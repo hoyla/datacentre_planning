@@ -60,11 +60,11 @@ class PlanItClient:
         user_agent: str = USER_AGENT,
         delay_seconds: float = 2.5,
         backoff_seconds: float = 60.0,
-        max_retries: int = 5,
+        max_retries: int = 4,
     ):
         self.base = base
         self.delay = delay_seconds
-        self.backoff = backoff_seconds
+        self.backoff = backoff_seconds  # base; doubles per attempt
         self.max_retries = max_retries
         self.client = httpx.Client(headers={"User-Agent": user_agent}, timeout=30.0)
         self._next_request_at = 0.0
@@ -90,14 +90,16 @@ class PlanItClient:
             r = self.client.get(url)
             self._next_request_at = time.monotonic() + self.delay
             if r.status_code == 429:
-                log.warning("429 from PlanIt (attempt %d); backing off %.0fs", attempt + 1, self.backoff)
-                time.sleep(self.backoff)
+                wait = self.backoff * (2 ** attempt)
+                log.warning("429 from PlanIt (attempt %d/%d); backing off %.0fs",
+                            attempt + 1, self.max_retries, wait)
+                time.sleep(wait)
                 continue
             r.raise_for_status()
             return PageResponse(url=url, raw=r.content, data=r.json())
         raise RuntimeError(f"persistent 429s after {self.max_retries} retries: {url}")
 
-    def iter_areas(self, *, pg_sz: int = 100) -> Iterator[PageResponse]:
+    def iter_areas(self, *, pg_sz: int = 200) -> Iterator[PageResponse]:
         page = 1
         while True:
             resp = self.get("/areas/json", {"pg_sz": pg_sz, "page": page, "select": AREAS_SELECT})
@@ -113,7 +115,7 @@ class PlanItClient:
         start_date: str | None = None,
         end_date: str | None = None,
         sort: str = "-start_date",
-        pg_sz: int = 100,
+        pg_sz: int = 200,
     ) -> Iterator[PageResponse]:
         page = 1
         while True:
