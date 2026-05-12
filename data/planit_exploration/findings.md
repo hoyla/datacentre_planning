@@ -273,7 +273,7 @@ That's the whole adapter for v1. Estimated build time: a couple of hours.
 
 ## Open items the walk-through left
 
-- **Verify Loughton `epf116522` is findable via PlanIt** once rate limit clears. If yes, kills the Salesforce-adapter assumption. If no, we still need a different approach for that council.
+- ~~**Verify Loughton `epf116522` is findable via PlanIt**~~ — **CONFIRMED 2026-05-12.** PlanIt's Epping Forest scraper (Arcus) covers the case as `EPF/1165/22` — the URL slug `epf116522` is just that with slashes stripped. Full application family visible: outline (EPF/1165/22), s73 variation (EPF/0388/26), Reserved Matters (EPF/0404/26), and three condition-discharge applications (EPF/0365/26, EPF/0591/26, EPF/0678/26). 15 DC applications in Epping Forest total. **Salesforce adapter is unnecessary.** Small adapter-design note: PlanIt's `search` param does not match URL-slug-style refs like `epf116522`; we'd need to query for the formatted form `EPF/1165/22` or use a separate field.
 - **The four parked Foxglove lookups** (DC01, International Trading Estate / GTR, G-Park Docklands, 103MW Court Lane) — should now be straightforward via PlanIt's developer-name search or description matches. Worth a small follow-on pass.
 - **PlanIt's `total` on areas hits 20,086,348** — sanity-check against published UK planning volumes. Sounds high but UK runs ~500k–1M planning applications a year, so 20M over ~25 years is plausible.
 - **`other_fields`** structure varies between records — should be normalised when we ingest (extract applicant_name, agent_company, etc. into dedicated `applications` columns).
