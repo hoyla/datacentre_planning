@@ -9,10 +9,11 @@ Raw page responses land in source_snapshots, deduped by (source_id, url, content
 
 from __future__ import annotations
 
+import json
 import logging
 import time
 import urllib.parse
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
 import httpx
@@ -48,6 +49,7 @@ class PageResponse:
     url: str
     raw: bytes
     data: dict
+    cached: bool = False
 
 
 class PlanItClient:
@@ -61,11 +63,13 @@ class PlanItClient:
         delay_seconds: float = 2.5,
         backoff_seconds: float = 60.0,
         max_retries: int = 4,
+        cache_get: Callable[[str], bytes | None] | None = None,
     ):
         self.base = base
         self.delay = delay_seconds
         self.backoff = backoff_seconds  # base; doubles per attempt
         self.max_retries = max_retries
+        self.cache_get = cache_get
         self.client = httpx.Client(headers={"User-Agent": user_agent}, timeout=30.0)
         self._next_request_at = 0.0
 
@@ -85,6 +89,11 @@ class PlanItClient:
 
     def get(self, path: str, params: dict) -> PageResponse:
         url = f"{self.base}{path}?{urllib.parse.urlencode(params)}"
+        if self.cache_get is not None:
+            cached = self.cache_get(url)
+            if cached is not None:
+                log.debug("cache hit: %s", url)
+                return PageResponse(url=url, raw=cached, data=json.loads(cached), cached=True)
         for attempt in range(self.max_retries):
             self._wait()
             r = self.client.get(url)
@@ -99,7 +108,7 @@ class PlanItClient:
             return PageResponse(url=url, raw=r.content, data=r.json())
         raise RuntimeError(f"persistent 429s after {self.max_retries} retries: {url}")
 
-    def iter_areas(self, *, pg_sz: int = 200) -> Iterator[PageResponse]:
+    def iter_areas(self, *, pg_sz: int = 100) -> Iterator[PageResponse]:
         page = 1
         while True:
             resp = self.get("/areas/json", {"pg_sz": pg_sz, "page": page, "select": AREAS_SELECT})
@@ -115,7 +124,7 @@ class PlanItClient:
         start_date: str | None = None,
         end_date: str | None = None,
         sort: str = "-start_date",
-        pg_sz: int = 200,
+        pg_sz: int = 100,
     ) -> Iterator[PageResponse]:
         page = 1
         while True:
@@ -143,51 +152,76 @@ def index(
     until: str | None = None,
     limit: int | None = None,
     delay_seconds: float = 2.5,
+    resume: bool = True,
 ) -> dict:
-    """Run a full index pass. Returns a summary dict."""
+    """Run a full index pass. Returns a summary dict.
+
+    If `resume` is True (default), URLs already captured in source_snapshots are
+    served from the cached bytes and not re-fetched. Useful after a 429 wall:
+    the prior pages are skipped and only the missing tail is requested.
+    """
     summary = {
         "areas_pages": 0,
+        "areas_pages_cached": 0,
         "councils_upserted": 0,
         "application_pages": 0,
+        "application_pages_cached": 0,
         "applications_upserted": 0,
         "snapshots_new": 0,
     }
     area_name_to_gss: dict[str, str] = {}
 
-    with PlanItClient(delay_seconds=delay_seconds) as client, db.connect() as conn:
+    with db.connect() as conn:
         source_id = repo.ensure_source(conn, name=SOURCE_NAME, kind="aggregator", base_url=BASE)
 
-        log.info("areas pass: starting")
-        for resp in client.iter_areas():
-            summary["areas_pages"] += 1
-            if repo.record_snapshot(conn, source_id=source_id, key=resp.url, raw_bytes=resp.raw):
-                summary["snapshots_new"] += 1
-            for area in resp.data.get("records", []):
-                gss = repo.upsert_council(conn, area)
-                if gss:
-                    summary["councils_upserted"] += 1
-                    if area.get("area_name"):
-                        area_name_to_gss[area["area_name"]] = gss
-            conn.commit()
+        cache_get = None
+        if resume:
+            def cache_get(url: str) -> bytes | None:
+                return repo.find_cached_response(conn, source_id=source_id, key=url)
 
-        log.info(
-            "applications pass: starting (since=%s, until=%s, limit=%s)", since, until, limit
-        )
-        seen = 0
-        for resp in client.iter_applications(start_date=since, end_date=until):
-            summary["application_pages"] += 1
-            if repo.record_snapshot(conn, source_id=source_id, key=resp.url, raw_bytes=resp.raw):
-                summary["snapshots_new"] += 1
-            for app in resp.data.get("records", []):
-                council_gss = area_name_to_gss.get(app.get("area_name") or "")
-                repo.upsert_application(
-                    conn, source_id=source_id, app=app, council_gss=council_gss
-                )
-                summary["applications_upserted"] += 1
-                seen += 1
-                if limit is not None and seen >= limit:
-                    conn.commit()
-                    return summary
-            conn.commit()
+        with PlanItClient(delay_seconds=delay_seconds, cache_get=cache_get) as client:
+            log.info("areas pass: starting (resume=%s)", resume)
+            for resp in client.iter_areas():
+                summary["areas_pages"] += 1
+                if resp.cached:
+                    summary["areas_pages_cached"] += 1
+                else:
+                    if repo.record_snapshot(
+                        conn, source_id=source_id, key=resp.url, raw_bytes=resp.raw
+                    ):
+                        summary["snapshots_new"] += 1
+                for area in resp.data.get("records", []):
+                    gss = repo.upsert_council(conn, area)
+                    if gss:
+                        summary["councils_upserted"] += 1
+                        if area.get("area_name"):
+                            area_name_to_gss[area["area_name"]] = gss
+                conn.commit()
+
+            log.info(
+                "applications pass: starting (since=%s, until=%s, limit=%s)",
+                since, until, limit,
+            )
+            seen = 0
+            for resp in client.iter_applications(start_date=since, end_date=until):
+                summary["application_pages"] += 1
+                if resp.cached:
+                    summary["application_pages_cached"] += 1
+                else:
+                    if repo.record_snapshot(
+                        conn, source_id=source_id, key=resp.url, raw_bytes=resp.raw
+                    ):
+                        summary["snapshots_new"] += 1
+                for app in resp.data.get("records", []):
+                    council_gss = area_name_to_gss.get(app.get("area_name") or "")
+                    repo.upsert_application(
+                        conn, source_id=source_id, app=app, council_gss=council_gss
+                    )
+                    summary["applications_upserted"] += 1
+                    seen += 1
+                    if limit is not None and seen >= limit:
+                        conn.commit()
+                        return summary
+                conn.commit()
 
     return summary

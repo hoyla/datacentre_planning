@@ -50,6 +50,24 @@ def record_snapshot(
         return cur.fetchone() is not None
 
 
+def find_cached_response(
+    conn: PgConnection, *, source_id: int, key: str
+) -> bytes | None:
+    """Return the most recent successful (200) snapshot body for (source_id, key), or None."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT raw_bytes_inline FROM source_snapshots
+            WHERE source_id = %s AND key = %s AND status_code = 200
+              AND raw_bytes_inline IS NOT NULL
+            ORDER BY fetched_at DESC LIMIT 1
+            """,
+            (source_id, key),
+        )
+        row = cur.fetchone()
+        return bytes(row[0]) if row else None
+
+
 def upsert_council(conn: PgConnection, area: dict[str, Any]) -> str | None:
     """Upsert a council row from a PlanIt area record. Returns gss_code or None if skipped."""
     gss = area.get("gss_code")

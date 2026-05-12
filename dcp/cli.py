@@ -17,11 +17,21 @@ def main() -> None:
 @click.option("--until", default=None, help="Latest application start_date (YYYY-MM-DD).")
 @click.option("--limit", type=int, default=None, help="Cap on applications upserted (for testing).")
 @click.option("--delay", "delay_seconds", type=float, default=2.5, help="Polite inter-request delay.")
-def index(source: str, mode: str, since: str, until: str | None, limit: int | None, delay_seconds: float) -> None:
+@click.option(
+    "--resume/--no-resume", default=True,
+    help="Serve already-snapshotted URLs from cache instead of re-fetching (default: resume).",
+)
+def index(
+    source: str, mode: str, since: str, until: str | None,
+    limit: int | None, delay_seconds: float, resume: bool,
+) -> None:
     """Stage 1: paginate recent applications from a source and upsert metadata."""
     if source == "planit":
         from dcp.sources import planit
-        summary = planit.index(since=since, until=until, limit=limit, delay_seconds=delay_seconds)
+        summary = planit.index(
+            since=since, until=until, limit=limit,
+            delay_seconds=delay_seconds, resume=resume,
+        )
         for k, v in summary.items():
             click.echo(f"  {k}: {v}")
     else:

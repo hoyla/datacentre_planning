@@ -82,3 +82,37 @@ def test_client_enforces_delay(monkeypatch):
 
     # The second call should have slept ~the configured delay; first call has none.
     assert any(s > 0 for s in sleeps), "expected at least one sleep between calls"
+
+
+def test_cache_get_short_circuits_fetch():
+    """When cache_get returns bytes for a URL, the HTTP client is never invoked."""
+    cached_body = SAMPLE.read_bytes()
+    transport_calls = []
+
+    def boom_handler(request):
+        transport_calls.append(request.url)
+        return httpx.Response(500, content=b"should not be reached")
+
+    c = planit.PlanItClient(
+        delay_seconds=0.0,
+        cache_get=lambda url: cached_body if "/applics/" in url else None,
+    )
+    c.client = httpx.Client(transport=httpx.MockTransport(boom_handler), timeout=30.0)
+
+    resp = c.get("/applics/json", {"search": '"data centre"', "pg_sz": 100, "page": 1})
+    assert resp.cached is True
+    assert resp.raw == cached_body
+    assert resp.data["records"][0]["associated_id"] == "24/04112/OUTES"
+    assert transport_calls == [], "transport must not be invoked on cache hit"
+
+
+def test_cache_get_falls_through_on_miss():
+    """When cache_get returns None, the HTTP client handles the request normally."""
+    c = planit.PlanItClient(
+        delay_seconds=0.0,
+        cache_get=lambda url: None,
+    )
+    c.client = httpx.Client(transport=httpx.MockTransport(_mock_handler), timeout=30.0)
+    resp = c.get("/applics/json", {"search": "x", "pg_sz": 100, "page": 1})
+    assert resp.cached is False
+    assert len(resp.data["records"]) == 5
