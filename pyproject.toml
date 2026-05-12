@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "datacentre-planning"
+version = "0.1.0"
+description = "UK data-centre planning-application scraper and analysis pipeline"
+requires-python = ">=3.12"
+dependencies = [
+    "psycopg2-binary>=2.9",
+    "httpx>=0.27",
+    "click>=8.1",
+    "selectolax>=0.3",
+    "pypdf>=4.0",
+    "pdfplumber>=0.10",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+dcp = "dcp.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["dcp*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
