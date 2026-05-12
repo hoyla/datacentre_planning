@@ -1,0 +1,265 @@
+Big Tech Data Centres: a threat to UK decarbonisation
+
+
+
+
+           Foxglove is an independent non-                      Global Action Plan is an
+            profit organisation that fights to                environmental charity focused
+              make tech fair for everyone.                   on issues where the connection
+                                                            between the health of people and
+                  www.foxglove.org.uk                          our planet is most tangible.
+                  info@foxglove.org.uk
+                                                              www.globalactionplan.org.uk
+                                                             team@globalactionplan.org.uk
+
+
+
+
+                                                        2
+Introduction
+
+1. The data centres being planned and built across the country will
+   require large amounts of electricity, adding significantly to our
+   carbon emissions.
+2. Developers’ own figures indicate that just ten of the largest data
+   centres in planning or construction will cause annual emissions
+   equivalent to 2,745,538 tonnes of CO2.
+3. A 2.7m tonne increase in annual emissions from data centres
+   would effectively wipe out the carbon savings expected in 2025
+   from the switch to electric cars (2.9m tonnes)1
+4. However, even this figure is just the tip of the iceberg – there
+   are many more data centres planned which have not provided
+   emissions figures; in addition, those figures provided by
+   developers are likely in many cases to be an underestimate.
+5. No reliable, overall figure for expected emissions driven by
+   data centre growth is available from government or industry –
+   we need the government to properly scrutinise and act on the
+   environmental impact of data centres.
+
+
+The UK is facing a vast expansion of data centres – large warehouses
+full of computer equipment. There is no official figure available, but
+the BBC has reported that there are 100 in planning or construction.
+However, Foxglove and Global Action Plan estimate the real number to
+be significantly higher.2
+The new generation of data centres – often referred to as ‘hyperscale’
+– will be significantly larger than those already in the country, and will
+demand vast quantities of electricity to run and cool their computing
+equipment. Some of the largest being planned will have a ‘capacity’ –
+that is, a maximum power use – of over one gigawatt. For comparison,
+the peak electricity demand for all of Britain in August was 30
+gigawatts.3
+Due to their high levels of electricity use, these data centres will be
+responsible for a significant increase in carbon emissions, as they are
+seeking to connect to the UK’s electricity grid – which is far from being
+fully decarbonised. In doing so, they will create significant additional
+demand which is likely to drive up prices, and will make it much more
+difficult for the UK to reduce carbon emissions from its electricity sector.
+Foxglove, a tech justice non-profit, and Global Action Plan, an
+environmental charity, are concerned about the impact of a huge
+increase of data centres on UK emissions. We are also concerned about
+data centres’ use of large volumes of water, although that is not the
+focus of this report.
+
+
+
+
+                                     3
+Big Tech Data Centres: a threat to UK decarbonisation
+
+
+
+
+               Knowledge gaps
+
+               It is widely accepted that the new generation of planned data centres
+               will lead to a significant increase in electricity demand in the UK. The UK
+               Government has set up an AI Energy Council to advise on the “energy
+               demands needed to power AI data centres.” It is also establishing ‘AI
+               Growth Zones’ which will “streamline” the process for constructing
+               data centres, and will be required to have access to “at least 500MW
+               of power.”4 The CEO of National Grid estimated in March 2024 that
+               “Demand from commercial data centres will increase six-fold, just in the
+               next ten years”.5
+               NESO have doubled their 2022 estimate of data centres’ projected
+               future energy needs and now expect them to use 71TWh by 2050,
+               equivalent to the entire commercial sector’s energy demands today.6
+               However, we have been unable to find any more detailed estimate of the
+               impact that the growing electricity demand from planned data centres
+               will have on the UK’s carbon emissions.
+               We have therefore sought to provide some indicators based on the
+               information which is publicly available. However, as we will explain,
+               this information is in many places flawed, incomplete or inconsistent
+               – as well as being entirely sourced from the data centre developers
+               themselves, which leads to concerns over bias.
+
+
+
+
+               Emissions from data centres
+               – developers’ estimates
+
+               We have aimed to build up a picture of data centre developers’ views
+               of their planned facilities’ expected emissions by looking at planning
+               documents.
+               The headline finding is that just ten of the larger planned data centres we
+               were able to identify will, according to their developers, result in annual
+               carbon emissions of 2,745,538 tonnes of CO2 equivalent. This is roughly
+               the same as the annual carbon saving in 2025 from the public’s switch
+               to electric vehicles, which the Climate Change Committee (CCC) puts at
+               2.9 million tonnes.
+               However, even this large total figure of 2.7m tonnes from planned
+               data centres is just a partial picture, based on conservative and in
+               some cases flawed or inconsistent figures. With over 100 data centres
+               currently in the planning or construction process, many of which do not
+               provide carbon emissions figures or even clarity on the size of the data
+               centre, the true total for all data centres will be many times higher.
+               The following table sets out all the large-scale data centres currently in
+
+
+
+                                                        4
+                 the planning process or under construction in England which Foxglove
+                 and Global Action Plan have been able to identify. ‘Large scale’ for
+                 the purposes of this report is defined as 100MW or above in terms of
+                 the ‘capacity’ of the data centre. We have excluded from this list data
+                 centres where a figure is not available for the planned scale of the data
+                 centre; or where the developer has not provided an estimate of carbon
+                 emissions from the power use of the data centre during its operational
+                 phase.
+                 We have however included developer estimates of emissions caused by
+                 electricity use even where they appear to be extremely low compared to
+                 other facilities of a comparable size. This highlights the lack of clarity or
+                 consistency in how the emissions resulting from planned data centres
+                 are being assessed.
+                 The overall emissions figure this produces should therefore be seen only
+                 as one part of the picture. It will be a substantial underestimate for several
+                 reasons: first, it only covers proposed data centres in England, not across
+                 the UK; second, there may be others in the planning process which we
+                 have been unable to identify, or which have been listed since the research
+                 was carried out; third, it only includes data centres where the developer
+                 has provided a carbon emissions estimate; and fourth, it includes
+                 developer figures which we believe may be an underestimate by one or
+                 two orders of magnitude, when compared to other similar facilities.
+
+
+Data Centre name, developer, application yr   Size (MW)        Status             Developer carbon emissions
+                                                                                  estimate (tC02e per year)
+Cambois (QTS) (2024)                          1100             Outline            184,160
+                                                               approved
+                                                               03.2025
+Elsham Tech (Greystoke) (2025)                1000             Pending outline 857,254
+
+Humber Tech (Greystoke) (2024)                384              Approved           387,805
+
+DC01 (2024)                                   320              Outline            6,056
+                                                               approved
+                                                               02.2025
+Thurrock (Google) (2025)                      225 (estimated) Pending             568,657
+
+Virtus Saunderton (2022)                      300              Under              101,660
+                                                               Construction
+International Trading Estate (GTR) (2025) 256                  Permission         219,031
+                                                               pending
+G-Park Docklands (GLP) (2025 – RM)            210              Under              1,148
+                                                               Construction
+North Weald (Google) (2025)                   164              Under              419,427
+                                                               Consultation
+103MW Court Lane (2022)                       103              Approved           340
+
+Total                                         4137                                2,745,538
+
+
+                                                          5
+Big Tech Data Centres: a threat to UK decarbonisation
+
+
+
+
+               It is worth considering the following issues regarding the data in the
+               table above:
+               Total absence of emissions figures for many proposed
+               developments
+
+               Foxglove was able to identify twice as many data centres in the planning
+               system which appeared to be 100MW or above, but we did not include
+               these here as we were not able to find carbon emissions estimates for
+               their operational phase from their developers.
+
+               Absence of an overall national picture
+               The information above had to be drawn from local planning authorities,
+               which means trawling a very wide number of sources to try to build up a
+               national picture. There are therefore likely to be absences in the above.
+               In addition, because of the scale involved, we were only able to look at
+               England in detail, and so this does not include data for the other nations
+               in the UK.
+               Vast inconsistences between estimates
+               We have not been able to determine why developers for data centres
+               of a similar size (in terms of energy use, MW) have arrived at emissions
+               estimates which vary by as much as two orders of magnitude. For
+               example, DC01 appears to estimate annual carbon emissions of
+               6,056 tonnes for a 320 MW facility; whereas Google estimates carbon
+               emissions of 568,657 tonnes – nearly 100 times higher – for its Thurrock
+               site, which we would estimate to be of a smaller scale.
+               Strong indications of underestimates
+               Based on one figure we have been able to find for emissions caused
+               by an existing data centre, it seems reasonable to assume that even
+               the higher estimates in the table above are on the optimistic side. Data
+               produced for the UK Government’s Climate Change Agreements (CCA)
+               scheme indicate that an existing, unknown data centre, run by Digital
+               Realty, reported emissions of 408,041 tonnes CO2 equivalent in 2021.
+               As the new generation of data centres are likely to be significantly larger
+               than ones already in operation in the UK, it is hard to understand how
+               their emissions could be lower to such an extent.
+
+
+
+
+                                                        6
+Conclusion
+
+The figures provided in this report are the tip of the iceberg – they do not
+include most data centres in planning, and the figures used are in many
+cases inconsistent and likely to involve significant underestimates.
+However, as they are the developers’ own figures they can be seen as
+an absolute minimum level of climate emissions that will result if just
+these ten facilities – out of a list in excess of 100 – are constructed.
+They therefore demonstrate that
+1. data centres are a significant and growing source of carbon
+   emissions that need to be taken very seriously;
+2. there is a need for a clear, consistent, unbiased picture of
+   the impact of planned and existing UK data centres on the
+   environment;
+3. the Government needs to act urgently on this threat to the UK’s
+   decarbonisation efforts.
+
+
+
+
+Endnotes
+1.   The Climate Change Committee projects savings of 2.9 million tonnes of CO2 equivalent in
+     2025 from electric cars – see ‘Progress in Reducing Emissions,’ 2025 report, figure 5: https://
+     www.theccc.org.uk/publication/progress-in-reducing-emissions-2025-report-to-parliament/
+2.   See ‘Data centres to be expanded across UK as concerns mount,’ BBC News, 15/08/2025:
+     https://www.bbc.co.uk/news/articles/clyr9nx0jrzo The underlying report for the BBC’s story
+     does not appear to be freely available, however we believe it significantly underestimates the
+     real total. For example, the article states that just one data centre is planned for Scotland when
+     there are two currently in the planning process for Edinburgh alone.
+3.   According to NESO, “Demand for electricity was at its highest of 29,694MW on 12 August at
+     6:30pm.” See ‘Great Britain’s Monthly Energy Stats,’ accessed 25/09/2025: https://www.neso.
+     energy/energy-101/great-britains-monthly-energy-stats
+4.   See ‘AI Energy Council to ensure UK’s energy infrastructure ready for AI revolution,’
+     08/04/2025: https://www.gov.uk/government/news/ai-energy-council-to-ensure-uks-energy-
+     infrastructure-ready-for-ai-revolution
+5.   ‘Transforming the supergrid of the 1950s to a network built on an electrified future for
+     generations to come,’ John Pettigrew, 26/03/2024, available at: https://www.linkedin.com/
+     pulse/transforming-supergrid-1950s-network-built-future-come-john-pettigrew-jpbcf/?tracking
+     Id=pfbUu%2B%2BXSmej4gv7AdNTtA%3D%3D
+6.   See ‘Future Energy Scenarios: Pathways to Net Zero’, July 2025, p.110 onwards https://www.
+     neso.energy/document/364541/download
+
+
+
+
+                                                  7
+
