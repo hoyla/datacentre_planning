@@ -1,0 +1,142 @@
+      Vic Coupland Ltd & Vic Coupland Mechanical Ltd
+      3 Therm Road, Hull, HU8 7BF
+      Tel: 01482 323346
+      Email: enquiries@viccoupland.com
+      Web: www.viccoupland.com
+
+      Directors: N.K Marris – P.M Chapman – M.F Dodson
+      Registration No. 326914 England (Vic Coupland Ltd)
+      Registration No. 5583448 England (Vic Coupland Mechanical Ltd)
+
+
+
+
+                   Yorkshire Energy Park - Energy Statement
+
+INTRODUCTION
+
+This Energy Statement has been prepared by Vic Coupland Ltd. to support a Reserved Matters
+Application (RMA) at the Yorkshire Energy Park (YEP). The YEP site is a mixed use development
+which benefits from an Outline Planning Permission (OPP) (Ref. 17/01673/STOUTE), approved 22
+December 2020 by East Riding of Yorkshire Council (ERYC). The Site is located at Land North
+West Of Kingstown Hotel, Hull Road, Hedon, East Riding Of Yorkshire.
+
+The applicant (Hull Eco Park Ltd (HEPL)) has submitted a RMA for the following proposed
+development:
+
+Reserved matters application for layout, scale, appearance and landscaping for the construction of
+an energy centre, a data centre, and associated roads and infrastructure, to outline planning
+permission 17/01673/STOUTE
+
+Condition 77 on the OPP states the following:
+
+The details submitted pursuant to condition 2 for each part of the development within the Business
+Park Land Use Zone or the Data Centre Land Use Zone (shaded yellow and purple respectively on
+plan reference YEP_BDP(PL)003 Rev E), shall include an energy statement demonstrating that the
+proposed occupier would have specific energy use requirements which would be met by the on-site
+energy generation facilities. Each part of the development shall be occupied in accordance with the
+details set out in the approved energy statement. A new or updated energy statement shall be
+submitted to and approved in writing by the Local Planning Authority before any part of the
+development within the Business Park Land Use Zone or the Data Centre Land Use Zone is
+occupied by a subsequent occupier. Subsequent occupation shall thereafter be in accordance with
+the details set out in the approved new or updated energy statement.
+
+The Data Centre element of this RMA is located within the Data Centre Land Use Zone (as per the
+approved Land Use Parameter Plan (Ref. YEP_BDP(PL)003 Rev E). Therefore, in line with the
+requirements of Condition 77, an Energy Statement is required to be submitted alongside this RMA.
+The Energy Statement is required to demonstrate that the proposed occupier of the Data Centre
+would have specific energy use requirement which would be met by the on-site energy generation
+facilities. On-site energy generation will be created by the Energy Centre which also forms part of
+this RMA. Condition 77 also requires each part of the development (i.e. the Data Centre that forms
+part of this RMA) to be occupied in accordance with the details set out within the approved Energy
+Statement.
+
+                                                                                         Page 1
+       Vic Coupland Ltd & Vic Coupland Mechanical Ltd
+       3 Therm Road, Hull, HU8 7BF
+       Tel: 01482 323346
+       Email: enquiries@viccoupland.com
+       Web: www.viccoupland.com
+
+       Directors: N.K Marris – P.M Chapman – M.F Dodson
+       Registration No. 326914 England (Vic Coupland Ltd)
+       Registration No. 5583448 England (Vic Coupland Mechanical Ltd)
+
+
+
+
+This Energy Statement, prepared by Vic Coupland Ltd., provides the detail required in order to
+satisfy the requirements of Condition 77 on the OPP.
+
+ENERGY STATEMENT
+
+The Data Centre operator have specifically selected the YEP site for their new data centre due to
+the resilient on-site zero carbon electrical and cooling energy generation planned for 2026, when
+the hydrogen source becomes available, where energy costs are provided at market rates
+equivalent to the grid supply. The Combined Heat and Power (CHP) turbines will initially be running
+off natural gas until the planned hydrogen supply becomes available.
+
+The Data Centre is designed to be initially built for 240 data racks requiring approximately 3-4MW
+of electrical demand with future expansion to 600 racks expanding to a future electrical demand of
+6MW. The cooling provided as a by-product of the energy generation, piped in cold water pipes
+from the energy centre to the data centre, eliminating the need for their own chiller plant.
+
+As the first tenants on the site, the energy centre generation capacity has been designed to align
+with the requirements of the data centre for both their energy and resilience
+
+Therefore, energy, for the Data Centre, will be drawn from the onsite energy centre (both of which
+form part of this RMA) which will provide the electrical and cooling requirements of the Data Centre
+space and ancillary office space with the Data Centre. The Energy Centre will be working towards a
+zero-carbon footprint eventually adopting hydrogen as its source of energy supply in the future.
+
+Electrical energy provided by a CHP plant will be utilised to provide power to energy efficient
+technologies were applicable/available.
+
+Cooling energy will be provided through the use of a community system via the proposed energy
+centre as a by-product of the electrical energy production via the CHP plant.
+
+Heating energy will be provided using a combination of Air Source Heat Pumps and Variable
+Refrigerant Flow (VRF) systems.
+
+Passive energy efficiency design measures invariably prove to be the most economical and
+socially acceptable inclusions on any scheme. Ensuring air-tight, well insulated buildings with
+good control measures are among the most important considerations.
+The design team will carry out relevant calculations and modelling to ensure these elements are
+optimised wherever possible within the scope of the project.
+
+
+                                                                                            Page 2
+      Vic Coupland Ltd & Vic Coupland Mechanical Ltd
+      3 Therm Road, Hull, HU8 7BF
+      Tel: 01482 323346
+      Email: enquiries@viccoupland.com
+      Web: www.viccoupland.com
+
+      Directors: N.K Marris – P.M Chapman – M.F Dodson
+      Registration No. 326914 England (Vic Coupland Ltd)
+      Registration No. 5583448 England (Vic Coupland Mechanical Ltd)
+
+
+
+
+The following provides a summary of the energy efficiency measures that are to be considered in
+order to improve the feasible energy rating for the new development:
+        1.      The use of glazing to maximise daylight in all areas.
+        2.      Passive solar control to help minimise the requirement for mechanical cooling by
+                use of; solar controlled glazing, deep window reveals and recessed facades to
+                South facing elevations.
+        3.      Partial or full solar control glazing to the south facing glazing as a minimum.
+        4.      Enhanced building thermal performance that exceeds building regulation minimum
+                standards.
+        5.      Maximise efficiency of plant and systems.
+        6.      Optimise control and flexibility of the installations.
+        7.      Air-tight construction. Proposed air permeability rate to surpass current regulatory
+                standards.
+        8.      Heating, ventilation, and air conditioning (HVAC) and lighting systems to operate
+                ‘on-demand’ wherever practical.
+
+
+
+
+                                                                                              Page 3
+
