@@ -37,9 +37,10 @@ Ideally collaborative with Aisha. We have 1,549 real applications to test prompt
 
 **Soon:**
 
-- **Council reorganisation handling.** Pre-2020 applications under legacy district names (Wycombe, Chiltern South Bucks, etc.) currently land with NULL `council_gss`. Either map legacy GSS codes into `councils`, or normalise on the join. ~50 records affected in v1 sweep.
+- **Council reorganisation handling.** Pre-2020 applications under legacy district names (Wycombe, Chiltern South Bucks, etc.) currently land with NULL `council_gss`. Either map legacy GSS codes into `councils`, or normalise on the join. ~50 records affected in v1 sweep. The Foxglove reconciliation (see below) confirms this matters: Saunderton (#6) and Court Lane (#10) both have application chains crossing the 2020 Bucks reorganisation.
 - **Document-fetch adapter for matched applications.** Once triage produces matches, we need to download the source-portal documents (Idox canonical and the `/newplanningaccess/` variant cover ~half the universe; Arcus and others follow). The Energy Statement document type from East Riding maps cleanly into the existing schema (`documents.kind`).
-- **Foxglove top-10 reconciliation.** Programmatic check that all ten Foxglove cases are present in our `applications` universe. Three are confirmed (Cambois, Saunderton, Loughton-adjacent); the others either match under different keywords or surface a coverage gap.
+- ~~**Foxglove top-10 reconciliation.**~~ **Done 2026-05-12.** 8/10 directly confirmed, 1 probable (G-Park Docklands → Tower Hamlets Travelodge-to-DC conversion), 1 unconfirmed (DC01 — generic name with no further identifying detail in the Foxglove report). Full writeup in [data/prior_art_sources/foxglove_reconciliation.md](data/prior_art_sources/foxglove_reconciliation.md). **Note for triage prioritisation:** three of the cases (DC01, G-Park Docklands, 103MW Court Lane) are Foxglove's implausibly-low-emissions outliers and should be top-priority deep-read targets — gap between planning-form figure and physical kit is likely widest there.
+- **Promote `associated_id` to a typed column.** Multiple confirmed Foxglove cases have parent/child application families linked by PlanIt's `associated_id`. Currently lives in `raw_metadata`; promoting to `applications.parent_ref` would make family navigation a direct join. ~30 minutes of schema work + a backfill from raw_metadata.
 
 ---
 
@@ -47,7 +48,7 @@ Ideally collaborative with Aisha. We have 1,549 real applications to test prompt
 
 Items consciously deferred — return when journalism need warrants.
 
-- **The four unidentified Foxglove cases.** DC01, International Trading Estate (GTR), G-Park Docklands (GLP), 103MW Court Lane. Three are the implausibly-low-emissions outliers in Foxglove's table and would make strong "developer figure understates kit" leads. Note in [data/seed_cases/foxglove_top10.md](data/seed_cases/foxglove_top10.md).
+- ~~**The four unidentified Foxglove cases.**~~ **Three of four resolved 2026-05-12** in [data/prior_art_sources/foxglove_reconciliation.md](data/prior_art_sources/foxglove_reconciliation.md): International Trading Estate (GTR) = `Ealing/250949FUL`, 103MW Court Lane = `ChilternSouthBucks/PL/22/4145/OA` (Iver), G-Park Docklands (probable) = `TowerHamlets/PA/22/01140/A1`. Only DC01 remains unidentified — defer to operator-name sweep.
 - **Salesforce adapter.** Originally planned for Epping Forest's Loughton case, but PlanIt's Arcus scraper covers Epping Forest, so the Salesforce frontend can be ignored. Revisit only if we encounter a Salesforce-only council not in PlanIt.
 - **NSIP / Section 35 Directions adapter.** The Planning Inspectorate route catches the biggest DCs (300+ MW). Currently the only NSIP case in our universe is the Bucks 2026 application surfacing in PlanIt; broader NSIP coverage needs a separate adapter. Wapseys Wood Section 35 PDF cached for reference.
 - **Idox / Civica / Tascomi / Ocella direct adapters.** Not needed for index stage (PlanIt covers most councils). Will be needed for the document-fetch stage where PlanIt only gives application metadata.
