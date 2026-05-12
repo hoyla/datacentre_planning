@@ -32,7 +32,8 @@ cp .env.example .env
 docker compose up -d postgres
 psql "$DATABASE_URL" -f migrations/001_initial.sql
 
-pytest
+pytest                       # full suite (creates dcp_test DB, applies schema)
+pytest -m "not integration"  # unit tests only, no Postgres required
 ```
 
 ## Pipeline
