@@ -9,13 +9,15 @@ For *why a journalism investigation needs this*, see [prior_art.md](prior_art.md
 
 ## Philosophy
 
-Five principles, in order of importance:
+Seven principles, in order of importance:
 
 1. **Ingest broadly, analyse second.** Don't bake the hypothesis into the extraction. Decisions about what's worth a story happen downstream of structured facts, not upstream of them. We need to be able to surface null findings and counter-evidence, not just dramatic ones.
-2. **Append-only with audit trail.** `source_snapshots` preserves every raw fetch. `triage` and `findings` are versioned by `inserted_at` rather than overwritten. Reruns add rows; nothing is destroyed. This makes re-analysis with refined prompts cheap and reproducible.
-3. **Idempotent at every stage.** Reruns are no-ops on unchanged content. PKs and unique constraints (`(source_id, application_ref)`, `(source_id, key, content_sha256)`, etc.) are the dedup contract. Cache-based resume means a partial sweep can be completed without re-fetching captured pages.
-4. **Look at the data before committing infra.** Hands-on exploration of every new source (manual API calls, sample documents) before adapter code is written. The seed-case walkthrough and the PlanIt exploration both produced design changes that wouldn't have come out of upfront planning.
-5. **Provenance is non-negotiable.** Every claim in `findings` carries a document reference, evidence text, page number, model name, and timestamp. Reporters can't use what we can't back to a quotable source.
+2. **Defensibility.** The reporting must be defensible end-to-end — every aggregate claim must be drillable back to the underlying source material so a journalist (and where necessary, a reader) can see exactly how a conclusion was reached. This is the editorial reason behind several of the engineering principles that follow.
+3. **Never mutate original source material.** Where normalisation or probable links are needed (e.g. council-name canonicalisation, fuzzy-matching applicants to operators, mapping legacy district names to current GSS codes), store the normalised / inferred value *alongside* the original — never overwrite. The raw response and the raw record are the canonical references the rest of the system points back to.
+4. **Append-only with audit trail.** `source_snapshots` preserves every raw fetch. `triage` and `findings` are versioned by `inserted_at` rather than overwritten. Reruns add rows; nothing is destroyed. This makes re-analysis with refined prompts cheap and reproducible, and is the engineering corollary of (2) and (3).
+5. **Idempotent at every stage.** Reruns are no-ops on unchanged content. PKs and unique constraints (`(source_id, application_ref)`, `(source_id, key, content_sha256)`, etc.) are the dedup contract. Cache-based resume means a partial sweep can be completed without re-fetching captured pages.
+6. **Look at the data before committing infra.** Hands-on exploration of every new source (manual API calls, sample documents) before adapter code is written. The seed-case walkthrough and the PlanIt exploration both produced design changes that wouldn't have come out of upfront planning.
+7. **Provenance is non-negotiable.** Every claim in `findings` carries a document reference, evidence text, page number, model name, and timestamp. Reporters can't use what we can't back to a quotable source. Aggregate outputs (markdown summaries, xlsx exports, any future web interface) must always link or cite back to the underlying `findings` / `documents` / `applications` rows, never present numbers without provenance.
 
 ---
 
@@ -159,15 +161,17 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 | Document corpus | Local filesystem first, S3 later | Mirrors fuel-finder's "local until it hurts" pattern. |
 | Time scope | 2018+ for v1 | PlanIt has consistent coverage from 2018; sharp drop before. |
 | Source order | PlanIt first | National, full-text searchable, single API. NSIP and per-council adapters added when journalism need warrants. |
-| Schema mutability | Append-only / versioned where it matters | Reproducibility for journalism; re-analysis with refined prompts is cheap. |
+| Schema mutability | Append-only / versioned where it matters; original values never overwritten | Reproducibility for journalism; defensibility back to source; re-analysis with refined prompts is cheap. |
 | Resume mechanism | Cache via `source_snapshots`, not a separate cache table | One source of truth; same data serves both audit and resume. |
+| Web framework (when needed) | FastAPI with auto-generated Redoc + OpenAPI | Matches Luke's fuel-finder convention; APIs should be documented by default. |
 
 ---
 
 ## What's not in the architecture yet
 
-- **Council-reorganisation handling** for pre-2020 records under legacy district names (Wycombe → Buckinghamshire, Chiltern South Bucks → Buckinghamshire, etc.). Currently surfaces as NULL `council_gss` with the legacy `area_name` preserved in `raw_metadata`.
+- **Council-reorganisation handling** for pre-2020 records under legacy district names (Wycombe → Buckinghamshire, Chiltern South Bucks → Buckinghamshire, etc.). Currently surfaces as NULL `council_gss` with the legacy `area_name` preserved in `raw_metadata`. Per principle 3, the legacy name stays untouched; any canonicalisation goes in a new column or join table, not over the original.
 - **Triage prompt design + rubric.** Pending session with Aisha.
 - **Document-fetch adapters per portal type.** Idox (canonical and `/newplanningaccess/` variant), Salesforce (verified unnecessary for now; Loughton accessible via PlanIt's Arcus scraper), NSIP, etc.
-- **Findings export / reporter-facing output.** Markdown summary + xlsx + (optional) FastAPI portal. Phase 5+.
+- **Findings export / reporter-facing output.** Markdown summary + xlsx for hand-off (meridian pattern). Phase 6+.
+- **Web interface (when needed).** If/when a reporter-facing browse UI is needed, **FastAPI** is the chosen framework — matches Luke's fuel-finder convention. Any HTTP API exposed by it should be documented via **Redoc with OpenAPI** (FastAPI generates both `/docs` Swagger and `/redoc` ReDoc views automatically; keep the operation `summary`, `description`, and Pydantic-model field docstrings populated). This isn't urgent — the CLI-driven export is enough until a journalist needs to click around — but the decision is locked when the time comes.
 - **CI**. Tests are local-only; no GitHub Actions yet. Worth setting up when team scales beyond Luke + Aisha.
