@@ -6,11 +6,15 @@ Collaboration with Aisha Down at the Guardian.
 
 ## Status
 
-**Phase 0 — scaffolding.** No scraping yet. Pipeline is plumbing only.
+**Phase 1 — index complete for PlanIt.** 1,549 UK data-centre applications ingested from 2018 onwards, covering 401 councils with GSS code and portal-type metadata. Triage and deep-read stages not yet implemented. Full 24-test suite (8 unit + 16 SQL integration) green.
 
 See:
-- [prior_art.md](prior_art.md) — published research and reporting; cross-reference benchmarks our own analysis should reconcile against.
-- [data/prior_art_sources/foxglove_top10.md](data/prior_art_sources/foxglove_top10.md) — Foxglove/Global Action Plan's ten ≥100 MW England applications, transcribed from their Sep 2025 report. Our pipeline's first known-good universe.
+- [ARCHITECTURE.md](ARCHITECTURE.md) — pipeline philosophy, schema, design decisions.
+- [ROADMAP.md](ROADMAP.md) — what's done, what's next, what's parked, open questions.
+- [prior_art.md](prior_art.md) — published research and cross-reference benchmarks.
+- [data/seed_cases/walkthrough_findings.md](data/seed_cases/walkthrough_findings.md) — hands-on findings from Aisha's three exemplar applications.
+- [data/planit_exploration/findings.md](data/planit_exploration/findings.md) — PlanIt API exploration writeup.
+- [data/prior_art_sources/foxglove_top10.md](data/prior_art_sources/foxglove_top10.md) — Foxglove top-10 reconciliation target.
 
 ## Stack
 
