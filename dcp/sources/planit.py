@@ -440,17 +440,21 @@ def fetch_colocated(
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT DISTINCT ON ((raw_metadata->>'location_x'), (raw_metadata->>'location_y'))
-                       id, application_ref,
-                       (raw_metadata->>'location_y')::float AS lat,
-                       (raw_metadata->>'location_x')::float AS lng
-                FROM applications
-                WHERE %s = ANY(discovered_via)
-                  AND raw_metadata->>'location_x' IS NOT NULL
-                  AND raw_metadata->>'location_y' IS NOT NULL
-                  AND raw_metadata->>'app_type' = ANY(%s)
-                ORDER BY (raw_metadata->>'location_x'), (raw_metadata->>'location_y'),
-                         date_received DESC NULLS LAST, id
+                SELECT id, application_ref, lat, lng FROM (
+                    SELECT DISTINCT ON ((raw_metadata->>'location_x'), (raw_metadata->>'location_y'))
+                           id, application_ref,
+                           (raw_metadata->>'location_y')::float AS lat,
+                           (raw_metadata->>'location_x')::float AS lng,
+                           date_received
+                    FROM applications
+                    WHERE %s = ANY(discovered_via)
+                      AND raw_metadata->>'location_x' IS NOT NULL
+                      AND raw_metadata->>'location_y' IS NOT NULL
+                      AND raw_metadata->>'app_type' = ANY(%s)
+                    ORDER BY (raw_metadata->>'location_x'), (raw_metadata->>'location_y'),
+                             date_received DESC NULLS LAST, id
+                ) deduped
+                ORDER BY date_received DESC NULLS LAST, id
                 """,
                 (anchor_filter, list(app_types)),
             )
