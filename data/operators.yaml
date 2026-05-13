@@ -68,3 +68,31 @@ power_specialists:
   - "Langley Holdings"
   - MWM
   - "Caterpillar Energy"
+
+# Planning agents and consultancies known to handle DC applications. Not DC
+# operators themselves, but their appearance as agent_company on an application
+# is a meaningful signal (the bridge between operator and planning record).
+# Confirmed via dev-DB inspection 2026-05-12: Quod is the agent on Cambois;
+# Barton Willmore on Court Lane Iver; Montagu Evans on Wapseys Wood and
+# multiple other major DCs.
+planning_agents:
+  - Quod
+  - "Barton Willmore"
+  - "Montagu Evans"
+  - DP9
+  - Lichfields
+  - Savills
+  - "Knight Frank"
+  - WSP
+  - "Vincent and Gorbing"
+  - "Iceni Projects"
+  - "Carter Jonas"
+  - "Pegasus Group"
+  - "Turley"
+  - "Rolton Group"
+  - "Avison Young"
+  - "Greystoke Land"   # also in dc_operators; redundant matches are deduped on insert
+  - Stantec            # formerly Barton Willmore — merged 2022; agent on Tower Hamlets G-Park, several others
+  - "Mallory Land"     # agent on Thurrock Google
+  - "Vail Williams"
+  - "DLP Planning"

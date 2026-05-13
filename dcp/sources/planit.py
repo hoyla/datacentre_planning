@@ -399,6 +399,9 @@ def _keyword_hits(text: str | None, keywords: tuple[str, ...] = ENERGY_KEYWORDS)
     return sorted({k for k in keywords if k.lower() in t})
 
 
+PRIMARY_ANCHOR_APP_TYPES = ("Outline", "Full")
+
+
 def fetch_colocated(
     *,
     radius_km: float = 1.0,
@@ -406,18 +409,26 @@ def fetch_colocated(
     delay_seconds: float = 2.5,
     resume: bool = True,
     anchor_filter: str = "dc_keyword",
+    app_types: tuple[str, ...] = PRIMARY_ANCHOR_APP_TYPES,
 ) -> dict:
     """Phase 1c (fetch half): for each DC anchor application, fetch all PlanIt
     applications within radius_km of its location and persist the raw response in
     source_snapshots. Filtering / candidate-link insertion is a separate pass
     (see process_colocated) so vocabulary changes don't require re-fetching.
 
-    Only anchors whose `discovered_via` contains `anchor_filter` are swept —
-    defaults to 'dc_keyword' so we don't recursively spatial-sweep around
-    candidates we discovered via earlier spatial sweeps.
+    Only anchors whose `discovered_via` contains `anchor_filter` AND whose
+    `raw_metadata.app_type` is in `app_types` are swept — defaults filter to
+    Outline / Full DC keyword anchors only, excluding Conditions / Amendment
+    discharges that share coordinates with their parent (we already fetch
+    the parent's neighbours once).
+
+    Anchors are deduplicated by (lat, lng): multiple application records at
+    the same site share the same spatial cache, so we fetch once per unique
+    location and let process_colocated() resolve all matching anchors.
     """
     summary = {"anchors_attempted": 0, "anchors_done": 0, "pages": 0,
-               "pages_cached": 0, "snapshots_new": 0, "anchors_skipped_no_loc": 0}
+               "pages_cached": 0, "snapshots_new": 0, "anchors_skipped_no_loc": 0,
+               "unique_locations": 0}
 
     with db.connect() as conn:
         source_id = repo.ensure_source(conn, name=SOURCE_NAME, kind="aggregator", base_url=BASE)
@@ -429,18 +440,22 @@ def fetch_colocated(
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT id, application_ref,
+                SELECT DISTINCT ON ((raw_metadata->>'location_x'), (raw_metadata->>'location_y'))
+                       id, application_ref,
                        (raw_metadata->>'location_y')::float AS lat,
                        (raw_metadata->>'location_x')::float AS lng
                 FROM applications
                 WHERE %s = ANY(discovered_via)
                   AND raw_metadata->>'location_x' IS NOT NULL
                   AND raw_metadata->>'location_y' IS NOT NULL
-                ORDER BY id
+                  AND raw_metadata->>'app_type' = ANY(%s)
+                ORDER BY (raw_metadata->>'location_x'), (raw_metadata->>'location_y'),
+                         date_received DESC NULLS LAST, id
                 """,
-                (anchor_filter,),
+                (anchor_filter, list(app_types)),
             )
             anchors = cur.fetchall()
+            summary["unique_locations"] = len(anchors)
 
         if limit_anchors is not None:
             anchors = anchors[:limit_anchors]
