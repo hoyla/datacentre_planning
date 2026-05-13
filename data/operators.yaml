@@ -1,0 +1,70 @@
+# Operator and developer names searched via PlanIt's `developer=` parameter
+# (matches the applicant_address, applicant_company, agent_address, and
+# agent_company fields). Case-insensitive substring within those fields.
+#
+# Categories below are advisory — they explain why a name is on the list,
+# not how the search works. All names are searched identically. Add or
+# remove entries freely; reruns are cheap (append-only schema, cached
+# snapshots — see ARCHITECTURE.md).
+#
+# When adding: a too-broad name like "Amazon" or "Google" will catch
+# many unrelated applications; the sweep is designed to over-include
+# and triage downstream, but extremely common names may exceed PlanIt's
+# 5,000-result cap. Use the more specific corporate entity where known.
+
+dc_operators:
+  - Google
+  - Microsoft
+  - Meta
+  - "Facebook UK"
+  - "Amazon Web Services"
+  - AWS
+  - Equinix
+  - "Digital Realty"
+  - QTS
+  - Blackstone
+  - "Greystoke Land"
+  - "Greystoke Capital"
+  - "Greystoke"          # broader catch
+  - Virtus
+  - GLP
+  - "Global Logistic Properties"
+  - GTR
+  - NTT
+  - CyrusOne
+  - Vantage
+  - "Stack Infrastructure"
+  - "Iron Mountain"
+  - "Pure Data Centres"
+  - Yondr
+  - "ARK Data Centres"
+  - Telehouse
+  - Colt
+  - "Compass Datacenters"
+  - Kao              # Kao Data
+  - "Tritax Big Box"  # behind Manor Farm Slough application
+
+# Energy SPVs and named entities surfaced through prior research and seed cases.
+# These are the kinds of corporate structures the spatial spike confirmed
+# can sit alongside a DC application under a different applicant name.
+energy_spvs_and_known_entities:
+  - "Hull Eco Park"      # Yorkshire Energy Park applicant
+  - "Slough Holdings"    # Wapseys Wood applicant (note: name suggests parent, not site)
+  - "Vic Coupland"       # Yorkshire Energy Park MEP contractor (named in Energy Statement)
+  - "Montagu Evans"      # Wapseys Wood planning agent
+  - "Hull Eco"
+
+# Behind-the-meter / on-site generation specialists named in DeSmog April 2026
+# and elsewhere. May surface gas-plant filings adjacent to DCs that don't
+# disclose the DC connection in their own description.
+power_specialists:
+  - AVK
+  - Aggreko
+  - Centrica
+  - SSE
+  - Drax
+  - Octopus
+  - Statkraft
+  - "Langley Holdings"
+  - MWM
+  - "Caterpillar Energy"

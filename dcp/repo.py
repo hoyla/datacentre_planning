@@ -107,8 +107,15 @@ def upsert_application(
     source_id: int,
     app: dict[str, Any],
     council_gss: str | None = None,
-) -> None:
-    """Upsert an application row from a PlanIt record."""
+    discovered_via: list[str] | None = None,
+) -> int:
+    """Upsert an application row from a PlanIt record. Returns the row id.
+
+    `discovered_via` records the discovery path(s) — e.g. ['dc_keyword'],
+    ['operator:Greystoke'], ['spatial:Northumberland/24/04112/OUTES']. On
+    conflict, paths are appended to the existing array (deduped) rather
+    than overwritten — same application found via two paths keeps both.
+    """
     raw_meta = {
         "app_type": app.get("app_type"),
         "app_size": app.get("app_size"),
@@ -126,14 +133,15 @@ def upsert_application(
         "location_x": app.get("location_x"),
         "location_y": app.get("location_y"),
     }
+    via = list(discovered_via) if discovered_via else []
     with conn.cursor() as cur:
         cur.execute(
             """
             INSERT INTO applications (
                 source_id, application_ref, council_gss, description, address, postcode,
-                date_received, date_decided, status, url, raw_metadata
+                date_received, date_decided, status, url, raw_metadata, discovered_via
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (source_id, application_ref) DO UPDATE SET
                 description = EXCLUDED.description,
                 address = EXCLUDED.address,
@@ -144,7 +152,11 @@ def upsert_application(
                 url = EXCLUDED.url,
                 council_gss = COALESCE(EXCLUDED.council_gss, applications.council_gss),
                 raw_metadata = EXCLUDED.raw_metadata,
+                discovered_via = ARRAY(
+                    SELECT DISTINCT unnest(applications.discovered_via || EXCLUDED.discovered_via)
+                ),
                 last_seen_at = now()
+            RETURNING id
             """,
             (
                 source_id,
@@ -158,5 +170,33 @@ def upsert_application(
                 app.get("app_state"),
                 app.get("url"),
                 Json(raw_meta),
+                via,
             ),
+        )
+        return cur.fetchone()[0]
+
+
+def upsert_colocated_candidate(
+    conn: PgConnection,
+    *,
+    anchor_app_id: int,
+    candidate_app_id: int,
+    distance_m: float | None,
+    radius_used_km: float,
+    keyword_hits: list[str],
+) -> None:
+    """Record a spatial-proximity link from an anchor DC application to a candidate
+    application within radius_used_km. ON CONFLICT updates distance and keyword_hits
+    in case the lexicon evolved between runs."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO colocated_candidates
+                (anchor_app_id, candidate_app_id, distance_m, radius_used_km, keyword_hits)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (anchor_app_id, candidate_app_id, radius_used_km) DO UPDATE SET
+                distance_m = EXCLUDED.distance_m,
+                keyword_hits = EXCLUDED.keyword_hits
+            """,
+            (anchor_app_id, candidate_app_id, distance_m, radius_used_km, keyword_hits),
         )

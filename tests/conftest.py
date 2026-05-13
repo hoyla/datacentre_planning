@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-MIGRATIONS_FILE = Path(__file__).parent.parent / "migrations" / "001_initial.sql"
+MIGRATIONS_DIR = Path(__file__).parent.parent / "migrations"
 TEST_DB_NAME = "dcp_test"
 
 
@@ -46,9 +46,15 @@ def _ensure_test_database() -> None:
     conn = psycopg2.connect(_test_db_url())
     try:
         with conn.cursor() as cur:
+            # Migration 001 — initial schema
             cur.execute("SELECT to_regclass('public.applications')")
             if cur.fetchone()[0] is None:
-                cur.execute(MIGRATIONS_FILE.read_text())
+                cur.execute((MIGRATIONS_DIR / "001_initial.sql").read_text())
+                conn.commit()
+            # Migration 002 — discovery_via column + colocated_candidates table
+            cur.execute("SELECT to_regclass('public.colocated_candidates')")
+            if cur.fetchone()[0] is None:
+                cur.execute((MIGRATIONS_DIR / "002_discovery_tracking.sql").read_text())
                 conn.commit()
     finally:
         conn.close()

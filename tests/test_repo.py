@@ -304,3 +304,123 @@ def test_find_cached_response_isolated_by_source(db_conn, planit_source_id):
     assert repo.find_cached_response(
         db_conn, source_id=planit_source_id, key="https://shared"
     ) is None
+
+
+# ---------------------------------------------------------------------------
+# discovered_via (migration 002)
+# ---------------------------------------------------------------------------
+
+
+def test_upsert_application_records_discovered_via(db_conn, planit_source_id):
+    repo.upsert_application(
+        db_conn, source_id=planit_source_id,
+        app=_app_record("X/1"),
+        discovered_via=["dc_keyword"],
+    )
+    with db_conn.cursor() as cur:
+        cur.execute("SELECT discovered_via FROM applications WHERE application_ref = %s", ("X/1",))
+        assert cur.fetchone()[0] == ["dc_keyword"]
+
+
+def test_upsert_application_appends_discovered_via_on_conflict(db_conn, planit_source_id):
+    """Same app discovered via two paths keeps both lineages, deduped."""
+    repo.upsert_application(
+        db_conn, source_id=planit_source_id,
+        app=_app_record("X/1"),
+        discovered_via=["dc_keyword"],
+    )
+    repo.upsert_application(
+        db_conn, source_id=planit_source_id,
+        app=_app_record("X/1"),
+        discovered_via=["operator:Google"],
+    )
+    repo.upsert_application(
+        db_conn, source_id=planit_source_id,
+        app=_app_record("X/1"),
+        discovered_via=["dc_keyword"],  # duplicate of first
+    )
+    with db_conn.cursor() as cur:
+        cur.execute("SELECT discovered_via FROM applications WHERE application_ref = %s", ("X/1",))
+        via = sorted(cur.fetchone()[0])
+        assert via == ["dc_keyword", "operator:Google"]
+
+
+def test_upsert_application_returns_row_id(db_conn, planit_source_id):
+    aid = repo.upsert_application(
+        db_conn, source_id=planit_source_id, app=_app_record("X/1"),
+    )
+    assert isinstance(aid, int) and aid > 0
+    same = repo.upsert_application(
+        db_conn, source_id=planit_source_id, app=_app_record("X/1"),
+    )
+    assert same == aid  # idempotent on conflict
+
+
+# ---------------------------------------------------------------------------
+# colocated_candidates (migration 002)
+# ---------------------------------------------------------------------------
+
+
+def test_upsert_colocated_candidate_inserts(db_conn, planit_source_id):
+    anchor = repo.upsert_application(
+        db_conn, source_id=planit_source_id, app=_app_record("anchor/1"),
+    )
+    cand = repo.upsert_application(
+        db_conn, source_id=planit_source_id, app=_app_record("cand/1"),
+    )
+    repo.upsert_colocated_candidate(
+        db_conn, anchor_app_id=anchor, candidate_app_id=cand,
+        distance_m=420.5, radius_used_km=1.0, keyword_hits=["gas turbine", "CHP"],
+    )
+    with db_conn.cursor() as cur:
+        cur.execute(
+            "SELECT distance_m, radius_used_km, keyword_hits FROM colocated_candidates "
+            "WHERE anchor_app_id = %s",
+            (anchor,),
+        )
+        d, r, hits = cur.fetchone()
+        assert round(d, 1) == 420.5
+        assert r == 1.0
+        assert sorted(hits) == ["CHP", "gas turbine"]
+
+
+def test_upsert_colocated_candidate_dedups_and_refreshes_keyword_hits(
+    db_conn, planit_source_id
+):
+    anchor = repo.upsert_application(
+        db_conn, source_id=planit_source_id, app=_app_record("anchor/1"),
+    )
+    cand = repo.upsert_application(
+        db_conn, source_id=planit_source_id, app=_app_record("cand/1"),
+    )
+    repo.upsert_colocated_candidate(
+        db_conn, anchor_app_id=anchor, candidate_app_id=cand,
+        distance_m=500.0, radius_used_km=1.0, keyword_hits=["substation"],
+    )
+    # Re-run with new keyword set after lexicon refinement
+    repo.upsert_colocated_candidate(
+        db_conn, anchor_app_id=anchor, candidate_app_id=cand,
+        distance_m=500.0, radius_used_km=1.0,
+        keyword_hits=["gas turbine", "energy reserve"],
+    )
+    with db_conn.cursor() as cur:
+        cur.execute(
+            "SELECT count(*), keyword_hits FROM colocated_candidates "
+            "WHERE anchor_app_id = %s GROUP BY keyword_hits",
+            (anchor,),
+        )
+        row = cur.fetchone()
+        assert row[0] == 1  # one row only
+        assert sorted(row[1]) == ["energy reserve", "gas turbine"]
+
+
+def test_colocated_candidate_rejects_self_link(db_conn, planit_source_id):
+    """The CHECK (anchor != candidate) constraint guards against bad spatial joins."""
+    a = repo.upsert_application(
+        db_conn, source_id=planit_source_id, app=_app_record("anchor/1"),
+    )
+    with pytest.raises(Exception):
+        repo.upsert_colocated_candidate(
+            db_conn, anchor_app_id=a, candidate_app_id=a,
+            distance_m=0.0, radius_used_km=1.0, keyword_hits=["gas turbine"],
+        )
