@@ -34,6 +34,11 @@ def index(
         )
         for k, v in summary.items():
             click.echo(f"  {k}: {v}")
+    elif source == "nsip":
+        from dcp.sources import nsip
+        summary = nsip.index(limit=limit)
+        for k, v in summary.items():
+            click.echo(f"  {k}: {v}")
     else:
         raise click.ClickException(f"Unknown source: {source!r}")
 
