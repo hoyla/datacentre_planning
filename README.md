@@ -12,9 +12,11 @@ See:
 - [ARCHITECTURE.md](ARCHITECTURE.md) — pipeline philosophy, schema, design decisions.
 - [ROADMAP.md](ROADMAP.md) — what's done, what's next, what's parked, open questions.
 - [prior_art.md](prior_art.md) — published research and cross-reference benchmarks.
-- [data/seed_cases/walkthrough_findings.md](data/seed_cases/walkthrough_findings.md) — hands-on findings from Aisha's three exemplar applications.
-- [data/planit_exploration/findings.md](data/planit_exploration/findings.md) — PlanIt API exploration writeup.
-- [data/prior_art_sources/foxglove_top10.md](data/prior_art_sources/foxglove_top10.md) — Foxglove top-10 reconciliation target.
+- `data/seed_cases/walkthrough_findings.md` — hands-on findings from Aisha's three exemplar applications.
+- `data/planit_exploration/findings.md` — PlanIt API exploration writeup.
+- `data/prior_art_sources/foxglove_top10.md` — Foxglove top-10 reconciliation target.
+
+> **Note on `data/`**: most of `data/` is gitignored — research writeups, eval outputs, cached source-portal responses, labelling artefacts. These contain pre-publication editorial direction that we keep out of version control. **Tracked exceptions**: `data/operators.yaml` (operational config — operator/agent name list) and `data/triage_labelling/rubric.md` (the distilled triage methodology). The bullet-list above describes files you'll have locally if you've run the pipeline; if you've just cloned, they won't be present.
 
 ## Stack
 

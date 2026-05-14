@@ -39,3 +39,22 @@ htmlcov/
 # Logs
 *.log
 logs/
+
+# ---------------------------------------------------------------------------
+# Editorial / in-flight content
+# ---------------------------------------------------------------------------
+# Most of data/ is research, labelling, eval outputs, cached source-portal
+# responses, and analytical writeups — i.e. pre-publication editorial work.
+# Untracked by default; specific operational config is exempted below.
+#
+# Repo went private 2026-05-14 in case of public exposure; this gitignore
+# is belt-and-braces for if the repo ever returns to public.
+
+data/*
+data/**/*
+
+# Exempt operational config / methodology that should be versioned:
+!data/operators.yaml
+!data/triage_labelling/
+data/triage_labelling/*
+!data/triage_labelling/rubric.md
