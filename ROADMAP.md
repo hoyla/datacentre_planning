@@ -73,9 +73,8 @@ Items consciously deferred — return when journalism need warrants.
 
 Things we haven't decided yet, with current thinking where there is one.
 
-- **Triage rubric scope.** Are we primarily hunting *primary on-site gas* (sharper, rarer) or *outsized backup-but-grid-services capacity* (more common, softer story)? Both? Decided with Aisha at next session.
-- **"energy centre" sweep.** 9,061 PlanIt hits — far too noisy for direct ingestion, but the term *is* the coded-language signal. Either run as a separate triage-heavy pass or rely on the in-document signal during deep-read. Probably both.
-- **Operator-name searches (Phase 1b).** Google, Meta, Microsoft, Blackstone, QTS, Greystoke, Vantage etc. via PlanIt's `developer=` parameter. Catches applications without DC keywords in description. Worth running once before triage to expand the universe.
+- **Triage rubric scope.** The current prompt leans inclusive across both *primary on-site gas* and *outsized backup-but-grid-services capacity* (`worth_deep_read='yes'/'maybe'` on either signal). After the first full triage sweep lands, decide with Aisha whether to narrow to one of these and re-run the universe under a tighter rubric for ranking.
+- **"energy centre" sweep.** 9,061 PlanIt hits — far too noisy for direct ingestion, but the term *is* the coded-language signal (granite4.1:30b already extracts it as a signal when it appears). Either run as a separate triage-heavy pass or rely on the in-document signal during deep-read. Probably both.
 - **Findings export shape.** Markdown + xlsx for journalist hand-off (meridian pattern) feels right. Whether to also stand up a FastAPI portal for browsing depends on whether Aisha (or the wider data desk) needs it. Defer until asked.
 - **CI.** GitHub Actions or other? Worth setting up once a second engineer joins. Tests are already CI-shaped (`-m "not integration"` for offline runs).
 - **Public-data ethics for personal-data fields.** Householder applications can include applicant names. Current schema stores raw values; redaction belongs at the export stage. Sanity-check before publishing any aggregate that touches personal fields.
@@ -88,10 +87,13 @@ Things we haven't decided yet, with current thinking where there is one.
 | Phase | Status | Description |
 |---|---|---|
 | 0 — Scaffolding | ✅ Done | Package, schema, CLI, tests, docker-compose. |
-| 1a — PlanIt index | ✅ Done | National DC application metadata. |
-| 1b — Operator-name sweep | ⏳ Soon | `developer=` parameter sweep for operator-coded applications. |
-| 2 — Triage | ⏳ Next | LLM classification, signal flagging. |
+| 1a — PlanIt index | ✅ Done | National DC application metadata (1,549 in-window apps). |
+| 1c — Spatial colocated sweep | ✅ Done | Two-step fetch/process; 338 candidate links across 14 anchors. |
+| 1d — Operator-name sweep | ✅ Done | `developer=` parameter sweep; 217 apps tagged by local agent-data backfill. |
+| 1e — NSIP CSV adapter | ✅ Done | All ~280 projects ingested; one current DC (Wapseys Wood). |
+| 1f — Parent-application backfill | ✅ Done | 67 parents fetched, 41 pre-2018. Saunderton 2008 parent recovered. |
+| 2 — Triage | ⏳ Running | `granite4.1:30b` over the full 1,832-app universe; first sweep in flight. |
 | 3 — Document fetch | ⏳ After triage | Source-portal document download for matched applications. |
 | 4 — Structured extraction | ⏳ After fetch | Text extraction, OCR fallback, evidence-quoted findings. |
 | 5 — Multimodal pass | ⏳ Eventual | Claude vision on site plans / blueprints. |
-| 6 — Reporter export | ⏳ Eventual | Markdown summary + xlsx + (optional) FastAPI portal. |
+| 6 — Reporter export | ⏳ Next after triage | Markdown summary + xlsx, filtered to triage matches. |

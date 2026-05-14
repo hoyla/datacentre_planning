@@ -164,7 +164,8 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 |---|---|---|
 | Database | Postgres 16 | Matches Luke's reference repos; JSONB for source-specific raw metadata. |
 | ORM | None — raw `psycopg2` | Matches fuel-finder / meridian convention; queries short and obvious. |
-| Triage LLM | Ollama (local) | Free, private, plenty for description-level classification. `FakeBackend` for CI. |
+| Triage LLM | Ollama (local), `granite4.1:30b` | Five-model eval (May 2026): granite4.1:30b 97% verdict accuracy at ~9s/app. IBM's JSON-tuning + 30b reasoning beat bigger non-granite models on calibration. `FakeBackend` for CI. |
+| Triage versioning | Per `(application_id, model, inserted_at)` | Re-running with a different model overlays a second opinion without touching the first. Resume is model-scoped. |
 | Multimodal pass | Claude vision via personal Anthropic API | Ollama vision too weak for site plans. Volume on matched subset is small. |
 | Document corpus | Local filesystem first, S3 later | Mirrors fuel-finder's "local until it hurts" pattern. |
 | Time scope | 2018+ for v1 | PlanIt has consistent coverage from 2018; sharp drop before. |
@@ -178,7 +179,6 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 ## What's not in the architecture yet
 
 - **Council-reorganisation handling** for pre-2020 records under legacy district names (Wycombe → Buckinghamshire, Chiltern South Bucks → Buckinghamshire, etc.). Currently surfaces as NULL `council_gss` with the legacy `area_name` preserved in `raw_metadata`. Per principle 3, the legacy name stays untouched; any canonicalisation goes in a new column or join table, not over the original.
-- **Triage prompt design + rubric.** Pending session with Aisha.
 - **Document-fetch adapters per portal type.** Idox (canonical and `/newplanningaccess/` variant), Salesforce (verified unnecessary for now; Loughton accessible via PlanIt's Arcus scraper), NSIP, etc.
 - **Findings export / reporter-facing output.** Markdown summary + xlsx for hand-off (meridian pattern). Phase 6+.
 - **Web interface (when needed).** If/when a reporter-facing browse UI is needed, **FastAPI** is the chosen framework — matches Luke's fuel-finder convention. Any HTTP API exposed by it should be documented via **Redoc with OpenAPI** (FastAPI generates both `/docs` Swagger and `/redoc` ReDoc views automatically; keep the operation `summary`, `description`, and Pydantic-model field docstrings populated). This isn't urgent — the CLI-driven export is enough until a journalist needs to click around — but the decision is locked when the time comes.

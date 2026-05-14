@@ -22,7 +22,7 @@ See:
 
 - Python 3.12, raw `psycopg2` (no ORM).
 - Postgres for state; append-only `source_snapshots` audit table preserves every fetch.
-- Ollama (local) for triage and structured extraction; pluggable `FakeBackend` keeps CI dependency-free.
+- Ollama (local) for triage and structured extraction; default model `granite4.1:30b` chosen after a five-model comparison (IBM's JSON-tuning + 30b reasoning ≈ 97% verdict accuracy at ~9s/app). Pluggable `FakeBackend` keeps CI dependency-free.
 - Claude vision via personal Anthropic API for site-plan / blueprint multimodality (Phase 4 only).
 - S3 for document corpus (introduced when local `data/` becomes inconvenient).
 - CLI-driven (`scrape.py` or `dcp …`). FastAPI portal only if reporters need it.
@@ -36,9 +36,9 @@ pip install -e '.[dev]'
 cp .env.example .env
 
 docker compose up -d postgres
-psql "$DATABASE_URL" -f migrations/001_initial.sql
+for m in migrations/*.sql; do psql "$DATABASE_URL" -f "$m"; done
 
-pytest                       # full suite (creates dcp_test DB, applies schema)
+pytest                       # full suite (creates dcp_test DB, applies all migrations)
 pytest -m "not integration"  # unit tests only, no Postgres required
 ```
 
@@ -46,15 +46,20 @@ pytest -m "not integration"  # unit tests only, no Postgres required
 
 Three stages, each idempotent and resumable:
 
-1. **Index** — paginate recent applications per source; upsert metadata into `applications`; preserve raw responses in `source_snapshots`. Reruns are no-ops by `(source, application_ref)` and content hash.
-2. **Triage** — Ollama classifies each new application against the DC + power-infrastructure rubric. Versioned per `(application_id, inserted_at)`.
-3. **Deep-read** — for triage matches, download document bundle, extract text (OCR fallback when no text layer), surface power-related signals into `findings`.
+1. **Index** — paginate recent applications per source; upsert metadata into `applications`; preserve raw responses in `source_snapshots`. Reruns are no-ops by `(source, application_ref)` and content hash. Complementary `dcp backfill-parents` walks the `associated_id` chain to fetch parent permissions outside the keyword window.
+2. **Triage** — `dcp triage` runs an Ollama model (default `granite4.1:30b`) over un-triaged applications, classifies against the DC + power-infrastructure rubric, and writes verdicts to `triage`. Versioned per `(application_id, model, inserted_at)`; resume is automatic and model-scoped, so re-running with a different model overlays a second opinion.
+3. **Deep-read** — for triage matches (`verdict in ('DC', 'adjacent') AND worth_deep_read in ('yes', 'maybe')`), download document bundle, extract text (OCR fallback when no text layer), surface power-related signals into `findings`. Not yet implemented.
 
-## Sources (planned, by priority)
+## Sources
 
-1. **PlanIt API** (`planit.org.uk/api`) — national, full-text searchable, free.
-2. **Planning Inspectorate NSIP register** — large opt-in cases (≥50 MW, e.g. Wapseys Wood).
-3. **Idox Public Access** generic adapter — long tail of council portals.
+Implemented:
+
+1. **PlanIt API** (`planit.org.uk/api`) — national, full-text searchable, free. Primary keyword sweep + operator-name sweep + spatial colocated sweep + parent-backfill all run through this adapter.
+2. **Planning Inspectorate NSIP register** — CSV download of all ~280 NSIP projects. One DC currently (Wapseys Wood, EN0110030); expected to grow.
+
+Planned:
+
+3. **Idox Public Access** generic adapter — long tail of council portals, needed for Phase 3 document fetch.
 4. **Environment Agency public register** (industrial installations / combustion plant) — triangulation against permitted on-site capacity.
 
 ## Methodology principle
