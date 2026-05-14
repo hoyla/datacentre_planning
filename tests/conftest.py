@@ -66,6 +66,11 @@ def _ensure_test_database() -> None:
             if cur.fetchone() is None:
                 cur.execute((MIGRATIONS_DIR / "003_triage_columns.sql").read_text())
                 conn.commit()
+            # Migration 004 — councils.notes → JSONB + council_aliases table.
+            cur.execute("SELECT to_regclass('public.council_aliases')")
+            if cur.fetchone()[0] is None:
+                cur.execute((MIGRATIONS_DIR / "004_council_aliases.sql").read_text())
+                conn.commit()
     finally:
         conn.close()
 
@@ -94,7 +99,8 @@ def db_conn(integration_db: str):
         with conn.cursor() as cur:
             cur.execute(
                 "TRUNCATE TABLE colocated_candidates, findings, triage, documents, "
-                "applications, source_snapshots RESTART IDENTITY CASCADE"
+                "applications, source_snapshots, council_aliases "
+                "RESTART IDENTITY CASCADE"
             )
         conn.commit()
         yield conn

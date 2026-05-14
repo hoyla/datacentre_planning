@@ -264,9 +264,15 @@ def index(
 
 
 def _load_area_gss_map(conn) -> dict[str, str]:
-    """Build a current `area_name → gss_code` map from councils.notes (populated by the
-    main index pass). Used by the operator and spatial sweeps to link applications
-    to councils without re-running the areas pass."""
+    """Build a current `area_name → gss_code` map from `councils.notes` (populated
+    by the main index pass) plus any entries in `council_aliases`. Used by the
+    operator sweep, spatial sweep, and parent-backfill to link applications to
+    councils without re-running the areas pass.
+
+    Aliases cover area_names that don't match a current `councils.name`: legacy
+    districts abolished by reorganisation (Wycombe → Buckinghamshire), and
+    joint-planning services (Chiltern South Bucks, Mid Kent, etc.). See
+    `data/priors/council_aliases.yaml` for the source-of-truth list."""
     out: dict[str, str] = {}
     with conn.cursor() as cur:
         cur.execute("SELECT gss_code, notes FROM councils")
@@ -275,6 +281,10 @@ def _load_area_gss_map(conn) -> dict[str, str]:
                 an = notes.get("area_name")
                 if an:
                     out[an] = gss
+        cur.execute("SELECT alias_name, gss_code FROM council_aliases")
+        for alias_name, gss in cur.fetchall():
+            # Aliases supplement; don't overwrite a direct council match.
+            out.setdefault(alias_name, gss)
     return out
 
 

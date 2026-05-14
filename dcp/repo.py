@@ -176,6 +176,46 @@ def upsert_application(
         return cur.fetchone()[0]
 
 
+def backfill_council_gss(conn: PgConnection) -> dict[str, int]:
+    """Fill in NULL `applications.council_gss` from the `area_name` carried in
+    `raw_metadata`. Two passes:
+
+    1. Direct match: `raw_metadata->area_name` equals a `councils.notes->area_name`.
+    2. Alias match: `raw_metadata->area_name` equals a `council_aliases.alias_name`.
+
+    Per principle 3 (never mutate originals), `raw_metadata.area_name` is left
+    untouched — `council_gss` is the alongside-the-original derived column. Any
+    application whose area_name doesn't match a council or an alias stays NULL
+    (e.g. Mayoral Development Corporations like OPDC/LLDC, intentionally
+    unmapped). Returns counts for each pass plus the residual NULLs.
+    """
+    out = {"matched_council": 0, "matched_alias": 0, "remaining_null": 0}
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            UPDATE applications a
+            SET council_gss = c.gss_code
+            FROM councils c
+            WHERE a.council_gss IS NULL
+              AND c.notes->>'area_name' = a.raw_metadata->>'area_name'
+            """,
+        )
+        out["matched_council"] = cur.rowcount
+        cur.execute(
+            """
+            UPDATE applications a
+            SET council_gss = al.gss_code
+            FROM council_aliases al
+            WHERE a.council_gss IS NULL
+              AND al.alias_name = a.raw_metadata->>'area_name'
+            """,
+        )
+        out["matched_alias"] = cur.rowcount
+        cur.execute("SELECT count(*) FROM applications WHERE council_gss IS NULL")
+        out["remaining_null"] = cur.fetchone()[0]
+    return out
+
+
 def append_discovered_via(
     conn: PgConnection, *, application_refs: list[str], tag: str,
 ) -> int:

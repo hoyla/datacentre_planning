@@ -1,0 +1,70 @@
+# PlanIt area_name → current-council GSS mapping for cases that don't match
+# the live `councils` table. Loaded into `council_aliases` by
+# `scripts/load_council_aliases.py`.
+#
+# Three categories, distinguished by `kind`:
+#
+# - `legacy_district`: pre-reorganisation district / borough councils that
+#   were abolished and absorbed into a current unitary. The application's
+#   `raw_metadata.area_name` still carries the original district name (per
+#   never-mutate-originals); the alias resolves to the current unitary's GSS.
+#
+# - `joint_planning`: shared planning services where two or more councils
+#   delegate intake to a combined portal (Chiltern + South Bucks before the
+#   Bucks unitary; Mid Kent; Bromsgrove + Redditch; etc.). Pick the primary
+#   current authority; the joint nature is noted in `notes`.
+#
+# - `predecessor`: a council that still exists but PlanIt's area_name doesn't
+#   directly match the current `councils.name`. (No entries yet but reserved
+#   for future cases where the join needs a hint.)
+#
+# Mayoral Development Corporations (OPDC, LLDC) are intentionally NOT mapped
+# here — they're planning authorities but not local councils, and forcing
+# them onto a constituent borough's GSS would mis-attribute application
+# counts at the borough level. Their applications stay `council_gss=NULL`
+# with the MDC name preserved in `raw_metadata.area_name`. Document them
+# explicitly when building any aggregate that filters by council.
+
+aliases:
+  # --- 2020 Buckinghamshire unitary reorganisation ---
+  - alias_name: Wycombe
+    gss_code: E06000060
+    kind: legacy_district
+    notes: "Wycombe DC (E07000007) abolished 2020-04-01; absorbed into Buckinghamshire."
+  - alias_name: Aylesbury Vale
+    gss_code: E06000060
+    kind: legacy_district
+    notes: "Aylesbury Vale DC (E07000004) abolished 2020-04-01; absorbed into Buckinghamshire."
+  - alias_name: Chiltern South Bucks
+    gss_code: E06000060
+    kind: joint_planning
+    notes: "Shared planning service between Chiltern DC (E07000005) and South Bucks DC (E07000006); both abolished 2020-04-01, both absorbed into Buckinghamshire (E06000060). Applications under this portal still file under the old joint name."
+
+  # --- 2021 Northamptonshire unitary reorganisation ---
+  - alias_name: Kettering
+    gss_code: E06000061
+    kind: legacy_district
+    notes: "Kettering BC (E07000153) abolished 2021-04-01; absorbed into North Northamptonshire."
+  - alias_name: Wellingborough
+    gss_code: E06000061
+    kind: legacy_district
+    notes: "Wellingborough BC (E07000156) abolished 2021-04-01; absorbed into North Northamptonshire."
+
+  # --- Joint planning services (not reorganisations; still active) ---
+  # Intentionally NOT mapped at this stage: 'Bromsgrove Redditch',
+  # 'South Norfolk Broadland', 'Mid Kent', 'Adur and Worthing',
+  # 'South West Devon'. The constituent councils (Bromsgrove DC,
+  # South Norfolk DC, Maidstone BC, Adur DC, South Hams DC) delegate
+  # their PlanIt portal to the joint service, so they don't appear in
+  # PlanIt's areas listing — they're absent from our `councils` table
+  # and a `council_aliases.gss_code` FK would fail. Mapping these
+  # requires a parallel "seed the absent council" pass (out of scope
+  # for the current reorg fix). Affected applications stay
+  # `council_gss=NULL` with the joint area_name in `raw_metadata`.
+
+# Also deliberately NOT included (planning authorities but not local councils):
+#   - 'Old Oak Park Royal' (OPDC, Mayoral Development Corp under GLA)
+#   - 'London Legacy' (LLDC, Olympic Park MDC under GLA)
+# These applications stay `council_gss=NULL`; the MDC name lives in
+# `raw_metadata.area_name`. Aggregate queries that need to attribute these
+# to a borough should join via spatial location, not via this alias map.
