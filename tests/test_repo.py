@@ -322,6 +322,46 @@ def test_upsert_application_records_discovered_via(db_conn, planit_source_id):
         assert cur.fetchone()[0] == ["dc_keyword"]
 
 
+def test_append_discovered_via_tags_existing_refs(db_conn, planit_source_id):
+    repo.upsert_application(
+        db_conn, source_id=planit_source_id,
+        app=_app_record("X/1"), discovered_via=["dc_keyword"],
+    )
+    repo.upsert_application(
+        db_conn, source_id=planit_source_id,
+        app=_app_record("X/2"), discovered_via=["dc_keyword"],
+    )
+    touched = repo.append_discovered_via(
+        db_conn, application_refs=["X/1", "X/2", "X/NOTHERE"], tag="foxglove_top10",
+    )
+    assert touched == 2  # missing refs are silent no-ops
+    with db_conn.cursor() as cur:
+        cur.execute(
+            "SELECT application_ref, discovered_via FROM applications "
+            "WHERE application_ref IN ('X/1', 'X/2') ORDER BY application_ref"
+        )
+        rows = cur.fetchall()
+    assert sorted(rows[0][1]) == ["dc_keyword", "foxglove_top10"]
+    assert sorted(rows[1][1]) == ["dc_keyword", "foxglove_top10"]
+
+
+def test_append_discovered_via_is_idempotent(db_conn, planit_source_id):
+    """Re-running with the same tag doesn't duplicate the entry."""
+    repo.upsert_application(
+        db_conn, source_id=planit_source_id, app=_app_record("X/1"),
+        discovered_via=["dc_keyword"],
+    )
+    for _ in range(3):
+        repo.append_discovered_via(
+            db_conn, application_refs=["X/1"], tag="foxglove_top10",
+        )
+    with db_conn.cursor() as cur:
+        cur.execute(
+            "SELECT discovered_via FROM applications WHERE application_ref = 'X/1'"
+        )
+        assert sorted(cur.fetchone()[0]) == ["dc_keyword", "foxglove_top10"]
+
+
 def test_upsert_application_appends_discovered_via_on_conflict(db_conn, planit_source_id):
     """Same app discovered via two paths keeps both lineages, deduped."""
     repo.upsert_application(

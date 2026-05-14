@@ -1,0 +1,76 @@
+# Foxglove top-10 application families.
+#
+# `discovered_via:foxglove_top10` flags these so they surface on the
+# deep-read worklist even when the LLM correctly classifies a procedural
+# follow-on as "unrelated" (the rubric is right; the family lineage is
+# still substantive — that's the architectural insight behind the
+# parent-backfill pass). Pair with the export filter:
+#
+#   worth_deep_read IN ('yes', 'maybe')
+#   OR 'foxglove_top10' = ANY(discovered_via)
+#
+# Source: data/prior_art_sources/foxglove_top10.md (Foxglove report verbatim)
+# Reconciliation: data/prior_art_sources/foxglove_reconciliation.md (8 confirmed,
+# 1 probable, 1 unconfirmed as of 2026-05-12).
+#
+# Apply with: scripts/tag_priors.py data/priors/foxglove_top10.yaml
+
+tag: foxglove_top10
+
+# Each family lists the substantive parent + every procedural/related ref we
+# already have. Adding follow-ons later is just an append to this list — re-run
+# the tagger; it's idempotent.
+
+families:
+  - name: "#1 Cambois (QTS) — 1,100 MW"
+    refs:
+      - Northumberland/24/04112/OUTES   # outline
+      - Northumberland/26/01617/VARYCO  # 2026 conditions variation
+
+  - name: "#2 Elsham Tech (Greystoke) — 1,000 MW"
+    refs:
+      - NorthLincs/PA/2025/643          # outline
+      - NorthLincs/PA/SCR/2025/5        # EIA screening
+
+  - name: "#3 Humber Tech (Greystoke) — 384 MW"
+    refs:
+      - NorthLincs/PA/2024/584          # outline
+      - NorthLincs/PA/SCR/2024/2        # EIA screening
+
+  # #4 DC01 — 320 MW unconfirmed; no PlanIt match. Track in
+  # foxglove_reconciliation.md; revisit after operator-name sweep widens.
+
+  - name: "#5 Thurrock (Google) — 225 MW"
+    refs:
+      - Thurrock/24/00927/SCO           # EIA scoping
+      - Thurrock/25/00573/OUT           # hybrid outline (May 2026 Guardian story site)
+
+  - name: "#6 Virtus Saunderton — 300 MW"
+    refs:
+      - Wycombe/08/05740/FULEA          # 2008 original outline (recovered via parent-backfill)
+      - Wycombe/22/06872/VCDN           # 2022 conditions variation
+      - Bucks/PL/25/6761/VRC            # 2025 latest variation (post-unitary-reorg)
+
+  - name: "#7 International Trading Estate (GTR) — 256 MW"
+    refs:
+      - Ealing/250949FUL                # parent permission
+      - Ealing/260718CND                # condition discharges referencing 250949FUL
+      - Ealing/260719CND
+      - Ealing/260783CND
+      - Ealing/260786CND
+      - Ealing/260790CND
+
+  - name: "#8 G-Park Docklands (GLP) — 210 MW (probable)"
+    refs:
+      - TowerHamlets/PA/18/03088/A1     # 2018 original outline
+      - TowerHamlets/PA/22/01140/A1     # 2022 Travelodge-to-DC conversion
+
+  - name: "#9 North Weald (Google) — 164 MW"
+    refs:
+      - EppingForest/EPF/1449/24        # EIA scoping
+      - EppingForest/EPF/0849/25        # outline (May 2026 Guardian story site)
+
+  - name: "#10 103MW Court Lane (Iver) — 103 MW"
+    refs:
+      - ChilternSouthBucks/PL/22/4145/OA  # 2022 outline (pre-unitary)
+      - Bucks/PL/26/02874/DE              # 2026 reserved matters (post-unitary)

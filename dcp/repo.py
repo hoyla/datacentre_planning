@@ -176,6 +176,33 @@ def upsert_application(
         return cur.fetchone()[0]
 
 
+def append_discovered_via(
+    conn: PgConnection, *, application_refs: list[str], tag: str,
+) -> int:
+    """Append `tag` to the `discovered_via` array of every application whose
+    `application_ref` is in `application_refs`. Idempotent — duplicates are
+    deduped via the same ARRAY-distinct pattern used by `upsert_application`.
+    Returns the number of rows touched (matches the number of refs that exist
+    in `applications`; missing refs are silently no-ops).
+
+    Used by the priors-tagging pass (see scripts/tag_priors.py): operator and
+    research priors (e.g. Foxglove top-10) get a `discovered_via` flag so the
+    export filter surfaces them even when triage classifies a procedural
+    follow-on as 'unrelated'."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            UPDATE applications
+            SET discovered_via = ARRAY(
+                SELECT DISTINCT unnest(discovered_via || ARRAY[%s])
+            )
+            WHERE application_ref = ANY(%s)
+            """,
+            (tag, application_refs),
+        )
+        return cur.rowcount
+
+
 def record_triage(
     conn: PgConnection,
     *,

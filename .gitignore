@@ -58,3 +58,6 @@ data/**/*
 !data/triage_labelling/
 data/triage_labelling/*
 !data/triage_labelling/rubric.md
+!data/priors/
+data/priors/*
+!data/priors/*.yaml
