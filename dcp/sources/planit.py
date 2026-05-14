@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import time
 import urllib.parse
 from collections.abc import Callable, Iterator
@@ -123,15 +124,19 @@ class PlanItClient:
         search: str | None = DC_KEYWORDS,
         developer: str | None = None,
         auth: str | None = None,
+        id_match: str | None = None,
         start_date: str | None = None,
         end_date: str | None = None,
         sort: str = "-start_date",
         pg_sz: int = 100,
     ) -> Iterator[PageResponse]:
         """Iterate /api/applics/ pages. Any combination of `search` (description
-        text), `developer` (applicant/agent fields), `auth` (council name) and
-        the date range may be supplied. Pass `search=None` to disable the
-        description filter."""
+        text), `developer` (applicant/agent fields), `auth` (council name),
+        `id_match` (exact match against uid/altid/reference/name) and the date
+        range may be supplied. Pass `search=None` to disable the description
+        filter. `id_match` is used by the parent-backfill pass to look up a
+        specific application by reference; per PlanIt docs `name` is unique
+        nationally, so a council-prefixed `id_match` yields at most one record."""
         page = 1
         while True:
             params: dict = {"pg_sz": pg_sz, "page": page, "sort": sort, "select": APPS_SELECT}
@@ -141,6 +146,8 @@ class PlanItClient:
                 params["developer"] = developer
             if auth is not None:
                 params["auth"] = auth
+            if id_match is not None:
+                params["id_match"] = id_match
             if start_date:
                 params["start_date"] = start_date
             if end_date:
@@ -589,3 +596,245 @@ def process_colocated(
             conn.commit()
 
     return summary
+
+
+# ---------------------------------------------------------------------------
+# Parent-application backfill
+#
+# Procedural follow-on applications (Conditions discharges, NMAs, variations of
+# conditions, reserved-matters submissions) point to a substantive *parent*
+# permission via PlanIt's `associated_id` field — and sometimes via free-text
+# refs embedded in `description`. The triage rubric correctly tags procedurals
+# as "unrelated" because they add no substantive content of their own, but the
+# pointer to the parent IS substantive: the parent may sit outside our 2018+
+# keyword sweep window, or may not have matched the DC keyword union directly.
+#
+# This pass walks the existing universe, extracts parent refs, dedupes against
+# `applications.application_ref`, and fetches missing parents via PlanIt's
+# `id_match` lookup — tagged `discovered_via=['parent_backfill:<child_ref>']`.
+# ---------------------------------------------------------------------------
+
+# A reference token is a slash-joined run of alphanumeric/dash/underscore
+# segments. Use-class fragments like `A1/A3/A4/B1/B8/D1/D2` are filtered out
+# downstream by requiring at least one purely-numeric segment of ≥3 digits.
+_REF_TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9_-]*(?:/[A-Za-z0-9_-]+)+|\d+(?:/[A-Za-z0-9_-]+)+")
+
+
+def _extract_candidate_refs(text: str | None) -> list[str]:
+    """Extract slash-delimited planning-reference tokens from a free-text field.
+
+    PlanIt's `associated_id` is a free-text field that mixes refs with
+    parenthetical commentary, use-class fragments and the occasional area
+    measurement: e.g. ``EPF/1165/22(Outline EPF/1136/19)``,
+    ``1331/APP/2020/3388 A1/A3/A4/B1/B8/D1/D2 1331/APP/2017/1883``,
+    ``24/02285/MSC 14,500.sq 19/00363/PPP``.
+
+    Filters: tokens must contain at least one slash AND at least one segment
+    of three or more consecutive digits (a year or four-digit sequence number).
+    This rejects use-class strings while accepting refs whose only numeric
+    component is a year (e.g. ``EPF/1165/22``) — `1165` is the qualifying
+    segment in that case.
+    """
+    if not text:
+        return []
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in _REF_TOKEN_RE.findall(text):
+        segments = raw.split("/")
+        if not any(s.isdigit() and len(s) >= 3 for s in segments):
+            continue
+        if raw in seen:
+            continue
+        seen.add(raw)
+        out.append(raw)
+    return out
+
+
+def _council_prefix(application_ref: str) -> str | None:
+    """Return the council prefix from an application_ref (the bit before the first '/'),
+    or None for refs without a prefix."""
+    if "/" not in application_ref:
+        return None
+    return application_ref.split("/", 1)[0]
+
+
+def _normalise_parent_ref(child_ref: str, candidate: str) -> str:
+    """Compose the fully-qualified `<Council>/<ref>` name expected in PlanIt's
+    `name` field. If the candidate already starts with the child's council
+    prefix, it's used as-is. Otherwise the child's prefix is prepended."""
+    prefix = _council_prefix(child_ref)
+    if prefix and not candidate.startswith(f"{prefix}/"):
+        return f"{prefix}/{candidate}"
+    return candidate
+
+
+def _load_existing_refs(conn) -> set[str]:
+    with conn.cursor() as cur:
+        cur.execute("SELECT application_ref FROM applications")
+        return {row[0] for row in cur.fetchall()}
+
+
+def _load_children(conn, *, mine_descriptions: bool):
+    """Pull child applications with parent pointers. Returns a list of
+    (application_ref, source, candidate_refs) tuples where source is
+    'associated_id' or 'description'."""
+    rows: list[tuple[str, str, list[str]]] = []
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT application_ref, raw_metadata->>'associated_id', description,
+                   raw_metadata->>'app_type'
+            FROM applications
+            ORDER BY application_ref
+            """,
+        )
+        for ref, assoc, descr, app_type in cur.fetchall():
+            cands_from_assoc = _extract_candidate_refs(assoc) if assoc else []
+            if cands_from_assoc:
+                rows.append((ref, "associated_id", cands_from_assoc))
+                continue
+            if mine_descriptions and app_type in ("Conditions", "Amendment", "Other"):
+                # Description fallback only fires when there's no associated_id and
+                # the application is procedural. Tighter filter (3+ slashes) trims
+                # false positives like dates ('1/2024') and use-class strings.
+                cands_from_descr = [
+                    c for c in _extract_candidate_refs(descr) if c.count("/") >= 2
+                ]
+                if cands_from_descr:
+                    rows.append((ref, "description", cands_from_descr))
+    return rows
+
+
+def _fetch_parent(client: "PlanItClient", parent_ref: str) -> tuple[dict | None, "PageResponse | None"]:
+    """Look up a single application by PlanIt `id_match`. Returns `(record, page)`
+    where `record` is the matched dict (or None) and `page` is the PageResponse
+    the caller should snapshot. PlanIt docs: the `name` field is unique
+    nationally, so a council-prefixed id_match yields at most one record."""
+    pages = client.iter_applications(
+        search=None, id_match=parent_ref, pg_sz=5, sort="-start_date",
+    )
+    try:
+        first = next(pages)
+    except StopIteration:
+        return None, None
+    records = first.data.get("records", [])
+    # Prefer an exact name match (council-prefixed lookups should hit `name`).
+    for rec in records:
+        if rec.get("name") == parent_ref:
+            return rec, first
+    # Otherwise (e.g. lookup matched on uid/altid/reference) accept a single
+    # unambiguous result; skip on ambiguity since uid collides across councils.
+    if len(records) == 1:
+        return records[0], first
+    return None, first
+
+
+def backfill_parents(
+    *,
+    limit: int | None = None,
+    delay_seconds: float = 2.5,
+    resume: bool = True,
+    mine_descriptions: bool = False,
+) -> dict:
+    """Walk procedural applications for parent-ref pointers; fetch any missing
+    parents from PlanIt and upsert them tagged `parent_backfill:<child_ref>`.
+
+    `mine_descriptions=True` enables a secondary pass over procedural records
+    that have no `associated_id`, extracting refs from the description text.
+    Off by default since the field is messier than `associated_id`.
+    """
+    summary = {
+        "children_scanned": 0,
+        "candidate_refs": 0,
+        "already_present": 0,
+        "fetched": 0,
+        "parents_upserted": 0,
+        "fetch_misses": 0,
+        "snapshots_new": 0,
+    }
+    with db.connect() as conn:
+        source_id = repo.ensure_source(conn, name=SOURCE_NAME, kind="aggregator", base_url=BASE)
+        cache_get = None
+        if resume:
+            def cache_get(url: str) -> bytes | None:
+                return repo.find_cached_response(conn, source_id=source_id, key=url)
+        with PlanItClient(delay_seconds=delay_seconds, cache_get=cache_get) as client:
+            _run_backfill(
+                conn, client,
+                source_id=source_id,
+                summary=summary,
+                limit=limit,
+                mine_descriptions=mine_descriptions,
+                commit=True,
+            )
+    return summary
+
+
+def _run_backfill(
+    conn,
+    client: "PlanItClient",
+    *,
+    source_id: int,
+    summary: dict,
+    limit: int | None,
+    mine_descriptions: bool,
+    commit: bool = True,
+) -> None:
+    """Core orchestrator. Separate from `backfill_parents` so tests can supply
+    a pre-built connection and stubbed client. `commit=False` suppresses per-
+    record commits so an integration test can roll back at teardown."""
+    area_to_gss = _load_area_gss_map(conn)
+    existing = _load_existing_refs(conn)
+    children = _load_children(conn, mine_descriptions=mine_descriptions)
+
+    fetched_in_session: set[str] = set()
+    fetched_records: int = 0
+
+    def _maybe_commit() -> None:
+        if commit:
+            conn.commit()
+
+    for child_ref, _source, candidates in children:
+        summary["children_scanned"] += 1
+        for cand in candidates:
+            summary["candidate_refs"] += 1
+            parent_ref = _normalise_parent_ref(child_ref, cand)
+            if parent_ref in existing:
+                summary["already_present"] += 1
+                continue
+            if parent_ref in fetched_in_session:
+                continue
+            fetched_in_session.add(parent_ref)
+
+            try:
+                rec, page = _fetch_parent(client, parent_ref)
+            except Exception as exc:
+                log.warning("parent fetch failed for %s (from %s): %s",
+                            parent_ref, child_ref, exc)
+                if commit:
+                    conn.rollback()
+                continue
+            # Snapshot the response (including empty results) so resumes hit cache.
+            if page is not None and not page.cached:
+                if repo.record_snapshot(
+                    conn, source_id=source_id, key=page.url, raw_bytes=page.raw
+                ):
+                    summary["snapshots_new"] += 1
+            if rec is None:
+                summary["fetch_misses"] += 1
+                _maybe_commit()
+                continue
+
+            summary["fetched"] += 1
+            council_gss = area_to_gss.get(rec.get("area_name") or "")
+            repo.upsert_application(
+                conn, source_id=source_id, app=rec, council_gss=council_gss,
+                discovered_via=[f"parent_backfill:{child_ref}"],
+            )
+            summary["parents_upserted"] += 1
+            existing.add(rec.get("name") or parent_ref)
+            _maybe_commit()
+            fetched_records += 1
+
+            if limit is not None and fetched_records >= limit:
+                return

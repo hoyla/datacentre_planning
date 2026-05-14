@@ -153,5 +153,37 @@ def colocated_process(radius_km: float) -> None:
         click.echo(f"  {k}: {v}")
 
 
+@main.command("backfill-parents")
+@click.option("--source", required=True, type=click.Choice(["planit"]))
+@click.option("--limit", type=int, default=None,
+              help="Cap on parents successfully upserted (for testing).")
+@click.option("--delay", "delay_seconds", type=float, default=2.5)
+@click.option("--resume/--no-resume", default=True)
+@click.option("--mine-descriptions/--no-mine-descriptions", default=False,
+              help="Also extract candidate parent refs from descriptions of procedural "
+                   "applications that have no associated_id (off by default; noisier).")
+def backfill_parents(source: str, limit: int | None, delay_seconds: float,
+                     resume: bool, mine_descriptions: bool) -> None:
+    """Walk procedural applications for parent-ref pointers; fetch missing parents from PlanIt.
+
+    \b
+    Procedural records (Conditions discharges, NMAs, variations of conditions,
+    reserved-matters submissions) carry pointers to substantive parent
+    permissions via PlanIt's `associated_id` field. The triage rubric
+    correctly tags procedurals as "unrelated" because they add no substantive
+    content of their own — but the *parent* often does, and may sit outside
+    our 2018+ keyword sweep (e.g. Saunderton's 2008 parent 08/05740/FULEA).
+    Backfilled parents are tagged `parent_backfill:<child_ref>` in
+    `applications.discovered_via`.
+    """
+    from dcp.sources import planit
+    summary = planit.backfill_parents(
+        limit=limit, delay_seconds=delay_seconds, resume=resume,
+        mine_descriptions=mine_descriptions,
+    )
+    for k, v in summary.items():
+        click.echo(f"  {k}: {v}")
+
+
 if __name__ == "__main__":
     main()

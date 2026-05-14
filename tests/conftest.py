@@ -72,9 +72,21 @@ def integration_db() -> str:
 
 @pytest.fixture
 def db_conn(integration_db: str):
-    """Per-test connection. Rolls back at teardown so the test DB stays clean."""
+    """Per-test connection. Rolls back at teardown so the test DB stays clean.
+
+    Also truncates the mutable tables at start-of-test so contamination from
+    any prior test that erroneously committed (or from a previous interrupted
+    run) doesn't bleed into the next test's preconditions. `sources` and
+    `councils` are reference data; the rest is per-test state.
+    """
     conn = psycopg2.connect(integration_db)
     try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "TRUNCATE TABLE colocated_candidates, findings, triage, documents, "
+                "applications, source_snapshots RESTART IDENTITY CASCADE"
+            )
+        conn.commit()
         yield conn
     finally:
         try:
