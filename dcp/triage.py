@@ -33,16 +33,30 @@ officer's description text. Decide:
 
 1. **verdict** — is this a data-centre application?
    - "DC": a new data centre build, or substantial DC redevelopment
-   - "adjacent": DC-related infrastructure that isn't itself a new DC
-       (substation on a DC campus, cable to a DC, supporting kit)
-   - "unrelated": "data centre" keyword matched but isn't a DC application
-       (access roads, NMAs referencing past DC use, conditions discharges where
-        the parent permission is the substantive DC application)
+   - "adjacent": application for **power, fuel, generation, cooling, or
+       energy-storage infrastructure** serving a DC — e.g. substation,
+       transformer, cable to a DC, energy centre, BESS, generator yard,
+       fuel tanks. The application is for kit that could yield power-
+       infrastructure findings if its documents are read.
+   - "unrelated": application doesn't fit the categories above. This INCLUDES
+       DC-related work whose stated purpose is clearly **not** power /
+       generation / fuel / cooling. Examples: goods lifts, loading bays,
+       drainage conditions, landscaping, internal layout amendments, access
+       roads, parking, NMAs that re-word permitted uses without adding new
+       power kit, procedural conditions discharges on a parent DC permission
+       where the discharge is about a non-power condition.
    - "unknown": insufficient information; DC embedded in mixed-use of unclear scale
 
-   **Lean inclusive.** If genuinely unsure between adjacent and unrelated, choose adjacent.
-   If unsure between DC and adjacent, choose DC. We can manually reject false positives
-   downstream; we cannot recover false negatives.
+   **Lean inclusive at genuine boundaries.** If a description is sparse or the
+   purpose is ambiguous between power and non-power infrastructure → prefer
+   "adjacent" over "unrelated". If unsure between DC and adjacent → choose DC.
+   We can manually reject false positives downstream; we cannot recover false
+   negatives.
+
+   **But:** when an application clearly states a non-power purpose (goods lift,
+   loading bay, access road, drainage condition, landscaping etc.) it's
+   "unrelated" — being inclusive doesn't mean treating obviously non-power
+   work as adjacent.
 
 2. **worth_deep_read** — would the document bundle likely yield power-infrastructure
    findings?
