@@ -81,10 +81,55 @@ officer's description text. Decide:
 - Air-cooled DCs are common and often the greener variant. Generic "cooling" and "air
   cooling" are NOT strong signals; "water cooling" and "water pumping" ARE (local
   environmental impact).
-- A conditions-discharge or NMA application is usually "unrelated" — the *parent*
-  application carries the substantive content and will be captured separately.
 - Grid-connection mentions are common in any large application; ignore unless paired
   with other generation language.
+
+**Procedural follow-on applications are USUALLY UNRELATED, even if the description
+contains "data centre".** The parent application is the one we want; procedural
+follow-ons add no new substantive content. Default to "unrelated" with
+worth_deep_read="no" when the description STARTS or is primarily about:
+
+- "Variation of Conditions …" / "Variation of Condition …" / "Section 73 application to vary …"
+- "Non-Material Amendment" / "NMA" / "Non material amendment"
+- "Approval of Details Reserved by Condition" / "Approval of details reserved by Condition"
+- "Discharge of Condition" / "Discharge of Conditions"
+- "Details of Condition NN (…) pursuant to planning permission …"
+- "Details pursuant to the discharge of Condition …"
+- "Reserved matters following Outline …" if scope is layout/scale/landscaping only
+  (i.e. no new substantive change to power infrastructure)
+
+These all reference an underlying DC application; we capture that parent separately.
+Mark these "unrelated" / "no". Override only if the application introduces clearly
+NEW substantive power infrastructure beyond what the parent already had.
+
+Worked examples (from labelled training data):
+
+- "Variation of Conditions 2 and 3 (plan numbers and development phasing) attached to
+  [parent DC permission]" → unrelated. The DC permission is elsewhere.
+- "Approval of Details Reserved by Condition 4 Contaminated Land of [parent DC outline]"
+  → unrelated. Pure procedural follow-on.
+- "Non-Material Amendment to Outline Planning Permission … to amend the description
+  of development to read [DC use]" → unrelated. Description is just an admin
+  re-wording.
+- "Details of condition 35 (Landscaping and Public Realm) for Phase 2 pursuant to
+  planning permission [DC outline]" → unrelated. Landscaping is not power kit.
+- "Discharge of Condition 25 against planning application … 5,150 dwellings; …
+  data centre; …" → unknown (mixed-use master plan with embedded DC of unclear
+  scale; the parent application is the relevant DC capture).
+- "Erection of a rear extension to the existing data centre to provide a goods lift
+  and modular loading bay" → unrelated. Building extension only; no power kit.
+- "The creation of an improved all-vehicle access road … to access … Data Centre" →
+  unrelated (or at most adjacent). It's a road, not the DC.
+- "INSTALLATION OF AN UNDERGROUND CABLE CONNECTION FROM 132KV SUBSTATION TO A DATA
+  CENTRE" → adjacent. It's DC-related infrastructure but not a new DC.
+- "Reserved matters application … for an electricity substation on Phase 1b of the
+  data centre campus" → adjacent. A substation on a DC campus is power-related and
+  worth deep-reading.
+
+For SUBSTANTIVE DC applications, the description usually starts with "Erection of …",
+"Construction of …", "Outline planning application … for the construction of …
+data centre …", "Hybrid planning application … to deliver a data centre campus …",
+or similar. These are typically "DC" with worth_deep_read="yes".
 
 Return strict JSON, no prose outside the JSON. Schema:
 

@@ -1,0 +1,684 @@
+[
+  {
+    "num": 1,
+    "ref": "Northumberland/24/04112/OUTES",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Foxglove, generators, substation",
+      "why": "explicit reference to on site generation and water cooling",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre buildings",
+        "substation",
+        "emergency generators"
+      ],
+      "why": "Description explicitly mentions data centre buildings, substation, and emergency generators.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 4.150429964065552
+  },
+  {
+    "num": 2,
+    "ref": "NorthLincs/PA/2025/643",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Foxglove, internal plant, generators, fuel storage, pumping station, electricity substation(s), energy generation/storage",
+      "why": "Multiple references to on-site power generation, likely use of water cooling",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre park",
+        "district heating centre",
+        "emergency backup generators",
+        "fuel storage",
+        "electricity substation(s)",
+        "energy generation/storage"
+      ],
+      "why": "The description mentions a data centre park with various power-related infrastructure, including emergency backup generators, fuel storage, district heating centre, and electricity substation(s).",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 3.081415891647339
+  },
+  {
+    "num": 3,
+    "ref": "NorthLincs/PA/2024/584",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Foxglove, internal plant and equipment, backup generators, fuel storage, electricity substation, drainage",
+      "why": "Internal plant sounds like heavy duty on-site power generation; drainage may imply water use impact",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre",
+        "emergency backup generators",
+        "associated fuel storage",
+        "electricity substation",
+        "district heating unit"
+      ],
+      "why": "mentions emergency backup generators and electricity substation, along with a district heating unit which may imply on-site energy generation",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.5094759464263916
+  },
+  {
+    "num": 4,
+    "ref": "Thurrock/25/00573/OUT",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Foxglove, sub-stations, power generators, energy storage, fuel tanks",
+      "why": "extensive references to on-site generation",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "sub-stations",
+        "emergency back-up power generators",
+        "energy storage",
+        "utility infrastructure"
+      ],
+      "why": "mentions sub-stations and emergency backup power generators, and includes utility infrastructure, energy storage, and associated works",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.7954421043395996
+  },
+  {
+    "num": 5,
+    "ref": "EppingForest/EPF/0849/25",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Foxglove, generators, energy storage, fuel tanks, electricity substations",
+      "why": "references to on-site generation; Foxglove tend to use on-site generation",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre campus",
+        "emergency back-up generators",
+        "energy storage",
+        "electricity substations",
+        "airfield safety bund"
+      ],
+      "why": "redevelopment of the Site to deliver a data centre campus",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.3510549068450928
+  },
+  {
+    "num": 6,
+    "ref": "Wycombe/22/06872/VCDN",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Foxglove, plant, electricity sub-station, substation enclosure",
+      "why": "presence of substation and 'plant' doesn't guarantee on-site generation but worth reading in depth because Foxglove tend to use on-site generation",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Variation of Conditions reference a parent DC permission (08/05740/FULEA)",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.975965976715088
+  },
+  {
+    "num": 7,
+    "ref": "Ealing/250949FUL",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Foxglove, two substations, associated plant",
+      "why": "presence of substation and 'plant' doesn't guarantee on-site generation but worth reading in depth because Foxglove tend to use on-site generation",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "substation",
+        "associated plant",
+        "generators"
+      ],
+      "why": "mentions two substations and associated plant",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.1044411659240723
+  },
+  {
+    "num": 8,
+    "ref": "ChilternSouthBucks/PL/22/4145/OA",
+    "ground_truth": {
+      "verdict": null,
+      "worth_deep_read": null,
+      "signals": "Foxglove, generator yard, external plant and equipment",
+      "why": "Reference to generator yard; Foxglove tend to use on-site generation",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre",
+        "redevelopment",
+        "generator yard"
+      ],
+      "why": "The description clearly states a redevelopment of the site to comprise a data centre.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.0643868446350098
+  },
+  {
+    "num": 9,
+    "ref": "TowerHamlets/PA/22/01140/A1",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Foxglove",
+      "why": "Foxglove tend to use on-site generation; tower hamlets site documents refer to 'Standby Power \u2013 Generators'",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre",
+        "demolition",
+        "erection"
+      ],
+      "why": "Description includes demolition and erection of a data centre.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.9372200965881348
+  },
+  {
+    "num": 10,
+    "ref": "EppingForest/EPF/1165/22",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Nscale",
+      "why": "Nscale tend to use microgrids",
+      "confidence": "guessing"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre"
+      ],
+      "why": "Description explicitly states 'New Data Centre'.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.3793540000915527
+  },
+  {
+    "num": 11,
+    "ref": "EastRiding/22/00301/STREME",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "Energy centre",
+      "why": "It is explicitly associating CHP generation with a data centre",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "Data Centre",
+        "Energy Centre"
+      ],
+      "why": "New Data Centre build following Outline Permission",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.585582971572876
+  },
+  {
+    "num": 12,
+    "ref": "ChilternSouthBucks/PL/22/3403/FA",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "maybe",
+      "signals": "",
+      "why": "Source URL doesn't work but hyperscale entails high power demand",
+      "confidence": "guessing"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "hyperscale",
+        "data centre",
+        "associated infrastructure"
+      ],
+      "why": "Redevelopment of land to provide a new data centre and associated infrastructure.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.9226419925689697
+  },
+  {
+    "num": 13,
+    "ref": "Ealing/253874FUL",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "plant, substation",
+      "why": "Application documents at source refer to 86 diesel generators",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "hyperscale data centre",
+        "Sui Generis",
+        "substation"
+      ],
+      "why": "description provides clear mention of a hyperscale data centre and a substation",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.2550530433654785
+  },
+  {
+    "num": 14,
+    "ref": "CentralBedfordshire/CB/24/03164/FULL",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "substation compound",
+      "why": "Docs at source state there is emergency generating capacity but there is a statement that 'no fossil fuels\nused for day to day operation'",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "substation compound",
+        "technical plant"
+      ],
+      "why": "Description mentions construction of data centre buildings, a substation compound, and technical plant.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.7166218757629395
+  },
+  {
+    "num": 15,
+    "ref": "Bedford/26/00355/MAO",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "emergency back-up generators",
+      "why": "Although nearly all data centres have emergency backup generators, it's worth finding out what they are and how much they are expected to be used - just for true outages or when demand outstrips demand, etc",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre",
+        "demolition",
+        "redevelopment",
+        "B8 use",
+        "emergency back-up generators",
+        "substation"
+      ],
+      "why": "proposed redevelopment of existing data centre and inclusion of a substation",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.2735800743103027
+  },
+  {
+    "num": 16,
+    "ref": "Dumfries/26/0464/SCO",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "SUBSTATION, ELECTRICAL INFRASTRUCTURE",
+      "why": "Needs deep read of associated documents to identify power sources",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data-centre",
+        "substation",
+        "electrical infrastructure"
+      ],
+      "why": "Proposed data-centre development includes a substation and electrical infrastructure.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.039109945297241
+  },
+  {
+    "num": 17,
+    "ref": "NorthLanarkshire/25/01322/PAN",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "substation, utilities, generation",
+      "why": "Reference to generation",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": [
+        "data centre building(s)",
+        "substation",
+        "battery energy storage (BES)",
+        "generation"
+      ],
+      "why": "mentions data centre, battery energy storage and generation along with a substation",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.094024896621704
+  },
+  {
+    "num": 18,
+    "ref": "NorthTyneside/25/01382/ADJLPA",
+    "ground_truth": {
+      "verdict": "adjacent",
+      "worth_deep_read": "yes",
+      "signals": "substation",
+      "why": "Substation on data centre campus - related to 24/04112/OUTES (item 1)",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "adjacent",
+      "worth_deep_read": "yes",
+      "signals": [
+        "electricity substation",
+        "data centre campus"
+      ],
+      "why": "Reserved matters application for layout, scale and appearance on Phase 1b of the data centre campus",
+      "confidence": "probable"
+    },
+    "error": null,
+    "seconds": 1.920861005783081
+  },
+  {
+    "num": 19,
+    "ref": "Newport/25/1071",
+    "ground_truth": {
+      "verdict": "adjacent",
+      "worth_deep_read": "maybe",
+      "signals": "substation",
+      "why": "Very little information in application - substation may be from the national grid rather than independent generation",
+      "confidence": "guessing"
+    },
+    "llm": {
+      "verdict": "adjacent",
+      "worth_deep_read": "yes",
+      "signals": [
+        "substation",
+        "data centre"
+      ],
+      "why": "Installation of an underground cable connection from a substation to a data centre",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.6391170024871826
+  },
+  {
+    "num": 20,
+    "ref": "EastAyrshire/25/0008/PREAPP",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "maybe",
+      "signals": "substation",
+      "why": "Ili Energy (from source docs) is explicitly a renewable energy firm so this one is likely to be a pretty green project",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "adjacent",
+      "worth_deep_read": "yes",
+      "signals": [
+        "substation"
+      ],
+      "why": "Substation mentioned in description.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.4226508140563965
+  },
+  {
+    "num": 21,
+    "ref": "EppingForest/EPF/0678/26",
+    "ground_truth": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": "Loughton",
+      "why": "This is with regard to the current state of the land for the proposed Loughton site, not for the DC project itself",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Approval of Details Reserved by Condition for a parent DC application (EPF/1165/22)",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.7450942993164062
+  },
+  {
+    "num": 22,
+    "ref": "OldOakParkRoyal/26/0082/AODOPDC",
+    "ground_truth": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": "",
+      "why": "Appears not to be an application for the data centre itself (which, hopefully, is identified elsewhere) so this is unlikely to carry technical details of power requirements",
+      "confidence": "guessing"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Details of condition for later determination, not substantive DC application",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.075240135192871
+  },
+  {
+    "num": 23,
+    "ref": "Hillingdon/49261/APP/2026/1013",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "plant, emergency generator",
+      "why": "This looks to be supporting documentation to the main plan, but does refer to plant and generation so might be worth reading",
+      "confidence": "guessing"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Details pursuant to the discharge of Condition",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.9008150100708008
+  },
+  {
+    "num": 24,
+    "ref": "Northumberland/26/01570/FUL",
+    "ground_truth": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": "",
+      "why": "Application is for access road to the data centre, not for the data centre itself - though if we hadn't already captured 24/04112/OUTES we would want to seek it out",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "It's a road, not the DC.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.453843116760254
+  },
+  {
+    "num": 25,
+    "ref": "Havering/P1169.25",
+    "ground_truth": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": "",
+      "why": "Planning for access to data centre rather than for the data centre itself",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Building extension only; no power kit.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.3536770343780518
+  },
+  {
+    "num": 26,
+    "ref": "Brent/26/0665",
+    "ground_truth": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": "____",
+      "why": "Planning for access to data centre rather than for the data centre itself - but we might want to check that we know about the data centre extension plan itself",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Temporary access road works",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.2946479320526123
+  },
+  {
+    "num": 27,
+    "ref": "Bracknell/20/00818/NMA",
+    "ground_truth": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": "",
+      "why": "Non-material amendments would not cover the introduction of power generation facilities or substations",
+      "confidence": "sure"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Non-Material Amendment, purely administrative rewording of the description.",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.88863205909729
+  },
+  {
+    "num": 28,
+    "ref": "Glasgow/24/02285/NMV01",
+    "ground_truth": {
+      "verdict": "DC",
+      "worth_deep_read": "yes",
+      "signals": "data centre, energy centre",
+      "why": "It's very unlikely to be large scale on a university campus but the terms used merit inclusion for further examination",
+      "confidence": "guessing"
+    },
+    "llm": {
+      "verdict": "DC",
+      "worth_deep_read": "maybe",
+      "signals": [
+        "Data Centre"
+      ],
+      "why": "mentioned in the list of developments",
+      "confidence": "guessing"
+    },
+    "error": null,
+    "seconds": 2.7722039222717285
+  },
+  {
+    "num": 29,
+    "ref": "CentralBedfordshire/CB/26/01140/DOC",
+    "ground_truth": {
+      "verdict": "unknown",
+      "worth_deep_read": "maybe",
+      "signals": "data centre, energy centre",
+      "why": "Probably a small scale data centre for local use, but the terms used merit inclusion for further examination or at least checking what CB/12/03613/OUT and CB/25/02087/PAPC are",
+      "confidence": "guessing"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Discharge of Condition against an earlier DC application (CB/12/03613/OUT)",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 2.259855031967163
+  },
+  {
+    "num": 30,
+    "ref": "EastRiding/24/40093/NONMAT",
+    "ground_truth": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": "energy infrastructure, data centre",
+      "why": "It's another NMA, so we should seek out the application it refers to (17/01673/STOUTE), which does seem to involve data centres and energy production",
+      "confidence": "probable"
+    },
+    "llm": {
+      "verdict": "unrelated",
+      "worth_deep_read": "no",
+      "signals": [],
+      "why": "Non-Material Amendment",
+      "confidence": "sure"
+    },
+    "error": null,
+    "seconds": 1.3790271282196045
+  }
+]
