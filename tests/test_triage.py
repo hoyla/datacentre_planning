@@ -90,3 +90,55 @@ def test_triage_application_uses_fake_backend():
     # The fake backend should have received our rendered message
     assert len(backend.calls) == 1
     assert "X/1" in backend.calls[0][0]
+
+
+class _GarbageThenJsonBackend:
+    """Returns prose on first call, valid JSON on second. Simulates a model
+    that needed a JSON-only reminder."""
+
+    def __init__(self, second_response: str):
+        self.second_response = second_response
+        self.calls: list[tuple[str, str | None]] = []
+
+    def complete(self, prompt: str, *, system: str | None = None):
+        from dcp.llm import LLMResponse
+        self.calls.append((prompt, system))
+        if len(self.calls) == 1:
+            return LLMResponse(text="Sure! Here's my view: it's a DC.", model="fake")
+        return LLMResponse(text=self.second_response, model="fake")
+
+
+def test_triage_application_retries_on_parse_error():
+    json_ok = '{"verdict": "DC", "worth_deep_read": "yes", "signals": [], "why": "x", "confidence": "sure"}'
+    backend = _GarbageThenJsonBackend(json_ok)
+    app = {"ref": "X/1", "council": "Test", "description": "data centre"}
+    v = triage.triage_application(app, backend)
+    assert v.verdict == "DC"
+    # Two calls — first failed parse, second succeeded
+    assert len(backend.calls) == 2
+    # The retry's prompt should contain the JSON-only reminder
+    assert "Return ONLY the JSON" in backend.calls[1][0]
+
+
+def test_triage_application_no_retry_raises():
+    backend = _GarbageThenJsonBackend('{"verdict": "DC", "worth_deep_read": "yes", "signals": [], "why": "x", "confidence": "sure"}')
+    app = {"ref": "X/1", "council": "Test", "description": "data centre"}
+    with pytest.raises(ValueError):
+        triage.triage_application(app, backend, retry_on_parse_error=False)
+    assert len(backend.calls) == 1
+
+
+def test_triage_application_double_failure_raises():
+    """If both attempts return unparseable text, the second ValueError propagates."""
+    class _AlwaysBad:
+        def __init__(self):
+            self.calls = []
+        def complete(self, prompt, *, system=None):
+            from dcp.llm import LLMResponse
+            self.calls.append((prompt, system))
+            return LLMResponse(text="not json at all", model="fake")
+    backend = _AlwaysBad()
+    app = {"ref": "X/1", "council": "Test", "description": "data centre"}
+    with pytest.raises(ValueError):
+        triage.triage_application(app, backend)
+    assert len(backend.calls) == 2  # retried once

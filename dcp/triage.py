@@ -245,8 +245,30 @@ def parse_response(text: str) -> TriageVerdict:
     )
 
 
-def triage_application(app: dict, backend: LLMBackend) -> TriageVerdict:
-    """Run Stage 1 triage on a single application."""
+def triage_application(
+    app: dict,
+    backend: LLMBackend,
+    *,
+    retry_on_parse_error: bool = True,
+) -> TriageVerdict:
+    """Run Stage 1 triage on a single application.
+
+    If parse_response fails (smaller models occasionally add prose or wrap things
+    oddly) and `retry_on_parse_error` is True, makes one more call with a stricter
+    JSON-only reminder appended to the user message. If the retry also fails, the
+    original ValueError is raised."""
     user_msg = render_user_message(app)
     resp: LLMResponse = backend.complete(user_msg, system=SYSTEM_PROMPT)
-    return parse_response(resp.text)
+    try:
+        return parse_response(resp.text)
+    except ValueError:
+        if not retry_on_parse_error:
+            raise
+        log.info("triage parse failed for %s; retrying with JSON-only reminder", app.get("ref"))
+        reminder = (
+            "\n\nIMPORTANT: Your previous response could not be parsed as JSON. "
+            "Return ONLY the JSON object — no prose before or after, no markdown code fences, "
+            "no commentary. Just the bare JSON object matching the schema."
+        )
+        resp = backend.complete(user_msg + reminder, system=SYSTEM_PROMPT)
+        return parse_response(resp.text)
