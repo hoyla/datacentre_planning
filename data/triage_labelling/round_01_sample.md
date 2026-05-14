@@ -11,7 +11,7 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Signal-tag starter list** (tick all that apply; add new ones as `[other: name]`):
 
-`substation` Â· `generator` Â· `backup` Â· `fuel storage` Â· `energy centre` Â· `gas` Â· `LPG` Â· `CHP` Â· `turbine` Â· `grid connection` Â· `cooling` Â· `air cooling` Â· `water cooling`
+`substation` y `generator` y `backup` y `fuel storage` y `energy centre` y `gas` y `LPG` y `CHP` y `turbine` y `grid connection` n `cooling` n `air cooling` n `water cooling` y `water pumping` y `propane` y `diesel` y `onsite generation` y `behind the meter` y `power plant` y `prime power` y `VoltaGrid` y `Scale Microgrids` y `Enchanted Rock` y `GridPoint` y `Uplight` y `SLB` y `Liberty Energy` y `Baker Hughes` y `bridge-to-grid` y `microgrid` y `cogeneration` y `NSIP` y `generating` y `power facility` y `Foxglove` y
 
 **Verdict scheme:**
 - **DC** â€” this is a new data centre application (or substantially DC-focused).
@@ -40,12 +40,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Foxglove, generators, substation` &nbsp; (comma-separated tags)
+- Why (one line): `explicit reference to on site generation and water cooling`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -71,12 +71,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Foxglove, internal plant, generators, fuel storage, pumping station, electricity substation(s), energy generation/storage` &nbsp; (comma-separated tags)
+- Why (one line): `Multiple references to on-site power generation, likely use of water cooling`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -99,12 +99,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Foxglove, internal plant and equipment, backup generators, fuel storage, electricity substation, drainage` &nbsp; (comma-separated tags)
+- Why (one line): `Internal plant sounds like heavy duty on-site power generation; drainage may imply water use impact`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -135,12 +135,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Foxglove, sub-stations, power generators, energy storage, fuel tanks` &nbsp; (comma-separated tags)
+- Why (one line): `extensive references to on-site generation`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -165,12 +165,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Foxglove, generators, energy storage, fuel tanks, electricity substations` &nbsp; (comma-separated tags)
+- Why (one line): `references to on-site generation; Foxglove tend to use on-site generation`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -181,7 +181,7 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 - **Date received:** 2022-07-08 Â· **Status:** Permitted Â· **Type:** Conditions Â· **Size (PlanIt):** Medium
 - **Address:** Former Molins Site Haw Lane Saunderton Buckinghamshire
 - **Applicant:** See source
-- **Source:** https://publicaccess.wycombe.gov.uk/idoxpa-web/applicationDetails.do?activeTab=summary&keyVal=REOSQQSCIXM00
+- **Source:** https://www.planit.org.uk/planapplic/Wycombe/22/06872/VCDN/ &nbsp; *(original council URL `publicaccess.wycombe.gov.uk/idoxpa-web/...keyVal=REOSQQSCIXM00` is dead â€” Wycombe was absorbed into the Buckinghamshire unitary council in 2020 and the legacy Idox keyVals didn't transfer; PlanIt's stable mirror is the working alternative; the Bucks unitary equivalent for newer related variations is `publicaccess.buckinghamshire.gov.uk/online-applications/`)*
 
 **Description:**
 
@@ -195,12 +195,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Foxglove, plant, electricity sub-station, substation enclosure` &nbsp; (comma-separated tags)
+- Why (one line): `presence of substation and 'plant' doesn't guarantee on-site generation but worth reading in depth because Foxglove tend to use on-site generation`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -228,12 +228,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Foxglove, two substations, associated plant` &nbsp; (comma-separated tags)
+- Why (one line): `presence of substation and 'plant' doesn't guarantee on-site generation but worth reading in depth because Foxglove tend to use on-site generation`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -260,10 +260,10 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 - Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
 - Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Signals: `Foxglove, generator yard, external plant and equipment` &nbsp; (comma-separated tags)
+- Why (one line): `Reference to generator yard; Foxglove tend to use on-site generation`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -287,12 +287,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Foxglove` &nbsp; (comma-separated tags)
+- Why (one line): `Foxglove tend to use on-site generation; tower hamlets site documents refer to 'Standby Power â€“ Generators'`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -303,7 +303,7 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 - **Date received:** 2022-05-19 Â· **Status:** Undecided Â· **Type:** Outline Â· **Size (PlanIt):** Medium
 - **Address:** Alandale Scaffolding Langston Road Loughton IG10 3SL
 - **Applicant:** See source
-- **Source:** https://eppingforestdcpr.force.com/pr/s/planning-application/a0h8d000000NzLYAA0
+- **Source:** https://eppingforestdc.my.site.com/pr/s/planning-application/a0h8d000000NzLYAA0/epf116522 &nbsp; *(original URL `eppingforestdcpr.force.com/...` returns 404; Epping Forest's Salesforce portal moved to `eppingforestdc.my.site.com` and the per-application slug now requires the trailing `/epf116522` reference â€” Aisha's original URL format from her May 2026 email)*
 
 **Description:**
 
@@ -311,12 +311,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Nscale` &nbsp; (comma-separated tags)
+- Why (one line): `Nscale tend to use microgrids`
+- Confidence: `guessing` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -339,12 +339,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC, adjacent` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `Energy centre` &nbsp; (comma-separated tags)
+- Why (one line): `It is explicitly associating CHP generation with a data centre`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -355,7 +355,7 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 - **Date received:** 2022-10-20 Â· **Status:** Undecided Â· **Type:** Full Â· **Size (PlanIt):** Large
 - **Address:** Dromenagh Farm Sevenhills Road Iver Heath Buckinghamshire SL0 0PA
 - **Applicant:** See source
-- **Source:** https://pa.chilternandsouthbucks.gov.uk/online-applications/applicationDetails.do?activeTab=summary&keyVal=RIYN7HES09X00
+- **Source:** https://www.planit.org.uk/planapplic/ChilternSouthBucks/PL/22/3403/FA/ &nbsp; *(original council URL `pa.chilternandsouthbucks.gov.uk/...keyVal=RIYN7HES09X00` is dead â€” Chiltern South Bucks was absorbed into the Buckinghamshire unitary council in 2020 and the legacy Idox keyVals didn't transfer; PlanIt's stable mirror is the working alternative; newer related variations like Bucks/PL/25/6737/VRC live at `publicaccess.buckinghamshire.gov.uk/online-applications/`)*
 
 **Description:**
 
@@ -365,12 +365,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `maybe` &nbsp; (yes / no / maybe)
+- Signals: ` ` &nbsp; (comma-separated tags)
+- Why (one line): `Source URL doesn't work but hyperscale entails high power demand`
+- Confidence: `guessing` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `yes` &nbsp; (yes / no)
 
 ---
 
@@ -395,12 +395,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `plant, substation` &nbsp; (comma-separated tags)
+- Why (one line): `Application documents at source refer to 86 diesel generators`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -419,12 +419,13 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `substation compound` &nbsp; (comma-separated tags)
+- Why (one line): `Docs at source state there is emergency generating capacity but there is a statement that 'no fossil fuels
+used for day to day operation'`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `yes` &nbsp; (yes / no)
 
 ---
 
@@ -446,12 +447,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `emergency back-up generators` &nbsp; (comma-separated tags)
+- Why (one line): `Although nearly all data centres have emergency backup generators, it's worth finding out what they are and how much they are expected to be used - just for true outages or when demand outstrips demand, etc`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -476,12 +477,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `SUBSTATION, ELECTRICAL INFRASTRUCTURE` &nbsp; (comma-separated tags)
+- Why (one line): `Needs deep read of associated documents to identify power sources`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -503,12 +504,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `substation, utilities, generation` &nbsp; (comma-separated tags)
+- Why (one line): `Reference to generation`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -528,12 +529,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `adjacent` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `substation` &nbsp; (comma-separated tags)
+- Why (one line): `Substation on data centre campus - related to 24/04112/OUTES (item 1)`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -552,12 +553,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `adjacent` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `maybe` &nbsp; (yes / no / maybe)
+- Signals: `substation` &nbsp; (comma-separated tags)
+- Why (one line): `Very little information in application - substation may be from the national grid rather than independent generation`
+- Confidence: `guessing` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -577,12 +578,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `maybe` &nbsp; (yes / no / maybe)
+- Signals: `substation` &nbsp; (comma-separated tags)
+- Why (one line): `Ili Energy (from source docs) is explicitly a renewable energy firm so this one is likely to be a pretty green project`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -604,12 +605,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `unrelated` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `no` &nbsp; (yes / no / maybe)
+- Signals: `Loughton` &nbsp; (comma-separated tags)
+- Why (one line): `This is with regard to the current state of the land for the proposed Loughton site, not for the DC project itself`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -639,12 +640,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `unrelated` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `no` &nbsp; (yes / no / maybe)
+- Signals: ` ` &nbsp; (comma-separated tags)
+- Why (one line): `Appears not to be an application for the data centre itself (which, hopefully, is identified elsewhere) so this is unlikely to carry technical details of power requirements`
+- Confidence: `guessing` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `yes` &nbsp; (yes / no)
 
 ---
 
@@ -670,12 +671,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `plant, emergency generator` &nbsp; (comma-separated tags)
+- Why (one line): `This looks to be supporting documentation to the main plan, but does refer to plant and generation so might be worth reading`
+- Confidence: `guessing` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `yes` &nbsp; (yes / no)
 
 ---
 
@@ -696,12 +697,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `unrelated` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `no` &nbsp; (yes / no / maybe)
+- Signals: ` ` &nbsp; (comma-separated tags)
+- Why (one line): `Application is for access road to the data centre, not for the data centre itself - though if we hadn't already captured 24/04112/OUTES we would want to seek it out`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -720,12 +721,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `unrelated` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `no` &nbsp; (yes / no / maybe)
+- Signals: ` ` &nbsp; (comma-separated tags)
+- Why (one line): `Planning for access to data centre rather than for the data centre itself`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -747,12 +748,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
+- Verdict: `unrelated` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `no` &nbsp; (yes / no / maybe)
 - Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Why (one line): `Planning for access to data centre rather than for the data centre itself - but we might want to check that we know about the data centre extension plan itself`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -777,12 +778,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `unrelated` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `no` &nbsp; (yes / no / maybe)
+- Signals: ` ` &nbsp; (comma-separated tags)
+- Why (one line): `Non-material amendments would not cover the introduction of power generation facilities or substations`
+- Confidence: `sure` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -816,12 +817,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `DC` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `yes` &nbsp; (yes / no / maybe)
+- Signals: `data centre, energy centre` &nbsp; (comma-separated tags)
+- Why (one line): `It's very unlikely to be large scale on a university campus but the terms used merit inclusion for further examination`
+- Confidence: `guessing` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -849,12 +850,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `unknwon` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `maybe` &nbsp; (yes / no / maybe)
+- Signals: `data centre, energy centre` &nbsp; (comma-separated tags)
+- Why (one line): `Probably a small scale data centre for local use, but the terms used merit inclusion for further examination or at least checking what CB/12/03613/OUT and CB/25/02087/PAPC are`
+- Confidence: `guessing` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `yes` &nbsp; (yes / no)
 
 ---
 
@@ -876,12 +877,12 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 **Your labels:**
 
-- Verdict: `____` &nbsp; (DC / adjacent / unrelated / unknown)
-- Worth deep-read: `____` &nbsp; (yes / no / maybe)
-- Signals: `____` &nbsp; (comma-separated tags)
-- Why (one line): `____`
-- Confidence: `____` &nbsp; (sure / probable / guessing)
-- Verify with Aisha?: `____` &nbsp; (yes / no)
+- Verdict: `unrelated` &nbsp; (DC / adjacent / unrelated / unknown)
+- Worth deep-read: `no` &nbsp; (yes / no / maybe)
+- Signals: `energy infrastructure, data centre` &nbsp; (comma-separated tags)
+- Why (one line): `It's another NMA, so we should seek out the application it refers to (17/01673/STOUTE), which does seem to involve data centres and energy production`
+- Confidence: `probable` &nbsp; (sure / probable / guessing)
+- Verify with Aisha?: `no` &nbsp; (yes / no)
 
 ---
 
@@ -889,9 +890,9 @@ Sample composed from the ingested PlanIt universe (1,549 applications, 2018-01 â
 
 Capture in your own words:
 
-- **Patterns** that made cases obviously DC: _______
-- **Patterns** that made cases obviously unrelated: _______
-- **The trickiest cases** and why: _______
-- **Signal tags** that were missing from the starter list and you had to add: _______
-- **Cases where you flagged for Aisha** and what specifically you'd want her view on: _______
-- **Anything in the descriptions that surprised you** (sparse metadata, coded language, descriptions that hide the DC nature): _______
+- **Patterns** that made cases obviously DC: explicit references to data centres
+- **Patterns** that made cases obviously unrelated: planning applications for roads etc connecting to data centres rather than for the data centres themselves; non material amendments where we should seek out the core application
+- **The trickiest cases** and why: a lot rests on whether emergency generation really is for brief outages rather than supplemental supply and that is rarely clear from the top lines
+- **Signal tags** that were missing from the starter list and you had to add: names of suppliers of generating capacity
+- **Cases where you flagged for Aisha** and what specifically you'd want her view on: cases where there is insufficient info; cases where the colocated electricity supplier is a known renewables provider (could be useful for comparisons with hydrocarbon users); cases where the application is about preparatory work for planned data centres rather than the data centres themselves - might require further investigation but I don't know how deep she wants to go; small scale data centres that probably aren't cloud service providers but just serve colocated businesses.
+- **Anything in the descriptions that surprised you** (sparse metadata, coded language, descriptions that hide the DC nature): water and cooling facilities get raised a lot and could have high environment or local provision impact - this perhaps is an additional line of enquiry. One thing missing from the list was a probable data centre application that didn't use the term "data centre" so their could be coded language that wasn't picked up in this survey. 
