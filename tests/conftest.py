@@ -56,6 +56,16 @@ def _ensure_test_database() -> None:
             if cur.fetchone()[0] is None:
                 cur.execute((MIGRATIONS_DIR / "002_discovery_tracking.sql").read_text())
                 conn.commit()
+            # Migration 003 — triage columns refresh (worth_deep_read, signals, why,
+            # confidence → TEXT). Probe via information_schema since this migration
+            # adds a column rather than a new relation.
+            cur.execute(
+                "SELECT 1 FROM information_schema.columns "
+                "WHERE table_name = 'triage' AND column_name = 'worth_deep_read'"
+            )
+            if cur.fetchone() is None:
+                cur.execute((MIGRATIONS_DIR / "003_triage_columns.sql").read_text())
+                conn.commit()
     finally:
         conn.close()
 

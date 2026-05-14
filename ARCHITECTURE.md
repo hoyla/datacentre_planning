@@ -44,9 +44,9 @@ For each application without a recent triage verdict, ask an LLM (Ollama by defa
 - What's the rough capacity (MW) if mentioned?
 - Are there power-related signals worth examining (substation, generator, fuel storage, "energy centre", etc.)?
 
-Verdicts versioned per `(application_id, inserted_at)`; latest wins for "what do we currently think." Prior verdicts retained for prompt-revision comparison.
+Verdicts versioned per `(application_id, model, inserted_at)`; latest wins for "what do we currently think." Prior verdicts retained for prompt-revision comparison. The resume contract is per-model: `applications_pending_triage(conn, model=X)` excludes apps that already have a verdict from model X, so re-running with a new model overlays a second opinion without touching the first.
 
-**Not yet implemented.** Rubric design with Aisha is the immediate next task. Captured lexicon so far: backup, generator, turbine, LPG, gas, failover, substation, fuel storage, emergency power, resilience, uptime, CHP, kVA, kW, MW, "energy centre" (Aisha-confirmed coded term — see `data/seed_cases/walkthrough_findings.md`).
+**Implemented** (`dcp triage`, prompt frozen 2026-05-14, model granite4.1:30b). Output fields: `verdict`, `worth_deep_read`, `signals[]`, `why`, `confidence`. The rubric lives in `data/triage_labelling/rubric.md` (tracked); the prompt is in [dcp/triage.py](dcp/triage.py). Captured lexicon includes: backup, generator, turbine, LPG, gas, failover, substation, fuel storage, emergency power, resilience, uptime, CHP, kVA, kW, MW, "energy centre" (Aisha-confirmed coded term — see `data/seed_cases/walkthrough_findings.md`).
 
 ### 3. Deep-read
 
@@ -64,7 +64,7 @@ Optional multimodal pass: Claude vision on site plans and elevations for the mat
 
 ## Schema
 
-Current schema in [migrations/001_initial.sql](migrations/001_initial.sql). Tables and their relationships:
+Current schema in [migrations/001_initial.sql](migrations/001_initial.sql) plus subsequent migrations: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table) and [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric). Tables and their relationships:
 
 ```
 sources        ──┐

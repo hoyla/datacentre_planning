@@ -11,8 +11,9 @@ from __future__ import annotations
 import json
 import logging
 import re
+import time
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Callable, Literal
 
 from dcp.llm import LLMBackend, LLMResponse
 
@@ -257,6 +258,99 @@ def parse_response(text: str) -> TriageVerdict:
         confidence=confidence,
         raw_response=text,
     )
+
+
+def app_row_to_triage_input(row: dict) -> dict:
+    """Map the dict returned by `repo.applications_pending_triage` into the
+    shape `render_user_message` expects."""
+    return {
+        "ref": row.get("application_ref"),
+        "council": row.get("council_name") or row.get("council_gss"),
+        "app_type": row.get("app_type"),
+        "date_received": (
+            row["date_received"].isoformat() if row.get("date_received") else None
+        ),
+        "status": row.get("status"),
+        "address": row.get("address"),
+        "description": row.get("description"),
+    }
+
+
+def run_triage(
+    *,
+    model: str | None = None,
+    limit: int | None = None,
+    timeout: float = 180.0,
+    progress: Callable[[dict], None] | None = None,
+) -> dict:
+    """Production triage sweep: walk applications without a verdict for `model`
+    and append one row per call into the `triage` table. Commits per-record so
+    a kill at any point loses at most the in-flight call. Resume is automatic:
+    apps that already have a verdict for the same model are skipped on re-run.
+
+    `progress`, if supplied, is called with a status dict after every record
+    so the CLI can stream live updates. The summary dict is returned at end.
+    """
+    from dcp import db, repo
+    from dcp.llm import OllamaBackend
+
+    backend = OllamaBackend(model=model, request_timeout=timeout)
+    model_name = backend.model
+
+    summary = {
+        "model": model_name,
+        "scanned": 0,
+        "errors": 0,
+        "by_verdict": {"DC": 0, "adjacent": 0, "unrelated": 0, "unknown": 0},
+    }
+
+    with db.connect() as conn:
+        pending = repo.applications_pending_triage(conn, model=model_name, limit=limit)
+        summary["pending"] = len(pending)
+        for row in pending:
+            t0 = time.time()
+            err: str | None = None
+            verdict_obj: TriageVerdict | None = None
+            try:
+                verdict_obj = triage_application(app_row_to_triage_input(row), backend)
+            except ValueError as exc:
+                err = f"parse_error: {exc}"
+            except Exception as exc:
+                err = f"{type(exc).__name__}: {exc}"
+            elapsed = time.time() - t0
+
+            if verdict_obj is not None:
+                repo.record_triage(
+                    conn,
+                    application_id=row["id"],
+                    model=model_name,
+                    verdict=verdict_obj.verdict,
+                    worth_deep_read=verdict_obj.worth_deep_read,
+                    signals=verdict_obj.signals,
+                    why=verdict_obj.why,
+                    confidence=verdict_obj.confidence,
+                    raw_response={"text": verdict_obj.raw_response},
+                )
+                conn.commit()
+                if verdict_obj.verdict in summary["by_verdict"]:
+                    summary["by_verdict"][verdict_obj.verdict] += 1
+            else:
+                summary["errors"] += 1
+
+            summary["scanned"] += 1
+            if progress is not None:
+                progress({
+                    "scanned": summary["scanned"],
+                    "pending": summary["pending"],
+                    "ref": row.get("application_ref"),
+                    "verdict": verdict_obj.verdict if verdict_obj else None,
+                    "worth_deep_read": verdict_obj.worth_deep_read if verdict_obj else None,
+                    "confidence": verdict_obj.confidence if verdict_obj else None,
+                    "elapsed": elapsed,
+                    "error": err,
+                })
+
+    return summary
 
 
 def triage_application(

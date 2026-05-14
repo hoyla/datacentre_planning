@@ -176,6 +176,67 @@ def upsert_application(
         return cur.fetchone()[0]
 
 
+def record_triage(
+    conn: PgConnection,
+    *,
+    application_id: int,
+    model: str,
+    verdict: str,
+    worth_deep_read: str | None,
+    signals: list[str],
+    why: str | None,
+    confidence: str | None,
+    raw_response: dict | str | None = None,
+) -> int:
+    """Append a triage verdict for an application. Versioned — latest by
+    inserted_at is current; prior verdicts are retained so prompt revisions
+    can be compared. Returns the row id."""
+    raw = Json(raw_response) if raw_response is not None else None
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO triage (
+                application_id, model, verdict, worth_deep_read,
+                signals, why, confidence, raw_response
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
+            """,
+            (application_id, model, verdict, worth_deep_read,
+             signals, why, confidence, raw),
+        )
+        return cur.fetchone()[0]
+
+
+def applications_pending_triage(
+    conn: PgConnection, *, model: str, limit: int | None = None,
+) -> list[dict[str, Any]]:
+    """Return applications that have no triage row for the given `model`.
+    Selection order is deterministic (date_received DESC NULLS LAST, id) so
+    a resumed sweep picks up where it left off without re-ordering."""
+    sql = """
+        SELECT a.id, a.application_ref, a.description, a.address,
+               a.date_received, a.status, a.council_gss,
+               a.raw_metadata->>'app_type' AS app_type,
+               c.name AS council_name
+        FROM applications a
+        LEFT JOIN councils c ON c.gss_code = a.council_gss
+        WHERE NOT EXISTS (
+            SELECT 1 FROM triage t
+            WHERE t.application_id = a.id AND t.model = %s
+        )
+        ORDER BY a.date_received DESC NULLS LAST, a.id
+    """
+    params: tuple[Any, ...] = (model,)
+    if limit is not None:
+        sql += " LIMIT %s"
+        params = (model, limit)
+    with conn.cursor() as cur:
+        cur.execute(sql, params)
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+
 def upsert_colocated_candidate(
     conn: PgConnection,
     *,

@@ -44,10 +44,52 @@ def index(
 
 
 @main.command()
-@click.option("--limit", type=int, default=None, help="Cap number of applications to triage.")
-def triage(limit: int | None) -> None:
-    """Stage 2: run LLM triage over un-triaged applications."""
-    click.echo(f"[triage] limit={limit} — not implemented yet")
+@click.option("--model", default=None,
+              help="Ollama model name. Defaults to OLLAMA_MODEL env var, then llama3.2.")
+@click.option("--limit", type=int, default=None,
+              help="Cap number of applications to triage (resume-aware — counted "
+                   "against pending, not total).")
+@click.option("--timeout", type=float, default=180.0,
+              help="Per-call Ollama timeout in seconds (default 180).")
+def triage(model: str | None, limit: int | None, timeout: float) -> None:
+    """Stage 2: run LLM triage over un-triaged applications.
+
+    \b
+    Resume is automatic — apps with an existing verdict for the same `model`
+    are skipped. Re-run with a different `--model` to overlay a second model's
+    verdicts (versioned per `(application_id, model, inserted_at)`).
+    """
+    import os
+    import sys
+    from dotenv import load_dotenv
+    from pathlib import Path
+    from dcp import triage as triage_mod
+
+    load_dotenv(Path(__file__).parent.parent / ".env")
+    if model is None:
+        model = os.environ.get("OLLAMA_MODEL", "llama3.2")
+
+    def _progress(row: dict) -> None:
+        n = row["scanned"]; total = row["pending"]
+        verdict = row.get("verdict") or "ERR"
+        dr = row.get("worth_deep_read") or "-"
+        conf = row.get("confidence") or "-"
+        ref = (row.get("ref") or "?")[:36]
+        line = (
+            f"  [{n:4d}/{total:4d}] {ref:36s}  v={verdict:9s}  "
+            f"dr={dr:5s}  c={conf:8s}  {row['elapsed']:5.1f}s"
+        )
+        if row.get("error"):
+            line += f"  ERR {row['error'][:60]}"
+        click.echo(line)
+        sys.stdout.flush()
+
+    summary = triage_mod.run_triage(
+        model=model, limit=limit, timeout=timeout, progress=_progress,
+    )
+    click.echo("")
+    for k, v in summary.items():
+        click.echo(f"  {k}: {v}")
 
 
 @main.command("deep-read")

@@ -6,7 +6,7 @@ Collaboration with Aisha Down at the Guardian.
 
 ## Status
 
-**Phase 1 — index complete for PlanIt.** 1,549 UK data-centre applications ingested from 2018 onwards, covering 401 councils with GSS code and portal-type metadata. Triage and deep-read stages not yet implemented. Full 24-test suite (8 unit + 16 SQL integration) green.
+**Phase 1 — index complete, parent-backfill complete, Phase 2 triage in progress.** 1,832 UK data-centre applications ingested from 2007 onwards (parent-backfill adds the pre-2018 procedural ancestors), covering 401 councils with GSS code and portal-type metadata. `dcp triage` runs `granite4.1:30b` over the universe and writes versioned verdicts to `triage`. Deep-read stage not yet implemented. 71-test suite (unit + integration + triage) green.
 
 See:
 - [ARCHITECTURE.md](ARCHITECTURE.md) — pipeline philosophy, schema, design decisions.

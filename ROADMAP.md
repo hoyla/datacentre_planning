@@ -25,35 +25,25 @@ Last meaningful update: 2026-05-14.
 - **Triage Stage 1 designed, evaluated, model selected** (`bfd8ca4`, refined `9980bbe`). Rubric distilled from Luke's labelling of 30 applications. Five models compared on the labelled set: granite4.1:8b (24/29, 4.3s/app), granite4.1:30b (28/29, 9.2s/app), mistral-small3.2:24b (26/29), gemma4:e4b (27/29), qwen3.6 (25/29, 60s/app). **Production choice: granite4.1:30b** — IBM's JSON-tuning advantage scales (calibration discipline + reasoning capacity), and bigger non-granite models lose calibration. Only repeatable miss across all five models is #6 Saunderton, which is architecturally recoverable via parent-backfill (see Next).
 - **Privacy** (`d467bfb`). Repo flipped to PRIVATE on GitHub 2026-05-14 to halt pre-publication exposure. `data/` mostly gitignored; only `data/operators.yaml` and `data/triage_labelling/rubric.md` remain tracked.
 
-46 tests total (10 unit + 28 integration + 8 triage), all green.
+- **Parent-application backfill** (this session, 2026-05-14). 67 new parents fetched, **41 pre-2018** — directly addressing the keyword-sweep window gap. The Saunderton smoking-gun `Wycombe/08/05740/FULEA` is recovered (the only repeatable miss across all five evaluated triage models). Bare-ref fallback in `_fetch_parent` handled the council-reorganisation case (child under `Bucks/`, parent under legacy `Wycombe/`). New 2007–2008 cluster of 10 parents, four of which are explicit DC permissions (Saunderton, Elean Business Park, Newport Celtic Lakes, Bury Green Farm). Tagged `discovered_via=['parent_backfill:<child_ref>']`.
+
+- **Production triage path wired** (this session). `dcp triage` reads pending apps from the DB, calls `triage_application` with `granite4.1:30b`, writes versioned verdicts to the `triage` table. Migration 003 reshaped the `triage` table (categorical `confidence`, added `worth_deep_read`/`signals[]`/`why`) to match the post-eval prompt output. Resume contract is per-model — rerunning with a different model overlays a second opinion. Smoke-tested on 5 apps; full sweep running unattended.
+
+71 tests total (parent-backfill + triage path each added new files), all green.
 
 ---
 
 ## Next
 
-**Immediate (next session): two phases queued in order.**
-
-### 1. Parent-application backfill (Luke's 2026-05-14 architectural insight)
-
-Procedural follow-on applications (variations of conditions, NMAs, conditions discharges, reserved matters following an outline) point to substantive *parent* permissions. The triage rubric correctly classifies them as "unrelated" because the procedural application itself adds no new content — but we haven't been *acting* on the pointer to the parent. This causes the only repeatable miss across all 5 evaluated models (#6 Saunderton: the 2022 variation captured, the 2008 parent permission `08/05740/FULEA` is pre-2018 and outside our keyword-sweep window, but explicitly referenced from the variation we already have).
-
-Design:
-- Query `applications` for distinct `associated_id` values on procedural records (PlanIt populates this field).
-- Cross-check against existing `applications.application_ref` (with council-prefix normalisation: e.g. `EPF/1165/22` vs `EppingForest/EPF/1165/22`).
-- For missing parents, fetch from PlanIt via `id_match` or description-search; ingest with `discovered_via=['parent_backfill:<child_ref>']`.
-- Regex fallback for description-embedded parent refs where PlanIt's `associated_id` is empty.
-
-Implementation: ~half a day. No new schema needed — `discovered_via` array column already supports the new tag. Pre-2018 backfill of important cases falls out as a bonus.
-
-### 2. Production triage sweep
-
-Run `granite4.1:30b` triage over the full 1,549-application universe (post-backfill so the parents are included). ~4 hours wall-clock at 9.2s/app. Outputs ranked deep-read worklist for Aisha. Should be left to run unattended; the eval harness is hardened (incremental JSONL writes, resume support, per-call timeout, parse-retry).
-
 ### Optional but adjacent: operator-prior `discovered_via` tag
 
 Wire a `discovered_via:foxglove_top10` flag onto the ten Foxglove applications (or similar pattern for other known operator priors). Bypasses the only failure mode the LLM can't fix from description alone. ~30 min of work.
 
-**Soon (after the two phases above):**
+### Reporter export from triage output
+
+Once the full sweep finishes, surface the ranked deep-read worklist for Aisha. Likely: a markdown summary + xlsx export, filtered to `verdict in ('DC', 'adjacent') AND worth_deep_read in ('yes', 'maybe')`, ordered by signal strength + recency.
+
+**Soon (after the items above):**
 
 - **Council reorganisation handling.** Pre-2020 applications under legacy district names (Wycombe, Chiltern South Bucks, etc.) currently land with NULL `council_gss`. Either map legacy GSS codes into `councils`, or normalise on the join. ~50 records affected.
 - **Document-fetch adapter for matched applications.** Once triage produces matches, download the source-portal documents (Idox canonical + `/newplanningaccess/` variant cover ~half the universe; Arcus and others follow).
