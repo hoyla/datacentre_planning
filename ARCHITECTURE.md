@@ -114,14 +114,22 @@ Adding a new source means:
 - A wire-up branch in `dcp/cli.py`'s `index` command.
 - Unit tests against mock transport (HTTP client) + integration tests against `dcp_test` if the adapter has new SQL paths.
 
+### Parent-application backfill
+
+A complement to the primary sweeps: procedural follow-on applications (variations of conditions, NMAs, conditions discharges, reserved matters) carry a pointer to a *parent* permission via PlanIt's `associated_id` field (and via description text). The triage rubric correctly classifies procedurals as "unrelated" because they add no new substantive content — but the pointer to the parent IS substantive content, and the parent may not be in our universe (especially if pre-2018, outside the keyword-sweep window).
+
+The backfill pass walks `applications` for distinct `associated_id` values, cross-checks against existing `application_ref` (with council-prefix normalisation: `EPF/1165/22` vs `EppingForest/EPF/1165/22`), and fetches missing parents via PlanIt's `id_match` or a description-search. Captured parents are tagged `discovered_via=['parent_backfill:<child_ref>']`.
+
+Same `discovered_via` array column already supports this; no schema change needed.
+
 ---
 
 ## Storage
 
 - **Postgres** for all structured state. Raw `psycopg2` (no ORM) — matches the project conventions; queries are short and explicit.
 - **`source_snapshots.raw_bytes_inline` (BYTEA)** for cached API responses — small JSON pages (~50–250 KB). Inline keeps the DB self-contained, simplifies the resume mechanism.
-- **`data/seed_cases/`, `data/prior_art_sources/`, `data/planit_exploration/`** in-repo for hand-curated reference material we want versioned with the code.
-- **`data/raw/`** (not yet used) — destination for downloaded PDFs and other documents fetched in the deep-read stage. Local-first; lift to S3 when corpus grows beyond what we want to keep in the repo.
+- **`data/`** is mostly **gitignored** (since 2026-05-14) for editorial confidentiality. Tracked exceptions: `data/operators.yaml` (operator/agent name list driving the Phase 1d sweep) and `data/triage_labelling/rubric.md` (the distilled triage methodology). Everything else — research writeups, eval outputs, cached source-portal responses, labelling samples, JSONL artefacts — is local-only.
+- **`data/raw/`** (not yet used) — destination for downloaded PDFs and other documents fetched in the deep-read stage. Local-first; lift to S3 when corpus grows beyond what we want to keep on disk.
 
 ---
 

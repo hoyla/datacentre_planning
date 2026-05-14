@@ -5,7 +5,7 @@ Where the project stands, what's next, what's parked, and what's open.
 For *how the system is shaped*, see [ARCHITECTURE.md](ARCHITECTURE.md).
 For *why we're doing this and what's been published*, see [prior_art.md](prior_art.md).
 
-Last meaningful update: 2026-05-12.
+Last meaningful update: 2026-05-14.
 
 ---
 
@@ -22,28 +22,42 @@ Last meaningful update: 2026-05-12.
 - **Phase 1c (spatial colocated sweep) + Phase 1d (operator-name sweep)** (`fe1a2a7`, refined `f4c3145`, `ae8d8d7`). Migration 002 adds `discovered_via TEXT[]` plus the `colocated_candidates` table. Two-step spatial design (fetch caches, process re-derives links from current keyword lexicon — vocabulary iteration costs no API calls). Operator-name caveats documented: PlanIt's developer-only queries time out on their backend and applicant_* fields are mostly empty, so practical matching is via `agent_company` / `agent_address`. Local backfill of operator tags from cached agent data (no API budget) tagged 217 applications.
 - **Foxglove top-10 colocated candidates derived** (this session, `8f28bc8` and ancestors). The original spatial spike's 8 cached JSON responses were imported into `source_snapshots`, then `process_colocated` derived 338 candidate links across 14 anchors. Yorkshire Energy Park's neighbours include the smoking-gun `EastRiding/16/02800/STPLF` ("Erection of a gas-fired energy reserve facility of up to 21MW capacity comprising of 14 gas reciprocating engine generators"), filed six years before the DC, plus a 2024 hydrogen production facility and multiple BESS applications — confirming the structural multi-fuel cluster pattern.
 - **Phase 1e (NSIP CSV adapter)** (`8f28bc8`). Built on the day's research (`1613414`). One DC project currently in the NSIP register: Wapseys Wood (`EN0110030`, Slough Holdings UK Limited, "EN01 - Generating Stations" classification, pre-application, anticipated DCO submission January 2027). Captured with full official description spelling out the on-site 250–350MW gas energy centre alongside the 300MW DC. The "EN01" classification is structurally important — DCs may be filed as generating stations rather than as a separate type.
+- **Triage Stage 1 designed, evaluated, model selected** (`bfd8ca4`, refined `9980bbe`). Rubric distilled from Luke's labelling of 30 applications. Five models compared on the labelled set: granite4.1:8b (24/29, 4.3s/app), granite4.1:30b (28/29, 9.2s/app), mistral-small3.2:24b (26/29), gemma4:e4b (27/29), qwen3.6 (25/29, 60s/app). **Production choice: granite4.1:30b** — IBM's JSON-tuning advantage scales (calibration discipline + reasoning capacity), and bigger non-granite models lose calibration. Only repeatable miss across all five models is #6 Saunderton, which is architecturally recoverable via parent-backfill (see Next).
+- **Privacy** (`d467bfb`). Repo flipped to PRIVATE on GitHub 2026-05-14 to halt pre-publication exposure. `data/` mostly gitignored; only `data/operators.yaml` and `data/triage_labelling/rubric.md` remain tracked.
 
-35 tests total (10 unit + 25 integration), all green. Code at `8f28bc8` on `main` (https://github.com/hoyla/datacentre_planning).
+46 tests total (10 unit + 28 integration + 8 triage), all green.
 
 ---
 
 ## Next
 
-**Immediate (next session):** triage rubric design.
+**Immediate (next session): two phases queued in order.**
 
-Ideally collaborative with Aisha. We have 1,549 real applications to test prompts against, plus three hand-validated exemplar cases (Yorkshire Energy Park, Wapseys Wood, Loughton). Aim:
+### 1. Parent-application backfill (Luke's 2026-05-14 architectural insight)
 
-- Define the *signal types* we want extracted (initial list in `data/seed_cases/walkthrough_findings.md`).
-- Draft Stage-1 prompt — application description + consultee senders → classify (DC / adjacent / unrelated / unknown) and flag "worth deep reading".
-- Spike Stage-2 prompt — Energy Statement / officer report / consultee letters → structured extraction with evidence-text capture.
-- Run prompts against the seed cases first, then a sample from the ingested universe, iterate.
+Procedural follow-on applications (variations of conditions, NMAs, conditions discharges, reserved matters following an outline) point to substantive *parent* permissions. The triage rubric correctly classifies them as "unrelated" because the procedural application itself adds no new content — but we haven't been *acting* on the pointer to the parent. This causes the only repeatable miss across all 5 evaluated models (#6 Saunderton: the 2022 variation captured, the 2008 parent permission `08/05740/FULEA` is pre-2018 and outside our keyword-sweep window, but explicitly referenced from the variation we already have).
 
-**Soon:**
+Design:
+- Query `applications` for distinct `associated_id` values on procedural records (PlanIt populates this field).
+- Cross-check against existing `applications.application_ref` (with council-prefix normalisation: e.g. `EPF/1165/22` vs `EppingForest/EPF/1165/22`).
+- For missing parents, fetch from PlanIt via `id_match` or description-search; ingest with `discovered_via=['parent_backfill:<child_ref>']`.
+- Regex fallback for description-embedded parent refs where PlanIt's `associated_id` is empty.
 
-- **Council reorganisation handling.** Pre-2020 applications under legacy district names (Wycombe, Chiltern South Bucks, etc.) currently land with NULL `council_gss`. Either map legacy GSS codes into `councils`, or normalise on the join. ~50 records affected in v1 sweep. The Foxglove reconciliation (see below) confirms this matters: Saunderton (#6) and Court Lane (#10) both have application chains crossing the 2020 Bucks reorganisation.
-- **Document-fetch adapter for matched applications.** Once triage produces matches, we need to download the source-portal documents (Idox canonical and the `/newplanningaccess/` variant cover ~half the universe; Arcus and others follow). The Energy Statement document type from East Riding maps cleanly into the existing schema (`documents.kind`).
-- ~~**Foxglove top-10 reconciliation.**~~ **Done 2026-05-12.** 8/10 directly confirmed, 1 probable (G-Park Docklands → Tower Hamlets Travelodge-to-DC conversion), 1 unconfirmed (DC01 — generic name with no further identifying detail in the Foxglove report). Full writeup in [data/prior_art_sources/foxglove_reconciliation.md](data/prior_art_sources/foxglove_reconciliation.md). **Note for triage prioritisation:** three of the cases (DC01, G-Park Docklands, 103MW Court Lane) are Foxglove's implausibly-low-emissions outliers and should be top-priority deep-read targets — gap between planning-form figure and physical kit is likely widest there.
-- **Promote `associated_id` to a typed column.** Multiple confirmed Foxglove cases have parent/child application families linked by PlanIt's `associated_id`. Currently lives in `raw_metadata`; promoting to `applications.parent_ref` would make family navigation a direct join. ~30 minutes of schema work + a backfill from raw_metadata.
+Implementation: ~half a day. No new schema needed — `discovered_via` array column already supports the new tag. Pre-2018 backfill of important cases falls out as a bonus.
+
+### 2. Production triage sweep
+
+Run `granite4.1:30b` triage over the full 1,549-application universe (post-backfill so the parents are included). ~4 hours wall-clock at 9.2s/app. Outputs ranked deep-read worklist for Aisha. Should be left to run unattended; the eval harness is hardened (incremental JSONL writes, resume support, per-call timeout, parse-retry).
+
+### Optional but adjacent: operator-prior `discovered_via` tag
+
+Wire a `discovered_via:foxglove_top10` flag onto the ten Foxglove applications (or similar pattern for other known operator priors). Bypasses the only failure mode the LLM can't fix from description alone. ~30 min of work.
+
+**Soon (after the two phases above):**
+
+- **Council reorganisation handling.** Pre-2020 applications under legacy district names (Wycombe, Chiltern South Bucks, etc.) currently land with NULL `council_gss`. Either map legacy GSS codes into `councils`, or normalise on the join. ~50 records affected.
+- **Document-fetch adapter for matched applications.** Once triage produces matches, download the source-portal documents (Idox canonical + `/newplanningaccess/` variant cover ~half the universe; Arcus and others follow).
+- **Promote `associated_id` to a typed column.** Once parent-backfill confirms the field is reliable, promoting it from `raw_metadata` to a dedicated `applications.parent_ref` column makes family-navigation queries a direct join. ~30 minutes of schema work.
 
 ---
 
