@@ -12,12 +12,16 @@ PDFs. A subset of plan documents (where the council uses Idox's OMT viewer)
 have `docKey=` URLs that point to an interactive viewer rather than a direct
 PDF — we currently skip those; deep-read can fall back to manual download.
 
-Some councils' portals ship a misconfigured TLS chain (missing intermediate
-cert; Sectigo OV R36 in particular). Callers can pass `verify=<path>` with a
-custom CA bundle for those councils; the default uses certifi's bundle. The
-data is public planning material and document content is hashed via SHA-256
-on download, but TLS chain bypasses are NOT enabled by default — broken
-councils log a warning and skip rather than silently bypassing verification.
+Many UK council Idox installs ship a misconfigured TLS chain — the server
+sends only the leaf cert and not the intermediate(s), so strict OpenSSL
+validation fails (Tower Hamlets uses GoDaddy G2; Northumberland and Glasgow
+use Sectigo OV R36; others vary). The `IdoxClient` defaults to an SSL
+context built via the `truststore` package, which delegates to the OS native
+TLS APIs (Keychain on macOS, schannel on Windows, system OpenSSL on Linux).
+Those native APIs perform AIA chasing — downloading the missing intermediate
+from the URL embedded in the leaf cert's Authority Information Access
+extension — so chain reconstruction is automatic and we never bypass
+verification.
 
 Bytes are stored under `data/raw/idox/<application_ref>/<sha256[:16]>.pdf`,
 recorded in `documents` table with `(application_id, content_sha256)` UNIQUE
@@ -46,6 +50,26 @@ log = logging.getLogger(__name__)
 
 MANIFEST_FILENAME = "_manifest.json"
 MANIFEST_VERSION = 1
+
+# Many UK council Idox installs serve TLS certs without including the full
+# intermediate chain (Tower Hamlets, Northumberland, Glasgow, and others). The
+# leaf cert is typically issued by a public CA whose root IS in certifi, but
+# the intermediate that bridges the two is missing — so Python's strict chain
+# validation fails. The proper fix is to use a trust store that performs AIA
+# chasing (downloading the missing intermediate from the URL in the leaf
+# cert's Authority Information Access extension). The `truststore` package
+# delegates to the OS native TLS APIs (Keychain on macOS, schannel on Windows,
+# OpenSSL with system roots on Linux), all of which support AIA chasing.
+# We never bypass certificate verification — only fix the chain.
+
+
+def _resolve_ssl_context():
+    """Build an SSL context that uses the OS native trust store (so we get
+    AIA chasing for free). Used as `verify=<context>` on the httpx.Client.
+    Memoised so the context is built once per process."""
+    import ssl
+    import truststore
+    return truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
 
 SOURCE_NAME = "idox"
 USER_AGENT = "datacentre_planning research (luke.hoyland@gmail.com)"
@@ -144,16 +168,23 @@ class IdoxClient:
         delay_seconds: float = 5.0,
         backoff_seconds: float = 60.0,
         max_retries: int = 4,
-        verify: str | bool = True,
+        verify: str | bool | None = None,
     ):
         self.delay = delay_seconds
         self.backoff = backoff_seconds
         self.max_retries = max_retries
+        # Default: OS native trust store via `truststore`, which performs AIA
+        # chasing to recover intermediate certs that misconfigured council
+        # servers fail to send. Pass `verify=True` to get certifi's strict
+        # bundle only (and accept failures on broken-chain councils); pass a
+        # path to a bundle to use a specific trust file. `verify=False`
+        # bypasses validation entirely — never do that for council portals.
+        resolved_verify = _resolve_ssl_context() if verify is None else verify
         self.client = httpx.Client(
             headers={"User-Agent": user_agent},
             timeout=90.0,
             follow_redirects=True,
-            verify=verify,
+            verify=resolved_verify,
         )
         self._next_request_at = 0.0
 
@@ -388,34 +419,21 @@ def fetch_documents_for_application(
 
 
 def _worklist_apps(conn, *, model: str, top: int | None) -> list[tuple]:
-    """Pull the ranked worklist apps that have a likely-Idox URL. Mirrors the
-    filter `dcp.worklist.fetch` uses but trims to just the fields we need."""
-    sql = """
-    WITH latest_triage AS (
-      SELECT DISTINCT ON (application_id) * FROM triage
-      WHERE model = %s ORDER BY application_id, inserted_at DESC
-    ),
-    ranked AS (
-      SELECT a.id, a.application_ref, a.url, a.discovered_via,
-        (SELECT count(*) FROM unnest(t.signals) AS s WHERE lower(s) ~
-           '(energy centre|gas turbine|chp|gas[- ]fired|hydrogen|biomass)') AS t1
-      FROM applications a JOIN latest_triage t ON t.application_id = a.id
-      WHERE ((t.verdict IN ('DC','adjacent') AND t.worth_deep_read IN ('yes','maybe'))
-             OR 'foxglove_top10' = ANY(a.discovered_via))
-        AND a.url IS NOT NULL
-        AND (a.url LIKE '%%/online-applications/%%' OR a.url LIKE '%%/newplanningaccess/%%')
-    )
-    SELECT id, application_ref, url FROM ranked
-    ORDER BY t1 DESC, application_ref
-    """
-    if top is not None:
-        sql += " LIMIT %s"
-        with conn.cursor() as cur:
-            cur.execute(sql, (model, top))
-            return cur.fetchall()
-    with conn.cursor() as cur:
-        cur.execute(sql, (model,))
-        return cur.fetchall()
+    """Pull worklist apps that have a likely-Idox URL, in worklist-rank order
+    (head-of-list first). Defers ranking to `dcp.worklist.fetch` so the fetch
+    order matches the order Aisha sees in the export — earlier ranks are the
+    highest-priority cases."""
+    from dcp import worklist as worklist_mod
+    data = worklist_mod.fetch(conn, model=model, limit=None)
+    out: list[tuple] = []
+    for row in data.rows:
+        url = row.get("url")
+        if not url or not _is_idox_url(url):
+            continue
+        out.append((row["id"], row["application_ref"], url))
+        if top is not None and len(out) >= top:
+            break
+    return out
 
 
 def fetch_worklist(

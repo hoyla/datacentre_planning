@@ -17,6 +17,7 @@ dependencies = [
     "python-dotenv>=1.0",
     "pyyaml>=6.0",
     "openpyxl>=3.1",
+    "truststore>=0.10",
 ]
 
 [project.optional-dependencies]
