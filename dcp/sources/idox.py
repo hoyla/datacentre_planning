@@ -23,9 +23,22 @@ from the URL embedded in the leaf cert's Authority Information Access
 extension — so chain reconstruction is automatic and we never bypass
 verification.
 
-Bytes are stored under `data/raw/idox/<application_ref>/<sha256[:16]>.pdf`,
+Bytes are stored under `data/raw/idox/<application_ref>/<sha256[:16]>.<ext>`,
 recorded in `documents` table with `(application_id, content_sha256)` UNIQUE
 so re-runs are no-ops.
+
+**Path-layout quirk worth knowing**: application refs use `/` as their
+own segment separator, and the bytes-layout preserves slashes verbatim
+so each council gets a tidy subtree on disk. The edge case is when one
+ref is a *prefix* of another — `TowerHamlets/PA/15/00249` and the
+Section 73 variation `TowerHamlets/PA/15/00249/S`. The variation's
+directory naturally nests inside the parent's, so the parent dir
+contains its own PDFs alongside a subdirectory holding the variation's.
+Each app's `_manifest.json` still distinguishes their contents and the
+apps are genuinely related, so this is editorially defensible. A
+flat-path migration (`TowerHamlets/PA_15_00249/` etc.) would eliminate
+the quirk but would orphan every already-fetched directory — deferred
+until a clean-sheet rebuild. See ARCHITECTURE.md §Storage for details.
 """
 
 from __future__ import annotations
