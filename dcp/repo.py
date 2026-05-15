@@ -216,6 +216,43 @@ def backfill_council_gss(conn: PgConnection) -> dict[str, int]:
     return out
 
 
+def record_document(
+    conn: PgConnection,
+    *,
+    application_id: int,
+    url: str,
+    content_sha256: str,
+    bytes_path: str | None = None,
+    text_path: str | None = None,
+    kind: str | None = None,
+    page_count: int | None = None,
+    ocr_used: bool = False,
+) -> int:
+    """Idempotent upsert of a fetched document. The `(application_id,
+    content_sha256)` UNIQUE constraint means re-fetching the same bytes is a
+    no-op. Returns the row id."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO documents
+                (application_id, url, kind, content_sha256, bytes_path,
+                 text_path, ocr_used, page_count, fetched_at)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, now())
+            ON CONFLICT (application_id, content_sha256) DO UPDATE SET
+                url = EXCLUDED.url,
+                kind = COALESCE(EXCLUDED.kind, documents.kind),
+                bytes_path = COALESCE(EXCLUDED.bytes_path, documents.bytes_path),
+                text_path = COALESCE(EXCLUDED.text_path, documents.text_path),
+                page_count = COALESCE(EXCLUDED.page_count, documents.page_count),
+                ocr_used = EXCLUDED.ocr_used
+            RETURNING id
+            """,
+            (application_id, url, kind, content_sha256, bytes_path,
+             text_path, ocr_used, page_count),
+        )
+        return cur.fetchone()[0]
+
+
 def append_discovered_via(
     conn: PgConnection, *, application_refs: list[str], tag: str,
 ) -> int:

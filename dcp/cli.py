@@ -174,6 +174,58 @@ def export(model: str, md_top: int, output_dir: Path) -> None:
     click.echo(f"Wrote xlsx     : {paths['xlsx']}")
 
 
+@main.command("fetch-docs")
+@click.option("--source", required=True, type=click.Choice(["idox"]),
+              help="Portal adapter to use (currently `idox` only).")
+@click.option("--model", default="granite4.1:30b",
+              help="Triage model whose worklist to draw the targets from.")
+@click.option("--top", type=int, default=None,
+              help="Cap on the number of worklist apps to fetch (head-of-list first).")
+@click.option("--delay", "delay_seconds", type=float, default=5.0,
+              help="Polite inter-request delay per portal (default 5s; "
+                   "longer than PlanIt because council portals are smaller-scale).")
+@click.option("--data-dir", type=click.Path(file_okay=False, path_type=Path),
+              default=Path("data"),
+              help="Root for bytes storage. Documents land under "
+                   "<data-dir>/raw/idox/<application_ref>/<sha>.pdf.")
+def fetch_docs(source: str, model: str, top: int | None,
+               delay_seconds: float, data_dir: Path) -> None:
+    """Stage 3: fetch source-portal documents for worklist applications.
+
+    \b
+    Currently only the Idox `online-applications` / `newplanningaccess`
+    canonical layout is supported. Non-Idox URLs (Ocella, Salesforce, etc.)
+    are skipped with a logged note; per-portal adapters land separately.
+    """
+    import sys
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+    from dcp.sources import idox
+
+    def _progress(row: dict) -> None:
+        ref = row.get("ref", "?")[:40]
+        if row.get("error_class"):
+            cls = row["error_class"]
+            click.echo(f"  {ref:40s}  SKIP[{cls}]")
+        else:
+            click.echo(
+                f"  {ref:40s}  "
+                f"links={row.get('links_found', 0):3d}  "
+                f"new={row.get('downloaded', 0):3d}  "
+                f"skip={row.get('skipped_existing', 0):3d}  "
+                f"err={row.get('errors', 0):3d}"
+            )
+        sys.stdout.flush()
+
+    total = idox.fetch_worklist(
+        model=model, top=top, delay_seconds=delay_seconds,
+        data_dir=data_dir, progress=_progress,
+    )
+    click.echo("")
+    for k, v in total.items():
+        click.echo(f"  {k}: {v}")
+
+
 @main.command("deep-read")
 @click.option("--limit", type=int, default=None)
 def deep_read(limit: int | None) -> None:
