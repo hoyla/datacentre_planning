@@ -41,7 +41,7 @@ Last meaningful update: 2026-05-15 (late afternoon — Phase 3 fetch in flight).
 
 - **Idox document-fetch adapter** (`8f6de70`, `16d9889`, 2026-05-15). `dcp fetch-docs --source idox` walks worklist apps in rank order, downloads every direct-PDF link from the documents tab, stores bytes under `data/raw/idox/<application_ref>/<sha[:16]>.<ext>`, records metadata in the `documents` table (UNIQUE on application_id + content_sha256 for idempotency). Per-app `_manifest.json` is the hand-over signal. Error-classification surfaces ssl_chain_failure / dns_failure / withdrawn_from_view / no_documents_or_unparseable distinctly.
 - **SSL chain fix via OS native trust store** (`16d9889`). Many council Idox installs send only the leaf cert; `truststore` delegates to the OS TLS APIs which perform AIA chasing automatically. Unblocks Tower Hamlets, Northumberland (Cambois Foxglove case), Glasgow, and other broken-chain councils — full PKI validation preserved, only the chain reconstruction is delegated.
-- **Wider sweep in flight** (currently running). Top-100 worklist apps in rank order. As of mid-sweep: 43 apps complete, 1,750 docs on disk, ~1.7 GB.
+- **Wider top-100 worklist sweep completed** (2026-05-16, ~14h wall-clock). 79 apps fully successful, 21 classified-skips (15 `no_documents_or_unparseable`, 4 `withdrawn_from_view`, 1 `dns_failure`, 1 `RuntimeError`). 3,032 documents downloaded across 3,104 found; **9.3 GB on disk**. Corpus mix: 2,849 PDFs + 52 .msg consultee emails + 52 .docx + 13 .xlsm + 12 .rtf + 10 .jpg + 15 misc Office files. The .msg files are exactly the EA-letter / consultee-response category Aisha flagged as editorially critical — generator counts and fuel detail that the application form alone omits.
 
 ### Phase 6 — reporter export (May 15)
 
@@ -121,7 +121,7 @@ Things we haven't decided yet, with current thinking where there is one.
 | 1e — NSIP CSV adapter | ✅ Done | All ~280 projects ingested; one current DC (Wapseys Wood). |
 | 1f — Parent-application backfill | ✅ Done | 67 parents fetched, 41 pre-2018. |
 | 2 — Triage | ✅ Done | `granite4.1:30b` over the full universe; 683 DC + 136 adjacent + 965 unrelated + 48 unknown (post-retriage). |
-| 3 — Document fetch | ⏳ In flight | Idox adapter active; top-100 worklist sweep currently running. Long-tail per-portal adapters pending. |
+| 3 — Document fetch | ✅ Top-100 done | Idox top-100 sweep complete (79 apps cleanly fetched, 9.3 GB corpus); long-tail per-portal adapters (Ocella / Arcus / Salesforce) pending. |
 | 4 — Structured extraction | ⏳ Next | Text extraction + OCR fallback; evidence-quoted findings into `findings` table. |
 | 5 — Multimodal pass | ⏳ Eventual | Claude vision on site plans / blueprints for matched subset. |
 | 6 — Reporter export | ✅ Done (v1) | Markdown + xlsx + KML + interactive HTML map with OSM power-plant overlay. Iterate per Aisha's feedback. |
