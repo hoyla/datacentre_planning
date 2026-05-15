@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import click
 
 
@@ -142,6 +144,34 @@ def retriage(cohort: str, model: str | None, limit: int | None, timeout: float) 
     click.echo("")
     for k, v in summary.items():
         click.echo(f"  {k}: {v}")
+
+
+@main.command()
+@click.option("--model", default="granite4.1:30b",
+              help="Triage model whose latest verdict per app to draw from.")
+@click.option("--top", "md_top", type=int, default=50,
+              help="Number of top-ranked cards to include in the markdown narrative.")
+@click.option("--output-dir", type=click.Path(file_okay=False, path_type=Path),
+              default=Path("data/exports"),
+              help="Directory to write `worklist_<date>.md` + `worklist_<date>.xlsx`.")
+def export(model: str, md_top: int, output_dir: Path) -> None:
+    """Stage 6: hand-off export for Aisha — markdown narrative + Excel companion.
+
+    \b
+    Produces two files:
+      - `worklist_<YYYY-MM-DD>.md`   — top-N curated narrative cards
+      - `worklist_<YYYY-MM-DD>.xlsx` — all worklist entries, sortable / filterable
+    Both refresh from the latest triage verdict per app (DISTINCT ON inserted_at).
+    """
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+    from dcp import export as export_mod  # local import avoids importing openpyxl when unused
+
+    paths = export_mod.export_worklist(
+        model=model, output_dir=output_dir, md_top=md_top,
+    )
+    click.echo(f"Wrote markdown : {paths['markdown']}")
+    click.echo(f"Wrote xlsx     : {paths['xlsx']}")
 
 
 @main.command("deep-read")
