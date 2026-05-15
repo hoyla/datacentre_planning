@@ -1,8 +1,10 @@
 # Data licensing notice
 
-The MIT `LICENSE` covers the code in this repository. Data ingested or
-tracked under `data/` carries its own licensing — recorded here for
-attribution.
+The Apache License 2.0 (`LICENSE`) covers the code in this repository,
+and the project-level copyright + attribution lives in `NOTICE`. The
+data ingested or tracked under `data/` carries its *own* upstream
+licensing, which the Apache `NOTICE` file alone doesn't capture — that's
+what this document records.
 
 ## Data sources used in the pipeline
 
@@ -71,9 +73,9 @@ ONS Office for National Statistics convention (OGL v3.0).
 ### Methodology trail (`data/seed_cases/`, `data/*_findings.md`, `data/triage_labelling/eval_*.md`, etc.)
 
 The methodology documents — research findings, evaluation reports,
-rubric — are the author's original work. Released under the same MIT
-licence as the code, with a request for attribution if re-used
-substantively in derivative research.
+rubric — are released under the same Apache License 2.0 as the code.
+Copyright Guardian News & Media Ltd. Attribution is appreciated if
+re-used substantively in derivative research.
 
 ### Triage and finding outputs
 
@@ -86,8 +88,9 @@ planning document by its application reference.
 
 ## In short
 
-- **Code**: MIT (see `LICENSE`).
-- **Methodology docs**: MIT, with citation request.
+- **Code**: Apache License 2.0 (see `LICENSE` and `NOTICE`).
+  Copyright 2026 Guardian News & Media Ltd.
+- **Methodology docs**: Apache 2.0, with attribution appreciated.
 - **OSM data**: ODbL — attribute "© OpenStreetMap contributors".
 - **NSIP CSV**: OGL v3.0.
 - **PlanIt data**: courtesy attribution to planit.org.uk.

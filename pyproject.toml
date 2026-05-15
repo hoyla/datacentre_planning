@@ -6,6 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "datacentre-planning"
 version = "0.1.0"
 description = "UK data-centre planning-application scraper and analysis pipeline"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.12"
 dependencies = [
     "psycopg2-binary>=2.9",

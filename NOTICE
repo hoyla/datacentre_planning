@@ -1,0 +1,10 @@
+datacentre_planning — UK data-centre planning-application dataset and triage pipeline
+Copyright 2026 Guardian News & Media Ltd.
+
+This product is authored by Luke Hoyland for Guardian News & Media,
+in collaboration with Aisha Down at the Guardian.
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+For the licensing of third-party data ingested or bundled with this
+repository (OpenStreetMap, NSIP register, etc.), see DATA-LICENSING.md.

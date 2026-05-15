@@ -9,8 +9,10 @@ authors:
   - family-names: Hoyland
     given-names: Luke
     email: luke.hoyland@gmail.com
+    affiliation: "Guardian News & Media Ltd."
 type: software
-license: MIT
+license: Apache-2.0
+copyright: "Copyright 2026 Guardian News & Media Ltd."
 repository-code: "https://github.com/hoyla/datacentre_planning"
 keywords:
   - data centres

@@ -115,9 +115,9 @@ When flipping public, consider also:
 
 - Adding a `CITATION.cff` with the project metadata so academic mirrors
   can cite it cleanly.
-- A `LICENSE` (decide before flip — likely MIT or Apache 2.0 for code;
-  the `data/priors/osm/` content stays under ODbL by upstream
-  attribution).
+- A `LICENSE` (Apache 2.0, copyright Guardian News & Media Ltd. — see
+  `LICENSE` and `NOTICE`). `data/priors/osm/` content stays under ODbL
+  by upstream attribution (covered in `DATA-LICENSING.md`).
 - A "How to reproduce the dataset" section in the README pointing at
   `scripts/` + the `dcp` CLI commands in order.
 - A note on the document corpus location (where `data/raw/` lives if
