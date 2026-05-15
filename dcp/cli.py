@@ -174,6 +174,34 @@ def export(model: str, md_top: int, output_dir: Path) -> None:
     click.echo(f"Wrote xlsx     : {paths['xlsx']}")
 
 
+@main.command()
+@click.option("--model", default="granite4.1:30b",
+              help="Triage model whose worklist to plot.")
+@click.option("--output-dir", type=click.Path(file_okay=False, path_type=Path),
+              default=Path("data/exports"))
+@click.option("--osm-path", type=click.Path(dir_okay=False, path_type=Path), default=None,
+              help="OSM power-plants GeoJSON. Default: data/priors/osm/uk_power_plants.geojson.")
+def map(model: str, output_dir: Path, osm_path: Path | None) -> None:
+    """Stage 6 add-on: editorial map (HTML + GeoJSON + KML).
+
+    \b
+    HTML is the primary artefact — self-contained Leaflet, opens in any
+    browser, with verdict-coloured worklist markers, OSM power-plant overlay,
+    and click popups that list signals + distance to the nearest power plant.
+    GeoJSON unblocks QGIS / kepler.gl. KML is for the Guardian graphics team
+    (Google Earth).
+    """
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+    from dcp import map as map_mod
+
+    result = map_mod.build_map(
+        model=model, output_dir=output_dir, osm_path=osm_path,
+    )
+    for k, v in result.items():
+        click.echo(f"  {k}: {v}")
+
+
 @main.command("fetch-docs")
 @click.option("--source", required=True, type=click.Choice(["idox"]),
               help="Portal adapter to use (currently `idox` only).")

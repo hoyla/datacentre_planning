@@ -61,3 +61,6 @@ data/triage_labelling/*
 !data/priors/
 data/priors/*
 !data/priors/*.yaml
+!data/priors/osm/
+data/priors/osm/*
+!data/priors/osm/*.geojson
