@@ -54,9 +54,13 @@ The substantive question. Per Luke (2026-05-13): *prefer false positives to fals
 
 Power-related vocabulary observed in the description. Pick from the lexicon below; add new tags freely when present.
 
+**Variant forms are synonymous.** Terms below are listed in one canonical form per entry, but downstream matching (in `scripts/worklist_preview.py` and any future ranker) treats common whitespace / hyphenation variants as equivalent. For example: `gas-fired` ≡ `gas fired`; `onsite generation` ≡ `on-site generation` ≡ `on site generation`; `behind the meter` ≡ `behind-the-meter`; `bridge-to-grid` ≡ `bridge to grid`. Don't proliferate near-duplicate entries; one canonical form per term is enough.
+
 ### Tier 1 — primary on-site generation (strong signal)
 
-`energy centre` · `power station` · `power plant` · `power facility` · `prime power` · `gas turbine` · `gas-fired` · `gas reciprocating engine` · `reciprocating engine` · `CHP` · `combined heat and power` · `cogeneration` · `energy reserve` · `onsite generation` · `microgrid` · `behind the meter` · `bridge-to-grid` · `biomass` · `hydrogen` · `fuel cell` · `anaerobic digestion` · `energy from waste`
+`energy centre` · `power station` · `power plant` · `power facility` · `prime power` · `gas turbine` · `gas-fired` · `gas reciprocating engine` · `reciprocating engine` · `CHP` · `combined heat and power` · `cogeneration` · `energy reserve` · `onsite generation` · `microgrid` · `behind the meter` · `bridge-to-grid` · `biomass` · `hydrogen` · `fuel cell` · `anaerobic digestion` · `energy from waste` · `district heating centre` · `district heating unit`
+
+The two `district heating …` phrasings flag on-site combustion infrastructure producing heat for a network (case (a) — strong signal). Bare `district heating` is intentionally *not* a Tier-1 term because it conflates case (a) with connection to an existing external network (case (b) — neutral or positive, e.g. waste-heat reuse). The Tier-3 entry still catches bare mentions where (a) vs (b) can't be disambiguated from the description alone.
 
 ### Tier 2 — backup / standby (deep-read trigger, not finding)
 
