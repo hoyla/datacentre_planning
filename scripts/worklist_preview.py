@@ -66,7 +66,16 @@ TIER_STORAGE_REGEX = (
 
 
 RANKED_SQL = """
-WITH ranked AS (
+-- `triage` is append-only / versioned per (application_id, model, inserted_at);
+-- pick the latest verdict per app so retriage runs supersede earlier ones
+-- without losing the audit trail (the older rows stay for inspection).
+WITH latest_triage AS (
+  SELECT DISTINCT ON (application_id) *
+  FROM triage
+  WHERE model = %s
+  ORDER BY application_id, inserted_at DESC
+),
+ranked AS (
   SELECT
     a.id, a.application_ref, a.description, a.address,
     a.date_received, a.url, a.raw_metadata,
@@ -87,13 +96,11 @@ WITH ranked AS (
        '(generator|generators|back[- ]?up|stand[- ]?by|flue)'
     ) AS backup_hits
   FROM applications a
-  JOIN triage t ON t.application_id = a.id
+  JOIN latest_triage t ON t.application_id = a.id
   LEFT JOIN councils c ON c.gss_code = a.council_gss
-  WHERE t.model = %s
-    AND (
+  WHERE
       (t.verdict IN ('DC','adjacent') AND t.worth_deep_read IN ('yes','maybe'))
       OR 'foxglove_top10' = ANY(a.discovered_via)
-    )
 )
 SELECT * FROM ranked
 ORDER BY (tier1_hits * 3 + storage_hits) DESC,
@@ -104,6 +111,12 @@ LIMIT %s
 """
 
 SUMMARY_SQL = """
+WITH latest_triage AS (
+  SELECT DISTINCT ON (application_id) *
+  FROM triage
+  WHERE model = %s
+  ORDER BY application_id, inserted_at DESC
+)
 SELECT
     count(*) AS total,
     count(*) FILTER (WHERE t.verdict = 'DC') AS dc,
@@ -114,8 +127,7 @@ SELECT
       WHERE (t.verdict IN ('DC','adjacent') AND t.worth_deep_read IN ('yes','maybe'))
          OR 'foxglove_top10' = ANY(a.discovered_via)
     ) AS worklist
-FROM applications a JOIN triage t ON t.application_id = a.id
-WHERE t.model = %s
+FROM applications a JOIN latest_triage t ON t.application_id = a.id
 """
 
 
@@ -204,7 +216,7 @@ def main() -> int:
             cols = [d[0] for d in cur.description]
             summary = dict(zip(cols, cur.fetchone()))
         with conn.cursor() as cur:
-            cur.execute(RANKED_SQL, (TIER1_REGEX, TIER_STORAGE_REGEX, args.model, args.top))
+            cur.execute(RANKED_SQL, (args.model, TIER1_REGEX, TIER_STORAGE_REGEX, args.top))
             cols = [d[0] for d in cur.description]
             rows = [dict(zip(cols, row)) for row in cur.fetchall()]
 

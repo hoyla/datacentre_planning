@@ -248,6 +248,101 @@ def test_run_triage_skips_already_triaged_on_resume(db_conn, monkeypatch):
     assert rows == [("Y/DONE", 1), ("Y/TODO", 1)]
 
 
+def test_applications_for_retriage_returns_apps_with_existing_verdict(db_conn):
+    """The retriage path must select apps even when they have a prior triage
+    row — that's the whole point. `applications_pending_triage` excludes them;
+    `applications_for_retriage` selects on the cohort SQL only."""
+    source_id = repo.ensure_source(
+        db_conn, name="planit", kind="aggregator", base_url="https://x",
+    )
+    a = _seed_app(db_conn, source_id, "X/1", "first")
+    b = _seed_app(db_conn, source_id, "X/2", "second")
+    repo.record_triage(
+        db_conn, application_id=a, model="granite4.1:30b",
+        verdict="DC", worth_deep_read="yes", signals=[], why="x", confidence="sure",
+    )
+    # Cohort: all apps where description LIKE 'first%' — should pick X/1 even
+    # though it already has a verdict. `%` is doubled because psycopg2 reserves
+    # the bare `%` for parameter substitution even when no params are passed.
+    rows = repo.applications_for_retriage(
+        db_conn, cohort_sql="a.description LIKE 'first%%'",
+    )
+    refs = [r["application_ref"] for r in rows]
+    assert refs == ["X/1"]
+
+
+def test_run_retriage_appends_new_verdict_without_deleting_old(db_conn, monkeypatch):
+    """A retriage run appends a new triage row alongside the existing one.
+    Both rows survive; the worklist preview picks the latest by inserted_at."""
+    from dcp import triage as triage_mod
+    from dcp.llm import FakeBackend
+
+    source_id = repo.ensure_source(
+        db_conn, name="planit", kind="aggregator", base_url="https://x",
+    )
+    app_id = _seed_app(db_conn, source_id, "Z/1", "DC application")
+    # Original verdict — say it was 'unknown' (sparse-prompt era)
+    repo.record_triage(
+        db_conn, application_id=app_id, model="fake-granite",
+        verdict="unknown", worth_deep_read="maybe", signals=[],
+        why="sparse prompt", confidence="guessing",
+    )
+    db_conn.commit()
+
+    # Stub backend that always returns DC/yes/sure for the re-prompt
+    fake = FakeBackend(responses={
+        "Application: Z/1": _canned("DC", deep="yes", confidence="sure"),
+    })
+    class _FakeBackend(FakeBackend):
+        def __init__(self, *a, **kw):
+            kw.pop("model", None); kw.pop("request_timeout", None)
+            super().__init__(responses=fake.responses)
+            self.model = "fake-granite"
+    import dcp.llm as llm_mod
+    monkeypatch.setattr(llm_mod, "OllamaBackend", _FakeBackend)
+
+    # Register an ad-hoc cohort that picks our seeded app
+    triage_mod.RETRIAGE_COHORTS["test-cohort"] = (
+        "a.application_ref = %s", ("Z/1",),
+        "test cohort selecting one ref",
+    )
+    try:
+        from contextlib import contextmanager
+        @contextmanager
+        def _conn_ctx(): yield db_conn
+        import dcp.db as db_mod
+        monkeypatch.setattr(db_mod, "connect", _conn_ctx)
+
+        summary = triage_mod.run_retriage(cohort="test-cohort", model="fake-granite")
+    finally:
+        triage_mod.RETRIAGE_COHORTS.pop("test-cohort")
+
+    assert summary["scanned"] == 1
+    assert summary["cohort_size"] == 1
+    assert summary["by_verdict"]["DC"] == 1
+
+    # Both triage rows exist — append-only honoured.
+    with db_conn.cursor() as cur:
+        cur.execute(
+            "SELECT verdict, confidence, raw_response FROM triage "
+            "WHERE application_id = %s ORDER BY inserted_at",
+            (app_id,),
+        )
+        rows = cur.fetchall()
+    assert len(rows) == 2
+    assert rows[0][0] == "unknown"
+    assert rows[1][0] == "DC"
+    # Retriage row carries the cohort marker for the audit trail
+    assert rows[1][2].get("retriage_cohort") == "test-cohort"
+
+
+def test_run_retriage_rejects_unknown_cohort(db_conn):
+    from dcp import triage as triage_mod
+    import pytest
+    with pytest.raises(ValueError, match="unknown cohort"):
+        triage_mod.run_retriage(cohort="does-not-exist")
+
+
 def test_run_triage_records_error_without_crashing(db_conn, monkeypatch):
     """A backend that returns unparseable text after retry must not abort the
     sweep — the row is counted as an error and the next app proceeds."""

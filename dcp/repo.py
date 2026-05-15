@@ -275,6 +275,37 @@ def record_triage(
         return cur.fetchone()[0]
 
 
+def applications_for_retriage(
+    conn: PgConnection, *, cohort_sql: str, cohort_params: tuple[Any, ...] = (),
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    """Return applications matching `cohort_sql` regardless of whether they
+    already have a triage row. Used by the retriage path to refresh a named
+    cohort (e.g. apps that saw NULL `council_gss` in their original prompt).
+    `cohort_sql` is a single WHERE-clause fragment applied to `applications a`
+    aliased; do NOT include the leading `WHERE`. New triage rows are appended
+    per the schema's append-only / versioned-by-inserted_at design — the
+    original verdict stays in place for the audit trail."""
+    sql = f"""
+        SELECT a.id, a.application_ref, a.description, a.address,
+               a.date_received, a.status, a.council_gss,
+               a.raw_metadata->>'app_type' AS app_type,
+               c.name AS council_name
+        FROM applications a
+        LEFT JOIN councils c ON c.gss_code = a.council_gss
+        WHERE {cohort_sql}
+        ORDER BY a.date_received DESC NULLS LAST, a.id
+    """
+    params: tuple[Any, ...] = cohort_params
+    if limit is not None:
+        sql += " LIMIT %s"
+        params = cohort_params + (limit,)
+    with conn.cursor() as cur:
+        cur.execute(sql, params)
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+
 def applications_pending_triage(
     conn: PgConnection, *, model: str, limit: int | None = None,
 ) -> list[dict[str, Any]]:

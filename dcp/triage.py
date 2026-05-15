@@ -276,6 +276,114 @@ def app_row_to_triage_input(row: dict) -> dict:
     }
 
 
+# Named retriage cohorts. Each entry maps a CLI-friendly slug to a SQL
+# WHERE fragment over `applications a`. Add new cohorts here when a future
+# bug or data fix needs a targeted refresh; keep them small and documented.
+RETRIAGE_COHORTS: dict[str, tuple[str, tuple, str]] = {
+    "council-backfill": (
+        # Apps where council_gss was NULL at sweep time because the broken
+        # _load_area_gss_map (TEXT-vs-JSONB bug, migrations/004) yielded an
+        # empty map for spatial/operator/parent_backfill paths. The original
+        # dc_keyword sweep built its map fresh from API and so wasn't affected.
+        "a.council_gss IS NOT NULL AND NOT ('dc_keyword' = ANY(a.discovered_via))",
+        (),
+        "Apps that saw NULL council in their original prompt due to the "
+        "TEXT-vs-JSONB bug fixed in migration 004; ~277 apps as of 2026-05-15.",
+    ),
+}
+
+
+def run_retriage(
+    *,
+    cohort: str,
+    model: str | None = None,
+    limit: int | None = None,
+    timeout: float = 180.0,
+    progress: Callable[[dict], None] | None = None,
+) -> dict:
+    """Append a fresh triage verdict for every application in `cohort`,
+    regardless of whether an earlier verdict exists. The original verdicts
+    stay in place — the `triage` table is versioned per
+    `(application_id, model, inserted_at)` and "latest by inserted_at wins"
+    is the queryable contract (see worklist_preview's DISTINCT ON pattern).
+
+    Use when a fixable bug retroactively changed the prompt input shape
+    (e.g. the council-backfill case where 277 apps saw NULL council in
+    their original prompt). For a fresh untriaged-apps sweep, use
+    `run_triage` instead — that's resume-aware and skips already-triaged.
+    """
+    from dcp import db, repo
+    from dcp.llm import OllamaBackend
+
+    if cohort not in RETRIAGE_COHORTS:
+        raise ValueError(
+            f"unknown cohort {cohort!r}; available: {sorted(RETRIAGE_COHORTS)}"
+        )
+    cohort_sql, cohort_params, _description = RETRIAGE_COHORTS[cohort]
+
+    backend = OllamaBackend(model=model, request_timeout=timeout)
+    model_name = backend.model
+
+    summary = {
+        "model": model_name,
+        "cohort": cohort,
+        "scanned": 0,
+        "errors": 0,
+        "by_verdict": {"DC": 0, "adjacent": 0, "unrelated": 0, "unknown": 0},
+    }
+
+    with db.connect() as conn:
+        cohort_rows = repo.applications_for_retriage(
+            conn, cohort_sql=cohort_sql, cohort_params=cohort_params, limit=limit,
+        )
+        summary["cohort_size"] = len(cohort_rows)
+        for row in cohort_rows:
+            t0 = time.time()
+            err: str | None = None
+            verdict_obj: TriageVerdict | None = None
+            try:
+                verdict_obj = triage_application(app_row_to_triage_input(row), backend)
+            except ValueError as exc:
+                err = f"parse_error: {exc}"
+            except Exception as exc:
+                err = f"{type(exc).__name__}: {exc}"
+            elapsed = time.time() - t0
+
+            if verdict_obj is not None:
+                repo.record_triage(
+                    conn,
+                    application_id=row["id"],
+                    model=model_name,
+                    verdict=verdict_obj.verdict,
+                    worth_deep_read=verdict_obj.worth_deep_read,
+                    signals=verdict_obj.signals,
+                    why=verdict_obj.why,
+                    confidence=verdict_obj.confidence,
+                    raw_response={"text": verdict_obj.raw_response,
+                                  "retriage_cohort": cohort},
+                )
+                conn.commit()
+                if verdict_obj.verdict in summary["by_verdict"]:
+                    summary["by_verdict"][verdict_obj.verdict] += 1
+            else:
+                summary["errors"] += 1
+
+            summary["scanned"] += 1
+            if progress is not None:
+                progress({
+                    "scanned": summary["scanned"],
+                    "cohort_size": summary["cohort_size"],
+                    "ref": row.get("application_ref"),
+                    "verdict": verdict_obj.verdict if verdict_obj else None,
+                    "worth_deep_read": verdict_obj.worth_deep_read if verdict_obj else None,
+                    "confidence": verdict_obj.confidence if verdict_obj else None,
+                    "elapsed": elapsed,
+                    "error": err,
+                })
+
+    return summary
+
+
 def run_triage(
     *,
     model: str | None = None,

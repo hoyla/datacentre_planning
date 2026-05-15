@@ -92,6 +92,58 @@ def triage(model: str | None, limit: int | None, timeout: float) -> None:
         click.echo(f"  {k}: {v}")
 
 
+@main.command()
+@click.option("--cohort", required=True,
+              help="Named retriage cohort (see RETRIAGE_COHORTS in dcp/triage.py).")
+@click.option("--model", default=None,
+              help="Ollama model name. Defaults to OLLAMA_MODEL env var.")
+@click.option("--limit", type=int, default=None,
+              help="Cap on apps re-triaged (for smoke testing).")
+@click.option("--timeout", type=float, default=180.0)
+def retriage(cohort: str, model: str | None, limit: int | None, timeout: float) -> None:
+    """Re-triage a named cohort, appending fresh verdicts alongside originals.
+
+    \b
+    Use when a fixable bug retroactively changed the prompt input shape and
+    you want a uniform-methodology subset re-run (e.g. the council-backfill
+    cohort after migration 004 resolved 317 NULL `council_gss` rows). The
+    `triage` table is append-only; original verdicts stay in place. The
+    worklist preview selects the latest verdict per app, so downstream
+    consumers see the fresh ranking automatically.
+    """
+    import os
+    import sys
+    from dotenv import load_dotenv
+    from pathlib import Path
+    from dcp import triage as triage_mod
+
+    load_dotenv(Path(__file__).parent.parent / ".env")
+    if model is None:
+        model = os.environ.get("OLLAMA_MODEL", "llama3.2")
+
+    def _progress(row: dict) -> None:
+        n = row["scanned"]; total = row["cohort_size"]
+        verdict = row.get("verdict") or "ERR"
+        dr = row.get("worth_deep_read") or "-"
+        conf = row.get("confidence") or "-"
+        ref = (row.get("ref") or "?")[:36]
+        line = (
+            f"  [{n:4d}/{total:4d}] {ref:36s}  v={verdict:9s}  "
+            f"dr={dr:5s}  c={conf:8s}  {row['elapsed']:5.1f}s"
+        )
+        if row.get("error"):
+            line += f"  ERR {row['error'][:60]}"
+        click.echo(line)
+        sys.stdout.flush()
+
+    summary = triage_mod.run_retriage(
+        cohort=cohort, model=model, limit=limit, timeout=timeout, progress=_progress,
+    )
+    click.echo("")
+    for k, v in summary.items():
+        click.echo(f"  {k}: {v}")
+
+
 @main.command("deep-read")
 @click.option("--limit", type=int, default=None)
 def deep_read(limit: int | None) -> None:
