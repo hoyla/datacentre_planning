@@ -62,6 +62,64 @@ Planned:
 3. **Idox Public Access** generic adapter — long tail of council portals, needed for Phase 3 document fetch.
 4. **Environment Agency public register** (industrial installations / combustion plant) — triangulation against permitted on-site capacity.
 
+## Reproducing the dataset
+
+After [Setup](#setup), the canonical sequence to rebuild the universe from
+scratch (~6–10 h of polite wall-clock against PlanIt + Ollama):
+
+```bash
+# 1. Primary national sweep (PlanIt DC keyword union)
+dcp index --source planit
+
+# 2. NSIP register (large opt-in cases)
+dcp index --source nsip
+
+# 3. Operator-name sweep (catches operator-coded applications)
+dcp operators --source planit
+
+# 4. Spatial colocated sweep (DC anchors → 1 km neighbours)
+dcp colocated fetch --source planit
+dcp colocated process
+
+# 5. Parent-application backfill (walks PlanIt's associated_id chain to
+#    recover pre-2018 substantive permissions referenced from procedurals)
+dcp backfill-parents --source planit
+
+# 6. Council aliases (fix the legacy district names → current unitary GSS)
+python scripts/load_council_aliases.py data/priors/council_aliases.yaml
+python scripts/backfill_council_gss.py
+
+# 7. Operator priors (Foxglove top-10 safety-net tags)
+python scripts/tag_priors.py data/priors/foxglove_top10.yaml
+
+# 8. Stage 1 triage (granite4.1:30b over the universe — ~5 h wall-clock)
+dcp triage --model granite4.1:30b
+
+# 9. Reporter export — Aisha-facing markdown + xlsx
+dcp export --top 50
+
+# 10. Editorial map — interactive HTML + GeoJSON + KML
+dcp map
+
+# 11. (Optional) Phase 3 document fetch — Idox councils only at present
+dcp fetch-docs --source idox --top 50
+```
+
+Each stage is idempotent: re-running picks up where it left off
+(`source_snapshots` is also the resume cache; triage uses model-scoped
+`NOT EXISTS` filtering on prior verdicts). Stages 1–7 are independent of
+the LLM and run in well under an hour combined; stage 8 dominates the
+wall-clock.
+
+The OSM power-stations layer used by `dcp map` ships in the repo
+(`data/priors/osm/uk_power_plants.geojson`, ODbL-licensed). Refresh it
+with `python scripts/fetch_osm_power_plants.py --force` if you want a
+newer snapshot.
+
+For a partial reproduction (e.g. to validate methodology against a
+single council), substitute `--limit N` on `dcp index`, `dcp triage`,
+and `dcp fetch-docs` to scope each stage.
+
 ## Methodology principle
 
 Ingest broadly; analyse second. We don't decide the story before we see the data; we need to be able to find null findings as well as dramatic ones. The Foxglove top-10 is our first reconciliation target — if our pipeline doesn't reproduce their list with matching MW figures, our coverage is broken.

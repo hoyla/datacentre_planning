@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "datacentre_planning: UK data-centre planning-application dataset and triage pipeline"
+abstract: >-
+  Systematic national dataset of UK data-centre planning applications,
+  with LLM-assisted triage to surface on-site power-generation signals
+  buried in planning documents. Built in collaboration with the Guardian
+  to support investigative journalism on data-centre carbon emissions.
+authors:
+  - family-names: Hoyland
+    given-names: Luke
+    email: luke.hoyland@gmail.com
+type: software
+license: MIT
+repository-code: "https://github.com/hoyla/datacentre_planning"
+keywords:
+  - data centres
+  - planning applications
+  - investigative journalism
+  - UK
+  - PlanIt
+  - NSIP
+  - LLM triage
+version: "0.1.0"
+date-released: "2026-05-15"
