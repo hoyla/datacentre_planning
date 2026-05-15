@@ -2,9 +2,13 @@
 
 The repo is currently **private** on GitHub (since 2026-05-14) to halt
 pre-publication exposure of editorial direction. After Aisha's story
-lands, we'll flip it back to public. This document records what to do
-on flip day so the decisions get made carefully now, not in a hurry
-then.
+lands, we'll flip it back to public.
+
+**Status as of 2026-05-15:** the methodology-trail files are already
+tracked in the private repo (PII scan done, gitignore widened, single
+methodology-trail commit landed). Pre-deletes (Foxglove PDF + idox
+exploration cache) also done. **Only the GitHub visibility toggle and
+the post-flip verification remain for publication day.**
 
 For background see [ARCHITECTURE.md §Storage](ARCHITECTURE.md) and the
 [ROADMAP](ROADMAP.md) "Privacy" Done-log entry.
@@ -62,98 +66,32 @@ want to understand how we built the dataset:
 
 ## Pre-flip mechanical steps
 
-Do these in order on the day of publication, after Aisha's piece is live:
+### Done 2026-05-15 (while the repo is still private)
 
-1. **Delete locally-only files no longer needed.**
-   ```bash
-   # Foxglove PDF — only kept as a local reference during dev
-   rm data/prior_art_sources/foxglove_gap_report.pdf
-   rm data/prior_art_sources/foxglove_gap_report.txt
-   # Idox exploration superseded by tests/fixtures/idox/
-   rm -rf data/idox_exploration/
-   ```
-   These deletions are local-filesystem only — files were never tracked,
-   so nothing to commit.
+The PII-scan, local deletions, gitignore widening, and methodology-trail
+commit have all already landed. Specifically:
 
-2. **Sanity-scan the to-be-tracked files for PII / unintended leakage.**
-   Open each file in the "Add to allow-list" table above and look for:
-   - Householder applicant names, agent names, contact details.
-   - Editorial commentary that references unpublished story angles or
-     reporter contacts.
-   - Internal council-officer names beyond what's already public.
+- **Local deletions** completed: `data/prior_art_sources/foxglove_gap_report.{pdf,txt}`
+  and `data/idox_exploration/` (superseded by `tests/fixtures/idox/`) removed
+  from the working tree.
+- **PII scan** completed and clear on the to-be-tracked files
+  (`sample_data_centre.json` has only "See source" / corporate-agent values;
+  eval-report disagreements reference only corporate DC cases; methodology
+  docs cover the three exemplar cases with no householder data).
+- **`.gitignore` widened** with the new allow-list (see `.gitignore`
+  in the repo — patterns landed in a single commit alongside the tracked
+  files).
+- **Methodology-trail commit landed** and pushed.
 
-   Anything you flag, redact in-place or move into a `_archive/` outside
-   the planned allow-list.
+### Still to do on publication day
 
-3. **Update `.gitignore`.** Append the new exemptions in the same shape
-   as the existing ones (allow-the-dir, block-everything-in-it,
-   allow-specific-paths):
+1. **Final visibility flip on GitHub.** Settings → General → Change
+   visibility → Make public. No further repo edits required — the
+   methodology trail is already there.
 
-   ```gitignore
-   # --- post-publication: methodology trail ---
-   !data/seed_cases/
-   data/seed_cases/*
-   !data/seed_cases/walkthrough_findings.md
-
-   !data/seed_applications.md
-
-   !data/planit_exploration/
-   data/planit_exploration/*
-   !data/planit_exploration/findings.md
-   !data/planit_exploration/sample_data_centre.json
-
-   !data/colocated_energy_spike/
-   data/colocated_energy_spike/*
-   !data/colocated_energy_spike/findings.md
-
-   !data/nsip_research/
-   data/nsip_research/*
-   !data/nsip_research/findings.md
-
-   !data/prior_art_sources/
-   data/prior_art_sources/*
-   !data/prior_art_sources/foxglove_top10.md
-   !data/prior_art_sources/foxglove_reconciliation.md
-
-   # Triage eval reports (markdown only — .jsonl raw outputs stay local)
-   !data/triage_labelling/eval_summary.md
-   !data/triage_labelling/eval_*.md
-   ```
-
-   Verify the negation patterns are exhaustive: a file glob-matches the
-   most recent matching pattern, so the order matters.
-
-4. **Stage and verify.**
-   ```bash
-   git add .gitignore data/seed_cases/walkthrough_findings.md \
-           data/seed_applications.md \
-           data/planit_exploration/findings.md \
-           data/planit_exploration/sample_data_centre.json \
-           data/colocated_energy_spike/findings.md \
-           data/nsip_research/findings.md \
-           data/prior_art_sources/foxglove_top10.md \
-           data/prior_art_sources/foxglove_reconciliation.md \
-           data/triage_labelling/eval_*.md \
-           data/triage_labelling/eval_summary.md
-   git status -sb            # confirm only intended files are staged
-   git diff --cached --stat  # quick line-count audit
-   ```
-
-   Then `git check-ignore -v data/raw/sample/file.pdf data/exports/x.html
-   data/triage_labelling/eval_granite4_30b.jsonl` to confirm the
-   still-blocked paths are still blocked.
-
-5. **Commit, then flip the repo to public** via the GitHub web UI
-   (Settings → General → Change visibility → Make public).
-
-   ```bash
-   git commit -m "Publication-day: expose methodology trail in data/"
-   git push
-   ```
-
-   Then on GitHub, flip the visibility. The README's "Status" line should
-   already reflect publication date by then; if not, update it in a
-   separate commit so the flip is mechanical.
+2. **Update the README's "Status" line** if it still says "private" or
+   refers to the pre-publication phase. Best done in a separate commit
+   the day before so the flip itself is mechanical.
 
 ---
 

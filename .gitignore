@@ -64,3 +64,36 @@ data/priors/*
 !data/priors/osm/
 data/priors/osm/*
 !data/priors/osm/*.geojson
+
+# --- Methodology trail (allowed pre-publication while repo is private;
+# stays tracked post-publication so a third party can reproduce). The
+# `data/raw/`, `data/exports/`, and other point-in-time outputs stay
+# blocked — see POST_PUBLICATION_CHECKLIST.md for rationale.
+!data/seed_cases/
+data/seed_cases/*
+!data/seed_cases/walkthrough_findings.md
+
+!data/seed_applications.md
+
+!data/planit_exploration/
+data/planit_exploration/*
+!data/planit_exploration/findings.md
+!data/planit_exploration/sample_data_centre.json
+
+!data/colocated_energy_spike/
+data/colocated_energy_spike/*
+!data/colocated_energy_spike/findings.md
+
+!data/nsip_research/
+data/nsip_research/*
+!data/nsip_research/findings.md
+
+!data/prior_art_sources/
+data/prior_art_sources/*
+!data/prior_art_sources/foxglove_top10.md
+!data/prior_art_sources/foxglove_reconciliation.md
+
+# Triage eval reports (markdown only — .jsonl raw outputs stay local,
+# regenerate via scripts/eval_triage.py).
+!data/triage_labelling/eval_summary.md
+!data/triage_labelling/eval_*.md
