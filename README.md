@@ -6,17 +6,19 @@ Collaboration with Aisha Down at the Guardian.
 
 ## Status
 
-**Phase 1 — index complete, parent-backfill complete, Phase 2 triage in progress.** 1,832 UK data-centre applications ingested from 2007 onwards (parent-backfill adds the pre-2018 procedural ancestors), covering 401 councils with GSS code and portal-type metadata. `dcp triage` runs `granite4.1:30b` over the universe and writes versioned verdicts to `triage`. Deep-read stage not yet implemented. 71-test suite (unit + integration + triage) green.
+**Phases 1, 2, and 6 (reporter export) complete; Phase 3 (document fetch) in flight; Phase 4 (structured extraction) next.** 1,832 UK data-centre applications ingested 2007–2026, classified by `granite4.1:30b` Stage-1 triage (683 DC · 136 adjacent · 965 unrelated · 48 unknown). Aisha-facing worklist export landed as markdown + xlsx + interactive HTML map (with OSM power-plant overlay, 58% of worklist DCs sitting within 5 km of a fossil/biomass/nuclear plant). Idox document-fetch adapter live; wider sweep currently in flight at top-100 worklist apps. 126-test suite green.
 
 See:
 - [ARCHITECTURE.md](ARCHITECTURE.md) — pipeline philosophy, schema, design decisions.
 - [ROADMAP.md](ROADMAP.md) — what's done, what's next, what's parked, open questions.
+- [POST_PUBLICATION_CHECKLIST.md](POST_PUBLICATION_CHECKLIST.md) — flip-day mechanics (repo is currently private; methodology trail already tracked).
 - [prior_art.md](prior_art.md) — published research and cross-reference benchmarks.
+- [LICENSE](LICENSE) / [NOTICE](NOTICE) / [DATA-LICENSING.md](DATA-LICENSING.md) — Apache 2.0 (code, © 2026 Guardian News & Media Ltd.); per-source upstream data licensing.
 - `data/seed_cases/walkthrough_findings.md` — hands-on findings from Aisha's three exemplar applications.
 - `data/planit_exploration/findings.md` — PlanIt API exploration writeup.
 - `data/prior_art_sources/foxglove_top10.md` — Foxglove top-10 reconciliation target.
 
-> **Note on `data/`**: most of `data/` is gitignored — research writeups, eval outputs, cached source-portal responses, labelling artefacts. These contain pre-publication editorial direction that we keep out of version control. **Tracked exceptions**: `data/operators.yaml` (operational config — operator/agent name list) and `data/triage_labelling/rubric.md` (the distilled triage methodology). The bullet-list above describes files you'll have locally if you've run the pipeline; if you've just cloned, they won't be present.
+> **Note on `data/`**: the methodology trail (research writeups, eval reports, the rubric) is tracked. Point-in-time outputs (document corpus under `data/raw/`, hand-off exports under `data/exports/`, raw JSONL eval outputs, the round-01 labelled sample) stay gitignored — see [POST_PUBLICATION_CHECKLIST.md](POST_PUBLICATION_CHECKLIST.md) for the per-file rationale. The bullet-list above describes the tracked subset; you'll see them in a fresh clone.
 
 ## Stack
 

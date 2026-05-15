@@ -33,8 +33,8 @@ Each stage is idempotent and resumable. Each writes to a separate table family. 
 
 Per source, paginate the recent-applications feed (or equivalent), upsert structured metadata into `applications`, preserve the raw response in `source_snapshots`.
 
-Implemented: PlanIt (`dcp/sources/planit.py`).
-Pending: NSIP register / Section 35 Directions, generic Idox adapter, MHCLG national service.
+Implemented: PlanIt (`dcp/sources/planit.py`, including the parent-application backfill and operator/spatial sweeps), NSIP CSV (`dcp/sources/nsip.py`).
+Pending: gov.uk-search-API Section 35 Directions half, MHCLG national service as a cross-validation source.
 
 ### 2. Triage
 
@@ -58,7 +58,7 @@ Two-stage extraction per the seed walkthrough:
 
 Optional multimodal pass: Claude vision on site plans and elevations for the matched subset, identifying fuel tanks and generator enclosures.
 
-**Not yet implemented.**
+**Document-fetch implemented** for canonical Idox portals (`dcp fetch-docs --source idox`); see `dcp/sources/idox.py`. Per-application `_manifest.json` is the hand-over signal. SSL chain reconstruction via the `truststore` package (OS native trust store + AIA chasing) unblocks councils whose servers send incomplete certificate chains. **Structured extraction (Stage 2) and the multimodal pass are not yet implemented.**
 
 ---
 
