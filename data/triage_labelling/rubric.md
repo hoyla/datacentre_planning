@@ -120,6 +120,8 @@ The downstream prompt-eval uses confidence as a calibration measure — disagree
 4. **Backup generators are not the story.** Every DC has them. Whether they're *truly* emergency-only is the story.
 5. **Operator-level priors enrich but don't replace description signals.** Stage 1 triage works from description alone; operator priors are layered in upstream (`discovered_via`) and downstream (deep-read).
 
+6. **Don't filter on polarity (removal / demolition / decommission).** Power-infrastructure signals are flagged regardless of whether the application is *installing* the kit, *removing* it, *modifying* it, or just *referring* to it. Reasoning: ~33% of worklist descriptions contain "removal" / "demolition" / "dismantling" / "decommission" language, but the overwhelming majority are the *constructive* pattern — *"demolition of existing buildings and construction of a data centre"*, *"removal of fill material and installation of an Energy Park"*, etc. Genuinely "remove-without-replacement" cases (e.g. Halton/22/00028/S73, a Tesco supermarket removing its CHP plant for net-zero compliance) are rare (single-digit cases out of ~800) and editorially interesting in their own right when they sit near a real DC site. Trying to encode polarity in either the LLM prompt or the worklist renderer risks over-correcting and dropping cases like *"removal of legacy gas turbine to install new hydrogen fuel cell array"* — which IS a story. Decision (Luke + Claude, 2026-05-15): keep the lean-inclusive stance; rely on the reader to scan the description (which the worklist card surfaces verbatim). The cost of a few false-positive Tesco refits is much smaller than the cost of missing one DC retrofit.
+
 ---
 
 ## Open questions Luke flagged for Aisha

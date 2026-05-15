@@ -131,6 +131,95 @@ FROM applications a JOIN latest_triage t ON t.application_id = a.id
 """
 
 
+def _collect_spatial_anchors(rows: list[dict]) -> set[str]:
+    """Walk all rows' `discovered_via` arrays and return the unique set of
+    spatial-anchor refs (the `X` in `spatial:X` tags). Used to batch-fetch
+    anchor metadata in one query rather than one-per-card."""
+    out: set[str] = set()
+    for row in rows:
+        for tag in row.get("discovered_via") or []:
+            if tag.startswith("spatial:"):
+                out.add(tag.split(":", 1)[1])
+    return out
+
+
+def _fetch_anchor_details(conn, refs: set[str]) -> dict[str, dict]:
+    """Batch lookup of spatial-anchor metadata so the card can render a
+    natural-language explanation rather than a bare ref. Anchors not in
+    `applications` (rare — would only happen if the anchor was deleted
+    after the spatial sweep) just won't appear in the returned dict and
+    the renderer falls back to the bare ref."""
+    if not refs:
+        return {}
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT application_ref, description, address "
+            "FROM applications WHERE application_ref = ANY(%s)",
+            (list(refs),),
+        )
+        return {
+            row[0]: {"description": row[1], "address": row[2]}
+            for row in cur.fetchall()
+        }
+
+
+def _trim(text: str | None, n: int = 140) -> str:
+    """Trim a string to ~n chars on a word boundary; append ellipsis if cut."""
+    if not text:
+        return ""
+    text = text.strip()
+    if len(text) <= n:
+        return text
+    cut = text[:n].rsplit(" ", 1)[0]
+    return f"{cut}…"
+
+
+def _expand_lineage(
+    discovered_via: list[str] | None, anchors: dict[str, dict],
+) -> list[str]:
+    """Translate `discovered_via` tags into reader-friendly bullet text.
+    Tags are documented in [data/priors/](data/priors/) and in each adapter's
+    docstring; this is the single place they get humanised for the worklist."""
+    lines: list[str] = []
+    for tag in discovered_via or []:
+        if tag == "dc_keyword":
+            lines.append(
+                "Matched the DC keyword union (data centre / hyperscale / colocation / etc.) "
+                "in the description."
+            )
+        elif tag == "foxglove_top10":
+            lines.append(
+                "Listed in Foxglove's top-10 ≥100 MW UK DC applications "
+                "(see `data/prior_art_sources/foxglove_reconciliation.md`)."
+            )
+        elif tag.startswith("spatial:"):
+            anchor_ref = tag.split(":", 1)[1]
+            info = anchors.get(anchor_ref) or {}
+            descr = _trim(info.get("description"), 140)
+            addr = (info.get("address") or "").strip()
+            bits = [f"Spatial neighbour (within 1 km) of `{anchor_ref}`"]
+            if descr:
+                bits.append(f"— *{descr}*")
+            if addr:
+                bits.append(f"(at {addr})")
+            lines.append(" ".join(bits) + ".")
+        elif tag.startswith("operator:"):
+            name = tag.split(":", 1)[1]
+            lines.append(
+                f"Shares agent/applicant **{name}** with another DC application "
+                "(operator-name sweep match)."
+            )
+        elif tag.startswith("parent_backfill:"):
+            child_ref = tag.split(":", 1)[1]
+            lines.append(
+                f"Substantive parent permission for procedural follow-on `{child_ref}` "
+                "(recovered by walking PlanIt's `associated_id` chain)."
+            )
+        else:
+            lines.append(f"Discovered via `{tag}` (no humaniser registered).")
+    return lines
+
+
 def _confidence_glyph(confidence: str | None) -> str:
     return {
         "sure": "★★★",
@@ -148,14 +237,14 @@ def _verdict_glyph(verdict: str) -> str:
     }.get(verdict, verdict)
 
 
-def _render_card(rank: int, row: dict) -> str:
+def _render_card(rank: int, row: dict, anchors: dict[str, dict]) -> str:
     out: list[str] = []
     fx = " · 🔖 Foxglove top-10" if row["foxglove"] else ""
     out.append(f"## {rank}. `{row['application_ref']}`{fx}")
     out.append("")
     bits = [
         f"**Verdict:** {row['verdict']}",
-        f"**Deep-read:** {row['worth_deep_read']}",
+        f"**Deep read recommended:** {row['worth_deep_read']}",
         f"**Confidence:** {row['confidence']} {_confidence_glyph(row['confidence'])}",
         f"**Tier-1 / Storage / Backup signal hits:** "
         f"{row['tier1_hits']} / {row['storage_hits']} / {row['backup_hits']}",
@@ -188,9 +277,12 @@ def _render_card(rank: int, row: dict) -> str:
         out.append("")
         out.append("> " + descr.replace("\n", "\n> "))
         out.append("")
-    via = [v for v in (row["discovered_via"] or []) if v]
-    if via:
-        out.append(f"**Discovered via:** `{', '.join(via)}`")
+    lineage = _expand_lineage(row.get("discovered_via"), anchors)
+    if lineage:
+        out.append("**Why this is on the worklist:**")
+        out.append("")
+        for line in lineage:
+            out.append(f"- {line}")
         out.append("")
     if row["url"]:
         out.append(f"[Source portal]({row['url']})")
@@ -219,6 +311,11 @@ def main() -> int:
             cur.execute(RANKED_SQL, (args.model, TIER1_REGEX, TIER_STORAGE_REGEX, args.top))
             cols = [d[0] for d in cur.description]
             rows = [dict(zip(cols, row)) for row in cur.fetchall()]
+        # Batch-fetch metadata for every spatial anchor referenced in this slice,
+        # so each card can render a natural-language explanation rather than a
+        # bare `spatial:Council/Ref` tag the reader has to decode.
+        anchor_refs = _collect_spatial_anchors(rows)
+        anchors = _fetch_anchor_details(conn, anchor_refs)
 
     header = [
         f"# Triage worklist — top {len(rows)} ranked",
@@ -257,7 +354,7 @@ def main() -> int:
 
     body = []
     for i, row in enumerate(rows, 1):
-        body.append(_render_card(i, row))
+        body.append(_render_card(i, row, anchors))
         body.append("---")
         body.append("")
 
