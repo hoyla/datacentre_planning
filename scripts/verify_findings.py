@@ -71,8 +71,10 @@ _PLURAL_SPLIT_RE = re.compile(r"\b([a-z]{4,})\s+(s)(?=\s|[.,;:?!\)\]\}])")
 # matches 'the report' matches "the report" matches the report.
 _QUOTE_STRIP = re.compile(r"['‘’ʼʻ\"“”„‟‚‛]")
 # Strip decorative bullet glyphs entirely — they're typography, not
-# semantic content. Common in pypdf output for list items.
-_BULLET_STRIP = re.compile(r"[•●○◦∙·▪◆■□]")
+# semantic content. Common in pypdf output for list items. Also strip
+# the Unicode Private Use Area (U+E000–U+F8FF) — pypdf renders custom
+# font glyphs (checkmarks, bullets, icons) as PUA codepoints.
+_BULLET_STRIP = re.compile(r"[•●○◦∙·▪◆■□-]")
 
 
 def _normalise(text: str) -> str:

@@ -1190,15 +1190,14 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "signal_type": "fuel_type",
             "value_text": "diesel back-up generators (with on-site fuel storage)",
             "evidence_text": (
-                "171 back-up diesel generators (for emergency power provision) ... "
-                "internal plant and equipment and emergency back-up generators and "
-                "associated fuel storage. The scheme includes site wide landscaping ... "
-                "District Heating Network"
+                "The proposal involves the installation of 171 no. 2,000 kWe "
+                "(2,500 kVa) back-up diesel generators; 57 for each data centre "
+                "building"
             ),
-            "evidence_page": 4,
+            "evidence_page": 6,
         },
         {
-            "doc_sha_prefix": "529582c0",  # AQA
+            "doc_sha_prefix": "b44023c9",  # Planning Statement (Project Details cover)
             "signal_type": "operator_pattern",
             "value_text": (
                 "Greystoke Land's THIRD UK DC site (alongside Humber Tech Park at "
@@ -1209,9 +1208,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Combined indicative IT load across the three sites: ~1.5 GW."
             ),
             "evidence_text": (
-                "Client: Greystoke Land Ltd ... 49526-FUT-ZZ-ZZ-PP-Z-0001 "
-                "[compare with Humber Tech Park Fuel Storage Report ref: "
-                "9915-FUT-V1-ZZ-RP-Z-3950 (also Future-tech)]"
+                "Client: Greystoke Land Ltd ... 49526-FUT-ZZ-ZZ-PP-Z-0001"
             ),
             "evidence_page": 22,
         },
