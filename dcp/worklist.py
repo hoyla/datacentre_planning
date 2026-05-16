@@ -231,6 +231,13 @@ def expand_lineage(
                 f"Substantive parent permission for procedural follow-on `{child_ref}` "
                 "(recovered by walking PlanIt's `associated_id` chain)."
             )
+        elif tag.startswith("duplicate_of:"):
+            primary_ref = tag.split(":", 1)[1]
+            lines.append(
+                f"Known duplicate of `{primary_ref}` — same scheme appearing in another "
+                "council's portal as an out-of-borough consultation. Docs / findings on "
+                "the primary record."
+            )
         else:
             lines.append(f"Discovered via `{tag}` (no humaniser registered).")
     return lines

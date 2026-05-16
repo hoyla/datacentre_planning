@@ -1,0 +1,30 @@
+# Known duplicate applications.
+#
+# Some applications appear in our universe more than once because a planning
+# application that straddles a borough boundary gets indexed by the primary
+# planning authority AND by each consulted neighbour. Each council assigns
+# its own internal reference, so the duplicates only become visible when
+# the description and address match.
+#
+# Tag format: `duplicate_of:<primary_application_ref>`. The lineage renderer
+# in `dcp/worklist.py` knows how to humanise it (see `expand_lineage`); the
+# export then explains that docs / findings live on the primary record.
+#
+# Idempotent: re-running adds nothing new to `applications.discovered_via`.
+#
+# Apply with: scripts/tag_duplicates.py
+#
+# Source of truth — confirmed by description + address match between each
+# `copy` and its `primary` (see `dcp/sources/<adapter>.py` adapters and the
+# manual cross-check in extract_findings.py).
+
+duplicates:
+  - primary: Hillingdon/75111/APP/2020/1955
+    notes: |
+      Ark Project Union outline at Bulls Bridge Industrial Estate, North
+      Hyde Gardens, Hayes. Sits on the Hillingdon-Hounslow boundary, with
+      the western edge near Ealing too — both councils were consulted and
+      assigned internal refs in their own portals.
+    copies:
+      - Hounslow/C/2020/2124
+      - Ealing/202655CONS

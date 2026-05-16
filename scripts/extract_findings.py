@@ -2411,6 +2411,178 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 5,
         },
     ],
+    # =====================================================================
+    # TeleData expansion to Simon House, Manchester —
+    # `Manchester/132638/FO/2022`. Small colocation operator
+    # expanding into an adjacent vacant building (Simon House) next to
+    # their existing Delta House site. Use Class change from E1 to
+    # Sui Generis (DC + offices). Includes a FUEL CELL (Tier-1
+    # signal) alongside conventional generator + transformer +
+    # substation. Approved 25 April 2022.
+    # =====================================================================
+    "Manchester/132638/FO/2022": [
+        {
+            "doc_sha_prefix": "01c5b41b",
+            "signal_type": "applicant_name",
+            "value_text": (
+                "TeleData (Mr Matt Edgley) — agent: Alpine Planning Ltd (Mr A Jelley, "
+                "The Buttery, Tithe Farm, Holcot, NN6 9SH); case officer David Lawless "
+                "at Manchester City Council"
+            ),
+            "evidence_text": (
+                "Applicant: Mr Matt Edgley, Teledata Simon House, Brownley Road, "
+                "Manchester, M22 5RA. Agent (if any): Mr A Jelley, Alpine Planning "
+                "Ltd, The Buttery, Tithe Farm, Holcot, NN6 9SH"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "01c5b41b",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "TeleData colocation campus expansion — Use Class E1 → Sui Generis "
+                "(DC + offices); ground floor of Simon House becomes data centre, "
+                "first floor remains offices. Adjacent to TeleData's existing Delta "
+                "House operation (campus-style expansion). New kit: substation in "
+                "GRP hut + electrical transformer + FUEL CELL + air condensing "
+                "units (roof) + emergency generator."
+            ),
+            "evidence_text": (
+                "The applicant is proposing to change the use of the property to a "
+                "data centre and offices, in connection with their existing operation "
+                "at Delta House – the ground floor would be converted into the data "
+                "centre, while the first floor would remain in use as offices. ... "
+                "the application is proposing to install the following at the rear "
+                "and side of the site.: new substation within GRP hut, electrical "
+                "transformer, fuel cell, air condensing units (roof top mounted) and "
+                "emergency generator"
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "01c5b41b",
+            "signal_type": "decision_outcome",
+            "value_text": "APPROVED — Manchester City Council Delegated Officer, 25 April 2022",
+            "evidence_text": "Recommendation: Approve. Date of recommendation: 25 April 2022",
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "01c5b41b",
+            "signal_type": "local_objection",
+            "value_text": (
+                "1 letter of objection (1 letter of support) — neighbour cites "
+                "TeleData as 'a constant nuisance neighbour since 2019' with noise "
+                "from existing 48 air-conditioning units at Delta House, "
+                "transformer noise requiring intervention by Environmental Health, "
+                "and concern about cumulative impact of the Simon House expansion"
+            ),
+            "evidence_text": (
+                "One letter of objection has been received... Teledata (based at "
+                "Delta House) have been a constant nuisance neighbour since 2019. "
+                "I have had to involved Environmental Health (Sue Jones) on "
+                "numerous occasions about noise levels. ... I then had noise "
+                "issues concerning the 48 air-conditioning units based at Delta "
+                "House."
+            ),
+            "evidence_page": 3,
+        },
+    ],
+    # =====================================================================
+    # Milton Keynes Energy Network — `MiltonKeynes/PLN/2024/2768`. A
+    # major heat-network-anchored scheme: an Energy Centre + a Data
+    # Centre + a 13.7 km piped distribution network connecting to
+    # multiple civic/institutional buildings as heat customers. Same
+    # Ramboll UK consultant signature as East Havering LDO. EIA
+    # screening request dated December 2024 — the only confirmed
+    # real-deployment of the DC-anchored DHN model in our dataset.
+    # =====================================================================
+    "MiltonKeynes/PLN/2024/2768": [
+        {
+            "doc_sha_prefix": "4dc4412e",
+            "signal_type": "applicant_name",
+            "value_text": (
+                "Milton Keynes Energy Limited — consultant: Ramboll UK Ltd "
+                "(Alex Kerr / Michelle Wheeler, project no. 1620016640)"
+            ),
+            "evidence_text": (
+                "On behalf of Milton Keynes Energy Limited ... This report has "
+                "been produced by Ramboll UK Ltd ('Ramboll') on behalf of Milton "
+                "Keynes Energy Limited (the 'Applicant'), pursuant to Regulation "
+                "6(1) of The Town and Country Planning (Environmental Impact "
+                "Assessment) Regulations 2017"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "4dc4412e",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "Energy Centre + Data Centre + 13.7 km piped distribution network "
+                "('Milton Keynes Energy Network'). EC components: several thermal "
+                "stores, evaporator platform, generator building, 11 kV "
+                "substation, gas kiosk, two heat-exchange buildings, FIVE BOILER "
+                "FLUES. DC components: generator building, 11 kV substation. "
+                "Pipe network connects EC to: MK Civic Buildings, MK University "
+                "Hospital, MK Open University Campus, Thames Valley Police, "
+                "MK Library, Woughton Leisure Centre."
+            ),
+            "evidence_text": (
+                "The proposed development would comprise: an energy centre ('EC') "
+                "and associated structures (several thermal stores, an evaporator "
+                "platform, a generator building, 11kV substation, a gas kiosk, "
+                "two heat exchange buildings and five boiler flues); a data "
+                "centre ('DC') and associated structures (a generator building "
+                "and 11kV substation); and an associated piped distribution "
+                "network, or pipe network ('PN'), which would cover a total "
+                "distance of approximately 13.7 km. The PN would be installed "
+                "across a single development phase, which would connect the EC "
+                "with Milton Keynes City Centre's Civic Buildings, the Milton "
+                "Keynes University Hospital ('MKUH') and the Milton Keynes Open "
+                "University Campus ('MKOUC'), Thames Valley Police, the Milton "
+                "Keynes Library and the Woughton Leisure Centre."
+            ),
+            "evidence_page": 4,
+        },
+        {
+            "doc_sha_prefix": "4dc4412e",
+            "signal_type": "heat_network_anchors",
+            "value_text": (
+                "6 named civic / institutional heat customers connected via the "
+                "13.7 km pipe network: MK Civic Buildings, MK University "
+                "Hospital, MK Open University Campus, Thames Valley Police, MK "
+                "Library, Woughton Leisure Centre. Only confirmed "
+                "DC-heat-anchor DHN deployment in the worklist (Newham Bidder "
+                "Street and Hillingdon Union Park have DH provisions but no "
+                "operator / no real network)."
+            ),
+            "evidence_text": (
+                "an associated piped distribution network, or pipe network "
+                "('PN'), which would cover a total distance of approximately "
+                "13.7 km ... [connecting to] Milton Keynes City Centre's Civic "
+                "Buildings, the Milton Keynes University Hospital ('MKUH') and "
+                "the Milton Keynes Open University Campus ('MKOUC'), Thames "
+                "Valley Police, the Milton Keynes Library and the Woughton "
+                "Leisure Centre"
+            ),
+            "evidence_page": 4,
+        },
+        {
+            "doc_sha_prefix": "4dc4412e",
+            "signal_type": "consultant_signature",
+            "value_text": (
+                "Ramboll UK — same firm that produced the East Havering DC "
+                "Campus LDO scoping report (Havering/Z0001.24). Ramboll appears "
+                "to be specialising in council- / utility-led DC schemes where "
+                "DC waste-heat reuse is the core editorial pitch (vs the "
+                "developer-led hyperscale apps elsewhere in the worklist)."
+            ),
+            "evidence_text": (
+                "This report has been produced by Ramboll UK Ltd ('Ramboll') on "
+                "behalf of Milton Keynes Energy Limited"
+            ),
+            "evidence_page": 1,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
