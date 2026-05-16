@@ -6,7 +6,7 @@ For *how the system is shaped*, see [ARCHITECTURE.md](ARCHITECTURE.md).
 For *why we're doing this and what's been published*, see [prior_art.md](prior_art.md).
 For *post-publication flip mechanics*, see [POST_PUBLICATION_CHECKLIST.md](POST_PUBLICATION_CHECKLIST.md).
 
-Last meaningful update: 2026-05-15 (late afternoon — Phase 3 fetch in flight).
+Last meaningful update: 2026-05-16 (evening — Phase 4 deep-read pipeline + editorial cohorts shipped).
 
 ---
 
@@ -37,11 +37,37 @@ Last meaningful update: 2026-05-15 (late afternoon — Phase 3 fetch in flight).
 - **Foxglove top-10 operator-prior tag** (`471f177`, 2026-05-15). 23 applications across 10 families tagged `discovered_via:foxglove_top10` so the export filter surfaces them even when triage correctly classifies a procedural follow-on as 'unrelated'. Tracked YAML at `data/priors/foxglove_top10.yaml`; idempotent loader at `scripts/tag_priors.py`.
 - **Targeted council-backfill retriage** (`ab721a1`, 2026-05-15). 277 apps retriaged with proper council context after migration 004 resolved their NULL `council_gss`. 18 verdict / deep-read changes (6.5%); net worklist size 818 → 815. The Halton Tesco-CHP-removal case flipped adjacent→unrelated without any explicit polarity rule.
 
-### Phase 3 — document fetch (May 15)
+### Phase 3 — document fetch (May 15–16)
 
 - **Idox document-fetch adapter** (`8f6de70`, `16d9889`, 2026-05-15). `dcp fetch-docs --source idox` walks worklist apps in rank order, downloads every direct-PDF link from the documents tab, stores bytes under `data/raw/idox/<application_ref>/<sha[:16]>.<ext>`, records metadata in the `documents` table (UNIQUE on application_id + content_sha256 for idempotency). Per-app `_manifest.json` is the hand-over signal. Error-classification surfaces ssl_chain_failure / dns_failure / withdrawn_from_view / no_documents_or_unparseable distinctly.
 - **SSL chain fix via OS native trust store** (`16d9889`). Many council Idox installs send only the leaf cert; `truststore` delegates to the OS TLS APIs which perform AIA chasing automatically. Unblocks Tower Hamlets, Northumberland (Cambois Foxglove case), Glasgow, and other broken-chain councils — full PKI validation preserved, only the chain reconstruction is delegated.
 - **Wider top-100 worklist sweep completed** (2026-05-16, ~14h wall-clock). 79 apps fully successful, 21 classified-skips (15 `no_documents_or_unparseable`, 4 `withdrawn_from_view`, 1 `dns_failure`, 1 `RuntimeError`). 3,032 documents downloaded across 3,104 found; **9.3 GB on disk**. Corpus mix: 2,849 PDFs + 52 .msg consultee emails + 52 .docx + 13 .xlsm + 12 .rtf + 10 .jpg + 15 misc Office files. The .msg files are exactly the EA-letter / consultee-response category Aisha flagged as editorially critical — generator counts and fuel detail that the application form alone omits.
+- **Ocella adapter** (`ddf6cf2`, 2026-05-16). `dcp fetch-docs --source ocella` covers the second-largest UK council-portal product (Hillingdon, Havering, and others). Documents are reached via a POST to `showDocuments?reference=<ref>&module=pl`, parsing `<a href ="viewDocument?file=...&module=pl">` anchors (the literal space in `href =` is a parser hazard worth noting). Storage / manifest / dedup mirrors the Idox adapter exactly. Top-30 Ocella sweep landed 812 documents across 27 apps (3 Havering scoping-request skips); the Hillingdon Ark Project Union cluster is now fully indexed.
+- **Manual ingest tooling** (`144c89d`, 2026-05-16). `scripts/ingest_manual_docs.py` + `dcp/sources/manual.py` cover the long tail of portals without an adapter (NorthLincs custom, Slough Agile, Runnymede PlanningExplorer, Manchester / Charnwood / Neath / Cherwell / WestLothian / Broxbourne / Warrington bespoke). Operator drops files in `data/raw/fully_manual/<app-dirname>/`, runs the script with `--source manual --application-ref ...`, gets hard-linked bytes at the canonical `data/raw/manual/<ref>/<sha[:16]>.<ext>` path + a refreshed manifest. Filename → kind label heuristic preserves readability. Hard links (or copy fallback on EXDEV) keep disk usage flat.
+
+### Phase 4 — structured extraction (May 16)
+
+- **Deep-read extractor + delta classifier shipped** (`7c0082f` through `45359f1`, 2026-05-16). End-to-end pipeline:
+  - `dcp/extract.py` — pypdf per-page text cache at `data/raw_text/<source>/<application_ref>/<sha[:16]>.pages.json` + regex pre-pass for MW / generator-count / fuel-storage candidates.
+  - `dcp/findings.py` — append-only query (latest per `(application_id, document_id, signal_type, model)`, mirroring triage versioning) + delta classifier sorting each finding into NEW DISCLOSURE / REFINEMENT / CONFIRMATION categories. CONFIRMATIONS (facts already in the description) are dropped from the markdown as noise; xlsx still surfaces their count for audit.
+  - `repo.record_finding` helper completes the schema's append-only family alongside `record_triage` / `record_document`.
+  - **The LLM stage is replaceable.** This round used Claude Code's vision-capable Read tool as the human-in-loop extractor (model column reads `claude-opus-4-7+read-tool`); a future Anthropic SDK + Sonnet 4.6 batch round (or any other model) writes to `findings` under a different `model` string so the rounds coexist for audit.
+
+- **35 apps with findings**, ~225 findings total. Geographic / operator coverage of the headline cases:
+  - **Yorkshire Energy Park family** (STPLF gas reserve, YEP DC, Saltend hybrid gas+BESS, Meld Energy hydrogen hub).
+  - **Greystoke Land's three sites** (Humber Tech Park, Elsham Tech Park, West London Tech Park — same Future-tech M&E consultant signature across all three).
+  - **Ark "Project Union"** (parent + 2022 expansion + condition-discharge follow-ons).
+  - **Longcross campus** (former DERA site — same Hurley Palmer Flatt + Phlorum + Auricl consultant trio as Project Union).
+  - **Newham Bidder Street** (Foster & Partners, ~£11M s106 incl. £2.67M carbon offset).
+  - **Thurrock Lakeside hyperscale** (Global Infrastructure UK Ltd, 12-year 100 MW Moray West offshore-wind PPA).
+  - **WestLothian AI** (250 MW AI-named DC + Section 36 BESS).
+  - **Havering Council-led LDO** (up to 400,000 sqm, combustion plant explicitly excluded).
+  - **Milton Keynes Energy Network** (13.7 km pipe network feeding 6 named civic anchors).
+  - **Neath WBE Margam** (12 MW DC private-wired to existing on-site biomass plant).
+  - Four worklist false-positives cleanly disambiguated (residential CHP, pallet kiln, waste-depot BESS pair).
+  - Six confirmed cross-borough duplicates tagged so they no longer compete for primary worklist slots.
+
+- **Output integration — markdown + xlsx restructured around editorial themes** (`1043234`, `45359f1`, 2026-05-16). The flat rank-ordered list under-weighted substantive findings and over-weighted procedural follow-ons; the export now opens with hand-picked **Editorial highlights**, organises cards into **Editorial cohorts** (operator clusters, spatial groupings, planning-route patterns), and lists the filtered-out apps in a separate audit section. Cohort structure is a single source of truth at `data/priors/cohorts.yaml`; loader at `scripts/tag_cohorts.py` stamps `cohort:<name>` and `exclude:<reason>` tags via `repo.append_discovered_via`; module-cached lookup at `dcp/cohorts.py`. Cards demote to h3/h4 inside cohort sections; HTML anchors enable highlights and cross-references to link directly to full cards. The xlsx companion gains **Highlight / Primary cohort / Also-in cohorts** columns plus a separate **Filtered** sheet — Aisha can filter on `Highlight=yes` or any single cohort directly in Excel.
 
 ### Phase 6 — reporter export (May 15)
 
@@ -64,21 +90,11 @@ Last meaningful update: 2026-05-15 (late afternoon — Phase 3 fetch in flight).
 
 ### Immediate (this/next session)
 
-- **Phase 4 — structured extraction.** Documents are landing; we can start parsing PDFs and surfacing power-related signals into `findings` (the table already has the right shape: `application_id`, `document_id`, `signal_type`, `value_text/number/unit`, `evidence_text`, `evidence_page`, `model`, `inserted_at` — see migration 001).
+- **Findings extraction across the remaining with-docs apps.** Top-100 doc coverage now sits at **94/100 with docs + 5/100 tagged duplicates = 99/100 resolved**; 35 apps have findings. The Hillingdon condition-discharge tail (Ark Project Union family — ~20 apps) is mostly procedural and yields modest findings each; the Glasgow university-campus cluster (rank ~40-67) hasn't been touched and may need a Glasgow cohort. **Editorially valuable next batches**: any 100+ MW app not yet covered, anything in the AI / Council-led LDO cohorts, anything with substantive consultee response content (`.msg` files in the Idox bundles).
 
-  **Full design in [ARCHITECTURE.md §3 Deep-read](ARCHITECTURE.md).** Headline plan:
-  - Per-file text extraction → cache under `data/raw_text/<source>/<application_ref>/<sha>.txt`. PDF via pypdf/pdfplumber (already deps); `.msg` consultee emails need `extract_msg` (new dep); `.docx/.doc/.rtf` need `python-docx` + `striprtf`; `.xlsm/.xlsx` already covered by openpyxl. ~92% of the corpus is PDFs so PDF support is the MVP.
-  - Regex pre-pass for high-signal patterns (`\d+\s*MW`, `\d+\s*generators`, fuel-storage hours/litres/tonnes) → candidate sentences.
-  - LLM extraction on candidates (granite4.1:30b for Stage-1 consistency, or a longer-context model if whole-PDF prompts make more sense for some doc types) → structured rows in `findings` with evidence text + page.
-  - Optional Phase 5 multimodal pass on site plans / elevations later.
+- **Long-tail portal adapters** for the worklist apps still without docs. The 2 remaining genuine gaps in the top-100 (Slough's 2026 SMI which is too new to have docs anywhere, and a handful of mid-rank apps on portals not yet sampled — Arcus, EnterpriseStore, PlanningExplorer for some councils). When journalism need warrants a fuller sweep, build the Arcus adapter first (Milton Keynes, Epping Forest) — Arcus is reasonably common across UK councils.
 
-  **First concrete deliverable**: end-to-end extraction for the Yorkshire Energy Park family (`EastRiding/16/02800/STPLF` + `EastRiding/22/00301/STREME`). Already at the top of the worklist, full docs already on disk, the editorial story (gas-fired generation behind a marketed-green DC) is already known — perfect smoke target to verify the extraction produces the right `findings` rows with proper provenance.
-
-  **Open design choices for the start of the next session**: (a) regex+LLM hybrid vs LLM-only — start with hybrid to save Ollama time; (b) signal-type taxonomy — derive from rubric tiers 1-4 or invent a more granular set; (c) consultee extraction — we don't currently capture the consultee list from the documents page, but the `.msg` emails ARE in the bundle so per-file extraction will surface the consultee body even without a separate "consultees" field. Worth deciding whether to add such a field for explicit indexing.
-
-  **Output integration** (decided 2026-05-16 with Luke; supersedes the earlier per-app `_findings.md` sidecar idea): `dcp export` becomes Phase-4-aware — same command, same output filenames; markdown cards and xlsx columns gain inline NEW DISCLOSURES + REFINEMENTS sections when `findings` rows exist for an app. Apps without findings yet render exactly as before. Single source of truth at all times; Aisha re-opens the same file each cycle and sees new-disclosure badges on cards she's already reviewed. The CONFIRMATIONS category (findings that just match what triage already extracted from the description) is intentionally omitted as noise. See ARCHITECTURE.md §3 for the badge / column shape and the delta-classification logic.
-
-- **Per-portal document-fetch adapters** for the long tail. Idox covers a big slice of the worklist; Ocella / Arcus / Salesforce / Civica / Tascomi / bespoke each need their own adapter when the worklist requires it. Per-portal effort scales: a clean adapter is ~half-day each; the documents-list HTML varies but the orchestrator / storage / manifest layer is reusable.
+- **Idox adapter improvement — handle OMT-viewer `docKey=` links.** Current adapter conservatively skips these, missing site plans / elevations / drawings (~half the doc set for many apps). The user's manual STPLF backfill recovered 16 such docs that the automated fetch missed. Worth re-running the Idox top-100 sweep after the fix.
 
 ### Soon
 
@@ -86,7 +102,7 @@ Last meaningful update: 2026-05-15 (late afternoon — Phase 3 fetch in flight).
 
 - **CI on GitHub Actions** (now feasible since the project is Apache 2.0 and tracked). Run `pytest -m "not integration"` on every push. ~1–2h.
 
-- **Triage round 2 with refined rubric** (depending on Aisha's editorial-narrowing decision — see Open Questions below). Either narrow to *primary on-site gas* (sharper, rarer story) or *outsized backup-but-grid-services capacity* (more common, softer story), and re-run with the tighter prompt.
+- **Triage round 2 with refined rubric** (depending on Aisha's editorial-narrowing decision — see Open Questions below). Either narrow to *primary on-site gas* (sharper, rarer story) or *outsized backup-but-grid-services capacity* (more common, softer story), and re-run with the tighter prompt. The cohort-driven export now provides editorial filtering even without retriaging, so this is less urgent than it was pre-Phase-4.
 
 ---
 
@@ -106,7 +122,9 @@ Items consciously deferred — return when journalism need warrants.
 
 - **Pre-2018 broader-keyword backfill.** PlanIt's coverage thins sharply before 2018. The parent-backfill already pulled in pre-2018 substantive parents; a separate broader-keyword sweep would catch pre-2018 cases that don't have a child in our window. Worth a separate sweep if the story angle needs it.
 
-- **Document corpus mirror.** `data/raw/` is local-only and growing (~2 GB at top-100). Candidates for a public reproducibility mirror: zenodo (DOI, academic-friendly, CC-BY), S3 (paid, more control), academictorrents. Decide once corpus stabilises in size and publication-day workflow is clear. See [POST_PUBLICATION_CHECKLIST.md](POST_PUBLICATION_CHECKLIST.md).
+- **Document corpus mirror.** `data/raw/` is local-only and growing (~12 GB after the Phase 4 + manual-ingest round). Candidates for a public reproducibility mirror: zenodo (DOI, academic-friendly, CC-BY), S3 (paid, more control), academictorrents. Decide once corpus stabilises in size and publication-day workflow is clear. See [POST_PUBLICATION_CHECKLIST.md](POST_PUBLICATION_CHECKLIST.md).
+
+- **Phase 5 — multimodal pass.** Originally planned as Claude vision on site plans / elevations for the matched subset. **Downgraded to a conditional, probably-won't-do.** The Phase 4 sweep confirmed nearly all PDFs in the corpus have text layers, so the regex pre-pass + Read-tool extraction already surfaces what's labelled. Vision would only add value if (a) labels are rasterised into a drawing tile rather than the PDF text layer, *and* (b) we have an app where we suspect on-site generation but text extraction came up empty. Anything an applicant genuinely wants to conceal won't be in the drawings at all. Revisit only if a specific app hits both conditions. If pursued, the multimodal pass writes to the same `findings` table under a different `model` string (e.g. `claude-opus-4-7+vision-batch`).
 
 ---
 
@@ -114,9 +132,10 @@ Items consciously deferred — return when journalism need warrants.
 
 Things we haven't decided yet, with current thinking where there is one.
 
-- **Triage rubric scope.** The current prompt leans inclusive across both *primary on-site gas* and *outsized backup-but-grid-services capacity* (`worth_deep_read='yes'/'maybe'` on either signal). Now that the full sweep is in, decide with Aisha whether to narrow to one of these and re-run the universe under a tighter rubric for ranking.
+- **Triage rubric scope.** The current prompt leans inclusive across both *primary on-site gas* and *outsized backup-but-grid-services capacity* (`worth_deep_read='yes'/'maybe'` on either signal). Now that the cohort export provides editorial filtering downstream of triage, the urgency on narrowing has dropped. Still worth a conversation with Aisha about whether to re-run a tighter rubric or just continue iterating cohort definitions.
 - **"energy centre" sweep.** 9,061 PlanIt hits — far too noisy for direct ingestion, but the term *is* the coded-language signal (granite4.1:30b already extracts it as a signal when it appears). Either run as a separate triage-heavy pass or rely on the in-document signal during deep-read. Probably both.
-- **FastAPI portal for browsing.** Markdown + xlsx + KML + interactive map cover the current hand-off shape well. A FastAPI portal would matter only if Aisha (or the wider data desk) wants point-and-click filtering on the full 815-app universe beyond what Excel can give them. Defer until asked.
+- **Findings extraction at scale.** The current 35-app set was extracted human-in-the-loop via Claude Code's Read tool. A systematic top-100 → top-300 sweep would need either (a) continued in-session iteration (cheap, slow, judgement-rich), (b) Anthropic SDK + Sonnet 4.6 batch (faster, repeatable, less rich), or (c) a hybrid where SDK does a first pass and human-in-loop refines the editorially-loudest. Worth picking a path before the next big push.
+- **Browse UI shape (if any).** Markdown + xlsx + KML + interactive map cover the current hand-off shape well; the cohort restructure pushed the markdown a long way toward being navigable. A dynamic web portal (FastAPI etc.) is almost certainly overkill — the dataset is a snapshot re-rendered on demand, not a live application. If point-and-click browsing ever becomes a requirement, a static-site build from the export pipeline (rendered HTML cohort pages + per-app pages + a generated index) would match the access pattern better than a live server.
 - **Public-data ethics for personal-data fields.** Householder applications can include applicant names. Current schema stores raw values; redaction belongs at the export stage. Pre-publication sanity-check completed on the methodology-trail tracked files; needs to run again on any aggregate that touches personal fields.
 - **PlanIt rate-limit politics.** PlanIt is donation-supported and friendly; we are a heavy user. Worth reaching out to them at some point — both as good citizenship and because they may have insights about coverage gaps. Now particularly relevant: the document-fetch stage hits *council portals* directly, not PlanIt, but the operator-name sweep + spatial sweep do hit PlanIt heavily.
 
@@ -133,7 +152,7 @@ Things we haven't decided yet, with current thinking where there is one.
 | 1e — NSIP CSV adapter | ✅ Done | All ~280 projects ingested; one current DC (Wapseys Wood). |
 | 1f — Parent-application backfill | ✅ Done | 67 parents fetched, 41 pre-2018. |
 | 2 — Triage | ✅ Done | `granite4.1:30b` over the full universe; 683 DC + 136 adjacent + 965 unrelated + 48 unknown (post-retriage). |
-| 3 — Document fetch | ✅ Top-100 done | Idox top-100 sweep complete (79 apps cleanly fetched, 9.3 GB corpus); long-tail per-portal adapters (Ocella / Arcus / Salesforce) pending. |
-| 4 — Structured extraction | ⏳ Next | Text extraction + OCR fallback; evidence-quoted findings into `findings` table. |
-| 5 — Multimodal pass | ⏳ Eventual | Claude vision on site plans / blueprints for matched subset. |
-| 6 — Reporter export | ✅ Done (v1) | Markdown + xlsx + KML + interactive HTML map with OSM power-plant overlay. Iterate per Aisha's feedback. |
+| 3 — Document fetch | ✅ Top-100 done | Idox + Ocella sweeps; manual ingest covers the long-tail portals. Top-100 doc coverage 94/100 + 5 duplicates resolved = 99/100. |
+| 4 — Structured extraction | ✅ v1 Done | Text-cache + regex pre-pass + delta classifier; 35 apps with findings, ~225 findings total under model `claude-opus-4-7+read-tool`. Editorial highlights + cohorts + filtered audit list shipped in the markdown + xlsx export. |
+| 5 — Multimodal pass | 🚫 Probably won't do | Originally planned vision pass on site plans / elevations. PDFs are overwhelmingly text-layered, so vision adds little; concealed plant won't appear in drawings at all. Revisit only if a specific app needs it. |
+| 6 — Reporter export | ✅ Done (v2) | Markdown + xlsx restructured around editorial cohorts, highlights, and filtered-out audit list; KML + interactive HTML map with OSM power-plant overlay unchanged. Iterate per Aisha's feedback. |

@@ -17,7 +17,7 @@ Seven principles, in order of importance:
 4. **Append-only with audit trail.** `source_snapshots` preserves every raw fetch. `triage` and `findings` are versioned by `inserted_at` rather than overwritten. Reruns add rows; nothing is destroyed. This makes re-analysis with refined prompts cheap and reproducible, and is the engineering corollary of (2) and (3).
 5. **Idempotent at every stage.** Reruns are no-ops on unchanged content. PKs and unique constraints (`(source_id, application_ref)`, `(source_id, key, content_sha256)`, etc.) are the dedup contract. Cache-based resume means a partial sweep can be completed without re-fetching captured pages.
 6. **Look at the data before committing infra.** Hands-on exploration of every new source (manual API calls, sample documents) before adapter code is written. The seed-case walkthrough and the PlanIt exploration both produced design changes that wouldn't have come out of upfront planning.
-7. **Provenance is non-negotiable.** Every claim in `findings` carries a document reference, evidence text, page number, model name, and timestamp. Reporters can't use what we can't back to a quotable source. Aggregate outputs (markdown summaries, xlsx exports, any future web interface) must always link or cite back to the underlying `findings` / `documents` / `applications` rows, never present numbers without provenance.
+7. **Provenance is non-negotiable.** Every claim in `findings` carries a document reference, evidence text, page number, model name, and timestamp. Reporters can't use what we can't back to a quotable source. Aggregate outputs (markdown summaries, xlsx exports, any future static-site build) must always link or cite back to the underlying `findings` / `documents` / `applications` rows, never present numbers without provenance.
 
 ---
 
@@ -56,58 +56,68 @@ Two-stage extraction per the seed walkthrough:
 - **Stage 1** (cheap): from description + consultee senders alone, before opening any document. Northern Gas Networks as a consultee → high gas-infrastructure prior.
 - **Stage 2** (per-document): structured fact extraction with evidence-text capture. Generator counts, fuel type, rated capacity, on-site CHP mentions, fuel-storage hours.
 
-Optional multimodal pass: Claude vision on site plans and elevations for the matched subset, identifying fuel tanks and generator enclosures.
+A multimodal pass (Claude vision on site plans and elevations) was originally planned as Phase 5; downgraded to probably-won't-do after the Phase 4 sweep — see [ROADMAP.md](ROADMAP.md). Vision can only see what's drawn and labelled; concealed plant won't appear in the drawings, and labelled plant is already text-extractable.
 
-**Document-fetch implemented** for canonical Idox portals (`dcp fetch-docs --source idox`); see `dcp/sources/idox.py`. Per-application `_manifest.json` is the hand-over signal. SSL chain reconstruction via the `truststore` package (OS native trust store + AIA chasing) unblocks councils whose servers send incomplete certificate chains.
+**Document-fetch implemented** for three transports:
 
-#### Stage-2 extraction: planned design (not yet implemented)
+- **Idox** (`dcp fetch-docs --source idox`, [dcp/sources/idox.py](dcp/sources/idox.py)) — canonical and `/newplanningaccess/` variants. SSL chain reconstruction via the `truststore` package (OS native trust store + AIA chasing) unblocks councils whose servers send incomplete certificate chains.
+- **Ocella** (`dcp fetch-docs --source ocella`, [dcp/sources/ocella.py](dcp/sources/ocella.py)) — POST to `showDocuments?reference=<ref>&module=pl`, parse `<a href="viewDocument?file=...">` anchors. Regex tolerates the stray-space `href =` variant some Ocella instances emit. Adds Hillingdon, NorthLincs, Slough Langley, several Welsh portals.
+- **Manual** (`scripts/ingest_manual_docs.py` + [dcp/sources/manual.py](dcp/sources/manual.py)) — for one-off portals without an adapter, the journalist drops files into `data/raw/fully_manual/<application_ref>/`; the ingest script hashes them, hard-links to the canonical `data/raw/manual/<ref>/<sha[:16]>.<ext>` path (copy fallback on EXDEV), records via `repo.record_document`, and **preserves any existing adapter-recorded URL** rather than overwriting with `file://`. The check-before-insert pattern keeps the principle-3 invariant (originals not mutated) even when the same doc is reachable via multiple paths.
 
-The `findings` table (migration 001) already has the right shape: one row per `(application_id, document_id, signal_type, model, inserted_at)`, with `value_text` / `value_number` / `value_unit` for structured facts, `evidence_text` + `evidence_page` for the supporting quote, and the model name for auditability. Append-only / versioned — re-extraction with a refined prompt adds rows; nothing is destroyed.
+Per-application `_manifest.json` is the hand-over signal across all three transports.
+
+#### Stage-2 extraction: implemented (v1)
+
+The `findings` table (migration 001) holds one row per `(application_id, document_id, signal_type, model, inserted_at)`, with `value_text` / `value_number` / `value_unit` for structured facts, `evidence_text` + `evidence_page` for the supporting quote, and the model name for auditability. Append-only / versioned — re-extraction with a refined prompt adds rows; nothing is destroyed.
 
 **Document formats in the corpus** (from the inaugural top-100 sweep):
 - ~2,850 PDFs (dominant; text-layer present on most modern ones, OCR fallback needed for older / scanned-only).
 - ~52 `.msg` Outlook emails (consultee responses — the EA-letter category Aisha flagged as editorially critical). Needs `extract_msg` or `mail-parser` dep.
 - ~50 `.docx` / `.doc` / `.rtf` (Word / RTF — pypdf doesn't handle; need `python-docx` and `striprtf`).
 - ~10 `.xlsm` / `.xlsx` (rare — likely emissions or capacity calculation worksheets; `openpyxl` already a dep).
-- ~10 image files (JPEGs of site-plan extracts; punt to the multimodal pass).
+- ~10 image files (JPEGs of site-plan extracts; not currently processed — see the multimodal-pass note below).
 
-Practical implication: PDF parsing alone covers ~92% of files; the long-tail formats need light per-type loaders before the LLM step.
+PDF parsing alone covers ~92% of files; long-tail loaders are still a follow-on.
 
-**Extraction approach**, in tentative tiers (refine in a Phase 4 design session):
-1. **Per-file text extraction** — pypdf / pdfplumber for PDFs (already deps), `extract_msg` for `.msg`, `python-docx` for Word. Cache extracted text under `data/raw_text/<source>/<application_ref>/<sha>.txt` so the LLM step is decoupled from the parsing step and either can be re-run independently.
-2. **Regex pre-pass** for high-signal patterns: `\d+(\.\d+)?\s*(MW|kVA|kW)\b`, `\d+\s*(diesel|gas|emergency|standby|back[- ]up)\s+generators?\b`, fuel-storage `\d+\s*(hours?|litres?|tonnes?)`. Cheap and deterministic — produces candidate sentences for the LLM to vet + extract structured fields from.
-3. **LLM extraction** on the candidate sentences (granite4.1:30b for consistency with Stage-1 triage, or a longer-context model if entire PDFs need to be in-prompt). Returns structured `findings` rows with evidence text + page number.
-4. **Optional multimodal pass** on site plans / elevations — Claude vision API for the matched subset. Lower-priority follow-on.
+**Extraction pipeline** ([dcp/extract.py](dcp/extract.py) + [dcp/findings.py](dcp/findings.py)):
 
-**Provenance discipline (principle 7)**: every `findings` row carries the source `document_id`, the exact `evidence_text` quote, the page number where it appeared, the model that extracted it, and the timestamp. Aggregate claims downstream (in the reporter export / map) link or cite back to those rows — no number presented without provenance.
+1. **Per-file text extraction** — pypdf for PDFs, cached at `data/raw_text/<source>/<application_ref>/<sha[:16]>.pages.json` (page-indexed JSON). LLM step is decoupled from parsing — either can be re-run.
+2. **Regex pre-pass** — `extract.find_candidates` surfaces high-signal sentences against patterns for MW capacity (`\d+(\.\d+)?\s*(MW|kVA|kW)\b`), generator counts (`\d+\s*(diesel|gas|emergency|standby|back[- ]up)\s+generators?\b`), and fuel storage hours / litres / tonnes. Deterministic; produces candidate windows for the LLM step.
+3. **LLM extraction** — currently human-in-loop via Claude Code's Read tool acting as the LLM (`model=claude-opus-4-7+read-tool`). The Read tool opens the cached page-JSON, the model identifies structured facts + the literal evidence quote + the page number, and `scripts/extract_findings.py` records them via `repo.record_finding`. The same shape (decoupled from parsing, cached text inputs, append-only rows) makes a later switch to a batch SDK pass a drop-in.
+4. **Delta classifier** ([dcp/findings.py](dcp/findings.py): `classify()`) — compares each finding against the application's `triage.signals` array and the description text. Three categories per the original design:
 
-**Resume / idempotency**: same shape as the triage path. `findings_pending(application_id, model)` (parallel to `applications_pending_triage`) selects apps whose latest `findings` extraction is older than the latest triage verdict for the chosen model. Re-extraction with a refined prompt is a separate model-name string so verdicts coexist.
+   | Category | What it is | Rendered? |
+   |---|---|---|
+   | **NEW DISCLOSURE** | Quantitative facts or named kit absent from the description (e.g. "18 × Caterpillar 3516B diesel generators, 45 MW peak"). The editorial signal. | Yes |
+   | **REFINEMENT** | Qualitative signals the description hinted at, sharpened with documents (e.g. "energy centre" → "12 MW gas-fired CHP, twin Jenbacher J620 engines"). | Yes |
+   | **CONFIRMATION** | Findings that match a triage signal exactly. | Omitted as noise |
 
-#### Output integration: a single source of truth, not sidecars
+   A short refinement-vocab set (`facility_classification`, `plant_configuration`, `grid_services_role`, `fuel_type_detail`) drives the qualitative side; quantitative findings (MW, generator counts, fuel volumes) default to NEW DISCLOSURE.
 
-`dcp export` becomes Phase-4-aware — same command, same output filenames; the existing markdown cards and xlsx columns gain extra content where `findings` rows exist for an app. Apps without findings yet render exactly as before. This avoids splitting the reporter's workflow across multiple artefacts (per-app sidecars + an aggregate doc + the original worklist), which is editorially worse than re-issuing the single source of truth as it's progressively enriched.
+5. **Multimodal pass on site plans / elevations** — originally planned as Phase 5; downgraded to probably-won't-do (see [ROADMAP.md](ROADMAP.md)). The Phase 4 sweep confirmed PDFs in the corpus are overwhelmingly text-layered, so the regex pre-pass + Read-tool extraction already surfaces labelled kit. Vision can only see what's drawn and labelled; concealed plant won't be in the drawings at all.
 
-The integration foregrounds the **delta** between what the documents disclose and what was already in the application description (or in the triage's `signals` extraction). Three categories:
+**Provenance discipline (principle 7)**: every `findings` row carries the source `document_id`, the exact `evidence_text` quote, the page number where it appeared, the model that extracted it, and the timestamp. The reporter export links each rendered finding back to the source filename + page; aggregate counts (e.g. "disclosed MW" in the xlsx) are derivable from the underlying rows.
 
-| Category | What it is | Rendered? |
-|---|---|---|
-| **NEW DISCLOSURES** | Quantitative facts or named kit absent from the description (e.g. "18 × Caterpillar 3516B diesel generators, 45 MW peak"). The editorial signal. | Yes |
-| **REFINEMENTS** | Qualitative signals the description hinted at, sharpened with documents (e.g. "energy centre" → "12 MW gas-fired CHP, twin Jenbacher J620 engines"). | Yes |
-| **CONFIRMATIONS** | Findings that match a triage signal exactly (e.g. doc and description both say "substation"). | Intentionally omitted as noise |
+**Resume / idempotency**: parallel to the triage path. Re-extraction with a refined model name adds rows; the export reads the latest per `(application_id, document_id, signal_type, model)` tuple.
 
-**Markdown enrichment per card** (only when findings exist):
-- A header badge next to the application_ref, e.g. `· 📄 3 new disclosures`.
-- A `**Document-extracted findings:**` block after the description, split into the NEW DISCLOSURES and REFINEMENTS subsections, each finding carrying its evidence quote, source filename, and page number.
+#### Editorial output structure
 
-**XLSX column additions** (only populated for apps with findings; NULL otherwise):
-- `findings_disclosed_mw` (numeric) — sum of newly-disclosed generation MW.
-- `findings_new_count` (numeric) — count of NEW-category findings.
-- `findings_refinement_count` (numeric).
-- `findings_summary` (text) — one-line headline of the biggest new disclosure.
+`dcp export` produces a single markdown + xlsx pair (no per-app sidecars). The reporter re-opens the same filenames each cycle; new findings appear inline on cards she's already reviewed.
 
-The reporter re-opens the same filenames each cycle; sees the new-disclosure badges on cards she's already reviewed (clear "look again — new info" signal); new cards in her unreviewed tail appear fully enriched. No cross-reference burden.
+The export is now organised editorially rather than as a flat ranked list, via [dcp/cohorts.py](dcp/cohorts.py) and the YAML at `data/priors/cohorts.yaml`. Five top-level sections:
 
-The delta classification itself is the load-bearing piece — needs explicit logic comparing each `findings` row against the application's `triage.signals` array. Easy for quantitative findings (any MW number in docs is NEW because descriptions rarely give precise MW); harder for qualitative (fuzzy matching against the triage signals list). Likely a small `findings_with_category` view in the schema, computed at export time.
+1. **At a glance** — universe-level counts (total, by verdict, worklist size, excluded).
+2. **Editorial highlights** — a hand-picked bullet list of the most newsworthy applications (10 entries with one-line hooks).
+3. **Methodology** — the rubric, the prompt freeze date, the model trail.
+4. **Editorial cohorts** — themed groupings (Humber Estuary cluster, Greystoke sites, Ark Project Union, Hurley Palmer Flatt consultant trio, …) in YAML-defined editorial order. Each cohort renders its primary apps as full cards; apps that also belong to later cohorts appear as cross-references rather than duplicated cards. The "primary cohort" for an app is the first cohort in YAML order that lists it; subsequent cohorts list it under an "Also in this cohort" cross-reference. HTML anchors (`<a id="...">`) make cohort hops in-document clickable.
+5. **Other applications** — the long tail of worklist apps not in any cohort, in rank order.
+6. **Filtered from the worklist** — applications confirmed NOT to be data centres after deep-read (4 entries at time of writing), tagged `exclude:<reason>`, plus consultation-stage duplicates tagged `duplicate_of:<primary>`. Filtered apps don't count toward the worklist total; the section makes the filter audit-able.
+
+The xlsx mirrors this: three new editorial-structure columns (`Highlight`, `Primary cohort`, `Also in cohorts`) sit alongside the existing data columns, and a separate `Filtered` sheet lists the excluded / duplicate apps with their reason and (where relevant) primary ref. The xlsx's auto-filter range and humanised-lineage column index move accordingly (see [tests/test_export.py](tests/test_export.py) for the structural contract).
+
+**Why this shape**: a flat rank doesn't surface that four applications within 2 km of each other on the Humber Estuary are the editorial story, or that three Greystoke sites share an applicant and a consultant. Cohorts let the journalist see *patterns* the rank order would obscure, while the long-tail "Other applications" preserves the principle-1 commitment to surfacing the whole universe rather than pre-filtering to the hypothesis.
+
+The `exclude:*` filter is the engineering corollary: confirmed non-DCs no longer pollute the worklist count without being silently dropped from the corpus. The original triage verdict stays untouched (principle 3); the exclusion is a separate tag.
 
 ---
 
@@ -132,7 +142,7 @@ documents        │ (application_id, content_sha256) UNIQUE
                  ▼
 triage           │ append-only, versioned per inserted_at
 findings         │ append-only, versioned per inserted_at
-findings_visual  │ (planned — multimodal extraction)
+                 │ (no multimodal sibling — see ROADMAP)
 ```
 
 Key invariants:
@@ -141,6 +151,7 @@ Key invariants:
 - `applications(source_id, application_ref)` UNIQUE. ON CONFLICT updates description / dates / status / url / raw_metadata, refreshes `last_seen_at`, preserves `first_seen_at` and existing non-null `council_gss` (COALESCE).
 - `documents(application_id, content_sha256)` UNIQUE — same document fetched twice doesn't duplicate.
 - `triage`, `findings` are versioned, never updated. Latest by `inserted_at` is current; historical rows kept for prompt-revision comparison.
+- Editorial filters (`exclude:<reason>`, `duplicate_of:<primary_ref>`, `cohort:<name>`) live as tags in the `applications.discovered_via` array — never as in-place mutations of the verdict or row. The triage verdict stays untouched (principle 3); the export reads the tags to filter and group at render time.
 
 `raw_metadata JSONB` on `applications` carries source-specific fields we don't promote to columns (PlanIt's `app_type`, `app_size`, `associated_id`, `other_fields`, etc.). Same approach on `councils.notes`.
 
@@ -216,20 +227,22 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 | ORM | None — raw `psycopg2` | Matches fuel-finder / meridian convention; queries short and obvious. |
 | Triage LLM | Ollama (local), `granite4.1:30b` | Five-model eval (May 2026): granite4.1:30b 97% verdict accuracy at ~9s/app. IBM's JSON-tuning + 30b reasoning beat bigger non-granite models on calibration. `FakeBackend` for CI. |
 | Triage versioning | Per `(application_id, model, inserted_at)` | Re-running with a different model overlays a second opinion without touching the first. Resume is model-scoped. |
-| Multimodal pass | Claude vision via personal Anthropic API | Ollama vision too weak for site plans. Volume on matched subset is small. |
+| Findings extraction LLM | Claude Code Read-tool (human-in-loop), model name `claude-opus-4-7+read-tool` | v1 calibration. Decoupled from text extraction (cached page-JSON), append-only rows, model-named — a future batch SDK pass slots in as a new model name without disturbing existing rows. Personal-account routing flagged when pre-publication. |
+| Multimodal pass | Originally planned via Claude vision; **probably won't do** | Phase 4 confirmed PDFs are overwhelmingly text-layered; vision can only see what's drawn and labelled, and concealed plant won't appear in drawings. Revisit per-app only. |
 | Document corpus | Local filesystem first, S3 later | Mirrors fuel-finder's "local until it hurts" pattern. |
 | Time scope | 2018+ for v1 | PlanIt has consistent coverage from 2018; sharp drop before. |
 | Source order | PlanIt first | National, full-text searchable, single API. NSIP and per-council adapters added when journalism need warrants. |
 | Schema mutability | Append-only / versioned where it matters; original values never overwritten | Reproducibility for journalism; defensibility back to source; re-analysis with refined prompts is cheap. |
 | Resume mechanism | Cache via `source_snapshots`, not a separate cache table | One source of truth; same data serves both audit and resume. |
-| Web framework (when needed) | FastAPI with auto-generated Redoc + OpenAPI | Matches Luke's fuel-finder convention; APIs should be documented by default. |
+| Web framework | None planned. If browsing ever needed, static-site build from the export pipeline | Dataset is a snapshot re-rendered on demand, not a live application — a dynamic server (FastAPI etc.) is overkill. Static HTML cohort + per-app pages can be generated alongside the existing markdown/xlsx/KML. |
 
 ---
 
 ## What's not in the architecture yet
 
 - **Council-reorganisation handling** for pre-2020 records under legacy district names (Wycombe → Buckinghamshire, Chiltern South Bucks → Buckinghamshire, etc.). Currently surfaces as NULL `council_gss` with the legacy `area_name` preserved in `raw_metadata`. Per principle 3, the legacy name stays untouched; any canonicalisation goes in a new column or join table, not over the original.
-- **Document-fetch adapters per portal type.** Idox (canonical and `/newplanningaccess/` variant), Salesforce (verified unnecessary for now; Loughton accessible via PlanIt's Arcus scraper), NSIP, etc.
-- **Findings export / reporter-facing output.** Markdown summary + xlsx for hand-off (meridian pattern). Phase 6+.
-- **Web interface (when needed).** If/when a reporter-facing browse UI is needed, **FastAPI** is the chosen framework — matches Luke's fuel-finder convention. Any HTTP API exposed by it should be documented via **Redoc with OpenAPI** (FastAPI generates both `/docs` Swagger and `/redoc` ReDoc views automatically; keep the operation `summary`, `description`, and Pydantic-model field docstrings populated). This isn't urgent — the CLI-driven export is enough until a journalist needs to click around — but the decision is locked when the time comes.
+- **Long-tail document-fetch adapters.** Idox + Ocella + manual ingest cover the top-100 worklist; smaller / one-off portals (Agile Applications, sbcplanning, Neath/Port Talbot's iPlan) currently route through the manual path. Worth promoting to dedicated adapters if the corpus expands beyond top-100.
+- **`parent_ref` as a first-class column** rather than a `discovered_via` tag. Currently a `parent_backfill:<child_ref>` array entry; promoting to a column would simplify join queries.
+- **Findings extraction at scale.** v1 covers ~35 apps via human-in-loop Read-tool extraction; running across the full top-100 and the long-tail worklist needs either a batch SDK pass or a continued slow-and-steady human-in-loop sweep. Open question; see [ROADMAP.md](ROADMAP.md).
+- **Browse UI (if needed).** No dynamic web portal planned — the dataset is a snapshot re-rendered on demand into markdown + xlsx + KML + interactive map, not a live application. If point-and-click browsing ever becomes a requirement, a **static-site build** from the export pipeline (rendered HTML cohort pages + per-app pages + a generated index) is the right shape: same source of truth as the existing artefacts, no server to run, trivially hostable. A live FastAPI server was the previous answer here; downgraded after the cohort-restructured markdown proved navigable enough on its own.
 - **CI**. Tests are local-only; no GitHub Actions yet. Worth setting up when team scales beyond Luke + Aisha.

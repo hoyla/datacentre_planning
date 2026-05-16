@@ -6,7 +6,7 @@ Collaboration with Aisha Down at the Guardian.
 
 ## Status
 
-**Phases 1, 2, and 6 (reporter export) complete; Phase 3 (document fetch) in flight; Phase 4 (structured extraction) next.** 1,832 UK data-centre applications ingested 2007–2026, classified by `granite4.1:30b` Stage-1 triage (683 DC · 136 adjacent · 965 unrelated · 48 unknown). Aisha-facing worklist export landed as markdown + xlsx + interactive HTML map (with OSM power-plant overlay, 58% of worklist DCs sitting within 5 km of a fossil/biomass/nuclear plant). Idox document-fetch adapter live; wider sweep currently in flight at top-100 worklist apps. 126-test suite green.
+**Phases 1, 2, 3 (top-100), 4 (v1), and 6 (v2 reporter export with editorial cohorts) all green.** 1,832 UK data-centre applications ingested 2007–2026, classified by `granite4.1:30b` Stage-1 triage (683 DC · 136 adjacent · 965 unrelated · 48 unknown). Top-100 worklist document fetch ~99% complete across Idox, Ocella, and a manual-ingest path for one-off portals. Phase 4 v1 deep-read landed with `dcp/extract.py` (pypdf cache + regex pre-pass) + `dcp/findings.py` (delta classifier, NEW DISCLOSURE / REFINEMENT / CONFIRMATION) feeding the editorial export; ~35 apps now carry document-extracted findings via human-in-loop Claude-Code Read-tool extraction. Reporter export restructured around editorial cohorts (highlights at top → themed cohorts with cross-references → long-tail rank-ordered → filtered-from-worklist), mirrored in the xlsx with a separate Filtered sheet.
 
 See:
 - [ARCHITECTURE.md](ARCHITECTURE.md) — pipeline philosophy, schema, design decisions.
@@ -24,10 +24,10 @@ See:
 
 - Python 3.12, raw `psycopg2` (no ORM).
 - Postgres for state; append-only `source_snapshots` audit table preserves every fetch.
-- Ollama (local) for triage and structured extraction; default model `granite4.1:30b` chosen after a five-model comparison (IBM's JSON-tuning + 30b reasoning ≈ 97% verdict accuracy at ~9s/app). Pluggable `FakeBackend` keeps CI dependency-free.
-- Claude vision via personal Anthropic API for site-plan / blueprint multimodality (Phase 4 only).
-- S3 for document corpus (introduced when local `data/` becomes inconvenient).
-- CLI-driven (`scrape.py` or `dcp …`). FastAPI portal only if reporters need it.
+- Ollama (local) for Stage-1 triage; default model `granite4.1:30b` chosen after a five-model comparison (IBM's JSON-tuning + 30b reasoning ≈ 97% verdict accuracy at ~9s/app). Pluggable `FakeBackend` keeps CI dependency-free.
+- Claude Code Read-tool (human-in-loop, model name `claude-opus-4-7+read-tool`) for Stage-2 findings extraction. Text-extraction step is decoupled (cached page-JSON), so a future batch SDK pass slots in as a new model name.
+- Document corpus on local filesystem; S3 lift deferred until corpus growth warrants.
+- CLI-driven (`dcp …` entrypoint). No web portal planned — the dataset is a snapshot re-rendered on demand into markdown + xlsx + KML + interactive map, not a live application. A static-site build is the likely shape if browsing ever becomes a requirement.
 
 ## Setup
 
@@ -50,19 +50,24 @@ Three stages, each idempotent and resumable:
 
 1. **Index** — paginate recent applications per source; upsert metadata into `applications`; preserve raw responses in `source_snapshots`. Reruns are no-ops by `(source, application_ref)` and content hash. Complementary `dcp backfill-parents` walks the `associated_id` chain to fetch parent permissions outside the keyword window.
 2. **Triage** — `dcp triage` runs an Ollama model (default `granite4.1:30b`) over un-triaged applications, classifies against the DC + power-infrastructure rubric, and writes verdicts to `triage`. Versioned per `(application_id, model, inserted_at)`; resume is automatic and model-scoped, so re-running with a different model overlays a second opinion.
-3. **Deep-read** — for triage matches (`verdict in ('DC', 'adjacent') AND worth_deep_read in ('yes', 'maybe')`), download document bundle, extract text (OCR fallback when no text layer), surface power-related signals into `findings`. Not yet implemented.
+3. **Deep-read** — for triage matches (`verdict in ('DC', 'adjacent') AND worth_deep_read in ('yes', 'maybe')`), `dcp fetch-docs --source {idox,ocella}` downloads the document bundle (or `scripts/ingest_manual_docs.py` ingests journalist-supplied files for portals without an adapter). `dcp/extract.py` caches per-page text + runs the regex pre-pass for MW / generator-count / fuel-storage patterns. `dcp/findings.py` records `(application_id, document_id, signal_type, model, evidence_text, evidence_page)` rows and classifies each as NEW DISCLOSURE / REFINEMENT / CONFIRMATION against the triage signals. v1 covers ~35 apps via human-in-loop Read-tool extraction; the export consumes the findings via the same `dcp export` command (no sidecar files).
 
 ## Sources
 
-Implemented:
+Implemented — application metadata (Phase 1):
 
 1. **PlanIt API** (`planit.org.uk/api`) — national, full-text searchable, free. Primary keyword sweep + operator-name sweep + spatial colocated sweep + parent-backfill all run through this adapter.
 2. **Planning Inspectorate NSIP register** — CSV download of all ~280 NSIP projects. One DC currently (Wapseys Wood, EN0110030); expected to grow.
 
+Implemented — document fetch (Phase 3):
+
+3. **Idox Public Access** (`dcp fetch-docs --source idox`) — canonical and `/newplanningaccess/` variants; SSL chain reconstruction via `truststore`.
+4. **Ocella** (`dcp fetch-docs --source ocella`) — POST to `showDocuments?reference=<ref>&module=pl`, anchor parse. Covers Hillingdon, NorthLincs, Slough Langley, several Welsh portals.
+5. **Manual** (`scripts/ingest_manual_docs.py`) — journalist drops files into `data/raw/fully_manual/<ref>/`, the script hashes + hard-links them into the canonical layout and records them without overwriting any adapter-recorded URL.
+
 Planned:
 
-3. **Idox Public Access** generic adapter — long tail of council portals, needed for Phase 3 document fetch.
-4. **Environment Agency public register** (industrial installations / combustion plant) — triangulation against permitted on-site capacity.
+6. **Environment Agency public register** (industrial installations / combustion plant) — triangulation against permitted on-site capacity.
 
 ## Reproducing the dataset
 
@@ -97,14 +102,26 @@ python scripts/tag_priors.py data/priors/foxglove_top10.yaml
 # 8. Stage 1 triage (granite4.1:30b over the universe — ~5 h wall-clock)
 dcp triage --model granite4.1:30b
 
-# 9. Reporter export — Aisha-facing markdown + xlsx
+# 9. Editorial-structure tags (cohorts, exclusions, duplicates)
+python scripts/tag_cohorts.py     # reads data/priors/cohorts.yaml
+python scripts/tag_duplicates.py  # reads data/priors/duplicates.yaml
+
+# 10. Reporter export — markdown + xlsx, structured around editorial cohorts
 dcp export --top 50
 
-# 10. Editorial map — interactive HTML + GeoJSON + KML
+# 11. Editorial map — interactive HTML + GeoJSON + KML
 dcp map
 
-# 11. (Optional) Phase 3 document fetch — Idox councils only at present
-dcp fetch-docs --source idox --top 50
+# 12. Phase 3 document fetch — Idox + Ocella portals
+dcp fetch-docs --source idox  --top 100
+dcp fetch-docs --source ocella --top 100
+
+# 13. (Optional) Manual ingest for portals without an adapter
+#     drop files under data/raw/fully_manual/<application_ref>/ first
+python scripts/ingest_manual_docs.py
+
+# 14. Phase 4 findings extraction (currently human-in-loop via Read tool)
+python scripts/extract_findings.py
 ```
 
 Each stage is idempotent: re-running picks up where it left off
