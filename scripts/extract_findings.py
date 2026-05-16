@@ -1959,6 +1959,128 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 1,
         },
     ],
+    # =====================================================================
+    # Thurrock Lakeside DC — `Thurrock/25/00573/OUT`. Global
+    # Infrastructure UK Ltd's hyperscale at the former Arena Essex
+    # Raceway, adjacent to Lakeside Shopping Centre. 4 DC buildings
+    # = 130,500 sqm GEA, 94 × 2.75 MW diesel back-up generators
+    # (~258 MW backup capacity). Hybrid planning application (full +
+    # outline).
+    # =====================================================================
+    "Thurrock/25/00573/OUT": [
+        {
+            "doc_sha_prefix": "6cd1f865",
+            "signal_type": "applicant_name",
+            "value_text": (
+                "Global Infrastructure UK Ltd (likely a Global Infrastructure "
+                "Partners-affiliated entity); agent Iceni Projects Ltd; ES Air "
+                "Quality chapter by Environmental Resources Management (ERM)"
+            ),
+            "evidence_text": (
+                "This chapter of the Environmental Statement (ES) has been prepared "
+                "by Environmental Resources Management Ltd (hereafter referred to "
+                "as 'ERM') ... ERM on behalf of Global Infrastructure UK Ltd "
+                "[Iceni Projects Ltd, Da Vinci House, 44 Saffron Hill, London, "
+                "ECN1 8FH]"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "6cd1f865",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "hyperscale data-centre campus on the former Arena Essex Raceway, "
+                "adjacent to Lakeside Shopping Centre — up to 4 DC buildings, "
+                "130,500 sqm GEA (excluding external plant) + 4,000 sqm office; "
+                "M25 west, A13 south"
+            ),
+            "evidence_text": (
+                "The Site is located at the former Arena Essex Raceway, Land to "
+                "the north of Arterial Road West Thurrock, Essex RM19 1AE, within "
+                "a predominantly mixed-use area that features industrial, "
+                "residential, and commercial land uses. To the north, the Site is "
+                "adjacent to the Lakeside Shopping Centre, a large retail and "
+                "commercial hub."
+            ),
+            "evidence_page": 4,
+        },
+        {
+            "doc_sha_prefix": "6cd1f865",
+            "signal_type": "generator_count",
+            "value_number": 94,
+            "evidence_text": (
+                "94 diesel backup generators are proposed to be installed at the "
+                "Site to provide emergency power in the event of a grid supply "
+                "failure."
+            ),
+            "evidence_page": 13,
+        },
+        {
+            "doc_sha_prefix": "6cd1f865",
+            "signal_type": "engine_rated_mw",
+            "value_number": 2.75,
+            "value_unit": "MW",
+            "evidence_text": (
+                "Table 4.4 Modelled Emissions Parameters Engine Parameter a, b "
+                "100% load 30% load c 10% load Engine Rating 2.75 MW Number of "
+                "generators 94 Stack Orientation Vertical Stack Height above "
+                "ground level (m) 26.0 Flue Diameter (m) 0.5"
+            ),
+            "evidence_page": 16,
+        },
+        {
+            "doc_sha_prefix": "6cd1f865",
+            "signal_type": "renewable_supply_commitment",
+            "value_text": (
+                "12-year 100 MW corporate Power Purchase Agreement with Scotland's "
+                "Moray West offshore wind project (announced 2022) — actual "
+                "contracted renewable supply, not just an aspirational hydrogen "
+                "transition"
+            ),
+            "evidence_text": (
+                "For example, in 2022 we announced a 12-year 100 MW corporate "
+                "power purchase agreement to support Scotland's Moray West "
+                "offshore wind development project."
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "6cd1f865",
+            "signal_type": "eia_screening_outcome",
+            "value_text": (
+                "EIA Scoping Opinion issued by Thurrock Council 16 October 2024 — "
+                "the application proceeded WITH an Environmental Statement (vs "
+                "the no-EIA outcomes seen at Elsham Tech Park and Basildon "
+                "Wickford)"
+            ),
+            "evidence_text": (
+                "An Environmental Impact Assessment (EIA) scoping report was "
+                "prepared and submitted to Thurrock Council in August 2024. An "
+                "EIA Scoping Opinion was subsequently issued by Thurrock Council "
+                "on 16th October 2024."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "6cd1f865",
+            "signal_type": "standby_generator_regime",
+            "value_text": (
+                "94 generators tested monthly + bi-annually; groups of max 3 "
+                "generators per test, 30 min each; modelled scenario assumes all "
+                "94 operate at 100% over 24h for the worst-case grid-failure "
+                "emergency"
+            ),
+            "evidence_text": (
+                "Maintenance 1 Monthly, 11 times per year 30 minutes per "
+                "generator group Groups of generators are tested (maximum three "
+                "generators), one group after the other (maximum 8-10 generators "
+                "tested per...) ... All 94 generators at the Site will operate "
+                "in any one 24-hour period; and The generators operate on a "
+                "maximum load of 100%."
+            ),
+            "evidence_page": 3,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
