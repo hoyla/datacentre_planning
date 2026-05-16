@@ -1852,6 +1852,113 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 5,
         },
     ],
+    # =====================================================================
+    # Meld Energy Green Hydrogen Hub at Saltend Chemicals Park —
+    # `EastRiding/24/00012/STOUT`. Same Humber corridor as YEP but
+    # different developer (Meld Energy Ltd, agent Matz Ltd) and
+    # different site (Reedmere site, south of Saltend Chemicals Park).
+    # 100 MW green-hydrogen-by-electrolysis production hub, doubling
+    # planned. Editorial significance: while the data-centre worklist
+    # apps name hydrogen as an aspirational future fuel, this is
+    # nearby actual hydrogen production capacity coming online — a
+    # data point for whether the "hydrogen transition" pitches are
+    # plausible at scale.
+    # =====================================================================
+    "EastRiding/24/00012/STOUT": [
+        {
+            "doc_sha_prefix": "276930f8",  # Planning Statement
+            "signal_type": "applicant_name",
+            "value_text": (
+                "Meld Energy Ltd (MEL) — agent: Matz Ltd; Planning Statement dated "
+                "November 2023"
+            ),
+            "evidence_text": (
+                "Meld Energy Planning Statement Matz Ltd November 2023 ... This "
+                "Planning Statement has been prepared on behalf of Meld Energy Ltd "
+                "(MEL) in support of an outline planning ... Meld Energy Ltd "
+                "mission, is to develop a portfolio of green Hydrogen production "
+                "hubs to supply low and zero carbon fuels"
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "276930f8",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "100 MW Green Hydrogen production hub by electrolysis (renewable-"
+                "powered), to supply existing Saltend Chemicals Park partners as "
+                "renewable fuel/product; doubling capacity planned in the future"
+            ),
+            "evidence_text": (
+                "The MEL Hydrogen hub will produce up to 100 MW of Green Hydrogen, "
+                "which will be used by existing SCP partners as a renewable fuel or "
+                "product. ... It is understood that the project will produce green "
+                "hydrogen by electrolysis and is powered by renewable energy, with "
+                "an initial capacity of 100MW, and the potential to double the "
+                "production in the future."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "276930f8",
+            "signal_type": "site_location",
+            "value_text": (
+                "Reedmere site, south side of Saltend Chemicals Park (SCP), "
+                "Saltend Lane, Saltend, East Riding of Yorkshire HU12 8DS — "
+                "same Humber estuary industrial corridor as the Yorkshire "
+                "Energy Park (HU12 8DX) and AMP gas reserve"
+            ),
+            "evidence_text": (
+                "The first MEL production hub is to be located on the South side of "
+                "the Reedmere site and will produce up to 100MW of Green Hydrogen, "
+                "which will be used by existing SCP partners."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "276930f8",
+            "signal_type": "nearby_development",
+            "value_text": (
+                "neighbouring approved Nu-Energy Ltd 20 MW Waste-to-Energy "
+                "Facility at the same Saltend cluster — air quality modelling "
+                "covered both facilities"
+            ),
+            "evidence_text": (
+                "Nu-Energy Ltd 20MW Waste to Energy Facility: A power generation "
+                "facility on land and building Approved. The Air Quality "
+                "Assessment modelled the predicted emissions levels at four "
+                "receptors on the Humber Estuary."
+            ),
+            "evidence_page": 23,
+        },
+    ],
+    # =====================================================================
+    # CHEP UK pallet biomass kiln, Thurrock — `Thurrock/20/00569/FUL`.
+    # Worklist false-positive: triage caught "biomass boiler" as Tier-1
+    # signal, but the application is a heat-treatment kiln for shipping
+    # pallets at CHEP UK's Hangmans Wood Industrial Park (CHEP is the
+    # global pallet pooling operator). Not a DC. Editorially useful as a
+    # null finding — distinguishes pallet manufacturing biomass from
+    # DC-relevant on-site combustion.
+    # =====================================================================
+    "Thurrock/20/00569/FUL": [
+        {
+            "doc_sha_prefix": "87354ccf",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "pallet heat-treatment kiln + biomass boiler at CHEP UK's Hangmans "
+                "Wood Industrial Park (global pallet pooling operator) — NOT a "
+                "data centre; worklist false-positive caught by the 'biomass "
+                "boiler' Tier-1 signal in the description"
+            ),
+            "evidence_text": (
+                "Installation of a heat treatment kiln and biomass boiler at "
+                "CHEP UK Hangmans Wood Industrial Park Stifford Road South "
+                "Ockendon Essex RM15 6RL"
+            ),
+            "evidence_page": 1,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
