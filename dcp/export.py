@@ -14,6 +14,7 @@ from __future__ import annotations
 import datetime as dt
 from pathlib import Path
 
+from dcp import cohorts as cohorts_mod
 from dcp import db, findings as findings_mod, worklist
 
 
@@ -46,15 +47,188 @@ entry; the markdown carries the top {md_top} curated, head-of-list first.
 # ---------------------------------------------------------------------------
 
 
+def _ranked_index_by_ref(rows: list[dict]) -> dict[str, int]:
+    """Map each application_ref → its 1-based rank in the full worklist."""
+    return {row["application_ref"]: i for i, row in enumerate(rows, 1)}
+
+
+def _highlights_section(rows_by_ref: dict[str, dict], ranks_by_ref: dict[str, int]) -> list[str]:
+    """Editorial highlights — hand-picked headline apps at the top of the
+    document. Each links to the full card via its anchor."""
+    lines: list[str] = []
+    hs = cohorts_mod.highlights()
+    if not hs:
+        return lines
+    lines.append("## Editorial highlights")
+    lines.append("")
+    lines.append(
+        "Hand-picked headline applications. Each is the substantive "
+        "anchor of an editorial pattern surfaced by the deep-read pass; "
+        "click through to the full card."
+    )
+    lines.append("")
+    for h in hs:
+        row = rows_by_ref.get(h.app)
+        rank = ranks_by_ref.get(h.app)
+        anchor = worklist._ref_anchor(h.app)
+        rank_str = f"rank {rank}" if rank else "filtered"
+        if row is not None:
+            link = f"[`{h.app}`](#{anchor}) ({rank_str})"
+        else:
+            link = f"`{h.app}` ({rank_str})"
+        lines.append(f"- **{link}** — {h.one_liner.strip()}")
+        lines.append("")
+    return lines
+
+
+def _cohort_anchor(cohort_name: str) -> str:
+    return f"cohort-{cohort_name.replace('_', '-')}"
+
+
+def _cohort_sections(
+    rows_by_ref: dict[str, dict],
+    ranks_by_ref: dict[str, int],
+    anchors: dict[str, dict],
+) -> tuple[list[str], set[str]]:
+    """Render every named cohort (in YAML order). Each cohort gets a
+    heading, intro paragraph, and the cards for its primary-member apps in
+    rank order. Apps whose primary is a different cohort are shown as
+    cross-references (one-line, linking to their canonical card).
+
+    Returns the rendered lines + the set of application_refs that landed
+    in a cohort section (so the caller can render the remaining apps in
+    a separate "Other" section).
+    """
+    lines: list[str] = []
+    rendered_refs: set[str] = set()
+
+    cohorts = cohorts_mod.cohorts()
+    if not cohorts:
+        return lines, rendered_refs
+
+    lines.append("## Editorial cohorts")
+    lines.append("")
+    lines.append(
+        "Themed groupings of related applications — operator networks, "
+        "spatial clusters, planning-route patterns. Within each cohort, "
+        "cards run in rank order. Apps that belong to more than one "
+        "cohort appear as a full card in their primary cohort and as "
+        "a cross-reference in the others."
+    )
+    lines.append("")
+
+    for cohort in cohorts:
+        lines.append(f'<a id="{_cohort_anchor(cohort.name)}"></a>')
+        lines.append(f"### {cohort.display_name}")
+        lines.append("")
+        if cohort.description:
+            lines.append(cohort.description)
+            lines.append("")
+        # Partition apps into "primary here" vs "cross-ref from another cohort".
+        primary_apps: list[dict] = []
+        cross_refs: list[dict] = []
+        for ref in cohort.apps:
+            row = rows_by_ref.get(ref)
+            if row is None:
+                # In universe but filtered out (excluded / duplicate),
+                # or not in our DB at all — skip silently. The excluded
+                # section at the bottom will show it if relevant.
+                continue
+            if row.get("primary_cohort") == cohort.name:
+                primary_apps.append(row)
+            else:
+                cross_refs.append(row)
+
+        # Sort each group by rank so the editorially-loudest case in each
+        # cohort floats to the top of its section.
+        primary_apps.sort(key=lambda r: ranks_by_ref.get(r["application_ref"], 9999))
+        cross_refs.sort(key=lambda r: ranks_by_ref.get(r["application_ref"], 9999))
+
+        if not primary_apps and not cross_refs:
+            lines.append("*(No applications currently in this cohort.)*")
+            lines.append("")
+            lines.append("---")
+            lines.append("")
+            continue
+
+        for row in primary_apps:
+            rank = ranks_by_ref[row["application_ref"]]
+            lines.append(worklist.render_card(rank, row, anchors, base_level=4))
+            rendered_refs.add(row["application_ref"])
+
+        if cross_refs:
+            lines.append(f"#### Cross-references to other cohorts")
+            lines.append("")
+            for row in cross_refs:
+                primary = row.get("primary_cohort")
+                primary_label = primary
+                primary_obj = cohorts_mod.cohort_by_name(primary) if primary else None
+                if primary_obj:
+                    primary_label = primary_obj.display_name
+                ref = row["application_ref"]
+                rank = ranks_by_ref.get(ref, "—")
+                anchor = worklist._ref_anchor(ref)
+                lines.append(
+                    f"- [`{ref}`](#{anchor}) — primary cohort is "
+                    f"[{primary_label}](#{_cohort_anchor(primary or '')}) "
+                    f"(see rank {rank})."
+                )
+            lines.append("")
+        lines.append("---")
+        lines.append("")
+    return lines, rendered_refs
+
+
+def _excluded_section(excluded: list[dict]) -> list[str]:
+    """The audit-trail list at the bottom: apps filtered out of the
+    primary worklist (exclusions + duplicate-tags). Brief one-liners
+    only, so reviewers can sanity-check the calls without each one
+    eating a full card."""
+    lines: list[str] = []
+    if not excluded:
+        return lines
+    lines.append("## Filtered from the worklist")
+    lines.append("")
+    lines.append(
+        "Applications that the deep-read pass has confirmed are NOT data "
+        "centres, or are duplicate consultation-copies of substantive "
+        "apps elsewhere on this worklist. Shown here so reviewers can "
+        "sanity-check (and dispute) the filtering."
+    )
+    lines.append("")
+    # Resolve exclusions YAML to add the notes alongside the tag.
+    notes_by_app = {e.app: e.notes for e in cohorts_mod.exclusions()}
+    for row in excluded:
+        ref = row["application_ref"]
+        tags = [t for t in (row.get("discovered_via") or [])
+                if t.startswith(("exclude:", "duplicate_of:"))]
+        tag_str = ", ".join(f"`{t}`" for t in tags)
+        addr = (row.get("address") or "").strip()
+        note = notes_by_app.get(ref, "")
+        line = f"- **`{ref}`**"
+        if tag_str:
+            line += f" — {tag_str}"
+        if addr:
+            line += f" — {addr}"
+        lines.append(line)
+        if note:
+            lines.append(f"  > {note.strip()}")
+        lines.append("")
+    return lines
+
+
 def render_markdown(
     *,
     data: worklist.WorklistData,
     top: int,
     model: str,
     generated_at: dt.datetime,
+    excluded: list[dict] | None = None,
 ) -> str:
     s = data.summary
-    rows_for_md = data.rows[:top]
+    rows = data.rows
+    ranks_by_ref = _ranked_index_by_ref(rows)
+    rows_by_ref = {r["application_ref"]: r for r in rows}
     when = generated_at.isoformat(timespec="seconds")
 
     out: list[str] = []
@@ -75,12 +249,15 @@ def render_markdown(
     )
     out.append(
         f"- **Worklist size:** {s['worklist']} applications "
-        f"(DC/adjacent ∩ deep-read yes/maybe, or Foxglove-tagged)."
+        f"(DC/adjacent ∩ deep-read yes/maybe, or Foxglove-tagged); "
+        f"deep-read false-positives and known duplicates filtered."
     )
-    out.append(f"- **This document:** top {len(rows_for_md)} ranked entries, head-of-list first.")
     out.append(f"- **Companion xlsx:** all {s['worklist']} worklist entries, flat table for filtering.")
     out.append("")
-    out.append(METHODOLOGY_NOTE.format(md_top=len(rows_for_md)))
+
+    out.extend(_highlights_section(rows_by_ref, ranks_by_ref))
+
+    out.append(METHODOLOGY_NOTE.format(md_top=min(top, len(rows))))
     out.append("")
     out.append("### How to read each card")
     out.append("")
@@ -89,17 +266,43 @@ def render_markdown(
         "counts, the council and address, the signals extracted from the description, "
         "a one-line model reasoning, the full description verbatim (so you can "
         "sanity-check the LLM), a `Why this is on the worklist` explanation of how "
-        "the application entered our universe, and a link to the source-portal "
-        "record. Substantive deep-read claims should be drillable back to those "
-        "documents."
+        "the application entered our universe, document-extracted findings (when the "
+        "deep-read pass has run on this app), and a link to the source-portal record. "
+        "Substantive deep-read claims should be drillable back to those documents."
     )
     out.append("")
     out.append("---")
     out.append("")
-    for i, row in enumerate(rows_for_md, 1):
-        out.append(worklist.render_card(i, row, data.anchors))
-        out.append("---")
+
+    # Cohort sections — themed grouping of related apps. Returns the set
+    # of refs already rendered so the "Other applications" section can
+    # cover only the rest.
+    cohort_lines, rendered_refs = _cohort_sections(rows_by_ref, ranks_by_ref, data.anchors)
+    out.extend(cohort_lines)
+
+    # Other applications: everything not already in a cohort, capped at
+    # the top-`top` so the document doesn't balloon. Apps in cohorts have
+    # already been shown.
+    other_rows = [r for r in rows if r["application_ref"] not in rendered_refs]
+    other_rows = other_rows[:top]
+    if other_rows:
+        out.append("## Other applications")
         out.append("")
+        out.append(
+            f"Top {len(other_rows)} ranked applications that aren't currently "
+            "assigned to a named cohort. The xlsx companion has the full "
+            f"{s['worklist']}-entry worklist for sortable / filterable review."
+        )
+        out.append("")
+        for row in other_rows:
+            rank = ranks_by_ref[row["application_ref"]]
+            out.append(worklist.render_card(rank, row, data.anchors, base_level=3))
+            out.append("---")
+            out.append("")
+
+    if excluded:
+        out.extend(_excluded_section(excluded))
+
     return "\n".join(out)
 
 
@@ -285,9 +488,11 @@ def export_worklist(
 
     with db.connect() as conn:
         data = worklist.fetch(conn, model=model)  # no limit — full worklist
+        excluded = worklist.fetch_excluded(conn, model=model)
 
     md_path.write_text(render_markdown(
         data=data, top=md_top, model=model, generated_at=generated_at,
+        excluded=excluded,
     ))
     write_xlsx(path=xlsx_path, data=data, model=model, generated_at=generated_at)
     return {"markdown": md_path, "xlsx": xlsx_path}

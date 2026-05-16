@@ -1,0 +1,297 @@
+# Editorial structure for the reporter export.
+#
+# Three layers:
+#   1. `highlights`  — hand-picked headline apps shown as a bullet list at the
+#                      top of the markdown export, with one-line "why this
+#                      matters" each. Read-once-and-know-what's-substantive.
+#   2. `cohorts`     — themed groups of related apps (operator networks,
+#                      spatial clusters, planning-route patterns). Cards
+#                      render in cohort sections rather than flat rank order.
+#   3. `exclusions`  — applications confirmed NOT to be data centres (or
+#                      duplicates of substantive apps elsewhere on the
+#                      worklist). Tagged via `exclude:<reason>` in
+#                      `applications.discovered_via` and filtered out of the
+#                      primary worklist count.
+#
+# Apply with: scripts/tag_cohorts.py
+# Re-runnable / idempotent.
+#
+# Source of truth: findings rows + ARCHITECTURE.md / ROADMAP.md.
+
+# ---------------------------------------------------------------------------
+# Highlights — short editorial bullets at the top of the export. Update by
+# hand as new findings reshape the picture.
+# ---------------------------------------------------------------------------
+
+highlights:
+  - app: NorthLincs/PA/2025/643
+    one_liner: |
+      Elsham Tech Park — ~1 GW IT load + 20 natural-gas CHP engines
+      (continuous) + 650 diesel back-up generators. Got a no-EIA Screening
+      Opinion from North Lincs Council. Developer: Greystoke Land.
+
+  - app: NorthLincs/PA/2024/584
+    one_liner: |
+      Humber Tech Park — 384 MW IT load, 250 × 2.4 MW diesel generators,
+      2.85 million litres of on-site diesel storage (24-hour bulk). The
+      Fuel Storage Report describes the generators as "designed to act as
+      the primary supply" with grid as "an economical alternative".
+
+  - app: WestLothian/0625/PAC/25
+    one_liner: |
+      Explicit 250 MW AI Data Centre Campus at the former Freeport
+      Shopping Village, West Calder. BESS going through Scottish
+      Government Section 36 consent — the worklist's only AI-named DC
+      and only S36-route entry.
+
+  - app: Newham/24/00088/FUL
+    one_liner: |
+      Foster & Partners-designed DC at Bidder Street, Canning Town —
+      95,000 sqm across DC + plant + energy centre, 48 phased diesel
+      generators, ~£11M in s106 obligations (incl. a £2.67M carbon offset
+      to render the development "the equivalent of zero carbon").
+
+  - app: Havering/Z0001.24
+    one_liner: |
+      Council-led Local Development Order for up to 400,000 sqm at North
+      Ockendon — combustion plant explicitly excluded from scope;
+      includes hydrogen fuel cells, 10 ha BESS, 26-60k sqm of indoor
+      horticulture for waste heat reuse, and a minimum 113 ha of
+      parkland. The "model citizen" DC on paper.
+
+  - app: EastRiding/16/02800/STPLF
+    one_liner: |
+      Yorkshire Energy Park gas reserve — 21 MW gas-fired, 14 GE
+      Jenbacher 420 GS engines, AMP Energy Services. Marketed as STOR
+      backing intermittent wind. Filed six years before the YEP DC at
+      the same site (EastRiding/22/00301/STREME).
+
+  - app: Hillingdon/75111/APP/2020/1955
+    one_liner: |
+      Ark "Project Union" at Bulls Bridge, Hayes. 22 standby reciprocating
+      engines (AQA names them as gas; Ealing-Council consultee response
+      quotes the application as "22 diesel generators" — inconsistency
+      worth scrutinising). Energy centre thermal output >50 MW, requires
+      EA Part A1 environmental permit.
+
+  - app: Thurrock/25/00573/OUT
+    one_liner: |
+      GIP / Iceni Projects / ERM hyperscale at the former Arena Essex
+      Raceway, Lakeside — 4 DC buildings 130,500 sqm GEA, 94 × 2.75 MW
+      diesel generators. Notable: a 12-year 100 MW corporate PPA with
+      Scotland's Moray West offshore wind project. Actual contracted
+      renewable supply (vs aspirational hydrogen elsewhere).
+
+  - app: Neath/P2025/0187
+    one_liner: |
+      Western Bio-Energy at Margam — 12 MW DC supplied via PRIVATE WIRE
+      from the existing on-site biomass plant. The closest thing to a
+      real renewable-anchored DC in the worklist (vs PPA arrangements
+      or aspirational hydrogen).
+
+  - app: MiltonKeynes/PLN/2024/2768
+    one_liner: |
+      Milton Keynes Energy Network — Energy Centre + DC + 13.7 km piped
+      distribution network feeding 6 named civic / institutional heat
+      customers (MK Hospital, Open University Campus, Civic Buildings,
+      Thames Valley Police, MK Library, Woughton Leisure Centre).
+      Only confirmed real DC-heat-anchor DHN deployment in the dataset.
+
+
+# ---------------------------------------------------------------------------
+# Cohorts — themed groupings. Apps within a cohort still rank by the existing
+# (Tier-1 ×3 + storage) score; cohorts themselves are ordered by editorial
+# priority (the order they appear in this YAML).
+# ---------------------------------------------------------------------------
+
+cohorts:
+
+  - name: humber_estuary_cluster
+    display_name: "Humber Estuary energy cluster"
+    description: |
+      Four substantive energy facilities within ~2 km of each other on the
+      Saltend / Hedon industrial estate. Mixed vintage: a 21 MW gas reserve
+      (2016), a Tier 3 DC with gas-fired CHP energy centre (2022), a 49 MW
+      hybrid gas+BESS (2017), and a 100 MW green-hydrogen-by-electrolysis
+      hub (2024). The "Energy Estuary" pitch in real numbers.
+    apps:
+      - EastRiding/16/02800/STPLF
+      - EastRiding/22/00301/STREME
+      - EastRiding/17/03771/STPLF
+      - EastRiding/24/00012/STOUT
+
+  - name: greystoke_sites
+    display_name: "Greystoke Land's UK DC portfolio"
+    description: |
+      Greystoke Land is the common operator across three nominally-
+      independent applications: Humber Tech Park (NorthLincs, 384 MW),
+      Elsham Tech Park (NorthLincs, ~1 GW), and West London Technology
+      Park at Iver (Buckinghamshire, 147 MW). Same Future-tech M&E
+      consultant signature on all three (doc reference prefix "*-FUT-*").
+      Combined indicative IT load: ~1.5 GW.
+    apps:
+      - NorthLincs/PA/2024/584
+      - NorthLincs/PA/2025/643
+      - NorthLincs/PA/SCR/2024/2
+      - Hillingdon/39707/APP/2022/3243
+
+  - name: ark_project_union
+    display_name: "Ark Data Centres — Project Union family"
+    description: |
+      Ark's data-centre campus at Bulls Bridge Industrial Estate, Hayes.
+      Parent outline (2020/1955) plus the 2022 expansion (2022/1007,
+      three energy centres + 42 generators) plus a long tail of condition-
+      discharge and non-material-amendment follow-ons. All Idox apps
+      under the 75111 prefix.
+    apps:
+      - Hillingdon/75111/APP/2020/1955
+      - Hillingdon/75111/APP/2022/1007
+      - Hillingdon/75111/APP/2025/2120
+      - Hillingdon/75111/APP/2025/1459
+      - Hillingdon/75111/APP/2025/2237
+      - Hillingdon/75111/APP/2025/1440
+      - Hillingdon/75111/APP/2025/1441
+      - Hillingdon/75111/APP/2024/3327
+      - Hillingdon/75111/APP/2023/3284
+      - Hillingdon/75111/APP/2023/3266
+      - Hillingdon/75111/APP/2023/3272
+      - Hillingdon/75111/APP/2023/3063
+      - Hillingdon/75111/APP/2023/3053
+      - Hillingdon/75111/APP/2023/2940
+      - Hillingdon/75111/APP/2022/3012
+      - Hillingdon/75111/APP/2022/2565
+      - Hillingdon/75111/APP/2022/2096
+      - Hillingdon/75111/APP/2022/2049
+      - Hillingdon/75111/APP/2021/3607
+      - Hillingdon/75111/APP/2021/2378
+      - Hillingdon/75111/APP/2021/1601
+      - Hillingdon/75111/APP/2021/1520
+      - Hillingdon/75111/APP/2021/1515
+      - Hillingdon/75111/APP/2021/1506
+
+  - name: longcross_campus
+    display_name: "Longcross DC campus (former DERA site)"
+    description: |
+      The Longcross hybrid mixed-use master plan on the former DERA
+      (Defence Evaluation and Research Agency) research base. Permission
+      sits with Runnymede Borough Council; the boundary triggers out-of-
+      borough consultations with Surrey Heath and Royal Borough of
+      Windsor and Maidenhead. Same Hurley Palmer Flatt + Phlorum + Auricl
+      consultant trio as Ark Project Union.
+    apps:
+      - Runnymede/RU.21/0780
+      - Runnymede/RU.22/0686
+      - Runnymede/RU.25/1538
+      - SurreyHeath/21/0639/PCA
+      - SurreyHeath/22/0470/PCA
+      - SurreyHeath/25/1195/PCA
+      - Windsor/21/30008/SMI
+      - Windsor/22/30013/SMI
+
+  - name: ai_named
+    display_name: "AI-named data centres"
+    description: |
+      Applications that explicitly identify AI as the use case. Worth
+      flagging because most DCs in the worklist describe themselves
+      generically — naming AI is a deliberate marketing / planning
+      framing choice.
+    apps:
+      - WestLothian/0625/PAC/25
+
+  - name: council_led_ldo
+    display_name: "Council-led Local Development Orders (LDOs)"
+    description: |
+      A Local Development Order is a fast-tracked planning route that an
+      LPA designates over a specific site to pre-approve development —
+      bypassing the usual application-by-application process. Council-led
+      LDO promotion (rather than developer-led) is editorially distinctive.
+    apps:
+      - Havering/Z0001.24
+
+  - name: heat_network_anchors
+    display_name: "Heat-network-anchored data centres"
+    description: |
+      DCs designed to (or planning to) feed waste heat into a district
+      heating network. Range from the fully-built (Milton Keynes Energy
+      Network, 13.7 km pipe to 6 named civic anchors) to the conditional
+      (Newham Bidder Street's s106 commits space + plant for a "future"
+      DHN if one becomes available) to the wishful (Ark Union Park's
+      Condition 41 discharge confirms no viable DHN nearby and a leaflet
+      drop to neighbours yielded no significant interest).
+    apps:
+      - MiltonKeynes/PLN/2024/2768
+      - Newham/24/00088/FUL
+      - Hillingdon/75111/APP/2025/2120
+
+  - name: no_eia_hyperscalers
+    display_name: "Hyperscale DCs with no-EIA screening outcomes"
+    description: |
+      Applications above ~100 MW (or comparable scale) where the LPA
+      issued a Screening Opinion confirming an Environmental Impact
+      Assessment was NOT required. Editorially worth scrutinising
+      because the cumulative environmental footprint at this scale is
+      substantial.
+    apps:
+      - NorthLincs/PA/2025/643
+      - Basildon/23/01552/SCREEN
+
+  - name: thurrock_lakeside
+    display_name: "Thurrock Lakeside hyperscale"
+    description: |
+      Global Infrastructure UK Ltd (likely a GIP-affiliated SPV) hyperscale
+      at the former Arena Essex Raceway, adjacent to the Lakeside Shopping
+      Centre. 4 DC buildings, 130,500 sqm GEA. Editorially notable for a
+      12-year 100 MW corporate PPA with Scotland's Moray West offshore
+      wind project — actual contracted renewable supply.
+    apps:
+      - Thurrock/25/00573/OUT
+
+  - name: biomass_anchored
+    display_name: "Biomass-anchored data centres"
+    description: |
+      DCs designed to draw power directly from an on-site biomass plant
+      via private wire — actual operating renewable supply rather than
+      a PPA or aspirational hydrogen transition. Editorially the closest
+      thing to a real renewable-anchored DC in the dataset.
+    apps:
+      - Neath/P2025/0187
+      - SouthLanarkshire/P/19/0896
+
+
+# ---------------------------------------------------------------------------
+# Exclusions — applications we now know are NOT data centres after deep-read.
+# Filtered from the primary worklist count; shown as a separate section at
+# the bottom of the export so reviewers can still see (and dispute) the call.
+# ---------------------------------------------------------------------------
+
+exclusions:
+
+  - app: TowerHamlets/PA/15/01527/S
+    reason: not_a_data_centre
+    notes: |
+      Residential housing NMA at Poplar Business Park (Phase 1 flats Block
+      A/A1/A3). The "external energy centre" + "CHP" the triage caught is
+      a ~100 kWe building-services heating CHP for the housing block, not
+      on-site power generation for a DC. Cleanly disambiguated by the
+      Decision Notice.
+
+  - app: Thurrock/20/00569/FUL
+    reason: not_a_data_centre
+    notes: |
+      CHEP UK pallet heat-treatment kiln + biomass boiler at Hangmans
+      Wood Industrial Park. CHEP is the global pallet pooling operator;
+      the biomass boiler heats the kiln, not data halls.
+
+  - app: Hounslow/P/2017/2665
+    reason: not_a_data_centre
+    notes: |
+      Battery storage facility + generator + photovoltaic panels at a
+      Waste Depot on Southall Lane. Caught by the "battery storage" +
+      "generator" signals; not a DC.
+
+  - app: Hounslow/P/2017/4684
+    reason: not_a_data_centre
+    notes: |
+      Condition-3+4 discharge of Hounslow/P/2017/2665 (the Southall Waste
+      Depot BESS). Already tagged as `duplicate_of:Hounslow/P/2017/2665`;
+      excluded for the same reason as its parent.

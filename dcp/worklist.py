@@ -13,8 +13,10 @@ every DC has backup, so it's a deep-read trigger, not a finding on its own.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
+from dcp import cohorts as cohorts_mod
 from dcp import findings as findings_mod
 
 
@@ -74,8 +76,19 @@ ranked AS (
   JOIN latest_triage t ON t.application_id = a.id
   LEFT JOIN councils c ON c.gss_code = a.council_gss
   WHERE
-      (t.verdict IN ('DC','adjacent') AND t.worth_deep_read IN ('yes','maybe'))
-      OR 'foxglove_top10' = ANY(a.discovered_via)
+      (
+        (t.verdict IN ('DC','adjacent') AND t.worth_deep_read IN ('yes','maybe'))
+        OR 'foxglove_top10' = ANY(a.discovered_via)
+      )
+      -- Filter out apps explicitly tagged as not-a-data-centre / duplicates
+      -- via `data/priors/cohorts.yaml` and `data/priors/duplicates.yaml`.
+      -- These still exist in the universe and can be queried separately for
+      -- audit (see `fetch_excluded`), they just don't compete for primary
+      -- worklist slots.
+      AND NOT EXISTS (
+          SELECT 1 FROM unnest(a.discovered_via) AS tag
+          WHERE tag LIKE 'exclude:%%' OR tag LIKE 'duplicate_of:%%'
+      )
 )
 SELECT * FROM ranked
 ORDER BY (tier1_hits * 3 + storage_hits) DESC,
@@ -99,8 +112,14 @@ SELECT
     count(*) FILTER (WHERE t.verdict = 'unrelated') AS unrelated,
     count(*) FILTER (WHERE t.verdict = 'unknown') AS unknown,
     count(*) FILTER (
-      WHERE (t.verdict IN ('DC','adjacent') AND t.worth_deep_read IN ('yes','maybe'))
-         OR 'foxglove_top10' = ANY(a.discovered_via)
+      WHERE (
+              (t.verdict IN ('DC','adjacent') AND t.worth_deep_read IN ('yes','maybe'))
+              OR 'foxglove_top10' = ANY(a.discovered_via)
+            )
+            AND NOT EXISTS (
+                SELECT 1 FROM unnest(a.discovered_via) AS tag
+                WHERE tag LIKE 'exclude:%%' OR tag LIKE 'duplicate_of:%%'
+            )
     ) AS worklist
 FROM applications a JOIN latest_triage t ON t.application_id = a.id
 """
@@ -170,8 +189,49 @@ def fetch(conn, *, model: str, limit: int | None = None) -> WorklistData:
     )
     for row in rows:
         row["findings"] = findings_by_app.get(row["id"], [])
+        # Editorial cohort resolution (data/priors/cohorts.yaml). An app's
+        # `primary_cohort` is its canonical home in the export's themed
+        # sections; `also_in_cohorts` lists secondary memberships rendered
+        # as cross-references rather than full cards.
+        primary, also = cohorts_mod.resolve_membership(row.get("discovered_via"))
+        row["primary_cohort"] = primary
+        row["also_in_cohorts"] = also
 
     return WorklistData(summary=summary, rows=rows, anchors=anchors, model=model)
+
+
+def fetch_excluded(conn, *, model: str) -> list[dict]:
+    """Return apps that are filtered out of the primary worklist via the
+    `exclude:*` or `duplicate_of:*` tag. The export renders these as a
+    short audit-trail section at the bottom so reviewers can see (and
+    dispute) the calls.
+    """
+    sql = """
+    WITH latest_triage AS (
+      SELECT DISTINCT ON (application_id) *
+      FROM triage WHERE model = %(model)s
+      ORDER BY application_id, inserted_at DESC
+    )
+    SELECT
+        a.application_ref,
+        a.description,
+        a.address,
+        a.url,
+        a.discovered_via,
+        t.verdict,
+        t.worth_deep_read
+    FROM applications a
+    JOIN latest_triage t ON t.application_id = a.id
+    WHERE EXISTS (
+        SELECT 1 FROM unnest(a.discovered_via) AS tag
+        WHERE tag LIKE 'exclude:%%' OR tag LIKE 'duplicate_of:%%'
+    )
+    ORDER BY a.application_ref
+    """
+    with conn.cursor() as cur:
+        cur.execute(sql, {"model": model})
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 
 # ---------------------------------------------------------------------------
@@ -280,20 +340,23 @@ def _render_finding_bullet(f) -> str:
     return "\n".join(parts)
 
 
-def _render_findings_block(findings: list) -> list[str]:
+def _render_findings_block(findings: list, sub_h: str = "###") -> list[str]:
     """The Phase-4 addendum: NEW DISCLOSURES + REFINEMENTS sections.
 
     CONFIRMATIONS are intentionally omitted from the markdown (they add
     nothing the reporter doesn't already see in the description), but the
     xlsx companion still surfaces their count for audit. Returns an empty
-    list if there's nothing classified as NEW or REFINEMENT.
+    list if there's nothing classified as NEW or REFINEMENT. `sub_h` is
+    the heading level for the "Document-extracted findings" header — `###`
+    when the card is at h2, `####` when the card is demoted to h3 (inside
+    a cohort section).
     """
     new = [f for f in findings if f.category == findings_mod.CATEGORY_NEW]
     refinement = [f for f in findings if f.category == findings_mod.CATEGORY_REFINEMENT]
     if not new and not refinement:
         return []
     lines: list[str] = []
-    lines.append("### Document-extracted findings")
+    lines.append(f"{sub_h} Document-extracted findings")
     lines.append("")
     if new:
         lines.append(f"*NEW DISCLOSURES ({len(new)}):*")
@@ -310,10 +373,25 @@ def _render_findings_block(findings: list) -> list[str]:
     return lines
 
 
-def render_card(rank: int, row: dict, anchors: dict[str, dict]) -> str:
+def _ref_anchor(application_ref: str) -> str:
+    """Stable HTML anchor id for cross-referencing an app's full card from
+    elsewhere in the document (highlights section, cohort cross-refs)."""
+    safe = re.sub(r"[^A-Za-z0-9]+", "-", application_ref).strip("-").lower()
+    return f"app-{safe}"
+
+
+def render_card(rank: int, row: dict, anchors: dict[str, dict], *, base_level: int = 2) -> str:
     """Render one worklist application as a Markdown card. Used by both the
-    preview script and the formal export."""
+    preview script and the formal export.
+
+    `base_level` is the heading level for the card title: 2 (default) puts
+    the title at h2 and its subsections at h3; 3 demotes everything by one
+    so cards can nest inside cohort sections (each cohort being itself h2).
+    """
+    main_h = "#" * base_level
+    sub_h = "#" * (base_level + 1)
     out: list[str] = []
+    out.append(f'<a id="{_ref_anchor(row["application_ref"])}"></a>')
     fx = " · 🔖 Foxglove top-10" if row["foxglove"] else ""
     findings = row.get("findings") or []
     counts = findings_mod.category_counts(findings)
@@ -325,8 +403,20 @@ def render_card(rank: int, row: dict, anchors: dict[str, dict]) -> str:
         badge_bits.append(f"✏️ {counts[findings_mod.CATEGORY_REFINEMENT]} refinement"
                           f"{'s' if counts[findings_mod.CATEGORY_REFINEMENT] != 1 else ''}")
     badge = f" · {' · '.join(badge_bits)}" if badge_bits else ""
-    out.append(f"## {rank}. `{row['application_ref']}`{fx}{badge}")
+    out.append(f"{main_h} {rank}. `{row['application_ref']}`{fx}{badge}")
     out.append("")
+    # If this app belongs to other cohorts beyond its primary, note them
+    # so the reader can navigate to the related groupings.
+    also = row.get("also_in_cohorts") or []
+    if also:
+        from dcp import cohorts as cohorts_mod
+        also_links = []
+        for cohort_name in also:
+            c = cohorts_mod.cohort_by_name(cohort_name)
+            label = c.display_name if c else cohort_name
+            also_links.append(f"[{label}](#cohort-{cohort_name.replace('_', '-')})")
+        out.append(f"*Also relevant to: {', '.join(also_links)}.*")
+        out.append("")
     bits = [
         f"**Verdict:** {row['verdict']}",
         f"**Deep read recommended:** {row['worth_deep_read']}",
@@ -359,16 +449,16 @@ def render_card(rank: int, row: dict, anchors: dict[str, dict]) -> str:
         out.append("")
     if row.get("description"):
         descr = row["description"].strip()
-        out.append("### Description")
+        out.append(f"{sub_h} Description")
         out.append("")
         out.append("> " + descr.replace("\n", "\n> "))
         out.append("")
-    findings_block = _render_findings_block(findings)
+    findings_block = _render_findings_block(findings, sub_h=sub_h)
     if findings_block:
         out.extend(findings_block)
     lineage = expand_lineage(row.get("discovered_via"), anchors)
     if lineage:
-        out.append("### Why this is on the worklist")
+        out.append(f"{sub_h} Why this is on the worklist")
         out.append("")
         for line in lineage:
             out.append(f"- {line}")
