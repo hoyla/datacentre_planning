@@ -1431,6 +1431,150 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 2,
         },
     ],
+    # =====================================================================
+    # Yorkshire Energy Park — the DC. `EastRiding/22/00301/STREME`.
+    # Reserved Matters Application #1 following outline permission
+    # 17/01673/STOUTE. The marketed-green Tier 3 data centre at the
+    # YEP, spatially neighbouring the 21 MW STPLF gas reserve we already
+    # documented. Editorial crux: the Planning Statement markets the
+    # whole park as Humber's "global transition to net zero" while
+    # disclosing the Energy Centre is gas-fired CHP (with hydrogen
+    # transition framed as future aspiration).
+    # =====================================================================
+    "EastRiding/22/00301/STREME": [
+        # ----- Planning Statement (Avison Young, 8 March 2022) -----
+        {
+            "doc_sha_prefix": "9655e6e7",
+            "signal_type": "applicant_name",
+            "value_text": (
+                "Hull Eco Park Ltd (HEPL) — agent: Avison Young (UK) Limited; "
+                "Planning Statement authors: Kate Limbert, David Sweeting, "
+                "Anne Burke-Hargreaves"
+            ),
+            "evidence_text": (
+                "This Planning Statement has been prepared on behalf of Hull Eco Park "
+                "Ltd (HEPL) to accompany a Reserved Matters Application (RMA) "
+                "proposing an Energy Centre, Data Centre and associated "
+                "infrastructure at land north west of Kingstown Hotel, Hull Road, "
+                "Hedon ... For and on behalf of Avison Young (UK) Limited"
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "9655e6e7",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "Yorkshire Energy Park Reserved Matters Application #1: Energy Centre "
+                "+ Tier 3 Data Centre (region's first Tier 3, 24/7/365 operation) "
+                "+ associated infrastructure. Marketed as Humber Freeport Zone's "
+                "'next generation energy and technology business park' contributing "
+                "to 'global transition to net zero'"
+            ),
+            "evidence_text": (
+                "HEPL's vision for the Yorkshire Energy Park is to create a next "
+                "generation energy and technology business park that will drive "
+                "economic growth, support the local community and help position the "
+                "Humber at the forefront of the global transition to net zero. "
+                "Yorkshire Energy Park is a flagship development strategically "
+                "located in the Humber Freeport Zone, at the heart of the UK's Energy "
+                "Estuary. ... The Data Centre will be the region's first Tier 3 Data "
+                "Centre and will house a data hall, office space and support space "
+                "that will run 24 hours a day, 365 days a year."
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "9655e6e7",
+            "signal_type": "energy_centre_fuel",
+            "value_text": (
+                "GAS-FIRED Combined Heat and Power (CHP) plant — Energy Centre "
+                "designed to supply 'low cost, resilient power to onsite occupiers' "
+                "and scalable as demand grows. (Editorial: the energy-centre framing "
+                "is primary-on-site combustion generation, NOT backup.)"
+            ),
+            "evidence_text": (
+                "The Energy Centre will provide low cost, resilient power to onsite "
+                "occupiers utilising a gas fired combined heat and power (CHP) plant "
+                "that can be scaled up as the demand increases"
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "9655e6e7",
+            "signal_type": "hydrogen_aspirational",
+            "value_text": (
+                "Energy Centre fueled by NATURAL GAS at commissioning; hydrogen "
+                "transition framed as future development goal, not initial design — "
+                "the marketed-green claim depends on a yet-to-materialise "
+                "fuel-switching technology"
+            ),
+            "evidence_text": (
+                "Whilst initially the Energy Centre will utilise natural gas, the "
+                "technology is being developed to easily enable a transition to "
+                "hydrogen in the future as part of the Yorkshire Energy Park's "
+                "journey to net zero carbon"
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "9655e6e7",
+            "signal_type": "renewable_component",
+            "value_text": (
+                "Energy Centre roof to include photovoltaic (solar) panels — token "
+                "renewables alongside gas-fired CHP as primary generation"
+            ),
+            "evidence_text": (
+                "The Energy Centre is being designed to include renewable technology "
+                "such as photovoltaic (solar) panels"
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "9655e6e7",
+            "signal_type": "parent_permission",
+            "value_text": (
+                "Reserved Matters Application #1 following outline permission "
+                "17/01673/STOUTE (approved by East Riding of Yorkshire Council on "
+                "22 December 2020). First of a series of RMAs expected at the "
+                "Yorkshire Energy Park"
+            ),
+            "evidence_text": (
+                "This RMA is the first in a series of RMAs expected to be submitted "
+                "at the Yorkshire Energy Park and follows approval on the 22 December "
+                "2020 of Outline Planning Permission 17/01673/STOUTE (OPP)."
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "9655e6e7",
+            "signal_type": "spatial_link",
+            "value_text": (
+                "Site sits adjacent to the 21 MW gas-fired energy reserve facility "
+                "at EastRiding/16/02800/STPLF (AMP Energy Services Ltd, approved "
+                "2016 — different applicant but same site context). The pre-existing "
+                "21 MW gas reserve + new gas-fired CHP energy centre + Tier 3 DC + "
+                "marketed-green framing is the YEP editorial story."
+            ),
+            "evidence_text": (
+                "land north west of Kingstown Hotel, Hull Road, Hedon (Proposed "
+                "Development). ... at the heart of the UK's Energy Estuary."
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "9655e6e7",
+            "signal_type": "job_creation_claim",
+            "value_text": (
+                "marketed at up to 4,480 jobs across construction + operational "
+                "phases (full YEP scheme, not just RMA#1)"
+            ),
+            "evidence_text": (
+                "Significant job creation – through both the construction and "
+                "operational periods of the development – up to 4,480 jobs"
+            ),
+            "evidence_page": 3,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
