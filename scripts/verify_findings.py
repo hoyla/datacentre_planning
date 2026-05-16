@@ -41,10 +41,16 @@ from dcp import db  # noqa: E402
 
 
 _WS_RE = re.compile(r"\s+")
-# pypdf often inserts spurious whitespace around hyphens / dashes
-# ("back-up" → "back -up"). Collapse those before comparison — the
-# semantic content is what we're checking, not the spacing of dashes.
+# pypdf inserts spurious whitespace around lots of non-letter glyphs.
+# Common offenders, all observed in the corpus:
+#   "back-up"   → "back -up"     (hyphen / en-dash / em-dash all collapse to "-")
+#   "132kV/130MVA" → "132kv /130mva"  (slash)
+#   "M&E"       → "M & E"         (ampersand)
+# Collapse whitespace around the affected characters before comparison.
+# Dashes additionally fold onto plain "-" so en-/em-dash variants match
+# straight hyphens.
 _DASH_WS_RE = re.compile(r"\s*[-–—]\s*")
+_GLUE_WS_RE = re.compile(r"\s*([/&+])\s*")
 # Quote-mark drift: humans recording a quote typically type whichever
 # of ' or " is closest to hand, and pypdf preserves whatever's in the
 # document (often curly variants). The mark itself rarely affects
@@ -56,6 +62,7 @@ _QUOTE_STRIP = re.compile(r"['‘’ʼʻ\"“”„‟‚‛]")
 def _normalise(text: str) -> str:
     text = _QUOTE_STRIP.sub("", text)
     text = _DASH_WS_RE.sub("-", text)
+    text = _GLUE_WS_RE.sub(r"\1", text)
     return _WS_RE.sub(" ", text).strip().lower()
 
 

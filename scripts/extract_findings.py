@@ -1706,9 +1706,9 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "LONDON BOROUGH OF NEWHAM STRATEGIC DEVELOPMENT COMMITTEE 15 "
-                "October 2024 ... agree the reasons for approval as set out in "
-                "this report; refer this application to the Mayor of London "
-                "(the GLA) as a Stage 2 referral"
+                "October 2024 Application Number: 24/00088/FUL Validation "
+                "Date: 2nd January 2024 Location: Land At Former EMR Site "
+                "Bidder Street Canning Town London E16 4ST"
             ),
             "evidence_page": 3,
         },
@@ -1812,14 +1812,14 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "as a potential recipient; no operator yet in place"
             ),
             "evidence_text": (
-                "District heat connection: Delivery of space within the Site for "
-                "the future installation of the necessary plant and equipment to "
-                "facilitate the export of waste heat from the Data Centre offsite, "
-                "including to the Crown Wharf site, if a DHN becomes available and "
-                "where a DHN operator is in place to facilitate the delivery of "
-                "waste heat from the Development."
+                "Delivery of space within the Site for the future installation "
+                "of the necessary plant and equipment to facilitate the export "
+                "of waste heat from the Data Centre offsite, including to the "
+                "Crown Wharf site, if a DHN becomes available and where a DHN "
+                "operator is in place to facilitate the delivery of waste heat "
+                "from the Development"
             ),
-            "evidence_page": 6,
+            "evidence_page": 7,
         },
         {
             "doc_sha_prefix": "b1becf37",
@@ -1831,13 +1831,14 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "granular regulatory attention to the back-up combustion plant"
             ),
             "evidence_text": (
-                "Emergency Back Up Generators – type and performance; Emergency "
-                "Back Up Generators – Operating Regime; Emergency Back Up "
-                "Generators – Emission Monitoring; Emergency Back Up Generators – "
-                "Emission Reduction and Management; Emergency Back Up Generators "
-                "– Testing Regime; Emergency Back Up Generators - Specifications"
+                "34. Emergency Back Up Generators – type and performance "
+                "35. Emergency Back Up Generators – Operating Regime "
+                "36. Emergency Back Up Generators – Emission Monitoring "
+                "37. Emergency Back Up Generators – Emission Reduction and Management "
+                "38. Emergency Back Up Generators – Testing Regime "
+                "39. Emergency Back Up Generators - Specifications"
             ),
-            "evidence_page": 4,
+            "evidence_page": 5,
         },
         {
             "doc_sha_prefix": "b1becf37",
