@@ -2139,6 +2139,149 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 1,
         },
     ],
+    # =====================================================================
+    # East Havering Data Centre Campus LDO scoping — `Havering/Z0001.24`.
+    # Editorially MASSIVE and unusual: this is a Council-driven Local
+    # Development Order (LDO) scoping exercise rather than a
+    # developer-led application. Havering Council itself is promoting
+    # the LDO designation via Ramboll UK as their consultant. Scope:
+    # up to 400,000 sqm DC + 10 ha BESS + hydrogen fuel cells +
+    # indoor horticulture (heat reuse) + district heating + 113 ha
+    # min parkland — on Land North of Fen Lane, North Ockendon.
+    # =====================================================================
+    "Havering/Z0001.24": [
+        {
+            "doc_sha_prefix": "ae7267ef",  # LDO Scoping Opinion
+            "signal_type": "facility_classification",
+            "value_text": (
+                "East Havering Data Centre Campus — Council-led Local Development "
+                "Order (LDO) scoping exercise (NOT a typical developer-led "
+                "application); Ramboll UK produced the scoping report on behalf "
+                "of London Borough of Havering as Local Planning Authority"
+            ),
+            "evidence_text": (
+                "This Scoping Opinion has been prepared on the basis of the "
+                "information contained within the document titled 'East Havering "
+                "Data Campus – EIA Scoping Opinion Request Report' dated February "
+                "2024 (Project no. 1620016267) – 'the Scoping Report'. The "
+                "document was produced by Ramboll UK on behalf of the London "
+                "Borough of Havering as Local Planning Authority."
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "ae7267ef",
+            "signal_type": "total_floorspace_sqm",
+            "value_number": 400000,
+            "value_unit": "sqm (max)",
+            "evidence_text": (
+                "New data centre campus (East Havering Data Centre Campus) of "
+                "between 279,400sq.m and 400,000sq.m of floorspace plus up to "
+                "10ha of battery storage."
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "ae7267ef",
+            "signal_type": "facility_components",
+            "value_text": (
+                "data centre floorspace 250,000-340,000 sqm + indoor horticulture "
+                "26,000-60,000 sqm + hydrogen fuel cell energy generation up to "
+                "6,000 sqm + district heating energy centre 200-2,800 sqm + "
+                "visitor centre 200-600 sqm + electrical substations 3,000-20,000 "
+                "sqm + min 113 ha parkland/biodiversity habitat"
+            ),
+            "evidence_text": (
+                "the campus will comprise between 250,000sq.m. and 340,000sq.m. "
+                "of data centre floorspace and associated external plant and "
+                "security, between 26,000sq.m and 60.000sq.m of indoor "
+                "horticulture facilities, green energy initiative (including up "
+                "to 6,000sq.m of hydrogen fuel cell energy generation, and a "
+                "district heating energy centre (between 200sq.m and 2,800sq.m)), "
+                "a visitor centre (between 200sq.m and 600sq.m) and electrical "
+                "substations and distribution infrastructure (between 3,000sq.m "
+                "and 20,000sq.m), civil engineering works, hard and soft "
+                "landscaping, formation of associated parkland/enhanced "
+                "biodiversity habitat (minimum 113ha) at North Ockendon, "
+                "Havering, Greater London."
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "ae7267ef",
+            "signal_type": "hydrogen_capacity_sqm",
+            "value_number": 6000,
+            "value_unit": "sqm (max hydrogen fuel cell area)",
+            "evidence_text": (
+                "green energy initiative (including up to 6,000sq.m of hydrogen "
+                "fuel cell energy generation"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "ae7267ef",
+            "signal_type": "battery_storage_hectares",
+            "value_number": 10,
+            "value_unit": "hectares (max BESS area)",
+            "evidence_text": (
+                "between 279,400sq.m and 400,000sq.m of floorspace plus up to "
+                "10ha of battery storage"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "ae7267ef",
+            "signal_type": "planning_route",
+            "value_text": (
+                "Local Development Order (LDO) — a fast-tracked planning route "
+                "designated by a local authority that pre-approves development "
+                "for a specific area, bypassing the usual planning-application "
+                "process. Havering Council promoting itself as the LDO sponsor "
+                "is editorially noteworthy (Council-led DC promotion vs typical "
+                "developer-led application)."
+            ),
+            "evidence_text": (
+                "RE: SCOPING OPINION PURSUANT TO PART 7 REGULATION 32(6) OF THE "
+                "TOWN AND COUNTRY PLANNING (ENVIRONMENTAL IMPACT ASSESSMENT) "
+                "REGULATIONS 2017 (AS AMENDED) FOR DEVELOPMENT PROPOSED TO BE "
+                "PERMITTED BY THE EAST HAVERING DATA CENTRE CAMPUS LOCAL "
+                "DEVELOPMENT ORDER (LDO) ON LAND NORTH OF FEN LANE, NORTH "
+                "OCKENDON, UPMINSTER"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "ae7267ef",
+            "signal_type": "consultant",
+            "value_text": (
+                "Ramboll UK (Ben Seward at 240 Blackfriars Road, London SE1 8NW "
+                "— notable: same Blackfriars Road address as Ark Data Centres' "
+                "office used for Project Union)"
+            ),
+            "evidence_text": "Ben Seward, Ramboll, 240 Blackfriars Road, London SE1 8NW",
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "ae7267ef",
+            "signal_type": "aqma_proximity",
+            "value_text": (
+                "Havering has declared an AQMA for annual mean NO₂ exceedances "
+                "and daily mean PM10 — the Council has agreed the AQ chapter "
+                "scope and notably accepted that 'impacts from combustion based "
+                "heating and hot water plant can be scoped out as this type of "
+                "equipment is not proposed within the development'"
+            ),
+            "evidence_text": (
+                "Havering has been declared an Air Quality Management Area "
+                "(AQMA) for exceedances of the annual mean nitrogen dioxide "
+                "objective and daily mean (PM10) National Air Quality Strategy "
+                "Objective. ... It is accepted that impacts from combustion "
+                "based heating and hot water plant can be scoped out as this "
+                "type of equipment is not proposed within the development."
+            ),
+            "evidence_page": 4,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
