@@ -1112,6 +1112,101 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 3,
         },
     ],
+    # =====================================================================
+    # West London Technology Park (Iver, Buckinghamshire) —
+    # `Hillingdon/39707/APP/2022/3243`. Out-of-borough consultation
+    # hosted on the Hillingdon Ocella portal. Greystoke Land's THIRD UK
+    # DC site in this dataset (alongside Humber Tech Park and Elsham
+    # Tech Park, both NorthLincs). Same Future-tech M&E consultant
+    # signature across all three. 147 MW IT load, 171 diesel generators.
+    # =====================================================================
+    "Hillingdon/39707/APP/2022/3243": [
+        {
+            "doc_sha_prefix": "b44023c9",  # D&A Statement
+            "signal_type": "applicant_name",
+            "value_text": (
+                "Greystoke Land Ltd (project: West London Technology Park; M&E consultant: "
+                "Future-tech, per the doc reference '9526-FUT-...' pattern shared with "
+                "Greystoke's Humber Tech Park and Elsham Tech Park applications)"
+            ),
+            "evidence_text": (
+                "PROJECT DETAILS Client: Greystoke Land Ltd Site Address: West London "
+                "Technology Park, land to the north of Palmers Moor Lane, Iver Area "
+                "51.48ha Final Day Capacity 147MW 49526-FUT-ZZ-ZZ-PP-Z-0001"
+            ),
+            "evidence_page": 22,
+        },
+        {
+            "doc_sha_prefix": "b44023c9",
+            "signal_type": "total_it_load_mw",
+            "value_number": 147,
+            "value_unit": "MW",
+            "evidence_text": (
+                "Final Day Capacity 147MW ... Building 1 – 49MW Building 2 – 49MW "
+                "Building 3 – 49MW"
+            ),
+            "evidence_page": 22,
+        },
+        {
+            "doc_sha_prefix": "b44023c9",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "3-building DC park on 51.48 ha former landfill, 49 MW IT load per "
+                "building (3 × 21 × 3.5 MW data halls), with on-site district heating "
+                "network and 171 diesel back-up generators"
+            ),
+            "evidence_text": (
+                "Building 1 – 49MW Building 2 – 49MW Building 3 – 49MW ... GENERAL "
+                "ARRANGEMENT – INTERIOR GROUND FLOOR 7 MMRs Data Hall • Approx. 1100m2 "
+                "• 3.5MW IT load ... GENERAL ARRANGEMENT – FIRST FLOOR ... Data Hall ... "
+                "3.5MW IT load ... GENERAL ARRANGEMENT – SECOND FLOOR ... 3.5MW IT load"
+            ),
+            "evidence_page": 23,
+        },
+        # ----- Air Quality Report -----
+        {
+            "doc_sha_prefix": "529582c0",  # AQA  # placeholder, filled below
+            "signal_type": "generator_count",
+            "value_number": 171,
+            "evidence_text": (
+                "The development is proposed to be a data centre scheme distributed "
+                "across three buildings, which will include 171 back-up diesel "
+                "generators (for emergency power provision); with small amounts of "
+                "traffic associated with the development."
+            ),
+            "evidence_page": 4,
+        },
+        {
+            "doc_sha_prefix": "529582c0",  # AQA
+            "signal_type": "fuel_type",
+            "value_text": "diesel back-up generators (with on-site fuel storage)",
+            "evidence_text": (
+                "171 back-up diesel generators (for emergency power provision) ... "
+                "internal plant and equipment and emergency back-up generators and "
+                "associated fuel storage. The scheme includes site wide landscaping ... "
+                "District Heating Network"
+            ),
+            "evidence_page": 4,
+        },
+        {
+            "doc_sha_prefix": "529582c0",  # AQA
+            "signal_type": "operator_pattern",
+            "value_text": (
+                "Greystoke Land's THIRD UK DC site (alongside Humber Tech Park at "
+                "South Killingholme, NL/PA/2024/584; and Elsham Tech Park at Elsham "
+                "Wolds, NL/PA/2025/643). All three use the same Future-tech M&E "
+                "consultant (doc reference prefix '*-FUT-*') and follow the same "
+                "doc-set template (AQA, Fuel Storage Report, Sustainability Statement). "
+                "Combined indicative IT load across the three sites: ~1.5 GW."
+            ),
+            "evidence_text": (
+                "Client: Greystoke Land Ltd ... 49526-FUT-ZZ-ZZ-PP-Z-0001 "
+                "[compare with Humber Tech Park Fuel Storage Report ref: "
+                "9915-FUT-V1-ZZ-RP-Z-3950 (also Future-tech)]"
+            ),
+            "evidence_page": 22,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
