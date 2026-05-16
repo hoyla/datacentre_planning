@@ -955,6 +955,163 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 37,
         },
     ],
+    # =====================================================================
+    # Small Hillingdon DC — `49261/APP/2024/2904`. 1 MW IT load, single
+    # back-up generator. The "small DC" worked example: confirms the
+    # description-stated single generator scale rather than uncovering
+    # hidden magnitudes.
+    # =====================================================================
+    "Hillingdon/49261/APP/2024/2904": [
+        {
+            "doc_sha_prefix": "b346a095",
+            "signal_type": "total_it_load_mw",
+            "value_number": 1,
+            "value_unit": "MW",
+            "evidence_text": (
+                "the proposed Data Centre will have a negligible cooling water demand "
+                "(< 150 m3 per annum) and lower operational power demand, with only one "
+                "back-up generator (1.08MW) required for the proposed data centre "
+                "building. ... The Proposed Development will contribute 1 MW of "
+                "additional data centre capacity towards the unmet requirement in the "
+                "Hayes availability zone."
+            ),
+            "evidence_page": 21,
+        },
+        {
+            "doc_sha_prefix": "b346a095",
+            "signal_type": "engine_rated_mw",
+            "value_number": 1.08,
+            "value_unit": "MW",
+            "evidence_text": (
+                "In the unlikely event of a loss of power supply, i.e. temporary grid "
+                "blackout, the single emergency (back-up) generator (1.08 MW) will be "
+                "utilised to maintain power supply."
+            ),
+            "evidence_page": 27,
+        },
+        {
+            "doc_sha_prefix": "b346a095",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "small single-building data centre (Class B8) with a single emergency "
+                "back-up generator; 1 MW utility-grid connection agreement pre-arranged "
+                "with the utility provider; aimed at the 'Hayes availability zone' "
+                "unmet capacity"
+            ),
+            "evidence_text": (
+                "The accompanying Infrastructure and Utility Assessment confirms a "
+                "connectivity agreement is in place between the Operator and the "
+                "utility provider for a 1MW capacity connection to serve the Data "
+                "Centre. ... The Proposed Development will contribute 1 MW of "
+                "additional data centre capacity towards the unmet requirement in the "
+                "Hayes availability zone."
+            ),
+            "evidence_page": 48,
+        },
+        {
+            "doc_sha_prefix": "b346a095",
+            "signal_type": "market_context",
+            "value_text": (
+                "London region data-centre capacity Q1 2024 = 993 MW peak IT load; "
+                "+125 MW new supply expected through 2024"
+            ),
+            "evidence_text": (
+                "As of Q1 2024, the London region had a data centre capacity (measured "
+                "in terms of MW of peak IT load) of 993MW – with an anticipated 125 MW "
+                "of new supply to be added throughout 2024."
+            ),
+            "evidence_page": 10,
+        },
+    ],
+    # =====================================================================
+    # Union Park expansion — `75111/APP/2022/1007`. Adds a third energy
+    # centre to the 2020 outline (22 generators → 42 generators), modelled
+    # at 1,176-1,386 generator-hours/year total. Ark operates 28 of the
+    # 42 generators directly; remaining 14 are reserved for a future
+    # hyperscale tenant.
+    # =====================================================================
+    "Hillingdon/75111/APP/2022/1007": [
+        # ----- Air Quality Assessment (Phlorum Ltd, 21 March 2022, v10) -----
+        {
+            "doc_sha_prefix": "b0a8d2c7",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "expansion of Ark Project Union — site now configured with THREE energy "
+                "centres (vs two in the 2020 outline), 42 generators total, "
+                "1,176-1,386 modelled generator-hours/year"
+            ),
+            "evidence_text": (
+                "The above Damage Cost Calculation is based on the assumption that all "
+                "42 generators across the three proposed energy centres will operate "
+                "(testing and grid failure) ... This equates to a total of 1,176 "
+                "generator-hours annually. The submitted AQA (v10) took a highly "
+                "conservative approach to the modelling assessment by assuming a total "
+                "of 1,386 operational hours annually."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "b0a8d2c7",
+            "signal_type": "generator_count",
+            "value_number": 42,
+            "evidence_text": (
+                "For the purposes of this assessment, it was also assumed that the site "
+                "loading for the grid failure would be 100% and all 42 generators "
+                "would run concurrently."
+            ),
+            "evidence_page": 28,
+        },
+        {
+            "doc_sha_prefix": "b0a8d2c7",
+            "signal_type": "operator_tenant_split",
+            "value_text": (
+                "Ark operates 28 of 42 generators directly (its own three data halls); "
+                "14 generators reserved for a future hyperscale tenant"
+            ),
+            "evidence_text": (
+                "If a future (hyperscaler) tenant were to operate 14 generators, with "
+                "Ark operating the other 28, the predicted total annual NOX and PM10 "
+                "emissions from the proposed development would be 1,284.3 kgNOX... "
+                "Table D.8: Proposed Generators Emission Rates (Ark operation of three "
+                "data halls) Total emissions (kg) Ark Future (hyperscaler) tenant"
+            ),
+            "evidence_page": 53,
+        },
+        {
+            "doc_sha_prefix": "b0a8d2c7",
+            "signal_type": "predicted_no2_impact",
+            "value_text": (
+                "modelled normal year: 0.94 tonnes NOₓ and 0.02 tonnes PM₂.₅ across all "
+                "42 generators; modelled testing scenario is 7.5× more conservative "
+                "than realistic hyperscaler-tenant operating scenario"
+            ),
+            "evidence_text": (
+                "The proposed development during a normal year of operation, with Ark "
+                "operating all 42 generators would not generate more than 0.94 tonnes "
+                "of NOX and 0.02 tonnes of PM2.5. ... This suggests that in terms of "
+                "total NOX emissions, the modelled testing scenario is 7.5 times more "
+                "conservative than a potential realistic scenario where a future "
+                "(hyperscale) tenant operates 14 generators."
+            ),
+            "evidence_page": 89,
+        },
+        # ----- Supporting Information (site history) -----
+        {
+            "doc_sha_prefix": "498f0fc7",
+            "signal_type": "site_history",
+            "value_text": (
+                "site historically hosted a 280 MW CEGB open-cycle gas-turbine power "
+                "station (since demolished) — the proposed DC sits on a brownfield "
+                "former-generation site"
+            ),
+            "evidence_text": (
+                "A 280 MW open-cycle gas-turbine power station, the power station owned "
+                "and operated by the CEGB occupied a large site on either side of "
+                "Yeading Brook, to the south of the Paddington main line and north..."
+            ),
+            "evidence_page": 3,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
