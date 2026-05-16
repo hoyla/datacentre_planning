@@ -797,6 +797,164 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 69,
         },
     ],
+    # =====================================================================
+    # Project Union at Bulls Bridge (Ark Data Centres) — Hillingdon
+    # `75111/APP/2020/1955`. The substantive parent outline that every
+    # 2021-2025 Hillingdon worklist app (75111/APP/2021/* through /2025/*)
+    # discharges conditions of. 22 standby reciprocating engines, energy
+    # centre >50 MW thermal output (requires EA Part A1 environmental
+    # permit). Within Hillingdon AQMA + 160m from Hayes North Hyde Road
+    # AQFA. The planning portal description has the AQA's
+    # "stand-by gas fired generation plant" mangled into
+    # "stand-by generation plant and gas storage" — worth flagging.
+    # =====================================================================
+    "Hillingdon/75111/APP/2020/1955": [
+        # ----- Air Quality Assessment (Phlorum Ltd, 15 June 2020) -----
+        {
+            "doc_sha_prefix": "68ab7417",
+            "signal_type": "applicant_name",
+            "value_text": (
+                "Ark Data Centres (ARK Estates 2 Ltd), 240 Blackfriars Road, London "
+                "SE1 8NW — internal codename 'Project Union'"
+            ),
+            "evidence_text": (
+                "Phlorum Ltd has been commissioned by Hurley Palmer Flatt on behalf of "
+                "Ark Data Centres to undertake an air quality assessment (AQA) for a "
+                "full planning application (with no matters reserved) for the proposed "
+                "development of a data centre at Land at Bulls Bridge Industrial "
+                "Estate, North Hyde Gardens, Hayes UB3 4QQ."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "68ab7417",
+            "signal_type": "engineering_consultant",
+            "value_text": (
+                "Hurley Palmer Flatt (M&E lead); Phlorum Ltd (air quality assessment)"
+            ),
+            "evidence_text": (
+                "Phlorum Ltd has been commissioned by Hurley Palmer Flatt on behalf of "
+                "Ark Data Centres"
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "68ab7417",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "new-build data centre with two MV Energy Centres including stand-by "
+                "GAS FIRED generation plant + HV sub-station (the planning portal "
+                "description has the 'gas fired' detail mangled into 'gas storage')"
+            ),
+            "evidence_text": (
+                "Site clearance and preparation, including the demolition of remaining "
+                "buildings, and the redevelopment of the site to provide: a new data "
+                "centre, two MV Energy Centres (including stand-by gas fired generation "
+                "plant), an HV Sub-Station, a visitor reception centre, plant..."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "68ab7417",
+            "signal_type": "generator_count",
+            "value_number": 22,
+            "evidence_text": (
+                "In order to meet the electrical demand for the data centre in the event "
+                "of a grid failure, proposals include 22 no. standby gas generators. It "
+                "should be noted that two standby generators will be used to provide "
+                "additional redundancy to the system; as such, when the site is "
+                "operating at 100% load 20 standby generators will be operational."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "68ab7417",
+            "signal_type": "fuel_type",
+            "value_text": (
+                "natural gas (reciprocating gas engines, NOT diesel — though one "
+                "Ealing-Council consultee response references '22 diesel generators', "
+                "suggesting a fuel-type change during the application's evolution; AQA "
+                "confirms gas-fired)"
+            ),
+            "evidence_text": (
+                "reciprocating gas engine installations which are operational for fewer "
+                "than 500 hours a year, like the proposed development, do not need to "
+                "adhere to the ELVs. Regardless, the proposed standby generators are to "
+                "incorporate selective catalytic reduction (SCR) technology and are "
+                "understood to achieve a NOx emission rate below the ELV of 100mg.Nm-3."
+            ),
+            "evidence_page": 7,
+        },
+        {
+            "doc_sha_prefix": "68ab7417",
+            "signal_type": "energy_centre_thermal_mw",
+            "value_text": (
+                "energy centre thermal output >50 MW — requires Environment Agency "
+                "Part A1 Environmental Permit (separate application from planning)"
+            ),
+            "evidence_text": (
+                "As the proposed energy centre has a thermal output greater than 50MW "
+                "it will require an Environmental Permit (Part A1) from the Environment "
+                "Agency. A separate application is being made to the Environment Agency "
+                "and this report is intended solely for planning purposes."
+            ),
+            "evidence_page": 7,
+        },
+        {
+            "doc_sha_prefix": "68ab7417",
+            "signal_type": "standby_generator_regime",
+            "value_text": (
+                "monthly + bi-annual testing only; generator runtime <500 hrs/year "
+                "(exempts from IED ELVs); modelled scenarios include 1 grid-failure/year "
+                "at 100% load (= 20 generators operating)"
+            ),
+            "evidence_text": (
+                "the principal emissions associated with the standby generators will be "
+                "from monthly and bi-annual testing events. Nonetheless, a grid failure "
+                "is not impossible and therefore this assessment considers a scenario in "
+                "which one grid failure occurs each year."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "68ab7417",
+            "signal_type": "aqma_proximity",
+            "value_text": (
+                "site within Hillingdon AQMA (declared 2003 for annual-mean NO₂ "
+                "exceedances); 160 m north of Hayes North Hyde Road AQFA (one of 12 "
+                "GLA-designated Air Quality Focus Areas in Hillingdon for high NO₂ + "
+                "human exposure)"
+            ),
+            "evidence_text": (
+                "LBH has declared one Air Quality Management Area (AQMA) that covers "
+                "the southern two thirds of the Borough. This AQMA was declared in "
+                "2003 due to exceedances of the UK Air Quality Standard (AQS) for "
+                "annual mean nitrogen dioxide (NO2). The proposed development is "
+                "located within this AQMA. ... There are a number of AQFAs in the "
+                "vicinity of the application site; including the Hayes North Hyde Road "
+                "AQFA, which is found, at its closest, circa 160m to the south of the "
+                "main site."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "21f29d4a",  # OFFICERS REPORTS
+            "signal_type": "consultee_concern",
+            "value_text": (
+                "London Borough of Ealing Regulatory Services flagged concerns about "
+                "the standby generators (description in their comment as '22 diesel "
+                "generators') — apparent fuel-type discrepancy with AQA's gas-engine "
+                "description"
+            ),
+            "evidence_text": (
+                "LONDON BOROUGH OF EALING FOLLOW-UP: We have had further comment from "
+                "our Regulatory Services Team, who would wish to raise the following "
+                "concern to the proposal. 'The following application has proposed to "
+                "have standby 22 diesel generators...'"
+            ),
+            "evidence_page": 37,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
