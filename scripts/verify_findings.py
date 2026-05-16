@@ -70,10 +70,14 @@ _PLURAL_SPLIT_RE = re.compile(r"\b([a-z]{4,})\s+(s)(?=\s|[.,;:?!\)\]\}])")
 # semantic match — strip all quote-like chars entirely so "the report"
 # matches 'the report' matches "the report" matches the report.
 _QUOTE_STRIP = re.compile(r"['‘’ʼʻ\"“”„‟‚‛]")
+# Strip decorative bullet glyphs entirely — they're typography, not
+# semantic content. Common in pypdf output for list items.
+_BULLET_STRIP = re.compile(r"[•●○◦∙·▪◆■□]")
 
 
 def _normalise(text: str) -> str:
     text = _QUOTE_STRIP.sub("", text)
+    text = _BULLET_STRIP.sub("", text)
     text = _DASH_WS_RE.sub("-", text)
     text = _GLUE_WS_RE.sub(r"\1", text)
     text = _WS_RE.sub(" ", text).strip().lower()

@@ -347,7 +347,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "doc_sha_prefix": "94ebbfb4",
             "signal_type": "applicant_name",
             "value_text": "Humber Tech Park Ltd (c/o Anthony Crean KC, 75D Banbury Road, Oxford OX2 6PE)",
-            "evidence_text": "Humber Tech Park Ltd, Anthony Crean KC, 75D Banbury Road, Oxford OX2 6PE",
+            "evidence_text": "Humber Tech Park Ltd Anthony Crean KC 75D Banbury Road Oxford OX2 6PE",
             "evidence_page": 2,
         },
         {
@@ -360,11 +360,14 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "It is currently proposed that three data centre buildings will be "
-                "constructed on the site and that each will have: Sixteen 8MW data halls "
-                "each with an associated 4MW of mechanical and building services loads. "
-                "Giving a total IT load per building of 128MW and supporting services "
-                "load of 64MW. ... Thus, the overall site load for all three buildings is "
-                "expected to be of the order of 576 MW."
+                "constructed on the site and that each will have: Sixteen 8MW data "
+                "halls each with an associated 4MW of mechanical and building "
+                "services loads. Giving a total IT load per building of 128MW and "
+                "supporting services load of 64MW. Each block of 12MW demand will "
+                "be supported by various configurations of 2.4MW generators a "
+                "total of 250 generators across the site. Thus, the overall site "
+                "load for all three buildings is expected to be of the order of "
+                "576 MW"
             ),
             "evidence_page": 5,
         },
@@ -406,10 +409,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_number": 475,
             "value_unit": "L/hr",
             "evidence_text": (
-                "At this stage generator fuel consumption will be calculated using 475 "
-                "litres per hour per engine at 80% load... Fuel Consumption Rates: "
-                "Whole Site 250 engines = 118,750 L/hr = 2,850,000 L/24hr; Per Engine "
-                "1 = 475 L/hr = 11,400 L/24hr."
+                "At this stage generator fuel consumption will be calculated using "
+                "475 litres per hour per engine at 80% load ... Fuel Consumption "
+                "Rates Area No Engines at 80% load L/hr L/24hr Whole Site 250 "
+                "118,750 2,850,000 ... Per Engine 1 475 11,400"
             ),
             "evidence_page": 5,
         },
@@ -419,8 +422,8 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_number": 118750,
             "value_unit": "L/hr",
             "evidence_text": (
-                "Whole Site, 250 No Engines at 80% load: 118,750 L/hr ≈ 2,850,000 L/24hr "
-                "with all generators running."
+                "Fuel Consumption Rates Area No Engines at 80% load L/hr L/24hr "
+                "Whole Site 250 118,750 2,850,000"
             ),
             "evidence_page": 5,
         },
@@ -487,10 +490,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "at full load"
             ),
             "evidence_text": (
-                "To satisfy this requirement, each of the 250 generator plant will be "
-                "tested separately. The assumption within this assessment is that the "
-                "generators will be tested separately, for 30 minutes per month, at "
-                "full load."
+                "To satisfy this requirement, each of the 250 generator plant will "
+                "be tested separately ... The assumption within this assessment is "
+                "that the generators will be tested separately, for 30 minutes per "
+                "month, at full load"
             ),
             "evidence_page": 36,
         },
@@ -502,9 +505,11 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_number": 38,
             "value_unit": "MW",
             "evidence_text": (
-                "Maximum power demand ≈ 450 MW. Assumed operational diversity 50% of "
-                "maximum. Operational power demand 38 MW. Data centre operation 8760 "
-                "hours / year. Annual energy consumption 1,664,400,000 kWh."
+                "Maximum power demand ≈ 450 MW "
+                "... Assumed operational diversity 50% of maximum "
+                "... Operational power demand 38 MW "
+                "... Data centre operation 8760 hours / year "
+                "... Annual energy consumption 1,664,400,000 kWh"
             ),
             "evidence_page": 14,
         },
