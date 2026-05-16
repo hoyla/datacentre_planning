@@ -58,7 +58,30 @@ Two-stage extraction per the seed walkthrough:
 
 Optional multimodal pass: Claude vision on site plans and elevations for the matched subset, identifying fuel tanks and generator enclosures.
 
-**Document-fetch implemented** for canonical Idox portals (`dcp fetch-docs --source idox`); see `dcp/sources/idox.py`. Per-application `_manifest.json` is the hand-over signal. SSL chain reconstruction via the `truststore` package (OS native trust store + AIA chasing) unblocks councils whose servers send incomplete certificate chains. **Structured extraction (Stage 2) and the multimodal pass are not yet implemented.**
+**Document-fetch implemented** for canonical Idox portals (`dcp fetch-docs --source idox`); see `dcp/sources/idox.py`. Per-application `_manifest.json` is the hand-over signal. SSL chain reconstruction via the `truststore` package (OS native trust store + AIA chasing) unblocks councils whose servers send incomplete certificate chains.
+
+#### Stage-2 extraction: planned design (not yet implemented)
+
+The `findings` table (migration 001) already has the right shape: one row per `(application_id, document_id, signal_type, model, inserted_at)`, with `value_text` / `value_number` / `value_unit` for structured facts, `evidence_text` + `evidence_page` for the supporting quote, and the model name for auditability. Append-only / versioned — re-extraction with a refined prompt adds rows; nothing is destroyed.
+
+**Document formats in the corpus** (from the inaugural top-100 sweep):
+- ~2,850 PDFs (dominant; text-layer present on most modern ones, OCR fallback needed for older / scanned-only).
+- ~52 `.msg` Outlook emails (consultee responses — the EA-letter category Aisha flagged as editorially critical). Needs `extract_msg` or `mail-parser` dep.
+- ~50 `.docx` / `.doc` / `.rtf` (Word / RTF — pypdf doesn't handle; need `python-docx` and `striprtf`).
+- ~10 `.xlsm` / `.xlsx` (rare — likely emissions or capacity calculation worksheets; `openpyxl` already a dep).
+- ~10 image files (JPEGs of site-plan extracts; punt to the multimodal pass).
+
+Practical implication: PDF parsing alone covers ~92% of files; the long-tail formats need light per-type loaders before the LLM step.
+
+**Extraction approach**, in tentative tiers (refine in a Phase 4 design session):
+1. **Per-file text extraction** — pypdf / pdfplumber for PDFs (already deps), `extract_msg` for `.msg`, `python-docx` for Word. Cache extracted text under `data/raw_text/<source>/<application_ref>/<sha>.txt` so the LLM step is decoupled from the parsing step and either can be re-run independently.
+2. **Regex pre-pass** for high-signal patterns: `\d+(\.\d+)?\s*(MW|kVA|kW)\b`, `\d+\s*(diesel|gas|emergency|standby|back[- ]up)\s+generators?\b`, fuel-storage `\d+\s*(hours?|litres?|tonnes?)`. Cheap and deterministic — produces candidate sentences for the LLM to vet + extract structured fields from.
+3. **LLM extraction** on the candidate sentences (granite4.1:30b for consistency with Stage-1 triage, or a longer-context model if entire PDFs need to be in-prompt). Returns structured `findings` rows with evidence text + page number.
+4. **Optional multimodal pass** on site plans / elevations — Claude vision API for the matched subset. Lower-priority follow-on.
+
+**Provenance discipline (principle 7)**: every `findings` row carries the source `document_id`, the exact `evidence_text` quote, the page number where it appeared, the model that extracted it, and the timestamp. Aggregate claims downstream (in the reporter export / map) link or cite back to those rows — no number presented without provenance.
+
+**Resume / idempotency**: same shape as the triage path. `findings_pending(application_id, model)` (parallel to `applications_pending_triage`) selects apps whose latest `findings` extraction is older than the latest triage verdict for the chosen model. Re-extraction with a refined prompt is a separate model-name string so verdicts coexist.
 
 ---
 

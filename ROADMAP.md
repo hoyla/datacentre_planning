@@ -64,7 +64,17 @@ Last meaningful update: 2026-05-15 (late afternoon — Phase 3 fetch in flight).
 
 ### Immediate (this/next session)
 
-- **Phase 4 — structured extraction.** Documents are landing; we can start parsing PDFs (text-layer + OCR fallback via pypdf/pdfplumber, both already deps) and surfacing power-related signals into `findings`. Two-stage extraction per the seed walkthrough — (a) description + consultee senders, (b) per-document evidence-quoted extraction. Probably the highest-value next thing once Aisha's started reading.
+- **Phase 4 — structured extraction.** Documents are landing; we can start parsing PDFs and surfacing power-related signals into `findings` (the table already has the right shape: `application_id`, `document_id`, `signal_type`, `value_text/number/unit`, `evidence_text`, `evidence_page`, `model`, `inserted_at` — see migration 001).
+
+  **Full design in [ARCHITECTURE.md §3 Deep-read](ARCHITECTURE.md).** Headline plan:
+  - Per-file text extraction → cache under `data/raw_text/<source>/<application_ref>/<sha>.txt`. PDF via pypdf/pdfplumber (already deps); `.msg` consultee emails need `extract_msg` (new dep); `.docx/.doc/.rtf` need `python-docx` + `striprtf`; `.xlsm/.xlsx` already covered by openpyxl. ~92% of the corpus is PDFs so PDF support is the MVP.
+  - Regex pre-pass for high-signal patterns (`\d+\s*MW`, `\d+\s*generators`, fuel-storage hours/litres/tonnes) → candidate sentences.
+  - LLM extraction on candidates (granite4.1:30b for Stage-1 consistency, or a longer-context model if whole-PDF prompts make more sense for some doc types) → structured rows in `findings` with evidence text + page.
+  - Optional Phase 5 multimodal pass on site plans / elevations later.
+
+  **First concrete deliverable**: end-to-end extraction for the Yorkshire Energy Park family (`EastRiding/16/02800/STPLF` + `EastRiding/22/00301/STREME`). Already at the top of the worklist, full docs already on disk, the editorial story (gas-fired generation behind a marketed-green DC) is already known — perfect smoke target to verify the extraction produces the right `findings` rows with proper provenance.
+
+  **Open design choices for the start of the next session**: (a) regex+LLM hybrid vs LLM-only — start with hybrid to save Ollama time; (b) signal-type taxonomy — derive from rubric tiers 1-4 or invent a more granular set; (c) consultee extraction — we don't currently capture the consultee list from the documents page, but the `.msg` emails ARE in the bundle so per-file extraction will surface the consultee body even without a separate "consultees" field. Worth deciding whether to add such a field for explicit indexing.
 
 - **Per-portal document-fetch adapters** for the long tail. Idox covers a big slice of the worklist; Ocella / Arcus / Salesforce / Civica / Tascomi / bespoke each need their own adapter when the worklist requires it. Per-portal effort scales: a clean adapter is ~half-day each; the documents-list HTML varies but the orchestrator / storage / manifest layer is reusable.
 
