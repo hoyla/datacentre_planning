@@ -233,8 +233,8 @@ def main() -> None:
             app_dir=app_dir,
             summary={
                 "links_found": total_docs,
-                "downloaded": copied,
-                "skipped_existing": skipped,
+                "downloaded": rows_inserted,
+                "skipped_existing": rows_preserved,
                 "errors": 0,
             },
         )
