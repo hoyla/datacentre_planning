@@ -2283,6 +2283,134 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 4,
         },
     ],
+    # =====================================================================
+    # Longcross DC campus Phase 3 Reserved Matters —
+    # `Runnymede/RU.21/0780`. The substantive parent of the 4 worklist
+    # consultation copies (Windsor, SurreyHeath ×2, Runnymede-internal).
+    # Granted by Runnymede BC on 4 November 2021. At Upper Longcross,
+    # Chobham Lane (former DERA / Defence Evaluation and Research Agency
+    # site, hence "Longcross North"). Same consultant signature as Ark
+    # Project Union: Hurley Palmer Flatt (M&E energy statement) +
+    # Phlorum (AQA) + Auricl (acoustic).
+    # =====================================================================
+    "Runnymede/RU.21/0780": [
+        {
+            "doc_sha_prefix": "42c86f80",  # Decision Notice
+            "signal_type": "decision_outcome",
+            "value_text": (
+                "GRANT PERMISSION subject to conditions — Runnymede Borough "
+                "Council, 4 November 2021; signed Ashley Smith (Corporate Head "
+                "of Development Management & Building Control)"
+            ),
+            "evidence_text": (
+                "Decision Notice: GRANT PERMISSION (subject to conditions) ... "
+                "Signed: Ashley Smith, Corporate Head of Development Management "
+                "& Building Control, Date of decision: 04 November 2021"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "42c86f80",
+            "signal_type": "agent_name",
+            "value_text": "Savills (Cardiff office: 2 Kingsway, CF10 3FD)",
+            "evidence_text": "Savills 2 Kingsway Cardiff CF10 3FD",
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "42c86f80",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "Phase 3 Reserved Matters DC campus on the former DERA "
+                "(Defence Evaluation and Research Agency) site at Longcross "
+                "North — components: data centre building(s) + cooling + "
+                "office + roof-mounted PV cells; Energy Centre Building; "
+                "Stand-By Generators and fuel storage; HV Sub-Station; "
+                "visitor reception centre"
+            ),
+            "evidence_text": (
+                "Phase 3 Reserved Matters application for the development of a "
+                "data centre campus comprising: a) A building(s) for data "
+                "storage and processing, associated cooling infrastructure, "
+                "ancillary office and technical space and roof mounted PV "
+                "cells; b) Energy Centre Building; c) Stand-By Generators and "
+                "fuel storage; d) HV Sub-Station; e) visitor reception centre; "
+                "... The application forms part of phase 3 of planning "
+                "permission RU.13/0856 (as revised under RU.16/0584)"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "42c86f80",
+            "signal_type": "consultant_signature",
+            "value_text": (
+                "Hurley Palmer Flatt (Energy Statement, Ref WED16285, Dec 2020 "
+                "Issue 3) + Phlorum (Air Quality Assessment) + Auricl "
+                "acoustic consulting (Plant Noise, 20 August 2021) — SAME "
+                "consultant trio as Ark's Project Union at Bulls Bridge "
+                "(Hillingdon/75111/APP/2020/1955). Editorially significant "
+                "operator-network signature visible across multiple major "
+                "UK hyperscale projects."
+            ),
+            "evidence_text": (
+                "And the following supporting Documents: ... Plant Noise "
+                "Assessment Report by Auricl acoustic consulting dated 20 "
+                "August 2021 ... Energy Statement by Hurley Palmer Flatt "
+                "Issue 3 Ref WED16285 Dec 2020 ... Air Quality Assessment by "
+                "Phlorum ..."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "42c86f80",
+            "signal_type": "parent_permission",
+            "value_text": (
+                "RU.13/0856 (the hybrid permission for demolition + "
+                "redevelopment of the Longcross North former DERA site), as "
+                "revised under RU.16/0584 and RU.20/0729. This Phase 3 RMA "
+                "is one phase of a larger mixed-use master plan."
+            ),
+            "evidence_text": (
+                "The application forms part of phase 3 of planning permission "
+                "RU.13/0856 (as revised under RU.16/0584) (Hybrid planning "
+                "permission for the demolition of existing buildings and "
+                "redevelopment of the Longcross North site)"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "42c86f80",
+            "signal_type": "site_history",
+            "value_text": (
+                "former DERA (Defence Evaluation and Research Agency) site at "
+                "Upper Longcross, Chobham Lane, Longcross KT16 0EE — military "
+                "research base since demolished, being redeveloped under the "
+                "Longcross North hybrid mixed-use master plan"
+            ),
+            "evidence_text": (
+                "Upper Longcross, Chobham Lane, Longcross, KT16 0EE ... "
+                "Hybrid planning permission for the demolition of existing "
+                "buildings and redevelopment of the Longcross North site"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "42c86f80",
+            "signal_type": "ev_charging_provision",
+            "value_text": (
+                "15 car parking spaces required to have fast-charge sockets "
+                "(7 kW Mode 3 Type 2, 230V AC 32A single-phase dedicated "
+                "supply) — condition 12"
+            ),
+            "evidence_text": (
+                "Electric vehicle charging The development hereby approved "
+                "shall not be occupied unless and until 15 of the proposed "
+                "car parking spaces is provided with a fast charge socket "
+                "(current minimum requirements - 7 kw Mode 3 with Type 2 "
+                "connector - 230v AC 32 Amp single phase dedicated supply)"
+            ),
+            "evidence_page": 5,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
