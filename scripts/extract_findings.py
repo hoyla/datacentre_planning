@@ -3067,23 +3067,30 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
     # (separate from this Proposal-of-Application-Notice / PAC route).
     # =====================================================================
     "WestLothian/0625/PAC/25": [
+        # Source doc is a handwritten Proposal of Application Notice form
+        # (pypdf returns empty pages — see Read-tool vision verification in
+        # 2026-05-16 session). Quotes below transcribe the handwritten
+        # entries on the form, retaining the form-language capitalisation
+        # and the applicant's misspelling of "separately".
         {
-            "doc_sha_prefix": "54e72002",  # Proposal Of Application Notice
+            "doc_sha_prefix": "54e72002",  # Proposal of Application Notice (handwritten form)
             "signal_type": "facility_classification",
             "value_text": (
-                "250 MW AI Data Centre Campus + ancillary BESS at former "
-                "Freeport Shopping Village, West Calder, EH55 8PN. Explicit "
-                "AI framing (rare in the worklist — most DCs avoid naming "
-                "the AI use case). 'Proposal of Application Notice' (PAC) "
-                "is the Scottish pre-application notification stage."
+                "250 MW AI Data Centre Campus + ancillary BESS at Land at "
+                "Former Freeport Retail Village, Westwood, West Calder, "
+                "EH55 8PN. Explicit AI framing (rare in the worklist — most "
+                "DCs avoid naming the AI use case). 'Proposal of Application "
+                "Notice' (PAC) is the Scottish pre-application notification "
+                "stage. Applicant: Apatura DC Project 8 Ltd; agent: Tom Allan "
+                "of PAA Consultants."
             ),
             "evidence_text": (
-                "Proposal of application notice for the erection of an AI "
-                "Data Centre Campus with a 250 MW demand utility capacity "
-                "with ancillary battery energy storage system (BESS) (to be "
-                "consented via separate Section 36 application to Scottish "
-                "Government) ... Land At Former Freeport Shopping Village "
-                "West Calder West Lothian EH55 8PN"
+                "ERECTION OF AN AI DATA CENTRE CAMPUS WITH A 250MW DEMAND "
+                "UTILITY CAPACITY WITH ANCILLARY BATTERY ENERGY STORAGE "
+                "(TO BE CONSENTED SEPERATLY VIA SECTION 36 APPLICATION TO "
+                "THE ECU), CAR PARKING, LANDSCAPING, ROADS, ACCESS AND "
+                "ASSOCIATED WORKS. ... LAND AT FORMER FREEPORT RETAIL "
+                "VILLAGE, WESTWOOD, WEST CALDER, EH55 8PN"
             ),
             "evidence_page": 1,
         },
@@ -3093,7 +3100,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_number": 250,
             "value_unit": "MW (utility demand capacity)",
             "evidence_text": (
-                "AI Data Centre Campus with a 250 MW demand utility capacity"
+                "AI DATA CENTRE CAMPUS WITH A 250MW DEMAND UTILITY CAPACITY"
             ),
             "evidence_page": 1,
         },
@@ -3103,17 +3110,16 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_text": (
                 "Scottish dual-track: Proposal of Application Notice (PAC) "
                 "for the DC building consent + separate Section 36 "
-                "application to Scottish Government for the BESS (S36 = "
-                "Electricity Act 1989 consent for generation/storage above "
-                "50 MW in Scotland, equivalent to a Development Consent "
-                "Order in England)"
+                "application to the Energy Consents Unit (ECU) for the BESS "
+                "(S36 = Electricity Act 1989 consent for generation/storage "
+                "above 50 MW in Scotland, equivalent to a Development "
+                "Consent Order in England)"
             ),
             "evidence_text": (
-                "Proposal of application notice for the erection of an AI "
-                "Data Centre Campus with a 250 MW demand utility capacity "
-                "with ancillary battery energy storage system (BESS) (to be "
-                "consented via separate Section 36 application to Scottish "
-                "Government)"
+                "ERECTION OF AN AI DATA CENTRE CAMPUS WITH A 250MW DEMAND "
+                "UTILITY CAPACITY WITH ANCILLARY BATTERY ENERGY STORAGE "
+                "(TO BE CONSENTED SEPERATLY VIA SECTION 36 APPLICATION TO "
+                "THE ECU)"
             ),
             "evidence_page": 1,
         },
