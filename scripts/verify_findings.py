@@ -45,18 +45,16 @@ _WS_RE = re.compile(r"\s+")
 # ("back-up" → "back -up"). Collapse those before comparison — the
 # semantic content is what we're checking, not the spacing of dashes.
 _DASH_WS_RE = re.compile(r"\s*[-–—]\s*")
-# Smart-quote / straight-quote drift: humans recording quotes typically
-# type straight ' and ", while pypdf preserves the document's curly
-# variants (and vice versa). Fold both onto the straight form.
-_QUOTE_TRANS = str.maketrans({
-    "‘": "'", "’": "'", "‚": "'", "‛": "'",
-    "“": '"', "”": '"', "„": '"', "‟": '"',
-    "ʼ": "'", "ʻ": "'",
-})
+# Quote-mark drift: humans recording a quote typically type whichever
+# of ' or " is closest to hand, and pypdf preserves whatever's in the
+# document (often curly variants). The mark itself rarely affects
+# semantic match — strip all quote-like chars entirely so "the report"
+# matches 'the report' matches "the report" matches the report.
+_QUOTE_STRIP = re.compile(r"['‘’ʼʻ\"“”„‟‚‛]")
 
 
 def _normalise(text: str) -> str:
-    text = text.translate(_QUOTE_TRANS)
+    text = _QUOTE_STRIP.sub("", text)
     text = _DASH_WS_RE.sub("-", text)
     return _WS_RE.sub(" ", text).strip().lower()
 

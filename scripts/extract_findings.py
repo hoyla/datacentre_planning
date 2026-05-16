@@ -24,9 +24,14 @@ re-run.
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 from typing import Any
 
-from dcp import db, repo
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent.parent / ".env")
+
+from dcp import db, repo  # noqa: E402
 
 
 # Provenance string for the LLM column. Reflects what actually happened
@@ -700,7 +705,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "data centre buildings will be finalised as part of the detailed design "
                 "specifications."
             ),
-            "evidence_page": 67,
+            "evidence_page": 68,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -775,7 +780,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "The proposed development is expected to generate a total of 1,278 "
                 "vehicle trips daily, of which 70 will be HDVs."
             ),
-            "evidence_page": 34,
+            "evidence_page": 35,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -836,7 +841,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Phlorum Ltd has been commissioned by Hurley Palmer Flatt on behalf of "
                 "Ark Data Centres"
             ),
-            "evidence_page": 5,
+            "evidence_page": 6,
         },
         {
             "doc_sha_prefix": "68ab7417",
@@ -914,7 +919,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "is not impossible and therefore this assessment considers a scenario in "
                 "which one grid failure occurs each year."
             ),
-            "evidence_page": 5,
+            "evidence_page": 6,
         },
         {
             "doc_sha_prefix": "68ab7417",
@@ -1621,7 +1626,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 1,
         },
         {
-            "doc_sha_prefix": "df75c718",
+            "doc_sha_prefix": "d4f864ee",  # Transport Scotland acknowledgement letter
             "signal_type": "consultee_response_summary",
             "value_text": (
                 "Transport Scotland received the consultation 19 June 2019 — no "
@@ -1681,7 +1686,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Certifier provisions; Design Monitoring Fee of £100,000 (Indexed) "
                 "for Architect/ Design Team changes."
             ),
-            "evidence_page": 6,
+            "evidence_page": 7,
         },
         {
             "doc_sha_prefix": "b1becf37",
@@ -1776,7 +1781,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "carbon (payable on implementation of the development). This "
                 "equates to £2,670,452 +RPI"
             ),
-            "evidence_page": 6,
+            "evidence_page": 7,
         },
         {
             "doc_sha_prefix": "b1becf37",
@@ -1796,7 +1801,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "and 50% end user jobs to residents of the LBN through a "
                 "financial contribution of £1,224,081."
             ),
-            "evidence_page": 5,
+            "evidence_page": 6,
         },
         {
             "doc_sha_prefix": "b1becf37",
@@ -1849,7 +1854,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "pursuant to section 16 of the Greater London Council (General "
                 "Powers) Act 1974"
             ),
-            "evidence_page": 5,
+            "evidence_page": 6,
         },
     ],
     # =====================================================================
@@ -1900,7 +1905,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 3,
         },
         {
-            "doc_sha_prefix": "276930f8",
+            "doc_sha_prefix": "449deddd",  # Drainage Impact Assessment (Matz Ltd, Nov 2023)
             "signal_type": "site_location",
             "value_text": (
                 "Reedmere site, south side of Saltend Chemicals Park (SCP), "
@@ -2029,7 +2034,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 16,
         },
         {
-            "doc_sha_prefix": "6cd1f865",
+            "doc_sha_prefix": "95485b37",  # applicant statement / corporate context doc
             "signal_type": "renewable_supply_commitment",
             "value_text": (
                 "12-year 100 MW corporate Power Purchase Agreement with Scotland's "
@@ -2358,7 +2363,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Issue 3 Ref WED16285 Dec 2020 ... Air Quality Assessment by "
                 "Phlorum ..."
             ),
-            "evidence_page": 3,
+            "evidence_page": 4,
         },
         {
             "doc_sha_prefix": "42c86f80",
@@ -2580,7 +2585,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "This report has been produced by Ramboll UK Ltd ('Ramboll') on "
                 "behalf of Milton Keynes Energy Limited"
             ),
-            "evidence_page": 1,
+            "evidence_page": 4,
         },
     ],
     # =====================================================================
@@ -2680,7 +2685,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
     # =====================================================================
     "Slough/P/00437/093": [
         {
-            "doc_sha_prefix": "8c22b42e",
+            "doc_sha_prefix": "2e23b813",  # Volume 3 technical appendices
             "signal_type": "applicant_name",
             "value_text": (
                 "Zurich Assurance Ltd, c/o Threadneedle Portfolio Services Ltd "
@@ -3002,7 +3007,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "uses. ... The site Falls wholly within Flood Zone 2 and "
                 "partially within Flood Zone 3."
             ),
-            "evidence_page": 3,
+            "evidence_page": 2,
         },
     ],
     # =====================================================================
@@ -3257,14 +3262,49 @@ def seed_app(conn, application_ref: str, findings: list[dict[str, Any]]) -> int:
     return inserted
 
 
+def reset_app(conn, application_ref: str) -> int:
+    """Delete every finding row for this app + model, so the next seed
+    pass starts from a clean slate.
+
+    The schema is append-only by default; we lift that for this calibration
+    round specifically because the seed script IS the source of truth (and
+    is tracked in git, so the audit trail lives there). A correction that
+    just appends a new row would still leave the wrong-doc / wrong-page row
+    visible via the (app, doc, signal, model) dedup tuple. Cleanest fix:
+    drop the round for the model + re-insert.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            "DELETE FROM findings "
+            "WHERE model = %s "
+            "AND application_id = (SELECT id FROM applications WHERE application_ref = %s)",
+            (MODEL, application_ref),
+        )
+        return cur.rowcount
+
+
 def main() -> None:
-    targets = sys.argv[1:] or list(FINDINGS_BY_APP.keys())
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--reset", action="store_true",
+        help="Delete existing findings for the target apps + this model before inserting. "
+             "Use after editing the seed dict to correct a transcription error.",
+    )
+    ap.add_argument("app_refs", nargs="*", help="App refs to (re-)seed. Default: all.")
+    args = ap.parse_args()
+
+    targets = args.app_refs or list(FINDINGS_BY_APP.keys())
     with db.connect() as conn:
         for app_ref in targets:
             findings = FINDINGS_BY_APP.get(app_ref)
             if findings is None:
                 print(f"  SKIP {app_ref}: no findings defined")
                 continue
+            if args.reset:
+                deleted = reset_app(conn, app_ref)
+                if deleted:
+                    print(f"  Cleared {deleted:3d} prior findings for {app_ref}")
             n = seed_app(conn, app_ref, findings)
             print(f"  Inserted {n:3d} findings for {app_ref}")
     print(f"Round model: {MODEL}")
