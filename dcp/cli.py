@@ -203,8 +203,8 @@ def map(model: str, output_dir: Path, osm_path: Path | None) -> None:
 
 
 @main.command("fetch-docs")
-@click.option("--source", required=True, type=click.Choice(["idox"]),
-              help="Portal adapter to use (currently `idox` only).")
+@click.option("--source", required=True, type=click.Choice(["idox", "ocella"]),
+              help="Portal adapter to use (`idox` or `ocella`).")
 @click.option("--model", default="granite4.1:30b",
               help="Triage model whose worklist to draw the targets from.")
 @click.option("--top", type=int, default=None,
@@ -228,7 +228,12 @@ def fetch_docs(source: str, model: str, top: int | None,
     import sys
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parent.parent / ".env")
-    from dcp.sources import idox
+    if source == "idox":
+        from dcp.sources import idox as adapter
+    elif source == "ocella":
+        from dcp.sources import ocella as adapter
+    else:
+        raise click.ClickException(f"unknown source: {source}")
 
     def _progress(row: dict) -> None:
         ref = row.get("ref", "?")[:40]
@@ -245,7 +250,7 @@ def fetch_docs(source: str, model: str, top: int | None,
             )
         sys.stdout.flush()
 
-    total = idox.fetch_worklist(
+    total = adapter.fetch_worklist(
         model=model, top=top, delay_seconds=delay_seconds,
         data_dir=data_dir, progress=_progress,
     )
