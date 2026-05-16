@@ -1575,6 +1575,68 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 3,
         },
     ],
+    # =====================================================================
+    # Birkhill / Coalburn DC + colocated solar + gas turbine —
+    # `SouthLanarkshire/P/19/0896`. Rare Scottish entry with explicit
+    # colocation of DC + 12 MW solar farm + 7.5 MW gas turbine + light
+    # industrial — Planning Permission in Principle (Scottish PPP, the
+    # outline equivalent). Site is the former M74 Central / Birkhill,
+    # Coalburn at NS 838 364 (~33.3 ha).
+    # =====================================================================
+    "SouthLanarkshire/P/19/0896": [
+        {
+            "doc_sha_prefix": "146682ea",  # ground investigation report (historical)
+            "signal_type": "site_context",
+            "value_text": (
+                "33.3 ha greenfield/quarry site at Birkhill, Coalburn (by Lesmahagow), "
+                "South Lanarkshire — historical ground investigation by Johnson Poole "
+                "& Bloomer for M74 Central Ltd dated July 2007 (re-used in the 2019 "
+                "DC PPP submission); peat removal needed; no mining beneath site"
+            ),
+            "evidence_text": (
+                "Johnson Poole & Bloomer Limited (JPB) were commissioned by Hodgins "
+                "Smith Partnership on behalf of M74 Central Limited to carry out an "
+                "initial Ground Investigation Report for the site at Birkhill, "
+                "Coalburn by Lesmahagow. The site is centred on National Grid "
+                "Reference NS 838 364 and occupies an area of approximately 33.3ha."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "df75c718",  # consultation response — Transport Scotland
+            "signal_type": "facility_classification",
+            "value_text": (
+                "data centre + colocated 12 MW solar farm + 7.5 MW gas turbine + "
+                "light industrial (Class 5) area — Scottish Planning Permission in "
+                "Principle (the Scottish equivalent of outline permission). "
+                "Application agent: Lodge Architects LLP (Glasgow)"
+            ),
+            "evidence_text": (
+                "for planning permission in principle for erection of data centre "
+                "(class 4 Business) and associated 12MW solar farm and 7.5MW gas "
+                "turbine with light industrial (Class 5) area and associated "
+                "infrastructure... Lodge Architects LLP, Crown House, 152 West "
+                "Regent Street, Glasgow G2 2RQ"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "df75c718",
+            "signal_type": "consultee_response_summary",
+            "value_text": (
+                "Transport Scotland received the consultation 19 June 2019 — no "
+                "objection flagged in the response (typical for non-trunk-road-adjacent "
+                "applications)"
+            ),
+            "evidence_text": (
+                "Transport Scotland Roads - Development Management TR /NPA /1A I "
+                "acknowledge receipt of the planning application P/19/0896 for "
+                "Planning Permission in Principle for erection of data centre "
+                "(Class 4 Business) and associated..."
+            ),
+            "evidence_page": 1,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
