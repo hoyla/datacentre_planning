@@ -2254,9 +2254,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "doc_sha_prefix": "ae7267ef",
             "signal_type": "consultant",
             "value_text": (
-                "Ramboll UK (Ben Seward at 240 Blackfriars Road, London SE1 8NW "
-                "— notable: same Blackfriars Road address as Ark Data Centres' "
-                "office used for Project Union)"
+                "Ramboll UK (Ben Seward) — based at 240 Blackfriars Road, "
+                "London SE1 8NW, which is a multi-tenant coworking office "
+                "building (no inferred relationship with other dataset apps "
+                "that share the address)"
             ),
             "evidence_text": "Ben Seward, Ramboll, 240 Blackfriars Road, London SE1 8NW",
             "evidence_page": 1,
