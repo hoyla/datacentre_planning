@@ -1207,6 +1207,230 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 22,
         },
     ],
+    # =====================================================================
+    # Humber Tech Park EIA screening request — `NorthLincs/PA/SCR/2024/2`.
+    # The screening predecessor to `NorthLincs/PA/2024/584` (Humber Tech
+    # Park full application). 6 docs: the screening request itself + 4
+    # statutory consultee responses (Environment Agency, National
+    # Highways, NE Lindsey IDB, Archaeology) + 1 mystery 'x.pdf'.
+    # =====================================================================
+    "NorthLincs/PA/SCR/2024/2": [
+        {
+            "doc_sha_prefix": "5c85e874",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "EIA screening request for the Humber Tech Park full application "
+                "(submitted later as NorthLincs/PA/2024/584) — 3 buildings, 384 MW IT "
+                "load, 309,000 sqm GEA"
+            ),
+            "evidence_text": (
+                "The Applicant proposes the submission of an outline planning "
+                "application (with all matters reserved) which will comprise the "
+                "following elements: Up to three Data Centre buildings capable of "
+                "384MW of IT load with a total GEA of 309,000 sqm..."
+            ),
+            "evidence_page": 12,
+        },
+        {
+            "doc_sha_prefix": "5c85e874",
+            "signal_type": "nearby_development",
+            "value_text": (
+                "49.9 MW solar farm + BESS proposal 3.1 km south-east of the Humber "
+                "Tech Park site (cumulative-impact context)"
+            ),
+            "evidence_text": (
+                "It is approximately 3.1km south-east of the Site. Construction and "
+                "operation of a solar farm (up to 49.9mw) and battery energy storage "
+                "system (BESS) with associated works, equipment, infrastructure..."
+            ),
+            "evidence_page": 30,
+        },
+        {
+            "doc_sha_prefix": "5b17c68e",
+            "signal_type": "consultee_response_summary",
+            "value_text": (
+                "National Highways consultee response confirms the 384 MW × 3-building "
+                "scope quoted in the screening note matches the full application"
+            ),
+            "evidence_text": (
+                "Proposed development Within the EIA Screening note, the proposed "
+                "development is stated to comprise: 'Up to three Data Centre "
+                "buildings capable of 384MW of IT load with a total GEA of "
+                "309,000 sqm...'"
+            ),
+            "evidence_page": 1,
+        },
+    ],
+    # =====================================================================
+    # Union Park district heating strategy discharge —
+    # `Hillingdon/75111/APP/2025/2120`. Editorially substantive
+    # condition-discharge: the energy centres are designed as continuous
+    # low-grade heat sources but the district-heating connection is
+    # currently unfeasible (no viable network nearby; leaflet drop to
+    # neighbours yielded no interest).
+    # =====================================================================
+    "Hillingdon/75111/APP/2025/2120": [
+        {
+            "doc_sha_prefix": "0f39992c",
+            "signal_type": "district_heating_outcome",
+            "value_text": (
+                "Condition 41 discharged: energy centres designed as continuous "
+                "low-grade heat sources with provisions (valved tap-offs on cooling "
+                "systems) for future DH connection, BUT implementation currently "
+                "unfeasible — no viable DH network nearby + leaflet drop to "
+                "neighbours yielded no significant interest in waste-heat export"
+            ),
+            "evidence_text": (
+                "The report prepared by HDR concludes that, although a Waste Heat "
+                "Recovery System could offer free cooling and contribute to long-term "
+                "sustainability benefits, the absence of a viable District Heating "
+                "Network within the vicinity of the development makes implementation "
+                "currently unfeasible. Furthermore, a leaflet drop to owners and "
+                "occupiers near Union Park regarding the potential to export waste "
+                "heat from the data centre yielded no significant interest. ... There "
+                "are provisions in the base building designs for the energy centres "
+                "to be sources of continuous low-grade heat for connection into a "
+                "future district heating system, should one be developed in the "
+                "future. The provision consists of valved tap offs on appropriate "
+                "sections of the energy centre cooling systems."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "0f39992c",
+            "signal_type": "related_application",
+            "value_text": (
+                "future DH pipework would route via Ark's separate application "
+                "`Hillingdon/75111/APP/2025/739` (red-line boundary covers the "
+                "pipework — same developer)"
+            ),
+            "evidence_text": (
+                "Whilst the district heating pipework is not shown to be within the "
+                "red line boundary of permission ref. 75111/APP/2020/1955, it would "
+                "be within the red line boundary of application ref. 75111/APP/2025/"
+                "739, which is also owned by the same Developer. This means that the "
+                "connection is feasible."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "0f39992c",
+            "signal_type": "decision_outcome",
+            "value_text": (
+                "APPROVED (Condition 41 discharged) — but the requirement to comply "
+                "with Condition 41 'remains in perpetuity'; the development must "
+                "provide a single point of connection to a future DH network"
+            ),
+            "evidence_text": (
+                "the application is recommended for approval. ... Whilst Condition 41 "
+                "can be discharged, please be advised that the requirement to comply "
+                "with Condition 41 remains in perpetuity. In effect, the development "
+                "hereby approved shall provide a single point of connection to allow "
+                "future connection to a district heating network."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "0f39992c",
+            "signal_type": "engineering_consultant",
+            "value_text": (
+                "HDR (global engineering firm) prepared the Waste Heat Recovery / "
+                "District Heat Network Connection Viability Study for the discharge"
+            ),
+            "evidence_text": (
+                "HDR-0474-SWS-XX-REP-M-000001 Issue P02 Waste Heat Recovery and "
+                "District Heat Network Connection Viability Study (Dated 3rd April "
+                "2025); HDR-0474-SWS-XX-REP-M-000001 Issue P03 Waste Heat Recovery "
+                "and District Heat Network Connection Viability Study (Dated 15th "
+                "October 2025)"
+            ),
+            "evidence_page": 2,
+        },
+    ],
+    # =====================================================================
+    # Basildon DC screening (Wickford) — `Basildon/23/01552/SCREEN`.
+    # EIA Screening Opinion for a single-building greenfield DC in
+    # Essex (modest scale by hyperscale standards). Decision: EIA not
+    # required.
+    # =====================================================================
+    "Basildon/23/01552/SCREEN": [
+        {
+            "doc_sha_prefix": "ec526eb9",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "single-building DC of 18,330 sqm floorspace (12 m height) + 2,100 sqm "
+                "energy centre + 7 m substation; 6.2 ha western parcel + 35 ha eastern "
+                "parcel for open space / sports pitches; greenfield Green Belt site at "
+                "Wickford"
+            ),
+            "evidence_text": (
+                "The proposal comprises a data centre building of up to 18,330 sqm in "
+                "floorspace and 12m (including roof plant) in height and an energy "
+                "centre building of up to 2,100 sqm in floorspace and 12m in height. "
+                "The proposed development also includes a 7m high substation, a 4m "
+                "high security gatehouse, access road, car parking, cycle parking, "
+                "service yard and loading facilities ... emergency back-up "
+                "generators, fuel storage."
+            ),
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "ec526eb9",
+            "signal_type": "eia_screening_outcome",
+            "value_text": (
+                "EIA NOT REQUIRED — Basildon Borough Council Screening Opinion; "
+                "applicant filed request 13 December 2023"
+            ),
+            "evidence_text": (
+                "The Local Planning Authority (LPA), Basildon Borough Council, has "
+                "considered the proposals and its SCREENING OPINION is that: an EIA "
+                "IS NOT REQUIRED. A request for a screening opinion was received by "
+                "letter dated 13th December 2023."
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "ec526eb9",
+            "signal_type": "site_designation",
+            "value_text": (
+                "Green Belt site (Parcel 36 in Basildon Borough Green Belt Review "
+                "2017); contributes to Green Belt purposes 1 (check sprawl of large "
+                "built-up areas) and 3 (safeguarding countryside from encroachment); "
+                "adjoins Grade II listed 'Fore Riders'; within 6km of 4 SSSIs "
+                "(Norsey Woods, Hanningfield Reservoir, Langdon Hills, Wat Tyler "
+                "Country Park)"
+            ),
+            "evidence_text": (
+                "The site is within the Green Belt. ... The western parcel does, "
+                "however, adjoin a Grade II listed building to the south-east, which "
+                "is known as 'Fore Riders'. ... The site falls within Parcel 36 in "
+                "the Basildon Borough Green Belt Review (2017) and partly contributes "
+                "to Green Belt purposes 1 (to check unrestricted sprawl of large "
+                "built up areas) and 3 (to assist in safeguarding the countryside "
+                "from encroachment). There are four SSSIs within 6 km of the site: "
+                "Norsey Woods, Hanningfield Reservoir, Landgon Hills, Wat Tyler "
+                "Country Park"
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "ec526eb9",
+            "signal_type": "related_application",
+            "value_text": (
+                "shares vehicular access with the consented Nevendon Road EV "
+                "charging station (21/01515/FULL)"
+            ),
+            "evidence_text": (
+                "Access to the site would be off Nevendon Road, sharing the access "
+                "road to be created in association with the electric vehicle "
+                "charging station (ref: 21/01515/FULL) which benefits from planning "
+                "permission. An emergency access point would also be created on Old "
+                "Nevendon Road, for use by the fire brigade and emergency vehicles "
+                "only."
+            ),
+            "evidence_page": 2,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
