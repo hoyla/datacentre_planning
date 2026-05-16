@@ -1042,9 +1042,9 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
     # hyperscale tenant.
     # =====================================================================
     "Hillingdon/75111/APP/2022/1007": [
-        # ----- Air Quality Assessment (Phlorum Ltd, 21 March 2022, v10) -----
+        # ----- Damage Cost Addendum (Phlorum Ltd, 2022) -----
         {
-            "doc_sha_prefix": "b0a8d2c7",
+            "doc_sha_prefix": "38da9dd1",  # damage-cost / dispersion addendum
             "signal_type": "facility_classification",
             "value_text": (
                 "expansion of Ark Project Union — site now configured with THREE energy "
@@ -1054,10 +1054,9 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_text": (
                 "The above Damage Cost Calculation is based on the assumption that all "
                 "42 generators across the three proposed energy centres will operate "
-                "(testing and grid failure) ... This equates to a total of 1,176 "
-                "generator-hours annually. The submitted AQA (v10) took a highly "
-                "conservative approach to the modelling assessment by assuming a total "
-                "of 1,386 operational hours annually."
+                "(testing and maintenance) for 26 hours per year, with an additional "
+                "two hours' worth of grid failures. This equates to a total of 1,176 "
+                "generator-hours annually"
             ),
             "evidence_page": 3,
         },
@@ -1082,9 +1081,9 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_text": (
                 "If a future (hyperscaler) tenant were to operate 14 generators, with "
                 "Ark operating the other 28, the predicted total annual NOX and PM10 "
-                "emissions from the proposed development would be 1,284.3 kgNOX... "
-                "Table D.8: Proposed Generators Emission Rates (Ark operation of three "
-                "data halls) Total emissions (kg) Ark Future (hyperscaler) tenant"
+                "emissions from the proposed development would be 1,284.3 kgNOX "
+                "... Table D.8: Proposed Generators Emission Rates (Ark operation of "
+                "three data halls) Total emissions (kg) Ark Future (hyperscaler) tenant"
             ),
             "evidence_page": 53,
         },
@@ -1099,10 +1098,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_text": (
                 "The proposed development during a normal year of operation, with Ark "
                 "operating all 42 generators would not generate more than 0.94 tonnes "
-                "of NOX and 0.02 tonnes of PM2.5. ... This suggests that in terms of "
-                "total NOX emissions, the modelled testing scenario is 7.5 times more "
-                "conservative than a potential realistic scenario where a future "
-                "(hyperscale) tenant operates 14 generators."
+                "of NOX and 0.02 tonnes of PM2.5"
             ),
             "evidence_page": 89,
         },
@@ -1347,10 +1343,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "HDR-0474-SWS-XX-REP-M-000001 Issue P02 Waste Heat Recovery and "
-                "District Heat Network Connection Viability Study (Dated 3rd April "
-                "2025); HDR-0474-SWS-XX-REP-M-000001 Issue P03 Waste Heat Recovery "
-                "and District Heat Network Connection Viability Study (Dated 15th "
-                "October 2025)"
+                "District Heat Network Connection Viability Study (Dated 3rd "
+                "April 2025 HDR-0474-SWS-XX-REP-M-000001 Issue P03 Waste Heat "
+                "Recovery and District Heat Network Connection Viability Study "
+                "(Dated 15th October 2025)"
             ),
             "evidence_page": 2,
         },
@@ -1410,16 +1406,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "The site is within the Green Belt. ... The western parcel does, "
-                "however, adjoin a Grade II listed building to the south-east, which "
-                "is known as 'Fore Riders'. ... The site falls within Parcel 36 in "
-                "the Basildon Borough Green Belt Review (2017) and partly contributes "
-                "to Green Belt purposes 1 (to check unrestricted sprawl of large "
-                "built up areas) and 3 (to assist in safeguarding the countryside "
-                "from encroachment). There are four SSSIs within 6 km of the site: "
-                "Norsey Woods, Hanningfield Reservoir, Landgon Hills, Wat Tyler "
-                "Country Park"
+                "however, adjoin a Grade II listed building to the south-east, "
+                "which is known as 'Fore Riders'. ... The site falls within "
+                "Parcel 36 in the Basildon Borough Green Belt Review (2017) "
+                "and partly contributes to Green Belt purposes 1"
             ),
-            "evidence_page": 3,
+            "evidence_page": 4,
         },
         {
             "doc_sha_prefix": "ec526eb9",
@@ -1620,11 +1612,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Application agent: Lodge Architects LLP (Glasgow)"
             ),
             "evidence_text": (
-                "for planning permission in principle for erection of data centre "
-                "(class 4 Business) and associated 12MW solar farm and 7.5MW gas "
-                "turbine with light industrial (Class 5) area and associated "
-                "infrastructure... Lodge Architects LLP, Crown House, 152 West "
-                "Regent Street, Glasgow G2 2RQ"
+                "for planning permission in principle for erection of data "
+                "centre (class 4 Business) and associated 12MW solar farm "
+                "and 7.5MW gas turbine with light industrial class 5) area "
+                "and associated infrastructure "
+                "... Lodge Architects LLP, Crown House, 152 West Regent "
+                "Street, Glasgow G2 2RQ"
             ),
             "evidence_page": 1,
         },
@@ -2310,9 +2303,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "of Development Management & Building Control)"
             ),
             "evidence_text": (
-                "Decision Notice: GRANT PERMISSION (subject to conditions) ... "
-                "Signed: Ashley Smith, Corporate Head of Development Management "
-                "& Building Control, Date of decision: 04 November 2021"
+                "Decision Notice: GRANT PERMISSION (subject to conditions) "
+                "... Signed: Date of decision: Ashley Smith 04 November 2021 "
+                "Ashley Smith Corporate Head of Development Management & "
+                "Building Control"
             ),
             "evidence_page": 1,
         },
@@ -2438,7 +2432,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "Applicant: Mr Matt Edgley, Teledata Simon House, Brownley Road, "
-                "Manchester, M22 5RA. Agent (if any): Mr A Jelley, Alpine Planning "
+                "Manchester, M22 5RA Agent (if any): Mr A Jelley, Alpine Planning "
                 "Ltd, The Buttery, Tithe Farm, Holcot, NN6 9SH"
             ),
             "evidence_page": 1,
@@ -2470,7 +2464,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "doc_sha_prefix": "01c5b41b",
             "signal_type": "decision_outcome",
             "value_text": "APPROVED — Manchester City Council Delegated Officer, 25 April 2022",
-            "evidence_text": "Recommendation: Approve. Date of recommendation: 25 April 2022",
+            "evidence_text": "Recommendation: Approve Date of recommendation: 25 April 2022",
             "evidence_page": 1,
         },
         {
@@ -2565,11 +2559,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_text": (
                 "an associated piped distribution network, or pipe network "
                 "('PN'), which would cover a total distance of approximately "
-                "13.7 km ... [connecting to] Milton Keynes City Centre's Civic "
-                "Buildings, the Milton Keynes University Hospital ('MKUH') and "
-                "the Milton Keynes Open University Campus ('MKOUC'), Thames "
-                "Valley Police, the Milton Keynes Library and the Woughton "
-                "Leisure Centre"
+                "13.7 km. The PN would be installed across a single development "
+                "phase, which would connect the EC with Milton Keynes City "
+                "Centre's Civic Buildings, the Milton Keynes University "
+                "Hospital ('MKUH') and the Milton Keynes Open University "
+                "Campus ('MKOUC'), Thames Valley Police, the Milton Keynes "
+                "Library and the Woughton Leisure Centre"
             ),
             "evidence_page": 4,
         },
@@ -2610,16 +2605,14 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "information requested by the LPA)."
             ),
             "evidence_text": (
-                "MEMORANDUM TO: Customer Support Services, South Bucks District "
-                "Council Planning Department, Capswood, Oxford Road, Denham UB9 "
-                "4LH. Case Officer Name: Alistair De Joux. Planning Reference: "
-                "P/00437/093 ... In accordance with The Town and Country Planning "
-                "(Environmental Impact Assessment) Regulations 2017 ... further "
-                "information has been provided in accordance with EIA Regulation "
-                "25, in the form of an Addendum which now forms part of the "
-                "Environmental Statement"
+                "In accordance with The Town and Country Planning "
+                "(Environmental Impact Assessment) Regulations 2017 (the EIA "
+                "Regulations), I give notice that further information has been "
+                "provided in accordance with EIA Regulation 25, in the form of "
+                "an Addendum which now forms part of the Environmental "
+                "Statement submitted in respect of the above planning application"
             ),
-            "evidence_page": 1,
+            "evidence_page": 2,
         },
         {
             "doc_sha_prefix": "0f473a7f",
@@ -2666,14 +2659,13 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "'battery storage' + 'generator' signals."
             ),
             "evidence_text": (
-                "Details submitted pursuant to Condition 3 (boundary treatment) "
-                "and condition 4 (parking) of planning permission 01032/I/P4 "
-                "dated 06/10/2017 for works to cover a battery storage "
-                "facilities/generator (associated with approved photovoltaic "
-                "panels). Erection of 50m2 (GEA) control room and electric "
-                "intake room. ... Waste Depot SOUTHALL LANE SOUTHALL"
+                "Works to cover a battery storage facilities/generator "
+                "(associated with approved photovoltaic panels). Erection of "
+                "50m2 (GEA) control room and electric intake room. Erection "
+                "of 72m2 (GEA) Pump House, 22m2 (GEA) Valve House & 115m2 "
+                "(GEA) Quarantine Area"
             ),
-            "evidence_page": 1,
+            "evidence_page": 2,
         },
     ],
     # =====================================================================
@@ -2865,11 +2857,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "The UK Data Centre market has c. 2,190 Mega Watts (MW) of "
-                "capacity (£7.5bn turnover... A significant proportion of "
-                "demand is focused on the West London market, on the basis "
-                "that this is within the availability zone of most of the "
-                "major cloud providers. Slough is a major UK Data Centre "
-                "[market with 379.23 MW]"
+                "capacity (£7.5bn turnover "
+                "... A significant proportion of demand is focused on the West "
+                "London market, on the basis that this is within the "
+                "availability zone of most of the major cloud providers"
             ),
             "evidence_page": 18,
         },
@@ -2892,8 +2883,8 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "Erection of energy and data centre with associated "
-                "landscaping and ancillary works. Whitworth Tower Elvyn Way "
-                "Loughborough University Loughborough LE11 3UA"
+                "landscaping and ancillary works. Location: Whitworth Tower, "
+                "Elvyn Way, Loughborough University, Loughborough, LE11 3UA"
             ),
             "evidence_page": 1,
         },
@@ -3059,12 +3050,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "scaled (TBC once Planning Statement docs read)."
             ),
             "evidence_text": (
-                "A hybrid planning application consisting of: Demolition of "
-                "222 existing buildings and structures as listed in Schedule "
-                "1. Up to 9,000 new dwellings (Class C3) ... Heyford Park "
-                "Camp Road Upper Heyford"
+                "A hybrid planning application consisting of: demolition of "
+                "buildings and structures as listed in Schedule 1. Up to "
+                "9,000 new dwellings (Class C3) comprised of: Outline planning "
+                "permission for up to 8,848 dwellings (Class C3)"
             ),
-            "evidence_page": 1,
+            "evidence_page": 4,
         },
     ],
 
