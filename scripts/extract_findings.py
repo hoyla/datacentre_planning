@@ -1637,6 +1637,221 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 1,
         },
     ],
+    # =====================================================================
+    # Bidder Street DC, Canning Town — `Newham/24/00088/FUL`. Former EMR
+    # (scrap yard) site, Foster & Partners designed, 95,000 sqm total
+    # floorspace across DC + plant + energy centre. 48 phased standby
+    # diesel generators (12/year 2027-2030). 132kV/130MVA grid supply.
+    # ~£11M s106 commitments incl. £2.67M carbon offset to render
+    # 'zero carbon'. Recommended for approval at SDC 15 Oct 2024;
+    # subject to Mayor of London Stage 2 referral.
+    # =====================================================================
+    "Newham/24/00088/FUL": [
+        # ----- Committee Report (Newham SDC, 15 October 2024) -----
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "DC building 72.3m AOD / ~59,923 sqm GEA + plant building 72.3m AOD "
+                "/ ~30,302 sqm GEA + energy centre 32.4m AOD / ~4,789 sqm GEA = "
+                "~95,000 sqm total floorspace on former EMR scrap yard, Bidder St, "
+                "Canning Town"
+            ),
+            "evidence_text": (
+                "Erection of a data centre (Use Class B8), comprising a Data Centre "
+                "Building of approximately 72.3m AOD in height (approximately "
+                "59,923sqm GEA including ancillary office space); a Plant Building "
+                "of approximately 72.3m AOD in height (approximately 30,302sqm "
+                "GEA), an Energy Centre of approximately 32.4m AOD in height "
+                "(approximately 4,789sqm GEA), with associated works including "
+                "landscaping, access, car and cycle parking, and servicing areas."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "architect",
+            "value_text": (
+                "Foster & Partners (Pritzker-prize-winning architect designing a "
+                "data centre — design retention required by s106 + £100,000 "
+                "Design Monitoring Fee)"
+            ),
+            "evidence_text": (
+                "Architect/ Design Team retention (Foster & Partners) and Design "
+                "Certifier provisions; Design Monitoring Fee of £100,000 (Indexed) "
+                "for Architect/ Design Team changes."
+            ),
+            "evidence_page": 6,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "agent_name",
+            "value_text": "RPS Consulting Services Limited (planning agent)",
+            "evidence_text": "Agent: RPS Consulting Services Limited",
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "decision_outcome",
+            "value_text": (
+                "Recommended for APPROVAL at Newham Strategic Development "
+                "Committee, 15 October 2024 — subject to Mayor of London (GLA) "
+                "Stage 2 referral and s106 legal agreement; validation date "
+                "2 January 2024"
+            ),
+            "evidence_text": (
+                "LONDON BOROUGH OF NEWHAM STRATEGIC DEVELOPMENT COMMITTEE 15 "
+                "October 2024 ... agree the reasons for approval as set out in "
+                "this report; refer this application to the Mayor of London "
+                "(the GLA) as a Stage 2 referral"
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "grid_connection",
+            "value_text": (
+                "132kV / 130 MVA power supply connection secured from UKPN in "
+                "November 2020, with 'power on by December 2026' + additional "
+                "grid network reinforcement works"
+            ),
+            "evidence_text": (
+                "The applicant has further confirmed that they have secured a 132kV/"
+                "130MVA power supply connection from the network operator UKPN in "
+                "November 2020, for power on by December 2026, together with "
+                "additional grid network reinforcement works"
+            ),
+            "evidence_page": 83,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "generator_count",
+            "value_number": 48,
+            "evidence_text": (
+                "Operational emissions to air from testing and emergency use from "
+                "the 48 standby generators were considered. ... Table 8.4 of the "
+                "ES describes the stack characteristics for the 48 diesel "
+                "generators proposed."
+            ),
+            "evidence_page": 91,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "fuel_type",
+            "value_text": "diesel standby generators",
+            "evidence_text": (
+                "Table 8.4 of the ES describes the stack characteristics for the "
+                "48 diesel generators proposed."
+            ),
+            "evidence_page": 91,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "standby_generator_regime",
+            "value_text": (
+                "phased deployment: 12 generators online 2027, 24 in 2028, 36 in "
+                "2029, 48 from 2030 — Air Quality Neutral offsetting payment of "
+                "£91,228 calculated against these excess emissions, with "
+                "additional offsetting required from 2031 onwards"
+            ),
+            "evidence_text": (
+                "Air quality offsetting payment of £91,228 based on excess "
+                "emissions from 12 generators in 2027, 24 in 2028, 36 in 2029 and "
+                "48 in 2030. Additional offsetting payments would be calculated "
+                "in line with the guidance if the generators are kept from 2031."
+            ),
+            "evidence_page": 7,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "s106_carbon_offset",
+            "value_text": (
+                "Carbon Offset Contribution: £95/tonne CO₂ × 30 years = £2,670,452 "
+                "(+RPI) — payment to make the development 'the equivalent of zero "
+                "carbon'"
+            ),
+            "evidence_text": (
+                "Carbon Offset Contribution payable at a rate of £95 per tonne "
+                "over 30 years to make the development the equivalent of zero "
+                "carbon (payable on implementation of the development). This "
+                "equates to £2,670,452 +RPI"
+            ),
+            "evidence_page": 6,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "s106_other_contributions",
+            "value_text": (
+                "Newham Data Education Programme £4,080,000; Newham Digital "
+                "Connectivity Strategy £1,625,000; Employment & Skills (35% "
+                "construction + 50% end-user jobs to Newham residents) "
+                "£1,224,081; TfL contributions £670,000; LBN Transport £1.2M+ "
+                "incl. £1M towards Mayer Parry Bridge"
+            ),
+            "evidence_text": (
+                "A financial contribution of £4,080,000 to the Council's Data "
+                "Education Programme. ... A financial contribution of £1.625 "
+                "million towards the delivery of Newham Digital Connectivity "
+                "Strategy. ... Commitment to providing 35% construction jobs "
+                "and 50% end user jobs to residents of the LBN through a "
+                "financial contribution of £1,224,081."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "district_heating_readiness",
+            "value_text": (
+                "s106 requires space + plant readiness for future export of waste "
+                "heat to a DHN; explicitly named neighbouring 'Crown Wharf' site "
+                "as a potential recipient; no operator yet in place"
+            ),
+            "evidence_text": (
+                "District heat connection: Delivery of space within the Site for "
+                "the future installation of the necessary plant and equipment to "
+                "facilitate the export of waste heat from the Data Centre offsite, "
+                "including to the Crown Wharf site, if a DHN becomes available and "
+                "where a DHN operator is in place to facilitate the delivery of "
+                "waste heat from the Development."
+            ),
+            "evidence_page": 6,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "conditions_generator_specific",
+            "value_text": (
+                "Newham SDC imposed 6 separate generator conditions (cond. 34-39: "
+                "type/performance, operating regime, emission monitoring, "
+                "emission reduction, testing regime, specifications) — unusually "
+                "granular regulatory attention to the back-up combustion plant"
+            ),
+            "evidence_text": (
+                "Emergency Back Up Generators – type and performance; Emergency "
+                "Back Up Generators – Operating Regime; Emergency Back Up "
+                "Generators – Emission Monitoring; Emergency Back Up Generators – "
+                "Emission Reduction and Management; Emergency Back Up Generators "
+                "– Testing Regime; Emergency Back Up Generators - Specifications"
+            ),
+            "evidence_page": 4,
+        },
+        {
+            "doc_sha_prefix": "b1becf37",
+            "signal_type": "car_free_agreement",
+            "value_text": (
+                "'Car Free' s106 obligation — businesses/occupiers of the "
+                "development precluded from issuing business parking permits in "
+                "the Canning Town CPZ"
+            ),
+            "evidence_text": (
+                "Enter in to a 'Car Free' agreement with Newham council which "
+                "precludes businesses / occupiers of the development from being "
+                "issued with business parking permits in the Canning Town CPZ "
+                "pursuant to section 16 of the Greater London Council (General "
+                "Powers) Act 1974"
+            ),
+            "evidence_page": 5,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
