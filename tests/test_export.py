@@ -105,8 +105,8 @@ def test_write_xlsx_structure(tmp_path, fake_data):
     assert "Methodology" in wb.sheetnames
     ws = wb["Worklist"]
     assert [c.value for c in ws[1]][:5] == [
-        "Rank", "Application ref", "Verdict",
-        "Deep read recommended", "Confidence",
+        "Rank", "Application ref", "Highlight",
+        "Primary cohort", "Also in cohorts",
     ]
     # 2 rows of data + 1 header
     assert ws.max_row == 3
@@ -115,23 +115,29 @@ def test_write_xlsx_structure(tmp_path, fake_data):
     assert ws.cell(row=2, column=2).value == "TestCouncil/24/0001"
     assert ws.cell(row=3, column=2).value == "TestCouncil/24/0002"
     assert ws.freeze_panes == "C2"
-    # 19 base columns + 4 Phase-4 findings columns = W. Auto-filter spans all
-    # 2 data rows + header.
-    assert ws.auto_filter.ref == "A1:W3"
-    # Humanised lineage column carries the prose, not the raw tag
-    humanised = ws.cell(row=3, column=17).value
-    assert "Spatial neighbour" in humanised
-    assert "TestCouncil/24/0001" in humanised
-    # Phase-4 findings columns: NULL/blank for fixture apps (no findings rows).
+    # 19 base columns + 3 editorial-structure columns (Highlight, Primary
+    # cohort, Also in cohorts) + 4 Phase-4 findings columns = 26 → Z.
+    # Auto-filter spans all 2 data rows + header.
+    assert ws.auto_filter.ref == "A1:Z3"
     findings_header_row = [c.value for c in ws[1]]
+    # Editorial-structure headers
+    assert findings_header_row[2] == "Highlight"
+    assert findings_header_row[3] == "Primary cohort"
+    assert findings_header_row[4] == "Also in cohorts"
+    # Phase-4 findings columns
     assert "Findings — new disclosures" in findings_header_row
     assert "Findings — refinements" in findings_header_row
     assert "Findings — disclosed MW" in findings_header_row
     assert "Findings — headline" in findings_header_row
-    # Last four columns on the data rows should be None — the fixture has no
-    # findings attached.
+    # Humanised lineage column carries the prose, not the raw tag.
+    # Column 20 (T) after the cohort columns shifted things right by 3.
+    humanised = ws.cell(row=3, column=20).value
+    assert "Spatial neighbour" in humanised
+    assert "TestCouncil/24/0001" in humanised
+    # Last four columns (Findings*) on the data rows should be None — the
+    # fixture has no findings attached. Column indices 23-26.
     for r in (2, 3):
-        for c in (20, 21, 22, 23):
+        for c in (23, 24, 25, 26):
             assert ws.cell(row=r, column=c).value in (None, "")
 
 

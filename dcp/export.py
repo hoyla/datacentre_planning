@@ -317,6 +317,7 @@ def write_xlsx(
     data: worklist.WorklistData,
     model: str,
     generated_at: dt.datetime,
+    excluded: list[dict] | None = None,
 ) -> None:
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill
@@ -326,9 +327,16 @@ def write_xlsx(
     ws = wb.active
     ws.title = "Worklist"
 
+    # Highlights are flagged via the per-app one-liner — build the set
+    # once so the row loop can mark each highlighted app.
+    highlight_refs = {h.app for h in cohorts_mod.highlights()}
+
     headers = [
         "Rank",
         "Application ref",
+        "Highlight",
+        "Primary cohort",
+        "Also in cohorts",
         "Verdict",
         "Deep read recommended",
         "Confidence",
@@ -383,9 +391,24 @@ def write_xlsx(
         ref_count = f_counts.get(findings_mod.CATEGORY_REFINEMENT) or None
         disclosed_mw = findings_mod.disclosed_mw_total(row_findings)
         headline = findings_mod.headline_disclosure(row_findings) or None
+        # Editorial-structure cells: highlight flag + cohort assignments.
+        primary_cohort_name = row.get("primary_cohort") or ""
+        primary_cohort_obj = (
+            cohorts_mod.cohort_by_name(primary_cohort_name)
+            if primary_cohort_name else None
+        )
+        primary_cohort_label = primary_cohort_obj.display_name if primary_cohort_obj else primary_cohort_name
+        also_in: list[str] = []
+        for c_name in (row.get("also_in_cohorts") or []):
+            c_obj = cohorts_mod.cohort_by_name(c_name)
+            also_in.append(c_obj.display_name if c_obj else c_name)
+        also_in_str = ", ".join(also_in)
         ws.append([
             rank,
             row["application_ref"],
+            "yes" if row["application_ref"] in highlight_refs else "",
+            primary_cohort_label,
+            also_in_str,
             row["verdict"],
             row["worth_deep_read"],
             row["confidence"],
@@ -410,19 +433,35 @@ def write_xlsx(
         ])
 
     # Column widths — calibrated for the dominant content per column.
+    # After inserting Highlight + cohort columns at C/D/E, the original
+    # columns shift by 3. Letter assignments below reflect post-insertion
+    # layout: A Rank, B Ref, C Highlight, D Primary cohort, E Also-in,
+    # F Verdict … through Z Findings-headline.
     widths = {
-        "A": 6,  "B": 36, "C": 10, "D": 9,  "E": 10,
-        "F": 8,  "G": 8,  "H": 9,  "I": 9,  "J": 28,
-        "K": 50, "L": 13, "M": 14, "N": 50, "O": 60,
-        "P": 40, "Q": 60, "R": 50, "S": 80,
-        # Phase-4 findings columns.
-        "T": 11, "U": 11, "V": 12, "W": 80,
+        "A": 6,   # Rank
+        "B": 36,  # Application ref
+        "C": 10,  # Highlight
+        "D": 26,  # Primary cohort
+        "E": 28,  # Also in cohorts
+        "F": 10, "G": 9, "H": 10,                  # Verdict / DR / Conf
+        "I": 8,  "J": 8, "K": 9,                   # Tier-1 / Storage / Backup
+        "L": 9,                                     # Foxglove
+        "M": 28,                                    # Council
+        "N": 50,                                    # Address
+        "O": 13,                                    # Date received
+        "P": 14,                                    # App type
+        "Q": 50,                                    # Signals
+        "R": 60,                                    # LLM reasoning
+        "S": 40, "T": 60,                          # Discovered via raw / humanised
+        "U": 50,                                    # Source portal URL
+        "V": 80,                                    # Description
+        "W": 11, "X": 11, "Y": 12, "Z": 80,         # Findings columns
     }
     for col, w in widths.items():
         ws.column_dimensions[col].width = w
 
     # Wrap text on the long columns so the row stays usable when sorted.
-    wrap_cols = {"N", "O", "P", "Q", "S", "W"}
+    wrap_cols = {"Q", "R", "S", "T", "V", "Z"}
     last_row = len(data.rows) + 1
     for col in wrap_cols:
         for r in range(2, last_row + 1):
@@ -436,6 +475,53 @@ def write_xlsx(
 
     ws.freeze_panes = "C2"
     ws.auto_filter.ref = f"A1:{get_column_letter(len(headers))}{last_row}"
+
+    # Filtered apps sheet — the false-positives + duplicates, kept
+    # accessible so reviewers can sanity-check (or dispute) the calls
+    # without each one eating a row on the main Worklist tab.
+    if excluded:
+        notes_by_app = {e.app: e.notes for e in cohorts_mod.exclusions()}
+        filt = wb.create_sheet("Filtered")
+        filt_headers = [
+            "Application ref",
+            "Filter tag(s)",
+            "Address",
+            "Verdict",
+            "Deep read recommended",
+            "Source portal URL",
+            "Notes",
+        ]
+        filt.append(filt_headers)
+        for col_idx in range(1, len(filt_headers) + 1):
+            cell = filt.cell(row=1, column=col_idx)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill("solid", fgColor="DDDDDD")
+            cell.alignment = Alignment(vertical="center")
+        for row in excluded:
+            ref = row["application_ref"]
+            tags = ", ".join(
+                t for t in (row.get("discovered_via") or [])
+                if t.startswith(("exclude:", "duplicate_of:"))
+            )
+            filt.append([
+                ref,
+                tags,
+                row.get("address") or "",
+                row.get("verdict") or "",
+                row.get("worth_deep_read") or "",
+                row.get("url") or "",
+                notes_by_app.get(ref, ""),
+            ])
+        for col, w in {"A": 36, "B": 50, "C": 50, "D": 10, "E": 11,
+                       "F": 50, "G": 70}.items():
+            filt.column_dimensions[col].width = w
+        for r in range(2, filt.max_row + 1):
+            for col_letter in ("B", "C", "F", "G"):
+                filt[f"{col_letter}{r}"].alignment = Alignment(
+                    vertical="top", wrap_text=True,
+                )
+        filt.freeze_panes = "B2"
+        filt.auto_filter.ref = f"A1:{get_column_letter(len(filt_headers))}{filt.max_row}"
 
     # Methodology / summary on a second sheet
     meta = wb.create_sheet("Methodology")
@@ -494,5 +580,8 @@ def export_worklist(
         data=data, top=md_top, model=model, generated_at=generated_at,
         excluded=excluded,
     ))
-    write_xlsx(path=xlsx_path, data=data, model=model, generated_at=generated_at)
+    write_xlsx(
+        path=xlsx_path, data=data, model=model,
+        generated_at=generated_at, excluded=excluded,
+    )
     return {"markdown": md_path, "xlsx": xlsx_path}
