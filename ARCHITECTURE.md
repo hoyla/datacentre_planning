@@ -83,6 +83,32 @@ Practical implication: PDF parsing alone covers ~92% of files; the long-tail for
 
 **Resume / idempotency**: same shape as the triage path. `findings_pending(application_id, model)` (parallel to `applications_pending_triage`) selects apps whose latest `findings` extraction is older than the latest triage verdict for the chosen model. Re-extraction with a refined prompt is a separate model-name string so verdicts coexist.
 
+#### Output integration: a single source of truth, not sidecars
+
+`dcp export` becomes Phase-4-aware — same command, same output filenames; the existing markdown cards and xlsx columns gain extra content where `findings` rows exist for an app. Apps without findings yet render exactly as before. This avoids splitting the reporter's workflow across multiple artefacts (per-app sidecars + an aggregate doc + the original worklist), which is editorially worse than re-issuing the single source of truth as it's progressively enriched.
+
+The integration foregrounds the **delta** between what the documents disclose and what was already in the application description (or in the triage's `signals` extraction). Three categories:
+
+| Category | What it is | Rendered? |
+|---|---|---|
+| **NEW DISCLOSURES** | Quantitative facts or named kit absent from the description (e.g. "18 × Caterpillar 3516B diesel generators, 45 MW peak"). The editorial signal. | Yes |
+| **REFINEMENTS** | Qualitative signals the description hinted at, sharpened with documents (e.g. "energy centre" → "12 MW gas-fired CHP, twin Jenbacher J620 engines"). | Yes |
+| **CONFIRMATIONS** | Findings that match a triage signal exactly (e.g. doc and description both say "substation"). | Intentionally omitted as noise |
+
+**Markdown enrichment per card** (only when findings exist):
+- A header badge next to the application_ref, e.g. `· 📄 3 new disclosures`.
+- A `**Document-extracted findings:**` block after the description, split into the NEW DISCLOSURES and REFINEMENTS subsections, each finding carrying its evidence quote, source filename, and page number.
+
+**XLSX column additions** (only populated for apps with findings; NULL otherwise):
+- `findings_disclosed_mw` (numeric) — sum of newly-disclosed generation MW.
+- `findings_new_count` (numeric) — count of NEW-category findings.
+- `findings_refinement_count` (numeric).
+- `findings_summary` (text) — one-line headline of the biggest new disclosure.
+
+The reporter re-opens the same filenames each cycle; sees the new-disclosure badges on cards she's already reviewed (clear "look again — new info" signal); new cards in her unreviewed tail appear fully enriched. No cross-reference burden.
+
+The delta classification itself is the load-bearing piece — needs explicit logic comparing each `findings` row against the application's `triage.signals` array. Easy for quantitative findings (any MW number in docs is NEW because descriptions rarely give precise MW); harder for qualitative (fuzzy matching against the triage signals list). Likely a small `findings_with_category` view in the schema, computed at export time.
+
 ---
 
 ## Schema

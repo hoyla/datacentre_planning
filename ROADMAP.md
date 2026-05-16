@@ -76,6 +76,8 @@ Last meaningful update: 2026-05-15 (late afternoon — Phase 3 fetch in flight).
 
   **Open design choices for the start of the next session**: (a) regex+LLM hybrid vs LLM-only — start with hybrid to save Ollama time; (b) signal-type taxonomy — derive from rubric tiers 1-4 or invent a more granular set; (c) consultee extraction — we don't currently capture the consultee list from the documents page, but the `.msg` emails ARE in the bundle so per-file extraction will surface the consultee body even without a separate "consultees" field. Worth deciding whether to add such a field for explicit indexing.
 
+  **Output integration** (decided 2026-05-16 with Luke; supersedes the earlier per-app `_findings.md` sidecar idea): `dcp export` becomes Phase-4-aware — same command, same output filenames; markdown cards and xlsx columns gain inline NEW DISCLOSURES + REFINEMENTS sections when `findings` rows exist for an app. Apps without findings yet render exactly as before. Single source of truth at all times; Aisha re-opens the same file each cycle and sees new-disclosure badges on cards she's already reviewed. The CONFIRMATIONS category (findings that just match what triage already extracted from the description) is intentionally omitted as noise. See ARCHITECTURE.md §3 for the badge / column shape and the delta-classification logic.
+
 - **Per-portal document-fetch adapters** for the long tail. Idox covers a big slice of the worklist; Ocella / Arcus / Salesforce / Civica / Tascomi / bespoke each need their own adapter when the worklist requires it. Per-portal effort scales: a clean adapter is ~half-day each; the documents-list HTML varies but the orchestrator / storage / manifest layer is reusable.
 
 ### Soon
