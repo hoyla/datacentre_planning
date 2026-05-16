@@ -2081,6 +2081,64 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 3,
         },
     ],
+    # =====================================================================
+    # Saltend hybrid gas + BESS facility — `EastRiding/17/03771/STPLF`.
+    # Yet another Humber-estuary energy-cluster entry: 49 MW hybrid
+    # natural-gas + battery-storage facility. Different to the
+    # gas-only STPLF (16/02800) and the YEP DC+CHP (22/00301/STREME) —
+    # this is the gas+BESS combination, which is the
+    # frequency-response / grid-services pattern. Same Saltend
+    # industrial cluster (HU12 8PP, near YEP's HU12 8DX).
+    # =====================================================================
+    "EastRiding/17/03771/STPLF": [
+        {
+            "doc_sha_prefix": "e45384cc",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "49 MW hybrid natural-gas + battery-energy-storage facility — "
+                "gas generators + battery storage units + transformers + "
+                "sub-station + switch room + gas kiosk; on Saltend Lane, Preston, "
+                "East Riding (same industrial cluster as the YEP DC and Meld "
+                "Energy hydrogen hub)"
+            ),
+            "evidence_text": (
+                "Construction of a hybrid natural gas production and energy "
+                "storage facility with a maximum capacity of 49 Megawatts to "
+                "include gas generators, battery storage units, transformers, "
+                "sub-station compounds, switch room, gas kiosk and welfare cabin "
+                "with associated access, parking and security fencing"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "e45384cc",
+            "signal_type": "total_capacity_mw",
+            "value_number": 49,
+            "value_unit": "MW",
+            "evidence_text": (
+                "hybrid natural gas production and energy storage facility with a "
+                "maximum capacity of 49 Megawatts"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "e45384cc",
+            "signal_type": "site_cluster_pattern",
+            "value_text": (
+                "Humber Estuary / Saltend energy-infrastructure cluster: this "
+                "49 MW gas+BESS hybrid joins (a) the 21 MW AMP gas reserve at "
+                "STPLF 16/02800 (2016); (b) the YEP DC + gas CHP energy centre "
+                "at 22/00301/STREME (2022); (c) Meld Energy's 100 MW green "
+                "hydrogen hub at Reedmere/Saltend (24/00012/STOUT, 2024). "
+                "All within ~2 km of each other on the same industrial estate."
+            ),
+            "evidence_text": (
+                "Former Car Park East Of Saltend Substation 7859 Saltend Lane "
+                "Preston East Riding Of Yorkshire HU12 8PP"
+            ),
+            "evidence_page": 1,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
