@@ -551,6 +551,252 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 8,
         },
     ],
+    # =====================================================================
+    # Elsham Tech Park — `NorthLincs/PA/2025/643`. The biggest DC
+    # application in the worklist by IT load: ~1 GW. Includes BOTH a
+    # continuous-operation natural-gas energy centre (20 engines, ~50 MW
+    # CHP with heat recovery) AND 650 diesel back-up generators
+    # (~1.6 GW). North Lincolnshire Council issued a Screening Opinion
+    # on 2025-05-13 confirming NO EIA required — editorially worth
+    # scrutinising. Developer: Greystoke Land. Description hides the
+    # magnitudes.
+    # =====================================================================
+    "NorthLincs/PA/2025/643": [
+        # ----- Planning Statement (Pegasus Group, 20.05.2025) -----
+        {
+            "doc_sha_prefix": "bccfdf28",
+            "signal_type": "applicant_name",
+            "value_text": "Elsham Tech Park Ltd (developer: Greystoke Land; agent: Pegasus Group)",
+            "evidence_text": (
+                "This Planning Statement has been prepared on behalf of Elsham Tech Park "
+                "Ltd (the 'Applicant'). It relates to an Outline Planning Application that "
+                "is submitted in connection with land adjacent to Elsham Wolds Industrial "
+                "Estate, in North Lincolnshire (the 'Application Site')."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "bccfdf28",
+            "signal_type": "total_it_load_mw",
+            "value_number": 1000,
+            "value_unit": "MW",
+            "evidence_text": (
+                "In summary, the application seeks outline planning permission for a "
+                "large scale data centre campus and other associated works. It would "
+                "provide a total IT Load (the key measure of data centre capacity) of "
+                "approximately 1,000MW."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "bccfdf28",
+            "signal_type": "eia_screening_outcome",
+            "value_text": (
+                "No EIA required — North Lincs Council Screening Opinion, 13 May 2025: "
+                "'the proposal would be unlikely to have any significant environmental "
+                "effects'"
+            ),
+            "evidence_text": (
+                "The LPA issued a formal screening opinion on 13th May 2025. It "
+                "confirmed that an EIA would not be required. It stated inter alia that:- "
+                "'North Lincolnshire Council advises that in light of the available "
+                "information and having regard to the location and nature of the proposed "
+                "development and the selection criteria for screening Schedule 2 "
+                "development as set out in Schedule 3 of the 2017 Regulations, the "
+                "proposal would be unlikely to have any significant environmental "
+                "effects.' ... The proposed development although constituting Schedule 2 "
+                "development category 10 is not considered to warrant an Environmental "
+                "Impact Assessment."
+            ),
+            "evidence_page": 6,
+        },
+
+        # ----- Air Quality Assessment (Logika Group, 02.06.2025) -----
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "1 GW data-centre campus with two combustion plant categories: a "
+                "continuous-operation natural-gas energy centre AND back-up diesel "
+                "generators (570+ emissions stacks total)"
+            ),
+            "evidence_text": (
+                "The proposals are for an outline application involving the construction "
+                "of a campus of data centres, distributed across a number of buildings, "
+                "as well as an energy centre. The data centres will include back-up "
+                "diesel generators (for emergency power provision), whilst the energy "
+                "centre will include natural gas engines. The combination of generators "
+                "and engines is referred throughout the report as 'energy plant'. ... "
+                "The back-up generators will only be used in the event of loss of power "
+                "to the site, as well as part of a regular testing regime, whilst the "
+                "energy centre will operate continuously."
+            ),
+            "evidence_page": 4,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "energy_centre_engine_count",
+            "value_number": 20,
+            "evidence_text": (
+                "The proposed data centres will contain a maximum of 670 emissions "
+                "points, comprising 20 stacks associated with the energy centre, and "
+                "up to 650 stacks associated with the back-up diesel generators."
+            ),
+            "evidence_page": 67,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "energy_centre_engine_mw",
+            "value_number": 2.499,
+            "value_unit": "MW",
+            "evidence_text": (
+                "Table A4-2: Plant Specifications and Modelled Emissions and Release "
+                "Conditions (per Unit) — Energy Centre: Specified Net Fuel Input 5,678 "
+                "kW, Power Output 2,499 kW; flue exhaust 120°C (heat recovery "
+                "technology); Specified NOx Emission Rate 50 mg/Nm³ at 5% O₂ (with SCR)."
+            ),
+            "evidence_page": 68,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "grid_services_role",
+            "value_text": (
+                "energy-centre natural-gas engines operate continuously (modelled "
+                "year-round) — primary on-site combustion generation, not backup; "
+                "back-up diesel generators run only for testing or grid-failure"
+            ),
+            "evidence_text": (
+                "The model has been run assuming continuous operation of the energy "
+                "centre, whilst the outputs from the generators have been scaled based "
+                "on their anticipated maximum annual operation (six hours per generator "
+                "each year)."
+            ),
+            "evidence_page": 35,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "energy_centre_heat_recovery",
+            "value_text": (
+                "energy-centre plant installed with heat recovery technology "
+                "(120°C exhaust temperature post-recovery, vs 500°C for the diesel "
+                "back-up generators); likely supports the on-site horticultural "
+                "glasshouse named in the application description"
+            ),
+            "evidence_text": (
+                "Specified Exhaust Temperature (°C): Energy Centre 120°C — It is "
+                "assumed that the energy centre plant will be installed with Heat "
+                "Recovery technology."
+            ),
+            "evidence_page": 68,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "backup_generator_count",
+            "value_number": 650,
+            "evidence_text": (
+                "up to 650 stacks associated with the back-up diesel generators, which "
+                "will operate to supply backup power to the site during a power outage. "
+                "The precise number of back-up generator stacks required to service the "
+                "data centre buildings will be finalised as part of the detailed design "
+                "specifications."
+            ),
+            "evidence_page": 67,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "engine_model",
+            "value_text": "Kohler KD3100-E (16-cylinder, US EPA Tier 2 compliant)",
+            "evidence_text": (
+                "KOHLER Industrial Diesel Generator Set KD3100-E, 50 Hz - Emission "
+                "Optimized - EPA Tier 2 Compliant ... Engine ref. KD83V16-5AE5, Number "
+                "of cylinders 16, Displacement 82.74 L, Maximum stand-by power 2,663 kW."
+            ),
+            "evidence_page": 66,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "engine_rated_mw",
+            "value_number": 2.48,
+            "value_unit": "MW",
+            "evidence_text": (
+                "Back-up Generator per-unit: Specified Net Fuel Input 6,644 kW, Power "
+                "Output 2,480 kW; Specified NOx Emission Rate 168 mg/Nm³ at 5% O₂ "
+                "(with SCR); Specified PM Emission Rate 64.5 mg/Nm³."
+            ),
+            "evidence_page": 68,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "standby_generator_regime",
+            "value_text": (
+                "650 diesel generators, each modelled for max 6 hours / year of test "
+                "operation; 10-minute cold-start window per test at unabated NOx "
+                "(~2,000 mg/Nm³ — 12× the controlled emission rate) before SCR is "
+                "effective"
+            ),
+            "evidence_text": (
+                "the outputs from the generators have been scaled based on their "
+                "anticipated maximum annual operation (six hours per generator each "
+                "year). A cold start penalty (see Paragraph 4.15) has been applied to "
+                "the emission concentrations from the back-up generators. ... It is "
+                "assumed that the emission limit value will be met within 10 minutes of "
+                "a cold start-up. ... assuming each back-up generator operates for 10 "
+                "minutes at the unabated NOx emission concentration (i.e. the US EPA "
+                "Tier 2 emission standard of 6,400 mg/kWh ... equivalent to 2,000 mg/Nm³)"
+            ),
+            "evidence_page": 68,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "predicted_no2_impact",
+            "value_text": (
+                "annual mean NO₂ at nearest receptors: baseline 24.1 µg/m³ → with "
+                "development 25.0 µg/m³ (+2% of objective; Logika Group judgement: "
+                "'negligible'); 1-hour maximum: 67.4 µg/m³ vs 200 µg/m³ objective"
+            ),
+            "evidence_text": (
+                "Table 7-1: Predicted Annual Mean Nitrogen Dioxide (NO₂) Concentrations "
+                "in 2023 (µg/m³). Receptor A: Baseline 24.1, With Development 25.0, % "
+                "Change 2, Impact Descriptor Negligible. ... Overall, the construction "
+                "and operational air quality effects of Elsham Tech Park are judged to "
+                "be 'not significant'."
+            ),
+            "evidence_page": 35,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "operational_traffic",
+            "value_text": (
+                "1,278 vehicle trips daily, 70 HDV; ~50% westbound on M180 toward "
+                "Scunthorpe, 21% southbound A18, 16% northbound A15 toward "
+                "Barton-upon-Humber"
+            ),
+            "evidence_text": (
+                "The proposed development is expected to generate a total of 1,278 "
+                "vehicle trips daily, of which 70 will be HDVs."
+            ),
+            "evidence_page": 34,
+        },
+        {
+            "doc_sha_prefix": "431ed476",
+            "signal_type": "dispersion_modelling_basis",
+            "value_text": (
+                "ADMS-6 dispersion model; Humberside meteorological data 2019-2023; "
+                "12 × 12 km Cartesian grid at 50 m resolution; building downwash "
+                "modelled; receptor heights 18-27 m for back-up generator stacks "
+                "(located on building roofs), 12 m for energy centre flues"
+            ),
+            "evidence_text": (
+                "The impacts of emissions from the proposed energy plant have been "
+                "predicted using the ADMS-6 dispersion model. ... The energy centre "
+                "flues have been modelled at a height of 12 m, whilst the back-up "
+                "generator flues have been modelled 4 m above the building upon which "
+                "it is located; back-up generator stacks range in height between 18 m "
+                "and 27 m."
+            ),
+            "evidence_page": 69,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
