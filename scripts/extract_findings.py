@@ -830,13 +830,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "SE1 8NW — internal codename 'Project Union'"
             ),
             "evidence_text": (
-                "Phlorum Ltd has been commissioned by Hurley Palmer Flatt on behalf of "
-                "Ark Data Centres to undertake an air quality assessment (AQA) for a "
-                "full planning application (with no matters reserved) for the proposed "
-                "development of a data centre at Land at Bulls Bridge Industrial "
-                "Estate, North Hyde Gardens, Hayes UB3 4QQ."
+                "Phlorum Ltd has been commissioned by Hurley Palmer Flatt on behalf "
+                "of Ark Data Centres "
+                "... for the proposed development of a data centre at Land at "
+                "Bulls Bridge Industrial Estate, North Hyde Gardens, Hayes UB3 4QQ"
             ),
-            "evidence_page": 5,
+            "evidence_page": 6,
         },
         {
             "doc_sha_prefix": "68ab7417",
@@ -862,22 +861,20 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Site clearance and preparation, including the demolition of remaining "
                 "buildings, and the redevelopment of the site to provide: a new data "
                 "centre, two MV Energy Centres (including stand-by gas fired generation "
-                "plant), an HV Sub-Station, a visitor reception centre, plant..."
+                "plant), an HV Sub-Station, a visitor reception centre, plant"
             ),
-            "evidence_page": 5,
+            "evidence_page": 6,
         },
         {
             "doc_sha_prefix": "68ab7417",
             "signal_type": "generator_count",
             "value_number": 22,
             "evidence_text": (
-                "In order to meet the electrical demand for the data centre in the event "
-                "of a grid failure, proposals include 22 no. standby gas generators. It "
-                "should be noted that two standby generators will be used to provide "
-                "additional redundancy to the system; as such, when the site is "
-                "operating at 100% load 20 standby generators will be operational."
+                "In order to meet the electrical demand for the data centre in the "
+                "event of a grid failure, proposals include 22 no. standby gas "
+                "generators"
             ),
-            "evidence_page": 5,
+            "evidence_page": 6,
         },
         {
             "doc_sha_prefix": "68ab7417",
@@ -895,7 +892,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "incorporate selective catalytic reduction (SCR) technology and are "
                 "understood to achieve a NOx emission rate below the ELV of 100mg.Nm-3."
             ),
-            "evidence_page": 7,
+            "evidence_page": 8,
         },
         {
             "doc_sha_prefix": "68ab7417",
@@ -905,12 +902,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Part A1 Environmental Permit (separate application from planning)"
             ),
             "evidence_text": (
-                "As the proposed energy centre has a thermal output greater than 50MW "
-                "it will require an Environmental Permit (Part A1) from the Environment "
-                "Agency. A separate application is being made to the Environment Agency "
-                "and this report is intended solely for planning purposes."
+                "the proposed energy centre has a thermal output greater than 50MW "
+                "it will require an Environmental Permit ... from the Environment "
+                "Agency. A separate application is being made to the Environment "
+                "Agency"
             ),
-            "evidence_page": 7,
+            "evidence_page": 8,
         },
         {
             "doc_sha_prefix": "68ab7417",
@@ -938,16 +935,16 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "human exposure)"
             ),
             "evidence_text": (
-                "LBH has declared one Air Quality Management Area (AQMA) that covers "
-                "the southern two thirds of the Borough. This AQMA was declared in "
-                "2003 due to exceedances of the UK Air Quality Standard (AQS) for "
-                "annual mean nitrogen dioxide (NO2). The proposed development is "
-                "located within this AQMA. ... There are a number of AQFAs in the "
-                "vicinity of the application site; including the Hayes North Hyde Road "
-                "AQFA, which is found, at its closest, circa 160m to the south of the "
-                "main site."
+                "LBH has declared one Air Quality Management Area (AQMA) that "
+                "covers the southern two thirds of the Borough. This AQMA was "
+                "declared in 2003 "
+                "... The proposed development is located within this AQMA "
+                "... There are a number of AQFAs in the vicinity of the "
+                "application site; including the Hayes North Hyde Road AQFA, "
+                "which is found, at its closest, circa 160m to the south of the "
+                "main site"
             ),
-            "evidence_page": 5,
+            "evidence_page": 6,
         },
         {
             "doc_sha_prefix": "21f29d4a",  # OFFICERS REPORTS
