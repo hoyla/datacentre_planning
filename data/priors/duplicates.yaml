@@ -28,3 +28,40 @@ duplicates:
     copies:
       - Hounslow/C/2020/2124
       - Ealing/202655CONS
+
+  - primary: TowerHamlets/PA/22/01982/A1
+    notes: |
+      Astoria Way DC change-of-use (1-6 Astoria Way, E14 9FT). The /NC
+      (Neighbour Consultation) record is the earlier consultation phase
+      of the same scheme; the substantive application is /A1. /NC has
+      been "withdrawn from public viewing" by Tower Hamlets (Idox status
+      message confirmed 2026-05-16); docs and findings live on /A1.
+    copies:
+      - TowerHamlets/PA/22/00693/NC
+
+  - primary: Hounslow/P/2017/2665
+    notes: |
+      Southall Waste Depot BESS + generator + photovoltaic scheme on
+      Southall Lane. /P/2017/2665 is the substantive permission; /P/2017/
+      4684 is the condition-3+4 (boundary + parking) discharge follow-on
+      for the same works. NOT a data centre — worklist false-positive
+      caught via "battery storage" + "generator" signals.
+    copies:
+      - Hounslow/P/2017/4684
+
+  - primary: Slough/P/00437/093
+    notes: |
+      Langley Business Centre, Station Road, Langley, Slough (SL3 8DS) —
+      data-centre outline (up to 93,000 sqm DC on plot B + mixed-use
+      including energy centre on plot A). Application sits on the
+      Slough/Bucks boundary; Chiltern South Bucks was consulted twice
+      (earlier all-matters-reserved version PL/20/0646/ADJ, and the
+      amended description PL/20/2041/ADJ). The Bucks side's PA-CSB Idox
+      portal is reachable; the Slough primary is on an Agile portal we
+      can't fetch from yet. Some consultation-response docs (Bucks
+      Environmental Health, Slough Consultation) have been ingested
+      against PL/20/2041/ADJ as the editorially-substantive content
+      we have access to until the Slough primary is reached.
+    copies:
+      - ChilternSouthBucks/PL/20/2041/ADJ
+      - ChilternSouthBucks/PL/20/0646/ADJ

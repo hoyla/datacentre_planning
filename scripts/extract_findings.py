@@ -2583,6 +2583,550 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 1,
         },
     ],
+    # =====================================================================
+    # Langley Business Centre Slough DC (Bucks consultation copy) —
+    # `ChilternSouthBucks/PL/20/2041/ADJ`. The substantive app is
+    # Slough/P/00437/093 (rank 80, on Agile portal we can't fetch).
+    # Two consultation-response docs from the Bucks side ingested
+    # manually. Both apps now tagged as duplicates.
+    # =====================================================================
+    "ChilternSouthBucks/PL/20/2041/ADJ": [
+        {
+            "doc_sha_prefix": "0f473a7f",
+            "signal_type": "cross_borough_notice",
+            "value_text": (
+                "Slough Borough Council Reg-25-EIA cross-borough notice (29 June "
+                "2020) to South Bucks District Council planning department, "
+                "Capswood, Denham re Slough's P/00437/093 at Langley Business "
+                "Centre. Case officer: Alistair De Joux. An Environmental "
+                "Statement Addendum was issued under EIA Reg 25 (further "
+                "information requested by the LPA)."
+            ),
+            "evidence_text": (
+                "MEMORANDUM TO: Customer Support Services, South Bucks District "
+                "Council Planning Department, Capswood, Oxford Road, Denham UB9 "
+                "4LH. Case Officer Name: Alistair De Joux. Planning Reference: "
+                "P/00437/093 ... In accordance with The Town and Country Planning "
+                "(Environmental Impact Assessment) Regulations 2017 ... further "
+                "information has been provided in accordance with EIA Regulation "
+                "25, in the form of an Addendum which now forms part of the "
+                "Environmental Statement"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "0f473a7f",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "outline DC of up to 93,000 sqm gross at Langley Business Centre, "
+                "Station Road, Slough SL3 8DS — plot (B) = DC + ancillary offices "
+                "+ substation; plot (A) up to 9,650 sqm GEA = mixed-use (up to 60 "
+                "dwellings + retail/A1-A5 + ENERGY CENTRE). Substantive permission "
+                "sits at Slough/P/00437/093 (Agile portal, not yet adaptered)."
+            ),
+            "evidence_text": (
+                "Outline planning permission with the details of access, "
+                "appearance, landscaping, layout and scale reserved for later "
+                "determination. Demolition and redevelopment to comprise on plot "
+                "(B) a data centre of up to 93,000 sqm gross, including ancillary "
+                "offices and sub station; and plot (A) up to 9,650 sqm GEA to "
+                "comprise one or more land uses comprising: up to 60 dwellings "
+                "(Use Class C3); additional development in Use Classes: A1, A2, "
+                "A3 (retail), A4 (public house), A5 (take away) and an energy "
+                "centre."
+            ),
+            "evidence_page": 1,
+        },
+    ],
+    # =====================================================================
+    # Southall Waste Depot BESS — `Hounslow/P/2017/4684`. Condition
+    # discharge for a battery-storage + generator + PV scheme at a
+    # waste depot. NOT a data centre. Worklist false-positive picked
+    # up via "battery storage" Tier-4 signal + "generator" Tier-2 signal.
+    # =====================================================================
+    "Hounslow/P/2017/4684": [
+        {
+            "doc_sha_prefix": "dc737f39",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "battery-storage + generator + photovoltaic scheme at a Waste "
+                "Depot on Southall Lane (NOT a data centre) — condition-discharge "
+                "for boundary treatment + parking of the underlying permission "
+                "01032/I/P4 (granted 6 Oct 2017). Includes a 50 sqm control / "
+                "electric intake room, 72 sqm pump house, valve & quarantine "
+                "areas, sprinkler tanks, and a 2,700 L bunded above-ground "
+                "diesel tank. Worklist false-positive picked up by the "
+                "'battery storage' + 'generator' signals."
+            ),
+            "evidence_text": (
+                "Details submitted pursuant to Condition 3 (boundary treatment) "
+                "and condition 4 (parking) of planning permission 01032/I/P4 "
+                "dated 06/10/2017 for works to cover a battery storage "
+                "facilities/generator (associated with approved photovoltaic "
+                "panels). Erection of 50m2 (GEA) control room and electric "
+                "intake room. ... Waste Depot SOUTHALL LANE SOUTHALL"
+            ),
+            "evidence_page": 1,
+        },
+    ],
+    # =====================================================================
+    # Langley Business Centre DC (Slough primary) —
+    # `Slough/P/00437/093`. The substantive 93,000 sqm / 130 MW DC
+    # application that ChilternSouthBucks/PL/20/2041/ADJ +
+    # ChilternSouthBucks/PL/20/0646/ADJ are consultation copies of.
+    # Documents fetched from www.sbcplanning.co.uk (the older Slough
+    # planning portal — the current Agile front-end at
+    # planning.agileapplications.co.uk does not surface them).
+    # =====================================================================
+    "Slough/P/00437/093": [
+        {
+            "doc_sha_prefix": "8c22b42e",
+            "signal_type": "applicant_name",
+            "value_text": (
+                "Zurich Assurance Ltd, c/o Threadneedle Portfolio Services Ltd "
+                "— consultant: Ramboll (a fourth Ramboll-led council / utility "
+                "scheme in our dataset, alongside East Havering LDO, Milton "
+                "Keynes Energy Network, and Humber Tech Park via Future-tech "
+                "for that one)"
+            ),
+            "evidence_text": (
+                "Volume 3: Technical Appendices ... Zurich Assurance Ltd c/o "
+                "Threadneedle Portfolio Services Ltd Langley Business Centre "
+                "RAMBOLL"
+            ),
+            "evidence_page": 477,
+        },
+        {
+            "doc_sha_prefix": "338c10bc",
+            "signal_type": "total_it_load_mw",
+            "value_number": 130,
+            "value_unit": "MW",
+            "evidence_text": (
+                "Load calculations have been completed based on a ratio of 60% "
+                "white space 40% plant and ancillary spaces and a value of 130MW "
+                "was calculated as a maximum site load."
+            ),
+            "evidence_page": 9,
+        },
+        {
+            "doc_sha_prefix": "8c22b42e",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "data-centre campus (Plot B, 93,000 sqm, 130 MW max site load) + "
+                "mixed-use residential / commercial (Plot A, 9,650 sqm GEA, up "
+                "to 60 dwellings + retail + energy centre). 5 MW per data hall "
+                "configuration; 26 × 4 MW generator systems in N+1 (104 MW "
+                "backup capacity)"
+            ),
+            "evidence_text": (
+                "For the proposed development, we have a load of 100MW, therefore "
+                "we need 25 x 4 MW (N) generators to meet the load and one more "
+                "as a spare to allow for maintenance which provides 4% additional "
+                "capacity. ... On this basis, the generators would be configured "
+                "as 26 generator systems each system providing 104 megawatts (MW) "
+                "in an N+1 configuration. ... an assumed electrical and cooling "
+                "load of 5MW per data hall"
+            ),
+            "evidence_page": 13,
+        },
+        {
+            "doc_sha_prefix": "8c22b42e",
+            "signal_type": "generator_count",
+            "value_number": 26,
+            "evidence_text": (
+                "the generators would be configured as 26 generator systems each "
+                "system providing 104 megawatts (MW) in an N+1 configuration"
+            ),
+            "evidence_page": 13,
+        },
+        {
+            "doc_sha_prefix": "8c22b42e",
+            "signal_type": "engine_rated_mw",
+            "value_number": 4,
+            "value_unit": "MW",
+            "evidence_text": (
+                "we need 25 x 4 MW (N) generators to meet the load and one more "
+                "as a spare to allow for maintenance"
+            ),
+            "evidence_page": 11,
+        },
+        {
+            "doc_sha_prefix": "8c22b42e",
+            "signal_type": "fuel_storage_litres",
+            "value_number": 260000,
+            "value_unit": "litres diesel (12 h runtime)",
+            "evidence_text": (
+                "Up to 260,000 litres of diesel fuel would be stored on site (to "
+                "provide up to 12 hours of fuel)."
+            ),
+            "evidence_page": 13,
+        },
+        {
+            "doc_sha_prefix": "338c10bc",
+            "signal_type": "grid_connection",
+            "value_text": (
+                "DNO is SSE; initial payment received 2 October 2019 to reserve "
+                "the required power supply (per Ramboll's Energy Statement). "
+                "Substation size and supply voltage submitted as part of the "
+                "DNO application."
+            ),
+            "evidence_text": (
+                "The size of the substation and the supply voltage were also "
+                "requested. 4.2 DNO – SSE Application & Payment Confirmation was "
+                "received from SSE on 2/10/2019 of receipt of initial payment to "
+                "reserve the required power supply"
+            ),
+            "evidence_page": 9,
+        },
+    ],
+    # =====================================================================
+    # Slough Manor Farm DC + BESS — `Slough/P/10076/013`. 50 MW DC +
+    # 114 MW BESS + 47 diesel generators at Manor Farm / north of
+    # Wraysbury Reservoir, Slough (near Heathrow). Docs from
+    # sbcplanning.co.uk (older Slough planning portal, not Agile).
+    # =====================================================================
+    "Slough/P/10076/013": [
+        {
+            "doc_sha_prefix": "3fbab67b",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "50 MW data centre (41,061 sqm GIA) + 114 MW battery energy "
+                "storage system + 47 diesel emergency generators + substation, "
+                "on land at Manor Farm and north of Wraysbury Reservoir, "
+                "Slough — Slough Availability Zone (UK DC market hub near "
+                "Heathrow)"
+            ),
+            "evidence_text": (
+                "The planning application comprises a 50MW Data Centre, Guard "
+                "House, internal access routes and associated parking, a "
+                "Substation and BESS. ... 41,061.49 sqm Gross Internal Area "
+                "(GIA) 50MW Data Centre ... This is set out in further detail "
+                "below, based on an approved 114mw battery storage scheme."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "3fbab67b",
+            "signal_type": "total_it_load_mw",
+            "value_number": 50,
+            "value_unit": "MW",
+            "evidence_text": "41,061.49 sqm Gross Internal Area (GIA) 50MW Data Centre",
+            "evidence_page": 28,
+        },
+        {
+            "doc_sha_prefix": "3fbab67b",
+            "signal_type": "battery_storage_mw",
+            "value_number": 114,
+            "value_unit": "MW",
+            "evidence_text": (
+                "This is set out in further detail below, based on an approved "
+                "114mw battery storage scheme. ... This is based on a 114MW "
+                "Battery Storage site."
+            ),
+            "evidence_page": 45,
+        },
+        {
+            "doc_sha_prefix": "7c2475be",
+            "signal_type": "generator_count",
+            "value_number": 47,
+            "evidence_text": (
+                "The proposed development will have 47 emergency diesel "
+                "generators to power the data centre in the event of major "
+                "grid failure."
+            ),
+            "evidence_page": 54,
+        },
+        {
+            "doc_sha_prefix": "7c2475be",
+            "signal_type": "fuel_type",
+            "value_text": "diesel emergency generators (with associated fuel storage)",
+            "evidence_text": (
+                "The proposed development will have 47 emergency diesel "
+                "generators to power the data centre in the event of major "
+                "grid failure."
+            ),
+            "evidence_page": 54,
+        },
+        {
+            "doc_sha_prefix": "e0d5621b",
+            "signal_type": "market_context",
+            "value_text": (
+                "UK DC market has c. 2,190 MW of capacity (£7.5bn turnover); "
+                "Slough's Availability Zone (AZ) has 379.23 MW of DC capacity "
+                "— a major UK DC hub, primarily serving the West London cloud "
+                "providers"
+            ),
+            "evidence_text": (
+                "The UK Data Centre market has c. 2,190 Mega Watts (MW) of "
+                "capacity (£7.5bn turnover... A significant proportion of "
+                "demand is focused on the West London market, on the basis "
+                "that this is within the availability zone of most of the "
+                "major cloud providers. Slough is a major UK Data Centre "
+                "[market with 379.23 MW]"
+            ),
+            "evidence_page": 18,
+        },
+    ],
+    # =====================================================================
+    # Loughborough University energy + data centre —
+    # `Charnwood/P/22/0023/2`. University-scale energy + data centre
+    # building at the Whitworth Tower, Elvyn Way, Loughborough
+    # University. Modest scale (university computing rather than
+    # hyperscale colocation).
+    # =====================================================================
+    "Charnwood/P/22/0023/2": [
+        {
+            "doc_sha_prefix": "c1525f76",  # FULL-Grant-Conditionally decision
+            "signal_type": "facility_classification",
+            "value_text": (
+                "university energy + data centre at Loughborough University "
+                "(Whitworth Tower, Elvyn Way) — university computing scale, "
+                "not hyperscale colocation"
+            ),
+            "evidence_text": (
+                "Erection of energy and data centre with associated "
+                "landscaping and ancillary works. Whitworth Tower Elvyn Way "
+                "Loughborough University Loughborough LE11 3UA"
+            ),
+            "evidence_page": 1,
+        },
+    ],
+    # =====================================================================
+    # WBE Margam biomass-anchored DC — `Neath/P2025/0187`. Editorially
+    # distinctive: Western Bio-Energy (WBE)'s existing biomass plant at
+    # Margam will supply a co-located 12 MW DC via PRIVATE WIRE — actual
+    # operating renewable power supply rather than a PPA / aspirational
+    # transition. 4th appearance of Future-tech as M&E consultant in the
+    # dataset (alongside Humber Tech Park, Elsham Tech Park, West London
+    # Tech Park).
+    # =====================================================================
+    "Neath/P2025/0187": [
+        {
+            "doc_sha_prefix": "440d3369",  # Design and Access Statement
+            "signal_type": "facility_classification",
+            "value_text": (
+                "12 MW data centre (2 × 3.75 MW data halls = 7.5 MW IT load, "
+                "cloud-based model), Use Class B8, on Land at Tyn-y-Caeau, "
+                "Margam, Port Talbot SA13 2NR. Power supplied via PRIVATE WIRE "
+                "from the existing on-site Western Bio-Energy biomass plant; "
+                "grid as back-up (up to 15.8 MW)."
+            ),
+            "evidence_text": (
+                "The existing nearby biomass power-station will provide up to "
+                "12 MW of power via a private wire to the data centre, with a "
+                "back-up connection to the national grid, which could provide "
+                "up to 15.8 MW. ... The data centre would consist of the "
+                "following: 2 Data Halls - 3.75 MW per hall ... Power "
+                "Infrastructure 5+1 block redundant"
+            ),
+            "evidence_page": 18,
+        },
+        {
+            "doc_sha_prefix": "440d3369",
+            "signal_type": "applicant_name",
+            "value_text": (
+                "Western Bio-Energy (WBE) — owner / operator of the existing "
+                "biomass plant at Margam, expanding to colocate a DC behind "
+                "the biomass plant's meter; M&E consultant: Future-tech "
+                "(doc ref pattern '1044 - FUT - V1 - 00 - ...', matching the "
+                "Future-tech signature on Greystoke Land's three sites at "
+                "Humber / Elsham / West London)"
+            ),
+            "evidence_text": (
+                "Therefore WBE is seeking to maximise capacity of data centre "
+                "(up to 12MW), subject to site constraints. ... Port Talbot "
+                "Western Bio-Energy Site Layout 1044 - FUT - V1 - 00 - ..."
+            ),
+            "evidence_page": 39,
+        },
+        {
+            "doc_sha_prefix": "440d3369",
+            "signal_type": "total_it_load_mw",
+            "value_number": 7.5,
+            "value_unit": "MW (IT load, cloud-based model)",
+            "evidence_text": (
+                "Of 12MW (MVA), c.7.5 MW usable power/IT load would be "
+                "achieved, based on a cloud-based model, as opposed to an "
+                "AI-based model. ... Specification for Data Centre: Achieve "
+                "as close to 7.5MW IT capacity as possible within limitations "
+                "of power."
+            ),
+            "evidence_page": 24,
+        },
+        {
+            "doc_sha_prefix": "440d3369",
+            "signal_type": "renewable_supply_commitment",
+            "value_text": (
+                "PRIVATE WIRE connection to the existing on-site Western Wood "
+                "Biomass Plant — actual operating renewable power, distinct "
+                "from PPA arrangements (e.g. Thurrock Lakeside's Moray West "
+                "wind PPA) or aspirational hydrogen transitions (e.g. Yorkshire "
+                "Energy Park). Editorially the closest thing to a real "
+                "renewable-anchored DC in the worklist."
+            ),
+            "evidence_text": (
+                "The biomass boiler will provide up to 12 MW of power via a "
+                "private wire to the data centre, with back-up from grid, "
+                "which could provide up to 15.8 MW. ... substation and power "
+                "connection to the existing Western Wood Biomass Plant"
+            ),
+            "evidence_page": 24,
+        },
+    ],
+    # =====================================================================
+    # Broxbourne small DC change of use — `Broxbourne/07/24/0348/F`.
+    # Single industrial-unit-scale DC conversion at Unit 3, Bingley
+    # Road, Hoddesdon. Modest scale; site partially in Flood Zone 3.
+    # =====================================================================
+    "Broxbourne/07/24/0348/F": [
+        {
+            "doc_sha_prefix": "7bf1a533",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "small Sui Generis DC change-of-use in a single industrial "
+                "unit (Unit 3 Bingley Road, Hoddesdon EN11 0BU — formerly "
+                "Xylem Water Solutions warehouse, since redeveloped under "
+                "parent 07/22/0479/F into 4 industrial sheds). Components: "
+                "battery storage for solar PV + cooling + bunded fuel store "
+                "+ generators + site transformer + HV switchgear. Wholly in "
+                "Flood Zone 2, partially in Flood Zone 3. Agent: Carter "
+                "Jonas; Case Officer: Louise Hart."
+            ),
+            "evidence_text": (
+                "The application seeks planning permission for Change of use "
+                "to allow a Sui Generis Data Centre (to include the "
+                "development of battery storage for solar PV, cooling "
+                "infrastructure, vented screening, bunded fuel store, "
+                "generator, site transformer and high voltage switch gear) "
+                "in addition to the permitted Class E (g) (iii), B2 and B8 "
+                "uses. ... The site Falls wholly within Flood Zone 2 and "
+                "partially within Flood Zone 3."
+            ),
+            "evidence_page": 3,
+        },
+    ],
+    # =====================================================================
+    # Widnes Waterfront mixed-use hybrid — `Warrington/2026/00295/HYB`.
+    # 169,800 sqm cross-boundary scheme including a 75,320 sqm DC + BESS
+    # as one of several uses. Site 5 within Warrington BC (WBC). Most
+    # docs are environmental-search / desktop reports rather than DC
+    # technical specs — substantive DC content modest in current bundle.
+    # =====================================================================
+    "Warrington/2026/00295/HYB": [
+        {
+            "doc_sha_prefix": "c7f6b7e3",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "75,320 sqm data centre (sui generis) as one use within a "
+                "169,800 sqm cross-boundary hybrid scheme at Widnes Waterfront "
+                "(Earle Road / Moss Bank Road, Widnes WA8 0GY) — also "
+                "162,850 sqm B2/B8 industrial/warehousing, BESS, 28,610 sqm "
+                "light industrial, retail, sport, creche. Hybrid full + "
+                "outline application; the DC sits within the outline portion "
+                "(all matters except Access reserved)."
+            ),
+            "evidence_text": (
+                "Outline application (with all matters reserved except for "
+                "Access) for a phased development comprising up to 169,800 "
+                "sqm of total floorspace across commercial / industrial / "
+                "warehousing / waste management facilities including: Up to "
+                "162,850 sqm for B2/B8 uses (with ancillary offices); Up to "
+                "75,320 sqm for a data centre (sui generis); A battery "
+                "energy storage system; Up to 28,610 sqm of E(g)(iii) "
+                "floorspace(light industrial)"
+            ),
+            "evidence_page": 1,
+        },
+    ],
+
+    # =====================================================================
+    # Heyford Park mixed-use hybrid — `Cherwell/25/02190/HYBRID`.
+    # 9,000-dwelling residential-led scheme at the former Heyford Park
+    # USAF base; DC is one named use among many. Editorial weight on
+    # the DC angle is modest (mostly residential).
+    # =====================================================================
+    "Cherwell/25/02190/HYBRID": [
+        {
+            "doc_sha_prefix": "7f2850a1",  # Application Form (redacted)
+            "signal_type": "facility_classification",
+            "value_text": (
+                "9,000-dwelling residential-led hybrid scheme at Heyford "
+                "Park, Camp Road, Upper Heyford (former US Air Force base). "
+                "DC component is one named use among many — editorial "
+                "weight is modest unless the DC element is substantially "
+                "scaled (TBC once Planning Statement docs read)."
+            ),
+            "evidence_text": (
+                "A hybrid planning application consisting of: Demolition of "
+                "222 existing buildings and structures as listed in Schedule "
+                "1. Up to 9,000 new dwellings (Class C3) ... Heyford Park "
+                "Camp Road Upper Heyford"
+            ),
+            "evidence_page": 1,
+        },
+    ],
+
+    # =====================================================================
+    # West Calder AI DC Campus — `WestLothian/0625/PAC/25`. 250 MW AI
+    # data centre campus with BESS at the former Freeport Shopping
+    # Village, West Calder. Editorially distinctive on three axes:
+    # (1) explicit AI framing, (2) hyperscale 250 MW utility demand,
+    # (3) BESS going through Scottish Government Section 36 consent
+    # (separate from this Proposal-of-Application-Notice / PAC route).
+    # =====================================================================
+    "WestLothian/0625/PAC/25": [
+        {
+            "doc_sha_prefix": "54e72002",  # Proposal Of Application Notice
+            "signal_type": "facility_classification",
+            "value_text": (
+                "250 MW AI Data Centre Campus + ancillary BESS at former "
+                "Freeport Shopping Village, West Calder, EH55 8PN. Explicit "
+                "AI framing (rare in the worklist — most DCs avoid naming "
+                "the AI use case). 'Proposal of Application Notice' (PAC) "
+                "is the Scottish pre-application notification stage."
+            ),
+            "evidence_text": (
+                "Proposal of application notice for the erection of an AI "
+                "Data Centre Campus with a 250 MW demand utility capacity "
+                "with ancillary battery energy storage system (BESS) (to be "
+                "consented via separate Section 36 application to Scottish "
+                "Government) ... Land At Former Freeport Shopping Village "
+                "West Calder West Lothian EH55 8PN"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "54e72002",
+            "signal_type": "total_it_load_mw",
+            "value_number": 250,
+            "value_unit": "MW (utility demand capacity)",
+            "evidence_text": (
+                "AI Data Centre Campus with a 250 MW demand utility capacity"
+            ),
+            "evidence_page": 1,
+        },
+        {
+            "doc_sha_prefix": "54e72002",
+            "signal_type": "planning_route",
+            "value_text": (
+                "Scottish dual-track: Proposal of Application Notice (PAC) "
+                "for the DC building consent + separate Section 36 "
+                "application to Scottish Government for the BESS (S36 = "
+                "Electricity Act 1989 consent for generation/storage above "
+                "50 MW in Scotland, equivalent to a Development Consent "
+                "Order in England)"
+            ),
+            "evidence_text": (
+                "Proposal of application notice for the erection of an AI "
+                "Data Centre Campus with a 250 MW demand utility capacity "
+                "with ancillary battery energy storage system (BESS) (to be "
+                "consented via separate Section 36 application to Scottish "
+                "Government)"
+            ),
+            "evidence_page": 1,
+        },
+    ],
+
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {
