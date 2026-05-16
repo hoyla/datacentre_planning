@@ -323,6 +323,234 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
     # adjacents from substantive DC-relevant cases.
     # `TowerHamlets/PA/15/01527/S`.
     # =====================================================================
+    # =====================================================================
+    # Humber Tech Park (Elsham) — `NorthLincs/PA/2024/584`. Outline for a
+    # 3-building hyperscale DC, 384 MW IT load total, 576 MW total site
+    # load, 250 × 2.4 MW diesel generators (≈600 MW backup capacity).
+    # Description names "emergency backup generators / fuel storage /
+    # district heating centre" — hides the magnitudes. The Fuel Storage
+    # Report explicitly frames the generators as "designed to act as the
+    # primary supply" with the grid as "an economical alternative that
+    # would normally be used" — backup-only in practice, primary-capable
+    # in design. Document set is rich: AQA, dedicated Fuel Storage Report,
+    # Sustainability & Renewable Energy Statement, Acoustics Assessment,
+    # Planning Statement, all dated April-May 2024.
+    # =====================================================================
+    "NorthLincs/PA/2024/584": [
+        # ----- Fuel Storage Report (Future-tech, 30/04/2024) -----
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "applicant_name",
+            "value_text": "Humber Tech Park Ltd (c/o Anthony Crean KC, 75D Banbury Road, Oxford OX2 6PE)",
+            "evidence_text": "Humber Tech Park Ltd, Anthony Crean KC, 75D Banbury Road, Oxford OX2 6PE",
+            "evidence_page": 2,
+        },
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "facility_classification",
+            "value_text": (
+                "hyperscale data-centre campus: 3 × 128 MW IT-load buildings "
+                "(48 × 8 MW data halls), 576 MW total site load including "
+                "mechanical/building services"
+            ),
+            "evidence_text": (
+                "It is currently proposed that three data centre buildings will be "
+                "constructed on the site and that each will have: Sixteen 8MW data halls "
+                "each with an associated 4MW of mechanical and building services loads. "
+                "Giving a total IT load per building of 128MW and supporting services "
+                "load of 64MW. ... Thus, the overall site load for all three buildings is "
+                "expected to be of the order of 576 MW."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "generator_count",
+            "value_number": 250,
+            "evidence_text": (
+                "Each block of 12MW demand will be supported by various configurations "
+                "of 2.4MW generators a total of 250 generators across the site."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "engine_rated_mw",
+            "value_number": 2.4,
+            "value_unit": "MW",
+            "evidence_text": (
+                "Each block of 12MW demand will be supported by various configurations "
+                "of 2.4MW generators a total of 250 generators across the site."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "fuel_type",
+            "value_text": "diesel (with on-site bulk storage)",
+            "evidence_text": (
+                "The purpose of this document is to provide an overview of the project "
+                "scope and a basis of design for the proposed diesel generator fuel "
+                "storage at the data centre development site in Humberside."
+            ),
+            "evidence_page": 4,
+        },
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "fuel_consumption_per_engine_lph",
+            "value_number": 475,
+            "value_unit": "L/hr",
+            "evidence_text": (
+                "At this stage generator fuel consumption will be calculated using 475 "
+                "litres per hour per engine at 80% load... Fuel Consumption Rates: "
+                "Whole Site 250 engines = 118,750 L/hr = 2,850,000 L/24hr; Per Engine "
+                "1 = 475 L/hr = 11,400 L/24hr."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "fuel_consumption_site_lph",
+            "value_number": 118750,
+            "value_unit": "L/hr",
+            "evidence_text": (
+                "Whole Site, 250 No Engines at 80% load: 118,750 L/hr ≈ 2,850,000 L/24hr "
+                "with all generators running."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "fuel_storage_hours",
+            "value_number": 24,
+            "value_unit": "hours",
+            "evidence_text": (
+                "sufficient bulk fuel storage would be provided on-site for approximately "
+                "24 Hours of continuous running of the generators. Each of these bulk "
+                "fuel storage facilities would comprise two tanks ... The individual "
+                "generator rooms are also currently being sized to accommodate a daily "
+                "service tank sufficient to maintain each generator for up to 6 hours."
+            ),
+            "evidence_page": 5,
+        },
+        {
+            "doc_sha_prefix": "94ebbfb4",
+            "signal_type": "generator_operation_role",
+            "value_text": (
+                "designed as primary-supply capable, operated as emergency backup "
+                "(grid normal); routine testing only — generators expected to run only "
+                "for testing or grid-failure scenarios"
+            ),
+            "evidence_text": (
+                "this site will be designed with the generators to act as the primary "
+                "supply but also with the incoming grid supply as an economical "
+                "alternative that would normally be used. Accordingly, the generators "
+                "are only expected to run for routine testing or in the unlikely event "
+                "of failures with either the incoming electrical supply or site "
+                "distribution."
+            ),
+            "evidence_page": 6,
+        },
+
+        # ----- Air Quality Assessment (10.05.2024) -----
+        {
+            "doc_sha_prefix": "819f38cf",
+            "signal_type": "generator_count",
+            "value_number": 250,
+            "evidence_text": (
+                "The development will consist of a data centre scheme distributed across "
+                "three buildings and will include 250 emergency back-up generators."
+            ),
+            "evidence_page": 3,
+        },
+        {
+            "doc_sha_prefix": "819f38cf",
+            "signal_type": "engine_rated_kva",
+            "value_number": 3000,
+            "value_unit": "kVA",
+            "evidence_text": (
+                "A 250 no. 3,000 kVA diesel generators will operate to supply backup "
+                "power to the site during power outage from the national grid."
+            ),
+            "evidence_page": 62,
+        },
+        {
+            "doc_sha_prefix": "819f38cf",
+            "signal_type": "standby_generator_regime",
+            "value_text": (
+                "each of the 250 generators tested separately for 30 minutes per month "
+                "at full load"
+            ),
+            "evidence_text": (
+                "To satisfy this requirement, each of the 250 generator plant will be "
+                "tested separately. The assumption within this assessment is that the "
+                "generators will be tested separately, for 30 minutes per month, at "
+                "full load."
+            ),
+            "evidence_page": 36,
+        },
+
+        # ----- Sustainability & Renewable Energy Statement (24.04.2024) -----
+        {
+            "doc_sha_prefix": "89571aef",
+            "signal_type": "operational_power_demand_mw",
+            "value_number": 38,
+            "value_unit": "MW",
+            "evidence_text": (
+                "Maximum power demand ≈ 450 MW. Assumed operational diversity 50% of "
+                "maximum. Operational power demand 38 MW. Data centre operation 8760 "
+                "hours / year. Annual energy consumption 1,664,400,000 kWh."
+            ),
+            "evidence_page": 14,
+        },
+        {
+            "doc_sha_prefix": "89571aef",
+            "signal_type": "considered_renewable_option",
+            "value_text": (
+                "19 MW biomass-fuelled CCHP plant considered (would meet 10% reduction "
+                "target but rejected as impractical — needs 680,000 m³ wood chip / year, "
+                "equivalent to 136 articulated lorry deliveries per week)"
+            ),
+            "evidence_text": (
+                "A 19MW biomass fuelled Combined Cooling Heat and Power (CCHP) plant "
+                "could provide the targeted 10% reduction... In terms of fuel "
+                "requirements a 19MW plant needs around 680,000m3 of wood chip per "
+                "annum, which equates to 136 articulated lorry deliveries per week."
+            ),
+            "evidence_page": 16,
+        },
+        {
+            "doc_sha_prefix": "89571aef",
+            "signal_type": "considered_renewable_option",
+            "value_text": (
+                "100 kW medium-scale wind turbine considered (would offset only 83 "
+                "tonnes CO2/year — negligible against 1.66 TWh annual energy demand)"
+            ),
+            "evidence_text": (
+                "A medium scale wind turbine (with a 20m rotor diameter and rated "
+                "power of ≈100kW) located on the site could produce around 195,000kWh "
+                "per annum, which would it turn offset around 83 tonnes of CO2 per "
+                "annum."
+            ),
+            "evidence_page": 16,
+        },
+
+        # ----- Planning Statement (01.05.2024) -----
+        {
+            "doc_sha_prefix": "d544e186",
+            "signal_type": "total_it_load_mw",
+            "value_number": 384,
+            "value_unit": "MW",
+            "evidence_text": (
+                "The Data Centre would provide an IT Load (the key measure of data "
+                "centre capacity) of up to 384MW. ... Up to three Data Centre buildings "
+                "capable of 384MW of IT load with a total GEA of 309,000 sqm, including "
+                "ancillary office space, with a maximum height of 13m (15m with the "
+                "external gantry and flues)."
+            ),
+            "evidence_page": 8,
+        },
+    ],
     "TowerHamlets/PA/15/01527/S": [
         # ----- Decision Notice (45512836) -----
         {

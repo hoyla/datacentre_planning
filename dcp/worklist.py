@@ -244,10 +244,11 @@ def _render_finding_bullet(f) -> str:
     evidence quote, and a backreference to the source document filename +
     page so the reporter can verify in seconds."""
     # Value first — quantitative or textual, whichever the row carries.
-    if f.value_number is not None and f.value_unit:
+    if f.value_number is not None:
         n = f.value_number
         n_str = f"{int(n)}" if float(n).is_integer() else f"{n}"
-        head = f"**{f.signal_type}:** {n_str} {f.value_unit}"
+        unit = f" {f.value_unit}" if f.value_unit else ""
+        head = f"**{f.signal_type}:** {n_str}{unit}"
     elif f.value_text:
         head = f"**{f.signal_type}:** {f.value_text}"
     else:
