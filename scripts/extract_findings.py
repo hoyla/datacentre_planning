@@ -176,9 +176,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_number": 21,
             "value_unit": "MW",
             "evidence_text": (
-                "The application proposed the creation of a secure compound enclosed by "
-                "acoustic fencing and containing 14 generators, office, storage and other "
-                "ancillary buildings ... up to 21MW capacity."
+                "The application proposed the creation of a secure compound "
+                "enclosed by acoustic fencing and containing 14 generators, "
+                "office, storage and other ancillary buildings, together with "
+                "associated access and works"
             ),
             "evidence_page": 5,
         },
@@ -1052,11 +1053,11 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "1,176-1,386 modelled generator-hours/year"
             ),
             "evidence_text": (
-                "The above Damage Cost Calculation is based on the assumption that all "
-                "42 generators across the three proposed energy centres will operate "
-                "(testing and maintenance) for 26 hours per year, with an additional "
-                "two hours' worth of grid failures. This equates to a total of 1,176 "
-                "generator-hours annually"
+                "The above Damage Cost Calculation is based on the assumption "
+                "that all 42 generators across the three proposed "
+                "... (testing and maintenance) for 26 hours per year, with an "
+                "additional two hours worth of grid failures. This equates to "
+                "a total of 1,176 generator-hours annually"
             ),
             "evidence_page": 3,
         },
@@ -1079,11 +1080,11 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "14 generators reserved for a future hyperscale tenant"
             ),
             "evidence_text": (
-                "If a future (hyperscaler) tenant were to operate 14 generators, with "
-                "Ark operating the other 28, the predicted total annual NOX and PM10 "
-                "emissions from the proposed development would be 1,284.3 kgNOX "
-                "... Table D.8: Proposed Generators Emission Rates (Ark operation of "
-                "three data halls) Total emissions (kg) Ark Future (hyperscaler) tenant"
+                "If a future (hyperscaler) tenant were to operate 14 generators, "
+                "with Ark operating the other 28 "
+                "... Table D.8: Proposed Generators Emission Rates (Ark "
+                "operation of three data halls) Total emissions (kg) Ark "
+                "Future (hyperscaler) tenant"
             ),
             "evidence_page": 53,
         },
@@ -1868,20 +1869,19 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
     # =====================================================================
     "EastRiding/24/00012/STOUT": [
         {
-            "doc_sha_prefix": "276930f8",  # Planning Statement
+            "doc_sha_prefix": "86ffbbd2",  # Planning Statement (with header line)
             "signal_type": "applicant_name",
             "value_text": (
                 "Meld Energy Ltd (MEL) — agent: Matz Ltd; Planning Statement dated "
                 "November 2023"
             ),
             "evidence_text": (
-                "Meld Energy Planning Statement Matz Ltd November 2023 ... This "
-                "Planning Statement has been prepared on behalf of Meld Energy Ltd "
-                "(MEL) in support of an outline planning ... Meld Energy Ltd "
-                "mission, is to develop a portfolio of green Hydrogen production "
-                "hubs to supply low and zero carbon fuels"
+                "Meld Energy Planning Statement Matz Ltd November 2023 "
+                "... This Planning Statement has been prepared on behalf of "
+                "Meld Energy Ltd (MEL) in support of an outline planning "
+                "application submitted to East Riding of Yorkshire Council (LPA)"
             ),
-            "evidence_page": 3,
+            "evidence_page": 2,
         },
         {
             "doc_sha_prefix": "276930f8",
@@ -1892,12 +1892,9 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "renewable fuel/product; doubling capacity planned in the future"
             ),
             "evidence_text": (
-                "The MEL Hydrogen hub will produce up to 100 MW of Green Hydrogen, "
-                "which will be used by existing SCP partners as a renewable fuel or "
-                "product. ... It is understood that the project will produce green "
-                "hydrogen by electrolysis and is powered by renewable energy, with "
-                "an initial capacity of 100MW, and the potential to double the "
-                "production in the future."
+                "The MEL Hydrogen hub will produce up to 100 MW of Green "
+                "Hydrogen, which will be used by existing SCP partners as a "
+                "renewable fuel or product"
             ),
             "evidence_page": 3,
         },
@@ -1918,7 +1915,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_page": 3,
         },
         {
-            "doc_sha_prefix": "276930f8",
+            "doc_sha_prefix": "c19a9467",  # Air Quality Assessment (longer doc)
             "signal_type": "nearby_development",
             "value_text": (
                 "neighbouring approved Nu-Energy Ltd 20 MW Waste-to-Energy "
@@ -1926,10 +1923,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "covered both facilities"
             ),
             "evidence_text": (
-                "Nu-Energy Ltd 20MW Waste to Energy Facility: A power generation "
-                "facility on land and building Approved. The Air Quality "
-                "Assessment modelled the predicted emissions levels at four "
-                "receptors on the Humber Estuary."
+                "Nu-Energy Ltd 20MW Waste to Energy Facility: A power "
+                "generation facility on land and building Approved "
+                "... The Air Quality Assessment modelled the predicted "
+                "emissions levels at four receptors on the Humber Estuary"
             ),
             "evidence_page": 23,
         },
@@ -1948,15 +1945,16 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "doc_sha_prefix": "87354ccf",
             "signal_type": "facility_classification",
             "value_text": (
-                "pallet heat-treatment kiln + biomass boiler at CHEP UK's Hangmans "
-                "Wood Industrial Park (global pallet pooling operator) — NOT a "
-                "data centre; worklist false-positive caught by the 'biomass "
-                "boiler' Tier-1 signal in the description"
+                "pallet heat-treatment kiln + biomass boiler at CHEP UK Ltd, "
+                "Stifford Rd, Aveley, South Ockendon RM15 4AA (global pallet "
+                "pooling operator) — NOT a data centre; worklist false-"
+                "positive caught by the 'biomass boiler' Tier-1 signal in the "
+                "description"
             ),
             "evidence_text": (
-                "Installation of a heat treatment kiln and biomass boiler at "
-                "CHEP UK Hangmans Wood Industrial Park Stifford Road South "
-                "Ockendon Essex RM15 6RL"
+                "Property name CHEP UK Ltd Address line 1 Stifford Rd Address "
+                "line 2 Aveley ... Town/city South Ockendon Postcode RM15 4AA "
+                "... Installation of a heat treatment kiln and biomass boiler"
             ),
             "evidence_page": 1,
         },
@@ -1979,11 +1977,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Quality chapter by Environmental Resources Management (ERM)"
             ),
             "evidence_text": (
-                "This chapter of the Environmental Statement (ES) has been prepared "
-                "by Environmental Resources Management Ltd (hereafter referred to "
-                "as 'ERM') ... ERM on behalf of Global Infrastructure UK Ltd "
-                "[Iceni Projects Ltd, Da Vinci House, 44 Saffron Hill, London, "
-                "ECN1 8FH]"
+                "This chapter of the Environmental Statement (ES) has been "
+                "prepared by Environmental Resources Management Ltd "
+                "(hereafter referred to as 'ERM') "
+                "... ERM on behalf of Global Infrastructure UK Ltd April 2025 "
+                "Iceni Projects Ltd. Da Vinci House, 44 Saffron Hill, London, "
+                "ECN1 8FH"
             ),
             "evidence_page": 1,
         },
@@ -1997,12 +1996,10 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "M25 west, A13 south"
             ),
             "evidence_text": (
-                "The Site is located at the former Arena Essex Raceway, Land to "
-                "the north of Arterial Road West Thurrock, Essex RM19 1AE, within "
-                "a predominantly mixed-use area that features industrial, "
-                "residential, and commercial land uses. To the north, the Site is "
-                "adjacent to the Lakeside Shopping Centre, a large retail and "
-                "commercial hub."
+                "The Site is located at the former Arena Essex Raceway, Land "
+                "to the north of Arterial Road West Thurrock, Essex RM19 1AE, "
+                "within a predominantly mixed-use area that features "
+                "industrial, residential, and commercial land uses"
             ),
             "evidence_page": 4,
         },
@@ -2094,37 +2091,39 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
     # =====================================================================
     "EastRiding/17/03771/STPLF": [
         {
-            "doc_sha_prefix": "e45384cc",
+            "doc_sha_prefix": "313ee329",  # Air Quality Assessment
             "signal_type": "facility_classification",
             "value_text": (
                 "49 MW hybrid natural-gas + battery-energy-storage facility — "
-                "gas generators + battery storage units + transformers + "
-                "sub-station + switch room + gas kiosk; on Saltend Lane, Preston, "
-                "East Riding (same industrial cluster as the YEP DC and Meld "
-                "Energy hydrogen hub)"
+                "11 GE Jenbacher 624 gas engines (4.5 MW each, 49 MW total "
+                "electrical output) + 25 × 2 MW battery storage units; on "
+                "Saltend Lane, Preston, East Riding (same industrial cluster "
+                "as the YEP DC and Meld Energy hydrogen hub)"
             ),
             "evidence_text": (
-                "Construction of a hybrid natural gas production and energy "
-                "storage facility with a maximum capacity of 49 Megawatts to "
-                "include gas generators, battery storage units, transformers, "
-                "sub-station compounds, switch room, gas kiosk and welfare cabin "
-                "with associated access, parking and security fencing"
+                "AMP have developed draft proposals for a hybrid energy project "
+                "combining natural gas generation and battery storage units. "
+                "The proposed development will consist of 11 General Electric "
+                "Jenbacher 624 natural gas engines (each engine has up to "
+                "4.5MW electrical output, however, the installed engines will "
+                "generate no more than 4 9MW electrical output in total) with "
+                "a rated thermal input of 132MW and 25 x 2MW energy storage units"
             ),
-            "evidence_page": 1,
+            "evidence_page": 4,
         },
         {
-            "doc_sha_prefix": "e45384cc",
+            "doc_sha_prefix": "313ee329",
             "signal_type": "total_capacity_mw",
             "value_number": 49,
             "value_unit": "MW",
             "evidence_text": (
-                "hybrid natural gas production and energy storage facility with a "
-                "maximum capacity of 49 Megawatts"
+                "the installed engines will generate no more than 4 9MW "
+                "electrical output in total"
             ),
-            "evidence_page": 1,
+            "evidence_page": 4,
         },
         {
-            "doc_sha_prefix": "e45384cc",
+            "doc_sha_prefix": "c17a3b2c",  # EA consultation technical note
             "signal_type": "site_cluster_pattern",
             "value_text": (
                 "Humber Estuary / Saltend energy-infrastructure cluster: this "
@@ -2135,8 +2134,8 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "All within ~2 km of each other on the same industrial estate."
             ),
             "evidence_text": (
-                "Former Car Park East Of Saltend Substation 7859 Saltend Lane "
-                "Preston East Riding Of Yorkshire HU12 8PP"
+                "Hybrid Natural Gas Production & Energy Storage Facility at "
+                "Salt End, Hull - 17/03771/STPLF"
             ),
             "evidence_page": 1,
         },
@@ -3007,7 +3006,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
     # =====================================================================
     "Warrington/2026/00295/HYB": [
         {
-            "doc_sha_prefix": "c7f6b7e3",
+            "doc_sha_prefix": "f55582d4",  # description-of-development doc
             "signal_type": "facility_classification",
             "value_text": (
                 "75,320 sqm data centre (sui generis) as one use within a "
@@ -3019,16 +3018,16 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "(all matters except Access reserved)."
             ),
             "evidence_text": (
-                "Outline application (with all matters reserved except for "
-                "Access) for a phased development comprising up to 169,800 "
-                "sqm of total floorspace across commercial / industrial / "
-                "warehousing / waste management facilities including: Up to "
-                "162,850 sqm for B2/B8 uses (with ancillary offices); Up to "
-                "75,320 sqm for a data centre (sui generis); A battery "
-                "energy storage system; Up to 28,610 sqm of E(g)(iii) "
-                "floorspace(light industrial)"
+                "Part B Outline planning permission with all matters reserved "
+                "except for means of access for a phased development "
+                "comprising up to 169,800 sqm of total floorspace across "
+                "commercial / industrial / warehousing / waste management "
+                "facilities providing up to 162,850 sqm of floorspace "
+                "(including ancillary office accommodation) in Use Classes B2 "
+                "and B8; up to 75,320 sqm of floorspace for data centre (sui "
+                "generis); battery energy storage system"
             ),
-            "evidence_page": 1,
+            "evidence_page": 4,
         },
     ],
 
