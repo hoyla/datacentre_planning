@@ -347,9 +347,11 @@ def _render_findings_block(findings: list, sub_h: str = "###") -> list[str]:
     nothing the reporter doesn't already see in the description), but the
     xlsx companion still surfaces their count for audit. Returns an empty
     list if there's nothing classified as NEW or REFINEMENT. `sub_h` is
-    the heading level for the "Document-extracted findings" header — `###`
-    when the card is at h2, `####` when the card is demoted to h3 (inside
-    a cohort section).
+    kept as a parameter for API compatibility but callers in the formal
+    export now always pass `###` — the user's preference is for these
+    sub-section headings to stay at h3 regardless of how deeply the card
+    is nested inside a cohort, so they don't visually drift into looking
+    subordinate to other content on the page.
     """
     new = [f for f in findings if f.category == findings_mod.CATEGORY_NEW]
     refinement = [f for f in findings if f.category == findings_mod.CATEGORY_REFINEMENT]
@@ -385,11 +387,16 @@ def render_card(rank: int, row: dict, anchors: dict[str, dict], *, base_level: i
     preview script and the formal export.
 
     `base_level` is the heading level for the card title: 2 (default) puts
-    the title at h2 and its subsections at h3; 3 demotes everything by one
-    so cards can nest inside cohort sections (each cohort being itself h2).
+    the title at h2; 3 or 4 demotes it so cards can nest inside cohort
+    sections. The named subsection headings inside a card (Description,
+    Document-extracted findings, Why this is on the worklist) stay locked
+    at h3 regardless of `base_level` — the editorial preference is that
+    these sections read as peer subheadings of the card content, not as
+    nested h4/h5 that visually look subordinate to surrounding section
+    headings on the page.
     """
     main_h = "#" * base_level
-    sub_h = "#" * (base_level + 1)
+    sub_h = "###"
     out: list[str] = []
     out.append(f'<a id="{_ref_anchor(row["application_ref"])}"></a>')
     fx = " · 🔖 Foxglove top-10" if row["foxglove"] else ""
