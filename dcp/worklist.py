@@ -15,6 +15,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from dcp import findings as findings_mod
+
 
 # Rubric Tier 1 — primary on-site generation. Verbatim union of the terms
 # listed under "Tier 1" in data/triage_labelling/rubric.md, lowercased and
@@ -151,6 +153,24 @@ def fetch(conn, *, model: str, limit: int | None = None) -> WorklistData:
                 r[0]: {"description": r[1], "address": r[2]}
                 for r in cur.fetchall()
             }
+
+    # Phase-4 enrichment: attach the latest findings per app (classified
+    # NEW / REFINEMENT / CONFIRMATION). Empty list for apps with no findings
+    # yet, so callers can iterate uniformly. CONFIRMATIONS are kept on the
+    # row for completeness (xlsx counts, audit) but the markdown render
+    # drops them — see `render_card`.
+    app_ids = [row["id"] for row in rows]
+    descriptions = {row["id"]: row.get("description") or "" for row in rows}
+    triage_signals = {row["id"]: row.get("signals") or [] for row in rows}
+    findings_by_app = findings_mod.fetch_for_applications(
+        conn,
+        application_ids=app_ids,
+        descriptions=descriptions,
+        triage_signals=triage_signals,
+    )
+    for row in rows:
+        row["findings"] = findings_by_app.get(row["id"], [])
+
     return WorklistData(summary=summary, rows=rows, anchors=anchors, model=model)
 
 
@@ -219,12 +239,85 @@ def expand_lineage(
 _CONFIDENCE_GLYPH = {"sure": "★★★", "probable": "★★☆", "guessing": "★☆☆"}
 
 
+def _render_finding_bullet(f) -> str:
+    """One markdown bullet for a single finding. Carries the value, the
+    evidence quote, and a backreference to the source document filename +
+    page so the reporter can verify in seconds."""
+    # Value first — quantitative or textual, whichever the row carries.
+    if f.value_number is not None and f.value_unit:
+        n = f.value_number
+        n_str = f"{int(n)}" if float(n).is_integer() else f"{n}"
+        head = f"**{f.signal_type}:** {n_str} {f.value_unit}"
+    elif f.value_text:
+        head = f"**{f.signal_type}:** {f.value_text}"
+    else:
+        head = f"**{f.signal_type}:** (no value)"
+    parts = [head]
+    if f.evidence_text:
+        # Trim ferocious whitespace from the quote but keep its shape.
+        quote = " ".join(f.evidence_text.split())
+        if len(quote) > 400:
+            quote = quote[:400] + "…"
+        parts.append(f"  *“{quote}”*")
+    # Document filename + page anchor.
+    doc_bits: list[str] = []
+    if f.document_kind:
+        doc_bits.append(f.document_kind)
+    if f.document_bytes_path:
+        doc_bits.append(f"`{f.document_bytes_path.split('/')[-1]}`")
+    if f.evidence_page is not None:
+        doc_bits.append(f"p.{f.evidence_page}")
+    if doc_bits:
+        parts.append(f"  — {' · '.join(doc_bits)}")
+    return "\n".join(parts)
+
+
+def _render_findings_block(findings: list) -> list[str]:
+    """The Phase-4 addendum: NEW DISCLOSURES + REFINEMENTS sections.
+
+    CONFIRMATIONS are intentionally omitted from the markdown (they add
+    nothing the reporter doesn't already see in the description), but the
+    xlsx companion still surfaces their count for audit. Returns an empty
+    list if there's nothing classified as NEW or REFINEMENT.
+    """
+    new = [f for f in findings if f.category == findings_mod.CATEGORY_NEW]
+    refinement = [f for f in findings if f.category == findings_mod.CATEGORY_REFINEMENT]
+    if not new and not refinement:
+        return []
+    lines: list[str] = []
+    lines.append("### Document-extracted findings")
+    lines.append("")
+    if new:
+        lines.append(f"*NEW DISCLOSURES ({len(new)}):*")
+        lines.append("")
+        for f in new:
+            lines.append("- " + _render_finding_bullet(f))
+        lines.append("")
+    if refinement:
+        lines.append(f"*REFINEMENTS ({len(refinement)}):*")
+        lines.append("")
+        for f in refinement:
+            lines.append("- " + _render_finding_bullet(f))
+        lines.append("")
+    return lines
+
+
 def render_card(rank: int, row: dict, anchors: dict[str, dict]) -> str:
     """Render one worklist application as a Markdown card. Used by both the
     preview script and the formal export."""
     out: list[str] = []
     fx = " · 🔖 Foxglove top-10" if row["foxglove"] else ""
-    out.append(f"## {rank}. `{row['application_ref']}`{fx}")
+    findings = row.get("findings") or []
+    counts = findings_mod.category_counts(findings)
+    badge_bits: list[str] = []
+    if counts.get(findings_mod.CATEGORY_NEW):
+        badge_bits.append(f"📄 {counts[findings_mod.CATEGORY_NEW]} new disclosure"
+                          f"{'s' if counts[findings_mod.CATEGORY_NEW] != 1 else ''}")
+    if counts.get(findings_mod.CATEGORY_REFINEMENT):
+        badge_bits.append(f"✏️ {counts[findings_mod.CATEGORY_REFINEMENT]} refinement"
+                          f"{'s' if counts[findings_mod.CATEGORY_REFINEMENT] != 1 else ''}")
+    badge = f" · {' · '.join(badge_bits)}" if badge_bits else ""
+    out.append(f"## {rank}. `{row['application_ref']}`{fx}{badge}")
     out.append("")
     bits = [
         f"**Verdict:** {row['verdict']}",
@@ -258,13 +351,16 @@ def render_card(rank: int, row: dict, anchors: dict[str, dict]) -> str:
         out.append("")
     if row.get("description"):
         descr = row["description"].strip()
-        out.append("**Description:**")
+        out.append("### Description")
         out.append("")
         out.append("> " + descr.replace("\n", "\n> "))
         out.append("")
+    findings_block = _render_findings_block(findings)
+    if findings_block:
+        out.extend(findings_block)
     lineage = expand_lineage(row.get("discovered_via"), anchors)
     if lineage:
-        out.append("**Why this is on the worklist:**")
+        out.append("### Why this is on the worklist")
         out.append("")
         for line in lineage:
             out.append(f"- {line}")

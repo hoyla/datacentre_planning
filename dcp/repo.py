@@ -280,6 +280,47 @@ def append_discovered_via(
         return cur.rowcount
 
 
+def record_finding(
+    conn: PgConnection,
+    *,
+    application_id: int,
+    document_id: int | None,
+    signal_type: str,
+    model: str,
+    value_text: str | None = None,
+    value_number: float | None = None,
+    value_unit: str | None = None,
+    evidence_text: str | None = None,
+    evidence_page: int | None = None,
+) -> int:
+    """Append a structured finding extracted from a document.
+
+    Versioned per the schema's append-only contract — re-extracting with a
+    refined prompt adds a row; nothing is destroyed. The latest row per
+    (application, document, signal_type, model) is current; older rows stay
+    for audit. Provenance fields (`evidence_text`, `evidence_page`,
+    `document_id`, `model`) are mandatory in spirit — only `document_id` can
+    be NULL, and only when the finding genuinely spans the bundle (e.g. a
+    consultee-roll-up). Returns the row id.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO findings (
+                application_id, document_id, signal_type,
+                value_text, value_number, value_unit,
+                evidence_text, evidence_page, model
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
+            """,
+            (application_id, document_id, signal_type,
+             value_text, value_number, value_unit,
+             evidence_text, evidence_page, model),
+        )
+        return cur.fetchone()[0]
+
+
 def record_triage(
     conn: PgConnection,
     *,

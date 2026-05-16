@@ -115,11 +115,24 @@ def test_write_xlsx_structure(tmp_path, fake_data):
     assert ws.cell(row=2, column=2).value == "TestCouncil/24/0001"
     assert ws.cell(row=3, column=2).value == "TestCouncil/24/0002"
     assert ws.freeze_panes == "C2"
-    assert ws.auto_filter.ref == "A1:S3"
+    # 19 base columns + 4 Phase-4 findings columns = W. Auto-filter spans all
+    # 2 data rows + header.
+    assert ws.auto_filter.ref == "A1:W3"
     # Humanised lineage column carries the prose, not the raw tag
     humanised = ws.cell(row=3, column=17).value
     assert "Spatial neighbour" in humanised
     assert "TestCouncil/24/0001" in humanised
+    # Phase-4 findings columns: NULL/blank for fixture apps (no findings rows).
+    findings_header_row = [c.value for c in ws[1]]
+    assert "Findings — new disclosures" in findings_header_row
+    assert "Findings — refinements" in findings_header_row
+    assert "Findings — disclosed MW" in findings_header_row
+    assert "Findings — headline" in findings_header_row
+    # Last four columns on the data rows should be None — the fixture has no
+    # findings attached.
+    for r in (2, 3):
+        for c in (20, 21, 22, 23):
+            assert ws.cell(row=r, column=c).value in (None, "")
 
 
 def test_write_xlsx_handles_missing_optional_fields(tmp_path):

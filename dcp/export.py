@@ -14,7 +14,7 @@ from __future__ import annotations
 import datetime as dt
 from pathlib import Path
 
-from dcp import db, worklist
+from dcp import db, findings as findings_mod, worklist
 
 
 METHODOLOGY_NOTE = """\
@@ -143,6 +143,11 @@ def write_xlsx(
         "Discovered via (humanised)",
         "Source portal URL",
         "Description",
+        # Phase-4 columns (NULL/blank for apps without findings yet).
+        "Findings — new disclosures",
+        "Findings — refinements",
+        "Findings — disclosed MW",
+        "Findings — headline",
     ]
     ws.append(headers)
     for col_idx, _ in enumerate(headers, 1):
@@ -168,6 +173,13 @@ def write_xlsx(
             or ""
         )
         app_type = (row.get("raw_metadata") or {}).get("app_type") or ""
+        # Phase-4 columns: populated only when the app has findings rows.
+        row_findings = row.get("findings") or []
+        f_counts = findings_mod.category_counts(row_findings)
+        new_count = f_counts.get(findings_mod.CATEGORY_NEW) or None
+        ref_count = f_counts.get(findings_mod.CATEGORY_REFINEMENT) or None
+        disclosed_mw = findings_mod.disclosed_mw_total(row_findings)
+        headline = findings_mod.headline_disclosure(row_findings) or None
         ws.append([
             rank,
             row["application_ref"],
@@ -188,6 +200,10 @@ def write_xlsx(
             via_human,
             row.get("url") or "",
             descr,
+            new_count,
+            ref_count,
+            disclosed_mw,
+            headline,
         ])
 
     # Column widths — calibrated for the dominant content per column.
@@ -196,12 +212,14 @@ def write_xlsx(
         "F": 8,  "G": 8,  "H": 9,  "I": 9,  "J": 28,
         "K": 50, "L": 13, "M": 14, "N": 50, "O": 60,
         "P": 40, "Q": 60, "R": 50, "S": 80,
+        # Phase-4 findings columns.
+        "T": 11, "U": 11, "V": 12, "W": 80,
     }
     for col, w in widths.items():
         ws.column_dimensions[col].width = w
 
     # Wrap text on the long columns so the row stays usable when sorted.
-    wrap_cols = {"N", "O", "P", "Q", "S"}
+    wrap_cols = {"N", "O", "P", "Q", "S", "W"}
     last_row = len(data.rows) + 1
     for col in wrap_cols:
         for r in range(2, last_row + 1):
