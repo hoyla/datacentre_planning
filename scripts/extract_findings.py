@@ -221,8 +221,8 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "signal_type": "applicant_name",
             "value_text": "Mrs Sally Hines, The John Innes Centre, Norwich Research Park",
             "evidence_text": (
-                "Applicant: Mrs Sally Hines, The John Innes Centre, Norwich Research Park, "
-                "Norwich, NR4 7UH"
+                "Applicant Mrs Sally Hines The John Innes Centre Norwich Research "
+                "Park Norwich NR4 7UH"
             ),
             "evidence_page": 1,
         },
@@ -231,7 +231,8 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "signal_type": "agent_name",
             "value_text": "Lanpro Services Limited (Mr Dean Starkey)",
             "evidence_text": (
-                "Agent: Mr Dean Starkey, Lanpro Services Limited, 98 Pottergate, Norwich, NR2 1EQ"
+                "Agent Mr Dean Starkey Lanpro Services Limited 98 Pottergate "
+                "Norwich NR2 1EQ"
             ),
             "evidence_page": 1,
         },
@@ -243,11 +244,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "discharges conditions 4, 5, 6, 7, 8, 10, 12, 20, 22, 23"
             ),
             "evidence_text": (
-                "DISCHARGE OF CONDITIONS IMPOSED ON 2012/1477 ... Condition 4: Surface water; "
-                "Condition 5: Foul water; Condition 6: Contamination; Condition 7: Verification; "
-                "Condition 8: Monitoring; Condition 10: External lighting; Condition 12: Fire "
-                "hydrants; Condition 20: Archaeology; Condition 22: Surfacing of footway/cycleway; "
-                "Condition 23: Roads, footways and cycleways"
+                "DISCHARGE OF CONDITIONS IMPOSED ON 2012/1477 "
+                "Condition 4 : Surface water "
+                "... Condition 5 : Foul water "
+                "... Condition 6 : Contamination "
+                "... Condition 8 : Monitoring "
+                "... Condition 10 : External lighting"
             ),
             "evidence_page": 3,
         },
@@ -2907,7 +2909,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
     # =====================================================================
     "Neath/P2025/0187": [
         {
-            "doc_sha_prefix": "440d3369",  # Design and Access Statement
+            "doc_sha_prefix": "8dcbaaad",  # Design and Access Statement (74p)
             "signal_type": "facility_classification",
             "value_text": (
                 "12 MW data centre (2 × 3.75 MW data halls = 7.5 MW IT load, "
@@ -2917,17 +2919,16 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "grid as back-up (up to 15.8 MW)."
             ),
             "evidence_text": (
-                "The existing nearby biomass power-station will provide up to "
-                "12 MW of power via a private wire to the data centre, with a "
-                "back-up connection to the national grid, which could provide "
-                "up to 15.8 MW. ... The data centre would consist of the "
-                "following: 2 Data Halls - 3.75 MW per hall ... Power "
-                "Infrastructure 5+1 block redundant"
+                "The biomass boiler will provide up to 12 MW of power via a "
+                "private wire to the data centre, with back-up from grid, "
+                "which could provide up to 15.8 MW. Therefore WBE is seeking "
+                "to maximise capacity of data centre (up to 12MW), subject to "
+                "site constraints"
             ),
-            "evidence_page": 18,
+            "evidence_page": 24,
         },
         {
-            "doc_sha_prefix": "440d3369",
+            "doc_sha_prefix": "8dcbaaad",
             "signal_type": "applicant_name",
             "value_text": (
                 "Western Bio-Energy (WBE) — owner / operator of the existing "
@@ -2939,27 +2940,24 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "Therefore WBE is seeking to maximise capacity of data centre "
-                "(up to 12MW), subject to site constraints. ... Port Talbot "
-                "Western Bio-Energy Site Layout 1044 - FUT - V1 - 00 - ..."
-            ),
-            "evidence_page": 39,
-        },
-        {
-            "doc_sha_prefix": "440d3369",
-            "signal_type": "total_it_load_mw",
-            "value_number": 7.5,
-            "value_unit": "MW (IT load, cloud-based model)",
-            "evidence_text": (
-                "Of 12MW (MVA), c.7.5 MW usable power/IT load would be "
-                "achieved, based on a cloud-based model, as opposed to an "
-                "AI-based model. ... Specification for Data Centre: Achieve "
-                "as close to 7.5MW IT capacity as possible within limitations "
-                "of power."
+                "(up to 12MW), subject to site constraints"
             ),
             "evidence_page": 24,
         },
         {
-            "doc_sha_prefix": "440d3369",
+            "doc_sha_prefix": "8dcbaaad",
+            "signal_type": "total_it_load_mw",
+            "value_number": 7.5,
+            "value_unit": "MW (IT load, cloud-based model)",
+            "evidence_text": (
+                "Of 12MW (MVA), c.7.5 MW usable power/ IT load would be "
+                "achieved, based on a cloud-based model, as opposed to an "
+                "AI-based model"
+            ),
+            "evidence_page": 24,
+        },
+        {
+            "doc_sha_prefix": "8dcbaaad",
             "signal_type": "renewable_supply_commitment",
             "value_text": (
                 "PRIVATE WIRE connection to the existing on-site Western Wood "
@@ -2972,8 +2970,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "evidence_text": (
                 "The biomass boiler will provide up to 12 MW of power via a "
                 "private wire to the data centre, with back-up from grid, "
-                "which could provide up to 15.8 MW. ... substation and power "
-                "connection to the existing Western Wood Biomass Plant"
+                "which could provide up to 15.8 MW"
             ),
             "evidence_page": 24,
         },
@@ -3143,10 +3140,11 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "generation for a data centre"
             ),
             "evidence_text": (
-                "Location: Poplar Business Park, 10 Prestons Road, London, E14 9RL. "
-                "APPROVAL OF NON-MATERIAL AMENDMENTS TO A PLANNING PERMISSION ... change all "
-                "2b/3p flats to 2b/4p flats (and associated minor internal layout changes) "
-                "within Block A ... relocate CHP plant from first floor A1 to external energy "
+                "APPROVAL OF NON-MATERIAL AMENDMENTS TO A PLANNING PERMISSION "
+                "... Location: Poplar Business Park, 10 Prestons Road, London, "
+                "E14 9RL ... change all 2b/3p flats to 2b/4p flats (and "
+                "associated minor internal layout changes) within Block A "
+                "... relocate CHP plant from first floor A1 to external energy "
                 "centre on the western boundary"
             ),
             "evidence_page": 1,
@@ -3208,7 +3206,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "doc_sha_prefix": "45512836",
             "signal_type": "agent_name",
             "value_text": "Barton Willmore Design (Mr James Carr)",
-            "evidence_text": "Mr James Carr, Barton Willmore Design, 7 Soho Square, London W1D 3QB",
+            "evidence_text": "Mr James Carr Barton Willmore Design 7 Soho Square London W1D 3QB",
             "evidence_page": 1,
         },
     ],
