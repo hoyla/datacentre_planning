@@ -42,15 +42,28 @@ from dcp import db  # noqa: E402
 
 _WS_RE = re.compile(r"\s+")
 # pypdf inserts spurious whitespace around lots of non-letter glyphs.
-# Common offenders, all observed in the corpus:
-#   "back-up"   → "back -up"     (hyphen / en-dash / em-dash all collapse to "-")
-#   "132kV/130MVA" → "132kv /130mva"  (slash)
-#   "M&E"       → "M & E"         (ampersand)
+# Observed-in-corpus offenders, all from real fail cases:
+#   "back-up"          → "back -up"     (hyphen / en-dash / em-dash → "-")
+#   "132kV/130MVA"     → "132kv /130mva" (slash)
+#   "M&E"              → "M & E"         (ampersand)
+#   "works. It"        → "works . It"    (sentence terminator)
+#   "Section 4.13:"    → "Section 4.13 :" (colon)
 # Collapse whitespace around the affected characters before comparison.
 # Dashes additionally fold onto plain "-" so en-/em-dash variants match
-# straight hyphens.
+# straight hyphens. The risk of over-collapsing (e.g. matching "Mr.Smith"
+# against "Mr. Smith") is acceptable for substring verification — both
+# forms still substring-match the same way as long as the chars match.
 _DASH_WS_RE = re.compile(r"\s*[-–—]\s*")
-_GLUE_WS_RE = re.compile(r"\s*([/&+])\s*")
+_GLUE_WS_RE = re.compile(r"\s*([/&+\.,:;\(\)])\s*")
+# pypdf often splits a trailing one-letter suffix off a word at a line
+# break:
+#   "data centre s will"    → true source is "data centres will" (plural)
+#   "energ y generation"    → true source is "energy generation"
+#   "centr e of"            → true source is "centre of"
+# Repair the split when an [a-z]{4,} word is followed by " <letter> "
+# (or " <letter>" + punct). The lookahead excludes digit/letter
+# continuations so "policy s3" and "section A" patterns are left alone.
+_PLURAL_SPLIT_RE = re.compile(r"\b([a-z]{4,})\s+(s)(?=\s|[.,;:?!\)\]\}])")
 # Quote-mark drift: humans recording a quote typically type whichever
 # of ' or " is closest to hand, and pypdf preserves whatever's in the
 # document (often curly variants). The mark itself rarely affects
@@ -63,7 +76,9 @@ def _normalise(text: str) -> str:
     text = _QUOTE_STRIP.sub("", text)
     text = _DASH_WS_RE.sub("-", text)
     text = _GLUE_WS_RE.sub(r"\1", text)
-    return _WS_RE.sub(" ", text).strip().lower()
+    text = _WS_RE.sub(" ", text).strip().lower()
+    text = _PLURAL_SPLIT_RE.sub(r"\1\2", text)
+    return text
 
 
 def _cache_path_for_bytes(bytes_path: str) -> Path:

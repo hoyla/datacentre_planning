@@ -603,15 +603,16 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "The LPA issued a formal screening opinion on 13th May 2025. It "
-                "confirmed that an EIA would not be required. It stated inter alia that:- "
-                "'North Lincolnshire Council advises that in light of the available "
-                "information and having regard to the location and nature of the proposed "
-                "development and the selection criteria for screening Schedule 2 "
-                "development as set out in Schedule 3 of the 2017 Regulations, the "
-                "proposal would be unlikely to have any significant environmental "
-                "effects.' ... The proposed development although constituting Schedule 2 "
-                "development category 10 is not considered to warrant an Environmental "
-                "Impact Assessment."
+                "confirmed that an EIA would not be required. It stated inter alia "
+                "that:- 'North Lincolnshire Council advises that in light of the "
+                "available information and having regard to the location and nature "
+                "of the proposed development and the selection criteria for screening "
+                "Schedule 2 development as set out in "
+                "... Schedule 3 of the 2017 Regulations, the proposal would be "
+                "unlikely to have any significant environmental effects "
+                "... The proposed development although constituting Schedule 2 "
+                "development category 10 is not considered to warrant an "
+                "Environmental Impact Assessment"
             ),
             "evidence_page": 6,
         },
@@ -647,7 +648,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "points, comprising 20 stacks associated with the energy centre, and "
                 "up to 650 stacks associated with the back-up diesel generators."
             ),
-            "evidence_page": 67,
+            "evidence_page": 68,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -656,11 +657,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_unit": "MW",
             "evidence_text": (
                 "Table A4-2: Plant Specifications and Modelled Emissions and Release "
-                "Conditions (per Unit) — Energy Centre: Specified Net Fuel Input 5,678 "
-                "kW, Power Output 2,499 kW; flue exhaust 120°C (heat recovery "
-                "technology); Specified NOx Emission Rate 50 mg/Nm³ at 5% O₂ (with SCR)."
+                "Conditions (per Unit) ... Energy Centre Back-up Generator "
+                "Specified Net Fuel Input (kW) 5,678 6,644 ... Power Output (kW) "
+                "2,499 2,480 ... Specified Exhaust Temperature (°C) 120 c 500 ... "
+                "Specified NOx Emission Rate (mg/Nm3) d 50 e 168 e"
             ),
-            "evidence_page": 68,
+            "evidence_page": 69,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -671,12 +673,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "back-up diesel generators run only for testing or grid-failure"
             ),
             "evidence_text": (
-                "The model has been run assuming continuous operation of the energy "
-                "centre, whilst the outputs from the generators have been scaled based "
-                "on their anticipated maximum annual operation (six hours per generator "
-                "each year)."
+                "the model has been run assuming continuous operation of the energy "
+                "centre, whilst the outputs from the generators have been scaled "
+                "based on their anticipated maximum an nual operation ( six hours "
+                "per generator each year)"
             ),
-            "evidence_page": 35,
+            "evidence_page": 36,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -688,11 +690,11 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "glasshouse named in the application description"
             ),
             "evidence_text": (
-                "Specified Exhaust Temperature (°C): Energy Centre 120°C — It is "
+                "Specified Exhaust Temperature (°C) 120 c 500 ... It is "
                 "assumed that the energy centre plant will be installed with Heat "
-                "Recovery technology."
+                "Recovery technology"
             ),
-            "evidence_page": 68,
+            "evidence_page": 69,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -712,11 +714,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "signal_type": "engine_model",
             "value_text": "Kohler KD3100-E (16-cylinder, US EPA Tier 2 compliant)",
             "evidence_text": (
-                "KOHLER Industrial Diesel Generator Set KD3100-E, 50 Hz - Emission "
-                "Optimized - EPA Tier 2 Compliant ... Engine ref. KD83V16-5AE5, Number "
-                "of cylinders 16, Displacement 82.74 L, Maximum stand-by power 2,663 kW."
+                "diesel generators will be Kohler KD Series KD3100-E sets, with "
+                "outputs of 2,480 kWe / 3,100 kVA. In total, a maximum of 650 of "
+                "these generators may be required to service the proposed "
+                "development's backup power requirements"
             ),
-            "evidence_page": 66,
+            "evidence_page": 20,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -724,11 +727,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_number": 2.48,
             "value_unit": "MW",
             "evidence_text": (
-                "Back-up Generator per-unit: Specified Net Fuel Input 6,644 kW, Power "
-                "Output 2,480 kW; Specified NOx Emission Rate 168 mg/Nm³ at 5% O₂ "
-                "(with SCR); Specified PM Emission Rate 64.5 mg/Nm³."
+                "Energy Centre Back-up Generator Specified Net Fuel Input (kW) "
+                "5,678 6,644 ... Power Output (kW) 2,499 2,480 ... Specified "
+                "NOx Emission Rate (mg/Nm3) d 50 e 168 e ... Specified PM "
+                "Emission Rate (mg/Nm3) d N/A 64.5"
             ),
-            "evidence_page": 68,
+            "evidence_page": 69,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -741,15 +745,15 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "the outputs from the generators have been scaled based on their "
-                "anticipated maximum annual operation (six hours per generator each "
-                "year). A cold start penalty (see Paragraph 4.15) has been applied to "
-                "the emission concentrations from the back-up generators. ... It is "
-                "assumed that the emission limit value will be met within 10 minutes of "
-                "a cold start-up. ... assuming each back-up generator operates for 10 "
-                "minutes at the unabated NOx emission concentration (i.e. the US EPA "
-                "Tier 2 emission standard of 6,400 mg/kWh ... equivalent to 2,000 mg/Nm³)"
+                "anticipated maximum an nual operation ( six hours per generator "
+                "each year). A cold start penalty (see Paragraph 4.15) has been "
+                "applied to the emission concentrations from the back-up generators "
+                "... It is assumed that the emission limit value will be met within "
+                "10 minutes of a cold start-up ... assuming each back-up generator "
+                "operates for 10 minutes at the unabated NOx emission concentration "
+                "(i.e. the US EPA Tier 2 emission standard of 6,400 mg/kWh"
             ),
-            "evidence_page": 68,
+            "evidence_page": 69,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -760,13 +764,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "'negligible'); 1-hour maximum: 67.4 µg/m³ vs 200 µg/m³ objective"
             ),
             "evidence_text": (
-                "Table 7-1: Predicted Annual Mean Nitrogen Dioxide (NO₂) Concentrations "
-                "in 2023 (µg/m³). Receptor A: Baseline 24.1, With Development 25.0, % "
-                "Change 2, Impact Descriptor Negligible. ... Overall, the construction "
-                "and operational air quality effects of Elsham Tech Park are judged to "
-                "be 'not significant'."
+                "Table 7-1: Predicted Annual Mean Nitrogen Dioxide (NO2) "
+                "Concentrations in 2023 (µg/m3) ... Overall, the construction "
+                "and operational air quality effects of Elsham Tech Park are "
+                "judged to be not significant"
             ),
-            "evidence_page": 35,
+            "evidence_page": 36,
         },
         {
             "doc_sha_prefix": "431ed476",
@@ -793,13 +796,12 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             ),
             "evidence_text": (
                 "The impacts of emissions from the proposed energy plant have been "
-                "predicted using the ADMS-6 dispersion model. ... The energy centre "
+                "predicted using the ADMS-6 dispersion model ... The energy centre "
                 "flues have been modelled at a height of 12 m, whilst the back-up "
-                "generator flues have been modelled 4 m above the building upon which "
-                "it is located; back-up generator stacks range in height between 18 m "
-                "and 27 m."
+                "generator flues have been modelled 4 m above the building upon "
+                "which it is located"
             ),
-            "evidence_page": 69,
+            "evidence_page": 68,
         },
     ],
     # =====================================================================
@@ -2201,15 +2203,14 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "the campus will comprise between 250,000sq.m. and 340,000sq.m. "
                 "of data centre floorspace and associated external plant and "
                 "security, between 26,000sq.m and 60.000sq.m of indoor "
-                "horticulture facilities, green energy initiative (including up "
-                "to 6,000sq.m of hydrogen fuel cell energy generation, and a "
-                "district heating energy centre (between 200sq.m and 2,800sq.m)), "
-                "a visitor centre (between 200sq.m and 600sq.m) and electrical "
-                "substations and distribution infrastructure (between 3,000sq.m "
-                "and 20,000sq.m), civil engineering works, hard and soft "
-                "landscaping, formation of associated parkland/enhanced "
-                "biodiversity habitat (minimum 113ha) at North Ockendon, "
-                "Havering, Greater London."
+                "horticulture facilities, green energy initiative "
+                "... a district heating energy centre (between 200sq.m and "
+                "2,800sq.m)), a visitor centre (between 200sq.m and 600sq.m) "
+                "and electrical substations and distribution infrastructure "
+                "(between 3,000sq.m and 20,000sq.m), civil engineering "
+                "... works, hard and soft landscaping, formation of "
+                "associated parkland/enhanced biodiversity habitat (minimum "
+                "113ha) at North Ockendon, Havering, Greater London"
             ),
             "evidence_page": 1,
         },
@@ -2219,8 +2220,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
             "value_number": 6000,
             "value_unit": "sqm (max hydrogen fuel cell area)",
             "evidence_text": (
-                "green energy initiative (including up to 6,000sq.m of hydrogen "
-                "fuel cell energy generation"
+                "green energy initiative (including up to 6,000sq.m of hydrogen"
             ),
             "evidence_page": 1,
         },
@@ -2265,7 +2265,7 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "building (no inferred relationship with other dataset apps "
                 "that share the address)"
             ),
-            "evidence_text": "Ben Seward, Ramboll, 240 Blackfriars Road, London SE1 8NW",
+            "evidence_text": "Ben Seward Ramboll 240 Blackfriars Road London SE1 8NW",
             "evidence_page": 1,
         },
         {
@@ -2282,11 +2282,11 @@ FINDINGS_BY_APP: dict[str, list[dict[str, Any]]] = {
                 "Havering has been declared an Air Quality Management Area "
                 "(AQMA) for exceedances of the annual mean nitrogen dioxide "
                 "objective and daily mean (PM10) National Air Quality Strategy "
-                "Objective. ... It is accepted that impacts from combustion "
-                "based heating and hot water plant can be scoped out as this "
-                "type of equipment is not proposed within the development."
+                "Objective ... that impacts from combustion based heating and "
+                "hot water plant can be scoped out as this type of equipment "
+                "is not proposed within the development"
             ),
-            "evidence_page": 4,
+            "evidence_page": 5,
         },
     ],
     # =====================================================================
