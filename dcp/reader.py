@@ -24,6 +24,7 @@ from pathlib import Path
 from dcp import cohorts as cohorts_mod
 from dcp import corpus_stats as corpus_stats_mod
 from dcp import db, worklist
+from dcp.map import OSM_BUNDLED, PLANT_BUCKET_COLOR, _bucket
 from dcp.worklist import _ref_anchor
 
 
@@ -538,6 +539,55 @@ _HTML_TEMPLATE = r"""<!doctype html>
     }}
     #right {{ flex: 1; position: relative; }}
     #map {{ position: absolute; inset: 0; }}
+    /* Map legend — bottom-left overlay matching the standalone map's
+       layout. Sits above Leaflet's default tile layer but below the
+       attribution + zoom controls. */
+    .map-legend {{
+      position: absolute;
+      bottom: 24px; left: 10px;
+      z-index: 800;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 11px; line-height: 1.4;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      max-width: 240px;
+      pointer-events: none;
+    }}
+    .map-legend .legend-title {{
+      font-weight: 600; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.4px;
+      color: var(--muted);
+      margin: 0 0 3px;
+    }}
+    .map-legend .legend-row {{ margin: 2px 0; }}
+    .map-legend .legend-dot {{
+      display: inline-block;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: middle;
+    }}
+    /* Outline-only variant for OSM power plants, matching the map's
+       hollow plant markers. */
+    .map-legend .legend-ring {{
+      display: inline-block;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      border: 1.8px solid;
+      box-sizing: border-box;
+      margin-right: 5px;
+      vertical-align: middle;
+      background: transparent;
+    }}
+    .map-legend hr {{
+      border: 0; border-top: 1px solid var(--rule); margin: 5px 0;
+    }}
+    .map-legend .legend-note {{ color: var(--muted); font-size: 10px; }}
+    /* Tighten Leaflet's layer-control box to match the legend's density */
+    .leaflet-control-layers {{ font-size: 12px; }}
+    .leaflet-control-layers-expanded {{ padding: 8px 10px; }}
     /* --- Cards ------------------------------------------------------- */
     .chapter {{ margin-bottom: 24px; }}
     .chapter > h2 {{
@@ -676,7 +726,26 @@ _HTML_TEMPLATE = r"""<!doctype html>
   <div id="left">
     <div id="cards"></div>
   </div>
-  <div id="right"><div id="map"></div></div>
+  <div id="right">
+    <div id="map"></div>
+    <div class="map-legend" id="map-legend">
+      <div class="legend-title">Worklist applications</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#1a7f37"></span> DC verdict</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#bf8700"></span> Adjacent</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#777"></span> Unknown</div>
+      <div class="legend-row"><span style="color:#9467bd">★</span> Foxglove top-10 ·
+        <span style="color:#d35400">⚑</span> Inferred coords</div>
+      <hr>
+      <div class="legend-title">UK power plants <span style="text-transform:none;color:var(--muted);font-weight:400">(OSM, hollow rings)</span></div>
+      <div class="legend-row"><span class="legend-ring" style="border-color:#d62728"></span> Fossil</div>
+      <div class="legend-row"><span class="legend-ring" style="border-color:#ff7f0e"></span> Biomass / waste</div>
+      <div class="legend-row"><span class="legend-ring" style="border-color:#9467bd"></span> Nuclear</div>
+      <div class="legend-row"><span class="legend-ring" style="border-color:#2ca02c"></span> Renewable</div>
+      <div class="legend-row"><span class="legend-ring" style="border-color:#1f77b4"></span> Storage</div>
+      <hr>
+      <div class="legend-note">Worklist filled · plants hollow. Worklist marker size = Tier-1 signal count. Toggle layers top-right.</div>
+    </div>
+  </div>
 </main>
 
 <script>
@@ -684,6 +753,8 @@ const RELEASE = {release_json};
 const CHAPTERS = {chapters_json};
 const ENTRIES = {entries_json};
 const INTRO_MD = {intro_md_json};
+const PLANTS = {plants_json};
+const PLANT_BUCKET_COLOR = {plant_bucket_color_json};
 
 // ----- Map setup ---------------------------------------------------------
 const map = L.map('map', {{ zoomControl: true, preferCanvas: true }})
@@ -700,6 +771,10 @@ const VERDICT_COLOR = {{
   "unrelated": "#bcbcbc",
 }};
 
+// Worklist points sit in a layer group so the layer control can toggle
+// the whole layer. Filter logic (search / chips) adds/removes individual
+// markers from this group rather than from the map directly.
+const worklistLayer = L.layerGroup().addTo(map);
 const markers = {{}};  // ref -> L.circleMarker
 for (const ref in ENTRIES) {{
   const e = ENTRIES[ref];
@@ -719,9 +794,76 @@ for (const ref in ENTRIES) {{
   m.on("click", () => {{
     scrollCardIntoView(ref);
   }});
-  m.addTo(map);
+  m.addTo(worklistLayer);
   markers[ref] = m;
 }}
+
+// ----- Power-plant overlays (OSM) ---------------------------------------
+// One Leaflet LayerGroup per bucket so the user can toggle fossil /
+// biomass+waste / nuclear / renewable / storage independently. Default
+// visibility mirrors the standalone folium map: editorially-relevant
+// buckets (fossil, biomass/waste, nuclear) on; renewable + storage +
+// other off.
+const plantLayers = {{
+  fossil:        L.layerGroup(),
+  biomass_waste: L.layerGroup(),
+  nuclear:       L.layerGroup(),
+  renewable:     L.layerGroup(),
+  storage:       L.layerGroup(),
+  other:         L.layerGroup(),
+}};
+
+function plantPopupHtml(p) {{
+  const name = p.name || '(unnamed)';
+  return `
+    <div style="font-family:system-ui,sans-serif;font-size:12px;">
+      <div style="font-weight:bold">${{escapeHtml(name)}}</div>
+      <table style="border-collapse:collapse;width:100%">
+        <tr><td><b>Operator</b></td><td>${{escapeHtml(p.operator || '?')}}</td></tr>
+        <tr><td><b>Source</b></td><td>${{escapeHtml(p.plant_source || '?')}}</td></tr>
+        <tr><td><b>Method</b></td><td>${{escapeHtml(p.plant_method || '?')}}</td></tr>
+        <tr><td><b>Capacity</b></td><td>${{escapeHtml(p.plant_output_electricity || '?')}}</td></tr>
+      </table>
+      <div style="color:#888;font-size:11px;margin-top:2px">OSM ${{p.osm_type || '?'}}/${{p.osm_id || '?'}}</div>
+    </div>
+  `;
+}}
+
+for (const p of PLANTS) {{
+  const bucket = p.bucket || 'other';
+  const color = PLANT_BUCKET_COLOR[bucket] || PLANT_BUCKET_COLOR.other;
+  // Plants render as hollow (outline-only) circles to stay visually
+  // distinct from worklist applications (filled circles), independent
+  // of the colour palette — so DC-green and renewable-green don't
+  // clash on the map. Slightly thicker stroke so the ring stays
+  // visible at small sizes.
+  const m = L.circleMarker([p.lat, p.lon], {{
+    radius: 4.5, color: color, weight: 1.8,
+    fill: false, fillOpacity: 0, opacity: 0.85,
+  }});
+  m.bindTooltip(`${{p.name || '(unnamed)'}} (${{p.plant_source || '?'}})`);
+  m.bindPopup(() => plantPopupHtml(p), {{ maxWidth: 280 }});
+  m.addTo(plantLayers[bucket] || plantLayers.other);
+}}
+
+// Default-on for the editorially-relevant buckets.
+plantLayers.fossil.addTo(map);
+plantLayers.biomass_waste.addTo(map);
+plantLayers.nuclear.addTo(map);
+
+L.control.layers(
+  null,
+  {{
+    "Worklist applications":          worklistLayer,
+    "Power plants · fossil":          plantLayers.fossil,
+    "Power plants · biomass / waste": plantLayers.biomass_waste,
+    "Power plants · nuclear":         plantLayers.nuclear,
+    "Power plants · renewable":       plantLayers.renewable,
+    "Power plants · storage":         plantLayers.storage,
+    "Power plants · other":           plantLayers.other,
+  }},
+  {{ position: 'topright', collapsed: false }}
+).addTo(map);
 
 function popupHtml(e) {{
   const fx = e.foxglove ? ' <span style="color:#9467bd">★ Foxglove top-10</span>' : '';
@@ -990,13 +1132,14 @@ function applyFilters() {{
 
   visibleCountEl.textContent = `${{total}} of ${{Object.keys(ENTRIES).length}} visible`;
 
-  // Map markers
+  // Map markers — add/remove against the worklist layer group rather
+  // than the map directly so the layer control's toggle still works.
   for (const ref in markers) {{
     const m = markers[ref];
     const e = ENTRIES[ref];
     const visible = (!q || e.search_blob.includes(q)) && matchesFilters(e);
-    if (visible && !map.hasLayer(m))      m.addTo(map);
-    else if (!visible && map.hasLayer(m)) map.removeLayer(m);
+    if (visible && !worklistLayer.hasLayer(m))      worklistLayer.addLayer(m);
+    else if (!visible && worklistLayer.hasLayer(m)) worklistLayer.removeLayer(m);
   }}
 }}
 
@@ -1017,6 +1160,37 @@ applyFilters();
 # ---------------------------------------------------------------------------
 
 
+def _load_plants_for_viewer(osm_path: Path = OSM_BUNDLED) -> list[dict]:
+    """Load the OSM power-plants geojson and project to the minimum field
+    set the viewer needs (coordinates + bucket + popup-relevant props).
+    Pre-stamping the bucket here means the client doesn't repeat the
+    classification logic.
+    """
+    if not osm_path.exists():
+        return []
+    raw = json.loads(osm_path.read_text())
+    out: list[dict] = []
+    for feat in raw.get("features", []):
+        geom = feat.get("geometry") or {}
+        coords = geom.get("coordinates")
+        if not coords or len(coords) != 2:
+            continue
+        props = feat.get("properties") or {}
+        out.append({
+            "lon": coords[0],
+            "lat": coords[1],
+            "bucket": _bucket(props.get("plant_source")),
+            "name": props.get("name"),
+            "operator": props.get("operator"),
+            "plant_source": props.get("plant_source"),
+            "plant_method": props.get("plant_method"),
+            "plant_output_electricity": props.get("plant_output_electricity"),
+            "osm_type": props.get("osm_type"),
+            "osm_id": props.get("osm_id"),
+        })
+    return out
+
+
 def build_reader(
     *,
     model: str = "granite4.1:30b",
@@ -1025,13 +1199,15 @@ def build_reader(
     text_md_path: Path | None = None,
     version: str = "1.0",
     generated_at: dt.datetime | None = None,
+    osm_path: Path | None = None,
 ) -> Path:
     """Build the integrated split-screen viewer HTML at `output_path`.
 
     `geojson_path` and `text_md_path` are accepted for API symmetry with
     the release orchestrator but the viewer reads from the DB directly —
     embedding the same data ensures the four artefacts (viewer, map,
-    geojson, markdown) stay in lock-step.
+    geojson, markdown) stay in lock-step. `osm_path` overrides the
+    bundled OSM power-plants source for the toggleable overlay.
     """
     generated_at = generated_at or dt.datetime.now()
     with db.connect() as conn:
@@ -1045,6 +1221,8 @@ def build_reader(
         e = _build_entry(row, rank, data.anchors, ref_to_chapter)
         entries[e["ref"]] = e
 
+    plants = _load_plants_for_viewer(osm_path or OSM_BUNDLED)
+
     release_payload = {
         "version": version,
         "generated": generated_at.isoformat(timespec="seconds"),
@@ -1054,6 +1232,7 @@ def build_reader(
         "verdict_adjacent": stats["verdicts"]["adjacent"],
         "verdict_unrelated": stats["verdicts"]["unrelated"],
         "worklist_size": len(data.rows),
+        "plants_total": len(plants),
     }
 
     intro_md = _build_intro_markdown(
@@ -1068,6 +1247,8 @@ def build_reader(
         chapters_json=json.dumps(chapters, ensure_ascii=False),
         entries_json=json.dumps(entries, ensure_ascii=False),
         intro_md_json=json.dumps(intro_md, ensure_ascii=False),
+        plants_json=json.dumps(plants, ensure_ascii=False),
+        plant_bucket_color_json=json.dumps(PLANT_BUCKET_COLOR, ensure_ascii=False),
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(html)
