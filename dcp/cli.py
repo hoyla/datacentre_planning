@@ -202,6 +202,60 @@ def map(model: str, output_dir: Path, osm_path: Path | None) -> None:
         click.echo(f"  {k}: {v}")
 
 
+@main.command()
+@click.option("--version", "version_str", required=True,
+              help="Release version, e.g. '1.0'. Bumped manually per published release.")
+@click.option("--model", default="granite4.1:30b",
+              help="Triage model whose worklist drives the release.")
+@click.option("--top", "md_top", type=int, default=50,
+              help="Top-N curated cards in the text-only markdown.")
+@click.option("--output-dir", type=click.Path(file_okay=False, path_type=Path),
+              default=Path("data/exports"),
+              help="Parent dir under which the dated release folder is created.")
+@click.option("--osm-path", type=click.Path(dir_okay=False, path_type=Path), default=None,
+              help="OSM power-plants GeoJSON. Default: data/priors/osm/uk_power_plants.geojson.")
+@click.option("--rerun-findings-verification/--copy-findings-verification", default=False,
+              help="Regenerate findings verification (re-runs verify_findings.py) or "
+                   "copy the most recent existing report (default: copy).")
+@click.option("--rerun-map-spotcheck/--copy-map-spotcheck", default=False,
+              help="Regenerate map spot-check (slow: 100s of rate-limited Nominatim calls) "
+                   "or copy the most recent existing report (default: copy).")
+def release(
+    version_str: str, model: str, md_top: int, output_dir: Path,
+    osm_path: Path | None,
+    rerun_findings_verification: bool, rerun_map_spotcheck: bool,
+) -> None:
+    """Stage 6 culmination: build a complete hand-off bundle in a single
+    versioned folder.
+
+    \b
+    Produces `data/exports/datacentre_energy_review_v<version>_<date>/`
+    containing the integrated viewer, the markdown + xlsx text/spreadsheet,
+    the standalone map + geojson + kml, the OSM-context geojson, the
+    "How to read this" companion, and the four QA artefacts (findings
+    verification, privacy sweep, Foxglove reconciliation, map spot-check).
+    """
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+    from dcp import release as release_mod
+
+    manifest = release_mod.build_release(
+        version=version_str,
+        output_root=output_dir,
+        model=model,
+        md_top=md_top,
+        osm_path=osm_path,
+        rerun_findings_verification=rerun_findings_verification,
+        rerun_map_spotcheck=rerun_map_spotcheck,
+    )
+    click.echo(f"Release v{version_str} built:")
+    click.echo(f"  folder: {manifest['folder']}")
+    for k, v in manifest.items():
+        if k in ("folder", "version"):
+            continue
+        click.echo(f"  {k}: {v}")
+
+
 @main.command("fetch-docs")
 @click.option("--source", required=True, type=click.Choice(["idox", "ocella"]),
               help="Portal adapter to use (`idox` or `ocella`).")
