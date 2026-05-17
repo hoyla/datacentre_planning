@@ -1,0 +1,117 @@
+# Inferred map-pin coordinates for applications where the raw PlanIt
+# record has no `location_x` / `location_y`. Per the project's
+# never-mutate-source-material principle, these live ALONGSIDE the raw
+# record — `dcp.map._row_to_point` falls back to this file when the
+# source coords are null. Inferred pins are flagged with
+# `inferred_coords: true` in the worklist geojson + popup so they're
+# visually distinguishable from source-coord pins.
+#
+# Each entry records:
+#   - ref:       the application_ref
+#   - lat:       inferred latitude
+#   - lon:       inferred longitude
+#   - source:    defensible provenance — how the coords were derived
+
+entries:
+
+  - ref: Havering/Z0001.24
+    lat: 51.5434
+    lon: 0.3215
+    source: |
+      Nominatim forward-search for "Corner Farm, North Ockendon, RM14"
+      returned (51.5434, 0.3215) at "Corner Farm, Fen Lane, London
+      Borough of Havering, RM14 3RB" (2026-05-17). The application
+      address is "East Havering Data Centre Campus North of Corner
+      Farm Cottage Fen Lane" — the LDO campus extent is the Fen Lane
+      / North Ockendon parcels north of this point; pin is set at
+      Corner Farm itself as the named landmark in the address.
+
+  - ref: MiltonKeynes/PLN/2024/2768
+    lat: 52.0563
+    lon: -0.7563
+    source: |
+      Nominatim forward-search for "Rockingham Drive, Linford Wood,
+      Milton Keynes" returned three close candidates spanning MK14
+      6PD / 6HG / 6PP at the Linford Wood Business Centre area
+      (2026-05-17). Pin is set to the midpoint of the road segment —
+      site is "Land off Rockingham Drive", precise plot extent not
+      named in the address text.
+
+  # Glasgow University Avenue cluster (8 refs). The same campus has
+  # other refs (Glasgow/19/03521/MSC, 19/03378/MSC, 19/01636/MSC,
+  # 19/00363/PPP — worklist ranks 57, 58, 60, 61) whose PlanIt records
+  # carry coords at (55.872, -4.294) ± ~30m. The unmapped refs below
+  # use the exact address text "Site At University Avenue Glasgow" —
+  # same site, same description, just missing the location_x/y from
+  # PlanIt. Coords taken as the centroid of the four sibling pins.
+  - ref: Glasgow/24/02285/NMV01
+    lat: 55.87199
+    lon: -4.29375
+    source: |
+      Sibling-ref coord backfill: same address ("Site At University
+      Avenue Glasgow") as Glasgow/19/03521/MSC, 19/03378/MSC,
+      19/01636/MSC, 19/00363/PPP — all four have PlanIt coords
+      averaging (55.87199, -4.29375). Same physical site (Glasgow
+      University data centre); coords cloned from the geocoded
+      siblings on 2026-05-17.
+
+  - ref: Glasgow/24/01681/DOC03
+    lat: 55.87199
+    lon: -4.29375
+    source: |
+      Sibling-ref coord backfill — same site as Glasgow/19/03521/MSC
+      cluster. See Glasgow/24/02285/NMV01 entry for derivation.
+
+  - ref: Glasgow/25/01338/MSC
+    lat: 55.87199
+    lon: -4.29375
+    source: |
+      Sibling-ref coord backfill — same site as Glasgow/19/03521/MSC
+      cluster. See Glasgow/24/02285/NMV01 entry for derivation.
+
+  - ref: Glasgow/24/01681/NMV01
+    lat: 55.87199
+    lon: -4.29375
+    source: |
+      Sibling-ref coord backfill — same site as Glasgow/19/03521/MSC
+      cluster. See Glasgow/24/02285/NMV01 entry for derivation.
+
+  - ref: Glasgow/24/01681/DOC02
+    lat: 55.87199
+    lon: -4.29375
+    source: |
+      Sibling-ref coord backfill — same site as Glasgow/19/03521/MSC
+      cluster. See Glasgow/24/02285/NMV01 entry for derivation.
+
+  - ref: Glasgow/24/01681/DOC01
+    lat: 55.87199
+    lon: -4.29375
+    source: |
+      Sibling-ref coord backfill — same site as Glasgow/19/03521/MSC
+      cluster. See Glasgow/24/02285/NMV01 entry for derivation.
+
+  - ref: Glasgow/24/02285/MSC
+    lat: 55.87199
+    lon: -4.29375
+    source: |
+      Sibling-ref coord backfill — same site as Glasgow/19/03521/MSC
+      cluster. See Glasgow/24/02285/NMV01 entry for derivation.
+
+  - ref: Glasgow/24/01681/MSC
+    lat: 55.87199
+    lon: -4.29375
+    source: |
+      Sibling-ref coord backfill — same site as Glasgow/19/03521/MSC
+      cluster. See Glasgow/24/02285/NMV01 entry for derivation.
+
+  # Tower Hamlets EMR Bidder Street. Same site as the related
+  # TowerHamlets/PA/24/01150/NC (rank 46) and Newham/24/00088/FUL
+  # (rank 51, editorial highlight), both of which have PlanIt coords.
+  - ref: TowerHamlets/PA/24/00091/NC
+    lat: 51.51779
+    lon: 0.00377
+    source: |
+      Sibling-ref coord backfill — address ("Land At Former EMR Site,
+      Bidder Street, Canning Town") is identical to
+      TowerHamlets/PA/24/01150/NC (rank 46) which has PlanIt coords
+      (51.51779, 0.00377). Coords cloned from sibling on 2026-05-17.

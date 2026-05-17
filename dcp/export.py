@@ -15,6 +15,7 @@ import datetime as dt
 from pathlib import Path
 
 from dcp import cohorts as cohorts_mod
+from dcp import corpus_stats as corpus_stats_mod
 from dcp import db, findings as findings_mod, worklist
 
 
@@ -111,9 +112,9 @@ def _cohort_sections(
     lines.append(
         "Themed groupings of related applications — operator networks, "
         "spatial clusters, planning-route patterns. Within each cohort, "
-        "cards run in rank order. Apps that belong to more than one "
-        "cohort appear as a full card in their primary cohort and as "
-        "a cross-reference in the others."
+        "cards run in rank order. Applications that belong to more "
+        "than one cohort appear as a full card in their primary cohort "
+        "and as a cross-reference in the others."
     )
     lines.append("")
 
@@ -192,8 +193,8 @@ def _excluded_section(excluded: list[dict]) -> list[str]:
     lines.append(
         "Applications that the deep-read pass has confirmed are NOT data "
         "centres, or are duplicate consultation-copies of substantive "
-        "apps elsewhere on this worklist. Shown here so reviewers can "
-        "sanity-check (and dispute) the filtering."
+        "applications elsewhere on this worklist. Shown here so reviewers "
+        "can sanity-check (and dispute) the filtering."
     )
     lines.append("")
     # Resolve exclusions YAML to add the notes alongside the tag.
@@ -224,6 +225,7 @@ def render_markdown(
     model: str,
     generated_at: dt.datetime,
     excluded: list[dict] | None = None,
+    stats: dict | None = None,
 ) -> str:
     s = data.summary
     rows = data.rows
@@ -242,16 +244,55 @@ def render_markdown(
     out.append("")
     out.append("## At a glance")
     out.append("")
-    out.append(f"- **Universe:** {s['total']} applications triaged.")
+    # Universe line: prefer the corpus-stats variant (date span + by-source
+    # breakdown) when available, falling back to the worklist summary alone.
+    if stats:
+        u = stats["universe"]
+        date_span = ""
+        if u["date_min"] and u["date_max"]:
+            date_span = (
+                f" (date received {u['date_min'].isoformat()} → "
+                f"{u['date_max'].isoformat()})"
+            )
+        src_parts = ", ".join(f"{n} from `{name}`" for name, n in u["by_source"])
+        out.append(
+            f"- **Universe:** {u['total']} applications ingested{date_span}, "
+            f"all triaged by `{model}`."
+            + (f" Sources: {src_parts}." if src_parts else "")
+        )
+    else:
+        out.append(f"- **Universe:** {s['total']} applications triaged.")
     out.append(
         f"- **Verdict mix:** DC {s['dc']} · adjacent {s['adjacent']} · "
         f"unrelated {s['unrelated']} · unknown {s['unknown']}."
     )
-    out.append(
-        f"- **Worklist size:** {s['worklist']} applications "
-        f"(DC/adjacent ∩ deep-read yes/maybe, or Foxglove-tagged); "
-        f"deep-read false-positives and known duplicates filtered."
-    )
+    if stats:
+        f = stats["filters"]
+        out.append(
+            f"- **Worklist size:** {s['worklist']} applications "
+            f"(DC/adjacent ∩ deep-read yes/maybe, or Foxglove-tagged) — "
+            f"{f['excluded']} confirmed-not-a-DC after deep-read and "
+            f"{f['duplicates']} consultation-stage duplicates filtered."
+        )
+        d = stats["documents"]
+        out.append(
+            f"- **Documents on file:** {d['docs_total']} fetched, "
+            f"covering {d['apps_with_docs']} applications."
+        )
+        fn = stats["findings"]
+        out.append(
+            f"- **Document-extracted findings:** {fn['findings_total']} findings on "
+            f"{fn['apps_with_findings']} applications from "
+            f"{fn['documents_with_findings']} documents — an editorially-"
+            f"selected sample, not the full worklist (see *How to read "
+            f"this* below)."
+        )
+    else:
+        out.append(
+            f"- **Worklist size:** {s['worklist']} applications "
+            f"(DC/adjacent ∩ deep-read yes/maybe, or Foxglove-tagged); "
+            f"deep-read false-positives and known duplicates filtered."
+        )
     out.append(f"- **Companion xlsx:** all {s['worklist']} worklist entries, flat table for filtering.")
     out.append("")
 
@@ -267,8 +308,8 @@ def render_markdown(
         "a one-line model reasoning, the full description verbatim (so you can "
         "sanity-check the LLM), a `Why this is on the worklist` explanation of how "
         "the application entered our universe, document-extracted findings (when the "
-        "deep-read pass has run on this app), and a link to the source-portal record. "
-        "Substantive deep-read claims should be drillable back to those documents."
+        "deep-read pass has run on this application), and a link to the source-portal "
+        "record. Substantive deep-read claims should be drillable back to those documents."
     )
     out.append("")
     out.append("---")
@@ -347,7 +388,7 @@ def write_xlsx(
         "Council",
         "Address",
         "Date received",
-        "App type",
+        "Application type",
         "Signals",
         "LLM reasoning",
         "Discovered via (raw)",
@@ -559,26 +600,33 @@ def export_worklist(
     output_dir: Path,
     md_top: int = 50,
     generated_at: dt.datetime | None = None,
+    md_path: Path | None = None,
+    xlsx_path: Path | None = None,
 ) -> dict[str, Path]:
     """Generate the markdown + xlsx pair for the current worklist.
 
     Markdown carries the top `md_top` cards for narrative reading; the xlsx
     has every worklist entry, ranked, with both the raw and humanised
     `discovered_via` lineage columns so Aisha can filter however she likes.
+
+    Default path naming is `worklist_<date>.{md,xlsx}` inside `output_dir`.
+    `md_path` / `xlsx_path` override the defaults for callers that need
+    a specific naming convention (e.g. the release-folder orchestrator).
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     generated_at = generated_at or dt.datetime.now()
     today = generated_at.date().isoformat()
-    md_path = output_dir / f"worklist_{today}.md"
-    xlsx_path = output_dir / f"worklist_{today}.xlsx"
+    md_path = md_path or (output_dir / f"worklist_{today}.md")
+    xlsx_path = xlsx_path or (output_dir / f"worklist_{today}.xlsx")
 
     with db.connect() as conn:
         data = worklist.fetch(conn, model=model)  # no limit — full worklist
         excluded = worklist.fetch_excluded(conn, model=model)
+        stats = corpus_stats_mod.collect(conn, model=model)
 
     md_path.write_text(render_markdown(
         data=data, top=md_top, model=model, generated_at=generated_at,
-        excluded=excluded,
+        excluded=excluded, stats=stats,
     ))
     write_xlsx(
         path=xlsx_path, data=data, model=model,

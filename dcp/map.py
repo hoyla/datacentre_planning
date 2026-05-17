@@ -127,14 +127,34 @@ class WorklistPoint:
     nearest_editorial_km: float | None
     nearest_editorial_name: str | None
     nearest_editorial_bucket: str | None
+    # True when lat/lon came from data/priors/inferred_coords.yaml rather
+    # than the raw PlanIt record. Flagged in geojson + popup so reviewers
+    # can tell source-coord pins from inferred ones at a glance.
+    inferred_coords: bool = False
+    inferred_coords_source: str | None = None
 
 
-def _row_to_point(row: dict, rank: int) -> WorklistPoint | None:
+def _row_to_point(
+    row: dict,
+    rank: int,
+    *,
+    inferred: dict[str, dict] | None = None,
+) -> WorklistPoint | None:
     meta = row.get("raw_metadata") or {}
     lon = meta.get("location_x")
     lat = meta.get("location_y")
+    is_inferred = False
+    inferred_source: str | None = None
     if lat is None or lon is None:
-        return None
+        # Fall back to data/priors/inferred_coords.yaml. Source coords
+        # stay null in raw_metadata; the inferred value lives alongside.
+        entry = (inferred or {}).get(row["application_ref"])
+        if entry is None:
+            return None
+        lat = entry["lat"]
+        lon = entry["lon"]
+        is_inferred = True
+        inferred_source = entry.get("source")
     try:
         lat_f, lon_f = float(lat), float(lon)
     except (TypeError, ValueError):
@@ -163,7 +183,30 @@ def _row_to_point(row: dict, rank: int) -> WorklistPoint | None:
         nearest_editorial_km=None,
         nearest_editorial_name=None,
         nearest_editorial_bucket=None,
+        inferred_coords=is_inferred,
+        inferred_coords_source=inferred_source,
     )
+
+
+def _load_inferred_coords(path: Path) -> dict[str, dict]:
+    """Load data/priors/inferred_coords.yaml. Returns an empty dict when
+    the file is missing — inferred-coord backfill is optional."""
+    if not path.exists():
+        return {}
+    import yaml
+    data = yaml.safe_load(path.read_text()) or {}
+    out: dict[str, dict] = {}
+    for entry in data.get("entries", []) or []:
+        ref = entry.get("ref")
+        lat = entry.get("lat")
+        lon = entry.get("lon")
+        if ref and lat is not None and lon is not None:
+            out[ref] = {
+                "lat": float(lat),
+                "lon": float(lon),
+                "source": entry.get("source"),
+            }
+    return out
 
 
 def _compute_nearest(points: list[WorklistPoint], plants: list[dict]) -> None:
@@ -228,6 +271,10 @@ def _popup_html(p: WorklistPoint) -> str:
     descr = (p.description or "").strip()
     descr_short = (descr[:300] + "…") if len(descr) > 300 else descr
     fx_badge = " <strong style='color:#9467bd'>★ Foxglove top-10</strong>" if p.foxglove else ""
+    inferred_badge = (
+        " <strong style='color:#d35400'>⚑ Inferred coords</strong>"
+        if p.inferred_coords else ""
+    )
     nearest_any = "—"
     if p.nearest_plant_name is not None:
         nearest_any = (
@@ -246,7 +293,7 @@ def _popup_html(p: WorklistPoint) -> str:
     )
     return f"""
     <div style='font-family:system-ui,sans-serif;font-size:12px;width:340px'>
-      <div style='font-weight:bold;font-size:13px'>#{p.rank} {p.application_ref}{fx_badge}</div>
+      <div style='font-weight:bold;font-size:13px'>#{p.rank} {p.application_ref}{fx_badge}{inferred_badge}</div>
       <div style='color:#555;margin-bottom:4px'>{p.council or '—'} · {p.address or ''}</div>
       <table style='border-collapse:collapse;width:100%'>
         <tr><td><b>Verdict</b></td><td>{p.verdict} · deep-read {p.worth_deep_read} · conf {p.confidence}</td></tr>
@@ -415,6 +462,8 @@ def render_geojson(*, points: list[WorklistPoint], out_path: Path) -> None:
                 "nearest_editorial_km": p.nearest_editorial_km,
                 "nearest_editorial_name": p.nearest_editorial_name,
                 "nearest_editorial_bucket": p.nearest_editorial_bucket,
+                "inferred_coords": p.inferred_coords,
+                "inferred_coords_source": p.inferred_coords_source,
             },
         })
     out_path.write_text(json.dumps(
@@ -457,6 +506,12 @@ def render_kml(*, points: list[WorklistPoint], out_path: Path,
             descr = p.description.strip()
             desc_lines.append("")
             desc_lines.append(descr)
+        if p.inferred_coords:
+            desc_lines.append("")
+            desc_lines.append(
+                "<i>Inferred coordinates (no location_x/y in source record). "
+                "See data/priors/inferred_coords.yaml for provenance.</i>"
+            )
         if p.portal_url:
             desc_lines.append("")
             desc_lines.append(f'<a href="{p.portal_url}">Source portal</a>')
@@ -538,16 +593,24 @@ def build_map(
     output_dir: Path = Path("data/exports"),
     osm_path: Path | None = None,
     generated_at: dt.datetime | None = None,
+    html_path: Path | None = None,
+    geojson_path: Path | None = None,
+    kml_path: Path | None = None,
+    plants_geojson_path: Path | None = None,
 ) -> dict[str, Path | int]:
     """Generate the HTML map + GeoJSON + KML companion files. Returns paths
-    + counts so the CLI can print a status block."""
+    + counts so the CLI can print a status block.
+
+    Path overrides let the release-folder orchestrator drop the four
+    outputs into a versioned folder with non-default naming.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
     generated_at = generated_at or dt.datetime.now()
     today = generated_at.date().isoformat()
-    out_html = output_dir / f"worklist_map_{today}.html"
-    out_geojson = output_dir / f"worklist_points_{today}.geojson"
-    out_kml = output_dir / f"worklist_points_{today}.kml"
-    out_plants = output_dir / f"uk_power_plants_{today}.geojson"
+    out_html = html_path or (output_dir / f"worklist_map_{today}.html")
+    out_geojson = geojson_path or (output_dir / f"worklist_points_{today}.geojson")
+    out_kml = kml_path or (output_dir / f"worklist_points_{today}.kml")
+    out_plants = plants_geojson_path or (output_dir / f"uk_power_plants_{today}.geojson")
 
     osm_src = osm_path or OSM_BUNDLED
     if not osm_src.exists():
@@ -559,9 +622,10 @@ def build_map(
 
     with db.connect() as conn:
         data = worklist.fetch(conn, model=model)
+    inferred = _load_inferred_coords(Path("data/priors/inferred_coords.yaml"))
     points: list[WorklistPoint] = []
     for rank, row in enumerate(data.rows, 1):
-        wp = _row_to_point(row, rank)
+        wp = _row_to_point(row, rank, inferred=inferred)
         if wp is not None:
             points.append(wp)
 
