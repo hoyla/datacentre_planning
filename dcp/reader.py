@@ -1059,6 +1059,29 @@ function scrollCardIntoView(ref) {{
   setTimeout(() => el.classList.remove('flash'), 1100);
 }}
 
+// Delegated click handler for in-page `#app-<slug>` anchor links —
+// used by the intro's editorial-highlights list and any cohort
+// cross-references that point at a specific card. The card-internal
+// `<a id="app-…">` targets are `display:none` (visual de-clutter), so
+// browser-native fragment navigation can't position-scroll to them.
+// Resolve manually: find the target element, walk up to its
+// enclosing card, then reuse the same smooth-scroll + flash treatment
+// as a map-pin click.
+cardsRoot.addEventListener('click', (e) => {{
+  const a = e.target.closest('a');
+  if (!a) return;
+  const href = a.getAttribute('href') || '';
+  if (!href.startsWith('#app-')) return;
+  const target = document.getElementById(href.slice(1));
+  if (!target) return;
+  const card = target.closest('.card');
+  if (!card) return;
+  e.preventDefault();
+  card.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+  card.classList.add('flash');
+  setTimeout(() => card.classList.remove('flash'), 1100);
+}});
+
 function focusOnMap(ref) {{
   const e = ENTRIES[ref];
   if (!e || !e.coords) return;
