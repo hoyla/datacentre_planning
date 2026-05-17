@@ -1,0 +1,55 @@
+name: Publish integrated reader to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/exports/datacentre_energy_review_v*_*/datacentre_energy_review_v*.html'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stage latest integrated reader as index.html
+        run: |
+          set -euo pipefail
+          latest_dir=$(ls -1d data/exports/datacentre_energy_review_v*_* 2>/dev/null | sort | tail -n 1 || true)
+          if [ -z "${latest_dir:-}" ]; then
+            echo "::error::No release folder matching data/exports/datacentre_energy_review_v*_* found"
+            exit 1
+          fi
+          html=$(ls -1 "$latest_dir"/datacentre_energy_review_v*.html 2>/dev/null | head -n 1 || true)
+          if [ -z "$html" ]; then
+            echo "::error::No datacentre_energy_review_v*.html inside $latest_dir"
+            exit 1
+          fi
+          echo "Publishing $html"
+          mkdir -p _site
+          cp "$html" _site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
