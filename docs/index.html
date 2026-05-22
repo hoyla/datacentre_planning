@@ -175,7 +175,22 @@
       border-radius: 6px;
     }
     #intro h1 { font-size: 18px; margin: 0 0 8px;
-                 border-bottom: 1px solid var(--accent); padding-bottom: 6px; }
+                 border-bottom: 1px solid var(--accent); padding-bottom: 6px;
+                 cursor: pointer; user-select: none; }
+    /* Collapsible "Read this first": the h1 is a disclosure toggle and the
+       rest of the briefing folds into .intro-body. Collapsed state persists
+       per-reader in localStorage (see makeIntroCollapsible) so someone
+       familiar with the briefing can fold it once and keep it folded across
+       visits — and across searches, which never touch this section. New
+       readers still get it open by default. */
+    #intro h1::before {
+      content: '▼'; display: inline-block; width: 1em; margin-right: 6px;
+      font-size: 15px; line-height: 1; color: var(--accent);
+      transition: transform 0.15s;
+    }
+    #intro.collapsed h1 { margin: 0; border-bottom: none; padding-bottom: 0; }
+    #intro.collapsed h1::before { transform: rotate(-90deg); }
+    #intro.collapsed .intro-body { display: none; }
     #intro h2 { font-size: 14px; margin: 14px 0 6px;
                  text-transform: uppercase; letter-spacing: 0.5px;
                  color: var(--muted); border: none; padding-bottom: 0; }
@@ -487,6 +502,49 @@ intro.id = 'intro';
 intro.innerHTML = openExternalLinksInNewTab(marked.parse(INTRO_MD || ''));
 cardsRoot.appendChild(intro);
 
+// Make the "Read this first" briefing collapsible. The first <h1> becomes a
+// disclosure toggle; everything after it folds into .intro-body. The choice
+// persists in localStorage so a reader who knows the briefing can fold it
+// once and keep it folded across visits (and across searches, which never
+// touch this section). New readers get it expanded by default.
+const INTRO_COLLAPSE_KEY = 'dcp.intro.collapsed';
+let setIntroCollapsed = () => {};
+(function makeIntroCollapsible() {
+  const head = intro.querySelector('h1');
+  if (!head) return;
+  const body = document.createElement('div');
+  body.className = 'intro-body';
+  let node = head.nextSibling;
+  while (node) {
+    const next = node.nextSibling;
+    body.appendChild(node);
+    node = next;
+  }
+  intro.appendChild(body);
+  head.setAttribute('role', 'button');
+  head.setAttribute('tabindex', '0');
+  setIntroCollapsed = function (collapsed) {
+    intro.classList.toggle('collapsed', collapsed);
+    head.setAttribute('aria-expanded', String(!collapsed));
+    head.title = collapsed
+      ? 'Show the "Read this first" briefing'
+      : 'Hide the "Read this first" briefing';
+    try { localStorage.setItem(INTRO_COLLAPSE_KEY, collapsed ? '1' : '0'); }
+    catch (e) {}
+  };
+  let collapsed = false;
+  try { collapsed = localStorage.getItem(INTRO_COLLAPSE_KEY) === '1'; }
+  catch (e) {}
+  setIntroCollapsed(collapsed);
+  head.addEventListener('click', () => setIntroCollapsed(!intro.classList.contains('collapsed')));
+  head.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setIntroCollapsed(!intro.classList.contains('collapsed'));
+    }
+  });
+})();
+
 const markedOpts = { breaks: false, gfm: true };
 if (window.marked && marked.setOptions) marked.setOptions(markedOpts);
 
@@ -581,6 +639,7 @@ const idxRoot = document.getElementById('chapter-index');
   a.innerHTML = '<b>Read this first</b>';
   a.addEventListener('click', (e) => {
     e.preventDefault();
+    setIntroCollapsed(false);  // a reader asking to read it wants it open
     intro.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
   idxRoot.appendChild(a);
