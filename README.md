@@ -2,7 +2,7 @@
 
 Investigative-journalism tool. Builds a systematic national dataset of UK data-centre planning applications and surfaces signals about on-site power-generation infrastructure that may contradict public renewable / green marketing claims.
 
-Collaboration with Aisha Down at the Guardian.
+Collaboration with Aisha Down at the Guardian. Findings overview at https://hoyla.github.io/datacentre_planning/
 
 ## Status
 
