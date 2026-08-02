@@ -6,7 +6,7 @@ Collaboration with Aisha Down at the Guardian. Findings overview at https://hoyl
 
 ## Status
 
-**Phases 1, 2, 3 (top-100), 4 (v1), and 6 (v2 reporter export with editorial cohorts) all green.** 1,832 UK data-centre applications ingested 2007–2026, classified by `granite4.1:30b` Stage-1 triage (683 DC · 136 adjacent · 965 unrelated · 48 unknown). Top-100 worklist document fetch ~99% complete across Idox, Ocella, and a manual-ingest path for one-off portals. Phase 4 v1 deep-read landed with `dcp/extract.py` (pypdf cache + regex pre-pass) + `dcp/findings.py` (delta classifier, NEW DISCLOSURE / REFINEMENT / CONFIRMATION) feeding the editorial export; ~35 apps now carry document-extracted findings via human-in-loop Claude-Code Read-tool extraction. Reporter export restructured around editorial cohorts (highlights at top → themed cohorts with cross-references → long-tail rank-ordered → filtered-from-worklist), mirrored in the xlsx with a separate Filtered sheet.
+**Phases 1, 2, 3 (top-100), 4 (v1), 6 (v2 reporter export with editorial cohorts), 7 (v1.0 release), and 8 (Barbour ABI cross-reference) all green.** 1,894 UK data-centre applications ingested 2007–2026, classified by `granite4.1:30b` Stage-1 triage. Top-100 worklist document fetch ~99% complete across Idox, Ocella, and a manual-ingest path for one-off portals. Phase 4 v1 deep-read landed with `dcp/extract.py` (pypdf cache + tesseract OCR fallback + regex pre-pass) + `dcp/findings.py` (delta classifier, NEW DISCLOSURE / REFINEMENT / CONFIRMATION) feeding the editorial export; ~35 apps carry document-extracted findings via human-in-loop Claude-Code Read-tool extraction, each evidence quote machine-verified against the cached page text. Reporter export restructured around editorial cohorts (highlights at top → themed cohorts with cross-references → long-tail rank-ordered → filtered-from-worklist), mirrored in the xlsx with a separate Filtered sheet. Phase 8 (Aug 2026) cross-referenced the universe against Barbour ABI's licensed construction-projects dataset: 253 projects in a new `projects` table, ~200 linked to applications with per-link match provenance, 62 previously-missed applications ingested (pre-2018 estates now in scope), and every coverage gap in both directions classified — see `data/new_lists/barbour_comparison_report.md`.
 
 See:
 - [ARCHITECTURE.md](ARCHITECTURE.md) — pipeline philosophy, schema, design decisions.
@@ -27,6 +27,7 @@ See:
 - Ollama (local) for Stage-1 triage; default model `granite4.1:30b` chosen after a five-model comparison (IBM's JSON-tuning + 30b reasoning ≈ 97% verdict accuracy at ~9s/app). Pluggable `FakeBackend` keeps CI dependency-free.
 - Claude Code Read-tool (human-in-loop, model name `claude-opus-4-7+read-tool`) for Stage-2 findings extraction. Text-extraction step is decoupled (cached page-JSON), so a future batch SDK pass slots in as a new model name.
 - Document corpus on local filesystem; S3 lift deferred until corpus growth warrants.
+- OCR fallback for scanned-only pages (~5% of corpus): pypdfium2 rendering + tesseract (default) or RapidOCR — deliberately non-generative engines only, because the OCR text is the substrate the verbatim-quote verification checks against and must fail noisily rather than fluently. Per-page OCR use recorded in the text cache and surfaced in the verification report.
 - CLI-driven (`dcp …` entrypoint). No web portal planned — the dataset is a snapshot re-rendered on demand into markdown + xlsx + KML + interactive map, not a live application. A static-site build is the likely shape if browsing ever becomes a requirement.
 
 ## Setup
@@ -58,16 +59,18 @@ Implemented — application metadata (Phase 1):
 
 1. **PlanIt API** (`planit.org.uk/api`) — national, full-text searchable, free. Primary keyword sweep + operator-name sweep + spatial colocated sweep + parent-backfill all run through this adapter.
 2. **Planning Inspectorate NSIP register** — CSV download of all ~280 NSIP projects. One DC currently (Wapseys Wood, EN0110030); expected to grow.
+3. **Barbour ABI** (`dcp index --source barbour --file <xlsx>`) — licensed construction-intelligence workbook (credit Barbour ABI; not redistributed — see [DATA-LICENSING.md](DATA-LICENSING.md)). Projects land in the `projects` table and link to applications via `project_applications` with per-link match provenance (`ref_suffix` / `barbour_tag` / `family_ref` / `manual`).
 
 Implemented — document fetch (Phase 3):
 
-3. **Idox Public Access** (`dcp fetch-docs --source idox`) — canonical and `/newplanningaccess/` variants; SSL chain reconstruction via `truststore`.
-4. **Ocella** (`dcp fetch-docs --source ocella`) — POST to `showDocuments?reference=<ref>&module=pl`, anchor parse. Covers Hillingdon, NorthLincs, Slough Langley, several Welsh portals.
-5. **Manual** (`scripts/ingest_manual_docs.py`) — journalist drops files into `data/raw/fully_manual/<ref>/`, the script hashes + hard-links them into the canonical layout and records them without overwriting any adapter-recorded URL.
+4. **Idox Public Access** (`dcp fetch-docs --source idox`) — `applicationDetails.do` endpoints on any mount path (`/online-applications/`, `/newplanningaccess/`, Fife's `/online/`, Horsham's `/public-access/`, Stockport's `/PlanningData-live/`, …); SSL chain reconstruction via `truststore`.
+5. **Ocella** (`dcp fetch-docs --source ocella`) — POST to `showDocuments?reference=<ref>&module=pl`, anchor parse. Covers Hillingdon, Havering, NorthLincs, several Welsh portals.
+6. **Manual** (`scripts/ingest_manual_docs.py`) — journalist drops files into `data/raw/fully_manual/<ref>/`, the script hashes + hard-links them into the canonical layout and records them without overwriting any adapter-recorded URL.
 
 Planned:
 
-6. **Environment Agency public register** (industrial installations / combustion plant) — triangulation against permitted on-site capacity.
+7. **Long-tail portal adapters**, in observed-need order: Agile Applications (Slough, Middlesbrough), Arcus registers (Cherwell, Crawley, Welwyn Hatfield), Northgate PlanningExplorer (Birmingham, Camden, Runnymede), Salesforce (Bracknell, Milton Keynes), NEC/LPAssure (Broxbourne).
+8. **Environment Agency public register** (industrial installations / combustion plant) — triangulation against permitted on-site capacity.
 
 ## Reproducing the dataset
 
@@ -99,36 +102,48 @@ python scripts/backfill_council_gss.py
 # 7. Operator priors (Foxglove top-10 safety-net tags)
 python scripts/tag_priors.py data/priors/foxglove_top10.yaml
 
-# 8. Stage 1 triage (granite4.1:30b over the universe — ~5 h wall-clock)
+# 8. Barbour ABI cross-reference (requires the licensed workbook — not in
+#    this repo; credit Barbour ABI in any published output)
+dcp index --source barbour --file "data/new_lists/<workbook>.xlsx"
+python scripts/barbour_gap_postmortem.py      # classify unmatched refs via PlanIt
+python scripts/ingest_barbour_gap_apps.py     # ingest the gap applications
+dcp index --source barbour --file "data/new_lists/<workbook>.xlsx"  # re-link
+python scripts/link_barbour_families.py       # family-level project links
+
+# 9. Stage 1 triage (granite4.1:30b over the universe — ~5 h wall-clock)
 dcp triage --model granite4.1:30b
 
-# 9. Editorial-structure tags (cohorts, exclusions, duplicates)
+# 10. Editorial-structure tags (cohorts, exclusions, duplicates)
 python scripts/tag_cohorts.py     # reads data/priors/cohorts.yaml
 python scripts/tag_duplicates.py  # reads data/priors/duplicates.yaml
 
-# 10. Reporter export — markdown + xlsx, structured around editorial cohorts
+# 11. Reporter export — markdown + xlsx, structured around editorial cohorts
 dcp export --top 50
 
-# 11. Editorial map — interactive HTML + GeoJSON + KML
+# 12. Editorial map — interactive HTML + GeoJSON + KML
 dcp map
 
-# 12. Phase 3 document fetch — Idox + Ocella portals
+# 13. Phase 3 document fetch — Idox + Ocella portals
 dcp fetch-docs --source idox  --top 100
 dcp fetch-docs --source ocella --top 100
+python scripts/fetch_barbour_docs.py   # Barbour-round applications, worklist-independent
 
-# 13. (Optional) Manual ingest for portals without an adapter
+# 14. (Optional) Manual ingest for portals without an adapter
 #     drop files under data/raw/fully_manual/<application_ref>/ first
 python scripts/ingest_manual_docs.py
 
-# 14. Phase 4 findings extraction (currently human-in-loop via Read tool)
+# 15. (Optional) OCR backfill for scanned-only pages in already-cached text
+python scripts/ocr_backfill.py
+
+# 16. Phase 4 findings extraction (currently human-in-loop via Read tool)
 python scripts/extract_findings.py
 ```
 
 Each stage is idempotent: re-running picks up where it left off
 (`source_snapshots` is also the resume cache; triage uses model-scoped
-`NOT EXISTS` filtering on prior verdicts). Stages 1–7 are independent of
-the LLM and run in well under an hour combined; stage 8 dominates the
-wall-clock.
+`NOT EXISTS` filtering on prior verdicts). Stages 1–8 are independent of
+the LLM and run in well under an hour combined (plus PlanIt politeness
+delays on 8); stage 9 dominates the wall-clock.
 
 The OSM power-stations layer used by `dcp map` ships in the repo
 (`data/priors/osm/uk_power_plants.geojson`, ODbL-licensed). Refresh it

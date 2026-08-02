@@ -41,6 +41,26 @@ This repository **does not redistribute** any of these documents — the
 corpus must fetch the documents themselves via `dcp fetch-docs` against
 the relevant council portals.
 
+### Barbour ABI (licensed, not redistributed)
+
+The construction-intelligence workbook "Data Centres in planning and under
+construction" (253 projects) was supplied to the Guardian by
+[Barbour ABI](https://barbour-abi.com/) under a commercial licence
+(clearance confirmed 2026-08-02). It is ingested into the `projects` table
+(`dcp index --source barbour --file <xlsx>`), with the verbatim source rows
+preserved in `raw_metadata`.
+
+- **Attribution required**: credit **Barbour ABI** in any published output
+  that draws on this data (project values, floor areas, build stages,
+  client / architect / contractor identifications, or coverage claims
+  derived from the cross-reference).
+- **Not redistributed**: the workbook lives under `data/new_lists/`
+  (gitignored) and the database rows are local-only. This repository does
+  not republish the dataset; reproduction requires your own licensed copy.
+- The role blocks carry named-individual contact details; they are held
+  for reporting purposes under the Guardian editorial code and must not
+  appear in published artefacts or tracked files.
+
 ### OpenStreetMap (`data/priors/osm/uk_power_plants.geojson`)
 
 Power-station features extracted from OpenStreetMap via the Overpass API.
@@ -94,5 +114,7 @@ planning document by its application reference.
 - **OSM data**: ODbL — attribute "© OpenStreetMap contributors".
 - **NSIP CSV**: OGL v3.0.
 - **PlanIt data**: courtesy attribution to planit.org.uk.
+- **Barbour ABI**: commercial licence — credit "Barbour ABI" in published
+  output; workbook and derived rows not redistributed.
 - **Council planning documents**: not redistributed by this repo;
   per-document licensing applies if reproduced elsewhere.
