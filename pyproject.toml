@@ -21,6 +21,11 @@ dependencies = [
     "openpyxl>=3.1",
     "truststore>=0.10",
     "folium>=0.17",
+    # OCR fallback for scanned-only pages (~5% of corpus). pypdfium2 renders
+    # pages; the default engine is the system `tesseract` binary (brew install
+    # tesseract); rapidocr is the pip-installable alternative engine.
+    "pypdfium2>=4.30",
+    "rapidocr-onnxruntime>=1.3",
 ]
 
 [project.optional-dependencies]

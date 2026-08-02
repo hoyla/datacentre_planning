@@ -33,7 +33,7 @@ Each stage is idempotent and resumable. Each writes to a separate table family. 
 
 Per source, paginate the recent-applications feed (or equivalent), upsert structured metadata into `applications`, preserve the raw response in `source_snapshots`.
 
-Implemented: PlanIt (`dcp/sources/planit.py`, including the parent-application backfill and operator/spatial sweeps), NSIP CSV (`dcp/sources/nsip.py`).
+Implemented: PlanIt (`dcp/sources/planit.py`, including the parent-application backfill and operator/spatial sweeps), NSIP CSV (`dcp/sources/nsip.py`), Barbour ABI xlsx (`dcp/sources/barbour.py` — file-based, `dcp index --source barbour --file <xlsx>`; ingests construction projects into `projects` and links them to applications by reference).
 Pending: gov.uk-search-API Section 35 Directions half, MHCLG national service as a cross-validation source.
 
 ### 2. Triage
@@ -81,7 +81,7 @@ PDF parsing alone covers ~92% of files; long-tail loaders are still a follow-on.
 
 **Extraction pipeline** ([dcp/extract.py](dcp/extract.py) + [dcp/findings.py](dcp/findings.py)):
 
-1. **Per-file text extraction** — pypdf for PDFs, cached at `data/raw_text/<source>/<application_ref>/<sha[:16]>.pages.json` (page-indexed JSON). LLM step is decoupled from parsing — either can be re-run.
+1. **Per-file text extraction** — pypdf for PDFs, cached at `data/raw_text/<source>/<application_ref>/<sha[:16]>.pages.json` (page-indexed JSON). Pages with no usable text layer (~5% of the corpus, measured Aug 2026 — scanned council forms plus image-only pages *inside* text-layered documents) fall back to OCR: pypdfium2 rendering at 300 DPI + tesseract by default (RapidOCR as the alternative engine). Both engines are deliberately **non-generative** — the OCR text is the substrate the quote-verification gate checks against, and it must fail noisily (garbage characters) rather than fluently (a VLM's plausible hallucination would let an invented quote verify). OCR'd page numbers are recorded per document in the cache (`ocr_pages`) and surfaced in the verification report. LLM step is decoupled from parsing — either can be re-run. Backfill across pre-existing caches: `scripts/ocr_backfill.py`.
 2. **Regex pre-pass** — `extract.find_candidates` surfaces high-signal sentences against patterns for MW capacity (`\d+(\.\d+)?\s*(MW|kVA|kW)\b`), generator counts (`\d+\s*(diesel|gas|emergency|standby|back[- ]up)\s+generators?\b`), and fuel storage hours / litres / tonnes. Deterministic; produces candidate windows for the LLM step.
 3. **LLM extraction** — currently human-in-loop via Claude Code's Read tool acting as the LLM (`model=claude-opus-4-7+read-tool`). The Read tool opens the cached page-JSON, the model identifies structured facts + the literal evidence quote + the page number, and `scripts/extract_findings.py` records them via `repo.record_finding`. The same shape (decoupled from parsing, cached text inputs, append-only rows) makes a later switch to a batch SDK pass a drop-in.
 4. **Delta classifier** ([dcp/findings.py](dcp/findings.py): `classify()`) — compares each finding against the application's `triage.signals` array and the description text. Three categories per the original design:
@@ -123,7 +123,7 @@ The `exclude:*` filter is the engineering corollary: confirmed non-DCs no longer
 
 ## Schema
 
-Current schema in [migrations/001_initial.sql](migrations/001_initial.sql) plus subsequent migrations: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table) and [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric). Tables and their relationships:
+Current schema in [migrations/001_initial.sql](migrations/001_initial.sql) plus subsequent migrations: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table), [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric), [004_council_aliases.sql](migrations/004_council_aliases.sql) (JSONB `councils.notes` + the `council_aliases` reorganisation map) and [005_projects.sql](migrations/005_projects.sql) (the `projects` + `project_applications` pair for commercial construction-intelligence records — see "Projects vs applications" below). Tables and their relationships:
 
 ```
 sources        ──┐
@@ -143,7 +143,27 @@ documents        │ (application_id, content_sha256) UNIQUE
 triage           │ append-only, versioned per inserted_at
 findings         │ append-only, versioned per inserted_at
                  │ (no multimodal sibling — see ROADMAP)
+
+projects         │ (source_id, external_ref) UNIQUE — commercial construction-
+                 │ intelligence records (Barbour ABI); full source row in raw_metadata
+project_applications │ many-to-many link to applications, match_method per link
 ```
+
+### Projects vs applications
+
+Barbour ABI's unit of record is the construction *project*, not the planning
+application — one campus maps to several applications (outline + reserved
+matters + variations), and some projects map to none (pre-planning schemes,
+fit-out/civil-works contracts, tender notices). So projects live in their own
+table and link to `applications` via `project_applications`, with
+`match_method` recording how each link was made (`ref_suffix` /
+`ref_normalised` / `manual`). Ambiguous bare-ref matches (the same council
+reference format in two councils) are never auto-linked — they surface in the
+adapter summary for manual curation. Barbour's own portal links rot (councils
+migrate portals), so `authority_name` + `planning_ref` is the durable join
+key and `planning_link` is treated as a hint. Barbour data is licensed for
+use with credit; the role-block contact PII in `raw_metadata` is held under
+the Guardian editorial code.
 
 Key invariants:
 
@@ -236,6 +256,7 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 | Resume mechanism | Cache via `source_snapshots`, not a separate cache table | One source of truth; same data serves both audit and resume. |
 | Web framework | None. Browsing is the **integrated viewer** — a single static HTML file (`dcp/reader.py` → `datacentre_energy_review_v<version>.html`) | The integrated viewer is the static-site answer: split-screen Leaflet map + chaptered card list, bidirectional click sync, in-page search and filter, all inlined into one file with the data embedded as JSON. No server, no build step, no dynamic deps. Generated alongside the existing markdown/xlsx/KML in the release-folder pipeline. |
 | Release packaging | `dcp release --version <v>` produces a single dated, versioned folder | Each release is one self-contained folder under `data/exports/datacentre_energy_review_v<version>_<date>/` with the headline integrated viewer at top level, journalist-facing companions (markdown, xlsx, standalone map, "How to read this") alongside, and two subfolders: `Map data/` (geojson + kml + OSM power-plants context) and `Self-scrutiny/` (the four QA artefacts — findings verification, privacy sweep, Foxglove reconciliation, map spot-check). Version bumped manually per published release. Source-of-truth filenames don't carry dates (dates live on the folder); the integrated viewer keeps the full `datacentre_energy_review` stem, components use the abbreviated `dc_energy_review_*` stem. |
+| OCR for scanned-only pages | pypdfium2 + tesseract (default) / RapidOCR; generative VLMs excluded from the substrate role | The OCR text doubles as the verbatim-quote verification substrate. Non-generative engines fail noisily on illegible input; a VLM fails fluently, which would let invented quotes verify. Vision-capable models remain available as *readers* during extraction — never as the text of record. |
 | Map coord backfill | `data/priors/inferred_coords.yaml` (typed alongside the raw record) | 11 of the top-61 worklist applications have no `location_x/y` in the raw PlanIt record because the address field carries no postcode. Inferred coordinates live in a small yaml priors file with per-entry provenance ("Nominatim forward-search returned …" or "sibling-ref backfill from …"); `dcp/map.py` falls back to it when source coords are null and flags inferred pins distinctly (`inferred_coords: true` in geojson + ⚑ badge in popups). Source coords stay null in `raw_metadata` — principle 3 (never mutate source) preserved. |
 
 ---
@@ -243,7 +264,7 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 ## What's not in the architecture yet
 
 - **Council-reorganisation handling** for pre-2020 records under legacy district names (Wycombe → Buckinghamshire, Chiltern South Bucks → Buckinghamshire, etc.). Currently surfaces as NULL `council_gss` with the legacy `area_name` preserved in `raw_metadata`. Per principle 3, the legacy name stays untouched; any canonicalisation goes in a new column or join table, not over the original.
-- **Long-tail document-fetch adapters.** Idox + Ocella + manual ingest cover the top-100 worklist; smaller / one-off portals (Agile Applications, sbcplanning, Neath/Port Talbot's iPlan) currently route through the manual path. Worth promoting to dedicated adapters if the corpus expands beyond top-100.
+- **Long-tail document-fetch adapters.** Idox + Ocella + manual ingest cover the top-100 worklist and most of the Barbour round. The 2026-08 fetch enumerated the remaining portal families by observed need: **Agile Applications** (Slough, Middlesbrough), **Arcus registers** (Cherwell — incl. Graven Hill — Crawley, Welwyn Hatfield), **Northgate PlanningExplorer** (Birmingham, Camden, Runnymede), **Salesforce** (Bracknell, Milton Keynes), **NEC/LPAssure** (Broxbourne), plus bespoke one-offs (St Albans, Jersey, Harlow) that stay on the manual path.
 - **`parent_ref` as a first-class column** rather than a `discovered_via` tag. Currently a `parent_backfill:<child_ref>` array entry; promoting to a column would simplify join queries.
 - **Findings extraction at scale.** v1 covers ~35 apps via human-in-loop Read-tool extraction; running across the full top-100 and the long-tail worklist needs either a batch SDK pass or a continued slow-and-steady human-in-loop sweep. Open question; see [ROADMAP.md](ROADMAP.md).
 - ~~**Browse UI.**~~ **Built 2026-05-17 as the integrated viewer** (`dcp/reader.py`). Single self-contained HTML file with split-screen Leaflet map + chaptered card list, bidirectional click sync, in-page search across all card fields, filter chips, and a "Read this first" intro panel embedding at-a-glance stats / methodology / how-to-read. Built for Aisha + two colleagues on M4-Air-class machines; opens straight from `file://`. Static, no server, no build step.

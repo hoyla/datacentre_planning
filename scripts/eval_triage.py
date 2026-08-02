@@ -24,9 +24,7 @@ import argparse
 import datetime as dt
 import json
 import os
-import sys
 import time
-from collections import Counter
 from pathlib import Path
 
 from dotenv import load_dotenv

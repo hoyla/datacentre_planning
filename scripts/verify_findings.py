@@ -133,6 +133,13 @@ class CheckResult:
     matched_page: int | None = None
     cached_excerpt: str | None = None
     detail: str | None = None
+    # True when the text the quote matched against came from the OCR
+    # fallback rather than the PDF's own text layer (cache `ocr_pages`).
+    # For v1 findings extracted via the vision-capable Read tool, an
+    # OCR-substrate pass means two independent readings of the same page
+    # image agree — stronger than a single reading, but flagged so the
+    # report is honest about the substrate.
+    ocr_substrate: bool = False
 
 
 def _query_findings(conn) -> list[FindingRow]:
@@ -194,6 +201,7 @@ def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
         )
     payload = json.loads(cache_path.read_text())
     pages: list[str] = payload.get("pages", [])
+    ocr_set: set[int] = set(payload.get("ocr_pages", []))
     if not pages:
         return CheckResult(
             finding=finding, status="cache_missing",
@@ -214,7 +222,8 @@ def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
     if 1 <= p1 <= len(pages):
         primary_norm = pages_norm[p1 - 1]
         if _all_fragments_in_order(primary_norm, fragments_norm):
-            return CheckResult(finding=finding, status="pass", matched_page=p1)
+            return CheckResult(finding=finding, status="pass", matched_page=p1,
+                               ocr_substrate=p1 in ocr_set)
 
         # Scanned-only? pypdf got nothing — punt to human eyeball.
         if not pages[p1 - 1].strip():
@@ -234,6 +243,7 @@ def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
                             finding=finding, status="pass_adjacent",
                             matched_page=candidate + 1,
                             detail=f"matched on page {candidate + 1} instead of recorded {p1}",
+                            ocr_substrate=(candidate + 1) in ocr_set,
                         )
 
     # 3) Whole-document fragment search. The journalism is defensible as
@@ -265,6 +275,7 @@ def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
             finding=finding, status="pass_cross_page",
             matched_page=fragment_pages[0],
             detail=detail,
+            ocr_substrate=any(p in ocr_set for p in fragment_pages),
         )
 
     # 4) Genuine miss. List which fragments couldn't be found.
@@ -318,6 +329,24 @@ def _render(results: list[CheckResult]) -> str:
         if n:
             lines.append(f"- `{status}`: **{n}** — {hint}")
     lines.append("")
+
+    ocr_passes = [r for r in results
+                  if r.ocr_substrate and r.status.startswith("pass")]
+    if ocr_passes:
+        lines.append(
+            f"**{len(ocr_passes)}** of the passes matched against **OCR text** "
+            "(tesseract; page had no native text layer — see `ocr_pages` in the "
+            "page cache). Where the original extraction was vision-based, this "
+            "means two independent readings of the same page image agree. "
+            "Findings verified this way:"
+        )
+        lines.append("")
+        for r in ocr_passes:
+            lines.append(
+                f"- finding {r.finding.finding_id} — {r.finding.application_ref} "
+                f"— `{r.finding.signal_type}` (page {r.matched_page}, `{r.status}`)"
+            )
+        lines.append("")
 
     need_eyeballs = [r for r in results if r.status not in ("pass",)]
     if need_eyeballs:

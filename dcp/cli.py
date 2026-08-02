@@ -23,9 +23,14 @@ def main() -> None:
     "--resume/--no-resume", default=True,
     help="Serve already-snapshotted URLs from cache instead of re-fetching (default: resume).",
 )
+@click.option(
+    "--file", "file_path", type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None, help="Input file for file-based sources (required for barbour).",
+)
 def index(
     source: str, mode: str, since: str, until: str | None,
     limit: int | None, delay_seconds: float, resume: bool,
+    file_path: Path | None,
 ) -> None:
     """Stage 1: paginate recent applications from a source and upsert metadata."""
     if source == "planit":
@@ -39,6 +44,15 @@ def index(
     elif source == "nsip":
         from dcp.sources import nsip
         summary = nsip.index(limit=limit)
+        for k, v in summary.items():
+            click.echo(f"  {k}: {v}")
+    elif source == "barbour":
+        from dotenv import load_dotenv
+        load_dotenv(Path(__file__).parent.parent / ".env")
+        from dcp.sources import barbour
+        if file_path is None:
+            raise click.ClickException("--source barbour requires --file <xlsx>")
+        summary = barbour.index(path=file_path, limit=limit)
         for k, v in summary.items():
             click.echo(f"  {k}: {v}")
     else:

@@ -6,7 +6,7 @@ For *how the system is shaped*, see [ARCHITECTURE.md](ARCHITECTURE.md).
 For *why we're doing this and what's been published*, see [prior_art.md](prior_art.md).
 For *post-publication flip mechanics*, see [POST_PUBLICATION_CHECKLIST.md](POST_PUBLICATION_CHECKLIST.md).
 
-Last meaningful update: 2026-05-16 (evening — Phase 4 deep-read pipeline + editorial cohorts shipped).
+Last meaningful update: 2026-08-02 (Barbour ABI ingest — the start of the v2 "datacentre build" dataset).
 
 ---
 
@@ -97,13 +97,107 @@ Last meaningful update: 2026-05-16 (evening — Phase 4 deep-read pipeline + edi
 - **`dcp release --version` — one-shot release-folder orchestrator** (`dcp/release.py`). Produces `data/exports/datacentre_energy_review_v<version>_<date>/` containing the integrated viewer (headline), the text-only markdown, the spreadsheet, the standalone map, the "How to read this" companion, plus `Map data/` (geojson + kml + OSM power-plants context) and `Self-scrutiny/` (the four QA artefacts above). All journalist-facing prose strings purged of "app" in favour of "application" (memory rule). Versioning is manual — bump deliberately per published release.
 - **Integrated viewer** (`dcp/reader.py`). Single self-contained HTML file: split-screen Leaflet map + chaptered card list (editorial highlights → cohorts → other ranked), with bidirectional click sync (card → map flyTo + popup; pin → card scrollIntoView + flash), search-across-fields (⌘K), filter chips (verdict / deep-read / Foxglove / has-findings / inferred-coords), and a `Read this first` intro panel that embeds the at-a-glance stats, the editorial-highlight one-liners, the how-to-read briefing, the methodology, and the companion-file pointers. Built for Aisha + two colleagues on M4 Air-class machines; ~2.3 MB; opens straight from `file://`. Original artefacts retained in the same folder for grep / spreadsheet / external GIS use cases.
 
-**126 tests total**, all green.
+### Phase 8 — Barbour ABI ingest, v2 dataset kickoff (Aug 2)
+
+Direction agreed with Luke 2026-08-02: **one database, new dataset.** The v2
+focus narrows to datacentre *build* applications (v1 was DCs + adjacent power
+sources); it ships as a new universe within the existing DB rather than a
+fresh one. Barbour ABI data is licensed for use with credit; pre-2018 "Built"
+estates are in scope this time; role-block PII is handled by the Guardian
+data journalists under the editorial code.
+
+- **Migration 005** — `projects` (commercial construction-intelligence
+  records, Barbour `Ptno` as external_ref, verbatim row in raw_metadata) +
+  `project_applications` (many-to-many, `match_method` per link, ambiguous
+  bare refs never auto-linked).
+- **Barbour adapter** (`dcp/sources/barbour.py`, `dcp index --source barbour
+  --file <xlsx>`). Snapshot-first, idempotent. Inaugural ingest of the
+  2026-08 export: **253 projects, 149 auto-linked to existing applications
+  (ref_suffix), 60 unmatched refs, 44 no-ref rows** (pre-planning schemes +
+  fit-out/civil contracts + tender notices). The sheet's own "Luke has?"
+  coverage column was wrong in 89 cases — always re-derive coverage.
+- **Gap post-mortem** (`scripts/barbour_gap_postmortem.py`) — classified all
+  60 unmatched refs via PlanIt `id_match` lookups (cached in
+  source_snapshots, authority-checked because bare refs collide
+  nationally). Result: **31 pre-2018** (window artefact, now in scope),
+  **13 no-DC-keywords** (descriptions never say "data centre" — reserved
+  matters / generic B2-B8 wording; incl. Graven Hill 435MW, Google Waltham
+  Cross, LCY20, NTT LON2-A), **7 tender notices**, **5 not in PlanIt**
+  (Slough T/-era refs, Hounslow, Wirral, and Cambois 25/02911/REM — recent,
+  PlanIt lag), **3 authority quirks** (MidKent shared service ×2, one
+  Barbour authority error), and just **1 genuine in-window keyword escape**
+  (Fife/26/01243/PPP, started 2026-04-29 — likely PlanIt scrape lag at
+  sweep time). Verdict: the v1 sweep methodology held up; the gap is
+  overwhelmingly the 2018 window plus keyword-blind descriptions. Report at
+  `data/new_lists/barbour_gap_postmortem.md`.
+
+- **OCR fallback for scanned-only pages** (`dcp/extract.py`, 2026-08-02).
+  Measured on the Barbour-round fetch: ~5% of documents have no text layer
+  (mostly clean typed council forms — e.g. the Fife notice recording that
+  Queensway Park Data Centres Ltd commenced development Dec 2020). Pages
+  whose pypdf text is under 25 chars now fall back to OCR via pypdfium2 +
+  a **non-generative engine** (deliberate: the OCR text is the
+  verbatim-quote verification substrate and must fail noisily, never
+  fluently — a VLM's plausible hallucination would let invented quotes
+  verify). Default engine `tesseract` (empirically better spacing/reading
+  order on English forms); `rapidocr` available as alternative. Per-page
+  OCR use recorded in the cache (`ocr_pages`) + engine string
+  (`pypdf+tesseract`) for audit.
+
+**146 tests total**, all green.
 
 ---
 
 ## Next
 
-### Immediate (this/next session)
+### Immediate (this/next session) — v2 dataset pipeline
+
+- **Ingest the missed applications.** From the post-mortem classes: fetch
+  the in-PlanIt misses via `id_match` (tag
+  `discovered_via=['barbour:<Ptno>']`), and portal-resolve the
+  not-in-PlanIt tail (incl. Jersey — outside PlanIt's coverage entirely).
+- **Pre-2018 "Built" backfill.** Now in scope (decision 2026-08-02). The
+  ~29 legacy estates with pre-2018 refs (Google Waltham Cross, Telehouse,
+  Interxion, Virtus London, Cody Park...) need PlanIt/portal ingestion and
+  document-availability assessment — councils purge old documents, so
+  record gaps honestly rather than dropping rows.
+- **`dc_build` universe + rubric.** New triage rubric ("is this a datacentre
+  build application") under a new model string; universe membership tagged
+  via `discovered_via` (or a first-class `universes` table if tags strain).
+  The v2 release pipeline exports only that universe.
+- **Agile Applications adapter** — 12 Barbour links point at
+  `planning.agileapplications.co.uk` (Slough among them); it was already
+  the top long-tail portal. Then SwiftLG (9) and PlanningExplorer (8).
+
+### Pondering (Luke, 2026-08-02, pre-decision)
+
+Raised after the Barbour reconciliation; to decide together before the next
+big push:
+
+- **Corpus re-fetch.** Not a blanket re-download — the archive is
+  content-hashed and append-only, so re-runs only add. But: (a) the ~62
+  newly ingested applications have no documents; (b) the Idox OMT-viewer
+  `docKey=` fix would roughly double the drawing/plan coverage for many
+  already-fetched applications; (c) live applications have accumulated new
+  consultee documents since May. Recommended order: fix Idox docKey → re-run
+  fetch across the enlarged dc_build worklist → Agile adapter → the 4
+  portal-only captures (Slough SPZ ×2, Cambois REM, Wirral).
+- **Re-extraction round 2 (all documents, smarter lexicon).** Append-only
+  findings make this cheap and safe (new model string; v1 rows retained).
+  New signal vocabulary learned since v1: "technical services centre"
+  (2008-era coding, LCY20), B8/B2-shed framing, SPZ/LDO/scoping consenting
+  routes, grid-connection companions, plus Barbour's per-site MW/value
+  priors to validate extraction against. Scale decision still open: batch
+  SDK first-pass + human-in-loop review of the loudest findings is the
+  leading option (quote round-trip verification automated at insert, per
+  the established rule).
+- **Reporter spreadsheet exports with dual provenance links** — every row
+  linking both the archived file (`documents.bytes_path`) and the live
+  portal URL (`documents.url`), with the archive as the durable copy and
+  portal links best-effort. Mostly an export-layer change; the schema
+  already carries both.
+
+### Carried over from v1
 
 - **Findings extraction across the remaining with-docs apps.** Top-100 doc coverage now sits at **94/100 with docs + 5/100 tagged duplicates = 99/100 resolved**; 35 apps have findings. The Hillingdon condition-discharge tail (Ark Project Union family — ~20 apps) is mostly procedural and yields modest findings each; the Glasgow university-campus cluster (rank ~40-67) hasn't been touched and may need a Glasgow cohort. **Editorially valuable next batches**: any 100+ MW app not yet covered, anything in the AI / Council-led LDO cohorts, anything with substantive consultee response content (`.msg` files in the Idox bundles).
 
@@ -152,7 +246,7 @@ Things we haven't decided yet, with current thinking where there is one.
 - **Findings extraction at scale.** The current 35-app set was extracted human-in-the-loop via Claude Code's Read tool. A systematic top-100 → top-300 sweep would need either (a) continued in-session iteration (cheap, slow, judgement-rich), (b) Anthropic SDK + Sonnet 4.6 batch (faster, repeatable, less rich), or (c) a hybrid where SDK does a first pass and human-in-loop refines the editorially-loudest. Worth picking a path before the next big push.
 - ~~**Browse UI shape (if any).**~~ **Resolved 2026-05-17.** The integrated viewer in `dcp/reader.py` is the static-site answer to this question — single-file HTML with bidirectional card-and-map sync, search, and filters. No server, no build step, no dynamic deps. Matches the access pattern as predicted.
 - **Public-data ethics for personal-data fields.** Householder applications can include applicant names. Current schema stores raw values; redaction belongs at the export stage. Pre-publication sanity-check completed on the methodology-trail tracked files; needs to run again on any aggregate that touches personal fields.
-- **PlanIt rate-limit politics.** PlanIt is donation-supported and friendly; we are a heavy user. Worth reaching out to them at some point — both as good citizenship and because they may have insights about coverage gaps. Now particularly relevant: the document-fetch stage hits *council portals* directly, not PlanIt, but the operator-name sweep + spatial sweep do hit PlanIt heavily.
+- **PlanIt rate-limit politics.** PlanIt is donation-supported and friendly; we are a heavy user. Worth reaching out to them at some point — both as good citizenship and because they may have insights about coverage gaps. Now particularly relevant: the document-fetch stage hits *council portals* directly, not PlanIt, but the operator-name sweep + spatial sweep do hit PlanIt heavily. **Observed 2026-08-02: PlanIt now 429s far more aggressively than during the May sweeps** — ~21 requests at 2.5 s spacing exhausted the quota, and the full 60/120/240/480 s backoff ladder still hit 429s. Assume an hourly quota; plan sweeps at ≥10 s spacing with cool-off resumes (the snapshot cache makes resumes free). Strengthens the case for the courtesy email before the next big sweep.
 
 ---
 
@@ -172,3 +266,4 @@ Things we haven't decided yet, with current thinking where there is one.
 | 5 — Multimodal pass | 🚫 Probably won't do | Originally planned vision pass on site plans / elevations. PDFs are overwhelmingly text-layered, so vision adds little; concealed plant won't appear in drawings at all. Revisit only if a specific app needs it. |
 | 6 — Reporter export | ✅ Done (v2) | Markdown + xlsx restructured around editorial cohorts, highlights, and filtered-out audit list; KML + interactive HTML map with OSM power-plant overlay unchanged. |
 | 7 — v1.0 release pipeline | ✅ Done (2026-05-17) | `dcp release --version` orchestrates a versioned per-release folder with the integrated viewer (split-screen card + map) as the headline artefact, plus the text-only / xlsx / standalone-map companions in `Map data/` and `Self-scrutiny/` subfolders. All eight story-readiness checklist items resolved. |
+| 8 — Barbour ABI ingest / v2 kickoff | ✅ Ingest done (2026-08-02) | Migration 005 (`projects` + `project_applications`), Barbour adapter, inaugural ingest (253 projects / 149 linked), gap post-mortem. Next: missed-application ingestion, pre-2018 Built backfill, `dc_build` universe + rubric, Agile adapter. |

@@ -39,6 +39,20 @@ def test_is_idox_url_recognises_both_variants():
     )
 
 
+def test_is_idox_url_recognises_nonstandard_mount_paths():
+    # The endpoint is the signal, not the path prefix — Fife mounts Idox at
+    # /online/, Horsham at /public-access/, Stockport at /PlanningData-live/.
+    assert idox._is_idox_url(
+        "https://planning.fife.gov.uk/online/applicationDetails.do?keyVal=X"
+    )
+    assert idox._is_idox_url(
+        "https://public-access.horsham.gov.uk/public-access/applicationDetails.do?keyVal=X"
+    )
+    assert idox._is_idox_url(
+        "https://planning.stockport.gov.uk/PlanningData-live/applicationDetails.do?keyVal=X"
+    )
+
+
 def test_is_idox_url_rejects_other_portals():
     # Hillingdon uses Ocella, not Idox
     assert not idox._is_idox_url(
