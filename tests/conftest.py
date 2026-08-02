@@ -71,6 +71,11 @@ def _ensure_test_database() -> None:
             if cur.fetchone()[0] is None:
                 cur.execute((MIGRATIONS_DIR / "004_council_aliases.sql").read_text())
                 conn.commit()
+            # Migration 005 — projects + project_applications (Barbour ABI).
+            cur.execute("SELECT to_regclass('public.projects')")
+            if cur.fetchone()[0] is None:
+                cur.execute((MIGRATIONS_DIR / "005_projects.sql").read_text())
+                conn.commit()
     finally:
         conn.close()
 
@@ -98,7 +103,8 @@ def db_conn(integration_db: str):
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "TRUNCATE TABLE colocated_candidates, findings, triage, documents, "
+                "TRUNCATE TABLE project_applications, projects, "
+                "colocated_candidates, findings, triage, documents, "
                 "applications, source_snapshots, council_aliases "
                 "RESTART IDENTITY CASCADE"
             )

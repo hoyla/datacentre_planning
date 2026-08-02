@@ -280,6 +280,107 @@ def append_discovered_via(
         return cur.rowcount
 
 
+def upsert_project(
+    conn: PgConnection,
+    *,
+    source_id: int,
+    project: dict[str, Any],
+) -> int:
+    """Upsert a construction-project row (Barbour ABI or a future provider).
+
+    `project` carries the promoted columns plus the full verbatim source row
+    under `raw_metadata` (principle 3 — the provider's record is never
+    corrected in place; promoted columns are refreshed on conflict but the
+    raw row travels with them). `first_seen_at` is preserved across reruns.
+    Returns the row id.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO projects (
+                source_id, external_ref, title, stage_summary, dev_type,
+                description, address, postcode, longitude, latitude,
+                value_gbp, floor_area, site_area, authority_name,
+                planning_ref, planning_link, plan_date, decision_date,
+                start_date, completion_date, url, raw_metadata
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (source_id, external_ref) DO UPDATE SET
+                title = EXCLUDED.title,
+                stage_summary = EXCLUDED.stage_summary,
+                dev_type = EXCLUDED.dev_type,
+                description = EXCLUDED.description,
+                address = EXCLUDED.address,
+                postcode = EXCLUDED.postcode,
+                longitude = EXCLUDED.longitude,
+                latitude = EXCLUDED.latitude,
+                value_gbp = EXCLUDED.value_gbp,
+                floor_area = EXCLUDED.floor_area,
+                site_area = EXCLUDED.site_area,
+                authority_name = EXCLUDED.authority_name,
+                planning_ref = EXCLUDED.planning_ref,
+                planning_link = EXCLUDED.planning_link,
+                plan_date = EXCLUDED.plan_date,
+                decision_date = EXCLUDED.decision_date,
+                start_date = EXCLUDED.start_date,
+                completion_date = EXCLUDED.completion_date,
+                url = EXCLUDED.url,
+                raw_metadata = EXCLUDED.raw_metadata,
+                last_seen_at = now()
+            RETURNING id
+            """,
+            (
+                source_id,
+                project["external_ref"],
+                project.get("title"),
+                project.get("stage_summary"),
+                project.get("dev_type"),
+                project.get("description"),
+                project.get("address"),
+                project.get("postcode"),
+                project.get("longitude"),
+                project.get("latitude"),
+                project.get("value_gbp"),
+                project.get("floor_area"),
+                project.get("site_area"),
+                project.get("authority_name"),
+                project.get("planning_ref"),
+                project.get("planning_link"),
+                project.get("plan_date"),
+                project.get("decision_date"),
+                project.get("start_date"),
+                project.get("completion_date"),
+                project.get("url"),
+                Json(project.get("raw_metadata")),
+            ),
+        )
+        return cur.fetchone()[0]
+
+
+def link_project_application(
+    conn: PgConnection,
+    *,
+    project_id: int,
+    application_id: int,
+    match_method: str,
+) -> bool:
+    """Idempotent link from a project to an application. Returns True if a
+    new link was inserted, False if the pair was already linked (the original
+    match_method is kept — the first recorded provenance wins)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO project_applications (project_id, application_id, match_method)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (project_id, application_id) DO NOTHING
+            RETURNING id
+            """,
+            (project_id, application_id, match_method),
+        )
+        return cur.fetchone() is not None
+
+
 def record_finding(
     conn: PgConnection,
     *,
