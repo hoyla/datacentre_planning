@@ -17,10 +17,17 @@ Two responsibilities, in service of the deep-read findings extractor:
    are real findings and what structured shape they take.
 
 Some PDFs are scanned-image-only (no text layer); pypdf returns empty
-strings for those pages. We don't OCR here — the vision-capable Read
-tool handles image-only PDFs natively. The regex pre-pass simply has
-no candidates from those docs, and the LLM step is expected to read
-them whole.
+strings for those pages. Those pages fall back to **RapidOCR** (ONNX
+PaddleOCR — non-generative CTC decoding, pinned weights), chosen over a
+VLM deliberately: the OCR text is the substrate the verbatim-quote
+verification gate checks against, and it must fail *noisily* on
+illegible input (garbage characters) rather than *fluently* (a
+generative model's plausible hallucination would let an invented quote
+verify). Measured on the 2026-08 Barbour-round fetch: ~5% of documents
+are scanned-only, mostly clean typed council forms. Per-page OCR use is
+recorded in the cache payload (`ocr_pages`) for the audit trail. If
+rapidocr isn't installed, behaviour degrades to the old contract
+(empty pages, vision-capable reader handles the doc whole).
 
 `.docx` / `.msg` / `.xlsx` loaders land in follow-ups (the YEP
 calibration set is PDF-dominated; `.docx` support arrives when the
@@ -58,6 +65,7 @@ class ExtractedDoc:
     pages: list[str]  # index = 0-based page; pages[i] is the page's text
     engine: str
     extracted_at: str
+    ocr_pages: tuple[int, ...] = ()  # 1-based pages whose text came from OCR
 
     @property
     def page_count(self) -> int:
@@ -97,6 +105,103 @@ def extract_pdf(bytes_path: Path) -> list[str]:
     return pages
 
 
+# A page whose stripped pypdf text is shorter than this is treated as
+# image-only and sent to OCR. Drawings often carry a few characters of
+# title-block text that pypdf does recover; the threshold keeps those in
+# scope for OCR without re-processing genuinely text-layered pages.
+OCR_MIN_CHARS = 25
+
+_OCR_ENGINE = None  # lazy singleton; RapidOCR loads ~3 ONNX models on init
+
+
+def _get_ocr_engine():
+    global _OCR_ENGINE
+    if _OCR_ENGINE is None:
+        from rapidocr_onnxruntime import RapidOCR
+        _OCR_ENGINE = RapidOCR()
+    return _OCR_ENGINE
+
+
+def _ocr_image_tesseract(pil_image) -> str:
+    """OCR one PIL image via the tesseract binary (no pytesseract dep).
+
+    Default engine: on clean typed English council documents it preserves
+    inter-word spacing and reading order noticeably better than RapidOCR's
+    English model (which concatenates words and emits full-width CJK
+    punctuation — measured on the 2026-08 Fife/Enfield scanned samples).
+    """
+    import subprocess
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(suffix=".png") as tmp:
+        pil_image.save(tmp.name, format="PNG")
+        proc = subprocess.run(
+            ["tesseract", tmp.name, "stdout", "--psm", "3", "-l", "eng"],
+            capture_output=True, text=True, timeout=120,
+        )
+    if proc.returncode != 0:
+        raise RuntimeError(f"tesseract failed: {proc.stderr[:200]}")
+    return proc.stdout
+
+
+def _ocr_image_rapidocr(pil_image) -> str:
+    """OCR one PIL image via RapidOCR (ONNX PaddleOCR). Alternative engine —
+    stronger on low-quality scans and complex layouts, but weaker spacing on
+    clean English text."""
+    import numpy as np
+
+    engine = _get_ocr_engine()
+    result, _elapse = engine(np.asarray(pil_image.convert("RGB")))
+    return "\n".join(item[1] for item in (result or []))
+
+
+_OCR_BACKENDS = {"tesseract": _ocr_image_tesseract, "rapidocr": _ocr_image_rapidocr}
+
+
+def ocr_pdf_pages(
+    bytes_path: Path, page_indices: list[int], engine: str = "tesseract",
+) -> dict[int, str]:
+    """OCR specific (0-based) pages of a PDF via pypdfium2 + a non-generative
+    OCR engine.
+
+    Returns {page_index: text}. Both engines are deliberately non-generative
+    (see module docstring): misreads surface as noisy characters, never as
+    fluent invented prose, so the quote-verification substrate stays honest.
+    Rendering at ~300 DPI (scale 300/72) — the sweet spot for typed council
+    forms. Returns {} if the renderer or engine is unavailable.
+    """
+    ocr_image = _OCR_BACKENDS[engine]
+    try:
+        import pypdfium2 as pdfium
+    except ImportError as exc:
+        log.warning("OCR unavailable (%s); leaving image-only pages empty", exc)
+        return {}
+
+    out: dict[int, str] = {}
+    try:
+        pdf = pdfium.PdfDocument(str(bytes_path))
+    except Exception as exc:
+        log.warning("pypdfium2 failed to open %s: %s", bytes_path, exc)
+        return {}
+    try:
+        for idx in page_indices:
+            try:
+                page = pdf[idx]
+                # 300 DPI for ordinary pages, but cap the rendered long edge
+                # at ~4000 px: A0/A1 site plans at full 300 DPI produce
+                # 100-megapixel bitmaps that stall tesseract for minutes and
+                # add nothing for text recovery.
+                long_edge_pts = max(page.get_size())
+                scale = min(300 / 72, 4000 / long_edge_pts)
+                bitmap = page.render(scale=scale)
+                out[idx] = ocr_image(bitmap.to_pil())
+            except Exception as exc:
+                log.warning("OCR failed on page %d of %s: %s", idx + 1, bytes_path, exc)
+    finally:
+        pdf.close()
+    return out
+
+
 def extract_document(
     *,
     source: str,
@@ -104,11 +209,15 @@ def extract_document(
     sha: str,
     bytes_path: Path,
     force: bool = False,
+    ocr: bool = True,
+    ocr_engine: str = "tesseract",
 ) -> ExtractedDoc:
     """Return parsed per-page text for a document, using cache when present.
 
     Set `force=True` to bypass the cache (e.g. after upgrading the extraction
-    engine).
+    engine). Pages with no usable text layer are OCR'd unless `ocr=False`;
+    OCR'd page numbers are recorded in the cache for audit and the engine
+    string becomes e.g. 'pypdf+tesseract'.
     """
     cache = cache_path_for(source, application_ref, sha)
     if cache.exists() and not force:
@@ -119,12 +228,25 @@ def extract_document(
             pages=payload["pages"],
             engine=payload["engine"],
             extracted_at=payload["extracted_at"],
+            ocr_pages=tuple(payload.get("ocr_pages", [])),
         )
 
+    ocr_pages: tuple[int, ...] = ()
     suffix = bytes_path.suffix.lower()
     if suffix == ".pdf":
         pages = extract_pdf(bytes_path)
         engine = "pypdf"
+        if ocr:
+            needs_ocr = [i for i, t in enumerate(pages)
+                         if len(t.strip()) < OCR_MIN_CHARS]
+            if needs_ocr:
+                ocr_out = ocr_pdf_pages(bytes_path, needs_ocr, engine=ocr_engine)
+                merged = {i: t for i, t in ocr_out.items() if t.strip()}
+                for i, text in merged.items():
+                    pages[i] = text
+                if merged:
+                    engine = f"pypdf+{ocr_engine}"
+                    ocr_pages = tuple(sorted(i + 1 for i in merged))
     else:
         # docx/msg/xlsx loaders land later; for now, leave non-PDFs uncached
         # so a future re-run picks them up. Returning an empty pages list
@@ -140,6 +262,7 @@ def extract_document(
         pages=pages,
         engine=engine,
         extracted_at=dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
+        ocr_pages=ocr_pages,
     )
     cache.parent.mkdir(parents=True, exist_ok=True)
     cache.write_text(json.dumps({
@@ -148,6 +271,7 @@ def extract_document(
         "pages": doc.pages,
         "engine": doc.engine,
         "extracted_at": doc.extracted_at,
+        "ocr_pages": list(doc.ocr_pages),
     }, ensure_ascii=False))
     return doc
 
