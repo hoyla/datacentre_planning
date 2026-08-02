@@ -99,14 +99,17 @@ class DocumentLink:
 
 
 def _is_idox_url(url: str) -> bool:
-    """Heuristic: Idox URLs contain '/online-applications/' or
-    '/newplanningaccess/' and the `applicationDetails.do` endpoint."""
+    """Heuristic: the `applicationDetails.do` endpoint is unique to Idox
+    Public Access across observed UK portals (Ocella uses `planningDetails`,
+    Northgate uses `StdDetails.aspx`), so the endpoint alone is the signal.
+    Councils mount Idox under many path prefixes — `/online-applications/`
+    and `/newplanningaccess/` are the common ones, but Fife uses `/online/`,
+    Horsham `/public-access/`, Stockport `/PlanningData-live/`, Dacorum
+    `/publicaccess/`, Midlothian `/OnlinePlanning/` — and the documents-tab
+    `activeTab` swap works identically on all of them."""
     if not url:
         return False
-    return (
-        "applicationDetails.do" in url
-        and ("/online-applications/" in url or "/newplanningaccess/" in url)
-    )
+    return "applicationDetails.do" in url
 
 
 def _documents_tab_url(application_url: str) -> str:
