@@ -159,7 +159,7 @@ Return strict JSON, no prose outside the JSON. Schema:
 
 
 # ---------------------------------------------------------------------------
-# dc_build rubric (v2, 2026-08-03) — project-class taxonomy
+# dc_build rubric (v2.1, 2026-08-03) — project-class taxonomy
 #
 # Scope decisions locked by Luke 2026-08-03: refurbs/fit-outs stay in the
 # corpus but classed distinctly from new builds; enabling works are a related
@@ -168,7 +168,15 @@ Return strict JSON, no prose outside the JSON. Schema:
 # tracks any datacentre-related project so schemes (including B8-disguised
 # ones) can be followed as they evolve. Methodology doc:
 # data/triage_labelling/rubric_dc_build.md
+#
+# v2.1 folds in the five rules from the 2026-08-03 adjudication (sixteen
+# contested trial rows ruled on conversationally): instrument-first
+# classification, the three-axes procedural definition, association by
+# evidence in the input, the why-field honesty rule, and the inclusion
+# principle. See the rubric doc's "Adjudication outcomes" section.
 # ---------------------------------------------------------------------------
+
+DC_BUILD_PROMPT_VERSION = "2.1"
 
 DC_BUILD_VERDICTS = {
     "new_build", "expansion_refurb", "enabling_works", "adjacent_power",
@@ -181,10 +189,18 @@ tracking data-centre development. Assign each application a PROJECT CLASS so
 downstream analysis can include or exclude classes as the question demands.
 Every class is retained — classification is categorisation, never discard.
 
-You see the application metadata (council, app type, address, dates) and the
-planning description text. Classify from the description's OWN substance —
-what this application itself seeks consent for — not from what its wider
-scheme might be.
+You see the application metadata (council, app type, address, dates), the
+planning description text, and sometimes an "Additional context from other
+records" block (cross-source project links, related application references).
+
+**Classify the INSTRUMENT, not the scheme it describes.** The verdict is
+about what THIS application itself seeks consent for — a conditions
+discharge on a hyperscale campus is still a conditions discharge, however
+dramatic the scheme it quotes. Reference and app-type codes often name the
+instrument directly: PREAPP / PAN / SCO / SCR signal pre-application
+instruments; NMA / DOC / DRC / VCDN signal procedural instruments (unless
+the change touches the scheme's substance — see the procedural class);
+Scottish PPP is permission in principle, a substantive consent.
 
 1. **verdict** — the project class:
    - "new_build": construction of new data-centre capacity — new buildings,
@@ -200,12 +216,18 @@ scheme might be.
        scheme that are neither the building nor its power systems —
        demolition / site clearance, access and spine roads, drainage,
        grid-connection cabling and trenching, highway (s278) works. The
-       description must tie the works to a data-centre scheme.
+       data-centre association must be visible somewhere in the INPUT —
+       the description itself or the additional-context block.
    - "adjacent_power": power generation, storage, or fuel infrastructure
        serving or co-located with a data centre or data-park site — energy
        centres, CHP, gas engines / turbines, energy reserve facilities,
        generator yards, fuel storage, BESS, substations, private-wire /
-       microgrid schemes.
+       microgrid schemes. As with enabling_works, the association may be
+       established by the description OR the additional-context block —
+       but where power kit has no visible data-centre tie anywhere in the
+       input, do not invent one: classify "not_dc" or "unknown" and let
+       held evidence (application family, spatial links, cross-source
+       data) make the association downstream.
    - "pre_application": pre-application and non-standard consenting
        instruments signalling a data-centre scheme — EIA screening or
        scoping requests, Scottish Proposal of Application Notices,
@@ -213,9 +235,15 @@ scheme might be.
        masterplans with a named data-centre component.
    - "procedural": variations of conditions, non-material amendments,
        conditions discharges, and reserved-matters submissions on a
-       data-centre parent that add NO new substantive content (landscaping
-       details, materials, phasing, admin re-wordings). These track the
-       application family; the parent carries the substance.
+       data-centre parent that leave the scheme's data-centre substance
+       unchanged on ALL THREE axes: (a) WHETHER it is a data centre,
+       (b) HOW BIG it is, (c) HOW IT IS POWERED. Landscaping details,
+       materials, phasing, admin re-wordings qualify. A filing that touches
+       any axis — a floorspace/quantum change, an amendment introducing
+       data-centre use, a height or massing change to accommodate plant —
+       is NOT procedural: classify it by the resulting scheme, with
+       worth_deep_read "yes". These track the application family; the
+       parent carries the substance.
    - "not_dc": nothing to do with data centres.
    - "unknown": insufficient information, or a DISGUISE SUSPECT (below).
 
@@ -246,19 +274,27 @@ scheme might be.
 
 5. **why** — one short sentence citing description text or naming the
    dominant factor, including which class-boundary you weighed if close.
+   HONESTY RULE: never assert a fact the input does not contain — e.g. the
+   direction of a quantum variation ("increases floorspace") when the
+   description only says "variation of condition". State what is visible
+   and route the open question to deep-read (worth_deep_read "yes"/"maybe")
+   rather than inferring an answer.
 
 6. **confidence** — "sure" | "probable" | "guessing" for the verdict call.
 
 **Calibration:**
 - Lean inclusive at genuine boundaries: unsure between new_build and
   expansion_refurb → new_build; between a DC class and not_dc → "unknown"
-  rather than not_dc. False positives are cheap; false negatives are not.
+  rather than not_dc. The working principle: it is easy for the data
+  journalists to remove something they can see, and much harder to add
+  something they can't.
 - Emergency/backup generators alone are a deep-read trigger, not proof of
   primary generation.
 - An application whose own substance is power kit on a DC site is
   "adjacent_power" even when filed as a reserved-matters or variation.
-- Enabling works require a stated data-centre connection; a road to an
-  unnamed employment site is "not_dc" or "unknown".
+- Enabling works and adjacent power need a data-centre association visible
+  in the input (description or context block); a road to an unnamed
+  employment site is "not_dc" or "unknown".
 
 Worked examples (all real):
 - "Erection of a gas-fired energy reserve facility of up to 21MW capacity
@@ -285,6 +321,13 @@ Worked examples (all real):
   substation, external plant enclosure…)" → procedural (the variation adds
   no new kit; the parent's substance is quoted, not proposed anew),
   deep_read maybe, signals from the quoted parent noted.
+- "Variation of Condition 2 … to substitute amended plans increasing the
+  approved data centre floorspace from 27,637 sqm to 33,870 sqm" → NOT
+  procedural (touches the how-big axis): new_build by the resulting scheme,
+  deep_read yes.
+- "Non-material amendment … to include data centre use within the approved
+  flexible employment floorspace" → NOT procedural (touches the whether
+  axis): classify by the resulting scheme, deep_read yes.
 - "Proposal of application notice … ERECTION OF AN AI DATA CENTRE CAMPUS
   WITH A 250MW DEMAND UTILITY CAPACITY WITH ANCILLARY BATTERY ENERGY
   STORAGE…" → pre_application, deep_read yes.

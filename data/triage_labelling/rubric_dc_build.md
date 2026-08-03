@@ -70,7 +70,8 @@ per application.
 ## Adjudication outcomes (Luke, 2026-08-03)
 
 Sixteen contested rows adjudicated conversationally; five durable rules
-emerged, to be folded into the prompt as v2.1:
+emerged, folded into the prompt as v2.1 the same evening
+(`dcp/triage.py`, `DC_BUILD_PROMPT_VERSION = "2.1"`):
 
 1. **Instrument-first.** Classify the instrument, not the scheme it
    describes. Reference/type suffixes often name it directly (PREAPP, PAN,
@@ -105,6 +106,16 @@ the 10 flagged rows):
 | granite4.1:30b | enriched | 39 | 35 | 4 |
 | claude-sonnet-5 | description | 42 | 38 | 4 |
 | claude-sonnet-5 | enriched | 42 | 36 | 6 |
+| claude-sonnet-5 **v2.1** | description | 44 | 39 | 5 |
+| claude-sonnet-5 **v2.1** | enriched | **47** | 38 | **9** |
+
+**v2.1 re-scored the same evening** (reports
+`eval_dc_build_claude-sonnet-5_2026-08-03_2044/2047.md`): the
+association-by-evidence rule recovered nearly the whole invisible set
+once enrichment carries the tie, and enrichment stopped costing
+visible-row accuracy. The sole remaining invisible miss is Stockport #41,
+which is document-locked. **Catalogue-sweep configuration: Sonnet 5 +
+enriched context, prompt v2.1.**
 
 Architecture locked on these numbers plus budget: **Sonnet 5 catalogues
 the universe's metadata** (one-off, ~$15–20); **local granite + Claude
