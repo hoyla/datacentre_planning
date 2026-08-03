@@ -26,6 +26,8 @@ dependencies = [
     # tesseract); rapidocr is the pip-installable alternative engine.
     "pypdfium2>=4.30",
     "rapidocr-onnxruntime>=1.3",
+    # Claude triage/extraction backend (Sonnet-5-vs-granite trial onward)
+    "anthropic>=0.120",
 ]
 
 [project.optional-dependencies]

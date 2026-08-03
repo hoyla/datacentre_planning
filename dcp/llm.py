@@ -52,6 +52,56 @@ class OllamaBackend:
         return LLMResponse(text=data["message"]["content"], model=self.model, raw=data)
 
 
+class ClaudeBackend:
+    """Anthropic Claude via the Messages API (anthropic SDK).
+
+    Used for the Sonnet-5-vs-granite triage trial (2026-08) and available to
+    any stage that takes a model string: `make_backend` routes any name
+    starting 'claude' here. Runs on Luke's personal Anthropic account — the
+    same personal-account caveat as the v1 Read-tool extraction applies.
+
+    Defaults are deliberate: adaptive thinking stays on (the model decides,
+    and classification benefits), and max_tokens leaves room for thinking +
+    the JSON verdict.
+    """
+
+    def __init__(
+        self,
+        model: str = "claude-sonnet-5",
+        request_timeout: float | None = None,
+        max_tokens: int = 4000,
+    ):
+        import anthropic
+
+        self.model = model
+        self.max_tokens = max_tokens
+        self.client = anthropic.Anthropic(timeout=request_timeout or 120.0)
+
+    def complete(self, prompt: str, *, system: str | None = None) -> LLMResponse:
+        kwargs: dict = {}
+        if system:
+            kwargs["system"] = system
+        msg = self.client.messages.create(
+            model=self.model,
+            max_tokens=self.max_tokens,
+            messages=[{"role": "user", "content": prompt}],
+            **kwargs,
+        )
+        text = "".join(b.text for b in msg.content if b.type == "text")
+        return LLMResponse(text=text, model=self.model, raw=msg.to_dict())
+
+
+def make_backend(
+    model: str, request_timeout: float | None = None
+) -> LLMBackend:
+    """Model-string dispatch: 'claude-*' → ClaudeBackend, anything else →
+    OllamaBackend. Keeps CLI surfaces (`dcp triage --model X`,
+    `scripts/eval_triage.py --model X`) backend-agnostic."""
+    if model.startswith("claude"):
+        return ClaudeBackend(model=model, request_timeout=request_timeout)
+    return OllamaBackend(model=model, request_timeout=request_timeout)
+
+
 class FakeBackend:
     """Deterministic fake: returns canned responses keyed by prompt prefix."""
 

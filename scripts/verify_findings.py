@@ -278,15 +278,22 @@ def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
             ocr_substrate=any(p in ocr_set for p in fragment_pages),
         )
 
-    # 4) Genuine miss. List which fragments couldn't be found.
+    # 4) Miss. Distinguish by substrate: a miss against a native text layer
+    #    is a possible paraphrase (libel-risk surface); a miss where the
+    #    recorded page's text is an OCR reconstruction of a scan means the
+    #    engine couldn't reproduce the region a vision-based extraction read
+    #    (e.g. tesseract's "2IMW" for "21MW") — the v1 vision verification
+    #    remains the authoritative check there, and the row needs an eyeball
+    #    rather than an alarm.
     missing = [
         i for i, found in enumerate(fragment_pages, 1) if found is None
     ]
     if 1 <= p1 <= len(pages):
         excerpt = pages[p1 - 1][:400].replace("\n", " ").strip()
+        status = "ocr_mismatch" if p1 in ocr_set else "fail"
         return CheckResult(
-            finding=finding, status="fail", matched_page=p1,
-            cached_excerpt=excerpt,
+            finding=finding, status=status, matched_page=p1,
+            cached_excerpt=excerpt, ocr_substrate=p1 in ocr_set,
             detail=f"fragment(s) {missing} not found anywhere in document "
                    f"(quote has {len(fragments_norm)} ellipsis-separated fragments)",
         )
@@ -322,6 +329,8 @@ def _render(results: list[CheckResult]) -> str:
         ("page_empty", "recorded page has no pypdf text — scanned-only; manual check needed"),
         ("cache_missing", "no pypdf cache for the document"),
         ("page_out_of_range", "recorded page beyond the document's pypdf page count"),
+        ("ocr_mismatch", "quote not reproduced by the OCR reconstruction of a scanned page — "
+                         "vision verification remains authoritative; manual eyeball to confirm"),
         ("fail", "at least one fragment not found anywhere in the document"),
     ]
     for status, hint in status_order:
