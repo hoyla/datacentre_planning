@@ -8,9 +8,12 @@ carries a single HTML table of (Date Published, Document Type, …, filename, li
 
 Document links are relative paths of the form
 `/online-applications/files/<HEX>/pdf/<filename>.pdf` and are served as direct
-PDFs. A subset of plan documents (where the council uses Idox's OMT viewer)
-have `docKey=` URLs that point to an interactive viewer rather than a direct
-PDF — we currently skip those; deep-read can fall back to manual download.
+PDFs. Where the council enables Idox's OMT measuring tool, drawing rows carry
+an *additional* `omt-server/omt.html#docKey=` anchor ("Measure document")
+ahead of the direct "View" link in the same row — the parser prefers the
+first non-docKey anchor, so those rows resolve to their direct PDF. Across
+every observed snapshot (14 councils) a docKey anchor is always accompanied
+by a direct link; a row with only viewer anchors would be skipped.
 
 Many UK council Idox installs ship a misconfigured TLS chain — the server
 sends only the leaf cert and not the intermediate(s), so strict OpenSSL
@@ -127,8 +130,10 @@ def parse_documents_page(html: str, base_url: str) -> list[DocumentLink]:
     """Extract document links from an Idox documents-tab HTML page.
 
     The page has a single top-level table; row 1 is the header, rows 2+ are
-    documents. Relative `href`s are resolved against `base_url`. The OMT-viewer
-    `docKey=` links are filtered out — they're not direct PDFs.
+    documents. Relative `href`s are resolved against `base_url`. Drawing rows
+    on OMT-enabled councils carry a "Measure document" viewer anchor
+    (`docKey=`) *before* the direct "View" anchor — the row's document link is
+    the first non-docKey anchor, and rows with only viewer anchors are skipped.
     """
     tree = HTMLParser(html)
     table = tree.css_first("table")
@@ -146,12 +151,14 @@ def parse_documents_page(html: str, base_url: str) -> list[DocumentLink]:
         cells = tr.css("td")
         if not cells:
             continue
-        a = tr.css_first("a")
-        if a is None:
-            continue
-        href = a.attributes.get("href") or ""
-        if not href or "docKey=" in href:
-            # Skip OMT-viewer links; we want direct PDFs only in this pass.
+        href = ""
+        for a in tr.css("a"):
+            candidate = a.attributes.get("href") or ""
+            if candidate and "docKey=" not in candidate:
+                href = candidate
+                break
+        if not href:
+            # Only OMT-viewer links (or none) in this row; no direct PDF.
             continue
         abs_href = urllib.parse.urljoin(base_url, href)
         def _cell(name: str) -> str | None:
@@ -395,7 +402,29 @@ def fetch_documents_for_application(
     summary["links_found"] = len(links)
     if len(links) == 0:
         summary["error_class"] = "no_documents_or_unparseable"
+
+    # Resume support: a document URL already recorded for this application
+    # with its bytes still on disk doesn't need re-downloading. Idox file
+    # URLs embed a unique per-revision document id, so bytes at a given URL
+    # are immutable in practice — revised documents appear as new URLs.
+    # Without this, re-walking a completed app re-downloads its whole bundle
+    # just to rediscover every hash matches.
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT url, bytes_path FROM documents WHERE application_id = %s",
+            (application_id,),
+        )
+        prior_bytes = {url: bp for url, bp in cur.fetchall() if bp}
+
     for link in links:
+        prior_path = prior_bytes.get(link.href)
+        if prior_path:
+            p = Path(prior_path)
+            if not p.is_absolute():
+                p = data_dir.parent / p
+            if p.exists():
+                summary["skipped_existing"] += 1
+                continue
         try:
             blob = client.get(link.href)
         except Exception as exc:

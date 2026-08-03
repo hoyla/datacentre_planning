@@ -87,29 +87,54 @@ def test_documents_tab_url_appends_when_missing():
 
 
 def test_parse_documents_page_extracts_halton_direct_pdf_docs(halton_fixture):
-    """Halton's documents tab has 4 rows: 3 direct PDFs + 1 'Plans' row whose
-    link is an OMT-viewer (`docKey=`) URL. The parser keeps the 3 direct PDFs
-    and skips the OMT entry — deep-read can fall back to manual download for
-    those plan documents in a v2."""
+    """Halton's documents tab has 4 rows: 3 plain direct-PDF rows + 1 'Plans'
+    row that carries an OMT-viewer "Measure document" anchor (`docKey=`)
+    *before* its direct "View" anchor. All 4 direct PDFs must come through —
+    the Plans row resolves to its direct link, not the viewer."""
     base = ("https://pa.halton.gov.uk/online-applications/applicationDetails.do"
             "?activeTab=documents&keyVal=R5K0ZSHTI6H00")
     links = idox.parse_documents_page(halton_fixture, base_url=base)
-    assert len(links) == 3
+    assert len(links) == 4
     kinds = sorted(link.kind for link in links if link.kind)
     assert kinds == [
         "Application Correspondence",
         "Application Form",
         "Decision / Officer Report",
+        "Plans",
     ]
     for link in links:
         assert link.href.startswith("https://pa.halton.gov.uk/online-applications/files/")
         assert link.href.endswith(".pdf")
+        assert "docKey=" not in link.href
 
 
-def test_parse_documents_page_skips_omt_viewer_links():
-    """The 'Plans' row in many Idox councils links to an OMT viewer
-    (`docKey=...`) rather than a direct PDF. Construct a minimal fixture that
-    forces that case and confirm those rows are dropped."""
+def test_parse_documents_page_prefers_direct_link_over_measure_anchor():
+    """Drawing rows on OMT-enabled councils (Glasgow, Fife, East Cambs, …)
+    carry two anchors: "Measure document" (docKey=, first in the row) and
+    "View Document" (direct PDF, later). The row must resolve to the direct
+    PDF — taking the first anchor and skipping on docKey used to drop the
+    whole row, silently losing the drawing."""
+    html = """
+    <html><body><table>
+      <tr><th>Date Published</th><th>Document Type</th><th>Description</th></tr>
+      <tr><td>7 Nov 2016</td><td>Drawing</td><td>CYCLING PROVISIONS</td>
+        <td><a href="https://pa.example.gov.uk/omt-server/omt.html#docKey=XXXX"
+               title="Measure document">measure</a></td>
+        <td><a href="/online-applications/files/AAAA/pdf/drawing.pdf"
+               title="View Document">view</a></td>
+      </tr>
+    </table></body></html>
+    """
+    links = idox.parse_documents_page(html, base_url="https://pa.example.gov.uk/online-applications/")
+    assert len(links) == 1
+    assert links[0].href == "https://pa.example.gov.uk/online-applications/files/AAAA/pdf/drawing.pdf"
+
+
+def test_parse_documents_page_skips_viewer_only_rows():
+    """A row whose only anchor is an OMT viewer link (no direct PDF anywhere
+    in the row) still gets dropped — there are no bytes to fetch. Unobserved
+    in the wild (all 1,622 docKey rows across 14 councils' snapshots carry a
+    direct link too), but the guard keeps the viewer URL out of the corpus."""
     html = """
     <html><body><table>
       <tr><th>Date Published</th><th>Document Type</th><th>Description</th></tr>
