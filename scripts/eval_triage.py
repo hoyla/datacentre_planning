@@ -102,6 +102,10 @@ def main():
                     help="Ollama model name, or any claude-* model (Anthropic API).")
     ap.add_argument("--rubric", choices=sorted(triage.RUBRICS), default="v1",
                     help="Which rubric/prompt to evaluate (v1 or dc_build).")
+    ap.add_argument("--enrich", action="store_true",
+                    help="Add prompt context from the DB per application: address, "
+                         "app type, linked Barbour project titles, associated_id. "
+                         "Tests information-vs-model-quality; needs Postgres.")
     ap.add_argument("--limit", type=int, default=None,
                     help="Cap applications evaluated (after skipping resume rows).")
     ap.add_argument("--timeout", type=float, default=180.0,
@@ -138,6 +142,36 @@ def main():
     if args.limit is not None:
         remaining = remaining[:args.limit]
 
+    enrichment: dict[str, dict] = {}
+    if args.enrich:
+        from dcp import db
+        with db.connect() as conn, conn.cursor() as cur:
+            for label in labels:
+                cur.execute("""
+                    select a.address, a.raw_metadata->>'app_type',
+                           a.raw_metadata->>'associated_id',
+                           array_remove(array_agg(p.title), NULL)
+                    from applications a
+                    left join project_applications pa on pa.application_id = a.id
+                    left join projects p on p.id = pa.project_id
+                    where a.application_ref = %s
+                    group by a.id""", (label["ref"],))
+                row = cur.fetchone()
+                if row:
+                    addr, app_type, assoc, barbour = row
+                    extra = {}
+                    if addr: extra["address"] = addr
+                    if app_type: extra["app_type"] = app_type
+                    ctx = []
+                    if barbour:
+                        ctx.append("Cross-source (Barbour ABI construction data) links this "
+                                   "application to project(s): " + "; ".join(f'"{t}"' for t in barbour))
+                    if assoc and len(assoc) < 200:
+                        ctx.append(f"Related application reference(s) on record: {assoc}")
+                    if ctx:
+                        extra["context"] = " ".join(ctx)
+                    enrichment[label["ref"]] = extra
+
     backend = make_backend(args.model, request_timeout=args.timeout)
     print(f"Triage: {len(remaining)} apps to evaluate against {args.model!r} "
           f"(per-call timeout {args.timeout:.0f}s, parse-retry on)")
@@ -156,6 +190,12 @@ def main():
                 "council": label["council"],
                 "description": label["description"],
             }
+            extra = enrichment.get(label["ref"], {})
+            app.update({k: v for k, v in extra.items() if k != "context"})
+            if extra.get("context"):
+                app["description"] = (
+                    label["description"]
+                    + "\n\nAdditional context from other records:\n" + extra["context"])
             t0 = time.time()
             verdict = None
             err = None
