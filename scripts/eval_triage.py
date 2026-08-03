@@ -33,7 +33,7 @@ ROOT = Path(__file__).parent.parent
 load_dotenv(ROOT / ".env")
 
 from dcp import triage
-from dcp.llm import OllamaBackend
+from dcp.llm import make_backend
 
 
 def normalise_label(rec: dict) -> dict:
@@ -98,7 +98,10 @@ def load_jsonl(path: Path) -> list[dict]:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--labels", default="data/triage_labelling/round_01_labels.json")
-    ap.add_argument("--model", default=os.environ.get("OLLAMA_MODEL", "mistral"))
+    ap.add_argument("--model", default=os.environ.get("OLLAMA_MODEL", "mistral"),
+                    help="Ollama model name, or any claude-* model (Anthropic API).")
+    ap.add_argument("--rubric", choices=sorted(triage.RUBRICS), default="v1",
+                    help="Which rubric/prompt to evaluate (v1 or dc_build).")
     ap.add_argument("--limit", type=int, default=None,
                     help="Cap applications evaluated (after skipping resume rows).")
     ap.add_argument("--timeout", type=float, default=180.0,
@@ -120,7 +123,7 @@ def main():
         # Resume: write into the same JSONL as before; report is regenerated from it.
         prefix = args.resume.with_suffix("")
     else:
-        prefix = ROOT / f"data/triage_labelling/eval_{args.model.replace(':', '_')}_{when}"
+        prefix = ROOT / f"data/triage_labelling/eval_{args.rubric}_{args.model.replace(':', '_')}_{when}"
     jsonl_path = prefix.with_suffix(".jsonl")
     md_path = prefix.with_suffix(".md")
 
@@ -135,7 +138,7 @@ def main():
     if args.limit is not None:
         remaining = remaining[:args.limit]
 
-    backend = OllamaBackend(model=args.model, request_timeout=args.timeout)
+    backend = make_backend(args.model, request_timeout=args.timeout)
     print(f"Triage: {len(remaining)} apps to evaluate against {args.model!r} "
           f"(per-call timeout {args.timeout:.0f}s, parse-retry on)")
     if not remaining:
@@ -157,7 +160,7 @@ def main():
             verdict = None
             err = None
             try:
-                verdict = triage.triage_application(app, backend)
+                verdict = triage.triage_application(app, backend, rubric=args.rubric)
             except ValueError as e:
                 # parse_response raised even after the in-module retry
                 err = f"parse_error: {e}"

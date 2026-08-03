@@ -158,6 +158,158 @@ Return strict JSON, no prose outside the JSON. Schema:
 """
 
 
+# ---------------------------------------------------------------------------
+# dc_build rubric (v2, 2026-08-03) — project-class taxonomy
+#
+# Scope decisions locked by Luke 2026-08-03: refurbs/fit-outs stay in the
+# corpus but classed distinctly from new builds; enabling works are a related
+# class; adjacent power is its own class (not merged with enabling works);
+# pre-application instruments are in scope, classed distinctly; the corpus
+# tracks any datacentre-related project so schemes (including B8-disguised
+# ones) can be followed as they evolve. Methodology doc:
+# data/triage_labelling/rubric_dc_build.md
+# ---------------------------------------------------------------------------
+
+DC_BUILD_VERDICTS = {
+    "new_build", "expansion_refurb", "enabling_works", "adjacent_power",
+    "pre_application", "procedural", "not_dc", "unknown",
+}
+
+DC_BUILD_SYSTEM_PROMPT = """\
+You classify UK planning applications for an investigative journalism project
+tracking data-centre development. Assign each application a PROJECT CLASS so
+downstream analysis can include or exclude classes as the question demands.
+Every class is retained — classification is categorisation, never discard.
+
+You see the application metadata (council, app type, address, dates) and the
+planning description text. Classify from the description's OWN substance —
+what this application itself seeks consent for — not from what its wider
+scheme might be.
+
+1. **verdict** — the project class:
+   - "new_build": construction of new data-centre capacity — new buildings,
+       data halls, campuses. Outline, full, or hybrid applications where a
+       data centre is a substantive component. A reserved-matters submission
+       that itself brings forward the buildings (appearance/layout/scale of
+       the data centre) is "new_build", not "procedural".
+   - "expansion_refurb": works to an EXISTING data centre — extensions,
+       fit-outs, refurbishment, plant replacement or upgrade, change of use
+       of an existing building TO data-centre use. These can add real
+       capacity but must not be conflated with new builds.
+   - "enabling_works": preparatory or supporting works for a data-centre
+       scheme that are neither the building nor its power systems —
+       demolition / site clearance, access and spine roads, drainage,
+       grid-connection cabling and trenching, highway (s278) works. The
+       description must tie the works to a data-centre scheme.
+   - "adjacent_power": power generation, storage, or fuel infrastructure
+       serving or co-located with a data centre or data-park site — energy
+       centres, CHP, gas engines / turbines, energy reserve facilities,
+       generator yards, fuel storage, BESS, substations, private-wire /
+       microgrid schemes.
+   - "pre_application": pre-application and non-standard consenting
+       instruments signalling a data-centre scheme — EIA screening or
+       scoping requests, Scottish Proposal of Application Notices,
+       Local Development Order / Simplified Planning Zone consents,
+       masterplans with a named data-centre component.
+   - "procedural": variations of conditions, non-material amendments,
+       conditions discharges, and reserved-matters submissions on a
+       data-centre parent that add NO new substantive content (landscaping
+       details, materials, phasing, admin re-wordings). These track the
+       application family; the parent carries the substance.
+   - "not_dc": nothing to do with data centres.
+   - "unknown": insufficient information, or a DISGUISE SUSPECT (below).
+
+2. **Disguise suspects.** Some data centres are filed without ever using the
+   words — described only as B8 'Storage or Distribution' or industrial
+   buildings. If a description is a LARGE single-use B8/industrial scheme
+   with data-centre-typical features — substantial electrical infrastructure
+   or substation provision, unusual cooling or plant provision, high power
+   demand language, 'services infrastructure' emphasis, campus phrasing —
+   but never names data-centre use, classify "unknown" and record those
+   features in signals, with why noting the suspicion. Never assert
+   data-centre use the description doesn't support. A plain distribution
+   warehouse with ordinary loading/parking language is "not_dc".
+
+3. **worth_deep_read** — would the document bundle likely yield
+   power-infrastructure findings?
+   - "yes": description names power-related kit (generators, substations,
+       energy centre, gas, fuel storage…), or a substantial scheme where
+       generation kit is expected
+   - "maybe": sparse description, mixed signals, disguise suspects
+   - "no": procedural/not_dc; routine works unlikely to disclose power kit
+   Lean toward "yes"/"maybe" when uncertain.
+
+4. **signals** — power-related terms genuinely present in the description
+   (energy centre, CHP, gas-fired, gas reciprocating engine, energy reserve,
+   BESS, generator, diesel, fuel storage, substation, private wire,
+   hyperscale, water cooling…). Don't infer terms not present.
+
+5. **why** — one short sentence citing description text or naming the
+   dominant factor, including which class-boundary you weighed if close.
+
+6. **confidence** — "sure" | "probable" | "guessing" for the verdict call.
+
+**Calibration:**
+- Lean inclusive at genuine boundaries: unsure between new_build and
+  expansion_refurb → new_build; between a DC class and not_dc → "unknown"
+  rather than not_dc. False positives are cheap; false negatives are not.
+- Emergency/backup generators alone are a deep-read trigger, not proof of
+  primary generation.
+- An application whose own substance is power kit on a DC site is
+  "adjacent_power" even when filed as a reserved-matters or variation.
+- Enabling works require a stated data-centre connection; a road to an
+  unnamed employment site is "not_dc" or "unknown".
+
+Worked examples (all real):
+- "Erection of a gas-fired energy reserve facility of up to 21MW capacity
+  comprising of 14 gas reciprocating engine generators…" on an energy-park
+  site → adjacent_power, deep_read yes.
+- "Submission of Reserved Matters … pursuant to … Outline Planning
+  Permission … for … construction of new buildings for B8 'Storage or
+  Distribution' use comprising up to 104,008 sq m … services infrastructure
+  and associated works" → unknown (disguise suspect: very large single-use
+  B8 with services emphasis), deep_read maybe.
+- "Reserved matters pursuant to outline planning permission … for appearance
+  landscaping and layout relating to Phase 1 infrastructure works the spine
+  road and associated drainage" (outline is a data-centre scheme named in
+  the description) → enabling_works, deep_read no.
+- "Installation of underground and ground mounted structures to support
+  electrical connection and communication cables … for a data centre" →
+  enabling_works (grid connection), deep_read maybe.
+- "Erection of x2 commercial buildings (Classes B2 and B8) including access
+  and servicing arrangements, car and cycle parking, landscaping" →
+  not_dc from the description alone (no scale/feature basis for suspicion).
+- "Variation of conditions 2 (Materials), 3 (Floor levels) … of planning
+  permission … (Redevelopment of site to provide … technical services
+  centre, offices, internal plant and I.T facilities, together with detached
+  substation, external plant enclosure…)" → procedural (the variation adds
+  no new kit; the parent's substance is quoted, not proposed anew),
+  deep_read maybe, signals from the quoted parent noted.
+- "Proposal of application notice … ERECTION OF AN AI DATA CENTRE CAMPUS
+  WITH A 250MW DEMAND UTILITY CAPACITY WITH ANCILLARY BATTERY ENERGY
+  STORAGE…" → pre_application, deep_read yes.
+- "Change of Use from E1 (Commercial) to Sui Generis (Mixed Use - Data
+  Centre and Offices)…" → expansion_refurb (existing building converted to
+  DC use), deep_read maybe.
+
+Return strict JSON, no prose outside the JSON. Schema:
+
+{
+  "verdict": "new_build" | "expansion_refurb" | "enabling_works" | "adjacent_power" | "pre_application" | "procedural" | "not_dc" | "unknown",
+  "worth_deep_read": "yes" | "no" | "maybe",
+  "signals": ["..."],
+  "why": "...",
+  "confidence": "sure" | "probable" | "guessing"
+}
+"""
+
+# Rubric registry: system prompt + valid verdict set, keyed by rubric name.
+RUBRICS: dict[str, tuple[str, set[str]]] = {
+    "v1": (SYSTEM_PROMPT, {"DC", "adjacent", "unrelated", "unknown"}),
+    "dc_build": (DC_BUILD_SYSTEM_PROMPT, DC_BUILD_VERDICTS),
+}
+
+
 def render_user_message(app: dict) -> str:
     """Build the per-application user prompt."""
     parts = [
@@ -193,11 +345,13 @@ _VALID_DEEP_READS = {"yes", "no", "maybe"}
 _VALID_CONFIDENCE = {"sure", "probable", "guessing"}
 
 
-def parse_response(text: str) -> TriageVerdict:
+def parse_response(text: str, valid_verdicts: set[str] | None = None) -> TriageVerdict:
     """Extract the JSON object from the LLM response and validate fields.
 
     Tolerates leading/trailing prose and code fences — the prompt asks for strict JSON
-    but Ollama / smaller models often add wrappers.
+    but Ollama / smaller models often add wrappers. `valid_verdicts` defaults to the
+    v1 set; pass a rubric's own set (e.g. `DC_BUILD_VERDICTS`) to validate against a
+    different taxonomy.
     """
     # Strip code fences if present
     cleaned = text.strip()
@@ -211,7 +365,14 @@ def parse_response(text: str) -> TriageVerdict:
     obj = json.loads(m.group(0))
 
     verdict = str(obj.get("verdict", "")).strip()
-    if verdict not in _VALID_VERDICTS:
+    if valid_verdicts is not None and valid_verdicts is not _VALID_VERDICTS:
+        # Non-v1 taxonomy: normalise case/spacing only; the v1 keyword
+        # coercions below would mangle class names like "new_build".
+        v_norm = verdict.lower().replace(" ", "_").replace("-", "_")
+        if v_norm in valid_verdicts:
+            verdict = v_norm
+        # else: leave as-is, caller can flag
+    elif verdict not in _VALID_VERDICTS:
         # Common LLM slip: lowercase, or "data centre" instead of "DC"
         v_lower = verdict.lower()
         if v_lower == "dc" or "data" in v_lower:
@@ -313,7 +474,7 @@ def run_retriage(
     `run_triage` instead — that's resume-aware and skips already-triaged.
     """
     from dcp import db, repo
-    from dcp.llm import OllamaBackend
+    from dcp.llm import make_backend
 
     if cohort not in RETRIAGE_COHORTS:
         raise ValueError(
@@ -321,7 +482,7 @@ def run_retriage(
         )
     cohort_sql, cohort_params, _description = RETRIAGE_COHORTS[cohort]
 
-    backend = OllamaBackend(model=model, request_timeout=timeout)
+    backend = make_backend(model, request_timeout=timeout)
     model_name = backend.model
 
     summary = {
@@ -400,9 +561,9 @@ def run_triage(
     so the CLI can stream live updates. The summary dict is returned at end.
     """
     from dcp import db, repo
-    from dcp.llm import OllamaBackend
+    from dcp.llm import make_backend
 
-    backend = OllamaBackend(model=model, request_timeout=timeout)
+    backend = make_backend(model, request_timeout=timeout)
     model_name = backend.model
 
     summary = {
@@ -466,17 +627,23 @@ def triage_application(
     backend: LLMBackend,
     *,
     retry_on_parse_error: bool = True,
+    rubric: str = "v1",
 ) -> TriageVerdict:
     """Run Stage 1 triage on a single application.
+
+    `rubric` selects the system prompt + valid-verdict set from `RUBRICS`
+    ("v1" is the original DC/adjacent taxonomy; "dc_build" is the 2026-08
+    project-class taxonomy).
 
     If parse_response fails (smaller models occasionally add prose or wrap things
     oddly) and `retry_on_parse_error` is True, makes one more call with a stricter
     JSON-only reminder appended to the user message. If the retry also fails, the
     original ValueError is raised."""
+    system_prompt, valid_verdicts = RUBRICS[rubric]
     user_msg = render_user_message(app)
-    resp: LLMResponse = backend.complete(user_msg, system=SYSTEM_PROMPT)
+    resp: LLMResponse = backend.complete(user_msg, system=system_prompt)
     try:
-        return parse_response(resp.text)
+        return parse_response(resp.text, valid_verdicts)
     except ValueError:
         if not retry_on_parse_error:
             raise
@@ -486,5 +653,5 @@ def triage_application(
             "Return ONLY the JSON object — no prose before or after, no markdown code fences, "
             "no commentary. Just the bare JSON object matching the schema."
         )
-        resp = backend.complete(user_msg + reminder, system=SYSTEM_PROMPT)
-        return parse_response(resp.text)
+        resp = backend.complete(user_msg + reminder, system=system_prompt)
+        return parse_response(resp.text, valid_verdicts)
