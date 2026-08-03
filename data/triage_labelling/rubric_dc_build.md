@@ -47,13 +47,17 @@ must never assert DC use the description doesn't support; a plain logistics
 shed is `not_dc`. Cross-source lists (Barbour ABI) remain the recall
 mechanism for what descriptions structurally cannot reveal.
 
-## Ground-truth policy
+## Ground-truth policy (revised 2026-08-03, adjudication session)
 
-Labels are **description-only**: the ground truth for each application is
-what its description supports, not what we know from Barbour, family links,
-or documents. This measures the classifier fairly and measures the *ceiling*
-of description-based triage — the B8-disguise cases are expected to land
-`unknown`, not `new_build`, and that is scored as correct.
+Labels record the **truth**, established from all evidence held — Barbour
+links, family relationships, documents — with an
+`invisible_from_description` flag on rows whose truth the prompt-visible
+text cannot support (10 of 50 in the trial set). Models are scored twice:
+against reality, and against the visible-information subset. The gap
+between the two scores *is* the description ceiling, quantified — reported
+as a finding rather than baked invisibly into the labels. (This reverses
+the draft's description-only policy, on Luke's ruling that adjudicating
+truth with full evidence is both easier and more honest.)
 
 ## Output schema
 
@@ -62,6 +66,53 @@ Unchanged from v1 apart from the verdict values: `verdict`,
 (sure/probable/guessing). Verdicts land in the same append-only `triage`
 table under the evaluating model's name; v1 and dc_build verdicts coexist
 per application.
+
+## Adjudication outcomes (Luke, 2026-08-03)
+
+Sixteen contested rows adjudicated conversationally; five durable rules
+emerged, to be folded into the prompt as v2.1:
+
+1. **Instrument-first.** Classify the instrument, not the scheme it
+   describes. Reference/type suffixes often name it directly (PREAPP, PAN,
+   SCO/SCR, PPP, NMA, DOC/DRC, VCDN). Observed failure mode (granite,
+   three times): right about the scheme, wrong about the instrument.
+2. **Three-axes procedural definition.** `procedural` ⟺ the filing leaves
+   the scheme's datacentre substance unchanged on all three axes —
+   *whether* it is one, *how big*, and *how powered*. Touch any axis and
+   it classifies by the resulting scheme, deep-read yes. Anchors: #9
+   (quantum 27,637→33,870 sqm, verified from the parent decision notice),
+   #27 (NMA introducing DC use), #35 (ridge height raised 18→20 m for a
+   2-storey DC with roof plant — planning statement §4.9–4.10, in corpus).
+3. **Association by evidence.** `adjacent_power` / `enabling_works`
+   require a real DC association established by *any held evidence*
+   (family, spatial, Barbour) — not by the description. Canonical case:
+   the YEP 21 MW gas reserve (#49), the v1 smoking gun, whose description
+   names no datacentre at all.
+4. **Honesty rule.** The why-field must not assert facts absent from the
+   input (e.g. the *direction* of a quantum variation). Route to deep-read
+   rather than infer; verified in #9 where an inferred "increases" happened
+   to be true but was only established by fetching the decision notice.
+5. **Inclusion principle** (Luke, verbatim): "easy for the data
+   journalists to remove something they can see; more difficult to add
+   something they can't."
+
+**Trial scores against adjudicated truth** (50 cases; visible-40 excludes
+the 10 flagged rows):
+
+| model | context | all 50 | visible-40 | invisible-10 |
+|---|---|---|---|---|
+| granite4.1:30b | description | 35 | 32 | 3 |
+| granite4.1:30b | enriched | 39 | 35 | 4 |
+| claude-sonnet-5 | description | 42 | 38 | 4 |
+| claude-sonnet-5 | enriched | 42 | 36 | 6 |
+
+Architecture locked on these numbers plus budget: **Sonnet 5 catalogues
+the universe's metadata** (one-off, ~$15–20); **local granite + Claude
+Code escalation deep-reads documents**, behind the model-agnostic
+verbatim-quote gate; **100% of candidate DC sites get deep-read** —
+triage is a cataloguer, not a gatekeeper. Even the best configuration
+managed only 6/10 on the invisible rows: metadata enrichment raises the
+floor, only documents remove the ceiling.
 
 ## Running an evaluation
 

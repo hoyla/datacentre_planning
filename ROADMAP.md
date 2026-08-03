@@ -169,7 +169,32 @@ data journalists under the editorial code.
   `planning.agileapplications.co.uk` (Slough among them); it was already
   the top long-tail portal. Then SwiftLG (9) and PlanningExplorer (8).
 
-### Pondering (Luke, 2026-08-02, pre-decision)
+### Locked 2026-08-03 (adjudication session) — v2 execution order
+
+The dc_build trial ran end-to-end and was adjudicated conversationally
+(16 contested rows; rules and scores in
+[data/triage_labelling/rubric_dc_build.md](data/triage_labelling/rubric_dc_build.md)).
+Architecture locked: **Sonnet 5 catalogues metadata** (~$15 one-off,
+42/50 vs granite-enriched 39/50), **local granite + Claude Code
+escalation deep-reads documents** behind the verbatim-quote gate, and
+**100% of candidate DC sites get deep-read** — triage demoted from
+gatekeeper to cataloguer. Queue for the next session:
+
+1. Relaunch the idempotent Barbour-round retry fetch (session-bound).
+2. Idox `docKey=` OMT-viewer fix, then the acquisition campaign: 400
+   Idox/Ocella applications fetchable today (606 of 705 DC-verdict
+   applications lack documents); adapters in coverage order Agile (64)
+   → Arcus (41) → Salesforce/Northgate/NEC (27); bespoke 73 by site
+   value. Status-refresh pass rides along (a stale 'Undecided' hid a
+   Bedford refusal); "documents unobtainable" tracked as an outcome
+   class (LCY20: £200M, zero public documents — FOI candidate).
+3. Prompt v2.1 (fold the five adjudication rules), then the Sonnet
+   catalogue sweep over the full universe.
+4. Geocode the 74 unlocatable sites; add the 2.5 km review band (5 km /
+   evidence-only on linear terminology) to the superset script.
+5. Per-site deep read rolls as coverage completes.
+
+### Pondering (Luke, 2026-08-02, pre-decision — superseded above where they overlap)
 
 Raised after the Barbour reconciliation; to decide together before the next
 big push:
