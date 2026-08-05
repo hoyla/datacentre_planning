@@ -91,6 +91,21 @@ SOURCE_NAME = "idox"
 USER_AGENT = "datacentre_planning research (luke.hoyland@gmail.com)"
 
 
+class PersistentHTTPError(RuntimeError):
+    """A request that kept returning the same retryable status (429/5xx)
+    until the backoff ladder was exhausted. Carries the status code so
+    callers can distinguish 'this portal is rate-limiting us right now'
+    (429 — come back later) from 'this portal is broken' (5xx — probably
+    stays broken). Subclasses RuntimeError so existing handling that
+    treats ladder exhaustion generically keeps working."""
+
+    def __init__(self, status_code: int, url: str, attempts: int):
+        self.status_code = status_code
+        self.url = url
+        super().__init__(
+            f"persistent {status_code}s after {attempts} retries: {url}")
+
+
 @dataclass
 class DocumentLink:
     """One row from an Idox documents-tab table."""
@@ -240,7 +255,7 @@ class IdoxClient:
                 continue
             r.raise_for_status()
             return r
-        raise RuntimeError(f"persistent {r.status_code}s after {self.max_retries} retries: {url}")
+        raise PersistentHTTPError(r.status_code, url, self.max_retries)
 
 
 _SAFE_REF_RE = re.compile(r"[^A-Za-z0-9._/-]+")
@@ -330,6 +345,54 @@ def _write_manifest(
     )
 
 
+def _network_up() -> bool:
+    """Cheap connectivity probe: DNS resolution of a stable public host,
+    no HTTP round-trip. Distinguishes 'the laptop is offline' from 'this
+    portal is down' so the document loop can pause rather than burn the
+    remaining links of a bundle as errors."""
+    import socket
+    try:
+        socket.getaddrinfo("www.gov.uk", 443)
+        return True
+    except OSError:
+        return False
+
+
+def _wait_for_network() -> None:
+    """Block until connectivity returns, with a five-minutely heartbeat."""
+    waited = 0
+    while not _network_up():
+        if waited % 300 == 0:
+            log.warning("offline; pausing document fetch (%d min so far)",
+                        waited // 60)
+        time.sleep(60)
+        waited += 60
+    if waited:
+        log.warning("back online after %d min; resuming document fetch",
+                    waited // 60)
+
+
+def _fetch_document(client: IdoxClient, href: str, docs_url: str) -> httpx.Response:
+    """Download one document, recovering from session expiry.
+
+    Some Idox installs sit behind a load balancer whose affinity cookies
+    (JSESSIONID + NSC_*) gate file downloads — Bexley serves 404 for a
+    document a browser fetches fine until the documents tab has been
+    visited in the same session. Our session is established by the tab
+    fetch, but a long 429/5xx backoff ladder can outlive it, after which
+    every download 404s. On a 404, re-fetch the tab (re-establishing the
+    session) and retry the document once; a 404 that survives a fresh
+    session is genuinely missing."""
+    try:
+        return client.get(href)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code != 404:
+            raise
+        log.info("404 for %s — refreshing portal session, retrying once", href)
+        client.get(docs_url)
+        return client.get(href)
+
+
 def fetch_documents_for_application(
     conn,
     *,
@@ -377,6 +440,16 @@ def fetch_documents_for_application(
         summary["errors"] += 1
         log.warning("timeout: %s — %s", application_ref, exc)
         return summary
+    except PersistentHTTPError as exc:
+        # Tab-level ladder exhaustion: a 429 means the portal is throttling
+        # us tonight (retryable later); a 5xx means the page itself is
+        # broken (probably stays that way). Callers treat these differently.
+        summary["error_class"] = (
+            "rate_limited" if exc.status_code == 429 else "persistent_5xx")
+        summary["error"] = str(exc)[:200]
+        summary["errors"] += 1
+        log.warning("documents page fetch failed (%s): %s", application_ref, exc)
+        return summary
     except Exception as exc:
         summary["error_class"] = f"{type(exc).__name__}"
         summary["error"] = str(exc)[:200]
@@ -416,6 +489,13 @@ def fetch_documents_for_application(
         )
         prior_bytes = {url: bp for url, bp in cur.fetchall() if bp}
 
+    # A portal that 429s persistently makes each failing document cost a
+    # full backoff ladder (~15 min). Three consecutive ladder-exhausted
+    # failures abandon the rest of this application's documents — the app
+    # keeps errors > 0, stays out of any completed set, and the retry pass
+    # picks it up later. Instant failures (404s on purged documents) don't
+    # count: they're cheap, and a run of them shouldn't doom the bundle.
+    ladder_failures_in_row = 0
     for link in links:
         prior_path = prior_bytes.get(link.href)
         if prior_path:
@@ -425,13 +505,43 @@ def fetch_documents_for_application(
             if p.exists():
                 summary["skipped_existing"] += 1
                 continue
-        try:
-            blob = client.get(link.href)
-        except Exception as exc:
+        # Connectivity loss mid-bundle pauses the loop (retrying the same
+        # document once the network returns) instead of failing the rest
+        # of the bundle one link at a time.
+        blob = None
+        failure: Exception | None = None
+        while True:
+            try:
+                blob = _fetch_document(client, link.href, docs_url)
+                break
+            except (httpx.ConnectError, httpx.TimeoutException) as exc:
+                if not _network_up():
+                    _wait_for_network()
+                    continue
+                failure = exc
+                break
+            except Exception as exc:
+                failure = exc
+                break
+        if blob is None:
             log.warning("doc download failed (%s, %s): %s",
-                        application_ref, link.href, exc)
+                        application_ref, link.href, failure)
             summary["errors"] += 1
+            if isinstance(failure, RuntimeError):
+                ladder_failures_in_row += 1
+                if ladder_failures_in_row >= 3:
+                    summary["error_class"] = "rate_limit_cascade"
+                    log.warning(
+                        "abandoning %s after %d consecutive exhausted "
+                        "backoff ladders (%d links unattempted)",
+                        application_ref, ladder_failures_in_row,
+                        len(links) - links.index(link) - 1,
+                    )
+                    break
+            else:
+                ladder_failures_in_row = 0
             continue
+        ladder_failures_in_row = 0
         body = blob.content
         sha = hashlib.sha256(body).hexdigest()
         ext = _ext_from_url(link.href)

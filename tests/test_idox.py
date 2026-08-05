@@ -211,3 +211,67 @@ def test_idox_client_retries_on_429(monkeypatch):
     r = client.get("https://x/online-applications/applicationDetails.do?keyVal=X")
     assert r.status_code == 200
     assert call_count["n"] == 2  # retried once after 429
+
+
+def test_fetch_document_refreshes_session_on_404(monkeypatch):
+    """Load-balancer affinity cookies (JSESSIONID + NSC_*) gate file
+    downloads on some Idox installs (Bexley): once a backoff ladder
+    outlives the session, downloads 404 even though the document exists.
+    A 404 must trigger one documents-tab re-fetch (re-establishing the
+    session) and one retry; a 404 that survives the fresh session is
+    genuinely missing and propagates."""
+    monkeypatch.setattr(idox.time, "sleep", lambda s: None)
+    docs_url = ("https://pa.example.gov.uk/online-applications/"
+                "applicationDetails.do?keyVal=X&activeTab=documents")
+    pdf_url = "https://pa.example.gov.uk/online-applications/files/AAAA/pdf/plan.pdf"
+
+    calls: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(str(request.url))
+        if str(request.url) == docs_url:
+            return httpx.Response(200, content=b"<html>tab</html>")
+        # First document attempt: session lapsed → 404. After the tab
+        # has been re-fetched, the download succeeds.
+        if calls.count(docs_url) == 0:
+            return httpx.Response(404, content=b"<html>not found</html>")
+        return httpx.Response(200, content=b"%PDF-1.4 ...")
+
+    client = idox.IdoxClient(delay_seconds=0.0, backoff_seconds=0.0)
+    client.client = httpx.Client(
+        transport=httpx.MockTransport(handler),
+        timeout=30,
+        headers={"User-Agent": "test"},
+    )
+    r = idox._fetch_document(client, pdf_url, docs_url)
+    assert r.status_code == 200
+    assert r.content.startswith(b"%PDF")
+    assert calls == [pdf_url, docs_url, pdf_url]
+
+
+def test_fetch_document_genuine_404_propagates(monkeypatch):
+    """A document that 404s even with a fresh session is really gone —
+    the error must propagate (it becomes a per-document error upstream),
+    after exactly one refresh attempt."""
+    monkeypatch.setattr(idox.time, "sleep", lambda s: None)
+    docs_url = ("https://pa.example.gov.uk/online-applications/"
+                "applicationDetails.do?keyVal=X&activeTab=documents")
+    pdf_url = "https://pa.example.gov.uk/online-applications/files/GONE/pdf/gone.pdf"
+
+    calls: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(str(request.url))
+        if str(request.url) == docs_url:
+            return httpx.Response(200, content=b"<html>tab</html>")
+        return httpx.Response(404, content=b"<html>not found</html>")
+
+    client = idox.IdoxClient(delay_seconds=0.0, backoff_seconds=0.0)
+    client.client = httpx.Client(
+        transport=httpx.MockTransport(handler),
+        timeout=30,
+        headers={"User-Agent": "test"},
+    )
+    with pytest.raises(httpx.HTTPStatusError):
+        idox._fetch_document(client, pdf_url, docs_url)
+    assert calls == [pdf_url, docs_url, pdf_url]
