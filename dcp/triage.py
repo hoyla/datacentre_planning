@@ -588,17 +588,56 @@ def run_retriage(
     return summary
 
 
+def enrichment_context(conn, application_id: int, associated_id: str | None) -> str | None:
+    """Cross-source context appended to the prompt in enriched mode.
+
+    Names the Barbour ABI project(s) this application is linked to, and any
+    related application references on record. This is what lifted the
+    adjudicated trial from 44/50 to 47/50 — the association-by-evidence rule
+    can only fire when the evidence is in front of the model. Kept factual:
+    it states what other records say, never what to conclude.
+    """
+    parts: list[str] = []
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT array_remove(array_agg(DISTINCT p.title), NULL)
+            FROM project_applications pa
+            JOIN projects p ON p.id = pa.project_id
+            WHERE pa.application_id = %s""", (application_id,))
+        row = cur.fetchone()
+    titles = row[0] if row else None
+    if titles:
+        parts.append("Cross-source (Barbour ABI construction data) links this "
+                     "application to project(s): "
+                     + "; ".join(f'"{t}"' for t in titles))
+    if associated_id and len(associated_id) < 200:
+        parts.append(f"Related application reference(s) on record: {associated_id}")
+    return " ".join(parts) if parts else None
+
+
 def run_triage(
     *,
     model: str | None = None,
     limit: int | None = None,
     timeout: float = 180.0,
+    rubric: str = "v1",
+    enrich: bool = False,
     progress: Callable[[dict], None] | None = None,
 ) -> dict:
-    """Production triage sweep: walk applications without a verdict for `model`
-    and append one row per call into the `triage` table. Commits per-record so
-    a kill at any point loses at most the in-flight call. Resume is automatic:
-    apps that already have a verdict for the same model are skipped on re-run.
+    """Production triage sweep: walk applications without a verdict for
+    `model` *and* `rubric`, appending one row per call into the `triage`
+    table. Commits per-record so a kill at any point loses at most the
+    in-flight call.
+
+    Resume is automatic and rubric-aware: a v1 verdict does not satisfy a
+    dc_build sweep, since the two taxonomies answer different questions.
+    Verdicts are append-only, so both generations coexist.
+
+    Every row records the provenance an adjudicator needs: the rubric, the
+    prompt version, whether enrichment was supplied, and the exact rendered
+    input the model saw. Enrichment links can shift as the corpus grows, so
+    the input cannot be reconstructed after the fact — it is stored at write
+    time or it is lost.
 
     `progress`, if supplied, is called with a status dict after every record
     so the CLI can stream live updates. The summary dict is returned at end.
@@ -606,25 +645,42 @@ def run_triage(
     from dcp import db, repo
     from dcp.llm import make_backend
 
+    if rubric not in RUBRICS:
+        raise ValueError(f"unknown rubric {rubric!r}; available: {sorted(RUBRICS)}")
+    _system_prompt, valid_verdicts = RUBRICS[rubric]
+    prompt_version = DC_BUILD_PROMPT_VERSION if rubric == "dc_build" else "1.0"
+
     backend = make_backend(model, request_timeout=timeout)
     model_name = backend.model
 
     summary = {
         "model": model_name,
+        "rubric": rubric,
+        "prompt_version": prompt_version,
+        "enriched": enrich,
         "scanned": 0,
         "errors": 0,
-        "by_verdict": {"DC": 0, "adjacent": 0, "unrelated": 0, "unknown": 0},
+        "by_verdict": {v: 0 for v in sorted(valid_verdicts)},
     }
 
     with db.connect() as conn:
-        pending = repo.applications_pending_triage(conn, model=model_name, limit=limit)
+        pending = repo.applications_pending_triage(
+            conn, model=model_name, limit=limit, rubric=rubric)
         summary["pending"] = len(pending)
         for row in pending:
             t0 = time.time()
             err: str | None = None
             verdict_obj: TriageVerdict | None = None
+            app_input = app_row_to_triage_input(row)
+            context = (enrichment_context(conn, row["id"], row.get("associated_id"))
+                       if enrich else None)
+            if context:
+                app_input["description"] = (
+                    (app_input.get("description") or "")
+                    + "\n\nAdditional context from other records:\n" + context)
+            rendered_input = render_user_message(app_input)
             try:
-                verdict_obj = triage_application(app_row_to_triage_input(row), backend)
+                verdict_obj = triage_application(app_input, backend, rubric=rubric)
             except ValueError as exc:
                 err = f"parse_error: {exc}"
             except Exception as exc:
@@ -641,11 +697,19 @@ def run_triage(
                     signals=verdict_obj.signals,
                     why=verdict_obj.why,
                     confidence=verdict_obj.confidence,
-                    raw_response={"text": verdict_obj.raw_response},
+                    raw_response={
+                        "text": verdict_obj.raw_response,
+                        "rubric": rubric,
+                        "prompt_version": prompt_version,
+                        "enriched": bool(context),
+                        "rendered_input": rendered_input,
+                    },
                 )
                 conn.commit()
                 if verdict_obj.verdict in summary["by_verdict"]:
                     summary["by_verdict"][verdict_obj.verdict] += 1
+                else:
+                    summary["by_verdict"][verdict_obj.verdict] = 1
             else:
                 summary["errors"] += 1
 
