@@ -487,27 +487,45 @@ def applications_for_retriage(
 
 def applications_pending_triage(
     conn: PgConnection, *, model: str, limit: int | None = None,
+    rubric: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Return applications that have no triage row for the given `model`.
+    """Return applications that have no triage row for the given `model`
+    (and `rubric`, when supplied).
+
+    Rubrics are separate universes of judgement: a v1 verdict says nothing
+    about how the dc_build taxonomy would classify the same application, so
+    a v2.1 sweep must not treat v1 rows as "already done". The rubric is
+    recorded in `raw_response->>'rubric'`; rows predating rubric stamping
+    are v1 by definition, so a v1 sweep also accepts a NULL rubric.
+
     Selection order is deterministic (date_received DESC NULLS LAST, id) so
     a resumed sweep picks up where it left off without re-ordering."""
-    sql = """
+    rubric_clause = ""
+    params: tuple[Any, ...] = (model,)
+    if rubric is not None:
+        if rubric == "v1":
+            rubric_clause = ("AND coalesce(t.raw_response->>'rubric', 'v1') "
+                             "= %s")
+        else:
+            rubric_clause = "AND t.raw_response->>'rubric' = %s"
+        params = (model, rubric)
+    sql = f"""
         SELECT a.id, a.application_ref, a.description, a.address,
                a.date_received, a.status, a.council_gss,
                a.raw_metadata->>'app_type' AS app_type,
+               a.raw_metadata->>'associated_id' AS associated_id,
                c.name AS council_name
         FROM applications a
         LEFT JOIN councils c ON c.gss_code = a.council_gss
         WHERE NOT EXISTS (
             SELECT 1 FROM triage t
-            WHERE t.application_id = a.id AND t.model = %s
+            WHERE t.application_id = a.id AND t.model = %s {rubric_clause}
         )
         ORDER BY a.date_received DESC NULLS LAST, a.id
     """
-    params: tuple[Any, ...] = (model,)
     if limit is not None:
         sql += " LIMIT %s"
-        params = (model, limit)
+        params = params + (limit,)
     with conn.cursor() as cur:
         cur.execute(sql, params)
         cols = [d[0] for d in cur.description]

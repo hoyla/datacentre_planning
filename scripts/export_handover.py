@@ -135,6 +135,7 @@ SITE_HEADERS = [
     "Verdict mix (v1 triage)", "Documents held", "Verified findings",
     "Max disclosed MW (verified findings)",
     "Documents obtained by hand", "EIA indicators (heuristic)",
+    "Environmental subjects (description keywords)",
     "Barbour Ptno", "Barbour title",
     "Barbour stage", "Barbour value £", "Barbour floor area sqm",
     "Barbour site area", "Barbour plan date", "Barbour decision date",
@@ -144,7 +145,8 @@ APP_HEADERS = [
     "Site key", "Application ref", "Joined site via", "Council", "Status",
     "Date received", "Date decided", "Verdict (latest)", "Verdict confidence",
     "Verdict model", "Verdict reasoning", "Signals", "Portal URL",
-    "Documents held", "Verified findings", "Address", "Description",
+    "Documents held", "Verified findings",
+    "Environmental signals (description keywords)", "Address", "Description",
 ]
 
 
@@ -168,11 +170,29 @@ def main() -> None:
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill
 
+    from collections import defaultdict
+
+    from dcp import signals as sig
+
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute(SITE_SQL)
         site_rows = cur.fetchall()
         cur.execute(APP_SQL)
         app_rows = cur.fetchall()
+
+    # Environmental signals are extracted deterministically from the
+    # description text (dcp/signals.py) rather than asked of the model:
+    # reproducible, free, and carrying no risk to a validated prompt.
+    # A floor, not a census — descriptions are terse, and the substantive
+    # environmental content lives in the documents, which deep-read covers.
+    app_env: dict[str, list[str]] = {}
+    site_env: dict[str, set[str]] = defaultdict(set)
+    for r in app_rows:
+        site_key, ref, description = r[0], r[1], r[-1]
+        found = sig.environmental_signals(description)
+        flat = sig.flatten(found)
+        app_env[ref] = flat
+        site_env[site_key].update(found.keys())
 
     wb = Workbook()
 
@@ -201,14 +221,16 @@ def main() -> None:
             ", ".join(councils or []), n_apps, "\n".join(refs or []),
             ", ".join(sorted(verdicts or [])), docs, findings_n, max_mw,
             manual_docs or "", eia,
+            ", ".join(sorted(site_env.get(key, ()))),
             ptno, btitle, bstage, bvalue, bfloor, bsite,
             str(bplan or ""), str(bdecision or ""),
         ])
 
     ws = _sheet("Applications", APP_HEADERS)
     for r in app_rows:
-        ws.append([str(x) if isinstance(x, (dt.date, dt.datetime)) else x
-                   for x in r])
+        vals = [str(x) if isinstance(x, (dt.date, dt.datetime)) else x for x in r]
+        # Insert the derived signals column just before Address/Description.
+        ws.append(vals[:-2] + ["\n".join(app_env.get(r[1], ()))] + vals[-2:])
 
     ws = _sheet("Provenance", ["Field", "Value"])
     with db.connect() as conn, conn.cursor() as cur:
