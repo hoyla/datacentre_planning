@@ -254,8 +254,9 @@ def _sanitised_ref(application_ref: str) -> str:
 
 
 def _app_dir(data_dir: Path, application_ref: str) -> Path:
-    """`<DATA_DIR>/raw/ocella/<safe_ref>/`."""
-    return data_dir / "raw" / "ocella" / _sanitised_ref(application_ref)
+    """`<DATA_DIR>/raw/documents/<safe_ref>/` — the single document store,
+    keyed by application rather than by the adapter that fetched it."""
+    return data_dir / "raw" / "documents" / _sanitised_ref(application_ref)
 
 
 def _bytes_path(data_dir: Path, application_ref: str, content_sha256: str, ext: str) -> Path:

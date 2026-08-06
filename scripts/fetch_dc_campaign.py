@@ -29,6 +29,15 @@ Built to survive interruption (the operator is travelling):
 - If the process itself is killed (laptop sleep, session teardown),
   relaunching the same command resumes from the state file in seconds.
 
+Parallel across portals, strictly serial within each: applications are
+sharded by portal *hostname* (not council — a few councils share a
+host) and a small worker pool (--workers, default 6) runs one shard at
+a time each, every worker holding its own clients and database
+connection. Politeness is a per-host property — the delay, the backoff
+ladders, and the one-request-in-flight rule are unchanged from any
+individual portal's point of view; a Newham backoff no longer idles
+Norwich.
+
 Writes a campaign manifest to `data/raw/_dc_campaign_<date>.json` at the
 end: cohort, per-application results, per-family needs-adapter lists —
 the completeness accounting the data team's coverage statement draws on.
@@ -44,7 +53,10 @@ import argparse
 import datetime as dt
 import json
 import sys
+import threading
 import time
+import urllib.parse
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -140,6 +152,92 @@ ORDER BY a.application_ref
 """
 
 
+def _run_shard(host: str, apps: list[tuple], *, args, state: dict,
+               lock: threading.Lock, totals: dict, per_app: list,
+               source_ids: dict) -> None:
+    """Fetch one portal host's applications, strictly serially, with the
+    worker's own clients and database connection. All shared-state
+    mutation happens under the lock."""
+    from dcp.sources import idox, ocella
+
+    with db.connect() as conn:
+        idox_client = idox.IdoxClient(
+            delay_seconds=args.delay, max_retries=args.max_retries)
+        ocella_client = ocella.OcellaClient(
+            delay_seconds=args.delay, max_retries=args.max_retries)
+        try:
+            for app_id, ref, url in apps:
+                with lock:
+                    totals["apps"] += 1
+                t0 = time.time()
+                family = portal_family(url)
+
+                def _fetch():
+                    if family == "idox":
+                        return idox.fetch_documents_for_application(
+                            conn, client=idox_client, application_id=app_id,
+                            application_ref=ref, application_url=url,
+                            source_id=source_ids["idox"], data_dir=args.data_dir)
+                    return ocella.fetch_documents_for_application(
+                        conn, client=ocella_client, application_id=app_id,
+                        application_ref=ref, application_url=url,
+                        source_id=source_ids["ocella"], data_dir=args.data_dir)
+
+                # Network-shaped failures get the offline wait-and-retry
+                # treatment; only a failure WITH connectivity confirmed
+                # counts as a genuine skip (defunct portal, etc.).
+                for _attempt in range(3):
+                    s = _fetch()
+                    if s.get("error_class") not in NETWORK_ERROR_CLASSES:
+                        break
+                    print(f"  {ref:44} network failure "
+                          f"[{s['error_class']}] — probing connectivity")
+                    _wait_for_connectivity()
+
+                cls = s.get("error_class")
+                elapsed = time.time() - t0
+                stamp = f"{dt.datetime.now():%H:%M:%S}"
+                with lock:
+                    totals["docs_downloaded"] += s.get("downloaded", 0)
+                    totals["docs_existing"] += s.get("skipped_existing", 0)
+                    totals["errors"] += s.get("errors", 0)
+                    per_app.append({"ref": ref, "family": family, "summary": s})
+                    if cls:
+                        totals["by_error_class"][cls] = \
+                            totals["by_error_class"].get(cls, 0) + 1
+                        print(f"  {stamp}  {ref:44} SKIP[{cls}] ({elapsed:.0f}s)")
+                    else:
+                        totals["fully_successful"] += 1
+                        print(f"  {stamp}  {ref:44} "
+                              f"links={s.get('links_found', 0):3d} "
+                              f"new={s.get('downloaded', 0):3d} ({elapsed:.0f}s)")
+                    # Only cleanly-finished applications are recorded as
+                    # done; anything with errors stays eligible for the
+                    # next relaunch. Hard skips are reserved for the
+                    # genuinely dead — never for rate limiting, which is
+                    # a tonight problem, not a forever one.
+                    if not cls and s.get("errors", 0) == 0:
+                        state["completed_refs"].append(ref)
+                        _save_state(state)
+                    elif cls in ("withdrawn_from_view", "dns_failure",
+                                 "persistent_5xx"):
+                        state["hard_skips"][ref] = cls
+                        _save_state(state)
+                if cls == "rate_limited":
+                    # This host is throttling us at page level — walking
+                    # the rest of its shard would burn a ladder per
+                    # application for nothing. Drop the shard; the
+                    # applications stay un-completed for the next
+                    # relaunch or the retry pass.
+                    print(f"  … dropping remaining {host} applications "
+                          f"this run (portal rate-limiting)")
+                    break
+        finally:
+            idox_client.close()
+            ocella_client.close()
+        conn.commit()
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--delay", type=float, default=5.0)
@@ -148,6 +246,9 @@ def main() -> None:
                          "~3 min worst-case per failing document). The sweep "
                          "is breadth-first; the retry pass is the patient "
                          "phase and uses the full ladder.")
+    ap.add_argument("--workers", type=int, default=6,
+                    help="Concurrent portal-host shards. Within a host, "
+                         "fetching is always strictly serial.")
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--data-dir", type=Path, default=Path("data"))
     ap.add_argument("--dry-run", action="store_true",
@@ -204,93 +305,43 @@ def main() -> None:
         if not resuming:
             _save_state(state)
 
-        idox_source = repo.ensure_source(
-            conn, name="idox", kind="council", base_url="(per-council Idox host)")
-        ocella_source = repo.ensure_source(
-            conn, name="ocella", kind="council", base_url="(per-council Ocella host)")
-
-        totals = {"apps": 0, "docs_downloaded": 0, "docs_existing": 0,
-                  "errors": 0, "by_error_class": {}, "fully_successful": 0}
-        per_app: list[dict] = []
-
-        idox_client = idox.IdoxClient(
-            delay_seconds=args.delay, max_retries=args.max_retries)
-        ocella_client = ocella.OcellaClient(
-            delay_seconds=args.delay, max_retries=args.max_retries)
-        throttled_councils: set[str] = set()
-        try:
-            for app_id, ref, url in fetchable:
-                if ref in done:
-                    continue
-                if ref.split("/", 1)[0] in throttled_councils:
-                    print(f"  {dt.datetime.now():%H:%M:%S}  {ref:44} "
-                          f"DEFER[council_throttled]")
-                    continue
-                totals["apps"] += 1
-                t0 = time.time()
-                family = portal_family(url)
-
-                def _fetch():
-                    if family == "idox":
-                        return idox.fetch_documents_for_application(
-                            conn, client=idox_client, application_id=app_id,
-                            application_ref=ref, application_url=url,
-                            source_id=idox_source, data_dir=args.data_dir)
-                    return ocella.fetch_documents_for_application(
-                        conn, client=ocella_client, application_id=app_id,
-                        application_ref=ref, application_url=url,
-                        source_id=ocella_source, data_dir=args.data_dir)
-
-                # Network-shaped failures get the offline wait-and-retry
-                # treatment; only a failure WITH connectivity confirmed is
-                # allowed to count as a genuine skip (defunct portal, etc.).
-                for attempt in range(3):
-                    s = _fetch()
-                    if s.get("error_class") not in NETWORK_ERROR_CLASSES:
-                        break
-                    print(f"  {ref:44} network failure "
-                          f"[{s['error_class']}] — probing connectivity")
-                    _wait_for_connectivity()
-
-                totals["docs_downloaded"] += s.get("downloaded", 0)
-                totals["docs_existing"] += s.get("skipped_existing", 0)
-                totals["errors"] += s.get("errors", 0)
-                cls = s.get("error_class")
-                per_app.append({"ref": ref, "family": family, "summary": s})
-                elapsed = time.time() - t0
-                stamp = f"{dt.datetime.now():%H:%M:%S}"
-                if cls:
-                    totals["by_error_class"][cls] = totals["by_error_class"].get(cls, 0) + 1
-                    print(f"  {stamp}  {ref:44} SKIP[{cls}] ({elapsed:.0f}s)")
-                else:
-                    totals["fully_successful"] += 1
-                    print(f"  {stamp}  {ref:44} links={s.get('links_found', 0):3d} "
-                          f"new={s.get('downloaded', 0):3d} ({elapsed:.0f}s)")
-                # Only cleanly-finished applications are recorded as done;
-                # anything with errors stays eligible for the next relaunch.
-                # Hard skips are reserved for the genuinely dead (withdrawn,
-                # defunct DNS, persistently-broken pages) — never for rate
-                # limiting, which is a tonight problem, not a forever one.
-                if not cls and s.get("errors", 0) == 0:
-                    state["completed_refs"].append(ref)
-                    _save_state(state)
-                elif cls in ("withdrawn_from_view", "dns_failure", "persistent_5xx"):
-                    state["hard_skips"][ref] = cls
-                    _save_state(state)
-                elif cls == "rate_limited":
-                    # The council's portal is throttling us at page level —
-                    # its remaining applications would each burn a full
-                    # ladder for nothing. Defer them for this run; they
-                    # stay un-completed, so the next relaunch (or the
-                    # retry pass) courts the council afresh.
-                    council = ref.split("/", 1)[0]
-                    throttled_councils.add(council)
-                    print(f"  … deferring remaining {council} applications "
-                          f"this run (portal rate-limiting)")
-        finally:
-            idox_client.close()
-            ocella_client.close()
+        source_ids = {
+            "idox": repo.ensure_source(
+                conn, name="idox", kind="council",
+                base_url="(per-council Idox host)"),
+            "ocella": repo.ensure_source(
+                conn, name="ocella", kind="council",
+                base_url="(per-council Ocella host)"),
+        }
         conn.commit()
+
+    totals = {"apps": 0, "docs_downloaded": 0, "docs_existing": 0,
+              "errors": 0, "by_error_class": {}, "fully_successful": 0}
+    per_app: list[dict] = []
+    lock = threading.Lock()
+
+    # Shard by portal hostname: politeness (delay, ladders, one request
+    # in flight) is a per-host property, so hosts may run concurrently
+    # while each host's applications stay strictly serial.
+    pending = [t for t in fetchable if t[1] not in done]
+    shards: dict[str, list[tuple]] = {}
+    for t in pending:
+        host = urllib.parse.urlparse(t[2]).netloc
+        shards.setdefault(host, []).append(t)
+    # Longest shards first so the big queues start immediately.
+    ordered = sorted(shards.items(), key=lambda kv: -len(kv[1]))
+    print(f"  {len(pending)} applications across {len(shards)} portal hosts; "
+          f"{args.workers} concurrent hosts")
+
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
+        futures = [
+            pool.submit(_run_shard, host, apps, args=args, state=state,
+                        lock=lock, totals=totals, per_app=per_app,
+                        source_ids=source_ids)
+            for host, apps in ordered
+        ]
+        for f in futures:
+            f.result()
         if not args.limit:
             # Natural end of the full campaign. Applications that ended
             # with errors keep their errored manifests — the retry pass

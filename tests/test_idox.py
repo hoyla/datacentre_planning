@@ -164,13 +164,15 @@ def test_parse_documents_page_handles_no_table():
 
 
 def test_bytes_path_sanitises_slashes_in_application_ref(tmp_path):
-    """`<DATA_DIR>/raw/idox/<safe_ref>/<sha[:16]>.pdf` — slashes inside the
-    application_ref are preserved as nested subdirectories so each council's
-    documents sit in their own folder."""
+    """`<DATA_DIR>/raw/documents/<safe_ref>/<sha[:16]>.pdf` — one store keyed
+    by application, not by the adapter that fetched it (acquisition route is
+    recorded per document in the manifest and database instead). Slashes
+    inside the application_ref are preserved as nested subdirectories so each
+    council's documents sit in their own folder."""
     p = idox._bytes_path(tmp_path, "Halton/22/00028/S73", "abcd" * 16, "pdf")
-    # Path structure: <tmp>/raw/idox/Halton/22/00028/S73/<sha>.pdf
+    # Path structure: <tmp>/raw/documents/Halton/22/00028/S73/<sha>.pdf
     rel = p.relative_to(tmp_path)
-    assert rel.parts == ("raw", "idox", "Halton", "22", "00028", "S73",
+    assert rel.parts == ("raw", "documents", "Halton", "22", "00028", "S73",
                           "abcdabcdabcdabcd.pdf")
 
 

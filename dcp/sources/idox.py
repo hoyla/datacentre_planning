@@ -26,7 +26,8 @@ from the URL embedded in the leaf cert's Authority Information Access
 extension — so chain reconstruction is automatic and we never bypass
 verification.
 
-Bytes are stored under `data/raw/idox/<application_ref>/<sha256[:16]>.<ext>`,
+Bytes are stored in the single document store,
+`data/raw/documents/<application_ref>/<sha256[:16]>.<ext>`,
 recorded in `documents` table with `(application_id, content_sha256)` UNIQUE
 so re-runs are no-ops.
 
@@ -240,10 +241,14 @@ class IdoxClient:
         if now < self._next_request_at:
             time.sleep(self._next_request_at - now)
 
-    def get(self, url: str) -> httpx.Response:
+    def get(self, url: str, headers: dict[str, str] | None = None) -> httpx.Response:
+        """GET with the politeness contract: inter-request delay, backoff
+        on 429/5xx, ladder exhaustion raising PersistentHTTPError.
+        `headers` are merged over the client defaults for this request —
+        used by adapters whose API requires per-request identification."""
         for attempt in range(self.max_retries):
             self._wait()
-            r = self.client.get(url)
+            r = self.client.get(url, headers=headers)
             self._next_request_at = time.monotonic() + self.delay
             if r.status_code == 429 or 500 <= r.status_code < 600:
                 wait = self.backoff * (2 ** attempt)
@@ -269,7 +274,7 @@ def _sanitised_ref(application_ref: str) -> str:
 
 def _app_dir(data_dir: Path, application_ref: str) -> Path:
     """`<DATA_DIR>/raw/idox/<safe_ref>/` — the per-application directory."""
-    return data_dir / "raw" / "idox" / _sanitised_ref(application_ref)
+    return data_dir / "raw" / "documents" / _sanitised_ref(application_ref)
 
 
 def _bytes_path(data_dir: Path, application_ref: str, content_sha256: str, ext: str) -> Path:
