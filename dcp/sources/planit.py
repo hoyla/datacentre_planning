@@ -53,6 +53,16 @@ class PageResponse:
     cached: bool = False
 
 
+class RateLimited(RuntimeError):
+    """PlanIt refused and asked for a wait longer than this run is willing
+    to sit through. Carries the server's requested delay so the caller can
+    stop cleanly and resume in a later window, rather than keep knocking."""
+
+    def __init__(self, message: str, *, retry_after: float):
+        self.retry_after = retry_after
+        super().__init__(message)
+
+
 class PlanItClient:
     """Polite HTTP client. Enforces an inter-request delay and backs off on 429."""
 
@@ -63,12 +73,16 @@ class PlanItClient:
         user_agent: str = USER_AGENT,
         delay_seconds: float = 2.5,
         backoff_seconds: float = 60.0,
+        max_retry_after: float = 300.0,
         max_retries: int = 4,
         cache_get: Callable[[str], bytes | None] | None = None,
     ):
         self.base = base
         self.delay = delay_seconds
         self.backoff = backoff_seconds  # base; doubles per attempt
+        # Longest server-requested wait this run will sit through before
+        # giving up and letting the caller resume in a later quota window.
+        self.max_retry_after = max_retry_after
         self.max_retries = max_retries
         self.cache_get = cache_get
         self.client = httpx.Client(headers={"User-Agent": user_agent}, timeout=90.0)
@@ -100,9 +114,36 @@ class PlanItClient:
             r = self.client.get(url)
             self._next_request_at = time.monotonic() + self.delay
             if r.status_code == 429:
-                wait = self.backoff * (2 ** attempt)
-                log.warning("429 from PlanIt (attempt %d/%d); backing off %.0fs",
-                            attempt + 1, self.max_retries, wait)
+                # PlanIt states the wait it wants in Retry-After, and its
+                # limit is a per-window quota rather than a per-request
+                # throttle — so a blind doubling ladder asks again several
+                # times *inside* the window the server just asked us to
+                # wait out. Honour the header when present; fall back to
+                # doubling only when the server says nothing. PlanIt is a
+                # free, donation-supported service and the relationship
+                # matters more than the speed.
+                header = r.headers.get("retry-after")
+                server_wait = None
+                if header:
+                    try:
+                        server_wait = float(header)
+                    except ValueError:
+                        server_wait = None
+                if server_wait is not None:
+                    if server_wait > self.max_retry_after:
+                        raise RateLimited(
+                            f"PlanIt asked for {server_wait:.0f}s "
+                            f"(> max_retry_after {self.max_retry_after:.0f}s): {url}",
+                            retry_after=server_wait)
+                    wait = server_wait + 5  # small cushion past the window
+                    log.warning("429 from PlanIt; server asked for %.0fs "
+                                "(attempt %d/%d)", server_wait,
+                                attempt + 1, self.max_retries)
+                else:
+                    wait = self.backoff * (2 ** attempt)
+                    log.warning("429 from PlanIt, no Retry-After (attempt "
+                                "%d/%d); backing off %.0fs",
+                                attempt + 1, self.max_retries, wait)
                 time.sleep(wait)
                 continue
             r.raise_for_status()
@@ -651,7 +692,16 @@ def _extract_candidate_refs(text: str | None) -> list[str]:
     seen: set[str] = set()
     for raw in _REF_TOKEN_RE.findall(text):
         segments = raw.split("/")
-        if not any(s.isdigit() and len(s) >= 3 for s in segments):
+        # A qualifying segment must *contain* three or more consecutive
+        # digits — not consist solely of them. Requiring `s.isdigit()`
+        # discarded every reference from councils that letter-prefix their
+        # numbering (South Oxfordshire `P21/S0274/FUL`, Vale of White Horse
+        # `P18/V2277/FUL`), so their conditions discharges and amendments
+        # never linked to their parents and clustered as singletons — the
+        # Amazon Didcot campus was scattered across separate "sites".
+        # Use-class strings ("A1/A3/B1/B8") and short dates still fail the
+        # test, since no segment reaches three consecutive digits.
+        if not any(re.search(r"\d{3,}", s) for s in segments):
             continue
         if raw in seen:
             continue
