@@ -51,17 +51,41 @@ def sites_with_coords(conn) -> list[tuple[str, float, float]]:
         return cur.fetchall()
 
 
+def already_swept(conn, source_id: int, lat: float, lng: float,
+                  radius_km: float) -> bool:
+    """True when this site's spatial page is already cached — the unit of
+    resume, so a run stopped by the quota picks up where it left off."""
+    with conn.cursor() as cur:
+        cur.execute("""SELECT 1 FROM source_snapshots
+                       WHERE source_id = %s AND key LIKE %s LIMIT 1""",
+                    (source_id, f"%lat={lat}&lng={lng}&krad={radius_km}%"))
+        return cur.fetchone() is not None
+
+
 def do_fetch(radius_km: float, delay: float, limit: int | None) -> None:
+    """Fetch spatial pages, stopping cleanly when PlanIt's quota window is
+    spent rather than knocking through it.
+
+    PlanIt's rate limit is a **per-window quota**, not a per-request
+    throttle: once spent, every request 429s with a Retry-After of up to
+    ~20 minutes regardless of how slowly we space them. A run that hits
+    that wall should stop and resume in a later window — this is a free,
+    donation-supported service and the relationship matters more than the
+    speed. Cached sites are skipped, so successive runs make progress.
+    """
     with db.connect() as conn:
         source_id = repo.ensure_source(conn, name=planit.SOURCE_NAME,
                                        kind="aggregator", base_url=planit.BASE)
         sites = sites_with_coords(conn)
+        pending = [s for s in sites
+                   if not already_swept(conn, source_id, s[1], s[2], radius_km)]
         if limit:
-            sites = sites[:limit]
-        print(f"{len(sites)} located sites; searching {radius_km} km around each")
-        pages = cached = new_snaps = 0
+            pending = pending[:limit]
+        print(f"{len(sites)} located sites; {len(pending)} not yet swept; "
+              f"searching {radius_km} km around each at {delay}s spacing")
+        pages = cached = new_snaps = done = 0
         with planit.PlanItClient(delay_seconds=delay) as client:
-            for i, (site_key, lat, lng) in enumerate(sites, 1):
+            for i, (site_key, lat, lng) in enumerate(pending, 1):
                 try:
                     for resp in client.iter_by_spatial(lat=lat, lng=lng, krad=radius_km):
                         pages += 1
@@ -71,13 +95,24 @@ def do_fetch(radius_km: float, delay: float, limit: int | None) -> None:
                                                   key=resp.url, raw_bytes=resp.raw):
                             new_snaps += 1
                     conn.commit()
+                    done += 1
+                except planit.RateLimited as exc:
+                    conn.commit()
+                    print(f"\nPlanIt quota spent — it asked for "
+                          f"{exc.retry_after:.0f}s ({exc.retry_after/60:.0f} min).")
+                    print(f"Stopping cleanly after {done} sites this run; "
+                          f"{len(pending) - done} still pending.")
+                    print("Re-run when the window has passed — swept sites are "
+                          "skipped, so it resumes where it left off.")
+                    break
                 except Exception as exc:
                     print(f"  {site_key}: fetch failed — {exc}")
                     conn.rollback()
                 if i % 25 == 0:
-                    print(f"  {i}/{len(sites)} sites, {pages} pages "
+                    print(f"  {i}/{len(pending)} sites, {pages} pages "
                           f"({cached} cached, {new_snaps} new snapshots)")
-        print(f"done: {pages} pages, {new_snaps} new snapshots")
+        print(f"done this run: {done} sites, {pages} pages, "
+              f"{new_snaps} new snapshots")
 
 
 def do_process(radius_km: float) -> None:
