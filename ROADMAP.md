@@ -150,6 +150,68 @@ data journalists under the editorial code.
 
 ## Next
 
+### Done 2026-08-05/06 — acquisition campaign, adapters, single store
+
+The 2026-08-03 queue below is largely discharged; what actually happened:
+
+- **Acquisition campaign complete.** 605-application cohort (DC-verdict,
+  zero documents) swept host-parallel; corpus **7.4k → 27k documents**,
+  DC-verdict applications holding documents **99 → 501 of 705**. Manifests
+  at `data/raw/_dc_campaign_*.json`.
+- **Four new portal adapters**: Agile (JSON API behind an Angular shell;
+  also the only source giving structured applicant/agent names), Arcus
+  (two register generations, two disclaimer mechanisms — terms reviewed
+  and accepted 2026-08-06), Salesforce public registers and the Newport
+  external docstore (both hybrid: browser-harvested listings, plain-HTTP
+  bytes). Amazon Didcot (10 applications, 609 documents) came in via
+  Arcus; Newport yielded 895 documents its Idox tab reports as an error.
+- **Single document store.** `data/raw/documents/<application_ref>/` with
+  one manifest per application; acquisition method recorded per document
+  rather than encoded in the directory path. `data/raw/manual/` is the
+  inbox for hand-obtained bundles (`scripts/ingest_inbox.py`).
+- **Sites materialised** (migration 006): 391 sites with stable keys.
+- **Still blocked, needs manual acquisition**: Northgate (403 to any
+  client), NEC/LPAssure (human check), Wychavon (TLS-fingerprint block —
+  all 7 applications since obtained by hand, 305 documents). Priority
+  manual list: Elsham Wolds 1GW (£10bn), Gwynedd Ferodo, Anglesey,
+  Epping Forest.
+
+### Handover design (agreed with Luke, 2026-08-06)
+
+Audience is the Guardian **data and visuals teams**, not a single
+reporter: the deliverable standard is *well-defined data*, not good
+examples. Structure agreed:
+
+1. **Source documents to a Guardian-owned Google Drive**, organised by
+   site, with human-readable derived filenames (the canonical store keeps
+   content-hash names) and each folder's manifest rendered as a readable
+   index. Regenerable by sync, never a one-off upload.
+2. **The handover workbook** (`scripts/export_handover.py`) as the
+   interface: Sites and Applications tabs linked by `site_key`, generated
+   from the database, never hand-maintained; annotations live in a
+   separate tab so regeneration cannot clobber them.
+3. **Per-site markdown reports**, generated from the same data, doubling
+   as NotebookLM source material.
+4. **Pinpoint / NotebookLM** as *lead generators only* — anything found
+   there re-enters the dataset through the verification gate (document,
+   quote, round-trip check), never directly.
+5. **The viewer last**, as a visualisation and exploration tool for the
+   reporting teams — explicitly not a source of truth.
+6. **Data dictionary and methodology** ([docs/data_dictionary.md](docs/data_dictionary.md),
+   [docs/methodology.md](docs/methodology.md)) at the Drive root *and* as
+   website pages.
+7. **Versioned releases** mirroring the v1 convention; additive, nothing
+   overwritten, so "which version did you query?" always has an answer.
+8. **Queryable export** (DuckDB/SQLite) alongside the workbook, for
+   journalists who want to run their own queries.
+
+Publication-grade validation (a stratified adjudication of sweep output)
+may be run by the data team themselves — so exports must carry
+**adjudication affordances**: every verdict travels with the rubric,
+prompt version, enrichment flag and the exact rendered input the model
+saw (`triage.raw_response`), plus the class definitions as a data
+dictionary.
+
 ### Immediate (this/next session) — v2 dataset pipeline
 
 - **Ingest the missed applications.** From the post-mortem classes: fetch
@@ -193,6 +255,34 @@ gatekeeper to cataloguer. Queue for the next session:
 4. Geocode the 74 unlocatable sites; add the 2.5 km review band (5 km /
    evidence-only on linear terminology) to the superset script.
 5. Per-site deep read rolls as coverage completes.
+
+**Prompt v2.2 tried and rejected (2026-08-06).** Widening the model's
+signal vocabulary to environmental subjects, and widening
+`worth_deep_read` to match, cost two points on the adjudicated set:
+45/50 against v2.1's 47/50, with the loss entirely on the
+invisible-from-description rows that depend on the association rule
+(9/10 → 7/10). Visible rows were unchanged at 38/40. Reverted to v2.1.
+
+The requirement was met a better way: environmental subjects are
+extracted **deterministically** from descriptions ([dcp/signals.py](dcp/signals.py))
+— reproducible, free, and carrying no risk to a validated prompt. Eight
+families (water, air, designated sites, ecology, flood/drainage, land
+quality, noise, heat). Like the EIA indicator this is a **floor**:
+descriptions are terse and the substantive environmental content lives
+in the documents, which deep-read covers.
+
+**Adjacency investigation — the bottleneck is ingestion, not the prompt.**
+The reporting team asked whether the parties behind nearby power
+generation are connected to the data-centre developers. No prompt can
+classify an application that was never ingested, and the universe was
+built from data-centre keyword searches: a peaker or BESS a kilometre
+from a campus that never says "data centre" may be absent entirely (the
+YEP gas reserve is the canonical case, caught by luck of another
+discovery path). [scripts/sweep_site_energy.py](scripts/sweep_site_energy.py)
+searches the energy lexicon around all 391 sites at the 2.5 km review
+band, tagging finds `discovered_via='site_energy:<site_key>'`. Party
+data itself falls out of deep-read; a partial view exists today from
+Agile's structured fields.
 
 ### Pondering (Luke, 2026-08-02, pre-decision — superseded above where they overlap)
 
