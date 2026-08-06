@@ -66,7 +66,8 @@ def _load_inferred_coords(data_dir: Path) -> dict[str, tuple[float, float]]:
 
 
 def build_clusters(conn, *, radius_km: float = 1.0,
-                   data_dir: Path = Path("data")) -> list[dict]:
+                   data_dir: Path = Path("data"),
+                   family_skips_not_dc: bool = True) -> list[dict]:
     """Cluster the dc_build universe into sites.
 
     Returns a list of cluster dicts:
@@ -205,6 +206,29 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             _join(("P", pid), "project_link")
     for x, y, src in fam_edges:
         if x in node_ids and y in node_ids:
+            # Family edges do not traverse an application the taxonomy
+            # calls not_dc. A mixed-use master plan otherwise drags its
+            # whole estate into a site: Houghton Regis North joined 154
+            # applications to one 5,150-dwelling outline, of which two
+            # mention a data centre.
+            #
+            # The risk was bridges — a not_dc application sitting between
+            # two datacentre ones, whose removal would sever a real family
+            # — so it was measured across the corpus before adoption
+            # (2026-08-06): 21 applications leave the universe, all of them
+            # not_dc, no site disappears, and **zero** substantive
+            # applications lose a substantive co-member. Set False to
+            # restore the permissive behaviour.
+            #
+            # This trims but does not cure master-plan conflation: most of
+            # the housing noise is classified `procedural` (procedural on a
+            # housing parent), which a verdict test cannot distinguish from
+            # procedural on a datacentre parent. That needs the parent link
+            # itself — see ROADMAP, typed `parent_ref` column.
+            if family_skips_not_dc and (
+                    by_id[x]["verdict"] == "not_dc"
+                    or by_id[y]["verdict"] == "not_dc"):
+                continue
             uf.union(("A", x), ("A", y))
             via = "family" if src == "associated_id" else "family_description"
             _join(("A", x), via)
