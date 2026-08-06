@@ -32,6 +32,18 @@ def test_extract_candidate_refs_handles_multiple_space_separated():
     ) == ["1331/APP/2019/1666", "1331/APP/2017/1883"]
 
 
+def test_extract_candidate_refs_handles_letter_prefixed_segments():
+    """Councils that letter-prefix every segment — South Oxfordshire
+    `P21/S0274/FUL`, Vale of White Horse `P18/V2277/FUL` — must extract.
+    Requiring a wholly-numeric segment discarded all of them, so their
+    conditions discharges never linked to their parents and the Amazon
+    Didcot campus clustered as unrelated singleton sites."""
+    assert planit._extract_candidate_refs(
+        "Discharge of condition 20 (Travel Plan) on application P21/S0274/FUL."
+    ) == ["P21/S0274/FUL"]
+    assert planit._extract_candidate_refs("P18/V2277/FUL") == ["P18/V2277/FUL"]
+
+
 def test_extract_candidate_refs_filters_use_class_fragments():
     """Mixed-in use-class strings like A1/A3/A4/B1/B8/D1/D2 must be rejected — none
     of their segments are 3+ digits long. Real refs in the same string survive."""
