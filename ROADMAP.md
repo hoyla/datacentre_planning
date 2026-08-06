@@ -320,6 +320,47 @@ big push:
 
 - **Idox adapter improvement — handle OMT-viewer `docKey=` links.** Current adapter conservatively skips these, missing site plans / elevations / drawings (~half the doc set for many apps). The user's manual STPLF backfill recovered 16 such docs that the automated fetch missed. Worth re-running the Idox top-100 sweep after the fix.
 
+### Pre-planning and non-council consenting routes (raised 2026-08-06)
+
+Prompted by the **Devon Data Campus** (Xlinks, North Devon —
+[devondatacampus.com](https://www.devondatacampus.com/), BBC coverage
+Aug 2026): a scheme with an active public-engagement campaign of which
+the corpus holds **nothing at all**. Zero matches for Xlinks, Valeon,
+Alverdiscott or Devon Data Campus; the only Devon data-centre records we
+hold are Exeter College's built teaching facility and two small Plymouth
+items. Three distinct gaps, in rising order of effort:
+
+1. **Operator watch-list sweep** (cheap). Add Xlinks and Valeon — and
+   review the list generally — then run a name-based PlanIt sweep on
+   `developer`. Catches the application the day it is validated rather
+   than whenever we next look. Same mechanism as the existing
+   operator-name expansions.
+
+2. **Direct council-register checks** for pre-application and screening
+   entries (Torridge, North Devon here). Councils routinely publish EIA
+   screening and scoping requests, and Scottish PANs, *before* any
+   application exists — our universe starts at submission, so this class
+   is structurally invisible to us. Worth deciding whether pre-planning
+   entries become first-class universe members or a separate watch table.
+
+3. **NSIP ingestion from the Planning Inspectorate** (the structural
+   fix). Nationally significant infrastructure is consented by PINS, not
+   councils, so it never appears in PlanIt at all. Xlinks' Morocco–UK
+   interconnector — whose UK landing point at Alverdiscott is plausibly
+   *why* a data campus is proposed there — is an NSIP, as is the
+   already-noted `EN0110030` data-centre campus reference we hold with no
+   council URL. Any data centre attaching itself to an NSIP power project
+   is currently invisible on both sides of the join. Design question to
+   settle first: an NSIP is a single "project" spanning hundreds of
+   kilometres and many authorities, which the 1 km spatial clustering
+   rule handles badly — likely wants its own node type and
+   evidence-based (not proximity-based) association.
+
+This also sharpens the **adjacency** work: `adjacent_power` currently
+holds only ~15 applications universe-wide, which is implausibly few and
+consistent with power schemes near campuses being absent from the
+corpus rather than merely misclassified.
+
 ### Soon
 
 - **Promote `associated_id` to a typed `applications.parent_ref` column.** Parent-backfill confirmed the field is reliable; a typed column makes family-navigation queries a direct join instead of JSONB extraction. ~30 min of schema + retrofill work.
