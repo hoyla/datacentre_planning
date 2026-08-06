@@ -80,19 +80,48 @@ def build_clusters(conn, *, radius_km: float = 1.0,
 
     inferred = _load_inferred_coords(data_dir)
 
+    # Universe membership is **rubric-aware**. Verdicts are append-only and
+    # multi-generational: an application classified `DC` under v1 may later
+    # be classified `new_build` (or `procedural`, or `adjacent_power`) under
+    # dc_build. Taking simply the latest verdict and testing for the v1
+    # label 'DC' silently ejects every application the dc_build sweep has
+    # reached — during the 2026-08-06 catalogue sweep that collapsed the
+    # universe from 1,046 applications to 629 mid-run, and would have
+    # rewritten every site key.
+    #
+    # So: take the latest verdict *per rubric*, and treat an application as
+    # in-universe if either generation calls it datacentre-related. Under
+    # dc_build that is every class except `not_dc` — `procedural` and
+    # `unknown` included, because a conditions discharge belongs to its
+    # parent's site and a disguise suspect is precisely what we must not
+    # drop.
     with conn.cursor() as cur:
         cur.execute("""
-            WITH latest AS (
-              SELECT DISTINCT ON (application_id) application_id, verdict
-              FROM triage ORDER BY application_id, inserted_at DESC)
-            SELECT a.id, a.application_ref, left(coalesce(a.description,''),120),
+            WITH per_rubric AS (
+              SELECT DISTINCT ON (application_id, coalesce(raw_response->>'rubric','v1'))
+                     application_id,
+                     coalesce(raw_response->>'rubric','v1') AS rubric,
+                     verdict
+              FROM triage
+              ORDER BY application_id, 2, inserted_at DESC),
+            membership AS (
+              SELECT application_id,
+                     bool_or(rubric = 'v1' AND verdict = 'DC'
+                             OR rubric = 'dc_build' AND verdict <> 'not_dc')
+                       AS in_universe,
+                     max(verdict) FILTER (WHERE rubric = 'dc_build') AS dc_build_verdict,
+                     max(verdict) FILTER (WHERE rubric = 'v1')       AS v1_verdict
+              FROM per_rubric GROUP BY application_id)
+            SELECT a.id, a.application_ref, left(coalesce(a.description,''),400),
                    coalesce(a.address,''),
                    a.raw_metadata->>'location_x', a.raw_metadata->>'location_y',
-                   coalesce(l.verdict, '?'), a.raw_metadata->>'associated_id'
-            FROM applications a LEFT JOIN latest l ON l.application_id = a.id
+                   coalesce(m.dc_build_verdict, m.v1_verdict, '?'),
+                   a.raw_metadata->>'associated_id',
+                   coalesce(m.in_universe, false)
+            FROM applications a LEFT JOIN membership m ON m.application_id = a.id
             ORDER BY a.application_ref""")
         apps = []
-        for aid, ref, desc, addr, lx, ly, verdict, assoc in cur.fetchall():
+        for aid, ref, desc, addr, lx, ly, verdict, assoc, in_universe in cur.fetchall():
             if lx and ly:
                 lat, lon, src = float(ly), float(lx), "application"
             elif ref in inferred:
@@ -101,7 +130,8 @@ def build_clusters(conn, *, radius_km: float = 1.0,
                 lat = lon = src = None
             apps.append({"id": aid, "ref": ref, "desc": desc, "addr": addr,
                          "lat": lat, "lon": lon, "coord_source": src,
-                         "verdict": verdict, "assoc": assoc})
+                         "verdict": verdict, "assoc": assoc,
+                         "in_universe": in_universe})
 
         cur.execute("""
             SELECT p.id, p.external_ref, p.title, p.latitude, p.longitude,
@@ -117,19 +147,38 @@ def build_clusters(conn, *, radius_km: float = 1.0,
 
     by_id = {a["id"]: a for a in apps}
     by_ref = {a["ref"].upper(): a for a in apps}
-    dc_apps = [a for a in apps if a["verdict"] == "DC"]
+    dc_apps = [a for a in apps if a["in_universe"]]
     linked_ids = {aid for _pid, aid in links}
     node_ids = {a["id"] for a in dc_apps} | linked_ids
 
+    # Family edges: an application naming another application's reference.
+    #
+    # `associated_id` is the clean signal, but many portals leave it empty
+    # and put the parent reference in the description instead — "Discharge
+    # of condition 20 (Travel Plan) on application P21/S0274/FUL". Without
+    # mining descriptions those applications cluster as singletons, which
+    # is how a Didcot condition-discharge ended up with its own "site"
+    # while its parent sat in the Amazon campus cluster.
+    #
+    # The description fallback fires only when `associated_id` is empty,
+    # and demands a stricter reference shape (3+ segments), mirroring the
+    # parent-backfill pass in dcp/sources/planit.py — dates like "1/2024"
+    # and use-class strings like "B1/B8" would otherwise create false
+    # links, and a false family edge silently merges two unrelated sites.
     fam_edges = []
     for a in apps:
-        cands = _extract_candidate_refs(a["assoc"]) if a["assoc"] else []
         council = a["ref"].split("/", 1)[0]
+        cands = _extract_candidate_refs(a["assoc"]) if a["assoc"] else []
+        source = "associated_id"
+        if not cands and a.get("desc"):
+            cands = [c for c in _extract_candidate_refs(a["desc"])
+                     if c.count("/") >= 2]
+            source = "description"
         for cand in cands:
             other = by_ref.get(f"{council}/{cand}".upper()) or by_ref.get(cand.upper())
             if other is not None and other["id"] != a["id"]:
-                fam_edges.append((a["id"], other["id"]))
-    for x, y in fam_edges:
+                fam_edges.append((a["id"], other["id"], source))
+    for x, y, _src in fam_edges:
         if x in node_ids or y in node_ids:
             node_ids.add(x)
             node_ids.add(y)
@@ -144,7 +193,8 @@ def build_clusters(conn, *, radius_km: float = 1.0,
     joined_via: dict[tuple, str] = {}
 
     def _join(node, via):
-        order = {"project_link": 3, "family": 2, "spatial": 1}
+        order = {"project_link": 4, "family": 3, "family_description": 2,
+                 "spatial": 1}
         if order.get(via, 0) > order.get(joined_via.get(node), 0):
             joined_via[node] = via
 
@@ -153,11 +203,12 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             uf.union(("P", pid), ("A", aid))
             _join(("A", aid), "project_link")
             _join(("P", pid), "project_link")
-    for x, y in fam_edges:
+    for x, y, src in fam_edges:
         if x in node_ids and y in node_ids:
             uf.union(("A", x), ("A", y))
-            _join(("A", x), "family")
-            _join(("A", y), "family")
+            via = "family" if src == "associated_id" else "family_description"
+            _join(("A", x), via)
+            _join(("A", y), via)
 
     located = ([("A", a["id"], a["lat"], a["lon"])
                 for a in (by_id[n] for n in node_ids) if a["lat"] is not None]
@@ -190,7 +241,7 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             (p for p in c["projects"] if not p["is_tender"]),
             key=lambda p: p["ptno"])
         c["apps"].sort(key=lambda a: a["ref"])
-        has_dc = any(a["verdict"] == "DC" for a in c["apps"])
+        has_dc = any(a["in_universe"] for a in c["apps"])
         has_barbour = bool(real_projects)
         if has_dc and has_barbour:
             cls = "both"
