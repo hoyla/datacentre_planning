@@ -1,0 +1,237 @@
+"""Scale and character of a site, derived from evidence already held.
+
+The reporting team needs to tell a 1GW campus from a server cupboard, and
+a merchant data centre from a university building that happens to contain
+one. Stated capacity answers that where it exists — but it exists for only
+137 of 429 sites, and for 71 sites the full document set genuinely never
+states a figure (verified, not assumed: a regex sweep of those sites'
+cached page text finds MW-like patterns in 2% of documents, and those are
+manhole annotations and EV charger ratings).
+
+So scale has to be inferred from what we do hold, with the basis recorded
+alongside the answer. Three sources, strongest first:
+
+  1. **Stated capacity** (power_adjudication) — a figure the documents
+     attribute to this development.
+  2. **Floor area** — a decent proxy and far better covered (168 sites).
+     Deliberately banded rather than converted to MW: the kW/m2 ratio
+     varies by more than an order of magnitude between a white-space hall
+     and a shell-and-core shed, so a conversion would manufacture
+     precision that isn't there.
+  3. **Description language** — "six air conditioning units" and "4 no.
+     data centre buildings" are not the same animal, and the wording
+     carries that reliably.
+
+Everything here is deterministic: same inputs, same answer, no API call,
+auditable by reading the rules. That follows the project's standing
+preference for deterministic extraction over model judgement wherever
+judgement is not actually required — and it means the model budget can be
+spent on the genuinely ambiguous remainder instead of the easy majority.
+
+Character and scale are kept as separate axes because they answer
+different questions. A university server room and a hyperscale campus can
+both be "a data centre"; only one is a story about grid impact.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+
+# --- character: what kind of facility is this? --------------------------
+# Ordered; first match wins. Patterns run against the concatenated
+# descriptions of a site's applications, lowercased.
+
+# A purpose-built data centre is full of "data halls", "plant rooms" and
+# "equipment rooms" — those words say nothing about whether the facility
+# is ancillary. Only wording that implies IT space *inside someone else's
+# building* counts here. ("data room" was tried and removed: it matched
+# "two data centre buildings containing data rooms", a hyperscale scheme.)
+_ANCILLARY = re.compile(
+    r"server room|comms? room|communications room|server cabinet|"
+    r"rack room|ancillary (data|server|it)|"
+    r"serving the (existing )?(building|site|office|hospital|school|"
+    r"university|premises)", re.I)
+
+# Unambiguous evidence that the data centre IS the development: tested
+# before ancillary, so incidental interior wording cannot demote a campus.
+_STRONG_STANDALONE = re.compile(
+    r"(erection|construction|development|delivery) of .{0,40}"
+    r"(data cent|data stor|datacent)|"
+    r"\d+\s*(no\.?|x)\s*data cent|data cent(re|er) (campus|buildings?|"
+    r"park|facility|development)|hyperscale|colocation|co-location|"
+    r"technical services centre", re.I)
+
+_INSTITUTIONAL = re.compile(
+    r"universit|college|school|hospital|nhs\b|academy|campus building|"
+    r"civic|town hall|library|research (institute|facility|centre)|"
+    r"laborator", re.I)
+
+_TELECOMS = re.compile(
+    r"telephone exchange|telecoms? exchange|bt exchange|"
+    r"telecommunications (centre|facility|installation)|"
+    r"mobile (mast|base station)|radio (mast|station)", re.I)
+
+_ENABLING_ONLY = re.compile(
+    r"^(?=.*\b(substation|switchgear|transformer|grid connection|"
+    r"cable route|electricity infrastructure)\b)"
+    r"(?!.*\b(data cent|data stor|server hall|technical services)\b)", re.I)
+
+_STANDALONE = re.compile(
+    r"data cent|data stor|datacent|server hall|technical services centre|"
+    r"colocation|co-location|hyperscale|digital infrastructure", re.I)
+
+
+@dataclass(frozen=True)
+class Character:
+    key: str
+    label: str
+    note: str
+
+
+CHARACTERS = {
+    "ancillary_server_room": Character(
+        "ancillary_server_room", "Ancillary server/comms room",
+        "IT space serving another occupier on the site, not a facility in "
+        "its own right. Low grid significance."),
+    "institutional_facility": Character(
+        "institutional_facility", "Institutional facility with IT space",
+        "University, hospital or civic building containing a data or "
+        "server room. Serves the host organisation."),
+    "telecoms_facility": Character(
+        "telecoms_facility", "Telecoms exchange or installation",
+        "Telecoms rather than compute; often reclassified as a data "
+        "centre later, so worth tracking separately."),
+    "enabling_infrastructure": Character(
+        "enabling_infrastructure", "Power/enabling works only",
+        "Substation, grid connection or cabling with no data-centre "
+        "building in the application."),
+    "standalone_datacentre": Character(
+        "standalone_datacentre", "Standalone data centre",
+        "Purpose-built or converted facility where the data centre is the "
+        "primary use."),
+    "unclear": Character(
+        "unclear", "Unclear from description",
+        "Description does not establish the facility's character."),
+}
+
+
+def character_for(text: str | None) -> str:
+    """Facility character from the site's description text.
+
+    Ancillary and institutional are tested before standalone because such
+    descriptions almost always *also* contain the words "data centre" —
+    "installation of six air conditioning units to serve the data centre"
+    is an ancillary works application, not a data centre application, and
+    testing standalone first would swallow it.
+    """
+    if not text:
+        return "unclear"
+    t = text.lower()
+    if _STRONG_STANDALONE.search(t):
+        return "standalone_datacentre"
+    if _ANCILLARY.search(t):
+        return "ancillary_server_room"
+    if _INSTITUTIONAL.search(t) and not re.search(
+            r"\b(hyperscale|colocation|co-location)\b", t):
+        return "institutional_facility"
+    if _TELECOMS.search(t):
+        return "telecoms_facility"
+    if _STANDALONE.search(t):
+        return "standalone_datacentre"
+    if _ENABLING_ONLY.search(t):
+        return "enabling_infrastructure"
+    return "unclear"
+
+
+# --- scale: how big is it? ----------------------------------------------
+# Bands rather than point values. The MW bands follow how the industry and
+# the grid talk about size; the floor-area bands are calibrated to UK
+# planning practice, where a sub-1,000 m2 "data centre" is essentially
+# always a room inside something else.
+
+MW_BANDS = (
+    (500.0, "very_large_500mw_plus", "500 MW and above — campus scale"),
+    (100.0, "large_100_500mw", "100–500 MW"),
+    (20.0, "medium_20_100mw", "20–100 MW"),
+    (5.0, "small_5_20mw", "5–20 MW"),
+    (0.0, "very_small_under_5mw", "Under 5 MW"),
+)
+
+AREA_BANDS = (
+    (50000.0, "very_large_50k_sqm_plus", "50,000 m² and above"),
+    (10000.0, "large_10k_50k_sqm", "10,000–50,000 m²"),
+    (2000.0, "medium_2k_10k_sqm", "2,000–10,000 m²"),
+    (500.0, "small_500_2k_sqm", "500–2,000 m²"),
+    (0.0, "very_small_under_500_sqm", "Under 500 m² — room scale"),
+)
+
+_AREA_TO_SQM = {
+    "sqm": 1.0, "m2": 1.0, "sq m": 1.0, "square metres": 1.0,
+    "square meters": 1.0, "sqft": 0.092903, "ft2": 0.092903,
+    "square feet": 0.092903,
+}
+
+
+def band(value: float, bands) -> tuple[str, str]:
+    for threshold, key, label in bands:
+        if value >= threshold:
+            return key, label
+    return bands[-1][1], bands[-1][2]
+
+
+def scale_from_mw(mw: float) -> tuple[str, str]:
+    return band(mw, MW_BANDS)
+
+
+def scale_from_area_sqm(sqm: float) -> tuple[str, str]:
+    return band(sqm, AREA_BANDS)
+
+
+def area_to_sqm(value: float, unit: str | None) -> float | None:
+    if unit is None:
+        return None
+    factor = _AREA_TO_SQM.get(unit.strip().lower())
+    return value * factor if factor else None
+
+
+# The basis is reported with every band so a reader knows how much weight
+# it carries. A band derived from floor area is a reasonable indication of
+# physical scale; it is not a capacity figure and must not be presented as
+# one.
+BASIS_NOTE = {
+    "stated_capacity": "Derived from a capacity figure the documents "
+                       "attribute to this development.",
+    "floor_area": "Derived from floor area — an indication of physical "
+                  "scale, NOT a power capacity.",
+    "description": "Inferred from the application description only; no "
+                   "capacity or area figure available.",
+    "none": "No scale evidence found in the documents held.",
+}
+
+
+# Significance order for rolling per-application characters up to a site.
+# A site is described by the most substantial thing proposed there: a
+# campus that also has a condition-discharge application for a comms room
+# is a standalone data centre site, not an ancillary one. Rolling up by
+# *max significance* rather than by concatenating descriptions avoids both
+# failure modes — one small application dragging a campus down, and one
+# stray mention of "data centre" promoting a university server room.
+_SIGNIFICANCE = {
+    "standalone_datacentre": 5,
+    "telecoms_facility": 4,
+    "institutional_facility": 3,
+    "enabling_infrastructure": 2,
+    "ancillary_server_room": 1,
+    "unclear": 0,
+}
+
+
+def rollup_character(characters) -> str:
+    """The site-level character from its applications' characters."""
+    best, best_rank = "unclear", -1
+    for c in characters:
+        rank = _SIGNIFICANCE.get(c, 0)
+        if rank > best_rank:
+            best, best_rank = c, rank
+    return best
