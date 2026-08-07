@@ -84,6 +84,12 @@ ENERGY_KEYWORDS_TIGHT = (
 SLIM_SELECT = ("name,area_name,address,description,app_type,start_date,"
                "url,location_x,location_y")
 
+# Page size for --full fetches. The slim sweep found the candidates; the
+# full-select pass re-fetches the same result set with every field —
+# `associated_id` above all, or ingested records can't join the family
+# graph. 100 records of full select stay comfortably under the cap.
+FULL_PG_SZ = 100
+
 
 def hav_km(lat1, lon1, lat2, lon2) -> float:
     r = 6371.0
@@ -94,21 +100,35 @@ def hav_km(lat1, lon1, lat2, lon2) -> float:
 
 
 def do_fetch(delay: float, pg_sz: int, start_date: str | None,
-             tight: bool = False) -> None:
+             tight: bool = False, full: bool = False) -> None:
     with db.connect() as conn:
         source_id = repo.ensure_source(conn, name=planit.SOURCE_NAME,
                                        kind="aggregator", base_url=planit.BASE)
         search = ENERGY_KEYWORDS_TIGHT if tight else ENERGY_KEYWORDS
-        pages = new_snaps = records = 0
+        select = planit.APPS_SELECT if full else SLIM_SELECT
+
+        def cache_get(url: str) -> bytes | None:
+            # Resume across quota windows without re-spending requests:
+            # a page already snapshotted is served from the database.
+            with conn.cursor() as cur:
+                cur.execute("""SELECT raw_bytes_inline FROM source_snapshots
+                               WHERE source_id = %s AND key = %s LIMIT 1""",
+                            (source_id, url))
+                row = cur.fetchone()
+                return bytes(row[0]) if row else None
+
+        pages = cached = new_snaps = records = 0
         print(f"national energy sweep ({'tight' if tight else 'full'} lexicon"
               + (f", from {start_date}" if start_date else "")
+              + (", FULL select" if full else "")
               + f") at {pg_sz}/page, {delay}s spacing")
-        with planit.PlanItClient(delay_seconds=delay) as client:
+        with planit.PlanItClient(delay_seconds=delay,
+                                 cache_get=cache_get) as client:
             try:
                 page = 1
                 while True:
                     params = {"pg_sz": pg_sz, "page": page,
-                              "sort": "-start_date", "select": SLIM_SELECT,
+                              "sort": "-start_date", "select": select,
                               "search": search}
                     if start_date:
                         params["start_date"] = start_date
@@ -116,11 +136,14 @@ def do_fetch(delay: float, pg_sz: int, start_date: str | None,
                     pages += 1
                     n = len(resp.data.get("records", []))
                     records += n
-                    if repo.record_snapshot(conn, source_id=source_id,
-                                            key=resp.url, raw_bytes=resp.raw):
+                    if resp.cached:
+                        cached += 1
+                    elif repo.record_snapshot(conn, source_id=source_id,
+                                              key=resp.url, raw_bytes=resp.raw):
                         new_snaps += 1
                     conn.commit()
-                    print(f"  page {pages}: {n} records (total {records})")
+                    print(f"  page {pages}: {n} records (total {records})"
+                          + ("  [cached]" if resp.cached else ""))
                     if n < pg_sz:
                         break
                     page += 1
@@ -128,10 +151,12 @@ def do_fetch(delay: float, pg_sz: int, start_date: str | None,
                 conn.commit()
                 print(f"\nPlanIt quota spent — asked for {exc.retry_after:.0f}s "
                       f"({exc.retry_after/60:.0f} min).")
-                print(f"Stopping cleanly after {pages} pages; re-run to resume "
-                      f"(cached pages are not re-fetched).")
+                print(f"Stopping cleanly after {pages} pages ({cached} cached); "
+                      f"re-run to resume (cached pages are not re-fetched).")
+                print(f"RETRY_AFTER_SECONDS={exc.retry_after:.0f}")
                 return
-        print(f"done: {pages} pages, {records} records, {new_snaps} new snapshots")
+        print(f"done: {pages} pages ({cached} cached), {records} records, "
+              f"{new_snaps} new snapshots")
 
 
 def do_process(radius_km: float, ingest: bool) -> None:
@@ -149,6 +174,10 @@ def do_process(radius_km: float, ingest: bool) -> None:
         cur.execute("SELECT application_ref FROM applications")
         known = {r[0] for r in cur.fetchall()}
 
+    # Both the slim discovery sweep and the full-select re-fetch are in the
+    # snapshot store. A full record (it carries the `associated_id` key,
+    # even when null) always wins over a slim one — ingesting a slim record
+    # would silently drop the family edges the re-fetch exists to capture.
     seen: dict[str, dict] = {}
     for (raw,) in snaps:
         try:
@@ -157,12 +186,16 @@ def do_process(radius_km: float, ingest: bool) -> None:
             continue
         for rec in data.get("records", []):
             name = rec.get("name")
-            if name:
+            if not name:
+                continue
+            if "associated_id" in rec or name not in seen:
                 seen[name] = rec
+    full_count = sum(1 for r in seen.values() if "associated_id" in r)
     print(f"{len(sites)} located sites; {len(seen)} distinct energy applications "
-          f"in snapshots")
+          f"in snapshots ({full_count} with full fields)")
 
-    near: dict[str, list] = defaultdict(list)
+    near_apps: dict[str, list] = defaultdict(list)   # name -> [(d, site_key)]
+    near: dict[str, list] = defaultdict(list)        # site_key -> hits
     for name, rec in seen.items():
         try:
             lat = float(rec.get("location_y")); lon = float(rec.get("location_x"))
@@ -172,9 +205,10 @@ def do_process(radius_km: float, ingest: bool) -> None:
             d = hav_km(lat, lon, float(slat), float(slon))
             if d <= radius_km:
                 near[site_key].append((d, name, rec))
+                near_apps[name].append((d, site_key))
 
     total = sum(len(v) for v in near.values())
-    fresh = sum(1 for v in near.values() for _d, n, _r in v if n not in known)
+    fresh = sum(1 for n in near_apps if n not in known)
     print(f"{total} energy applications within {radius_km} km of a site "
           f"({len(near)} sites affected); {fresh} not already in the corpus\n")
     for site_key, hits in sorted(near.items(), key=lambda kv: -len(kv[1]))[:15]:
@@ -183,6 +217,31 @@ def do_process(radius_km: float, ingest: bool) -> None:
             flag = "" if name in known else "  ** NEW **"
             print(f"    {d:4.1f} km  {name:32} "
                   f"{(rec.get('description') or '')[:56]}{flag}")
+
+    if not ingest:
+        return
+    new_rows = slim_only = 0
+    with db.connect() as conn:
+        source_id = repo.ensure_source(conn, name=planit.SOURCE_NAME,
+                                       kind="aggregator", base_url=planit.BASE)
+        for name, site_hits in sorted(near_apps.items()):
+            if name in known:
+                continue
+            rec = seen[name]
+            if "associated_id" not in rec:
+                # Slim record only — refuse rather than ingest a version
+                # with no family fields; the full re-fetch fills these.
+                slim_only += 1
+                continue
+            via = [f"energy_national:{sk}"
+                   for _d, sk in sorted(site_hits)]
+            if repo.upsert_application(conn, source_id=source_id, app=rec,
+                                       discovered_via=via):
+                new_rows += 1
+        conn.commit()
+    print(f"\ningested {new_rows} new applications"
+          + (f"; {slim_only} skipped awaiting full-select re-fetch"
+             if slim_only else ""))
 
 
 def main() -> None:
@@ -195,6 +254,9 @@ def main() -> None:
     ap.add_argument("--tight", action="store_true",
                     help="Generation/storage terms only — one quota window "
                          "rather than five.")
+    ap.add_argument("--full", action="store_true",
+                    help="Fetch the full APPS_SELECT (associated_id and all) "
+                         "at a page size that fits the response cap.")
     ap.add_argument("--start-date", default=None,
                     help="Restrict to applications on/after this date "
                          "(YYYY-MM-DD), shrinking the sweep.")
@@ -203,7 +265,8 @@ def main() -> None:
                          "only reporting them.")
     args = ap.parse_args()
     if args.fetch:
-        do_fetch(args.delay, args.pg_sz, args.start_date, args.tight)
+        pg_sz = FULL_PG_SZ if (args.full and args.pg_sz == 500) else args.pg_sz
+        do_fetch(args.delay, pg_sz, args.start_date, args.tight, args.full)
     if args.process:
         do_process(args.radius_km, args.ingest)
     if not (args.fetch or args.process):
