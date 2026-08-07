@@ -212,6 +212,101 @@ prompt version, enrichment flag and the exact rendered input the model
 saw (`triage.raw_response`), plus the class definitions as a data
 dictionary.
 
+### Done 2026-08-07 — deep-read live, energy adjacency ingested, Drive syncing
+
+- **Deep-read model decided by benchmark**: MLX Qwen3.6-35B-A3B-4bit
+  9.2s/document vs granite4.1:30b 58s (sequential comparison, one model
+  resident at a time). Thinking disabled (`enable_thinking=False`);
+  quality-checked on Bridgend P/25/247/HYB (Vantage applicant, interim
+  grid solution) before commitment.
+- **Production run live**: `scripts/deepread_run.py`, model tag
+  `mlx:Qwen3.6-35B-A3B-4bit`, prompt v1.0, over 26,763 documents of
+  live-site applications (Tier A first). Verbatim gate BEFORE insert
+  (shared normalisation with verify_findings); failures + truncation
+  salvage recorded to `data/deepread_escalations.jsonl` for the
+  escalation pass. Coverage bookkeeping in `deepread_log`
+  (migrations/007), including skipped-graphical and sampled-out rows —
+  the methodology's coverage statement is a query. Gate already caught
+  the model reciting policy boilerplate with invented page numbers
+  (claimed pages 8/12 of a 7-page document) — held out, never inserted.
+- **Energy adjacency ingested with family edges intact**: full-select
+  re-fetch (88 pages, 8,747 records, ~5 quota windows, Retry-After
+  honoured, cached pages free on resume) then ingest: **1,357 new
+  applications** within 2.5 km of sites (207 sites affected), 993 with
+  populated `associated_id`. Ingest refuses slim records — the 2
+  stragglers were re-fetched individually by `id_match`. NOT yet done
+  for these: site re-materialisation (HELD until the Drive bulk upload
+  completes — re-clustering could rename site keys and strand Drive
+  folders), catalogue-sweep triage (spends API, awaits go).
+- **Drive bulk upload running** into Luke's folder by ID
+  (`--dest-id 1vKev…`; name-based resolution silently duplicates the
+  folder under drive.file scope — never resolve by name). Staging:
+  429 sites / 1,709 applications / 26,557 documents.
+
+### Done 2026-08-07 (evening) — corpus read, and two problems it exposed
+
+- **Two-device sharded local read.** `deepread_run.py --shard K/N` splits
+  the cohort by `document_id % N`; disjoint by construction, so a second
+  machine (Mac Studio, over the LAN) writes into the same Postgres with no
+  coordination. Verified zero duplicate reads, and prompt-byte-identical
+  across machines by SHA-256 rather than by trusting a version string.
+- **Sonnet bulk offload.** Local throughput oscillated 50–190 docs/hour
+  against a Monday handover, so the remaining corpus went to the Batch API:
+  **17,990 documents, 346,653 findings** at $462. Two lessons recorded:
+  estimating tokens as characters÷4 under-counted by 1.8× on this dense
+  technical prose (use `count_tokens` on real requests), and a nullable
+  enum in a structured-output schema must be `anyOf`, not
+  `"type": ["string","null"]` — the latter failed 301 requests silently.
+- **Signal-type fragmentation.** The extraction prompt asks for "a short
+  snake_case label", and the model duly invented one per finding: **54,044
+  distinct labels**, 42,384 of them appearing once or twice, the same
+  concept scattered across `onsite_generation` / `on_site_generation` /
+  `onsite_power_generation` / `on_site_power_generation`. The findings are
+  sound — every one gate-verified with a quote — but the *index* was
+  unusable: no reporter can filter 54,000 labels. [dcp/signal_families.py](dcp/signal_families.py)
+  maps them onto 25 canonical families by ordered token rules, stored
+  alongside the original label, never overwriting it. 88.7% classify; the
+  rest are honestly `unclassified` rather than guessed into a bucket.
+- **Power figures were mostly not about the sites.** Planning statements
+  argue for approval by citing the market, so of the 22 largest MW/GW
+  findings in the corpus, *all 22* were market forecasts, policy targets or
+  grid statistics — sorting sites by their largest figure would have
+  ranked a Slough application as a 30GW site. The verbatim gate cannot
+  catch this: the quotes are all genuine, and the failure is subject
+  attribution one level up. [scripts/adjudicate_power.py](scripts/adjudicate_power.py)
+  re-uses the findings already extracted (reads no documents, $2.06) and
+  asks only which figures describe *this* development, and which quantity
+  each measures. Result: **2,570 site capacities across 228 applications,
+  1,422 figures excluded with a recorded reason** — 36% of the total.
+  Exclusions are kept, not dropped, so "why doesn't this site show that
+  number?" resolves to a row.
+- **IT load, grid connection, on-site generation and cooling are kept
+  apart** ([migrations/008_power_adjudication.sql](migrations/008_power_adjudication.sql)).
+  Their medians differ by two orders of magnitude (44 MW, 99 MW, 3.3 MW,
+  0.3 MW); collapsing them into "the site's MW" would replace one error
+  with another.
+- **Site scale and character** ([dcp/site_scale.py](dcp/site_scale.py)),
+  deterministic and free: 423 of 429 sites classified as standalone data
+  centre (410), institutional facility with IT space (11), ancillary
+  server room, or enabling infrastructure only. Scale bands come from
+  adjudicated capacity where it exists and floor area otherwise, with the
+  basis always recorded — a floor-area band indicates physical scale and
+  must never be read as a power figure.
+- **Free cross-validation.** Barbour site names often embed the capacity
+  ("MANOR FARM - 147MW DATA CENTRE"). Of 15 checkable sites, 7 agree with
+  the adjudicated figure within 15% and 8 diverge — the divergences
+  (Former Ford Engine Plant 2 vs 600 MW, Graven Hill D1 435 vs 15 MW)
+  are a prioritised queue for human adjudication rather than a defect.
+- **A re-read of the 288 sites lacking a capacity figure was investigated
+  and rejected as unnecessary** — the useful negative result. 183 of them
+  hold no documents at all (an acquisition gap, not an extraction one), 7
+  have documents not yet read, 27 have thin evidence, and **71 were fully
+  read and genuinely never state a capacity**. A regex sweep of those
+  sites' cached text finds MW-like patterns in 2% of documents, all false
+  positives (manhole annotations on survey drawings, kWh/m² targets, EV
+  charger ratings). That 71 consented or pending data centres disclose no
+  power figure is itself a finding for the reporting team.
+
 ### Immediate (this/next session) — v2 dataset pipeline
 
 - **Ingest the missed applications.** From the post-mortem classes: fetch
