@@ -230,3 +230,61 @@ def family_for(signal_type: str | None) -> str:
 
 def family_names() -> list[str]:
     return [f.name for f in FAMILIES] + [UNCLASSIFIED]
+
+
+# ---------------------------------------------------------------------------
+# Prevention, as opposed to the cure above
+# ---------------------------------------------------------------------------
+#
+# Everything above this line cleans up after the fact. It exists because
+# prompt v1.0 asked the model for "a short snake_case label" and got
+# 54,044 of them. Mapping them back into families recovers a usable index,
+# but a re-run under the same prompt would produce a fresh 54,000, and the
+# regexes above would then be chasing a new set of coinages.
+#
+# The fix is to constrain the vocabulary at the point of extraction while
+# keeping what was genuinely valuable about the free-form label. The model
+# naming precisely what it found — `generator_testing_hours` rather than a
+# flat `power_generation` — carries real information that a fixed taxonomy
+# would throw away. So a corrected prompt asks for BOTH: a `signal_family`
+# drawn from this controlled list, and the model's own `signal_type` as a
+# free-text refinement beneath it.
+#
+# On the API paths that field can be an enum in the structured-output
+# schema, which makes an out-of-vocabulary family impossible rather than
+# merely discouraged. The local model has no such enforcement, so its
+# output is validated against this same list on the way in and anything
+# unrecognised falls back to `family_for()` on the free-text label.
+#
+# These names are generated from FAMILIES rather than written out again,
+# so the prompt's vocabulary and the mapper's vocabulary cannot drift
+# apart — the failure mode that would otherwise reappear the first time
+# someone adds a family to one and forgets the other.
+
+PROMPT_FAMILY_ENUM: list[str] = [f.name for f in FAMILIES] + [UNCLASSIFIED]
+
+
+def prompt_vocabulary_block() -> str:
+    """The family list as prompt text, with the one-line note for each.
+
+    Rendered from FAMILIES so it always matches what the mapper accepts.
+    """
+    lines = ["Choose signal_family from exactly this list:"]
+    for f in FAMILIES:
+        lines.append(f"  {f.name} — {f.note}")
+    lines.append(f"  {UNCLASSIFIED} — none of the above fits; say so rather "
+                 f"than forcing a match.")
+    return "\n".join(lines)
+
+
+def validate_family(value: str | None, fallback_label: str | None) -> str:
+    """Coerce a model-supplied family into the controlled vocabulary.
+
+    Used on paths where the schema cannot enforce the enum (the local
+    model). An unrecognised value is not trusted and not discarded: the
+    free-text label is mapped instead, which is the same route the v1.0
+    corpus takes.
+    """
+    if value and value in PROMPT_FAMILY_ENUM:
+        return value
+    return family_for(fallback_label)

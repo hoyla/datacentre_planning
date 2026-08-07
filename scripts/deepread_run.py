@@ -54,11 +54,20 @@ load_dotenv(ROOT / ".env")
 
 from dcp import db, extract  # noqa: E402
 from dcp import deepread_select as sel  # noqa: E402
+from dcp import signal_families  # noqa: E402
 
 MODEL_PATH = "mlx-community/Qwen3.6-35B-A3B-4bit"
 MODEL_TAG = "mlx:Qwen3.6-35B-A3B-4bit"
-PROMPT_VERSION = "1.0"
 ESCALATION_PATH = ROOT / "data" / "deepread_escalations.jsonl"
+
+# v1.0 is what the current corpus was read under and must not change: it
+# is half of the UNIQUE(document_id, model, prompt_version) resume
+# contract, so editing it in place would orphan 18,000 completed reads and
+# silently re-read them. v2.0 fixes the taxonomy fragmentation v1.0
+# caused, and is opt-in via --prompt-version until a full re-run is
+# actually wanted. See dcp/signal_families.py for why.
+PROMPT_VERSION = "1.0"
+DEFAULT_PROMPT_VERSION = "1.0"
 
 PROMPT = """\
 You are reading a UK planning document for an investigative journalism
@@ -88,6 +97,69 @@ Return strict JSON: {"findings": [...]}. No prose outside the JSON.
 
 DOCUMENT:
 """
+
+# --- prompt v2.0 -----------------------------------------------------------
+# Identical to v1.0 in what it extracts and in the verbatim-quote
+# requirement. The single change is the taxonomy: v1.0 asked only for a
+# free-form snake_case label and produced 54,044 of them, which made the
+# findings unfilterable. v2.0 asks for a controlled `signal_family`
+# alongside the free-text `signal_type`, so the index is usable without
+# losing the specificity that made the free label worth having.
+#
+# The family list is rendered from dcp/signal_families.py rather than
+# written out here, so the prompt cannot drift from the mapper.
+
+PROMPT_V2 = """\
+You are reading a UK planning document for an investigative journalism
+project on data centres and their power and environmental impact.
+
+Extract every factual claim relevant to any of: on-site power generation
+(engines, turbines, CHP, generators, fuel), grid connection and capacity,
+IT load or power demand in MW, water use including cooling, emissions and
+air quality, designated sites and ecology, flood risk, EIA screening
+outcomes, and the parties involved (applicant, agent, consultants).
+
+The document text below is divided by [PAGE n] markers giving the
+physical PDF page each passage comes from.
+
+For each fact, return an object with:
+  "signal_family": the broad category, from the controlled list below
+  "signal_type":   a short snake_case label of your own naming the
+                   specific fact, as precisely as you like — this sits
+                   beneath the family and is where detail belongs
+  "value_text":    the fact in a few words
+  "value_number" and "value_unit": if the fact is quantitative, else null
+  "evidence_text": a VERBATIM quote from the document supporting it
+  "evidence_page": the [PAGE n] number the quote appears on
+
+%(families)s
+
+Where a figure is a quantity, take care over WHOSE quantity it is. These
+documents argue for approval by citing market forecasts, national policy
+targets and other schemes. A capacity figure is only about this
+development if the surrounding text says so; if it describes the market,
+a policy ambition or a different site, extract it but name the
+signal_type accordingly (for example market_demand_forecast rather than
+it_load).
+
+The evidence quote must appear in the document character-for-character —
+it is checked automatically, and an invented quote is worse than no
+finding. If the document contains nothing relevant, return an empty list.
+
+Return strict JSON: {"findings": [...]}. No prose outside the JSON.
+
+DOCUMENT:
+"""
+
+
+def prompt_for(version: str) -> str:
+    if version == "1.0":
+        return PROMPT
+    if version == "2.0":
+        from dcp import signal_families
+        return PROMPT_V2 % {
+            "families": signal_families.prompt_vocabulary_block()}
+    raise SystemExit(f"unknown prompt version: {version}")
 
 # ---------------------------------------------------------------------------
 # Quote verification — same normalisation as scripts/verify_findings.py,
@@ -122,12 +194,13 @@ def quote_on_page(quote: str, page_text: str) -> bool:
 _MLX: dict = {}
 
 
-def mlx_generate(text: str, max_tokens: int) -> tuple[str, float]:
+def mlx_generate(text: str, max_tokens: int,
+                 prompt: str | None = None) -> tuple[str, float]:
     from mlx_lm import generate, load
     if "m" not in _MLX:
         _MLX["m"], _MLX["t"] = load(MODEL_PATH)
     model, tok = _MLX["m"], _MLX["t"]
-    messages = [{"role": "user", "content": PROMPT + text}]
+    messages = [{"role": "user", "content": (prompt or PROMPT) + text}]
     # Qwen3.6 is a thinking model by default; disable it or the trace
     # swamps the JSON and the throughput alike.
     prompt = tok.apply_chat_template(messages, add_generation_prompt=True,
@@ -348,13 +421,26 @@ def verify_and_insert(conn, row: dict, findings: list[dict],
                 continue
             num = f.get("value_number")
             num = num if isinstance(num, (int, float)) else None
+            # Under v2.0 the model names the family directly; the local
+            # path has no schema enforcement, so an out-of-vocabulary
+            # answer is mapped from the label instead of being trusted.
+            label = str(f["signal_type"])[:80]
+            supplied = f.get("signal_family")
+            if supplied:
+                family = signal_families.validate_family(supplied, label)
+                source = ("model" if family == supplied
+                          else "derived_fallback")
+            else:
+                family = signal_families.family_for(label)
+                source = "derived"
             cur.execute("""
                 INSERT INTO findings (application_id, document_id,
-                    signal_type, value_text, value_number, value_unit,
-                    evidence_text, evidence_page, model)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                (row["application_id"], row["document_id"],
-                 str(f["signal_type"])[:80], f.get("value_text"), num,
+                    signal_type, signal_family, family_source, value_text,
+                    value_number, value_unit, evidence_text, evidence_page,
+                    model)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                (row["application_id"], row["document_id"], label,
+                 family, source, f.get("value_text"), num,
                  f.get("value_unit"), quote, verified_page, MODEL_TAG))
             inserted += 1
     conn.commit()
@@ -362,7 +448,7 @@ def verify_and_insert(conn, row: dict, findings: list[dict],
 
 
 def process_document(conn, row: dict, *, max_chars: int,
-                     max_tokens: int) -> str:
+                     max_tokens: int, prompt: str | None = None) -> str:
     """Run one document end to end; returns a short status string."""
     if row["tier"] == "skip":
         log_document(conn, row, read_state="skipped_graphical",
@@ -393,11 +479,11 @@ def process_document(conn, row: dict, *, max_chars: int,
     inserted = failed = 0
     parse_failed = False
     for nums, text in chunks:
-        raw, _el = mlx_generate(text, max_tokens)
+        raw, _el = mlx_generate(text, max_tokens, prompt)
         findings = parse_findings(raw)
         if findings is None:
             # Most likely truncation — one retry with double the budget.
-            raw, _el = mlx_generate(text, max_tokens * 2)
+            raw, _el = mlx_generate(text, max_tokens * 2, prompt)
             findings = parse_findings(raw)
         if findings is None:
             # Still truncated: salvage the complete objects, keep the
@@ -443,7 +529,25 @@ def main() -> None:
                     help="Process only documents with id %% N == K "
                          "(e.g. 0/2 and 1/2 on two machines sharing "
                          "the database).")
+    ap.add_argument("--prompt-version", default=DEFAULT_PROMPT_VERSION,
+                    choices=["1.0", "2.0"],
+                    help="1.0 is what the existing corpus was read under. "
+                         "2.0 adds the controlled signal_family vocabulary "
+                         "that stops taxonomy fragmentation, and starts a "
+                         "SEPARATE read of the whole corpus — it shares no "
+                         "resume state with 1.0.")
     args = ap.parse_args()
+
+    global PROMPT_VERSION
+    PROMPT_VERSION = args.prompt_version
+    active_prompt = prompt_for(PROMPT_VERSION)
+    if PROMPT_VERSION != DEFAULT_PROMPT_VERSION:
+        # Changing version re-reads everything, because the resume
+        # contract is keyed on it. That is correct for a deliberate
+        # re-run and expensive as an accident, so make it loud.
+        print(f"*** prompt v{PROMPT_VERSION} selected: this is a full "
+              f"re-read, not a resume of the v{DEFAULT_PROMPT_VERSION} "
+              f"corpus ***")
 
     shard = None
     if args.shard:
@@ -489,7 +593,8 @@ def main() -> None:
                     with db.connect() as doc_conn:
                         status = process_document(doc_conn, row,
                                                   max_chars=args.max_chars,
-                                                  max_tokens=args.max_tokens)
+                                                  max_tokens=args.max_tokens,
+                                                  prompt=active_prompt)
                     break
                 except (psycopg2.OperationalError,
                         psycopg2.InterfaceError):
