@@ -116,7 +116,10 @@ def run_mlx(text: str, max_tokens: int) -> tuple[str, float, dict]:
         _MLX_CACHE["m"], _MLX_CACHE["t"] = load(MLX_MODEL)
     model, tok = _MLX_CACHE["m"], _MLX_CACHE["t"]
     messages = [{"role": "user", "content": PROMPT + text}]
-    prompt = tok.apply_chat_template(messages, add_generation_prompt=True)
+    # Qwen3.6 is a thinking model by default; a reasoning trace would swamp
+    # the JSON output and the throughput numbers alike.
+    prompt = tok.apply_chat_template(messages, add_generation_prompt=True,
+                                     enable_thinking=False)
     t0 = time.time()
     out = generate(model, tok, prompt=prompt, max_tokens=max_tokens, verbose=False)
     elapsed = time.time() - t0
