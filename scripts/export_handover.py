@@ -122,16 +122,27 @@ SELECT s.site_key, s.classification, s.display_name,
        max(pw.gen_mw)                                         AS gen_mw,
        coalesce(sum(pw.n_capacity), 0)                        AS n_capacity,
        coalesce(sum(px.n_excluded), 0)                        AS n_excluded,
-       -- Correlated rather than joined: array_agg cannot flatten the
-       -- per-application arrays across a site group, and this runs once
-       -- per site against an indexed column.
-       (SELECT array_agg(DISTINCT f2.signal_family)
-          FROM findings f2
-          JOIN site_members m3 ON m3.application_id = f2.application_id
-               AND m3.retired_at IS NULL
-         WHERE m3.site_id = s.id
-           AND f2.signal_family IS NOT NULL
-           AND f2.signal_family <> 'unclassified')            AS signal_families,
+       -- Ranked by evidence volume, not listed alphabetically. A flat
+       -- presence list marks nearly every family present on any
+       -- document-heavy site, so it ends up reporting "this site has a
+       -- lot of documents" rather than what the site is about. Counts
+       -- ordered by size discriminate: a site whose largest families are
+       -- power_generation and power_grid reads differently from one
+       -- dominated by ecology_biodiversity and designated_sites.
+       --
+       -- Correlated rather than joined because array_agg cannot flatten
+       -- the per-application arrays across a site group; runs once per
+       -- site against an indexed column.
+       (SELECT array_agg(fam || ' (' || n || ')' ORDER BY n DESC)
+          FROM (SELECT f2.signal_family AS fam, count(*) AS n
+                  FROM findings f2
+                  JOIN site_members m3
+                       ON m3.application_id = f2.application_id
+                       AND m3.retired_at IS NULL
+                 WHERE m3.site_id = s.id
+                   AND f2.signal_family IS NOT NULL
+                   AND f2.signal_family <> 'unclassified'
+                 GROUP BY f2.signal_family) ranked)         AS signal_families,
        bool_or(ae.ref_hit)                                    AS eia_ref_hit,
        bool_or(ae.doc_hit)                                    AS eia_doc_hit,
        coalesce(sum(ap.manual_docs), 0)                       AS manual_docs,
@@ -188,6 +199,11 @@ WHERE s.retired_at IS NULL
 ORDER BY s.site_key, a.application_ref
 """
 
+# How many finding families to name per site before summarising the rest.
+# Six covers what characterises a site without turning the cell into a
+# list of everything the corpus can detect.
+TOP_FAMILIES = 6
+
 SITE_HEADERS = [
     "Site key", "Classification", "Site name", "Latitude", "Longitude",
     "Coordinate source", "Councils", "Applications", "Application refs",
@@ -201,7 +217,7 @@ SITE_HEADERS = [
     "Grid connection MW (adjudicated)", "On-site generation MW (adjudicated)",
     "Capacity figures attributed to site", "Power figures excluded (context)",
     "Facility character", "Scale band", "Scale basis",
-    "Finding subjects (families)",
+    "Finding subjects (top families by volume)",
     "Documents obtained by hand", "EIA indicators (heuristic)",
     "Environmental subjects (description keywords)",
     "Barbour Ptno", "Barbour title",
@@ -336,7 +352,12 @@ def main() -> None:
             n_capacity or "", n_excluded or "",
             scale.CHARACTERS[character].label, band_label,
             scale.BASIS_NOTE[basis],
-            ", ".join(sorted(families or [])),
+            # Already ordered by count in SQL; the tail is long and thin,
+            # so show the families that actually characterise the site and
+            # say how many more there are rather than filling the cell.
+            (", ".join((families or [])[:TOP_FAMILIES])
+             + (f"  (+{len(families) - TOP_FAMILIES} more)"
+                if families and len(families) > TOP_FAMILIES else "")),
             manual_docs or "", eia,
             ", ".join(sorted(site_env.get(key, ()))),
             ptno, btitle, bstage, bvalue, bfloor, bsite,
