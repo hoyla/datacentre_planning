@@ -39,10 +39,52 @@ WITH latest AS (
 app_docs AS (
   SELECT application_id, count(*) AS n FROM documents GROUP BY application_id),
 app_findings AS (
+  -- signal_family, not signal_type: the extraction prompt asks the model
+  -- to name what it found in its own words, which produced 54,044
+  -- distinct labels. Aggregating those per application yields a
+  -- spreadsheet cell nobody can read or filter. The family is the
+  -- 25-value canonical index over them (dcp/signal_families.py); the
+  -- original label is still on every findings row for anyone drilling in.
   SELECT application_id, count(*) AS n,
-         max(value_number) FILTER (WHERE upper(coalesce(value_unit,'')) = 'MW') AS max_mw,
-         array_agg(DISTINCT signal_type) AS signal_types
+         array_agg(DISTINCT signal_family) FILTER (
+             WHERE signal_family IS NOT NULL
+               AND signal_family <> 'unclassified')            AS signal_families
   FROM findings GROUP BY application_id),
+app_power AS (
+  -- Adjudicated capacity ONLY. The previous version of this query took
+  -- max(value_number) over every finding carrying a 'MW' unit, which is
+  -- wrong in a way that reaches the reader: planning statements argue for
+  -- approval by quoting market forecasts, policy targets and other
+  -- schemes, so the largest MW figure in a site's documents is usually
+  -- not about that site. Under that rule a Slough application reported
+  -- 30GW (an NGESO storage target) and a Chiltern one 22,700MW (a Savills
+  -- market forecast).
+  --
+  -- power_adjudication resolves whose figure each one is; only
+  -- verdict='site_capacity' is admitted here. The quantities stay in
+  -- separate columns because IT load, grid connection and standby
+  -- generation are different numbers for the same site — medians across
+  -- the corpus are 44 MW, 99 MW and 3.3 MW — and a single "site MW"
+  -- column would silently mix them.
+  SELECT application_id,
+         max(value_mw) FILTER (WHERE quantity_type = 'it_load')     AS it_load_mw,
+         max(value_mw) FILTER (WHERE quantity_type = 'total_site')  AS total_site_mw,
+         max(value_mw) FILTER (WHERE quantity_type = 'grid_connection')
+                                                                    AS grid_mw,
+         max(value_mw) FILTER (WHERE quantity_type = 'onsite_generation')
+                                                                    AS gen_mw,
+         count(*)                                                   AS n_capacity,
+         count(*) FILTER (WHERE is_maximum)                         AS n_ultimate
+  FROM power_adjudication
+  WHERE verdict = 'site_capacity' AND value_mw IS NOT NULL
+  GROUP BY application_id),
+app_power_excluded AS (
+  -- Recorded so a reader can see that figures were considered and set
+  -- aside, rather than wondering why a number in the documents is absent
+  -- from the workbook.
+  SELECT application_id, count(*) AS n_excluded
+  FROM power_adjudication WHERE verdict <> 'site_capacity'
+  GROUP BY application_id),
 app_provenance AS (
   -- How this application's documents were obtained. Hand-ingested
   -- documents carry file:// URIs (no portal link to offer a reader);
@@ -74,7 +116,33 @@ SELECT s.site_key, s.classification, s.display_name,
            FILTER (WHERE a.id IS NOT NULL)                    AS verdicts,
        coalesce(sum(ad.n), 0)                                 AS docs_held,
        coalesce(sum(af.n), 0)                                 AS findings_n,
-       max(af.max_mw)                                         AS max_mw,
+       max(pw.it_load_mw)                                     AS it_load_mw,
+       max(pw.total_site_mw)                                  AS total_site_mw,
+       max(pw.grid_mw)                                        AS grid_mw,
+       max(pw.gen_mw)                                         AS gen_mw,
+       coalesce(sum(pw.n_capacity), 0)                        AS n_capacity,
+       coalesce(sum(px.n_excluded), 0)                        AS n_excluded,
+       -- Ranked by evidence volume, not listed alphabetically. A flat
+       -- presence list marks nearly every family present on any
+       -- document-heavy site, so it ends up reporting "this site has a
+       -- lot of documents" rather than what the site is about. Counts
+       -- ordered by size discriminate: a site whose largest families are
+       -- power_generation and power_grid reads differently from one
+       -- dominated by ecology_biodiversity and designated_sites.
+       --
+       -- Correlated rather than joined because array_agg cannot flatten
+       -- the per-application arrays across a site group; runs once per
+       -- site against an indexed column.
+       (SELECT array_agg(fam || ' (' || n || ')' ORDER BY n DESC)
+          FROM (SELECT f2.signal_family AS fam, count(*) AS n
+                  FROM findings f2
+                  JOIN site_members m3
+                       ON m3.application_id = f2.application_id
+                       AND m3.retired_at IS NULL
+                 WHERE m3.site_id = s.id
+                   AND f2.signal_family IS NOT NULL
+                   AND f2.signal_family <> 'unclassified'
+                 GROUP BY f2.signal_family) ranked)         AS signal_families,
        bool_or(ae.ref_hit)                                    AS eia_ref_hit,
        bool_or(ae.doc_hit)                                    AS eia_doc_hit,
        coalesce(sum(ap.manual_docs), 0)                       AS manual_docs,
@@ -95,6 +163,8 @@ LEFT JOIN applications a ON a.id = m.application_id
 LEFT JOIN latest l ON l.application_id = a.id
 LEFT JOIN app_docs ad ON ad.application_id = a.id
 LEFT JOIN app_findings af ON af.application_id = a.id
+LEFT JOIN app_power pw ON pw.application_id = a.id
+LEFT JOIN app_power_excluded px ON px.application_id = a.id
 LEFT JOIN app_eia ae ON ae.application_id = a.id
 LEFT JOIN app_provenance ap ON ap.application_id = a.id
 LEFT JOIN projects p ON p.id = m.project_id
@@ -129,11 +199,39 @@ WHERE s.retired_at IS NULL
 ORDER BY s.site_key, a.application_ref
 """
 
+# How many finding families to name per site before summarising the rest.
+# Six covers what characterises a site without turning the cell into a
+# list of everything the corpus can detect.
+TOP_FAMILIES = 6
+
 SITE_HEADERS = [
     "Site key", "Classification", "Site name", "Latitude", "Longitude",
     "Coordinate source", "Councils", "Applications", "Application refs",
     "Verdict mix (v1 triage)", "Documents held", "Verified findings",
-    "Max disclosed MW (verified findings)",
+    # The ranking column comes first and is always a number where any
+    # basis exists, because capacity is how these sites get compared. Its
+    # qualifications sit immediately to its right rather than in a
+    # methodology note: whoever sorts by MW sees, in the adjacent cell,
+    # whether they are sorting a disclosed figure or an inference.
+    "Power MW (best available)", "Power basis", "Power confidence",
+    "Power caveat",
+    # The components stay, because they are different quantities rather
+    # than competing estimates and some questions need them separately.
+    "IT load MW (adjudicated)", "Total site MW (adjudicated)",
+    "Grid connection MW (adjudicated)", "On-site generation MW (adjudicated)",
+    "Capacity figures attributed to site", "Power figures excluded (context)",
+    "Facility character", "Scale band", "Scale basis",
+    # From dcp/site_profile, shared with the web view so both present the
+    # same signal for the same reason.
+    "Standby generators (count)", "Generation type", "Generator caveat",
+    "EIA status (from documents)",
+    # Who is behind the scheme, ranked by how often each is named.
+    # Names are normalised (dcp/entities) so one developer is one row
+    # rather than four spellings; the raw value_text stays on every
+    # findings row for anyone checking the derivation.
+    "Applicant / operator", "Advisers and consultants",
+    "Planning authority (from documents)",
+    "Finding subjects (top families by volume)",
     "Documents obtained by hand", "EIA indicators (heuristic)",
     "Environmental subjects (description keywords)",
     "Barbour Ptno", "Barbour title",
@@ -173,6 +271,7 @@ def main() -> None:
     from collections import defaultdict
 
     from dcp import signals as sig
+    from dcp import site_scale as scale
 
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute(SITE_SQL)
@@ -187,12 +286,51 @@ def main() -> None:
     # environmental content lives in the documents, which deep-read covers.
     app_env: dict[str, list[str]] = {}
     site_env: dict[str, set[str]] = defaultdict(set)
+    site_desc: dict[str, list[str]] = defaultdict(list)
     for r in app_rows:
         site_key, ref, description = r[0], r[1], r[-1]
         found = sig.environmental_signals(description)
         flat = sig.flatten(found)
         app_env[ref] = flat
         site_env[site_key].update(found.keys())
+        if description:
+            site_desc[site_key].append(description)
+
+    # Building floorspace per site, used only where no capacity has been
+    # disclosed. Two deliberate restrictions, both learned the hard way:
+    #
+    #   - Only floorspace signal types. `site_area` and bare
+    #     `development_scale` routinely carry land parcels, and one site
+    #     came through at 117 km2 of "floor area" — run through a kW/m2
+    #     factor that becomes a gigawatt estimate for a shed.
+    #   - The median, not the max. A site's documents quote many areas
+    #     (a phase, a hall, the whole scheme); the largest is the least
+    #     representative, while the median tracks the building.
+    # Derived signals shared with the web view (dcp/site_profile). Both
+    # consumers call the same code so neither can present a different
+    # answer for the same site.
+    from dcp import site_profile
+    with db.connect() as conn:
+        site_profiles = site_profile.load_site_profiles(conn)
+
+    site_floorspace: dict[str, float] = {}
+    with db.connect() as conn, conn.cursor() as cur:
+        cur.execute("""
+            SELECT s.site_key,
+                   percentile_cont(0.5) WITHIN GROUP (ORDER BY f.value_number)
+            FROM findings f
+            JOIN site_members sm ON sm.application_id = f.application_id
+                 AND sm.retired_at IS NULL
+            JOIN sites s ON s.id = sm.site_id
+            WHERE f.value_number IS NOT NULL
+              AND f.value_number BETWEEN 500 AND 400000
+              AND lower(f.value_unit) IN ('sqm','m2','sq m','square metres',
+                                          'square meters')
+              AND f.signal_type = ANY(%s)
+            GROUP BY s.site_key""", (list(scale.FLOORSPACE_SIGNAL_TYPES),))
+        for site_key, median_sqm in cur.fetchall():
+            if median_sqm:
+                site_floorspace[site_key] = float(median_sqm)
 
     wb = Workbook()
 
@@ -211,15 +349,60 @@ def main() -> None:
     ws = _sheet("Sites", SITE_HEADERS)
     for r in site_rows:
         (key, cls, name, lat, lon, csrc, councils, n_apps, refs, verdicts,
-         docs, findings_n, max_mw, eia_ref, eia_doc, manual_docs, ptno,
-         btitle, bstage, bvalue, bfloor, bsite, bplan, bdecision) = r
+         docs, findings_n, it_load_mw, total_site_mw, grid_mw, gen_mw,
+         n_capacity, n_excluded, families, eia_ref, eia_doc, manual_docs,
+         ptno, btitle, bstage, bvalue, bfloor, bsite, bplan, bdecision) = r
         eia = " + ".join(
             label for hit, label in
             [(eia_ref, "ref pattern"), (eia_doc, "ES documents")] if hit)
+
+        # Character from the site's own descriptions, rolled up by
+        # significance; scale from the strongest evidence available, with
+        # the basis stated so a floor-area inference is never mistaken for
+        # a disclosed capacity.
+        character = scale.rollup_character(
+            [scale.character_for(d) for d in site_desc.get(key, ())]
+            or [scale.character_for(name)])
+        # One rankable figure with its qualifications; falls back through
+        # disclosed IT load -> total site -> grid -> generation -> a
+        # floorspace inference, losing authority at each step and saying so.
+        prof = site_profiles.get(key, {})
+        est = scale.power_estimate(
+            it_load_mw=it_load_mw, total_site_mw=total_site_mw,
+            grid_mw=grid_mw, generation_mw=gen_mw,
+            floorspace_sqm=site_floorspace.get(key),
+            has_documents=bool(docs))
+
+        if est.value_mw is not None:
+            band_key, band_label = scale.scale_from_mw(est.value_mw)
+            basis = ("stated_capacity" if est.confidence in ("High", "Medium")
+                     else "floor_area" if est.basis.startswith("Estimated")
+                     else "stated_capacity")
+        else:
+            band_key, band_label, basis = "", "", "none"
+
         ws.append([
             key, cls, name, lat, lon, csrc,
             ", ".join(councils or []), n_apps, "\n".join(refs or []),
-            ", ".join(sorted(verdicts or [])), docs, findings_n, max_mw,
+            ", ".join(sorted(verdicts or [])), docs, findings_n,
+            est.value_mw, est.basis, est.confidence, est.caveat,
+            it_load_mw, total_site_mw, grid_mw, gen_mw,
+            n_capacity or "", n_excluded or "",
+            scale.CHARACTERS[character].label, band_label,
+            scale.BASIS_NOTE[basis],
+            prof.get("generator_count") or "",
+            prof.get("generator_fuel") or "",
+            prof.get("generator_caveat") or "",
+            prof.get("eia_status_label") or "",
+            prof.get("applicants") or "",
+            prof.get("advisers") or "",
+            prof.get("authorities") or "",
+            # Already ordered by count in SQL; the tail is long and thin,
+            # so show the families that actually characterise the site and
+            # say how many more there are rather than filling the cell.
+            (", ".join((families or [])[:TOP_FAMILIES])
+             + (f"  (+{len(families) - TOP_FAMILIES} more)"
+                if families and len(families) > TOP_FAMILIES else "")),
             manual_docs or "", eia,
             ", ".join(sorted(site_env.get(key, ()))),
             ptno, btitle, bstage, bvalue, bfloor, bsite,

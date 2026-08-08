@@ -177,10 +177,18 @@ class OcellaClient:
         backoff_seconds: float = 60.0,
         max_retries: int = 4,
         verify: str | bool | None = None,
+        adaptive_delay: bool = True,
+        max_delay_seconds: float = 45.0,
     ):
         self.delay = delay_seconds
         self.backoff = backoff_seconds
         self.max_retries = max_retries
+        # See IdoxClient for the reasoning: a 429 is the council telling us
+        # our pace is too fast, so this client — which serves exactly one
+        # host — slows permanently rather than backing off and resuming a
+        # rate already refused.
+        self.adaptive_delay = adaptive_delay
+        self.max_delay = max_delay_seconds
         resolved_verify = _resolve_ssl_context() if verify is None else verify
         self.client = httpx.Client(
             headers={"User-Agent": user_agent},
@@ -204,6 +212,20 @@ class OcellaClient:
         if now < self._next_request_at:
             time.sleep(self._next_request_at - now)
 
+    def _note_rate_limit(self, url: str) -> None:
+        """Permanently slow this host after a 429. One client per host, so
+        the adaptation is per-council for the rest of the run."""
+        if not self.adaptive_delay:
+            return
+        was = self.delay
+        self.delay = min(self.delay * 1.5, self.max_delay)
+        if self.delay > was:
+            from urllib.parse import urlparse
+            host = urlparse(url).netloc or url[:60]
+            log.warning("429 from %s — this host's spacing raised "
+                        "%.0fs -> %.0fs for the rest of the run",
+                        host, was, self.delay)
+
     def get(self, url: str) -> httpx.Response:
         for attempt in range(self.max_retries):
             self._wait()
@@ -211,6 +233,8 @@ class OcellaClient:
             self._next_request_at = time.monotonic() + self.delay
             if r.status_code == 429 or 500 <= r.status_code < 600:
                 wait = self.backoff * (2 ** attempt)
+                if r.status_code == 429:
+                    self._note_rate_limit(url)
                 log.warning(
                     "%d from %s (attempt %d/%d); backing off %.0fs",
                     r.status_code, url, attempt + 1, self.max_retries, wait,
@@ -233,6 +257,8 @@ class OcellaClient:
             self._next_request_at = time.monotonic() + self.delay
             if r.status_code == 429 or 500 <= r.status_code < 600:
                 wait = self.backoff * (2 ** attempt)
+                if r.status_code == 429:
+                    self._note_rate_limit(url)
                 log.warning(
                     "%d from %s (attempt %d/%d); backing off %.0fs",
                     r.status_code, url, attempt + 1, self.max_retries, wait,

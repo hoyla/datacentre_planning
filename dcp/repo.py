@@ -521,6 +521,13 @@ def applications_pending_triage(
             SELECT 1 FROM triage t
             WHERE t.application_id = a.id AND t.model = %s {rubric_clause}
         )
+        -- NSIP energy infrastructure is held as an adjacency layer, not as
+        -- universe candidates: interconnectors, transmission lines and
+        -- power stations are context for where grid capacity exists, and
+        -- paying a model to confirm that a gas pipeline is not a data
+        -- centre would be waste. They carry no verdict by design, which is
+        -- also what keeps them out of the site clustering.
+        AND NOT (a.discovered_via @> ARRAY['nsip_energy'])
         ORDER BY a.date_received DESC NULLS LAST, a.id
     """
     if limit is not None:

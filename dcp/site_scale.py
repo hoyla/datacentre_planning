@@ -235,3 +235,121 @@ def rollup_character(characters) -> str:
         if rank > best_rank:
             best, best_rank = c, rank
     return best
+
+
+# ---------------------------------------------------------------------------
+# One rankable power figure, with its qualifications alongside
+# ---------------------------------------------------------------------------
+#
+# Capacity is how data centres get ranked, so the workbook needs a single
+# sortable column. But the figures behind it differ enormously in what
+# they mean and how much they can bear: a disclosed IT load is a fact
+# about the building, a grid connection is contracted headroom that may
+# never be drawn, standby generation is sized to full load but is not
+# demand, and a floor-area estimate is an inference. Publishing those in
+# one column with no qualification would let a reporter rank a site on an
+# inference against another's measured figure without noticing.
+#
+# So: one number, and immediately beside it the basis, a confidence, and
+# a plain-English caveat. Sorting works; the caveat travels with the cell
+# rather than living in a methodology note nobody opens.
+#
+# FLOOR_AREA_KW_PER_SQM is measured from this corpus, not borrowed from
+# industry guidance: across the 53 sites holding BOTH a disclosed capacity
+# and a building floorspace figure, the median is 1.71 kW/m2 and the
+# central mass sits between 1.6 and 1.9. The interquartile range
+# (1.29-3.26) implies roughly a two-fold uncertainty, which the caveat
+# states. Site areas and land parcels are excluded from that calibration
+# — including them produced absurdities like 117 km2 of "floor area".
+FLOOR_AREA_KW_PER_SQM = 1.71
+FLOOR_AREA_SPREAD = "roughly a factor of two either way"
+
+# Signal types that denote building floorspace. `site_area` and bare
+# `development_scale` are deliberately absent: they routinely carry land
+# parcels, and a land area run through the kW/m2 factor produces a
+# gigawatt figure for a shed.
+FLOORSPACE_SIGNAL_TYPES = (
+    "floor_area", "floorspace", "building_area", "building_floor_area",
+    "gross_internal_area", "total_floorspace", "data_centre_floor_area",
+    "data_centre_floorspace", "data_centre_area", "building_footprint",
+    "building_size", "gia", "total_floor_area", "proposed_floorspace",
+)
+
+
+@dataclass(frozen=True)
+class PowerEstimate:
+    """A rankable figure plus everything needed to read it honestly."""
+    value_mw: float | None
+    basis: str          # short label for the column
+    confidence: str     # High | Medium | Low | Indicative | None
+    caveat: str         # plain English, sits beside the number
+
+
+def _round_sensibly(mw: float) -> float:
+    """Round so an inference never looks like a measurement."""
+    if mw < 10:
+        return round(mw, 1)
+    if mw < 100:
+        return float(round(mw / 5) * 5)
+    return float(round(mw / 10) * 10)
+
+
+def power_estimate(*, it_load_mw=None, total_site_mw=None,
+                   grid_mw=None, generation_mw=None,
+                   floorspace_sqm=None, has_documents=True) -> PowerEstimate:
+    """Best available capacity for ranking, with its qualifications.
+
+    Preference order runs from what the documents say about the building's
+    own load down to what can be inferred from its size. Each step down is
+    a real loss of authority, which the confidence and caveat record.
+    """
+    if it_load_mw:
+        return PowerEstimate(
+            float(it_load_mw), "Disclosed IT load", "High",
+            "Stated in the application documents as this development's IT "
+            "load. Excludes cooling and other overhead, so total site "
+            "demand will be higher.")
+
+    if total_site_mw:
+        return PowerEstimate(
+            float(total_site_mw), "Disclosed total site demand", "High",
+            "Stated as the development's total demand, including cooling "
+            "and overhead. Not directly comparable with IT-load figures, "
+            "which are smaller for the same building.")
+
+    if grid_mw:
+        return PowerEstimate(
+            float(grid_mw), "Grid connection capacity", "Medium",
+            "The connection capacity sought or contracted, which is "
+            "headroom rather than consumption — operators commonly secure "
+            "more than they draw, and phased sites draw it over years.")
+
+    if generation_mw:
+        return PowerEstimate(
+            float(generation_mw), "Standby generation capacity", "Low",
+            "Inferred from on-site standby generation, which is normally "
+            "sized to carry full load and so approximates it — but it is "
+            "backup plant, not a demand figure, and some sites over-provide.")
+
+    if floorspace_sqm and floorspace_sqm >= 500:
+        est = _round_sensibly(floorspace_sqm * FLOOR_AREA_KW_PER_SQM / 1000)
+        return PowerEstimate(
+            est, "Estimated from floorspace", "Indicative",
+            f"No capacity disclosed. Estimated from {floorspace_sqm:,.0f} m² "
+            f"of building floorspace at {FLOOR_AREA_KW_PER_SQM} kW/m², the "
+            f"median across the 53 sites in this dataset that disclose "
+            f"both. Expect {FLOOR_AREA_SPREAD}; use for ranking, not for "
+            f"quotation.")
+
+    if not has_documents:
+        return PowerEstimate(
+            None, "No documents held", "None",
+            "No planning documents have been obtained for this site, so "
+            "neither a capacity nor a size can be established. Absence "
+            "here reflects the document gap, not a small site.")
+
+    return PowerEstimate(
+        None, "No capacity disclosed", "None",
+        "The documents held for this site were read in full and disclose "
+        "neither a capacity figure nor a building floorspace. For a "
+        "consented or pending data centre that is itself notable.")
