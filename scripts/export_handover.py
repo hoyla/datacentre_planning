@@ -208,11 +208,15 @@ SITE_HEADERS = [
     "Site key", "Classification", "Site name", "Latitude", "Longitude",
     "Coordinate source", "Councils", "Applications", "Application refs",
     "Verdict mix (v1 triage)", "Documents held", "Verified findings",
-    # Power, adjudicated. Four columns rather than one because these are
-    # different quantities, not alternative estimates of one: a campus
-    # commonly holds more standby generation than IT load, behind a larger
-    # grid connection again. The counts let a reader see how much evidence
-    # sits behind a figure and how much was set aside as not-this-site.
+    # The ranking column comes first and is always a number where any
+    # basis exists, because capacity is how these sites get compared. Its
+    # qualifications sit immediately to its right rather than in a
+    # methodology note: whoever sorts by MW sees, in the adjacent cell,
+    # whether they are sorting a disclosed figure or an inference.
+    "Power MW (best available)", "Power basis", "Power confidence",
+    "Power caveat",
+    # The components stay, because they are different quantities rather
+    # than competing estimates and some questions need them separately.
     "IT load MW (adjudicated)", "Total site MW (adjudicated)",
     "Grid connection MW (adjudicated)", "On-site generation MW (adjudicated)",
     "Capacity figures attributed to site", "Power figures excluded (context)",
@@ -282,26 +286,34 @@ def main() -> None:
         if description:
             site_desc[site_key].append(description)
 
-    # Best floor area per site, for the scale band where no capacity has
-    # been adjudicated. Deliberately a fallback, never a conversion: the
-    # kW/m2 ratio spans an order of magnitude between fitted white space
-    # and a shell-and-core shed, so area indicates physical size only.
-    site_area_sqm: dict[str, float] = {}
+    # Building floorspace per site, used only where no capacity has been
+    # disclosed. Two deliberate restrictions, both learned the hard way:
+    #
+    #   - Only floorspace signal types. `site_area` and bare
+    #     `development_scale` routinely carry land parcels, and one site
+    #     came through at 117 km2 of "floor area" — run through a kW/m2
+    #     factor that becomes a gigawatt estimate for a shed.
+    #   - The median, not the max. A site's documents quote many areas
+    #     (a phase, a hall, the whole scheme); the largest is the least
+    #     representative, while the median tracks the building.
+    site_floorspace: dict[str, float] = {}
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute("""
-            SELECT s.site_key, max(f.value_number), min(lower(f.value_unit))
+            SELECT s.site_key,
+                   percentile_cont(0.5) WITHIN GROUP (ORDER BY f.value_number)
             FROM findings f
             JOIN site_members sm ON sm.application_id = f.application_id
                  AND sm.retired_at IS NULL
             JOIN sites s ON s.id = sm.site_id
             WHERE f.value_number IS NOT NULL
+              AND f.value_number BETWEEN 500 AND 400000
               AND lower(f.value_unit) IN ('sqm','m2','sq m','square metres',
-                                          'square meters','sqft','ft2')
-            GROUP BY s.site_key""")
-        for site_key, value, unit in cur.fetchall():
-            sqm = scale.area_to_sqm(float(value), unit)
-            if sqm:
-                site_area_sqm[site_key] = sqm
+                                          'square meters')
+              AND f.signal_type = ANY(%s)
+            GROUP BY s.site_key""", (list(scale.FLOORSPACE_SIGNAL_TYPES),))
+        for site_key, median_sqm in cur.fetchall():
+            if median_sqm:
+                site_floorspace[site_key] = float(median_sqm)
 
     wb = Workbook()
 
@@ -334,13 +346,20 @@ def main() -> None:
         character = scale.rollup_character(
             [scale.character_for(d) for d in site_desc.get(key, ())]
             or [scale.character_for(name)])
-        headline_mw = it_load_mw or total_site_mw
-        if headline_mw:
-            band_key, band_label = scale.scale_from_mw(float(headline_mw))
-            basis = "stated_capacity"
-        elif site_area_sqm.get(key):
-            band_key, band_label = scale.scale_from_area_sqm(site_area_sqm[key])
-            basis = "floor_area"
+        # One rankable figure with its qualifications; falls back through
+        # disclosed IT load -> total site -> grid -> generation -> a
+        # floorspace inference, losing authority at each step and saying so.
+        est = scale.power_estimate(
+            it_load_mw=it_load_mw, total_site_mw=total_site_mw,
+            grid_mw=grid_mw, generation_mw=gen_mw,
+            floorspace_sqm=site_floorspace.get(key),
+            has_documents=bool(docs))
+
+        if est.value_mw is not None:
+            band_key, band_label = scale.scale_from_mw(est.value_mw)
+            basis = ("stated_capacity" if est.confidence in ("High", "Medium")
+                     else "floor_area" if est.basis.startswith("Estimated")
+                     else "stated_capacity")
         else:
             band_key, band_label, basis = "", "", "none"
 
@@ -348,6 +367,7 @@ def main() -> None:
             key, cls, name, lat, lon, csrc,
             ", ".join(councils or []), n_apps, "\n".join(refs or []),
             ", ".join(sorted(verdicts or [])), docs, findings_n,
+            est.value_mw, est.basis, est.confidence, est.caveat,
             it_load_mw, total_site_mw, grid_mw, gen_mw,
             n_capacity or "", n_excluded or "",
             scale.CHARACTERS[character].label, band_label,
