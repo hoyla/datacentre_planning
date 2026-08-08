@@ -42,10 +42,24 @@ def main() -> None:
     ap.add_argument("--no-enrich", action="store_true")
     args = ap.parse_args()
 
+    # Two different numbers, and conflating them overstates the bill.
+    # `universe` is every application; `pending` is the subset with no
+    # dc_build verdict, which is all the resume-aware sweep will touch.
+    # The pilot previously projected against the universe and quoted
+    # $29 for what was in fact $12 of work.
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute("SELECT count(*) FROM applications")
         universe = cur.fetchone()[0]
-    print(f"universe: {universe} applications")
+        cur.execute("""
+            SELECT count(*) FROM applications a
+            WHERE NOT EXISTS (
+              SELECT 1 FROM triage t
+              WHERE t.application_id = a.id
+                AND t.raw_response->>'rubric' = 'dc_build')
+              AND NOT (a.discovered_via @> ARRAY['nsip_energy'])""")
+        pending_total = cur.fetchone()[0]
+    print(f"universe: {universe} applications; "
+          f"{pending_total} pending a dc_build verdict")
 
     started = time.time()
     counter = {"n": 0}
@@ -85,11 +99,15 @@ def main() -> None:
         in_tok = (float(in_chars or 0) / 4) + sys_tokens
         out_tok = float(out_chars or 0) / 4
         per_app = (in_tok * PRICE_IN + out_tok * PRICE_OUT) / 1_000_000
-        remaining = universe - summary["scanned"]
+        # Against pending, not universe: the pilot's own scanned rows are
+        # already recorded, so they are not remaining work.
+        remaining = max(pending_total - summary["scanned"], 0)
         print(f"\nmeasured: ~{in_tok:.0f} input + ~{out_tok:.0f} output tokens/application")
         print(f"cost/application: ${per_app:.4f}")
-        print(f"projected for remaining {remaining}: ${per_app * remaining:.2f}")
-        print(f"projected TOTAL for the universe: ${per_app * universe:.2f}")
+        print(f"projected for remaining {remaining} pending: "
+              f"${per_app * remaining:.2f}")
+        print(f"(a full re-sweep of all {universe} would be "
+              f"${per_app * universe:.2f})")
         print(f"projected wall-clock: {(elapsed/summary['scanned'])*remaining/60:.0f} min")
 
 

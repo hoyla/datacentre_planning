@@ -52,6 +52,25 @@ def _is_dc_relevant(row: dict) -> bool:
     return any(k in blob for k in DC_KEYWORDS)
 
 
+# Energy NSIPs are ingested as an adjacency layer rather than as universe
+# members. Grid capacity is the binding constraint on data centres, so the
+# map of where transmission and generation capacity is being created is
+# the map of where they can plausibly go next — the forward-looking view
+# that a register of submitted planning applications cannot give.
+#
+# The Xlinks case is the argument for it: a 3.6GW interconnector at
+# Alverdiscott (EN010164, withdrawn 2025-07-02) whose developer is now
+# consulting on a data campus at the same grid connection. Neither half
+# is visible from council planning data.
+#
+# All EN* types are taken — generating stations, electric lines, gas
+# storage and pipelines. Gas matters because gas-fired generation is a
+# live option at several sites in the corpus. Roads, rail and harbours
+# are excluded: they are not grid capacity.
+def _is_energy_infrastructure(row: dict) -> bool:
+    return (row.get("Application type") or "").strip().upper().startswith("EN")
+
+
 def _parse_gps(s: str | None) -> tuple[float | None, float | None]:
     """The CSV's GPS column is leading-quoted to preserve the negative sign in CSV viewers,
     e.g. \"'-0.5945505216141749, 51.58726008957555\". Returns (lng, lat) — note order:
@@ -116,9 +135,13 @@ def _fetch_csv(delay_seconds: float = 2.0) -> _Response:
     return _Response(url=CSV_URL, raw=r.content)
 
 
-def index(*, limit: int | None = None) -> dict:
-    """Fetch the NSIP CSV, filter for DC-relevant rows, upsert into applications."""
-    summary = {"rows_total": 0, "rows_dc_relevant": 0, "upserted": 0, "snapshots_new": 0}
+def index(*, limit: int | None = None, energy: bool = True) -> dict:
+    """Fetch the NSIP CSV and upsert DC projects, plus the energy layer.
+
+    `energy=False` restores the original DC-only behaviour.
+    """
+    summary = {"rows_total": 0, "rows_dc_relevant": 0, "upserted": 0,
+               "snapshots_new": 0}
     resp = _fetch_csv()
     rows = list(csv.DictReader(io.StringIO(resp.raw.decode("utf-8-sig"))))
     summary["rows_total"] = len(rows)
@@ -146,6 +169,25 @@ def index(*, limit: int | None = None) -> dict:
                 discovered_via=["nsip_register"],
             )
             summary["upserted"] += 1
+
+        # Energy infrastructure, tagged distinctly. These are context, not
+        # candidates: they carry no triage verdict, so dcp/sites.py leaves
+        # them out of the clustering, and the catalogue sweep excludes the
+        # tag rather than paying a model to confirm that Hinkley Point C
+        # is not a data centre.
+        if energy:
+            dc_refs = {r.get("Project reference") for r in dc_rows}
+            energy_rows = [r for r in rows
+                           if _is_energy_infrastructure(r)
+                           and r.get("Project reference") not in dc_refs]
+            summary["rows_energy"] = len(energy_rows)
+            for row in energy_rows:
+                app = _csv_row_to_app(row)
+                repo.upsert_application(
+                    conn, source_id=source_id, app=app, council_gss=None,
+                    discovered_via=["nsip_energy"],
+                )
+                summary["upserted_energy"] = summary.get("upserted_energy", 0) + 1
         conn.commit()
 
     return summary
