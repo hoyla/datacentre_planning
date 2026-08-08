@@ -62,9 +62,18 @@ Serves `403` to a bare research user-agent, `200` to
   constructible from the reference; no need to scrape the Northgate page
 - The list is embedded as `var model = {...}` JSON with a `Guid` per
   document
-- **Unsolved:** `/PublicAccess_Live/Document/DownloadFile?guid=...&fileSystemId=PL`
-  answers "File does not exist" as GET and POST, with and without a
-  session cookie and referer. Retry from inside a browser tab.
+- Download: `GET /PublicAccess_Live/Document/ViewDocument?id=<Guid>`
+
+  The parameter is **`id`**, not `guid`, and there is no `fileSystemId`.
+  `DownloadFile` is a decoy: it answers `200` with the 20-byte body
+  "File does not exist" for every id, correct or not — which reads as a
+  broken document rather than a wrong endpoint, and cost several rounds
+  of guessing before the page was made to reveal what it actually calls.
+
+  Finding it needed the click handler, and the handler ignores
+  `element.click()` on the anchor: it is bound to the inner `<span>` and
+  fires only on a dispatched `MouseEvent`. Wrapping `window.open` then
+  shows the real URL.
 
 ## Broxbourne — NEC LPAssure (26 applications)
 
