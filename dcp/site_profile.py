@@ -215,6 +215,106 @@ def generator_profile(counts, fuel_texts) -> GeneratorProfile:
 
 
 # ---------------------------------------------------------------------------
+# Coverage — what we hold, what has been analysed, and why anything is absent
+# ---------------------------------------------------------------------------
+#
+# The dataset's absences carry as much editorial weight as its contents,
+# and they are not one thing. "No capacity figure" can mean the documents
+# were read and disclose nothing (a fact about the applicant), that the
+# documents have not been analysed yet (a fact about this pipeline), that
+# no documents could be retrieved (a fact about the council's portal), or
+# that no application exists yet (a fact about the project's stage). The
+# workbook and the web view must distinguish these identically, so the
+# vocabulary lives here.
+
+# Portals we can see but deliberately do not fetch from. Coventry answers
+# HTTP 202 with an empty body to any non-browser client (AWS WAF);
+# replaying a browser's token would be bypassing bot protection, so the
+# gap is recorded instead of worked around.
+KNOWN_BLOCKED_HOSTS: dict[str, str] = {
+    "planandregulatory.coventry.gov.uk":
+        "portal uses bot protection; documents not retrievable",
+}
+
+# Individual register entries that are not public.
+KNOWN_LOGIN_REQUIRED_REFS: dict[str, str] = {
+    "Wiltshire/PL/2022/09577": "register entry requires a consultee login",
+}
+
+
+def capacity_status(*, pre_application: bool, docs_held: int, docs_read: int,
+                    power_value_mw, power_basis: str) -> tuple[str, str]:
+    """(key, label) saying what the power columns' emptiness — or figure —
+    actually means. Ordered so the strongest available statement wins.
+    """
+    if pre_application:
+        return ("pre_application",
+                "Pre-application — no public planning material exists yet")
+    if docs_held == 0:
+        return ("no_documents", "No documents held")
+    if power_value_mw is not None:
+        if power_basis.startswith("Estimated"):
+            return ("inferred_floor_area",
+                    "No capacity disclosed — figure inferred from floor area")
+        return ("disclosed", "Capacity disclosed in documents")
+    if docs_read == 0:
+        return ("not_yet_analysed",
+                f"Documents held ({docs_held}), none analysed yet")
+    if docs_read < docs_held:
+        return ("partially_analysed",
+                f"No figure found so far — {docs_read} of {docs_held} "
+                "documents analysed")
+    return ("read_none_disclosed",
+            "All documents analysed — no capacity disclosed")
+
+
+def acquisition_status(*, pre_application: bool, docs_held: int,
+                       hosts, refs) -> str:
+    """One line on whether the source material could be, and was, obtained.
+
+    States facts about retrieval only; what to do about a gap is the
+    reader's call, not this column's.
+    """
+    if pre_application:
+        return "No public application exists yet (pre-planning stage)"
+    blocked = sorted({KNOWN_BLOCKED_HOSTS[h] for h in (hosts or ())
+                      if h in KNOWN_BLOCKED_HOSTS})
+    login = sorted({KNOWN_LOGIN_REQUIRED_REFS[r] for r in (refs or ())
+                    if r in KNOWN_LOGIN_REQUIRED_REFS})
+    notes = blocked + login
+    if docs_held == 0:
+        return notes[0].capitalize() if notes else "No documents fetched yet"
+    if notes:
+        return f"Documents held; some applications not retrievable ({'; '.join(notes)})"
+    return "Documents held"
+
+
+# Per-site document counts against the deep-read ledger. 'read' is the
+# only state that counts as analysed: no_text and parse_failed are
+# attempts, and treating an attempt as coverage is how an access problem
+# gets mistaken for a null finding.
+DEEPREAD_COVERAGE_SQL = """
+SELECT s.site_key,
+       count(DISTINCT d.id) AS docs_held,
+       count(DISTINCT d.id) FILTER (WHERE r.document_id IS NOT NULL) AS docs_read
+FROM sites s
+JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
+JOIN documents d ON d.application_id = sm.application_id
+LEFT JOIN (SELECT DISTINCT document_id FROM deepread_log
+           WHERE read_state = 'read') r ON r.document_id = d.id
+WHERE s.retired_at IS NULL
+GROUP BY s.site_key
+"""
+
+
+def load_coverage(conn) -> dict[str, tuple[int, int]]:
+    """site_key -> (documents held, documents analysed)."""
+    with conn.cursor() as cur:
+        cur.execute(DEEPREAD_COVERAGE_SQL)
+        return {k: (held, read) for k, held, read in cur.fetchall()}
+
+
+# ---------------------------------------------------------------------------
 # Queries — one place, so consumers cannot drift on what they select
 # ---------------------------------------------------------------------------
 
