@@ -221,6 +221,10 @@ SITE_HEADERS = [
     "Grid connection MW (adjudicated)", "On-site generation MW (adjudicated)",
     "Capacity figures attributed to site", "Power figures excluded (context)",
     "Facility character", "Scale band", "Scale basis",
+    # From dcp/site_profile, shared with the web view so both present the
+    # same signal for the same reason.
+    "Standby generators (count)", "Generation type", "Generator caveat",
+    "EIA status (from documents)",
     "Finding subjects (top families by volume)",
     "Documents obtained by hand", "EIA indicators (heuristic)",
     "Environmental subjects (description keywords)",
@@ -296,6 +300,13 @@ def main() -> None:
     #   - The median, not the max. A site's documents quote many areas
     #     (a phase, a hall, the whole scheme); the largest is the least
     #     representative, while the median tracks the building.
+    # Derived signals shared with the web view (dcp/site_profile). Both
+    # consumers call the same code so neither can present a different
+    # answer for the same site.
+    from dcp import site_profile
+    with db.connect() as conn:
+        site_profiles = site_profile.load_site_profiles(conn)
+
     site_floorspace: dict[str, float] = {}
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute("""
@@ -349,6 +360,7 @@ def main() -> None:
         # One rankable figure with its qualifications; falls back through
         # disclosed IT load -> total site -> grid -> generation -> a
         # floorspace inference, losing authority at each step and saying so.
+        prof = site_profiles.get(key, {})
         est = scale.power_estimate(
             it_load_mw=it_load_mw, total_site_mw=total_site_mw,
             grid_mw=grid_mw, generation_mw=gen_mw,
@@ -372,6 +384,10 @@ def main() -> None:
             n_capacity or "", n_excluded or "",
             scale.CHARACTERS[character].label, band_label,
             scale.BASIS_NOTE[basis],
+            prof.get("generator_count") or "",
+            prof.get("generator_fuel") or "",
+            prof.get("generator_caveat") or "",
+            prof.get("eia_status_label") or "",
             # Already ordered by count in SQL; the tail is long and thin,
             # so show the families that actually characterise the site and
             # say how many more there are rather than filling the cell.
