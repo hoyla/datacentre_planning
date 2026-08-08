@@ -39,10 +39,52 @@ WITH latest AS (
 app_docs AS (
   SELECT application_id, count(*) AS n FROM documents GROUP BY application_id),
 app_findings AS (
+  -- signal_family, not signal_type: the extraction prompt asks the model
+  -- to name what it found in its own words, which produced 54,044
+  -- distinct labels. Aggregating those per application yields a
+  -- spreadsheet cell nobody can read or filter. The family is the
+  -- 25-value canonical index over them (dcp/signal_families.py); the
+  -- original label is still on every findings row for anyone drilling in.
   SELECT application_id, count(*) AS n,
-         max(value_number) FILTER (WHERE upper(coalesce(value_unit,'')) = 'MW') AS max_mw,
-         array_agg(DISTINCT signal_type) AS signal_types
+         array_agg(DISTINCT signal_family) FILTER (
+             WHERE signal_family IS NOT NULL
+               AND signal_family <> 'unclassified')            AS signal_families
   FROM findings GROUP BY application_id),
+app_power AS (
+  -- Adjudicated capacity ONLY. The previous version of this query took
+  -- max(value_number) over every finding carrying a 'MW' unit, which is
+  -- wrong in a way that reaches the reader: planning statements argue for
+  -- approval by quoting market forecasts, policy targets and other
+  -- schemes, so the largest MW figure in a site's documents is usually
+  -- not about that site. Under that rule a Slough application reported
+  -- 30GW (an NGESO storage target) and a Chiltern one 22,700MW (a Savills
+  -- market forecast).
+  --
+  -- power_adjudication resolves whose figure each one is; only
+  -- verdict='site_capacity' is admitted here. The quantities stay in
+  -- separate columns because IT load, grid connection and standby
+  -- generation are different numbers for the same site — medians across
+  -- the corpus are 44 MW, 99 MW and 3.3 MW — and a single "site MW"
+  -- column would silently mix them.
+  SELECT application_id,
+         max(value_mw) FILTER (WHERE quantity_type = 'it_load')     AS it_load_mw,
+         max(value_mw) FILTER (WHERE quantity_type = 'total_site')  AS total_site_mw,
+         max(value_mw) FILTER (WHERE quantity_type = 'grid_connection')
+                                                                    AS grid_mw,
+         max(value_mw) FILTER (WHERE quantity_type = 'onsite_generation')
+                                                                    AS gen_mw,
+         count(*)                                                   AS n_capacity,
+         count(*) FILTER (WHERE is_maximum)                         AS n_ultimate
+  FROM power_adjudication
+  WHERE verdict = 'site_capacity' AND value_mw IS NOT NULL
+  GROUP BY application_id),
+app_power_excluded AS (
+  -- Recorded so a reader can see that figures were considered and set
+  -- aside, rather than wondering why a number in the documents is absent
+  -- from the workbook.
+  SELECT application_id, count(*) AS n_excluded
+  FROM power_adjudication WHERE verdict <> 'site_capacity'
+  GROUP BY application_id),
 app_provenance AS (
   -- How this application's documents were obtained. Hand-ingested
   -- documents carry file:// URIs (no portal link to offer a reader);
@@ -74,7 +116,22 @@ SELECT s.site_key, s.classification, s.display_name,
            FILTER (WHERE a.id IS NOT NULL)                    AS verdicts,
        coalesce(sum(ad.n), 0)                                 AS docs_held,
        coalesce(sum(af.n), 0)                                 AS findings_n,
-       max(af.max_mw)                                         AS max_mw,
+       max(pw.it_load_mw)                                     AS it_load_mw,
+       max(pw.total_site_mw)                                  AS total_site_mw,
+       max(pw.grid_mw)                                        AS grid_mw,
+       max(pw.gen_mw)                                         AS gen_mw,
+       coalesce(sum(pw.n_capacity), 0)                        AS n_capacity,
+       coalesce(sum(px.n_excluded), 0)                        AS n_excluded,
+       -- Correlated rather than joined: array_agg cannot flatten the
+       -- per-application arrays across a site group, and this runs once
+       -- per site against an indexed column.
+       (SELECT array_agg(DISTINCT f2.signal_family)
+          FROM findings f2
+          JOIN site_members m3 ON m3.application_id = f2.application_id
+               AND m3.retired_at IS NULL
+         WHERE m3.site_id = s.id
+           AND f2.signal_family IS NOT NULL
+           AND f2.signal_family <> 'unclassified')            AS signal_families,
        bool_or(ae.ref_hit)                                    AS eia_ref_hit,
        bool_or(ae.doc_hit)                                    AS eia_doc_hit,
        coalesce(sum(ap.manual_docs), 0)                       AS manual_docs,
@@ -95,6 +152,8 @@ LEFT JOIN applications a ON a.id = m.application_id
 LEFT JOIN latest l ON l.application_id = a.id
 LEFT JOIN app_docs ad ON ad.application_id = a.id
 LEFT JOIN app_findings af ON af.application_id = a.id
+LEFT JOIN app_power pw ON pw.application_id = a.id
+LEFT JOIN app_power_excluded px ON px.application_id = a.id
 LEFT JOIN app_eia ae ON ae.application_id = a.id
 LEFT JOIN app_provenance ap ON ap.application_id = a.id
 LEFT JOIN projects p ON p.id = m.project_id
@@ -133,7 +192,16 @@ SITE_HEADERS = [
     "Site key", "Classification", "Site name", "Latitude", "Longitude",
     "Coordinate source", "Councils", "Applications", "Application refs",
     "Verdict mix (v1 triage)", "Documents held", "Verified findings",
-    "Max disclosed MW (verified findings)",
+    # Power, adjudicated. Four columns rather than one because these are
+    # different quantities, not alternative estimates of one: a campus
+    # commonly holds more standby generation than IT load, behind a larger
+    # grid connection again. The counts let a reader see how much evidence
+    # sits behind a figure and how much was set aside as not-this-site.
+    "IT load MW (adjudicated)", "Total site MW (adjudicated)",
+    "Grid connection MW (adjudicated)", "On-site generation MW (adjudicated)",
+    "Capacity figures attributed to site", "Power figures excluded (context)",
+    "Facility character", "Scale band", "Scale basis",
+    "Finding subjects (families)",
     "Documents obtained by hand", "EIA indicators (heuristic)",
     "Environmental subjects (description keywords)",
     "Barbour Ptno", "Barbour title",
@@ -173,6 +241,7 @@ def main() -> None:
     from collections import defaultdict
 
     from dcp import signals as sig
+    from dcp import site_scale as scale
 
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute(SITE_SQL)
@@ -187,12 +256,36 @@ def main() -> None:
     # environmental content lives in the documents, which deep-read covers.
     app_env: dict[str, list[str]] = {}
     site_env: dict[str, set[str]] = defaultdict(set)
+    site_desc: dict[str, list[str]] = defaultdict(list)
     for r in app_rows:
         site_key, ref, description = r[0], r[1], r[-1]
         found = sig.environmental_signals(description)
         flat = sig.flatten(found)
         app_env[ref] = flat
         site_env[site_key].update(found.keys())
+        if description:
+            site_desc[site_key].append(description)
+
+    # Best floor area per site, for the scale band where no capacity has
+    # been adjudicated. Deliberately a fallback, never a conversion: the
+    # kW/m2 ratio spans an order of magnitude between fitted white space
+    # and a shell-and-core shed, so area indicates physical size only.
+    site_area_sqm: dict[str, float] = {}
+    with db.connect() as conn, conn.cursor() as cur:
+        cur.execute("""
+            SELECT s.site_key, max(f.value_number), min(lower(f.value_unit))
+            FROM findings f
+            JOIN site_members sm ON sm.application_id = f.application_id
+                 AND sm.retired_at IS NULL
+            JOIN sites s ON s.id = sm.site_id
+            WHERE f.value_number IS NOT NULL
+              AND lower(f.value_unit) IN ('sqm','m2','sq m','square metres',
+                                          'square meters','sqft','ft2')
+            GROUP BY s.site_key""")
+        for site_key, value, unit in cur.fetchall():
+            sqm = scale.area_to_sqm(float(value), unit)
+            if sqm:
+                site_area_sqm[site_key] = sqm
 
     wb = Workbook()
 
@@ -211,15 +304,39 @@ def main() -> None:
     ws = _sheet("Sites", SITE_HEADERS)
     for r in site_rows:
         (key, cls, name, lat, lon, csrc, councils, n_apps, refs, verdicts,
-         docs, findings_n, max_mw, eia_ref, eia_doc, manual_docs, ptno,
-         btitle, bstage, bvalue, bfloor, bsite, bplan, bdecision) = r
+         docs, findings_n, it_load_mw, total_site_mw, grid_mw, gen_mw,
+         n_capacity, n_excluded, families, eia_ref, eia_doc, manual_docs,
+         ptno, btitle, bstage, bvalue, bfloor, bsite, bplan, bdecision) = r
         eia = " + ".join(
             label for hit, label in
             [(eia_ref, "ref pattern"), (eia_doc, "ES documents")] if hit)
+
+        # Character from the site's own descriptions, rolled up by
+        # significance; scale from the strongest evidence available, with
+        # the basis stated so a floor-area inference is never mistaken for
+        # a disclosed capacity.
+        character = scale.rollup_character(
+            [scale.character_for(d) for d in site_desc.get(key, ())]
+            or [scale.character_for(name)])
+        headline_mw = it_load_mw or total_site_mw
+        if headline_mw:
+            band_key, band_label = scale.scale_from_mw(float(headline_mw))
+            basis = "stated_capacity"
+        elif site_area_sqm.get(key):
+            band_key, band_label = scale.scale_from_area_sqm(site_area_sqm[key])
+            basis = "floor_area"
+        else:
+            band_key, band_label, basis = "", "", "none"
+
         ws.append([
             key, cls, name, lat, lon, csrc,
             ", ".join(councils or []), n_apps, "\n".join(refs or []),
-            ", ".join(sorted(verdicts or [])), docs, findings_n, max_mw,
+            ", ".join(sorted(verdicts or [])), docs, findings_n,
+            it_load_mw, total_site_mw, grid_mw, gen_mw,
+            n_capacity or "", n_excluded or "",
+            scale.CHARACTERS[character].label, band_label,
+            scale.BASIS_NOTE[basis],
+            ", ".join(sorted(families or [])),
             manual_docs or "", eia,
             ", ".join(sorted(site_env.get(key, ()))),
             ptno, btitle, bstage, bvalue, bfloor, bsite,
