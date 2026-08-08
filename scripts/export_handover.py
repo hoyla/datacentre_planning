@@ -225,6 +225,12 @@ SITE_HEADERS = [
     # same signal for the same reason.
     "Standby generators (count)", "Generation type", "Generator caveat",
     "EIA status (from documents)",
+    # Who is behind the scheme, ranked by how often each is named.
+    # Names are normalised (dcp/entities) so one developer is one row
+    # rather than four spellings; the raw value_text stays on every
+    # findings row for anyone checking the derivation.
+    "Applicant / operator", "Advisers and consultants",
+    "Planning authority (from documents)",
     "Finding subjects (top families by volume)",
     "Documents obtained by hand", "EIA indicators (heuristic)",
     "Environmental subjects (description keywords)",
@@ -388,6 +394,9 @@ def main() -> None:
             prof.get("generator_fuel") or "",
             prof.get("generator_caveat") or "",
             prof.get("eia_status_label") or "",
+            prof.get("applicants") or "",
+            prof.get("advisers") or "",
+            prof.get("authorities") or "",
             # Already ordered by count in SQL; the tail is long and thin,
             # so show the families that actually characterise the site and
             # say how many more there are rather than filling the cell.

@@ -247,6 +247,61 @@ GROUP BY s.site_key
 """
 
 
+PARTIES_SQL = """
+SELECT s.site_key, f.signal_family, f.value_text
+FROM findings f
+JOIN site_members sm ON sm.application_id = f.application_id
+     AND sm.retired_at IS NULL
+JOIN sites s ON s.id = sm.site_id
+WHERE s.retired_at IS NULL
+  AND f.signal_family LIKE 'party_%'
+  AND f.value_text IS NOT NULL
+"""
+
+
+def _parties_for_sites(conn) -> dict[str, dict]:
+    """Applicant and adviser names per site, ranked by how often named.
+
+    Ranked rather than listed for the same reason as the finding families:
+    a site's documents mention many organisations, and the one named forty
+    times is the developer while the one named twice is a consultee's
+    consultant. The count travels with the name so a reader can see which
+    is which.
+
+    Authorities are re-routed here rather than trusted from the family:
+    the family came from the model's signal_type label, which put 1,536
+    councils and development corporations among the advisers.
+    """
+    from collections import defaultdict
+    from dcp import entities
+
+    per_site: dict[str, dict[str, dict[str, int]]] = defaultdict(
+        lambda: defaultdict(lambda: defaultdict(int)))
+    display: dict[str, str] = {}
+
+    with conn.cursor() as cur:
+        cur.execute(PARTIES_SQL)
+        for site_key, family, value_text in cur.fetchall():
+            e = entities.parse_entity(value_text)
+            if e is None:
+                continue
+            display.setdefault(e.key, e.display)
+            bucket = "authority" if e.is_authority else (
+                "applicant" if family == "party_applicant" else
+                "adviser" if family == "party_adviser" else "other")
+            per_site[site_key][bucket][e.key] += 1
+
+    def render(counts: dict[str, int], top: int = 3) -> str:
+        ranked = sorted(counts.items(), key=lambda kv: -kv[1])[:top]
+        return ", ".join(f"{display[k]} ({n})" for k, n in ranked)
+
+    return {site_key: {
+        "applicants": render(b.get("applicant", {})),
+        "advisers": render(b.get("adviser", {})),
+        "authorities": render(b.get("authority", {}), top=2),
+    } for site_key, b in per_site.items()}
+
+
 def load_site_profiles(conn) -> dict[str, dict]:
     """Every derived signal in this module, keyed by site_key.
 
@@ -269,4 +324,7 @@ def load_site_profiles(conn) -> dict[str, dict]:
             p["generator_fuel"] = gp.fuel_label
             p["generator_is_chp"] = gp.is_chp
             p["generator_caveat"] = gp.caveat
+
+    for site_key, parties in _parties_for_sites(conn).items():
+        profiles.setdefault(site_key, {}).update(parties)
     return profiles
