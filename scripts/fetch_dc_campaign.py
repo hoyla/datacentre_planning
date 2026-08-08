@@ -140,15 +140,53 @@ def portal_family(url: str | None) -> str:
     return "bespoke/other"
 
 
+# Cohort, revised 2026-08-08. The original targeted the v1 rubric's 'DC'
+# verdict, which was right when v1 was the only taxonomy. Since the
+# dc_build sweep ran, that definition silently excludes most of the
+# universe: 166 new-build data centres, 83 expansions and 48
+# pre-applications had portal URLs and no documents simply because they
+# carry a dc_build verdict rather than a v1 one.
+#
+# Rubrics are separate universes of judgement, so membership is the union:
+# any dc_build verdict except not_dc, OR a v1 'DC'. NSIP energy records
+# are excluded — they are an adjacency layer with no council portal to
+# fetch from.
+#
+# Ordered by editorial value rather than alphabetically. The cohort is
+# frozen at first run and worked through in order, so an interruption
+# leaves the new-builds fetched and the condition discharges outstanding,
+# rather than a random alphabetical slice of both. `procedural` is last
+# but deliberately included: a discharge-of-conditions application is
+# often where the substantive technical report finally appears (the
+# wildlife management plan, the drainage strategy, the noise assessment),
+# so the class is low priority, not low value.
 COHORT_SQL = """
-WITH latest AS (
+WITH latest_dc_build AS (
   SELECT DISTINCT ON (application_id) application_id, verdict
-  FROM triage ORDER BY application_id, inserted_at DESC)
+  FROM triage WHERE raw_response->>'rubric' = 'dc_build'
+  ORDER BY application_id, inserted_at DESC),
+latest_v1 AS (
+  SELECT DISTINCT ON (application_id) application_id, verdict
+  FROM triage WHERE coalesce(raw_response->>'rubric', 'v1') = 'v1'
+  ORDER BY application_id, inserted_at DESC)
 SELECT a.id, a.application_ref, a.url
-FROM latest l JOIN applications a ON a.id = l.application_id
-WHERE l.verdict = 'DC'
-  AND NOT EXISTS (SELECT 1 FROM documents d WHERE d.application_id = a.id)
-ORDER BY a.application_ref
+FROM applications a
+LEFT JOIN latest_dc_build b ON b.application_id = a.id
+LEFT JOIN latest_v1 v ON v.application_id = a.id
+WHERE NOT EXISTS (SELECT 1 FROM documents d WHERE d.application_id = a.id)
+  AND (b.verdict IS NOT NULL AND b.verdict <> 'not_dc' OR v.verdict = 'DC')
+  AND NOT (a.discovered_via @> ARRAY['nsip_energy'])
+ORDER BY CASE coalesce(b.verdict, 'v1_dc')
+           WHEN 'new_build' THEN 1
+           WHEN 'expansion_refurb' THEN 2
+           WHEN 'pre_application' THEN 3
+           WHEN 'adjacent_power' THEN 4
+           WHEN 'enabling_works' THEN 5
+           WHEN 'v1_dc' THEN 6
+           WHEN 'unknown' THEN 7
+           ELSE 8
+         END,
+         a.application_ref
 """
 
 
