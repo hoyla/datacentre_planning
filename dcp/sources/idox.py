@@ -208,10 +208,26 @@ class IdoxClient:
         backoff_seconds: float = 60.0,
         max_retries: int = 4,
         verify: str | bool | None = None,
+        adaptive_delay: bool = True,
+        max_delay_seconds: float = 45.0,
     ):
         self.delay = delay_seconds
         self.backoff = backoff_seconds
         self.max_retries = max_retries
+        # A 429 says our chosen pace is faster than this council wants.
+        # Backing off for the retry and then resuming the original pace
+        # means asking again at a rate already refused — the campaign
+        # logged 220 of them across eight councils at 5s spacing, each
+        # handled correctly but each still an unwelcome request.
+        #
+        # So a 429 permanently slows THIS client, and clients are one per
+        # host, which makes the adaptation per-council for the rest of the
+        # run. Multiplicative increase converges quickly; the cap stops a
+        # pathological host stalling its shard forever. 5xx does not
+        # adapt: a server error is not a statement about our rate.
+        self.adaptive_delay = adaptive_delay
+        self.max_delay = max_delay_seconds
+        self._base_delay = delay_seconds
         # Default: OS native trust store via `truststore`, which performs AIA
         # chasing to recover intermediate certs that misconfigured council
         # servers fail to send. Pass `verify=True` to get certifi's strict
@@ -252,6 +268,15 @@ class IdoxClient:
             self._next_request_at = time.monotonic() + self.delay
             if r.status_code == 429 or 500 <= r.status_code < 600:
                 wait = self.backoff * (2 ** attempt)
+                if r.status_code == 429 and self.adaptive_delay:
+                    was = self.delay
+                    self.delay = min(self.delay * 1.5, self.max_delay)
+                    if self.delay > was:
+                        log.warning(
+                            "429 from %s — this host's spacing raised "
+                            "%.0fs -> %.0fs for the rest of the run",
+                            _host_of(url), was, self.delay,
+                        )
                 log.warning(
                     "%d from %s (attempt %d/%d); backing off %.0fs",
                     r.status_code, url, attempt + 1, self.max_retries, wait,
@@ -261,6 +286,15 @@ class IdoxClient:
             r.raise_for_status()
             return r
         raise PersistentHTTPError(r.status_code, url, self.max_retries)
+
+
+def _host_of(url: str) -> str:
+    """Host for logging, so an adaptation names the council not the file."""
+    try:
+        from urllib.parse import urlparse
+        return urlparse(url).netloc or url[:60]
+    except Exception:
+        return url[:60]
 
 
 _SAFE_REF_RE = re.compile(r"[^A-Za-z0-9._/-]+")
