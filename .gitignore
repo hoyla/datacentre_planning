@@ -98,3 +98,6 @@ data/prior_art_sources/*
 # regenerate via scripts/eval_triage.py).
 !data/triage_labelling/eval_summary.md
 !data/triage_labelling/eval_*.md
+
+# Generated analysis exports; regenerable from the database.
+out/
