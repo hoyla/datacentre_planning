@@ -76,6 +76,11 @@ def main() -> int:
         return 0
     log.info("%d manifests", len(manifests))
 
+    # Two ways a manifest identifies its application, because the portals
+    # differ in what they expose. Coventry's pages are keyed by an opaque
+    # internal id and never state the planning reference, so its harvester
+    # records the id and we map it back through the stored URL. The others
+    # are addressed by reference directly, so they record that.
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute("""SELECT id, application_ref, url FROM applications
                        WHERE url ~ 'id=[0-9]+'""")
@@ -84,6 +89,13 @@ def main() -> int:
             m = re.search(r"[?&]id=(\d+)", url or "")
             if m:
                 by_portal_id[m.group(1)] = (app_id, ref)
+        cur.execute("SELECT id, application_ref FROM applications")
+        by_ref: dict[str, tuple[int, str]] = {}
+        for app_id, ref in cur.fetchall():
+            by_ref[ref] = (app_id, ref)
+            # Case and separator drift between a portal's own reference and
+            # ours is common (Slough files 't/131' where we hold 'T/131').
+            by_ref.setdefault(ref.upper(), (app_id, ref))
 
     totals = {"documents": 0, "stored": 0, "skipped": 0,
               "unmatched_app": 0, "bad_bytes": 0, "missing_file": 0}
@@ -96,11 +108,14 @@ def main() -> int:
 
         for mf in manifests:
             man = json.loads(mf.read_text())
-            portal_id = str(man.get("app_internal_id"))
-            match = by_portal_id.get(portal_id)
+            if man.get("app_internal_id") is not None:
+                ident = str(man["app_internal_id"])
+                match = by_portal_id.get(ident)
+            else:
+                ident = str(man.get("application_ref") or "")
+                match = by_ref.get(ident) or by_ref.get(ident.upper())
             if not match:
-                log.warning("%s: portal id %s matches no application",
-                            mf.name, portal_id)
+                log.warning("%s: %r matches no application", mf.name, ident)
                 totals["unmatched_app"] += 1
                 continue
             application_id, ref = match
