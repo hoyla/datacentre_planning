@@ -335,6 +335,36 @@ KNOWN_LOGIN_REQUIRED_REFS: dict[str, str] = {
 }
 
 
+def provisional(docs_held: int, docs_read: int) -> tuple[bool, str]:
+    """(is provisional, how to say so) for a partially-read site.
+
+    Every findings-derived value is a floor, not a measurement. The
+    largest capacity in the documents we have read is the largest we know
+    of, and reading the rest can only raise it — a campus promoted as 1GW
+    shows 500MW here because that is the biggest figure in the 40% of its
+    documents that have been analysed, not because the promoter's number
+    is wrong.
+
+    The same asymmetry applies to every field assembled by counting
+    findings: generator counts, cooling methods, fuels, applicant and
+    adviser names, EIA status, finding subjects. All can grow; none can
+    shrink. Presenting them unmarked invites a reader to treat a floor as
+    a total, which is the one misreading this dataset can least afford.
+    """
+    if not docs_held or docs_read >= docs_held:
+        return False, ""
+    pct = 100 * docs_read // docs_held
+    if docs_read == 0:
+        return True, ("none of this site's documents have been analysed yet — "
+                      "findings-derived values are absent, not zero")
+    return True, (f"prior to complete deep read — from the {pct}% of documents "
+                  f"({docs_read} of {docs_held}) analysed so far; further "
+                  f"reading can raise this figure but not lower it")
+
+
+PROVISIONAL_MARK = "(prior to complete deep read)"
+
+
 def capacity_status(*, pre_application: bool, docs_held: int, docs_read: int,
                     power_value_mw, power_basis: str) -> tuple[str, str]:
     """(key, label) saying what the power columns' emptiness — or figure —
@@ -359,6 +389,99 @@ def capacity_status(*, pre_application: bool, docs_held: int, docs_read: int,
                 "documents analysed")
     return ("read_none_disclosed",
             "All documents analysed — no capacity disclosed")
+
+
+def provisional_statement(docs_held: int, docs_read: int) -> str:
+    """The same fact as `provisional`, written to stand on its own.
+
+    `provisional` returns a clause meant to be appended to a caveat that
+    already names the figure ("Disclosed IT load (prior to complete deep
+    read) — from the 73% …"). Reused as a panel heading it read as its own
+    footnote: the marker, then a dash, then the marker again.
+
+    A panel is not a footnote to anything — it is always on screen, and it
+    is stating a fact about this site — so it gets its own sentence.
+    Returns "" when the site is fully read.
+    """
+    if not docs_held or docs_read >= docs_held:
+        return ""
+    if docs_read == 0:
+        return ("None of this site's documents have been analysed yet. Every value "
+                "below drawn from the documents is absent rather than zero: the "
+                "documents are held and readable, but nothing has been extracted "
+                "from them.")
+    pct = 100 * docs_read // docs_held
+    return (f"{docs_read:,} of this site's {docs_held:,} documents ({pct}%) have been "
+            f"analysed. Every value below drawn from the documents — capacity, "
+            f"generator counts, cooling method, the names involved — is the largest "
+            f"or fullest found so far. Further reading can raise these figures and "
+            f"cannot lower them.")
+
+
+# Why a site holds no documents. The distinction that matters is between
+# work not yet done and work finished with a null result: a council that
+# publishes nothing has been checked, and counting it as a gap makes the
+# dataset look permanently incomplete. Keyed on the acquisition outcome
+# recorded against the site's applications.
+NO_DOCUMENT_REASONS: dict[str, str] = {
+    "pre_application": (
+        "No planning application has been submitted for this site, so there is no "
+        "public register entry and no documents to hold. Everything known about it "
+        "comes from Barbour ABI project intelligence. Capacity, cooling, water and "
+        "generation are unknowable until an application is made — blank here means "
+        "nothing has been published, not that the scheme is small."),
+    "none_published": (
+        "The council's register has been checked and publishes no documents for "
+        "this site's applications. This is a finished check, not an outstanding "
+        "task: some authorities publish only the decision, and older applications "
+        "predate routine document publication. The application details on the "
+        "register are still the citable source."),
+    "no_adapter": (
+        "This council runs planning-portal software the pipeline cannot yet read. "
+        "The documents exist on the council's own register — the Source links below "
+        "reach them — but they have not been retrieved into this archive. This is "
+        "an acquisition gap, and a later release closes it."),
+    "portal_blocked": (
+        "This council's portal blocks automated clients. Documents can be retrieved "
+        "by hand where a site warrants it, and several have been; the rest have "
+        "not. The Source links below reach the register directly."),
+    "login_required": (
+        "The documents sit behind an account on the council's system and are not "
+        "publicly retrievable."),
+    "error": (
+        "Retrieval was attempted and failed — a timeout, a moved page, or a portal "
+        "outage. These are recorded as retryable rather than settled, and a later "
+        "pass will try again."),
+    "untried": (
+        "These applications have not been attempted yet. They are queued for the "
+        "next acquisition pass, so their absence here says nothing about whether "
+        "the council publishes documents."),
+}
+
+
+def no_documents_reason(outcomes) -> tuple[str, str]:
+    """(short label, explanation) for a site holding no documents.
+
+    Takes the acquisition outcomes recorded across the site's
+    applications. Where they disagree — some checked, some untried — the
+    outstanding work is reported ahead of the finished work, because a
+    site that is part-checked is not a site that has been checked.
+    """
+    seen = {o or "untried" for o in (outcomes or ())} or {"untried"}
+    for key in ("untried", "error", "no_adapter", "portal_blocked",
+                "login_required", "none_published", "pre_application"):
+        if key in seen:
+            label = {
+                "untried": "Not yet retrieved",
+                "error": "Retrieval failed — will retry",
+                "no_adapter": "Portal not yet readable",
+                "portal_blocked": "Portal blocks automated access",
+                "login_required": "Documents behind a login",
+                "none_published": "Register publishes no documents",
+                "pre_application": "No application submitted yet",
+            }[key]
+            return label, NO_DOCUMENT_REASONS[key]
+    return "Not yet retrieved", NO_DOCUMENT_REASONS["untried"]
 
 
 def acquisition_status(*, pre_application: bool, docs_held: int,
