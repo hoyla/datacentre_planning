@@ -179,7 +179,23 @@ def main() -> int:
     svc = get_service()
     sid = spreadsheet_id(args.url)
 
-    meta = svc.spreadsheets().get(spreadsheetId=sid).execute()
+    try:
+        meta = svc.spreadsheets().get(spreadsheetId=sid).execute()
+    except Exception as exc:
+        # A converted workbook and an .xlsx being edited in Drive's Office
+        # mode look identical in a browser and share a /spreadsheets/d/
+        # URL, but only the former has an API behind it. This is the error
+        # that distinguishes them, and the fix is not obvious from it.
+        if "must not be an Office file" in str(exc):
+            raise SystemExit(
+                "That document is still an .xlsx opened in Drive's Office "
+                "compatibility mode, not a Google Sheet, and the Sheets API "
+                "cannot write to it.\n\n"
+                "Convert it once — File > Save as Google Sheets — which "
+                "keeps the column widths, wrapping and alignment and "
+                "produces a new file id. Put that URL in dcp/drive.py as "
+                "WORKBOOK_SHEET_URL and run this again.")
+        raise
     tabs = {s["properties"]["title"]: s["properties"] for s in meta["sheets"]}
     print(f"{meta['properties']['title']!r}: {len(tabs)} tabs")
 
