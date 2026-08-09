@@ -29,9 +29,11 @@ are recorded `no_adapter` rather than retried.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import importlib.util
 import logging
 import shutil
+import signal
 import sys
 import time
 from pathlib import Path
@@ -73,6 +75,36 @@ def _campaign():
     return mod
 
 
+class ApplicationTimeout(Exception):
+    """A single application exceeded its wall-clock budget."""
+
+
+@contextlib.contextmanager
+def deadline(seconds: int):
+    """Abandon an application that will not finish.
+
+    httpx's `timeout=` is per socket operation, not per request, so a
+    server that dribbles a byte every minute never trips it. One
+    Hillingdon application held the sweep for thirteen minutes on a
+    connection that was open, idle and going nowhere — with no output,
+    because progress is logged per application rather than per document.
+
+    SIGALRM gives the loop a real ceiling. The raised error is caught by
+    the same handler as any other failure, so the application is recorded
+    `error` and retried on a later pass rather than being settled.
+    """
+    def fire(_signum, _frame):
+        raise ApplicationTimeout(f"exceeded {seconds}s")
+
+    previous = signal.signal(signal.SIGALRM, fire)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, previous)
+
+
 def record(conn, app_id: int, outcome: str, adapter: str,
            detail: str | None = None, found: int = 0) -> None:
     with conn.cursor() as cur:
@@ -99,6 +131,10 @@ def main() -> int:
     # so a later pass retries them — better to give up quickly and revisit.
     p.add_argument("--max-retries", type=int, default=2)
     p.add_argument("--backoff", type=float, default=15.0)
+    # Generous enough for a genuinely large document set at the request
+    # spacing, short enough that one wedged connection cannot own the run.
+    p.add_argument("--app-timeout", type=int, default=900,
+                   help="wall-clock ceiling per application, in seconds")
     args = p.parse_args()
 
     logging.basicConfig(level=logging.INFO,
@@ -217,7 +253,8 @@ def main() -> int:
                 else:
                     kw["client"] = client_for(fam, url)
                 try:
-                    s = mods[fam].fetch_documents_for_application(**kw)
+                    with deadline(args.app_timeout):
+                        s = mods[fam].fetch_documents_for_application(**kw)
                 except Exception as exc:
                     record(conn, app_id, "error", fam, str(exc)[:180])
                     totals["error"] += 1
