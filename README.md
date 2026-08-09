@@ -204,3 +204,5 @@ that as its first deployment rule.
 ## Methodology principle
 
 Ingest broadly; analyse second. We don't decide the story before we see the data; we need to be able to find null findings as well as dramatic ones. The Foxglove top-10 is our first reconciliation target — if our pipeline doesn't reproduce their list with matching MW figures, our coverage is broken.
+
+.
