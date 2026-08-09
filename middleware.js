@@ -290,5 +290,14 @@ export async function middleware(context) {
 }
 
 export const config = {
-  matcher: ['/:path*'],
+  // A catch-all pattern, not '/:path*'. The named-segment form does not
+  // match a path with an empty segment, so a request for '//index.html'
+  // skipped the middleware entirely and EdgeOne served the reader — all
+  // 7.4 MB of it — to anyone who typed the extra slash. Every other path
+  // redirected correctly, so the gate looked sound from a browser.
+  //
+  // If this pattern is ever narrowed, re-run the unauthenticated probe in
+  // tests/README terms: check '//index.html', '///index.html' and
+  // percent-encoded separators, not just '/'.
+  matcher: ['/(.*)'],
 };

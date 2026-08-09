@@ -51,8 +51,17 @@ async function sessionCookie() {
   return setCookie.split(';')[0];
 }
 
-test('every route is matched, so data files are covered too', () => {
-  assert.deepEqual(config.matcher, ['/:path*']);
+test('the matcher is a catch-all, including paths with empty segments', () => {
+  // '/:path*' left '//index.html' unmatched, and EdgeOne served the
+  // reader unauthenticated. Assert the pattern, and that it really does
+  // match the shapes that got through.
+  assert.deepEqual(config.matcher, ['/(.*)']);
+  const re = new RegExp('^' + config.matcher[0] + '$');
+  for (const path of ['/', '/index.html', '//index.html', '///index.html',
+                      '/data/priors/salesforce_documents.json',
+                      '/%2findex.html', '/a/b/c']) {
+    assert.ok(re.test(path), `${path} must be matched by the middleware`);
+  }
 });
 
 test('fails closed when the environment is not configured', async () => {
