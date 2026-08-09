@@ -162,7 +162,7 @@ function loginPage(nextPath, error = '', status = 200) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>UK data-centre planning — handover</title>
+  <title>UK datacentre plans v2, phase 1 release</title>
   <style>
     :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             --bg:#f6f7f9; --card:#fff; --fg:#16171b; --mut:#63666e; --line:#e4e5e9; --accent:#0b5fff; }
@@ -193,7 +193,8 @@ function loginPage(nextPath, error = '', status = 200) {
 <body>
   <main>
     <p class="eyebrow">Guardian data team</p>
-    <h1>UK data-centre planning</h1>
+    <h1>UK datacentre plans</h1>
+    <p class="eyebrow" style="margin:.4rem 0 0">v2 · phase 1 release</p>
     ${message}
     <form method="post" action="/login">
       <input type="hidden" name="next" value="${escapeHtml(nextPath)}">
