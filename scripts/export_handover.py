@@ -283,8 +283,9 @@ DRIVE_LEDGER = Path("data/exports/.drive_sync_state.json")
 
 SITE_HEADERS = [
     # --- identity & links -------------------------------------------------
-    "Site key", "Classification", "Site name", "Latitude", "Longitude",
-    "Coordinate source", "Councils",
+    "Site key", "Classification", "Site name", "Proposal",
+    "Proposal describes a development?",
+    "Latitude", "Longitude", "Coordinate source", "Councils",
     # The workbook is the interface to the Drive-by-site archive and to
     # the public record; a row that cannot reach its evidence is a claim,
     # not an index card.
@@ -301,7 +302,7 @@ SITE_HEADERS = [
     # methodology note: whoever sorts by MW sees, in the adjacent cell,
     # whether they are sorting a disclosed figure or an inference.
     "Power MW (best available)", "Power basis", "Power confidence",
-    "Power caveat",
+    "Power caveat", "Figures provisional?",
     # The components stay, because they are different quantities rather
     # than competing estimates and some questions need them separately.
     "IT load MW (adjudicated)", "Total site MW (adjudicated)",
@@ -344,7 +345,7 @@ APP_HEADERS = [
     "Site key", "Application ref", "Joined site via", "Council", "Status",
     "Date received", "Date decided", "Verdict (latest)", "Verdict confidence",
     "Verdict model", "Verdict reasoning", "Signals", "Portal URL",
-    "Documents held", "Verified findings",
+    "Drive folder", "Documents held", "Verified findings",
     "Environmental signals (description keywords)", "Address", "Description",
 ]
 
@@ -367,6 +368,20 @@ DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Site name",
      "Display name assembled at site materialisation; for pre-planning "
      "rows, the Barbour project title."),
+    ("Sites", "Proposal",
+     "A one-line description of what is proposed, taken word-for-word from "
+     "the council's own application description. Planning descriptions "
+     "usually open with procedure — which condition is being discharged, "
+     "which permission varied — and state the development somewhere in the "
+     "middle; this is the clause that describes the development, selected "
+     "across all of the site's applications. It is an extract, never a "
+     "paraphrase, so it can be quoted; the untouched description is on "
+     "every Applications row."),
+    ("Sites", "Proposal describes a development?",
+     "'No' where nothing on the public record describes what is being "
+     "built — the site is known only through condition discharges, "
+     "consultations or screening requests — and the Proposal cell is "
+     "therefore procedural text rather than a summary."),
     ("Sites", "Latitude / Longitude / Coordinate source",
      "Best available coordinates and where they came from. Rows without "
      "coordinates cannot be matched in the distance columns."),
@@ -400,6 +415,14 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "IT load, total site power, grid connection, on-site generation, "
      "then a floor-area inference — losing authority at each step. The "
      "three columns to its right say which step and how much to trust it."),
+    ("Sites", "Figures provisional?",
+     "Whether this row's findings-derived values come from a complete "
+     "reading. Where they do not, every such value is a floor rather than a "
+     "measurement: the largest capacity in the documents read so far, the "
+     "generators counted so far, the applicants named so far. Further "
+     "reading can raise these figures and cannot lower them. A campus "
+     "promoted as 1GW may show 500MW here simply because the document "
+     "stating the larger figure has not been analysed yet."),
     ("Sites", "Power basis / Power confidence / Power caveat",
      "What the figure is based on, how strong that basis is, and any "
      "qualification. These qualify the Power MW column and travel with "
@@ -505,6 +528,11 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "reasoning. Earlier verdicts are retained in the database."),
     ("Applications", "Portal URL",
      "The application's page on the council's public register."),
+    ("Applications", "Drive folder",
+     "Link to this application's own folder in the Drive archive, holding "
+     "the documents its register entry lists. Blank where the application "
+     "has no documents, or where they were acquired after the most recent "
+     "sync."),
     ("Energy projects", "All columns",
      "Nationally significant infrastructure projects (energy) from the "
      "Planning Inspectorate register: metadata read from each project's "
@@ -569,6 +597,56 @@ def _drive_folder_map() -> dict[str, str]:
     return out
 
 
+def _drive_application_map() -> dict[tuple[str, str], str]:
+    """(normalised site key, folder-name form of the ref) -> Drive URL.
+
+    Application folders sit one level below their site's, named for the
+    reference with slashes swapped for underscores (Drive treats a slash
+    as a path separator). Linking straight to the application saves a
+    reporter opening a site folder of forty siblings to find the one the
+    row is about.
+
+    Keyed on the site as well as the reference, because the same folder
+    name legitimately appears under more than one site — a shared
+    application between neighbouring councils, or two references that
+    collide once truncated to the folder-name limit. Keying on the name
+    alone silently sent some of those to another site's documents.
+
+    As with the site map, absence means not-yet-synced, and the caller
+    leaves the link out rather than constructing a URL that may 404.
+    """
+    if not DRIVE_LEDGER.exists():
+        return {}
+    try:
+        folders = json.loads(DRIVE_LEDGER.read_text()).get("folders", {})
+    except Exception:
+        return {}
+    roots = {v for k, v in folders.items() if k.endswith("/sites")}
+    if not roots:
+        return {}
+    site_key_by_id = {
+        fid: _norm_key(name.split(" — ")[0])
+        for k, fid in folders.items()
+        for parent, _, name in (k.partition("/"),) if parent in roots}
+    out: dict[tuple[str, str], str] = {}
+    for key, fid in folders.items():
+        parent, _, name = key.partition("/")
+        site_key = site_key_by_id.get(parent)
+        if site_key:
+            out[(site_key, name)] = f"https://drive.google.com/drive/folders/{fid}"
+    return out
+
+
+def _drive_application_url(app_map, site_key: str, ref: str) -> str:
+    return app_map.get((_norm_key(site_key), clean_ref(ref)), "")
+
+
+def clean_ref(ref: str) -> str:
+    """The staging tree's folder name for an application reference."""
+    out = re.sub(r'[<>:"/\\|?*\x00-\x1f]+', " ", (ref or "").replace("/", "_"))
+    return re.sub(r"\s+", " ", out).strip(" .")[:60].strip(" .")
+
+
 def _haversine_km(lat1, lon1, lat2, lon2) -> float:
     p1, p2 = radians(lat1), radians(lat2)
     return 2 * 6371 * asin(sqrt(
@@ -589,6 +667,7 @@ def main() -> None:
     from collections import defaultdict
     from urllib.parse import urlparse
 
+    from dcp import proposal
     from dcp import signals as sig
     from dcp import site_profile
     from dcp import site_scale as scale
@@ -787,6 +866,23 @@ def main() -> None:
         # honest.
         power_basis_cell = est.basis
         power_caveat_cell = est.caveat
+        # A figure from a partially-read site is a floor, not a measurement:
+        # further reading can raise it but never lower it. Saying so on the
+        # figure itself is the difference between a reader treating 500MW as
+        # this site's capacity and treating it as the largest we have seen
+        # so far.
+        is_prov, prov_note = site_profile.provisional(held, read)
+        # The register's own wording, reduced to the clause that describes
+        # the development. Verbatim, so it stays quotable; the untouched
+        # description remains on every Applications row.
+        _summary, _descriptive = proposal.summarise(
+            site_desc.get(key) or [btitle])
+        proposal_cell = proposal.tidy(_summary)
+        proposal_flag = ("Yes" if _descriptive else
+                         "No — only procedural applications on record")
+        if is_prov and est.value_mw is not None:
+            power_basis_cell = f"{est.basis} {site_profile.PROVISIONAL_MARK}"
+            power_caveat_cell = ((est.caveat + " ") if est.caveat else "") + prov_note
         if est.value_mw is None and cap_key in ("not_yet_analysed",
                                                 "partially_analysed",
                                                 "pre_application"):
@@ -813,7 +909,8 @@ def main() -> None:
                         else f"Open portal (1 of {n_hosts})")
 
         row = [
-            key, cls, name, lat, lon, csrc,
+            key, cls, name, proposal_cell, proposal_flag,
+            lat, lon, csrc,
             ", ".join(councils or []),
             _hyperlink(drive_urls.get(_norm_key(key)), "Open Drive folder"),
             _hyperlink(portal[1] if portal else None, portal_label),
@@ -823,6 +920,7 @@ def main() -> None:
             str(site_latest_decision.get(key) or ""),
             ", ".join(sorted(verdicts or [])),
             est.value_mw, power_basis_cell, est.confidence, power_caveat_cell,
+            ("Yes — reading incomplete" if is_prov else "No"),
             it_load_mw, total_site_mw, grid_mw, gen_mw,
             n_capacity or "", n_excluded or "",
             scale.CHARACTERS[character].label, band_label,
@@ -880,13 +978,16 @@ def main() -> None:
             near_name, near_km, near_cap = (
                 f"{p['name']} ({p['ref']})", km, p["capacity"])
         env = sig.environmental_signals(description)
+        bsummary, bdescriptive = proposal.summarise([description, title])
         row = [
-            pseudo_key, "barbour_only", title, plat, plon,
-            "barbour", authority or "",
+            pseudo_key, "barbour_only", title,
+            proposal.tidy(bsummary),
+            "Yes" if bdescriptive else "No — Barbour intelligence only",
+            plat, plon, "barbour", authority or "",
             _hyperlink(drive_urls.get(_norm_key(pseudo_key)), "Open Drive folder"),
             "",                       # no public register entry exists
             0, "", 0, "", "", "",
-            None, cap_label, "", "",  # power block: status text as basis
+            None, cap_label, "", "", "n/a — no documents",
             None, None, None, None, "", "",
             "", "", "",               # character/scale unknowable pre-application
             "", "", "", "", "", "", "", "",
@@ -904,10 +1005,17 @@ def main() -> None:
 
     # ---- Applications ------------------------------------------------------
     ws = _sheet("Applications", APP_HEADERS)
+    drive_app_urls = _drive_application_map()
     for r in app_rows:
         vals = [str(x) if isinstance(x, (dt.date, dt.datetime)) else x for x in r]
+        # A row that cannot reach its own documents sends the reader back
+        # to the site folder to hunt among its siblings.
+        folder = _hyperlink(
+            _drive_application_url(drive_app_urls, r[0], r[1]) or None,
+            "Open Drive folder")
         # Insert the derived signals column just before Address/Description.
-        ws.append(vals[:-2] + ["\n".join(app_env.get(r[1], ()))] + vals[-2:])
+        ws.append(vals[:13] + [folder] + vals[13:-2]
+                  + ["\n".join(app_env.get(r[1], ()))] + vals[-2:])
 
     # ---- Energy projects ----------------------------------------------------
     # Ranked by distance to the nearest located data-centre site (main and
