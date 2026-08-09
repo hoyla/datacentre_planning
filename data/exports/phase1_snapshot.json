@@ -1,0 +1,12 @@
+{
+ "phase": 1,
+ "cutoff_utc": "2026-08-09T08:50:46.028573+00:00",
+ "documents": 53994,
+ "max_document_id": 58565,
+ "documents_analysed": 18645,
+ "applications": 3448,
+ "active_sites": 429,
+ "note": "Corpus frozen for Phase 1: acquisition and the second-opinion read were stopped so every artefact reports identical figures. Both resume for Phase 2.",
+ "frozen": true,
+ "second_opinion_documents": 4119
+}
