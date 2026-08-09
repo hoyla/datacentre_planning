@@ -215,6 +215,99 @@ def generator_profile(counts, fuel_texts) -> GeneratorProfile:
 
 
 # ---------------------------------------------------------------------------
+# Cooling and water
+# ---------------------------------------------------------------------------
+#
+# Water is the most contested externality of a data centre after power, and
+# the corpus does NOT support an adjudicated consumption figure. The
+# water/cooling finding families look enormous — 34,274 findings across 193
+# sites — but they are dominated by flood and drainage engineering that
+# every development produces: rainfall depths in mm, pipe runs in m,
+# "design discharge rate 3.6 l/s for a 30-year event", attenuation volumes.
+#
+# Filtered to figures that describe what a facility would actually consume,
+# it collapses to 76 of 429 sites. Building a "water use MW-equivalent"
+# column on that would imply a precision the documents do not contain, and
+# would invite exactly the comparison it cannot support.
+#
+# So two honest things are reported instead. Cooling METHOD is categorical
+# and reasonably covered (119 sites) — and it is the question that actually
+# determines water demand, since an air-cooled hall and an evaporative one
+# differ by orders of magnitude. And the *absence* is reported as a finding
+# in its own right: that only 18% of sites disclose anything about water
+# consumption is itself worth a reporter's attention.
+
+# Methods are counted, never reduced to one. An energy statement that
+# compares adiabatic against air-cooled before choosing mentions both, and
+# a presence test would report the site as using every technology it
+# considered — the mistake the finding-families column made before it was
+# ranked by volume.
+_COOLING_RULES: tuple[tuple[str, str], ...] = (
+    ("Water-cooled / chilled water", r"water[- ]cooled|chilled water|chiller"),
+    ("Air-cooled", r"air[- ]cooled|air cooling|dry cooler"),
+    ("Adiabatic / evaporative", r"adiabatic|evaporative|cooling tower"),
+    ("Free cooling", r"free[- ]cooling|free air"),
+    ("Heat reuse / offtake", r"heat (re-?use|recovery|offtake|network)|district heat"),
+    ("Closed loop", r"closed[- ]loop|sealed system"),
+    ("Immersion / liquid", r"immersion cool|liquid cool|direct[- ]to[- ]chip"),
+)
+_COOLING_COMPILED = tuple((l, re.compile(p, re.I)) for l, p in _COOLING_RULES)
+
+# Signal types that describe consumption or abstraction, as opposed to the
+# drainage engineering that dominates the family.
+CONSUMPTION_SIGNAL_RE = re.compile(
+    r"consum|demand|usage|potable|abstract|cooling_water|wue|evapor", re.I)
+
+# A method mentioned once against a dominant one is usually an option the
+# applicant weighed, not plant they are installing.
+COOLING_SECONDARY_FLOOR = 0.2
+
+
+def cooling_profile(texts) -> tuple[str, str]:
+    """(method label, caveat) for a site, from its cooling-related text."""
+    counts: dict[str, int] = {}
+    for t in texts:
+        if not t:
+            continue
+        for label, pattern in _COOLING_COMPILED:
+            if pattern.search(t):
+                counts[label] = counts.get(label, 0) + 1
+    if not counts:
+        return "", ""
+    ranked = sorted(counts.items(), key=lambda kv: -kv[1])
+    top_label, top_n = ranked[0]
+    parts = [f"{top_label} ({top_n})"]
+    minor = []
+    for label, n in ranked[1:]:
+        if n >= top_n * COOLING_SECONDARY_FLOOR:
+            parts.append(f"{label} ({n})")
+        else:
+            minor.append(label)
+    out = ", ".join(parts)
+    if minor:
+        out += f"; also referenced: {', '.join(minor)}"
+    return out, ("Cooling technologies named in this site's documents, with "
+                 "mention counts. Applications routinely compare options "
+                 "before choosing, so more than one method may appear.")
+
+
+COOLING_TEXTS_SQL = """
+SELECT s.site_key,
+       array_agg(f.value_text) FILTER (WHERE f.value_text IS NOT NULL) AS texts,
+       count(*) FILTER (WHERE f.signal_type ~* %s)                     AS consumption_findings,
+       count(*)                                                        AS water_findings
+FROM findings f
+JOIN site_members sm ON sm.application_id = f.application_id
+     AND sm.retired_at IS NULL
+JOIN sites s ON s.id = sm.site_id
+WHERE s.retired_at IS NULL
+  AND (f.signal_family IN ('water','cooling')
+       OR f.value_text ~* 'cool|chiller|adiabatic|immersion')
+GROUP BY s.site_key
+"""
+
+
+# ---------------------------------------------------------------------------
 # Coverage — what we hold, what has been analysed, and why anything is absent
 # ---------------------------------------------------------------------------
 #
@@ -424,6 +517,23 @@ def load_site_profiles(conn) -> dict[str, dict]:
             p["generator_fuel"] = gp.fuel_label
             p["generator_is_chp"] = gp.is_chp
             p["generator_caveat"] = gp.caveat
+
+        cur.execute(COOLING_TEXTS_SQL, (CONSUMPTION_SIGNAL_RE.pattern,))
+        for site_key, texts, n_consumption, n_water in cur.fetchall():
+            label, caveat = cooling_profile(texts or ())
+            p = profiles.setdefault(site_key, {})
+            p["cooling_method"] = label
+            p["cooling_caveat"] = caveat
+            p["water_findings"] = n_water
+            # Deliberately a count of evidence, not a figure: see the note
+            # above on why consumption is not adjudicated.
+            p["water_consumption_findings"] = n_consumption
+            p["water_evidence"] = (
+                f"{n_consumption} consumption/abstraction findings"
+                if n_consumption else
+                ("No water consumption disclosed "
+                 f"({n_water} water findings, all drainage or flood related)"
+                 if n_water else ""))
 
     for site_key, parties in _parties_for_sites(conn).items():
         profiles.setdefault(site_key, {}).update(parties)

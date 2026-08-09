@@ -312,6 +312,10 @@ SITE_HEADERS = [
     # From dcp/site_profile, shared with the web view so both present the
     # same signal for the same reason.
     "Standby generators (count)", "Generation type", "Generator caveat",
+    # Cooling method rather than a water-consumption figure: the corpus
+    # supports the first and not the second, and cooling method is what
+    # actually determines water demand.
+    "Cooling method", "Water evidence", "Cooling caveat",
     "EIA status (from documents)", "EIA indicators (heuristic)",
     "Environmental subjects (description keywords)",
     # --- parties ----------------------------------------------------------
@@ -428,6 +432,23 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "combined heat and power language."),
     ("Sites", "Generator caveat",
      "Standing qualification on the generator columns."),
+    ("Sites", "Cooling method",
+     "Cooling technologies named in the documents, with mention counts. "
+     "Applications routinely compare options before choosing, so more than "
+     "one may appear; the count separates the method used from the methods "
+     "considered. Cooling method is reported instead of a water-consumption "
+     "figure because it is what determines water demand and because the "
+     "documents support it: an air-cooled hall and an evaporative one differ "
+     "by orders of magnitude."),
+    ("Sites", "Water evidence",
+     "How much the documents say about water consumption or abstraction, as "
+     "a count of findings — not a volume. The water and cooling finding "
+     "families are large but dominated by flood and drainage engineering "
+     "that every development produces (rainfall depths, pipe runs, design "
+     "discharge rates). Filtered to consumption and abstraction, only 76 of "
+     "429 sites disclose anything at all. That silence is itself a finding: "
+     "no volume is published here because the applications do not contain "
+     "one."),
     ("Sites", "EIA status (from documents)",
      "Environmental Impact Assessment status stated in the documents "
      "themselves (screening/scoping/ES submitted), precedence-ordered so "
@@ -809,6 +830,9 @@ def main() -> None:
             prof.get("generator_count") or "",
             prof.get("generator_fuel") or "",
             prof.get("generator_caveat") or "",
+            prof.get("cooling_method") or "",
+            prof.get("water_evidence") or "",
+            prof.get("cooling_caveat") or "",
             prof.get("eia_status_label") or "", eia,
             ", ".join(sorted(site_env.get(key, ()))),
             prof.get("applicants") or "",
@@ -865,7 +889,7 @@ def main() -> None:
             None, cap_label, "", "",  # power block: status text as basis
             None, None, None, None, "", "",
             "", "", "",               # character/scale unknowable pre-application
-            "", "", "", "", "",
+            "", "", "", "", "", "", "", "",
             ", ".join(sorted(env.keys())),
             "", "", "",
             "", 0, 0, 0, "",
@@ -919,7 +943,34 @@ def main() -> None:
         cur.execute("""SELECT count(DISTINCT document_id) FROM deepread_log
                        WHERE read_state = 'read'""")
         n_read = cur.fetchone()[0]
+        cur.execute("""SELECT count(DISTINCT document_id) FROM deepread_log
+                       WHERE read_state = 'read' AND model LIKE 'mlx%%'""")
+        n_second = cur.fetchone()[0]
+    pct = (100 * n_read // n_docs) if n_docs else 0
     for k, v in [
+        ("RELEASE", "Phase 1 of 3"),
+        ("What Phase 1 contains",
+         f"Every site, application and energy project we hold, with all "
+         f"analysis complete against the documents read so far. "
+         f"{n_read:,} of {n_docs:,} documents ({pct}%) have been analysed."),
+        ("What is NOT in Phase 1",
+         f"{n_docs - n_read:,} documents are held but not yet analysed, so "
+         "findings-derived columns (power, cooling, EIA status, parties, "
+         "finding subjects) are silent for them. Per-site, 'Capacity status' "
+         "and 'Documents analysed' say exactly which rows this affects — an "
+         "empty power figure on an unanalysed site is not a disclosure fact. "
+         "A small tail of applications is also still being retrieved."),
+        ("Phase 2 (expected within days)",
+         "The remaining documents analysed, and the acquisition tail "
+         "completed. Every figure here is regenerated; nothing is "
+         "overwritten, so Phase 1 stays auditable."),
+        ("Phase 3", "A second, independent model's reading of the whole "
+         f"corpus for corroboration ({n_second:,} documents so far)."),
+        ("Water figures", "Deliberately not published as volumes. The water "
+         "and cooling findings are dominated by drainage and flood "
+         "engineering; only 93 sites disclose anything about consumption. "
+         "'Cooling method' is reported instead, being both better evidenced "
+         "and the thing that determines water demand."),
         ("Generated at (UTC)", dt.datetime.now(dt.timezone.utc)
                                  .isoformat(timespec="seconds")),
         ("Pipeline commit", _git_commit()),
