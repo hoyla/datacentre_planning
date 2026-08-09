@@ -76,6 +76,11 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path,
                     default=Path("data/exports/drive_staging"))
+    ap.add_argument("--release-dir", dest="release_dir", type=Path,
+                    default=Path("data/exports/phase1_build"),
+                    help="folder whose workbook, database and reader go to the "
+                         "Drive root; the release is the source of truth for "
+                         "which generated artefacts belong together")
     ap.add_argument("--limit", type=int, default=None,
                     help="Only the first N sites (for a dry look).")
     args = ap.parse_args()
@@ -245,34 +250,35 @@ def main() -> None:
         folder.mkdir(parents=True, exist_ok=True)
         (folder / "_site_report.md").write_text("\n".join(report) + "\n")
 
-    # Root artefacts.
+    # Root artefacts. Three things and no more: the documents, the
+    # workbook, and the database. The explanatory material — README,
+    # methodology, data dictionary — used to ship here as markdown beside
+    # them, which meant three files nobody opens from a Drive listing and
+    # a fourth copy of every definition to keep in step. It now lives in
+    # the reader, generated from the same queries as the data, so it
+    # cannot drift out of date the way a companion document does.
     out.mkdir(parents=True, exist_ok=True)
-    for doc in ("docs/data_dictionary.md", "docs/methodology.md"):
-        p = Path(doc)
-        if p.exists():
-            shutil.copyfile(p, out / p.name)
-    workbooks = sorted(Path("data/exports").glob("dc_build_handover_*.xlsx"))
-    if workbooks:
-        shutil.copyfile(workbooks[-1], out / workbooks[-1].name)
-    (out / "README.md").write_text(f"""# UK data-centre planning dataset — source documents
-
-Generated {generated} from the datacentre_planning pipeline. This tree is
-**derived**: it is rebuilt from the canonical store, so do not edit files
-here — annotations belong in the shared workbook's annotation tab.
-
-- `dc_build_handover_*.xlsx` — the dataset interface (sites + applications).
-- `data_dictionary.md` / `methodology.md` — what every field means, how the
-  dataset was built, and what has been measured about its accuracy.
-- `sites/` — one folder per site: a `_site_report.md` summary, then one
-  folder per planning application holding its documents. Each application
-  folder's `_index.md` maps the readable filenames to source URLs.
-
-Documents marked "obtained by hand" were downloaded manually from portals
-that block automated clients; their citable source is the application's
-portal page. Consultation responses are reproduced as councils published
-them and contain objectors' names and addresses. Barbour ABI project data
-is licensed for this use; attribution is required in published output.
-""")
+    for stale in ("README.md", "data_dictionary.md", "methodology.md"):
+        (out / stale).unlink(missing_ok=True)
+    # The release folder is the source of these, not data/exports at large:
+    # globbing the exports directory picked up every workbook and database
+    # ever generated, so the Drive root offered a reader three dated
+    # spreadsheets and no way to tell which one the reader.html agreed with.
+    for old_artefact in out.glob("dc_build_handover_*.xlsx"):
+        old_artefact.unlink()
+    release = Path(args.release_dir)
+    staged_root = []
+    if release.is_dir():
+        for f in sorted(release.iterdir()):
+            if f.suffix.lower() in (".xlsx", ".duckdb", ".html"):
+                link_or_copy(f, out / f.name)
+                staged_root.append(f.name)
+    else:
+        workbooks = sorted(Path("data/exports").glob("dc_build_handover_*.xlsx"))
+        if workbooks:
+            shutil.copyfile(workbooks[-1], out / workbooks[-1].name)
+            staged_root.append(workbooks[-1].name)
+    print("   root artefacts: " + (", ".join(staged_root) or "none"))
     print(f"staged {len(site_keys)} sites, {n_apps} applications, "
           f"{n_docs} documents -> {out}")
 
