@@ -156,12 +156,19 @@ and `dcp fetch-docs` to scope each stage.
 
 ## Publishing the reader
 
-`scripts/export_reader.py --publish docs/index.html` writes the reader to
-the GitHub Pages directory as part of the build, so the published page is
-the same artefact as the release copy rather than a hand-made duplicate.
-The methodology and data dictionary are generated inside it from the same
+`scripts/export_reader.py --publish index.html` writes the reader to the
+repository root as part of the build, so the published page is the same
+artefact as the release copy rather than a hand-made duplicate. The
+methodology and data dictionary are generated inside it from the same
 queries as the data; there are deliberately no markdown copies alongside,
 because a companion document is the first thing to fall out of step.
+
+The site is the repository root because that is what the EdgeOne
+deployment serves. It used to live in `docs/`, which is also exactly what
+GitHub Pages publishes — so merging the reader put a complete, ungated
+copy on `hoyla.github.io` at the same moment the password gate was being
+built for it. The Pages workflow is gone and there is now one deployment,
+behind the gate.
 
 ### The password gate
 
