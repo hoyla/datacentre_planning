@@ -55,7 +55,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import db  # noqa: E402
 
-DRIVE_ROOT = "https://drive.google.com/drive/folders/1vKevmR1NSh3_9wnsYRMl0BA5os9oaoPT"
+from dcp.drive import FOLDER_URL as DRIVE_ROOT  # noqa: E402
 
 # Statuses meaning "we have not looked yet", as against "they disclosed
 # nothing" — the distinction the page is built around.
@@ -134,8 +134,13 @@ nav.top button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--acc
   background:rgba(127,127,127,.15);color:var(--mut);margin-left:6px;vertical-align:1px}
 .stat{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0 4px;padding:13px 15px;
   border:1px solid var(--line);border-radius:7px}
-.stat div span{display:block;font-size:21px;font-weight:650;font-variant-numeric:tabular-nums}
-.stat div small{color:var(--mut);font-size:12px}
+/* Selectors reach the children of any tile, not just the div ones. The
+   three clickable tiles are buttons, so a `.stat div span` rule skipped
+   them entirely: they inherited the button's 14px and lost the block
+   display, rendering as a tiny run-together "455sites" beside the
+   full-size figures. */
+.stat span{display:block;font-size:21px;font-weight:650;font-variant-numeric:tabular-nums}
+.stat small{display:block;color:var(--mut);font-size:12px}
 .banner{margin:16px 0;padding:12px 14px;border-left:3px solid var(--warn);
   background:var(--warnbg);color:var(--warn);border-radius:0 5px 5px 0;font-size:13px}
 h2.sec{font-size:15px;margin:24px 0 8px}
@@ -225,8 +230,9 @@ details.apps-d[open]>summary:before{transform:rotate(90deg)}
 details.apps-d>summary:hover{text-decoration:underline}
 .stat button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;
   padding:0;text-align:left;border-radius:5px}
-.stat button:hover span{color:var(--accent)}
-.stat button:hover small{text-decoration:underline}
+.stat button span{color:var(--accent)}
+.stat button:hover span,.stat button:focus-visible span{text-decoration:underline}
+.stat button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 table.stats{width:100%;margin:6px 0 18px;font-size:13px;min-width:0;
   border-collapse:separate;border-spacing:0}
 table.stats th[scope=row]{position:static;font-weight:500;white-space:normal;

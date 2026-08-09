@@ -39,6 +39,12 @@ TOKEN_PATH = CONFIG_DIR / "drive_token.json"
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 STATE_PATH = Path("data/exports/.drive_sync_state.json")
 
+# The one destination. Operator-supplied, and the same ID the workbook and
+# the reader link to, so there is a single place to change it and no way
+# for the three to disagree about where the archive lives.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from dcp.drive import FOLDER_ID as HANDOVER_FOLDER_ID  # noqa: E402
+
 
 def get_service():
     from google.auth.transport.requests import Request
@@ -159,15 +165,16 @@ def main() -> None:
     ap.add_argument("--auth", action="store_true",
                     help="Run the consent flow and exit.")
     ap.add_argument("--sync", type=Path)
-    ap.add_argument("--dest", default="DC Planning Dataset",
-                    help="Top-level folder name to create/reuse.")
-    ap.add_argument("--dest-id",
-                    help="Existing Drive folder ID to sync into (from the "
-                         "folder's URL). Takes precedence over --dest. Note "
-                         "the drive.file scope can create files inside a "
-                         "folder it did not create, but cannot list that "
-                         "folder's other contents — so pre-existing files "
-                         "are invisible to this tool by design.")
+    ap.add_argument("--dest", default=None,
+                    help="Top-level folder NAME to create or reuse. Almost "
+                         "never what you want — see --dest-id.")
+    ap.add_argument("--dest-id", default=HANDOVER_FOLDER_ID,
+                    help="Drive folder ID to sync into (from the folder's "
+                         "URL). Defaults to the handover folder. The "
+                         "drive.file scope can create files inside a folder "
+                         "it did not create but cannot list that folder's "
+                         "other contents, so pre-existing files are "
+                         "invisible to this tool by design.")
     ap.add_argument("--probe-id",
                     help="Write a single tiny file into this folder ID to "
                          "verify access, then report and stop.")
@@ -199,12 +206,29 @@ def main() -> None:
         return
 
     sync = Sync(svc)
-    root = args.dest_id or sync.folder(args.dest, None)
+    # Resolving the destination by name is how a second, parallel copy of
+    # the whole archive came to exist. The handover folder was created by
+    # the operator, so `drive.file` cannot see it — a name lookup found
+    # nothing, silently created "DC Planning Dataset" at My Drive root,
+    # and every later run filled that instead. Both trees then held 429
+    # site folders and the exports landed in the one nobody was reading.
+    #
+    # The ID is therefore the default and a name has to be asked for.
+    if args.dest and args.dest_id != HANDOVER_FOLDER_ID:
+        ap.error("give --dest or --dest-id, not both")
+    if args.dest:
+        print(f"WARNING: resolving destination by name {args.dest!r}. If a "
+              f"folder of that name is not visible to this tool it will "
+              f"create a new one, which is rarely intended.")
+        root = sync.folder(args.dest, None)
+    else:
+        root = args.dest_id
+    print(f"destination folder id: {root}")
     counts = {"uploaded": 0, "updated": 0, "skipped": 0, "cached": 0, "failed": 0}
     t0 = time.time()
     files = sorted(p for p in args.sync.rglob("*")
                    if p.is_file() and not p.name.startswith("."))
-    print(f"{len(files)} files to consider -> Drive folder {args.dest!r}")
+    print(f"{len(files)} files to consider -> Drive folder {root}")
     folder_ids: dict[Path, str] = {args.sync: root}
     for i, f in enumerate(files, 1):
         parent_path = f.parent
