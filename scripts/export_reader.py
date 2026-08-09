@@ -571,7 +571,8 @@ def main() -> int:
                     default=Path("data/exports/phase1_build/reader.html"))
     ap.add_argument("--phase", default="1")
     ap.add_argument("--publish", type=Path, default=None,
-                    help="also write here, e.g. docs/index.html for Pages")
+                    help="also write here — index.html at the repository root, "
+                         "which is what the EdgeOne deployment serves")
     args = ap.parse_args()
 
     hv = _handover()
@@ -1511,7 +1512,7 @@ def main() -> int:
     if args.publish:
         args.publish.parent.mkdir(parents=True, exist_ok=True)
         args.publish.write_text(out, encoding="utf-8")
-        print(f"  also wrote {args.publish} (GitHub Pages)")
+        print(f"  also wrote {args.publish} (EdgeOne deployment root)")
     print(f"wrote {args.out} ({len(out)/1024/1024:.1f} MB) — {n_sites} sites, "
           f"{len(app_rows)} applications, {len(nsip)} energy projects, "
           f"{n_prov} sites marked provisional")
