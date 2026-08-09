@@ -1,0 +1,9 @@
+{
+  "name": "datacentre-planning-reader",
+  "private": true,
+  "type": "module",
+  "description": "EdgeOne edge middleware for the handover reader. The pipeline itself is Python; this exists only so the password gate is treated as an ES module and can be tested.",
+  "scripts": {
+    "test": "node --test tests/middleware.test.mjs"
+  }
+}

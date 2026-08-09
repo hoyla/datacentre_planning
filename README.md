@@ -154,6 +154,46 @@ For a partial reproduction (e.g. to validate methodology against a
 single council), substitute `--limit N` on `dcp index`, `dcp triage`,
 and `dcp fetch-docs` to scope each stage.
 
+## Publishing the reader
+
+`scripts/export_reader.py --publish docs/index.html` writes the reader to
+the GitHub Pages directory as part of the build, so the published page is
+the same artefact as the release copy rather than a hand-made duplicate.
+The methodology and data dictionary are generated inside it from the same
+queries as the data; there are deliberately no markdown copies alongside,
+because a companion document is the first thing to fall out of step.
+
+### The password gate
+
+`middleware.js` is EdgeOne Pages edge middleware. It matches every route,
+so the page, its embedded dataset and every other asset require a session
+before anything is served — which is the difference between this and a
+password prompt written into the page, where the data has already reached
+the browser by the time it asks. A correct password is exchanged for an
+HMAC-signed, expiring, `HttpOnly` cookie.
+
+Two variables are set in the EdgeOne dashboard, never in the repository:
+
+| Variable | Purpose |
+|---|---|
+| `DC_READER_PASSWORD` | the shared password, at least 12 characters |
+| `DC_READER_SESSION_SECRET` | cookie signing key, at least 32 characters |
+
+Either missing or too short and the middleware answers 503. It fails
+closed on purpose: an unset variable must never mean "serve it to
+anyone".
+
+    node --test tests/middleware.test.mjs
+
+**The gate protects the deployment, not the repository.** EdgeOne Pages
+builds from the git repo, so the reader has to be committed for EdgeOne
+to serve it — and while this repository is public, that same file is
+readable directly from GitHub whatever the middleware does. A password in
+front of the EdgeOne URL is then only a barrier to casual discovery. For
+the gate to mean what it appears to mean, the repository has to be
+private, which is why the companion project this pattern came from states
+that as its first deployment rule.
+
 ## Methodology principle
 
 Ingest broadly; analyse second. We don't decide the story before we see the data; we need to be able to find null findings as well as dramatic ones. The Foxglove top-10 is our first reconciliation target — if our pipeline doesn't reproduce their list with matching MW figures, our coverage is broken.
