@@ -164,7 +164,13 @@ queries as the data; there are deliberately no markdown copies alongside,
 because a companion document is the first thing to fall out of step.
 
 The site is the repository root because that is what the EdgeOne
-deployment serves. It used to live in `docs/`, which is also exactly what
+deployment serves. EdgeOne calls these Projects rather than Pages; the
+repository is attached to the `datacentres` project, whose production
+branch is `main`, with no build command and the output directory left at
+the root. Note that a project only sees pushes to repositories the
+EdgeOne GitHub App has been granted access to — grant the access first,
+because pushes made before it are never delivered and the project simply
+looks idle. It used to live in `docs/`, which is also exactly what
 GitHub Pages publishes — so merging the reader put a complete, ungated
 copy on `hoyla.github.io` at the same moment the password gate was being
 built for it. The Pages workflow is gone and there is now one deployment,
