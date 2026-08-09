@@ -56,6 +56,8 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 from dcp import db  # noqa: E402
 
 from dcp.drive import FOLDER_URL as DRIVE_ROOT  # noqa: E402
+from dcp.drive import WORKBOOK_SHEET_URL  # noqa: E402
+from dcp.drive import SITES_URL  # noqa: E402
 
 # Statuses meaning "we have not looked yet", as against "they disclosed
 # nothing" — the distinction the page is built around.
@@ -176,6 +178,10 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px;
 #tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:150px}
 #tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){min-width:250px}
 #tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){width:112px}
+/* A date is one word or it is nothing: 2024-04-15 broken across two lines
+   reads as two half-dates. The width comes out of Proposal, which is the
+   one column here that can lose a few pixels without cost. */
+#tbl-apps th:nth-child(4),#tbl-apps td:nth-child(4){white-space:nowrap;width:98px}
 tr.detail td{min-width:0}
 th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 /* Sticky on the <thead>, not on each <th>. On a 910-row table the
@@ -235,13 +241,15 @@ tr.detail td{padding:14px 18px 18px 30px}
   .grid{grid-template-columns:1fr}
   .box.proposal,.box.identity{grid-column:1}
 }
-.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-  gap:9px 18px}
+/* Four columns on one row. Site key and classification are always a few
+   characters, so they share a column stacked rather than each taking a
+   whole one — which is what pushed the source documents onto a second
+   row of their own. */
+.fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px 18px}
+.fields .stack{display:flex;flex-direction:column;gap:9px}
 .fields .wide{grid-column:1 / -1}
-/* "How we found it" sits beside the coordinates rather than under them,
-   but it carries the longest text in the block, so it gets two columns. */
-.fields .span2{grid-column:span 2}
-@media (max-width:700px){.fields .span2{grid-column:auto}}
+@media (max-width:1100px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.fields{grid-template-columns:1fr}}
 .fields .lbl{display:block;color:var(--mut);font-size:11.5px;margin-bottom:1px}
 .fields .val{display:block;font-size:12.5px;line-height:1.45}
 .box h4{margin:0 0 7px;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
@@ -1117,13 +1125,15 @@ def main() -> int:
 
   <div class="box identity"><h4>Site details</h4>
    <div class="fields">
-    <div><span class="lbl">Site key</span><span class="val">{esc(key)}</span></div>
-    <div><span class="lbl">Classification</span><span class="val">{esc(cls)}</span></div>
+    <div class="stack">
+     <div><span class="lbl">Site key</span><span class="val">{esc(key)}</span></div>
+     <div><span class="lbl">Classification</span><span class="val">{esc(cls)}</span></div>
+    </div>
     <div><span class="lbl">Coordinates</span><span class="val">
      {f'{lat:.5f}, {lon:.5f}' if lat and lon else '—'}
      {maplink}{' · ' + gmaps if gmaps else ''}
      <span class="help">{esc(csrc or 'source unknown')}</span></span></div>
-    <div class="span2"><span class="lbl">How we found it</span><span class="val">
+    <div><span class="lbl">How we found it</span><span class="val">
      {esc(', '.join(org)) or '—'}
      {f'<span class="help">{esc(origin_mod.explain(org))}</span>' if len(org) < 3 else
       '<span class="help">Several independent routes reached this site, which is a '
@@ -1238,12 +1248,14 @@ def main() -> int:
 
   <div class="box identity"><h4>Site details</h4>
    <div class="fields">
-    <div><span class="lbl">Barbour reference</span><span class="val">{esc(pref)}</span></div>
+    <div class="stack">
+     <div><span class="lbl">Barbour reference</span><span class="val">{esc(pref)}</span></div>
+     <div><span class="lbl">Stage</span><span class="val">{esc(pstage or '—')}</span></div>
+    </div>
     <div><span class="lbl">Development type</span><span class="val">{esc(dev_type or '—')}</span></div>
-    <div><span class="lbl">Stage</span><span class="val">{esc(pstage or '—')}</span></div>
     <div><span class="lbl">Coordinates</span><span class="val">
      {f'{plat:.5f}, {plon:.5f}' if plat and plon else '—'} {maplink}</span></div>
-    <div class="wide"><span class="lbl">Environmental subjects</span>
+    <div><span class="lbl">Environmental subjects</span>
      <span class="val">{esc(', '.join(env)) or '—'}</span></div>
    </div></div>
 
@@ -1527,14 +1539,14 @@ def main() -> int:
 
 
     out = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
-<title>UK data-centre planning — handover (Phase {esc(args.phase)})</title>
+<title>UK datacentre plans v2, phase 1 release</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- The gate is there to stop the link being passed around, so the page
      should not turn up in a search either. -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <style>{CSS}</style></head><body>
-<header><h1>UK data-centre planning — handover</h1>
- <div class="sub">Phase {esc(args.phase)} · {n_sites} sites · {n_docs:,} documents ·
+<header><h1>UK datacentre plans v2, phase 1 release</h1>
+ <div class="sub">{n_sites} sites · {n_docs:,} documents ·
  generated {dt.datetime.now(dt.timezone.utc):%Y-%m-%d %H:%M} UTC ·
  pipeline {esc(hv._git_commit())}</div></header>
 <nav class="top">
@@ -1593,12 +1605,15 @@ def main() -> int:
    <p class="what">The same rows with all {len(hv.SITE_HEADERS)} columns, filterable and
     pivotable, with a provenance sheet.</p>
    <p class="when"><b>Reach for it when</b> you want to slice the data yourself.
-    &nbsp;<a href="{DRIVE_ROOT}" target="_blank" rel="noopener">Open it on Drive</a></p></div>
+    &nbsp;<a href="{WORKBOOK_SHEET_URL}" target="_blank" rel="noopener">Open the
+    spreadsheet</a> <span class="help">· or the .xlsx
+    <a href="{DRIVE_ROOT}" target="_blank" rel="noopener">on Drive</a></span></p></div>
   <div class="part"><h3>Source documents<span class="pill">Drive</span></h3>
    <p class="what">The council documents themselves, filed by site and by application. Every
     Drive link in these tables lands in the right folder.</p>
    <p class="when"><b>Reach for it when</b> you need the original to quote or verify.
-    &nbsp;<a href="{DRIVE_ROOT}" target="_blank" rel="noopener">Open the Drive folder</a></p></div>
+    &nbsp;<a href="{SITES_URL}" target="_blank" rel="noopener">Open the site
+    folders</a></p></div>
   <div class="part"><h3>Query database<span class="pill">DuckDB</span></h3>
    <p class="what">Every site, application, document and finding in one file
     (<code>dc_phase1.duckdb</code>, ~106 MB). Opens in DuckDB CLI, Python, R or the DuckDB
