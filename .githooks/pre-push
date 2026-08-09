@@ -1,0 +1,77 @@
+#!/bin/sh
+# Push safety, by the state of the branch's pull request.
+#
+#   no PR      safe to push
+#   draft PR   safe to push
+#   ready PR   do not push without asking first
+#   merged PR  never push
+#
+# The last two are the ones that bite. A push to a merged branch is
+# stranded — not in main, on a branch nobody will open again, and with
+# every appearance of having worked. A push to a branch under review
+# changes what a reviewer is looking at while they look at it.
+#
+# Enable once per clone:
+#     git config core.hooksPath .githooks
+#
+# Deliberate override, for the rare case where the answer really is yes:
+#     ALLOW_MERGED_PUSH=1 git push …
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+[ "$ALLOW_MERGED_PUSH" = "1" ] && exit 0
+command -v gh >/dev/null 2>&1 || exit 0     # no gh, no opinion
+
+info=$(gh pr view "$branch" --json state,isDraft,number,url 2>/dev/null) || exit 0
+[ -z "$info" ] && exit 0                    # no PR: safe
+
+state=$(printf '%s' "$info" | sed -n 's/.*"state":"\([A-Z]*\)".*/\1/p')
+draft=$(printf '%s' "$info" | sed -n 's/.*"isDraft":\([a-z]*\).*/\1/p')
+url=$(printf '%s' "$info" | sed -n 's/.*"url":"\([^"]*\)".*/\1/p')
+
+case "$state" in
+  MERGED)
+    cat >&2 <<EOF
+
+  Refusing to push. The pull request for '$branch' has MERGED.
+  $url
+
+  Anything pushed here is stranded: not in main, on a branch nobody will
+  read again, and looking for all the world as though it worked.
+
+  Start again from main:
+
+      git checkout -b <new-branch> origin/main
+      git cherry-pick <commits>
+
+EOF
+    exit 1 ;;
+  OPEN)
+    [ "$draft" = "true" ] && exit 0         # draft: safe
+    cat >&2 <<EOF
+
+  Refusing to push. '$branch' has a pull request that is READY for review.
+  $url
+
+  Pushing now changes what a reviewer is reading while they read it. Ask
+  first, or put the PR back into draft:
+
+      gh pr ready --undo $branch
+
+  Then push again.
+
+EOF
+    exit 1 ;;
+  CLOSED)
+    cat >&2 <<EOF
+
+  Refusing to push. The pull request for '$branch' was CLOSED unmerged.
+  $url
+
+  Reopen it deliberately, or branch afresh from main.
+
+EOF
+    exit 1 ;;
+esac
+
+exit 0
