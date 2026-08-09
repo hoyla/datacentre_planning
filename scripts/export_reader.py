@@ -172,7 +172,10 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px;
   font-size:13px}
 #tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){min-width:210px}
 #tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){min-width:260px}
+#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){width:104px}
+#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:150px}
 #tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){min-width:250px}
+#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){width:112px}
 tr.detail td{min-width:0}
 th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 /* Sticky on the <thead>, not on each <th>. On a 910-row table the
@@ -183,7 +186,7 @@ th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);verti
 #tbl-sites thead,#tbl-apps thead,#tbl-energy thead{position:sticky;
   top:var(--th-top,82px);z-index:7}
 th{background:var(--bg);cursor:pointer;white-space:nowrap;font-weight:600;
-  border-bottom:2px solid var(--line)}
+  border-bottom:2px solid var(--line);vertical-align:bottom}
 th:after{content:" ↕";color:var(--mut);font-size:10px;opacity:.55}
 tr.site{cursor:pointer}
 tr.site:hover{background:rgba(127,127,127,.06)}
@@ -200,13 +203,48 @@ tr.detail{display:none;background:var(--soft)}
 tr.detail.on{display:table-row}
 tr.detail td{padding:14px 18px 18px 30px}
 .mw{font-variant-numeric:tabular-nums;font-weight:650;white-space:nowrap}
+/* The qualifier under a figure wraps; only the figure itself must not.
+   Inheriting nowrap from .mw made "Disclosed total site demand · may
+   rise" set the width of the whole column. */
+.mw .q{white-space:normal}
 .prov{color:var(--warn);font-weight:400}
 .q{display:block;color:var(--mut);font-size:11.5px;font-weight:400;line-height:1.35}
-.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;white-space:nowrap}
+/* Status labels wrap. They are occasionally a full sentence — "No figure
+   found so far — 56 of 69 documents analysed" — and holding those on one
+   line gave the column more width than any other, on rows that are
+   several lines deep anyway. */
+.tag{display:inline-block;padding:2px 7px;border-radius:9px;font-size:11px;
+  white-space:normal;line-height:1.35}
 .tag.known{background:var(--okbg);color:var(--ok)}
 .tag.unknown{background:var(--warnbg);color:var(--warn)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
-.box h4{margin:0 0 5px;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+/* The panel is a four-column grid: the proposal down the left across two
+   rows, the identity fields as one wide block above, and the three
+   subject boxes beneath it. Before this everything lived in the first
+   column and three columns of whitespace sat beside it. */
+.grid{display:grid;grid-template-columns:minmax(250px,1.15fr) repeat(3,1fr);
+  gap:12px;align-items:start}
+.box{border:1px solid var(--line);border-radius:8px;padding:11px 13px;min-width:0}
+.box.proposal{grid-column:1;grid-row:1 / span 2}
+.box.identity{grid-column:2 / -1;grid-row:1}
+@media (max-width:1100px){
+  .grid{grid-template-columns:1fr 1fr}
+  .box.proposal{grid-column:1 / -1;grid-row:auto}
+  .box.identity{grid-column:1 / -1;grid-row:auto}
+}
+@media (max-width:700px){
+  .grid{grid-template-columns:1fr}
+  .box.proposal,.box.identity{grid-column:1}
+}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:9px 18px}
+.fields .wide{grid-column:1 / -1}
+/* "How we found it" sits beside the coordinates rather than under them,
+   but it carries the longest text in the block, so it gets two columns. */
+.fields .span2{grid-column:span 2}
+@media (max-width:700px){.fields .span2{grid-column:auto}}
+.fields .lbl{display:block;color:var(--mut);font-size:11.5px;margin-bottom:1px}
+.fields .val{display:block;font-size:12.5px;line-height:1.45}
+.box h4{margin:0 0 7px;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
 .box p{margin:0 0 8px}
 .kv{display:grid;grid-template-columns:148px 1fr;gap:2px 12px;font-size:12.5px;margin:0}
 .kv dt{color:var(--mut)}.kv dd{margin:0}
@@ -263,9 +301,30 @@ a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:non
 .wrap p.m{margin:0 0 9px}
 .wrap ul.m{margin:0 0 9px;padding-left:19px}
 .wrap ul.m li{margin-bottom:4px}
-#mapwrap{position:relative}
-#mapview{position:relative;overflow:hidden;height:calc(100vh - var(--th-top,150px) - 30px);
-  min-height:420px;background:var(--soft);cursor:grab;touch-action:none}
+/* Controls beside the map, not above and below it. A laptop viewport is
+   landscape and Britain is not, so stacking a filter bar on top and a key
+   underneath left a short, wide strip of map with the key pushed off the
+   bottom of the screen. In a side column the map keeps the full height
+   and comes out closer to square, and the key is always visible.
+   The height is set so the page exactly fills the viewport and does not
+   scroll — --map-top is measured, because the masthead above it is not a
+   fixed height. */
+#mapwrap{display:flex;height:calc(100vh - var(--map-top,150px));min-height:440px;
+  border-top:1px solid var(--line)}
+#mapside{flex:0 0 250px;overflow-y:auto;padding:14px 16px;display:flex;
+  flex-direction:column;gap:13px;border-right:1px solid var(--line)}
+#mapside input[type=search]{min-width:0;width:100%}
+#mapside .mgroup{display:flex;flex-direction:column;gap:7px}
+#mapside .count{margin:0;font-size:12.5px}
+#mapside .help{margin:0}
+#mapside .attrib{margin-top:auto;padding-top:10px;border-top:1px solid var(--line)}
+@media (max-width:760px){
+  #mapwrap{flex-direction:column;height:auto}
+  #mapside{flex:none;border-right:0;border-bottom:1px solid var(--line)}
+  #mapview{height:70vh}
+}
+#mapview{position:relative;overflow:hidden;flex:1;height:100%;min-width:0;
+  background:var(--soft);cursor:grab;touch-action:none}
 #mapview:active{cursor:grabbing}
 #maptiles,#mappins{position:absolute;inset:0}
 #mappins{pointer-events:none}
@@ -280,13 +339,21 @@ img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-
 #mapzoom{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:3px}
 #mapzoom button{width:31px;height:31px;font-size:17px;border:1px solid var(--line);
   background:var(--bg);color:var(--fg);cursor:pointer;border-radius:5px}
-#mapinfo{position:absolute;bottom:44px;left:12px;max-width:330px;background:var(--bg);
+#mapinfo{position:absolute;top:12px;left:12px;width:300px;background:var(--bg);
   border:1px solid var(--line);border-radius:7px;padding:11px 13px;font-size:13px;
   box-shadow:0 2px 14px rgba(0,0,0,.16);z-index:6}
-#mapkey{padding:7px 22px;font-size:12px;color:var(--mut);display:flex;gap:9px;
-  align-items:center;border-top:1px solid var(--line);flex-wrap:wrap}
-#mapkey .pin{position:static;pointer-events:none;margin:0 1px 0 8px}
-#mapkey .attrib{margin-left:auto}
+#mapinfo .cardx{position:absolute;top:4px;right:6px;border:0;background:none;
+  color:var(--mut);font-size:17px;line-height:1;cursor:pointer;padding:2px 4px}
+#mapinfo .cardx:hover{color:var(--fg)}
+#mapinfo .cardlinks{display:block;margin-top:7px;padding-top:7px;
+  border-top:1px solid var(--line);font-size:12.5px}
+#mapkey{font-size:12px;color:var(--mut);display:flex;flex-direction:column;gap:5px}
+/* Explicit inline-block: on the map a .pin is a <button>, which is
+   inline-block already, but in the key it is a <span> — inline, so width
+   and height were ignored and the swatch collapsed to a sliver. */
+#mapkey div{display:flex;align-items:center;gap:7px}
+#mapkey .pin{position:static;pointer-events:none;display:inline-block;
+  flex:0 0 11px;width:11px;height:11px;margin:0}
 footer{padding:20px 22px 34px;color:var(--mut);font-size:12px;border-top:1px solid var(--line)}
 .help{font-size:11.5px;color:var(--mut)}
 """
@@ -307,7 +374,8 @@ MAP_JS = """
    points. Both calls are pure re-renders, so doing it twice is free. */
 function soon(fn){ try{ fn(); }catch(e){} setTimeout(fn, 0); }
 const TS=256, MINZ=5, MAXZ=17;
-const map={z:6, cx:-2.4, cy:54.2, el:null, tiles:null, pins:null, drag:null};
+const map={z:6, cx:-2.4, cy:54.2, el:null, tiles:null, pins:null, drag:null,
+           fitted:false, fitSize:null, userMoved:false};
 function proj(lat,lon,z){
   const n=Math.pow(2,z), la=lat*Math.PI/180;
   return [(lon+180)/360*n*TS,
@@ -319,7 +387,46 @@ function unproj(px,py,z){
   const k=Math.PI-2*Math.PI*py/(n*TS);
   return [180/Math.PI*Math.atan(0.5*(Math.exp(k)-Math.exp(-k))), lon];
 }
+/* Zoom about a point, keeping whatever is under the cursor where it is.
+   Zooming about the viewport centre — which is what changing map.z alone
+   does — means the thing you are trying to look at slides away from you
+   at every step, and you chase it with the drag handle. */
+function zoomAround(nz, clientX, clientY){
+  nz = Math.max(MINZ, Math.min(MAXZ, nz));
+  if(nz === map.z) return;
+  map.userMoved = true;
+  hideCard();
+  const r = map.el.getBoundingClientRect();
+  const w = map.el.clientWidth, h = map.el.clientHeight;
+  const px = (clientX === undefined) ? w / 2 : clientX - r.left;
+  const py = (clientY === undefined) ? h / 2 : clientY - r.top;
+  const [cx, cy] = proj(map.cy, map.cx, map.z);
+  const ox = cx - w / 2, oy = cy - h / 2;
+  const f = Math.pow(2, nz - map.z);
+  const nox = (ox + px) * f - px, noy = (oy + py) * f - py;
+  const [la, lo] = unproj(nox + w / 2, noy + h / 2, nz);
+  map.z = nz; map.cy = la; map.cx = lo;
+  drawMap();
+}
+
 function drawMap(){
+  /* First real draw fits the data to whatever space the window actually
+     gives us, rather than opening at a hardcoded zoom 6 that crops the
+     country on a laptop and wastes half a widescreen. It happens here,
+     not in initMap, because the tab is hidden at startup and a hidden
+     element has no width to fit to. */
+  /* Refit while the opening view is still untouched. The first draw can
+     happen before the side column has settled and given the map its full
+     height, so the fit lands against a shorter box and the map opens
+     further out than it should. Once the reader has panned or zoomed,
+     their view is theirs and is never overridden. */
+  const size = map.el.clientWidth + 'x' + map.el.clientHeight;
+  if(map.el.clientWidth > 0 && !map.userMoved
+     && (!map.fitted || (map.fitSize && map.fitSize !== size))){
+    map.fitted = true;
+    const vis = MAPPTS.filter(p => p.vis);
+    if(vis.length){ fitTo(vis); return; }
+  }
   const w=map.el.clientWidth, h=map.el.clientHeight;
   const [cx,cy]=proj(map.cy,map.cx,map.z);
   const ox=cx-w/2, oy=cy-h/2, n=Math.pow(2,map.z);
@@ -355,7 +462,9 @@ function mapFilter(){
   for(const p of MAPPTS){
     let ok = p.k==='e' ? showE : showS;
     if(ok&&s) ok=p.h.includes(s);
-    if(ok&&big&&p.k!=='e') ok = p.mw!==null && p.mw>=100;
+    if(ok&&big&&p.k!=='e'){
+      ok = p.mw===null ? !document.getElementById('munk').checked : p.mw>=100;
+    }
     p.vis=ok;
   }
   drawMap();
@@ -367,10 +476,14 @@ function fitTo(pts){
   map.cy=(Math.min(...la)+Math.max(...la))/2;
   map.cx=(Math.min(...lo)+Math.max(...lo))/2;
   const w=map.el.clientWidth||800, h=map.el.clientHeight||600;
+  // 0.88, not 0.7. Jersey and Shetland stretch the bounding box well
+  // beyond where the sites actually are, so a generous margin on top of
+  // that opened the map on most of western Europe.
   for(let z=MAXZ; z>=MINZ; z--){
     const a=proj(Math.min(...la),Math.min(...lo),z), b=proj(Math.max(...la),Math.max(...lo),z);
-    if(Math.abs(b[0]-a[0])<w*0.7 && Math.abs(b[1]-a[1])<h*0.7){ map.z=z; break; }
+    if(Math.abs(b[0]-a[0])<w*0.88 && Math.abs(b[1]-a[1])<h*0.88){ map.z=z; break; }
   }
+  map.fitSize = w + 'x' + h;
   drawMap();
 }
 function showMap(siteKey, energyRef){
@@ -382,6 +495,9 @@ function showMap(siteKey, energyRef){
     document.getElementById('ms').checked=true;
     document.getElementById('mq').value='';
     document.getElementById('mbig').setAttribute('aria-pressed','false');
+    document.getElementById('munk').checked=false;
+    document.getElementById('munk').disabled=true;
+    document.getElementById('munklab').classList.add('off');
     mapFilter();
     for(const p of MAPPTS){
       if((siteKey&&p.k==='s'&&p.id===siteKey)||(energyRef&&p.k==='e'&&p.id===energyRef)){
@@ -389,8 +505,32 @@ function showMap(siteKey, energyRef){
       }
     }
   }
-  soon(()=>{ want.length?fitTo(want):drawMap(); });
+  soon(()=>{ if(want.length){ map.userMoved=true; fitTo(want); } else drawMap(); });
 }
+/* Put the card beside the marker, clamped inside the map. It used to be
+   pinned to the bottom-left of the map container — and the map is taller
+   than the fold, so on a click near the top the card opened below the
+   visible area and looked as though nothing had happened. */
+function showCard(p, pin){
+  const box = document.getElementById('mapinfo');
+  box.innerHTML = '<button class="cardx" aria-label="Close">\u00d7</button>' + p.pop;
+  box.hidden = false;
+  const view = map.el.getBoundingClientRect();
+  const at = pin.getBoundingClientRect();
+  const bw = box.offsetWidth, bh = box.offsetHeight;
+  const x = at.left - view.left + at.width + 12;
+  const y = at.top - view.top - bh / 2 + at.height / 2;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  // Flip to the other side of the marker rather than sitting on top of it.
+  box.style.left = (x + bw > view.width - 8
+                    ? clamp(at.left - view.left - bw - 12, 8, view.width - bw - 8)
+                    : clamp(x, 8, view.width - bw - 8)) + 'px';
+  box.style.top = clamp(y, 8, Math.max(8, view.height - bh - 8)) + 'px';
+  box.querySelector('.cardx').addEventListener('click', () => { box.hidden = true; });
+}
+
+function hideCard(){ const b=document.getElementById('mapinfo'); if(b) b.hidden=true; }
+
 function initMap(){
   map.el=document.getElementById('mapview');
   map.tiles=document.getElementById('maptiles');
@@ -403,33 +543,63 @@ function initMap(){
     if(!map.drag) return;
     const [cx,cy]=proj(map.cy,map.cx,map.z);
     const [la,lo]=unproj(cx-(e.clientX-map.drag.x), cy-(e.clientY-map.drag.y), map.z);
-    map.cy=la; map.cx=lo; map.drag={x:e.clientX,y:e.clientY}; drawMap();
+    map.cy=la; map.cx=lo; map.drag={x:e.clientX,y:e.clientY};
+    map.userMoved=true; hideCard(); drawMap();
   });
   addEventListener('pointerup',()=>{map.drag=null;});
+  /* A wheel event is not a zoom level. A trackpad emits a stream of them
+     for one gesture, so stepping a level per event flew through five
+     levels before the fingers had stopped moving. Accumulate instead, and
+     step only when enough has built up — pinch (ctrlKey) counts for more
+     per unit than a scroll, because the gesture is shorter. */
+  let wheelAcc = 0, wheelAt = 0;
   map.el.addEventListener('wheel',e=>{
     e.preventDefault();
-    const nz=Math.max(MINZ,Math.min(MAXZ,map.z+(e.deltaY<0?1:-1)));
-    if(nz!==map.z){map.z=nz; drawMap();}
+    const t = e.timeStamp || 0;
+    if(t - wheelAt > 400) wheelAcc = 0;      // a new gesture starts clean
+    wheelAt = t;
+    wheelAcc += -e.deltaY * (e.ctrlKey ? 0.02 : 0.006);
+    while(wheelAcc >= 1){ zoomAround(map.z + 1, e.clientX, e.clientY); wheelAcc -= 1; }
+    while(wheelAcc <= -1){ zoomAround(map.z - 1, e.clientX, e.clientY); wheelAcc += 1; }
   },{passive:false});
+  // Double-click zooms in where you clicked; with alt or shift, out.
+  map.el.addEventListener('dblclick',e=>{
+    if(e.target.classList.contains('pin')) return;
+    e.preventDefault();
+    zoomAround(map.z + ((e.altKey || e.shiftKey) ? -1 : 1), e.clientX, e.clientY);
+  });
   map.pins.addEventListener('click',e=>{
     const b=e.target.closest('.pin'); if(!b) return;
+    showCard(MAPPTS[+b.dataset.i], b);
+  });
+  // Double-clicking a marker goes in on it rather than opening its card.
+  map.pins.addEventListener('dblclick',e=>{
+    const b=e.target.closest('.pin'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
     const p=MAPPTS[+b.dataset.i];
-    const box=document.getElementById('mapinfo');
-    box.innerHTML=p.pop; box.hidden=false;
+    map.cy=p.lat; map.cx=p.lon; map.z=Math.min(MAXZ, Math.max(map.z+2, 14));
+    drawMap();
   });
   ['mq'].forEach(id=>document.getElementById(id).addEventListener('input',mapFilter));
   ['me','ms'].forEach(id=>document.getElementById(id).addEventListener('change',mapFilter));
   document.getElementById('mbig').addEventListener('click',function(){
-    this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')!=='true'); mapFilter();
+    const on=this.getAttribute('aria-pressed')!=='true';
+    this.setAttribute('aria-pressed', on);
+    const unk=document.getElementById('munk');
+    unk.disabled=!on;
+    document.getElementById('munklab').classList.toggle('off', !on);
+    mapFilter();
   });
-  document.getElementById('mzin').addEventListener('click',()=>{
-    map.z=Math.min(MAXZ,map.z+1); drawMap();});
-  document.getElementById('mzout').addEventListener('click',()=>{
-    map.z=Math.max(MINZ,map.z-1); drawMap();});
+  document.getElementById('munk').addEventListener('change', mapFilter);
+  document.getElementById('mzin').addEventListener('click',()=>zoomAround(map.z+1));
+  document.getElementById('mzout').addEventListener('click',()=>zoomAround(map.z-1));
   document.getElementById('mreset').addEventListener('click',()=>{
-    map.z=6; map.cx=-2.4; map.cy=54.2;
+    map.fitted=false; map.userMoved=false;  // refit to the current window
     document.getElementById('mq').value='';
     document.getElementById('mbig').setAttribute('aria-pressed','false');
+    const unk=document.getElementById('munk');
+    unk.checked=false; unk.disabled=true;
+    document.getElementById('munklab').classList.add('off');
     document.getElementById('me').checked=true; document.getElementById('ms').checked=true;
     MAPPTS.forEach(p=>p.sel=false); mapFilter();});
   addEventListener('resize',()=>{ if(document.getElementById('view-map').classList.contains('on')) drawMap(); });
@@ -468,6 +638,11 @@ function sticky(){
   const r=document.documentElement.style;
   r.setProperty('--nav-h', navH+'px');
   r.setProperty('--th-top', (navH+barH)+'px');
+  const wrap=document.getElementById('mapwrap');
+  if(wrap && wrap.offsetParent){
+    r.setProperty('--map-top',
+      (wrap.getBoundingClientRect().top + window.scrollY) + 'px');
+  }
 }
 addEventListener('resize', sticky);
 function show(v, quiet){
@@ -767,22 +942,41 @@ def main() -> int:
             site_mw_values.append(est.value_mw)
         addr = max((a[15] or "" for a in apps), key=len, default="") or \
             ", ".join(councils or [])
+        _reg = next((a[12] for a in sorted(
+            apps, key=lambda x: str(x[5] or ""), reverse=True)
+            if a[12] and not str(a[12]).startswith("file://")), "")
         if lat is not None and lon is not None:
             map_points.append({
                 "k": "s", "id": key, "lat": lat, "lon": lon,
                 "mw": est.value_mw, "t": (name or key)[:80],
                 "h": " ".join(x.lower() for x in
                               (name or key, ", ".join(councils or []), addr) if x),
-                "pop": (f'<b>{esc(name or key)}</b><br><span class="help">'
-                        f'{esc(", ".join(councils or []))}</span><br>'
-                        + (f'<b>{est.value_mw:,.0f} MW</b> '
-                           f'<span class="help">{esc(est.basis)}</span><br>'
-                           if est.value_mw else
-                           f'<span class="help">{esc(est.basis)}</span><br>')
-                        + f'<a href="#sites" onclick="return goSite(\'{esc(key)}\')">'
-                          f'Open this site</a>')})
-        maplink = (f'<a href="https://www.google.com/maps/search/?api=1&query={lat},{lon}"'
-                   f' target="_blank" rel="noopener">map</a>') if lat and lon else ""
+                "pop": (
+                    f'<b>{esc(name or key)}</b><br><span class="help">'
+                    f'{esc(", ".join(councils or []))}</span><br>'
+                    + (f'<b>{est.value_mw:,.0f} MW</b> '
+                       f'<span class="help">{esc(est.basis)}</span><br>'
+                       if est.value_mw else
+                       f'<span class="help">{esc(est.basis)}</span><br>')
+                    + (f'<span class="help">{held:,} documents, {read:,} analysed'
+                       f'</span><br>' if held else
+                       '<span class="help">no documents held</span><br>')
+                    # A pin is a starting point, so the card carries the
+                    # three places worth going next: the full row, the
+                    # documents themselves, and the council's own register.
+                    + '<span class="cardlinks">'
+                    + f'<a href="#sites" onclick="return goSite(\'{esc(key)}\')">'
+                      f'Open this site</a>'
+                    + (f' · <a href="{esc(drive[hv._norm_key(key)])}" target="_blank" '
+                       f'rel="noopener">Drive</a>'
+                       if held and hv._norm_key(key) in drive else '')
+                    + (f' · <a href="{esc(_reg)}" target="_blank" rel="noopener">'
+                       f'Register</a>' if _reg else '')
+                    + '</span>')})
+        maplink = (f'<a href="#map" onclick="showMap(\'{esc(key)}\');return false"'
+                   f' title="Show this site on the map">map</a>') if lat and lon else ""
+        gmaps = (f'<a href="https://www.google.com/maps/search/?api=1&query={lat},{lon}"'
+                 f' target="_blank" rel="noopener">Google Maps</a>') if lat and lon else ""
         full_desc = max((a[16] or "" for a in apps), key=len, default="") or (btitle or "")
         summary, descriptive = prop.summarise([a[16] for a in apps] or [btitle])
         summary = prop.tidy(summary)
@@ -908,26 +1102,35 @@ def main() -> int:
 <td class="mw" data-v="{est.value_mw or ''}">{mw_cell}</td>
 <td data-v="{esc(cap_label)}"><span class="tag {'known' if known else 'unknown'}">{esc(cap_label)}</span></td>
 <td data-v="{esc(addr)}">{esc(trim(addr, 105)) or '—'} {maplink}</td>
-<td data-v="{read}">{read}/{held}<span class="q">documents read</span></td>
+<td data-v="{read}">{read}/{held}<span class="q">documents read{
+ f' · <a href="{esc(_durl)}" target="_blank" rel="noopener" '
+ f'onclick="event.stopPropagation()">Drive</a>' if _durl and held else ''
+}</span></td>
 </tr>
 <tr class="detail"><td colspan="6">
  {site_banner}
  <div class="grid">
-  <div class="box"><h4>Proposal</h4>
+  <div class="box proposal"><h4>Proposal</h4>
    <p><strong>{esc(summary) or '—'}</strong></p>
    <p class="help">Lifted verbatim from an application below, which the council published
-    as:</p><p>{esc(trim(full_desc, 640)) or '—'}</p>
-   <dl class="kv">
-    <dt>Site key</dt><dd>{esc(key)}</dd>
-    <dt>Classification</dt><dd>{esc(cls)}</dd>
-    <dt>Coordinates</dt><dd>{f'{lat:.5f}, {lon:.5f}' if lat and lon else '—'} {maplink}
-     <span class="help">({esc(csrc or 'source unknown')})</span></dd>
-    <dt>How we found it</dt><dd>{esc(', '.join(org)) or '—'}
+    as:</p><p>{esc(trim(full_desc, 640)) or '—'}</p></div>
+
+  <div class="box identity"><h4>Site details</h4>
+   <div class="fields">
+    <div><span class="lbl">Site key</span><span class="val">{esc(key)}</span></div>
+    <div><span class="lbl">Classification</span><span class="val">{esc(cls)}</span></div>
+    <div><span class="lbl">Coordinates</span><span class="val">
+     {f'{lat:.5f}, {lon:.5f}' if lat and lon else '—'}
+     {maplink}{' · ' + gmaps if gmaps else ''}
+     <span class="help">{esc(csrc or 'source unknown')}</span></span></div>
+    <div class="span2"><span class="lbl">How we found it</span><span class="val">
+     {esc(', '.join(org)) or '—'}
      {f'<span class="help">{esc(origin_mod.explain(org))}</span>' if len(org) < 3 else
       '<span class="help">Several independent routes reached this site, which is a '
-      'stronger signal than any one of them.</span>'}</dd>
-    <dt>{'Source documents' if held else 'Drive'}</dt><dd>{drive_html}</dd>
-   </dl></div>
+      'stronger signal than any one of them.</span>'}</span></div>
+    <div><span class="lbl">{'Source documents' if held else 'Drive'}</span>
+     <span class="val">{drive_html}</span></div>
+   </div></div>
 
   <div class="box"><h4>Power</h4>
    <dl class="kv">
@@ -992,10 +1195,22 @@ def main() -> int:
             pre_application=True, docs_held=0, docs_read=0,
             power_value_mw=None, power_basis="")
         near = nearest(plat, plon)
-        maplink = (f'<a href="https://www.google.com/maps/search/?api=1&query={plat},{plon}"'
-                   f' target="_blank" rel="noopener">map</a>') if plat and plon else ""
+        maplink = (f'<a href="#map" onclick="showMap(\'{esc(key)}\');return false"'
+                   f' title="Show this site on the map">map</a>') if plat and plon else ""
         env = sorted(sig.environmental_signals(description or "").keys())
         summary = prop.tidy(prop.summarise([description, title])[0])
+        if plat is not None and plon is not None:
+            map_points.append({
+                "k": "s", "id": key, "lat": plat, "lon": plon, "mw": None,
+                "t": (title or key)[:80],
+                "h": " ".join(x.lower() for x in
+                              (title or key, authority or "", address or "") if x),
+                "pop": (f'<b>{esc(title or key)}</b><br><span class="help">'
+                        f'{esc(authority or "")}</span><br>'
+                        f'<span class="help">No application submitted yet — '
+                        f'Barbour ABI project intelligence</span><br>'
+                        f'<a href="#sites" onclick="return goSite(\'{esc(key)}\')">'
+                        f'Open this site</a>')})
         hay = " ".join(str(x or "").lower() for x in
                        (title, key, address, authority, description, dev_type))
         near_html = (f'{esc(near[0]["name"])} — {near[1]} km'
@@ -1017,26 +1232,35 @@ def main() -> int:
  <div class="banner" style="margin-top:0"><b>No application submitted yet.</b>
   {esc(site_profile.NO_DOCUMENT_REASONS['pre_application'])}</div>
  <div class="grid">
-  <div class="box"><h4>Proposal</h4>
+  <div class="box proposal"><h4>Proposal</h4>
    <p><strong>{esc(summary) or '—'}</strong></p>
-   <p class="help">Barbour ABI records it as:</p><p>{esc(description) or '—'}</p>
-   <dl class="kv">
-    <dt>Barbour reference</dt><dd>{esc(pref)}</dd>
-    <dt>Development type</dt><dd>{esc(dev_type or '—')}</dd>
-    <dt>Stage</dt><dd>{esc(pstage or '—')}</dd>
-    <dt>Coordinates</dt><dd>{f'{plat:.5f}, {plon:.5f}' if plat and plon else '—'} {maplink}</dd>
-    <dt>Environmental subjects</dt><dd>{esc(', '.join(env)) or '—'}</dd>
-   </dl></div>
+   <p class="help">Barbour ABI records it as:</p><p>{esc(description) or '—'}</p></div>
+
+  <div class="box identity"><h4>Site details</h4>
+   <div class="fields">
+    <div><span class="lbl">Barbour reference</span><span class="val">{esc(pref)}</span></div>
+    <div><span class="lbl">Development type</span><span class="val">{esc(dev_type or '—')}</span></div>
+    <div><span class="lbl">Stage</span><span class="val">{esc(pstage or '—')}</span></div>
+    <div><span class="lbl">Coordinates</span><span class="val">
+     {f'{plat:.5f}, {plon:.5f}' if plat and plon else '—'} {maplink}</span></div>
+    <div class="wide"><span class="lbl">Environmental subjects</span>
+     <span class="val">{esc(', '.join(env)) or '—'}</span></div>
+   </div></div>
+
   <div class="box"><h4>Scheme</h4>
    <dl class="kv">
     <dt>Planning authority</dt><dd>{esc(authority or '—')}</dd>
     <dt>Contract value</dt><dd>{f'£{pvalue:,.0f}' if pvalue else '—'}</dd>
     <dt>Floor area</dt><dd>{f'{pfloor:,.0f} m²' if pfloor else '—'}</dd>
     <dt>Site area</dt><dd>{f'{psite:,.2f} ha' if psite else '—'}</dd>
+   </dl></div>
+  <div class="box"><h4>Dates</h4>
+   <dl class="kv">
     <dt>Plan date</dt><dd>{esc(str(pplan or '—'))}</dd>
     <dt>Decision date</dt><dd>{esc(str(pdecision or '—'))}</dd>
-    <dt>Nearest energy project</dt><dd>{near_html}</dd>
-   </dl>
+   </dl></div>
+  <div class="box"><h4>Nearby</h4>
+   <dl class="kv"><dt>Nearest energy project</dt><dd>{near_html}</dd></dl>
    <p class="help">Barbour ABI data is licensed and must be credited in published output.</p>
   </div>
  </div></td></tr>""")
@@ -1472,24 +1696,36 @@ def main() -> int:
 <tbody>{''.join(h for _, h in energyrows)}</tbody></table></section>
 
 <section id="view-map" class="view">
-<div class="controls">
- <input type="search" id="mq" placeholder="Search site, council, applicant, project…">
- <label class="chk"><input type="checkbox" id="ms" checked> Data-centre sites</label>
- <label class="chk"><input type="checkbox" id="me" checked> Energy projects</label>
- <button type="button" id="mbig" class="toggle" aria-pressed="false">100 MW or greater</button>
- <button type="button" id="mreset" class="toggle">Reset</button>
- <span class="count" id="mapcount"></span>
-</div>
 <div id="mapwrap">
- <div id="mapview"><div id="maptiles"></div><div id="mappins"></div></div>
- <div id="mapinfo" hidden></div>
- <div id="mapzoom"><button id="mzin" title="Zoom in">+</button>
-  <button id="mzout" title="Zoom out">−</button></div>
- <div id="mapkey"><span class="pin s"></span> data-centre site
-  <span class="pin e"></span> energy project
-  <span class="attrib">Tiles © <a href="https://www.openstreetmap.org/copyright"
+ <aside id="mapside">
+  <input type="search" id="mq" placeholder="Search site, council, applicant…">
+  <div class="mgroup">
+   <label class="chk"><input type="checkbox" id="ms" checked> Data-centre sites</label>
+   <label class="chk"><input type="checkbox" id="me" checked> Energy projects</label>
+  </div>
+  <div class="mgroup">
+   <button type="button" id="mbig" class="toggle" aria-pressed="false">100 MW or greater</button>
+   <label class="chk off" id="munklab"><input type="checkbox" id="munk" disabled>
+    Exclude unknown MW consumption</label>
+  </div>
+  <button type="button" id="mreset" class="toggle">Reset view and filters</button>
+  <p class="count" id="mapcount"></p>
+  <div id="mapkey">
+   <div><span class="pin s"></span> data-centre site</div>
+   <div><span class="pin e"></span> energy project</div>
+  </div>
+  <p class="help">Click a marker for its details. Double-click the map to zoom in
+   where you click.</p>
+  <p class="help attrib">Tiles © <a href="https://www.openstreetmap.org/copyright"
    target="_blank" rel="noopener">OpenStreetMap</a> contributors. Sites without
-   coordinates are absent.</span></div>
+   coordinates are absent.</p>
+ </aside>
+ <div id="mapview">
+  <div id="maptiles"></div><div id="mappins"></div>
+  <div id="mapinfo" hidden></div>
+  <div id="mapzoom"><button id="mzin" title="Zoom in">+</button>
+   <button id="mzout" title="Zoom out">−</button></div>
+ </div>
 </div>
 </section>
 
