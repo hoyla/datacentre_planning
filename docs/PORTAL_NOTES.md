@@ -82,9 +82,24 @@ Serves `403` to a bare research user-agent, `200` to
 
 ## Broxbourne — NEC LPAssure (26 applications)
 
-`/LPAssure/ES/Presentation/Planning/OnlinePlanning/OnlinePlanningOverview`
-`?applicationNumber=<ref urlencoded>` returns an "UnsupportedWebBrowser"
-page to scripted clients. Not yet investigated in a browser.
+The overview page returns "UnsupportedWebBrowser" to scripted clients,
+so the work happens in a browser. The document list does not need the
+page at all:
+
+    POST /LPAssure/ES/Presentation/Planning/OnlinePlanning/GetOnlineDocuments
+         ?applicationNumber=<ref>&currentPageIndex=<n>
+         &IsDatePublishSortedDescending=false&pageSize=50
+
+**`pageSize` is required.** Omit it and the endpoint answers `500` for
+every page index — which reads as a broken or protected endpoint rather
+than a missing parameter, and is what made this look harder than it is.
+Walk `currentPageIndex` until no new links appear; the reference needs no
+space-padding despite the padding visible in the document hrefs.
+
+Documents: `/LPAssure/ES/Presentation/Planning/OnlineDisplayDocument/`
+`DisplaySearchDocument/<name>?applicationNumber=...&FileName=...`
+`&fileType=.tif&aspectGuid=<guid>` — `fileType=.tif` is misleading, the
+server returns `application/pdf`.
 
 ## Slough — Agile register, legacy document store (37 applications)
 
