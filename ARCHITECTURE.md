@@ -2,7 +2,9 @@
 
 The shape of the system, the schema, the design principles, and where we expect to extend.
 
-For *what's done and what's next*, see [ROADMAP.md](ROADMAP.md).
+For *what is still to do*, see [ROADMAP.md](ROADMAP.md); for what was
+built and decided, including what was tried and rejected, see
+[HISTORY.md](HISTORY.md).
 For *why a journalism investigation needs this*, see [prior_art.md](prior_art.md) and `data/seed_cases/walkthrough_findings.md`.
 
 ---
@@ -56,7 +58,7 @@ Two-stage extraction per the seed walkthrough:
 - **Stage 1** (cheap): from description + consultee senders alone, before opening any document. Northern Gas Networks as a consultee → high gas-infrastructure prior.
 - **Stage 2** (per-document): structured fact extraction with evidence-text capture. Generator counts, fuel type, rated capacity, on-site CHP mentions, fuel-storage hours.
 
-A multimodal pass (Claude vision on site plans and elevations) was originally planned as Phase 5; downgraded to probably-won't-do after the Phase 4 sweep — see [ROADMAP.md](ROADMAP.md). Vision can only see what's drawn and labelled; concealed plant won't appear in the drawings, and labelled plant is already text-extractable.
+A multimodal pass (Claude vision on site plans and elevations) was originally planned as Phase 5; rejected after the Phase 4 sweep — see [HISTORY.md](HISTORY.md). Vision can only see what's drawn and labelled; concealed plant won't appear in the drawings, and labelled plant is already text-extractable.
 
 **Document-fetch implemented** for three transports:
 
@@ -94,7 +96,7 @@ PDF parsing alone covers ~92% of files; long-tail loaders are still a follow-on.
 
    A short refinement-vocab set (`facility_classification`, `plant_configuration`, `grid_services_role`, `fuel_type_detail`) drives the qualitative side; quantitative findings (MW, generator counts, fuel volumes) default to NEW DISCLOSURE.
 
-5. **Multimodal pass on site plans / elevations** — originally planned as Phase 5; downgraded to probably-won't-do (see [ROADMAP.md](ROADMAP.md)). The Phase 4 sweep confirmed PDFs in the corpus are overwhelmingly text-layered, so the regex pre-pass + Read-tool extraction already surfaces labelled kit. Vision can only see what's drawn and labelled; concealed plant won't be in the drawings at all.
+5. **Multimodal pass on site plans / elevations** — originally planned as Phase 5; rejected (see [HISTORY.md](HISTORY.md)). The Phase 4 sweep confirmed PDFs in the corpus are overwhelmingly text-layered, so the regex pre-pass + Read-tool extraction already surfaces labelled kit. Vision can only see what's drawn and labelled; concealed plant won't be in the drawings at all.
 
 **Provenance discipline (principle 7)**: every `findings` row carries the source `document_id`, the exact `evidence_text` quote, the page number where it appeared, the model that extracted it, and the timestamp. The reporter export links each rendered finding back to the source filename + page; aggregate counts (e.g. "disclosed MW" in the xlsx) are derivable from the underlying rows.
 
@@ -266,6 +268,7 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 - **Council-reorganisation handling** for pre-2020 records under legacy district names (Wycombe → Buckinghamshire, Chiltern South Bucks → Buckinghamshire, etc.). Currently surfaces as NULL `council_gss` with the legacy `area_name` preserved in `raw_metadata`. Per principle 3, the legacy name stays untouched; any canonicalisation goes in a new column or join table, not over the original.
 - **Long-tail document-fetch adapters.** Idox + Ocella + manual ingest cover the top-100 worklist and most of the Barbour round. The 2026-08 fetch enumerated the remaining portal families by observed need: **Agile Applications** (Slough, Middlesbrough), **Arcus registers** (Cherwell — incl. Graven Hill — Crawley, Welwyn Hatfield), **Northgate PlanningExplorer** (Birmingham, Camden, Runnymede), **Salesforce** (Bracknell, Milton Keynes), **NEC/LPAssure** (Broxbourne), plus bespoke one-offs (St Albans, Jersey, Harlow) that stay on the manual path.
 - **`parent_ref` as a first-class column** rather than a `discovered_via` tag. Currently a `parent_backfill:<child_ref>` array entry; promoting to a column would simplify join queries.
-- **Findings extraction at scale.** v1 covers ~35 apps via human-in-loop Read-tool extraction; running across the full top-100 and the long-tail worklist needs either a batch SDK pass or a continued slow-and-steady human-in-loop sweep. Open question; see [ROADMAP.md](ROADMAP.md).
+- **Findings extraction at scale.** v1 covers ~35 apps via human-in-loop Read-tool extraction; running across the full top-100 and the long-tail worklist needs either a batch SDK pass or a continued slow-and-steady human-in-loop sweep. Resolved since: the corpus is deep-read at scale behind the
+verbatim-quote gate — see [HISTORY.md](HISTORY.md).
 - ~~**Browse UI.**~~ **Built 2026-05-17 as the integrated viewer** (`dcp/reader.py`). Single self-contained HTML file with split-screen Leaflet map + chaptered card list, bidirectional click sync, in-page search across all card fields, filter chips, and a "Read this first" intro panel embedding at-a-glance stats / methodology / how-to-read. Built for Aisha + two colleagues on M4-Air-class machines; opens straight from `file://`. Static, no server, no build step.
 - **CI**. Tests are local-only; no GitHub Actions yet. Worth setting up when team scales beyond Luke + Aisha.
