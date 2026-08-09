@@ -21,6 +21,9 @@ workbook, a queryable database, and the source documents themselves.
   seven principles the design is held to.
 - [docs/PORTAL_NOTES.md](docs/PORTAL_NOTES.md) — how to reach the
   council registers that ordinary HTTP cannot.
+- [docs/MAC_STUDIO.md](docs/MAC_STUDIO.md) — the machine that runs the
+  long deep-reads: how to reach it, start it, and tell whether it is
+  actually working.
 - [DATA-LICENSING.md](DATA-LICENSING.md) — per-source upstream terms.
   Barbour ABI data is licensed and **requires credit** in published
   output.

@@ -80,6 +80,21 @@ rather than errors to resolve.
 
 ---
 
+## The Mac Studio
+
+It runs the local MLX deep-read and is the machine for long reads — it
+never overheats and stays usable while working. Connection details,
+start/stop, and how to tell a live reader from a stale log are in
+[MAC_STUDIO.md](MAC_STUDIO.md). The short version: user `hoyla`, host
+`192.168.50.113`, and `pgrep -f deepread_run` lies because it matches a
+leftover `tail -f`.
+
+**Postgres is on the laptop, and stays there through Phase 2** — the
+laptop is doing the downloading, ingesting and API deep-reads, so the
+database belongs with the active work. The Studio only runs the Phase 3
+corroboration read. Move the database to the Studio *after* Phase 2, when
+the laptop's role shrinks to editing and publishing.
+
 ## Things that will bite
 
 **Drive is addressed by ID, never by name.** `dcp/drive.py` holds it.
