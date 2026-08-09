@@ -1298,6 +1298,9 @@ def main() -> int:
     out = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>UK data-centre planning — handover (Phase {esc(args.phase)})</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- The gate is there to stop the link being passed around, so the page
+     should not turn up in a search either. -->
+<meta name="robots" content="noindex, nofollow, noarchive">
 <style>{CSS}</style></head><body>
 <header><h1>UK data-centre planning — handover</h1>
  <div class="sub">Phase {esc(args.phase)} · {n_sites} sites · {n_docs:,} documents ·
@@ -1492,7 +1495,8 @@ def main() -> int:
  {''.join(dict_html)}
 </div></section>
 
-<footer>Barbour ABI data is licensed and requires credit in published output. Personal
+<footer><b>Please do not forward this link or the password.</b> This
+ supports unpublished reporting. Barbour ABI data is licensed and requires credit in published output. Personal
  contact details are excluded throughout. Distances are straight-line, to the nearest site we
  hold coordinates for. A blank stated capacity on an energy project means its PINS page states
  none.</footer>
