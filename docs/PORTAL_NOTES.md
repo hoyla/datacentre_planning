@@ -106,9 +106,28 @@ server returns `application/pdf`.
 The Agile API truthfully reports zero documents: they live on
 `sbcplanning.co.uk`, a separate PHP system reached from the application
 page ("View the decision notice for this application at Planning
-Search"). Search is `POST /search.php` with
-`st=<ref>&DBName=planapp&Searchfield=Number`; the reference format it
-wants is **unknown** — `P/00072/106` returns nothing.
+Search"). That passing sentence is the only evidence the material exists.
+
+**No browser needed** — `scripts/fetch_slough_legacy.py` does it with a
+plain session:
+
+    GET  /plansearch.php                       (establish the session)
+    POST /search.php   Referer: /plansearch.php
+         st=<ref>&DBName=planapp&Searchfield=Number&plannsearch=Search+for+number
+
+The Referer is what makes it work; without it the search appears to
+return nothing, which is what wrongly sent this down the browser route.
+
+Filenames are a lossy transformation of the reference — `P/00072/096`
+becomes `P72-96`, leading zeros stripped, further documents suffixed
+`(2)`, `(3)` — and the series vary (`P/`, `SMI/`, `T/`, some with their
+own parenthetical suffixes). Reconstructing them is guesswork, so ask
+the site's search to resolve each reference and take the links it
+returns. Filter out `scaling.pdf`: it is help material linked on every
+results page.
+
+Coverage: 26 of 37 hold documents; the `T/` and `SMI/` series genuinely
+hold none.
 
 ## Not a user-agent problem
 
