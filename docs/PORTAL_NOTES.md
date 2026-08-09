@@ -42,7 +42,12 @@ without a challenge when the real form is submitted.
   (a query parameter — `/Planning/Display/<ref>` returns 404)
 - Page is JS-rendered; fetched HTML still contains the document rows
 - Documents tab: `div.tabHeader#Documents`
-- Rows: `tr.grid-dataRow`, carrying `data-module`, `data-recordnumber`,
+- Rows: `tr.grid-dataRow[data-imageid]` — **the attribute filter is
+  required**. `tr.grid-dataRow` alone also matches rows in the related
+  applications, consultee and site history tables, which carry no
+  document identifiers and return `204`. Without the filter a 127-document
+  application reports 383 rows and 256 "failures", and those look exactly
+  like a portal refusing us. Carrying `data-module`, `data-recordnumber`,
   `data-planid`, `data-imageid`
 - Download: `POST /Document/GetFileBinary`, form-encoded
 
