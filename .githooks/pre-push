@@ -1,0 +1,43 @@
+#!/bin/sh
+# Refuse to push to a branch whose pull request has already merged.
+#
+# Commits pushed to a merged branch are stranded: they sit on a branch
+# nobody will look at again, they are not in main, and everything appears
+# to have worked. It has happened twice, both times after being pointed
+# out, so this is a check rather than a note to be careful.
+#
+# Enable once per clone:
+#     git config core.hooksPath .githooks
+#
+# Override deliberately, in the rare case a merged branch is the target:
+#     ALLOW_MERGED_PUSH=1 git push …
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+[ "$ALLOW_MERGED_PUSH" = "1" ] && exit 0
+command -v gh >/dev/null 2>&1 || exit 0     # no gh, no opinion
+
+state=$(gh pr view "$branch" --json state --jq .state 2>/dev/null)
+
+if [ "$state" = "MERGED" ]; then
+  cat >&2 <<EOF
+
+  Refusing to push: the pull request for '$branch' has already merged.
+
+  Anything pushed here is stranded — not in main, on a branch nobody will
+  read again, and with every appearance of having worked.
+
+  Cut a fresh branch for this work instead:
+
+      git checkout -b <new-branch> origin/main
+      git cherry-pick <commits>
+
+  If you really do mean to push to the merged branch:
+
+      ALLOW_MERGED_PUSH=1 git push ...
+
+EOF
+  exit 1
+fi
+
+exit 0
