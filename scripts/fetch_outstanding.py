@@ -29,9 +29,11 @@ are recorded `no_adapter` rather than retried.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import importlib.util
 import logging
 import shutil
+import signal
 import sys
 import time
 from pathlib import Path
@@ -56,10 +58,15 @@ FROM applications a
 JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
 LEFT JOIN LATERAL (
     SELECT outcome FROM acquisition_outcome ao
-    WHERE ao.application_id = a.id ORDER BY checked_at DESC LIMIT 1) o ON true
-WHERE NOT EXISTS (SELECT 1 FROM documents d WHERE d.application_id = a.id)
-  AND a.url IS NOT NULL
-  AND (o.outcome IS NULL OR o.outcome = 'error' OR o.outcome = ANY(%s))
+    -- Insertion order, not checked_at, matching application_acquisition.
+    -- A backdated correction must not be overruled by the wrong row it
+    -- was written to correct.
+    WHERE ao.application_id = a.id ORDER BY ao.id DESC LIMIT 1) o ON true
+WHERE a.url IS NOT NULL
+  AND (NOT EXISTS (SELECT 1 FROM documents d WHERE d.application_id = a.id)
+       OR o.outcome = 'partial')
+  AND (o.outcome IS NULL OR o.outcome IN ('error', 'partial')
+       OR o.outcome = ANY(%s))
 GROUP BY a.id, a.application_ref, a.url
 ORDER BY a.application_ref
 """
@@ -71,6 +78,36 @@ def _campaign():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+class ApplicationTimeout(Exception):
+    """A single application exceeded its wall-clock budget."""
+
+
+@contextlib.contextmanager
+def deadline(seconds: int):
+    """Abandon an application that will not finish.
+
+    httpx's `timeout=` is per socket operation, not per request, so a
+    server that dribbles a byte every minute never trips it. One
+    Hillingdon application held the sweep for thirteen minutes on a
+    connection that was open, idle and going nowhere — with no output,
+    because progress is logged per application rather than per document.
+
+    SIGALRM gives the loop a real ceiling. The raised error is caught by
+    the same handler as any other failure, so the application is recorded
+    `error` and retried on a later pass rather than being settled.
+    """
+    def fire(_signum, _frame):
+        raise ApplicationTimeout(f"exceeded {seconds}s")
+
+    previous = signal.signal(signal.SIGALRM, fire)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, previous)
 
 
 def record(conn, app_id: int, outcome: str, adapter: str,
@@ -99,6 +136,10 @@ def main() -> int:
     # so a later pass retries them — better to give up quickly and revisit.
     p.add_argument("--max-retries", type=int, default=2)
     p.add_argument("--backoff", type=float, default=15.0)
+    # Generous enough for a genuinely large document set at the request
+    # spacing, short enough that one wedged connection cannot own the run.
+    p.add_argument("--app-timeout", type=int, default=900,
+                   help="wall-clock ceiling per application, in seconds")
     args = p.parse_args()
 
     logging.basicConfig(level=logging.INFO,
@@ -154,7 +195,7 @@ def main() -> int:
         return clients[key]
     mods = {"idox": idox, "ocella": ocella, "agile": agile,
             "arcus": arcus, "salesforce": salesforce_pr}
-    totals = {"fetched": 0, "none_published": 0, "error": 0,
+    totals = {"fetched": 0, "partial": 0, "none_published": 0, "error": 0,
               "no_adapter": 0, "documents": 0}
     started = time.monotonic()
     try:
@@ -217,7 +258,8 @@ def main() -> int:
                 else:
                     kw["client"] = client_for(fam, url)
                 try:
-                    s = mods[fam].fetch_documents_for_application(**kw)
+                    with deadline(args.app_timeout):
+                        s = mods[fam].fetch_documents_for_application(**kw)
                 except Exception as exc:
                     record(conn, app_id, "error", fam, str(exc)[:180])
                     totals["error"] += 1
@@ -229,7 +271,22 @@ def main() -> int:
                     strikes[host] += 1
                 else:
                     strikes[host] = 0
-                if got:
+                # An application is only finished when everything the
+                # register listed actually arrived. Recording a short
+                # fetch as done is the same silent failure as recording a
+                # blocked page as "no documents": the queue empties, the
+                # site looks covered, and a third of its evidence is
+                # missing with nothing saying so. Halton rate-limiting
+                # mid-application is exactly how this happens.
+                listed = s.get("links_found") or 0
+                held = got + (s.get("skipped_existing") or 0)
+                if got and listed and held < listed:
+                    record(conn, app_id, "partial", fam,
+                           f"{held} of {listed} listed documents retrieved", got)
+                    totals["partial"] += 1; totals["documents"] += got
+                    log.warning("[%d/%d] %-28s PARTIAL %d of %d listed",
+                                i, len(todo), ref, held, listed)
+                elif got:
                     record(conn, app_id, "fetched", fam, None, got)
                     totals["fetched"] += 1; totals["documents"] += got
                 elif s.get("error_class") in (None, "no_documents"):
@@ -248,6 +305,7 @@ def main() -> int:
             except Exception: pass
 
     log.info("done: %(fetched)d fetched (%(documents)d documents), "
+             "%(partial)d partial and still queued, "
              "%(none_published)d hold nothing, %(error)d errors, "
              "%(no_adapter)d recorded as unreadable", totals)
     return 0

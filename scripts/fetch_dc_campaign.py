@@ -131,9 +131,25 @@ def portal_family(url: str | None) -> str:
         return "agile"
     if "planningregister." in u or "/planning/display/" in u:
         return "arcus"
-    if "planningexplorer" in u or "stddetails.aspx" in u:
+    # Match the product, not the hostname. "planningexplorer" in a host
+    # name proves nothing: Barnsley runs a bespoke MVC app at
+    # planningexplorer.barnsley.gov.uk and Charnwood an NEC Assure install
+    # at planningexplorer.charnwood.gov.uk. Counting both as Northgate
+    # made the outstanding-work breakdown report a family of nine where
+    # there were really three products, and sent the wrong adapter after
+    # them.
+    if "/assure/" in u:
+        return "nec"
+    if ("stddetails.aspx" in u or "/northgate/planningexplorer/" in u
+            or "/necsws/planningexplorer/" in u):
         return "northgate"
-    if "/s/detail/" in u:
+    # Salesforce Lightning communities, whose councils each pick their own
+    # object path. Anglesey publishes /s/papplication/, Bracknell
+    # /s/detail/; matching only the latter filed three Anglesey
+    # applications as "no adapter for this portal type" when the adapter
+    # handles them fine.
+    if any(p in u for p in ("/s/detail/", "/s/papplication/",
+                            "/s/planning-application/")):
         return "salesforce"
     if "lpassure" in u or "necsws" in u:
         return "nec"

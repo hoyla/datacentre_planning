@@ -570,6 +570,8 @@ def main() -> int:
     ap.add_argument("--out", type=Path,
                     default=Path("data/exports/phase1_build/reader.html"))
     ap.add_argument("--phase", default="1")
+    ap.add_argument("--publish", type=Path, default=None,
+                    help="also write here, e.g. docs/index.html for Pages")
     args = ap.parse_args()
 
     hv = _handover()
@@ -1296,6 +1298,9 @@ def main() -> int:
     out = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>UK data-centre planning — handover (Phase {esc(args.phase)})</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- The gate is there to stop the link being passed around, so the page
+     should not turn up in a search either. -->
+<meta name="robots" content="noindex, nofollow, noarchive">
 <style>{CSS}</style></head><body>
 <header><h1>UK data-centre planning — handover</h1>
  <div class="sub">Phase {esc(args.phase)} · {n_sites} sites · {n_docs:,} documents ·
@@ -1490,7 +1495,8 @@ def main() -> int:
  {''.join(dict_html)}
 </div></section>
 
-<footer>Barbour ABI data is licensed and requires credit in published output. Personal
+<footer><b>Please do not forward this link or the password.</b> This
+ supports unpublished reporting. Barbour ABI data is licensed and requires credit in published output. Personal
  contact details are excluded throughout. Distances are straight-line, to the nearest site we
  hold coordinates for. A blank stated capacity on an energy project means its PINS page states
  none.</footer>
@@ -1499,6 +1505,13 @@ def main() -> int:
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(out, encoding="utf-8")
+    # The published page is the same artefact, not a variant of it: the
+    # methodology and dictionary are generated here, so a hand-copied
+    # docs/index.html is a second version of them waiting to disagree.
+    if args.publish:
+        args.publish.parent.mkdir(parents=True, exist_ok=True)
+        args.publish.write_text(out, encoding="utf-8")
+        print(f"  also wrote {args.publish} (GitHub Pages)")
     print(f"wrote {args.out} ({len(out)/1024/1024:.1f} MB) — {n_sites} sites, "
           f"{len(app_rows)} applications, {len(nsip)} energy projects, "
           f"{n_prov} sites marked provisional")
