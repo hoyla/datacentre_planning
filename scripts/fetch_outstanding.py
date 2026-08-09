@@ -58,10 +58,15 @@ FROM applications a
 JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
 LEFT JOIN LATERAL (
     SELECT outcome FROM acquisition_outcome ao
-    WHERE ao.application_id = a.id ORDER BY checked_at DESC LIMIT 1) o ON true
-WHERE NOT EXISTS (SELECT 1 FROM documents d WHERE d.application_id = a.id)
-  AND a.url IS NOT NULL
-  AND (o.outcome IS NULL OR o.outcome = 'error' OR o.outcome = ANY(%s))
+    -- Insertion order, not checked_at, matching application_acquisition.
+    -- A backdated correction must not be overruled by the wrong row it
+    -- was written to correct.
+    WHERE ao.application_id = a.id ORDER BY ao.id DESC LIMIT 1) o ON true
+WHERE a.url IS NOT NULL
+  AND (NOT EXISTS (SELECT 1 FROM documents d WHERE d.application_id = a.id)
+       OR o.outcome = 'partial')
+  AND (o.outcome IS NULL OR o.outcome IN ('error', 'partial')
+       OR o.outcome = ANY(%s))
 GROUP BY a.id, a.application_ref, a.url
 ORDER BY a.application_ref
 """
@@ -190,7 +195,7 @@ def main() -> int:
         return clients[key]
     mods = {"idox": idox, "ocella": ocella, "agile": agile,
             "arcus": arcus, "salesforce": salesforce_pr}
-    totals = {"fetched": 0, "none_published": 0, "error": 0,
+    totals = {"fetched": 0, "partial": 0, "none_published": 0, "error": 0,
               "no_adapter": 0, "documents": 0}
     started = time.monotonic()
     try:
@@ -266,7 +271,22 @@ def main() -> int:
                     strikes[host] += 1
                 else:
                     strikes[host] = 0
-                if got:
+                # An application is only finished when everything the
+                # register listed actually arrived. Recording a short
+                # fetch as done is the same silent failure as recording a
+                # blocked page as "no documents": the queue empties, the
+                # site looks covered, and a third of its evidence is
+                # missing with nothing saying so. Halton rate-limiting
+                # mid-application is exactly how this happens.
+                listed = s.get("links_found") or 0
+                held = got + (s.get("skipped_existing") or 0)
+                if got and listed and held < listed:
+                    record(conn, app_id, "partial", fam,
+                           f"{held} of {listed} listed documents retrieved", got)
+                    totals["partial"] += 1; totals["documents"] += got
+                    log.warning("[%d/%d] %-28s PARTIAL %d of %d listed",
+                                i, len(todo), ref, held, listed)
+                elif got:
                     record(conn, app_id, "fetched", fam, None, got)
                     totals["fetched"] += 1; totals["documents"] += got
                 elif s.get("error_class") in (None, "no_documents"):
@@ -285,6 +305,7 @@ def main() -> int:
             except Exception: pass
 
     log.info("done: %(fetched)d fetched (%(documents)d documents), "
+             "%(partial)d partial and still queued, "
              "%(none_published)d hold nothing, %(error)d errors, "
              "%(no_adapter)d recorded as unreadable", totals)
     return 0
