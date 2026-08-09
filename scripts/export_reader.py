@@ -570,6 +570,8 @@ def main() -> int:
     ap.add_argument("--out", type=Path,
                     default=Path("data/exports/phase1_build/reader.html"))
     ap.add_argument("--phase", default="1")
+    ap.add_argument("--publish", type=Path, default=None,
+                    help="also write here, e.g. docs/index.html for Pages")
     args = ap.parse_args()
 
     hv = _handover()
@@ -1499,6 +1501,13 @@ def main() -> int:
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(out, encoding="utf-8")
+    # The published page is the same artefact, not a variant of it: the
+    # methodology and dictionary are generated here, so a hand-copied
+    # docs/index.html is a second version of them waiting to disagree.
+    if args.publish:
+        args.publish.parent.mkdir(parents=True, exist_ok=True)
+        args.publish.write_text(out, encoding="utf-8")
+        print(f"  also wrote {args.publish} (GitHub Pages)")
     print(f"wrote {args.out} ({len(out)/1024/1024:.1f} MB) — {n_sites} sites, "
           f"{len(app_rows)} applications, {len(nsip)} energy projects, "
           f"{n_prov} sites marked provisional")
