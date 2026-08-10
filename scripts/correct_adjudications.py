@@ -117,7 +117,7 @@ RULES = [
     ("equipment_label_not_connection",
      "verdict='unclear', quantity_type=NULL, value_mw=NULL, is_maximum=NULL",
      r"""pa.quantity_type='grid_connection'
-         AND f.evidence_text ~* 'floor plan|sections drawing|figure [0-9]|substation\s+[0-9.]+\s*m²|legacy'""",
+         AND f.evidence_text ~* 'floor plan|sections drawing|figure\s+[0-9]|substation\s+[0-9.]+\s*m²|legacy'""",
      "equipment label or another scheme's plant, not this connection"),
 ]
 

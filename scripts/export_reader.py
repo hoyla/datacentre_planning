@@ -53,6 +53,7 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
+from dcp import adjudication_gate  # noqa: E402
 from dcp import db  # noqa: E402
 
 from dcp.drive import FOLDER_URL as DRIVE_ROOT  # noqa: E402
@@ -755,6 +756,9 @@ function goDict(id){
 
 
 def main() -> int:
+    # Nothing is written from adjudications nobody has
+    # corrected. See dcp/adjudication_gate.py.
+    adjudication_gate.require_corrected()
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", type=Path,
                     default=Path("data/exports/phase1_build/reader.html"))

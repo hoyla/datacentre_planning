@@ -40,6 +40,7 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
+from dcp import adjudication_gate  # noqa: E402
 from dcp import db, signals  # noqa: E402
 
 TABLES: dict[str, str] = {
@@ -133,6 +134,9 @@ VIEWS: dict[str, str] = {
 
 
 def main() -> None:
+    # Nothing is written from adjudications nobody has
+    # corrected. See dcp/adjudication_gate.py.
+    adjudication_gate.require_corrected()
     import duckdb
 
     ap = argparse.ArgumentParser()
