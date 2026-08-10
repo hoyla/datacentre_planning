@@ -1021,9 +1021,14 @@ def main() -> int:
         if fl:
             findings_html = "<ul class='find'>" + "".join(fl) + "</ul>"
             if findings_n and findings_n > len(fl):
+                # Not the workbook: it holds per-site counts and the
+                # adjudicated figures, and a reporter sent there for the
+                # findings themselves found nothing. The full set lives in
+                # each site's Drive folder (_findings.csv, beside the
+                # documents the rows cite) and in the DuckDB findings table.
                 findings_html += (f"<p class='help'>Showing {len(fl)} of {findings_n:,} "
-                                  "verified findings; the workbook and DuckDB file hold "
-                                  "all of them.</p>")
+                                  "verified findings; the full set is in this site's "
+                                  "Drive folder (_findings.csv) and the DuckDB file.</p>")
         elif held and read >= held:
             # Read in full and still nothing: a null result, not a gap.
             # The earlier wording said "not analysed" whenever the list was
