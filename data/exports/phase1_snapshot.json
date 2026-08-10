@@ -1,12 +1,15 @@
 {
- "phase": 1,
- "cutoff_utc": "2026-08-09T08:50:46.028573+00:00",
- "documents": 53994,
- "max_document_id": 58565,
- "documents_analysed": 18645,
- "applications": 3448,
- "active_sites": 429,
- "note": "Corpus frozen for Phase 1: acquisition and the second-opinion read were stopped so every artefact reports identical figures. Both resume for Phase 2.",
- "frozen": true,
- "second_opinion_documents": 4119
+  "phase": 1,
+  "cutoff_utc": "2026-08-09T22:42:27.060865+00:00",
+  "documents": 55678,
+  "max_document_id": 60335,
+  "documents_analysed": 18645,
+  "applications": 3448,
+  "supersedes": {
+    "cutoff_utc": "2026-08-09T08:50:46.028573+00:00",
+    "documents": 53994,
+    "max_document_id": 58565,
+    "documents_analysed": 18645
+  },
+  "note": "Acquisition was restarted after the first boundary, so the release is stamped when collecting stopped. Deep-read stayed paused throughout: documents acquired after the first boundary are held and unread, which lowers the analysed percentage without any reading having been lost."
 }
