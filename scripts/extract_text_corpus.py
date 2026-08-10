@@ -46,11 +46,11 @@ from dcp import extract  # noqa: E402
 
 def _one(args: tuple) -> tuple[str, int, bool, str | None]:
     """Extract one document. Runs in a worker process."""
-    ref, sha, path_s, ocr = args
+    ref, sha, path_s, ocr, force = args
     try:
         doc = extract.extract_document(
             source="documents", application_ref=ref, sha=sha,
-            bytes_path=Path(path_s), ocr=ocr)
+            bytes_path=Path(path_s), ocr=ocr, force=force)
         pages = doc.pages if isinstance(doc.pages, list) else []
         ocr_used = bool(getattr(doc, "ocr_pages", None))
         return sha, len(pages), ocr_used, None
@@ -78,6 +78,35 @@ def load_documents(*, include_drawings: bool) -> list[tuple]:
     return out
 
 
+def partition(docs: list[tuple]) -> tuple[list[tuple], set[str], list[tuple]]:
+    """Split documents into (to-do, stale-shas, already-done).
+
+    A cache is not enough on its own: an earlier extractor wrote an empty
+    cache with `engine: "skipped"` for every format it could not load, so
+    1,119 documents present as extracted-and-empty when nothing has read
+    them. Those are re-read, with `force` so the stale cache is replaced.
+
+    Only non-PDFs are checked for staleness. Reading the engine means
+    parsing the cache payload, which holds the document's whole text, and
+    a PDF cache never carries a stale engine.
+    """
+    todo: list[tuple] = []
+    stale: set[str] = set()
+    done: list[tuple] = []
+    for d in docs:
+        ref, sha, bytes_path = d[0], d[1], d[2]
+        cache = extract.cache_path_for("documents", ref, sha)
+        if not cache.exists():
+            todo.append(d)
+        elif (not str(bytes_path).lower().endswith(".pdf")
+                and extract.is_stale_cache(cache)):
+            stale.add(sha)
+            todo.append(d)
+        else:
+            done.append(d)
+    return todo, stale, done
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, default=4)
@@ -95,11 +124,9 @@ def main() -> None:
 
     docs = load_documents(include_drawings=not args.skip_drawings)
 
-    cached = [d for d in docs
-              if extract.cache_path_for("documents", d[0], d[1]).exists()]
-    todo = [d for d in docs
-            if not extract.cache_path_for("documents", d[0], d[1]).exists()]
-    print(f"already extracted: {len(cached)}; to do: {len(todo)}")
+    todo, stale, cached = partition(docs)
+    print(f"already extracted: {len(cached)}; to do: {len(todo)} "
+          f"(of which {len(stale)} re-read after a stale cache)")
     if args.stats:
         return
     if args.limit:
@@ -107,7 +134,8 @@ def main() -> None:
 
     t0 = time.time()
     done = failed = ocr_docs = pages_total = 0
-    tasks = [(ref, sha, bp, not args.no_ocr) for ref, sha, bp, _kind in todo]
+    tasks = [(ref, sha, bp, not args.no_ocr, sha in stale)
+             for ref, sha, bp, _kind in todo]
     with ProcessPoolExecutor(max_workers=args.workers) as pool:
         futures = {pool.submit(_one, t): t for t in tasks}
         for fut in as_completed(futures):
