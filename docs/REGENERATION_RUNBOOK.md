@@ -276,6 +276,36 @@ phase 1 workbook now lives on Drive.
 Each of these calls the adjudication gate first, so if step 2 was
 skipped they stop rather than shipping.
 
+### 7a. The notebook bundle — optional, local, off the chain
+
+```sh
+scripts/export_notebook_bundle.py            # -> data/exports/notebook_bundle/
+```
+
+Not part of the release. It writes a local folder for hand-uploading to
+a Gemini Notebook and touches nothing else — not Drive, not the
+database, not the staging tree it reads.
+
+One document per site: the site report as written, then that site's
+findings as a markdown table beneath it. The Drive tree keeps them
+apart, which is right for a folder and wrong for a notebook — 429 sites
+would arrive as 726 sources against a 600 limit, and a CSV uploaded as a
+source reads poorly.
+
+It reads the staging tree rather than the database on purpose, so the
+report prose has exactly one implementation and the notebook cannot
+drift from the Drive folder. Run it after step 5.
+
+Big sites are **split, never truncated**: a source is capped near
+500,000 words and one site holds 130,092 findings. Parts are budgeted by
+word count rather than row count — a row-based cap set from an estimated
+40 words per row put 49 documents over the limit, because the real
+average is ~52 and varies with quote length. 429 sites become 506
+documents. Every part repeats the site name, the key, its part number
+and a line saying every row belongs to that site: one document is always
+one site, but a model retrieving a row from the middle of a
+400,000-word table has only what is on the page.
+
 ### 8. The Google Sheet
 
 ```sh
