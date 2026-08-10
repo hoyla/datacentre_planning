@@ -49,7 +49,23 @@ load_dotenv(ROOT / ".env")
 from dcp import db  # noqa: E402
 
 MODEL = "claude-sonnet-5"
+# power-1.0 is what the corpus was adjudicated under and must not change:
+# it is half of the (finding_id, model, prompt_version) key, so editing it
+# in place would leave two different prompts sharing one version and make
+# the audit trail a lie.
+#
+# power-1.1 adds the quantity-kind rules below — the six families that
+# reached readers on 2026-08-10 — so that errors are not created and then
+# corrected by scripts/correct_adjudications.py, but mostly not created.
+#
+# It is NOT the default, because selecting it re-adjudicates the entire
+# corpus: no figure carries a 1.1 verdict, so every one re-enters the
+# cohort. That is roughly $20-40 of batch and a deliberate decision, not
+# a side effect of an import. It is also UNVALIDATED: the 229-figure
+# ground-truth set in the scratchpad is the way to check it improves the
+# specific cases before spending that.
 PROMPT_VERSION = "power-1.0"
+PROMPT_VERSION_LATEST = "power-1.1"
 STATE_PATH = ROOT / "data" / "power_adjudication_batch.json"
 
 # Units that carry a real-power meaning we can normalise to MW. MVA and
@@ -102,6 +118,35 @@ For each figure, return:
 Be strict. If the quote does not make clear that the figure belongs to
 this development, use "unclear" rather than guessing. Under-claiming is
 recoverable; a wrong site capacity in a published chart is not.
+
+BEFORE deciding whose figure it is, decide whether it is a power
+capacity at all. These were all mis-filed as site capacity in an earlier
+run of this task, and each put a wrong number in front of a reader:
+
+- **Energy is not power.** "251,859,057.50 kW which equates to
+  94,197.29 kWh/m2" is a year's consumption, not a capacity; converted
+  it implied a site four times the national grid. A figure whose
+  magnitude is absurd for a building — anything above about 3,000 MW —
+  is wrong whatever unit it carries. Verdict "unclear".
+- **Storage is not generation, and not demand.** A battery or UPS rating
+  says how fast it can discharge. Use quantity_type "other" and say so
+  in the reasoning; never "onsite_generation".
+- **Thermal input is not electrical output.** "a Thermal Input of around
+  1.2GW" is fuel entering a plant, typically two to three times the
+  electricity leaving it. Verdict "unclear" unless the quote gives an
+  electrical figure.
+- **A number in a table is not a capacity.** If the quote carries no
+  unit at all — "80% - 480W", "Data Centre 150 210 1,839,600", a row of
+  pounds sterling — nothing establishes it is megawatts. Verdict
+  "unclear".
+- **A substation on a drawing is not a grid connection.** "- 6MW
+  Substation 25.4m²" is an equipment schedule; "TEMPORARY 1MW
+  SUBSTATION" is a construction supply. A grid connection is capacity
+  sought, reserved, contracted or offered.
+- **A single unit is not the fleet.** "38 no. 2,640kW generator units"
+  is about 100 MW of plant, not 2.6 MW. Where a quote gives both a count
+  and a per-unit rating, the figure for this development is the product.
+  Where it gives only one machine's spec, say so in the reasoning.
 
 Return strict JSON: {"adjudications": [...]}. No prose outside the JSON.
 

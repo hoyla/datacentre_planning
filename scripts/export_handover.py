@@ -54,6 +54,7 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
+from dcp import adjudication_gate  # noqa: E402
 from dcp import db  # noqa: E402
 
 
@@ -655,6 +656,9 @@ def _haversine_km(lat1, lon1, lat2, lon2) -> float:
 
 
 def main() -> None:
+    # Nothing is written from adjudications nobody has
+    # corrected. See dcp/adjudication_gate.py.
+    adjudication_gate.require_corrected()
     ap = argparse.ArgumentParser()
     default_out = Path(
         f"data/exports/dc_build_handover_{dt.date.today().isoformat()}.xlsx")

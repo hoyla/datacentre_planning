@@ -101,3 +101,5 @@ data/prior_art_sources/*
 
 # Generated analysis exports; regenerable from the database.
 out/
+data/adjudication_shards/
+data/adjudication_batches_openai/

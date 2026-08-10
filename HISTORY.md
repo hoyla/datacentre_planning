@@ -257,6 +257,90 @@ bit-flipped archives. `--restore-test` goes further and is the only
 honest check: it restores into a scratch database and compares row
 counts against live.
 
+### What kind of quantity is this? (Aug 10)
+
+Power adjudication was built to answer one question — is this figure
+about this development — and answers it well. Nothing asked what *kind*
+of quantity the figure was, and six families of error lived in that gap.
+All six were found in an afternoon, by reading the largest figures and
+then following each oddity, and every one had put a wrong number in
+front of a reader.
+
+**Energy recorded as power.** An ARK application gives a load as
+"251,859,057.50 kW which equates to 94,197.29 kWh/m2". The unit says
+power; the cross-reference says energy; the year's consumption over its
+hours is about 28.7 MW. It reached the adjudication table as 251,859 MW,
+four times the United Kingdom's generating capacity. Three drafts tried
+to detect this in the text and each produced only false positives —
+"energy centre capacity 47MW" is power, and so is "4000 GWh/year = 456
+MW continuous load", where the document supplies both quantities
+deliberately. What detects it is magnitude: nothing is 3 GW.
+
+**Storage and heat recorded as generation.** A 1,000 MW battery at Rover
+Way is a discharge rating; 1.2 GW of "Thermal Input" at Camilla Road is
+fuel entering a plant, not electricity leaving it, and halved to a
+defensible 600 MW once corrected. 115 rows moved to quantity types no
+headline column consumes.
+
+**Table rows recorded as capacities.** 116 verdicts rested on a quote
+with no unit in it: "80% - 480W" became 480 MW, a table of pounds
+sterling became a 384 MW IT load. Three sites lost a headline, and all
+three had independently been flagged as contradicted by the grid
+cross-check — two methods built from different evidence agreeing on
+which figures were wrong.
+
+**Substations recorded as grid connections.** Of seven sites reporting
+more demand than their connection could carry, four were not connections
+at all: a battery compound, a drawing schedule complete with the
+substation's floor area, an earlier scheme's legacy plant, and fifteen
+copies of "TEMPORARY 1MW SUBSTATION". Two were real and were left
+standing — Watford Bypass states 218 MW of demand against a connection
+designed for 120 MW — because a site whose demand exceeds its connection
+is a fact the documents assert, not a blemish. One was a clustering
+artefact: Ocean Estates merges a Salford scheme with a Trafford one
+960 m away.
+
+**Per-unit figures recorded as site totals.** Southside states "Each
+building ... rated at 75MW" and, elsewhere, "Three data centre
+buildings": the site is 225 MW, not 75. Both halves had been extracted
+months apart and nothing had multiplied them.
+
+**A single machine standing in for a fleet — the worst of them.** Amazon
+Didcot recorded 2.9 MW of on-site generation, from "Mechanical Generator
+- 2,873 kW", one unit's spec sheet. The same documents say "38 no.
+2,640kW generator units per building": about 100 MW, against 120 MW of
+consumption. Reasoning from the smaller number, the dataset described
+the site as having life-safety backup only and being grid-dependent —
+close to the opposite of what the application says, on an Amazon site,
+about exactly the kind of undisclosed on-site generation this
+investigation exists to find.
+
+**Two editorial findings came out of the same work.** Of 666 generation
+verdicts across 96 sites, 447 name no fuel or plant type at all, and 64
+of the 96 sites disclose none anywhere — a megawatt figure with no noun.
+And the null-capacity claim, re-run in committed form
+([scripts/sweep_null_capacity.py](scripts/sweep_null_capacity.py)),
+refused to print a number at all while candidate figures awaited
+adjudication.
+
+**Three adjudication routes now share one rubric.** The Anthropic batch
+adjudicator cannot run — that budget is spent — so a Claude Code
+subagent probe was measured blind against 229 already-judged figures:
+94% agreement on the five-way verdict, 95% on the only distinction a
+chart cares about, at ~1,150 tokens per figure. Subagents took the 1,005
+consequential figures, where a verdict moves a headline; an OpenAI batch
+took the 10,656-figure tail for a few dollars. All three import the
+prompt and schema from one file, so a disagreement between them is a
+fact about models rather than three drifting copies.
+
+**What replaced remembering.** The corrections are idempotent and
+re-runnable ([scripts/correct_adjudications.py](scripts/correct_adjudications.py));
+the three exports refuse to build over uncorrected adjudications
+([dcp/adjudication_gate.py](dcp/adjudication_gate.py)); and the rules are
+named in the adjudication prompt itself as `power-1.1`, which is
+declared but deliberately not default, because selecting it
+re-adjudicates the whole corpus and it has not been validated yet.
+
 ---
 
 ## Lessons that changed how the code is written
@@ -272,6 +356,24 @@ browser until an unauthenticated request from outside found
 `//index.html` served the whole dataset. The backup verifier joined the
 list before it had ever run in anger: listing a dump's table of contents
 proved the table of contents, not the data behind it.
+
+**Ask what kind of thing a number is, not only whose it is.** Six
+families of error hid in that question on 2026-08-10, from a battery
+counted as generation to a 251,859 MW site. Every stage was faithful:
+the extractor quoted the document exactly, the adjudicator answered the
+question it was asked. Nobody asked whether a figure denominated in kW
+was power at all. A pipeline that reads the unit and the subject and
+never the kind will keep finding new ways to be precisely wrong.
+
+**A predicate written once is a predicate written twice.** Three regex
+traps in one afternoon, each caught by a self-check rather than by
+review: `\b` is a backspace in PostgreSQL and `\y` is the word
+boundary, so a rule written with `\b` matched nothing and demoted 261
+rows instead of 116; summing overlapping predicates is not counting
+distinct rows; and a literal space never matches PDF text, which reads
+"Substation       25.4m²". The migrations now abort on an unintended
+count, and a test asserts no predicate contains a single literal space
+before a digit — which failed on its first run and found another one.
 
 **A correction deserves a durable form.** Two instructions — use the
 Drive folder *ID*, never push to a merged branch — were in memory, were
