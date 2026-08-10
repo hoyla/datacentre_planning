@@ -5,9 +5,13 @@ the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
 Current state: **429 sites** (plus 26 pre-planning), **1,709
-applications** in the site universe, **54,707 documents**, **18,645
-analysed**, **462,221 findings**. Phase 1 of the handover is published;
-acquisition is running again.
+applications** in the site universe, **55,678 documents**, **462,221
+findings**. Phase 1 is published and closed, stamped at the boundary
+acquisition stopped at.
+
+Reading coverage is the open question: 22,611 documents are read, but
+4,836 more were skipped by an extractor gap now fixed, and 58 sites
+holding 8,212 documents have had nothing read at all.
 
 ---
 
@@ -48,6 +52,17 @@ The handover is out. These close it properly.
   the Anthropic budget is spent; the plan is OpenAI credits. Everything
   downstream already marks unread sites, so this raises figures rather
   than changing shape.
+- **Teach the extractor formats other than PDF.** 196 documents are
+  `.docx`, `.xlsx`, `.doc`, `.msg` or RTF, and the extractor is pypdf
+  plus OCR — so they yield zero pages and were logged as containing no
+  text. `openpyxl` is already a dependency; `python-docx`, `striprtf`
+  and `extract-msg` cover the rest. The `.msg` files are consultee
+  responses, where objections and technical challenges live. A further
+  25 are JPEGs that genuinely need OCR.
+- **Salvage the 14 documents lost to parse failure.** Of 380
+  parse-failed rows, 368 still produced findings — the failure is a
+  truncated tail. The 14 that yielded nothing include two VIRTUS
+  supporting statements. `deepread_escalate.py` is the path.
 - **Re-list the corpus to find historical partial fetches.** A short
   fetch used to be recorded as complete. New ones are caught, but past
   ones are not measurable from the manifests, which record what was

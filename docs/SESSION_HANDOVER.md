@@ -11,28 +11,81 @@ document covers only what is *in flight* and what is easy to get wrong.
 
 ## What is running right now
 
-Two background jobs, plus a chain waiting on both.
+| Job | Where | What it is | Log |
+|---|---|---|---|
+| `extract_text_corpus.py` | laptop | text-extracting ~26,800 documents that have no cache | `logs/extract_corpus.log` |
+| `deepread_run.py` | **Studio** | Qwen corroboration read, cohort now 45,309 | `data/deepread_run.log` on the Studio |
+| `caffeinate` | laptop | holding sleep off | — |
 
-| Job | What it is | Log |
-|---|---|---|
-| `fetch_outstanding.py` | 108 applications across Idox, Arcus, Agile, Ocella | `logs/phase2_acquisition.log` |
-| `drive_sync.py` | repairing the document tree after a duplicate archive was found | `data/drive_sync.log` |
-| `phase1_finalise.sh` | **waits for both**, then rebuilds everything once | `logs/phase1_finalise.log` |
+Acquisition and the Drive repair both finished overnight, and
+`phase1_finalise.sh` ran to completion: the boundary was re-stamped at
+22:42 UTC with 55,678 documents, all artefacts regenerated, Drive synced,
+the Sheet refreshed. **Phase 1 is published and closed.**
 
-`phase1_finalise.sh` re-stamps the corpus boundary, regenerates workbook,
-DuckDB and reader, rebuilds the Drive staging tree, syncs it, and updates
-the Google Sheet. It deliberately stops before the PR that deploys
-`index.html`.
+Extraction takes roughly five hours at ~86 documents/minute and costs
+nothing but CPU. It is a **Phase 2 prerequisite with no Phase 1 value** —
+nothing but the deep-read consumes cached text, and a deterministic regex
+sweep over it was already tried and produced only false positives.
 
-**First thing to check:** whether the chain has run, and what it said.
+---
 
-```bash
-cat logs/phase1_finalise.log
-pgrep -fl "fetch_outstanding|drive_sync|phase1_finalise"
-```
+## The extraction bug, and the two it was hiding
 
-If the chain completed, `index.html` will have changed and needs a branch
-and PR to reach the deployment.
+This is the substantive discovery of the session and the reason the
+numbers moved.
+
+**`no_text` meant two opposite things.** The runner logged it both when
+the text cache was missing — nobody had extracted the document — and when
+the cache existed and held no words. An absence of *processing* recorded
+as an absence of *content*. Because the cohort query excludes anything
+already logged, the first kind was never revisited.
+
+**4,836 of 5,073 were the never-extracted kind.** Sampling the supporting
+statements among them found every one carried a full text layer:
+thousands of characters in the first pages, one 86 pages long. Supporting
+Information is where capacity figures live. Corpus-wide, 28,433 documents
+had no cached text at all.
+
+Fixed on branch **`not-extracted-fix`, which still needs a PR**: the
+runner logs `not_extracted` and retries it, the log upserts instead of
+`DO NOTHING` (so a later success replaces the earlier miss), and
+migration 011 relabels the mislabelled rows. The Studio was stopped,
+resynced and restarted mid-session because it was minting fresh
+mislabelled rows.
+
+### What that left, once measured honestly
+
+**237 documents genuinely have no extractable text — and 196 of them are
+not PDFs.** The extractor is pypdf plus OCR, so anything else yields zero
+pages and is logged as though it were empty:
+
+| Format | Count |
+|---|---|
+| `.docx` / `.xlsx` | 127 |
+| `.doc` / `.msg` / `.xls` | 55 |
+| JPEG | 25 |
+| RTF | 14 |
+| PDF | 12 |
+| HTML / other | 4 |
+
+The same bug in a third costume: *the extractor does not handle this
+format*, recorded as *this document contains no words*. The Outlook
+`.msg` files are consultee responses, which is where objections and
+technical challenges live. `openpyxl` is already a dependency;
+`python-docx`, `striprtf` and `extract-msg` would cover 196 of the 237.
+
+**14 documents genuinely lost to parse failure** — the original task
+list's "16 bad chunks", and roughly right. 380 parse-failed rows exist
+but 368 still produced findings; the failure is a truncated tail. The 14
+are mostly short ancillary items, though two are VIRTUS supporting
+statements and one a 37-page Cardiff "Additional Information".
+`deepread_escalate.py` is the salvage path.
+
+**58 sites hold documents with nothing read at all** — 8,212 documents,
+17 of them named as data centres or carrying an MW figure, including
+Google Waltham Cross (500 documents), Saunderton VIRTUS (289), Langston
+Road 50MW (182) and LCY20 (177). That is not a loose end, it is the body
+of Phase 2.
 
 ---
 
@@ -63,16 +116,23 @@ not the local directory or the repo.
 
 ## The three phases
 
-**Phase 1 — nearly closed.** The handover is published behind the gate.
-Remaining: the chain above, the Drive verification, a gate re-probe, and
-16 bad-chunk documents plus 7 sites with unread documents.
+**Phase 1 — closed.** Published behind the gate, regenerated against the
+22:42 boundary, Drive verified by sampling 40 documents' actual parents
+(all correct), the Sheet refreshed. Only a gate re-probe remains, from
+outside with no cookie, after the next deploy. The duplicate Drive folder
+`1UxxGmbi…` is safe to delete whenever Luke wants.
 
-**Phase 2 — collecting, then reading.** The acquisition tail is analysed
-in the roadmap: 20 applications reachable headlessly across eleven
-unrelated portals (poor value), against 31 that route through the
-already-working browser tooling (good value, needs Luke at the keyboard).
-Then deep-read the remaining two thirds of the corpus — the Anthropic
-budget is spent, so this is planned on OpenAI credits.
+**Phase 2 — collecting, then reading.** The overnight sweep resolved 37
+of 108 applications and gained 1,573 documents; 68 remain as retryable
+errors. Still to come: the 31 applications that route through the browser
+tooling (good value, needs Luke at the keyboard) against 20 reachable
+headlessly across eleven unrelated portals (poor value); format handling
+for the 196 non-PDF documents; and the deep-read itself over the
+remaining corpus, on OpenAI credits since the Anthropic budget is spent.
+
+**Start here in the next session:** open a PR for `not-extracted-fix`,
+then add non-PDF format handling to the extractor. Both are prerequisites
+for the deep-read being worth running.
 
 **Phase 3 — the second opinion.** A subset is dual-read; the comparison
 across the corpus is the deliverable, and disagreements are findings
