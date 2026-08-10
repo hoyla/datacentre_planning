@@ -190,6 +190,18 @@ Method: for each rule, write down the domain fact it asserts, then grep
 this file and HISTORY for the quantity, the unit and the concept. The
 files exist to prevent this and are cheap to search.
 
+**And when a claim is retracted, sweep every place it was asserted.**
+The impossible-components claim was corrected in the code and in the
+runbook, and left standing in the pull request description — the one
+artefact a reviewer actually reads — until Luke found it there too. That
+was the third instance in one evening of fixing the thing in front of me
+and not its neighbours: the per-site CSVs bypassed adjudication while the
+workbook had it, DuckDB omitted it entirely, and a retraction reached two
+of four places. A claim lives in code, comments, commit messages, PR
+bodies, the runbook, HISTORY, and the reader's own methodology and
+dictionary text. `git grep` the distinctive phrase, not the file you
+happen to have open.
+
 ## Smaller things
 
 - **Promote `associated_id` to a typed `applications.parent_ref`
