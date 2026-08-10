@@ -19,6 +19,14 @@ had nothing read at all.
 
 ---
 
+## Regenerating the phase 2 release
+
+The chain, its ordering constraints and the traps are in
+[docs/REGENERATION_RUNBOOK.md](docs/REGENERATION_RUNBOOK.md). Two steps
+must precede the artefacts: adjudication corrections (enforced in code
+by `dcp/adjudication_gate.py`) and the Drive staging rebuild that picks
+up the new CSV adjudication columns.
+
 ## Finishing Phase 1
 
 The handover is out. These close it properly.
