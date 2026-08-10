@@ -271,6 +271,15 @@ def main() -> None:
     if release.is_dir():
         for f in sorted(release.iterdir()):
             if f.suffix.lower() in (".xlsx", ".duckdb", ".html"):
+                # Drop the old entry first. `link_or_copy` skips a
+                # destination that already exists, which is right for the
+                # 46,000 content-hashed documents and wrong here: a
+                # regenerated artefact keeps its name. The workbook and
+                # reader survived only because their writers truncate the
+                # existing inode, so the hard link saw the new bytes —
+                # DuckDB replaces the file instead, and staging quietly
+                # kept pointing at a database eight hours out of date.
+                (out / f.name).unlink(missing_ok=True)
                 link_or_copy(f, out / f.name)
                 staged_root.append(f.name)
     else:

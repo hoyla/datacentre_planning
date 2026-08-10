@@ -46,6 +46,12 @@ _spec.loader.exec_module(campaign)
      "applicationDetails.do?keyVal=Q58Q2XCHMZQ00", "idox"),
     ("https://www.example.gov.uk/ocellaweb/planningDetails?ref=1", "ocella"),
     ("https://slough.agileapplications.co.uk/planning/index.html", "agile"),
+    # Northern Ireland is on a planningregister.* host and is not Arcus.
+    ("https://planningregister.planningsystemni.gov.uk/application/205021",
+     "ni_planning"),
+    # ...while a genuine Arcus register still resolves.
+    ("https://planningregister.cherwell.gov.uk/Planning/Display/23/00123/F",
+     "arcus"),
     (None, "no_url"),
 ])
 def test_portal_family(url, expected):
