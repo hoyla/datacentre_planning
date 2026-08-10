@@ -68,7 +68,7 @@ GEN_CORROBORATES = (0.8, 1.5)
 # Below this, generation is life-safety only rather than load-carrying.
 GEN_PARTIAL = 0.5
 
-SQL = """
+SQL = r"""
 WITH cons AS (
   -- The single finding that supplies each site's headline consumption
   -- figure, with its own quote. Scope is a property of THAT finding:
@@ -102,18 +102,47 @@ cap AS (
   GROUP BY 1,2)
 SELECT cap.site_key, cap.display_name, cap.it_load, cap.total_site,
        cap.grid, cap.gen, cap.storage, cap.thermal, cap.n_cons,
+       units.n_units, units.unit_quote, councils.n_councils,
        coalesce(
          cons.evidence_text ~* '(each|per) (building|hall|data hall|unit|block|phase)'
          AND NOT cons.evidence_text ~* 'across the (campus|site|development)|in total|overall|total (it load|load|capacity)|combined',
          false) AS partial_scope
-FROM cap LEFT JOIN cons ON cons.site_key = cap.site_key
+FROM cap
+LEFT JOIN cons ON cons.site_key = cap.site_key
+-- How many buildings the documents say there are. A per-building figure
+-- is only a floor until this is known; with it, the site's implied total
+-- is arithmetic the reader can check rather than a number we invented.
+LEFT JOIN LATERAL (
+  SELECT CASE lower((regexp_match(f.evidence_text,
+           '\y(two|three|four|five|six|[0-9]+)\s+(?:no\.?\s+)?(?:data centre |dc )?buildings\y', 'i'))[1])
+           WHEN 'two' THEN 2 WHEN 'three' THEN 3 WHEN 'four' THEN 4
+           WHEN 'five' THEN 5 WHEN 'six' THEN 6
+           ELSE nullif(regexp_replace((regexp_match(f.evidence_text,
+                '\y([0-9]+)\s+(?:no\.?\s+)?(?:data centre |dc )?buildings\y','i'))[1],
+                '[^0-9]','','g'),'')::int END AS n_units,
+         left(regexp_replace(f.evidence_text, E'\\s+',' ','g'), 150) AS unit_quote
+  FROM findings f
+  JOIN site_members m2 ON m2.application_id = f.application_id AND m2.retired_at IS NULL
+  JOIN sites s2 ON s2.id = m2.site_id AND s2.site_key = cap.site_key
+  WHERE f.evidence_text ~* '\y(two|three|four|five|six|[0-9]+)\s+(no\.?\s+)?(data centre |dc )?buildings\y'
+  LIMIT 1) units ON true
+-- Signals drawn from applications in different planning authorities are
+-- a clustering question before they are a data question: the 1km rule
+-- can merge two schemes that merely stand near each other.
+LEFT JOIN LATERAL (
+  SELECT count(DISTINCT split_part(a2.application_ref, '/', 1)) AS n_councils
+  FROM site_members m3
+  JOIN applications a2 ON a2.id = m3.application_id
+  JOIN sites s3 ON s3.id = m3.site_id AND s3.site_key = cap.site_key
+  WHERE m3.retired_at IS NULL) councils ON true
 WHERE cap.it_load IS NOT NULL OR cap.total_site IS NOT NULL
    OR cap.grid IS NOT NULL OR cap.gen IS NOT NULL
 ORDER BY coalesce(cap.it_load, cap.total_site, cap.grid, cap.gen) DESC NULLS LAST
 """
 
 
-def classify(cons, grid, gen, partial_scope=False):
+def classify(cons, grid, gen, partial_scope=False, n_units=None,
+             unit_quote=None, n_councils=1):
     """(status, note) for one site's consumption figure."""
     if cons is None:
         return ("no-consumption-figure",
@@ -125,6 +154,17 @@ def classify(cons, grid, gen, partial_scope=False):
     # "each building will provide approximately 72MW" beside a
     # whole-scheme figure of 1,100MW; a reader given 72 has been told
     # something false about a very large site.
+    if partial_scope and n_units and n_units > 1:
+        # The corpus holds both halves: a per-unit figure and a count of
+        # units. Multiplying them is arithmetic the reader can check
+        # against two quotes, so the implied total is stated — as an
+        # implication, never as a disclosed figure.
+        return ("scope-resolved",
+                f"Documents give {cons:,.1f} MW per building and state "
+                f"{n_units} buildings, implying about "
+                f"{cons * n_units:,.0f} MW for the site. The {cons:,.1f} MW "
+                f"in the capacity column is per building, not the site. "
+                f"Building count from: \"{(unit_quote or '')[:110]}\"")
     if partial_scope:
         return ("scope-uncertain",
                 f"The quote behind this {cons:,.1f} MW figure describes a "
@@ -134,6 +174,14 @@ def classify(cons, grid, gen, partial_scope=False):
                 f"Treat as a floor for the site, not its capacity.")
     checks, notes = [], []
     if grid is not None:
+        if grid < cons * GRID_SHORTFALL and (n_councils or 1) > 1:
+            return ("possible-clustering-artefact",
+                    f"Grid connection {grid:,.1f} MW is below the "
+                    f"{cons:,.1f} MW consumption — but this site's "
+                    f"applications span {n_councils} planning authorities, "
+                    f"so the two figures may describe different schemes "
+                    f"merged by the 1km proximity rule. A site-definition "
+                    f"question before a data one.")
         if grid < cons * GRID_SHORTFALL:
             return ("contradicted",
                     f"Grid connection {grid:,.1f} MW is below the "
@@ -175,7 +223,7 @@ def main() -> int:
 
     buckets: dict[str, list] = {}
     for (key, name, it, tot, grid, gen, storage, thermal, n_cons,
-         partial_scope) in rows:
+         n_units, unit_quote, n_councils, partial_scope) in rows:
         # The larger of the two, not it_load-by-preference. A campus
         # stating 72 MW per building and 1,100 MW overall has both, and
         # preferring the IT-load column reported the smaller as the
@@ -183,13 +231,15 @@ def main() -> int:
         cons = max([v for v in (it, tot) if v is not None], default=None)
         if cons is not None and cons < args.min_mw:
             continue
-        status, note = classify(cons, grid, gen, partial_scope)
+        status, note = classify(cons, grid, gen, partial_scope,
+                                n_units, unit_quote, n_councils)
         buckets.setdefault(status, []).append(
             (key, name, cons, it, tot, grid, gen, storage, thermal,
              n_cons, note))
 
     stamp = dt.datetime.now(dt.timezone.utc)
-    order = ["contradicted", "scope-uncertain", "partial-generation",
+    order = ["contradicted", "possible-clustering-artefact",
+             "scope-resolved", "scope-uncertain", "partial-generation",
              "corroborated", "uncorroborated", "no-consumption-figure"]
     total = sum(len(v) for v in buckets.values())
     out = [f"# Consumption integrity — {stamp:%Y-%m-%d %H:%M} UTC", "",
