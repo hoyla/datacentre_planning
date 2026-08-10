@@ -240,7 +240,8 @@ def model_tag_for(model: str, reasoning_effort: str | None = None) -> str:
 
 
 def load_cohort(conn, which: str, sample: int = 0,
-                model_tag: str | None = None) -> list[dict]:
+                model_tag: str | None = None,
+                tiers: tuple[str, ...] = ()) -> list[dict]:
     """'validation' = a small sample of documents already read by BOTH
     other models, for a three-way comparison; 'remaining' = documents
     this model has not read.
@@ -318,6 +319,8 @@ def load_cohort(conn, which: str, sample: int = 0,
     for row, plan in zip(rows, plans):
         if plan.tier == "skip" or plan.sampled_out:
             continue
+        if tiers and plan.tier not in tiers:
+            continue
         row["tier"] = plan.tier
         kept.append(row)
     return kept
@@ -380,7 +383,8 @@ def build_jsonl(rows: list[dict], model: str, max_chars: int,
 def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
               sample: int = 0, rate_in: float = 0.0,
               rate_out: float = 0.0, max_spend: float = 0.0,
-              reasoning_effort: str | None = None) -> None:
+              reasoning_effort: str | None = None,
+              tiers: tuple[str, ...] = ()) -> None:
     tag = model_tag_for(model, reasoning_effort)
 
     # The validation interlock runs FIRST, before a single cache file is
@@ -392,7 +396,8 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
         _require_validation(model)
 
     with db.connect() as conn:
-        rows = load_cohort(conn, cohort, sample=sample, model_tag=tag)
+        rows = load_cohort(conn, cohort, sample=sample, model_tag=tag,
+                           tiers=tiers)
 
     # A dry run over the whole corpus does not need to build the whole
     # corpus: read a sample and scale. Exact for anything small, and for
@@ -738,6 +743,14 @@ def main() -> None:
                     help="Show which account, org and project the key "
                          "resolves to, and which models it can see. "
                          "Spends nothing.")
+    ap.add_argument("--tier", nargs="+", default=None,
+                    choices=["A", "B", "C"], metavar="TIER",
+                    help="Restrict the 'remaining' cohort to these tiers. "
+                         "Tier A is supporting statements and consultee "
+                         "responses -- 22%% of the corpus and where the "
+                         "disclosures are -- so spending a better (dearer) "
+                         "configuration on A while B and C get a cheap one "
+                         "buys accuracy exactly where findings come from.")
     ap.add_argument("--reasoning-effort", default=None,
                     choices=["minimal", "low", "medium", "high"],
                     help="Reasoning models bill reasoning as output and "
@@ -763,7 +776,8 @@ def main() -> None:
                   dry_run=not args.submit, sample=args.sample,
                   rate_in=args.rate_in, rate_out=args.rate_out,
                   max_spend=args.max_spend_usd,
-                  reasoning_effort=args.reasoning_effort)
+                  reasoning_effort=args.reasoning_effort,
+                  tiers=tuple(args.tier or ()))
     elif args.collect:
         do_collect(args.batch_id)
     else:
