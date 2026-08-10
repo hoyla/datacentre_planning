@@ -296,12 +296,19 @@ def _round_sensibly(mw: float) -> float:
 
 def power_estimate(*, it_load_mw=None, total_site_mw=None,
                    grid_mw=None, generation_mw=None,
-                   floorspace_sqm=None, has_documents=True) -> PowerEstimate:
+                   floorspace_sqm=None, has_documents=True,
+                   docs_held: int | None = None,
+                   docs_read: int | None = None) -> PowerEstimate:
     """Best available capacity for ranking, with its qualifications.
 
     Preference order runs from what the documents say about the building's
     own load down to what can be inferred from its size. Each step down is
     a real loss of authority, which the confidence and caveat record.
+
+    `docs_held` / `docs_read` let the no-capacity caveat state how much of
+    the site's document set that absence is based on. Without them the
+    caveat stays silent on coverage — it must never claim a full reading
+    it cannot see.
     """
     if it_load_mw:
         return PowerEstimate(
@@ -348,8 +355,33 @@ def power_estimate(*, it_load_mw=None, total_site_mw=None,
             "neither a capacity nor a size can be established. Absence "
             "here reflects the document gap, not a small site.")
 
+    # "Read in full" is a claim about coverage, so it is only made when
+    # the coverage numbers are in hand and say so. The published reader
+    # once asserted it on 173 sites whose own banner said reading was
+    # incomplete — including the 58 where nothing had been read at all.
+    if docs_held and docs_read is not None and docs_read >= docs_held:
+        return PowerEstimate(
+            None, "No capacity disclosed", "None",
+            "The documents held for this site were read in full and disclose "
+            "neither a capacity figure nor a building floorspace. For a "
+            "consented or pending data centre that is itself notable.")
+
+    if docs_held and docs_read == 0:
+        return PowerEstimate(
+            None, "Not yet analysed", "None",
+            "None of the documents held for this site have been analysed "
+            "yet, so no capacity figure could have been found. The absence "
+            "reflects the reading gap, not the documents.")
+
+    if docs_held and docs_read is not None:
+        return PowerEstimate(
+            None, "No capacity disclosed", "None",
+            f"Of the {docs_held:,} documents held for this site, "
+            f"{docs_read:,} have been read so far and none discloses a "
+            "capacity figure or a building floorspace. Reading is "
+            "incomplete: treat the absence as provisional, not established.")
+
     return PowerEstimate(
         None, "No capacity disclosed", "None",
-        "The documents held for this site were read in full and disclose "
-        "neither a capacity figure nor a building floorspace. For a "
-        "consented or pending data centre that is itself notable.")
+        "The documents read for this site disclose neither a capacity "
+        "figure nor a building floorspace.")

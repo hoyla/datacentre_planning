@@ -940,7 +940,8 @@ def main() -> int:
         apps = apps_by_site.get(key, [])
         est = scale.power_estimate(it_load_mw=it, total_site_mw=tot, grid_mw=grid,
                                    generation_mw=gen, floorspace_sqm=None,
-                                   has_documents=bool(docs))
+                                   has_documents=bool(docs),
+                                   docs_held=held, docs_read=read)
         cap_key, cap_label = site_profile.capacity_status(
             pre_application=(n_apps or 0) == 0, docs_held=held, docs_read=read,
             power_value_mw=est.value_mw, power_basis=est.basis)

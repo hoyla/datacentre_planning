@@ -185,6 +185,45 @@ be sideways as upright. Read upright-only, one Oxfordshire objection
 photograph returned `AUTHSCUOAXO TVUNY GNAIAC`, which is `DEFEND RURAL
 OXFORDSHIRE` backwards.
 
+### Findings idempotency, and a caveat that outran the coverage (Aug 10)
+
+A full review of the v2 work found two defects that had reached the
+published reader, both now fixed.
+
+**5.6% of the published findings count was duplicate rows.** The runner
+committed findings chunk by chunk and wrote the log row afterwards on a
+separate commit, so a document whose run died between the two — or whose
+`parse_failed` retry re-read chunks that had already landed — was
+re-offered by the cohort query and re-inserted everything it had already
+stored. 20,377 rows across 1,504 documents were exact copies of an
+earlier row in every content column; migration 012 moves them to
+`findings_removed_duplicates` (archived, not destroyed) and adds a
+unique index over the content columns so the database now refuses what
+the code used to permit. The runner commits each document's findings and
+its log row in one transaction, and every findings writer inserts with
+`ON CONFLICT DO NOTHING` — a re-run is now genuinely a no-op on
+unchanged content. `prompt_version` joins the findings row at the same
+time, backfilled to the 1.0 every read to date used. A further 7,771
+rows share a quote but differ in a value column: same evidence, two
+readings. Those are kept — they are Phase 3's raw material, not cleanup.
+
+**The reader claimed "read in full" on sites it had barely read.** The
+no-capacity caveat asserted "the documents held for this site were read
+in full" whenever a site had documents and no figure — 213 times in the
+published page, 173 of them on sites whose own banner said reading was
+incomplete, including all 58 where nothing had been read. The estimator
+never saw the coverage numbers. It does now, and the caveat states the
+fraction read, marks the absence provisional, and only claims a full
+reading — and calls the null result notable — when the coverage says
+so. The workbook already compensated at the cell level; the reader
+rendered the estimator's sentence raw.
+
+**Migration 013 relabels the 227 rows migration 011 could not see** —
+`no_text` with a page count of zero, the unhandled-format caches that
+recorded no pages rather than no page count. The same bug in its fifth
+costume, and the reason the Outlook consultee responses would never have
+re-entered the cohort despite the format loaders existing.
+
 ---
 
 ## Lessons that changed how the code is written

@@ -5,14 +5,17 @@ the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
 Current state: **429 sites** (plus 26 pre-planning), **1,709
-applications** in the site universe, **55,678 documents**, **462,221
-findings**. Phase 1 is published and closed, stamped at the boundary
-acquisition stopped at.
+applications** in the site universe, **55,678 documents**, **454,011
+findings** (20,450 duplicate rows archived by migration 012). Phase 1
+is published and closed, stamped at the boundary acquisition stopped
+at.
 
-Reading coverage is the open question: 22,611 documents are read, but
-4,836 more were skipped by an extractor gap now fixed, 2,082 are not
-PDFs and were unreadable until the format loaders landed, and 58 sites
-holding 8,212 documents have had nothing read at all.
+Reading coverage is the open question: 18,645 distinct documents are
+read — an earlier figure here, 22,611, summed per-model reads and so
+double-counted the dual-read subset — but 4,836 more were skipped by an
+extractor gap now fixed, 2,082 are not PDFs and were unreadable until
+the format loaders landed, and 58 sites holding 8,212 documents have
+had nothing read at all.
 
 ---
 

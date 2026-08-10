@@ -838,11 +838,13 @@ def main() -> None:
         # disclosed IT load -> total site -> grid -> generation -> a
         # floorspace inference, losing authority at each step and saying so.
         prof = site_profiles.get(key, {})
+        held, read = coverage.get(key, (docs or 0, 0))
         est = scale.power_estimate(
             it_load_mw=it_load_mw, total_site_mw=total_site_mw,
             grid_mw=grid_mw, generation_mw=gen_mw,
             floorspace_sqm=site_floorspace.get(key),
-            has_documents=bool(docs))
+            has_documents=bool(docs),
+            docs_held=held, docs_read=read)
 
         if est.value_mw is not None:
             band_key, band_label = scale.scale_from_mw(est.value_mw)
@@ -856,7 +858,6 @@ def main() -> None:
         # pre-planning project: "no documents held" would be true but
         # misleading — no public material exists to hold.
         pre_app = (n_apps or 0) == 0
-        held, read = coverage.get(key, (docs or 0, 0))
         cap_key, cap_label = site_profile.capacity_status(
             pre_application=pre_app, docs_held=held, docs_read=read,
             power_value_mw=est.value_mw, power_basis=est.basis)
