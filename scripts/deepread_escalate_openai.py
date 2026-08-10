@@ -258,7 +258,41 @@ def load_cohort(conn, which: str, sample: int = 0,
     plainly there in a normal supporting statement, which is the
     question a bulk run turns on.
     """
-    if which == "validation":
+    if which == "power":
+        # A validation cohort weighted to the documents the investigation
+        # actually turns on.
+        #
+        # The plain `validation` sample is drawn across all dual-read
+        # documents, which are overwhelmingly application forms and
+        # decision notices: of its 60 documents only 4 carry a capacity
+        # figure at all. That measures a reader on ordinary prose and
+        # then asks it to be trusted with supporting statements, which
+        # is the wrong test for a data-centre power investigation.
+        #
+        # This selects dual-read documents where some model already
+        # found a figure in MW, kW, kVA or MVA -- 333 of them, mostly
+        # Additional Information, objections and supporting statements.
+        # Whether a cheaper configuration still finds those figures is
+        # the question worth spending a validation batch on.
+        q = """
+            SELECT d.id, a.id, a.application_ref, d.content_sha256,
+                   d.kind, max(l.tier)
+            FROM deepread_log l
+            JOIN documents d ON d.id = l.document_id
+            JOIN applications a ON a.id = d.application_id
+            WHERE l.prompt_version = %s
+              AND EXISTS (SELECT 1 FROM findings f
+                          WHERE f.document_id = d.id
+                            AND lower(coalesce(f.value_unit,'')) IN
+                                ('mw','kw','kva','mva'))
+            GROUP BY d.id, a.id, a.application_ref, d.content_sha256, d.kind
+            HAVING count(*) FILTER (WHERE l.model = 'claude-sonnet-5'
+                                      AND l.read_state = 'read') > 0
+               AND count(*) FILTER (WHERE l.model LIKE 'mlx%%'
+                                      AND l.read_state = 'read') > 0
+            ORDER BY md5(d.id::text)"""
+        params = [PROMPT_VERSION]
+    elif which == "validation":
         q = """
             SELECT d.id, a.id, a.application_ref, d.content_sha256,
                    d.kind, max(l.tier)
@@ -308,7 +342,7 @@ def load_cohort(conn, which: str, sample: int = 0,
         rows = [{"document_id": r[0], "application_id": r[1],
                  "application_ref": r[2], "sha": r[3], "kind": r[4],
                  "tier": r[5]} for r in cur.fetchall()]
-    if which == "validation":
+    if which in ("validation", "power"):
         # Already-read documents carry a tier from the run that read
         # them; page selection follows it, so the comparison is
         # like-for-like against what the other two models saw.
@@ -720,7 +754,7 @@ def main() -> None:
     ap.add_argument("--list-models", action="store_true")
     ap.add_argument("--submit", action="store_true")
     ap.add_argument("--collect", action="store_true")
-    ap.add_argument("--cohort", choices=["validation", "remaining"],
+    ap.add_argument("--cohort", choices=["validation", "power", "remaining"],
                     default="validation",
                     help="'validation' samples documents already read by "
                          "both other models, for a three-way comparison; "
