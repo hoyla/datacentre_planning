@@ -415,6 +415,13 @@ def log_document(conn, row: dict, *, read_state: str, pages_total: int | None,
     conn.commit()
 
 
+def _no_nul(v):
+    """Postgres text cannot hold NUL (0x00) and raises on it. One arrived
+    in a gpt-5 finding after 460,000 findings without one -- the model can
+    emit what the source never contained -- so every string is stripped at
+    the database boundary rather than trusting any reader not to."""
+    return v.replace("\x00", "") if isinstance(v, str) else v
+
 def verify_and_insert(conn, row: dict, findings: list[dict],
                       pages: list[str], sent: list[int]) -> tuple[int, int]:
     """The verbatim gate, then storage. Returns (inserted, failed)."""
@@ -473,10 +480,11 @@ def verify_and_insert(conn, row: dict, findings: list[dict],
                     value_number, value_unit, md5(evidence_text),
                     evidence_page)
                 DO NOTHING""",
-                (row["application_id"], row["document_id"], label,
-                 family, source, f.get("value_text"), num,
-                 f.get("value_unit"), quote, verified_page, MODEL_TAG,
-                 PROMPT_VERSION))
+                (row["application_id"], row["document_id"],
+                 _no_nul(label), family, source,
+                 _no_nul(f.get("value_text")), num,
+                 _no_nul(f.get("value_unit")), _no_nul(quote),
+                 verified_page, MODEL_TAG, PROMPT_VERSION))
             inserted += cur.rowcount
     # No commit here, deliberately: findings only become visible together
     # with the deepread_log row that records they were read, in the one
