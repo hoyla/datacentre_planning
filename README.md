@@ -7,9 +7,13 @@ sites will draw, what generation they propose on site, how they will be
 cooled, and who is behind them.
 
 **What it holds today:** 429 sites plus 26 known only at pre-planning
-stage, 1,709 planning applications, 54,707 documents from council
-registers, 18,645 of them analysed, 462,221 verified findings, and a
-layer of 197 nationally significant energy projects for adjacency.
+stage, 1,709 planning applications, 55,678 documents from council
+registers, and a layer of 197 nationally significant energy projects for
+adjacency. Reading is in progress, so the analysed and findings counts
+move daily — `scripts/corpus_stats.py` prints the current figures, and
+the published reader states its own boundary. Deliberately not repeated
+here: a hand-copied number in a readme is a number that is wrong by the
+following morning, and this one was.
 
 The output is a handover package, not a live service: a reader, a
 workbook, a queryable database, and the source documents themselves.
@@ -38,8 +42,17 @@ workbook, a queryable database, and the source documents themselves.
 **Ingest broadly, analyse second.** A corpus assembled to prove a point
 cannot produce a null finding. Applications are collected on a
 deliberately wide definition and the editorial judgement applied
-afterwards, to structured facts — which is why the dataset can say *71
-consented data centres disclose no power figure at all*, and mean it.
+afterwards, to structured facts — so *these consented data centres
+disclose no power figure at all* is a result the dataset can reach, and
+not only the dramatic ones.
+
+That particular finding is **being re-verified before it is quoted**.
+The figure of 71 sites was measured before the extractor could read
+Word, Outlook and spreadsheet documents, and the sweep that confirmed it
+was never committed — so it rests on a cohort that may have contained
+documents nobody could read yet, checked by an analysis nobody can
+re-run. Both are fixed; the number is not restated until the sweep has
+been re-run against the current corpus and committed alongside it.
 
 Two consequences run through the code:
 
