@@ -430,7 +430,36 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "it: a sort by MW should be read with all four columns."),
     ("Sites", "IT load / Total site / Grid connection / On-site generation MW",
      "The adjudicated components, kept separate because they are "
-     "different quantities for the same site, not competing estimates."),
+     "different quantities for the same site, not competing estimates. "
+     "IT load is what the racks draw and excludes cooling overhead; total "
+     "site includes it, so the two are not comparable and a site quoting "
+     "only one is not smaller than a site quoting the other. Grid "
+     "connection is capacity sought, reserved or contracted — headroom, "
+     "which operators commonly secure more of than they draw, and which "
+     "phased schemes take up over years. On-site generation is standby "
+     "and CHP plant; read it beside IT load rather than alone, because "
+     "generation far below load usually means life-safety backup only and "
+     "a wholly grid-dependent site, which is itself worth reporting."),
+    ("Sites", "What is NOT in the generation and capacity columns",
+     "Three quantities that look like power and are deliberately kept "
+     "out of these columns, each recorded under its own type so it stays "
+     "findable: battery and UPS ratings (energy_storage) state discharge "
+     "speed, not generation or demand; thermal input (thermal_input) is "
+     "fuel entering a plant, typically two to three times the electricity "
+     "leaving it; and annual energy consumption, which is not a capacity "
+     "at all — one application states a load in kW that is really a "
+     "year's kWh, and taken literally implies a site four times the "
+     "national grid. Figures above 3 GW are rejected on that basis alone."),
+    ("Sites", "How much to trust a single capacity figure",
+     "Some sites state a figure once and nothing corroborates it; others "
+     "state it and their grid connection or standby plant independently "
+     "agrees. Both appear in this column identically, so where it "
+     "matters, check the site panel: it shows the components beside each "
+     "other. Two known limits travel with these figures. A figure the "
+     "documents describe as per-building is not the site total — one "
+     "scheme states 75 MW per building and, elsewhere, three buildings — "
+     "and a generation figure taken from one machine's specification is "
+     "not the fleet, where the documents describe dozens of units."),
     ("Sites", "Capacity figures attributed to site",
      "How many megawatt figures the adjudication attributed to this site "
      "itself."),

@@ -151,6 +151,31 @@ applications.
 
 Deferred consciously. Return when journalism need warrants.
 
+### Postponed past the phase 2 release (2026-08-10 evening)
+
+Cut so the phase 2 handover could go out this evening with the deep-read
+in place. None is abandoned; each is a known, scoped piece of work.
+
+- **The acquisition tail.** 31 browser-routed applications, 20 across
+  bespoke portals, 13 genuinely hard — a slow process needing a human at
+  the keyboard, and not worth holding the release for.
+- **Salvage the 14 parse-failure documents**, two VIRTUS supporting
+  statements among them. `deepread_escalate.py` is the path.
+- **Synthetic pagination labelling.** A `.docx` finding carries a
+  section index the reader still calls a page. A provenance nicety, not
+  a blocker.
+- **Scanned-page orientation detection.** Measurement first, re-run
+  second; ~5% of the corpus was OCR'd on the old setting.
+- **Coverage gaps** — Northern Ireland (whole nation, one adapter),
+  pre-application/screening entries, Section 35 / NSIP, the operator
+  watch-list.
+- **Phase 3, the second opinion.** The Studio is building the dual-read
+  tier-A corpus and `scripts/compare_readers.py` exists; the corpus-wide
+  comparison and water adjudication are the next release's deliverable,
+  not this one.
+
+### Longer-standing
+
 - **DC01, the unidentified Foxglove case.** A 320 MW outline approved
   2025-02 with implausibly low emissions and no council, developer or
   address. Three of four originally-unidentified cases are resolved;

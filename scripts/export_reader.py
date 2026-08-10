@@ -655,7 +655,7 @@ function sticky(){
 }
 addEventListener('resize', sticky);
 function show(v, quiet){
-  for(const k of ['start','sites','apps','energy','map','method','dict']){
+  for(const k of ['start','sites','apps','energy','map','method','dict','notes']){
     const el=document.getElementById('view-'+k), tb=document.getElementById('tab-'+k);
     if(el) el.classList.toggle('on', k===v);
     if(tb) tb.setAttribute('aria-selected', k===v);
@@ -1517,6 +1517,44 @@ def main() -> int:
  "site MW" column would silently mix them. Each site's headline figure carries its basis,
  its confidence and its caveat. Where a site spans several buildings, the figures may come
  from different applications; the panel names the application behind each one.</p>
+ <p class="m"><b>Asking whose figure it is turned out not to be enough.</b> A second question
+ had to be added — <em>what kind of quantity is this?</em> — after six families of error were
+ found sitting in the gap between the two. Every stage had been faithful: the extractor
+ quoted its document exactly, the adjudicator answered the question it was asked. Nobody
+ asked whether a figure denominated in kW was a power figure at all.</p>
+ <ul class="m">
+  <li><b>Energy is not power.</b> One application gives a load as "251,859,057.50&nbsp;kW
+   which equates to 94,197.29&nbsp;kWh/m²" — the unit says power, the cross-reference says
+   energy. Divided by the hours in a year it is about 28.7&nbsp;MW. Untreated it entered the
+   table as 251,859&nbsp;MW, four times the United Kingdom's generating capacity. Figures
+   above 3&nbsp;GW are now rejected outright: no announced campus anywhere approaches it.</li>
+  <li><b>Storage is not generation.</b> A 1,000&nbsp;MW battery states how fast it can
+   discharge, and a UPS rating is a battery too. Both are recorded under
+   <code>energy_storage</code> and excluded from the generation column.</li>
+  <li><b>Thermal input is not electrical output.</b> "A Thermal Input of around 1.2&nbsp;GW"
+   is fuel entering a plant, typically two to three times the electricity leaving it. Kept as
+   <code>thermal_input</code>; one site's headline halved to a defensible figure once
+   separated.</li>
+  <li><b>A number in a table is not a capacity.</b> 116 figures rested on a quote carrying no
+   unit at all — one read "80% - 480W" and became 480&nbsp;MW; another was a table of pounds
+   sterling that became a 384&nbsp;MW IT load.</li>
+  <li><b>A substation on a drawing is not a grid connection.</b> Four sites appeared to draw
+   more than their connection could carry; the "connections" were a battery compound, a
+   drawing schedule complete with the substation's floor area, an earlier scheme's plant, and
+   a temporary construction supply.</li>
+  <li><b>One machine is not the fleet.</b> A site recorded 2.9&nbsp;MW of standby generation
+   from a single unit's specification while its documents described "38 no. 2,640&nbsp;kW
+   generator units per building" — about 100&nbsp;MW. Sites where this pattern is detected
+   are flagged rather than multiplied, because "26 no. 28000&nbsp;kW generators" is genuinely
+   ambiguous about whether the rating is per unit or the total.</li>
+ </ul>
+ <p class="m">Nothing was deleted in correcting these. The findings, their quotes and their
+ original values are untouched; what was withdrawn is only the claim that a number is a
+ site's power capacity. Two apparent contradictions were left standing deliberately, because
+ the documents really do assert them: one site states 218&nbsp;MW of demand against a
+ connection "designed to support a power transfer capacity of 120&nbsp;MW", and another
+ reserved 57&nbsp;MW "anticipated to serve the needs of building 1" for a 155&nbsp;MW
+ scheme.</p>
 
  <h2 class="sec">Known limits of this release</h2>
  <ul class="m">
@@ -1547,15 +1585,133 @@ def main() -> int:
  register page, not to this archive.</p>
 """
 
+    # Working notes from the AI assistant that built the pipeline. Kept
+    # deliberately separate from the data pages and labelled as what it
+    # is: nothing here is a finding, and every factual claim points at a
+    # site, a column or a document the reader can open. The value is in
+    # the failure modes — a reporter who knows how this data can mislead
+    # is better armed than one handed a clean-looking number.
+    assistant_notes_html = f"""
+ <p class="lede">Working notes from the AI assistant that built this pipeline. <b>This is not
+ editorial content and nothing here is a finding.</b> It is a record of what the data looks
+ like from the inside: what seems worth pulling on, where it can mislead, what should be
+ checked before anything is published, and where to look next. Every claim below can be
+ traced to a site, a column or a document in this release — if something here cannot be
+ verified that way, treat it as an opinion and discard it.</p>
+
+ <h2 class="sec">What looks worth pulling on</h2>
+ <p class="m"><b>The silences are the strongest material.</b> This dataset's most unusual
+ property is that it can show what applications <em>do not</em> say. Two examples are
+ already visible: sites whose documents were read in full and state no capacity figure at
+ all, and — more striking — the majority of on-site generation figures that name no fuel and
+ no plant type. For an investigation that began by asking whether operators disclose
+ generation contradicting their public renewable positioning, "most of them do not say what
+ it burns" is a finding about disclosure itself, and it is measurable here rather than
+ anecdotal.</p>
+ <p class="m"><b>The gap between demand and grid connection.</b> A handful of sites state
+ they will draw materially more than the connection their own documents describe. Those are
+ not errors — they have been checked by hand — and they raise a question the planning file
+ cannot answer: where does the rest come from, and when. Two such sites are flagged in this
+ release.</p>
+ <p class="m"><b>Sites that are grid-dependent by design.</b> Where standby generation is a
+ small fraction of stated load, the plant is life-safety only and the site relies wholly on
+ the grid. That is an operational fact with public-interest consequences, and it can be read
+ straight off the capacity components in the site panel.</p>
+ <p class="m"><b>Energy parks with a data centre attached.</b> Several records pair a data
+ centre with generation or storage far larger than the computing load — the scheme's centre
+ of gravity is arguably the power project, not the building. Worth deciding, per site, which
+ story is being told.</p>
+
+ <h2 class="sec">Where this data can mislead — pitfalls found the hard way</h2>
+ <p class="m">Each of these produced a wrong number during construction and was corrected.
+ They are listed because the same traps apply to anyone doing their own analysis over the
+ workbook or the database.</p>
+ <ul class="m">
+  <li><b>The largest number in a document is almost never the site's.</b> Planning statements
+   argue by citing the market. Of the twenty-two largest megawatt figures in this corpus, all
+   twenty-two describe something else — a national target, a competitor, a forecast. Any
+   analysis that takes a maximum will be wrong.</li>
+  <li><b>Not everything measured in megawatts is power.</b> Annual energy, thermal input,
+   battery discharge ratings and UPS capacity all appear in MW or kW and mean different
+   things. They are separated here; they will not be in a raw extract.</li>
+  <li><b>A figure may be per building, per hall or per phase.</b> Multiplying is sometimes
+   right and sometimes double-counting, and the documents are often ambiguous about which.
+   Where this release detects the pattern it flags rather than multiplies.</li>
+  <li><b>Table rows lie.</b> A number lifted from a table without its column headers can be
+   anything — pounds, square metres, a row index. Where a quote carries no unit, the figure
+   is not treated as a capacity.</li>
+  <li><b>A regex sweep over this corpus produces mostly false positives.</b> Searching for
+   "MW" finds manhole annotations, EV charger ratings and postcodes (TW6 2GW). Findings here
+   went through an adjudication step for that reason.</li>
+  <li><b>Some evidence quotes are OCR garbage.</b> Every quote was machine-verified to appear
+   in its source document, which guarantees fidelity, not legibility — a scanned page can
+   yield a verbatim-true but unreadable quote. Check the source document before quoting
+   anything that reads oddly.</li>
+ </ul>
+
+ <h2 class="sec">What deserves a human before publication</h2>
+ <ul class="m">
+  <li><b>Any figure you intend to print.</b> Open the site panel, read the quote, then open
+   the source document. The chain is built for exactly this and takes a minute.</li>
+  <li><b>Sites flagged as partly read.</b> Their values are floors and can only rise. A site
+   promoted publicly as 1&nbsp;GW may show less here purely because the document saying so
+   has not been analysed.</li>
+  <li><b>Sites whose applications span more than one council.</b> Clustering is by proximity,
+   so two schemes standing near each other can be merged into one record. Where this release
+   detects it, the site is flagged rather than silently reconciled.</li>
+  <li><b>Generation figures without a fuel.</b> The absence is real and reportable, but
+   before writing that a specific operator has undisclosed diesel, read that site's
+   documents directly.</li>
+  <li><b>Anything adjudicated by a single model.</b> Where two readers agree, a figure is
+   corroborated; where only one read it, it rests on one judgement.</li>
+ </ul>
+
+ <h2 class="sec">Where I would look next</h2>
+ <p class="m">These are suggestions for reporting, not work this pipeline has done. Each
+ would independently test what the planning documents claim.</p>
+ <ul class="m">
+  <li><b>Grid connection registers.</b> Distribution network operators publish embedded
+   capacity registers, and the electricity system operator publishes the transmission
+   connections queue. These record what a site has actually applied for and been offered —
+   independent of what an applicant tells a council. For the sites here that disclose no
+   capacity, or whose stated demand exceeds their connection, that is the natural check.</li>
+  <li><b>Companies House.</b> Applicants are frequently special-purpose vehicles. Officers,
+   persons of significant control and registered addresses are the route from an SPV to the
+   operator behind it. This dataset deliberately does not fuzzy-match company names, because
+   near-identical names are often genuinely different companies — which is exactly the
+   distinction an ownership story turns on.</li>
+  <li><b>Planning appeals.</b> Refused applications generate appeal evidence that is
+   cross-examined and often far more candid than the original submission. Nothing from the
+   appeals system is in this release.</li>
+  <li><b>Environmental permits.</b> Combustion plant above certain thresholds needs a permit
+   naming fuel, capacity and running hours — a direct cross-check on the generation figures
+   here, and on the sites that name no fuel at all.</li>
+  <li><b>Ask the operators.</b> The clearest questions this data raises are simple ones: what
+   will the site draw at full build, what fuel does the standby plant burn, how many hours a
+   year is it expected to run, and where is the connection coming from.</li>
+ </ul>
+
+ <h2 class="sec">What I would not claim from this data</h2>
+ <ul class="m">
+  <li><b>That the dataset is complete.</b> A tail of applications is still being retrieved,
+   and coverage of Northern Ireland is minimal.</li>
+  <li><b>That a site with no capacity figure is small.</b> It may simply not have said.</li>
+  <li><b>That totals across sites are meaningful without care.</b> Sites state different
+   quantities — IT load, total demand, grid connection — and summing them mixes categories.</li>
+  <li><b>That absence of a fuel type means absence of fossil generation.</b> It means the
+   documents in hand do not say.</li>
+ </ul>
+"""
+
 
     out = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
-<title>UK datacentre plans v2, phase 1 release</title>
+<title>UK datacentre plans v2, phase {args.phase} release</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- The gate is there to stop the link being passed around, so the page
      should not turn up in a search either. -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <style>{CSS}</style></head><body>
-<header><h1>UK datacentre plans v2, phase 1 release</h1>
+<header><h1>UK datacentre plans v2, phase {args.phase} release</h1>
  <div class="sub">{n_sites} sites · {n_docs:,} documents ·
  generated {dt.datetime.now(dt.timezone.utc):%Y-%m-%d %H:%M} UTC ·
  pipeline {esc(hv._git_commit())}</div></header>
@@ -1567,6 +1723,7 @@ def main() -> int:
  <button id="tab-map" aria-selected="false" onclick="show('map')">Map</button>
  <button id="tab-method" aria-selected="false" onclick="show('method')">Methodology</button>
  <button id="tab-dict" aria-selected="false" onclick="show('dict')">Data dictionary</button>
+ <button id="tab-notes" aria-selected="false" onclick="show('notes')">Assistant's notes</button>
 </nav>
 
 <section id="view-start" class="view on"><div class="wrap">
@@ -1620,8 +1777,13 @@ def main() -> int:
     <a href="{DRIVE_ROOT}" target="_blank" rel="noopener">on Drive</a></span></p></div>
   <div class="part"><h3>Source documents<span class="pill">Drive</span></h3>
    <p class="what">The council documents themselves, filed by site and by application. Every
-    Drive link in these tables lands in the right folder.</p>
-   <p class="when"><b>Reach for it when</b> you need the original to quote or verify.
+    Drive link in these tables lands in the right folder. Each site's folder also carries a
+    <b>site report</b> (the applications, parties and Barbour record, in prose) and a
+    <b>findings CSV</b> — every verified finding for that site, one row each, naming the
+    document file beside it, the page, the verbatim quote and the model that read it.
+    Both are named after the site, so they stay identifiable outside their folders.</p>
+   <p class="when"><b>Reach for it when</b> you need the original to quote or verify — or
+    everything extracted from one site in a single file.
     &nbsp;<a href="{SITES_URL}" target="_blank" rel="noopener">Open the site
     folders</a></p></div>
   <div class="part"><h3>Query database<span class="pill">DuckDB</span></h3>
@@ -1631,6 +1793,12 @@ def main() -> int:
    <p class="when"><b>Reach for it when</b> the question is not in a column.
     &nbsp;<a href="{DRIVE_ROOT}" target="_blank" rel="noopener">Open it on Drive</a></p></div>
  </div>
+
+ <h3 class="sub-head">Coming shortly…</h3>
+ <p class="help">Two further ways into the same material are planned: a <b>Pinpoint
+ collection</b> of the planning application documents, for full-text search across the
+ corpus, and a <b>Gemini Notebook</b> built from the site reports and findings CSVs, for
+ asking questions across sites. Neither exists yet; this page will say when they do.</p>
 
  <h2 class="sec">Where the applications stand</h2>
  <table class="stats"><tbody>
@@ -1755,6 +1923,8 @@ def main() -> int:
 </section>
 
 <section id="view-method" class="view"><div class="wrap">{methodology_html}</div></section>
+
+<section id="view-notes" class="view"><div class="wrap">{assistant_notes_html}</div></section>
 
 <section id="view-dict" class="view"><div class="wrap">
  <p class="lede">What every column contains and how it was derived. The same definitions
