@@ -137,3 +137,52 @@ class TestPromptsRender:
         out = ap.PROMPT % {"ref": "r", "desc": "d", "figures": "f"}
         assert "80% - 480W" in out
         assert "80%% - 480W" not in out
+
+
+class TestNoExportBypassesAdjudication:
+    """No artefact may derive a site's capacity straight from `findings`.
+
+    Power adjudication decides whose figure each number is, and a
+    consumer that reads `findings.value_number` instead is asserting
+    that every MW in a site's documents belongs to that site. Planning
+    statements argue for approval by quoting the market, so it does not.
+
+    This shipped. `export_handover.py` was fixed for it; the identical
+    expression in `export_duckdb.py`'s `site_overview` view was not,
+    because the fix was scoped to the file that had been named rather
+    than to the pattern. The phase 1 release therefore reported West
+    London Technology Park at 298,000 MW — about ten times the UK grid,
+    from a European demand scenario the adjudicator had already marked
+    `market_context` — while the workbook and reader said 155 MW.
+
+    Retracting a claim means sweeping everywhere it was asserted.
+    """
+
+    EXPORTS = ("scripts/export_duckdb.py", "scripts/export_handover.py",
+               "scripts/export_reader.py", "scripts/build_drive_staging.py")
+
+    def test_no_max_over_unadjudicated_mw_findings(self):
+        import pathlib
+        import re
+        # max(...value_number...) anywhere near a MW unit filter, which is
+        # the shape of the bug in every form it has taken so far.
+        pattern = re.compile(
+            r"max\s*\(\s*[a-z]*\.?value_number[^)]*\)[^;]{0,160}?"
+            r"value_unit[^;]{0,40}?MW", re.I | re.S)
+        for name in self.EXPORTS:
+            src = pathlib.Path(name).read_text()
+            hit = pattern.search(src)
+            assert hit is None, (
+                f"{name} derives a capacity from findings.value_number "
+                f"filtered on a MW unit, bypassing power_adjudication:\n"
+                f"  {hit.group()[:180]}")
+
+    def test_duckdb_site_overview_reads_the_adjudication(self):
+        import pathlib
+        src = pathlib.Path("scripts/export_duckdb.py").read_text()
+        view = src[src.index('"site_overview"'):src.index('"latest_verdict"')]
+        assert "power_adjudication" in view, (
+            "site_overview no longer joins power_adjudication; its capacity "
+            "columns would be unadjudicated")
+        assert "site_capacity" in view, (
+            "site_overview does not filter to verdict='site_capacity'")

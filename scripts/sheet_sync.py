@@ -52,7 +52,7 @@ CLIENT_SECRET = CONFIG_DIR / "client_secret.json"
 TOKEN_PATH = CONFIG_DIR / "sheets_token.json"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-DEFAULT_WORKBOOK = Path("data/exports/phase1_build/dc_handover_phase1.xlsx")
+DEFAULT_WORKBOOK = Path("data/exports/phase2_build/dc_handover_phase2.xlsx")
 
 # Anything Sheets would read as a formula. The exporter emits deliberate
 # =HYPERLINK() cells and those must stay live, but a council's own

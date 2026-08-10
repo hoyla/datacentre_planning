@@ -1,5 +1,13 @@
 #!/bin/sh
-# Wait for acquisition and the Drive repair, then rebuild Phase 1 once.
+# Wait for acquisition and the Drive repair, then rebuild the release once.
+#
+# Written for phase 1 and named for it; kept under that name because
+# SESSION_HANDOVER and ROADMAP both record it running. It now takes the
+# phase, because artefacts are named for the phase that produced them and
+# a chain hardcoded to phase 1 would rebuild `dc_handover_phase1.xlsx`
+# over a published file with different numbers inside it.
+#
+#     PHASE=2 scripts/phase1_finalise.sh
 #
 # The 08:50 boundary was a device for getting a handover out the same day.
 # Acquisition has since restarted deliberately, so the release is stamped
@@ -18,7 +26,8 @@
 set -u
 cd "$(dirname "$0")/.." || exit 1
 PY=.venv/bin/python
-RELEASE=data/exports/phase1_build
+PHASE=${PHASE:-2}
+RELEASE=data/exports/phase${PHASE}_build
 
 say() { printf '\n[%s] %s\n' "$(date +%H:%M:%S)" "$*"; }
 step() { say "$1"; shift; "$@" || { say "FAILED: $*"; exit 1; }; }
@@ -70,11 +79,14 @@ print(f"  {docs:,} documents ({read:,} analysed)"
       + (f", was {prevdocs:,}" if prevdocs else ""))
 PYEOF
 
-step "workbook"  $PY scripts/export_handover.py --out $RELEASE/dc_handover_phase1.xlsx
-step "database"  $PY scripts/export_duckdb.py --out $RELEASE/dc_phase1.duckdb
-step "reader"    $PY scripts/export_reader.py --out $RELEASE/reader.html --publish index.html
-step "drive staging" $PY scripts/build_drive_staging.py
-step "drive sync"    $PY -u scripts/drive_sync.py --sync data/exports/drive_staging
+step "workbook"  $PY scripts/export_handover.py --out "$RELEASE/dc_handover_phase${PHASE}.xlsx"
+step "database"  $PY scripts/export_duckdb.py --out "$RELEASE/dc_phase${PHASE}.duckdb"
+step "reader"    $PY scripts/export_reader.py --out "$RELEASE/reader.html" \
+                     --phase "$PHASE" --publish index.html
+# Staging copies the release into the Drive root, so it follows the three
+# exports above and never precedes them.
+step "drive staging" $PY scripts/build_drive_staging.py --release-dir "$RELEASE"
+step "drive sync"    $PY -u scripts/drive_sync.py --sync data/exports/drive_staging --prune
 step "google sheet"  $PY scripts/sheet_sync.py
 
 say "done — index.html has changed and needs a PR to deploy"

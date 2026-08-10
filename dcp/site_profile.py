@@ -350,16 +350,27 @@ def provisional(docs_held: int, docs_read: int) -> tuple[bool, str]:
     adviser names, EIA status, finding subjects. All can grow; none can
     shrink. Presenting them unmarked invites a reader to treat a floor as
     a total, which is the one misreading this dataset can least afford.
+
+    **Pass the prose counts, not every document held.** A site whose only
+    outstanding documents are elevations and near-identical objection
+    letters is not partially read — the methodology skips the first and
+    samples the second, deliberately, and no amount of further reading
+    will change that. Counting them made 201 of 302 sites provisional
+    when 38 had any prose outstanding, which tells a reporter the dataset
+    is a third finished when its readable material is 99% read. That is
+    not a cautious error: a caveat that fires on almost every row is
+    indistinguishable from noise, and the 38 rows where it matters get
+    lost among the 163 where it does not.
     """
     if not docs_held or docs_read >= docs_held:
         return False, ""
     pct = 100 * docs_read // docs_held
     if docs_read == 0:
-        return True, ("none of this site's documents have been analysed yet — "
-                      "findings-derived values are absent, not zero")
-    return True, (f"prior to complete deep read — from the {pct}% of documents "
-                  f"({docs_read} of {docs_held}) analysed so far; further "
-                  f"reading can raise this figure but not lower it")
+        return True, ("none of this site's readable documents have been analysed "
+                      "yet — findings-derived values are absent, not zero")
+    return True, (f"prior to complete deep read — from the {pct}% of readable "
+                  f"documents ({docs_read} of {docs_held}) analysed so far; "
+                  f"further reading can raise this figure but not lower it")
 
 
 PROVISIONAL_MARK = "(prior to complete deep read)"
@@ -411,11 +422,11 @@ def provisional_statement(docs_held: int, docs_read: int) -> str:
                 "documents are held and readable, but nothing has been extracted "
                 "from them.")
     pct = 100 * docs_read // docs_held
-    return (f"{docs_read:,} of this site's {docs_held:,} documents ({pct}%) have been "
-            f"analysed. Every value below drawn from the documents — capacity, "
-            f"generator counts, cooling method, the names involved — is the largest "
-            f"or fullest found so far. Further reading can raise these figures and "
-            f"cannot lower them.")
+    return (f"{docs_read:,} of this site's {docs_held:,} readable documents ({pct}%) "
+            f"have been analysed. Every value below drawn from the documents — "
+            f"capacity, generator counts, cooling method, the names involved — is the "
+            f"largest or fullest found so far. Further reading can raise these figures "
+            f"and cannot lower them.")
 
 
 # Why a site holds no documents. The distinction that matters is between
@@ -531,6 +542,68 @@ def load_coverage(conn) -> dict[str, tuple[int, int]]:
     with conn.cursor() as cur:
         cur.execute(DEEPREAD_COVERAGE_SQL)
         return {k: (held, read) for k, held, read in cur.fetchall()}
+
+
+COVERAGE_DETAIL_SQL = """
+SELECT s.site_key, d.id, d.kind, (r.document_id IS NOT NULL) AS was_read
+FROM sites s
+JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
+JOIN documents d ON d.application_id = sm.application_id
+LEFT JOIN (SELECT DISTINCT document_id FROM deepread_log
+           WHERE read_state = 'read') r ON r.document_id = d.id
+WHERE s.retired_at IS NULL
+"""
+
+
+def load_coverage_detail(conn) -> dict[str, dict[str, int]]:
+    """site_key -> coverage split by what the methodology does with each document.
+
+    "Documents analysed" over "documents held" is an honest ratio and a
+    misleading headline. It counts a site-location plan, which the
+    deep-read skips because it has no prose in it, exactly like an unread
+    planning statement, which is a real gap. Measured 2026-08-10 the two
+    are worth 5,751 and 662 documents respectively, so the undivided
+    figure reads 78% when the material that can actually carry a
+    disclosure is 98% read, and it marks 201 sites as not fully read when
+    52 of them have any prose outstanding.
+
+    The split is not a presentational choice; it is the methodology's own
+    (`deepread_select.classify_kind`), which is why it is computed from
+    that function rather than from a regex written here. Tier `skip` is
+    graphical, tier `C` is the repetitive classes that are deliberately
+    sampled rather than read exhaustively, and A and B are the prose the
+    deep-read is actually for.
+
+    Keys per site: `held`, `read`, `prose_held`, `prose_read`,
+    `graphical`, `sampled_held`, `sampled_read`.
+    """
+    from dcp.deepread_select import classify_kind
+
+    out: dict[str, dict[str, int]] = {}
+    seen: set[tuple[str, int]] = set()
+    with conn.cursor() as cur:
+        cur.execute(COVERAGE_DETAIL_SQL)
+        for key, doc_id, kind, was_read in cur.fetchall():
+            # One application can belong to more than one site; a document
+            # counts once per site, never twice within one.
+            if (key, doc_id) in seen:
+                continue
+            seen.add((key, doc_id))
+            c = out.setdefault(key, {"held": 0, "read": 0, "prose_held": 0,
+                                     "prose_read": 0, "graphical": 0,
+                                     "sampled_held": 0, "sampled_read": 0})
+            tier, _ = classify_kind(kind)
+            c["held"] += 1
+            c["read"] += bool(was_read)
+            if tier == "skip":
+                c["graphical"] += 1
+            elif tier == "C":
+                c["sampled_held"] += 1
+                c["sampled_read"] += bool(was_read)
+            else:
+                c["prose_held"] += 1
+                c["prose_read"] += bool(was_read)
+    return out
 
 
 # ---------------------------------------------------------------------------

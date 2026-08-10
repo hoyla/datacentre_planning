@@ -45,3 +45,31 @@ WORKBOOK_SHEET_URL = (
     "https://docs.google.com/spreadsheets/d/"
     "18WB-yRWxOa3IRNQLIR4nOsKMKCQ4WsCA83Je73CUpdw"
     "/edit?gid=1246662960#gid=1246662960")
+
+# Superseded releases. Phase 1's artefacts were moved here by hand when
+# phase 2 was built, so the handover folder shows the current release
+# only. Recorded because their absence from the root looks like a failed
+# upload otherwise, and because it is the reason `drive_sync.py --prune`
+# refuses to touch files at the tree root: those files have no local
+# counterpart any more, which to a path-based prune is indistinguishable
+# from a rename, and binning them would destroy the published phase 1.
+#
+# Treat it as where phase 1 lives, not as a guarantee of what is in it:
+# on 2026-08-11 the workbook had been left in a different folder and Luke
+# was tidying it back. Either way both artefacts keep their file ids, so
+# a citation resolves wherever the file has been filed.
+PHASE1_ARCHIVE_FOLDER_ID = "1udCAR_bD5ghLO4qJOBThXqmSPSlzb3wT"
+PHASE1_ARCHIVE_URL = (
+    f"https://drive.google.com/drive/folders/{PHASE1_ARCHIVE_FOLDER_ID}")
+
+# The Gemini Notebook, built by hand from scripts/export_notebook_bundle.py
+# — one document per site, the site report with that site's findings
+# tabulated beneath it. Shared with the reporting team (Luke, 2026-08-11).
+#
+# Not written by any script and not refreshed by the release chain: the
+# upload is manual, so the notebook holds whichever bundle was last
+# uploaded and does not follow a regeneration. Re-upload after a rebuild
+# that matters, the same caveat as the Sheet above.
+NOTEBOOK_URL = (
+    "https://notebook.google.com/notebook/"
+    "91c4227e-7625-452d-8def-4fd6a667aabe")

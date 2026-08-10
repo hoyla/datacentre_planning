@@ -95,13 +95,30 @@ branches without one are unaffected.
 ## Building the handover
 
 ```bash
-scripts/export_handover.py --out data/exports/phase1_build/dc_handover_phase1.xlsx
-scripts/export_duckdb.py   --out data/exports/phase1_build/dc_phase1.duckdb
-scripts/export_reader.py   --out data/exports/phase1_build/reader.html --publish index.html
+scripts/export_handover.py --out data/exports/phase2_build/dc_handover_phase2.xlsx
+scripts/export_duckdb.py   --out data/exports/phase2_build/dc_phase2.duckdb
+scripts/export_reader.py   --out data/exports/phase2_build/reader.html \
+                           --phase 2 --publish index.html
 scripts/build_drive_staging.py        # assemble the Drive tree
-scripts/drive_sync.py --sync data/exports/drive_staging
+scripts/drive_sync.py --sync data/exports/drive_staging --prune
 scripts/sheet_sync.py                 # refresh the Sheet, keeping its formatting
 ```
+
+The artefacts carry the phase that produced them, and each release lands
+beside its predecessor on Drive rather than on top of it, so a citation
+of the phase 1 workbook keeps resolving. `--phase` is not cosmetic: the
+title, the header, the stamp and the database's own filename in the
+reader all read from it, and it still defaults to 1.
+
+**The exports must run before `build_drive_staging.py`**, which copies
+the release into the Drive root. Built the other way round, the tree
+carries the previous release's workbook and database beside the current
+release's per-site files.
+
+`--prune` is needed whenever staged files have been renamed: the sync
+uploads by path and never deletes, so a rename otherwise leaves the old
+name on Drive beside the new one. It bins nothing at the tree root —
+released artefacts accumulate on purpose. Dry-run it first.
 
 `scripts/phase1_finalise.sh` runs that chain in dependency order once
 acquisition and the Drive sync have finished.

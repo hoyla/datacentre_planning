@@ -136,23 +136,95 @@ TABLES: dict[str, str] = {
 }
 
 VIEWS: dict[str, str] = {
+    # One CTE per contributing table, each already grouped to the site,
+    # then joined one-to-one. The previous shape LEFT JOINed documents,
+    # findings, verdicts and Barbour into a single GROUP BY, so a site
+    # with 200 documents and 40,000 findings materialised eight million
+    # rows to count DISTINCT its way back out of. It survived that;
+    # adding power_adjudication to the same join multiplied it again and
+    # a single-site lookup stopped returning. `count(DISTINCT ...)` hid
+    # the fan-out from the answers but not from the cost, and a database
+    # a reporter is invited to query has to answer quickly.
+    #
+    # Pre-aggregating also makes `power_figures_excluded` expressible at
+    # all: a plain sum over the fanned-out join counts each excluded
+    # figure once per document in the application.
     "site_overview": """
+        WITH apps AS (
+          SELECT site_key, count(DISTINCT application_ref) AS n
+          FROM site_members GROUP BY 1),
+        docs AS (
+          SELECT m.site_key, count(DISTINCT d.content_sha256) AS n
+          FROM site_members m
+          JOIN documents d ON d.application_ref = m.application_ref
+          GROUP BY 1),
+        finds AS (
+          SELECT m.site_key, count(*) AS n
+          FROM site_members m
+          JOIN findings f ON f.application_ref = m.application_ref
+          GROUP BY 1),
+        -- Adjudicated capacity only. This was `max(value_number) WHERE
+        -- unit = 'MW'` over every finding, which is the power-attribution
+        -- error the adjudication layer exists to correct: planning
+        -- statements argue for approval by quoting the market, so the
+        -- largest MW figure in a site's documents is usually not about
+        -- that site. It reported West London Technology Park at 298,000
+        -- MW — about ten times the UK grid, from a European demand
+        -- scenario — and Amazon Didcot at 22,700, a Savills forecast.
+        -- Both had already been adjudicated `market_context` correctly;
+        -- this view simply never asked. `export_handover.py` was fixed
+        -- for the identical expression and this one was missed, so a
+        -- single release stated 298,000 MW and 155 MW for one site
+        -- depending on which artefact you opened.
+        --
+        -- Four columns rather than one, matching the workbook: IT load,
+        -- total site demand, grid connection and standby generation are
+        -- different quantities for the same site (corpus medians 44, 84,
+        -- 99 and 3.3 MW), and a single "site MW" column mixes them.
+        pwr AS (
+          SELECT m.site_key,
+                 max(pa.value_mw) FILTER (WHERE pa.verdict = 'site_capacity'
+                     AND pa.quantity_type = 'it_load')           AS it_load_mw,
+                 max(pa.value_mw) FILTER (WHERE pa.verdict = 'site_capacity'
+                     AND pa.quantity_type = 'total_site')        AS total_site_mw,
+                 max(pa.value_mw) FILTER (WHERE pa.verdict = 'site_capacity'
+                     AND pa.quantity_type = 'grid_connection')   AS grid_connection_mw,
+                 max(pa.value_mw) FILTER (WHERE pa.verdict = 'site_capacity'
+                     AND pa.quantity_type = 'onsite_generation') AS onsite_generation_mw,
+                 -- Figures considered and set aside, so their absence
+                 -- reads as a decision rather than as a gap.
+                 count(*) FILTER (WHERE pa.verdict <> 'site_capacity')
+                                                                 AS excluded
+          FROM site_members m
+          JOIN power_adjudication pa ON pa.application_ref = m.application_ref
+          GROUP BY 1),
+        verd AS (
+          SELECT m.site_key, string_agg(DISTINCT t.verdict, ', ') AS v
+          FROM site_members m
+          JOIN triage_verdicts t ON t.application_ref = m.application_ref
+          GROUP BY 1),
+        barb AS (
+          SELECT m.site_key, max(b.value_gbp) AS v
+          FROM site_members m
+          JOIN barbour_projects b ON b.ptno = m.barbour_ptno
+          GROUP BY 1)
         SELECT s.site_key, s.classification, s.display_name AS site_name,
                s.latitude, s.longitude,
-               count(DISTINCT m.application_ref) AS applications,
-               count(DISTINCT d.content_sha256)  AS documents,
-               count(DISTINCT f.rowid)           AS findings,
-               max(f.value_number) FILTER (WHERE upper(coalesce(f.value_unit,'')) = 'MW')
-                                                 AS max_disclosed_mw,
-               max(b.value_gbp)                  AS barbour_value_gbp,
-               string_agg(DISTINCT t.verdict, ', ') AS verdicts
+               coalesce(apps.n, 0)  AS applications,
+               coalesce(docs.n, 0)  AS documents,
+               coalesce(finds.n, 0) AS findings,
+               pwr.it_load_mw, pwr.total_site_mw,
+               pwr.grid_connection_mw, pwr.onsite_generation_mw,
+               coalesce(pwr.excluded, 0) AS power_figures_excluded,
+               barb.v AS barbour_value_gbp,
+               verd.v AS verdicts
         FROM sites s
-        LEFT JOIN site_members m ON m.site_key = s.site_key
-        LEFT JOIN documents d ON d.application_ref = m.application_ref
-        LEFT JOIN findings f ON f.application_ref = m.application_ref
-        LEFT JOIN triage_verdicts t ON t.application_ref = m.application_ref
-        LEFT JOIN barbour_projects b ON b.ptno = m.barbour_ptno
-        GROUP BY 1,2,3,4,5""",
+        LEFT JOIN apps  ON apps.site_key  = s.site_key
+        LEFT JOIN docs  ON docs.site_key  = s.site_key
+        LEFT JOIN finds ON finds.site_key = s.site_key
+        LEFT JOIN pwr   ON pwr.site_key   = s.site_key
+        LEFT JOIN verd  ON verd.site_key  = s.site_key
+        LEFT JOIN barb  ON barb.site_key  = s.site_key""",
     "latest_verdict": """
         SELECT application_ref, verdict, worth_deep_read, confidence, rubric,
                prompt_version, enriched, why, signals, inserted_at

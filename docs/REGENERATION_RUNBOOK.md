@@ -11,18 +11,25 @@ it.
 
 ---
 
-## State — updated 2026-08-10 21:32 UTC, after steps 1–4
+## State — updated 2026-08-11, after steps 1–5 and 7
 
-**Steps 1 to 4 are done. Start at step 5.**
+**Steps 1 to 5 and step 7 are done. Start at step 6 (the Drive sync).**
+
+Step 7 was pulled forward deliberately: `build_drive_staging.py` copies
+the release artefacts into the Drive root, so building the tree before
+the exports stages the *previous* release's workbook and database. The
+order in this file is now 5 → 7 → 5 → 6, and the step text says so.
 
 | | |
 |---|---|
-| Branch | `adjudication-tail-ceiling`, ahead of main; needs a PR |
-| Documents | 55,678 held, **40,279 read** |
-| Findings | 1,019,618 rows / ~878,651 distinct passages |
-| Adjudications | **14,671**, of which 7,666 are this development's |
-| Largest site capacity | 2,240 MW — **and it is wrong, see below** |
-| Backup | `dcp_2026-08-10T1932.dump.gpg`, verified, on Drive |
+| Branch | `adjudication-tail-ceiling` was merged as PR #39; this work is on top of `main` |
+| Documents | 55,678 held, 40,279 read; **36,743 of 36,983 prose (99%)** |
+| Findings | 1,019,942 rows |
+| Adjudications | **14,671** |
+| Largest site capacity | **1,200 MW** (Camilla Road, Auchtertool) |
+| Sites with prose outstanding | **38 of 302** (was reported as 201) |
+| Release | `data/exports/phase2_build/`, artefacts named `phase2` |
+| Backup | `dcp_2026-08-10T1932.dump.gpg`, verified, on Drive — **predates today's corrections** |
 | OpenAI spend | ~£528 deep-read + ~$20 adjudication |
 
 What happened in steps 1–4:
@@ -42,19 +49,39 @@ What happened in steps 1–4:
   were interpolated into SQL and one contains an apostrophe. It had run
   clean before only because that rule matched zero rows. Now bound as a
   parameter.
-- **One figure needs reading before it ships.** West London Technology
-  Park now shows **2,240 MW**, which would be the largest site in the
-  dataset. It comes from a quote whose text layer is damaged — "thi
-  propo al would contribute of 2240MW toward thi need" — reading more
-  like the size of a national need than of one proposal, while the same
-  site's documents state **342 MW** as the development's theoretical
-  maximum. Not an OCR artefact: that document has no OCR'd pages, so the
-  damage is in the PDF's own text layer and no provenance flag catches
-  it.
+- **The West London figure was read, and it was wrong.** Resolved
+  2026-08-11; nothing further to do. The quote is paragraph 32 of the
+  PL/21/4429/OA appeal decision: "the urgent need for data centres up
+  until 2027 (this proposal would contribute of 2240MW towards this
+  need)". The text layer is not damaged — the sentence is simply broken
+  ("contribute of") in the Inspector's summary of the Council's case.
+  The same document settles it three times over: paragraph 59, "The
+  total power requirement of the appeal proposal is anticipated to be
+  147MW"; paragraph 37, "The 147MW, which the appeal proposal will
+  deliver"; paragraph 59 again, "would deliver around 147MW towards the
+  anticipated demand of 1730MW in the SAZ". The nearest real 2,2xx
+  figure in the document is the appellant's London forecast of
+  2,248MW–3,082MW at paragraph 21. So 2240 belongs to the need side of
+  that sentence, not the contribution.
 
-**Before step 7, read that quote.** It is one site, it is in the
-reader's headline position, and it is the only figure tonight that looks
-actively wrong rather than merely uncorroborated.
+  Demoted to `unclear`, not to `market_context`: what the document rules
+  out is that this is the proposal's capacity, not what the number
+  counts. The adjudicator had itself reached `unclear` on one of its
+  three passes over the same sentence. The site now reads 155 MW
+  disclosed IT load, 342 MW theoretical maximum, and the dataset's
+  largest capacity is Camilla Road at 1,200 MW.
+
+  **A general rule was written for this and rejected on measurement.**
+  "Demote a site_capacity figure whose document also holds one five
+  times smaller, where the quote talks of need, demand or a forecast"
+  matched 64 rows and was wrong on about 62: "Maximum power demand ≈ 450
+  MW", "210MW IT capacity" and "an IT capacity of around 72 MW towards
+  demand in the SAZ" are all real capacities. Need and demand are the
+  ordinary vocabulary of a capacity statement. The correction is
+  therefore pinned to the value and the sentence, is named
+  `contradicted_by_own_document`, and lives in
+  `correct_adjudications.py` rather than a migration because a
+  re-adjudication would recreate it.
 
 A caution about how it was found, because the first version of this
 runbook got it wrong. The report flags four sites where IT load exceeds
@@ -64,7 +91,7 @@ sites the two figures routinely come from different applications and
 different scopes, and all four flagged sites are cross-application.
 **Do not "fix" the other three.** The check is now called
 `components-differ` and says so; only the magnitude of the West London
-gap makes it worth reading.
+gap made it worth reading.
 
 Everything else from step 3, for reference: 2 contradicted sites (both
 known and genuine), 5 generation-understated, 2 clustering artefacts,
@@ -155,30 +182,63 @@ re-fetchable, the interpretive layer is not. This machinery was used in
 anger once already today, to recover 248 rows from a migration that
 demoted more than it should have.
 
-### 5. Rebuild the Drive staging tree — AFTER step 2, never before
+### 5. Rebuild the Drive staging tree — AFTER steps 2 and 7, never before
 
 ```sh
 scripts/build_drive_staging.py
 ```
 
-The per-site `_findings.csv` now carries four adjudication columns
-(*whose figure is this?*, quantity type, adjudicated MW, quantity note).
-Built before step 2, those columns carry uncorrected verdicts — a
-battery rating labelled as this site's generation, in the artefact most
-likely to be opened in Excel and sorted by the biggest number.
+The per-site findings CSV carries four adjudication columns (*whose
+figure is this?*, quantity type, adjudicated MW, quantity note). Built
+before step 2, those columns carry uncorrected verdicts — a battery
+rating labelled as this site's generation, in the artefact most likely
+to be opened in Excel and sorted by the biggest number.
 
-Still outstanding here, requested but not built: **site names in the
-`_findings.csv` and `_site_report.md` filenames**, so the files stay
-identifiable inside a NotebookLM collection. That rename needs a **prune
-step in the sync** — `drive_sync.py` uploads by path and never deletes,
-so renaming without pruning leaves ~700 stale twins beside their
-successors. Do both together or neither.
+**And after step 7**, because this script copies the release's workbook,
+database and reader into the Drive root. Run before them and the root
+gets the previous release's artefacts beside the current release's
+per-site files, which is how a reader ends up with a workbook and a
+reader that disagree. The dependency is on `--release-dir`, which
+defaults to `data/exports/phase2_build` and must be bumped with the
+phase.
+
+The rename **is now built**: the two per-site files carry the site in
+their own filenames —
+
+    _findings — <site_key> — <site name>.csv
+    _site_report — <site_key> — <site name>.md
+
+so they stay identifiable in anything that flattens the tree, a
+NotebookLM collection above all. The site key is in there as well as the
+name because display names are not unique — four sites are called
+"Reading Quarry Berrys Lane Burghfield".
+
+The matching **prune step in the sync is also built** (`--prune`, step
+6). Renaming without it leaves 692 stale twins beside their successors.
+Do both together or neither.
 
 ### 6. Sync to Drive, then verify at the far side
 
 ```sh
-scripts/drive_sync.py --sync data/exports/drive_staging
+scripts/drive_sync.py --sync data/exports/drive_staging --prune --dry-run
+scripts/drive_sync.py --sync data/exports/drive_staging --prune
 ```
+
+`--prune` moves to the Drive bin every file this tool uploaded whose
+local copy has gone — the stale twins left by the step 5 rename. It
+works from the upload ledger, because the grant is `drive.file` and the
+API cannot list the folder's contents: there is no far side to diff
+against, only the record of what this tool put there. That cuts the safe
+way, since a file this tool never uploaded is invisible to it and cannot
+be binned by it. It refuses outright if the prune set exceeds half the
+tree, on the grounds that a staging build that died halfway looks
+exactly like a wholesale rename.
+
+Two things it will not touch. Released artefacts at the tree root —
+phase 1's workbook stays beside phase 2's, so a citation of the older
+one keeps resolving. And anything it did not upload. Files are trashed,
+never deleted, so a wrong prune is a restore from the bin rather than a
+re-upload of 70GB.
 
 Then confirm by fetching a sample **through the API by file id** —
 name, parent folder, and byte size against local. Do not trust the
@@ -187,20 +247,64 @@ a duplicate archive. There is a worked example of the far-side check in
 the session transcript; the principle is that the ledger is the near
 side and the API is the far side.
 
-### 7. Rebuild the artefacts
+### 7. Rebuild the artefacts — BEFORE step 5 stages them
 
 ```sh
-scripts/export_handover.py --out data/exports/phase1_build/dc_handover_phase1.xlsx
-scripts/export_duckdb.py   --out data/exports/phase1_build/dc_phase1.duckdb
-scripts/export_reader.py   --out data/exports/phase1_build/reader.html \
+scripts/export_handover.py --out data/exports/phase2_build/dc_handover_phase2.xlsx
+scripts/export_duckdb.py   --out data/exports/phase2_build/dc_phase2.duckdb
+scripts/export_reader.py   --out data/exports/phase2_build/reader.html \
                            --phase 2 --publish index.html
 ```
 
-**Pass `--phase 2`.** The title, header and stamp all read from it; the
-default is still 1.
+**Pass `--phase 2`.** The title, header, stamp and the database's own
+filename in the reader all read from it; the default is still 1.
+
+**Name the artefacts for the phase that produced them.** Phase 1
+published `dc_handover_phase1.xlsx` and `dc_phase1.duckdb` into this same
+Drive folder. Rebuilding under those names replaces a published artefact
+with different numbers behind an unchanged name, which is the one thing
+an append-only record is supposed to prevent. Luke chose on 2026-08-11 to
+ship phase 2 alongside and leave phase 1 in place.
+
+A trap worth knowing, because it cost the local phase 1 workbook: the
+workbook writer **truncates the existing inode**, so a rebuild over the
+old name is seen instantly by every hard link in the staging tree. The
+DuckDB writer replaces the file instead, which is why the phase 1
+database survived and the phase 1 workbook did not. The only genuine
+phase 1 workbook now lives on Drive.
 
 Each of these calls the adjudication gate first, so if step 2 was
 skipped they stop rather than shipping.
+
+### 7a. The notebook bundle — optional, local, off the chain
+
+```sh
+scripts/export_notebook_bundle.py            # -> data/exports/notebook_bundle/
+```
+
+Not part of the release. It writes a local folder for hand-uploading to
+a Gemini Notebook and touches nothing else — not Drive, not the
+database, not the staging tree it reads.
+
+One document per site: the site report as written, then that site's
+findings as a markdown table beneath it. The Drive tree keeps them
+apart, which is right for a folder and wrong for a notebook — 429 sites
+would arrive as 726 sources against a 600 limit, and a CSV uploaded as a
+source reads poorly.
+
+It reads the staging tree rather than the database on purpose, so the
+report prose has exactly one implementation and the notebook cannot
+drift from the Drive folder. Run it after step 5.
+
+Big sites are **split, never truncated**: a source is capped near
+500,000 words and one site holds 130,092 findings. Parts are budgeted by
+word count rather than row count — a row-based cap set from an estimated
+40 words per row put 49 documents over the limit, because the real
+average is ~52 and varies with quote length. 429 sites become 506
+documents. Every part repeats the site name, the key, its part number
+and a line saying every row belongs to that site: one document is always
+one site, but a model retrieving a row from the middle of a
+400,000-word table has only what is on the page.
 
 ### 8. The Google Sheet
 
@@ -250,6 +354,22 @@ the caveats; the note should point at them rather than restate them.
 - The reader's phase 2 presentation changes: source-documents wording,
   "Coming shortly", methodology, dictionary, and an **Assistant's notes**
   tab.
+- **Coverage is now stated over prose, not over every document held**
+  (2026-08-11). The old headline read "37,991 of 48,191 analysed (78%)"
+  and "201 of 455 sites are not yet fully read", which counted 5,751
+  drawings the deep read skips by design and the objection letters it
+  samples on purpose. Both were true and both read as a job a third
+  done. Over the prose the deep read is actually for it is 36,743 of
+  36,983 (99%), and 38 sites have any prose outstanding. The split comes
+  from the methodology's own `deepread_select.classify_kind` — tier
+  `skip` graphical, tier `C` sampled, A and B prose — via
+  `site_profile.load_coverage_detail`, so the reader and the workbook
+  cannot drift on which rows are provisional. The undivided ratio is
+  still shown, next to what it excludes.
+- **The reader's package section links to the tabs.** A user read the
+  "this page" badge as "everything is on the screen in front of you" and
+  missed the other tabs entirely; the badge now says "this web portal"
+  and each named component is a link.
 
 ## Decisions outstanding — Luke's, not the runner's
 
