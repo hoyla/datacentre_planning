@@ -55,6 +55,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
 from dcp import db  # noqa: E402
+from dcp import deepread_select  # noqa: E402
 
 from dcp.drive import FOLDER_URL as DRIVE_ROOT  # noqa: E402
 from dcp.drive import WORKBOOK_SHEET_URL  # noqa: E402
@@ -795,12 +796,35 @@ def main() -> int:
                  WHERE dl.read_state='read' GROUP BY 1),
           outc AS (SELECT DISTINCT ON (application_id) application_id, outcome
                    FROM acquisition_outcome ORDER BY application_id, id DESC)
-          SELECT coalesce(d.n,0), coalesce(r.n,0), o.outcome
+          SELECT coalesce(d.n,0), coalesce(r.n,0), o.outcome, m.id
           FROM member m
           LEFT JOIN docs d ON d.application_id=m.id
           LEFT JOIN rd r ON r.application_id=m.id
           LEFT JOIN outc o ON o.application_id=m.id""")
-        cover = cur.fetchall()
+        cover_rows = cur.fetchall()
+        cover = [(a, b, c) for a, b, c, _ in cover_rows]
+        # The same applications counted over prose alone. The analysis
+        # table below says how many applications are fully read, and an
+        # application is not "partially analysed" because a location plan
+        # in it was skipped by design — that reading of it made 78% of
+        # the corpus look outstanding when 1% of the prose was.
+        cur.execute("""
+          SELECT d.application_id, d.kind,
+                 EXISTS (SELECT 1 FROM deepread_log dl
+                         WHERE dl.document_id=d.id AND dl.read_state='read')
+          FROM documents d
+          WHERE EXISTS (SELECT 1 FROM site_members m
+                        JOIN sites s ON s.id=m.site_id AND s.retired_at IS NULL
+                        WHERE m.application_id=d.application_id
+                          AND m.retired_at IS NULL)""")
+        _prose: dict[int, list[int]] = {}
+        for app_id, kind, was_read in cur.fetchall():
+            if deepread_select.classify_kind(kind)[0] == "skip":
+                continue
+            e = _prose.setdefault(app_id, [0, 0])
+            e[0] += 1
+            e[1] += bool(was_read)
+        cover_prose = [tuple(_prose.get(app_id, (0, 0))) for *_, app_id in cover_rows]
         cur.execute("""SELECT count(*) FROM documents d WHERE NOT EXISTS (
                          SELECT 1 FROM site_members m JOIN sites s ON s.id=m.site_id
                          WHERE m.application_id=d.application_id
@@ -885,6 +909,11 @@ def main() -> int:
     with db.connect() as conn:
         profiles = site_profile.load_site_profiles(conn)
         coverage = site_profile.load_coverage(conn)
+        # `held`/`read` are every document; `prose_*` are the ones the
+        # deep-read is for. The caveats run off prose, the counts shown
+        # to a reporter run off both, and they are different numbers on
+        # purpose — see site_profile.load_coverage_detail.
+        cov_detail = site_profile.load_coverage_detail(conn)
 
     apps_by_site = defaultdict(list)
     for r in app_rows:
@@ -910,6 +939,18 @@ def main() -> int:
     n_docs = sum(c[0] for c in cover)
     n_read = sum(c[1] for c in cover)
     pct = 100 * n_read // n_docs if n_docs else 0
+    # The same corpus, split by what the methodology does with it. The
+    # undivided ratio is honest and unusable as a headline: it says 78%
+    # because it counts 5,751 drawings the deep-read skips by design and
+    # the objection letters it samples on purpose. A reporter reads 78%
+    # as "a fifth of the evidence is unexamined", when the prose that can
+    # carry a disclosure is 99% read.
+    n_prose      = sum(c["prose_held"] for c in cov_detail.values())
+    n_prose_read = sum(c["prose_read"] for c in cov_detail.values())
+    pct_prose = 100 * n_prose_read // n_prose if n_prose else 0
+    n_graphical  = sum(c["graphical"] for c in cov_detail.values())
+    n_sampled    = sum(c["sampled_held"] for c in cov_detail.values())
+    n_sampled_rd = sum(c["sampled_read"] for c in cov_detail.values())
 
     def _pc(x, of=None):
         of = n_apps_total if of is None else of
@@ -937,9 +978,10 @@ def main() -> int:
         ("login_required", "Documents behind a login",
          "Not retrievable without an account."),
     ]
-    full_read = sum(1 for c in have if c[1] >= c[0])
-    part_read = sum(1 for c in have if 0 < c[1] < c[0])
-    un_read = sum(1 for c in have if c[1] == 0)
+    have_prose = [c for c in cover_prose if c[0]]
+    full_read = sum(1 for c in have_prose if c[1] >= c[0])
+    part_read = sum(1 for c in have_prose if 0 < c[1] < c[0])
+    un_read = sum(1 for c in have_prose if c[1] == 0)
 
     app_stats_rows = "".join(
         f"<tr><th scope='row'>{esc(lbl)}</th><td class='n'>{by_outcome[k]:,}</td>"
@@ -954,16 +996,19 @@ def main() -> int:
          bsite, bplan, bdec) = r
         prof = profiles.get(key, {})
         held, read = coverage.get(key, (docs or 0, 0))
+        _cd = cov_detail.get(key, {})
+        p_held = _cd.get("prose_held", held)
+        p_read = _cd.get("prose_read", read)
         apps = apps_by_site.get(key, [])
         est = scale.power_estimate(it_load_mw=it, total_site_mw=tot, grid_mw=grid,
                                    generation_mw=gen, floorspace_sqm=None,
                                    has_documents=bool(docs),
                                    docs_held=held, docs_read=read)
         cap_key, cap_label = site_profile.capacity_status(
-            pre_application=(n_apps or 0) == 0, docs_held=held, docs_read=read,
+            pre_application=(n_apps or 0) == 0, docs_held=p_held, docs_read=p_read,
             power_value_mw=est.value_mw, power_basis=est.basis)
         known = cap_key not in NOT_YET_KNOWN
-        is_prov, prov_note = site_profile.provisional(held, read)
+        is_prov, prov_note = site_profile.provisional(p_held, p_read)
         if est.value_mw:
             site_mw_values.append(est.value_mw)
         addr = max((a[15] or "" for a in apps), key=len, default="") or \
@@ -984,8 +1029,8 @@ def main() -> int:
                        f'<span class="help">{esc(est.basis)}</span><br>'
                        if est.value_mw else
                        f'<span class="help">{esc(est.basis)}</span><br>')
-                    + (f'<span class="help">{held:,} documents, {read:,} analysed'
-                       f'</span><br>' if held else
+                    + (f'<span class="help">{held:,} documents, {p_read:,} of '
+                       f'{p_held:,} prose analysed</span><br>' if held else
                        '<span class="help">no documents held</span><br>')
                     # A pin is a starting point, so the card carries the
                     # three places worth going next: the full row, the
@@ -1050,11 +1095,14 @@ def main() -> int:
                 # Not the workbook: it holds per-site counts and the
                 # adjudicated figures, and a reporter sent there for the
                 # findings themselves found nothing. The full set lives in
-                # each site's Drive folder (_findings.csv, beside the
+                # each site's Drive folder (the findings CSV, beside the
                 # documents the rows cite) and in the DuckDB findings table.
+                # Named by role rather than by filename: the CSV carries the
+                # site's own name now, so there is no one string to quote.
                 findings_html += (f"<p class='help'>Showing {len(fl)} of {findings_n:,} "
-                                  "verified findings; the full set is in this site's "
-                                  "Drive folder (_findings.csv) and the DuckDB file.</p>")
+                                  "verified findings; the full set is in the findings "
+                                  "CSV in this site's Drive folder, and in the DuckDB "
+                                  "file.</p>")
         elif held and read >= held:
             # Read in full and still nothing: a null result, not a gap.
             # The earlier wording said "not analysed" whenever the list was
@@ -1084,7 +1132,7 @@ def main() -> int:
         elif is_prov:
             site_banner = ('<div class="banner" style="margin-top:0"><b>'
                            'Reading is incomplete.</b> '
-                           + esc(site_profile.provisional_statement(held, read))
+                           + esc(site_profile.provisional_statement(p_held, p_read))
                            + '</div>')
 
         # Every site gets a Drive folder, including those with nothing in
@@ -1462,7 +1510,9 @@ def main() -> int:
 
     origin_opts = sorted({o for v in origins.values() for o in v})
     n_prov = sum(1 for r in site_rows
-                 if site_profile.provisional(*coverage.get(r[0], (0, 0)))[0])
+                 if site_profile.provisional(
+                     cov_detail.get(r[0], {}).get("prose_held", 0),
+                     cov_detail.get(r[0], {}).get("prose_read", 0))[0])
 
     # ---- Methodology ------------------------------------------------------
     # Written here rather than shipped as a markdown file beside the data:
@@ -1519,9 +1569,12 @@ def main() -> int:
  verbatim quote, checked mechanically against the source text before it enters the store</b>,
  with OCR fallback for scanned documents. Quotes that fail that check are rejected rather
  than corrected.</p>
- <p class="m">{n_read:,} of {n_docs:,} documents ({pct}%) have been analysed. A second model
- is re-reading a subset independently; where the two disagree, both readings are kept and the
- disagreement is the finding.</p>
+ <p class="m">{n_prose_read:,} of {n_prose:,} prose documents ({pct_prose}%) have been
+ analysed. The remaining {n_graphical:,} drawings and {n_sampled - n_sampled_rd:,} unsampled
+ objection letters are excluded by the selection rules above, not outstanding: counted in,
+ the ratio reads {n_read:,} of {n_docs:,} ({pct}%). A second model is re-reading a subset
+ independently; where the two disagree, both readings are kept and the disagreement is the
+ finding.</p>
 
  <h2 class="sec">How power figures were adjudicated</h2>
  <p class="m">This is the part most likely to be quoted, and the part where a naive approach
@@ -1580,8 +1633,9 @@ def main() -> int:
 
  <h2 class="sec">Known limits of this release</h2>
  <ul class="m">
-  <li><b>Reading is incomplete.</b> {n_prov} of {n_sites} sites are not fully read, and their
-   findings-derived values are floors that can rise.</li>
+  <li><b>Reading is incomplete on some sites.</b> {n_prov} of {n_sites} sites have prose
+   documents still outstanding, and their findings-derived values are floors that can
+   rise.</li>
   <li><b>Acquisition has a tail.</b> {len(none_held) - by_outcome.get('none_published', 0):,}
    applications are still to be retrieved or are on portals not yet readable.</li>
   <li><b>Council statuses are point-of-ingest</b> and a refresh pass is pending.</li>
@@ -1759,18 +1813,26 @@ def main() -> int:
   <button onclick="show('apps')"><span>{n_apps_total:,}</span><small>applications</small></button>
   <button onclick="show('energy')"><span>{len(nsip)}</span><small>energy projects</small></button>
   <div><span>{n_docs:,}</span><small>documents held</small></div>
-  <div><span>{n_read:,}</span><small>analysed ({pct}%)</small></div>
+  <div><span>{n_prose_read:,}</span><small>prose analysed ({pct_prose}%)</small></div>
  </div>
 
- <div class="banner"><b>This is a partial reading.</b> {n_read:,} of {n_docs:,} documents
- ({pct}%) have been analysed, and <b>{n_prov} of {n_sites} sites are not yet fully
- read</b>. On those rows every findings-derived value — capacity, generator counts, cooling
- method, the names involved — is a <em>floor</em>: the largest or fullest we have seen so
- far. Further reading can raise these figures and cannot lower them, so a campus promoted as
- 1GW may show a smaller number here simply because the document stating the larger figure
- has not been analysed yet. Those rows are marked <em>(prior to complete deep read)</em> and
- can be isolated with the Sites filter. A small tail of applications is also still being
- retrieved. Both are completed in the next release.</div>
+ <div class="banner"><b>Nearly all of the readable material has been read.</b>
+ {n_prose_read:,} of {n_prose:,} prose documents ({pct_prose}%) have been analysed — the
+ planning and energy statements, officer reports, consultee responses and screening
+ opinions, which is where disclosures live. Two classes are excluded on purpose and are not
+ a gap: {n_graphical:,} drawings, elevations and location plans carry no extractable prose,
+ and {n_sampled_rd:,} of {n_sampled:,} near-identical objection letters were sampled rather
+ than read exhaustively, because their value is aggregate sentiment rather than unique fact.
+ Counting all three together gives {n_read:,} of {n_docs:,} ({pct}%), which understates the
+ reading rather than describing it.<br><br>
+ <b>{n_prov} of {n_sites} sites still have prose outstanding.</b> On those rows every
+ findings-derived value — capacity, generator counts, cooling method, the names involved —
+ is a <em>floor</em>: the largest or fullest we have seen so far. Further reading can raise
+ these figures and cannot lower them, so a campus promoted as 1GW may show a smaller number
+ here simply because the document stating the larger figure has not been analysed yet. Those
+ rows are marked <em>(prior to complete deep read)</em> and can be isolated with the Sites
+ filter. A small tail of applications is also still being retrieved. Both are completed in
+ the next release.</div>
 
  <h2 class="sec">The shape of it</h2>
  <p class="help">Both charts read the dataset as it stands today. Neither depends on the
@@ -1780,12 +1842,18 @@ def main() -> int:
 
  <h2 class="sec">What the package contains</h2>
  <div class="parts">
-  <div class="part"><h3>Sites, Applications, Energy projects, Map<span class="pill">this page</span></h3>
+  <div class="part"><h3><a href="#sites" onclick="show('sites');return false">Sites</a>,
+    <a href="#apps" onclick="show('apps');return false">Applications</a>,
+    <a href="#energy" onclick="show('energy');return false">Energy projects</a>,
+    <a href="#map" onclick="show('map');return false">Map</a><span class="pill">this web
+    portal</span></h3>
    <p class="what">Each site expands to its full proposal text, power breakdown, generation
     and cooling evidence, who is behind it, its planning applications with links to the
     council's own register, and what the documents were found to say.</p>
    <p class="when"><b>Reach for it when</b> you want to read a site and follow it outward.</p></div>
-  <div class="part"><h3>Methodology · Data dictionary<span class="pill">this page</span></h3>
+  <div class="part"><h3><a href="#method" onclick="show('method');return false">Methodology</a>
+    · <a href="#dict" onclick="show('dict');return false">Data dictionary</a><span
+    class="pill">this web portal</span></h3>
    <p class="what">How sites were identified, how documents were retrieved and read, how
     power figures were adjudicated — and what every column in the workbook means.</p>
    <p class="when"><b>Reach for it when</b> an editor or a subject asks how a number was
@@ -1810,8 +1878,8 @@ def main() -> int:
     folders</a></p></div>
   <div class="part"><h3>Query database<span class="pill">DuckDB</span></h3>
    <p class="what">Every site, application, document and finding in one file
-    (<code>dc_phase1.duckdb</code>, ~106 MB). Opens in DuckDB CLI, Python, R or the DuckDB
-    web shell.</p>
+    (<code>dc_phase{args.phase}.duckdb</code>, ~106 MB). Opens in DuckDB CLI, Python, R or
+    the DuckDB web shell.</p>
    <p class="when"><b>Reach for it when</b> the question is not in a column.
     &nbsp;<a href="{DRIVE_ROOT}" target="_blank" rel="noopener">Open it on Drive</a></p></div>
  </div>
@@ -1826,25 +1894,29 @@ def main() -> int:
  <table class="stats"><tbody>
   <tr><th scope="row">Applications in the dataset</th><td class="n">{n_apps_total:,}</td>
       <td class="n">100%</td><td class="help">Every application attached to a site here.</td></tr>
-  <tr class="lead"><th scope="row">Documents retrieved</th><td class="n">{len(have):,}</td>
+  <tr class="lead"><th scope="row">With documents retrieved</th><td class="n">{len(have):,}</td>
       <td class="n">{_pc(len(have))}</td>
-      <td class="help">{n_docs:,} documents held across them.</td></tr>
+      <td class="help">Applications, not documents — {n_docs:,} documents were retrieved
+       across these {len(have):,}.</td></tr>
   <tr class="lead"><th scope="row">No documents held</th><td class="n">{len(none_held):,}</td>
       <td class="n">{_pc(len(none_held))}</td>
       <td class="help">Broken down below — most of it is finished work, not a gap.</td></tr>
   {app_stats_rows}
  </tbody></table>
 
- <h4 class="sub-head">Analysis, across the {len(have):,} applications whose documents we hold</h4>
+ <h4 class="sub-head">Analysis, across the {len(have_prose):,} applications holding prose
+ documents</h4>
+ <p class="help">Counted over prose only. Drawings are excluded because the deep read skips
+ them by design, so an application is not half-read on account of a location plan.</p>
  <table class="stats"><tbody>
-  <tr><th scope="row">Every document analysed</th><td class="n">{full_read:,}</td>
-      <td class="n">{_pc(full_read, len(have))}</td>
+  <tr><th scope="row">Every prose document analysed</th><td class="n">{full_read:,}</td>
+      <td class="n">{_pc(full_read, len(have_prose))}</td>
       <td class="help">Findings for these are complete as far as the documents go.</td></tr>
   <tr><th scope="row">Partially analysed</th><td class="n">{part_read:,}</td>
-      <td class="n">{_pc(part_read, len(have))}</td>
+      <td class="n">{_pc(part_read, len(have_prose))}</td>
       <td class="help">Values are floors: further reading can raise them.</td></tr>
   <tr><th scope="row">Not yet analysed</th><td class="n">{un_read:,}</td>
-      <td class="n">{_pc(un_read, len(have))}</td>
+      <td class="n">{_pc(un_read, len(have_prose))}</td>
       <td class="help">Documents are held and readable; nothing has been extracted yet.</td></tr>
  </tbody></table>
  <p class="help">A further {n_outside:,} documents sit outside these figures, on applications

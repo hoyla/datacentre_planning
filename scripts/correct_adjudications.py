@@ -119,6 +119,46 @@ RULES = [
      r"""pa.quantity_type='grid_connection'
          AND f.evidence_text ~* 'floor plan|sections drawing|figure\s+[0-9]|substation\s+[0-9.]+\s*m²|legacy'""",
      "equipment label or another scheme's plant, not this connection"),
+
+    # The premise, because a rule is a claim about the world: **a figure
+    # is not this development's capacity when the same document states
+    # the development's capacity as something else, three times, in the
+    # decision-maker's own conclusions.**
+    #
+    # Unlike every rule above this one, this is an instance and not a
+    # family, and it is pinned to one value in one sentence deliberately.
+    # The general form was written and measured first: demote a
+    # site_capacity figure whose document also holds a site_capacity
+    # figure five times smaller, where the quote talks of need, demand or
+    # a forecast. It matched 64 rows and was wrong on about 62 of them —
+    # "Maximum power demand ≈ 450 MW", "210MW IT capacity", "The peak
+    # demand is estimated to be 106 MW" are all real capacities, and
+    # "an IT capacity of around 72 MW towards demand in the SAZ" is a
+    # real capacity described in exactly the rejected phrasing. Need and
+    # demand are the ordinary vocabulary of a capacity statement. The
+    # general rule is not available; this specific figure still has to go.
+    #
+    # PL/21/4429/OA, appeal decision, paragraph 32: "the urgent need for
+    # data centres up until 2027 (this proposal would contribute of
+    # 2240MW towards this need)". The sentence is broken — "contribute
+    # of" — and the same document says at paragraph 59 "The total power
+    # requirement of the appeal proposal is anticipated to be 147MW",
+    # at 37 "The 147MW, which the appeal proposal will deliver", and at
+    # 59 again "would deliver around 147MW towards the anticipated
+    # demand of 1730MW in the SAZ". The nearest real 2,2xx figure in the
+    # document is the appellant's London forecast of 2,248MW-3,082MW at
+    # paragraph 21. So 2240 belongs to the need side of that sentence.
+    #
+    # Demoted to `unclear` rather than moved to `market_context`: what
+    # the document rules out is that this is the proposal's capacity, not
+    # what the number actually counts. The adjudicator reached `unclear`
+    # on one of its three passes over this same sentence unaided.
+    ("contradicted_by_own_document",
+     "verdict='unclear', quantity_type=NULL, value_mw=NULL, is_maximum=NULL",
+     r"""pa.value_mw = 2240
+         AND f.evidence_text ~* 'contribute.{0,12}2240\s*MW'""",
+     "the same document states this proposal as 147MW; 2240MW is the "
+     "need it contributes towards, not the contribution"),
 ]
 
 

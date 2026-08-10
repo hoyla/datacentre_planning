@@ -7,19 +7,20 @@ Everything here is derived; the canonical store and database remain the
 source of truth, and the tree is rebuilt rather than edited.
 
     drive_staging/
-    ├── README.md                    (what this is, how to read it)
-    ├── data_dictionary.md
-    ├── methodology.md
-    ├── dc_build_handover_<date>.xlsx
+    ├── dc_handover_phase<N>.xlsx     (each release's, side by side)
+    ├── dc_phase<N>.duckdb
+    ├── reader.html                   (always the current release)
     └── sites/
         └── <site_key> — <site name>/
-            ├── _site_report.md      (per-site summary: applications,
+            ├── _site_report — <site_key> — <site name>.md
+            │                        (per-site summary: applications,
             │                         parties, signals, Barbour fields)
+            ├── _findings — <site_key> — <site name>.csv
             └── <application_ref>/
                 ├── _index.md        (document list with source URLs)
                 └── NNN - <derived name>.pdf
 
-Two deliberate choices:
+Three deliberate choices:
 
 - **Hard links, not copies.** The corpus is ~70GB; the staging tree
   shares inodes with the canonical store, so it costs directory entries,
@@ -29,6 +30,19 @@ Two deliberate choices:
   Derived names come from the council's own document description, with a
   stable numeric prefix for ordering and a hash suffix on collisions.
   The mapping is recorded in each folder's `_index.md`.
+- **The per-site report and findings carry the site in their own
+  filenames**, not just in the folder above them. Anything that flattens
+  the tree — a NotebookLM collection, a Pinpoint upload, a folder of
+  downloads — otherwise presents 429 files called `_site_report.md` and
+  429 called `_findings.csv`, and the reader has no way to tell which
+  site is which. The site key is in there as well as the name because
+  display names are not unique: four sites are called "Reading Quarry
+  Berrys Lane Burghfield", and the name alone would collide.
+
+Renaming these files leaves their old names behind on Drive, because
+`drive_sync.py` uploads by path and never deletes. Run that sync with
+`--prune` after any rename here, or the collection gains a stale twin of
+every file it already had.
 
 Usage:
     .venv/bin/python scripts/build_drive_staging.py [--out DIR] [--limit N]
@@ -63,6 +77,16 @@ def clean(name: str, maxlen: int = 80) -> str:
     return out[:maxlen].strip(" .") or "document"
 
 
+def site_stem(key: str, name: str | None) -> str:
+    """The one place a site's `key — name` label is composed.
+
+    Used for the site's folder and for the two files inside it that name
+    the site in their own filename. One function so the folder and the
+    files can never disagree about the truncation.
+    """
+    return f"{clean(key, 40)} — {clean(name or 'unnamed', 60)}"
+
+
 def link_or_copy(src: Path, dst: Path) -> None:
     dst.parent.mkdir(parents=True, exist_ok=True)
     if dst.exists():
@@ -77,8 +101,12 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path,
                     default=Path("data/exports/drive_staging"))
+    # Bump this with the phase. It is the current release, not phase 1's:
+    # the artefacts are named for the phase that produced them, so that a
+    # citation of the phase 1 workbook keeps resolving after phase 2
+    # ships beside it rather than on top of it.
     ap.add_argument("--release-dir", dest="release_dir", type=Path,
-                    default=Path("data/exports/phase1_build"),
+                    default=Path("data/exports/phase2_build"),
                     help="folder whose workbook, database and reader go to the "
                          "Drive root; the release is the source of truth for "
                          "which generated artefacts belong together")
@@ -200,10 +228,13 @@ def main() -> None:
     n_docs = n_apps = n_findings_csv = 0
     for key in site_keys:
         name, cls, lat, lng = site_meta[key]
-        folder = sites_dir / f"{clean(key, 40)} — {clean(name or 'unnamed', 60)}"
+        stem = site_stem(key, name)
+        folder = sites_dir / stem
+        findings_name = f"_findings — {stem}.csv"
+        report_name = f"_site_report — {stem}.md"
         # (application_ref, doc file-or-absence, page, family, type, value,
         #  number, unit, quote, model) rows accumulated across this site's
-        # applications, written as _findings.csv beside _site_report.md.
+        # applications, written as the findings CSV beside the site report.
         site_csv_rows: list[tuple] = []
         report = [f"# {name or key}", "",
                   f"**Site key:** `{key}`  ",
@@ -327,8 +358,8 @@ def main() -> None:
         if site_csv_rows:
             # utf-8-sig: the BOM is what makes Excel open a UTF-8 CSV
             # correctly on double-click, and Sheets ignores it.
-            with (folder / "_findings.csv").open("w", newline="",
-                                                 encoding="utf-8-sig") as fh:
+            with (folder / findings_name).open("w", newline="",
+                                               encoding="utf-8-sig") as fh:
                 w = csv.writer(fh)
                 w.writerow(["application", "document file",
                             "page (or section for non-PDF)", "signal family",
@@ -341,7 +372,7 @@ def main() -> None:
             report.append(f"## Findings")
             report.append("")
             report.append(
-                f"`_findings.csv` in this folder holds all "
+                f"`{findings_name}` in this folder holds all "
                 f"{len(site_csv_rows):,} verified findings extracted from "
                 f"this site's documents — each row names the document file "
                 f"it came from (in the application folders here), the page, "
@@ -361,7 +392,12 @@ def main() -> None:
                 "and was never put to adjudication, which is different from "
                 "having been judged and set aside.")
             report.append("")
-        (folder / "_site_report.md").write_text("\n".join(report) + "\n")
+        (folder / report_name).write_text("\n".join(report) + "\n")
+        # The previous build wrote these two under bare names. They are
+        # hard links into nothing and cheap to drop, but leaving them
+        # would ship both spellings of the same file in the same folder.
+        for superseded in ("_findings.csv", "_site_report.md"):
+            (folder / superseded).unlink(missing_ok=True)
 
     # Root artefacts. Three things and no more: the documents, the
     # workbook, and the database. The explanatory material — README,

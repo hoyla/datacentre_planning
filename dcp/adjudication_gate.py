@@ -2,7 +2,10 @@
 
 Six families of quantity-type error live in the gap between "whose figure
 is this" (which power adjudication asks) and "what kind of quantity is
-this" (which nothing asked until 2026-08-10). They are all correctable —
+this" (which nothing asked until 2026-08-10), and one figure sits here
+that is not a family at all: a single sentence whose own document
+contradicts it, guarded by value because no general rule survived
+measurement. They are all correctable —
 scripts/correct_adjudications.py does it idempotently — and correcting
 them is a step someone has to remember.
 
@@ -58,6 +61,9 @@ WHERE pa.verdict = 'site_capacity'
  OR (coalesce(pa.unit_note,'') NOT LIKE '%[equipment_label_not_connection]%'
      AND pa.quantity_type = 'grid_connection'
      AND f.evidence_text ~* 'floor plan|sections drawing|figure\s+[0-9]|substation\s+[0-9.]+\s*m²|legacy')
+ OR (coalesce(pa.unit_note,'') NOT LIKE '%[contradicted_by_own_document]%'
+     AND pa.value_mw = 2240
+     AND f.evidence_text ~* 'contribute.{0,12}2240\s*MW')
   )
 """
 

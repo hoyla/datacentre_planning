@@ -799,6 +799,11 @@ def main() -> None:
     with db.connect() as conn:
         site_profiles = site_profile.load_site_profiles(conn)
         coverage = site_profile.load_coverage(conn)
+        # Prose counts drive the caveats; total counts stay for display.
+        # The workbook and the reader must agree on which rows are
+        # provisional, so both read this from site_profile rather than
+        # deciding it locally.
+        cov_detail = site_profile.load_coverage_detail(conn)
 
     site_floorspace: dict[str, float] = {}
     with db.connect() as conn, conn.cursor() as cur:
@@ -892,6 +897,9 @@ def main() -> None:
         # floorspace inference, losing authority at each step and saying so.
         prof = site_profiles.get(key, {})
         held, read = coverage.get(key, (docs or 0, 0))
+        _cd = cov_detail.get(key, {})
+        p_held = _cd.get("prose_held", held)
+        p_read = _cd.get("prose_read", read)
         est = scale.power_estimate(
             it_load_mw=it_load_mw, total_site_mw=total_site_mw,
             grid_mw=grid_mw, generation_mw=gen_mw,
@@ -912,7 +920,7 @@ def main() -> None:
         # misleading — no public material exists to hold.
         pre_app = (n_apps or 0) == 0
         cap_key, cap_label = site_profile.capacity_status(
-            pre_application=pre_app, docs_held=held, docs_read=read,
+            pre_application=pre_app, docs_held=p_held, docs_read=p_read,
             power_value_mw=est.value_mw, power_basis=est.basis)
         # "No capacity disclosed" from the estimator presumes the
         # documents were read. Where none have been (or none exist yet),
@@ -925,7 +933,7 @@ def main() -> None:
         # figure itself is the difference between a reader treating 500MW as
         # this site's capacity and treating it as the largest we have seen
         # so far.
-        is_prov, prov_note = site_profile.provisional(held, read)
+        is_prov, prov_note = site_profile.provisional(p_held, p_read)
         # The register's own wording, reduced to the clause that describes
         # the development. Verbatim, so it stays quotable; the untouched
         # description remains on every Applications row.
