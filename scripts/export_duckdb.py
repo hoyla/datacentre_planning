@@ -142,14 +142,44 @@ VIEWS: dict[str, str] = {
                count(DISTINCT m.application_ref) AS applications,
                count(DISTINCT d.content_sha256)  AS documents,
                count(DISTINCT f.rowid)           AS findings,
-               max(f.value_number) FILTER (WHERE upper(coalesce(f.value_unit,'')) = 'MW')
-                                                 AS max_disclosed_mw,
+               -- Adjudicated capacity only, and split by quantity. This
+               -- column was `max(value_number) WHERE unit = 'MW'` over
+               -- every finding, which is the power-attribution error the
+               -- adjudication layer exists to correct: planning
+               -- statements argue for approval by quoting the market, so
+               -- the largest MW figure in a site's documents is usually
+               -- not about that site. It reported West London at 298,000
+               -- MW — about ten times the UK grid — and Amazon Didcot at
+               -- 22,700, which is a Savills market forecast. The workbook
+               -- was fixed for exactly this and the view was missed, so
+               -- the same release stated 298,000 MW and 155 MW for one
+               -- site depending on which artefact you opened.
+               --
+               -- Four columns rather than one, matching the workbook: IT
+               -- load, total site demand, grid connection and standby
+               -- generation are different quantities for the same site
+               -- (corpus medians 44, 84, 99 and 3.3 MW), and a single
+               -- "site MW" column silently mixes them.
+               max(pa.value_mw) FILTER (WHERE pa.verdict = 'site_capacity'
+                   AND pa.quantity_type = 'it_load')        AS it_load_mw,
+               max(pa.value_mw) FILTER (WHERE pa.verdict = 'site_capacity'
+                   AND pa.quantity_type = 'total_site')     AS total_site_mw,
+               max(pa.value_mw) FILTER (WHERE pa.verdict = 'site_capacity'
+                   AND pa.quantity_type = 'grid_connection') AS grid_connection_mw,
+               max(pa.value_mw) FILTER (WHERE pa.verdict = 'site_capacity'
+                   AND pa.quantity_type = 'onsite_generation')
+                                                            AS onsite_generation_mw,
+               -- Figures considered and set aside, so their absence is
+               -- visible as a decision rather than as a gap.
+               count(DISTINCT pa.rowid) FILTER (
+                   WHERE pa.verdict <> 'site_capacity')     AS power_figures_excluded,
                max(b.value_gbp)                  AS barbour_value_gbp,
                string_agg(DISTINCT t.verdict, ', ') AS verdicts
         FROM sites s
         LEFT JOIN site_members m ON m.site_key = s.site_key
         LEFT JOIN documents d ON d.application_ref = m.application_ref
         LEFT JOIN findings f ON f.application_ref = m.application_ref
+        LEFT JOIN power_adjudication pa ON pa.application_ref = m.application_ref
         LEFT JOIN triage_verdicts t ON t.application_ref = m.application_ref
         LEFT JOIN barbour_projects b ON b.ptno = m.barbour_ptno
         GROUP BY 1,2,3,4,5""",
