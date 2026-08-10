@@ -155,6 +155,18 @@ the EdgeOne dashboard and never in the repository:
 Missing or too short and it answers 503. It fails closed deliberately: an
 unset variable must never mean *serve it to anyone*.
 
+**Probe it from outside after every deploy**, because a browser with a
+session cannot show you this — a double slash once skipped the middleware
+entirely and EdgeOne served the whole dataset with a 200 to anyone who
+typed the extra slash:
+
+```bash
+scripts/probe_gate.sh https://<the-deployment>
+```
+
+22 paths — the bypass class, traversal and percent-encoded forms — plus a
+forged session cookie. Exit 0 if every one is refused.
+
 **The gate protects the deployment, not the repository.** EdgeOne builds
 from git, so the reader is committed — and this repository is public, so
 that file is readable from GitHub whatever the middleware does. The gate

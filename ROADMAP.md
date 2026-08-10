@@ -34,9 +34,11 @@ The handover is out. These close it properly.
   trusting the sync counters. Then the duplicate folder
   `1UxxGmbiEI-9lR8DPJnEzonBj6OR6OpQe` can be deleted — an outward-facing
   deletion, so Luke's call.
-- **Re-probe the password gate** after the next deploy. Unauthenticated,
-  from outside, including `//index.html`, `///index.html` and
-  percent-encoded separators — a browser session cannot show you this.
+- **Re-probe the password gate** after the next deploy:
+  `scripts/probe_gate.sh <url>`. 22 paths plus a forged cookie,
+  unauthenticated from outside — a browser session cannot show you this.
+  Passed on 2026-08-10 against the current deployment; the reader is
+  rebuilt on merge, so it needs running again after the regeneration.
 - **16 bad-chunk documents and 7 sites holding unread documents.** Small,
   but they turn into "why does this site say nothing" later.
 
