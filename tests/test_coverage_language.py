@@ -8,7 +8,7 @@ quietly, so the tests assert the distinctions rather than the wording.
 
 from __future__ import annotations
 
-from dcp import origin, site_profile
+from dcp import origin, site_profile, site_scale
 
 
 class TestProvisional:
@@ -71,6 +71,53 @@ class TestNoDocumentsReason:
     def test_pre_application_says_why_the_blanks_are_blank(self):
         _, why = site_profile.no_documents_reason(["pre_application"])
         assert "not that the scheme is small" in why
+
+
+class TestPowerEstimateCoverage:
+    """The no-capacity caveat may only claim "read in full" when the
+    coverage numbers say so. The published reader once asserted it on 173
+    sites whose own banner said reading was incomplete.
+    """
+
+    def _est(self, **kw):
+        return site_scale.power_estimate(has_documents=True, **kw)
+
+    def test_fully_read_site_keeps_the_null_result(self):
+        est = self._est(docs_held=12, docs_read=12)
+        assert "read in full" in est.caveat
+        assert "notable" in est.caveat
+
+    def test_unread_site_reports_the_reading_gap_not_a_null_result(self):
+        est = self._est(docs_held=12, docs_read=0)
+        assert "read in full" not in est.caveat
+        assert "notable" not in est.caveat
+        assert est.basis == "Not yet analysed"
+        assert "reading gap" in est.caveat
+
+    def test_partly_read_site_states_its_fraction_and_stays_provisional(self):
+        est = self._est(docs_held=2614, docs_read=1927)
+        assert "read in full" not in est.caveat
+        assert "notable" not in est.caveat
+        assert "1,927" in est.caveat and "2,614" in est.caveat
+        assert "provisional" in est.caveat
+
+    def test_unknown_coverage_never_claims_a_full_reading(self):
+        """A caller that cannot say how much was read must not let the
+        caveat claim everything was."""
+        est = self._est()
+        assert "read in full" not in est.caveat
+        assert "notable" not in est.caveat
+
+    def test_no_documents_branch_is_unchanged_by_coverage(self):
+        est = site_scale.power_estimate(has_documents=False,
+                                        docs_held=0, docs_read=0)
+        assert est.basis == "No documents held"
+
+    def test_a_disclosed_figure_is_untouched_by_coverage(self):
+        est = site_scale.power_estimate(it_load_mw=45, has_documents=True,
+                                        docs_held=10, docs_read=1)
+        assert est.value_mw == 45.0
+        assert est.basis == "Disclosed IT load"
 
 
 class TestOriginRoutes:
