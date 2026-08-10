@@ -24,6 +24,9 @@ workbook, a queryable database, and the source documents themselves.
 - [docs/MAC_STUDIO.md](docs/MAC_STUDIO.md) — the machine that runs the
   long deep-reads: how to reach it, start it, and tell whether it is
   actually working.
+- [docs/BACKUP.md](docs/BACKUP.md) — the database is the part that
+  cannot be re-fetched. How it is dumped, encrypted, verified and
+  rehearsed, and where the copies live.
 - [DATA-LICENSING.md](DATA-LICENSING.md) — per-source upstream terms.
   Barbour ABI data is licensed and **requires credit** in published
   output.
