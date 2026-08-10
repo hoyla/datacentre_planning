@@ -935,6 +935,7 @@ def main() -> int:
     map_points: list[dict] = []
     drive = hv._drive_folder_map()
     drive_apps = hv._drive_application_map()
+    drive_csv = hv._drive_findings_map()
     n_apps_total = len(cover)
     n_docs = sum(c[0] for c in cover)
     n_read = sum(c[1] for c in cover)
@@ -1099,10 +1100,13 @@ def main() -> int:
                 # documents the rows cite) and in the DuckDB findings table.
                 # Named by role rather than by filename: the CSV carries the
                 # site's own name now, so there is no one string to quote.
+                csv_url = drive_csv.get(hv._norm_key(key), "")
+                where = (f"<a href='{esc(csv_url)}' target='_blank' rel='noopener'>"
+                         f"this site's findings CSV</a>" if csv_url else
+                         "the findings CSV in this site's Drive folder")
                 findings_html += (f"<p class='help'>Showing {len(fl)} of {findings_n:,} "
-                                  "verified findings; the full set is in the findings "
-                                  "CSV in this site's Drive folder, and in the DuckDB "
-                                  "file.</p>")
+                                  f"verified findings; the full set is in {where}, "
+                                  f"and in the DuckDB file.</p>")
         elif held and read >= held:
             # Read in full and still nothing: a null result, not a gap.
             # The earlier wording said "not analysed" whenever the list was
@@ -1851,6 +1855,15 @@ def main() -> int:
     and cooling evidence, who is behind it, its planning applications with links to the
     council's own register, and what the documents were found to say.</p>
    <p class="when"><b>Reach for it when</b> you want to read a site and follow it outward.</p></div>
+  <div class="part"><h3><a href="#notes" onclick="show('notes');return false">Assistant's
+    notes</a><span class="pill">this web portal</span></h3>
+   <p class="what">A record of what this data looks like from the inside, written by the AI
+    assistant that built the pipeline: which silences look like the strongest material, where
+    the figures can mislead, what to check before publishing, and where to look next.
+    <b>Nothing in it is a finding</b> — every claim points at a site, a column or a document
+    you can open, and anything that cannot be traced that way is an opinion to discard.</p>
+   <p class="when"><b>Reach for it when</b> you want the failure modes before the numbers —
+    or a shortlist of what to pull on first.</p></div>
   <div class="part"><h3><a href="#method" onclick="show('method');return false">Methodology</a>
     · <a href="#dict" onclick="show('dict');return false">Data dictionary</a><span
     class="pill">this web portal</span></h3>

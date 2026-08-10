@@ -46,7 +46,7 @@ import re
 import subprocess
 import sys
 from math import asin, cos, radians, sin, sqrt
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -689,6 +689,53 @@ def _drive_application_map() -> dict[tuple[str, str], str]:
 
 def _drive_application_url(app_map, site_key: str, ref: str) -> str:
     return app_map.get((_norm_key(site_key), clean_ref(ref)), "")
+
+
+def _drive_findings_map() -> dict[str, str]:
+    """normalised site_key -> Drive URL of that site's findings CSV.
+
+    The folder maps above are built from the ledger's `folders`; this one
+    from its `files`, which records an id per uploaded path. Sending a
+    reporter to the folder and leaving them to spot one CSV among the
+    application subfolders is a step that can be removed, and the panel
+    that mentions the file is the natural place to remove it from.
+
+    The site key comes from the containing folder rather than the
+    filename, so it matches `_drive_folder_map` exactly even though both
+    now carry it.
+
+    Absent means not yet synced — a renamed CSV has no id until the sync
+    has uploaded it, so a reader built between the rename and the sync
+    simply describes the file without linking to it. That is the same
+    contract as the folder maps and the reason the reader is rebuilt
+    after a sync rather than before one.
+    """
+    if not DRIVE_LEDGER.exists():
+        return {}
+    try:
+        files = json.loads(DRIVE_LEDGER.read_text()).get("files", {})
+    except Exception:
+        return {}
+    out: dict[str, str] = {}
+    for path, meta in files.items():
+        name = PurePosixPath(path).name
+        if not (name.startswith("_findings") and name.endswith(".csv")):
+            continue
+        fid = (meta or {}).get("id")
+        if not fid:
+            continue
+        # A ledger entry whose local file has gone is a file the next
+        # prune will bin — the old `_findings.csv` before the rename was
+        # synced, for instance. Linking to it would hand a reporter a URL
+        # that works today and 404s after the sync, which is worse than
+        # no link. Existence locally is the cheapest proxy for "this is
+        # the copy the current tree would upload".
+        if not Path(path).exists():
+            continue
+        folder = PurePosixPath(path).parent.name
+        out[_norm_key(folder.split(" — ")[0])] = (
+            f"https://drive.google.com/file/d/{fid}/view")
+    return out
 
 
 def clean_ref(ref: str) -> str:
