@@ -279,12 +279,18 @@ def _insert_agent(conn, row, findings, pages, sent) -> tuple[int, int]:
             cur.execute("""
                 INSERT INTO findings (application_id, document_id,
                     signal_type, value_text, value_number, value_unit,
-                    evidence_text, evidence_page, model)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    evidence_text, evidence_page, model, prompt_version)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                ON CONFLICT (application_id, document_id, model,
+                    prompt_version, signal_type, md5(value_text),
+                    value_number, value_unit, md5(evidence_text),
+                    evidence_page)
+                DO NOTHING""",
                 (row["application_id"], row["document_id"],
                  str(f["signal_type"])[:80], f.get("value_text"), num,
-                 f.get("value_unit"), quote, verified, MODEL_TAG))
-            inserted += 1
+                 f.get("value_unit"), quote, verified, MODEL_TAG,
+                 PROMPT_VERSION))
+            inserted += cur.rowcount
     conn.commit()
     return inserted, failed
 

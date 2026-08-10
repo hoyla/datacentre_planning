@@ -408,6 +408,10 @@ def log_document(conn, row: dict, *, read_state: str, pages_total: int | None,
             (row["document_id"], row["application_id"], MODEL_TAG,
              PROMPT_VERSION, row["tier"], read_state, pages_total,
              pages_sent, inserted, failed, elapsed))
+    # The one commit per document. Findings inserted by verify_and_insert
+    # stay uncommitted until this row lands, so a death anywhere between
+    # chunk and log rolls the whole document back and the next run
+    # re-reads it cleanly instead of duplicating it.
     conn.commit()
 
 
@@ -452,17 +456,33 @@ def verify_and_insert(conn, row: dict, findings: list[dict],
             else:
                 family = signal_families.family_for(label)
                 source = "derived"
+            # ON CONFLICT against the content key (migration 012): a
+            # document processed twice — a killed run, a parse_failed
+            # retry — re-derives the same findings, and re-deriving must
+            # not re-insert. 20,377 duplicate rows existed before the
+            # index did. rowcount keeps the inserted count honest when
+            # the guard absorbs one.
             cur.execute("""
                 INSERT INTO findings (application_id, document_id,
                     signal_type, signal_family, family_source, value_text,
                     value_number, value_unit, evidence_text, evidence_page,
-                    model)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    model, prompt_version)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                ON CONFLICT (application_id, document_id, model,
+                    prompt_version, signal_type, md5(value_text),
+                    value_number, value_unit, md5(evidence_text),
+                    evidence_page)
+                DO NOTHING""",
                 (row["application_id"], row["document_id"], label,
                  family, source, f.get("value_text"), num,
-                 f.get("value_unit"), quote, verified_page, MODEL_TAG))
-            inserted += 1
-    conn.commit()
+                 f.get("value_unit"), quote, verified_page, MODEL_TAG,
+                 PROMPT_VERSION))
+            inserted += cur.rowcount
+    # No commit here, deliberately: findings only become visible together
+    # with the deepread_log row that records they were read, in the one
+    # commit log_document makes. Committing per chunk was how 20,377
+    # duplicates happened — chunks landed, the process died before the
+    # log row, and the cohort query re-offered the document.
     return inserted, failed
 
 
