@@ -105,3 +105,35 @@ class TestGateBehaviour:
         assert "correct_adjudications.py" in msg
         assert "--dry-run" in msg
         assert "consumption_integrity.py" in msg
+
+
+class TestPromptsRender:
+    """A prompt that cannot render is a batch that cannot run.
+
+    scripts/adjudicate_power.py builds its prompt with %-formatting, so a
+    literal percent sign anywhere in the text — "80% - 480W", which is one
+    of the examples the prompt itself cites — raises ValueError at build
+    time. That failed only when a submission was attempted, after the
+    cohort had been queried and the JSONL half-built. Cheap to assert.
+    """
+
+    def _prompt_module(self):
+        spec = importlib.util.spec_from_file_location(
+            "adjudicate_power", ROOT / "scripts" / "adjudicate_power.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
+    def test_adjudication_prompt_renders(self):
+        ap = self._prompt_module()
+        out = ap.PROMPT % {"ref": "Council/1/23", "desc": "d",
+                           "figures": "- finding_id 1: 5 MW"}
+        assert "Council/1/23" in out and "5 MW" in out
+
+    def test_literal_percent_survives_as_one_sign(self):
+        """%% in the source must reach the model as %, or the example the
+        prompt gives is not the example the model sees."""
+        ap = self._prompt_module()
+        out = ap.PROMPT % {"ref": "r", "desc": "d", "figures": "f"}
+        assert "80% - 480W" in out
+        assert "80%% - 480W" not in out

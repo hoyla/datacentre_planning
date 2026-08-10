@@ -136,7 +136,7 @@ run of this task, and each put a wrong number in front of a reader:
   electricity leaving it. Verdict "unclear" unless the quote gives an
   electrical figure.
 - **A number in a table is not a capacity.** If the quote carries no
-  unit at all — "80% - 480W", "Data Centre 150 210 1,839,600", a row of
+  unit at all — "80%% - 480W", "Data Centre 150 210 1,839,600", a row of
   pounds sterling — nothing establishes it is megawatts. Verdict
   "unclear".
 - **A substation on a drawing is not a grid connection.** "- 6MW
