@@ -852,9 +852,21 @@ def main() -> int:
             WHERE rn = 1""")
         power_src = {(k, q): r for k, q, r in cur.fetchall()}
 
+        # A figure adjudicated as somebody else's must not appear in this
+        # list looking like the site's own. Ten of them did: the panel
+        # ranks power findings to the top, and "22,700 MW" is a Savills
+        # market forecast sitting in a Chiltern application. They are kept
+        # rather than hidden -- a reader seeing what the documents contain
+        # is the point -- but each is labelled with whose it is.
         cur.execute("""
-            SELECT site_key, signal_type, value_text, value_number, value_unit FROM (
-              SELECT s.site_key, f.signal_type, f.value_text, f.value_number, f.value_unit,
+            WITH adj AS (
+              SELECT DISTINCT ON (finding_id) finding_id, verdict
+              FROM power_adjudication
+              ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC)
+            SELECT site_key, signal_type, value_text, value_number, value_unit,
+                   verdict FROM (
+              SELECT s.site_key, f.signal_type, f.value_text, f.value_number,
+                     f.value_unit, adj.verdict,
                      row_number() OVER (PARTITION BY s.site_key
                        ORDER BY (f.signal_family IN ('power_demand','power_generation',
                                  'power_grid','cooling','water','eia_process')) DESC,
@@ -862,12 +874,13 @@ def main() -> int:
               FROM findings f
               JOIN site_members m ON m.application_id=f.application_id AND m.retired_at IS NULL
               JOIN sites s ON s.id=m.site_id
+              LEFT JOIN adj ON adj.finding_id = f.id
               WHERE s.retired_at IS NULL AND f.value_text IS NOT NULL
                 AND f.signal_family <> 'unclassified') t
             WHERE rn <= %s""", (FINDINGS_PER_SITE,))
         findings = defaultdict(list)
-        for k, st, vt, vn, vu in cur.fetchall():
-            findings[k].append((st, vt, vn, vu))
+        for k, st, vt, vn, vu, verdict in cur.fetchall():
+            findings[k].append((st, vt, vn, vu, verdict))
 
     with db.connect() as conn:
         profiles = site_profile.load_site_profiles(conn)
@@ -1019,9 +1032,18 @@ def main() -> int:
              "intelligence, at pre-planning stage.</p>")
 
         fl = []
-        for st, vt, vn, vu in findings.get(key, []):
+        for st, vt, vn, vu, verdict in findings.get(key, []):
             num = f" <strong>{vn:g} {esc(vu or '')}</strong>" if vn is not None else ""
-            fl.append(f"<li><span class='st'>{esc(st)}</span>{num} — {esc(trim(vt,190))}</li>")
+            # Adjudicated as describing something other than this site.
+            not_ours = {
+                "market_context": "market or sector context, not this site",
+                "policy_target":  "a policy target, not this site",
+                "comparator":     "a different named scheme, not this site",
+            }.get(verdict)
+            tag = (f" <span class='q' style='color:#b3261e'>[{esc(not_ours)}]</span>"
+                   if not_ours else "")
+            fl.append(f"<li><span class='st'>{esc(st)}</span>{num}{tag} — "
+                      f"{esc(trim(vt,190))}</li>")
         if fl:
             findings_html = "<ul class='find'>" + "".join(fl) + "</ul>"
             if findings_n and findings_n > len(fl):
