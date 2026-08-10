@@ -21,6 +21,17 @@ FOLDER_URL = f"https://drive.google.com/drive/folders/{FOLDER_ID}"
 SITES_FOLDER_ID = "1wSMSDEm8xhxXFtAmUPCO5VgBYtfhiJEW"
 SITES_URL = f"https://drive.google.com/drive/folders/{SITES_FOLDER_ID}"
 
+# Encrypted database backups (scripts/backup_db.py). Deliberately NOT a
+# subfolder of the handover archive above: Drive sharing inherits
+# downward, and a pg_dump is the raw schema — Barbour's role-block
+# contact details, objectors' names and addresses from consultee
+# responses, everything the exports redact. A subfolder of the folder the
+# reporting team can read would hand them all of it. Separate folder,
+# unshared, and the dumps are encrypted anyway so that a mis-share still
+# leaks nothing.
+BACKUP_FOLDER_ID = "12-X9peqr2rm6SRndV7Q75A5HSwRJaheM"
+BACKUP_FOLDER_URL = f"https://drive.google.com/drive/folders/{BACKUP_FOLDER_ID}"
+
 # The workbook converted to a *native* Google Sheet, so it opens in a
 # browser rather than downloading — and, unlike an .xlsx opened in Drive's
 # Office compatibility mode, can be written by the Sheets API. The two

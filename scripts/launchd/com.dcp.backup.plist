@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.dcp.backup</string>
+
+    <!-- The passphrase is sourced from a file outside the repository so
+         it never reaches git and never appears in argv. -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>-lc</string>
+        <string>cd /Users/luke_hoyland/Code/Other_GitHub/datacentre_planning &amp;&amp; set -a &amp;&amp; . "$HOME/.config/datacentre_planning/backup.env" &amp;&amp; set +a &amp;&amp; .venv/bin/python scripts/backup_db.py</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key><integer>3</integer>
+        <key>Minute</key><integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/luke_hoyland/Code/Other_GitHub/datacentre_planning/logs/backup.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/luke_hoyland/Code/Other_GitHub/datacentre_planning/logs/backup.log</string>
+
+    <!-- Deliberately absent: RunAtLoad. A backup should happen on a
+         schedule, not every time someone logs in. And no KeepAlive — if
+         the laptop is asleep at 03:00 the run is skipped rather than
+         queued, which is why `backup_db.py --list` reports the age of
+         the newest off-site copy. -->
+</dict>
+</plist>

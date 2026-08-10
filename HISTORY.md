@@ -224,6 +224,39 @@ recorded no pages rather than no page count. The same bug in its fifth
 costume, and the reason the Outlook consultee responses would never have
 re-entered the cohort despite the format loaders existing.
 
+### Backups, and the check that nearly wasn't one (Aug 10)
+
+Until this point the database existed in exactly one place: a Docker
+volume on one laptop, with no dump, no replication and no schedule. The
+document corpus is mostly re-fetchable; 454,000 gated findings, the
+adjudications and the append-only audit trail are not, and re-deriving
+them would cost the API budget that produced them.
+
+`scripts/backup_db.py` dumps through the container (whose `pg_dump`
+cannot drift from the server, unlike the host's, which is a major
+version behind and refuses outright), encrypts with AES256 before
+anything leaves the machine, verifies, and uploads to **its own
+unshared Drive folder** — never a subfolder of the handover archive,
+because Drive sharing inherits downward and a `pg_dump` is the raw
+schema, including the Barbour contact details and objector addresses
+that every export redacts. Encrypted, the folder's permissions stop
+being the only thing standing between that material and a mis-share.
+Generational: nothing is ever overwritten, because a backup that
+overwrites eventually copies a corrupt database over a good one.
+
+**The verification was wrong first, in the project's own signature
+way.** The obvious check — decrypt and run `pg_restore --list` — passed
+a file truncated to 40%, because the table of contents lives at the
+start of a custom-format dump: the catalogue was intact, the data was
+gone, and the listing proved only that the listing existed. What
+detects truncation is gpg's integrity check, and only if someone reads
+its return code, which the first version did not. Verification now
+decrypts the whole file in a pass of its own before parsing anything,
+and was tested against intact, wrong-passphrase, truncated and
+bit-flipped archives. `--restore-test` goes further and is the only
+honest check: it restores into a scratch database and compares row
+counts against live.
+
 ---
 
 ## Lessons that changed how the code is written
@@ -236,7 +269,9 @@ after looking at the local staging tree; claiming Pages was fine after
 looking at the repo. Both were wrong, and both were caught later by
 checking the actual endpoint. The password gate looked perfect in a
 browser until an unauthenticated request from outside found
-`//index.html` served the whole dataset.
+`//index.html` served the whole dataset. The backup verifier joined the
+list before it had ever run in anger: listing a dump's table of contents
+proved the table of contents, not the data behind it.
 
 **A correction deserves a durable form.** Two instructions — use the
 Drive folder *ID*, never push to a merged branch — were in memory, were
@@ -254,7 +289,7 @@ applications holding *none* — so a partly-retrieved application could
 never come back. Short fetches are now `partial` and re-queued.
 
 **"Nobody looked" must never be stored as "nothing there".** The same
-mistake in four costumes, each found by pulling on the last: the
+mistake in six costumes now, each found by pulling on the last: the
 deep-read logged a missing text cache as an empty one (4,836
 documents); the extractor logged an unhandled format as an empty
 document (2,082); the extractor also *cached* that empty result despite
@@ -264,3 +299,12 @@ same way. The rule now has a mechanical form: **a stage that could not
 read something writes no cache at all**, because the absence of the file
 is what makes the next run retry. `engine: "skipped"` and
 `engine: "unsupported"` are recognised as stale wherever they survive.
+
+The fifth and sixth costumes turned up on 2026-08-10, which is the point
+of writing them down. Migration 011 relabelled the missing-cache rows by
+`pages_total IS NULL` and passed straight over 227 that recorded a page
+count of *zero* — same fact, different spelling, still settled and still
+invisible (migration 013). And the reader asserted that a site's
+documents "were read in full" whenever it held documents and no capacity
+figure, on 173 sites where reading was incomplete or had never started:
+nobody looked, published as nothing to see, on the front page.
