@@ -5,11 +5,13 @@
 -- separate commit. A document whose run died between the two — or whose
 -- parse_failed retry re-read chunks that had already landed — was
 -- re-offered by the cohort query and re-inserted everything it had
--- already stored. Measured on 2026-08-10: 20,377 rows were exact
--- duplicates of an earlier row in every content column, 5.6% of the
--- published findings count. 1,504 documents were affected, almost all
--- on the local-model run, with the copies landing hours apart — the
--- signature of restarts, not of versioned re-reads.
+-- already stored. Measured at review on 2026-08-10: 20,377 rows were
+-- exact duplicates of an earlier row in every content column, 5.6% of
+-- the published findings count, across 1,504 documents — almost all on
+-- the local-model run, with the copies landing hours apart, the
+-- signature of restarts rather than versioned re-reads. The run kept
+-- reading while this was written, so the archive below holds whatever
+-- exists at execution, slightly more than the measured figure.
 --
 -- Three changes, one contract:
 --
@@ -27,6 +29,15 @@
 --    reversible. Rows that share a quote but differ in any value column
 --    (7,771 of them) are NOT touched: same evidence, different reading
 --    — those are for adjudication, not cleanup.
+--
+--    Power adjudication reached 18 of the duplicate copies, and in all
+--    18 cases it also reached the copy that survives, with the same
+--    verdict and the same MW — checked row by row before this was
+--    written. Those 18 adjudication rows are archived the same way;
+--    their content already stands on the surviving finding. The foreign
+--    key is left to enforce the check: if a future state ever diverges
+--    from that measurement, the delete below fails and the whole
+--    migration rolls back rather than guessing.
 --
 -- 3. A unique index over the content columns makes the database refuse
 --    what the code used to permit. The text columns enter as md5() —
@@ -49,6 +60,49 @@ CREATE TABLE findings_removed_duplicates (
     removed_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     reason      TEXT        NOT NULL
 );
+
+CREATE TABLE power_adjudication_removed_duplicates (
+    LIKE power_adjudication,
+    removed_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    reason      TEXT        NOT NULL
+);
+
+-- Adjudications of duplicate findings, where an identical adjudication
+-- (same model, prompt, verdict and value) already sits on the copy that
+-- survives. Archived first so the findings delete is unobstructed; any
+-- reference this misses fails the FK below and aborts the migration.
+WITH ranked AS (
+    SELECT id,
+           min(id) OVER (PARTITION BY application_id, document_id, model,
+                         prompt_version, signal_type, value_text,
+                         value_number, value_unit, evidence_text,
+                         evidence_page) AS survivor
+    FROM findings
+),
+surplus AS (
+    SELECT id, survivor FROM ranked WHERE id <> survivor
+),
+dup_adj AS (
+    SELECT pa.id
+    FROM power_adjudication pa
+    JOIN surplus s ON s.id = pa.finding_id
+    JOIN power_adjudication ex
+      ON ex.finding_id = s.survivor
+     AND ex.model = pa.model
+     AND ex.prompt_version = pa.prompt_version
+     AND ex.verdict = pa.verdict
+     AND ex.value_mw IS NOT DISTINCT FROM pa.value_mw
+)
+INSERT INTO power_adjudication_removed_duplicates
+SELECT pa.*, now(),
+       'adjudication of a duplicate finding; an identical adjudication '
+       'stands on the surviving copy'
+FROM power_adjudication pa
+JOIN dup_adj d ON d.id = pa.id;
+
+DELETE FROM power_adjudication pa
+ USING power_adjudication_removed_duplicates d
+ WHERE pa.id = d.id;
 
 WITH ranked AS (
     SELECT id,
