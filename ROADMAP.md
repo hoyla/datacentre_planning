@@ -139,6 +139,57 @@ session with the network tab open, after which an adapter is
 straightforward. Worth doing — it is the whole of NI, not seven
 applications.
 
+## Audit tonight's new rules against prior learnings
+
+**Do this before the phase 3 work, and ideally before anyone leans on
+the integrity reports.**
+
+On 2026-08-10 a check was written asserting that a site's IT load cannot
+exceed its stated total site demand. This file already recorded the
+opposite, a few lines below, under Smaller things: four sites report
+exactly that and *all four are correct*, because the figures come from
+different applications at multi-building sites. The check would have led
+a fresh session to "correct" three correct figures — the regeneration
+runbook told them to — and it was caught only because Luke happened to
+read the premise in reasoning text that is not displayed by default.
+
+Inventing a validation rule means asserting a domain fact, and this
+project's domain facts are already written down, often as hard-won
+negative results. A rule that contradicts one is a regression wearing
+the clothes of an improvement. Several dozen rules were written in one
+evening without anyone checking them against this file or HISTORY.
+
+What to audit, and against what:
+
+- **`scripts/correct_adjudications.py`** — six quantity-kind rules. In
+  particular the 3 GW implausibility ceiling: is any legitimate scheme in
+  the corpus, or plausibly arriving, above it? An energy park's
+  generation might be.
+- **`scripts/consumption_integrity.py`** — the corroboration bands
+  (`GRID_SHORTFALL` 0.8, `GEN_CORROBORATES` 0.8–1.5, `GEN_PARTIAL` 0.5)
+  are invented thresholds, not measured ones. HISTORY's note that standby
+  is "normally sized to carry full load" is the v1 assumption that
+  hyperscale breaks; check the bands against what the corpus actually
+  shows rather than against that assumption.
+- **`scripts/generation_integrity.py`** — the count×rating arithmetic
+  assumes "N no. X MW" means N units of X. "26 no. 28000kW generators"
+  more likely means 26 units totalling 28 MW. The report flags rather
+  than multiplies, which is right, but the flag text asserts a reading.
+- **`scripts/review_large_capacities.py`** — the ≥100 MW threshold and
+  the decimal-slip heuristic (a figure exactly 10/100/1000× another on
+  the same site). Phased schemes legitimately state figures in that
+  relationship.
+- **`dcp/adjudication_gate.py`** — carries its own copy of the six
+  predicates. Tests assert the copies stay in step; nothing asserts
+  either copy is *right*.
+- **`dcp/site_scale.py`** — `power_estimate`'s preference order and the
+  1.71 kW/m² floor-area factor predate tonight and were measured; check
+  tonight's changes did not disturb them.
+
+Method: for each rule, write down the domain fact it asserts, then grep
+this file and HISTORY for the quantity, the unit and the concept. The
+files exist to prevent this and are cheap to search.
+
 ## Smaller things
 
 - **Promote `associated_id` to a typed `applications.parent_ref`
