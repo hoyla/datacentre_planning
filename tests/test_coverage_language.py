@@ -83,19 +83,19 @@ class TestPowerEstimateCoverage:
         return site_scale.power_estimate(has_documents=True, **kw)
 
     def test_fully_read_site_keeps_the_null_result(self):
-        est = self._est(docs_held=12, docs_read=12)
+        est = self._est(prose_held=12, prose_read=12)
         assert "read in full" in est.caveat
         assert "notable" in est.caveat
 
     def test_unread_site_reports_the_reading_gap_not_a_null_result(self):
-        est = self._est(docs_held=12, docs_read=0)
+        est = self._est(prose_held=12, prose_read=0)
         assert "read in full" not in est.caveat
         assert "notable" not in est.caveat
         assert est.basis == "Not yet analysed"
         assert "reading gap" in est.caveat
 
     def test_partly_read_site_states_its_fraction_and_stays_provisional(self):
-        est = self._est(docs_held=2614, docs_read=1927)
+        est = self._est(prose_held=2614, prose_read=1927)
         assert "read in full" not in est.caveat
         assert "notable" not in est.caveat
         assert "1,927" in est.caveat and "2,614" in est.caveat
@@ -110,12 +110,12 @@ class TestPowerEstimateCoverage:
 
     def test_no_documents_branch_is_unchanged_by_coverage(self):
         est = site_scale.power_estimate(has_documents=False,
-                                        docs_held=0, docs_read=0)
+                                        prose_held=0, prose_read=0)
         assert est.basis == "No documents held"
 
     def test_a_disclosed_figure_is_untouched_by_coverage(self):
         est = site_scale.power_estimate(it_load_mw=45, has_documents=True,
-                                        docs_held=10, docs_read=1)
+                                        prose_held=10, prose_read=1)
         assert est.value_mw == 45.0
         assert est.basis == "Disclosed IT load"
 
@@ -143,3 +143,42 @@ class TestOriginRoutes:
         note = origin.explain(["Keyword search"])
         assert "data-centre language" in note
         assert origin.explain([]) == ""
+
+
+class TestCoverageArgsAreProseCounts:
+    """Three functions decide how much of a site has been read, and all
+    three must be given prose counts rather than every document held.
+
+    Passed totals, each one describes a site as partly read because it
+    holds drawings the deep read skips by design. That was shipped once:
+    the reader said 78% and 201 of 302 sites, the workbook hedged the
+    capacity caveat on 78 sites whose prose was complete, and the null
+    result those sites actually represent — a consented data centre
+    disclosing no power figure — was displaced by "reading is
+    incomplete". The parameters on power_estimate are named prose_held
+    and prose_read so that passing the wrong quantity is visible at the
+    call site; this test is the same guard for the other two.
+    """
+
+    def test_power_estimate_takes_prose_named_arguments(self):
+        import inspect
+        params = inspect.signature(site_scale.power_estimate).parameters
+        assert "prose_held" in params and "prose_read" in params
+        assert "docs_held" not in params and "docs_read" not in params
+
+    def test_call_sites_pass_prose_counts(self):
+        import pathlib
+        import re
+        for name in ("scripts/export_reader.py", "scripts/export_handover.py"):
+            src = pathlib.Path(name).read_text()
+            for fn, args in (("power_estimate", ("prose_held=p_held",
+                                                 "prose_read=p_read")),
+                             ("provisional", ("(p_held, p_read)",)),
+                             ("capacity_status", ("docs_held=p_held",
+                                                  "docs_read=p_read"))):
+                if fn not in src:
+                    continue
+                for frag in args:
+                    assert frag in re.sub(r"\s+", " ", src) or frag in src, (
+                        f"{name}: {fn} is not being given prose counts "
+                        f"({frag!r} missing)")

@@ -952,7 +952,7 @@ def main() -> None:
             grid_mw=grid_mw, generation_mw=gen_mw,
             floorspace_sqm=site_floorspace.get(key),
             has_documents=bool(docs),
-            docs_held=held, docs_read=read)
+            prose_held=p_held, prose_read=p_read)
 
         if est.value_mw is not None:
             band_key, band_label = scale.scale_from_mw(est.value_mw)

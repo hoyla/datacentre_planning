@@ -60,6 +60,7 @@ from dcp import deepread_select  # noqa: E402
 from dcp.drive import FOLDER_URL as DRIVE_ROOT  # noqa: E402
 from dcp.drive import WORKBOOK_SHEET_URL  # noqa: E402
 from dcp.drive import SITES_URL  # noqa: E402
+from dcp.drive import NOTEBOOK_URL  # noqa: E402
 
 # Statuses meaning "we have not looked yet", as against "they disclosed
 # nothing" — the distinction the page is built around.
@@ -1004,7 +1005,7 @@ def main() -> int:
         est = scale.power_estimate(it_load_mw=it, total_site_mw=tot, grid_mw=grid,
                                    generation_mw=gen, floorspace_sqm=None,
                                    has_documents=bool(docs),
-                                   docs_held=held, docs_read=read)
+                                   prose_held=p_held, prose_read=p_read)
         cap_key, cap_label = site_profile.capacity_status(
             pre_application=(n_apps or 0) == 0, docs_held=p_held, docs_read=p_read,
             power_value_mw=est.value_mw, power_basis=est.basis)
@@ -1889,6 +1890,15 @@ def main() -> int:
     everything extracted from one site in a single file.
     &nbsp;<a href="{SITES_URL}" target="_blank" rel="noopener">Open the site
     folders</a></p></div>
+  <div class="part"><h3>Ask across sites<span class="pill">Gemini Notebook</span></h3>
+   <p class="what">Every site's report and its full findings table, one document per site,
+    loaded into a notebook you can question in plain language — "which sites mention gas
+    turbines?", "who is the agent on the Slough applications?". It answers from these
+    documents and cites the site it drew each answer from.</p>
+   <p class="when"><b>Reach for it when</b> the question spans sites and you would otherwise
+    be opening folders one at a time. Check anything you intend to publish against the site
+    row or the document itself — the notebook is a way in, not a source.
+    &nbsp;<a href="{NOTEBOOK_URL}" target="_blank" rel="noopener">Open the notebook</a></p></div>
   <div class="part"><h3>Query database<span class="pill">DuckDB</span></h3>
    <p class="what">Every site, application, document and finding in one file
     (<code>dc_phase{args.phase}.duckdb</code>, ~106 MB). Opens in DuckDB CLI, Python, R or
@@ -1898,10 +1908,9 @@ def main() -> int:
  </div>
 
  <h3 class="sub-head">Coming shortly…</h3>
- <p class="help">Two further ways into the same material are planned: a <b>Pinpoint
+ <p class="help">One further way into the same material is planned: a <b>Pinpoint
  collection</b> of the planning application documents, for full-text search across the
- corpus, and a <b>Gemini Notebook</b> built from the site reports and findings CSVs, for
- asking questions across sites. Neither exists yet; this page will say when they do.</p>
+ corpus. It does not exist yet; this page will say when it does.</p>
 
  <h2 class="sec">Where the applications stand</h2>
  <table class="stats"><tbody>
