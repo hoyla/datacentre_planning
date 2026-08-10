@@ -103,6 +103,7 @@ cap AS (
 SELECT cap.site_key, cap.display_name, cap.it_load, cap.total_site,
        cap.grid, cap.gen, cap.storage, cap.thermal, cap.n_cons,
        units.n_units, units.unit_quote, councils.n_councils,
+       coalesce(fleet.understated, false) AS gen_understated,
        coalesce(
          cons.evidence_text ~* '(each|per) (building|hall|data hall|unit|block|phase)'
          AND NOT cons.evidence_text ~* 'across the (campus|site|development)|in total|overall|total (it load|load|capacity)|combined',
@@ -129,6 +130,17 @@ LEFT JOIN LATERAL (
 -- Signals drawn from applications in different planning authorities are
 -- a clustering question before they are a data question: the 1km rule
 -- can merge two schemes that merely stand near each other.
+-- Does any quote on this site describe a FLEET whose per-unit rating is
+-- what got recorded? "38 no. 2,640kW generator units" beside a stored
+-- 2.9 MW means the column holds one machine, not the site's plant.
+LEFT JOIN LATERAL (
+  SELECT bool_or(f3.evidence_text ~* '[0-9]{1,4}\s*(no\.?|nr|x|×)\s*[,\s]*[0-9,]+(\.[0-9]+)?\s*(MW|kW|kWe|MWe)\y')
+         AS understated
+  FROM power_adjudication pa3
+  JOIN findings f3 ON f3.id = pa3.finding_id
+  JOIN site_members m4 ON m4.application_id = f3.application_id AND m4.retired_at IS NULL
+  JOIN sites s4 ON s4.id = m4.site_id AND s4.site_key = cap.site_key
+  WHERE pa3.verdict='site_capacity' AND pa3.quantity_type='onsite_generation') fleet ON true
 LEFT JOIN LATERAL (
   SELECT count(DISTINCT split_part(a2.application_ref, '/', 1)) AS n_councils
   FROM site_members m3
@@ -142,7 +154,7 @@ ORDER BY coalesce(cap.it_load, cap.total_site, cap.grid, cap.gen) DESC NULLS LAS
 
 
 def classify(cons, grid, gen, partial_scope=False, n_units=None,
-             unit_quote=None, n_councils=1):
+             unit_quote=None, n_councils=1, gen_understated=False):
     """(status, note) for one site's consumption figure."""
     if cons is None:
         return ("no-consumption-figure",
@@ -196,6 +208,20 @@ def classify(cons, grid, gen, partial_scope=False, n_units=None,
             notes.append(f"standby generation {gen:,.1f} MW is sized to "
                          f"carry the load ({ratio:.0%})")
         elif ratio < GEN_PARTIAL:
+            # Only if the generation figure is the site's fleet and not
+            # one machine's spec sheet. Amazon Didcot recorded 2.9 MW
+            # from "Mechanical Generator - 2,873 kW" while the same
+            # documents say "38 no. 2,640kW generator units per
+            # building" — about 100 MW. Called grid-dependent on the
+            # smaller number, the dataset told a reporter the opposite
+            # of what the application says.
+            if gen_understated:
+                notes.append(f"recorded generation {gen:,.1f} MW appears "
+                             f"to be a single unit: the documents describe "
+                             f"a fleet, so the site's real standby capacity "
+                             f"is higher and its grid-dependence cannot be "
+                             f"judged from this figure")
+                return ("generation-understated", "; ".join(notes))
             notes.append(f"standby generation {gen:,.1f} MW is only "
                          f"{ratio:.0%} of load — life-safety backup, not "
                          f"load-carrying; the site is grid-dependent")
@@ -223,7 +249,8 @@ def main() -> int:
 
     buckets: dict[str, list] = {}
     for (key, name, it, tot, grid, gen, storage, thermal, n_cons,
-         n_units, unit_quote, n_councils, partial_scope) in rows:
+         n_units, unit_quote, n_councils, gen_understated,
+         partial_scope) in rows:
         # The larger of the two, not it_load-by-preference. A campus
         # stating 72 MW per building and 1,100 MW overall has both, and
         # preferring the IT-load column reported the smaller as the
@@ -232,13 +259,15 @@ def main() -> int:
         if cons is not None and cons < args.min_mw:
             continue
         status, note = classify(cons, grid, gen, partial_scope,
-                                n_units, unit_quote, n_councils)
+                                n_units, unit_quote, n_councils,
+                                gen_understated)
         buckets.setdefault(status, []).append(
             (key, name, cons, it, tot, grid, gen, storage, thermal,
              n_cons, note))
 
     stamp = dt.datetime.now(dt.timezone.utc)
-    order = ["contradicted", "possible-clustering-artefact",
+    order = ["contradicted", "generation-understated",
+             "possible-clustering-artefact",
              "scope-resolved", "scope-uncertain", "partial-generation",
              "corroborated", "uncorroborated", "no-consumption-figure"]
     total = sum(len(v) for v in buckets.values())
