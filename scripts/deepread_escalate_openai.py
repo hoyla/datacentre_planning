@@ -241,7 +241,8 @@ def model_tag_for(model: str, reasoning_effort: str | None = None) -> str:
 
 def load_cohort(conn, which: str, sample: int = 0,
                 model_tag: str | None = None,
-                tiers: tuple[str, ...] = ()) -> list[dict]:
+                tiers: tuple[str, ...] = (),
+                limit: int = 0) -> list[dict]:
     """'validation' = a small sample of documents already read by BOTH
     other models, for a three-way comparison; 'remaining' = documents
     this model has not read.
@@ -357,7 +358,13 @@ def load_cohort(conn, which: str, sample: int = 0,
             continue
         row["tier"] = plan.tier
         kept.append(row)
-    return kept
+    # Take the cohort in slices when the whole thing is more money than
+    # anyone wants to commit on an estimate. The order is deterministic
+    # (application_ref, document id), and a collected slice leaves log
+    # rows that exclude it from the next call -- so running --limit N
+    # repeatedly walks the cohort without overlap and without needing to
+    # remember where it got to.
+    return kept[:limit] if limit else kept
 
 
 def build_jsonl(rows: list[dict], model: str, max_chars: int,
@@ -418,7 +425,7 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
               sample: int = 0, rate_in: float = 0.0,
               rate_out: float = 0.0, max_spend: float = 0.0,
               reasoning_effort: str | None = None,
-              tiers: tuple[str, ...] = ()) -> None:
+              tiers: tuple[str, ...] = (), limit: int = 0) -> None:
     tag = model_tag_for(model, reasoning_effort)
 
     # The validation interlock runs FIRST, before a single cache file is
@@ -431,17 +438,29 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
 
     with db.connect() as conn:
         rows = load_cohort(conn, cohort, sample=sample, model_tag=tag,
-                           tiers=tiers)
+                           tiers=tiers, limit=limit)
 
     # A dry run over the whole corpus does not need to build the whole
     # corpus: read a sample and scale. Exact for anything small, and for
     # the bulk cohort the answer is a size decision, not an invoice.
+    # A named slice is a slice someone is about to pay for, so it is
+    # costed exactly -- building every request rather than extrapolating
+    # from 300 of them. Sampling is for answering "how big is the whole
+    # thing", not "what will this cost me".
     scale_factor = 1.0
-    if dry_run and len(rows) > SAMPLE_THRESHOLD:
+    if dry_run and not limit and len(rows) > SAMPLE_THRESHOLD:
         scale_factor = len(rows) / SAMPLE_THRESHOLD
         print(f"cohort '{cohort}': {len(rows):,} documents — estimating from "
-              f"a {SAMPLE_THRESHOLD}-document sample")
-        rows = rows[:SAMPLE_THRESHOLD]
+              f"a {SAMPLE_THRESHOLD}-document sample, spread across the "
+              f"cohort")
+        # Every k-th document, not the first 300. The cohort is ordered by
+        # application reference, so the first 300 are one alphabetical
+        # corner of the country -- and they turned out to hold shorter
+        # documents than average, which made a half-of-tier-A estimate
+        # come in 40% under the exact figure. A spread sample crosses
+        # every council in the cohort.
+        step = max(1, len(rows) // SAMPLE_THRESHOLD)
+        rows = rows[::step][:SAMPLE_THRESHOLD]
 
     lines, meta = build_jsonl(rows, model, max_chars,
                               reasoning_effort=reasoning_effort)
@@ -777,6 +796,13 @@ def main() -> None:
                     help="Show which account, org and project the key "
                          "resolves to, and which models it can see. "
                          "Spends nothing.")
+    ap.add_argument("--limit", type=int, default=0,
+                    help="Submit only the first N documents of the "
+                         "'remaining' cohort. Deterministic order, and a "
+                         "collected slice is excluded from the next call, "
+                         "so repeated --limit runs walk the cohort without "
+                         "overlap. Use it to check an estimate against an "
+                         "actual before committing the rest.")
     ap.add_argument("--tier", nargs="+", default=None,
                     choices=["A", "B", "C"], metavar="TIER",
                     help="Restrict the 'remaining' cohort to these tiers. "
@@ -811,7 +837,7 @@ def main() -> None:
                   rate_in=args.rate_in, rate_out=args.rate_out,
                   max_spend=args.max_spend_usd,
                   reasoning_effort=args.reasoning_effort,
-                  tiers=tuple(args.tier or ()))
+                  tiers=tuple(args.tier or ()), limit=args.limit)
     elif args.collect:
         do_collect(args.batch_id)
     else:
