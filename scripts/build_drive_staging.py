@@ -122,14 +122,36 @@ def main() -> None:
         # each site's CSV can point at the exact file sitting beside it in
         # the same folder. The reader used to send people to the workbook
         # for these; the workbook never held them.
-        cur.execute("""SELECT f.application_id, d.content_sha256,
-                              coalesce(f.signal_family,''), f.signal_type,
-                              f.value_text, f.value_number, f.value_unit,
-                              f.evidence_text, f.evidence_page, f.model
-                       FROM findings f
-                       LEFT JOIN documents d ON d.id = f.document_id
-                       ORDER BY f.application_id, d.content_sha256,
-                                f.evidence_page NULLS LAST, f.id""")
+        # The adjudication columns are the point of the LEFT JOIN. Without
+        # them the CSV shows every power figure as an equal finding --
+        # including the ones adjudication identified as somebody else's:
+        # a 30 GW national storage target and a 22,700 MW market forecast
+        # both appear in these documents, and both would read as site
+        # capacity to anyone opening the file. That is the exact
+        # misreading the adjudication layer exists to prevent, and a CSV
+        # built from `findings` alone walks straight past it.
+        #
+        # DISTINCT ON keeps one adjudication per finding, preferring a
+        # decided verdict over 'unclear' and the most recent within that,
+        # so a figure adjudicated by two models does not duplicate the row.
+        cur.execute("""
+            WITH adj AS (
+              SELECT DISTINCT ON (finding_id)
+                     finding_id, verdict, quantity_type, value_mw, unit_note
+              FROM power_adjudication
+              ORDER BY finding_id,
+                       (verdict = 'unclear'),        -- decided verdicts first
+                       inserted_at DESC)
+            SELECT f.application_id, d.content_sha256,
+                   coalesce(f.signal_family,''), f.signal_type,
+                   f.value_text, f.value_number, f.value_unit,
+                   f.evidence_text, f.evidence_page, f.model,
+                   adj.verdict, adj.quantity_type, adj.value_mw, adj.unit_note
+            FROM findings f
+            LEFT JOIN documents d ON d.id = f.document_id
+            LEFT JOIN adj ON adj.finding_id = f.id
+            ORDER BY f.application_id, d.content_sha256,
+                     f.evidence_page NULLS LAST, f.id""")
         findings_by_app: dict[int, list] = defaultdict(list)
         for row in cur.fetchall():
             findings_by_app[row[0]].append(row[1:])
@@ -274,15 +296,32 @@ def main() -> None:
                 (app_folder / "_index.md").write_text("\n".join(index) + "\n")
 
             for (sha, family, stype, vtext, vnum, vunit, quote, page,
-                 model) in findings_by_app.get(app_id, ()):
+                 model, verdict, qty, mw, unit_note) in findings_by_app.get(
+                     app_id, ()):
                 doc_file = sha_to_fname.get(sha) if sha else None
+                # Spelled out rather than passed through as a code, because
+                # this file is read by people and opened in Excel. A blank
+                # means the finding is not a power figure and was never put
+                # to adjudication -- which is different from being judged
+                # and set aside, and the two must not look alike.
+                whose = {
+                    "site_capacity":  "this development",
+                    "market_context": "NOT this site — market or sector context",
+                    "policy_target":  "NOT this site — policy target",
+                    "comparator":     "NOT this site — a different named scheme",
+                    "unclear":        "could not be attributed from the quote",
+                }.get(verdict, "" if verdict is None else verdict)
                 site_csv_rows.append((
                     ref,
                     doc_file or "(document not in this folder)",
                     page if page is not None else "",
                     family, stype, vtext,
                     vnum if vnum is not None else "",
-                    vunit or "", quote, model))
+                    vunit or "", quote, model,
+                    whose,
+                    qty or "",
+                    f"{mw:g}" if mw is not None else "",
+                    unit_note or ""))
 
         folder.mkdir(parents=True, exist_ok=True)
         if site_csv_rows:
@@ -294,7 +333,9 @@ def main() -> None:
                 w.writerow(["application", "document file",
                             "page (or section for non-PDF)", "signal family",
                             "signal type", "value", "number", "unit",
-                            "verbatim quote", "extracted by"])
+                            "verbatim quote", "extracted by",
+                            "whose figure is this?", "quantity type",
+                            "adjudicated MW", "quantity note"])
                 w.writerows(site_csv_rows)
             n_findings_csv += len(site_csv_rows)
             report.append(f"## Findings")
@@ -307,6 +348,18 @@ def main() -> None:
                 f"the verbatim quote, and the model that read it. Every "
                 f"quote was checked against the source text before it was "
                 f"stored.")
+            report.append("")
+            report.append(
+                "**Read the 'whose figure is this?' column before quoting any "
+                "megawatt number.** Planning documents argue for approval by "
+                "citing the market, so a figure appearing in this site's "
+                "documents is often about something else entirely — a "
+                "national policy target, a competitor's scheme, a sector "
+                "forecast. Each power figure has been adjudicated for whose "
+                "it is, and only those marked *this development* describe "
+                "the site. A blank means the finding is not a power figure "
+                "and was never put to adjudication, which is different from "
+                "having been judged and set aside.")
             report.append("")
         (folder / "_site_report.md").write_text("\n".join(report) + "\n")
 

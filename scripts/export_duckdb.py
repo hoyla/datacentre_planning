@@ -89,14 +89,43 @@ TABLES: dict[str, str] = {
                     ELSE 'portal fetch' END AS obtained,
                d.page_count, d.ocr_used, d.fetched_at
         FROM documents d JOIN applications a ON a.id = d.application_id""",
+    # The adjudication columns matter more here than anywhere else. This
+    # file exists for the question that is not in a column, which means
+    # somebody will write `WHERE value_unit = 'MW' ORDER BY value_number
+    # DESC` -- and the largest megawatt figures in this corpus are a 30 GW
+    # national storage target and a 22,700 MW market forecast. Without a
+    # verdict beside each figure the file invites exactly the mistake the
+    # adjudication layer exists to prevent.
     "findings": """
+        WITH adj AS (
+          SELECT DISTINCT ON (finding_id)
+                 finding_id, verdict, quantity_type, value_mw, unit_note
+          FROM power_adjudication
+          ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC)
         SELECT a.application_ref, f.signal_type, f.value_text, f.value_number,
                f.value_unit, f.evidence_text, f.evidence_page, f.model,
                d.content_sha256 AS document_sha256, d.url AS document_url,
+               adj.verdict        AS whose_figure,
+               adj.quantity_type  AS quantity_type,
+               adj.value_mw       AS adjudicated_mw,
+               adj.unit_note      AS quantity_note,
                f.inserted_at
         FROM findings f
         JOIN applications a ON a.id = f.application_id
-        LEFT JOIN documents d ON d.id = f.document_id""",
+        LEFT JOIN documents d ON d.id = f.document_id
+        LEFT JOIN adj ON adj.finding_id = f.id""",
+    # The adjudications in full, so the reasoning is inspectable and not
+    # only its conclusion. Every verdict carries the sentence that decided
+    # it.
+    "power_adjudication": """
+        SELECT a.application_ref, pa.verdict, pa.quantity_type,
+               pa.value_mw, pa.value_original, pa.unit_original,
+               pa.unit_note, pa.is_maximum, pa.reasoning,
+               f.signal_type, f.evidence_text, f.evidence_page,
+               pa.model, pa.prompt_version, pa.inserted_at
+        FROM power_adjudication pa
+        JOIN findings f ON f.id = pa.finding_id
+        JOIN applications a ON a.id = pa.application_id""",
     "barbour_projects": """
         SELECT p.external_ref AS ptno, p.title, p.stage_summary, p.dev_type,
                p.address, p.postcode, p.latitude, p.longitude,

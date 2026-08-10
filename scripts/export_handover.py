@@ -71,7 +71,16 @@ app_findings AS (
   -- spreadsheet cell nobody can read or filter. The family is the
   -- 25-value canonical index over them (dcp/signal_families.py); the
   -- original label is still on every findings row for anyone drilling in.
-  SELECT application_id, count(*) AS n,
+  --
+  -- count(DISTINCT passage), not count(*). Several models read the same
+  -- documents, so one sentence found by three readers was three rows and
+  -- the column read as three findings. Measured 2026-08-10: 1,019,106
+  -- rows over 878,651 distinct passages -- 14% inflation, smaller than
+  -- feared, but a count should mean one thing and "three readers agreed"
+  -- is corroboration rather than volume.
+  SELECT application_id,
+         count(DISTINCT (document_id, md5(evidence_text), evidence_page))
+                                                               AS n,
          array_agg(DISTINCT signal_family) FILTER (
              WHERE signal_family IS NOT NULL
                AND signal_family <> 'unclassified')            AS signal_families
@@ -207,7 +216,11 @@ WITH latest AS (
 app_docs AS (
   SELECT application_id, count(*) AS n FROM documents GROUP BY application_id),
 app_findings AS (
-  SELECT application_id, count(*) AS n FROM findings GROUP BY application_id)
+  -- Distinct passages, matching the Sites query above: one sentence found
+  -- by three readers is one finding corroborated three times, not three.
+  SELECT application_id,
+         count(DISTINCT (document_id, md5(evidence_text), evidence_page)) AS n
+  FROM findings GROUP BY application_id)
 SELECT s.site_key, a.application_ref, m.joined_via,
        split_part(a.application_ref,'/',1) AS council,
        a.status, a.date_received, a.date_decided,
@@ -430,7 +443,36 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "it: a sort by MW should be read with all four columns."),
     ("Sites", "IT load / Total site / Grid connection / On-site generation MW",
      "The adjudicated components, kept separate because they are "
-     "different quantities for the same site, not competing estimates."),
+     "different quantities for the same site, not competing estimates. "
+     "IT load is what the racks draw and excludes cooling overhead; total "
+     "site includes it, so the two are not comparable and a site quoting "
+     "only one is not smaller than a site quoting the other. Grid "
+     "connection is capacity sought, reserved or contracted — headroom, "
+     "which operators commonly secure more of than they draw, and which "
+     "phased schemes take up over years. On-site generation is standby "
+     "and CHP plant; read it beside IT load rather than alone, because "
+     "generation far below load usually means life-safety backup only and "
+     "a wholly grid-dependent site, which is itself worth reporting."),
+    ("Sites", "What is NOT in the generation and capacity columns",
+     "Three quantities that look like power and are deliberately kept "
+     "out of these columns, each recorded under its own type so it stays "
+     "findable: battery and UPS ratings (energy_storage) state discharge "
+     "speed, not generation or demand; thermal input (thermal_input) is "
+     "fuel entering a plant, typically two to three times the electricity "
+     "leaving it; and annual energy consumption, which is not a capacity "
+     "at all — one application states a load in kW that is really a "
+     "year's kWh, and taken literally implies a site four times the "
+     "national grid. Figures above 3 GW are rejected on that basis alone."),
+    ("Sites", "How much to trust a single capacity figure",
+     "Some sites state a figure once and nothing corroborates it; others "
+     "state it and their grid connection or standby plant independently "
+     "agrees. Both appear in this column identically, so where it "
+     "matters, check the site panel: it shows the components beside each "
+     "other. Two known limits travel with these figures. A figure the "
+     "documents describe as per-building is not the site total — one "
+     "scheme states 75 MW per building and, elsewhere, three buildings — "
+     "and a generation figure taken from one machine's specification is "
+     "not the fleet, where the documents describe dozens of units."),
     ("Sites", "Capacity figures attributed to site",
      "How many megawatt figures the adjudication attributed to this site "
      "itself."),
@@ -499,7 +541,14 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "anything; see Capacity status."),
     ("Sites", "Verified findings",
      "Deep-read findings whose evidence quotes passed verbatim "
-     "verification against the source text before storage."),
+     "verification against the source text before storage. Counted as "
+     "distinct passages, not rows: several models read these documents, "
+     "and one sentence found independently by three readers is one "
+     "finding corroborated three times rather than three findings. "
+     "Across the corpus that distinction removes about 14% of the raw "
+     "row count. A high number here means a document-rich site, not "
+     "necessarily an information-rich one — a long environmental "
+     "statement yields hundreds of findings about drainage."),
     ("Sites", "Documents obtained by hand",
      "Documents ingested manually rather than fetched from a portal; they "
      "carry no public link."),

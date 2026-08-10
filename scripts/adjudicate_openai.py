@@ -59,7 +59,11 @@ PROMPT, SCHEMA = _ap.PROMPT, _ap.SCHEMA
 TO_MW, APPARENT = _ap.TO_MW, _ap.APPARENT
 PROMPT_VERSION = "power-1.0"
 BATCH_DIR = ROOT / "data" / "adjudication_batches_openai"
-MAX_COMPLETION_TOKENS = 8000
+# 8000 starved gpt-5 at high reasoning: it spent 96%% of the budget
+# thinking and 155 of 436 requests hit the ceiling with no answer
+# written, losing a third of the batch. Reasoning tokens are output
+# tokens, so the ceiling has to cover both.
+MAX_COMPLETION_TOKENS = 16000
 FIGURES_PER_REQUEST = 60
 
 

@@ -144,13 +144,21 @@ def main() -> int:
             print(f"  {name:32} {n:>5} {'would be' if args.dry_run else ''} "
                   f"corrected  ({note})")
             if n and not args.dry_run:
+                # The note is a bound parameter, not interpolated. One of
+                # these reads "another scheme's plant", and an apostrophe
+                # inside a single-quoted SQL literal ends the string. It
+                # went unnoticed because the rule matched zero rows on the
+                # first run and the UPDATE is skipped when the count is
+                # zero -- so the bug waited for the first batch that
+                # actually triggered it.
                 cur.execute(f"""
                     UPDATE power_adjudication pa
                        SET {set_clause},
                            unit_note = coalesce(pa.unit_note || ' ', '')
-                                       || '[{name}] {note}'
+                                       || %s
                       FROM findings f
-                     WHERE f.id = pa.finding_id AND {where}""")
+                     WHERE f.id = pa.finding_id AND {where}""",
+                    (f"[{name}] {note}",))
         if not args.dry_run:
             conn.commit()
 
