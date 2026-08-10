@@ -37,6 +37,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import os
 import re
@@ -117,6 +118,22 @@ def main() -> None:
         for app_id, url, kind, sha, bp, ft in cur.fetchall():
             docs_by_app[app_id].append((url, kind, sha, bp, ft))
 
+        # Every verified finding, keyed by application and document hash so
+        # each site's CSV can point at the exact file sitting beside it in
+        # the same folder. The reader used to send people to the workbook
+        # for these; the workbook never held them.
+        cur.execute("""SELECT f.application_id, d.content_sha256,
+                              coalesce(f.signal_family,''), f.signal_type,
+                              f.value_text, f.value_number, f.value_unit,
+                              f.evidence_text, f.evidence_page, f.model
+                       FROM findings f
+                       LEFT JOIN documents d ON d.id = f.document_id
+                       ORDER BY f.application_id, d.content_sha256,
+                                f.evidence_page NULLS LAST, f.id""")
+        findings_by_app: dict[int, list] = defaultdict(list)
+        for row in cur.fetchall():
+            findings_by_app[row[0]].append(row[1:])
+
         cur.execute("""SELECT m.site_id, s.site_key, p.title, p.value_gbp,
                               p.floor_area, p.stage_summary
                        FROM site_members m
@@ -158,10 +175,14 @@ def main() -> None:
     if args.limit:
         site_keys = site_keys[: args.limit]
 
-    n_docs = n_apps = 0
+    n_docs = n_apps = n_findings_csv = 0
     for key in site_keys:
         name, cls, lat, lng = site_meta[key]
         folder = sites_dir / f"{clean(key, 40)} — {clean(name or 'unnamed', 60)}"
+        # (application_ref, doc file-or-absence, page, family, type, value,
+        #  number, unit, quote, model) rows accumulated across this site's
+        # applications, written as _findings.csv beside _site_report.md.
+        site_csv_rows: list[tuple] = []
         report = [f"# {name or key}", "",
                   f"**Site key:** `{key}`  ",
                   f"**Classification:** {cls}  ",
@@ -223,31 +244,70 @@ def main() -> None:
                              if app_docs else ""))
             report.append("")
 
-            if not app_docs:
-                continue
-            app_folder = folder / clean(ref.replace("/", "_"), 60)
-            index = [f"# Documents — {ref}", "",
-                     f"Source: {url or 'obtained by hand'}", "",
-                     "| file | document | source |", "|---|---|---|"]
-            used: set[str] = set()
-            for i, (durl, kind, sha, bp, _ft) in enumerate(app_docs, 1):
-                src = Path(bp)
-                if not src.is_absolute():
-                    src = Path.cwd() / bp
-                if not src.exists():
-                    continue
-                base = clean(kind or "document")
-                fname = f"{i:03d} - {base}{src.suffix}"
-                if fname.lower() in used:
-                    fname = f"{i:03d} - {base} [{sha[:8]}]{src.suffix}"
-                used.add(fname.lower())
-                link_or_copy(src, app_folder / fname)
-                n_docs += 1
-                shown_url = durl if not durl.startswith("file://") else "obtained by hand"
-                index.append(f"| {fname} | {kind or '—'} | {shown_url} |")
-            (app_folder / "_index.md").write_text("\n".join(index) + "\n")
+            sha_to_fname: dict[str, str] = {}
+            if app_docs:
+                app_folder = folder / clean(ref.replace("/", "_"), 60)
+                index = [f"# Documents — {ref}", "",
+                         f"Source: {url or 'obtained by hand'}", "",
+                         "| file | document | source |", "|---|---|---|"]
+                used: set[str] = set()
+                for i, (durl, kind, sha, bp, _ft) in enumerate(app_docs, 1):
+                    src = Path(bp)
+                    if not src.is_absolute():
+                        src = Path.cwd() / bp
+                    if not src.exists():
+                        continue
+                    base = clean(kind or "document")
+                    fname = f"{i:03d} - {base}{src.suffix}"
+                    if fname.lower() in used:
+                        fname = f"{i:03d} - {base} [{sha[:8]}]{src.suffix}"
+                    used.add(fname.lower())
+                    link_or_copy(src, app_folder / fname)
+                    n_docs += 1
+                    # The CSV references documents by these exact names, so
+                    # the mapping is captured here, in the loop that assigns
+                    # them — a second script recomputing the numbering would
+                    # drift the moment this one changed.
+                    sha_to_fname[sha] = f"{clean(ref.replace('/', '_'), 60)}/{fname}"
+                    shown_url = durl if not durl.startswith("file://") else "obtained by hand"
+                    index.append(f"| {fname} | {kind or '—'} | {shown_url} |")
+                (app_folder / "_index.md").write_text("\n".join(index) + "\n")
+
+            for (sha, family, stype, vtext, vnum, vunit, quote, page,
+                 model) in findings_by_app.get(app_id, ()):
+                doc_file = sha_to_fname.get(sha) if sha else None
+                site_csv_rows.append((
+                    ref,
+                    doc_file or "(document not in this folder)",
+                    page if page is not None else "",
+                    family, stype, vtext,
+                    vnum if vnum is not None else "",
+                    vunit or "", quote, model))
 
         folder.mkdir(parents=True, exist_ok=True)
+        if site_csv_rows:
+            # utf-8-sig: the BOM is what makes Excel open a UTF-8 CSV
+            # correctly on double-click, and Sheets ignores it.
+            with (folder / "_findings.csv").open("w", newline="",
+                                                 encoding="utf-8-sig") as fh:
+                w = csv.writer(fh)
+                w.writerow(["application", "document file",
+                            "page (or section for non-PDF)", "signal family",
+                            "signal type", "value", "number", "unit",
+                            "verbatim quote", "extracted by"])
+                w.writerows(site_csv_rows)
+            n_findings_csv += len(site_csv_rows)
+            report.append(f"## Findings")
+            report.append("")
+            report.append(
+                f"`_findings.csv` in this folder holds all "
+                f"{len(site_csv_rows):,} verified findings extracted from "
+                f"this site's documents — each row names the document file "
+                f"it came from (in the application folders here), the page, "
+                f"the verbatim quote, and the model that read it. Every "
+                f"quote was checked against the source text before it was "
+                f"stored.")
+            report.append("")
         (folder / "_site_report.md").write_text("\n".join(report) + "\n")
 
     # Root artefacts. Three things and no more: the documents, the
@@ -289,7 +349,8 @@ def main() -> None:
             staged_root.append(workbooks[-1].name)
     print("   root artefacts: " + (", ".join(staged_root) or "none"))
     print(f"staged {len(site_keys)} sites, {n_apps} applications, "
-          f"{n_docs} documents -> {out}")
+          f"{n_docs} documents, {n_findings_csv:,} findings rows in "
+          f"per-site CSVs -> {out}")
 
 
 if __name__ == "__main__":
