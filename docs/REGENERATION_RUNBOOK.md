@@ -11,26 +11,43 @@ it.
 
 ---
 
-## State — updated 2026-08-11, after steps 1–5 and 7
+## State — phase 2 shipped, 2026-08-10 23:30 UTC
 
-**Steps 1 to 5 and step 7 are done. Start at step 6 (the Drive sync).**
+**Every step is done. Nothing here is waiting to be run.** The next
+regeneration starts at step 1 again; read the steps for the order, which
+is 1–4, then 7, then 5, then 6, 8, 9.
 
-Step 7 was pulled forward deliberately: `build_drive_staging.py` copies
+Step 7 comes before step 5 deliberately: `build_drive_staging.py` copies
 the release artefacts into the Drive root, so building the tree before
-the exports stages the *previous* release's workbook and database. The
-order in this file is now 5 → 7 → 5 → 6, and the step text says so.
+the exports stages the *previous* release's workbook and database.
 
 | | |
 |---|---|
-| Branch | `adjudication-tail-ceiling` was merged as PR #39; this work is on top of `main` |
+| Deployed | PR #40, merged 2026-08-10 22:23 UTC, `81af0e7`; `probe_gate.sh` PASS — 22 paths refused, forged cookie rejected |
 | Documents | 55,678 held, 40,279 read; **36,743 of 36,983 prose (99%)** |
-| Findings | 1,019,942 rows |
+| Findings | ~1,021,400 rows and still rising — the Studio is writing |
 | Adjudications | **14,671** |
-| Largest site capacity | **1,200 MW** (Camilla Road, Auchtertool) |
-| Sites with prose outstanding | **38 of 302** (was reported as 201) |
+| Sites with prose outstanding | **38 of 302** (previously reported as 201) |
 | Release | `data/exports/phase2_build/`, artefacts named `phase2` |
-| Backup | `dcp_2026-08-10T1932.dump.gpg`, verified, on Drive — **predates today's corrections** |
+| Drive | synced and pruned; 692 stale twins binned; phase 1 artefacts kept |
+| Backup | `dcp_2026-08-10T1932.dump.gpg`, verified, on Drive — **predates the corrections below** |
 | OpenAI spend | ~£528 deep-read + ~$20 adjudication |
+
+**The largest figures, stated carefully, because getting this wrong is
+the standing hazard of this dataset.** Largest disclosed IT load is
+**Elsham Wolds at 1,000 MW**; largest total site demand is
+**Northumberland Energy Park (Cambois) at 1,100 MW**.
+
+The largest single row carrying `verdict='site_capacity'` is **1,200 MW
+at Camilla Road, and it is a `thermal_input`** — fuel entering a plant,
+two to three times the electricity leaving it. An earlier version of this
+table called it the dataset's largest site capacity, which was wrong, and
+wrong in exactly the way the `thermal_not_electrical` correction exists
+to prevent. **`verdict='site_capacity'` alone does not mean "an
+electrical capacity".** It means the figure is about this development;
+`quantity_type` says what kind of quantity it is, and `thermal_input` and
+`energy_storage` are both in there. Filter on both, always. The three
+exports do; a `max(value_mw)` typed at a psql prompt does not.
 
 What happened in steps 1–4:
 
@@ -68,8 +85,9 @@ What happened in steps 1–4:
   out is that this is the proposal's capacity, not what the number
   counts. The adjudicator had itself reached `unclear` on one of its
   three passes over the same sentence. The site now reads 155 MW
-  disclosed IT load, 342 MW theoretical maximum, and the dataset's
-  largest capacity is Camilla Road at 1,200 MW.
+  disclosed IT load and 342 MW theoretical maximum, and no longer holds
+  the dataset's largest figure — see the state table above for what
+  does, and for why the largest `site_capacity` row is not it.
 
   **A general rule was written for this and rejected on measurement.**
   "Demote a site_capacity figure whose document also holds one five
@@ -241,7 +259,9 @@ never deleted, so a wrong prune is a restore from the bin rather than a
 re-upload of 70GB.
 
 Then confirm by fetching a sample **through the API by file id** —
-name, parent folder, and byte size against local. Do not trust the
+name, parent folder, byte size and md5 against local. This is what found
+that the phase 1 artefacts sit outside the handover root; the sync's own
+counters would never have shown it. Do not trust the
 sync's own counters: they looked fine on the day half the tree went into
 a duplicate archive. There is a worked example of the far-side check in
 the session transcript; the principle is that the ledger is the near
@@ -333,11 +353,58 @@ browser with a session cannot show you this: `//index.html` once skipped
 the middleware entirely and served the whole 7.4 MB dataset with a 200.
 Exit 0 means every path was refused.
 
+It proves the gate, not the deployment. The probe is refused like anyone
+else, so it cannot tell you *what* was published — only that nothing is
+reachable without a session. Checking the content needs a browser with
+one.
+
+Ran clean for phase 2 on 2026-08-10: 22 paths, all 303, forged cookie
+rejected.
+
 ### 10. Tell the reporting team
 
 Say what moved, what is still a floor, and that disagreements between
 readers are kept rather than resolved. The reader's front page carries
 the caveats; the note should point at them rather than restate them.
+
+For this release specifically, three things belong in that note:
+
+- **Coverage is now stated over prose.** If anyone saw the earlier "78%"
+  or "201 of 455 sites not fully read", those counted drawings the deep
+  read skips by design. The prose figure is 99%, and 38 sites have
+  anything outstanding.
+- **`max_disclosed_mw` is gone from the DuckDB.** It has been replaced by
+  four adjudicated columns and `power_figures_excluded`. Any query
+  written against the phase 1 database needs adjusting.
+- **The phase 1 artefacts are still on Drive and still carry the old
+  column**, with West London Technology Park at 298,000 MW in it. They
+  were kept deliberately so earlier citations keep resolving. A note
+  beside them is worth more than withdrawing them.
+
+---
+
+## Still outstanding after the phase 2 release — Luke's, not the runner's
+
+- **Upload the notebook bundle.** 506 documents sit in
+  `data/exports/notebook_bundle/` (step 7a). The Gemini Notebook is
+  linked from the reader already, so until they are uploaded the link
+  leads somewhere emptier than the page implies.
+- **The Google Sheet is still titled `DC_handover_v2_phase1`.** Renaming
+  it is safe: `sheet_sync.py` resolves the spreadsheet by the id in
+  `WORKBOOK_SHEET_URL` and only prints the title. The **tab** names are
+  matched against the workbook's sheet names and must not change.
+- **`dc_handover_phase1.xlsx` is not in the phase 1 archive folder** with
+  its database; it is in a third folder. Both are untrashed and keep
+  their file ids, so citations resolve either way.
+- **The local phase 1 workbook no longer exists.** The workbook writer
+  truncates its inode, so rebuilding under the phase 1 name overwrote it
+  through the staging hard link. The Drive copy is the only one left,
+  which is why `--prune` exempts the tree root.
+- **A backup postdating the corrections has not been taken.** The most
+  recent verified dump predates them. Two adjudication rows changed and
+  the rule that changed them is in `correct_adjudications.py`, so it is
+  reproducible rather than fragile — but the next `backup_db.py` should
+  not be skipped.
 
 ---
 
