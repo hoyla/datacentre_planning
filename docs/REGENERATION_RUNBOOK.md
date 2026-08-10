@@ -11,20 +11,57 @@ it.
 
 ---
 
-## State when this was written
+## State — updated 2026-08-10 21:32 UTC, after steps 1–4
+
+**Steps 1 to 4 are done. Start at step 5.**
 
 | | |
 |---|---|
-| Branch | `adjudication-tail-ceiling`, 7 commits ahead of main |
-| Documents | 55,678 held, **40,279 read** (was 18,645 this morning) |
-| Findings | 1,019,389 rows / ~878,651 distinct passages |
-| Adjudications | 6,916 |
-| OpenAI spend | ~£528 + ~$14 of adjudication, inside the £600 ceiling |
-| In flight | One batch: `batch_6a7a15db82a88190b819396b916b662d`, 150/158 |
+| Branch | `adjudication-tail-ceiling`, ahead of main; needs a PR |
+| Documents | 55,678 held, **40,279 read** |
+| Findings | 1,019,618 rows / ~878,651 distinct passages |
+| Adjudications | **14,671**, of which 7,666 are this development's |
+| Largest site capacity | 2,240 MW — **and it is wrong, see below** |
+| Backup | `dcp_2026-08-10T1932.dump.gpg`, verified, on Drive |
+| OpenAI spend | ~£528 deep-read + ~$20 adjudication |
 
-**The deep-read is complete across the readable site universe.** There is
-no tier D. What remains is adjudication of the tail and then the
-regeneration itself.
+What happened in steps 1–4:
+
+- **Adjudication is complete.** The final batch ran at `medium` effort
+  with a 16,000-token ceiling: 158 of 158 finished cleanly, no
+  truncation, $5.91. 18 figures across 7 applications remain
+  unadjudicated — findings that arrived after the cohort was built, not
+  worth a batch.
+- **127 corrections applied**, and that number is the answer to "would a
+  replay reintroduce the errors": across 9,692 newly adjudicated figures
+  the unchanged prompt recreated 43 storage-as-generation, 47 headerless
+  table rows, 32 thermal inputs, 3 equipment labels and 2 temporary
+  supplies. About 1.3%, all caught mechanically. Re-run is a no-op and
+  the export gate is satisfied.
+- **The correction script had a bug that only fired tonight**: rule notes
+  were interpolated into SQL and one contains an apostrophe. It had run
+  clean before only because that rule matched zero rows. Now bound as a
+  parameter.
+- **A wrong headline was caught before it shipped.** West London
+  Technology Park had jumped to 2,240 MW from a quote OCR had eaten
+  ("thi propo al would contribute of 2240MW"), while the same documents
+  state 342 MW as the development's theoretical maximum. Four sites now
+  fail a new **impossible-components** check — IT load above the site's
+  own stated total, which cannot happen since total includes IT plus
+  overhead.
+
+**Before step 7, someone must look at these four.** They are flagged, not
+corrected, because only reading both quotes says which figure is wrong.
+West London is the urgent one: at 2,240 MW it would be the largest site
+in the dataset and among the largest on earth, and it is in the reader's
+headline position.
+
+Everything else from step 3, for reference: 2 contradicted sites (both
+known and genuine), 5 generation-understated, 2 clustering artefacts,
+21 corroborated, 37 uncorroborated. Generation: 1,846 verdicts across 99
+sites, **71% naming no fuel**, 61 of 99 sites disclosing none at all.
+Null-capacity sweep: 65 fully-read sites with no capacity figure, 57 of
+them with no power-unit text anywhere.
 
 ---
 
