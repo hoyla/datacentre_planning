@@ -151,6 +151,40 @@ release is stamped when collecting actually stopped;
 `data/exports/phase1_snapshot.json` records both boundaries and why the
 first was superseded.
 
+### Formats other than PDF (Aug 10)
+
+The extractor was pypdf plus OCR, and dispatched on the filename
+suffix. Everything else — Word supporting statements, Outlook consultee
+responses, spreadsheets of plant schedules — yielded zero pages, and was
+recorded as containing no text.
+
+**Sniffing replaced the suffix**, because the filename lies: 255
+documents arrive as `.bin`, and a 200-file sample of those was 54 Word
+documents, 42 Outlook messages, 16 workbooks and 18 scanned TIFFs. Magic
+bytes decide; ZIP and OLE containers are opened and identified by the
+streams they hold, which is the only way to tell a `.doc` from an `.xls`
+from a `.msg`. Checked against `file(1)` across every non-PDF format in
+the corpus, the two agree on all of them.
+
+**The real population was 2,082, not the 196 first counted** — that
+figure was documents that had reached the deep-read, not the corpus.
+Loaders now cover Word (both generations), RTF, workbooks, OpenDocument,
+PowerPoint, Outlook and RFC 822 mail, HTML, CSV, plain text, standalone
+images, and the exported-email ZIP bundles. Six documents remain
+unreadable: the binary pre-2007 Excel and PowerPoint formats.
+
+**Synthetic pagination is labelled.** Only a PDF has pages, so a `.docx`
+is split into ~3,000-character sections, a workbook into worksheets, a
+deck into slides — page-scoring needs something page-shaped — and the
+cache records which kind of division it is. Anything but `"pages"` must
+not reach a reader as a page number.
+
+**Standalone images are OCR'd with orientation detection.** They are
+often photographs — a campaign banner, a site notice — and as likely to
+be sideways as upright. Read upright-only, one Oxfordshire objection
+photograph returned `AUTHSCUOAXO TVUNY GNAIAC`, which is `DEFEND RURAL
+OXFORDSHIRE` backwards.
+
 ---
 
 ## Lessons that changed how the code is written
@@ -179,3 +213,15 @@ things. Everything that can fail this way now records *why* it is empty.
 some documents was recorded as complete, and the queue only asked for
 applications holding *none* — so a partly-retrieved application could
 never come back. Short fetches are now `partial` and re-queued.
+
+**"Nobody looked" must never be stored as "nothing there".** The same
+mistake in four costumes, each found by pulling on the last: the
+deep-read logged a missing text cache as an empty one (4,836
+documents); the extractor logged an unhandled format as an empty
+document (2,082); the extractor also *cached* that empty result despite
+a comment promising it did not, which made the miss permanent (1,119);
+and a loader that failed transiently returned `[]`, which cached the
+same way. The rule now has a mechanical form: **a stage that could not
+read something writes no cache at all**, because the absence of the file
+is what makes the next run retry. `engine: "skipped"` and
+`engine: "unsupported"` are recognised as stale wherever they survive.

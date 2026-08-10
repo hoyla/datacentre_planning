@@ -10,7 +10,8 @@ findings**. Phase 1 is published and closed, stamped at the boundary
 acquisition stopped at.
 
 Reading coverage is the open question: 22,611 documents are read, but
-4,836 more were skipped by an extractor gap now fixed, and 58 sites
+4,836 more were skipped by an extractor gap now fixed, 2,082 are not
+PDFs and were unreadable until the format loaders landed, and 58 sites
 holding 8,212 documents have had nothing read at all.
 
 ---
@@ -52,13 +53,23 @@ The handover is out. These close it properly.
   the Anthropic budget is spent; the plan is OpenAI credits. Everything
   downstream already marks unread sites, so this raises figures rather
   than changing shape.
-- **Teach the extractor formats other than PDF.** 196 documents are
-  `.docx`, `.xlsx`, `.doc`, `.msg` or RTF, and the extractor is pypdf
-  plus OCR — so they yield zero pages and were logged as containing no
-  text. `openpyxl` is already a dependency; `python-docx`, `striprtf`
-  and `extract-msg` cover the rest. The `.msg` files are consultee
-  responses, where objections and technical challenges live. A further
-  25 are JPEGs that genuinely need OCR.
+- **Re-extract the 1,112 stale caches.** Done in code, not yet run: the
+  extractor now reads Word, RTF, workbooks, OpenDocument, Outlook, mail,
+  HTML and images, and the corpus runner re-reads anything cached with
+  `engine: "skipped"`. It needs a pass of `extract_text_corpus.py` to
+  take effect, and the deep-read cohort will grow by the 2,082
+  non-PDF documents it makes readable. Six remain unreadable: binary
+  pre-2007 Excel and PowerPoint.
+- **Decide whether scanned PDF pages want orientation detection too.**
+  Standalone images are now OCR'd with `--psm 1` because photographs
+  arrive sideways; PDF pages stay on `--psm 3`. Councils scan sideways
+  as well, so the same fix may apply — but ~5% of 55,678 documents have
+  already been OCR'd on the old setting, so this is a measurement first
+  (how many cached OCR pages look rotated) and a re-run second.
+- **Show synthetic pagination as what it is.** A finding from a `.docx`
+  now carries a section index, not a page number, and the cache says so
+  in `pagination`. The reader still labels every `evidence_page` as a
+  page. Small change, but it is a provenance claim.
 - **Salvage the 14 documents lost to parse failure.** Of 380
   parse-failed rows, 368 still produced findings — the failure is a
   truncated tail. The 14 that yielded nothing include two VIRTUS

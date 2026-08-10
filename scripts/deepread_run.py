@@ -490,7 +490,15 @@ def process_document(conn, row: dict, *, max_chars: int,
         log_document(conn, row, read_state="not_extracted",
                      pages_total=None, pages_sent=None)
         return "not extracted yet"
-    pages = json.loads(cache.read_text()).get("pages") or []
+    payload = json.loads(cache.read_text())
+    if payload.get("engine") in extract.STALE_ENGINES:
+        # The same fact in a third costume: a cache written by an extractor
+        # that had no loader for this format. Empty because nobody could
+        # read it, not because it holds no words.
+        log_document(conn, row, read_state="not_extracted",
+                     pages_total=None, pages_sent=None)
+        return "no loader for this format"
+    pages = payload.get("pages") or []
     if not any(p.strip() for p in pages):
         log_document(conn, row, read_state="no_text",
                      pages_total=len(pages), pages_sent=None)
