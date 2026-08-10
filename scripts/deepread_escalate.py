@@ -318,6 +318,13 @@ def do_collect(batch_id: str | None) -> None:
              if errored else ""))
 
 
+def _no_nul(v):
+    """Postgres text cannot hold NUL (0x00) and raises on it. One arrived
+    in a gpt-5 finding after 460,000 findings without one -- the model can
+    emit what the source never contained -- so every string is stripped at
+    the database boundary rather than trusting any reader not to."""
+    return v.replace("\x00", "") if isinstance(v, str) else v
+
 def _insert_with_model(conn, row: dict, findings: list[dict],
                        pages: list[str], sent: list[int]) -> tuple[int, int]:
     """verify_and_insert, but stamping the Sonnet model tag."""
@@ -358,9 +365,10 @@ def _insert_with_model(conn, row: dict, findings: list[dict],
                     evidence_page)
                 DO NOTHING""",
                 (row["application_id"], row["document_id"],
-                 str(f["signal_type"])[:80], f.get("value_text"), num,
-                 f.get("value_unit"), quote, verified_page, MODEL,
-                 PROMPT_VERSION))
+                 _no_nul(str(f["signal_type"])[:80]),
+                 _no_nul(f.get("value_text")), num,
+                 _no_nul(f.get("value_unit")), _no_nul(quote),
+                 verified_page, MODEL, PROMPT_VERSION))
             inserted += cur.rowcount
     conn.commit()
     return inserted, failed
