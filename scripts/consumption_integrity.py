@@ -154,11 +154,25 @@ ORDER BY coalesce(cap.it_load, cap.total_site, cap.grid, cap.gen) DESC NULLS LAS
 
 
 def classify(cons, grid, gen, partial_scope=False, n_units=None,
-             unit_quote=None, n_councils=1, gen_understated=False):
+             unit_quote=None, n_councils=1, gen_understated=False,
+             it=None, tot=None):
     """(status, note) for one site's consumption figure."""
     if cons is None:
         return ("no-consumption-figure",
                 "No consumption figure; other power signals only.")
+    # IT load is a component of total site demand -- total is IT plus
+    # cooling and overhead -- so an IT load above a site's own stated
+    # total is impossible, not merely surprising. West London reached
+    # 2,240 MW against its own stated 342 MW maximum, from a quote OCR
+    # had eaten ("thi propo al would contribute of 2240MW"), which the
+    # verbatim gate passed because it matches the damaged source exactly.
+    if it is not None and tot is not None and it > tot * 1.05:
+        return ("impossible-components",
+                f"IT load {it:,.1f} MW exceeds this site's own stated "
+                f"total demand of {tot:,.1f} MW. Total includes IT load "
+                f"plus cooling and overhead, so one of the two figures is "
+                f"wrong -- check both quotes before using either. A "
+                f"garbled OCR quote is the usual cause.")
     # Scope outranks corroboration. A figure the documents describe as
     # per-building or per-phase is not this site's consumption, and
     # saying it is understates the site — which for this investigation
@@ -260,13 +274,13 @@ def main() -> int:
             continue
         status, note = classify(cons, grid, gen, partial_scope,
                                 n_units, unit_quote, n_councils,
-                                gen_understated)
+                                gen_understated, it, tot)
         buckets.setdefault(status, []).append(
             (key, name, cons, it, tot, grid, gen, storage, thermal,
              n_cons, note))
 
     stamp = dt.datetime.now(dt.timezone.utc)
-    order = ["contradicted", "generation-understated",
+    order = ["impossible-components", "contradicted", "generation-understated",
              "possible-clustering-artefact",
              "scope-resolved", "scope-uncertain", "partial-generation",
              "corroborated", "uncorroborated", "no-consumption-figure"]
