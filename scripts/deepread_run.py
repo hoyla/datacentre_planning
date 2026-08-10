@@ -310,9 +310,14 @@ def load_cohort(conn, *, tier: str | None, ref: str | None,
         WHERE s.retired_at IS NULL
           AND d.content_sha256 IS NOT NULL
           AND d.bytes_path IS NOT NULL
+          -- Settled states only. `not_extracted` is deliberately absent:
+          -- those documents re-enter the cohort once the text extractor
+          -- has caught up, which is the whole point of distinguishing it
+          -- from a document that genuinely holds no words.
           AND NOT EXISTS (SELECT 1 FROM deepread_log l
                           WHERE l.document_id = d.id
-                            AND l.model = %s AND l.prompt_version = %s)
+                            AND l.model = %s AND l.prompt_version = %s
+                            AND l.read_state <> 'not_extracted')
     """
     params: list = [MODEL_TAG, PROMPT_VERSION]
     if ref:
@@ -385,7 +390,21 @@ def log_document(conn, row: dict, *, read_state: str, pages_total: int | None,
                 prompt_version, tier, read_state, pages_total, pages_sent,
                 findings_inserted, quotes_failed, elapsed_s)
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            ON CONFLICT (document_id, model, prompt_version) DO NOTHING""",
+            -- Upsert, because a document can legitimately be logged
+            -- twice: `not_extracted` on a pass before the text existed,
+            -- then read properly afterwards. DO NOTHING left the first
+            -- verdict standing and the coverage figures wrong. A
+            -- successful read is never overwritten by a later failure.
+            ON CONFLICT (document_id, model, prompt_version) DO UPDATE SET
+                read_state = EXCLUDED.read_state,
+                tier = EXCLUDED.tier,
+                pages_total = EXCLUDED.pages_total,
+                pages_sent = EXCLUDED.pages_sent,
+                findings_inserted = EXCLUDED.findings_inserted,
+                quotes_failed = EXCLUDED.quotes_failed,
+                elapsed_s = EXCLUDED.elapsed_s,
+                completed_at = now()
+            WHERE deepread_log.read_state <> 'read'""",
             (row["document_id"], row["application_id"], MODEL_TAG,
              PROMPT_VERSION, row["tier"], read_state, pages_total,
              pages_sent, inserted, failed, elapsed))
@@ -462,9 +481,15 @@ def process_document(conn, row: dict, *, max_chars: int,
     cache = extract.cache_path_for("documents", row["application_ref"],
                                    row["sha"])
     if not cache.exists():
-        log_document(conn, row, read_state="no_text",
+        # `not_extracted`, not `no_text`. The two are opposite facts and
+        # were recorded identically: one says the document contains no
+        # words, the other that nobody has looked. 4,836 documents were
+        # skipped under the second while reading as the first, and the
+        # cohort query never revisited them — a text-layered 86-page
+        # supporting statement counted as analysed-and-empty.
+        log_document(conn, row, read_state="not_extracted",
                      pages_total=None, pages_sent=None)
-        return "no cached text"
+        return "not extracted yet"
     pages = json.loads(cache.read_text()).get("pages") or []
     if not any(p.strip() for p in pages):
         log_document(conn, row, read_state="no_text",

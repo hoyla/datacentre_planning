@@ -506,9 +506,12 @@ def acquisition_status(*, pre_application: bool, docs_held: int,
 
 
 # Per-site document counts against the deep-read ledger. 'read' is the
-# only state that counts as analysed: no_text and parse_failed are
-# attempts, and treating an attempt as coverage is how an access problem
-# gets mistaken for a null finding.
+# only state that counts as analysed: no_text, not_extracted and
+# parse_failed are attempts, and treating an attempt as coverage is how
+# an access problem gets mistaken for a null finding. 'not_extracted' is
+# the sharpest case — the document was never put through the text
+# extractor, so counting it as analysed would assert that a document
+# nobody has read contains nothing.
 DEEPREAD_COVERAGE_SQL = """
 SELECT s.site_key,
        count(DISTINCT d.id) AS docs_held,
