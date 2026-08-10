@@ -42,19 +42,29 @@ What happened in steps 1–4:
   were interpolated into SQL and one contains an apostrophe. It had run
   clean before only because that rule matched zero rows. Now bound as a
   parameter.
-- **A wrong headline was caught before it shipped.** West London
-  Technology Park had jumped to 2,240 MW from a quote OCR had eaten
-  ("thi propo al would contribute of 2240MW"), while the same documents
-  state 342 MW as the development's theoretical maximum. Four sites now
-  fail a new **impossible-components** check — IT load above the site's
-  own stated total, which cannot happen since total includes IT plus
-  overhead.
+- **One figure needs reading before it ships.** West London Technology
+  Park now shows **2,240 MW**, which would be the largest site in the
+  dataset. It comes from a quote whose text layer is damaged — "thi
+  propo al would contribute of 2240MW toward thi need" — reading more
+  like the size of a national need than of one proposal, while the same
+  site's documents state **342 MW** as the development's theoretical
+  maximum. Not an OCR artefact: that document has no OCR'd pages, so the
+  damage is in the PDF's own text layer and no provenance flag catches
+  it.
 
-**Before step 7, someone must look at these four.** They are flagged, not
-corrected, because only reading both quotes says which figure is wrong.
-West London is the urgent one: at 2,240 MW it would be the largest site
-in the dataset and among the largest on earth, and it is in the reader's
-headline position.
+**Before step 7, read that quote.** It is one site, it is in the
+reader's headline position, and it is the only figure tonight that looks
+actively wrong rather than merely uncorroborated.
+
+A caution about how it was found, because the first version of this
+runbook got it wrong. The report flags four sites where IT load exceeds
+the site's own stated total, and an earlier draft called that
+*impossible*. It is not: ROADMAP already records that at multi-building
+sites the two figures routinely come from different applications and
+different scopes, and all four flagged sites are cross-application.
+**Do not "fix" the other three.** The check is now called
+`components-differ` and says so; only the magnitude of the West London
+gap makes it worth reading.
 
 Everything else from step 3, for reference: 2 contradicted sites (both
 known and genuine), 5 generation-understated, 2 clustering artefacts,

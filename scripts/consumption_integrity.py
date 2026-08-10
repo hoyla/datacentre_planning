@@ -160,44 +160,34 @@ def classify(cons, grid, gen, partial_scope=False, n_units=None,
     if cons is None:
         return ("no-consumption-figure",
                 "No consumption figure; other power signals only.")
-    # IT load is a component of total site demand -- total is IT plus
-    # cooling and overhead -- so an IT load above a site's own stated
-    # total is impossible, not merely surprising. West London reached
-    # 2,240 MW against its own stated 342 MW maximum, from a quote OCR
-    # had eaten ("thi propo al would contribute of 2240MW"), which the
-    # verbatim gate passed because it matches the damaged source exactly.
+    # IT load above a site's stated total is NOT impossible, and an
+    # earlier version of this check said it was. ROADMAP already recorded
+    # the finding: at multi-building sites the two figures routinely come
+    # from different applications, so a campus-wide IT load can exceed a
+    # single building's total-site figure without either being wrong. All
+    # four sites flagged here are cross-application, exactly as that entry
+    # describes. The physical relationship holds within one scope, not
+    # across max() aggregates.
+    #
+    # What IS worth a human is the magnitude. West London reads 2,240 MW
+    # against 342 MW elsewhere in its own documents, from a quote whose
+    # text layer is damaged ("thi propo al would contribute of 2240MW") --
+    # not OCR, the PDF itself. That figure would be the largest in the
+    # corpus. The ratio is the symptom; the reading is the evidence.
     if it is not None and tot is not None and it > tot * 1.05:
-        return ("impossible-components",
-                f"IT load {it:,.1f} MW exceeds this site's own stated "
-                f"total demand of {tot:,.1f} MW. Total includes IT load "
-                f"plus cooling and overhead, so one of the two figures is "
-                f"wrong -- check both quotes before using either. A "
-                f"garbled OCR quote is the usual cause.")
-    # Scope outranks corroboration. A figure the documents describe as
-    # per-building or per-phase is not this site's consumption, and
-    # saying it is understates the site — which for this investigation
-    # is as much a misreport as overstating it. Northumberland reads
-    # "each building will provide approximately 72MW" beside a
-    # whole-scheme figure of 1,100MW; a reader given 72 has been told
-    # something false about a very large site.
-    if partial_scope and n_units and n_units > 1:
-        # The corpus holds both halves: a per-unit figure and a count of
-        # units. Multiplying them is arithmetic the reader can check
-        # against two quotes, so the implied total is stated — as an
-        # implication, never as a disclosed figure.
-        return ("scope-resolved",
-                f"Documents give {cons:,.1f} MW per building and state "
-                f"{n_units} buildings, implying about "
-                f"{cons * n_units:,.0f} MW for the site. The {cons:,.1f} MW "
-                f"in the capacity column is per building, not the site. "
-                f"Building count from: \"{(unit_quote or '')[:110]}\"")
-    if partial_scope:
-        return ("scope-uncertain",
-                f"The quote behind this {cons:,.1f} MW figure describes a "
-                f"building, hall or phase rather than the whole site. The "
-                f"site total may be a multiple of it, and this dataset "
-                f"does not reliably know how many units are proposed. "
-                f"Treat as a floor for the site, not its capacity.")
+        ratio = it / tot
+        loud = ratio >= 3 or it >= 1000
+        return ("components-differ",
+                f"IT load {it:,.1f} MW sits above this site's stated total "
+                f"of {tot:,.1f} MW ({ratio:.1f}x). At a multi-building site "
+                f"that is usually legitimate -- the two figures come from "
+                f"different applications and describe different scopes -- "
+                f"so this is context, not an error."
+                + (f" BUT the gap here is large enough to want reading: "
+                   f"check the {it:,.1f} MW quote before using it, and be "
+                   f"alert to a damaged text layer, which is how a "
+                   f"national-scale figure once became a site capacity."
+                   if loud else ""))
     checks, notes = [], []
     if grid is not None:
         if grid < cons * GRID_SHORTFALL and (n_councils or 1) > 1:
@@ -280,7 +270,7 @@ def main() -> int:
              n_cons, note))
 
     stamp = dt.datetime.now(dt.timezone.utc)
-    order = ["impossible-components", "contradicted", "generation-understated",
+    order = ["components-differ", "contradicted", "generation-understated",
              "possible-clustering-artefact",
              "scope-resolved", "scope-uncertain", "partial-generation",
              "corroborated", "uncorroborated", "no-consumption-figure"]
