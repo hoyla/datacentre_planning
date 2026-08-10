@@ -129,6 +129,14 @@ def portal_family(url: str | None) -> str:
         return "ocella"
     if "agileapplications.co.uk" in u:
         return "agile"
+    # Northern Ireland's portal is on a planningregister.* host and is not
+    # Arcus: it is a Next.js application whose documents come from an API,
+    # not from links in the page. Matching the hostname sent the Arcus
+    # adapter at seven NI applications, which failed with 'not_arcus_url'
+    # — honest, but it cost a retry each sweep and hid a real coverage
+    # gap behind an adapter error.
+    if "planningsystemni.gov.uk" in u:
+        return "ni_planning"
     if "planningregister." in u or "/planning/display/" in u:
         return "arcus"
     # Match the product, not the hostname. "planningexplorer" in a host

@@ -92,6 +92,16 @@ gaps, in rising order of effort:
 implausibly few and consistent with power schemes near campuses being
 absent from the corpus rather than misclassified.
 
+**Northern Ireland is a coverage gap, not just a missing adapter.** PlanIt
+does not cover NI at all, so the only NI applications we hold arrived by
+other routes — seven, from Derry & Strabane and Causeway Coast & Glens.
+They sit on `planningregister.planningsystemni.gov.uk`, which is a
+Next.js application: the page carries only an id and the documents come
+from an API call made in the browser. Finding that endpoint needs a
+session with the network tab open, after which an adapter is
+straightforward. Worth doing — it is the whole of NI, not seven
+applications.
+
 ## Smaller things
 
 - **Promote `associated_id` to a typed `applications.parent_ref`
