@@ -1,12 +1,19 @@
 """OpenAI-backed deep-read batch pass — same pipeline, third model tag.
 
-STATUS: UNEXERCISED. Written when an OpenAI credit balance looked like the
-faster route to a deadline, but no API key ever materialised, so this has
-never issued a live request. The cohort/chunking/gate logic is shared with
-the Anthropic path and the JSONL shape follows OpenAI's documented batch
-format, but treat every API interaction here as untested. Validate on the
-54-document escalation cohort (which already holds Qwen and Sonnet reads,
-making a three-way quality comparison exact) before any bulk use.
+STATUS: exercised 2026-08-10. First live run was gpt-5 over the
+60-document validation cohort: 692 findings, 0.9% verbatim-gate failure
+(the best of the three readers), and 29% of requests answering nothing
+at all — see MAX_COMPLETION_TOKENS and --reasoning-effort below, which
+is the whole story of that run.
+
+Three bugs were found by auditing it before it ever spent anything, and
+they are worth knowing because each would have been expensive rather
+than loud: the validation cohort selected all 18,044 documents Sonnet
+had read rather than a sample; the bulk cohort excluded any document
+any model had merely *logged*, dropping 5,694 readable ones whose only
+row said `not_extracted`; and collect never opened the batch error
+file, so an API-level failure produced no log row, stayed in the
+cohort, and was resubmitted and recharged on every later run.
 
 Exists because the organisation holds OpenAI API credits, and the pipeline
 was deliberately built model-agnostic: the verbatim-quote gate (not the
@@ -17,14 +24,18 @@ scripts/deepread_run.py so no provider path can drift from another.
 Flow mirrors scripts/deepread_escalate.py but speaks OpenAI's Batch API
 (JSONL file upload -> batch -> poll -> download results file) and uses
 their enforced-JSON structured outputs. Quality is validated before any
-bulk spend: run --cohort escalation first — the 54 documents that already
-carry both Qwen and Sonnet reads — and compare gate-failure rates.
+bulk spend, and that is enforced rather than advised: --cohort remaining
+refuses to run until a validation batch for the same model tag has been
+collected.
 
 Usage:
+    scripts/deepread_escalate_openai.py --preflight
     scripts/deepread_escalate_openai.py --list-models
-    scripts/deepread_escalate_openai.py --submit --cohort escalation --model <id>
-    scripts/deepread_escalate_openai.py --submit --cohort remaining --model <id>
+    scripts/deepread_escalate_openai.py --dry-run --cohort remaining --model <id>
+    scripts/deepread_escalate_openai.py --submit --cohort validation --model <id> \
+        [--reasoning-effort minimal] [--max-spend-usd N --rate-in N --rate-out N]
     scripts/deepread_escalate_openai.py --collect [--batch-id ...]
+    scripts/compare_readers.py --models openai:<id> claude-sonnet-5 mlx:<id>
 """
 
 from __future__ import annotations
@@ -212,11 +223,20 @@ def _require_validation(model: str) -> None:
     print(f"  validation batch found ({collected[0]}) — bulk run allowed")
 
 
-def model_tag_for(model: str) -> str:
+def model_tag_for(model: str, reasoning_effort: str | None = None) -> str:
     """The model name findings and log rows are stamped with. Namespaced
     so an OpenAI read can never be confused with the Qwen or Sonnet read
-    of the same document — the findings unique index includes it."""
-    return f"openai:{model}"
+    of the same document — the findings unique index includes it.
+
+    Reasoning effort is part of the tag because it changes the reading,
+    not just the bill. The first gpt-5 run spent 94% of its output
+    budget on reasoning tokens and hit the ceiling on 29% of requests,
+    returning nothing for them; a run at a lower effort is a different
+    reader and has to be comparable against the first rather than
+    silently mixed into it.
+    """
+    return f"openai:{model}" + (f":{reasoning_effort}" if reasoning_effort
+                                else "")
 
 
 def load_cohort(conn, which: str, sample: int = 0,
@@ -303,8 +323,8 @@ def load_cohort(conn, which: str, sample: int = 0,
     return kept
 
 
-def build_jsonl(rows: list[dict], model: str,
-                max_chars: int) -> tuple[list[str], dict]:
+def build_jsonl(rows: list[dict], model: str, max_chars: int,
+                reasoning_effort: str | None = None) -> tuple[list[str], dict]:
     lines, meta = [], {}
     for row in rows:
         cache = extract.cache_path_for("documents", row["application_ref"],
@@ -327,12 +347,21 @@ def build_jsonl(rows: list[dict], model: str,
             "n_chunks": len(chunks),
         }
         for i, (_nums, text) in enumerate(chunks):
+            body = {"model": model}
+            if reasoning_effort:
+                # This is copying, not deliberating: the model has to
+                # find facts already written on the page and quote them
+                # character for character. Left at its default, gpt-5
+                # burned 4,965 reasoning tokens per request to do that
+                # and ran out of budget before answering 29% of the
+                # time.
+                body["reasoning_effort"] = reasoning_effort
             lines.append(json.dumps({
                 "custom_id": f"{row['document_id']}-{i}",
                 "method": "POST",
                 "url": "/v1/chat/completions",
                 "body": {
-                    "model": model,
+                    **body,
                     # 16,000 was a ceiling nobody costed. A findings
                     # payload for one chunk is hundreds of tokens, not
                     # thousands, and the ceiling is what a worst-case
@@ -350,8 +379,9 @@ def build_jsonl(rows: list[dict], model: str,
 
 def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
               sample: int = 0, rate_in: float = 0.0,
-              rate_out: float = 0.0, max_spend: float = 0.0) -> None:
-    tag = model_tag_for(model)
+              rate_out: float = 0.0, max_spend: float = 0.0,
+              reasoning_effort: str | None = None) -> None:
+    tag = model_tag_for(model, reasoning_effort)
 
     # The validation interlock runs FIRST, before a single cache file is
     # opened. It used to sit after the JSONL build, which meant refusing
@@ -374,7 +404,8 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
               f"a {SAMPLE_THRESHOLD}-document sample")
         rows = rows[:SAMPLE_THRESHOLD]
 
-    lines, meta = build_jsonl(rows, model, max_chars)
+    lines, meta = build_jsonl(rows, model, max_chars,
+                              reasoning_effort=reasoning_effort)
     size_mb = sum(len(l) for l in lines) / 1e6 * scale_factor
 
     # A spend estimate before the spend. ~4 characters per token is the
@@ -393,7 +424,7 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
     # run on what a request actually consumed. Otherwise all that can
     # honestly be quoted is the ceiling, which is why the first run is a
     # validation run.
-    measured = _measured_usage(model)
+    measured = _measured_usage(tag)
     out_expected = None
     if measured:
         out_expected = n_reqs * measured["out_per_request"]
@@ -484,6 +515,7 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
                                       endpoint="/v1/chat/completions",
                                       completion_window="24h")
         state = {"batch_id": batch.id, "model": model,
+                 "reasoning_effort": reasoning_effort,
                  "prompt_version": PROMPT_VERSION, "cohort": cohort,
                  "slice": n, "n_slices": len(slices),
                  "submitted_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -567,7 +599,8 @@ def do_collect(batch_id: str | None) -> None:
                 continue
             by_doc.setdefault(doc_id, []).extend(findings)
 
-        model_tag = model_tag_for(state["model"])
+        model_tag = model_tag_for(state["model"],
+                                  state.get("reasoning_effort"))
         inserted = failed = docs = 0
         with db.connect() as conn:
             for doc_id, info in state["documents"].items():
@@ -617,8 +650,8 @@ def do_collect(batch_id: str | None) -> None:
                     store = json.loads(USAGE_PATH.read_text())
                 except Exception:
                     store = {}
-            prev = store.get(state["model"], {"requests": 0, "in": 0, "out": 0})
-            store[state["model"]] = {
+            prev = store.get(model_tag, {"requests": 0, "in": 0, "out": 0})
+            store[model_tag] = {
                 "requests": prev["requests"] + usage["requests"],
                 "in": prev["in"] + usage["in"],
                 "out": prev["out"] + usage["out"],
@@ -705,6 +738,14 @@ def main() -> None:
                     help="Show which account, org and project the key "
                          "resolves to, and which models it can see. "
                          "Spends nothing.")
+    ap.add_argument("--reasoning-effort", default=None,
+                    choices=["minimal", "low", "medium", "high"],
+                    help="Reasoning models bill reasoning as output and "
+                         "spend it from max_completion_tokens. Extraction "
+                         "does not need deliberation; gpt-5 at its default "
+                         "spent 94%% of its budget thinking and answered "
+                         "nothing on 29%% of requests. Becomes part of the "
+                         "model tag.")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -721,7 +762,8 @@ def main() -> None:
         do_submit(args.cohort, args.model or "<unset>", args.max_chars,
                   dry_run=not args.submit, sample=args.sample,
                   rate_in=args.rate_in, rate_out=args.rate_out,
-                  max_spend=args.max_spend_usd)
+                  max_spend=args.max_spend_usd,
+                  reasoning_effort=args.reasoning_effort)
     elif args.collect:
         do_collect(args.batch_id)
     else:
