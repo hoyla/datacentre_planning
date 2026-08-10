@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -119,15 +120,25 @@ def preflight() -> None:
                  f"{str(exc)[:300]}")
     print(f"authenticated: {len(models)} models visible")
 
-    # The org/project the key actually resolves to, straight from the
-    # response headers rather than from what anyone believes.
+    # The org/project the key resolves to, if the API will say. It
+    # generally will not for a project-scoped key — no openai-organization
+    # header comes back — so this reports the absence rather than
+    # printing nothing, which would read as "checked, and fine".
+    named = False
     try:
         raw = client.models.with_raw_response.list()
         for h in ("openai-organization", "openai-project"):
             if raw.headers.get(h):
                 print(f"{h}: {raw.headers[h]}")
-    except Exception:
-        pass
+                named = True
+    except Exception as exc:
+        print(f"could not read response headers: {type(exc).__name__}")
+    if not named:
+        print("the API does not name the organisation or project for this "
+              "key, so WHICH account this bills cannot be confirmed from "
+              "here — check the dashboard, and confirm at the far side by "
+              "watching the validation spend appear in the project you "
+              "expect")
 
     interesting = [m.id for m in models
                    if any(t in m.id for t in ("gpt-5", "gpt-4.1", "o3", "o4"))]
