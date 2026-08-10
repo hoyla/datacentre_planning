@@ -71,7 +71,16 @@ app_findings AS (
   -- spreadsheet cell nobody can read or filter. The family is the
   -- 25-value canonical index over them (dcp/signal_families.py); the
   -- original label is still on every findings row for anyone drilling in.
-  SELECT application_id, count(*) AS n,
+  --
+  -- count(DISTINCT passage), not count(*). Several models read the same
+  -- documents, so one sentence found by three readers was three rows and
+  -- the column read as three findings. Measured 2026-08-10: 1,019,106
+  -- rows over 878,651 distinct passages -- 14% inflation, smaller than
+  -- feared, but a count should mean one thing and "three readers agreed"
+  -- is corroboration rather than volume.
+  SELECT application_id,
+         count(DISTINCT (document_id, md5(evidence_text), evidence_page))
+                                                               AS n,
          array_agg(DISTINCT signal_family) FILTER (
              WHERE signal_family IS NOT NULL
                AND signal_family <> 'unclassified')            AS signal_families
@@ -207,7 +216,11 @@ WITH latest AS (
 app_docs AS (
   SELECT application_id, count(*) AS n FROM documents GROUP BY application_id),
 app_findings AS (
-  SELECT application_id, count(*) AS n FROM findings GROUP BY application_id)
+  -- Distinct passages, matching the Sites query above: one sentence found
+  -- by three readers is one finding corroborated three times, not three.
+  SELECT application_id,
+         count(DISTINCT (document_id, md5(evidence_text), evidence_page)) AS n
+  FROM findings GROUP BY application_id)
 SELECT s.site_key, a.application_ref, m.joined_via,
        split_part(a.application_ref,'/',1) AS council,
        a.status, a.date_received, a.date_decided,
@@ -528,7 +541,14 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "anything; see Capacity status."),
     ("Sites", "Verified findings",
      "Deep-read findings whose evidence quotes passed verbatim "
-     "verification against the source text before storage."),
+     "verification against the source text before storage. Counted as "
+     "distinct passages, not rows: several models read these documents, "
+     "and one sentence found independently by three readers is one "
+     "finding corroborated three times rather than three findings. "
+     "Across the corpus that distinction removes about 14% of the raw "
+     "row count. A high number here means a document-rich site, not "
+     "necessarily an information-rich one — a long environmental "
+     "statement yields hundreds of findings about drainage."),
     ("Sites", "Documents obtained by hand",
      "Documents ingested manually rather than fetched from a portal; they "
      "carry no public link."),
