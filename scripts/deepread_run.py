@@ -724,6 +724,18 @@ def process_document(conn, row: dict, *, max_chars: int,
         return "empty text layer"
 
     selected = sel.select_pages(pages, tier=row["tier"])
+    capped = sel.selection_was_capped(pages, selected)
+    if capped:
+        # Recorded, not silent. A document whose selection hit the
+        # ceiling has been partly read, and coverage must be able to say
+        # so — the same honesty the split already applies to drawings and
+        # sampled objection letters.
+        escalate(reason="selection_capped",
+                 application_ref=row["application_ref"], sha=row["sha"],
+                 document_id=row["document_id"], pages_total=len(pages),
+                 pages_selected=len(selected),
+                 chars_available=sum(len(p) for p in pages),
+                 cap=sel.MAX_SELECTED_CHARS)
     chunks = chunk_pages(pages, selected, max_chars)
     sent = [n for nums, _t in chunks for n in nums]
 
@@ -756,6 +768,13 @@ def process_document(conn, row: dict, *, max_chars: int,
 
     inserted = commit_or_spool(
         conn, row, values=verified,
+        # Deliberately still "read". Capping is page selection, not a
+        # different outcome, and `pages_sent` beside `pages_total`
+        # already records exactly what was and was not looked at — the
+        # same way ordinary page filtering is recorded. Inventing a state
+        # here would change what `read_state = 'read'` counts in
+        # site_profile.load_coverage_detail and move published coverage
+        # figures as a side effect of a performance fix.
         read_state="parse_failed" if parse_failed else "read",
         pages_total=len(pages), pages_sent=sent,
         failed=failed, elapsed=elapsed)
@@ -907,8 +926,12 @@ def main() -> None:
                      application_ref=row["application_ref"],
                      sha=row["sha"], document_id=row["document_id"],
                      error=status)
+        # The sha matters: one application here has two documents both
+        # called SUPPORTING INFORMATION, and with only ref and kind
+        # printed they are the same line. An hour went into diagnosing a
+        # "regression" that was simply the other document.
         print(f"  [{i}/{len(rows)}] {row['application_ref']} "
-              f"{(row['kind'] or '')[:40]:40} {status}")
+              f"{row['sha'][:8]} {(row['kind'] or '')[:40]:40} {status}")
         if i % 25 == 0:
             rate = i / ((time.time() - t0) / 3600)
             print(f"  --- {rate:.0f} docs/hour; "

@@ -166,9 +166,35 @@ TIER_SETTINGS: dict[str, dict] = {
 }
 
 
+# A ceiling on how much text one document may send, in characters.
+#
+# The scorer has no notion of how big a page is, and some pages are very
+# big: a 32-sheet xlsx emissions tracker (Hillingdon/18399/APP/2025/1412)
+# scored every sheet as a hit — each mentions NOx, emissions and load —
+# and produced 2,075,466 characters, which the runner turned into 204
+# sequential model calls and about half an hour on one document. 542
+# cached extractions exceed 400,000 characters and between them hold 448
+# million, so this is a class, not a case.
+#
+# Collapsing near-identical pages was tried first and rejected. Line-level
+# similarity does find the 24 duplicate year-sheets, but on a soil
+# analytical report it also finds 118 of 208 pages "duplicate": same
+# laboratory letterhead, same determinand rows, differing only in sample
+# ids and measured values. Those numbers are the evidence. A rule that
+# cannot tell "same layout, no data" from "same layout, different data"
+# has no business deleting pages.
+#
+# So: cap, keep the highest-scoring pages within it, and record the rest
+# as not sent. 120,000 characters is roughly ten chunks at the runner's
+# default — enough for any real document, and it leaves the pathological
+# ones visible rather than expensive.
+MAX_SELECTED_CHARS = 120_000
+
+
 def select_pages(pages: list[str], *, tier: str, context: int | None = None,
                  min_score: int | None = None, always_read_first: int = 2,
-                 max_pages: int | None = None) -> list[int]:
+                 max_pages: int | None = None,
+                 max_chars: int | None = MAX_SELECTED_CHARS) -> list[int]:
     """Indices of pages worth sending.
 
     Short documents are sent whole — filtering a four-page letter saves
@@ -177,6 +203,11 @@ def select_pages(pages: list[str], *, tier: str, context: int | None = None,
     so a figure separated from its heading is not orphaned. The opening
     pages are always read: they carry the description of development,
     the applicant, and the document's own summary.
+
+    `max_chars` bounds the total text returned. When it binds, pages are
+    dropped lowest-score-first — never truncated mid-page, because half a
+    page produces quotes that fail the verbatim gate against the whole
+    one. The opening pages survive regardless. Pass None to disable.
     """
     settings = TIER_SETTINGS.get(tier, TIER_SETTINGS["B"])
     if context is None:
@@ -196,7 +227,39 @@ def select_pages(pages: list[str], *, tier: str, context: int | None = None,
     for i in hits:
         for j in range(max(0, i - context), min(n, i + context + 1)):
             keep.add(j)
+
+    if max_chars is not None and sum(len(pages[i]) for i in keep) > max_chars:
+        # Opening pages are not negotiable — they carry the description
+        # of development and the applicant, and a document reduced to
+        # nothing is worse than one reduced to its summary.
+        floor = set(range(min(always_read_first, n)))
+        budget = max_chars - sum(len(pages[i]) for i in floor)
+        by_score = sorted((i for i in keep if i not in floor),
+                          key=lambda i: (-score_page(pages[i]), i))
+        kept = set(floor)
+        for i in by_score:
+            if len(pages[i]) <= budget:
+                kept.add(i)
+                budget -= len(pages[i])
+        return sorted(kept)
+
     return sorted(keep)
+
+
+def selection_was_capped(pages: list[str], selected: list[int],
+                         max_chars: int | None = MAX_SELECTED_CHARS) -> bool:
+    """Whether `max_chars` bound, so the caller can say so out loud.
+
+    Coverage is stated over what was actually read, so a document that
+    hit the ceiling has to be recorded differently from one read whole —
+    the same reason drawings and sampled objection letters are counted
+    separately rather than quietly.
+    """
+    if max_chars is None:
+        return False
+    full = select_pages(pages, tier="A", max_chars=None)
+    return (sum(len(pages[i]) for i in full) > max_chars
+            and len(selected) < len(full))
 
 
 def plan_documents(docs: list[dict], *, sample_rate: int = 5) -> list[DocumentPlan]:
