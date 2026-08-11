@@ -36,6 +36,8 @@ Usage:
         --model <id>        # the coverage gap only; see --unread-only
     scripts/deepread_escalate_openai.py --submit --cohort validation --model <id> \
         [--reasoning-effort minimal] [--max-spend-usd N --rate-in N --rate-out N]
+    scripts/deepread_escalate_openai.py --dry-run --cohort parse_failed \
+        --model <id>        # documents whose JSON came back truncated
     scripts/deepread_escalate_openai.py --collect [--batch-id ...]
     scripts/compare_readers.py --models openai:<id> claude-sonnet-5 mlx:<id>
 """
@@ -262,7 +264,41 @@ def load_cohort(conn, which: str, sample: int = 0,
     plainly there in a normal supporting statement, which is the
     question a bulk run turns on.
     """
-    if which == "power":
+    if which == "parse_failed":
+        # `parse_failed` is an absence of PROCESSING, not a reading — the
+        # same distinction `not_extracted` needed, in a different
+        # costume, and it went the same way: the cohort excludes any
+        # document this model has logged as anything other than
+        # not_extracted, so a document whose JSON came back truncated was
+        # never offered again.
+        #
+        # Narrow on purpose. Of 456 documents that parse-failed, 442
+        # still produced findings — the failure is a truncated tail, the
+        # findings that arrived are sound, and re-reading them would
+        # spend money to re-derive what is already stored. This selects
+        # only the ones that yielded nothing AND were never successfully
+        # read by any model: documents where the failure cost us the
+        # whole document rather than its last few pages.
+        q = """
+            SELECT DISTINCT d.id, a.id, a.application_ref, d.content_sha256,
+                            d.kind, NULL
+            FROM sites s
+            JOIN site_members sm ON sm.site_id = s.id
+            JOIN applications a  ON a.id = sm.application_id
+            JOIN documents d     ON d.application_id = a.id
+            WHERE s.retired_at IS NULL
+              AND d.content_sha256 IS NOT NULL AND d.bytes_path IS NOT NULL
+              AND EXISTS (SELECT 1 FROM deepread_log l
+                          WHERE l.document_id = d.id
+                            AND l.read_state = 'parse_failed')
+              AND NOT EXISTS (SELECT 1 FROM deepread_log l
+                              WHERE l.document_id = d.id
+                                AND l.read_state = 'read')
+              AND NOT EXISTS (SELECT 1 FROM findings f
+                              WHERE f.document_id = d.id)
+            ORDER BY a.application_ref, d.id"""
+        params = []
+    elif which == "power":
         # A validation cohort weighted to the documents the investigation
         # actually turns on.
         #
@@ -529,7 +565,7 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
     # a 26,000-document bulk run took ten minutes of reading documents
     # it was about to decline to submit. A refusal should be instant, or
     # people learn to skip the step that produces it.
-    if cohort == "remaining" and not dry_run:
+    if cohort in ("remaining", "parse_failed") and not dry_run:
         _require_validation(model)
 
     with db.connect() as conn:
@@ -889,7 +925,9 @@ def main() -> None:
     ap.add_argument("--list-models", action="store_true")
     ap.add_argument("--submit", action="store_true")
     ap.add_argument("--collect", action="store_true")
-    ap.add_argument("--cohort", choices=["validation", "power", "remaining"],
+    ap.add_argument("--cohort",
+                    choices=["validation", "power", "remaining",
+                             "parse_failed"],
                     default="validation",
                     help="'validation' samples documents already read by "
                          "both other models, for a three-way comparison; "
