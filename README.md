@@ -90,9 +90,14 @@ raise.
 - Append-only throughout: `source_snapshots` preserves every fetch,
   interpretations add rows rather than overwriting, and content hashes
   make re-runs no-ops.
-- Ollama locally for cataloguing; Claude for deep-read, behind a
-  verbatim-quote gate. A second model re-reads a subset, and
-  disagreements are kept rather than resolved.
+- Claude Sonnet 5 catalogues the universe. The deep read is split across
+  three model families, all behind the same verbatim-quote gate, and
+  every finding records which one produced it: GPT-5 on OpenAI batch
+  (54%), Sonnet (34%), and Qwen 3.6 under MLX locally (12%).
+- Reading the tier-A corpus twice, so that disagreements between models
+  can be kept rather than resolved, is built but **not yet done** — it
+  stopped at the 2.1 boundary and the corpus-wide comparison is the next
+  release's deliverable.
 - Document corpus on the local filesystem, mirrored to Google Drive by
   site and application.
 - The published reader is one self-contained HTML file — no CDN, no
