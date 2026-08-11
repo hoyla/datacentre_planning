@@ -383,7 +383,15 @@ def escalate(**payload) -> None:
 
 def log_document(conn, row: dict, *, read_state: str, pages_total: int | None,
                  pages_sent: list[int] | None, inserted: int = 0,
-                 failed: int = 0, elapsed: float | None = None) -> None:
+                 failed: int = 0, elapsed: float | None = None,
+                 model: str | None = None) -> None:
+    """Record what became of one document, under `model` (default local).
+
+    The batch readers pass their own tag. The upsert below is the only
+    correct way to write this table — a second copy of it in another
+    runner is how `not_extracted` came to outlive the extraction that
+    fixed it — so callers reach for this rather than their own INSERT.
+    """
     with conn.cursor() as cur:
         cur.execute("""
             INSERT INTO deepread_log (document_id, application_id, model,
@@ -405,7 +413,7 @@ def log_document(conn, row: dict, *, read_state: str, pages_total: int | None,
                 elapsed_s = EXCLUDED.elapsed_s,
                 completed_at = now()
             WHERE deepread_log.read_state <> 'read'""",
-            (row["document_id"], row["application_id"], MODEL_TAG,
+            (row["document_id"], row["application_id"], model or MODEL_TAG,
              PROMPT_VERSION, row["tier"], read_state, pages_total,
              pages_sent, inserted, failed, elapsed))
     # The one commit per document. Findings inserted by verify_and_insert

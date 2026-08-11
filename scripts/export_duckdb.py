@@ -103,7 +103,12 @@ TABLES: dict[str, str] = {
           FROM power_adjudication
           ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC)
         SELECT a.application_ref, f.signal_type, f.value_text, f.value_number,
-               f.value_unit, f.evidence_text, f.evidence_page, f.model,
+               f.value_unit, f.evidence_text, f.evidence_page,
+               -- Whose division evidence_page indexes. Only a PDF has
+               -- pages; a Word file's index is a section, a workbook's a
+               -- sheet. Kept beside the number rather than folded into
+               -- it so the number stays sortable.
+               d.pagination AS evidence_page_is_a, f.model,
                d.content_sha256 AS document_sha256, d.url AS document_url,
                adj.verdict        AS whose_figure,
                adj.quantity_type  AS quantity_type,
@@ -122,9 +127,11 @@ TABLES: dict[str, str] = {
                pa.value_mw, pa.value_original, pa.unit_original,
                pa.unit_note, pa.is_maximum, pa.reasoning,
                f.signal_type, f.evidence_text, f.evidence_page,
+               d.pagination AS evidence_page_is_a,
                pa.model, pa.prompt_version, pa.inserted_at
         FROM power_adjudication pa
         JOIN findings f ON f.id = pa.finding_id
+        LEFT JOIN documents d ON d.id = f.document_id
         JOIN applications a ON a.id = pa.application_id""",
     "barbour_projects": """
         SELECT p.external_ref AS ptno, p.title, p.stage_summary, p.dev_type,

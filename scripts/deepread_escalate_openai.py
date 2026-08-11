@@ -32,6 +32,8 @@ Usage:
     scripts/deepread_escalate_openai.py --preflight
     scripts/deepread_escalate_openai.py --list-models
     scripts/deepread_escalate_openai.py --dry-run --cohort remaining --model <id>
+    scripts/deepread_escalate_openai.py --dry-run --cohort remaining --unread-only \
+        --model <id>        # the coverage gap only; see --unread-only
     scripts/deepread_escalate_openai.py --submit --cohort validation --model <id> \
         [--reasoning-effort minimal] [--max-spend-usd N --rate-in N --rate-out N]
     scripts/deepread_escalate_openai.py --collect [--batch-id ...]
@@ -242,7 +244,8 @@ def model_tag_for(model: str, reasoning_effort: str | None = None) -> str:
 def load_cohort(conn, which: str, sample: int = 0,
                 model_tag: str | None = None,
                 tiers: tuple[str, ...] = (),
-                limit: int = 0) -> list[dict]:
+                limit: int = 0,
+                unread_only: bool = False) -> list[dict]:
     """'validation' = a small sample of documents already read by BOTH
     other models, for a three-way comparison; 'remaining' = documents
     this model has not read.
@@ -331,13 +334,32 @@ def load_cohort(conn, which: str, sample: int = 0,
                               WHERE l.document_id = d.id
                                 AND l.prompt_version = %s
                                 AND l.model = %s
-                                AND l.read_state <> 'not_extracted')
-            ORDER BY a.application_ref, d.id"""
+                                AND l.read_state <> 'not_extracted')"""
         if not model_tag:
             raise ValueError("the 'remaining' cohort must be scoped to a "
                              "model tag, or it cannot tell what this model "
                              "has already read")
         params = [PROMPT_VERSION, model_tag]
+        if unread_only:
+            # Close the coverage gap rather than corroborate: keep only
+            # documents NO model has read. Without this the cohort is
+            # everything *this* model has not read, which on a corpus two
+            # other readers have already been over is mostly second
+            # opinions — worth having, and a different release.
+            #
+            # Deliberately NOT scoped to prompt_version, unlike the clause
+            # above. This one has to mean what the reader's coverage
+            # figure means, and export_reader.py counts a document read if
+            # any deepread_log row says 'read', whatever prompt read it. A
+            # cohort that disagreed with the front page about which
+            # documents are unread would close a gap the page still
+            # reported, or bill for documents it already counted.
+            q += """
+              AND NOT EXISTS (SELECT 1 FROM deepread_log l2
+                              WHERE l2.document_id = d.id
+                                AND l2.read_state = 'read')"""
+        q += """
+            ORDER BY a.application_ref, d.id"""
     with conn.cursor() as cur:
         cur.execute(q, params)
         rows = [{"document_id": r[0], "application_id": r[1],
@@ -349,10 +371,17 @@ def load_cohort(conn, which: str, sample: int = 0,
         # like-for-like against what the other two models saw.
         return rows[:sample] if sample else rows
 
-    plans = sel.plan_documents(rows)
+    # Planned over the whole universe, not over these rows. Sampling is
+    # "every Nth tier-C document within its application", so planning a
+    # filtered set samples a different fifth — a cohort scoped to one
+    # model's backlog would pull in repetitive documents the global
+    # policy had set aside, and the reader would still call them unread.
+    # See sel.universe_plan.
+    plan_by_id = sel.universe_plan(conn)
     kept = []
-    for row, plan in zip(rows, plans):
-        if plan.tier == "skip" or plan.sampled_out:
+    for row in rows:
+        plan = plan_by_id.get(row["document_id"])
+        if plan is None or not plan.will_read:
             continue
         if tiers and plan.tier not in tiers:
             continue
@@ -367,19 +396,85 @@ def load_cohort(conn, which: str, sample: int = 0,
     return kept[:limit] if limit else kept
 
 
+def do_record_no_text(model: str, reasoning_effort: str | None = None) -> int:
+    """Give the unreadable documents a verdict instead of a silence.
+
+    231 documents sit in the cohort holding a cache with no words in it:
+    photographs of site notices, plans filed as JPEGs, a 4.7MB Exif photo
+    filed as Supporting Information. Both tesseract and Apple Vision read
+    them as blank (measured 2026-08-11, 0 of 10 on a like-for-like
+    sample), so no OCR pass is going to change the answer.
+
+    Left alone they are indistinguishable from a backlog — held,
+    classified as prose, never read, for ever. `no_text` is the verdict
+    the schema already has for exactly this, and deepread_run has written
+    it for years down the non-batch path. This writes it down the batch
+    path too.
+
+    Deliberately its own action rather than a side effect of --submit or
+    --dry-run: it writes, and a dry run that quietly wrote rows would be
+    a worse trap than the one it fixes. Idempotent — the upsert never
+    overwrites a successful read, so a document that later becomes
+    readable and is read keeps the read.
+    """
+    tag = model_tag_for(model, reasoning_effort)
+    written = kept = 0
+    with db.connect() as conn:
+        rows = load_cohort(conn, "remaining", model_tag=tag, unread_only=True)
+        for row in rows:
+            cache = extract.cache_path_for("documents", row["application_ref"],
+                                           row["sha"])
+            if not cache.exists():
+                continue
+            try:
+                pages = json.loads(cache.read_text()).get("pages") or []
+            except Exception:
+                continue
+            if any(p.strip() for p in pages):
+                kept += 1
+                continue
+            _dr.log_document(conn, row, read_state="no_text",
+                             pages_total=len(pages), pages_sent=None,
+                             model=tag)
+            written += 1
+    print(f"{written:,} documents recorded as no_text under {tag}; "
+          f"{kept:,} of the cohort have text and were left alone")
+    return written
+
+
 def build_jsonl(rows: list[dict], model: str, max_chars: int,
-                reasoning_effort: str | None = None) -> tuple[list[str], dict]:
+                reasoning_effort: str | None = None,
+                dropped: dict[str, int] | None = None
+                ) -> tuple[list[str], dict]:
+    """Requests for a cohort, plus a tally of what never became one.
+
+    `dropped` counts documents the cohort selected and this could not
+    build, by reason. It used to `continue` past all three cases in
+    silence, which is how a 245-document cohort produced a 3-document
+    batch and said nothing: 231 of them held a cache whose every page
+    was blank. The count and the cohort then disagree about coverage,
+    and only the smaller number is visible — an absence recorded as
+    nothing at all, which is the failure mode this project is most
+    careful about everywhere else.
+    """
     lines, meta = [], {}
+    drop = dropped if dropped is not None else {}
     for row in rows:
         cache = extract.cache_path_for("documents", row["application_ref"],
                                        row["sha"])
         if not cache.exists():
+            drop["cache missing"] = drop.get("cache missing", 0) + 1
             continue
         try:
             pages = json.loads(cache.read_text()).get("pages") or []
         except Exception:
+            drop["cache unreadable"] = drop.get("cache unreadable", 0) + 1
             continue
         if not any(p.strip() for p in pages):
+            # Extraction ran and produced no words. Overwhelmingly
+            # single-page graphical documents whose kind did not name
+            # them as drawings; some are scans OCR read as blank.
+            drop["no extractable text"] = drop.get("no extractable text", 0) + 1
             continue
         selected = sel.select_pages(pages, tier=row["tier"] or "B")
         chunks = _dr.chunk_pages(pages, selected, max_chars)
@@ -425,7 +520,8 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
               sample: int = 0, rate_in: float = 0.0,
               rate_out: float = 0.0, max_spend: float = 0.0,
               reasoning_effort: str | None = None,
-              tiers: tuple[str, ...] = (), limit: int = 0) -> None:
+              tiers: tuple[str, ...] = (), limit: int = 0,
+              unread_only: bool = False) -> None:
     tag = model_tag_for(model, reasoning_effort)
 
     # The validation interlock runs FIRST, before a single cache file is
@@ -438,7 +534,7 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
 
     with db.connect() as conn:
         rows = load_cohort(conn, cohort, sample=sample, model_tag=tag,
-                           tiers=tiers, limit=limit)
+                           tiers=tiers, limit=limit, unread_only=unread_only)
 
     # A dry run over the whole corpus does not need to build the whole
     # corpus: read a sample and scale. Exact for anything small, and for
@@ -462,8 +558,10 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
         step = max(1, len(rows) // SAMPLE_THRESHOLD)
         rows = rows[::step][:SAMPLE_THRESHOLD]
 
+    dropped: dict[str, int] = {}
     lines, meta = build_jsonl(rows, model, max_chars,
-                              reasoning_effort=reasoning_effort)
+                              reasoning_effort=reasoning_effort,
+                              dropped=dropped)
     size_mb = sum(len(l) for l in lines) / 1e6 * scale_factor
 
     # A spend estimate before the spend. ~4 characters per token is the
@@ -478,6 +576,16 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
     approx = "≈" if scale_factor > 1 else ""
     print(f"cohort '{cohort}': {approx}{n_docs:,} documents, "
           f"{approx}{n_reqs:,} requests, {approx}{size_mb:.0f}MB of JSONL")
+    if dropped:
+        # Said out loud, because the difference between the cohort and
+        # the batch is a coverage claim. These documents are selected,
+        # unread, and will stay unread -- which is worth knowing, and is
+        # not the same as their not existing.
+        total = sum(dropped.values())
+        detail = ", ".join(f"{v:,} {k}" for k, v in
+                           sorted(dropped.items(), key=lambda kv: -kv[1]))
+        print(f"  {total:,} of {len(rows):,} selected documents cannot be "
+              f"built into a request: {detail}")
     # If a validation batch has been collected for this model, cost the
     # run on what a request actually consumed. Otherwise all that can
     # honestly be quoted is the ceiling, which is why the first run is a
@@ -827,6 +935,15 @@ def main() -> None:
                          "spent 94%% of its budget thinking and answered "
                          "nothing on 29%% of requests. Becomes part of the "
                          "model tag.")
+    ap.add_argument("--record-no-text", action="store_true",
+                    help="Write a no_text verdict for cohort documents whose "
+                         "cache holds no words, so they stop reading as an "
+                         "unanalysed backlog. Writes; idempotent.")
+    ap.add_argument("--unread-only", action="store_true",
+                    help="Restrict the 'remaining' cohort to documents no "
+                         "model has read, closing the coverage gap rather "
+                         "than adding a second opinion. Matches the "
+                         "reader's own definition of unread.")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -837,6 +954,16 @@ def main() -> None:
         for m in sorted(_client().models.list(), key=lambda m: m.id):
             print(m.id)
         return
+    if args.record_no_text:
+        # Explicit, because the row names the run that met the document.
+        # A verdict filed under 'openai:<unset>' would be a permanent
+        # record of nobody in particular having found nothing.
+        if not args.model:
+            ap.error("--record-no-text requires --model: the verdict is "
+                     "logged under the tag of the run whose cohort "
+                     "selected the document")
+        do_record_no_text(args.model, args.reasoning_effort)
+        return
     if args.submit or args.dry_run:
         if args.submit and not args.model:
             ap.error("--submit requires --model (see --list-models)")
@@ -845,7 +972,8 @@ def main() -> None:
                   rate_in=args.rate_in, rate_out=args.rate_out,
                   max_spend=args.max_spend_usd,
                   reasoning_effort=args.reasoning_effort,
-                  tiers=tuple(args.tier or ()), limit=args.limit)
+                  tiers=tuple(args.tier or ()), limit=args.limit,
+                  unread_only=args.unread_only)
     elif args.collect:
         do_collect(args.batch_id)
     else:

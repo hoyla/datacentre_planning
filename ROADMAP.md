@@ -79,10 +79,6 @@ The handover is out. These close it properly.
   as well, so the same fix may apply — but ~5% of 55,678 documents have
   already been OCR'd on the old setting, so this is a measurement first
   (how many cached OCR pages look rotated) and a re-run second.
-- **Show synthetic pagination as what it is.** A finding from a `.docx`
-  now carries a section index, not a page number, and the cache says so
-  in `pagination`. The reader still labels every `evidence_page` as a
-  page. Small change, but it is a provenance claim.
 - **Salvage the 14 documents lost to parse failure.** Of 380
   parse-failed rows, 368 still produced findings — the failure is a
   truncated tail. The 14 that yielded nothing include two VIRTUS
@@ -250,9 +246,6 @@ in place. None is abandoned; each is a known, scoped piece of work.
   the keyboard, and not worth holding the release for.
 - **Salvage the 14 parse-failure documents**, two VIRTUS supporting
   statements among them. `deepread_escalate.py` is the path.
-- **Synthetic pagination labelling.** A `.docx` finding carries a
-  section index the reader still calls a page. A provenance nicety, not
-  a blocker.
 - **Scanned-page orientation detection.** Measurement first, re-run
   second; ~5% of the corpus was OCR'd on the old setting.
 - **Coverage gaps** — Northern Ireland (whole nation, one adapter),

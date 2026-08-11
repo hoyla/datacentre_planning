@@ -754,6 +754,36 @@ def extract_zip(bytes_path: Path) -> list[str]:
 # loader is for, and is left alone rather than read at unbounded cost.
 MAX_ZIP_MEMBERS = 50
 
+# Singular forms, for citing one of them. The plural is what the cache
+# and documents.pagination store; this is what a reader is shown.
+_PAGINATION_NOUN = {
+    "pages": "page",
+    "sections": "section",
+    "sheets": "sheet",
+    "slides": "slide",
+}
+
+
+def cite_page(page, pagination: str | None) -> str:
+    """Name one `evidence_page` the way the source document divides itself.
+
+    'page 4' for a PDF, 'section 4' for a Word file, 'sheet 2' for a
+    workbook, 'slide 5' for a deck. This is the string a reporter uses to
+    find a sentence before quoting it, so being wrong about it costs more
+    than being vague: told "page 3" of a spreadsheet they open the file,
+    find no page 3, and end up doubting the quote rather than the label.
+    17,724 findings cite an index that is not a page.
+
+    An unrecorded pagination yields a bare number rather than a guess.
+    Most such documents are ordinary PDFs, but "most" is not a provenance
+    claim, and this is the one field whose whole job is being checkable.
+    """
+    if page is None or page == "":
+        return ""
+    noun = _PAGINATION_NOUN.get(pagination or "")
+    return f"{noun} {page}" if noun else str(page)
+
+
 # format -> (loader, pagination label). The label says whose division the
 # index represents; only "pages" may be shown to a reader as a page number.
 _LOADERS = {

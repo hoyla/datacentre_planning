@@ -253,3 +253,193 @@ class TestMentionCountsAreNotPlant:
             assert f"counted(prof.get('{field}'))" in src, (
                 f"{field} is rendered without subduing its mention counts")
         assert ".mcount{" in src
+
+
+class TestOneDefinitionOfIntendedToBeRead:
+    """Sampled-by-design is not a backlog, and must not be counted as one.
+
+    The repetitive tier — objections, neighbour comments, petitions,
+    correspondence — is read at 1-in-5 deliberately. The reader's
+    coverage figure filtered on `classify_kind` alone, which knows
+    nothing about that, so 4,204 documents policy never intends to read
+    were published as prose awaiting analysis: 99% coverage rendered as
+    89% and falling. The cohort query had the mirror-image fault, sampling
+    a different fifth because it filtered before planning.
+    """
+
+    def test_sampling_is_computed_over_the_whole_set_not_a_filtered_one(self):
+        """Filter-then-plan and plan-then-filter must agree on the fifth."""
+        from dcp import deepread_select as sel
+        docs = [{"application_ref": "X/1", "sha": f"s{i}",
+                 "kind": "objection"} for i in range(10)]
+        full = sel.plan_documents(docs)
+        chosen = {d["sha"] for d, p in zip(docs, full) if p.will_read}
+        # The same documents, planned after someone dropped the first two.
+        subset = docs[2:]
+        refiltered = {d["sha"] for d, p in zip(subset,
+                                               sel.plan_documents(subset))
+                      if p.will_read}
+        assert chosen != refiltered, (
+            "if these agree the test no longer demonstrates the hazard "
+            "universe_plan exists to remove")
+        assert chosen == {"s0", "s5"}
+
+    def test_a_sampled_out_document_is_not_will_read(self):
+        from dcp import deepread_select as sel
+        docs = [{"application_ref": "X/1", "sha": f"s{i}",
+                 "kind": "public comment"} for i in range(5)]
+        plans = sel.plan_documents(docs)
+        assert sum(p.will_read for p in plans) == 1
+        assert all(p.tier == "C" for p in plans)
+        assert "1-in-5" in [p.reason for p in plans if p.sampled_out][0]
+
+    def test_a_named_drawing_is_skipped_and_a_statement_is_not(self):
+        from dcp import deepread_select as sel
+        assert sel.classify_kind("Site Location Plan")[0] == "skip"
+        assert sel.classify_kind("Supporting Statement")[0] == "A"
+
+    def test_bare_plan_kinds_are_not_recognised_as_drawings(self):
+        """Recorded because it is the cause of a live 231-document residue.
+
+        DRAWING_KINDS matches 'location plan' and 'block plan' but not a
+        council that files the same thing as 'Plans' or 'OS Extract'.
+        Those land in tier B, are counted as prose that ought to be read,
+        extract to no words at all, and sit in the outstanding column for
+        ever. Widening the pattern is not obviously right — a plan can
+        carry an annotation schedule worth reading — so this asserts the
+        behaviour rather than asking for it, and fails loudly if someone
+        changes it without deciding to.
+        """
+        from dcp import deepread_select as sel
+        for kind in ("Plans", "Site Plan", "OS Extract"):
+            assert sel.classify_kind(kind)[0] == "B", kind
+
+    def test_both_consumers_ask_the_same_function(self):
+        """The two callers that disagreed now share one definition."""
+        import pathlib
+        import re
+        for name in ("scripts/export_reader.py",
+                     "scripts/deepread_escalate_openai.py"):
+            src = re.sub(r"\s+", " ", pathlib.Path(name).read_text())
+            assert "universe_plan(" in src, (
+                f"{name} derives coverage without the shared plan")
+
+    def test_the_batch_builder_counts_what_it_cannot_build(self):
+        """245 selected, 3 built, and it used to say nothing about 242."""
+        import pathlib
+        src = pathlib.Path("scripts/deepread_escalate_openai.py").read_text()
+        for reason in ("cache missing", "cache unreadable",
+                       "no extractable text"):
+            assert f'"{reason}"' in src
+        assert "selected documents cannot be " in src
+
+
+class TestUnreadableIsNotUnread:
+    """A document with no words is not a document awaiting analysis.
+
+    231 documents are held, classified as prose, and contain nothing:
+    photographs of site notices, plans filed as JPEGs. Both tesseract and
+    Apple Vision read them as blank, so no further pass moves them.
+    Counted as "not yet analysed" they were a residue that never cleared
+    and implied a backlog that did not exist.
+    """
+
+    def test_the_reader_separates_no_text_from_not_yet_read(self):
+        import pathlib
+        import re
+        src = re.sub(r"\s+", " ", pathlib.Path("scripts/export_reader.py").read_text())
+        assert "read_state='no_text'" in src
+        assert "if no_text and not was_read:" in src
+        # ...and says so on the page rather than only in the arithmetic.
+        assert "contain no words at all" in src
+
+    def test_recording_a_verdict_is_its_own_action(self):
+        """A dry run that quietly wrote rows would be the worse trap."""
+        import pathlib
+        src = pathlib.Path("scripts/deepread_escalate_openai.py").read_text()
+        assert "--record-no-text" in src
+        assert "requires --model" in src
+        # It must not be reachable from the estimate-only path.
+        assert "if args.record_no_text:" in src
+
+    def test_the_log_writer_takes_a_model_rather_than_assuming_one(self):
+        """One upsert, many readers. A second copy is how not_extracted
+        outlived the extraction that fixed it."""
+        import inspect
+        import pathlib
+        src = pathlib.Path("scripts/deepread_run.py").read_text()
+        assert "model: str | None = None" in src
+        assert "model or MODEL_TAG" in src
+        assert src.count("INSERT INTO deepread_log") == 1, (
+            "a second INSERT into deepread_log means a second upsert "
+            "policy, which is the bug this guards")
+        del inspect
+
+
+class TestOnlyAPdfHasPages:
+    """`evidence_page` is the thing a reporter follows to check a quote.
+
+    A .docx has no pages until something renders it, so the extractor
+    records the index of a section; a workbook's is a sheet, a deck's a
+    slide. 17,724 findings cite an index that is not a page, and every
+    artefact called it one. Told "page 3" of a spreadsheet a reporter
+    opens the file, finds no page 3, and doubts the quote rather than the
+    label.
+    """
+
+    def test_each_kind_is_named_in_the_singular(self):
+        from dcp import extract
+        assert extract.cite_page(4, "pages") == "page 4"
+        assert extract.cite_page(4, "sections") == "section 4"
+        assert extract.cite_page(2, "sheets") == "sheet 2"
+        assert extract.cite_page(5, "slides") == "slide 5"
+
+    def test_an_unrecorded_pagination_gives_a_bare_number_not_a_guess(self):
+        """Most such documents are PDFs. "Most" is not a provenance claim."""
+        from dcp import extract
+        assert extract.cite_page(4, None) == "4"
+        assert extract.cite_page(4, "") == "4"
+        assert extract.cite_page(4, "something-new") == "4"
+
+    def test_no_page_cites_nothing(self):
+        from dcp import extract
+        assert extract.cite_page(None, "pages") == ""
+        assert extract.cite_page("", "sections") == ""
+
+    def test_page_zero_is_still_a_citation(self):
+        """0 is falsy and is a real index; it must not vanish."""
+        from dcp import extract
+        assert extract.cite_page(0, "sections") == "section 0"
+
+    def test_the_vocabulary_matches_the_loader_table(self):
+        """The nouns and the labels extract.py writes cannot drift apart."""
+        from dcp import extract
+        written = {p for _loader, p in extract._LOADERS.values()}
+        written.add("pages")
+        assert written <= set(extract._PAGINATION_NOUN), (
+            f"no singular noun for {written - set(extract._PAGINATION_NOUN)}")
+
+    def test_the_csv_and_the_notebook_share_a_header(self):
+        """They are one artefact in two renderings, and only a comment
+        said so. This is the assertion that comment implied."""
+        import pathlib
+        import re
+        import sys
+        sys.path.insert(0, "scripts")
+        csv_src = pathlib.Path("scripts/build_drive_staging.py").read_text()
+        m = re.search(r"w\.writerow\(\[(.*?)\]\)", csv_src, re.S)
+        assert m, "could not find the findings CSV header"
+        header = re.findall(r'"([^"]+)"', m.group(1))
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "nb", "scripts/export_notebook_bundle.py")
+        nb = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(nb)
+        assert header == nb.COLUMNS
+
+    def test_the_exports_carry_the_pagination(self):
+        import pathlib
+        for name in ("scripts/build_drive_staging.py",
+                     "scripts/export_duckdb.py"):
+            src = pathlib.Path(name).read_text()
+            assert "pagination" in src, name
