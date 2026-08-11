@@ -49,6 +49,31 @@ DRAWING_KINDS = re.compile(
     r"block plan|masterplan|photograph|photo\b|montage|visualisation|"
     r"street scene|survey plan|topographic|boundary plan|red line", re.I)
 
+# Statutory instruments, tested BEFORE the drawing rule and nothing else.
+#
+# `DRAWING_KINDS` contains `section\b` for architectural sections, and it
+# was tested first, so "Section 106 Agreement" came back `skip` — a
+# drawing — though TIER_A_KINDS lists `section 106` explicitly and was
+# plainly written to catch it. 58 documents recording planning
+# obligations were never read, while "S106 Agreement" took the intended
+# path: whether an obligation was read turned on how the council
+# abbreviated it.
+#
+# Deliberately not fixed by reordering the two rules wholesale. Measured
+# over the corpus, that moves 68 documents and 10 of them are genuine
+# drawings pulled into the read tier by an incidental word — "Water
+# Treatment Plans, Sections and Elevations", "NOISE ... LOCATION PLAN",
+# "Drawing - Decision". Nor by excluding numbers from `section\b`, which
+# un-skips "Section 1", "Section 01" and "Section 03" — those ARE
+# numbered architectural sections.
+#
+# What is true is narrower than either: a named statutory instrument is
+# never a drawing, whatever else its title says. That is this pattern,
+# and it moves 60 documents, 58 of them the s106 agreements.
+LEGAL_INSTRUMENT_KINDS = re.compile(
+    r"\bs\.?10[68]\b|\bsection 10[68]\b|\bsection 73\b|"
+    r"unilateral undertaking|planning obligation", re.I)
+
 # Read in full: where power, environmental and consenting facts are stated.
 TIER_A_KINDS = re.compile(
     r"planning statement|design and access|environmental statement|es (chapter|volume)|"
@@ -97,7 +122,15 @@ class DocumentPlan:
 
 
 def classify_kind(kind: str | None) -> tuple[str, str]:
-    """`(tier, reason)` from the document kind alone."""
+    """`(tier, reason)` from the document kind alone.
+
+    Order is load-bearing. Statutory instruments are tested first
+    because their titles collide with the drawing vocabulary; see
+    LEGAL_INSTRUMENT_KINDS. Everything after that is drawings, then
+    tier A, then the sampled repetitive classes.
+    """
+    if kind and LEGAL_INSTRUMENT_KINDS.search(kind):
+        return "A", "statutory instrument"
     if kind and DRAWING_KINDS.search(kind):
         return "skip", "graphical document"
     if kind and TIER_A_KINDS.search(kind):
