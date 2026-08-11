@@ -185,10 +185,29 @@ TIER_SETTINGS: dict[str, dict] = {
 # has no business deleting pages.
 #
 # So: cap, keep the highest-scoring pages within it, and record the rest
-# as not sent. 120,000 characters is roughly ten chunks at the runner's
-# default — enough for any real document, and it leaves the pathological
-# ones visible rather than expensive.
-MAX_SELECTED_CHARS = 120_000
+# as not sent.
+#
+# The number was first set at 120,000 on the assumption that ten chunks
+# was ample for any real document. It was not: measured over 60 large
+# documents the *median* selection is 162,781 characters, so 120,000 sat
+# below the middle of the distribution and bound on 67% of them. It was
+# taking 230 selected pages of a SUPPORTING INFORMATION down to 58, a
+# committee report from 135 to 40, and a Revised Environmental Statement
+# from 83 to 41 — an Environmental Statement being exactly where
+# disclosures live. A threshold calibrated on one pathological workbook
+# was cutting the documents this investigation exists to read.
+#
+# Recalibrated on the distribution instead:
+#
+#     median 162,781 · p90 419,076 · p95 647,335 · p99 732,786
+#     the xlsx tracker that started this: 2,075,466
+#
+# 1,000,000 sits above p99 and below the outliers, and binds on 1 in 60
+# large documents rather than 40. The cost that actually matters is
+# sequential model calls: at the runner's 12,000-character chunk a
+# capped document is ~83 calls, a few minutes, against the 204 calls and
+# half an hour that prompted this.
+MAX_SELECTED_CHARS = 1_000_000
 
 
 def select_pages(pages: list[str], *, tier: str, context: int | None = None,

@@ -27,20 +27,20 @@ def _page(text: str, size: int) -> str:
 
 
 def test_cap_binds_on_a_pathological_document():
-    pages = [_page(f"sheet {i}", 70_000) for i in range(32)]
+    pages = [_page(f"sheet {i}", 70_000) for i in range(48)]
     uncapped = sel.select_pages(pages, tier="A", max_chars=None)
     capped = sel.select_pages(pages, tier="A")
 
-    assert sum(len(pages[i]) for i in uncapped) > 2_000_000
+    assert sum(len(pages[i]) for i in uncapped) > 3_000_000
     assert len(capped) < len(uncapped)
     # Bounded by the cap plus the opening pages, which are never dropped.
     # What actually matters is the number of sequential model calls: 32
     # pages of this size is 204 of them, and this must be a handful.
-    assert len(capped) <= 4
+    assert len(capped) <= 16
 
 
 def test_the_floor_may_exceed_the_cap_and_that_is_the_contract():
-    """Two opening pages of 70,000 characters are 140,000, over the
+    """Two opening pages of 600,000 characters are 1,200,000, over the
     ceiling, and they are still sent.
 
     Stated rather than fixed. The alternative is a document whose first
@@ -49,7 +49,7 @@ def test_the_floor_may_exceed_the_cap_and_that_is_the_contract():
     cost stays bounded because the floor is a fixed number of pages, not
     a fixed number of characters — two model calls, not two hundred.
     """
-    pages = [_page(f"sheet {i}", 70_000) for i in range(32)]
+    pages = [_page(f"sheet {i}", 600_000) for i in range(8)]
     capped = sel.select_pages(pages, tier="A")
     assert {0, 1} <= set(capped)
     assert sum(len(pages[i]) for i in capped) > sel.MAX_SELECTED_CHARS
@@ -74,8 +74,8 @@ def test_opening_pages_always_survive_the_cap():
     summary, so the floor is not negotiable even when the first pages are
     themselves enormous.
     """
-    pages = [_page("opening", 200_000)] + [_page(f"body {i}", 90_000)
-                                           for i in range(20)]
+    pages = [_page("opening", 1_400_000)] + [_page(f"body {i}", 90_000)
+                                             for i in range(20)]
     capped = sel.select_pages(pages, tier="A")
     assert 0 in capped, "the first page must be sent whatever it costs"
 
@@ -83,7 +83,7 @@ def test_opening_pages_always_survive_the_cap():
 def test_pages_are_dropped_whole_never_truncated():
     """Half a page produces quotes that fail the verbatim gate against
     the whole one, which would look like the model inventing evidence."""
-    pages = [_page(f"sheet {i}", 70_000) for i in range(32)]
+    pages = [_page(f"sheet {i}", 70_000) for i in range(48)]
     capped = sel.select_pages(pages, tier="A")
     assert all(isinstance(i, int) and 0 <= i < len(pages) for i in capped)
     assert len(set(capped)) == len(capped)
@@ -95,9 +95,9 @@ def test_highest_scoring_pages_are_the_ones_kept():
     A page naming generators, megawatts and water outscores one naming a
     single term, and the scarce budget should go to the former.
     """
-    dull = "planning history and consultation responses follow. " * 1200
+    dull = "planning history and consultation responses follow. " * 6000
     rich = ("12 MW gas turbine generator, grid connection, water cooling, "
-            "diesel fuel storage, battery. ") * 700
+            "diesel fuel storage, battery. ") * 3500
     pages = [_page("opening", 500), _page("opening two", 500)] \
         + [dull] * 6 + [rich]
     capped = sel.select_pages(pages, tier="A")
@@ -109,13 +109,13 @@ def test_selection_was_capped_reports_honestly():
     assert not sel.selection_was_capped(
         small, sel.select_pages(small, tier="A"))
 
-    huge = [_page(f"sheet {i}", 70_000) for i in range(32)]
+    huge = [_page(f"sheet {i}", 70_000) for i in range(48)]
     assert sel.selection_was_capped(huge, sel.select_pages(huge, tier="A"))
 
 
 def test_cap_can_be_disabled():
     """The batch readers and any re-read of a capped document need the
     whole thing, so `None` must genuinely mean no ceiling."""
-    pages = [_page(f"sheet {i}", 70_000) for i in range(32)]
+    pages = [_page(f"sheet {i}", 70_000) for i in range(48)]
     assert sum(len(pages[i]) for i in
-               sel.select_pages(pages, tier="A", max_chars=None)) > 2_000_000
+               sel.select_pages(pages, tier="A", max_chars=None)) > 3_000_000
