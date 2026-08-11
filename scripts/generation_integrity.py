@@ -192,10 +192,20 @@ def main() -> int:
         if not (cons and gen):
             continue
         r = gen / cons
-        b = ("generation exceeds load (energy park?)" if r > 1.5
-             else "sized to carry the load" if r >= 0.8
-             else "partial — load-carrying uncertain" if r >= 0.5
-             else "life-safety only; site is grid-dependent")
+        # Descriptive, not diagnostic. These labels used to assert a
+        # design intent — "sized to carry the load", "life-safety only" —
+        # on the strength of a ratio, and named 0.8-1.5 the classic
+        # full-redundancy pattern. Measured across the 47 sites
+        # disclosing both figures (2026-08-11) that band holds 13 of
+        # them; the median ratio is 0.75 and the modal case, 20 sites, is
+        # below 0.5. The premise was inherited from v1 and the corpus
+        # does not support it, so the bands now say what the numbers do
+        # and leave why to a reader who can open the documents.
+        b = ("generation above stated load" if r > 1.5
+             else "generation comparable to stated load" if r >= 0.8
+             else "generation between half and four-fifths of stated load"
+             if r >= 0.5
+             else "generation below half of stated load")
         band.setdefault(b, []).append((r, cons, gen, sites.get(key, {}).get("name", key),
                                        sorted(sites.get(key, {}).get("fuels", []))))
     for b in ("generation exceeds load (energy park?)", "sized to carry the load",
