@@ -77,12 +77,21 @@ disclosing both a consumption and a generation figure:
 |---|---|---|
 | below 0.5 | **20** | life-safety only; grid-dependent |
 | 0.5–0.8 | 4 | partial — load-carrying uncertain |
-| 0.8–1.5 | 13 | sized to carry the load |
-| above 1.5 | 10 | generation exceeds load (energy park?) |
+| 0.8–1.5 | 14 | sized to carry the load |
+| above 1.5 | 9 | generation exceeds load (energy park?) |
 
 Median ratio **0.75**, which falls in the band the code calls
-"uncertain". The "classic" pattern holds 13 of 47 sites; the modal case,
-20 sites, is below half. Whatever the industry norm may be, this corpus's
+"uncertain". The "classic" pattern holds 14 of 47 sites; the modal case,
+20 sites, is below half.
+
+*(Amended 2026-08-11, later the same day: this table first read 13 and
+10. North Hyde Gardens was reporting 800 MW of on-site generation
+against a 256 MW site — a ratio of 3.1 — because a thermal figure had
+been stored as generation. Correcting it moved that site from the top
+band to 1.17, which is what the numbers below now reflect. The median and
+the conclusion are unchanged. Recorded rather than silently rewritten,
+because a measurement that moves is worth more than one that appears not
+to.)* Whatever the industry norm may be, this corpus's
 disclosures do not show it, and a band that calls itself classic on
 28% of the evidence is asserting a design intent it cannot see.
 
