@@ -189,3 +189,48 @@ def plan_documents(docs: list[dict], *, sample_rate: int = 5) -> list[DocumentPl
                 plan.reason = f"repetitive class — not in 1-in-{sample_rate} sample"
         plans.append(plan)
     return plans
+
+
+# Every document attached to a live site, in ONE canonical order. The
+# order is part of the contract: plan_documents samples every Nth tier-C
+# row *of what it is handed*, so two callers that filter differently
+# before planning disagree about which fifth was ever meant to be read.
+UNIVERSE_DOCS_SQL = """
+SELECT d.id, a.application_ref, d.content_sha256, d.kind
+FROM documents d
+JOIN applications a ON a.id = d.application_id
+WHERE EXISTS (SELECT 1 FROM site_members m
+              JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+              WHERE m.application_id = d.application_id
+                AND m.retired_at IS NULL)
+ORDER BY a.application_ref, d.id
+"""
+
+
+def universe_plan(conn) -> dict[int, DocumentPlan]:
+    """`{document_id: DocumentPlan}` for every document in the site universe.
+
+    The single answer to "was this document ever meant to be read", for
+    everyone who needs to know — the read cohorts and the coverage
+    figures the reader publishes.
+
+    It exists because those two had drifted apart, and in the direction
+    that misleads. The reader counted a document as prose-not-yet-analysed
+    whenever `classify_kind` did not call it a drawing, which takes no
+    account of the 1-in-5 sample applied to the repetitive tier. 4,204
+    objections and neighbour comments that policy deliberately never
+    reads were therefore reported as an analysis backlog, dragging a
+    published coverage figure from 99% to 89% and falling — a policy
+    choice wearing the clothes of a gap. Meanwhile the cohort query
+    filtered to one model's backlog *before* planning, so it sampled a
+    different fifth again.
+
+    Both now ask this. `plan.will_read` is the denominator of any honest
+    coverage claim; `plan.sampled_out` is a separate, statable number,
+    never silently folded into either side.
+    """
+    with conn.cursor() as cur:
+        cur.execute(UNIVERSE_DOCS_SQL)
+        rows = cur.fetchall()
+    docs = [{"application_ref": r[1], "sha": r[2], "kind": r[3]} for r in rows]
+    return {r[0]: plan for r, plan in zip(rows, plan_documents(docs))}

@@ -830,7 +830,7 @@ def main() -> int:
         # in it was skipped by design — that reading of it made 78% of
         # the corpus look outstanding when 1% of the prose was.
         cur.execute("""
-          SELECT d.application_id, d.kind,
+          SELECT d.id, d.application_id,
                  EXISTS (SELECT 1 FROM deepread_log dl
                          WHERE dl.document_id=d.id AND dl.read_state='read')
           FROM documents d
@@ -838,9 +838,23 @@ def main() -> int:
                         JOIN sites s ON s.id=m.site_id AND s.retired_at IS NULL
                         WHERE m.application_id=d.application_id
                           AND m.retired_at IS NULL)""")
+        # The plan, not the kind. Filtering on `classify_kind` alone
+        # counted the four-fifths of the repetitive tier that the 1-in-5
+        # sample deliberately sets aside as prose still awaiting
+        # analysis — 4,204 objections and neighbour comments reported as
+        # a backlog, which took a genuine 99% down to 89% and falling as
+        # acquisition brought in more of them. Sampling objections rather
+        # than reading every near-identical one is a deliberate policy;
+        # what was wrong was publishing it as a gap.
+        plan_by_id = deepread_select.universe_plan(conn)
         _prose: dict[int, list[int]] = {}
-        for app_id, kind, was_read in cur.fetchall():
-            if deepread_select.classify_kind(kind)[0] == "skip":
+        n_sampled_out = 0
+        for doc_id, app_id, was_read in cur.fetchall():
+            plan = plan_by_id.get(doc_id)
+            if plan is None or plan.tier == "skip":
+                continue
+            if plan.sampled_out:
+                n_sampled_out += 1
                 continue
             e = _prose.setdefault(app_id, [0, 0])
             e[0] += 1
@@ -1951,7 +1965,13 @@ def main() -> int:
  <h4 class="sub-head">Analysis, across the {len(have_prose):,} applications holding prose
  documents</h4>
  <p class="help">Counted over prose only. Drawings are excluded because the deep read skips
- them by design, so an application is not half-read on account of a location plan.</p>
+ them by design, so an application is not half-read on account of a location plan.
+ A further {n_sampled_out:,} documents are excluded as the sampled remainder of the
+ repetitive classes — objections, neighbour comments, petitions and correspondence, which
+ arrive in near-identical runs and are read at one in five. That is a deliberate policy
+ rather than a backlog, so they are named here and left out of the figures below rather
+ than counted as unanalysed. Reading every one of them would change the totals and not
+ the findings.</p>
  <table class="stats"><tbody>
   <tr><th scope="row">Every prose document analysed</th><td class="n">{full_read:,}</td>
       <td class="n">{_pc(full_read, len(have_prose))}</td>
