@@ -9,11 +9,12 @@ cooled, and who is behind them.
 **What it holds today:** 429 sites plus 26 known only at pre-planning
 stage, 1,709 planning applications, 55,678 documents from council
 registers, and a layer of 197 nationally significant energy projects for
-adjacency. Reading is in progress, so the analysed and findings counts
-move daily — `scripts/corpus_stats.py` prints the current figures, and
-the published reader states its own boundary. Deliberately not repeated
-here: a hand-copied number in a readme is a number that is wrong by the
-following morning, and this one was.
+adjacency. The analysed and findings counts are deliberately not repeated
+here: the corroboration pass is still writing rows, so they move — and a
+hand-copied number in a readme is a number that is wrong by the following
+morning, as this one was, by roughly a factor of two.
+`scripts/corpus_stats.py` prints the current figures, and every published
+release states the boundary it was stamped at.
 
 The output is a handover package, not a live service: a reader, a
 workbook, a queryable database, and the source documents themselves.
@@ -46,13 +47,22 @@ afterwards, to structured facts — so *these consented data centres
 disclose no power figure at all* is a result the dataset can reach, and
 not only the dramatic ones.
 
-That particular finding is **being re-verified before it is quoted**.
-The figure of 71 sites was measured before the extractor could read
-Word, Outlook and spreadsheet documents, and the sweep that confirmed it
-was never committed — so it rests on a cohort that may have contained
-documents nobody could read yet, checked by an analysis nobody can
-re-run. Both are fixed; the number is not restated until the sweep has
-been re-run against the current corpus and committed alongside it.
+That finding has been **re-verified, and the re-verification is the
+thing to cite rather than any number written here.** The original figure
+of 71 sites was measured before the extractor could read Word, Outlook
+and spreadsheet documents, and the regex sweep behind it was never
+committed — a cohort that could contain documents nobody had read yet,
+checked by an analysis nobody could re-run. Both are fixed:
+`scripts/sweep_null_capacity.py` builds the cohort from reading coverage,
+separates sites genuinely stating nothing from sites merely unread,
+prints the residue it cannot classify instead of waving it away, and
+refuses to be authoritative while candidate figures await adjudication.
+It writes a dated report naming every site and quoting every match it
+could not classify. That report is local — `data/reports/` is not
+tracked, because it quotes consultation material — so the citable object
+is the script, and a published claim should rest on a run of it made
+against the corpus as it stood, not on a number copied out of an earlier
+one.
 
 Two consequences run through the code:
 
