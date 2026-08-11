@@ -70,26 +70,45 @@ hard-linked to the canonical store — `data/raw/documents` shares its
 inodes — so recompressing in place would silently rewrite original source
 material. Every output is a new file.
 
-Re-runs are no-ops on unchanged input: a file whose hash and target size
-already match is skipped, so an interrupted sweep resumes without
-re-spending the work.
+**Built to be interrupted.** The full sweep takes around an hour and a
+quarter, which is long enough that it will be. Three things make a
+re-run safe rather than merely tolerable:
+
+- Every output is written under a temporary name and `os.replace`d into
+  place, so a file either exists complete or does not exist. A killed
+  run leaves no half-written PDF that a resume would mistake for done.
+- `_journal.jsonl` records each input file as it finishes, appended and
+  flushed line by line. A re-run reads it, skips what it covers, and
+  spends its time on the remainder. A truncated last line — the normal
+  result of `kill` — costs exactly one redone file.
+- `_build.log` carries timestamped progress, throughput and an ETA, so
+  a sweep left running overnight can be read afterwards to see what it
+  did and where it stopped.
+
+`_manifest.csv` is rebuilt from the journal at the end of every run,
+which means it is derived rather than accumulated, and re-running a
+finished sweep just rewrites it. Delete the journal to force a full
+rebuild.
 
 Usage:
     .venv/bin/python scripts/export_pinpoint_bundle.py --plan
     .venv/bin/python scripts/export_pinpoint_bundle.py --limit 5
-    .venv/bin/python scripts/export_pinpoint_bundle.py --jobs 12
+    .venv/bin/python scripts/export_pinpoint_bundle.py --jobs 10
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import datetime as dt
 import hashlib
+import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import time
 import zipfile
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -222,6 +241,24 @@ def _sniff_ole(path: Path) -> str:
     return ""
 
 
+def publish(tmp: Path, dst: Path) -> None:
+    """Move a finished file into place in one indivisible step.
+
+    A two-hour sweep will occasionally be interrupted, and a half-written
+    output is worse than a missing one: on resume it looks finished, so
+    it is never rebuilt and a truncated PDF goes to Pinpoint. Everything
+    is therefore built under a temporary name on the same filesystem and
+    `os.replace`d, which either happens or does not.
+    """
+    os.replace(tmp, dst)
+
+
+def copy_atomic(src: Path, dst: Path, work: Path, tag: str) -> None:
+    tmp = work / f"{tag}{dst.suffix}"
+    shutil.copy2(src, tmp)
+    publish(tmp, dst)
+
+
 def kind_of(path: Path) -> str:
     """The council's own document description, from the filename.
 
@@ -270,6 +307,19 @@ def compress_pdf(src: Path, dst: Path) -> bool:
                             capture_output=True, timeout=1800).returncode
     except (OSError, subprocess.SubprocessError):
         return False
+    # A negative return code means Ghostscript was killed by a signal
+    # rather than having failed on the file — which is what happens when
+    # the sweep itself is interrupted. The two must not be conflated.
+    # Treating a kill as "compression failed" makes the caller fall back
+    # to copying the uncompressed original, and because that copy is a
+    # complete, valid file, the next run sees it and marks it done. It
+    # cost 73MB in place of 28.6MB on one file in an interrupt test:
+    # correct content, silently four times the quota, and nothing on
+    # screen to say so. Raising instead leaves the file unbuilt and
+    # unjournalled, so the resume redoes it properly.
+    if rc < 0:
+        dst.unlink(missing_ok=True)
+        raise InterruptedError("ghostscript killed by signal")
     if rc != 0 or not dst.exists() or dst.stat().st_size == 0:
         dst.unlink(missing_ok=True)
         return False
@@ -313,7 +363,9 @@ def msg_to_eml(src: Path, dst: Path) -> bool:
         msg.close()
     except Exception:
         return False
-    dst.write_bytes(data)
+    tmp = dst.parent / "_work" / (dst.name + ".part")
+    tmp.write_bytes(data)
+    publish(tmp, dst)
     return True
 
 
@@ -324,12 +376,15 @@ def shrink_image(src: Path, dst: Path) -> bool:
         Image.MAX_IMAGE_PIXELS = None
         with Image.open(src) as im:
             im = im.convert("RGB")
+            tmp = dst.parent / "_work" / (dst.name + ".part")
             for quality, scale in ((70, 1.0), (60, 0.7), (50, 0.5), (40, 0.35)):
                 w, h = int(im.width * scale), int(im.height * scale)
-                im.resize((w, h)).save(dst, "JPEG", quality=quality, optimize=True)
-                if dst.stat().st_size <= OTHER_MAX:
+                im.resize((w, h)).save(tmp, "JPEG", quality=quality, optimize=True)
+                if tmp.stat().st_size <= OTHER_MAX:
+                    publish(tmp, dst)
                     return True
-        return dst.exists() and dst.stat().st_size <= OTHER_MAX
+            tmp.unlink(missing_ok=True)
+        return False
     except Exception:
         return False
 
@@ -351,7 +406,9 @@ def split_text(src: Path, out_dir: Path, base: str, ext: str) -> list[Path]:
         for line in fh:
             if size + len(line) > OTHER_MAX and buf:
                 p = out_dir / f"{base} (part {part}){ext}"
-                p.write_bytes(b"".join(buf))
+                tmp = out_dir / "_work" / (p.name + ".part")
+                tmp.write_bytes(b"".join(buf))
+                publish(tmp, p)
                 written.append(p)
                 part += 1
                 buf, size = ([header] if header else []), len(header)
@@ -359,7 +416,9 @@ def split_text(src: Path, out_dir: Path, base: str, ext: str) -> list[Path]:
             size += len(line)
         if buf and size > len(header):
             p = out_dir / f"{base} (part {part}){ext}"
-            p.write_bytes(b"".join(buf))
+            tmp = out_dir / "_work" / (p.name + ".part")
+            tmp.write_bytes(b"".join(buf))
+            publish(tmp, p)
             written.append(p)
     return written
 
@@ -399,7 +458,7 @@ def process(job: tuple) -> list[dict]:
                 action = "recompressed"
             else:
                 tmp.unlink(missing_ok=True)
-                shutil.copy2(src, dst)
+                copy_atomic(src, dst, work, sha[:16])
                 action = "copied (compression made it larger)"
             if dst.stat().st_size > PDF_MAX:
                 return [done(name, dst, action, "OVER 1GB — Pinpoint will reject")]
@@ -439,7 +498,7 @@ def process(job: tuple) -> list[dict]:
                 name = flat_name(rel, ext)
                 dst = out_dir / name
                 if not dst.exists():
-                    shutil.copy2(src, dst)
+                    copy_atomic(src, dst, work, sha[:16])
                 return [done(name, dst, "copied")]
             name = flat_name(rel, ".jpg")
             dst = out_dir / name
@@ -455,7 +514,7 @@ def process(job: tuple) -> list[dict]:
                 name = flat_name(rel, ext)
                 dst = out_dir / name
                 if not dst.exists():
-                    shutil.copy2(src, dst)
+                    copy_atomic(src, dst, work, sha[:16])
                 return [done(name, dst, "copied")]
             base = flat_name(rel, "")
             outs = split_text(src, out_dir, base, ext)
@@ -469,14 +528,53 @@ def process(job: tuple) -> list[dict]:
             if size > OTHER_MAX:
                 return [{**row, "pinpoint_filename": "", "output_bytes": 0,
                          "action": "dropped", "note": f"{ext} over 10MB cap"}]
-            shutil.copy2(src, dst)
+            copy_atomic(src, dst, work, sha[:16])
             return [done(name, dst, "copied")]
 
         return [{**row, "pinpoint_filename": "", "output_bytes": 0,
                  "action": "dropped", "note": f"unhandled type {ext or 'unknown'}"}]
+    except InterruptedError:
+        # Not this file's fault — the run is being torn down. Propagate
+        # so the parent declines to journal it and the resume retries.
+        raise
     except Exception as exc:  # one bad file must not end a 42,000-file sweep
         return [{**row, "pinpoint_filename": "", "output_bytes": 0,
                  "action": "dropped", "note": f"error: {exc}"[:200]}]
+
+
+def log(handle, message: str) -> None:
+    """One line to the console and to the run log, timestamped.
+
+    A sweep this long is normally left running, so the log is what
+    someone reads afterwards to find out what it did and where it
+    stopped. Timestamps make an interruption locatable.
+    """
+    stamp = dt.datetime.now().strftime("%H:%M:%S")
+    line = f"[{stamp}] {message}"
+    print(line, flush=True)
+    if handle:
+        handle.write(line + "\n")
+        handle.flush()
+
+
+def read_journal(path: Path) -> dict[str, list]:
+    """Input files already completed, from the append-only journal.
+
+    Tolerates a truncated final line: a run killed mid-write leaves one,
+    and the correct response is to redo that single file rather than to
+    refuse to start.
+    """
+    done: dict[str, list] = {}
+    if not path.exists():
+        return done
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            done[rec["staging_path"]] = rec["rows"]
+    return done
 
 
 def collect(src_root: Path, limit: int | None) -> tuple[list, dict]:
@@ -524,35 +622,80 @@ def main() -> None:
     if not args.src.is_dir():
         sys.exit(f"no staging tree at {args.src}")
 
-    print(f"scanning {args.src} ...", flush=True)
-    kept, stats = collect(args.src, args.limit)
+    args.out.mkdir(parents=True, exist_ok=True)
+    logf = None if args.plan else open(args.out / "_build.log", "a",
+                                       encoding="utf-8")
     g = 1 << 30
-    print(f"  {stats['seen']:,} files, {stats['bytes_in']/g:.1f} GB")
-    print(f"  - {stats['drawings']:,} drawings ({stats['bytes_drawings']/g:.1f} GB)")
-    print(f"  - {stats['duplicates']:,} duplicates ({stats['bytes_dupes']/g:.1f} GB)")
-    print(f"  = {len(kept):,} files to convert "
-          f"({sum(k[3] for k in kept)/g:.1f} GB in)")
+    log(logf, f"scanning {args.src}")
+    kept, stats = collect(args.src, args.limit)
+    log(logf, f"{stats['seen']:,} files, {stats['bytes_in']/g:.1f} GB")
+    log(logf, f"- {stats['drawings']:,} drawings "
+              f"({stats['bytes_drawings']/g:.1f} GB)")
+    log(logf, f"- {stats['duplicates']:,} duplicates "
+              f"({stats['bytes_dupes']/g:.1f} GB)")
+    log(logf, f"= {len(kept):,} files to convert "
+              f"({sum(k[3] for k in kept)/g:.1f} GB in)")
     if args.plan:
         return
 
     files_dir = args.out / "files"
     files_dir.mkdir(parents=True, exist_ok=True)
+    # Largest first. In walk order the pool finishes its small files and
+    # then sits nearly idle while one 400MB environmental statement runs
+    # alone — measured at 5.7 of 10 workers busy across a whole run.
+    # Starting the long jobs first lets the short ones fill in around
+    # them, which is longest-processing-time scheduling and costs one
+    # sort.
+    kept = sorted(kept, key=lambda k: -k[3])
     jobs = [(str(rel), str(path), str(files_dir), sha, size)
             for rel, path, sha, size in kept]
 
-    rows: list[dict] = []
-    done = 0
-    with ProcessPoolExecutor(max_workers=args.jobs) as pool:
-        futures = [pool.submit(process, j) for j in jobs]
-        for fut in as_completed(futures):
-            rows.extend(fut.result())
-            done += 1
-            if done % 250 == 0 or done == len(jobs):
-                out_b = sum(r["output_bytes"] for r in rows)
-                print(f"  {done:,}/{len(jobs):,}  {out_b/g:.1f} GB written",
-                      flush=True)
+    # A two-hour sweep gets interrupted, so completed work is journalled
+    # as it lands rather than held in memory until the end. The journal
+    # is append-only and one line per input file: re-running reads it,
+    # skips what it already covers, and spends the remaining budget on
+    # the rest. Deleting it forces a full rebuild.
+    journal_path = args.out / "_journal.jsonl"
+    done_paths = read_journal(journal_path)
+    rows = [r for group in done_paths.values() for r in group]
+    if done_paths:
+        log(logf, f"resuming: {len(done_paths):,} input files already journalled")
+    jobs = [j for j in jobs if j[0] not in done_paths]
+    log(logf, f"{len(jobs):,} to process, {args.jobs} workers")
 
-    shutil.rmtree(files_dir / "_work", ignore_errors=True)
+    # Leftover parts from a killed run: nothing here is trusted, because
+    # a `.part` is by definition a file that never reached its final name.
+    work_dir = files_dir / "_work"
+    shutil.rmtree(work_dir, ignore_errors=True)
+    work_dir.mkdir(parents=True, exist_ok=True)
+
+    done, t0 = 0, time.time()
+    with open(journal_path, "a", encoding="utf-8") as jf:
+        with ProcessPoolExecutor(max_workers=args.jobs) as pool:
+            futures = [pool.submit(process, j) for j in jobs]
+            try:
+                for fut in as_completed(futures):
+                    try:
+                        got = fut.result()
+                    except InterruptedError:
+                        continue  # torn down mid-file; resume will redo it
+                    rows.extend(got)
+                    jf.write(json.dumps({"staging_path": got[0]["staging_path"],
+                                         "rows": got}) + "\n")
+                    jf.flush()
+                    done += 1
+                    if done % 250 == 0 or done == len(jobs):
+                        out_b = sum(r["output_bytes"] for r in rows)
+                        rate = done / max(0.1, time.time() - t0)
+                        eta = (len(jobs) - done) / rate / 60
+                        log(logf, f"{done:,}/{len(jobs):,}  {out_b/g:.1f} GB  "
+                                  f"{rate:.1f} files/s  eta {eta:.0f} min")
+            except KeyboardInterrupt:
+                log(logf, "interrupted — journal is current, re-run to resume")
+                pool.shutdown(cancel_futures=True)
+                raise
+
+    shutil.rmtree(work_dir, ignore_errors=True)
 
     # Tranches are assigned after the fact, over what actually got built,
     # so a conversion that dropped a file does not leave a hole in a
@@ -571,17 +714,19 @@ def main() -> None:
 
     out_b = sum(r["output_bytes"] for r in live)
     dropped = [r for r in rows if not r["pinpoint_filename"]]
-    print(f"\n{len(live):,} files, {out_b/g:.1f} GB  "
-          f"({out_b / max(1, sum(k[3] for k in kept)):.2f} of input)")
-    print(f"tranches: {max((int(r['tranche']) for r in live), default=0)}")
+    log(logf, f"{len(live):,} files, {out_b/g:.1f} GB "
+              f"({out_b / max(1, sum(k[3] for k in kept)):.2f} of input)")
+    log(logf, f"tranches: {max((int(r['tranche']) for r in live), default=0)}")
     if dropped:
-        print(f"dropped {len(dropped)}:")
         reasons: dict[str, int] = {}
         for r in dropped:
             reasons[r["note"]] = reasons.get(r["note"], 0) + 1
+        log(logf, f"dropped {len(dropped)}:")
         for note, n in sorted(reasons.items(), key=lambda kv: -kv[1])[:10]:
-            print(f"  {n:5d}  {note}")
-    print(f"manifest: {manifest}")
+            log(logf, f"  {n:5d}  {note}")
+    log(logf, f"manifest: {manifest}")
+    if logf:
+        logf.close()
 
 
 if __name__ == "__main__":
