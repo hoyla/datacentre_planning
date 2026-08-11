@@ -259,12 +259,15 @@ class TestOneDefinitionOfIntendedToBeRead:
     """Sampled-by-design is not a backlog, and must not be counted as one.
 
     The repetitive tier — objections, neighbour comments, petitions,
-    correspondence — is read at 1-in-5 deliberately. The reader's
-    coverage figure filtered on `classify_kind` alone, which knows
-    nothing about that, so 4,204 documents policy never intends to read
-    were published as prose awaiting analysis: 99% coverage rendered as
-    89% and falling. The cohort query had the mirror-image fault, sampling
-    a different fifth because it filtered before planning.
+    correspondence — is read at 1-in-5 deliberately, and every consumer
+    has to agree on whether that tier is prose. The read cohort did not:
+    it filtered to one model's backlog before planning, so it sampled a
+    different fifth than the global policy had.
+
+    The reader's headline figure was never wrong — it comes from
+    load_coverage_detail, which always split the tier out. Its
+    per-application analysis table was, counting every non-drawing
+    document as prose.
     """
 
     def test_sampling_is_computed_over_the_whole_set_not_a_filtered_one(self):

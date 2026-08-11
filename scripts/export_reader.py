@@ -928,24 +928,21 @@ def main() -> int:
                         JOIN sites s ON s.id=m.site_id AND s.retired_at IS NULL
                         WHERE m.application_id=d.application_id
                           AND m.retired_at IS NULL)""")
-        # The plan, not the kind. Filtering on `classify_kind` alone
-        # counted the four-fifths of the repetitive tier that the 1-in-5
-        # sample deliberately sets aside as prose still awaiting
-        # analysis — 4,204 objections and neighbour comments reported as
-        # a backlog, which took a genuine 99% down to 89% and falling as
-        # acquisition brought in more of them. Sampling objections rather
-        # than reading every near-identical one is a deliberate policy;
-        # what was wrong was publishing it as a gap.
+        # Prose is tiers A and B, exactly as site_profile.load_coverage_detail
+        # defines it — the repetitive tier is a category of its own and is
+        # reported as one, never folded into either side. This loop counts
+        # the same thing that function does, at application granularity
+        # rather than site, because the two are shown on the same page and
+        # a reader comparing them is entitled to find them consistent.
+        # An earlier version of this counted every non-drawing document as
+        # prose awaiting analysis, which over-stated the per-application
+        # backlog by the whole of tier C.
         plan_by_id = deepread_select.universe_plan(conn)
         _prose: dict[int, list[int]] = {}
-        n_sampled_out = 0
         n_no_text = 0
         for doc_id, app_id, was_read, no_text in cur.fetchall():
             plan = plan_by_id.get(doc_id)
-            if plan is None or plan.tier == "skip":
-                continue
-            if plan.sampled_out:
-                n_sampled_out += 1
+            if plan is None or plan.tier in ("skip", "C"):
                 continue
             if no_text and not was_read:
                 # Held, classified as prose, and containing no words:
@@ -2075,14 +2072,11 @@ def main() -> int:
  documents</h4>
  <p class="help">Counted over prose only. Drawings are excluded because the deep read skips
  them by design, so an application is not half-read on account of a location plan.
- A further {n_sampled_out:,} documents are excluded as the sampled remainder of the
- repetitive classes — objections, neighbour comments, petitions and correspondence, which
- arrive in near-identical runs and are read at one in five. That is a deliberate policy
- rather than a backlog, so they are named here and left out of the figures below rather
- than counted as unanalysed. Reading every one of them would change the totals and not
- the findings. A further {n_no_text:,} are held and contain no words at all — photographs
- of site notices, plans filed as images — read as blank by two independent text
- recognisers. They are named for the same reason: an unreadable document is a different
+ The repetitive classes — objections, neighbour comments, petitions and correspondence —
+ are counted separately above and read at one in five by policy, not left outstanding.
+ A further {n_no_text:,} documents are held and contain no words at all — photographs of
+ site notices, plans filed as images — read as blank by two independent text recognisers.
+ They are named rather than counted as unanalysed: an unreadable document is a different
  thing from an unread one, and only one of the two can be fixed by reading.</p>
  <table class="stats"><tbody>
   <tr><th scope="row">Every prose document analysed</th><td class="n">{full_read:,}</td>

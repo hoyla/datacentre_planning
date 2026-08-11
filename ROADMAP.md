@@ -5,17 +5,19 @@ the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
 Current state: **429 sites** (plus 26 pre-planning), **1,709
-applications** in the site universe, **55,678 documents**, **454,011
-findings** (20,450 duplicate rows archived by migration 012). Phase 1
-is published and closed, stamped at the boundary acquisition stopped
-at.
+applications** in the site universe, **55,678 documents**. Findings and
+adjudication counts move while the corroboration pass runs and are
+deliberately not restated here — `scripts/corpus_stats.py` prints them,
+and each release states the boundary it was stamped at.
 
-Reading coverage is the open question: 18,645 distinct documents are
-read — an earlier figure here, 22,611, summed per-model reads and so
-double-counted the dual-read subset — but 4,836 more were skipped by an
-extractor gap now fixed, 2,082 are not PDFs and were unreadable until
-the format loaders landed, and 58 sites holding 8,212 documents have
-had nothing read at all.
+**Reading is complete for phase 2.1**, stamped 2026-08-11 with the
+Studio reader stopped so the boundary is clean: 37,992 of 38,005 prose
+documents read. Two other numbers belong beside that one and are stated
+in the reader rather than folded into it — 4,204 documents in the
+repetitive classes are sampled out at one in five by policy, not
+backlog, and 231 are held but contain no words at all, confirmed blank
+by two independent OCR engines. Every capacity figure that existed at
+the boundary is adjudicated.
 
 ---
 
@@ -66,23 +68,12 @@ The handover is out. These close it properly.
   the Anthropic budget is spent; the plan is OpenAI credits. Everything
   downstream already marks unread sites, so this raises figures rather
   than changing shape.
-- **Re-extract the 1,112 stale caches.** Done in code, not yet run: the
-  extractor now reads Word, RTF, workbooks, OpenDocument, Outlook, mail,
-  HTML and images, and the corpus runner re-reads anything cached with
-  `engine: "skipped"`. It needs a pass of `extract_text_corpus.py` to
-  take effect, and the deep-read cohort will grow by the 2,082
-  non-PDF documents it makes readable. Six remain unreadable: binary
-  pre-2007 Excel and PowerPoint.
 - **Decide whether scanned PDF pages want orientation detection too.**
   Standalone images are now OCR'd with `--psm 1` because photographs
   arrive sideways; PDF pages stay on `--psm 3`. Councils scan sideways
   as well, so the same fix may apply — but ~5% of 55,678 documents have
   already been OCR'd on the old setting, so this is a measurement first
   (how many cached OCR pages look rotated) and a re-run second.
-- **Salvage the 14 documents lost to parse failure.** Of 380
-  parse-failed rows, 368 still produced findings — the failure is a
-  truncated tail. The 14 that yielded nothing include two VIRTUS
-  supporting statements. `deepread_escalate.py` is the path.
 - **Re-list the corpus to find historical partial fetches.** A short
   fetch used to be recorded as complete. New ones are caught, but past
   ones are not measurable from the manifests, which record what was
@@ -221,8 +212,6 @@ in place. None is abandoned; each is a known, scoped piece of work.
 - **The acquisition tail.** 31 browser-routed applications, 20 across
   bespoke portals, 13 genuinely hard — a slow process needing a human at
   the keyboard, and not worth holding the release for.
-- **Salvage the 14 parse-failure documents**, two VIRTUS supporting
-  statements among them. `deepread_escalate.py` is the path.
 - **Scanned-page orientation detection.** Measurement first, re-run
   second; ~5% of the corpus was OCR'd on the old setting.
 - **Coverage gaps** — Northern Ireland (whole nation, one adapter),

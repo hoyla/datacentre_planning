@@ -214,16 +214,21 @@ def universe_plan(conn) -> dict[int, DocumentPlan]:
     everyone who needs to know — the read cohorts and the coverage
     figures the reader publishes.
 
-    It exists because those two had drifted apart, and in the direction
-    that misleads. The reader counted a document as prose-not-yet-analysed
-    whenever `classify_kind` did not call it a drawing, which takes no
-    account of the 1-in-5 sample applied to the repetitive tier. 4,204
-    objections and neighbour comments that policy deliberately never
-    reads were therefore reported as an analysis backlog, dragging a
-    published coverage figure from 99% to 89% and falling — a policy
-    choice wearing the clothes of a gap. Meanwhile the cohort query
-    filtered to one model's backlog *before* planning, so it sampled a
-    different fifth again.
+    It exists because the read cohort and the coverage figures had
+    drifted apart. The cohort query filtered to one model's backlog
+    *before* planning, so `plan_documents` sampled a different fifth of
+    the repetitive tier than the global policy had — an unread-only
+    cohort pulled in ~900 objections the policy had set aside, as an
+    artefact of filter ordering rather than anyone's decision.
+
+    A correction, because the first version of this docstring overstated
+    it: the reader's headline coverage figure was never wrong. It comes
+    from site_profile.load_coverage_detail, which has always split the
+    repetitive tier out and reported it separately. What was wrong was
+    narrower — the per-application analysis table counted every
+    non-drawing document as prose, so it over-stated how many
+    applications had reading outstanding. Both now agree that prose means
+    tiers A and B, and that tier C is a category of its own.
 
     Both now ask this. `plan.will_read` is the denominator of any honest
     coverage claim; `plan.sampled_out` is a separate, statable number,
