@@ -33,11 +33,22 @@ def _handler_body(event: str) -> str:
 
 
 @pytest.mark.parametrize("event", GESTURE_HANDLERS)
-def test_a_press_inside_the_card_starts_no_map_gesture(event):
+def test_a_press_on_an_overlay_starts_no_map_gesture(event):
     body = _handler_body(event)
-    assert "#mapinfo" in body, (
-        f"the map's {event} handler does not exempt the card, so pressing "
-        f"a link in it starts a map gesture and the link never fires")
+    assert ".mapoverlay" in body, (
+        f"the map's {event} handler does not exempt overlays, so pressing "
+        f"a control in one starts a map gesture and the control never fires")
+
+
+def test_every_overlay_carries_the_class_the_guard_looks_for():
+    """The guard is one class, not a list of ids, so that adding an
+    overlay cannot silently reintroduce the bug — but only if the new
+    overlay is labelled. These are the elements sitting inside the map."""
+    inner = SRC[SRC.index('<div id="mapview">'):]
+    inner = inner[:inner.index("</div>\n</div>")]
+    for el in ("mapsubset", "mapinfo", "mapzoom"):
+        block = inner[inner.index(f'id="{el}"'):][:120]
+        assert "mapoverlay" in block, f"#{el} is inside the map but not a .mapoverlay"
 
 
 @pytest.mark.parametrize("event", GESTURE_HANDLERS)

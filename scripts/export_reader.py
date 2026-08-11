@@ -382,6 +382,32 @@ img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-
   flex:0 0 11px;width:11px;height:11px;margin:0}
 footer{padding:20px 22px 34px;color:var(--mut);font-size:12px;border-top:1px solid var(--line)}
 .help{font-size:11.5px;color:var(--mut)}
+/* A button that reads as a link: it navigates rather than submits, but it
+   is a button because it acts on the page's current state rather than
+   going to an address. */
+.linkish{border:0;background:none;padding:0;font:inherit;color:var(--lnk,#0b57d0);
+  cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.linkish:disabled{color:var(--mut);cursor:default;text-decoration:none}
+.tip{display:inline-flex;align-items:center;justify-content:center;width:15px;
+  height:15px;margin-left:5px;border-radius:50%;border:1px solid var(--line);
+  color:var(--mut);font-size:10.5px;cursor:help;position:relative;vertical-align:1px}
+.tip .tiptext{display:none;position:absolute;bottom:20px;left:-8px;width:290px;
+  background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;
+  font-size:12px;line-height:1.45;color:var(--fg);box-shadow:0 2px 14px rgba(0,0,0,.16);
+  z-index:8;text-align:left;cursor:auto}
+/* focus-within as well as focus: a tap on a touch device, where there
+   is no hover at all, lands focus on the span or on something inside
+   it depending on the engine. */
+.tip:hover .tiptext,.tip:focus .tiptext,
+.tip:focus-within .tiptext{display:block}
+/* The map is showing a subset someone chose on another tab. Said out
+   loud, with the way out attached, because a map silently showing 190 of
+   429 sites is indistinguishable from a map that is simply wrong. */
+#mapsubset{position:absolute;top:10px;left:10px;right:58px;z-index:7;
+  display:flex;gap:8px;align-items:baseline;padding:7px 10px;border:1px solid var(--line);
+  border-radius:6px;background:var(--bg);font-size:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#mapsubset[hidden]{display:none}
 /* Bracketed mention counts. Subdued because they qualify the label they
    follow rather than stating a quantity of anything on the site — the
    same grey as .help and the field keys, which is already the page's
@@ -406,7 +432,7 @@ MAP_JS = """
 function soon(fn){ try{ fn(); }catch(e){} setTimeout(fn, 0); }
 const TS=256, MINZ=5, MAXZ=17;
 const map={z:6, cx:-2.4, cy:54.2, el:null, tiles:null, pins:null, drag:null,
-           fitted:false, fitSize:null, userMoved:false};
+           fitted:false, fitSize:null, userMoved:false, subset:null};
 function proj(lat,lon,z){
   const n=Math.pow(2,z), la=lat*Math.PI/180;
   return [(lon+180)/360*n*TS,
@@ -485,6 +511,15 @@ function drawMap(){
   document.getElementById('mapcount').textContent =
     shown+' of '+MAPPTS.length+' locations';
 }
+/* A set of site keys projected from the Sites tab, or null for "no
+   subset". mapFilter INTERSECTS with it rather than replacing it, so the
+   map's own controls keep working inside the projection instead of
+   silently discarding it the moment one is touched. */
+function clearSubset(){
+  map.subset=null;
+  document.getElementById('mapsubset').hidden=true;
+  mapFilter();
+}
 function mapFilter(){
   const s=(document.getElementById('mq').value||'').toLowerCase().trim();
   const showE=document.getElementById('me').checked;
@@ -492,6 +527,7 @@ function mapFilter(){
   const big=document.getElementById('mbig').getAttribute('aria-pressed')==='true';
   for(const p of MAPPTS){
     let ok = p.k==='e' ? showE : showS;
+    if(ok&&map.subset&&p.k==='s') ok = map.subset.has(p.id);
     if(ok&&s) ok=p.h.includes(s);
     if(ok&&big&&p.k!=='e'){
       ok = p.mw===null ? !document.getElementById('munk').checked : p.mw>=100;
@@ -519,6 +555,10 @@ function fitTo(pts){
 }
 function showMap(siteKey, energyRef){
   show('map', true);
+  // Jumping to one site leaves any projection behind, or the site would
+  // be filtered out of the very view that was opened to show it.
+  map.subset=null;
+  document.getElementById('mapsubset').hidden=true;
   MAPPTS.forEach(p=>{p.sel=false;});
   const want=[];
   if(siteKey||energyRef){
@@ -575,7 +615,7 @@ function initMap(){
        did nothing. Capturing the pointer to the map compounds it.
        closest(), not classList: a press can land on a pin's child or on
        the card's own <a>, and classList only sees the element itself. */
-    if(e.target.closest('.pin, #mapinfo')) return;
+    if(e.target.closest('.pin, .mapoverlay')) return;
     map.drag={x:e.clientX,y:e.clientY}; map.el.setPointerCapture(e.pointerId);
   });
   map.el.addEventListener('pointermove',e=>{
@@ -603,7 +643,7 @@ function initMap(){
   },{passive:false});
   // Double-click zooms in where you clicked; with alt or shift, out.
   map.el.addEventListener('dblclick',e=>{
-    if(e.target.closest('.pin, #mapinfo')) return;
+    if(e.target.closest('.pin, .mapoverlay')) return;
     e.preventDefault();
     zoomAround(map.z + ((e.altKey || e.shiftKey) ? -1 : 1), e.clientX, e.clientY);
   });
@@ -630,6 +670,7 @@ function initMap(){
     mapFilter();
   });
   document.getElementById('munk').addEventListener('change', mapFilter);
+  document.getElementById('mapsubsetclear').addEventListener('click', clearSubset);
   document.getElementById('mzin').addEventListener('click',()=>zoomAround(map.z+1));
   document.getElementById('mzout').addEventListener('click',()=>zoomAround(map.z-1));
   document.getElementById('mreset').addEventListener('click',()=>{
@@ -647,6 +688,42 @@ function initMap(){
 
 /* Open one site's row on the Sites tab, expanded, with filters cleared so
    the row cannot be hidden by a filter the reader left set on another tab. */
+/* Show exactly the sites the Sites tab is currently displaying.
+   Reads the table rather than re-deriving the filter, so it cannot drift
+   from what the reporter is actually looking at: whatever apply() left
+   visible is what goes on the map, including any future filter nobody
+   has thought of yet. */
+function seeAllOnMap(){
+  const keys=[];
+  for(const r of document.querySelectorAll('#tbl-sites tr.site')){
+    if(r.style.display!=='none') keys.push(r.dataset.key);
+  }
+  const want=new Set(keys);
+  const plotted=MAPPTS.filter(p=>p.k==='s'&&want.has(p.id));
+  show('map', true);
+  map.subset=want;
+  // The map's own controls start from neutral, or a leftover 100 MW
+  // toggle would filter the projection again and the count would lie.
+  document.getElementById('me').checked=false;
+  document.getElementById('ms').checked=true;
+  document.getElementById('mq').value='';
+  document.getElementById('mbig').setAttribute('aria-pressed','false');
+  document.getElementById('munk').checked=false;
+  document.getElementById('munk').disabled=true;
+  document.getElementById('munklab').classList.add('off');
+  MAPPTS.forEach(p=>{p.sel=false;});
+  plotted.forEach(p=>{p.sel=true;});
+  mapFilter();
+  const missing = keys.length - plotted.length;
+  document.getElementById('mapsubsettext').textContent =
+    plotted.length.toLocaleString()+' of '+keys.length.toLocaleString()
+    +' filtered site'+(keys.length===1?'':'s')+' shown'
+    + (missing ? ' — '+missing.toLocaleString()+' ha'+(missing===1?'s':'ve')
+                 +' no recorded location' : '');
+  document.getElementById('mapsubset').hidden=false;
+  soon(()=>{ if(plotted.length){ map.userMoved=true; fitTo(plotted); } else drawMap(); });
+}
+
 function goSite(key){
   show('sites', true);
   document.getElementById('q').value='';
@@ -740,6 +817,8 @@ function apply(){
     if(ok)shown++;
   }
   n.textContent=shown+' of '+rows.length+' sites';
+  // Nothing to project is not a map worth opening.
+  document.getElementById('seemap').disabled = shown===0;
 }
 const big=document.getElementById('big'), unk=document.getElementById('unk'),
       unklab=document.getElementById('unklab');
@@ -753,6 +832,7 @@ big.addEventListener('click',()=>{
 unk.addEventListener('change',apply);
 unk.disabled=true; unklab.classList.add('off');
 [q,f,o].forEach(el=>el.addEventListener('input',apply));
+document.getElementById('seemap').addEventListener('click', seeAllOnMap);
 function wire(sel){
   document.querySelectorAll(sel+' > thead th').forEach((th,i)=>th.addEventListener('click',()=>{
     const tb=th.closest('table').tBodies[0];
@@ -1420,6 +1500,11 @@ def main() -> int:
  </div></td></tr>""")
 
     n_sites = len(site_rows) + n_barbour
+    # Sites in the table that can never be a pin. Derived from the points
+    # actually built rather than counted separately, so the tooltip cannot
+    # disagree with the map it is explaining.
+    n_mappable = sum(1 for m in map_points if m["k"] == "s")
+    n_no_coords = n_sites - n_mappable
 
     approws_all = []
     for r in sorted(app_rows, key=lambda x: (x[3] or "", x[1] or "")):
@@ -2044,6 +2129,13 @@ def main() -> int:
  <label class="chk" id="unklab"><input type="checkbox" id="unk"> Exclude unknown MW
   consumption</label>
  <span class="count" id="n"></span>
+ <button type="button" id="seemap" class="linkish">See all on map</button><span
+  class="tip" tabindex="0" role="note" aria-label="Why the map may show fewer sites
+ than the table">?<span class="tiptext">The map can only show sites with a recorded
+ location. {n_no_coords} of {n_sites} sites have none — usually because the council
+ published no grid reference and the address could not be resolved — so they stay in the
+ table but never appear as a pin. The link says how many of the sites you have filtered
+ to can be shown, and how many cannot.</span></span>
 </div>
 <table id="tbl-sites"><thead><tr>
  <th>{dl("Sites","Site name","Site")}</th>
@@ -2100,8 +2192,10 @@ def main() -> int:
  </aside>
  <div id="mapview">
   <div id="maptiles"></div><div id="mappins"></div>
-  <div id="mapinfo" hidden></div>
-  <div id="mapzoom"><button id="mzin" title="Zoom in">+</button>
+  <div id="mapsubset" class="mapoverlay" hidden><span id="mapsubsettext"></span><button
+   type="button" id="mapsubsetclear" class="linkish">Clear this selection</button></div>
+  <div id="mapinfo" class="mapoverlay" hidden></div>
+  <div id="mapzoom" class="mapoverlay"><button id="mzin" title="Zoom in">+</button>
    <button id="mzout" title="Zoom out">−</button></div>
  </div>
 </div>
