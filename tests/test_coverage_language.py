@@ -332,3 +332,45 @@ class TestOneDefinitionOfIntendedToBeRead:
                        "no extractable text"):
             assert f'"{reason}"' in src
         assert "selected documents cannot be " in src
+
+
+class TestUnreadableIsNotUnread:
+    """A document with no words is not a document awaiting analysis.
+
+    231 documents are held, classified as prose, and contain nothing:
+    photographs of site notices, plans filed as JPEGs. Both tesseract and
+    Apple Vision read them as blank, so no further pass moves them.
+    Counted as "not yet analysed" they were a residue that never cleared
+    and implied a backlog that did not exist.
+    """
+
+    def test_the_reader_separates_no_text_from_not_yet_read(self):
+        import pathlib
+        import re
+        src = re.sub(r"\s+", " ", pathlib.Path("scripts/export_reader.py").read_text())
+        assert "read_state='no_text'" in src
+        assert "if no_text and not was_read:" in src
+        # ...and says so on the page rather than only in the arithmetic.
+        assert "contain no words at all" in src
+
+    def test_recording_a_verdict_is_its_own_action(self):
+        """A dry run that quietly wrote rows would be the worse trap."""
+        import pathlib
+        src = pathlib.Path("scripts/deepread_escalate_openai.py").read_text()
+        assert "--record-no-text" in src
+        assert "requires --model" in src
+        # It must not be reachable from the estimate-only path.
+        assert "if args.record_no_text:" in src
+
+    def test_the_log_writer_takes_a_model_rather_than_assuming_one(self):
+        """One upsert, many readers. A second copy is how not_extracted
+        outlived the extraction that fixed it."""
+        import inspect
+        import pathlib
+        src = pathlib.Path("scripts/deepread_run.py").read_text()
+        assert "model: str | None = None" in src
+        assert "model or MODEL_TAG" in src
+        assert src.count("INSERT INTO deepread_log") == 1, (
+            "a second INSERT into deepread_log means a second upsert "
+            "policy, which is the bug this guards")
+        del inspect

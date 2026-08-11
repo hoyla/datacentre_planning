@@ -832,7 +832,9 @@ def main() -> int:
         cur.execute("""
           SELECT d.id, d.application_id,
                  EXISTS (SELECT 1 FROM deepread_log dl
-                         WHERE dl.document_id=d.id AND dl.read_state='read')
+                         WHERE dl.document_id=d.id AND dl.read_state='read'),
+                 EXISTS (SELECT 1 FROM deepread_log dl
+                         WHERE dl.document_id=d.id AND dl.read_state='no_text')
           FROM documents d
           WHERE EXISTS (SELECT 1 FROM site_members m
                         JOIN sites s ON s.id=m.site_id AND s.retired_at IS NULL
@@ -849,12 +851,23 @@ def main() -> int:
         plan_by_id = deepread_select.universe_plan(conn)
         _prose: dict[int, list[int]] = {}
         n_sampled_out = 0
-        for doc_id, app_id, was_read in cur.fetchall():
+        n_no_text = 0
+        for doc_id, app_id, was_read, no_text in cur.fetchall():
             plan = plan_by_id.get(doc_id)
             if plan is None or plan.tier == "skip":
                 continue
             if plan.sampled_out:
                 n_sampled_out += 1
+                continue
+            if no_text and not was_read:
+                # Held, classified as prose, and containing no words:
+                # photographs of site notices, plans filed as JPEGs. Both
+                # tesseract and Apple Vision read them as blank, so no
+                # further pass will move them. Counting them as awaiting
+                # analysis would leave a residue that never clears and
+                # imply a backlog that does not exist; they are named
+                # instead, which is what the corpus can honestly say.
+                n_no_text += 1
                 continue
             e = _prose.setdefault(app_id, [0, 0])
             e[0] += 1
@@ -1971,7 +1984,10 @@ def main() -> int:
  arrive in near-identical runs and are read at one in five. That is a deliberate policy
  rather than a backlog, so they are named here and left out of the figures below rather
  than counted as unanalysed. Reading every one of them would change the totals and not
- the findings.</p>
+ the findings. A further {n_no_text:,} are held and contain no words at all — photographs
+ of site notices, plans filed as images — read as blank by two independent text
+ recognisers. They are named for the same reason: an unreadable document is a different
+ thing from an unread one, and only one of the two can be fixed by reading.</p>
  <table class="stats"><tbody>
   <tr><th scope="row">Every prose document analysed</th><td class="n">{full_read:,}</td>
       <td class="n">{_pc(full_read, len(have_prose))}</td>

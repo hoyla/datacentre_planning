@@ -396,6 +396,52 @@ def load_cohort(conn, which: str, sample: int = 0,
     return kept[:limit] if limit else kept
 
 
+def do_record_no_text(model: str, reasoning_effort: str | None = None) -> int:
+    """Give the unreadable documents a verdict instead of a silence.
+
+    231 documents sit in the cohort holding a cache with no words in it:
+    photographs of site notices, plans filed as JPEGs, a 4.7MB Exif photo
+    filed as Supporting Information. Both tesseract and Apple Vision read
+    them as blank (measured 2026-08-11, 0 of 10 on a like-for-like
+    sample), so no OCR pass is going to change the answer.
+
+    Left alone they are indistinguishable from a backlog — held,
+    classified as prose, never read, for ever. `no_text` is the verdict
+    the schema already has for exactly this, and deepread_run has written
+    it for years down the non-batch path. This writes it down the batch
+    path too.
+
+    Deliberately its own action rather than a side effect of --submit or
+    --dry-run: it writes, and a dry run that quietly wrote rows would be
+    a worse trap than the one it fixes. Idempotent — the upsert never
+    overwrites a successful read, so a document that later becomes
+    readable and is read keeps the read.
+    """
+    tag = model_tag_for(model, reasoning_effort)
+    written = kept = 0
+    with db.connect() as conn:
+        rows = load_cohort(conn, "remaining", model_tag=tag, unread_only=True)
+        for row in rows:
+            cache = extract.cache_path_for("documents", row["application_ref"],
+                                           row["sha"])
+            if not cache.exists():
+                continue
+            try:
+                pages = json.loads(cache.read_text()).get("pages") or []
+            except Exception:
+                continue
+            if any(p.strip() for p in pages):
+                kept += 1
+                continue
+            _dr.log_document(conn, row, read_state="no_text",
+                             pages_total=len(pages), pages_sent=None,
+                             model=tag)
+            written += 1
+    print(f"{written:,} documents recorded as no_text under {tag}; "
+          f"{kept:,} of the cohort have text and were left alone")
+    return written
+
+
 def build_jsonl(rows: list[dict], model: str, max_chars: int,
                 reasoning_effort: str | None = None,
                 dropped: dict[str, int] | None = None
@@ -889,6 +935,10 @@ def main() -> None:
                          "spent 94%% of its budget thinking and answered "
                          "nothing on 29%% of requests. Becomes part of the "
                          "model tag.")
+    ap.add_argument("--record-no-text", action="store_true",
+                    help="Write a no_text verdict for cohort documents whose "
+                         "cache holds no words, so they stop reading as an "
+                         "unanalysed backlog. Writes; idempotent.")
     ap.add_argument("--unread-only", action="store_true",
                     help="Restrict the 'remaining' cohort to documents no "
                          "model has read, closing the coverage gap rather "
@@ -903,6 +953,16 @@ def main() -> None:
     if args.list_models:
         for m in sorted(_client().models.list(), key=lambda m: m.id):
             print(m.id)
+        return
+    if args.record_no_text:
+        # Explicit, because the row names the run that met the document.
+        # A verdict filed under 'openai:<unset>' would be a permanent
+        # record of nobody in particular having found nothing.
+        if not args.model:
+            ap.error("--record-no-text requires --model: the verdict is "
+                     "logged under the tag of the run whose cohort "
+                     "selected the document")
+        do_record_no_text(args.model, args.reasoning_effort)
         return
     if args.submit or args.dry_run:
         if args.submit and not args.model:
