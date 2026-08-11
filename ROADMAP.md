@@ -116,6 +116,71 @@ session with the network tab open, after which an adapter is
 straightforward. Worth doing — it is the whole of NI, not seven
 applications.
 
+**Section 106 agreements are tiered as drawings and never read.**
+`classify_kind` in [dcp/deepread_select.py](dcp/deepread_select.py) tests
+`DRAWING_KINDS` before `TIER_A_KINDS`, and `DRAWING_KINDS` contains
+`section\b`. So a document whose kind is "Section 106 Agreement" matches
+the drawing rule and returns `skip`, even though `TIER_A_KINDS` lists
+`s106|section 106` explicitly and was plainly written to catch it — the
+ordering decides, and the tier-A rule is never reached. `"S106
+Agreement"` takes the intended path and comes back `A`, so whether an
+obligation is read at all turns on how the authority abbreviated it.
+
+Counted over the staged corpus, **57 documents (438 MB) whose kind
+mentions s106, section 106, a unilateral undertaking or a planning
+obligation are classified `skip`**, against 62 that reach tier A. The
+premise this rests on is that s106 agreements are prose worth reading:
+they are where planning obligations, community payments and
+infrastructure commitments are actually written down, which is
+investigative material rather than graphical. `"Section 73 Application"`
+— variation of conditions — falls the same way.
+
+The fix is ordering, not vocabulary: test `TIER_A_KINDS` first, or
+exclude the s106 forms from `section\b`. It changes coverage figures, so
+it wants the 57 re-read and `load_coverage_detail` recomputed rather than
+just the regex changed. Found 2026-08-11 while sizing the skip tier for
+the Pinpoint upload, where the same rule would have dropped these
+documents from the collection too.
+
+## Audit tonight's new rules against prior learnings — DONE
+
+Carried out 2026-08-11; findings in
+[docs/RULES_AUDIT.md](docs/RULES_AUDIT.md). One rule of six failed, one
+is inert, and the instruction below cited a HISTORY note that does not
+exist.
+
+**The failure:** the corroboration bands in `consumption_integrity.py`
+and `generation_integrity.py` called 0.8–1.5 the classic
+full-redundancy pattern, "sized to carry the load". Measured across the
+47 sites disclosing both figures, that band holds 13 of them; the median
+ratio is 0.75 and the modal case, 20 sites, is below half. The labels
+now describe the ratio instead of diagnosing the engineering. The
+thresholds are kept as divisions.
+
+**Still open from it:** the ratios compare figures that may come from
+different applications at multi-building sites — the same scope trap
+recorded below under Smaller things — and neither script says so. The
+extremes run 0.00 to 100.00, which is what that looks like.
+
+The standing lesson holds and is why this was worth doing: inventing a
+validation rule means asserting a domain fact, and this project's domain
+facts are already written down, often as hard-won negative results. On
+2026-08-10 a check asserted that a site's IT load cannot exceed its
+stated total; this file already recorded four sites where it does and
+all four are correct. It would have led a fresh session to "correct"
+three correct figures.
+
+**And when a claim is retracted, sweep every place it was asserted.**
+The impossible-components claim was corrected in the code and in the
+runbook, and left standing in the pull request description — the one
+artefact a reviewer actually reads — until Luke found it there too. That
+was the third instance in one evening of fixing the thing in front of me
+and not its neighbours: the per-site CSVs bypassed adjudication while the
+workbook had it, DuckDB omitted it entirely, and a retraction reached two
+of four places. A claim lives in code, comments, commit messages, PR
+bodies, the runbook, HISTORY, and the reader's own methodology and
+dictionary text. `git grep` the distinctive phrase, not the file you
+happen to have open.
 ## Smaller things
 
 - **Re-measure the 1.71 kW/m² floor-area factor.** It drives the
