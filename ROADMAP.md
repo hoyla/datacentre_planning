@@ -131,6 +131,22 @@ gaps, in rising order of effort:
 implausibly few and consistent with power schemes near campuses being
 absent from the corpus rather than misclassified.
 
+4. **Generator capacity that accretes through follow-on applications.**
+   Found while cross-checking the Capacity Market sites against planning
+   records — see §5 of
+   [docs/EXTERNAL_DATA_SOURCES.md](docs/EXTERNAL_DATA_SOURCES.md). At 672
+   Galvin Road, Slough, four generators arrived in 2023 on their own minor
+   consent, years after the data centre permission; at Hemel Hempstead a
+   2003 application is simply "Construction of single storey building to
+   house generator". None states a figure in MW. This is the Yorkshire
+   Energy Park pattern at building scale, and it means a sweep anchored on
+   the main consent **systematically undercounts installed generation**.
+   The fix is to link follow-on applications back to their parent site,
+   which the co-location sweep should do anyway. Two naming-invisibility
+   cases turned up in the same search — a data centre consented under use
+   class B8, and one as "fibre exchange (Sui Generis)" — which belong with
+   the existing invisibility-flag work.
+
 **Northern Ireland is a coverage gap, not just a missing adapter.** PlanIt
 does not cover NI at all, so the only NI applications we hold arrived by
 other routes — seven, from Derry & Strabane and Causeway Coast & Glens.
@@ -265,6 +281,18 @@ in place. None is abandoned; each is a known, scoped piece of work.
   separate sweep would catch cases with no child in our window.
 - **Environment Agency public register.** Industrial installations and
   combustion plant, as triangulation against permitted on-site capacity.
+  Before adding this or any other outside source, read
+  [docs/EXTERNAL_DATA_SOURCES.md](docs/EXTERNAL_DATA_SOURCES.md): the
+  commercial directories, the NESO registers and the Capacity Market were
+  each tested against this corpus on 2026-08-10 and the finding was that
+  no external MW can become a column, because none of them measures the
+  quantity a planning application states — and Data Center Map's
+  planned-site figures are read off the same planning documents, so they
+  would corroborate us with our own numbers. The two things there worth
+  actually doing are requests, not downloads: an EIR request to NESO for
+  the project-level demand connection queue, and an FoI to DESNZ/EA for
+  site-level CCA consumption. Both have lead times, so starting them is
+  cheap and waiting is the cost.
 - **Multimodal pass over drawings.** Rejected in v1 and still rejected:
   PDFs are overwhelmingly text-layered, and concealed plant will not be
   in the drawings. Revisit only for a specific application where both

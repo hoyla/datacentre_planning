@@ -32,6 +32,10 @@ workbook, a queryable database, and the source documents themselves.
 - [docs/BACKUP.md](docs/BACKUP.md) — the database is the part that
   cannot be re-fetched. How it is dumped, encrypted, verified and
   rehearsed, and where the copies live.
+- [docs/EXTERNAL_DATA_SOURCES.md](docs/EXTERNAL_DATA_SOURCES.md) — the
+  other datasets that claim to measure data-centre capacity, what each
+  one's MW actually is, and why none of them can be merged into a column
+  here. Read before proposing a triangulation source.
 - [DATA-LICENSING.md](DATA-LICENSING.md) — per-source upstream terms.
   Barbour ABI data is licensed and **requires credit** in published
   output.
