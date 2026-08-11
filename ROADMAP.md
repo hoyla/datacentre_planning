@@ -136,45 +136,6 @@ infrastructure commitments are written down, which is investigative
 material. 438 MB of it, and the same rule would have dropped them from
 the Pinpoint collection too.
 
-## Audit tonight's new rules against prior learnings — DONE
-
-Carried out 2026-08-11; findings in
-[docs/RULES_AUDIT.md](docs/RULES_AUDIT.md). One rule of six failed, one
-is inert, and the instruction below cited a HISTORY note that does not
-exist.
-
-**The failure:** the corroboration bands in `consumption_integrity.py`
-and `generation_integrity.py` called 0.8–1.5 the classic
-full-redundancy pattern, "sized to carry the load". Measured across the
-47 sites disclosing both figures, that band holds 13 of them; the median
-ratio is 0.75 and the modal case, 20 sites, is below half. The labels
-now describe the ratio instead of diagnosing the engineering. The
-thresholds are kept as divisions.
-
-**Still open from it:** the ratios compare figures that may come from
-different applications at multi-building sites — the same scope trap
-recorded below under Smaller things — and neither script says so. The
-extremes run 0.00 to 100.00, which is what that looks like.
-
-The standing lesson holds and is why this was worth doing: inventing a
-validation rule means asserting a domain fact, and this project's domain
-facts are already written down, often as hard-won negative results. On
-2026-08-10 a check asserted that a site's IT load cannot exceed its
-stated total; this file already recorded four sites where it does and
-all four are correct. It would have led a fresh session to "correct"
-three correct figures.
-
-**And when a claim is retracted, sweep every place it was asserted.**
-The impossible-components claim was corrected in the code and in the
-runbook, and left standing in the pull request description — the one
-artefact a reviewer actually reads — until Luke found it there too. That
-was the third instance in one evening of fixing the thing in front of me
-and not its neighbours: the per-site CSVs bypassed adjudication while the
-workbook had it, DuckDB omitted it entirely, and a retraction reached two
-of four places. A claim lives in code, comments, commit messages, PR
-bodies, the runbook, HISTORY, and the reader's own methodology and
-dictionary text. `git grep` the distinctive phrase, not the file you
-happen to have open.
 ## Smaller things
 
 - **Re-measure the 1.71 kW/m² floor-area factor.** It drives the
