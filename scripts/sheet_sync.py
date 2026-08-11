@@ -45,6 +45,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from dcp import release  # noqa: E402
 from dcp.drive import WORKBOOK_SHEET_URL  # noqa: E402
 
 CONFIG_DIR = Path.home() / ".config" / "datacentre_planning"
@@ -52,7 +53,8 @@ CLIENT_SECRET = CONFIG_DIR / "client_secret.json"
 TOKEN_PATH = CONFIG_DIR / "sheets_token.json"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-DEFAULT_WORKBOOK = Path("data/exports/phase2_build/dc_handover_phase2.xlsx")
+DEFAULT_WORKBOOK = release.latest_workbook(
+    Path("data/exports/phase1_build/dc_handover_phase1.xlsx"))
 
 # Anything Sheets would read as a formula. The exporter emits deliberate
 # =HYPERLINK() cells and those must stay live, but a council's own

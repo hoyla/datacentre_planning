@@ -259,7 +259,8 @@ def generator_profile(counts, fuel_texts) -> GeneratorProfile:
 # "design discharge rate 3.6 l/s for a 30-year event", attenuation volumes.
 #
 # Filtered to figures that describe what a facility would actually consume,
-# it collapses to 76 of 429 sites. Building a "water use MW-equivalent"
+# it collapses to 119 of 429 sites (76 when this was written on 2026-08-10;
+# the phase 2.1 reading raised it). Building a "water use MW-equivalent"
 # column on that would imply a precision the documents do not contain, and
 # would invite exactly the comparison it cannot support.
 #
@@ -267,7 +268,7 @@ def generator_profile(counts, fuel_texts) -> GeneratorProfile:
 # and reasonably covered (119 sites) — and it is the question that actually
 # determines water demand, since an air-cooled hall and an evaporative one
 # differ by orders of magnitude. And the *absence* is reported as a finding
-# in its own right: that only 18% of sites disclose anything about water
+# in its own right: that only 28% of sites disclose anything about water
 # consumption is itself worth a reporter's attention.
 
 # Methods are counted, never reduced to one. An energy statement that

@@ -67,6 +67,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import db, extract, signals  # noqa: E402
+from dcp import release as release_mod  # noqa: E402
 
 BAD = re.compile(r'[<>:"/\\|?*\x00-\x1f]+')
 
@@ -106,10 +107,11 @@ def main() -> None:
     # citation of the phase 1 workbook keeps resolving after phase 2
     # ships beside it rather than on top of it.
     ap.add_argument("--release-dir", dest="release_dir", type=Path,
-                    default=Path("data/exports/phase2_build"),
+                    default=None,
                     help="folder whose workbook, database and reader go to the "
                          "Drive root; the release is the source of truth for "
-                         "which generated artefacts belong together")
+                         "which generated artefacts belong together. Defaults "
+                         "to the most recently written data/exports/*_build.")
     ap.add_argument("--limit", type=int, default=None,
                     help="Only the first N sites (for a dry look).")
     args = ap.parse_args()
@@ -419,7 +421,10 @@ def main() -> None:
     # spreadsheets and no way to tell which one the reader.html agreed with.
     for old_artefact in out.glob("dc_build_handover_*.xlsx"):
         old_artefact.unlink()
-    release = Path(args.release_dir)
+    release = Path(args.release_dir) if args.release_dir else (
+        release_mod.latest_release_dir(Path("data/exports/phase1_build")))
+    if not args.release_dir:
+        print(f"   release folder: {release} (newest; --release-dir overrides)")
     staged_root = []
     if release.is_dir():
         for f in sorted(release.iterdir()):

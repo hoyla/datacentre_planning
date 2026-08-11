@@ -54,6 +54,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
+from dcp import release  # noqa: E402
 from dcp import db  # noqa: E402
 from dcp import deepread_select  # noqa: E402
 
@@ -724,6 +725,27 @@ function seeAllOnMap(){
   soon(()=>{ if(plotted.length){ map.userMoved=true; fitTo(plotted); } else drawMap(); });
 }
 
+/* How much chrome is pinned above the scrolling content. Three layers
+   stack: the tab bar at top:0, the filter bar beneath it, and the
+   table's own sticky header row. scrollIntoView({block:'start'}) knows
+   about none of them, so a row scrolled to "the top" lands underneath
+   all three — which put a site's name off screen and left the reporter
+   looking at expanded detail with no way to tell whose it was.
+   Measured from the live elements rather than assumed: the filter bar
+   wraps to two lines at some widths, and the whole point is that this
+   is the height nobody can predict. */
+function stickyOffset(){
+  const h = el => (el && el.offsetParent !== null)
+                  ? el.getBoundingClientRect().height : 0;
+  return h(document.querySelector('nav.top'))
+       + h(document.querySelector('.view.on .controls'))
+       + h(document.querySelector('.view.on table thead'));
+}
+function scrollRowToTop(r){
+  const y = window.scrollY + r.getBoundingClientRect().top - stickyOffset() - 8;
+  window.scrollTo({top: Math.max(0, y)});
+}
+
 function goSite(key){
   show('sites', true);
   document.getElementById('q').value='';
@@ -739,7 +761,7 @@ function goSite(key){
     if(!r.classList.contains('open')){
       r.classList.add('open'); r.nextElementSibling.classList.add('on');
     }
-    soon(()=>r.scrollIntoView({block:'start'}));
+    soon(()=>scrollRowToTop(r));
   }
   return false;
 }
@@ -870,9 +892,18 @@ def main() -> int:
     # corrected. See dcp/adjudication_gate.py.
     adjudication_gate.require_corrected()
     ap = argparse.ArgumentParser(description=__doc__)
+    # Derived from the newest release folder, never named. Run bare
+    # during the 2.1 regeneration these defaulted to phase1_build and
+    # "1", so the front page would have been stamped "phase 1 release"
+    # and written into a folder two releases old. See dcp/release.py.
+    _rel = release.latest_release_dir()
     ap.add_argument("--out", type=Path,
-                    default=Path("data/exports/phase1_build/reader.html"))
-    ap.add_argument("--phase", default="1")
+                    default=(_rel / "reader.html") if _rel
+                            else Path("data/exports/phase1_build/reader.html"))
+    ap.add_argument("--phase", default=release.phase_of(_rel) or "1",
+                    help="stamps the title, the header and the database "
+                         "filename; defaults to the newest release folder's "
+                         "phase, so starting a NEW phase means passing it")
     ap.add_argument("--publish", type=Path, default=None,
                     help="also write here — index.html at the repository root, "
                          "which is what the EdgeOne deployment serves")
@@ -928,24 +959,21 @@ def main() -> int:
                         JOIN sites s ON s.id=m.site_id AND s.retired_at IS NULL
                         WHERE m.application_id=d.application_id
                           AND m.retired_at IS NULL)""")
-        # The plan, not the kind. Filtering on `classify_kind` alone
-        # counted the four-fifths of the repetitive tier that the 1-in-5
-        # sample deliberately sets aside as prose still awaiting
-        # analysis — 4,204 objections and neighbour comments reported as
-        # a backlog, which took a genuine 99% down to 89% and falling as
-        # acquisition brought in more of them. Sampling objections rather
-        # than reading every near-identical one is a deliberate policy;
-        # what was wrong was publishing it as a gap.
+        # Prose is tiers A and B, exactly as site_profile.load_coverage_detail
+        # defines it — the repetitive tier is a category of its own and is
+        # reported as one, never folded into either side. This loop counts
+        # the same thing that function does, at application granularity
+        # rather than site, because the two are shown on the same page and
+        # a reader comparing them is entitled to find them consistent.
+        # An earlier version of this counted every non-drawing document as
+        # prose awaiting analysis, which over-stated the per-application
+        # backlog by the whole of tier C.
         plan_by_id = deepread_select.universe_plan(conn)
         _prose: dict[int, list[int]] = {}
-        n_sampled_out = 0
         n_no_text = 0
         for doc_id, app_id, was_read, no_text in cur.fetchall():
             plan = plan_by_id.get(doc_id)
-            if plan is None or plan.tier == "skip":
-                continue
-            if plan.sampled_out:
-                n_sampled_out += 1
+            if plan is None or plan.tier in ("skip", "C"):
                 continue
             if no_text and not was_read:
                 # Held, classified as prose, and containing no words:
@@ -2075,14 +2103,11 @@ def main() -> int:
  documents</h4>
  <p class="help">Counted over prose only. Drawings are excluded because the deep read skips
  them by design, so an application is not half-read on account of a location plan.
- A further {n_sampled_out:,} documents are excluded as the sampled remainder of the
- repetitive classes — objections, neighbour comments, petitions and correspondence, which
- arrive in near-identical runs and are read at one in five. That is a deliberate policy
- rather than a backlog, so they are named here and left out of the figures below rather
- than counted as unanalysed. Reading every one of them would change the totals and not
- the findings. A further {n_no_text:,} are held and contain no words at all — photographs
- of site notices, plans filed as images — read as blank by two independent text
- recognisers. They are named for the same reason: an unreadable document is a different
+ The repetitive classes — objections, neighbour comments, petitions and correspondence —
+ are counted separately above and read at one in five by policy, not left outstanding.
+ A further {n_no_text:,} documents are held and contain no words at all — photographs of
+ site notices, plans filed as images — read as blank by two independent text recognisers.
+ They are named rather than counted as unanalysed: an unreadable document is a different
  thing from an unread one, and only one of the two can be fixed by reading.</p>
  <table class="stats"><tbody>
   <tr><th scope="row">Every prose document analysed</th><td class="n">{full_read:,}</td>
