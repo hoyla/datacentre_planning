@@ -54,6 +54,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
+from dcp import release  # noqa: E402
 from dcp import db  # noqa: E402
 from dcp import deepread_select  # noqa: E402
 
@@ -891,9 +892,18 @@ def main() -> int:
     # corrected. See dcp/adjudication_gate.py.
     adjudication_gate.require_corrected()
     ap = argparse.ArgumentParser(description=__doc__)
+    # Derived from the newest release folder, never named. Run bare
+    # during the 2.1 regeneration these defaulted to phase1_build and
+    # "1", so the front page would have been stamped "phase 1 release"
+    # and written into a folder two releases old. See dcp/release.py.
+    _rel = release.latest_release_dir()
     ap.add_argument("--out", type=Path,
-                    default=Path("data/exports/phase1_build/reader.html"))
-    ap.add_argument("--phase", default="1")
+                    default=(_rel / "reader.html") if _rel
+                            else Path("data/exports/phase1_build/reader.html"))
+    ap.add_argument("--phase", default=release.phase_of(_rel) or "1",
+                    help="stamps the title, the header and the database "
+                         "filename; defaults to the newest release folder's "
+                         "phase, so starting a NEW phase means passing it")
     ap.add_argument("--publish", type=Path, default=None,
                     help="also write here — index.html at the repository root, "
                          "which is what the EdgeOne deployment serves")

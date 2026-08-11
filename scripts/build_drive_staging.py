@@ -67,6 +67,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import db, extract, signals  # noqa: E402
+from dcp import release as release_mod  # noqa: E402
 
 BAD = re.compile(r'[<>:"/\\|?*\x00-\x1f]+')
 
@@ -95,25 +96,6 @@ def link_or_copy(src: Path, dst: Path) -> None:
         os.link(src, dst)
     except OSError:
         shutil.copyfile(src, dst)
-
-
-def _latest_release() -> Path:
-    """The most recently written release folder under data/exports.
-
-    Defaulted to a hardcoded `phase2_build` until 2026-08-11, when the
-    2.1 regeneration staged phase 2's workbook and database to the Drive
-    root and announced it in one line nobody would think to doubt — the
-    per-site files were current and the two artefacts beside them were a
-    day old. A default that names one release is a default that is wrong
-    from the next release onwards, and this is the one place where being
-    wrong ships a stale spreadsheet to the people relying on it.
-    """
-    builds = [d for d in Path("data/exports").glob("*_build") if d.is_dir()]
-    if not builds:
-        return Path("data/exports/phase2_build")
-    newest = max(builds, key=lambda d: d.stat().st_mtime)
-    print(f"   release folder: {newest} (most recent; --release-dir overrides)")
-    return newest
 
 
 def main() -> None:
@@ -439,7 +421,10 @@ def main() -> None:
     # spreadsheets and no way to tell which one the reader.html agreed with.
     for old_artefact in out.glob("dc_build_handover_*.xlsx"):
         old_artefact.unlink()
-    release = Path(args.release_dir) if args.release_dir else _latest_release()
+    release = Path(args.release_dir) if args.release_dir else (
+        release_mod.latest_release_dir(Path("data/exports/phase1_build")))
+    if not args.release_dir:
+        print(f"   release folder: {release} (newest; --release-dir overrides)")
     staged_root = []
     if release.is_dir():
         for f in sorted(release.iterdir()):
