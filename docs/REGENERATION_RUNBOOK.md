@@ -276,7 +276,28 @@ one keeps resolving. And anything it did not upload. Files are trashed,
 never deleted, so a wrong prune is a restore from the bin rather than a
 re-upload of 70GB.
 
-Then confirm by fetching a sample **through the API by file id** —
+```sh
+scripts/verify_drive_sample.py --sample 30 --phase 2.1
+```
+
+That is the check, now a script rather than a described intention. It
+fetches each file by id from the upload ledger and compares name, size
+and md5 against the local copy, then walks the parent chain to confirm
+it reaches the handover root. Release artefacts are always included on
+top of the random sample, because checking only random files would pass
+while the one thing everybody opens sat in the wrong folder. `--phase`
+tells it which release is yours, so an older release's artefacts are
+reported without failing the run.
+
+It found on 2026-08-11 that **phase 1's and phase 2's workbooks and
+databases sit outside the handover root**, in
+`1udCAR_bD5ghLO4qJOBThXqmSPSlzb3wT`. Phase 1's was already known; phase
+2's was not. Worth knowing before hunting for them to archive. Under
+`drive.file` the tool cannot read that folder's own metadata, only its
+id — it did not create it.
+
+The original wording of this step, kept because it is the reason the
+script exists: confirm by fetching a sample **through the API by file id** —
 name, parent folder, byte size and md5 against local. This is what found
 that the phase 1 artefacts sit outside the handover root; the sync's own
 counters would never have shown it. Do not trust the
