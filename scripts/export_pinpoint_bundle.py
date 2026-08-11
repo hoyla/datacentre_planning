@@ -99,6 +99,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import atexit
 import csv
 import datetime as dt
 import hashlib
@@ -254,7 +255,7 @@ def publish(tmp: Path, dst: Path) -> None:
 
 
 def copy_atomic(src: Path, dst: Path, work: Path, tag: str) -> None:
-    tmp = work / f"{tag}{dst.suffix}"
+    tmp = work / f"{tag}.{os.getpid()}{dst.suffix}"
     shutil.copy2(src, tmp)
     publish(tmp, dst)
 
@@ -363,7 +364,7 @@ def msg_to_eml(src: Path, dst: Path) -> bool:
         msg.close()
     except Exception:
         return False
-    tmp = dst.parent / "_work" / (dst.name + ".part")
+    tmp = dst.parent / "_work" / f"{dst.name}.{os.getpid()}.part"
     tmp.write_bytes(data)
     publish(tmp, dst)
     return True
@@ -376,7 +377,7 @@ def shrink_image(src: Path, dst: Path) -> bool:
         Image.MAX_IMAGE_PIXELS = None
         with Image.open(src) as im:
             im = im.convert("RGB")
-            tmp = dst.parent / "_work" / (dst.name + ".part")
+            tmp = dst.parent / "_work" / f"{dst.name}.{os.getpid()}.part"
             for quality, scale in ((70, 1.0), (60, 0.7), (50, 0.5), (40, 0.35)):
                 w, h = int(im.width * scale), int(im.height * scale)
                 im.resize((w, h)).save(tmp, "JPEG", quality=quality, optimize=True)
@@ -406,7 +407,7 @@ def split_text(src: Path, out_dir: Path, base: str, ext: str) -> list[Path]:
         for line in fh:
             if size + len(line) > OTHER_MAX and buf:
                 p = out_dir / f"{base} (part {part}){ext}"
-                tmp = out_dir / "_work" / (p.name + ".part")
+                tmp = out_dir / "_work" / f"{p.name}.{os.getpid()}.part"
                 tmp.write_bytes(b"".join(buf))
                 publish(tmp, p)
                 written.append(p)
@@ -416,7 +417,7 @@ def split_text(src: Path, out_dir: Path, base: str, ext: str) -> list[Path]:
             size += len(line)
         if buf and size > len(header):
             p = out_dir / f"{base} (part {part}){ext}"
-            tmp = out_dir / "_work" / (p.name + ".part")
+            tmp = out_dir / "_work" / f"{p.name}.{os.getpid()}.part"
             tmp.write_bytes(b"".join(buf))
             publish(tmp, p)
             written.append(p)
@@ -439,7 +440,7 @@ def process(job: tuple) -> list[dict]:
     ext = sniff(src) or src.suffix.lower()
     work = out_dir / "_work"
     work.mkdir(parents=True, exist_ok=True)
-    tmp = work / f"{sha[:16]}{ext}"
+    tmp = work / f"{sha[:16]}.{os.getpid()}{ext}"
 
     def done(name: str, path: Path, action: str, note: str = "") -> dict:
         r = dict(row)
@@ -623,6 +624,29 @@ def main() -> None:
         sys.exit(f"no staging tree at {args.src}")
 
     args.out.mkdir(parents=True, exist_ok=True)
+    # Refuse to run twice against one output directory. Two sweeps were
+    # once started by different people minutes apart and neither noticed
+    # for over an hour: they raced on identical `_work` temp names, each
+    # deleted the other's in-progress files at startup, half the corpus
+    # was converted twice, and the journal recorded sizes that no longer
+    # matched what was on disk. Nothing was corrupted in the end, but the
+    # manifest is the provenance record and it had already drifted from
+    # the files it describes. A lock is cheaper than proving that never
+    # matters.
+    lock = args.out / "_running.lock"
+    if not args.plan:
+        if lock.exists():
+            try:
+                other = int(lock.read_text().split()[0])
+                os.kill(other, 0)
+            except (ValueError, IndexError, ProcessLookupError, OSError):
+                other = None
+            if other:
+                sys.exit(f"another sweep (pid {other}) is already writing to "
+                         f"{args.out}\nwait for it, or remove {lock} if it died")
+            lock.unlink(missing_ok=True)
+        lock.write_text(f"{os.getpid()} {dt.datetime.now().isoformat()}\n")
+        atexit.register(lambda: lock.unlink(missing_ok=True))
     logf = None if args.plan else open(args.out / "_build.log", "a",
                                        encoding="utf-8")
     g = 1 << 30
