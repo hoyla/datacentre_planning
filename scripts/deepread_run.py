@@ -724,18 +724,15 @@ def process_document(conn, row: dict, *, max_chars: int,
         return "empty text layer"
 
     selected = sel.select_pages(pages, tier=row["tier"])
-    capped = sel.selection_was_capped(pages, selected)
-    if capped:
-        # Recorded, not silent. A document whose selection hit the
-        # ceiling has been partly read, and coverage must be able to say
-        # so — the same honesty the split already applies to drawings and
-        # sampled objection letters.
-        escalate(reason="selection_capped",
+    if sel.selection_is_large(pages, selected):
+        # Announced, not trimmed. Nothing is dropped — this exists so a
+        # genuinely expensive document is visible before it starts to
+        # look like a hung process.
+        escalate(reason="large_document",
                  application_ref=row["application_ref"], sha=row["sha"],
                  document_id=row["document_id"], pages_total=len(pages),
                  pages_selected=len(selected),
-                 chars_available=sum(len(p) for p in pages),
-                 cap=sel.MAX_SELECTED_CHARS)
+                 chars_selected=sum(len(pages[i]) for i in selected))
     chunks = chunk_pages(pages, selected, max_chars)
     sent = [n for nums, _t in chunks for n in nums]
 
@@ -743,7 +740,15 @@ def process_document(conn, row: dict, *, max_chars: int,
     verified: list[tuple] = []
     inserted = failed = 0
     parse_failed = False
-    for nums, text in chunks:
+    for ci, (nums, text) in enumerate(chunks, 1):
+        # Per chunk, not per document. A 172-chunk workbook used to print
+        # nothing for half an hour and was killed twice as a hang; the
+        # database was fine and the model was working the whole time.
+        # Anything that takes minutes must say so while it is happening.
+        if len(chunks) > 8:
+            print(f"      chunk {ci}/{len(chunks)} "
+                  f"({row['sha'][:8]}, {time.time() - t0:.0f}s elapsed)",
+                  flush=True)
         raw, _el = mlx_generate(text, max_tokens, prompt)
         findings = parse_findings(raw)
         if findings is None:

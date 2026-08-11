@@ -166,29 +166,46 @@ TIER_SETTINGS: dict[str, dict] = {
 }
 
 
-# A ceiling on how much text one document may send, in characters.
+# **No document is truncated by size.** `max_chars` exists for a caller
+# that wants a bounded read, and defaults to off.
 #
-# The scorer has no notion of how big a page is, and some pages are very
-# big: a 32-sheet xlsx emissions tracker (Hillingdon/18399/APP/2025/1412)
-# scored every sheet as a hit — each mentions NOx, emissions and load —
-# and produced 2,075,466 characters, which the runner turned into 204
-# sequential model calls and about half an hour on one document. 542
-# cached extractions exceed 400,000 characters and between them hold 448
-# million, so this is a class, not a case.
+# A ceiling was tried, at 120,000 characters, after a 32-sheet xlsx
+# emissions tracker (Hillingdon/18399/APP/2025/1412) offered 2,075,466
+# characters and became 172 sequential model calls. Classifying every
+# document the cap actually bound on is what settled it:
 #
-# Collapsing near-identical pages was tried first and rejected. Line-level
-# similarity does find the 24 duplicate year-sheets, but on a soil
-# analytical report it also finds 118 of 208 pages "duplicate": same
-# laboratory letterhead, same determinand rows, differing only in sample
-# ids and measured values. Those numbers are the evidence. A rule that
-# cannot tell "same layout, no data" from "same layout, different data"
-# has no business deleting pages.
+#     1,183 documents capped, of which 1,029 were PDFs
+#     186.4M characters dropped from PDFs; 50M from spreadsheets
+#     35 Environmental Statements losing about half their selected pages
+#     the median capped PDF kept 48 of 88 pages
 #
-# So: cap, keep the highest-scoring pages within it, and record the rest
-# as not sent. 120,000 characters is roughly ten chunks at the runner's
-# default — enough for any real document, and it leaves the pathological
-# ones visible rather than expensive.
-MAX_SELECTED_CHARS = 120_000
+# The threshold had been calibrated on one pathological workbook and was
+# below the *median* selection for a large document (162,781 characters).
+# It was a haircut on the corpus wearing the clothes of an outlier guard,
+# and it fell hardest on Environmental Statements — the class where
+# disclosures live.
+#
+# Two narrower rules were tried and rejected for the same reason: they
+# delete evidence.
+#
+#  - Collapsing near-identical pages. Line-level similarity does find the
+#    24 duplicate year-sheets, but on a soil analytical report it calls
+#    118 of 208 pages duplicates: same laboratory letterhead, same
+#    determinand rows, differing only in sample ids and measured values.
+#  - Dropping rows whose numbers are all zero. A zero in an emissions log
+#    is a fact — the generator did not run — and dropping it also erases
+#    the difference between *nothing recorded* and *zero recorded*.
+#
+# What was actually wrong that night was not the cost. It was that a
+# 172-call document was indistinguishable from a hung process, because
+# the runner logged only on completion. Progress logging is the fix for
+# that; deleting pages never was.
+MAX_SELECTED_CHARS: int | None = None
+
+# Documents above this are reported, not trimmed — a flag in the
+# escalation queue so that an expensive document is visible in advance
+# rather than discovered as an apparent stall.
+REPORT_OVER_CHARS = 1_000_000
 
 
 def select_pages(pages: list[str], *, tier: str, context: int | None = None,
@@ -246,20 +263,17 @@ def select_pages(pages: list[str], *, tier: str, context: int | None = None,
     return sorted(keep)
 
 
-def selection_was_capped(pages: list[str], selected: list[int],
-                         max_chars: int | None = MAX_SELECTED_CHARS) -> bool:
-    """Whether `max_chars` bound, so the caller can say so out loud.
+def selection_is_large(pages: list[str], selected: list[int],
+                       threshold: int = REPORT_OVER_CHARS) -> bool:
+    """Whether this document is big enough to be worth announcing.
 
-    Coverage is stated over what was actually read, so a document that
-    hit the ceiling has to be recorded differently from one read whole —
-    the same reason drawings and sampled objection letters are counted
-    separately rather than quietly.
+    Reporting only — nothing is dropped on the strength of it. The point
+    is that an expensive document should be visible *before* it looks
+    like a stall, which is the failure this replaced: a 172-call
+    workbook was killed twice and misdiagnosed as a hang because the
+    runner said nothing until a document finished.
     """
-    if max_chars is None:
-        return False
-    full = select_pages(pages, tier="A", max_chars=None)
-    return (sum(len(pages[i]) for i in full) > max_chars
-            and len(selected) < len(full))
+    return sum(len(pages[i]) for i in selected) > threshold
 
 
 def plan_documents(docs: list[dict], *, sample_rate: int = 5) -> list[DocumentPlan]:
