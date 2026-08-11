@@ -724,6 +724,27 @@ function seeAllOnMap(){
   soon(()=>{ if(plotted.length){ map.userMoved=true; fitTo(plotted); } else drawMap(); });
 }
 
+/* How much chrome is pinned above the scrolling content. Three layers
+   stack: the tab bar at top:0, the filter bar beneath it, and the
+   table's own sticky header row. scrollIntoView({block:'start'}) knows
+   about none of them, so a row scrolled to "the top" lands underneath
+   all three — which put a site's name off screen and left the reporter
+   looking at expanded detail with no way to tell whose it was.
+   Measured from the live elements rather than assumed: the filter bar
+   wraps to two lines at some widths, and the whole point is that this
+   is the height nobody can predict. */
+function stickyOffset(){
+  const h = el => (el && el.offsetParent !== null)
+                  ? el.getBoundingClientRect().height : 0;
+  return h(document.querySelector('nav.top'))
+       + h(document.querySelector('.view.on .controls'))
+       + h(document.querySelector('.view.on table thead'));
+}
+function scrollRowToTop(r){
+  const y = window.scrollY + r.getBoundingClientRect().top - stickyOffset() - 8;
+  window.scrollTo({top: Math.max(0, y)});
+}
+
 function goSite(key){
   show('sites', true);
   document.getElementById('q').value='';
@@ -739,7 +760,7 @@ function goSite(key){
     if(!r.classList.contains('open')){
       r.classList.add('open'); r.nextElementSibling.classList.add('on');
     }
-    soon(()=>r.scrollIntoView({block:'start'}));
+    soon(()=>scrollRowToTop(r));
   }
   return false;
 }
