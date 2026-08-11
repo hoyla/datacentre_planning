@@ -99,6 +99,29 @@ RULES = [
               OR f.signal_type ~* 'thermal_input|heat_input')""",
      "thermal or fuel input, not electrical capacity"),
 
+    ("thermal_output_not_electrical",
+     "quantity_type='thermal_input'",
+     # A CHP or generator fleet has two outputs and the documents name
+     # both: "a thermal output of over 800mw and nearly 300MWe". Storing
+     # the larger one as generation put 800 MW of on-site generation on a
+     # 256 MW site — the electrical truth is 300.
+     #
+     # The sibling rule above matches 'thermal input', which is fuel
+     # going in, and cannot see this: thermal OUTPUT is heat coming out,
+     # and it is equally not electricity. Matching the words alone would
+     # be wrong — 68 rows say 'thermal output' and most are the correctly
+     # stored electrical figure from a sentence that mentions both. What
+     # identifies a mis-stored one is arithmetic, not vocabulary: the
+     # quote gives an explicit MWe figure and we stored something larger,
+     # so what we stored is the thermal number. Measured 2026-08-11: 2
+     # rows, both genuine, no false positives.
+     r"""pa.quantity_type IN ('onsite_generation','it_load','total_site')
+         AND f.evidence_text ~* 'thermal output|heat output'
+         AND f.evidence_text ~* '[0-9][0-9.,]*\s*MWe'
+         AND pa.value_mw > substring(f.evidence_text
+                                     from '([0-9][0-9.,]*)\s*MWe')::numeric""",
+     "thermal output; the same sentence gives the electrical figure in MWe"),
+
     ("headerless_table_row",
      "verdict='unclear', quantity_type=NULL, value_mw=NULL, is_maximum=NULL",
      r"""length(f.evidence_text) > 0

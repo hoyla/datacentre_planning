@@ -348,22 +348,69 @@ def load_cohort(conn, *, tier: str | None, ref: str | None,
     return rows
 
 
+def _split_oversized(text: str, limit: int) -> list[str]:
+    """One unit's text in pieces of at most `limit`, split on line breaks.
+
+    Line boundaries because a spreadsheet row is the unit of meaning here,
+    and a quote cut in half is a quote the verbatim gate will reject —
+    which would turn an oversized document into a silently empty one
+    rather than a read one. A single line longer than the limit is still
+    passed through whole: truncating it would corrupt the evidence, and
+    the model refusing one enormous row is a better failure than this
+    function inventing a shorter one.
+    """
+    out: list[str] = []
+    buf: list[str] = []
+    size = 0
+    for line in text.splitlines(keepends=True):
+        if buf and size + len(line) > limit:
+            out.append("".join(buf))
+            buf, size = [], 0
+        buf.append(line)
+        size += len(line)
+    if buf:
+        out.append("".join(buf))
+    return out or [text]
+
+
 def chunk_pages(pages: list[str], selected: list[int],
                 max_chars: int) -> list[tuple[list[int], str]]:
     """Group selected pages into prompt-sized chunks of marked-up text.
-    Page numbers in markers are 1-based physical PDF pages."""
+
+    Page numbers in markers are 1-based physical PDF pages.
+
+    A unit larger than `max_chars` is split across several chunks that
+    keep its marker, so provenance still points at the sheet or page the
+    text came from. This matters only since the format loaders landed: a
+    PDF page is a few thousand characters and never tripped the limit,
+    but one worksheet can be 1.3 million. The old guard could not help,
+    because it only fired when a chunk was already non-empty — a single
+    oversized block always went through whole, and the model answered
+    with truncated JSON. That is the whole of the remaining parse-failure
+    backlog: two spreadsheets, one of them a data-hall schedule reading
+    "UP4 - 4.080MW DATAHALL DIRECT AIR SOLUTION @ 100% LOAD".
+    """
     chunks: list[tuple[list[int], str]] = []
     nums: list[int] = []
     parts: list[str] = []
     size = 0
     for i in selected:
-        block = f"[PAGE {i + 1}]\n{pages[i]}\n"
-        if parts and size + len(block) > max_chars:
-            chunks.append((nums, "".join(parts)))
-            nums, parts, size = [], [], 0
-        nums.append(i + 1)
-        parts.append(block)
-        size += len(block)
+        marker = f"[PAGE {i + 1}]\n"
+        body = f"{pages[i]}\n"
+        # Room for the marker on every piece, and never a non-positive
+        # budget however small max_chars is set.
+        budget = max(1, max_chars - len(marker))
+        pieces = ([body] if len(body) <= budget
+                  else _split_oversized(body, budget))
+        for piece in pieces:
+            block = marker + piece
+            if parts and size + len(block) > max_chars:
+                chunks.append((nums, "".join(parts)))
+                nums, parts, size = [], [], 0
+            if (i + 1) not in nums:
+                nums.append(i + 1)
+            parts.append(block)
+            size += len(block)
     if parts:
         chunks.append((nums, "".join(parts)))
     return chunks

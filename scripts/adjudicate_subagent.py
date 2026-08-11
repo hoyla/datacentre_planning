@@ -85,11 +85,21 @@ capacity — is site_capacity, with the appropriate quantity_type.
 """
 
 
-def load_consequential(conn) -> list[dict]:
+def load_consequential(conn, include_refinements: bool = False) -> list[dict]:
     """Candidate figures on sites holding no adjudicated capacity.
 
     These are the ones where a verdict can change what a site reports,
     rather than add another figure beneath an existing one.
+
+    `include_refinements` drops that restriction and takes every
+    unadjudicated figure. The restriction exists because of volume, not
+    principle: at ~862 tokens a figure the 6,297-figure backlog was 5.4M
+    tokens, where an OpenAI batch did the same work for a few dollars. A
+    small tail does not raise that question — 77 figures is ~66k tokens —
+    and running them here keeps them on the same model as the primary
+    adjudication instead of splitting one week's verdicts across two
+    adjudicators for no reason but queue latency. Opt-in, so the default
+    discipline stands.
     """
     with conn.cursor() as cur:
         cur.execute("""
@@ -111,13 +121,14 @@ def load_consequential(conn) -> list[dict]:
             JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
             WHERE f.value_number IS NOT NULL
               AND lower(f.value_unit) = ANY(%s)
-              AND m.site_id NOT IN (SELECT site_id FROM capped)
+              AND (%s OR m.site_id NOT IN (SELECT site_id FROM capped))
               AND NOT EXISTS (
                     SELECT 1 FROM power_adjudication p
                     WHERE p.finding_id = f.id
                       AND p.prompt_version = %s)
             ORDER BY f.application_id, f.value_number DESC""",
-            (list(TO_MW) + list(APPARENT), PROMPT_VERSION))
+            (list(TO_MW) + list(APPARENT), include_refinements,
+             PROMPT_VERSION))
         rows = cur.fetchall()
 
     apps: dict[int, dict] = {}
@@ -132,9 +143,9 @@ def load_consequential(conn) -> list[dict]:
     return list(apps.values())
 
 
-def prepare(shards: int) -> None:
+def prepare(shards: int, include_refinements: bool = False) -> None:
     with db.connect() as conn:
-        apps = load_consequential(conn)
+        apps = load_consequential(conn, include_refinements)
     n_fig = sum(len(a["figures"]) for a in apps)
     SHARD_DIR.mkdir(parents=True, exist_ok=True)
     for p in SHARD_DIR.glob("shard_*.json"):
@@ -246,11 +257,15 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--prepare", action="store_true")
     ap.add_argument("--shards", type=int, default=6)
+    ap.add_argument("--include-refinements", action="store_true",
+                    help="Also take figures on sites that already hold "
+                         "an adjudicated capacity. For a small tail only "
+                         "— see load_consequential.")
     ap.add_argument("--ingest", action="store_true")
     ap.add_argument("--report", action="store_true")
     args = ap.parse_args()
     if args.prepare:
-        prepare(args.shards)
+        prepare(args.shards, args.include_refinements)
     elif args.ingest:
         ingest()
     elif args.report:
