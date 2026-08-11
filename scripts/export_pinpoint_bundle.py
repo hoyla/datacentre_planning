@@ -206,7 +206,40 @@ def sniff(path: Path) -> str:
         return _sniff_zip(path)
     if head[:4] == b"\xd0\xcf\x11\xe0":
         return _sniff_ole(path)
+    # No magic number: the text formats. Three `.bin` files here are two
+    # HTML pages and a saved RFC 822 message, all of which Pinpoint takes
+    # once they are named honestly, and all of which were being dropped
+    # as "unhandled" for want of a signature to match.
+    return _sniff_text(path)
+
+
+def _sniff_text(path: Path) -> str:
+    out = _file_says(path)
+    if "HTML" in out:
+        return ".html"
+    if "RFC 822" in out or "news or mail" in out:
+        return ".eml"
+    if "Rich Text Format" in out:
+        return ".rtf"
+    if "text" in out.lower():
+        return ".txt"
     return ""
+
+
+def _file_says(path: Path) -> str:
+    """`file -b`, decoded leniently.
+
+    Bytes then decode, never `text=True`: `file` echoes an OLE document's
+    own Title and Author back, and those come out of Word in whatever
+    code page the author used. A 0xab guillemet in one title raised
+    UnicodeDecodeError and killed a sweep 93% of the way through.
+    """
+    try:
+        raw = subprocess.run(["file", "-b", str(path)], capture_output=True,
+                             timeout=30).stdout
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    return raw.decode("utf-8", errors="replace")
 
 
 def _sniff_zip(path: Path) -> str:
@@ -228,25 +261,44 @@ def _sniff_zip(path: Path) -> str:
 
 
 def _sniff_ole(path: Path) -> str:
-    # Bytes, then decode leniently. `file` echoes an OLE document's own
-    # Title and Author back at us, and those come out of Word in whatever
-    # code page the author was using — a 0xab (a Latin-1 guillemet) in
-    # one document title was enough to raise UnicodeDecodeError out of
-    # `text=True` and kill a worker, and with it a sweep that was 93% of
-    # the way through. Nothing here needs the metadata to be readable;
-    # it only needs to find the word "Outlook", "Word" or "Excel".
+    """Which OLE compound document this is, from its own stream names.
+
+    `file` alone is not enough. It reports many of these as a generic
+    "Composite Document File V2", and treating that as a `.msg` — which
+    an earlier version did — sent a spreadsheet to the Outlook parser,
+    where it failed with "does not contain a property stream" and was
+    dropped. The container's directory names are decisive and cheap:
+    an Outlook message holds `__substg1.0_` streams, a Word document a
+    `WordDocument` stream, a workbook a `Workbook` or `Book` stream.
+    They are stored UTF-16LE, hence the interleaved nulls.
+    """
     try:
-        raw = subprocess.run(["file", "-b", str(path)], capture_output=True,
-                             timeout=30).stdout
-        out = raw.decode("utf-8", errors="replace")
-    except (OSError, subprocess.SubprocessError):
+        with open(path, "rb") as fh:
+            head = fh.read(1 << 20)
+    except OSError:
         return ""
-    if "Outlook" in out or "Composite Document File" in out and "Word" not in out:
+
+    def u16(s: str) -> bytes:
+        return s.encode("utf-16-le")
+
+    if u16("__substg1.0_") in head or u16("__properties_version") in head:
+        return ".msg"
+    if u16("WordDocument") in head:
+        return ".doc"
+    if u16("Workbook") in head or u16("Book") in head:
+        return ".xls"
+    if u16("PowerPoint Document") in head:
+        return ".ppt"
+
+    out = _file_says(path)
+    if "Outlook" in out:
         return ".msg"
     if "Word" in out:
         return ".doc"
     if "Excel" in out:
         return ".xls"
+    if "PowerPoint" in out:
+        return ".ppt"
     return ""
 
 
@@ -355,6 +407,46 @@ def soffice_to_pdf(src: Path, workdir: Path) -> Path | None:
     return out if out.exists() and out.stat().st_size else None
 
 
+def _eml_from_msg(msg) -> bytes | None:
+    """Assemble an RFC 822 message from an Outlook one, decoding leniently.
+
+    Headers, plain body, HTML alternative and attachments — enough that
+    the reporter sees who wrote to whom, when, and what they said, which
+    is the whole value of a consultee response. Bytes that do not decode
+    become replacement characters rather than an exception.
+    """
+    from email.message import EmailMessage
+    try:
+        em = EmailMessage()
+        for header, value in (("From", getattr(msg, "sender", None)),
+                              ("To", getattr(msg, "to", None)),
+                              ("Cc", getattr(msg, "cc", None)),
+                              ("Subject", getattr(msg, "subject", None)),
+                              ("Date", getattr(msg, "date", None))):
+            if value:
+                em[header] = str(value)
+
+        html = getattr(msg, "htmlBody", None)
+        if isinstance(html, bytes):
+            html = html.decode("utf-8", errors="replace")
+        body = getattr(msg, "body", None) or ""
+        em.set_content(body or (html or ""))
+        if html and body:
+            em.add_alternative(html, subtype="html")
+
+        for att in getattr(msg, "attachments", []) or []:
+            payload = getattr(att, "data", None)
+            if not isinstance(payload, bytes):
+                continue
+            name = (getattr(att, "longFilename", None)
+                    or getattr(att, "shortFilename", None) or "attachment")
+            em.add_attachment(payload, maintype="application",
+                              subtype="octet-stream", filename=str(name))
+        return em.as_bytes()
+    except Exception:
+        return None
+
+
 def msg_to_eml(src: Path, dst: Path) -> bool:
     """`.msg` to `.eml`, because Pinpoint takes EML and MBOX and not MSG.
 
@@ -366,11 +458,33 @@ def msg_to_eml(src: Path, dst: Path) -> bool:
         import extract_msg
     except ImportError:
         return False
+    # Council mailboxes are Windows, and the bodies come out in cp1252:
+    # 0x92 a curly apostrophe, 0x95 a bullet, 0x96 an en dash. Left to
+    # its default of strict UTF-8, extract_msg raised on 13 of the 16
+    # messages that failed the first sweep — all of them consultee
+    # correspondence. cp1252 has no undefined byte sequences, so the
+    # retry cannot fail the same way; latin-1 is the last resort.
+    data = None
     try:
         msg = extract_msg.Message(str(src))
-        data = msg.asEmailMessage().as_bytes()
-        msg.close()
     except Exception:
+        return False
+    try:
+        data = msg.asEmailMessage().as_bytes()
+    except Exception:
+        # `asEmailMessage` hard-codes `htmlBody.decode('utf-8')`, so no
+        # constructor argument can save it — and 13 of these messages
+        # carry a cp1252 byte in the HTML part (0x92 a curly apostrophe,
+        # 0x96 an en dash). Assembling the message here instead, with a
+        # lenient decode, keeps correspondence that is otherwise lost:
+        # every one of them is a consultee response.
+        data = _eml_from_msg(msg)
+    finally:
+        try:
+            msg.close()
+        except Exception:
+            pass
+    if not data:
         return False
     tmp = dst.parent / "_work" / f"{dst.name}.{os.getpid()}.part"
     tmp.write_bytes(data)
@@ -533,6 +647,38 @@ def process(job: tuple) -> list[dict]:
             base = flat_name(rel, "")
             outs = split_text(src, out_dir, base, ext)
             return [done(p.name, p, f"split into {len(outs)}") for p in outs]
+
+        if ext == ".zip":
+            # Not archives of convenience — these are exported email
+            # threads, one per zip: a `header.txt` carrying the From,
+            # To, Subject and Date, beside the message body as RTF or
+            # PDF. All fifteen in this corpus are consultee
+            # correspondence — HSE, Network Rail, the Lead Local Flood
+            # Authority, environmental health. Dropping the container
+            # dropped the response, so the members come out as
+            # documents in their own right, each keeping the archive's
+            # name so the thread stays reassemblable.
+            outs: list[dict] = []
+            stem = flat_name(rel, "")
+            with zipfile.ZipFile(src) as z:
+                for member in z.infolist():
+                    if member.is_dir() or member.file_size == 0:
+                        continue
+                    m_ext = Path(member.filename).suffix.lower()
+                    if m_ext not in PASS_THROUGH or member.file_size > OTHER_MAX:
+                        continue
+                    leaf = Path(member.filename).name
+                    name = f"{stem} — {leaf}"
+                    dst = out_dir / name
+                    if not dst.exists():
+                        tmp = work / f"{sha[:16]}.{os.getpid()}.{leaf}"
+                        tmp.write_bytes(z.read(member))
+                        publish(tmp, dst)
+                    outs.append(done(name, dst, "unpacked from zip"))
+            if outs:
+                return outs
+            return [{**row, "pinpoint_filename": "", "output_bytes": 0,
+                     "action": "dropped", "note": "zip held nothing usable"}]
 
         if ext in PASS_THROUGH:
             name = flat_name(rel, ext)
@@ -746,10 +892,41 @@ def main() -> None:
     # Tranches are assigned after the fact, over what actually got built,
     # so a conversion that dropped a file does not leave a hole in a
     # batch someone is about to upload.
+    #
+    # They break on site boundaries. Pinpoint takes 20,000 files per
+    # upload, and the arithmetic would happily cut a site in half — but
+    # an upload is a unit of work someone watches and re-runs when it
+    # fails, and "Saunderton is half in" is a far worse thing to reason
+    # about at that moment than an uneven batch. Sites stay whole; the
+    # counts come out roughly even because no single site is large
+    # relative to the target.
     live = [r for r in rows if r["pinpoint_filename"]]
     live.sort(key=lambda r: (r["site"], r["application"], r["pinpoint_filename"]))
-    for i, r in enumerate(live):
-        r["tranche"] = f"{i // args.tranche_size + 1}"
+
+    by_site: dict[str, list[dict]] = {}
+    for r in live:
+        by_site.setdefault(r["site"], []).append(r)
+    n_tranches = max(1, -(-len(live) // args.tranche_size))
+    target = -(-len(live) // n_tranches)
+
+    # Fill each tranche to its share and move on, rather than breaking
+    # only when the target is exceeded: the latter lets the final
+    # tranche absorb everything left over, which put 15,555 files in a
+    # batch aimed at 14,096 while the first held 12,709. Sites are still
+    # never split — the boundary moves to whichever side leaves the
+    # batch closer to its share.
+    counts = [0] * n_tranches
+    tranche = 0
+    for site in sorted(by_site):
+        group = by_site[site]
+        if tranche < n_tranches - 1 and counts[tranche]:
+            with_site = counts[tranche] + len(group)
+            if abs(with_site - target) > abs(counts[tranche] - target) \
+                    or with_site > args.tranche_size:
+                tranche += 1
+        for r in group:
+            r["tranche"] = str(tranche + 1)
+        counts[tranche] += len(group)
 
     manifest = args.out / "_manifest.csv"
     with open(manifest, "w", newline="", encoding="utf-8") as fh:
@@ -757,6 +934,31 @@ def main() -> None:
         w.writeheader()
         for r in sorted(rows, key=lambda r: r["staging_path"]):
             w.writerow(r)
+
+    # The tranche was previously only a column in the manifest, which
+    # made it a fiction: there was nothing to drag into a browser, just
+    # 42,000 files in one directory and a spreadsheet saying which
+    # notional third each belonged to. These are hard links, so three
+    # browsable upload folders cost directory entries rather than a
+    # second copy of 61GB.
+    upload = args.out / "upload"
+    shutil.rmtree(upload, ignore_errors=True)
+    for r in live:
+        d = upload / f"tranche_{r['tranche']}"
+        d.mkdir(parents=True, exist_ok=True)
+        target_path = d / r["pinpoint_filename"]
+        if not target_path.exists():
+            try:
+                os.link(files_dir / r["pinpoint_filename"], target_path)
+            except OSError:
+                shutil.copy2(files_dir / r["pinpoint_filename"], target_path)
+    log(logf, f"upload folders: {upload}")
+    for t in sorted({r["tranche"] for r in live}, key=int):
+        members = [r for r in live if r["tranche"] == t]
+        sites = len({r["site"] for r in members})
+        log(logf, f"  tranche_{t}: {len(members):,} files, "
+                  f"{sum(r['output_bytes'] for r in members)/g:.1f} GB, "
+                  f"{sites} sites")
 
     out_b = sum(r["output_bytes"] for r in live)
     dropped = [r for r in rows if not r["pinpoint_filename"]]
