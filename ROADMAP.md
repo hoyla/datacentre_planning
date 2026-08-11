@@ -136,6 +136,51 @@ infrastructure commitments are written down, which is investigative
 material. 438 MB of it, and the same rule would have dropped them from
 the Pinpoint collection too.
 
+**A zero-byte document is held, counted and read as though it were a
+document.** Three exist in the corpus, found while building the Pinpoint
+bundle because an empty file is conspicuous in an export and invisible
+everywhere else:
+
+| document | application | site |
+|---|---|---|
+| `005 - Section 106 Agreement.pdf` | Wakefield 23/00100/S7301 | Ferrybridge C |
+| `011 - Consultation Response.pdf` | Warwick W/23/1025 | Warwick Hospital |
+| `018 - Supporting Documents.pdf` | Medway MC/21/0979 | Kingsnorth |
+
+**They cannot be re-fetched, and the fault is not ours.** With a session
+cookie and referer all three return HTTP 200, `Content-Type:
+application/pdf`, and a body of zero bytes, from the councils' own
+servers. Without the cookie Idox answers 404, which is what made this
+look at first like a stale-URL problem; it is not. The Wakefield s106 is
+still listed on the documents tab, dated 09 Jan 2025, at exactly the URL
+we hold. Luke confirmed the same result in a browser. The original fetch
+was correct and faithfully stored what the portal served.
+
+The defect is that nothing notices. An empty file passes the fetcher,
+lands in the canonical store, is hard-linked into staging, is counted in
+the corpus totals, and reaches the deep read as a document held and
+readable — where it yields nothing, indistinguishably from a document
+that genuinely says nothing. Two of these three are consultee responses
+and one is an s106; on kind alone they are exactly the material the
+investigation is looking for, so "we hold it and it was silent" is the
+worst available failure mode.
+
+Three pieces of work, smallest first:
+
+1. **Guard at fetch.** A zero-length body is a failed fetch, not a
+   document: record the failure against the application and leave no
+   file, so a re-run retries rather than treating emptiness as done.
+2. **Sweep the corpus.** `find -size -1c` over the canonical store is the
+   whole check. Three today; nothing would flag a fourth.
+3. **Say so in the artefacts.** Where a document is held but empty, the
+   site report and the coverage detail should show it as unavailable
+   from the source rather than as read — the same honesty the coverage
+   split already applies to drawings and sampled objection letters.
+
+Worth raising with the three councils as well: a listed document that
+downloads as nothing is a public-access failure independent of this
+investigation.
+
 ## Smaller things
 
 - **Re-measure the 1.71 kW/m² floor-area factor.** It drives the
