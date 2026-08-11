@@ -116,31 +116,25 @@ session with the network tab open, after which an adapter is
 straightforward. Worth doing — it is the whole of NI, not seven
 applications.
 
-**Section 106 agreements are tiered as drawings and never read.**
-`classify_kind` in [dcp/deepread_select.py](dcp/deepread_select.py) tests
-`DRAWING_KINDS` before `TIER_A_KINDS`, and `DRAWING_KINDS` contains
-`section\b`. So a document whose kind is "Section 106 Agreement" matches
-the drawing rule and returns `skip`, even though `TIER_A_KINDS` lists
-`s106|section 106` explicitly and was plainly written to catch it — the
-ordering decides, and the tier-A rule is never reached. `"S106
-Agreement"` takes the intended path and comes back `A`, so whether an
-obligation is read at all turns on how the authority abbreviated it.
+**Read the 58 Section 106 agreements the tiering used to skip.** The
+classification is fixed — `LEGAL_INSTRUMENT_KINDS` is now tested before
+the drawing rule, so a statutory instrument is never a drawing whatever
+its title says, and `tests/test_tier_ordering.py` asserts every phrase
+`TIER_A_KINDS` names can actually be reached. What is *not* done is the
+consequence.
 
-Counted over the staged corpus, **57 documents (438 MB) whose kind
-mentions s106, section 106, a unilateral undertaking or a planning
-obligation are classified `skip`**, against 62 that reach tier A. The
-premise this rests on is that s106 agreements are prose worth reading:
-they are where planning obligations, community payments and
-infrastructure commitments are actually written down, which is
-investigative material rather than graphical. `"Section 73 Application"`
-— variation of conditions — falls the same way.
+Those 58 documents are now classified as prose and are unread, which is
+the honest position rather than the previous one where they counted as
+drawings. Coverage moves from 36,744 of 36,983 (99.35%) to 36,744 of
+37,041 (99.2%). **They want reading and the artefacts regenerating
+before the coverage figure is quoted again** — phase 2.1 shipped before
+this and is accurate to its own definition; this changes the definition.
 
-The fix is ordering, not vocabulary: test `TIER_A_KINDS` first, or
-exclude the s106 forms from `section\b`. It changes coverage figures, so
-it wants the 57 re-read and `load_coverage_detail` recomputed rather than
-just the regex changed. Found 2026-08-11 while sizing the skip tier for
-the Pinpoint upload, where the same rule would have dropped these
-documents from the collection too.
+They are worth the read rather than a reclassification for tidiness:
+s106 agreements are where planning obligations, community payments and
+infrastructure commitments are written down, which is investigative
+material. 438 MB of it, and the same rule would have dropped them from
+the Pinpoint collection too.
 
 ## Audit tonight's new rules against prior learnings — DONE
 

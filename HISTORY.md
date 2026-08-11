@@ -439,6 +439,33 @@ a 2.5x margin over the largest genuine figure. The decimal-slip
 heuristic fires zero times and is kept only as a tripwire. Full findings
 in `docs/RULES_AUDIT.md`.
 
+**A rule that was written but could never fire.** `classify_kind` tested
+the drawing regex before the tier-A one, and the drawing regex contains
+`section\b`. So "Section 106 Agreement" was a graphical document, though
+`TIER_A_KINDS` listed `section 106` explicitly and had plainly been
+written to catch it. 58 documents recording planning obligations were
+never read — while "S106 Agreement" took the intended path, so whether
+an obligation was read turned on how the council abbreviated it. Found
+by Luke while sizing the skip tier for the Pinpoint upload, where the
+same rule would have dropped them from the collection.
+
+Both obvious fixes cost something, and the corpus was asked before
+choosing. Testing tier A first moves 68 documents and 10 are genuine
+drawings pulled in by an incidental word — TIER_A_KINDS contains
+`water`, `noise`, `drainage` and `decision`, so "Water Treatment Plans,
+Sections and Elevations" and "Drawing - Decision" come with them.
+Excluding numbers from `section\b` un-skips "Section 1", "Section 01"
+and "Section 03", which are drawing sheets. What is true is narrower
+than either: a named statutory instrument is never a drawing, whatever
+else its title says. That moves 60 documents and nothing else.
+
+The general lesson is about the test suite rather than the regex. Four
+hundred tests passed throughout, because **a dead rule passes every test
+that exercises the live ones**. Nothing asserted that a rule which is
+written is a rule that can fire — the same shape as the adjudication
+gate asserting its two copies agree while nothing asserts either is
+right, which is how the thermal-output hole survived.
+
 **Versioning was set aside deliberately.** The rule is that a release
 lands beside its predecessor so a citation keeps resolving. For 2.1 that
 was overridden on knowledge of who was using what: the Sheet is refreshed
