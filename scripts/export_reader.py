@@ -567,7 +567,15 @@ function initMap(){
   map.tiles=document.getElementById('maptiles');
   map.pins=document.getElementById('mappins');
   map.el.addEventListener('pointerdown',e=>{
-    if(e.target.classList.contains('pin')) return;
+    /* The card is a child of the map, so a press on one of its links
+       arrives here too. Starting a drag then hid the card on the first
+       pointermove — a pixel of movement, which every real mouse
+       produces — so the anchor was gone before the mouseup that would
+       have followed it, and both internal and external links silently
+       did nothing. Capturing the pointer to the map compounds it.
+       closest(), not classList: a press can land on a pin's child or on
+       the card's own <a>, and classList only sees the element itself. */
+    if(e.target.closest('.pin, #mapinfo')) return;
     map.drag={x:e.clientX,y:e.clientY}; map.el.setPointerCapture(e.pointerId);
   });
   map.el.addEventListener('pointermove',e=>{
@@ -595,7 +603,7 @@ function initMap(){
   },{passive:false});
   // Double-click zooms in where you clicked; with alt or shift, out.
   map.el.addEventListener('dblclick',e=>{
-    if(e.target.classList.contains('pin')) return;
+    if(e.target.closest('.pin, #mapinfo')) return;
     e.preventDefault();
     zoomAround(map.z + ((e.altKey || e.shiftKey) ? -1 : 1), e.clientX, e.clientY);
   });
