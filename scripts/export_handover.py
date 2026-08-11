@@ -377,8 +377,26 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "Stable identifier for the site; also the prefix of its Drive folder "
      "name. Keys beginning 'ptno-' are anchored on a Barbour project."),
     ("Sites", "Classification",
-     "How the site entered the universe. 'barbour_only' rows are anchored on a "
-     "Barbour project; those with zero applications are pre-planning."),
+     "How the site entered the universe, and therefore what kind of "
+     "evidence stands behind it. Five values, from dcp/sites.py: "
+     "**both** — the cluster holds at least one planning application in "
+     "the data-centre universe AND a Barbour ABI project record, so two "
+     "independent sources agree the site exists. "
+     "**ours_only** — planning applications we found and classified, with "
+     "no matching Barbour project. Those applications arrived by several "
+     "routes, not one: the national keyword sweep, spatial searches "
+     "around known sites, operator and agent name searches, the energy "
+     "adjacency sweep, the Foxglove list and parent-application backfill. "
+     "The 'How we found it' column names the routes for each site. "
+     "**unlocatable** — the same as ours_only except that not one of its "
+     "applications carries a coordinate, so the site is real but cannot "
+     "be placed on a map. These are the sites absent from the map view. "
+     "**barbour_covered** — anchored on a Barbour project, with planning "
+     "applications in the cluster that our own classification did not put "
+     "in the universe. "
+     "**barbour_only** — a Barbour project with no planning application "
+     "at all: the scheme is known at pre-planning stage and has not yet "
+     "reached a public register."),
     ("Sites", "Site name",
      "Display name assembled at site materialisation; for pre-planning "
      "rows, the Barbour project title."),
@@ -517,7 +535,7 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "a count of findings — not a volume. The water and cooling finding "
      "families are large but dominated by flood and drainage engineering "
      "that every development produces (rainfall depths, pipe runs, design "
-     "discharge rates). Filtered to consumption and abstraction, only 76 of "
+     "discharge rates). Filtered to consumption and abstraction, only 119 of "
      "429 sites disclose anything at all. That silence is itself a finding: "
      "no volume is published here because the applications do not contain "
      "one."),
@@ -551,7 +569,7 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "distinct passages, not rows: several models read these documents, "
      "and one sentence found independently by three readers is one "
      "finding corroborated three times rather than three findings. "
-     "Across the corpus that distinction removes about 14% of the raw "
+     "Across the corpus that distinction removes about 16% of the raw "
      "row count. A high number here means a document-rich site, not "
      "necessarily an information-rich one — a long environmental "
      "statement yields hundreds of findings about drainage."),

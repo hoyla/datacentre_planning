@@ -341,6 +341,112 @@ named in the adjudication prompt itself as `power-1.1`, which is
 declared but deliberately not default, because selecting it
 re-adjudicates the whole corpus and it has not been validated yet.
 
+### Phase 2.1 — what the artefacts were claiming (Aug 11)
+
+A correctness release. No new documents, and almost no new reading: two
+recovered from a parse-failure backlog. Everything that changed was a
+claim an artefact was making, and most were reported by people using the
+release rather than found by a test.
+
+**A number that did not say what it counted.** A site panel read
+"Standby generators: 109" above "Diesel (147), HVO (39)", and a reporter
+reasonably asked how 147 diesel generators and 39 HVO ones fit inside
+109. 109 is plant — the largest count disclosed in any one document. 147
+and 39 are passages of text mentioning a fuel, out of 1,292 for that
+site. Both correct, neither saying what it was of, two lines apart. Now
+"109 units" and "Diesel (147 mentions)", with the noun on the leading
+bracket only. The same idiom rendered fuels, cooling methods and party
+names from three copies of one piece of code; it is now one function, so
+the next correction cannot reach two of the three.
+
+**A page number that was not a page.** 17,724 findings cite an index
+that is not a page: a `.docx` has sections, a workbook has sheets, a deck
+has slides. `dcp/extract.py` has recorded which since the format loaders
+landed, but the caches are files on disk and every export is SQL, so the
+distinction had never once reached a reader. Told "page 3" of a
+spreadsheet, a reporter opens it, finds no page 3, and doubts the quote
+rather than the label. Migration 020 adds `documents.pagination`,
+constrained to the four values the loader table can produce because a
+typo in a closed vocabulary stays invisible until it reaches a citation.
+Null means *not recorded*, never "pages": most unrecorded documents are
+ordinary PDFs, and "most" is not a provenance claim.
+
+**Map card links that did nothing.** The card is a child of the map
+element, so pressing one of its links reached the map's drag handler,
+and the first pixel of pointer movement — which every real mouse
+produces — hid the card before the mouseup that would have completed the
+click. Internal and external links failed together, which reads as
+"links are broken" rather than as a map bug. Overlays inside the map now
+share a class the gesture guards key off, because a list of ids is a list
+the next overlay gets left off.
+
+**An 800 MW site that was 300.** North Hyde Gardens published 800 MW of
+on-site generation against a 256 MW site total. The document says plainly
+what the figure is: "100 generators across the site giving a thermal
+output of over 800mw and nearly 300MWe". Two independent readers
+described it as thermal in their own reasoning and filed it as generation
+anyway. The existing correction matched "thermal input" — fuel going in —
+and could not see heat coming out.
+
+The rule written for it is worth recording as a method rather than a
+patch. Matching the words would have touched 68 rows, most of them the
+correctly stored *electrical* figure from a sentence that mentions both:
+"a thermal output of 28MW and an electrical output of 11MW" stores 11 and
+is right to. What identifies a mis-stored one is arithmetic, not
+vocabulary — the quote gives an explicit MWe figure and we stored
+something larger. Measured before adopting: 2 rows, both genuine, no
+false positives.
+
+**Coverage was being reported two ways on one page.** The read cohort
+and the coverage figures had drifted: `plan_documents` samples every Nth
+document of *what it is handed*, so a cohort filtered to one model's
+backlog before planning sampled a different fifth than policy had. Both
+now ask `deepread_select.universe_plan`, which plans the whole universe
+in one canonical order. A first attempt at this introduced a *second*
+definition of "prose" two hundred lines from the first — 36,744 against
+37,992, both on the same page — which was caught only by building the
+artefact and reading it.
+
+**Unreadable is not unread.** 231 documents are held, classified as
+prose, and contain no words: photographs of site notices, plans filed as
+JPEGs, a 4.7MB Exif photo filed as "Supporting Information". Tesseract
+read them as blank; Apple Vision, tried as a second opinion because it
+handles orientation itself, read them as blank too — 0 of 10 on a
+like-for-like sample, the only hits a logo and a photographed sign. Two
+independent recognisers agreeing is as settled as this gets. They now
+carry a `no_text` verdict instead of sitting in the outstanding column
+for ever.
+
+**The parse-failure backlog was two documents, not fourteen.** Of 456
+documents that parse-failed, 442 still produced findings — the failure is
+a truncated tail. Of the 14 that produced nothing, 12 have since been
+read successfully by another model and still yield nothing. The two that
+remained were spreadsheets, and both failed for one reason:
+`chunk_pages` grouped whole units and never split one, so a worksheet of
+551,003 characters went to the model in a single request and came back as
+truncated JSON. A PDF page is a few thousand characters and never tripped
+it. The Hillingdon document recovered from this is a data-hall schedule
+giving 4.08 MW datahall capacity and a cooling load whose arithmetic
+checks out against its own stated floor area.
+
+**The evening's validation rules were audited** against this file and
+ROADMAP, as ROADMAP had asked. One of six failed: the corroboration bands
+called a generation-to-load ratio of 0.8–1.5 the classic full-redundancy
+pattern, where the corpus shows that band holding 14 of 47 sites, a
+median of 0.75, and a modal case below half. The labels now describe the
+ratio rather than diagnose the engineering. The 3 GW ceiling passed with
+a 2.5x margin over the largest genuine figure. The decimal-slip
+heuristic fires zero times and is kept only as a tripwire. Full findings
+in `docs/RULES_AUDIT.md`.
+
+**Versioning was set aside deliberately.** The rule is that a release
+lands beside its predecessor so a citation keeps resolving. For 2.1 that
+was overridden on knowledge of who was using what: the Sheet is refreshed
+in place anyway, nobody was on the phase 2 workbook or database. Recorded
+because the cost is invisible until someone hits it — a citation of "the
+phase 2 workbook" no longer resolves to the file that produced those
+numbers.
+
 ---
 
 ## Lessons that changed how the code is written

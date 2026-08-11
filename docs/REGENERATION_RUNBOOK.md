@@ -1,8 +1,8 @@
-# Regenerating the phase 2 release
+# Regenerating the release
 
-Written 2026-08-10 evening, mid-flight, for whoever runs the
-regeneration — including me in a fresh session. It assumes nothing about
-what you remember.
+Written 2026-08-10 evening mid-flight and updated after the 2.1 run on
+2026-08-11, for whoever runs the regeneration — including me in a fresh
+session. It assumes nothing about what you remember.
 
 Read [SESSION_HANDOVER.md](SESSION_HANDOVER.md) for the phase 1 context
 and [HISTORY.md](../HISTORY.md) for why the pipeline is shaped this way.
@@ -11,27 +11,45 @@ it.
 
 ---
 
-## State — phase 2 shipped, 2026-08-10 23:30 UTC
+## State — phase 2.1 regenerated, 2026-08-11
 
-**Every step is done. Nothing here is waiting to be run.** The next
-regeneration starts at step 1 again; read the steps for the order, which
-is 1–4, then 7, then 5, then 6, 8, 9.
+**Every step is done except the deploy, which happens when the release
+branch merges** — EdgeOne builds from git, so writing `index.html` is not
+publishing it. The gate probe is only meaningful after that merge.
+
+The next regeneration starts at step 1 again; read the steps for the
+order, which is 1–4, then 7, then 5, then 6, 8, 9.
 
 Step 7 comes before step 5 deliberately: `build_drive_staging.py` copies
 the release artefacts into the Drive root, so building the tree before
 the exports stages the *previous* release's workbook and database.
 
+**And check which release folder it took.** Its `--release-dir` used to
+default to a hardcoded `phase2_build`, so the 2.1 run staged phase 2's
+workbook and database beside 2.1's per-site files and said so in a line
+nobody would think to doubt. It now defaults to the most recently
+written `data/exports/*_build` and prints which one it chose.
+
 | | |
 |---|---|
-| Deployed | PR #40, merged 2026-08-10 22:23 UTC, `81af0e7`; `probe_gate.sh` PASS — 22 paths refused, forged cookie rejected |
-| Documents | 55,678 held, 40,279 read; **36,743 of 36,983 prose (99%)** |
-| Findings | ~1,021,400 rows and still rising — the Studio is writing |
-| Adjudications | **14,671** |
-| Sites with prose outstanding | **38 of 302** (previously reported as 201) |
-| Release | `data/exports/phase2_build/`, artefacts named `phase2` |
-| Drive | synced and pruned; 692 stale twins binned; phase 1 artefacts kept |
-| Backup | `dcp_2026-08-10T1932.dump.gpg`, verified, on Drive — **predates the corrections below** |
-| OpenAI spend | ~£528 deep-read + ~$20 adjudication |
+| Reading | **stopped for a clean boundary** — the Studio reader was killed with TERM so nothing was written under the exports |
+| Documents | 55,678 held; **36,744 prose analysed (99%)**, 0 applications with reading outstanding |
+| Excluded on purpose | 5,751 drawings, 1,248 of 5,457 objection letters sampled, 226 held but wordless |
+| Findings | 1,027,946 rows over 884,495 distinct passages |
+| Adjudications | **14,780** — every capacity figure at the boundary is adjudicated |
+| Release | `data/exports/phase2.1_build/`, artefacts named `phase2.1` |
+| Drive | 2.1 artefacts synced; phase 1 and phase 2 artefacts still at the root, Luke archiving the phase 2 pair by hand |
+| Backup | `dcp_2026-08-11T1130.dump.gpg`, 134 MB, verified, on Drive |
+| Deployed | **not yet — on merge** |
+
+**Versioning was set aside deliberately this time.** The rule is that a
+release lands beside its predecessor so a citation of the phase 2
+workbook keeps resolving. For 2.1 Luke overrode it knowing the user
+state: the Google Sheet is being refreshed in place anyway, nobody is
+using the phase 2 workbook or database, and the person who wants the
+database has not opened any version. The cost, stated once because it is
+invisible until someone hits it: a citation of "the phase 2 workbook" no
+longer resolves to the file that produced those numbers.
 
 **The largest figures, stated carefully, because getting this wrong is
 the standing hazard of this dataset.** Largest disclosed IT load is
@@ -283,10 +301,10 @@ themselves into something other than pages, and 17,724 findings cite one
 of those divisions.
 
 ```sh
-scripts/export_handover.py --out data/exports/phase2_build/dc_handover_phase2.xlsx
-scripts/export_duckdb.py   --out data/exports/phase2_build/dc_phase2.duckdb
-scripts/export_reader.py   --out data/exports/phase2_build/reader.html \
-                           --phase 2 --publish index.html
+scripts/export_handover.py --out data/exports/phase2.1_build/dc_handover_phase2.1.xlsx
+scripts/export_duckdb.py   --out data/exports/phase2.1_build/dc_phase2.1.duckdb
+scripts/export_reader.py   --out data/exports/phase2.1_build/reader.html \
+                           --phase 2.1 --publish index.html
 ```
 
 **Pass `--phase 2`.** The title, header, stamp and the database's own

@@ -21,7 +21,7 @@ the boundary is adjudicated.
 
 ---
 
-## Regenerating the phase 2 release
+## Regenerating a release
 
 The chain, its ordering constraints and the traps are in
 [docs/REGENERATION_RUNBOOK.md](docs/REGENERATION_RUNBOOK.md). Two steps
@@ -29,30 +29,7 @@ must precede the artefacts: adjudication corrections (enforced in code
 by `dcp/adjudication_gate.py`) and the Drive staging rebuild that picks
 up the new CSV adjudication columns.
 
-## Finishing Phase 1
-
-The handover is out. These close it properly.
-
-- **Re-stamp and regenerate.** Acquisition restarted after the first
-  boundary, so the release is stamped when collecting stops.
-  `scripts/phase1_finalise.sh` waits for the sweep and the Drive sync,
-  re-stamps `phase1_snapshot.json`, rebuilds workbook, DuckDB and reader,
-  syncs Drive and updates the Sheet. It stops short of the PR that
-  deploys `index.html`.
-- **Verify the Drive repair.** The document tree was rebuilt after a
-  duplicate archive was found; confirm by sampling files' parents, not by
-  trusting the sync counters. Then the duplicate folder
-  `1UxxGmbiEI-9lR8DPJnEzonBj6OR6OpQe` can be deleted — an outward-facing
-  deletion, so Luke's call.
-- **Re-probe the password gate** after the next deploy:
-  `scripts/probe_gate.sh <url>`. 22 paths plus a forged cookie,
-  unauthenticated from outside — a browser session cannot show you this.
-  Passed on 2026-08-10 against the current deployment; the reader is
-  rebuilt on merge, so it needs running again after the regeneration.
-- **16 bad-chunk documents and 7 sites holding unread documents.** Small,
-  but they turn into "why does this site say nothing" later.
-
-## Phase 2 — finish the collecting, then the reading
+## Phase 2 — the tail of the collecting
 
 - **The acquisition tail.** 108 applications are being worked now. Of
   those recorded unreadable, a host-by-host probe found **20 reachable
@@ -64,16 +41,6 @@ The handover is out. These close it properly.
   harvested document listing. Needs a human at the keyboard.
   Genuinely hard: 5 behind CAPTCHA, 7 refusing with 403/500/503
   regardless of user-agent, 1 Incapsula.
-- **Deep-read the remainder.** Two thirds of the corpus is unread and
-  the Anthropic budget is spent; the plan is OpenAI credits. Everything
-  downstream already marks unread sites, so this raises figures rather
-  than changing shape.
-- **Decide whether scanned PDF pages want orientation detection too.**
-  Standalone images are now OCR'd with `--psm 1` because photographs
-  arrive sideways; PDF pages stay on `--psm 3`. Councils scan sideways
-  as well, so the same fix may apply — but ~5% of 55,678 documents have
-  already been OCR'd on the old setting, so this is a measurement first
-  (how many cached OCR pages look rotated) and a re-run second.
 - **Re-list the corpus to find historical partial fetches.** A short
   fetch used to be recorded as complete. New ones are caught, but past
   ones are not measurable from the manifests, which record what was
@@ -86,9 +53,14 @@ The handover is out. These close it properly.
 - **Second-model comparison across the corpus.** A subset is dual-read
   already. Where two models disagree, both readings are kept and the
   disagreement is the finding; the comparison is the deliverable.
-- **Water adjudication**, once reading is complete — whether the 93
-  sites disclosing consumption support anything firmer than the cooling
-  method reported today.
+- **Water adjudication**, once reading is complete — whether the sites
+  disclosing consumption support anything firmer than the cooling method
+  reported today. **119 sites as at the 2.1 boundary**, and the number
+  has moved twice: HISTORY records 93 at phase 1 and the data dictionary
+  said 76 through phase 2, both measured before the reading that
+  followed them. Three hardcoded figures for one quantity, drifting
+  apart — measure it at the time rather than quoting any of them, and
+  see the note below about making it computed.
 
 ## Coverage gaps worth closing
 
@@ -144,47 +116,21 @@ session with the network tab open, after which an adapter is
 straightforward. Worth doing — it is the whole of NI, not seven
 applications.
 
-## Audit tonight's new rules against prior learnings — DONE
-
-Carried out 2026-08-11; findings in
-[docs/RULES_AUDIT.md](docs/RULES_AUDIT.md). One rule of six failed, one
-is inert, and the instruction below cited a HISTORY note that does not
-exist.
-
-**The failure:** the corroboration bands in `consumption_integrity.py`
-and `generation_integrity.py` called 0.8–1.5 the classic
-full-redundancy pattern, "sized to carry the load". Measured across the
-47 sites disclosing both figures, that band holds 13 of them; the median
-ratio is 0.75 and the modal case, 20 sites, is below half. The labels
-now describe the ratio instead of diagnosing the engineering. The
-thresholds are kept as divisions.
-
-**Still open from it:** the ratios compare figures that may come from
-different applications at multi-building sites — the same scope trap
-recorded below under Smaller things — and neither script says so. The
-extremes run 0.00 to 100.00, which is what that looks like.
-
-The standing lesson holds and is why this was worth doing: inventing a
-validation rule means asserting a domain fact, and this project's domain
-facts are already written down, often as hard-won negative results. On
-2026-08-10 a check asserted that a site's IT load cannot exceed its
-stated total; this file already recorded four sites where it does and
-all four are correct. It would have led a fresh session to "correct"
-three correct figures.
-
-**And when a claim is retracted, sweep every place it was asserted.**
-The impossible-components claim was corrected in the code and in the
-runbook, and left standing in the pull request description — the one
-artefact a reviewer actually reads — until Luke found it there too. That
-was the third instance in one evening of fixing the thing in front of me
-and not its neighbours: the per-site CSVs bypassed adjudication while the
-workbook had it, DuckDB omitted it entirely, and a retraction reached two
-of four places. A claim lives in code, comments, commit messages, PR
-bodies, the runbook, HISTORY, and the reader's own methodology and
-dictionary text. `git grep` the distinctive phrase, not the file you
-happen to have open.
-
 ## Smaller things
+
+- **Re-measure the 1.71 kW/m² floor-area factor.** It drives the
+  published power estimate for every site with no disclosed capacity. An
+  ad-hoc query on 2026-08-11 suggested it may have moved — 88 sites now
+  disclose both a capacity and a floorspace figure, against the 53 it was
+  calibrated on — but with different signal matching from the original,
+  so this is a flag and nothing more. Reproduce the original criteria
+  from git history first, then re-run, then decide.
+- **Make the data dictionary's corpus statistics computed.** The count of
+  sites disclosing water consumption exists as three hardcoded figures
+  written at three moments — HISTORY 93, the dictionary 76, live 119 —
+  and only the last is true. One function taking a connection, called by
+  both exporters, kills the class. Until then, measure before quoting any
+  dictionary statistic.
 
 - **Promote `associated_id` to a typed `applications.parent_ref`
   column.** Parent-backfill confirmed the field is reliable; a typed
@@ -204,23 +150,27 @@ happen to have open.
 
 Deferred consciously. Return when journalism need warrants.
 
-### Postponed past the phase 2 release (2026-08-10 evening)
+### Postponed past the phase 2 and 2.1 releases
 
-Cut so the phase 2 handover could go out this evening with the deep-read
-in place. None is abandoned; each is a known, scoped piece of work.
+None is abandoned; each is a known, scoped piece of work.
 
 - **The acquisition tail.** 31 browser-routed applications, 20 across
   bespoke portals, 13 genuinely hard — a slow process needing a human at
   the keyboard, and not worth holding the release for.
-- **Scanned-page orientation detection.** Measurement first, re-run
-  second; ~5% of the corpus was OCR'd on the old setting.
+- **Scanned-page orientation detection — closed on evidence, not done.**
+  The theory was that councils scan sideways and `--psm 3` misses it. The
+  231 documents that OCR'd to nothing were the obvious test cohort, and
+  Apple Vision — which detects orientation itself — read them as blank
+  too. They are photographs and line drawings with no text in them, so
+  there is nothing for a better OCR pass to find. Reopen only with a
+  document that demonstrably has readable text nobody is reading.
 - **Coverage gaps** — Northern Ireland (whole nation, one adapter),
   pre-application/screening entries, Section 35 / NSIP, the operator
   watch-list.
-- **Phase 3, the second opinion.** The Studio is building the dual-read
-  tier-A corpus and `scripts/compare_readers.py` exists; the corpus-wide
-  comparison and water adjudication are the next release's deliverable,
-  not this one.
+- **Phase 3, the second opinion.** `scripts/compare_readers.py` exists
+  and the Studio has been building the dual-read tier-A corpus; it was
+  stopped for the 2.1 boundary and needs restarting. The corpus-wide
+  comparison and water adjudication are the next release's deliverable.
 
 ### Longer-standing
 
