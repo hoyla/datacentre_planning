@@ -135,9 +135,43 @@ applications.
 - **Promote `associated_id` to a typed `applications.parent_ref`
   column.** Parent-backfill confirmed the field is reliable; a typed
   column makes family navigation a join rather than JSONB extraction.
+- **Improve the automated test surface.** The suite is good at internal
+  consistency and blind to two things, and almost every defect found on
+  2026-08-11 sat in one of the gaps. Worth doing properly rather than
+  adding a test per bug — the recurring shape of these is *fixed the
+  symptom, missed the cause*.
+
+  **Nothing drives the built artefact.** The reader's card links did
+  nothing in a shipped release; a chip took its own flex column and
+  squashed the map into a third of the width; an energy checkbox went
+  dead inside a projection. All three were invisible in review and
+  obvious within seconds of opening the page. A build-and-drive smoke
+  test — generate the reader, load it headless, click the things a
+  reporter clicks, assert what they do — would have caught every one.
+  It would also have caught the two prose definitions on one page, which
+  survived a full test run and was found by reading the output.
+
+  **Nothing asserts that a stated number matches the data it describes.**
+  The count of sites disclosing water consumption existed as three
+  hardcoded figures written at three moments — 93, 76 and 119 — and
+  every one passed. Same for the findings-inflation percentage. A test
+  that recomputes each statistic the dictionary quotes and compares it
+  to the string would make that class impossible; making them computed
+  (above) is the better fix, and the test is what stops the next one
+  being hardcoded.
+
+  **The pattern to copy** is `tests/test_release_defaults.py`: it asserts
+  a *rule* over the whole tree — no default may name a release — rather
+  than one instance, and it was verified by reintroducing the bug and
+  watching it fail. `tests/test_adjudication_gate.py` is the
+  counter-example worth understanding: it asserts the corrector and the
+  gate agree, and nothing asserts either is right, which is how the
+  thermal-output hole survived.
+
 - **CI on GitHub Actions.** `pytest -m "not integration"` on every push,
   plus `node --test` for the edge middleware. Feasible now the repo is
-  public and Apache 2.0.
+  public and Apache 2.0. Pairs with the item above: the tests only stop
+  a regression if something runs them.
 - **Four sites report a total site demand below their IT load.** All four
   are correct — the figures come from different applications at
   multi-building sites, and each figure names its source application in
