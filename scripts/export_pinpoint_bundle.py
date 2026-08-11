@@ -228,9 +228,17 @@ def _sniff_zip(path: Path) -> str:
 
 
 def _sniff_ole(path: Path) -> str:
+    # Bytes, then decode leniently. `file` echoes an OLE document's own
+    # Title and Author back at us, and those come out of Word in whatever
+    # code page the author was using — a 0xab (a Latin-1 guillemet) in
+    # one document title was enough to raise UnicodeDecodeError out of
+    # `text=True` and kill a worker, and with it a sweep that was 93% of
+    # the way through. Nothing here needs the metadata to be readable;
+    # it only needs to find the word "Outlook", "Word" or "Excel".
     try:
-        out = subprocess.run(["file", "-b", str(path)], capture_output=True,
-                             text=True, timeout=30).stdout
+        raw = subprocess.run(["file", "-b", str(path)], capture_output=True,
+                             timeout=30).stdout
+        out = raw.decode("utf-8", errors="replace")
     except (OSError, subprocess.SubprocessError):
         return ""
     if "Outlook" in out or "Composite Document File" in out and "Word" not in out:
@@ -437,18 +445,23 @@ def process(job: tuple) -> list[dict]:
            "sha256": sha, "kind": kind, "tier": tier,
            "original_bytes": size, "tranche": "", "note": ""}
 
-    ext = sniff(src) or src.suffix.lower()
-    work = out_dir / "_work"
-    work.mkdir(parents=True, exist_ok=True)
-    tmp = work / f"{sha[:16]}.{os.getpid()}{ext}"
-
     def done(name: str, path: Path, action: str, note: str = "") -> dict:
         r = dict(row)
         r.update(pinpoint_filename=name, output_bytes=path.stat().st_size,
                  action=action, note=note)
         return r
 
+    # Everything below is inside the guard, type sniffing included. It
+    # used to sit above it, on the assumption that identifying a file
+    # could not fail — which is exactly the assumption that ended a sweep
+    # 93% of the way through, when `file` returned a byte that would not
+    # decode. In a 42,000-file batch the cost of one unreadable file must
+    # be one dropped row, never the run.
     try:
+        ext = sniff(src) or src.suffix.lower()
+        work = out_dir / "_work"
+        work.mkdir(parents=True, exist_ok=True)
+        tmp = work / f"{sha[:16]}.{os.getpid()}{ext}"
         if ext == ".pdf":
             name = flat_name(rel, ".pdf")
             dst = out_dir / name
@@ -693,7 +706,7 @@ def main() -> None:
     shutil.rmtree(work_dir, ignore_errors=True)
     work_dir.mkdir(parents=True, exist_ok=True)
 
-    done, t0 = 0, time.time()
+    done, failed, t0 = 0, 0, time.time()
     with open(journal_path, "a", encoding="utf-8") as jf:
         with ProcessPoolExecutor(max_workers=args.jobs) as pool:
             futures = [pool.submit(process, j) for j in jobs]
@@ -703,6 +716,15 @@ def main() -> None:
                         got = fut.result()
                     except InterruptedError:
                         continue  # torn down mid-file; resume will redo it
+                    except Exception as exc:
+                        # A worker died in a way its own guard could not
+                        # catch. Not journalling it means the resume
+                        # retries it; ending the sweep would throw away
+                        # everything still queued behind it.
+                        failed += 1
+                        log(logf, f"worker failed, will retry on resume: "
+                                  f"{type(exc).__name__}: {exc}"[:200])
+                        continue
                     rows.extend(got)
                     jf.write(json.dumps({"staging_path": got[0]["staging_path"],
                                          "rows": got}) + "\n")
