@@ -32,14 +32,49 @@ and stalls if the network is unhappy.
 
 ```sh
 ssh hoyla@192.168.50.113 'cd Code/datacentre_planning &&
-  HF_HUB_OFFLINE=1 nohup .venv/bin/python -u scripts/deepread_run.py \
+  HF_HUB_OFFLINE=1 nohup .venv/bin/python -u scripts/deepread_run.py --tier A \
     >> data/deepread_run.log 2>&1 &'
 ```
+
+**`--tier A` is not optional for the phase 3 dual read**, which is what
+this machine is for. Without it the cohort is the entire corpus: on
+2026-08-11 a restart from the bare command above picked up 43,020
+documents (`A:2508, B:29348, C:1253, sampled_out:4204, skip:5707`)
+instead of the 2,508 tier-A documents outstanding — about 107 hours of
+reading in place of six, on the wrong material. Nothing is corrupted by
+it, but days are lost before anyone looks.
+
+**Check the cohort line before walking away.** The first thing the run
+prints says exactly what it is about to do, and the tier breakdown is
+the tell:
+
+```
+deep-read cohort: 2508 documents pending (A:2508) — model mlx:Qwen3.6-…
+```
+
+`(A:…)` alone is the dual read. Anything with `B:` in it is the whole
+corpus and almost certainly not what was wanted.
 
 Add `--shard 1/2` **only if the laptop is reading at the same time**
 (it takes `0/2`). With one machine reading, no shard flag means it works
 the whole cohort. Resume is automatic either way: `deepread_log` is the
 contract, so nothing is read twice.
+
+## If the laptop will be away
+
+The database lives on the laptop, so the Studio cannot write while it is
+asleep or off the network. Since 2026-08-11 that no longer costs
+anything: the run detects the outage, keeps reading, and spools verified
+findings to `data/deepread_spool.jsonl`, draining them when the database
+comes back and again at startup. Nothing needs doing — but if a run ends
+with
+
+```
+WARNING: database still unreachable — N documents remain in …spool.jsonl
+```
+
+then those N are read and verified and *not yet stored*. Re-run once the
+laptop is back and they are written before anything else happens.
 
 ## Checking it is actually running
 
