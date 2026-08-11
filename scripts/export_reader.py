@@ -1933,7 +1933,10 @@ def main() -> int:
     Drive link in these tables lands in the right folder. Each site's folder also carries a
     <b>site report</b> (the applications, parties and Barbour record, in prose) and a
     <b>findings CSV</b> — every verified finding for that site, one row each, naming the
-    document file beside it, the page, the verbatim quote and the model that read it.
+    document file beside it, where in that document it appears, the verbatim quote and
+    the model that read it. Only a PDF has pages, so a Word file cites a section and a
+    workbook a sheet — the column says which, because it is what you follow to check
+    a quote.
     Both are named after the site, so they stay identifiable outside their folders.</p>
    <p class="when"><b>Reach for it when</b> you need the original to quote or verify — or
     everything extracted from one site in a single file.

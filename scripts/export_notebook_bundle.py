@@ -52,7 +52,7 @@ DEFAULT_MAX_WORDS = 400_000
 # The CSV's own column order, which is the order a reporter sees in
 # Excel. Kept identical so the table and the CSV are the same artefact
 # in two renderings.
-COLUMNS = ["application", "document file", "page (or section for non-PDF)",
+COLUMNS = ["application", "document file", "where in the document",
            "signal family", "signal type", "value", "number", "unit",
            "verbatim quote", "extracted by", "whose figure is this?",
            "quantity type", "adjudicated MW", "quantity note"]
@@ -188,7 +188,9 @@ def main() -> int:
                     f"{len(rows):,} verified findings for {name}"
                     + (f", of which rows {seen + 1:,}–{seen + len(chunk):,} "
                        f"appear below" if parts > 1 else "")
-                    + ". Every row names the document it came from, the page, "
+                    + ". Every row names the document it came from, where in "
+                    "that document it appears — only a PDF has pages, so "
+                    "a Word file cites a section and a workbook a sheet — "
                       "the verbatim quote and the model that read it. Every "
                       "quote was checked against the source text before it was "
                       "stored.", "",

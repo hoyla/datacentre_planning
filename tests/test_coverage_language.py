@@ -374,3 +374,72 @@ class TestUnreadableIsNotUnread:
             "a second INSERT into deepread_log means a second upsert "
             "policy, which is the bug this guards")
         del inspect
+
+
+class TestOnlyAPdfHasPages:
+    """`evidence_page` is the thing a reporter follows to check a quote.
+
+    A .docx has no pages until something renders it, so the extractor
+    records the index of a section; a workbook's is a sheet, a deck's a
+    slide. 17,724 findings cite an index that is not a page, and every
+    artefact called it one. Told "page 3" of a spreadsheet a reporter
+    opens the file, finds no page 3, and doubts the quote rather than the
+    label.
+    """
+
+    def test_each_kind_is_named_in_the_singular(self):
+        from dcp import extract
+        assert extract.cite_page(4, "pages") == "page 4"
+        assert extract.cite_page(4, "sections") == "section 4"
+        assert extract.cite_page(2, "sheets") == "sheet 2"
+        assert extract.cite_page(5, "slides") == "slide 5"
+
+    def test_an_unrecorded_pagination_gives_a_bare_number_not_a_guess(self):
+        """Most such documents are PDFs. "Most" is not a provenance claim."""
+        from dcp import extract
+        assert extract.cite_page(4, None) == "4"
+        assert extract.cite_page(4, "") == "4"
+        assert extract.cite_page(4, "something-new") == "4"
+
+    def test_no_page_cites_nothing(self):
+        from dcp import extract
+        assert extract.cite_page(None, "pages") == ""
+        assert extract.cite_page("", "sections") == ""
+
+    def test_page_zero_is_still_a_citation(self):
+        """0 is falsy and is a real index; it must not vanish."""
+        from dcp import extract
+        assert extract.cite_page(0, "sections") == "section 0"
+
+    def test_the_vocabulary_matches_the_loader_table(self):
+        """The nouns and the labels extract.py writes cannot drift apart."""
+        from dcp import extract
+        written = {p for _loader, p in extract._LOADERS.values()}
+        written.add("pages")
+        assert written <= set(extract._PAGINATION_NOUN), (
+            f"no singular noun for {written - set(extract._PAGINATION_NOUN)}")
+
+    def test_the_csv_and_the_notebook_share_a_header(self):
+        """They are one artefact in two renderings, and only a comment
+        said so. This is the assertion that comment implied."""
+        import pathlib
+        import re
+        import sys
+        sys.path.insert(0, "scripts")
+        csv_src = pathlib.Path("scripts/build_drive_staging.py").read_text()
+        m = re.search(r"w\.writerow\(\[(.*?)\]\)", csv_src, re.S)
+        assert m, "could not find the findings CSV header"
+        header = re.findall(r'"([^"]+)"', m.group(1))
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "nb", "scripts/export_notebook_bundle.py")
+        nb = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(nb)
+        assert header == nb.COLUMNS
+
+    def test_the_exports_carry_the_pagination(self):
+        import pathlib
+        for name in ("scripts/build_drive_staging.py",
+                     "scripts/export_duckdb.py"):
+            src = pathlib.Path(name).read_text()
+            assert "pagination" in src, name

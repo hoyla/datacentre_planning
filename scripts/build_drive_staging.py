@@ -66,7 +66,7 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-from dcp import db, signals  # noqa: E402
+from dcp import db, extract, signals  # noqa: E402
 
 BAD = re.compile(r'[<>:"/\\|?*\x00-\x1f]+')
 
@@ -174,7 +174,8 @@ def main() -> None:
                    coalesce(f.signal_family,''), f.signal_type,
                    f.value_text, f.value_number, f.value_unit,
                    f.evidence_text, f.evidence_page, f.model,
-                   adj.verdict, adj.quantity_type, adj.value_mw, adj.unit_note
+                   adj.verdict, adj.quantity_type, adj.value_mw, adj.unit_note,
+                   d.pagination
             FROM findings f
             LEFT JOIN documents d ON d.id = f.document_id
             LEFT JOIN adj ON adj.finding_id = f.id
@@ -327,7 +328,8 @@ def main() -> None:
                 (app_folder / "_index.md").write_text("\n".join(index) + "\n")
 
             for (sha, family, stype, vtext, vnum, vunit, quote, page,
-                 model, verdict, qty, mw, unit_note) in findings_by_app.get(
+                 model, verdict, qty, mw, unit_note,
+                 pagination) in findings_by_app.get(
                      app_id, ()):
                 doc_file = sha_to_fname.get(sha) if sha else None
                 # Spelled out rather than passed through as a code, because
@@ -345,7 +347,7 @@ def main() -> None:
                 site_csv_rows.append((
                     ref,
                     doc_file or "(document not in this folder)",
-                    page if page is not None else "",
+                    extract.cite_page(page, pagination),
                     family, stype, vtext,
                     vnum if vnum is not None else "",
                     vunit or "", quote, model,
@@ -362,7 +364,7 @@ def main() -> None:
                                                encoding="utf-8-sig") as fh:
                 w = csv.writer(fh)
                 w.writerow(["application", "document file",
-                            "page (or section for non-PDF)", "signal family",
+                            "where in the document", "signal family",
                             "signal type", "value", "number", "unit",
                             "verbatim quote", "extracted by",
                             "whose figure is this?", "quantity type",
@@ -375,8 +377,10 @@ def main() -> None:
                 f"`{findings_name}` in this folder holds all "
                 f"{len(site_csv_rows):,} verified findings extracted from "
                 f"this site's documents — each row names the document file "
-                f"it came from (in the application folders here), the page, "
-                f"the verbatim quote, and the model that read it. Every "
+                f"it came from (in the application folders here), where in "
+                f"that document it appears, the verbatim quote, and the "
+                f"model that read it. Only a PDF has pages, so a Word "
+                f"file cites a section and a workbook a sheet. Every "
                 f"quote was checked against the source text before it was "
                 f"stored.")
             report.append("")

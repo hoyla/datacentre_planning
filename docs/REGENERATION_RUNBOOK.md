@@ -269,6 +269,19 @@ side and the API is the far side.
 
 ### 7. Rebuild the artefacts — BEFORE step 5 stages them
 
+First carry the pagination into the database, or every citation from a
+Word file, a workbook or a deck goes out calling its section a page:
+
+```sh
+scripts/backfill_pagination.py --dry-run   # then without, to write
+```
+
+Idempotent, reads the text caches, and only matters after new documents
+have been extracted — but it is cheap and running it out of order is the
+kind of mistake that ships. 1,470 documents in the corpus divide
+themselves into something other than pages, and 17,724 findings cite one
+of those divisions.
+
 ```sh
 scripts/export_handover.py --out data/exports/phase2_build/dc_handover_phase2.xlsx
 scripts/export_duckdb.py   --out data/exports/phase2_build/dc_phase2.duckdb
