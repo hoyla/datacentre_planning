@@ -488,18 +488,24 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "stated in documents or inferred from floor area at 1.71 kW per sqm "
      "(measured across the 53 sites disclosing both)."),
     ("Sites", "Standby generators (count)",
-     "Highest generator count disclosed in this site's documents. Not "
-     "adjudicated (unlike capacity): generator counts are rarely quoted "
-     "as market context, which capacity routinely is."),
+     "Plant: the highest generator count disclosed in any one of this "
+     "site's documents, so separately-described phases are not summed. "
+     "The only count on these columns that is a quantity of equipment — "
+     "the bracketed numbers in 'Generation type' and 'Cooling method' are "
+     "mentions, and the two do not reconcile. Not adjudicated (unlike "
+     "capacity): generator counts are rarely quoted as market context, "
+     "which capacity routinely is."),
     ("Sites", "Generation type",
-     "Fuels named in generation-related findings, with mention counts. "
-     "Fuels well below the leader are listed as 'also referenced' — "
-     "usually options weighed rather than plant installed. 'CHP' flags "
-     "combined heat and power language."),
+     "Fuels named in generation-related findings, counted by how many "
+     "passages name each — not by how many generators run on each, which "
+     "the documents do not break down. Fuels well below the leader are "
+     "listed as 'also referenced' — usually options weighed rather than "
+     "plant installed. 'CHP' flags combined heat and power language."),
     ("Sites", "Generator caveat",
      "Standing qualification on the generator columns."),
     ("Sites", "Cooling method",
-     "Cooling technologies named in the documents, with mention counts. "
+     "Cooling technologies named in the documents, counted by how many "
+     "passages name each rather than by how much plant is installed. "
      "Applications routinely compare options before choosing, so more than "
      "one may appear; the count separates the method used from the methods "
      "considered. Cooling method is reported instead of a water-consumption "

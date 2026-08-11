@@ -99,6 +99,21 @@ def esc(v) -> str:
     return html.escape(html.unescape("" if v is None else str(v)))
 
 
+# `Diesel (147 mentions), HVO (39)` — the brackets on a ranked label count
+# passages in the documents, and the panel they sit on also carries counts
+# of plant. site_profile names the unit on the first bracket; this greys
+# every bracket on the line so the eye reads them as one kind of number
+# before it reads any of them as a quantity of equipment.
+_MENTION_COUNT_RE = re.compile(r"\((\d[\d,]*(?: [a-z]+)?)\)")
+
+
+def counted(v) -> str:
+    """Escape a ranked label, subduing its bracketed mention counts."""
+    if not v:
+        return "—"
+    return _MENTION_COUNT_RE.sub(r'<span class="mcount">(\1)</span>', esc(v))
+
+
 def trim(text, n: int) -> str:
     t = (text or "").strip().replace("\n", " ")
     return t if len(t) <= n else t[: n - 1].rsplit(" ", 1)[0] + "…"
@@ -367,6 +382,11 @@ img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-
   flex:0 0 11px;width:11px;height:11px;margin:0}
 footer{padding:20px 22px 34px;color:var(--mut);font-size:12px;border-top:1px solid var(--line)}
 .help{font-size:11.5px;color:var(--mut)}
+/* Bracketed mention counts. Subdued because they qualify the label they
+   follow rather than stating a quantity of anything on the site — the
+   same grey as .help and the field keys, which is already the page's
+   sign for "this is about the evidence, not the development". */
+.mcount{color:var(--mut)}
 """
 
 MAP_JS = """
@@ -1245,21 +1265,23 @@ def main() -> int:
 
   <div class="box"><h4>Generation, cooling and water</h4>
    <dl class="kv">
-    <dt>Standby generators</dt><dd>{esc(prof.get('generator_count') or '—')}</dd>
-    <dt>Generation type</dt><dd>{esc(prof.get('generator_fuel') or '—')}</dd>
-    <dt>Cooling method</dt><dd>{esc(prof.get('cooling_method') or '—')}</dd>
+    <dt>Standby generators</dt><dd>{
+      (esc(prof.get('generator_count')) + ' units') if prof.get('generator_count') else '—'}</dd>
+    <dt>Generation type</dt><dd>{counted(prof.get('generator_fuel'))}</dd>
+    <dt>Cooling method</dt><dd>{counted(prof.get('cooling_method'))}</dd>
     <dt>Water evidence</dt><dd>{esc(prof.get('water_evidence') or '—')}</dd>
     <dt>EIA status</dt><dd>{esc(prof.get('eia_status_label') or '—')}</dd>
     <dt>Environmental subjects</dt><dd>{esc(', '.join(env)) or '—'}</dd>
     <dt>Finding subjects</dt><dd>{esc(', '.join((families or [])[:6])) or '—'}</dd>
    </dl>
-   <p class="help">{esc(prof.get('generator_caveat') or '')}</p></div>
+   <p class="help">{esc(prof.get('generator_caveat') or '')}</p>
+   <p class="help">{esc(prof.get('cooling_caveat') or '')}</p></div>
 
   <div class="box"><h4>Who is behind it</h4>
    <dl class="kv">
-    <dt>Applicant / operator</dt><dd>{esc(prof.get('applicants') or '—')}</dd>
-    <dt>Advisers</dt><dd>{esc(prof.get('advisers') or '—')}</dd>
-    <dt>Planning authority</dt><dd>{esc(prof.get('authorities') or '—')}</dd>
+    <dt>Applicant / operator</dt><dd>{counted(prof.get('applicants'))}</dd>
+    <dt>Advisers</dt><dd>{counted(prof.get('advisers'))}</dd>
+    <dt>Planning authority</dt><dd>{counted(prof.get('authorities'))}</dd>
     <dt>Barbour project</dt><dd>{esc(btitle or '—')}
      {f'<span class="help">{esc(bstage or "")}</span>' if bstage else ''}</dd>
     <dt>Nearest energy project</dt><dd>{near_html}</dd>

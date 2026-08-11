@@ -182,3 +182,74 @@ class TestCoverageArgsAreProseCounts:
                     assert frag in re.sub(r"\s+", " ", src) or frag in src, (
                         f"{name}: {fn} is not being given prose counts "
                         f"({frag!r} missing)")
+
+
+class TestMentionCountsAreNotPlant:
+    """A bracketed count says how often the documents say a thing.
+
+    Nothing else on the same panel does. "Standby generators: 109" beside
+    "Diesel (147), HVO (39)" was read by a reporter as 147 diesel engines
+    and 39 HVO ones inside a total of 109, which is the natural reading of
+    two numbers that look alike and are never told apart. Both figures
+    were correct; neither said what it counted.
+
+    These assert the distinction rather than the wording: that the leading
+    bracket names its unit, that the plant count carries its own, and that
+    the reader passes these fields through the formatter that subdues them.
+    """
+
+    def test_the_leading_bracket_names_what_it_counts(self):
+        label = site_profile.ranked_label(
+            [("Diesel", 147), ("HVO", 39)], site_profile.FUEL_SECONDARY_FLOOR)
+        assert label.startswith("Diesel (147 mentions)")
+        # Named once, not four times: the noun establishes the kind for the
+        # line, and repeating it buries the fuels it exists to qualify.
+        assert label.count(site_profile.MENTION_NOUN) == 1
+        assert "HVO (39)" in label
+
+    def test_a_minor_entry_is_referenced_rather_than_counted(self):
+        label = site_profile.ranked_label(
+            [("Diesel", 147), ("HVO", 39), ("Hydrogen / fuel cell", 4)],
+            site_profile.FUEL_SECONDARY_FLOOR)
+        assert "also referenced: Hydrogen / fuel cell" in label
+        assert "(4)" not in label
+
+    def test_empty_ranking_says_nothing(self):
+        assert site_profile.ranked_label([], 0.15) == ""
+
+    def test_fuels_cooling_and_parties_all_declare_the_unit(self):
+        """One claim, three columns. It has been fixed in two before."""
+        fuels = site_profile.GeneratorProfile(
+            109, [("Diesel", 147), ("HVO", 39)], False, "").fuel_label
+        cooling, _ = site_profile.cooling_profile(
+            ["adiabatic cooling", "adiabatic and chilled water"])
+        for label in (fuels, cooling):
+            assert site_profile.MENTION_NOUN in label
+
+    def test_chp_survives_the_shared_builder(self):
+        prof = site_profile.GeneratorProfile(
+            5, [("Gas", 20)], True, "")
+        assert prof.fuel_label == "Gas (20 mentions) — CHP"
+
+    def test_no_fuels_means_no_chp_suffix(self):
+        """The suffix once qualified a label that did not exist."""
+        assert site_profile.GeneratorProfile(5, [], True, "").fuel_label == ""
+
+    def test_the_generator_caveat_separates_plant_from_mentions(self):
+        prof = site_profile.generator_profile([12, 109], ["diesel generator"])
+        assert prof.count == 109
+        assert "plant" in prof.caveat
+        assert "mention" in prof.caveat or "passages" in prof.caveat
+
+    def test_the_reader_subdues_counts_and_units_its_plant(self):
+        import pathlib
+        import re
+        src = re.sub(r"\s+", " ", pathlib.Path("scripts/export_reader.py").read_text())
+        # The plant count says what it is a count of.
+        assert "generator_count')) + ' units'" in src
+        # Every ranked label goes through the formatter, not bare esc().
+        for field in ("generator_fuel", "cooling_method",
+                      "applicants", "advisers", "authorities"):
+            assert f"counted(prof.get('{field}'))" in src, (
+                f"{field} is rendered without subduing its mention counts")
+        assert ".mcount{" in src

@@ -159,6 +159,52 @@ GENERATOR_COUNT_CEILING = 1000
 FUEL_SECONDARY_FLOOR = 0.15
 
 
+# What the bracketed numbers on a ranked label are counting. They are
+# mentions in the documents, and nothing else on the same panel is — the
+# generator count beside them is plant. A reporter read "Standby
+# generators: 109" against "Diesel (147), HVO (39)" and reasonably asked
+# how 147 diesel generators and 39 HVO ones fit inside 109. Both numbers
+# were right and neither said what it was of.
+#
+# So the leading bracket carries the noun and the rest inherit it: naming
+# it once establishes the kind for the whole line, where repeating it four
+# times would bury the fuels it is meant to qualify. Every artefact gets
+# this — the workbook's dictionary already promised "mention counts" and
+# only the dictionary said so.
+MENTION_NOUN = "mentions"
+
+
+def ranked_label(ranked, floor: float, *, noun: str = MENTION_NOUN) -> str:
+    """`Top (147 mentions), Next (39); also referenced: Rare`.
+
+    `ranked` is (label, count) most-mentioned first. Entries below
+    `floor` × the leader are summarised as 'also referenced' rather than
+    listed with a number, because a thing named once against a dominant
+    alternative is usually an option weighed rather than plant installed
+    — and printing its count invites a comparison the evidence will not
+    carry.
+
+    One implementation for fuels, cooling methods and party names: they
+    are the same claim about the same kind of number, and when the
+    wording of that claim changes it should not change in only two of the
+    three places.
+    """
+    if not ranked:
+        return ""
+    top_label, top_n = ranked[0]
+    parts = [f"{top_label} ({top_n} {noun})"]
+    minor = []
+    for label, n in ranked[1:]:
+        if n >= top_n * floor:
+            parts.append(f"{label} ({n})")
+        else:
+            minor.append(label)
+    out = ", ".join(parts)
+    if minor:
+        out += f"; also referenced: {', '.join(minor)}"
+    return out
+
+
 @dataclass(frozen=True)
 class GeneratorProfile:
     count: int | None
@@ -168,25 +214,9 @@ class GeneratorProfile:
 
     @property
     def fuel_label(self) -> str:
-        """Dominant fuel first, with genuinely-present others named.
-
-        Fuels below a fraction of the leader are summarised as
-        'also referenced' rather than listed as though installed.
-        """
-        if not self.fuels:
-            return ""
-        top_label, top_n = self.fuels[0]
-        parts = [f"{top_label} ({top_n})"]
-        minor = []
-        for label, n in self.fuels[1:]:
-            if n >= top_n * FUEL_SECONDARY_FLOOR:
-                parts.append(f"{label} ({n})")
-            else:
-                minor.append(label)
-        out = ", ".join(parts)
-        if minor:
-            out += f"; also referenced: {', '.join(minor)}"
-        return f"{out} — CHP" if self.is_chp else out
+        """Dominant fuel first, with genuinely-present others named."""
+        out = ranked_label(self.fuels, FUEL_SECONDARY_FLOOR)
+        return f"{out} — CHP" if self.is_chp and out else out
 
 
 def generator_profile(counts, fuel_texts) -> GeneratorProfile:
@@ -206,11 +236,14 @@ def generator_profile(counts, fuel_texts) -> GeneratorProfile:
         return GeneratorProfile(
             None, fuels, is_chp,
             "Generation type named but no count disclosed." if fuels else "")
-    caveat = ("Highest count disclosed across this site's documents; "
-              "phases may be described separately. Not adjudicated for "
-              "attribution, unlike the capacity figures — generator counts "
-              "are rarely quoted as market context, which capacity "
-              "routinely is.")
+    caveat = ("The count is plant: the highest number of generators "
+              "disclosed in any one of this site's documents, so phases "
+              "described separately are not added together. The bracketed "
+              "numbers beside each fuel count something else — passages in "
+              "the documents naming that fuel — and the two do not "
+              "reconcile arithmetically. Not adjudicated for attribution, "
+              "unlike the capacity figures: generator counts are rarely "
+              "quoted as market context, which capacity routinely is.")
     return GeneratorProfile(max(usable), fuels, is_chp, caveat)
 
 
@@ -275,20 +308,12 @@ def cooling_profile(texts) -> tuple[str, str]:
     if not counts:
         return "", ""
     ranked = sorted(counts.items(), key=lambda kv: -kv[1])
-    top_label, top_n = ranked[0]
-    parts = [f"{top_label} ({top_n})"]
-    minor = []
-    for label, n in ranked[1:]:
-        if n >= top_n * COOLING_SECONDARY_FLOOR:
-            parts.append(f"{label} ({n})")
-        else:
-            minor.append(label)
-    out = ", ".join(parts)
-    if minor:
-        out += f"; also referenced: {', '.join(minor)}"
-    return out, ("Cooling technologies named in this site's documents, with "
-                 "mention counts. Applications routinely compare options "
-                 "before choosing, so more than one method may appear.")
+    return ranked_label(ranked, COOLING_SECONDARY_FLOOR), (
+        "Cooling technologies named in this site's documents, counted by "
+        "how many passages name each — not by how much plant is installed. "
+        "Applications routinely compare options before choosing, so more "
+        "than one method may appear, and the count is what separates the "
+        "method used from the methods considered.")
 
 
 COOLING_TEXTS_SQL = """
@@ -684,8 +709,11 @@ def _parties_for_sites(conn) -> dict[str, dict]:
             per_site[site_key][bucket][e.key] += 1
 
     def render(counts: dict[str, int], top: int = 3) -> str:
+        # Floor 0 keeps every one of the top few named — an adviser is not
+        # demoted to 'also referenced' for being named less often than the
+        # developer, which is the normal case rather than a weak signal.
         ranked = sorted(counts.items(), key=lambda kv: -kv[1])[:top]
-        return ", ".join(f"{display[k]} ({n})" for k, n in ranked)
+        return ranked_label([(display[k], n) for k, n in ranked], 0)
 
     return {site_key: {
         "applicants": render(b.get("applicant", {})),
