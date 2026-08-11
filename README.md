@@ -7,9 +7,14 @@ sites will draw, what generation they propose on site, how they will be
 cooled, and who is behind them.
 
 **What it holds today:** 429 sites plus 26 known only at pre-planning
-stage, 1,709 planning applications, 54,707 documents from council
-registers, 18,645 of them analysed, 462,221 verified findings, and a
-layer of 197 nationally significant energy projects for adjacency.
+stage, 1,709 planning applications, 55,678 documents from council
+registers, and a layer of 197 nationally significant energy projects for
+adjacency. The analysed and findings counts are deliberately not repeated
+here: the corroboration pass is still writing rows, so they move — and a
+hand-copied number in a readme is a number that is wrong by the following
+morning, as this one was, by roughly a factor of two.
+`scripts/corpus_stats.py` prints the current figures, and every published
+release states the boundary it was stamped at.
 
 The output is a handover package, not a live service: a reader, a
 workbook, a queryable database, and the source documents themselves.
@@ -27,6 +32,10 @@ workbook, a queryable database, and the source documents themselves.
 - [docs/BACKUP.md](docs/BACKUP.md) — the database is the part that
   cannot be re-fetched. How it is dumped, encrypted, verified and
   rehearsed, and where the copies live.
+- [docs/EXTERNAL_DATA_SOURCES.md](docs/EXTERNAL_DATA_SOURCES.md) — the
+  other datasets that claim to measure data-centre capacity, what each
+  one's MW actually is, and why none of them can be merged into a column
+  here. Read before proposing a triangulation source.
 - [DATA-LICENSING.md](DATA-LICENSING.md) — per-source upstream terms.
   Barbour ABI data is licensed and **requires credit** in published
   output.
@@ -38,8 +47,26 @@ workbook, a queryable database, and the source documents themselves.
 **Ingest broadly, analyse second.** A corpus assembled to prove a point
 cannot produce a null finding. Applications are collected on a
 deliberately wide definition and the editorial judgement applied
-afterwards, to structured facts — which is why the dataset can say *71
-consented data centres disclose no power figure at all*, and mean it.
+afterwards, to structured facts — so *these consented data centres
+disclose no power figure at all* is a result the dataset can reach, and
+not only the dramatic ones.
+
+That finding has been **re-verified, and the re-verification is the
+thing to cite rather than any number written here.** The original figure
+of 71 sites was measured before the extractor could read Word, Outlook
+and spreadsheet documents, and the regex sweep behind it was never
+committed — a cohort that could contain documents nobody had read yet,
+checked by an analysis nobody could re-run. Both are fixed:
+`scripts/sweep_null_capacity.py` builds the cohort from reading coverage,
+separates sites genuinely stating nothing from sites merely unread,
+prints the residue it cannot classify instead of waving it away, and
+refuses to be authoritative while candidate figures await adjudication.
+It writes a dated report naming every site and quoting every match it
+could not classify. That report is local — `data/reports/` is not
+tracked, because it quotes consultation material — so the citable object
+is the script, and a published claim should rest on a run of it made
+against the corpus as it stood, not on a number copied out of an earlier
+one.
 
 Two consequences run through the code:
 
