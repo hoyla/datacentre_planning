@@ -92,6 +92,28 @@ SOURCES = {
         "as a proportion of the site's meter capacity, by voltage level and "
         "data centre type. The only published measurement of what UK data "
         "centres actually draw, as opposed to what they secured."),
+    "desnz_lahh": Source(
+        "desnz_lahh",
+        "Sub-national electricity consumption: local authority Half-Hourly "
+        "non-domestic series, 2010–2024",
+        "Department for Energy Security and Net Zero",
+        "2024-data release, current at access",
+        "https://assets.publishing.service.gov.uk/media/"
+        "69427b3736f089d38be1f1ce/MSOA_non-domestic_elec_2010-2024.xlsx",
+        "12 August 2026",
+        "Annual metered consumption by local authority and meter type, "
+        "Open Government Licence v3. The Half-Hourly non-domestic rows are "
+        "the class data centres belong to, and DESNZ publishes that class "
+        "at local-authority level only — every per-MSOA row in the source "
+        "carries zero Half-Hourly meters. Authority figures are floors: a "
+        "national unallocated remainder (~2.9 TWh in 2024) could not be "
+        "placed in any authority. The extract this dataset reads is "
+        "committed at data/external_sources/ with the source workbook's "
+        "sha256 and the sanity anchors any re-ingest must reproduce; "
+        "unlike the sources above, the per-authority change also appears "
+        "beside each site as context — computed from the extract at "
+        "generation time, and never presented as the site's own "
+        "consumption."),
 }
 
 
@@ -254,6 +276,25 @@ AGGREGATES = (
         "496 not-yet-energised import projects of 5 MVA and above "
         "(anonymised)",
         "ukpn_queue", "dataset record count at access", ""),
+    Aggregate(
+        "GB large-user (Half-Hourly non-domestic) electricity "
+        "consumption, 2019 → 2024",
+        "134.2 TWh → 121.5 TWh (−9%)",
+        "desnz_lahh", "sum of allocated local-authority rows; anchors "
+        "recorded in data/external_sources/README.md", ""),
+    Aggregate(
+        "Largest absolute rise in large-user consumption of any GB local "
+        "authority, 2019 → 2024",
+        "Slough: 1,084 GWh → 1,734 GWh (+60%, +650 GWh) — against the "
+        "national −9%",
+        "desnz_lahh", "local-authority Half-Hourly rows, E06000039", ""),
+    Aggregate(
+        "Second-largest absolute rise in large-user consumption, "
+        "2019 → 2024",
+        "Hillingdon: 1,029 GWh → 1,398 GWh (+36%, +369 GWh); the "
+        "third-largest rise (Wiltshire, +151 GWh) is less than half "
+        "Hillingdon's",
+        "desnz_lahh", "local-authority Half-Hourly rows, E09000017", ""),
 )
 
 

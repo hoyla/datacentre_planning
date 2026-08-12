@@ -919,6 +919,7 @@ def main() -> int:
     args = ap.parse_args()
 
     hv = _handover()
+    from dcp import consumption_context as cc
     from dcp import external_aggregates as extagg
     from dcp import origin as origin_mod
     from dcp import proposal as prop
@@ -1165,11 +1166,17 @@ def main() -> int:
         for k, lbl, note in OUTCOMES if by_outcome[k])
     body = []
 
+    # DESNZ consumption context, loaded once so every panel compares
+    # against the same national change; coverage counted and printed so
+    # unmapped sites are a number, never a silent gap.
+    desnz = cc.load_series()
+    ctx_mapped = ctx_unmapped = 0
+    ctx_unrecognised: set[str] = set()
     for r in site_rows:
         (key, cls, name, lat, lon, csrc, councils, n_apps, refs, verdicts,
          docs, findings_n, it, tot, grid, gen, ncap, nexc, families,
          eref, edoc, manual, ptno, btitle, bstage, bvalue, bfloor,
-         bsite, bplan, bdec) = r
+         bsite, bplan, bdec, bauthority) = r
         prof = profiles.get(key, {})
         held, read = coverage.get(key, (docs or 0, 0))
         _cd = cov_detail.get(key, {})
@@ -1335,6 +1342,24 @@ def main() -> int:
                      + f' <a href="{esc(near[0]["url"])}" target="_blank" '
                        f'rel="noopener">PINS</a>') if near else "—"
 
+        # DESNZ consumption context: the sentence appears only where the
+        # site's local authority maps cleanly — no hedged filler on the
+        # sites that span authorities or sit outside Great Britain — and
+        # the caveats travel with it, naming the inferred authority so
+        # the mapping is visible beside its product.
+        ctx_la = cc.authority_for(councils, bauthority)
+        ctx_sentence = cc.context_sentence(ctx_la, desnz) if ctx_la else None
+        if ctx_sentence:
+            ctx_mapped += 1
+            ctx_html = (
+                '<div class="box"><h4>Local authority context</h4>'
+                f'<p>{esc(ctx_sentence)}</p>'
+                f'<p class="help">{esc(cc.context_note(ctx_la))}</p></div>')
+        else:
+            ctx_unmapped += 1
+            ctx_html = ""
+        ctx_unrecognised.update(cc.unrecognised(councils))
+
         def _q(v, qt, _k=key):
             if not v:
                 return "—"
@@ -1444,6 +1469,7 @@ def main() -> int:
    </dl>
    <p class="help">Names are counted: the organisation named forty times is the developer,
     the one named twice is usually a consultee's consultant.</p></div>
+  {ctx_html}
  </div>
 
  <h4 class="sub-head">What the documents say</h4>
@@ -1489,6 +1515,17 @@ def main() -> int:
         near_html = (f'{esc(near[0]["name"])} — {near[1]} km'
                      f' <a href="{esc(near[0]["url"])}" target="_blank" '
                      f'rel="noopener">PINS</a>') if near else "—"
+        ctx_la = cc.authority_for((), authority)
+        ctx_sentence = cc.context_sentence(ctx_la, desnz) if ctx_la else None
+        if ctx_sentence:
+            ctx_mapped += 1
+            ctx_html = (
+                '<div class="box"><h4>Local authority context</h4>'
+                f'<p>{esc(ctx_sentence)}</p>'
+                f'<p class="help">{esc(cc.context_note(ctx_la))}</p></div>')
+        else:
+            ctx_unmapped += 1
+            ctx_html = ""
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="0"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
@@ -1538,6 +1575,7 @@ def main() -> int:
    <dl class="kv"><dt>Nearest energy project</dt><dd>{near_html}</dd></dl>
    <p class="help">Barbour ABI data is licensed and must be credited in published output.</p>
   </div>
+  {ctx_html}
  </div></td></tr>""")
 
     n_sites = len(site_rows) + n_barbour
@@ -1727,6 +1765,16 @@ def main() -> int:
         f"<td class='n'>{len(site_mw_values):,}</td></tr>")
     _ofgem_src = extagg.SOURCES["ofgem_curate"]
     _cfi_src = extagg.SOURCES["neso_cfi"]
+    # The DESNZ paragraph's figures are computed from the committed
+    # extract at generation time, like every number on this page — the
+    # verbatim anchors live in dcp/external_aggregates and the extract's
+    # README, and the tests hold the two together.
+    _desnz_src = extagg.SOURCES["desnz_lahh"]
+    _d_nat = round(cc.national_change(desnz))
+    _d_slough = round(cc.change_pct(desnz["Slough"]))
+    _d_hillingdon = round(cc.change_pct(desnz["Hillingdon"]))
+    _d_towerhamlets = round(cc.change_pct(desnz["Tower Hamlets"]))
+    _d_hertsmere = round(cc.change_pct(desnz["Hertsmere"]))
 
     methodology_html = f"""
  <p class="lede">How this dataset was built, what has been measured about its accuracy, and
@@ -1876,6 +1924,22 @@ def main() -> int:
  the sources measure different quantities, and the anonymised ones cannot be matched to a
  site without guessing. The full set, with verbatim quotes, locators and access dates, is on
  the workbook's External aggregates sheet.</p>
+ <p class="m">Consumption is the measurement the queue cannot make. DESNZ's
+ <a href="{esc(_desnz_src.url)}" target="_blank" rel="noopener">sub-national electricity
+ statistics</a> record what large users actually drew: Half-Hourly-metered non-domestic
+ consumption — the meter class data centres belong to — published at local-authority level
+ only, because below that level the source carries no half-hourly meters at all. Between
+ 2019 and 2024 that consumption fell {abs(_d_nat)}% nationally, while rising
+ {_d_slough}% in Slough and {_d_hillingdon}% in Hillingdon — the two largest absolute rises
+ of any GB local authority. The nulls are as visible as the rises: Tower Hamlets, holding
+ the Docklands cluster, fell {abs(_d_towerhamlets)}%, and Hertsmere, with data-centre sites
+ of its own in this dataset, fell {abs(_d_hertsmere)}%. Each site panel carries its own
+ authority's change beside the national one where the authority maps cleanly
+ ({ctx_mapped} of {n_sites} sites; the remainder span more than one authority, sit outside
+ Great Britain, or record no authority at all). The figure describes the authority, never
+ the site: an authority's total covers all its large users, the series ends in 2024 — so
+ sites energised since are not in it — and authority figures are floors, because DESNZ
+ could not place a national remainder of roughly 2.9&nbsp;TWh in any authority.</p>
 
  <h2 class="sec">Known limits of this release</h2>
  <ul class="m">
@@ -2337,9 +2401,19 @@ def main() -> int:
         args.publish.parent.mkdir(parents=True, exist_ok=True)
         args.publish.write_text(out, encoding="utf-8")
         print(f"  also wrote {args.publish} (EdgeOne deployment root)")
+    # No silent gaps: every site panel either carries the consumption
+    # context or is counted here, and unknown council prefixes are named.
+    assert ctx_mapped + ctx_unmapped == n_sites, \
+        (ctx_mapped, ctx_unmapped, n_sites)
     print(f"wrote {args.out} ({len(out)/1024/1024:.1f} MB) — {n_sites} sites, "
           f"{len(app_rows)} applications, {len(nsip)} energy projects, "
           f"{n_prov} sites marked provisional")
+    print(f"  Consumption context: {ctx_mapped} site panels carry the DESNZ "
+          f"sentence, {ctx_unmapped} do not (several authorities, Northern "
+          f"Ireland, development corporations, or no authority recorded)")
+    if ctx_unrecognised:
+        print(f"  Consumption context: UNRECOGNISED council prefixes — add "
+              f"to dcp/consumption_context.py: {sorted(ctx_unrecognised)}")
     return 0
 
 

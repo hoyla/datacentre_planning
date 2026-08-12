@@ -196,7 +196,11 @@ SELECT s.site_key, s.classification, s.display_name,
        max(p.floor_area)                                      AS barbour_floor_area,
        max(p.site_area)                                       AS barbour_site_area,
        max(p.plan_date)                                       AS barbour_plan_date,
-       max(p.decision_date)                                   AS barbour_decision_date
+       max(p.decision_date)                                   AS barbour_decision_date,
+       -- For the DESNZ consumption context: a Barbour-anchored site with
+       -- no applications has no council prefixes, and a site spanning
+       -- councils needs Barbour's authority to say which one it is in.
+       max(p.authority_name)                                  AS barbour_authority
 FROM sites s
 LEFT JOIN site_members m ON m.site_id = s.id AND m.retired_at IS NULL
 LEFT JOIN applications a ON a.id = m.application_id
@@ -352,6 +356,13 @@ SITE_HEADERS = [
     # --- nearest energy project ---------------------------------------------
     "Nearest energy project (NSIP)", "Distance to energy project (km)",
     "Energy project stated capacity",
+    # --- consumption context (DESNZ) ----------------------------------------
+    # Context, never attribution: the authority's large-user consumption
+    # change beside the national one, with the inferred authority named
+    # so the mapping is visible beside its product.
+    "Local authority (DESNZ series, inferred)",
+    "Local authority large-user electricity 2019→2024 (% change)",
+    "National large-user electricity 2019→2024 (% change)",
     # --- coverage & gaps ---------------------------------------------------
     "Capacity status", "Acquisition status",
     # --- Barbour -----------------------------------------------------------
@@ -587,6 +598,30 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "page states. Shown for every site with coordinates regardless of "
      "distance — a large distance is itself information. Distance is to "
      "the nearest *located* site; sites without coordinates cannot match."),
+    ("Sites", "Local authority (DESNZ series, inferred)",
+     "The current local authority this site's council references — or, "
+     "for pre-planning rows, its Barbour-recorded authority — resolve "
+     "to, named so the two consumption columns beside it say whose "
+     "figures they are. The match is an inference; the Councils column "
+     "keeps the original values. Blank where the site's references span "
+     "more than one authority and nothing selects among them, where the "
+     "authority is outside Great Britain (the DESNZ series does not "
+     "cover Northern Ireland), or where the planning authority is a "
+     "development corporation rather than a local authority."),
+    ("Sites", "Local authority / National large-user electricity "
+     "2019→2024 (% change)",
+     "Change in Half-Hourly-metered non-domestic electricity consumption "
+     "between 2019 and 2024, for the site's local authority and for "
+     "Great Britain, from DESNZ sub-national electricity statistics "
+     "(Open Government Licence v3). Large users — half-hourly-metered "
+     "non-domestic consumers — are the class data centres belong to, and "
+     "DESNZ publishes it at local-authority level only: every per-MSOA "
+     "row in the source carries zero half-hourly meters, so nothing "
+     "finer exists. The figure describes the authority, not the site: an "
+     "authority's total covers all its large users. The series ends "
+     "2024, so later energisations are not in it, and authority figures "
+     "are floors — DESNZ could not allocate a national remainder "
+     "(~2.9 TWh in 2024) to any authority."),
     ("Sites", "Capacity status",
      "What the power columns' content (or emptiness) means: disclosed / "
      "inferred from floor area / analysed in full with nothing disclosed "
@@ -817,6 +852,7 @@ def main() -> None:
     from collections import defaultdict
     from urllib.parse import urlparse
 
+    from dcp import consumption_context as cc
     from dcp import external_aggregates as extagg
     from dcp import proposal
     from dcp import signals as sig
@@ -977,11 +1013,20 @@ def main() -> None:
     # Collected from the very estimates the Sites sheet displays, so the
     # aggregate table cannot disagree with the rows it summarises.
     agg_figures: list[tuple[str, float | None, bool]] = []
+    # DESNZ consumption context: the series is loaded once and the
+    # national change computed once, so every row's comparison is against
+    # the same baseline. Coverage is asserted after the loops — every row
+    # either maps or is counted, and the export prints both numbers.
+    desnz = cc.load_series()
+    desnz_national = round(cc.national_change(desnz))
+    ctx_mapped = ctx_unmapped = 0
+    ctx_unrecognised: set[str] = set()
     for r in site_rows:
         (key, cls, name, lat, lon, csrc, councils, n_apps, refs, verdicts,
          docs, findings_n, it_load_mw, total_site_mw, grid_mw, gen_mw,
          n_capacity, n_excluded, families, eia_ref, eia_doc, manual_docs,
-         ptno, btitle, bstage, bvalue, bfloor, bsite, bplan, bdecision) = r
+         ptno, btitle, bstage, bvalue, bfloor, bsite, bplan, bdecision,
+         bauthority) = r
         if lat is not None and lon is not None:
             site_coords.append((lat, lon, name or key))
         eia = " + ".join(
@@ -1070,6 +1115,20 @@ def main() -> None:
             near_km = km
             near_cap = p["capacity"]
 
+        # Consumption context: emitted as a trio or not at all — an
+        # authority name without its figures, or a national baseline
+        # beside a blank, would invite the comparison the columns exist
+        # to make without the terms that make it honest.
+        ctx_la = cc.authority_for(councils, bauthority)
+        ctx_pct = cc.change_pct(desnz[ctx_la]) if ctx_la else None
+        if ctx_pct is not None:
+            ctx_mapped += 1
+            ctx_cells = [ctx_la, round(ctx_pct), desnz_national]
+        else:
+            ctx_unmapped += 1
+            ctx_cells = ["", "", ""]
+        ctx_unrecognised.update(cc.unrecognised(councils))
+
         portal = site_portal.get(key)
         n_hosts = len(site_hosts.get(key, ()))
         portal_label = ("Open portal" if n_hosts <= 1
@@ -1111,6 +1170,7 @@ def main() -> None:
                 if families and len(families) > TOP_FAMILIES else "")),
             held, read, findings_n, manual_docs or "",
             near_name, near_km, near_cap,
+            *ctx_cells,
             cap_label, acq,
             ptno, btitle, bstage, bvalue, bfloor, bsite,
             str(bplan or ""), str(bdecision or ""),
@@ -1146,6 +1206,14 @@ def main() -> None:
                 f"{p['name']} ({p['ref']})", km, p["capacity"])
         env = sig.environmental_signals(description)
         bsummary, bdescriptive = proposal.summarise([description, title])
+        ctx_la = cc.authority_for((), authority)
+        ctx_pct = cc.change_pct(desnz[ctx_la]) if ctx_la else None
+        if ctx_pct is not None:
+            ctx_mapped += 1
+            ctx_cells = [ctx_la, round(ctx_pct), desnz_national]
+        else:
+            ctx_unmapped += 1
+            ctx_cells = ["", "", ""]
         row = [
             pseudo_key, "barbour_only", title,
             proposal.tidy(bsummary),
@@ -1162,6 +1230,7 @@ def main() -> None:
             "", "", "",
             "", 0, 0, 0, "",
             near_name, near_km, near_cap,
+            *ctx_cells,
             cap_label, acq,
             pref, title, pstage, pvalue, pfloor, psite,
             str(pplan or ""), str(pdecision or ""),
@@ -1422,9 +1491,21 @@ def main() -> None:
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     wb.save(args.out)
+    # No silent gaps: every Sites row either carries the DESNZ context or
+    # is counted here, and a council prefix the mapping has never seen is
+    # named rather than folded into the unmapped number.
+    assert ctx_mapped + ctx_unmapped == len(site_rows) + appended_barbour, \
+        (ctx_mapped, ctx_unmapped, len(site_rows), appended_barbour)
     print(f"Wrote {args.out}")
     print(f"  Sites: {len(site_rows)} + {appended_barbour} pre-planning; "
           f"Applications: {len(app_rows)}; Energy projects: {len(nsip)}")
+    print(f"  Consumption context: {ctx_mapped} rows mapped to a DESNZ "
+          f"authority, {ctx_unmapped} unmapped (spans several authorities, "
+          f"Northern Ireland, development corporations, or no authority "
+          f"recorded)")
+    if ctx_unrecognised:
+        print(f"  Consumption context: UNRECOGNISED council prefixes — add "
+              f"to dcp/consumption_context.py: {sorted(ctx_unrecognised)}")
 
 
 if __name__ == "__main__":
