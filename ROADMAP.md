@@ -260,6 +260,28 @@ investigation.
 
 Deferred consciously. Return when journalism need warrants.
 
+### Queued behind the consumption-context line
+
+- **LA-level consumption choropleth on the reader map ("plan 2",
+  agreed 2026-08-12).** A toggleable layer shading each local authority
+  by the change in its large-user (half-hourly non-domestic) electricity
+  consumption 2019→2024, with the sites drawn on top. The signal is
+  strong and already measured: against a national fall of 9%, Slough is
+  +60% and Hillingdon +36% — the two largest absolute risers in Great
+  Britain — while the null cases render too (Docklands −15%, Hertsmere
+  flat despite 260 MVA committed in UKPN's queue), which is pipeline
+  versus consumption on one map. Ships only after
+  [docs/PLAN_CONSUMPTION_CONTEXT.md](docs/PLAN_CONSUMPTION_CONTEXT.md)
+  ("plan 1"): the per-site sentence proves the numbers, the
+  council→authority mapping and the caveat language before anything is
+  painted. Constraints decided up front: local-authority granularity is
+  forced, not chosen — DESNZ publishes half-hourly consumption only as
+  LA rollups and the per-MSOA rows exclude it entirely; the layer
+  describes the authority's consumption, never the site's; the series
+  ends 2024 and says so; simplified LA boundary geometry must fit the
+  single-file reader's payload budget. The data is already committed in
+  `data/external_sources/` (provenance in its README).
+
 ### Postponed past the phase 2 and 2.1 releases
 
 None is abandoned; each is a known, scoped piece of work.
