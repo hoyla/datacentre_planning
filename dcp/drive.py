@@ -73,3 +73,20 @@ PHASE1_ARCHIVE_URL = (
 NOTEBOOK_URL = (
     "https://notebook.google.com/notebook/"
     "91c4227e-7625-452d-8def-4fd6a667aabe")
+
+# The Pinpoint collection, built by hand from
+# scripts/export_pinpoint_bundle.py — the planning application documents
+# themselves, flattened and recompressed to fit the 100GB quota, for
+# full-text search across the corpus (Luke, 2026-08-12).
+#
+# Same manual-upload caveat as the Sheet and the notebook above: nothing
+# in the release chain refreshes it, so it holds whichever bundle was last
+# uploaded.
+#
+# It is a search index, not the archive of record. Drive keeps the
+# originals at full resolution; the bundle drops drawings and exact
+# duplicates and recompresses PDFs, and `_manifest.csv` maps every file in
+# it back to its staging path, site, application and content hash.
+PINPOINT_URL = (
+    "https://journaliststudio.google.com/pinpoint/search"
+    "?collection=d38a75e5577d57bc")
