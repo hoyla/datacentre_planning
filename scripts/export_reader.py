@@ -165,6 +165,16 @@ nav.top button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--acc
 .stat small{display:block;color:var(--mut);font-size:12px}
 .banner{margin:16px 0;padding:12px 14px;border-left:3px solid var(--warn);
   background:var(--warnbg);color:var(--warn);border-radius:0 5px 5px 0;font-size:13px}
+/* The coverage caveats only need reading once, but the panel sat between the
+   stat tiles and the charts on every visit — so it folds shut by default. */
+details.banner-d>summary{cursor:pointer;font-weight:650;list-style:none;
+  display:inline-block;padding:0}
+details.banner-d>summary::-webkit-details-marker{display:none}
+details.banner-d>summary:before{content:"▸ ";display:inline-block;
+  transition:transform .12s;width:12px}
+details.banner-d[open]>summary:before{transform:rotate(90deg)}
+details.banner-d>summary:hover{text-decoration:underline}
+details.banner-d>div{margin-top:9px}
 h2.sec{font-size:15px;margin:24px 0 8px}
 .controls{display:flex;gap:9px;flex-wrap:wrap;padding:11px 22px;align-items:center;
   border-bottom:1px solid var(--line);position:sticky;top:var(--nav-h,41px);
@@ -252,10 +262,15 @@ tr.detail td{padding:14px 18px 18px 30px}
 .box{border:1px solid var(--line);border-radius:8px;padding:11px 13px;min-width:0}
 .box.proposal{grid-column:1;grid-row:1 / span 2}
 .box.identity{grid-column:2 / -1;grid-row:1}
+/* One sentence and its caveats: a wide, short band under the subject
+   boxes. Left in the grid's auto-flow it landed in row 3 of the first
+   column, stranding the documents section below an empty row. */
+.box.ctx{grid-column:2 / -1}
 @media (max-width:1100px){
   .grid{grid-template-columns:1fr 1fr}
   .box.proposal{grid-column:1 / -1;grid-row:auto}
   .box.identity{grid-column:1 / -1;grid-row:auto}
+  .box.ctx{grid-column:1 / -1}
 }
 @media (max-width:700px){
   .grid{grid-template-columns:1fr}
@@ -1352,7 +1367,7 @@ def main() -> int:
         if ctx_sentence:
             ctx_mapped += 1
             ctx_html = (
-                '<div class="box"><h4>Local authority context</h4>'
+                '<div class="box ctx"><h4>Local authority context</h4>'
                 f'<p>{esc(ctx_sentence)}</p>'
                 f'<p class="help">{esc(cc.context_note(ctx_la))}</p></div>')
         else:
@@ -1520,7 +1535,7 @@ def main() -> int:
         if ctx_sentence:
             ctx_mapped += 1
             ctx_html = (
-                '<div class="box"><h4>Local authority context</h4>'
+                '<div class="box ctx"><h4>Local authority context</h4>'
                 f'<p>{esc(ctx_sentence)}</p>'
                 f'<p class="help">{esc(cc.context_note(ctx_la))}</p></div>')
         else:
@@ -2126,7 +2141,8 @@ def main() -> int:
   <div><span>{n_prose_read:,}</span><small>prose analysed ({pct_prose}%)</small></div>
  </div>
 
- <div class="banner"><b>Nearly all of the readable material has been read.</b>
+ <details class="banner banner-d"><summary>About these numbers</summary>
+ <div><b>Nearly all of the readable material has been read.</b>
  {n_prose_read:,} of {n_prose:,} prose documents ({pct_prose}%) have been analysed — the
  planning and energy statements, officer reports, consultee responses and screening
  opinions, which is where disclosures live. Two classes are excluded on purpose and are not
@@ -2142,7 +2158,7 @@ def main() -> int:
  here simply because the document stating the larger figure has not been analysed yet. Those
  rows are marked <em>(prior to complete deep read)</em> and can be isolated with the Sites
  filter. A small tail of applications is also still being retrieved. Both are completed in
- the next release.</div>
+ the next release.</div></details>
 
  <h2 class="sec">The shape of it</h2>
  <p class="help">Both charts read the dataset as it stands today. Neither depends on the
