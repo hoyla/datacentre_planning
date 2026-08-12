@@ -587,6 +587,42 @@ def insert_verified(conn, values: list[tuple]) -> int:
     return inserted
 
 
+# The columns `findings_content_key` compares, as offsets into the value
+# tuples `verify_findings` builds. `signal_family` and `family_source`
+# are deliberately absent: they are derived, and the index does not
+# distinguish rows differing only there.
+CONTENT_KEY = (0, 1, 10, 11, 2, 5, 6, 7, 8, 9)
+
+
+def dedupe_verified(values: list[tuple]) -> list[tuple]:
+    """Drop the rows `findings_content_key` would collapse anyway.
+
+    A long document routinely produces the same finding from the same
+    quote more than once — chunk overlap, and repeated boilerplate in a
+    document whose parse went wrong. Postgres absorbs that silently, so
+    online it never mattered.
+
+    Offline it did. The spool wrote every row and reported how many it
+    wrote, while an online read reports what Postgres inserted, so one
+    column of one log meant two different things: on 2026-08-12 two
+    spooled documents claimed 230 and 142 findings where 73 and 32
+    landed. Deduping here rather than printing a second number also
+    means the spool holds exactly what the drain will insert.
+
+    It is an estimate of one thing only — rows already in `findings` from
+    an earlier partial write would still be absorbed by the index — so
+    the drain's own total stays the authority.
+    """
+    seen: set[tuple] = set()
+    out: list[tuple] = []
+    for v in values:
+        key = tuple(v[i] for i in CONTENT_KEY)
+        if key not in seen:
+            seen.add(key)
+            out.append(v)
+    return out
+
+
 def spool(row: dict, *, values: list[tuple], read_state: str,
           pages_total: int | None, pages_sent: list[int] | None,
           failed: int = 0, elapsed: float | None = None) -> None:
@@ -674,10 +710,11 @@ def commit_or_spool(conn, row: dict, *, values: list[tuple], read_state: str,
     a write, not an inference.
     """
     if conn is None:
-        spool(row, values=values, read_state=read_state,
+        keep = dedupe_verified(values)
+        spool(row, values=keep, read_state=read_state,
               pages_total=pages_total, pages_sent=pages_sent,
               failed=failed, elapsed=elapsed)
-        return len(values)
+        return len(keep)
     inserted = insert_verified(conn, values) if values else 0
     log_document(conn, row, read_state=read_state, pages_total=pages_total,
                  pages_sent=pages_sent, inserted=inserted, failed=failed,
@@ -685,15 +722,99 @@ def commit_or_spool(conn, row: dict, *, values: list[tuple], read_state: str,
     return inserted
 
 
-def process_document(conn, row: dict, *, max_chars: int,
+class Sink:
+    """Where a finished document goes, and the only thing that connects.
+
+    It holds no connection between documents and opens one only at commit
+    time — *after* the read. That ordering is the whole point. The
+    connection used to be opened first and held across the read, so an
+    outage beginning mid-document surfaced at commit, and the retry
+    re-read the document from scratch: two outages on 2026-08-12 spent
+    696s and 576s of Studio time re-reading documents whose inference was
+    finished and whose findings were already through the verbatim gate.
+
+    So the retry ladder here retries the *write*. PR #50 made an outage
+    cost a write rather than an inference for every document read while
+    already offline; this extends that to the one document that discovers
+    the outage, which was the only one still paying twice.
+    """
+
+    def __init__(self) -> None:
+        self.offline = False
+        self._probe_at = 0.0
+
+    def _going_offline(self) -> None:
+        self.offline = True
+        self._probe_at = time.time() + PROBE_EVERY
+
+    def _probe(self) -> None:
+        """While offline, look for the database and drain if it is back.
+
+        Bounded by PROBE_EVERY: retrying on every document would spend
+        the connect timeout per document discovering the same outage.
+        """
+        import psycopg2
+        if not self.offline or time.time() < self._probe_at:
+            return
+        try:
+            with db.connect() as probe:
+                docs, found = drain_spool(probe)
+            self.offline = False
+            print(f"  database back — drained {docs} documents, "
+                  f"{found} findings from the spool")
+        except (psycopg2.OperationalError, psycopg2.InterfaceError):
+            self._probe_at = time.time() + PROBE_EVERY
+
+    def commit(self, row: dict, *, values: list[tuple], read_state: str,
+               pages_total: int | None, pages_sent: list[int] | None,
+               failed: int = 0, elapsed: float | None = None) -> int:
+        """Store one finished document. Returns findings stored.
+
+        Two short retries ride out a blip; past that the run goes offline
+        and the result is spooled. A connection per document is
+        deliberate — over a multi-day run a single held connection is the
+        thing most likely to die, and a broken one would turn every
+        subsequent document into a spurious failure.
+        """
+        import psycopg2
+        self._probe()
+        if not self.offline:
+            for attempt in range(3):
+                try:
+                    with db.connect() as conn:
+                        return commit_or_spool(
+                            conn, row, values=values, read_state=read_state,
+                            pages_total=pages_total, pages_sent=pages_sent,
+                            failed=failed, elapsed=elapsed)
+                except (psycopg2.OperationalError, psycopg2.InterfaceError):
+                    if attempt == 2:
+                        self._going_offline()
+                        print("  database unreachable — going offline; "
+                              "reading continues and results are spooled")
+                        break
+                    wait = 15 * (attempt + 1)
+                    print(f"  database unreachable — retrying the write "
+                          f"for {row['application_ref']} in {wait}s")
+                    time.sleep(wait)
+        return commit_or_spool(
+            None, row, values=values, read_state=read_state,
+            pages_total=pages_total, pages_sent=pages_sent,
+            failed=failed, elapsed=elapsed)
+
+
+def process_document(sink: Sink, row: dict, *, max_chars: int,
                      max_tokens: int, prompt: str | None = None) -> str:
-    """Run one document end to end; returns a short status string."""
+    """Run one document end to end; returns a short status string.
+
+    Reads first, then hands the result to `sink`, which is what opens
+    a connection. Nothing here knows or cares whether the database is
+    reachable."""
     if row["tier"] == "skip":
-        commit_or_spool(conn, row, values=[], read_state="skipped_graphical",
+        sink.commit(row, values=[], read_state="skipped_graphical",
                         pages_total=None, pages_sent=None)
         return "skip (graphical)"
     if row["sampled_out"]:
-        commit_or_spool(conn, row, values=[], read_state="sampled_out",
+        sink.commit(row, values=[], read_state="sampled_out",
                         pages_total=None, pages_sent=None)
         return "sampled out"
 
@@ -706,7 +827,7 @@ def process_document(conn, row: dict, *, max_chars: int,
         # skipped under the second while reading as the first, and the
         # cohort query never revisited them — a text-layered 86-page
         # supporting statement counted as analysed-and-empty.
-        commit_or_spool(conn, row, values=[], read_state="not_extracted",
+        sink.commit(row, values=[], read_state="not_extracted",
                         pages_total=None, pages_sent=None)
         return "not extracted yet"
     payload = json.loads(cache.read_text())
@@ -714,12 +835,12 @@ def process_document(conn, row: dict, *, max_chars: int,
         # The same fact in a third costume: a cache written by an extractor
         # that had no loader for this format. Empty because nobody could
         # read it, not because it holds no words.
-        commit_or_spool(conn, row, values=[], read_state="not_extracted",
+        sink.commit(row, values=[], read_state="not_extracted",
                         pages_total=None, pages_sent=None)
         return "no loader for this format"
     pages = payload.get("pages") or []
     if not any(p.strip() for p in pages):
-        commit_or_spool(conn, row, values=[], read_state="no_text",
+        sink.commit(row, values=[], read_state="no_text",
                         pages_total=len(pages), pages_sent=None)
         return "empty text layer"
 
@@ -771,8 +892,8 @@ def process_document(conn, row: dict, *, max_chars: int,
         failed += fl
     elapsed = time.time() - t0
 
-    inserted = commit_or_spool(
-        conn, row, values=verified,
+    inserted = sink.commit(
+        row, values=verified,
         # Deliberately still "read". Capping is page selection, not a
         # different outcome, and `pages_sent` beside `pages_total`
         # already records exactly what was and was not looked at — the
@@ -865,63 +986,18 @@ def main() -> None:
         if args.dry_run or not rows:
             return
 
-    offline = False
-    probe_at = 0.0
+    # One sink for the run: it owns the offline state and is the only
+    # thing that opens a connection, at commit time rather than before
+    # the read. The loop below therefore has no database in it at all.
+    sink = Sink()
     t0 = time.time()
     for i, row in enumerate(rows, 1):
         try:
-            # A connection per document: over a multi-day run a single
-            # held connection is the thing most likely to die, and a
-            # broken one would turn every subsequent document into a
-            # spurious failure. Two short retries ride out a blip.
-            #
-            # Past that the run goes *offline* rather than failing: it
-            # keeps reading and spools the results. Retrying every
-            # document forever would spend three minutes per document
-            # discovering the same outage, and the old behaviour — fail
-            # after four attempts, escalate, move on — threw away the
-            # inference as well. An unreachable database should cost a
-            # write, not a read.
-            import psycopg2
-            if offline and time.time() >= probe_at:
-                try:
-                    with db.connect() as probe:
-                        docs, found = drain_spool(probe)
-                    offline = False
-                    print(f"  database back — drained {docs} documents, "
-                          f"{found} findings from the spool")
-                except (psycopg2.OperationalError, psycopg2.InterfaceError):
-                    probe_at = time.time() + PROBE_EVERY
-
-            if offline:
-                status = process_document(None, row, max_chars=args.max_chars,
-                                          max_tokens=args.max_tokens,
-                                          prompt=active_prompt) + " [spooled]"
-            else:
-                for attempt in range(3):
-                    try:
-                        with db.connect() as doc_conn:
-                            status = process_document(doc_conn, row,
-                                                      max_chars=args.max_chars,
-                                                      max_tokens=args.max_tokens,
-                                                      prompt=active_prompt)
-                        break
-                    except (psycopg2.OperationalError,
-                            psycopg2.InterfaceError):
-                        if attempt == 2:
-                            offline = True
-                            probe_at = time.time() + PROBE_EVERY
-                            print("  database unreachable — going offline; "
-                                  "reading continues and results are spooled")
-                            status = process_document(
-                                None, row, max_chars=args.max_chars,
-                                max_tokens=args.max_tokens,
-                                prompt=active_prompt) + " [spooled]"
-                            break
-                        wait = 15 * (attempt + 1)
-                        print(f"  database unreachable — retrying "
-                              f"{row['application_ref']} in {wait}s")
-                        time.sleep(wait)
+            status = process_document(sink, row, max_chars=args.max_chars,
+                                      max_tokens=args.max_tokens,
+                                      prompt=active_prompt)
+            if sink.offline:
+                status += " [spooled]"
         except KeyboardInterrupt:
             print("\ninterrupted — resume with the same command")
             return

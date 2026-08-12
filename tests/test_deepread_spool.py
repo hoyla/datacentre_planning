@@ -162,3 +162,117 @@ def test_states_that_never_reach_the_model_also_spool(spool):
     records = [json.loads(x) for x in D.SPOOL_PATH.read_text().splitlines()]
     assert [r["read_state"] for r in records] == [
         "skipped_graphical", "sampled_out", "not_extracted", "no_text"]
+
+
+def _value(signal_type="standby_capacity", family="power", source="derived",
+           value_text="12 MW", number=12, unit="MW",
+           evidence="12 MW of standby diesel generation", page=1):
+    """One row in the shape `verify_findings` builds, positionally."""
+    return (22, 11, signal_type, family, source, value_text, number, unit,
+            evidence, page, D.MODEL_TAG, D.PROMPT_VERSION)
+
+
+def test_spooled_count_is_what_will_land(spool):
+    """The spool must not report more findings than the drain writes.
+
+    Online the count is what Postgres inserted, which is after the
+    content-key index has absorbed repeats. The spool used to report how
+    many rows it wrote, which was before — so on 2026-08-12 two spooled
+    documents claimed 230 and 142 findings against 73 and 32 actually
+    stored, in the same column of the same log as the honest numbers.
+    """
+    dup = _value()
+    # Same content key, different derived family: the index does not
+    # distinguish these, so neither may the count.
+    same_key = _value(family="power_generation", source="model")
+    other = _value(signal_type="grid_connection", value_text="400 kV",
+                   number=400, unit="kV", evidence="a 400 kV connection")
+
+    spooled = D.commit_or_spool(None, ROW, values=[dup, same_key, other],
+                                read_state="read", pages_total=1,
+                                pages_sent=[1])
+    assert spooled == 2, "rows the index would collapse must not be counted"
+
+    record = json.loads(D.SPOOL_PATH.read_text().splitlines()[0])
+    assert len(record["values"]) == 2, "nor written to the spool"
+
+    conn = FakeConn()
+    docs, drained = D.drain_spool(conn)
+    assert (docs, drained) == (1, spooled), \
+        "the drain's total must match what the spool already claimed"
+
+
+def test_dedupe_keeps_the_first_row_and_its_evidence(spool):
+    """Collapsing rows must not lose the quote or reorder the survivors."""
+    first = _value(value_text="12 MW", evidence="12 MW of standby diesel")
+    second = _value(signal_type="water_use", value_text="3 Ml/d",
+                    number=3, unit="Ml/d", evidence="3 Ml/d of cooling water")
+    kept = D.dedupe_verified([first, second, first])
+    assert kept == [first, second]
+
+
+class UnreachableDB:
+    """`db.connect()` for a database that is not there, counting attempts."""
+
+    def __init__(self):
+        self.attempts = 0
+
+    def __call__(self):
+        import psycopg2
+        self.attempts += 1
+        raise psycopg2.OperationalError("could not connect to server")
+
+
+def test_an_outage_costs_the_write_not_the_read(spool, monkeypatch):
+    """A document read as the outage begins must not be read again.
+
+    The connection used to be opened before the read and held across it,
+    so the failure surfaced at commit and the retry re-read the whole
+    document. On 2026-08-12 that cost 696s and 576s of Studio time on two
+    documents whose inference was finished and whose findings had already
+    passed the verbatim gate.
+    """
+    reads = []
+    monkeypatch.setattr(D, "mlx_generate", lambda text, max_tokens, prompt=None:
+                        (reads.append(text) or
+                         (json.dumps({"findings": [
+                             {"signal_type": "standby_capacity",
+                              "value_text": "12 MW",
+                              "evidence_text":
+                                  "12 MW of standby diesel generation",
+                              "evidence_page": 1}]}), 0.1)))
+    cache = spool / "doc.json"
+    cache.write_text(json.dumps({"engine": "pypdf", "pages": PAGES}))
+    monkeypatch.setattr(D.extract, "cache_path_for", lambda *a, **k: cache)
+    unreachable = UnreachableDB()
+    monkeypatch.setattr(D.db, "connect", unreachable)
+    monkeypatch.setattr(D.time, "sleep", lambda s: None)
+
+    row = dict(ROW, sampled_out=False, kind="SUPPORTING INFORMATION")
+    sink = D.Sink()
+    status = D.process_document(sink, row, max_chars=16000, max_tokens=4000)
+
+    assert len(reads) == 1, "the model must be run once, outage or not"
+    assert sink.offline, "the run should now be offline"
+    assert unreachable.attempts == 3, "three write attempts, then spool"
+    assert "1 findings" in status
+    record = json.loads(D.SPOOL_PATH.read_text().splitlines()[0])
+    assert len(record["values"]) == 1, "the verified finding is spooled"
+
+
+def test_offline_sink_does_not_probe_before_the_interval(spool, monkeypatch):
+    """Already offline, the sink must not spend a connect timeout per
+    document rediscovering the same outage."""
+    unreachable = UnreachableDB()
+    monkeypatch.setattr(D.db, "connect", unreachable)
+    monkeypatch.setattr(D.time, "sleep", lambda s: None)
+    sink = D.Sink()
+    sink.commit(ROW, values=[], read_state="read", pages_total=1,
+                pages_sent=[1])
+    assert unreachable.attempts == 3 and sink.offline
+
+    for _ in range(5):
+        sink.commit(ROW, values=[], read_state="read", pages_total=1,
+                    pages_sent=[1])
+    assert unreachable.attempts == 3, "no further connections until the probe"
+    assert len(D.SPOOL_PATH.read_text().splitlines()) == 6

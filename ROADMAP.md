@@ -200,6 +200,17 @@ investigation.
 - **Promote `associated_id` to a typed `applications.parent_ref`
   column.** Parent-backfill confirmed the field is reliable; a typed
   column makes family navigation a join rather than JSONB extraction.
+- **`deepread_log.pages_sent` counts a page once per chunk, not once.** A
+  page split across chunks is recorded once per chunk it appears in, so
+  the array is a send log rather than a set of pages: document 52945 has
+  148 entries for 32 distinct pages, and 21 rows currently hold more
+  entries than `pages_total`. Nothing divides by it today — the runners
+  only write it, and the log line's `[148/32 pages]` is the sole visible
+  symptom — so this is latent rather than wrong. It becomes wrong the
+  moment any coverage figure is computed from `array_length`, which is
+  the obvious way to use the column. Either store distinct pages or make
+  the ambiguity impossible to misread; do it before a consumer needs it,
+  not after one has published from it.
 - **Improve the automated test surface.** The suite is good at internal
   consistency and blind to two things, and almost every defect found on
   2026-08-11 sat in one of the gaps. Worth doing properly rather than
