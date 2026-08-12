@@ -465,6 +465,45 @@ trial.
 
 ## 6. Other statutory sources
 
+### DESNZ sub-national electricity consumption — in use since 2026-08-12
+
+The one statutory source surveyed here that made it into the artefacts,
+and it carries consumption, not capacity — so it does not touch
+recommendation 1 below. DESNZ's
+[sub-national electricity statistics](https://assets.publishing.service.gov.uk/media/69427b3736f089d38be1f1ce/MSOA_non-domestic_elec_2010-2024.xlsx)
+publish annual **metered** consumption by local authority and meter
+type, Open Government Licence v3. The Half-Hourly non-domestic rows are
+the meter class data centres belong to.
+
+**What it can see.** Real metered draw, 2010–2024, for every GB local
+authority. Between 2019 and 2024 large-user consumption fell 9%
+nationally while rising 60% in Slough and 36% in Hillingdon — the two
+largest absolute rises of any authority (+650 GWh and +369 GWh; third
+place is less than half of second). The nulls are equally visible:
+Tower Hamlets, holding the Docklands cluster, fell 15%, and Hertsmere —
+with data-centre sites in this dataset — fell 4%.
+
+**What it cannot see.** Anything below local-authority level: the
+Half-Hourly class is published only as an "All MSOAs" rollup, and every
+per-MSOA row in the source carries **zero** Half-Hourly meters (verified
+2026-08-12), so data-centre-scale consumers are structurally invisible
+below authority granularity — nothing MSOA-level should ever be built
+from this source. The series ends in 2024, so 2025–26 energisations are
+not in it. Authority figures are floors: a national "Unallocated" bucket
+(~2.9 TWh in 2024) could not be placed anywhere. Northern Ireland is
+absent. And an authority's total covers all its large users, so the
+figure is context for a site, never attribution to it.
+
+**Where it lives.** The Half-Hourly extract is committed at
+`data/external_sources/` with the source workbook's sha256 and the
+sanity anchors any re-ingest must reproduce (see its README — the
+workbook itself is 9.4 MB and not committed).
+`dcp/consumption_context.py` computes the per-site sentence and the
+council → authority mapping (an inference, emitted beside the source
+values); the workbook's Sites sheet, the reader's site panels and the
+External aggregates tables all draw from it, and both exporters print
+mapped/unmapped coverage at generation.
+
 **Climate Change Agreement scheme.** Administered by techUK under DESNZ
 policy, with the Environment Agency holding target-unit data. 170+ UK data
 centre sites reporting **metered and audited** electricity consumption —
