@@ -304,6 +304,14 @@ table.stats{width:100%;margin:6px 0 18px;font-size:13px;min-width:0;
 table.stats th[scope=row]{position:static;font-weight:500;white-space:normal;
   border-bottom:1px solid var(--line);z-index:auto;cursor:default}
 table.stats th:after{content:""}
+table.stats th[scope=col]{position:static;cursor:default;white-space:normal;
+  border-bottom:2px solid var(--line);z-index:auto}
+/* The queue comparison is five narrow columns; at full page width the
+   numbers drift a screen away from the band labels and the headers
+   stack. Capped, with roomier numeric columns than the 74px default. */
+table.stats.queue{max-width:620px}
+table.stats.queue td.n{width:105px}
+table.stats.queue th[scope=col]{vertical-align:bottom}
 table.stats tr.lead th[scope=row]{font-weight:650}
 table.stats td.n{font-variant-numeric:tabular-nums;text-align:right;width:74px;
   white-space:nowrap}
@@ -911,6 +919,7 @@ def main() -> int:
     args = ap.parse_args()
 
     hv = _handover()
+    from dcp import external_aggregates as extagg
     from dcp import origin as origin_mod
     from dcp import proposal as prop
     from dcp import signals as sig
@@ -1097,6 +1106,7 @@ def main() -> int:
         return best, round(hv._haversine_km(lat, lon, best["lat"], best["lon"]), 1)
 
     site_mw_values: list[float] = []
+    power_basis_counts: dict[str, int] = {}
     map_points: list[dict] = []
     drive = hv._drive_folder_map()
     drive_apps = hv._drive_application_map()
@@ -1177,6 +1187,8 @@ def main() -> int:
         is_prov, prov_note = site_profile.provisional(p_held, p_read)
         if est.value_mw:
             site_mw_values.append(est.value_mw)
+            power_basis_counts[est.basis] = \
+                power_basis_counts.get(est.basis, 0) + 1
         addr = max((a[15] or "" for a in apps), key=len, default="") or \
             ", ".join(councils or [])
         _reg = next((a[12] for a in sorted(
@@ -1694,6 +1706,28 @@ def main() -> int:
     # Written here rather than shipped as a markdown file beside the data:
     # a companion document is the first thing to go stale, and every count
     # in this one is injected from the same query that built the page.
+
+    # The regulator's queue beside this release's disclosures. External
+    # figures come from dcp/external_aggregates (entered once, with their
+    # locators); this release's column is the same per-site figures the
+    # page displays, banded the way Ofgem bands its Table 1. The two are
+    # deliberately never joined at site level — the premise is recorded in
+    # that module and in docs/EXTERNAL_DATA_SOURCES.md.
+    queue_rows_html = "".join(
+        f"<tr><th scope='row'>{esc(label)}</th><td class='n'>{n_proj:,}</td>"
+        f"<td class='n'>{mw:,}</td><td class='n'>{esc(pct)}</td>"
+        f"<td class='n'>{ours:,}</td></tr>"
+        for (label, _lo, _hi, n_proj, mw, pct), (_l, ours) in zip(
+            extagg.OFGEM_QUEUE_BANDS, extagg.band_counts(site_mw_values)))
+    queue_rows_html += (
+        f"<tr class='lead'><th scope='row'>All bands</th>"
+        f"<td class='n'>{extagg.OFGEM_QUEUE_TOTALS[0]:,}</td>"
+        f"<td class='n'>{extagg.OFGEM_QUEUE_TOTALS[1]:,}</td>"
+        f"<td class='n'>100%</td>"
+        f"<td class='n'>{len(site_mw_values):,}</td></tr>")
+    _ofgem_src = extagg.SOURCES["ofgem_curate"]
+    _cfi_src = extagg.SOURCES["neso_cfi"]
+
     methodology_html = f"""
  <p class="lede">How this dataset was built, what has been measured about its accuracy, and
  where its edges are. Every figure below is generated with the page, so it describes this
@@ -1806,6 +1840,42 @@ def main() -> int:
  connection "designed to support a power transfer capacity of 120&nbsp;MW", and another
  reserved 57&nbsp;MW "anticipated to serve the needs of building 1" for a 155&nbsp;MW
  scheme.</p>
+
+ <h2 class="sec">What the regulator can see that these documents cannot</h2>
+ <p class="m">On 29 July 2026 Ofgem published its
+ <a href="{esc(_ofgem_src.url)}" target="_blank" rel="noopener">Curate consultation</a> on
+ demand connections reform. Its paragraph 2.8 states that approximately 73&nbsp;GW of the GB
+ demand connection queue is data centres — around 315 projects holding contracted connection
+ offers of 1&nbsp;MW to 1,500&nbsp;MW — against a 2025/26 peak GB electricity demand of
+ 45&nbsp;GW. The project-level data behind those aggregates, NESO's mandatory Information
+ Request Notice of March 2026, is not published. What can be compared is the shape of the
+ two universes:</p>
+ <table class="stats queue"><thead><tr><th scope="col">MW band</th>
+  <th scope="col">Queue: projects</th><th scope="col">Queue: MW</th>
+  <th scope="col">Queue: share</th>
+  <th scope="col">Sites here with a figure</th></tr></thead>
+  <tbody>{queue_rows_html}</tbody></table>
+ <p class="m">The queue columns are Ofgem's Table 1 — contracted connection capacity, which
+ is headroom rather than consumption. This release's column counts sites whose documents
+ yield a disclosed IT load, total site demand, grid connection or standby generation figure,
+ banded the same way. The two universes overlap but neither contains the other: the queue
+ includes projects that have never filed a planning application — Ofgem's consultation
+ argues much of it never will — and this release includes the built estate back to 2015.
+ The comparison shows what each side can see, not a shortfall to be subtracted. The
+ asymmetry at the top end is the finding: the larger the project, the more likely its power
+ figure exists only in the connection queue.</p>
+ <p class="m">Two more of the consultation's findings bear directly on this dataset. At
+ least 9&nbsp;GW of queue projects reclassified themselves from battery to data centre
+ between May 2024 and August 2025 (paragraph 2.10), so any register that classifies projects
+ by declared technology undercounts data centres — the planning-side counterpart is the
+ naming-invisibility cases this corpus tracks. And NESO's voluntary
+ <a href="{esc(_cfi_src.url)}" target="_blank" rel="noopener">call for input</a> on the
+ demand queue found only 32% of data centre projects had secured an off-taker, and 71 of 148
+ reported financial commitment with FID evidence — NESO's own caveat: developer intent, not
+ confirmed deliverability. These aggregates are deliberately not joined to the sites here:
+ the sources measure different quantities, and the anonymised ones cannot be matched to a
+ site without guessing. The full set, with verbatim quotes, locators and access dates, is on
+ the workbook's External aggregates sheet.</p>
 
  <h2 class="sec">Known limits of this release</h2>
  <ul class="m">
