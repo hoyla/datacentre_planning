@@ -1,5 +1,15 @@
 # Session handover — 2026-08-11
 
+**Update 2026-08-12:** PRs #60 (Pinpoint link) and #61 (external
+aggregates beside the planning data) are merged. The next build is
+specified in [PLAN_CONSUMPTION_CONTEXT.md](PLAN_CONSUMPTION_CONTEXT.md)
+— per-site consumption context from the DESNZ local-authority series,
+approved by Luke, all inputs committed under `data/external_sources/`
+(read its README before touching them; two snapshots are
+registration-gated and cannot be re-fetched). A separate session is
+fixing the workbook Provenance sheet's stale phase labels. The rest of
+this document is the 2026-08-11 state and still applies.
+
 For whoever picks this up next. Written at the end of the day the 2.1
 release was regenerated, with nothing running.
 

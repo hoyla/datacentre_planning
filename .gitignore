@@ -55,6 +55,8 @@ data/**/*
 
 # Exempt operational config / methodology that should be versioned:
 !data/operators.yaml
+!data/external_sources/
+!data/external_sources/**
 !data/triage_labelling/
 data/triage_labelling/*
 !data/triage_labelling/rubric.md
