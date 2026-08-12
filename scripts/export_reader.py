@@ -253,21 +253,35 @@ tr.detail td{padding:14px 18px 18px 30px}
   white-space:normal;line-height:1.35}
 .tag.known{background:var(--okbg);color:var(--ok)}
 .tag.unknown{background:var(--warnbg);color:var(--warn)}
-/* The panel is a four-column grid: the proposal down the left across two
-   rows, the identity fields as one wide block above, and the three
-   subject boxes beneath it. Before this everything lived in the first
-   column and three columns of whitespace sat beside it. */
+/* The panel is a four-column grid, split by what the boxes are about
+   rather than by their size. Column 1 describes the record — what is
+   proposed, and the identifiers and provenance of the row itself.
+   Columns 2 to 4 carry the three subject boxes on one row, with the
+   consumption context as a shallow band beneath them.
+
+   The identity fields were a full-width band across the top until this
+   layout, which cost columns 2 to 4 exactly its height in whitespace
+   while the first column ran long — the same imbalance as before it,
+   reversed. Stacking the two record boxes in one column puts the tall
+   subject boxes and the tall proposal side by side instead. */
 .grid{display:grid;grid-template-columns:minmax(250px,1.15fr) repeat(3,1fr);
   gap:12px;align-items:start}
 .box{border:1px solid var(--line);border-radius:8px;padding:11px 13px;min-width:0}
-.box.proposal{grid-column:1;grid-row:1 / span 2}
-.box.identity{grid-column:2 / -1;grid-row:1}
+/* A flex column rather than two grid rows: grid rows are shared across
+   the whole panel, so an identity box placed in row 2 hangs below the
+   tallest subject box in row 1 — a void under the proposal exactly as
+   tall as whichever box happens to be longest. */
+.col-record{grid-column:1;grid-row:1 / span 2;display:flex;flex-direction:column;
+  gap:12px;min-width:0}
 /* One sentence and its caveats: a wide, short band under the subject
-   boxes. Left in the grid's auto-flow it landed in row 3 of the first
-   column, stranding the documents section below an empty row. */
+   boxes. Left in the grid's auto-flow it landed in the first column,
+   stranding the documents section below an empty row. */
 .box.ctx{grid-column:2 / -1}
 @media (max-width:1100px){
   .grid{grid-template-columns:1fr 1fr}
+  /* Two boxes wide enough to want the full width again: dissolving the
+     wrapper returns them to the panel grid as direct items. */
+  .col-record{display:contents}
   .box.proposal{grid-column:1 / -1;grid-row:auto}
   .box.identity{grid-column:1 / -1;grid-row:auto}
   .box.ctx{grid-column:1 / -1}
@@ -276,11 +290,13 @@ tr.detail td{padding:14px 18px 18px 30px}
   .grid{grid-template-columns:1fr}
   .box.proposal,.box.identity{grid-column:1}
 }
-/* Four columns on one row. Site key and classification are always a few
-   characters, so they share a column stacked rather than each taking a
-   whole one — which is what pushed the source documents onto a second
-   row of their own. */
-.fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px 18px}
+/* One field per row: the identity box now sits in the narrow first
+   column, where four abreast would break every value onto its own
+   wrapped lines. It widens to two only where the box itself goes full
+   width, at the breakpoints below. Site key and classification stay
+   paired in a stack, which is what keeps them sharing one cell there
+   rather than each taking a whole one. */
+.fields{display:grid;grid-template-columns:1fr;gap:9px 18px}
 .fields .stack{display:flex;flex-direction:column;gap:9px}
 .fields .wide{grid-column:1 / -1}
 @media (max-width:1100px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -1419,29 +1435,31 @@ def main() -> int:
 <tr class="detail"><td colspan="6">
  {site_banner}
  <div class="grid">
-  <div class="box proposal"><h4>Proposal</h4>
-   <p><strong>{esc(summary) or '—'}</strong></p>
-   <p class="help">Lifted verbatim from an application below, which the council published
-    as:</p><p>{esc(trim(full_desc, 640)) or '—'}</p></div>
+  <div class="col-record">
+   <div class="box proposal"><h4>Proposal</h4>
+    <p><strong>{esc(summary) or '—'}</strong></p>
+    <p class="help">Lifted verbatim from an application below, which the council published
+     as:</p><p>{esc(trim(full_desc, 640)) or '—'}</p></div>
 
-  <div class="box identity"><h4>Site details</h4>
-   <div class="fields">
-    <div class="stack">
-     <div><span class="lbl">Site key</span><span class="val">{esc(key)}</span></div>
-     <div><span class="lbl">Classification</span><span class="val">{esc(cls)}</span></div>
-    </div>
-    <div><span class="lbl">Coordinates</span><span class="val">
-     {f'{lat:.5f}, {lon:.5f}' if lat and lon else '—'}
-     {maplink}{' · ' + gmaps if gmaps else ''}
-     <span class="help">{esc(csrc or 'source unknown')}</span></span></div>
-    <div><span class="lbl">How we found it</span><span class="val">
-     {esc(', '.join(org)) or '—'}
-     {f'<span class="help">{esc(origin_mod.explain(org))}</span>' if len(org) < 3 else
-      '<span class="help">Several independent routes reached this site, which is a '
-      'stronger signal than any one of them.</span>'}</span></div>
-    <div><span class="lbl">{'Source documents' if held else 'Drive'}</span>
-     <span class="val">{drive_html}</span></div>
-   </div></div>
+   <div class="box identity"><h4>Site details</h4>
+    <div class="fields">
+     <div class="stack">
+      <div><span class="lbl">Site key</span><span class="val">{esc(key)}</span></div>
+      <div><span class="lbl">Classification</span><span class="val">{esc(cls)}</span></div>
+     </div>
+     <div><span class="lbl">Coordinates</span><span class="val">
+      {f'{lat:.5f}, {lon:.5f}' if lat and lon else '—'}
+      {maplink}{' · ' + gmaps if gmaps else ''}
+      <span class="help">{esc(csrc or 'source unknown')}</span></span></div>
+     <div><span class="lbl">How we found it</span><span class="val">
+      {esc(', '.join(org)) or '—'}
+      {f'<span class="help">{esc(origin_mod.explain(org))}</span>' if len(org) < 3 else
+       '<span class="help">Several independent routes reached this site, which is a '
+       'stronger signal than any one of them.</span>'}</span></div>
+     <div><span class="lbl">{'Source documents' if held else 'Drive'}</span>
+      <span class="val">{drive_html}</span></div>
+    </div></div>
+  </div>
 
   <div class="box"><h4>Power</h4>
    <dl class="kv">
@@ -1557,22 +1575,24 @@ def main() -> int:
  <div class="banner" style="margin-top:0"><b>No application submitted yet.</b>
   {esc(site_profile.NO_DOCUMENT_REASONS['pre_application'])}</div>
  <div class="grid">
-  <div class="box proposal"><h4>Proposal</h4>
-   <p><strong>{esc(summary) or '—'}</strong></p>
-   <p class="help">Barbour ABI records it as:</p><p>{esc(description) or '—'}</p></div>
+  <div class="col-record">
+   <div class="box proposal"><h4>Proposal</h4>
+    <p><strong>{esc(summary) or '—'}</strong></p>
+    <p class="help">Barbour ABI records it as:</p><p>{esc(description) or '—'}</p></div>
 
-  <div class="box identity"><h4>Site details</h4>
-   <div class="fields">
-    <div class="stack">
-     <div><span class="lbl">Barbour reference</span><span class="val">{esc(pref)}</span></div>
-     <div><span class="lbl">Stage</span><span class="val">{esc(pstage or '—')}</span></div>
-    </div>
-    <div><span class="lbl">Development type</span><span class="val">{esc(dev_type or '—')}</span></div>
-    <div><span class="lbl">Coordinates</span><span class="val">
-     {f'{plat:.5f}, {plon:.5f}' if plat and plon else '—'} {maplink}</span></div>
-    <div><span class="lbl">Environmental subjects</span>
-     <span class="val">{esc(', '.join(env)) or '—'}</span></div>
-   </div></div>
+   <div class="box identity"><h4>Site details</h4>
+    <div class="fields">
+     <div class="stack">
+      <div><span class="lbl">Barbour reference</span><span class="val">{esc(pref)}</span></div>
+      <div><span class="lbl">Stage</span><span class="val">{esc(pstage or '—')}</span></div>
+     </div>
+     <div><span class="lbl">Development type</span><span class="val">{esc(dev_type or '—')}</span></div>
+     <div><span class="lbl">Coordinates</span><span class="val">
+      {f'{plat:.5f}, {plon:.5f}' if plat and plon else '—'} {maplink}</span></div>
+     <div><span class="lbl">Environmental subjects</span>
+      <span class="val">{esc(', '.join(env)) or '—'}</span></div>
+    </div></div>
+  </div>
 
   <div class="box"><h4>Scheme</h4>
    <dl class="kv">
