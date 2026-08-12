@@ -115,8 +115,33 @@ SELECT max(completed_at), now() - max(completed_at) FROM deepread_log;
 ssh hoyla@192.168.50.113 'pkill -TERM -f "scripts/deepread_run.py"'
 ```
 
-`TERM` lets the current document finish and its row commit. Only escalate
-to `-9` if it is still there after a minute.
+`TERM` lets the current document finish and its row commit, then drains or
+reports the spool before exiting. **This became true on 2026-08-12**; the
+sentence had been here since before anything implemented it. There was no
+handler, so TERM took Python's default disposition and killed the process
+where it stood — nothing corrupted, because findings stay uncommitted
+until the `deepread_log` row lands, but a document up to 86 minutes in was
+thrown away by the documented way of stopping.
+
+Three levels, in order of what they cost:
+
+| | |
+|---|---|
+| `pkill -TERM` | finishes the current document, then stops |
+| `pkill -INT` | abandons the current document, still lands the spool |
+| `pkill -9` | immediate; the spool stays on disk for the next start |
+
+**Do not escalate to `-9` after a minute.** The old instruction to do so
+predates TERM working, and following it now throws away exactly what the
+graceful stop was preserving — a large Environmental Statement can
+legitimately take over an hour. Acknowledgement of the signal is itself
+delayed until the current *chunk* of generation finishes, because MLX
+generates inside a C call and Python runs handlers between bytecodes, so
+several minutes of apparent silence after a TERM is normal. Watch the log
+for `stop requested`, and if you genuinely cannot wait, use `-INT`.
+
+Nothing is lost at any of the three levels: a killed run's spool is
+drained by the next start, before the cohort is selected.
 
 ## The laptop dependency, and how to remove it
 
