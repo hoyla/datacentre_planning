@@ -1,6 +1,6 @@
 """Generate the data-team handover workbook.
 
-Five sheets, in the order a new reader meets them:
+Six sheets, in the order a new reader meets them:
 
 - **Read me** — one row per column: what it contains, how it was derived,
   what its caveats mean. At this width the dictionary is load-bearing,
@@ -15,6 +15,11 @@ Five sheets, in the order a new reader meets them:
   generation/transmission projects, ranked by distance to the nearest
   data-centre site. A different unit of analysis, kept in the same
   workbook because the site rows point into it.
+- **External aggregates** — regulators' and network operators' published
+  aggregate figures on data centre power demand, presented beside — and
+  deliberately never joined to — the planning-derived rows. They measure
+  different quantities from planning documents, which is itself the
+  point: the sheet shows what each side can and cannot see.
 - **Provenance** — run metadata plus the corpus-level statement of known
   retrieval gaps, so the coverage caveats live in the deliverable rather
   than in a covering email.
@@ -614,6 +619,27 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "'Stated capacity' is lifted verbatim from the page's description — "
      "the description column shows the sentence it came from. A blank "
      "capacity means the page states none, not that the project is small."),
+    ("External aggregates", "All tables",
+     "Aggregate figures published by Ofgem, NESO and UK Power Networks "
+     "about data centre power demand, presented beside the planning-"
+     "derived sheets and deliberately never joined to them: the sources "
+     "measure different quantities (contracted grid headroom, developer "
+     "survey responses, metered draw), none of which is the quantity a "
+     "planning application states. Each external figure carries its "
+     "source document, its table or paragraph number, and the date it "
+     "was read; the verbatim quote is included where one was "
+     "transcribed. Two of the sources are anonymised by their "
+     "publishers, and no attempt has been made to match them to sites."),
+    ("External aggregates", "Size distribution table",
+     "Ofgem's Table 1 — the size distribution of the ~315 data centre "
+     "projects holding ~73 GW of contracted connection offers in the GB "
+     "demand queue at June 2025 — beside the count of sites in this "
+     "workbook whose planning documents yield a figure in the same "
+     "band. The two universes overlap but neither contains the other: "
+     "the queue includes projects that have never filed a planning "
+     "application, and this workbook includes the built estate back to "
+     "2015. The workbook column is recomputed from the Sites sheet at "
+     "every generation."),
 ]
 
 
@@ -791,6 +817,7 @@ def main() -> None:
     from collections import defaultdict
     from urllib.parse import urlparse
 
+    from dcp import external_aggregates as extagg
     from dcp import proposal
     from dcp import signals as sig
     from dcp import site_profile
@@ -945,6 +972,11 @@ def main() -> None:
     # ---- Sites -----------------------------------------------------------
     ws = _sheet("Sites", SITE_HEADERS)
     site_coords: list[tuple[float, float, str]] = []
+    # For the External aggregates sheet: the basis and value behind each
+    # site row's headline figure, plus whether its prose was read in full.
+    # Collected from the very estimates the Sites sheet displays, so the
+    # aggregate table cannot disagree with the rows it summarises.
+    agg_figures: list[tuple[str, float | None, bool]] = []
     for r in site_rows:
         (key, cls, name, lat, lon, csrc, councils, n_apps, refs, verdicts,
          docs, findings_n, it_load_mw, total_site_mw, grid_mw, gen_mw,
@@ -977,6 +1009,8 @@ def main() -> None:
             floorspace_sqm=site_floorspace.get(key),
             has_documents=bool(docs),
             prose_held=p_held, prose_read=p_read)
+        agg_figures.append((est.basis, est.value_mw,
+                            p_held > 0 and p_read >= p_held))
 
         if est.value_mw is not None:
             band_key, band_label = scale.scale_from_mw(est.value_mw)
@@ -1175,6 +1209,152 @@ def main() -> None:
             _hyperlink(p["developer_site"], "Developer site"),
             p["description"][:500],
         ])
+
+    # ---- External aggregates ------------------------------------------------
+    # The premise is a domain fact established 2026-08-10 and recorded in
+    # docs/EXTERNAL_DATA_SOURCES.md: none of these sources measures the
+    # quantity a planning application states, so no external megawatt may
+    # become a per-site column. Aggregates beside the data — never joined
+    # to it — are the permitted form. External figures come from
+    # dcp/external_aggregates (entered once, with provenance); everything
+    # on this workbook's side of the comparison is computed from the
+    # estimates the Sites sheet just displayed.
+    DISCLOSED_BASES = ("Disclosed IT load", "Disclosed total site demand",
+                       "Grid connection capacity",
+                       "Standby generation capacity")
+    ws = wb.create_sheet("External aggregates")
+
+    def _agg_title(text):
+        ws.append([text])
+        ws.cell(row=ws.max_row, column=1).font = Font(bold=True, size=12)
+
+    def _agg_head(cols):
+        ws.append(cols)
+        for i in range(1, len(cols) + 1):
+            c = ws.cell(row=ws.max_row, column=i)
+            c.font = Font(bold=True)
+            c.fill = PatternFill("solid", fgColor="DDDDDD")
+
+    _agg_title("External aggregates: what the regulator and network "
+               "operators publish about data centre power demand")
+    ws.append(["These figures are presented beside the planning-derived "
+               "sheets and deliberately never joined to them. The sources "
+               "measure different quantities — the first table says what "
+               "each one is and is not — and two of them are anonymised; "
+               "no attempt has been made to match them to sites."])
+    ws.append(["Every external figure names its source, its place in that "
+               "source, and the date it was read. Every figure on this "
+               "workbook's side is computed from the Sites sheet's own "
+               "rows when the workbook is generated."])
+    ws.append([])
+
+    _agg_title("What each source of a megawatt figure measures")
+    _agg_head(["Quantity", "Where it appears", "What it is",
+               "What it is not"])
+    for row in extagg.MEASURES:
+        ws.append(list(row))
+    ws.append([])
+
+    _agg_title("Size distribution: the regulator's connection queue beside "
+               "this workbook's planning documents")
+    ws.append(["The two universes overlap but neither contains the other: "
+               "the queue includes projects that have never filed a "
+               "planning application — Ofgem's consultation argues much of "
+               "it never will — while this workbook includes the built "
+               "estate back to 2015 and sites below the queue's radar. "
+               "The comparison shows what each side can see, not a "
+               "shortfall to be subtracted."])
+    _agg_head(["MW band", "Queue: data centre projects", "Queue: total MW",
+               "Queue: share of queue MW",
+               "This workbook: sites with a disclosed or plant-derived "
+               "figure"])
+    disclosed_mw = [v for b, v, _ in agg_figures
+                    if b in DISCLOSED_BASES and v is not None]
+    for (label, _lo, _hi, n_proj, mw, pct), (_l, ours) in zip(
+            extagg.OFGEM_QUEUE_BANDS, extagg.band_counts(disclosed_mw)):
+        ws.append([label, n_proj, mw, pct, ours])
+    ws.append(["All bands", extagg.OFGEM_QUEUE_TOTALS[0],
+               extagg.OFGEM_QUEUE_TOTALS[1], "100%", len(disclosed_mw)])
+    ws.cell(row=ws.max_row, column=1).font = Font(bold=True)
+    ws.append(["Queue columns: Ofgem, Consultation Curate, Table 1 — "
+               "contracted connection capacity at June 2025. Workbook "
+               "column: each site's best-available basis (IT load, total "
+               "site demand, grid connection or standby generation); "
+               "floorspace estimates excluded because an inference does "
+               "not belong in a column of contracted figures. The two "
+               "columns deliberately have no MW total to compare: summing "
+               "IT loads with generation capacities would manufacture a "
+               "number no document states."])
+    ws.append([])
+
+    _agg_title("What the planning documents disclose "
+               "(computed from this workbook's rows)")
+    _agg_head(["What the documents yield", "Sites"])
+    n_by_basis = {}
+    for basis, _v, read_full in agg_figures:
+        k = (basis, read_full) if basis == "No capacity disclosed" \
+            else (basis, None)
+        n_by_basis[k] = n_by_basis.get(k, 0) + 1
+    disclosure_rows = [
+        ("Headline figure is a disclosed IT load",
+         n_by_basis.pop(("Disclosed IT load", None), 0)),
+        ("Headline figure is a disclosed total site demand",
+         n_by_basis.pop(("Disclosed total site demand", None), 0)),
+        ("Headline figure is a grid connection capacity",
+         n_by_basis.pop(("Grid connection capacity", None), 0)),
+        ("Headline figure is inferred from standby generation plant",
+         n_by_basis.pop(("Standby generation capacity", None), 0)),
+        ("Headline figure is estimated from floorspace "
+         "(an inference, not a disclosure)",
+         n_by_basis.pop(("Estimated from floorspace", None), 0)),
+        ("Readable documents read in full; no capacity or floorspace "
+         "disclosed — for a data centre, itself notable",
+         n_by_basis.pop(("No capacity disclosed", True), 0)),
+        ("No capacity disclosed so far; reading incomplete, so the "
+         "absence is provisional",
+         n_by_basis.pop(("No capacity disclosed", False), 0)),
+        ("No documents analysed yet",
+         n_by_basis.pop(("Not yet analysed", None), 0)),
+        ("No documents held",
+         n_by_basis.pop(("No documents held", None), 0)),
+    ]
+    # A new basis string in site_scale must be classified here, not fall
+    # off the sheet silently.
+    assert not n_by_basis, f"bases missing from the aggregates sheet: " \
+                           f"{sorted(n_by_basis)}"
+    assert sum(n for _l, n in disclosure_rows) == len(agg_figures)
+    for label, n in disclosure_rows:
+        ws.append([label, n])
+    ws.append(["Site rows summarised above", len(agg_figures)])
+    ws.append(["Pre-planning rows appended from Barbour, not counted "
+               "above (no public planning documents exist yet)",
+               appended_barbour])
+    ws.append([])
+
+    _agg_title("Published aggregates")
+    _agg_head(["What", "Figure", "Source", "Where in the source",
+               "Verbatim quote"])
+    for agg in extagg.AGGREGATES:
+        src = extagg.SOURCES[agg.source_key]
+        ws.append([agg.label, agg.figure,
+                   f"{src.publisher} — {src.title}", agg.locator,
+                   agg.quote])
+    ws.append([])
+
+    _agg_title("Sources")
+    _agg_head(["Source", "Publisher", "Published", "Read on", "URL",
+               "Notes"])
+    for src in extagg.SOURCES.values():
+        ws.append([src.title, src.publisher, src.published, src.accessed,
+                   src.url, src.note])
+
+    for col, width in (("A", 58), ("B", 30), ("C", 34), ("D", 34),
+                       ("E", 64), ("F", 90)):
+        ws.column_dimensions[col].width = width
+    for row in ws.iter_rows(min_row=2):
+        for c in row:
+            if c.value is not None:
+                c.alignment = Alignment(wrap_text=True, vertical="top")
 
     # ---- Provenance --------------------------------------------------------
     ws = _sheet("Provenance", ["Field", "Value"])

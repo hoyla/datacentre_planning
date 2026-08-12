@@ -154,19 +154,174 @@ connection registers — **TEC**, **Embedded** (Scottish generation) and
 **Interconnector**. All are generation-side. Every dataset matching
 "demand" is a forecast or an aggregate.
 
-**The widely-quoted figures are commentary, not data.** The 125 GW demand
-queue (up from 41 GW in November 2024), the ~140 data centre projects
-claiming Final Investment Decision, and the 99 GW of transmission-connected
-demand through Gate 2 all appear in NESO's connections-reform documents
-and legal summaries. None is a downloadable per-project register. The Gate 2
-"EA Register" is a PDF limited to projects that consented to be named.
+**But the aggregates are published, and by Ofgem rather than NESO.** The
+primary source is Ofgem,
+[*Consultation Curate – Demand Connections Reform*](https://www.ofgem.gov.uk/sites/default/files/2026-07/Proposed-data-centre-connection-reforms-curate-consultation-document.pdf),
+published 29 July 2026, response deadline 16 September 2026. Verbatim,
+paragraph 2.7:
 
-**Route to it:** NESO has been in public ownership since 2024 and is very
-likely a public authority for Environmental Information Regulations
-purposes; connection queue data is environmental information. Because NESO
-has already published the aggregate and the FID count, a request for the
-underlying project list is well-founded rather than speculative. EIR is a
-broader and harder-to-refuse regime than FOIA.
+> "Between November 2024 and June 2025 total contracted offers in the
+> demand queue rose sharply from 41 GW (17 GW transmission, 24 GW
+> distribution) to 125 GW (97 GW transmission, 29 GW distribution) in
+> June 2025."
+
+And paragraph 2.8:
+
+> "approximately 73 GW of the total demand queue are data centres,
+> comprising around 315 data centre projects with total contracted
+> capacity ranging from 1 MW to 1,500 MW."
+
+Table 1 of the consultation gives the size distribution:
+
+| Size | MW band | Projects | Total (MW) | % of DC queue |
+|---|---|---|---|---|
+| Small | 0–10 | 11 | 76 | 0.1% |
+| Medium | 10–50 | 47 | 1,370 | 1.9% |
+| Large | 50–100 | 51 | 3,492 | 4.8% |
+| Extra-large | 100–500 | 166 | 36,632 | 50.2% |
+| Hyper | 500+ | 40 | 31,408 | 43.0% |
+
+Ofgem sets that against "peak GB electricity demand in 2025/26" of 45 GW,
+and puts implied total capex at £693 billion — around 23% of UK GDP in
+2025 — at an assumed £9.5m per MW.
+
+**Handle the 45 GW comparator carefully.** Ofgem's footnote 10 sources it
+to NESO Triad Data 2025/26. The primary document is
+[*Triads 2025/26*](https://www.neso.energy/document/379521/download)
+(NESO, 26 March 2026), which gives the three Triads as **45,004 MW on
+5 January 2026**, 41,227 MW on 3 February 2026 and 40,976 MW on
+20 November 2025. NESO defines a Triad as one of "the three half-hour
+settlement periods of highest **net system demand on the GB electricity
+transmission system** between November and February (inclusive) each year,
+separated by at least ten clear days."
+
+Net system demand is what the transmission system sees, and is net of
+embedded distribution-connected generation. It is therefore **not** total
+GB consumption at peak, and the underlying figure is higher. Ofgem is
+comparing it against 73 GW of contracted *connection capacity* — a
+contractual ceiling, of which a substantial share is distribution-connected
+and would be netted off transmission demand entirely. Two different
+quantities, exactly as in §1. Attribute the comparison to Ofgem; do not
+assert "GB peak demand is 45 GW" in our own voice.
+
+Note also that Ofgem's executive summary says "peak demand in Great Britain
+in **2025** was 45 GW" while paragraph 2.8 says 2025/26. The peak fell on
+5 January 2026, so the executive summary phrasing is wrong.
+
+**Paragraph 2.10 is the most reportable line in the document:**
+
+> "between May 2024 and August 2025 at least 9 GW of data centres in the
+> transmission queue had modified their connection request from a
+> 'battery' technology to data centre."
+
+Ofgem adds that stakeholders point to "a financial incentive structure
+that make battery, and other technologies, increasingly likely to modify
+their current connection to become data centres at the next application
+window." Any dataset that classifies projects by declared technology —
+including the connection registers themselves — therefore undercounts
+data centres, with a named mechanism for how.
+
+**Verified against the primary document, 2026-08-12.** NESO's *Demand
+Call for Input – High Level Summary* (March 2026) is published — it is
+the download on NESO's
+[Demand IRN page](https://www.neso.energy/industry-information/connections/demand-information-request-notice-irn)
+([document 378226](https://www.neso.energy/document/378226/download), 8
+pages). An earlier draft of this section flagged the figures secondary
+commentary attributed to it ("~140 data centres, ~50 GW, 71 at FID") as
+unverified. Read directly, the document gives:
+
+- Data centre demand in CFI responses: **50,802 MW across 152 project
+  phases** (a project may have several phases; 243 responses in total,
+  229 linkable to NESO's connection records, and around 16 GW not
+  linkable to a transmission zone).
+- Financial commitment with FID evidence, data centres only: **71
+  projects (21,598 MW) yes; 77 projects (29,590 MW) no.**
+- The same question across all demand technologies: 94 projects
+  (27,726 MW) yes; 149 projects (64,274 MW) no.
+- Off-takers, verbatim: "Only 32% of data centre projects have secured
+  off-takers, while 68% have not yet secured one, often pending a firm
+  connection date."
+- Planning permission, the caption of a chart whose axes resist exact
+  transcription from the PDF: "Most projects have not yet secured full
+  or outline planning permission, although a notable proportion have
+  applications underway or approved" — the regulator's own evidence that
+  the queue and the planning system see substantially different
+  populations.
+
+So the commentary was close on count and total and wrong in its framing:
+71 at FID is 71 *of 148 data centre respondents to that question*, and
+21.6 GW of the 51.2 GW answering. NESO's caveat travels with all of it:
+"These CFI insights should be considered indicative only. They represent
+developer intent, not confirmed deliverability."
+
+These figures, with locators and access dates, are transcribed once in
+`dcp/external_aggregates.py`, which generates both the workbook's
+External aggregates sheet and the reader's methodology comparison.
+Correct them there, never in the artefacts.
+
+**Route to the project-level data.** Ofgem paragraphs 2.3–2.4 name its own
+evidence base, which tells us precisely what NESO holds:
+
+- NESO's **voluntary Call for Input** on the demand queue, issued November
+  2025; summary published by NESO March 2026.
+- **Project-level data from NESO's mandatory Information Request Notice
+  (IRN) to demand projects in the transmission queue, issued 13 March
+  2026.**
+- Project-level data collected by DNOs from a voluntary call on their
+  demand queues, March 2026, aggregated by NESO.
+
+The IRN is the target. It is mandatory, project-level, dated, and a
+regulator has publicly confirmed both that NESO holds it and that it has
+been analysed — Ofgem's Table 3 is headed "NESO information request notice
+estimated capex of data centres by size."
+
+NESO has been a public authority under **both** FOIA 2000 and the EIR 2004
+since it launched in 2024, with an Information Rights team, a stated
+20-working-day deadline and a published response log. Requests go to
+`boxinformationrights@nationalenergyso.com`. EIR is the right frame:
+connection data is environmental information under regulation 2(1), and
+regulation 12(2) imposes an express presumption in favour of disclosure.
+
+### What IS published — 2026-08-12 sweep of the open-data portals
+
+No project-level demand register exists anywhere, but the distribution
+side publishes more than the transmission side, and one operator far more
+than the rest:
+
+- **UK Power Networks, [Large Demand List](https://ukpowernetworks.opendatasoft.com/explore/dataset/ukpn-large-demand-list/)**
+  (`ukpn-large-demand-list`): 496 live, committed, not-yet-energised
+  import projects of 5,000 kVA and above across the three UKPN licence
+  areas (London, South East, East). Anonymised, but each row carries
+  licence area, grid supply point, demand technology type, required
+  import capacity (kVA) and application date. The record count and schema
+  are public; **row access needs free portal registration** — the
+  anonymous CSV export returns headers only.
+- **UK Power Networks, [Data Centre Demand Profiles](https://ukpowernetworks.opendatasoft.com/explore/assets/ukpn-data-centre-demand-profiles/)**
+  (`ukpn-data-centre-demand-profiles`): half-hourly observed load of
+  identified (anonymised) data centres from 1 January 2023, expressed as
+  a proportion of each site's meter capacity, by voltage level and data
+  centre type. ~5.4M rows at access, refreshed monthly. The only
+  published measurement of what data centres actually *draw* as against
+  what they secured — the quantity every grid-connection caveat in the
+  reader hedges about. Same registration gate. (An earlier
+  `ukpn-data-centre-utilisation` dataset is archived in its favour.)
+- **NGED's [Connection Queue](https://connecteddata.nationalgrid.co.uk/dataset/connection-queue)**
+  publishes per-GSP CSVs with named sites and a `Site Import Capacity
+  (MW)` column — but the sampled file (Coventry GSP) contains only
+  generation rows (Solar, BESS) with zero import. It is the Gate 2
+  generation queue wearing a schema that could carry demand. One GSP of
+  ~40 checked; a sweep is cheap if certainty is ever needed.
+- **SPEN, Northern Powergrid and ENWL** portals: no demand-queue
+  equivalent found in a quick catalogue probe (not exhaustive). The
+  ENA-aggregated distribution queue data Ofgem cites in paragraph 2.4 is
+  not published as a dataset anywhere found.
+
+A caution that belongs with the UKPN pair: a grid supply point plus a
+capacity plus an application date will sometimes identify a project
+uniquely. Any such match is a deliberate re-identification exercise
+producing an adjudicated, method-labelled inference stored beside the
+record — never a join. The workbook's External aggregates sheet states
+the same rule in its own header.
 
 ### The TEC register does not find co-located generation
 
@@ -367,6 +522,26 @@ reconnaissance scripts were run from a scratchpad and deliberately not
 added to the repository; no project database or code was modified.
 
 Unverified claims are flagged inline as such — specifically the
-Eggborough gas/data-centre relationship, and every address-level link
-between a Capacity Market entry and a neighbouring planning consent in §5.
-Do not repeat either without checking.
+Eggborough gas/data-centre relationship and every address-level link
+between a Capacity Market entry and a neighbouring planning consent in
+§5. Do not repeat either without checking. (The 140/71 Final Investment
+Decision figures previously flagged here were resolved against the
+primary NESO document on 2026-08-12; §3 carries the verified figures.)
+
+**Correction, 2026-08-10.** An earlier draft of this file attributed the
+41 GW → 125 GW demand queue growth to "NESO's connections-reform documents
+and legal summaries", and stated that a NESO data request "found around
+140 data centre projects claiming to have reached Final Investment
+Decision". Both came from search-result summaries rather than primary
+documents. The queue figure is Ofgem's, published 29 July 2026 and quoted
+verbatim above; the 140-at-FID figure could not be traced to any primary
+source and was flagged as unverified. The law-firm briefing originally
+credited with the figures contains neither of them.
+
+**Resolution, 2026-08-12.** The document behind the FID figures — NESO's
+*Demand Call for Input – High Level Summary* — was located on NESO's IRN
+page, downloaded and read. §3 now quotes it directly, and the same-day
+sweep of the network operators' open-data portals above records what is
+and is not published. The transcribed figures live in
+`dcp/external_aggregates.py` and flow from there into the workbook and
+the reader.
