@@ -66,8 +66,17 @@ The database lives on the laptop, so the Studio cannot write while it is
 asleep or off the network. Since 2026-08-11 that no longer costs
 anything: the run detects the outage, keeps reading, and spools verified
 findings to `data/deepread_spool.jsonl`, draining them when the database
-comes back and again at startup. Nothing needs doing — but if a run ends
-with
+comes back and again at startup.
+
+One gap in that was measured on 2026-08-12 and closed the same day. The
+document *being read* when an outage began was still re-read from
+scratch, because the connection was opened before the read and held
+across it, so the failure surfaced at commit — two outages that day cost
+696s and 576s of Studio time on documents already read and already
+verified. The connection is now opened after the read, so the retry
+ladder retries the write.
+
+Nothing needs doing — but if a run ends with
 
 ```
 WARNING: database still unreachable — N documents remain in …spool.jsonl
@@ -116,9 +125,9 @@ The Studio's `.env` points there. So the Studio only reads while the
 laptop is awake and on the same network — closing the lid stalls it, and
 taking the laptop to work stops it entirely.
 
-Nothing is corrupted when that happens: the connection drops, the run
-dies, and the next start resumes from `deepread_log`. But it does mean
-the Studio idles exactly when it would otherwise be most useful.
+That no longer stops the read — see *If the laptop will be away* above:
+the run goes offline, keeps reading and spools. What the dependency still
+costs is visibility, since nothing is queryable until the laptop returns.
 
 **Do not move Postgres yet.** It looks like the obvious fix, and it is
 the eventual one, but the sequencing matters: through Phase 2 the laptop
@@ -133,17 +142,17 @@ role shrinks to editing and publishing, the Studio becomes the machine
 that matters, and the dependency is the right way round. A `pg_dump`,
 a restore, and an `.env` change on both machines.
 
-**A local spool is the alternative** if the interruptions become
-intolerable before then: the reader writes findings and log rows to a
-file when the database is unreachable and a catch-up command replays
-them. Real work, though — the replay has to be idempotent against the
-same unique constraints, and a spool that silently diverges from the
-database is worse than a reader that stops honestly.
+**The local spool was the alternative, and it is what got built** (PR #50,
+2026-08-11, extended 2026-08-12), which is why the move is no longer
+urgent. It is not a substitute for it: a spool keeps the Studio reading
+but leaves the results unqueryable until the laptop is back, so a long
+absence still delays every count, export and adjudication that depends on
+them.
 
-Until one of those happens, the honest operating rule is: **start the
-Studio read when the laptop is home and awake, and expect it to stop when
-the laptop leaves.** `caffeinate -s` on the laptop holds sleep off; `-w
-<pid>` releases it when a given job finishes.
+The operating rule is now: **start the read whenever the Studio is free,
+and expect the results to appear when the laptop next comes home.**
+`caffeinate -s` on the laptop holds sleep off if you want the writes to
+land as they happen; `-w <pid>` releases it when a given job finishes.
 
 ## Reading the log correctly
 
