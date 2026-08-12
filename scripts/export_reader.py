@@ -62,6 +62,7 @@ from dcp.drive import FOLDER_URL as DRIVE_ROOT  # noqa: E402
 from dcp.drive import WORKBOOK_SHEET_URL  # noqa: E402
 from dcp.drive import SITES_URL  # noqa: E402
 from dcp.drive import NOTEBOOK_URL  # noqa: E402
+from dcp.drive import PINPOINT_URL  # noqa: E402
 
 # Statuses meaning "we have not looked yet", as against "they disclosed
 # nothing" — the distinction the page is built around.
@@ -2063,15 +2064,32 @@ def main() -> int:
     everything extracted from one site in a single file.
     &nbsp;<a href="{SITES_URL}" target="_blank" rel="noopener">Open the site
     folders</a></p></div>
-  <div class="part"><h3>Ask across sites<span class="pill">Gemini Notebook</span></h3>
+  <div class="part"><h3>Interrogate planning summaries on Notebook<span class="pill">Gemini
+    Notebook</span></h3>
    <p class="what">Every site's report and its full findings table, one document per site,
     loaded into a notebook you can question in plain language — "which sites mention gas
     turbines?", "who is the agent on the Slough applications?". It answers from these
-    documents and cites the site it drew each answer from.</p>
+    documents and cites the site it drew each answer from. What it holds is <b>this
+    project's summaries</b> of the corpus, not the council documents themselves.</p>
    <p class="when"><b>Reach for it when</b> the question spans sites and you would otherwise
     be opening folders one at a time. Check anything you intend to publish against the site
     row or the document itself — the notebook is a way in, not a source.
     &nbsp;<a href="{NOTEBOOK_URL}" target="_blank" rel="noopener">Open the notebook</a></p></div>
+  <div class="part"><h3>Interrogate all planning documents on Pinpoint<span
+    class="pill">Pinpoint</span></h3>
+   <p class="what">The council documents themselves — every planning application document
+    holding prose — as one full-text searchable collection. Where the notebook above holds
+    this project's summaries, this holds the source material, so a phrase that no one
+    thought to extract is still findable. Drawings and exact duplicates are excluded:
+    a drawing carries no text to search, and the same document is routinely filed against
+    several applications for one site. Pinpoint has no folders, so each filename carries its
+    site and application in front of it.</p>
+   <p class="when"><b>Reach for it when</b> you want to search wording across the whole
+    corpus rather than read a site — a phrase, a company name, a consultant. It is a search
+    index, not the archive of record: the PDFs are recompressed to fit Pinpoint's quota, so
+    quote from the Drive original when the passage spans a table or a multi-column page.
+    &nbsp;<a href="{PINPOINT_URL}" target="_blank" rel="noopener">Open the
+    collection</a></p></div>
   <div class="part"><h3>Query database<span class="pill">DuckDB</span></h3>
    <p class="what">Every site, application, document and finding in one file
     (<code>dc_phase{args.phase}.duckdb</code>, ~106 MB). Opens in DuckDB CLI, Python, R or
@@ -2079,11 +2097,6 @@ def main() -> int:
    <p class="when"><b>Reach for it when</b> the question is not in a column.
     &nbsp;<a href="{DRIVE_ROOT}" target="_blank" rel="noopener">Open it on Drive</a></p></div>
  </div>
-
- <h3 class="sub-head">Coming shortly…</h3>
- <p class="help">One further way into the same material is planned: a <b>Pinpoint
- collection</b> of the planning application documents, for full-text search across the
- corpus. It does not exist yet; this page will say when it does.</p>
 
  <h2 class="sec">Where the applications stand</h2>
  <table class="stats"><tbody>
