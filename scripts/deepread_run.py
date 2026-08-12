@@ -722,6 +722,80 @@ def commit_or_spool(conn, row: dict, *, values: list[tuple], read_state: str,
     return inserted
 
 
+def settle_spool() -> None:
+    """Try to land whatever the spool is holding, or say what is held.
+
+    Reached on every exit — a finished cohort, a requested stop, a
+    Ctrl-C. Work sitting in the spool is read, verified and invisible, so
+    no exit path gets to be silent about it. The Ctrl-C path used to
+    `return` past this, which meant the one exit most likely to happen
+    during an outage was the one that said nothing.
+    """
+    if not SPOOL_PATH.exists():
+        return
+    import psycopg2
+    try:
+        with db.connect() as conn:
+            docs, found = drain_spool(conn)
+        print(f"drained {docs} spooled documents, {found} findings")
+    except (psycopg2.OperationalError, psycopg2.InterfaceError):
+        held = sum(1 for _ in SPOOL_PATH.open())
+        print(f"WARNING: database still unreachable — {held} documents "
+              f"remain in {SPOOL_PATH}. They are read and verified; "
+              f"re-run when it is back and they will be written first.")
+
+
+# Set by SIGTERM, read at each document boundary. A flag rather than an
+# exception because the point of TERM is to stop *without* throwing away
+# a document mid-inference: on a large Environmental Statement that is up
+# to an hour and a half of Studio time, and the runbook has promised this
+# behaviour since before anything implemented it.
+_STOP = {"requested": False}
+
+
+def request_stop(signum, frame) -> None:
+    """Ask for a stop at the next document boundary.
+
+    Python runs a signal handler at the next bytecode boundary in the
+    main thread, and MLX generation is a long call into C, so this
+    acknowledgement appears when the current *chunk* finishes rather than
+    instantly. That is a delay of seconds to a couple of minutes, not a
+    failure to stop. `kill -9` is the immediate option and costs the
+    document in flight.
+    """
+    if _STOP["requested"]:
+        return
+    _STOP["requested"] = True
+    print("\nstop requested — finishing the current document first "
+          "(kill -9 to stop now, at the cost of re-reading it)", flush=True)
+
+
+def install_stop_handler() -> None:
+    """Make SIGTERM a graceful stop, and make SIGINT arrive at all.
+
+    Without the first, TERM took Python's default disposition and killed
+    the process where it stood. Nothing was corrupted — findings stay
+    uncommitted until the `deepread_log` row lands, so the transaction
+    rolled back and resume re-read the document cleanly — but the runbook
+    said TERM 'lets the current document finish and its row commit', and
+    it did not. Documents up to 86 minutes long were being thrown away by
+    the documented way of stopping.
+
+    The second is subtler. A shell sets SIGINT to SIG_IGN for a command
+    it starts in the background, and Python honours an inherited SIG_IGN
+    rather than installing its own handler — so the reader, which is
+    always started as `nohup … &` over ssh, ignored SIGINT completely and
+    `except KeyboardInterrupt` could never run. Measured, after a `kill
+    -INT` was delivered to a live run and the run read on to completion.
+    Restoring the default handler gives three honest levels of stopping:
+    TERM finishes the document, INT abandons it, -9 takes the process.
+    """
+    import signal
+    signal.signal(signal.SIGTERM, request_stop)
+    if signal.getsignal(signal.SIGINT) == signal.SIG_IGN:
+        signal.signal(signal.SIGINT, signal.default_int_handler)
+
+
 class Sink:
     """Where a finished document goes, and the only thing that connects.
 
@@ -990,7 +1064,10 @@ def main() -> None:
     # thing that opens a connection, at commit time rather than before
     # the read. The loop below therefore has no database in it at all.
     sink = Sink()
+    install_stop_handler()
     t0 = time.time()
+    done = 0
+    interrupted = False
     for i, row in enumerate(rows, 1):
         try:
             status = process_document(sink, row, max_chars=args.max_chars,
@@ -998,9 +1075,16 @@ def main() -> None:
                                       prompt=active_prompt)
             if sink.offline:
                 status += " [spooled]"
+            done = i
         except KeyboardInterrupt:
-            print("\ninterrupted — resume with the same command")
-            return
+            # `break`, not `return`. Returning here skipped the spool
+            # settle below, so interrupting an offline run left hundreds
+            # of read-and-verified documents on disk with nothing said
+            # about them — the one moment the warning matters most.
+            print("\ninterrupted — the current document will be re-read "
+                  "on resume")
+            interrupted = True
+            break
         except Exception as exc:
             status = f"ERROR {type(exc).__name__}: {str(exc)[:100]}"
             escalate(reason="exception",
@@ -1017,22 +1101,13 @@ def main() -> None:
             rate = i / ((time.time() - t0) / 3600)
             print(f"  --- {rate:.0f} docs/hour; "
                   f"~{(len(rows) - i) / max(rate, 1):.1f}h remaining ---")
-    # Whatever is still spooled at the end is work already done and not
-    # yet visible, so the run does not get to call itself finished
-    # without at least trying to land it.
-    if SPOOL_PATH.exists():
-        import psycopg2
-        try:
-            with db.connect() as conn:
-                docs, found = drain_spool(conn)
-            print(f"drained {docs} spooled documents, {found} findings")
-        except (psycopg2.OperationalError, psycopg2.InterfaceError):
-            held = sum(1 for _ in SPOOL_PATH.open())
-            print(f"WARNING: database still unreachable — {held} documents "
-                  f"remain in {SPOOL_PATH}. They are read and verified; "
-                  f"re-run when it is back and they will be written first.")
-
-    print(f"\ndone: {len(rows)} documents in "
+        if _STOP["requested"]:
+            print("  stopping at a document boundary as asked — nothing "
+                  "in flight, nothing to re-read")
+            break
+    settle_spool()
+    print(f"\n{'stopped' if _STOP['requested'] or interrupted else 'done'}: "
+          f"{done} of {len(rows)} documents in "
           f"{(time.time() - t0) / 3600:.1f}h")
 
 

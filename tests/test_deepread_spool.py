@@ -276,3 +276,120 @@ def test_offline_sink_does_not_probe_before_the_interval(spool, monkeypatch):
                     pages_sent=[1])
     assert unreachable.attempts == 3, "no further connections until the probe"
     assert len(D.SPOOL_PATH.read_text().splitlines()) == 6
+
+
+def test_settle_warns_about_held_documents_when_the_db_is_away(spool,
+                                                               monkeypatch,
+                                                               capsys):
+    """The exit that happens during an outage must not be the silent one.
+
+    Ctrl-C used to `return` past the settle, so interrupting an offline
+    run left every read-and-verified document on disk with nothing said
+    about it — at the one moment an operator most needs telling.
+    """
+    D.commit_or_spool(None, ROW, values=[_value()], read_state="read",
+                      pages_total=1, pages_sent=[1])
+    D.commit_or_spool(None, ROW, values=[], read_state="no_text",
+                      pages_total=0, pages_sent=None)
+    monkeypatch.setattr(D.db, "connect", UnreachableDB())
+
+    D.settle_spool()
+
+    out = capsys.readouterr().out
+    assert "WARNING" in out and "2 documents" in out
+    assert D.SPOOL_PATH.exists(), "held work must stay on disk to be replayed"
+
+
+def test_settle_drains_when_the_db_is_back(spool, monkeypatch, capsys):
+    D.commit_or_spool(None, ROW, values=[_value()], read_state="read",
+                      pages_total=1, pages_sent=[1])
+    conn = FakeConn()
+
+    import contextlib
+
+    @contextlib.contextmanager
+    def reachable():
+        yield conn
+
+    monkeypatch.setattr(D.db, "connect", reachable)
+    D.settle_spool()
+
+    assert "drained 1 spooled documents, 1 findings" in capsys.readouterr().out
+    assert not D.SPOOL_PATH.exists()
+
+
+def test_settle_is_a_no_op_with_nothing_held(spool, capsys):
+    D.settle_spool()
+    assert capsys.readouterr().out == ""
+
+
+def test_term_asks_for_a_stop_rather_than_taking_one(capsys):
+    """SIGTERM must not kill the process where it stands.
+
+    The runbook has promised since before it was true that TERM lets the
+    current document finish. It did not: there was no handler, so TERM
+    took Python's default disposition and threw away whatever the model
+    had produced — up to 86 minutes of it on a large Environmental
+    Statement.
+    """
+    import signal
+
+    D._STOP["requested"] = False
+    previous = signal.getsignal(signal.SIGTERM)
+    try:
+        D.install_stop_handler()
+        assert signal.getsignal(signal.SIGTERM) is D.request_stop, \
+            "TERM must be handled, not left to kill the process"
+
+        D.request_stop(signal.SIGTERM, None)
+        assert D._STOP["requested"], "the loop checks this at each boundary"
+        assert "finishing the current document" in capsys.readouterr().out
+
+        # A second TERM is not an escalation: acknowledging once keeps the
+        # log honest, and `kill -9` is the documented immediate stop.
+        D.request_stop(signal.SIGTERM, None)
+        assert capsys.readouterr().out == ""
+    finally:
+        signal.signal(signal.SIGTERM, previous)
+        D._STOP["requested"] = False
+
+
+def test_a_backgrounded_run_can_still_be_interrupted():
+    """SIGINT must be deliverable to a run started with `nohup … &`.
+
+    A shell sets SIGINT to SIG_IGN for a background command and Python
+    honours an inherited SIG_IGN instead of installing its own handler.
+    The reader is always started that way, so `except KeyboardInterrupt`
+    was unreachable in production — measured by delivering `kill -INT` to
+    a live run, which read on to completion as though nothing had been
+    sent.
+    """
+    import signal
+
+    previous_int = signal.getsignal(signal.SIGINT)
+    previous_term = signal.getsignal(signal.SIGTERM)
+    try:
+        signal.signal(signal.SIGINT, signal.SIG_IGN)  # as a shell leaves it
+        D.install_stop_handler()
+        assert signal.getsignal(signal.SIGINT) is signal.default_int_handler, \
+            "an inherited SIG_IGN must be replaced, or INT is a no-op"
+    finally:
+        signal.signal(signal.SIGINT, previous_int)
+        signal.signal(signal.SIGTERM, previous_term)
+
+
+def test_an_existing_sigint_handler_is_left_alone():
+    """Only an inherited SIG_IGN is overridden — a foreground run already
+    has Python's handler, and a caller that installed its own keeps it."""
+    import signal
+
+    previous_int = signal.getsignal(signal.SIGINT)
+    previous_term = signal.getsignal(signal.SIGTERM)
+    mine = lambda *a: None  # noqa: E731
+    try:
+        signal.signal(signal.SIGINT, mine)
+        D.install_stop_handler()
+        assert signal.getsignal(signal.SIGINT) is mine
+    finally:
+        signal.signal(signal.SIGINT, previous_int)
+        signal.signal(signal.SIGTERM, previous_term)
