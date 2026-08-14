@@ -32,28 +32,48 @@ and stalls if the network is unhappy.
 
 ```sh
 ssh hoyla@192.168.50.113 'cd Code/datacentre_planning &&
-  HF_HUB_OFFLINE=1 nohup .venv/bin/python -u scripts/deepread_run.py --tier A \
+  HF_HUB_OFFLINE=1 nohup .venv/bin/python -u scripts/deepread_run.py --tier A,B \
     >> data/deepread_run.log 2>&1 &'
 ```
 
-**`--tier A` is not optional for the phase 3 dual read**, which is what
-this machine is for. Without it the cohort is the entire corpus: on
-2026-08-11 a restart from the bare command above picked up 43,020
-documents (`A:2508, B:29348, C:1253, sampled_out:4204, skip:5707`)
-instead of the 2,508 tier-A documents outstanding — about 107 hours of
-reading in place of six, on the wrong material. Nothing is corrupted by
-it, but days are lost before anyone looks.
+**`--tier` is not optional.** Without it the cohort is the entire
+corpus: on 2026-08-11 a restart from the bare command above picked up
+43,020 documents (`A:2508, B:29348, C:1253, sampled_out:4204,
+skip:5707`) instead of the 2,508 tier-A documents outstanding — about
+107 hours of reading in place of six, on the wrong material.
+
+Omitting it is worse than slow, which was not understood when the above
+was written. Tier C is sampled 1-in-5, and `load_cohort` plans that
+sample *after* filtering to unread documents, so the fifth an unscoped
+run reads is not the fifth the global policy chose — see
+`universe_plan` in `dcp/deepread_select.py`, which exists to fix exactly
+this and which the runner does not yet use. Naming the tiers keeps the
+runner away from it, because sampling only ever touches tier C.
+
+**As of 2026-08-14 the scope is `--tier A,B`.** The flag takes a list.
+Tier B is the outstanding bulk; tier A stays named so that prose
+arriving later — a new Environmental Statement is tier A — is picked up
+by the next start. A is read first regardless of the order given.
 
 **Check the cohort line before walking away.** The first thing the run
 prints says exactly what it is about to do, and the tier breakdown is
 the tell:
 
 ```
-deep-read cohort: 2508 documents pending (A:2508) — model mlx:Qwen3.6-…
+deep-read cohort: 29338 documents pending (A:5, B:29333) — model mlx:Qwen3.6-…
 ```
 
-`(A:…)` alone is the dual read. Anything with `B:` in it is the whole
-corpus and almost certainly not what was wanted.
+Tiers you did not ask for mean the flag did not take. `C:` or
+`sampled_out:` in that line is the whole corpus, and not what was
+wanted.
+
+**Expect about 320 hours.** Measured 2026-08-14 from the 1,033 tier-B
+documents already read: a blended 39.2s each, so 29,338 is a fortnight
+of continuous reading. `--shard` across both machines halves it. The
+blend is worth knowing — 4.1% of tier-B documents end `parse_failed`,
+and they take 42.7% of the time (411s mean against 23s for a clean
+read), so roughly a third of the fortnight buys the class of document
+that `docs/` already records as the worst for quote-gate rejection.
 
 Add `--shard 1/2` **only if the laptop is reading at the same time**
 (it takes `0/2`). With one machine reading, no shard flag means it works
