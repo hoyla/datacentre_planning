@@ -311,7 +311,7 @@ def coerce_page(value) -> int | None:
 # ---------------------------------------------------------------------------
 
 
-def load_cohort(conn, *, tier: str | None, ref: str | None,
+def load_cohort(conn, *, tiers: list[str] | None, ref: str | None,
                 site: str | None, shard: tuple[int, int] | None = None) -> list[dict]:
     """Documents of applications on live sites, minus those already read
     under this (model, prompt_version)."""
@@ -358,8 +358,8 @@ def load_cohort(conn, *, tier: str | None, ref: str | None,
     for row, plan in zip(rows, plans):
         row["tier"], row["reason"], row["sampled_out"] = \
             plan.tier, plan.reason, plan.sampled_out
-    if tier:
-        rows = [r for r in rows if r["tier"] == tier]
+    if tiers:
+        rows = [r for r in rows if r["tier"] in tiers]
     return rows
 
 
@@ -984,10 +984,46 @@ def process_document(sink: Sink, row: dict, *, max_chars: int,
             + f"  [{len(sent)}/{len(pages)} pages, {elapsed:.0f}s]")
 
 
-def main() -> None:
+TIER_ORDER = {"A": 0, "B": 1, "C": 2, "skip": 3}
+
+
+def cohort_sort_key(row: dict) -> tuple:
+    """Tier A first: statements and consultee responses carry the
+    disclosures, so early hours produce editorial value even if the run
+    is interrupted. Ties break on application_ref so a resumed run walks
+    the corpus in the same order it did before."""
+    return (TIER_ORDER.get(row["tier"], 9), row["application_ref"])
+
+
+def parse_tiers(value: str | None) -> list[str] | None:
+    """`"A,B"` to `["A", "B"]`; None means the whole corpus.
+
+    Unknown tiers exit rather than being dropped: a silently ignored
+    typo produces an empty cohort, and an empty cohort prints `done: 0 of
+    0` — a finished read and a misspelled flag look identical.
+    """
+    if not value:
+        return None
+    tiers = [t.strip().upper() for t in value.split(",") if t.strip()]
+    unknown = [t for t in tiers if t not in ("A", "B", "C")]
+    if unknown:
+        raise SystemExit(f"--tier: unknown tier {','.join(unknown)} "
+                         f"(choose from A, B, C)")
+    return tiers
+
+
+def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
-    ap.add_argument("--tier", choices=["A", "B", "C"], default=None)
+    # A list, not one choice: the phase 3 read wants A and B together, so
+    # that prose arriving later — a new Environmental Statement lands in
+    # tier A — is picked up by the next start rather than needing its own
+    # run. Omitting the flag still means the whole corpus, which is
+    # rarely what anyone wants; see docs/MAC_STUDIO.md.
+    ap.add_argument("--tier", default=None, metavar="A[,B,C]",
+                    help="Comma-separated tiers to read, e.g. 'A' or "
+                         "'A,B'. Omit for the entire corpus, tier C "
+                         "included.")
     ap.add_argument("--ref", default=None, help="Single application_ref")
     ap.add_argument("--site", default=None, help="Single site_key")
     ap.add_argument("--max-chars", type=int, default=16000,
@@ -1009,6 +1045,11 @@ def main() -> None:
                          "that stops taxonomy fragmentation, and starts a "
                          "SEPARATE read of the whole corpus — it shares no "
                          "resume state with 1.0.")
+    return ap
+
+
+def main() -> None:
+    ap = build_parser()
     args = ap.parse_args()
 
     global PROMPT_VERSION
@@ -1021,6 +1062,8 @@ def main() -> None:
         print(f"*** prompt v{PROMPT_VERSION} selected: this is a full "
               f"re-read, not a resume of the v{DEFAULT_PROMPT_VERSION} "
               f"corpus ***")
+
+    tiers = parse_tiers(args.tier)
 
     shard = None
     if args.shard:
@@ -1039,14 +1082,9 @@ def main() -> None:
             docs, found = drain_spool(conn)
             print(f"drained {docs} spooled documents from a previous run "
                   f"({found} findings) before selecting the cohort")
-        rows = load_cohort(conn, tier=args.tier, ref=args.ref, site=args.site,
+        rows = load_cohort(conn, tiers=tiers, ref=args.ref, site=args.site,
                            shard=shard)
-        # Tier A first: statements and consultee responses carry the
-        # disclosures, so early hours produce editorial value even if the
-        # run is interrupted.
-        order = {"A": 0, "B": 1, "C": 2, "skip": 3}
-        rows.sort(key=lambda r: (order.get(r["tier"], 9),
-                                 r["application_ref"]))
+        rows.sort(key=cohort_sort_key)
         if args.limit:
             rows = rows[: args.limit]
 
