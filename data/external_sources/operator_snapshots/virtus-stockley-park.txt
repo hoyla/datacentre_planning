@@ -1,0 +1,373 @@
+# url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+
+# fetched: 2026-08-20
+
+# sha256(html): 965d79663817554fd7d914599c9fda3d1142f0b04c2d189619136ba6ef0a5d35
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/Organization/base",
+   "@type": "Organization",
+   "image": {
+    "@id": "https://virtusdatacentres.com/#/schema/ImageObject/logo"
+   },
+   "logo": {
+    "@id": "https://virtusdatacentres.com/#/schema/ImageObject/logo",
+    "@type": "ImageObject",
+    "contentUrl": "images/logos/virtus-data-centres.svg",
+    "url": "images/logos/virtus-data-centres.svg"
+   },
+   "name": "VIRTUS Data Centres",
+   "url": "https://virtusdatacentres.com/"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/WebSite/base",
+   "@type": "WebSite",
+   "name": "VIRTUS",
+   "potentialAction": {
+    "@type": "SearchAction",
+    "query-input": "required name=search_term_string",
+    "target": "https://virtusdatacentres.com/component/finder/search?q={search_term_string}&amp;Itemid=101"
+   },
+   "publisher": {
+    "@id": "https://virtusdatacentres.com/#/schema/Organization/base"
+   },
+   "url": "https://virtusdatacentres.com/"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/WebPage/base",
+   "@type": "WebPage",
+   "about": {
+    "@id": "https://virtusdatacentres.com/#/schema/Organization/base"
+   },
+   "description": "The VIRTUS Data Centre Campus at Stockley Park is one of the UK's largest and most established data centres, with four facilities built with flexibility in mind",
+   "inLanguage": "en-GB",
+   "isPartOf": {
+    "@id": "https://virtusdatacentres.com/#/schema/WebSite/base"
+   },
+   "name": "Stockley Park Data Centre Campus - VIRTUS",
+   "url": "https://virtusdatacentres.com/locations/uk/london/stockley-park-campus"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/com_content/article/394",
+   "@type": "Article",
+   "headline": "London Data Centres | Stockley Park Campus",
+   "inLanguage": "en-GB",
+   "isPartOf": {
+    "@id": "https://virtusdatacentres.com/#/schema/WebPage/base"
+   },
+   "name": "London Data Centres | Stockley Park Campus",
+   "thumbnailUrl": "images/locations/LONDON5.jpg"
+  }
+ ]
+}
+
+{
+ "@context": "http://schema.org",
+ "@type": "Organization",
+ "name": "VIRTUS Data Centres",
+ "sameAs": [
+  "http://www.twitter.com/VIRTUSDCs",
+  "https://www.youtube.com/channel/UCVDaezuqxPXg4VQQH0Cyqfg",
+  "https://www.linkedin.com/company/virtus-data-centres/"
+ ],
+ "url": "https://virtusdatacentres.com/"
+}
+
+## VISIBLE TEXT
+
+Stockley Park Data Centre Campus - VIRTUS 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Locations 
+ 
+ 
+ UK 
+ 
+ 
+ London Data Centres | Stockley Park Campus London Data Centres | Slough Campus London Data Centres | Saunderton Campus Hayes Campus Enfield Campus Germany 
+ 
+ 
+ Berlin Data Centres | Marienpark Campus Berlin Data Centres | Wustermark Campus Italy Solutions 
+ 
+ 
+ AI Ready Data Centres Build to Suit Data Centres Colocation Data Centres 
+ 
+ 
+ Data Centre Rack Solutions Data Centre Cage Colocation Data Centre Suite High Performance Computing (HPC) Services 
+ 
+ 
+ Cloud Connectivity Data Centre Security ServiceNow Market Place 
+ 
+ 
+ Market Place: Cloud Connect Market Place: Bespoke Solutions Market Place: Connectivity Platform Market Place: Services Market Place: AWS Market Place: C4L Market Place: Coreix Market Place: Daisy Group Market Place: ERA Market Place: Exponential-e Market Place: Inatech Market Place: Microsoft Azure Market Place: ServerSpace Market Place: Accesspoint Market Place: The Legal DC Market Place: Unitas Global Market Place: EX Networks Market Place: VMhosts Market Place: AssureStor Marketplace: Global Cloud Xchange Market Place: CommScope Market Place: L3C Market Place: Romonet Market Place: euNetworks Market Place: LINX Market Place: Pacnet Market Place: SSE Enterprise Telecoms Market Place: Virgin Media Business Market Place: Zayo Market Place: TeliaSonera Market Place: Viatel Market Place: Belcom247 Market Place: Technimove Market Place: Venus Networks Market Place: OryxAlign Market Place: Secura Market Place: PacketFabric Media 
+ 
+ 
+ Video Gallery 
+ 
+ 
+ General Videos AI VIRTUS Blog News & Press Releases Downloads About Us 
+ 
+ 
+ Global Data Centre Platform Vision & Values People Board of Directors Investors Partners Careers Why VIRTUS 
+ 
+ 
+ Agile Commercials 
+ 
+ 
+ Examples of VIRTUS Flex Going Green? Operational Excellence Quality Credentials Sustainability 
+
+ 
+ 
+ 
+ 
+ 
+ +44 (0)20 7499 1300 
+ Contact Us 
+ LOGIN --> 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ London Data Centres | Stockley Park Campus The UK's largest data centre campus is built to scale for today's modern data centre consumer 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Campus Overview Data Centres The VIRTUS Data Centre Campus at Stockley Park is located close to the well known Stockley Park business centre. The campus comprises of four facilities and is built with VIRTUS' value of flexibility at the core of the design. With 112.5MW of IT load over 45,400 NTM, the site provides wide scope for customer expansion, ensuring that our facilities grow with your business. The data centres have excellent public transport and airport links, offering close proximity to both London and international travel. For further customer convenience, the facilities have dedicated office and meeting space also available to all customers. VIRTUS operates a 'defence-in-depth' approach to security. With a dedicated on-site security team 24/7, protecting your IT infrastructure is our highest priority. The data centre also incorporates VIRTUS' real-time monitoring dashboards, and self-service tools for clients to use either remotely, or in one of the customer-friendly dedicated rooms or café areas that are designed into the facility. The facility is carrier neutral and provides access to a wide choice of Tier I and Tier II carriers, and on-ramp access to all major cloud and connectivity platforms. LONDON5 
+ 
+ 24MW 
+ 10,000 NTM 
+ LONDON7 32.5MW 13,000 NTM LONDON14 Bespoke design 8,400 NTM LONDON6 
+ 
+ 16MW 
+ 7,000 NTM 
+ LONDON8 Bespoke design 7,000 NTM 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Back 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Total Flexibility 
+ Eco-efficient, optimised design for fully flexible, bespoke customer solutions 
+ Ultra-high power density solutions available for high performance computing requirements 
+ On-ramp access to all major cloud and connectivity providers 
+ Maximum Efficency 
+ VIRTUS 'Air Flooded Room' principle 
+ Hot-aisle containement 
+ Ability to host up to 80kW racks 
+ Optimised Locations 
+ Situated close to the well known Stockley Park business centre 
+ 16 miles from central London and accessible by a fast rail link station located less than one mile away 
+ Easy access to M25/M4 
+ Data Centre Locations 
+ > Stockley Park Campus 
+ > Slough Campus 
+ > Hayes 
+ > Enfield 
+ Downloads VIRTUS Stockley Park Campus Specifications Sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ You May Also Be Interested In 
+ 
+ Services 
+ 
+ VIRTUS offers a wide range of flexible colocation solutions to meet your requirements 
+ Read More 
+ 
+ 
+ Why VIRTUS 
+ 
+ VIRTUS designs, builds and operates the best data centres in the world, so that our customers don't have to 
+ Read More 
+ 
+ 
+ Locations 
+ 
+ Our focus is on site diversity with multiple interconnected campuses, all designed and built to an uptime Tier III standard 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ To discuss your requirements or find out more about our locations and services 
+ 
+ +44 (0)20 7499 1300 
+ 
+ Contact Us 
+ 
+ 
+ 
+ 
+ 
+ Home 
+ 
+ > 
+ 
+ 
+ 
+ Locations 
+ 
+ > 
+ 
+ 
+ 
+ UK 
+ 
+ > 
+ 
+ 
+ 
+ London Data Centres | Stockley Park Campus 
+ 
+ 
+ 
+ 
+ 
+ Follow Us 
+ 
+ Twitter 
+ LinkedIn 
+ YouTube 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Head Office 
+ 20 Balderton Street London W1K 6TL 
+ 
+ +44 (0)20 7499 1300 
+ 
+ 
+ This email address is being protected from spambots. You need JavaScript enabled to view it. 
+ 
+ 
+ 
+ Our Locations UK Europe Services Colocation High Performance Computing Cloud & Connectivity ServiceNow Market Place Why Virtus Agile Commercials Operational Excellence Quality Credentials Sustainability Careers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COPYRIGHT © 2002-2024 VIRTUS. All rights reserved 
+ Privacy Policy Modern Slavery Statement Right to be Forgotten UK Tax Strategy Statement Stakeholder Code Of Conduct Terms and Conditions Language Definitions Impressum - Germany 
+ 
+ 
+ View desktop site 
+ 
+ 
+ Menu

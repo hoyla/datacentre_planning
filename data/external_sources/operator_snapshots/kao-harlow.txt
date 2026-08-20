@@ -1,0 +1,882 @@
+# url: https://kaodata.com/locations/harlow/
+
+# fetched: 2026-08-20
+
+# sha256(html): fe6b62a4d2f826803de1af099934416865a83cc148dc75b7a0f5a9376bcd5959
+
+## STRUCTURED
+
+(none)
+
+## VISIBLE TEXT
+
+Harlow – Kao Data Website 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customer Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Harlow 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Built on the site of Sir Charles Kao’s pioneering discovery of fibre optic cable in 1966, and home to some of the UK’s most demanding compute, our Harlow campus is the UK’s largest data centre campus currently under development. Strategically located between Cambridge and London, the 15 acre, +£230m campus compromises four state-of the-art, carrier neutral data centres. When fully completed, these will support an ITE load of 71MW, across 150,000sq ft of technical space – all powered by 100% renewable energy. In the future, the campus can develop beyond this footprint to eventually accommodate an impressive IT-load of 150MW. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Our Network 
+ 
+ 
+ Location 
+ 
+ 
+ 
+ 
+ 
+ Address 
+ 
+ Kao Data Campus, London Road, Harlow, CM17 9NA 
+ 
+ Travel 
+ 
+ Road: M11 Junction 7 (5 mins) Train: London Liverpool Street (30 mins) Airport: Stanstead (20 mins) Airport: Heathrow (50 mins) 
+ 
+ 
+ 
+ Data Centres 
+ 
+ KLON-01 (8.8MW Operational) KLON-02 (8.8MW Operational) KLON-03 (17.6MW Under Development) KLON-04 (36MW Planned) 
+ 
+ Technical Specs 
+ 
+ Campus Size: 61,000 m2 Technology Suites: 16 x 850 m2 (across 4 facilities) Technical Space: 14,000 m2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kao Data’s OCP-Ready facility in Harlow and their technical expertise in high density computing made them a clear choice to deploy the first Civo cloud in the region. 
+ 
+ Mark Boost, CEO, Civo 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Behind the Scenes 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Why Harlow? 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Award Winning 
+ 
+ Highest calibre, concurrently maintainable Technology Suites providing 100% uptime guaranteed. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Scalability 
+ 
+ UK’s largest data centre campus development, offering multi-megawatt capacities and industrial scale facilities. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ AI & HPC Provision 
+ 
+ Customisable, NVIDIA DGX-Ready infrastructure ideal for high density, GPU-accelerated, AI and HPC. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Low PUE 
+ 
+ Ultra-efficient, free-air cooled hosting environments offering an SLA-backed PUE of 1.2. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+ Carrier neutral campus with a diverse range of on-net connectivity specialists and cloud on-ramp providers. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability 
+ 
+ BREEAM ‘Excellent’ architecture, 100% renewable energy and supported by HVO fuelled generators. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Learn More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Your Harlow data centre looked smart, we liked the concept of industrial scale, you had a specialism in AI and HPC and were located within the UK Innovation Corridor near Cambridge. 
+ 
+ Marc Hamilton, VP Solutions Architecture and Engineering, NVIDIA 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ More from Kao Data 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kao Data Announces Construction of a New 17.6MW, Liquid Cooled, AI Data Centre in Harlow 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Downing Renewable Developments Partners with Kao Data to Build Green Data Solar Farm 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kao Data, Arm, NVIDIA, and Nscale Host Key Figures from UK Government at AI Field Trip in Harlow 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Our services 
+ 
+ 
+ 
+ AI & HPC 
+ 
+ 
+ 
+ 
+ 
+ 
+ Colocation 
+ 
+ 
+ 
+ 
+ 
+ 
+ Cloud & Connectivity 
+ 
+ 
+ 
+ 
+ 
+ 
+ Latest updates 
+ 
+ 
+ 
+ News 
+ 
+ 
+ 
+ 
+ 
+ 
+ Blog 
+ 
+ 
+ 
+ 
+ 
+ 
+ Find out more 
+ 
+ 
+ 
+ About Kao Data 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability & ESG 
+ 
+ 
+ 
+ 
+ 
+ 
+ Standards & Certifications 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers 
+ 
+ 
+ 
+ 
+ 
+ 
+ Assets 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get a quote 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ © Kao Data 2020-2026. Harlow Operations Ltd. Company number 09227383. Registered office: Kao Data Campus, London Road, Harlow CM17 9NA. 
+ 
+ 
+ 
+ 
+ 
+ Privacy policy 
+ 
+ 
+ 
+ 
+ 
+ 
+ Update privacy settings 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get a quote 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customer Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Test Text 
+ 
+ test job title 
+ 
+ 
+ 
+ 
+ 
+ Click to see full book 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Details 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ If your application is successful, Harlow Council will transfer the grant by BACS. Bank details (account name, number and sort code) will need to be supplied with a summary of accounts. Funding conditions : If your application is successful, your project must be delivered by 31 December 2026. You will have to return any grant funds if the project is not delivered or the organisation receiving the funding stops operating. A contract agreement will need to be signed between your organisation and Harlow District Council before any funding is granted. Monitoring and Evaluation: Grant recipients will be required to provide an end of project report to establish whether the project has met its aims and objectives, as well as to assess the overall impact on participants. Funding for the project is provided on the basis that the Project Evaluation form is returned within the agreed project timescale (no later than 31 January 2027). Risks and Liabilities: In giving grants the ‘Harlow Council’ will require the supported project organisation or groups to accept all risks and liabilities associated with the activity being supported. This will be a condition of the grant. Copies of relevant documents may need to be provided if the application has been approved. Data protection statement – how we will use your information The Council is committed to handling your personal information in line with the data processing principles. The Data Protection Legislation and the General Data Protection Regulation 2016/679 (GDPR) sets the legal framework for how we collect, handle and process personal data and for your rights as a ‘data subject.’ General Data Protection Regulation: Personal data provided by you will be processed in accordance with this protocol. For more details, please see https://www.harlow.gov.uk/privacy-notice Thank you for taking the time to read these guidance notes. If you have any questions, please get in touch with health.wellbeing@harlow.gov.uk . 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ FAQs 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ Who can apply? The fund is open to not-for-profit community groups and grassroots initiatives based in Stockport. What types of projects are eligible? We encourage projects focused on environmental sustainability, community cohesion, and local economic development. How much funding is available? Grants range from £500 to £2,500 for pilot projects or to enhance existing initiatives. Is this the sole funding for this project? If not, please expand on the additional match funding that you currently have or are in the process of applying for. Are there any restrictions on grants under £500? Yes, please note that grants under £500 may be subject to different guidelines or restrictions, which will be communicated upon application. When will we know if our project was selected? Notifications will be sent by March 31, 2025. How can I apply for a grant? Applications can be submitted through our online portal, where you will find detailed guidelines and forms. What happens if my application is unsuccessful? If your application is not successful, we encourage you to seek feedback and consider reapplying in future funding rounds. When is the application deadline? Please check our website for the latest application deadlines and any upcoming funding rounds.

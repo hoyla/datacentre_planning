@@ -1,0 +1,819 @@
+# url: https://www.coltdatacentres.net/en-GB/our-locations/data-centre-locations-europe/london-6-7-8
+
+# fetched: 2026-08-20
+
+# sha256(html): 857bdf855aeac8c7d646ca4d53c7db557f68bff282d4a058828d62f70572d76e
+
+## STRUCTURED
+
+[
+ {
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "address": [
+   {
+    "@type": "PostalAddress",
+    "addressCountry": "GB",
+    "addressLocality": "London",
+    "addressRegion": "England",
+    "postalCode": "EC2A 3EH",
+    "streetAddress": "Colt House, 20 Great Eastern Street"
+   }
+  ],
+  "contactPoint": [
+   {
+    "@type": "ContactPoint",
+    "contactType": "Sales",
+    "email": "dcsinfo@colt.net",
+    "telephone": "020 7390 3158"
+   }
+  ],
+  "description": "We connect hyperscale cloud providers to managed service providers, systems integrators, carriers and enterprises using end services, bringing a rich history of more than 20 years of experience with data centres, networks and IT services.",
+  "email": "dcsinfo@colt.net",
+  "logo": "https://www.coltdatacentres.net/en-GB/-/media/Images/logos/colt-logos/colt-logo-reversed.png?rev=1d8114b3da144a9bacfa9cd16640f597",
+  "name": "Colt Data Centre Services",
+  "sameAs": [
+   "https://uk.linkedin.com/company/coltdatacentreservices",
+   "https://twitter.com/coltdatacentres"
+  ],
+  "url": "https://www.coltdatacentres.net/en-GB"
+ },
+ {
+  "@context": "http://schema.org",
+  "@type": "WebPage",
+  "author": {
+   "@context": "http://schema.org",
+   "@type": "Organization",
+   "address": [
+    {
+     "@type": "PostalAddress",
+     "addressCountry": "GB",
+     "addressLocality": "London",
+     "addressRegion": "England",
+     "postalCode": "EC2A 3EH",
+     "streetAddress": "Colt House, 20 Great Eastern Street"
+    }
+   ],
+   "contactPoint": [
+    {
+     "@type": "ContactPoint",
+     "contactType": "Sales",
+     "email": "dcsinfo@colt.net",
+     "telephone": "020 7390 3158"
+    }
+   ],
+   "description": "We connect hyperscale cloud providers to managed service providers, systems integrators, carriers and enterprises using end services, bringing a rich history of more than 20 years of experience with data centres, networks and IT services.",
+   "email": "dcsinfo@colt.net",
+   "logo": "https://www.coltdatacentres.net/en-GB/-/media/Images/logos/colt-logos/colt-logo-reversed.png?rev=1d8114b3da144a9bacfa9cd16640f597",
+   "name": "Colt Data Centre Services",
+   "sameAs": [
+    "https://uk.linkedin.com/company/coltdatacentreservices",
+    "https://twitter.com/coltdatacentres"
+   ],
+   "url": "https://www.coltdatacentres.net/en-GB"
+  },
+  "breadcrumb": {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "item": "https://www.coltdatacentres.net",
+     "name": "Home",
+     "position": 1
+    },
+    {
+     "@type": "ListItem",
+     "item": "https://www.coltdatacentres.net/our-locations/data-centre-locations-europe/london-6-7-8",
+     "name": "london-6-7-8",
+     "position": 2
+    }
+   ]
+  },
+  "dateModified": "2025-09-29T07:39:57Z",
+  "datePublished": "2025-06-12T08:21:30Z",
+  "description": "Development is planned for three additional data centres on our London Hayes Campus with London 6, 7 and 8, taking the total number of data centres on the site to five.     \r\n",
+  "headline": "London 6, 7, 8 Data Centre | London Data Centre | Colt DCS",
+  "inLanguage": "en",
+  "mainEntityOfPage": {
+   "@id": "https://www.coltdatacentres.net/our-locations/data-centre-locations-europe/london-6-7-8",
+   "@type": "WebPage"
+  },
+  "name": "London 6, 7, 8 Data Centre | London Data Centre | Colt DCS",
+  "publisher": {
+   "@context": "http://schema.org",
+   "@type": "Organization",
+   "address": [
+    {
+     "@type": "PostalAddress",
+     "addressCountry": "GB",
+     "addressLocality": "London",
+     "addressRegion": "England",
+     "postalCode": "EC2A 3EH",
+     "streetAddress": "Colt House, 20 Great Eastern Street"
+    }
+   ],
+   "contactPoint": [
+    {
+     "@type": "ContactPoint",
+     "contactType": "Sales",
+     "email": "dcsinfo@colt.net",
+     "telephone": "020 7390 3158"
+    }
+   ],
+   "description": "We connect hyperscale cloud providers to managed service providers, systems integrators, carriers and enterprises using end services, bringing a rich history of more than 20 years of experience with data centres, networks and IT services.",
+   "email": "dcsinfo@colt.net",
+   "logo": "https://www.coltdatacentres.net/en-GB/-/media/Images/logos/colt-logos/colt-logo-reversed.png?rev=1d8114b3da144a9bacfa9cd16640f597",
+   "name": "Colt Data Centre Services",
+   "sameAs": [
+    "https://uk.linkedin.com/company/coltdatacentreservices",
+    "https://twitter.com/coltdatacentres"
+   ],
+   "url": "https://www.coltdatacentres.net/en-GB"
+  },
+  "url": "https://www.coltdatacentres.net/our-locations/data-centre-locations-europe/london-6-7-8"
+ }
+]
+
+## VISIBLE TEXT
+
+London 6, 7, 8 Data Centre | London Data Centre | Colt DCS 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ Skip to main 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ English
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ English
+ 
+ 
+ 
+ 
+ 
+ JP@3x Created with Sketch. 
+ 
+ Japanese
+ 
+ 
+ 
+ 
+ 
+ flags-color-1_germany Created with Sketch. 
+ 
+ German
+ 
+ 
+ 
+ 
+ 
+ flags-color-1_france Created with Sketch. 
+ 
+ French
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Data Centres 
+ 
+ 
+ Back 
+ 
+ 
+ 
+ 
+ Our Locations Europe 
+ See all 
+ 
+ 
+ 
+ Frankfurt City 
+ 
+ 
+ Frankfurt West 
+ 
+ 
+ London North 
+ 
+ 
+ London West 
+ 
+ 
+ Paris South West 
+ 
+ 
+ Rotterdam 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Our Locations Asia 
+ See All 
+ 
+ 
+ 
+ Mumbai 1 and 2 
+ Construction Timeline 
+ Health and Safety 
+ Security 
+ Sustainability 
+ 
+ 
+ Osaka Keihanna 
+ 
+ 
+ Tokyo Shiohama 
+ 
+ 
+ Tokyo Inzai 1 
+ 
+ 
+ Tokyo Inzai 2 
+ 
+ 
+ Tokyo Inzai 3 
+ 
+ 
+ Tokyo Inzai 4 
+ Construction Timeline 
+ Health and Safety 
+ Sustainability 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Developments 
+ 
+ 
+ Back 
+ 
+ 
+ 
+ 
+ Our Locations Europe 
+ See all 
+ 
+ 
+ 
+ Berlin 1 & 2 
+ 
+ 
+ Frankfurt 3 
+ Construction Timeline 
+ Health and Safety 
+ Security 
+ Sustainability 
+ 
+ 
+ Frankfurt 4 & 5 
+ 
+ 
+ London 4 
+ Construction Timeline 
+ Health and Safety 
+ Sustainability 
+ 
+ 
+ London 5 
+ 
+ 
+ London 6 7 8 
+ 
+ 
+ Paris 2 
+ 
+ 
+ Paris 3 
+ 
+ 
+ Paris 4 
+ 
+ 
+ Paris 5 & 6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Our Locations Asia 
+ See All 
+ 
+ 
+ 
+ Chennai 
+ 
+ 
+ Tokyo Inzai 5 
+ 
+ 
+ Tokyo Yoshikawa 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Solutions 
+ 
+ Back 
+ Hyperscale Solutions 
+ AI Solutions 
+ Colocation Solutions 
+ Connectivity Solutions 
+ Central Telemetry Platform 
+ Value Added Services 
+ Customer Experience 
+ Security 
+ 
+ 
+ 
+ Sustainability 
+ 
+ Back 
+ Sustainability at Colt DCS 
+ Decarbonising our Business 
+ Connecting People 
+ Safeguarding our Company 
+ Awards and Certifications 
+ Report Hub 
+ 
+ 
+ 
+ About 
+ *]:min-w-[230px] xl:[&>*]:max-w-[230px]">
+
+ Back 
+ About 
+ Operations 
+ Our Vision 
+ Health and Safety 
+ Ownership and Investment 
+ Diversity, Equity and Inclusion 
+ Management Team 
+ Careers 
+ Real Estate and Land Banking 
+ Work for Colt DCS 
+ 
+ 
+ 
+ Media Room 
+ 
+ Back 
+ Updates 
+ Press Releases 
+ Blogs 
+ E-guides 
+ Case Studies 
+ Events 
+ 
+ 
+ 
+ Contact 
+ 
+ Back 
+ Contact Us 
+ Get a Quote 
+ Book a Tour 
+ International Sales 
+ 
+ 
+ 
+
+ 
+ Search 
+ 
+ 
+ 
+ 
+ 
+
+ Get a quote -->
+ Get a quote 
+
+ Careers 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+
+ 
+ 
+ London 6, 7, 8 Data Centre 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+
+
+
+
+ 
+ 
+ 
+ 
+ 3
+ 
+ Data Centres 
+ 
+ 
+ 
+ 98MW
+ 
+ of IT Power 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ Three Planned Data Centres at Colt DCS’ London Hayes Campus 
+ 
+ Development is planned for three additional data centres on our London Hayes Campus with London 6, 7 and 8. This will take the total number of data centres on the site to five. 
+ The planning and development process is well underway, with construction expected to start on site in 2026 and the first phase of delivery in 2028. Delivery of buildings can be altered to meet customer requirements. 
+ Once complete, these data centres will add 98MW to the available IT power at our London Hayes Campus, taking the total capacity to 160MW. 
+ 
+ 
+ Contact Us 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ Development Highlights 
+ 
+ London 6 will deliver up to 9 x 1,000m2 data halls and 27MW of IT power. 
+ London 7 will have 15 x 1,000m2 data halls and up to 48MW of IT Power. 
+ London 8 will have 4 x 1,000m2 halls and 4 x 680m2 halls with up to 23MW of IT Power 
+ Average power density can be designed to be 3-4.5 KW/sqm. 
+ 1.35 Annualised design PUE. 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ Contact us 
+ 
+ If you would like to know more about Colt Data Centre Services, please get in touch with our team. We would be delighted to support your digital infrastructure requirements.
+ 
+ Contact us 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+ 
+ Interested in learning more about our data centres? 
+ 
+ We operate 15 state-of-the-art data centres, with an additional 12 sites under development across 9 cities in the UK, Europe and APAC region, offering 24/7 security and local language support. 
+ 
+ 
+ See our data centres 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ London 4 
+ 
+ Built to meet the city’s growing appetite for cloud technology and the recent surge in AI demand, this data centre is currently under construction.
+ 
+
+
+ Find out more 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ Mumbai 
+ 
+ Built to support India’s mass cloud migration, and in its second phase of development, our data centre will deliver 134MW across a site area of 62,490m2.
+ 
+
+
+ Find out more 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ Tokyo Inzai 4 
+ 
+ Developed to meet the city’s technological advancement, this site will deliver 20MW of IT power with scalable capacity to support IT workloads.
+ 
+
+
+ Find out more 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact Support 
+ +44 207 390 3900 
+ Email 
+ [email protected] 
+ 
+ 
+
+
+
+ 
+ 
+ Back to top
+ 
+ 
+ 
+ 
+ 
+ Quick Links 
+ 
+ 
+ 
+ 
+ Code of Business Conduct 
+ 
+ List of Companies 
+ 
+ Complaints 
+ 
+ Privacy and Cookie Policy 
+ 
+ Tax Policy 
+ 
+ Terms and Conditions 
+ 
+ Modern Slavery Statement 
+ 
+ 
+ 
+ 
+ Key Locations 
+ 
+ 
+ 
+ 
+ Mumbai 
+ 
+ London 4 
+ 
+ Osaka Keihanna 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Data Centres 
+ 
+ 
+ 
+ 
+ Europe 
+ 
+ Asia 
+ 
+ Map of data centre locations 
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+
+ 
+ 
+ ©
+ 
+2024 Colt Data Centre Services Holdings.

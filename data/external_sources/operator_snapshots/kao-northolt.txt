@@ -1,0 +1,844 @@
+# url: https://kaodata.com/locations/northolt/
+
+# fetched: 2026-08-20
+
+# sha256(html): 71eebbb24adc550c0e8a52feed369b4205cfe43f36a8ecb43f78eaa2c13573cf
+
+## STRUCTURED
+
+(none)
+
+## VISIBLE TEXT
+
+Northolt – Kao Data Website 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customer Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Northolt 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kao Data’s Northolt facility enjoys a prime West London location within the M25 perimeter with excellent transport connections to the city and London Heathrow. KLON-05 provides 4MW of Tier 3 equivalent, concurrently maintainable colocation, all operated at a low PUE of 1.25 and powered by 100% renewable energy ensuring a low-carbon computing footprint. With demand for high performance colocation increasing within West London, our Northolt facility is now fully occupied. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Key Facts 
+ 
+ 
+ Location 
+ 
+ 
+ 
+ 
+ 
+ Address 
+ 
+ Kao Data Northolt, Rowdell Road, Northolt, London, UB5 5QR 
+ 
+ Travel 
+ 
+ Road: M4 Junction 6 (5 mins) Tube: Central London (20 mins) Airport: Heathrow (15 mins) 
+ 
+ 
+ 
+ Data Centres 
+ 
+ KLON-05 (4MW Operational) 
+ 
+ Technical Specs 
+ 
+ Size: 4,000 m2 Technology Suites: 4 Availability: Fully Occupied 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ We chose to work with Kao Data because they’re founded on innovation, and that matches our aspirations. Legacy data centres can’t compare with the power infrastructure, cooling systems, security and sheer scalability at Kao Data. 
+ 
+ Mark Boost, CEO, ServerChoice 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Why Northolt? 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Enterprise Ready 
+ 
+ Concurrently maintainable, Tier 3 equivalent and ISO-certified Technology Suites providing 100% uptime. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ London Location 
+ 
+ Located within the M25 perimeter, our Northolt data centre enjoys superb access to the city and Heathrow. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Security 
+ 
+ Secure, low-risk data centre location with excellent security procedures and facilities 24/7/365. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ TCO Focused 
+ 
+ Ultra-efficient hosting environments offering an SLA-backed PUE of 1.25. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability 
+ 
+ Technology Suites powered by 100% renewable energy and supported by HVO fueled generators. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customer Support 
+ 
+ Data centre is managed and operated by Kao Data’s award-winning operations team. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Learn More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ More from Kao Data 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Downing Renewable Developments Partners with Kao Data to Build Green Data Solar Farm 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kao Data Promotes Fraser Clarke to Vice President of Operations 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Ori Selects Kao Data for its First UK AI Cloud Region 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Our services 
+ 
+ 
+ 
+ AI & HPC 
+ 
+ 
+ 
+ 
+ 
+ 
+ Colocation 
+ 
+ 
+ 
+ 
+ 
+ 
+ Cloud & Connectivity 
+ 
+ 
+ 
+ 
+ 
+ 
+ Latest updates 
+ 
+ 
+ 
+ News 
+ 
+ 
+ 
+ 
+ 
+ 
+ Blog 
+ 
+ 
+ 
+ 
+ 
+ 
+ Find out more 
+ 
+ 
+ 
+ About Kao Data 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability & ESG 
+ 
+ 
+ 
+ 
+ 
+ 
+ Standards & Certifications 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers 
+ 
+ 
+ 
+ 
+ 
+ 
+ Assets 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get a quote 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ © Kao Data 2020-2026. Harlow Operations Ltd. Company number 09227383. Registered office: Kao Data Campus, London Road, Harlow CM17 9NA. 
+ 
+ 
+ 
+ 
+ 
+ Privacy policy 
+ 
+ 
+ 
+ 
+ 
+ 
+ Update privacy settings 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get a quote 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customer Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Test Text 
+ 
+ test job title 
+ 
+ 
+ 
+ 
+ 
+ Click to see full book 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Details 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ If your application is successful, Harlow Council will transfer the grant by BACS. Bank details (account name, number and sort code) will need to be supplied with a summary of accounts. Funding conditions : If your application is successful, your project must be delivered by 31 December 2026. You will have to return any grant funds if the project is not delivered or the organisation receiving the funding stops operating. A contract agreement will need to be signed between your organisation and Harlow District Council before any funding is granted. Monitoring and Evaluation: Grant recipients will be required to provide an end of project report to establish whether the project has met its aims and objectives, as well as to assess the overall impact on participants. Funding for the project is provided on the basis that the Project Evaluation form is returned within the agreed project timescale (no later than 31 January 2027). Risks and Liabilities: In giving grants the ‘Harlow Council’ will require the supported project organisation or groups to accept all risks and liabilities associated with the activity being supported. This will be a condition of the grant. Copies of relevant documents may need to be provided if the application has been approved. Data protection statement – how we will use your information The Council is committed to handling your personal information in line with the data processing principles. The Data Protection Legislation and the General Data Protection Regulation 2016/679 (GDPR) sets the legal framework for how we collect, handle and process personal data and for your rights as a ‘data subject.’ General Data Protection Regulation: Personal data provided by you will be processed in accordance with this protocol. For more details, please see https://www.harlow.gov.uk/privacy-notice Thank you for taking the time to read these guidance notes. If you have any questions, please get in touch with health.wellbeing@harlow.gov.uk . 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ FAQs 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ Who can apply? The fund is open to not-for-profit community groups and grassroots initiatives based in Stockport. What types of projects are eligible? We encourage projects focused on environmental sustainability, community cohesion, and local economic development. How much funding is available? Grants range from £500 to £2,500 for pilot projects or to enhance existing initiatives. Is this the sole funding for this project? If not, please expand on the additional match funding that you currently have or are in the process of applying for. Are there any restrictions on grants under £500? Yes, please note that grants under £500 may be subject to different guidelines or restrictions, which will be communicated upon application. When will we know if our project was selected? Notifications will be sent by March 31, 2025. How can I apply for a grant? Applications can be submitted through our online portal, where you will find detailed guidelines and forms. What happens if my application is unsuccessful? If your application is not successful, we encourage you to seek feedback and consider reapplying in future funding rounds. When is the application deadline? Please check our website for the latest application deadlines and any upcoming funding rounds.

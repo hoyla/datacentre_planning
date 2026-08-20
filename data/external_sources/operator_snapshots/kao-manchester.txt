@@ -1,0 +1,846 @@
+# url: https://kaodata.com/locations/manchester/
+
+# fetched: 2026-08-20
+
+# sha256(html): 679ada0aaaa29724ffd484353840fec1945969e0035d649ad26b713cce3d3cfb
+
+## STRUCTURED
+
+(none)
+
+## VISIBLE TEXT
+
+Manchester – Kao Data Website 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customer Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Manchester 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Our new data centre, proposed for the Greater Manchester borough of Stockport, represents an investment of £350 million and when it becomes operational in Q3-2027, will be Northern England’s largest facility. Following our award-winning high-performance design, efficiency and sustainability ethos, the data centre will provide capacity for more than 4,000 racks, all powered by 100% renewable energy. Download our Why Manchester? whitepaper and find out why Kao Data chose the city for our most ambitious data centre project yet. 
+ 
+ 
+ 
+ Download Whitepaper 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Key Facts 
+ 
+ 
+ Location 
+ 
+ 
+ 
+ 
+ 
+ Address 
+ 
+ Kenwood Point, Kenwood Road, Reddish, Stockport, SK5 6PH 
+ 
+ Travel 
+ 
+ Road: M60/M67 interchange (10 mins) Train: Stockport is on the Manchester Piccadilly to London Euston line Airport: Manchester (20 mins) 
+ 
+ 
+ 
+ Data Centres 
+ 
+ KMAN-01 (33MW Under Development) 
+ 
+ Technical Specs 
+ 
+ Size: 40,000 m2 Technology Suites: TBC Technical Space: 11,000 m2 Estimated Racks: 4,000+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ We are thrilled that Kao Data have chosen to invest in Greater Manchester. Manchester is thriving and continues to be ambitious. 
+ 
+ Sam Booth, Chief Executive, pro-manchester 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Why Manchester? 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Scalability 
+ 
+ Northern England’s largest data centre, offering multi-megawatt Technology Suites designed to hyperscale standards 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ AI & HPC Provision 
+ 
+ Designed to NVIDIA DGX-Ready standards, KMAN-01 will offer capacity for GPU-accelerated AI and HPC. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ TCO Focused 
+ 
+ Our basis of design provides ultra-efficient, customisable hosting environments operating at a PUE of 1.2. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+ As the second most connected city in the UK, KMAN-01 will access a variety of high-density, low latency fibre routes. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability 
+ 
+ KMAN-01 will set a new benchmark for sustainability, utilising BREEAM ‘Excellent’ architecture and 100% renewable energy. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Media Specialism 
+ 
+ Located close to Manchester’s media, broadcasting, SFX and CGI clusters, KMAN-01 is the ideal home. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kao Data’s facilities will provide infrastructure to ensure the growth and scale-up around cloud services, internet applications and data storage – harnessing the full potential of emerging technologies. 
+ 
+ Katie Gallagher, Managing Director, Manchester Digital & Chair of UK Tech Cluster Group 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ More from Kao Data 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kao Data Promotes Fraser Clarke to Vice President of Operations 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kao Data announces funding for the first 20 community projects from its Kao SEED Fund Stockport initiative 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Downing Renewable Developments Partners with Kao Data to Build Green Data Solar Farm 
+ 
+ 
+ 
+ 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Our services 
+ 
+ 
+ 
+ AI & HPC 
+ 
+ 
+ 
+ 
+ 
+ 
+ Colocation 
+ 
+ 
+ 
+ 
+ 
+ 
+ Cloud & Connectivity 
+ 
+ 
+ 
+ 
+ 
+ 
+ Latest updates 
+ 
+ 
+ 
+ News 
+ 
+ 
+ 
+ 
+ 
+ 
+ Blog 
+ 
+ 
+ 
+ 
+ 
+ 
+ Find out more 
+ 
+ 
+ 
+ About Kao Data 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability & ESG 
+ 
+ 
+ 
+ 
+ 
+ 
+ Standards & Certifications 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers 
+ 
+ 
+ 
+ 
+ 
+ 
+ Assets 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get a quote 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ © Kao Data 2020-2026. Harlow Operations Ltd. Company number 09227383. Registered office: Kao Data Campus, London Road, Harlow CM17 9NA. 
+ 
+ 
+ 
+ 
+ 
+ Privacy policy 
+ 
+ 
+ 
+ 
+ 
+ 
+ Update privacy settings 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get a quote 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ AI & HPC 
+ Colocation 
+ Cloud & Connectivity 
+ 
+ 
+ Locations 
+ 
+ Harlow 
+ Slough 
+ Northolt 
+ Manchester 
+ 
+ 
+ About 
+ 
+ Our people 
+ Investors 
+ Partners 
+ Sustainability & ESG 
+ Standards & Certifications 
+ Careers 
+ 
+ 
+ Discover 
+ 
+ News 
+ Blog 
+ Assets 
+ Video 
+ 
+ 
+ Initiatives 
+ 
+ Critical Careers 
+ Kao SEED Fund 
+ Kao Academy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customer Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Test Text 
+ 
+ test job title 
+ 
+ 
+ 
+ 
+ 
+ Click to see full book 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Details 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ If your application is successful, Harlow Council will transfer the grant by BACS. Bank details (account name, number and sort code) will need to be supplied with a summary of accounts. Funding conditions : If your application is successful, your project must be delivered by 31 December 2026. You will have to return any grant funds if the project is not delivered or the organisation receiving the funding stops operating. A contract agreement will need to be signed between your organisation and Harlow District Council before any funding is granted. Monitoring and Evaluation: Grant recipients will be required to provide an end of project report to establish whether the project has met its aims and objectives, as well as to assess the overall impact on participants. Funding for the project is provided on the basis that the Project Evaluation form is returned within the agreed project timescale (no later than 31 January 2027). Risks and Liabilities: In giving grants the ‘Harlow Council’ will require the supported project organisation or groups to accept all risks and liabilities associated with the activity being supported. This will be a condition of the grant. Copies of relevant documents may need to be provided if the application has been approved. Data protection statement – how we will use your information The Council is committed to handling your personal information in line with the data processing principles. The Data Protection Legislation and the General Data Protection Regulation 2016/679 (GDPR) sets the legal framework for how we collect, handle and process personal data and for your rights as a ‘data subject.’ General Data Protection Regulation: Personal data provided by you will be processed in accordance with this protocol. For more details, please see https://www.harlow.gov.uk/privacy-notice Thank you for taking the time to read these guidance notes. If you have any questions, please get in touch with health.wellbeing@harlow.gov.uk . 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ FAQs 
+ 
+ 
+ 
+ X 
+ 
+ 
+ 
+ 
+ 
+ 
+ Who can apply? The fund is open to not-for-profit community groups and grassroots initiatives based in Stockport. What types of projects are eligible? We encourage projects focused on environmental sustainability, community cohesion, and local economic development. How much funding is available? Grants range from £500 to £2,500 for pilot projects or to enhance existing initiatives. Is this the sole funding for this project? If not, please expand on the additional match funding that you currently have or are in the process of applying for. Are there any restrictions on grants under £500? Yes, please note that grants under £500 may be subject to different guidelines or restrictions, which will be communicated upon application. When will we know if our project was selected? Notifications will be sent by March 31, 2025. How can I apply for a grant? Applications can be submitted through our online portal, where you will find detailed guidelines and forms. What happens if my application is unsuccessful? If your application is not successful, we encourage you to seek feedback and consider reapplying in future funding rounds. When is the application deadline? Please check our website for the latest application deadlines and any upcoming funding rounds.

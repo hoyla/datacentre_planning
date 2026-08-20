@@ -159,9 +159,23 @@ def test_operator_terms_are_preserved_not_translated():
     assert {"Total Capacity", "IT load"} <= terms
 
 
-def test_operator_claims_are_all_announced_capacity():
+def test_operator_quantities_all_carry_a_caveat():
+    """Operators publish IT figures and grid figures, and the two are not
+    the same quantity — CyrusOne states 90 MW of IT capacity and 160 MVA
+    of supply for one site. Whatever type a claim takes, the panel must
+    have a line explaining it."""
     for c in cc.load_operator_claims():
-        assert c.quantity_type == "announced_capacity", c.claim_name
+        assert c.quantity_type in cc.QUANTITY_CAVEATS, c.claim_name
+
+
+def test_mva_never_becomes_megawatts():
+    """Converting MVA to MW needs a power factor none of these operators
+    publishes. The apparent-power figures must reach the store with no
+    derived MW at all."""
+    mva = [c for c in cc.load_operator_claims() if c.unit == "MVA"]
+    assert mva, "expected grid-supply claims in MVA"
+    for c in mva:
+        assert cc.mw_of(c.value, c.unit) is None, c.claim_name
 
 
 def test_a_changed_page_fails_rather_than_drifts():

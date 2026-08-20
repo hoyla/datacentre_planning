@@ -1,0 +1,709 @@
+# url: https://puredc.com/our-london-park-royal-site
+
+# fetched: 2026-08-20
+
+# sha256(html): 5c0a1da900eae3cc19188c5e6019642853a1163890106da959fc8fafe80e840f
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://puredc.com/#/schema/WebSite",
+   "@type": "WebSite",
+   "inLanguage": "en-GB",
+   "name": "Pure DC",
+   "potentialAction": {
+    "@type": "SearchAction",
+    "query-input": "required name=search_term_string",
+    "target": {
+     "@type": "EntryPoint",
+     "urlTemplate": "https://puredc.com/search/{search_term_string}"
+    }
+   },
+   "publisher": {
+    "@id": "https://puredc.com/#/schema/Organization",
+    "@type": "Organization",
+    "name": "Pure DC",
+    "url": "https://puredc.com/"
+   },
+   "url": "https://puredc.com/"
+  },
+  {
+   "@id": "https://puredc.com/our-london-park-royal-site",
+   "@type": "WebPage",
+   "breadcrumb": {
+    "@id": "https://puredc.com/#/schema/BreadcrumbList",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "item": "https://puredc.com/",
+      "name": "Pure DC",
+      "position": 1
+     },
+     {
+      "@type": "ListItem",
+      "name": "London (Park Royal)",
+      "position": 2
+     }
+    ]
+   },
+   "description": "Explore PureDC\u2019s 56MW Park Royal data centre\u2014powered by 70MVA renewable energy, featuring a PUE of 1.24, and designed for AI-ready workloads.",
+   "inLanguage": "en-GB",
+   "isPartOf": {
+    "@id": "https://puredc.com/#/schema/WebSite"
+   },
+   "name": "London (Park Royal) - Pure DC",
+   "potentialAction": {
+    "@type": "ReadAction",
+    "target": "https://puredc.com/our-london-park-royal-site"
+   },
+   "url": "https://puredc.com/our-london-park-royal-site"
+  }
+ ]
+}
+
+## VISIBLE TEXT
+
+London (Park Royal) - Pure DC 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About us 
+ 
+ 
+ 
+ 
+ About us 
+ A leading developer and operator of critical digital infrastructure 
+ Find out more 
+ 
+ 
+ 
+ Our leadership 
+ Our approach to sustainability 
+ Corporate policies 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ What we do 
+ 
+ 
+ 
+ 
+ What we do 
+ PureDC delivers end-to-end data centre consultancy, from strategy and design to operations and optimisation. We help clients create high-performance, resilient, and future-ready infrastructure. 
+ Find out more 
+ 
+ 
+ 
+ Abu Dhabi (Yas Island) 
+ Amsterdam (Westpoort) 
+ Dublin (Ballycoolin) 
+ Finland (Seinäjoki) 
+ Jakarta (Bekasi) 
+ London (Brent Cross) 
+ London (Park Royal) 
+ Madrid (Meco) 
+ Saudi Arabia (Riyadh) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Newsroom 
+
+ Careers 
+
+ Contact us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About us Our leadership Our approach to sustainability Corporate policies What we do Abu Dhabi (Yas Island) Amsterdam (Westpoort) Dublin (Ballycoolin) Finland (Seinäjoki) Jakarta (Bekasi) London (Brent Cross) London (Park Royal) Madrid (Meco) Saudi Arabia (Riyadh) Newsroom Careers Contact us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ London Park Royal (LON02) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ A joint venture in North-West London to deliver over 56MW 
+ Park Royal is a joint venture between Pure DC and SEGRO, the UK’s largest FTSE real estate company, to deliver a next-generation, liquid-cooled data centre on a 10-acre super-prime site in West London. The project secures 70MVA of dedicated power via a new substation, sourced primarily from renewables, ensuring reliable and low-carbon operations. 
+ The campus will be powered via a dedicated substation capable of supporting a 72 MW data centre. 
+ Designed for long-term resilience and AI-ready workloads, the 24,000 m² facility will rise up to 30 m and incorporate a modular, sustainable design. Green drainage systems will mitigate flood risk and support local wildlife, while rainwater harvesting will be reused for planting and green spaces. Construction will use modern methods and low-carbon materials, including recycled components from the existing warehouse. 
+ Construction is scheduled to begin in 2026, with operations targeted for 2029. The project is set to reinforce Park Royal’s role as one of London’s most important industrial and digital hubs. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ At a glance 
+ 
+ 
+ 
+ Land area: 9.64 acres 
+ 
+ 
+ 
+ DC buildings: 1 
+ 
+ 
+ 
+ Building size: 22,365 SQM 
+ 
+ 
+ 
+ Status: Permitting underway 
+ 
+ 
+ 
+ WUE: Water usage effectiveness – closed loop system 
+ 
+ 
+ 
+ PUE: 1.24 average annualised power usage effectiveness. For 90% of the year the data centre will be cooled naturally which contributes to its high energy efficiency. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ "What makes Pure DC unique is that we can offer hyperscale customers something that almost never exists in the London market — the ability to launch a fully redundant three-site availability zone within the same metropolitan area. For cloud providers deploying the next generation of AI inferencing infrastructure, that level of immediate scale and resiliency is incredibly valuable.” 
+ Gary Wojtaszek Executive Chairman & Interim CEO of Pure DC 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 100% 
+ Backup generators fuelled by 100% Hydrotreated Vegetable Oil (HVO), reducing lifecycle carbon emissions. 
+ 
+ 
+ 
+ 
+ 70MVA 
+ The project secures 70MVA of dedicated power via a new substation, sourced primarily from renewables, ensuring reliable and low-carbon operations. 
+ 
+ 
+ 
+ 
+ 30% 
+ Over 30% biodiversity net gain, with extensive tree planting and new green spaces. 
+ 
+ 
+ 
+ 
+ £109m 
+ Expected to add £109 million to the local economy per year during the construction phase of the project 
+ 
+ 
+ 
+ 
+ £52m 
+ Expected to add up to £52 million per year to the local economy once the data centre is operational 
+ 
+ 
+ 
+ 
+ £104m 
+ The campus will generate £104 million per year in local wages during the construction period, and a further £26.6 million per year once the data centre is operational 
+ 
+ 
+ 
+ 
+ £2.3m 
+ Produce £2.3 million per year in business rates, helping fund local public services 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Community 
+ 
+ We are investing more than £2 million in community programmes to create lasting opportunities for local people. In partnership with schools, colleges, charities and the Old Oak and Park Royal Development Corporation (OPDC), we will deliver training and apprenticeships that open pathways into careers in construction, technology and the data centre sector. 
+ We are also committed to supporting local businesses by opening up opportunities across our supply chain. Waste heat from the facility is designed to be reused by the local district heating network, providing low-carbon heating for new homes, hospitals and other community buildings. 
+ The design creates green spaces for staff to relax and will achieve over 30% increase in biodiversity. Most existing trees will be retained, new trees will be planted and new areas of habitat created. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 200 
+ IT training and equipment donations for up to for 200 local residents, to address digital inequality 
+ 
+ 
+ 
+ 
+ 1000 
+ Inspiring 1000 students to consider science and tech careers through dedicated workshops. 
+ 
+ 
+ 
+ 
+ 150 
+ Supporting 150 local businesses to digitise their operations, to improve their competitiveness and productivity. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Partners 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Related content 
+ 
+ 
+ 
+ Careers Company News Diversity & Inclusion News Pure DC 07/04/2026 Pure DC shows support for those who serve by signing Armed Forces Covenant Learn more Company News News Press releases Pure DC 25/03/2026 Pure DC and SEGRO joint venture unlocks major AI infrastructure development in London Learn more Company News News 25/03/2025 Segro and Pure Data Centres Group announce joint venture to develop a c.£1bn fully fitted data centre Learn more 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About us What we do Newsroom Careers Contact us Corporate policies 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About us Decarbonising digital infrastructure Advancing climate adaptation and resilience Producing high integrity carbon dioxide removals Newsroom Contact us 
+ 
+ 
+ 
+ 
+ 
+ © Copyright Pure DC Group Limited 2025. All Rights Reserved. Privacy Policy Terms 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ Manage Consent 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ To provide the best experiences and protect our site from spam and abuse, we use technologies like cookies to store and/or access device information. We also use Google reCAPTCHA, which may collect technical and behavioural data and share it with Google for security purposes. Consenting to these technologies will allow us to process data such as browsing behavior or unique IDs on this site. Not consenting or withdrawing consent may adversely affect certain features and functions. 
+ 
+ 
+ 
+ 
+ Functional 
+ 
+ 
+ 
+ Functional 
+ 
+ Always active 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is strictly necessary for the legitimate purpose of enabling the use of a specific service explicitly requested by the subscriber or user, or for the sole purpose of carrying out the transmission of a communication over an electronic communications network. 
+ 
+ 
+
+ 
+ 
+ Preferences 
+ 
+ 
+ Preferences 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is necessary for the legitimate purpose of storing preferences that are not requested by the subscriber or user. 
+ 
+ 
+
+ 
+ 
+ Statistics 
+ 
+ 
+ Statistics 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access that is used exclusively for statistical purposes. 
+ The technical storage or access that is used exclusively for anonymous statistical purposes. Without a subpoena, voluntary compliance on the part of your Internet Service Provider, or additional records from a third party, information stored or retrieved for this purpose alone cannot usually be used to identify you. 
+ 
+ 
+
+ 
+ 
+ Marketing 
+ 
+ 
+ Marketing 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is required to create user profiles to send advertising, or to track the user on a website or across several websites for similar marketing purposes. 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Manage options 
+ Manage services 
+ Manage {vendor_count} vendors 
+ Read more about these purposes 
+ 
+ 
+
+ 
+
+ 
+ Accept 
+ Deny 
+ View preferences 
+ Save preferences 
+ View preferences 
+ 
+
+
+ 
+ 
+ {title} 
+ {title} 
+ {title} 
+ 
+ 
+ 
+ 
+ Manage consent

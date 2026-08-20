@@ -1,0 +1,382 @@
+# url: https://virtusdatacentres.com/locations/uk/london/enfield-campus
+
+# fetched: 2026-08-20
+
+# sha256(html): 888a21e0b8e8faa0c8866b172b64bdec272ca98122ec1f751c831bdeda01ca95
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/Organization/base",
+   "@type": "Organization",
+   "image": {
+    "@id": "https://virtusdatacentres.com/#/schema/ImageObject/logo"
+   },
+   "logo": {
+    "@id": "https://virtusdatacentres.com/#/schema/ImageObject/logo",
+    "@type": "ImageObject",
+    "contentUrl": "images/logos/virtus-data-centres.svg",
+    "url": "images/logos/virtus-data-centres.svg"
+   },
+   "name": "VIRTUS Data Centres",
+   "url": "https://virtusdatacentres.com/"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/WebSite/base",
+   "@type": "WebSite",
+   "name": "VIRTUS",
+   "potentialAction": {
+    "@type": "SearchAction",
+    "query-input": "required name=search_term_string",
+    "target": "https://virtusdatacentres.com/component/finder/search?q={search_term_string}&amp;Itemid=101"
+   },
+   "publisher": {
+    "@id": "https://virtusdatacentres.com/#/schema/Organization/base"
+   },
+   "url": "https://virtusdatacentres.com/"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/WebPage/base",
+   "@type": "WebPage",
+   "about": {
+    "@id": "https://virtusdatacentres.com/#/schema/Organization/base"
+   },
+   "description": "VIRTUS' Enfield Campus in North London offers scalable, secure colocation across one of the UK\u2019s most established and connected data centre campuses.\r\n\r\n",
+   "inLanguage": "en-GB",
+   "isPartOf": {
+    "@id": "https://virtusdatacentres.com/#/schema/WebSite/base"
+   },
+   "name": "LONDON1 Enfield Data Centre Campus - VIRTUS ",
+   "url": "https://virtusdatacentres.com/locations/uk/london/enfield-campus"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/com_content/article/191",
+   "@type": "Article",
+   "headline": "Enfield Campus | LONDON1",
+   "inLanguage": "en-GB",
+   "isPartOf": {
+    "@id": "https://virtusdatacentres.com/#/schema/WebPage/base"
+   },
+   "name": "Enfield Campus | LONDON1",
+   "thumbnailUrl": "images/locations/LONDON1.jpg"
+  }
+ ]
+}
+
+{
+ "@context": "http://schema.org",
+ "@type": "Organization",
+ "name": "VIRTUS Data Centres",
+ "sameAs": [
+  "http://www.twitter.com/VIRTUSDCs",
+  "https://www.youtube.com/channel/UCVDaezuqxPXg4VQQH0Cyqfg",
+  "https://www.linkedin.com/company/virtus-data-centres/"
+ ],
+ "url": "https://virtusdatacentres.com/"
+}
+
+## VISIBLE TEXT
+
+LONDON1 Enfield Data Centre Campus - VIRTUS 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Locations 
+ 
+ 
+ UK 
+ 
+ 
+ London Data Centres | Stockley Park Campus London Data Centres | Slough Campus London Data Centres | Saunderton Campus Hayes Campus Enfield Campus Germany 
+ 
+ 
+ Berlin Data Centres | Marienpark Campus Berlin Data Centres | Wustermark Campus Italy Solutions 
+ 
+ 
+ AI Ready Data Centres Build to Suit Data Centres Colocation Data Centres 
+ 
+ 
+ Data Centre Rack Solutions Data Centre Cage Colocation Data Centre Suite High Performance Computing (HPC) Services 
+ 
+ 
+ Cloud Connectivity Data Centre Security ServiceNow Market Place 
+ 
+ 
+ Market Place: Cloud Connect Market Place: Bespoke Solutions Market Place: Connectivity Platform Market Place: Services Market Place: AWS Market Place: C4L Market Place: Coreix Market Place: Daisy Group Market Place: ERA Market Place: Exponential-e Market Place: Inatech Market Place: Microsoft Azure Market Place: ServerSpace Market Place: Accesspoint Market Place: The Legal DC Market Place: Unitas Global Market Place: EX Networks Market Place: VMhosts Market Place: AssureStor Marketplace: Global Cloud Xchange Market Place: CommScope Market Place: L3C Market Place: Romonet Market Place: euNetworks Market Place: LINX Market Place: Pacnet Market Place: SSE Enterprise Telecoms Market Place: Virgin Media Business Market Place: Zayo Market Place: TeliaSonera Market Place: Viatel Market Place: Belcom247 Market Place: Technimove Market Place: Venus Networks Market Place: OryxAlign Market Place: Secura Market Place: PacketFabric Media 
+ 
+ 
+ Video Gallery 
+ 
+ 
+ General Videos AI VIRTUS Blog News & Press Releases Downloads About Us 
+ 
+ 
+ Global Data Centre Platform Vision & Values People Board of Directors Investors Partners Careers Why VIRTUS 
+ 
+ 
+ Agile Commercials 
+ 
+ 
+ Examples of VIRTUS Flex Going Green? Operational Excellence Quality Credentials Sustainability 
+
+ 
+ 
+ 
+ 
+ 
+ +44 (0)20 7499 1300 
+ Contact Us 
+ LOGIN --> 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Enfield Campus | LONDON1 LONDON1 is designed to meet the growing demand for scalable, reliable, on-demand colocation services, with exceptional access to both London city and the Docklands. 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Key features More Data Centres VIRTUS LONDON1 is designed to deliver high quality customer solutions, comprised of over 2,900m2 net technical data centre space, and delivering 4.2MW of IT load. LONDON1 is capable of being subdivided allowing clients to have anything from a rack in a colocation space, to their own suite or data hall with dedicated power and cooling. 
+ The site is highly secure - VIRTUS operates a 'defence-in-depth' approach to security. With a dedicated on-site security team 24/7, protecting your IT infrastructure is our highest priority. 
+ The data centre also incorporates VIRTUS' real-time monitoring dashboards, and self-service tools for customers to use either remotely, or in one of our dedicated customer offices, kitchen or touchdown areas that are designed into the facility. 
+ The facility is carrier neutral and provides access to a wide choice of Tier I and Tier II carriers, and on-ramp access to all major cloud and connectivity platforms. LONDON5 
+ 
+ 24MW 
+ 10,000 NTM 
+ LONDON7 
+ 
+ 28MW 
+ 13,000 NTM 
+ LONDON6 
+ 
+ 16MW 
+ 7,000 NTM 
+ LONDON8 
+ 
+ 18MW 
+ 7,000 NTM 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Back 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Total Flexibility 
+ Eco-efficient, optimised design for fully flexible, bespoke customer solutions 
+ Ultra-high power density solutions available for high performance computing requirements 
+ On-ramp access to all major cloud and connectivity providers 
+ Maximum Efficency 
+ Powered by 100% renewable resources 
+ Designed to BREEAM 'Good' standard 
+ Optimised Locations 
+ 11 miles from central London and accessible by a fast rail link station located less than one mile away 
+ Easy access to M25/A10 
+ Data Centre Locations 
+ > Stockley Park Campus 
+ > Slough Campus 
+ > Hayes 
+ > Enfield 
+ Downloads VIRTUS LONDON1 Specifications Sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ You May Also Be Interested In 
+ 
+ Services 
+ 
+ VIRTUS offers a wide range of flexible colocation solutions to meet your requirements 
+ Read More 
+ 
+ 
+ Why VIRTUS 
+ 
+ VIRTUS designs, builds and operates the best data centres in the world, so that our customers don't have to 
+ Read More 
+ 
+ 
+ Locations 
+ 
+ Our focus is on site diversity with multiple interconnected campuses, all designed and built to an uptime Tier III standard 
+ Read More 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ To discuss your requirements or find out more about our locations and services 
+ 
+ +44 (0)20 7499 1300 
+ 
+ Contact Us 
+ 
+ 
+ 
+ 
+ 
+ Home 
+ 
+ > 
+ 
+ 
+ 
+ Locations 
+ 
+ > 
+ 
+ 
+ 
+ UK 
+ 
+ > 
+ 
+ 
+ 
+ Enfield Campus 
+ 
+ 
+ 
+ 
+ 
+ Follow Us 
+ 
+ Twitter 
+ LinkedIn 
+ YouTube 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Head Office 
+ 20 Balderton Street London W1K 6TL 
+ 
+ +44 (0)20 7499 1300 
+ 
+ 
+ This email address is being protected from spambots. You need JavaScript enabled to view it. 
+ 
+ 
+ 
+ Our Locations UK Europe Services Colocation High Performance Computing Cloud & Connectivity ServiceNow Market Place Why Virtus Agile Commercials Operational Excellence Quality Credentials Sustainability Careers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COPYRIGHT © 2002-2024 VIRTUS. All rights reserved 
+ Privacy Policy Modern Slavery Statement Right to be Forgotten UK Tax Strategy Statement Stakeholder Code Of Conduct Terms and Conditions Language Definitions Impressum - Germany 
+ 
+ 
+ View desktop site 
+ 
+ 
+ Menu

@@ -1,0 +1,651 @@
+# url: https://puredc.com/london-brent-cross
+
+# fetched: 2026-08-20
+
+# sha256(html): e63bb4b4efc479582e0e71fb4e65ffe80542b70264acfd54eb2ec321a8e5b150
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://puredc.com/#/schema/WebSite",
+   "@type": "WebSite",
+   "inLanguage": "en-GB",
+   "name": "Pure DC",
+   "potentialAction": {
+    "@type": "SearchAction",
+    "query-input": "required name=search_term_string",
+    "target": {
+     "@type": "EntryPoint",
+     "urlTemplate": "https://puredc.com/search/{search_term_string}"
+    }
+   },
+   "publisher": {
+    "@id": "https://puredc.com/#/schema/Organization",
+    "@type": "Organization",
+    "name": "Pure DC",
+    "url": "https://puredc.com/"
+   },
+   "url": "https://puredc.com/"
+  },
+  {
+   "@id": "https://puredc.com/london-brent-cross",
+   "@type": "WebPage",
+   "breadcrumb": {
+    "@id": "https://puredc.com/#/schema/BreadcrumbList",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "item": "https://puredc.com/",
+      "name": "Pure DC",
+      "position": 1
+     },
+     {
+      "@type": "ListItem",
+      "name": "London Brent Cross",
+      "position": 2
+     }
+    ]
+   },
+   "description": "Explore PureDC\u2019s 90MW Brent Cross data centre in London\u2014featuring a 750,000-plant living wall, HVO-powered backup, and significant local economic impact.",
+   "inLanguage": "en-GB",
+   "isPartOf": {
+    "@id": "https://puredc.com/#/schema/WebSite"
+   },
+   "name": "London Brent Cross - Pure DC",
+   "potentialAction": {
+    "@type": "ReadAction",
+    "target": "https://puredc.com/london-brent-cross"
+   },
+   "url": "https://puredc.com/london-brent-cross"
+  }
+ ]
+}
+
+## VISIBLE TEXT
+
+London Brent Cross - Pure DC 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About us 
+ 
+ 
+ 
+ 
+ About us 
+ A leading developer and operator of critical digital infrastructure 
+ Find out more 
+ 
+ 
+ 
+ Our leadership 
+ Our approach to sustainability 
+ Corporate policies 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ What we do 
+ 
+ 
+ 
+ 
+ What we do 
+ PureDC delivers end-to-end data centre consultancy, from strategy and design to operations and optimisation. We help clients create high-performance, resilient, and future-ready infrastructure. 
+ Find out more 
+ 
+ 
+ 
+ Abu Dhabi (Yas Island) 
+ Amsterdam (Westpoort) 
+ Dublin (Ballycoolin) 
+ Finland (Seinäjoki) 
+ Jakarta (Bekasi) 
+ London (Brent Cross) 
+ London (Park Royal) 
+ Madrid (Meco) 
+ Saudi Arabia (Riyadh) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Newsroom 
+
+ Careers 
+
+ Contact us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About us Our leadership Our approach to sustainability Corporate policies What we do Abu Dhabi (Yas Island) Amsterdam (Westpoort) Dublin (Ballycoolin) Finland (Seinäjoki) Jakarta (Bekasi) London (Brent Cross) London (Park Royal) Madrid (Meco) Saudi Arabia (Riyadh) Newsroom Careers Contact us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ London Brent Cross (LON01) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ A 90MW data centre campus in the heart of London. 
+ Our Brent Cross campus was acquired in 2020. The project has full planning permission and power secured for 90MW. Building 1 (20MW) is fully operational with four data halls, and Building 2 (70MW) is currently under construction. 
+ The site has planning permission for what will be one of the world’s largest living walls. Over 750,000 plants will wrap around Building 2 to reduce noise and air pollution, as well as encourage biodiversity of insects and birds next to Brent Reservoir’s Site of Special Scientific Interest (SSSI). 
+ LON01 has achieved its Platinum zero-waste-to-landfill certificate and uses hydrotreated vegetable oil (HVO) in place of diesel for our backup generators. Over the initial period of construction we expect to invest over £1 billion, boosting the local economy and employment. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ At a glance 
+ 
+ 
+ 
+ Land area: 8.92 acres 
+ 
+ 
+ 
+ DC buildings: 2 
+ 
+ 
+ 
+ Building size: 86,527 SQM 
+ 
+ 
+ 
+ Status: Building 1: Live, Building 2: Fully permitted and under construction 
+ 
+ 
+ 
+ WUE: Water usage effectiveness – closed loop system 
+ 
+ 
+ 
+ PUE: 1.29 average annualised power usage effectiveness 
+ 
+ 
+ 
+ Sustainability: We have replaced diesel for Hydrotreated Vegetable Oil (HVO) fuel for our backup generators, removing our reliance on fossil fuel. 
+ 
+ 
+ 
+ Local economy: We expect to add £215 million to Brent’s GDP during the construction phase 
+ 
+ 
+ 
+ Jobs: We’ve created over 1,500 jobs to date, and a total of 3,380 job-years of employment , which include local apprenticeships 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ "What makes Pure DC unique is that we can offer hyperscale customers something that almost never exists in the London market — the ability to launch a fully redundant three-site availability zone within the same metropolitan area. For cloud providers deploying the next generation of AI inferencing infrastructure, that level of immediate scale and resiliency is incredibly valuable.” 
+ Gary Wojtaszek Executive Chairman & Interim CEO of Pure DC 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ +£1 bn 
+ 
+ Total projected investment 
+ 
+ 
+ 
+ 750K 
+ 
+ We are creating one of the world’s largest living walls, wrapping Building 2 in 750,000 plants to encourage biodiversity of insects and birds 
+ 
+ 
+ 
+ £83m 
+ 
+ We expect to add £83 million annually to Brent’s GDP once operational 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Community 
+ 
+ Along with A Healthier Earth and Viritopia, we’ve donated a living wall to St Robert Southwell RC, a local Primary School in Brent, to educate pupils about nature and climate action. Three Tiny Forests have been planted in partnership with Earthwatch Europe and Barnet Council, and we’re supporting local school garden/allotment projects through Seeds for Growth. Around Brent and North West London we've also conducted a series of school visits and jobs fairs to promote careers in STEM and the data centre sector.   
+ Tiny Forests We’re supporting local school garden/allotment projects Brent primary school Educating pupils about nature and climate action Living Wall We’ve donated a living wall to St Robert Southwell RC 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Partners 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Related content 
+ 
+ 
+ 
+ Careers Company News Diversity & Inclusion News Pure DC 07/04/2026 Pure DC shows support for those who serve by signing Armed Forces Covenant Learn more Company News News 16/01/2025 Pure Data Centres granted planning permission in London for world’s largest living wall Learn more Company News News 26/11/2024 Pure Data Centres completes substructure at London expansion Learn more Biochar Company News Sustainability News 28/03/2025 Hundreds of volunteers plant 1800 trees in one day – creating three new ‘tiny forests’ in Finchley Learn more Sustainability News 21/07/2025 Replacing diesel for good: how Pure DC made the switch to hydrotreated vegetable oil work at scale Learn more 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About us What we do Newsroom Careers Contact us Corporate policies 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About us Decarbonising digital infrastructure Advancing climate adaptation and resilience Producing high integrity carbon dioxide removals Newsroom Contact us 
+ 
+ 
+ 
+ 
+ 
+ © Copyright Pure DC Group Limited 2025. All Rights Reserved. Privacy Policy Terms 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ Manage Consent 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ To provide the best experiences and protect our site from spam and abuse, we use technologies like cookies to store and/or access device information. We also use Google reCAPTCHA, which may collect technical and behavioural data and share it with Google for security purposes. Consenting to these technologies will allow us to process data such as browsing behavior or unique IDs on this site. Not consenting or withdrawing consent may adversely affect certain features and functions. 
+ 
+ 
+ 
+ 
+ Functional 
+ 
+ 
+ 
+ Functional 
+ 
+ Always active 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is strictly necessary for the legitimate purpose of enabling the use of a specific service explicitly requested by the subscriber or user, or for the sole purpose of carrying out the transmission of a communication over an electronic communications network. 
+ 
+ 
+
+ 
+ 
+ Preferences 
+ 
+ 
+ Preferences 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is necessary for the legitimate purpose of storing preferences that are not requested by the subscriber or user. 
+ 
+ 
+
+ 
+ 
+ Statistics 
+ 
+ 
+ Statistics 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access that is used exclusively for statistical purposes. 
+ The technical storage or access that is used exclusively for anonymous statistical purposes. Without a subpoena, voluntary compliance on the part of your Internet Service Provider, or additional records from a third party, information stored or retrieved for this purpose alone cannot usually be used to identify you. 
+ 
+ 
+
+ 
+ 
+ Marketing 
+ 
+ 
+ Marketing 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is required to create user profiles to send advertising, or to track the user on a website or across several websites for similar marketing purposes. 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Manage options 
+ Manage services 
+ Manage {vendor_count} vendors 
+ Read more about these purposes 
+ 
+ 
+
+ 
+
+ 
+ Accept 
+ Deny 
+ View preferences 
+ Save preferences 
+ View preferences 
+ 
+
+
+ 
+ 
+ {title} 
+ {title} 
+ {title} 
+ 
+ 
+ 
+ 
+ Manage consent

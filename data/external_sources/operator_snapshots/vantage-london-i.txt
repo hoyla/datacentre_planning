@@ -1,0 +1,999 @@
+# url: https://vantage-dc.com/data-center-locations/emea/london-i-united-kingdom/
+
+# fetched: 2026-08-20
+
+# sha256(html): 510b7f450776a2855855f48466b1fcdb1d18c76f628c49ae1bfba138a440f337
+
+## STRUCTURED
+
+(none)
+
+## VISIBLE TEXT
+
+London I, United Kingdom Data Center Campus - Vantage Data Centers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+ 
+
+
+ 
+ 
+
+
+ 
+ Skip to content 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Close 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services 
+ 
+ Rack Ready Whitespace Build-to-Suit Other Services 
+ Features 
+ 
+ Power Cooling Security and Compliance Connectivity Room Design Amenities Sustainability Safety Operational Excellence 
+ Locations 
+ 
+ 
+ 
+ 
+ 
+ North America North America 
+ Ashburn I, VA, United States 
+ Ashburn II, VA, United States 
+ Ashburn III, VA, United States 
+ Fredericksburg, VA, United States 
+ New Albany, OH, United States 
+ Phoenix, AZ, United States 
+ Port Washington, WI, United States 
+ Quincy, WA, United States 
+ Reno, NV, United States 
+ Santa Clara I, CA, United States 
+ Santa Clara II, CA, United States 
+ Santa Clara III, CA, United States 
+ Shackelford County, TX, United States 
+ Montreal I, Canada 
+ Montreal II, Canada 
+ Montreal III, Canada 
+ Quebec City, Canada 
+ 
+ 
+ 
+ EMEA EMEA 
+ Berlin I, Germany 
+ Berlin II, Germany 
+ Frankfurt I, Germany 
+ Frankfurt II, Germany 
+ Dublin, Ireland 
+ Milan I, Italy 
+ Milan II, Italy 
+ Warsaw, Poland 
+ Johannesburg I, South Africa 
+ Johannesburg II, South Africa 
+ Zurich I, Switzerland 
+ Zurich II, Switzerland 
+ Cardiff, United Kingdom 
+ London I, United Kingdom 
+ London II, United Kingdom 
+ 
+ 
+ 
+ APAC APAC 
+ Melbourne, Australia 
+ Fo Tan, Hong Kong 
+ Kwai Chung, Hong Kong 
+ On Lok, Hong Kong 
+ Osaka, Japan 
+ Cyberjaya I, Malaysia 
+ Cyberjaya II, Malaysia 
+ Johor, Malaysia 
+ Taipei, Taiwan 
+ 
+ 
+ 
+ All Locations All Locations 
+ 
+ 
+ 
+ 
+ 
+ 
+ North America 
+ 
+ Ashburn I, VA, United States Ashburn II, VA, United States Ashburn III, VA, United States Phoenix, AZ, United States Quincy, WA, United States Santa Clara I, CA, United States Santa Clara II, CA, United States Santa Clara III, CA, United States Montreal I, Canada Montreal II, Canada Montreal III, Canada Quebec City, Canada 
+ EMEA 
+ 
+ Berlin I, Germany Berlin II, Germany Frankfurt I, Germany Frankfurt II, Germany Dublin, Ireland Milan, Italy Warsaw, Poland Johannesburg I, South Africa Johannesburg II, South Africa Zurich I, Switzerland Zurich II, Switzerland Cardiff, United Kingdom London I, United Kingdom London II, United Kingdom 
+ APAC 
+ 
+ Cyberjaya I, Malaysia Cyberjaya II, Malaysia Fo Tan, Hong Kong Kwai Chung, Hong Kong Melbourne, Australia On Lok, Hong Kong Osaka, Japan Taipei, Taiwan 
+ All Locations 
+ 
+ 
+ Company 
+ 
+ Leadership News & Events Careers Contact Us 
+ Resources 
+ 
+ Videos White Papers Data Sheets Reports & Brochures 
+ Blog 
+ 
+ Get Started 
+ 
+ 
+ Careers 
+ Login 
+ 
+ 
+ 
+
+ 
+
+ 
+ English 
+
+ 
+ 
+ 
+ 
+ French 
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+ Get Started 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ -->
+ 
+ 
+ 
+ 
+ 
+ 
+ -->
+ 
+ 
+ 
+ 
+
+ 
+ 
+ CLOSE 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ Home / 
+ locations / 
+ emea / 
+ London I, United Kingdom Campus 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ London (LHR1) Data Center Campus 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ Jump To : 
+ Select 
+ 
+ OVERVIEW 
+ FEATURES 
+ RELATED RESOURCES 
+ REQUEST INFORMATION 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ London I Data Center Campus Overview 
+ 
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 5 
+ 
+ acre (2 hectares) campus 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 2 
+ 
+ data centers 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 55MW 
+ 
+ of critical IT load 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 430K 
+ 
+ square feet (40K square meters) 
+ 
+
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ London is the largest of the four FLAP (Frankfurt, London, Amsterdam, Paris) markets in Europe and one of the top three biggest markets in the world. Now in the city’s PowerGate district comes our LHR1 data center campus sited on five acres (two hectares) with two multi-story facilities. Once fully built, the London data center campus will provide 55MW of capacity throughout its 430,000 square feet (40,000 square meters). The campus will offer 300W/SF (3.23kW/M²) average densities to power your high-density applications. 
+ We’re pleased to offer you all the advantages that come with choosing Vantage Data Centers. You’ll find a unique combination of people and technology: cooling and power that’s both sustainable and reliable; flexible room design and rigidly enforced physical security; and amenities that keep your staff happy—all backed by operational excellence at every location as we scrupulously adhere to the same service and delivery standards across the globe. 
+
+ 
+ 
+ 
+ Get the data sheet 
+
+ 
+ 
+ 
+ Get more info 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Campus Features 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ Power 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Vantage’s LHR1 London data center campus will feature the most state-of-the-art electrical equipment to ensure maximum efficiency and reliability. The campus will offer N+1 redundancy across all systems, all supported by a world-class in-house operations team ensuring customer uptime. 
+ 
+ HV substation of 110MVA, including 80MVA dedicated to support LHR1 
+ Power provided by National Grid, the region’s leading energy provider 
+ Multiple, diverse power feeds supporting the campus 
+ 400V electrical configuration 
+ All systems 100% concurrently maintainable 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Cooling 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Vantage’s LHR1 London data center campus will use a highly efficient closed-loop chilled water system generated through air-cooled chillers. The cooling system also includes an integrated economizer capability that allows reduced compressor energy based on outside ambient temperature, so when weather is favorable, cooling becomes more sustainable and less resource intensive. 
+ 
+ N+1 overall, N+2 component-level redundancy across mechanical systems 
+ Computer Room Air Handling (CRAH) units located in two galleries on opposite sides of each data module allow for highly efficient airflow distribution 
+ Closed-loop chilled water system with air-side economizers 
+ Water Utilization Efficiency (WUE) is near zero (liters/kW/hr) using the latest cooling design 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ LHR1 will offer multiple, diverse fiber pathways into the campus with access to both dark and lit fiber. The campus will be carrier neutral, giving you the flexibility to manage your own network. 
+ 
+ Two meet-me-rooms (MMRs) for each data center on campus, allowing for diverse paths and multiple connectivity options 
+ Four points-of-entry (POEs) for the campus, ensuring maximum path diversity for inbound carriers 
+ Diverse fiber pathways into the campus (minimum 2 paths per carrier) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Security 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Stringent security and safety measures are hallmarks of every Vantage campus. Our LHR1 London data center campus is no exception, so you can rest easy when it comes to the security of your digital assets. 
+ 
+ On-site security operations center with patrols 24x7x365 
+ CCTV on all access control points throughout the entire campus 
+ Dual authentication for customer and critical infrastructure areas 
+ Visitor Management System with controlled and monitored access points and stringent access control policy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Amenities 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ A space where your employees can work efficiently, as well as relax and recharge, is essential. To provide that superior customer environment, our LHR1 London data center campus will offer dedicated office space, conference rooms and large-scale break room facilities with food, games, entertainment and more. 
+ 
+ Customizable offices and workspaces dedicated to individual customers 
+ Secure storage with easy access between data modules 
+ Multiple conference rooms and meeting spaces throughout the campus 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Vantage Data Centers builds and operates our campuses in ways that prioritize sustainability and environmental responsibility, all while delivering the reliability that is our hallmark. Our baseline approach includes using renewable energy whenever possible, limiting carbon footprints, and maintaining energy efficient operations with industry-leading PUEs. We’re committed to reaching net zero carbon emissions by 2030, both by reductions in the emissions we control directly, as well as those in our supply chain we can influence. Our LHR1 London data center campus will deliver on this promise. 
+ 
+ Hyper-efficient cooling with outside air economization using minimal water 
+ Small things that add up over time: recycling, motion-sensor LED lights, drought-resistant landscaping and more 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Related Resources 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ -->
+ 
+
+ DATA SHEET 
+
+ London (LHR1) Data Center Campus Overview 
+ attached 
+ London (LHR1) Data Center Campus Overview 
+ -->
+ 
+ 
+ 
+ 
+ 
+
+ London (LHR1) Data Center Campus Overview 
+ 
+ 
+ 
+ Download the London, United Kingdom (LHR1), data sheet to learn more about the campus, its specifications and features that make it unique. 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ -->
+ 
+
+ WHITE PAPER 
+
+ Colocation Choices UK 
+ attached 
+ link mode 
+ Colocation Choices UK 
+ -->
+ 
+ 
+ 
+ 
+ 
+
+ Colocation Choices UK 
+ 
+ 
+ 
+ This eBook highlights the advantages of Vantage’s Cardiff data center campus, the benefits of colocation facilities and best practices for choosing a communications partner. 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ -->
+ 
+
+ BLOG 
+
+ Vantage Data Centers continues European expansion with acquisition of Next Generation Data (NGD). 
+ attached 
+ link mode 
+ Vantage Data Centers continues European expansion with acquisition of Next Generation Data (NGD). 
+ -->
+ 
+ 
+ 
+ 
+ 
+
+ Vantage Data Centers continues European expansion with acquisition of Next Generation Data (NGD). 
+ 
+ 
+ 
+ 
+Vantage Data Centers doubles its hyperscale portfolio in 2020 with an aggressive European expansion and acquisition of Next Generation Data.
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ -->
+ 
+ 
+ 
+ 
+ 
+ Get Started 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ Give us a call 
+
+ 
+ +44 (0)1633 988 021 
+
+ 
+ +1 (408) 748-9830 (U.S.) 
+
+ 
+ 
+
+ 
+
+
+ 
+ Email us 
+
+ 
+ info@vantage-dc.com 
+
+ 
+ 
+
+ -->
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ ,
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+
+ 
+
+ 
+ 
+ Services 
+ 
+ Rack Ready 
+ Whitespace 
+ Build-to-Suit 
+ Other Services 
+ 
+ 
+ Features 
+ 
+ Power 
+ Cooling 
+ Security & Compliance 
+ Connectivity 
+ Room Design 
+ Amenities 
+ Sustainability 
+ Safety 
+ Operational Excellence 
+ 
+ 
+ Locations 
+ 
+ North America 
+ EMEA 
+ APAC 
+ 
+ 
+ Company 
+ 
+ Leadership 
+ News & Events 
+ Careers 
+ Contact Us 
+ 
+ 
+ Resources 
+ 
+ Videos 
+ White Papers 
+ Data Sheets 
+ Reports & Brochures 
+ 
+ 
+ Blog 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Login 
+ 
+ 
+ Get in touch:
+ +1 (408) 748-9830 
+ 
+ 
+
+ 
+ Follow us:
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ Terms of Use 
+ Privacy Statement 
+ Modern Slavery Statement 
+ Do Not Sell My Information 
+ Speak Up 
+ Sitemap 
+ 
+ 
+
+ 
+ 
+ © 2026 Vantage Data Centers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Revoke Consent 
+ 
+ 
+ 
+
+ 
+ × 
+ 
+ 
+ 
+ 
+ 
+ Services Rack Ready Whitespace Build-to-Suit Other Services Features Power Cooling Security and Compliance Connectivity Room Design Amenities Sustainability Safety Operational Excellence Locations North America Ashburn I, VA, United States Ashburn II, VA, United States Ashburn III, VA, United States Phoenix, AZ, United States Quincy, WA, United States Santa Clara I, CA, United States Santa Clara II, CA, United States Santa Clara III, CA, United States Montreal I, Canada Montreal II, Canada Montreal III, Canada Quebec City, Canada EMEA Berlin I, Germany Berlin II, Germany Frankfurt I, Germany Frankfurt II, Germany Dublin, Ireland Milan, Italy Warsaw, Poland Johannesburg I, South Africa Johannesburg II, South Africa Zurich I, Switzerland Zurich II, Switzerland Cardiff, United Kingdom London I, United Kingdom London II, United Kingdom APAC Cyberjaya I, Malaysia Cyberjaya II, Malaysia Fo Tan, Hong Kong Kwai Chung, Hong Kong Melbourne, Australia On Lok, Hong Kong Osaka, Japan Taipei, Taiwan All Locations Company Leadership News & Events Careers Contact Us Resources Videos White Papers Data Sheets Reports & Brochures Blog 
+ 
+ Careers Login 
+ 
+ 
+ 
+
+ 
+
+ 
+ English 
+
+ 
+ 
+ 
+ 
+ French 
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ Get Started

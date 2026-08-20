@@ -45,6 +45,76 @@ sources:
       2.5 GW of accepted grid connections" on the home page against
       "2 GWs of accepted grid connections" on the AI Growth Zone page.
 
+  - key: virtus_website
+    operator: VIRTUS Data Centres
+    snapshot_dir: operator_snapshots
+    note: >-
+      Publishes per-building figures for every London facility, uniformly
+      termed "IT load". No dates anywhere. The wider survey found four
+      internal contradictions across its own pages (LONDON7 at 32.5 MW on
+      its own page and 28 MW in a carousel; LONDON8 "bespoke design" with
+      no figure on its page and 18 MW elsewhere) and a Slough campus total
+      that exceeds the sum of its listed buildings — worth putting to
+      them, and the reason only campus figures are loaded here.
+
+  - key: kao_website
+    operator: Kao Data
+    snapshot_dir: operator_snapshots
+    note: >-
+      The most useful structure of any operator surveyed: each campus page
+      lists buildings with a figure and a lifecycle status in one string,
+      "KLON-03 (17.6MW Under Development)". Status vocabulary is
+      Operational / Under Development / Planned. Both "ITE load" and
+      "IT-load" appear on the same page for the same campus.
+
+  - key: cyrusone_website
+    operator: CyrusOne
+    snapshot_dir: operator_snapshots
+    note: >-
+      The only operator in the survey publishing an IT figure and a grid
+      figure for the same site, which makes it the sole published
+      calibration for how far the two diverge: 8.72 MW IT against 15 MVA
+      at LON1, and 90 MW against 160 MVA at LON6 — both close to 1.75x.
+
+  - key: ada_website
+    operator: Ada Infrastructure
+    snapshot_dir: operator_snapshots
+    note: >-
+      The headline stat is rendered from embedded application state as
+      {"number": 210, "blurb": "Total IT load"} — the megawatt unit exists
+      nowhere in the data object, only in adjacent prose, so an automated
+      read of the stat block yields a bare 210.
+
+  - key: puredc_website
+    operator: Pure Data Centres
+    snapshot_dir: operator_snapshots
+
+  - key: vantage_website
+    operator: Vantage Data Centers
+    snapshot_dir: operator_snapshots
+
+  - key: colt_website
+    operator: Colt Data Centre Services
+    snapshot_dir: operator_snapshots
+
+  - key: globalswitch_website
+    operator: Global Switch
+    snapshot_dir: operator_snapshots
+    note: >-
+      Publishes bare megawatt figures with no qualifying term of any kind,
+      inside a contact block. Nothing on the site says whether they are IT
+      load, utility supply or installed UPS, so no quantity can be
+      inferred beyond "a number the company publishes".
+
+  - key: nlighten_website
+    operator: nLighten
+    snapshot_dir: operator_snapshots
+    note: >-
+      Formerly Proximity Data Centres. Every UK page states the site "is a
+      facility with X kW of power" in the lead — present tense — while the
+      spec panel qualifies the same number as "Site capacity end-state".
+      Recorded here with the spec panel's wording, not the lead's.
+
 claims:
   # --- Ark, per campus ---------------------------------------------------
   - source: ark_website
@@ -186,7 +256,368 @@ claims:
     stage: planning approved
     quote: 90MW IT load Planning approved
 
+  # --- Second tranche, 2026-08-20 ---------------------------------------
+  - source: virtus_website
+    snapshot: virtus-saunderton
+    claim_name: VIRTUS Saunderton Campus
+    quantity_type: announced_capacity
+    value: 78
+    unit: MW
+    term: IT load
+    stage: across four separate data centres
+    quote: Delivering 78MW of IT load across four separate data centres
+    note: >-
+      Sharpens a divergence already on file. EXTERNAL_DATA_SOURCES.md §2
+      recorded Data Center Map giving VIRTUS Saunderton as 75 MW against
+      300 MW in the planning documents, and reasoned that 75 MW was the
+      operator's marketing figure for saleable IT load. VIRTUS's own site
+      now says 78 MW of IT load, which supports that reading: the two
+      numbers are different quantities, not a contradiction.
+
+  - source: kao_website
+    snapshot: kao-harlow
+    claim_name: Kao Data Harlow campus
+    quantity_type: announced_capacity
+    value: 71
+    unit: MW
+    term: ITE load
+    stage: when fully completed
+    quote: these will support an ITE load of 71MW
+    note: >-
+      The same page calls it "IT-load" two sentences later, and states a
+      further ambition to "eventually accommodate an impressive IT-load of
+      150MW" — a separate, undated aspiration not loaded as a claim.
+
+  - source: kao_website
+    snapshot: kao-harlow
+    claim_name: KLON-01 (Harlow)
+    quantity_type: announced_capacity
+    value: 8.8
+    unit: MW
+    term: (building figure, status Operational)
+    stage: operational
+    quote: KLON-01 (8.8MW Operational)
+
+  - source: kao_website
+    snapshot: kao-harlow
+    claim_name: KLON-02 (Harlow)
+    quantity_type: announced_capacity
+    value: 8.8
+    unit: MW
+    term: (building figure, status Operational)
+    stage: operational
+    quote: KLON-02 (8.8MW Operational)
+
+  - source: kao_website
+    snapshot: kao-harlow
+    claim_name: KLON-03 (Harlow)
+    quantity_type: announced_capacity
+    value: 17.6
+    unit: MW
+    term: (building figure, status Under Development)
+    stage: under development
+    quote: KLON-03 (17.6MW Under Development)
+
+  - source: kao_website
+    snapshot: kao-harlow
+    claim_name: KLON-04 (Harlow)
+    quantity_type: announced_capacity
+    value: 36
+    unit: MW
+    term: (building figure, status Planned)
+    stage: planned
+    quote: KLON-04 (36MW Planned)
+
+  - source: kao_website
+    snapshot: kao-slough
+    claim_name: KLON-06 (Slough)
+    quantity_type: announced_capacity
+    value: 20
+    unit: MW
+    term: (building figure, status Operational)
+    stage: operational
+    quote: KLON-06 (20MW Operational)
+
+  - source: cyrusone_website
+    snapshot: cyrusone-lon6
+    claim_name: CyrusOne LON6 (Iver Heath)
+    quantity_type: announced_capacity
+    value: 90
+    unit: MW
+    term: Total Megawatts IT Capacity
+    stage: will deliver
+    quote: 90 MW Total Megawatts IT Capacity
+
+  - source: cyrusone_website
+    snapshot: cyrusone-lon6
+    claim_name: CyrusOne LON6 (Iver Heath) — grid supply
+    quantity_type: grid_connection
+    value: 160
+    unit: MVA
+    term: power capacity via 132 kV active/active feeds
+    stage: planned
+    quote: 160 MVA power capacity via 132 kV active/active feeds
+    note: >-
+      160 MVA against 90 MW of IT capacity on the same page — about 1.75x,
+      the same ratio CyrusOne publishes at LON1. No power factor is
+      stated, so MVA is not converted to MW.
+
+  - source: cyrusone_website
+    snapshot: cyrusone-lon1
+    claim_name: CyrusOne LON1 (Slough)
+    quantity_type: announced_capacity
+    value: 8.72
+    unit: MW
+    term: Total Megawatts IT Capacity
+    stage: operational
+    quote: 8.72 MW Total Megawatts IT Capacity
+
+  - source: cyrusone_website
+    snapshot: cyrusone-lon1
+    claim_name: CyrusOne LON1 (Slough) — grid supply
+    quantity_type: grid_connection
+    value: 15
+    unit: MVA
+    term: Active/Active dual redundant power supplies
+    stage: operational
+    quote: power supplies of 15 MVA
+
+  - source: ada_website
+    snapshot: ada-docklands
+    claim_name: Ada Docklands campus
+    quantity_type: announced_capacity
+    value: 210
+    unit: MW
+    term: Total IT load
+    stage: approved, under construction
+    quote: Approved 210MW data center campus
+
+  - source: ada_website
+    snapshot: ada-docklands
+    claim_name: Ada Docklands campus — grid supply
+    quantity_type: grid_connection
+    value: 300
+    unit: MVA
+    term: power secured by UKPN
+    stage: secured
+    quote: substation with 300 MVA power secured by UKPN
+
+  - source: puredc_website
+    snapshot: puredc-brent-cross
+    claim_name: Pure DC Brent Cross (LON01)
+    quantity_type: announced_capacity
+    value: 90
+    unit: MW
+    term: data centre campus / power secured
+    stage: building 1 operational, building 2 under construction
+    quote: A 90MW data centre campus in the heart of London
+    note: >-
+      Split on the same page as "Building 1 (20MW) is fully operational
+      with four data halls, and Building 2 (70MW) is currently under
+      construction" — one of the few operator pages tying a figure to a
+      build status per building.
+
+  - source: vantage_website
+    snapshot: vantage-london-i
+    claim_name: Vantage London I (LHR1)
+    quantity_type: announced_capacity
+    value: 55
+    unit: MW
+    term: critical IT load
+    stage: once fully built
+    quote: 55MW of critical IT load
+
+  - source: vantage_website
+    snapshot: vantage-london-i
+    claim_name: Vantage London I (LHR1) — grid supply
+    quantity_type: grid_connection
+    value: 80
+    unit: MVA
+    term: dedicated to support LHR1
+    stage: —
+    quote: HV substation of 110MVA, including 80MVA dedicated to support LHR1
+    note: >-
+      The site's share of a 110 MVA substation. 80 MVA against 55 MW of
+      critical IT load is about 1.45x — a second published grid-to-IT
+      ratio, from a different operator, in the same broad band as
+      CyrusOne's 1.75x.
+
+  - source: vantage_website
+    snapshot: vantage-cardiff
+    claim_name: Vantage Cardiff campus
+    quantity_type: announced_capacity
+    value: 148
+    unit: MW
+    term: critical IT load
+    stage: 3 data centers, two operational
+    quote: 148MW of critical IT load
+    note: >-
+      The same page's gallery caption says instead that the campus
+      "includes an existing 72MW of IT capacity and two additional
+      facilities planned", and calls it 50-acre where the stat block says
+      46-acre. Both figures are Vantage's own.
+
+  - source: colt_website
+    snapshot: colt-london-4
+    claim_name: Colt London 4 (Hayes campus)
+    quantity_type: announced_capacity
+    value: 31
+    unit: MW
+    term: IT power
+    stage: under construction
+    quote: it will deliver 31MW of IT power across 5 floors
+
+  - source: globalswitch_website
+    snapshot: globalswitch-london
+    claim_name: Global Switch London East
+    quantity_type: announced_capacity
+    value: 87
+    unit: MW
+    term: (no term given)
+    stage: —
+    quote: London East 87 MW
+    note: >-
+      Published with no qualifying term anywhere on the site — not IT
+      load, not utility supply, just a number beside a postal address. The
+      absence of a term is the finding; it means the figure cannot be
+      compared with any other operator's without an assumption.
+
+  - source: nlighten_website
+    snapshot: nlighten-london
+    claim_name: nLighten London (Hoddesdon)
+    quantity_type: announced_capacity
+    value: 3600
+    unit: kW
+    term: Site capacity end-state
+    stage: end-state
+    quote: Site capacity end-state – 3,600 kW
+    note: >-
+      Recorded with the spec panel's wording. The page's lead sentence
+      states the site "is a facility with 2,100 m² of dedicated colocation
+      space and 3,600 kW of power" — present tense for the same number the
+      panel below calls an end-state.
+
 matches:
+  - claim_name: VIRTUS Saunderton Campus
+    site_id: 1
+    method: name_and_operator
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      VIRTUS names its "Saunderton Campus"; site 1 is "SAUNDERTON DATA
+      CENTRE - 4 VIRTUS DATA CENTRES" (Buckinghamshire), which names both
+      the place and the operator, and VIRTUS's figure is "across four
+      separate data centres" against the site record's four.
+
+  - claim_name: Kao Data Harlow campus
+    site_id: 34
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Kao names its Harlow campus; site 34 is "KAO PARK HARLOW - PROJECT
+      NOBEL DATA CENTRE CAMPUS" (Harlow District Council). One campus of
+      that name, named for the operator.
+
+  - claim_name: KLON-01 (Harlow)
+    site_id: 34
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      A building within the Kao Data Harlow campus matched at site 34.
+      Kept as its own claim rather than folded into the campus figure
+      because it carries a build status the campus figure does not.
+
+  - claim_name: KLON-02 (Harlow)
+    site_id: 34
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      A building within the Kao Data Harlow campus matched at site 34,
+      stated as operational.
+
+  - claim_name: KLON-03 (Harlow)
+    site_id: 34
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      A building within the Kao Data Harlow campus matched at site 34,
+      stated as under development — the 17.6 MW liquid-cooled AI building
+      Kao announced in March 2025.
+
+  - claim_name: KLON-04 (Harlow)
+    site_id: 34
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      A building within the Kao Data Harlow campus matched at site 34,
+      stated as planned. The four Harlow buildings sum to 71.2 MW against
+      the campus figure of 71 MW, so the parts and the whole agree.
+
+  - claim_name: CyrusOne LON6 (Iver Heath)
+    site_id: 84
+    method: name_and_capacity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      CyrusOne's LON6 page describes a 90 MW facility at Iver Heath,
+      Buckinghamshire; site 84 is "IVER HEATH DATA PARK - 90MW DATA
+      CENTRE" (Buckinghamshire Council). Place, scale and description all
+      agree, and no other Iver Heath data centre of this size exists in
+      the corpus.
+
+  - claim_name: CyrusOne LON6 (Iver Heath) — grid supply
+    site_id: 84
+    method: name_and_capacity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Same page and same facility as the 90 MW IT figure above; recorded
+      separately because 160 MVA of grid supply is a different quantity
+      from 90 MW of IT capacity, and the gap between them is the point.
+
+  - claim_name: Ada Docklands campus
+    site_id: 48
+    method: name_and_capacity
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Ada Infrastructure is GLP's data centre arm, and its Docklands
+      campus is "Three 70 MW data center buildings"; site 48 is "G PARK 2
+      LONDON DOCKLANDS - 70MW DATA CENTRES" — G Park being GLP's own
+      estate brand, with the same 70 MW per building. Held below strong
+      because the corpus record sits under Greenwich while Ada describes
+      the Royal Docks, so the administrative boundary needs checking
+      against the application.
+
+  - claim_name: Ada Docklands campus — grid supply
+    site_id: 48
+    method: name_and_capacity
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Same page and campus as the 210 MW figure, on the same reasoning and
+      with the same boundary caveat. 300 MVA secured from UKPN against
+      210 MW of IT load is about 1.43x, close to Vantage's published
+      ratio at LHR1.
+
+  - claim_name: Pure DC Brent Cross (LON01)
+    site_id: 63
+    method: name_and_place
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Pure DC's Brent Cross campus is the JVC Business Park scheme on
+      Priestley Way; site 63 is "JVC BUSINESS PARK - INDUSTRIAL EXTENSION"
+      (Barnet, 41 applications), the largest of four corpus records for
+      that address — sites 170, 392 and 393 cover the same place. Held
+      below strong by that fragmentation rather than by doubt about the
+      scheme.
+
   - claim_name: Cody Park
     site_id: 14
     method: name_and_postcode
@@ -295,6 +726,36 @@ matches:
       not an attribution.
 
 considered:
+  - claim_name: Colt London 4 (Hayes campus)
+    reason: >-
+      Colt names the campus "London Hayes" and states no street address.
+      Press reporting places Colt's London 4 and 5 at Tudor Works,
+      Beaconsfield Road, Hayes, which this corpus holds as three separate
+      site records (213, 214, 215) for the same address. Choosing one of
+      the three on press evidence alone would be a guess dressed as a
+      match; the claim is loaded unmatched until the fragmentation is
+      resolved or Colt's own material names the street.
+
+  - claim_name: nLighten London (Hoddesdon)
+    reason: >-
+      Deliberately not matched to site 97, and it bears on a match already
+      held there. Site 97 (Xylem Industrial Estate, Bingley Road,
+      Hoddesdon) currently carries two *tentative* NESO rows of 57 MW
+      each, matched on place and scale. nLighten's Hoddesdon site is
+      3.6 MW end-state — an order of magnitude smaller, and an edge
+      colocation facility rather than a shell. Either they are different
+      sites in the same town, or the 57 MW attribution is wrong. Recording
+      the competing candidate is what lets someone resolve it; asserting
+      either way now would not be evidence.
+
+  - claim_name: Global Switch London North / London South
+    reason: >-
+      18 MW and 70 MW are published on the same page as the London East
+      figure that is loaded, with the same absence of any qualifying term.
+      Left out of this tranche only because neither corresponds to a
+      corpus site; they are worth adding when the Docklands records are
+      reviewed.
+
   - claim_name: Meridian Park
     reason: >-
       No site in this corpus corresponds to Ark's Enfield data centre,
@@ -303,6 +764,22 @@ considered:
       planning sweep has never captured.
 
 noted:
+  - subject: Digital Realty — per-site capacity published but never rendered
+    snapshot: digitalrealty-london
+    quote: '"field_utility_power_capacity":"179.9k+ kW"'
+    reason: >-
+      Digital Realty's London metro page ships per-site utility power
+      capacity to the browser inside its embedded application state and
+      displays none of it: eleven UK facilities carry a bare integer under
+      field_utility_power_capacity, and those eleven sum to exactly
+      179,900, matching the metro aggregate string the same payload
+      carries. The unit is confirmed by that arithmetic rather than
+      asserted. Not loaded as per-site claims because the metro page's
+      fragments cannot be tied to individual facilities without fetching
+      each site page — the next tranche's work. Note the quantity is
+      *utility* power, grid supply rather than IT load, so it is not
+      comparable with the IT figures other operators headline.
+
   - subject: Greystoke, Humber Tech Park — 384 GW
     snapshot: greystoke-ai-growth-zone
     quote: can provide 384 GW of computing power
