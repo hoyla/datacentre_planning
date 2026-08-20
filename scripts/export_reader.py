@@ -200,14 +200,18 @@ label.chk.off{opacity:.45;cursor:default}
    away — and that is what put the column headings below the first row of
    data. Only bottom borders are drawn on cells, so separate borders look
    identical here. */
-table{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px;
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:1230px;
   font-size:13px}
 #tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){min-width:210px}
 #tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){min-width:260px}
 #tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){width:104px}
-#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:150px}
-#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){min-width:250px}
-#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){width:112px}
+#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:108px}
+#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){width:150px}
+/* Narrowed to make room for the indicators column: of the "top level"
+   cells this one has the most spare width, an address rarely needing
+   its full former allowance. */
+#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){min-width:190px}
+#tbl-sites th:nth-child(7),#tbl-sites td:nth-child(7){width:112px}
 /* A date is one word or it is nothing: 2024-04-15 broken across two lines
    reads as two half-dates. The width comes out of Proposal, which is the
    one column here that can lose a few pixels without cost. */
@@ -277,9 +281,16 @@ tr.detail td{padding:14px 18px 18px 30px}
    boxes. Left in the grid's auto-flow it landed in the first column,
    stranding the documents section below an empty row. */
 .box.ctx{grid-column:2 / -1}
-/* Same shape as the context band: register claims carry a paragraph of
-   match evidence each, which a column slot would fold into a ribbon. */
-.box.claims{grid-column:2 / -1}
+/* box.claims takes no explicit placement — it sits in row 1 between
+   Declared power and Generation, an ordinary third box. It used to
+   claim the full width like .ctx, but a full-width item mid-sequence
+   breaks CSS Grid's auto-placement for everything after it: needing
+   three contiguous free tracks in row 1, and finding only two (Declared
+   power already holds the first), the browser drops the whole item to
+   row 2 — and then auto-places every later box from that cursor
+   position, pushing Generation into a track meant for something else
+   and leaving row 1 half-empty. A full-width item is safe only at the
+   end of the sequence, which is where .ctx has always lived. */
 .box.claims .claim{margin-bottom:10px}
 .box.claims details>summary{cursor:pointer;font-size:12px;color:var(--accent);
   list-style:none}
@@ -287,16 +298,16 @@ tr.detail td{padding:14px 18px 18px 30px}
 .box.claims details>summary:before{content:"▸ ";display:inline-block;
   transition:transform .12s}
 .box.claims details[open]>summary:before{transform:rotate(90deg)}
-.box.claims details>p{margin-top:6px;max-width:70em}
+.box.claims details>p{margin-top:6px}
 @media (max-width:1100px){
   .grid{grid-template-columns:1fr 1fr}
-  /* Two boxes wide enough to want the full width again: dissolving the
+  /* Three boxes wide enough to want the full width again: dissolving the
      wrapper returns them to the panel grid as direct items. */
   .col-record{display:contents}
   .box.proposal{grid-column:1 / -1;grid-row:auto}
   .box.identity{grid-column:1 / -1;grid-row:auto}
+  .box.parties{grid-column:1 / -1;grid-row:auto}
   .box.ctx{grid-column:1 / -1}
-  .box.claims{grid-column:1 / -1}
 }
 @media (max-width:700px){
   .grid{grid-template-columns:1fr}
@@ -1458,7 +1469,7 @@ def main() -> int:
                     f'<p class="help">{esc(c["evidence"])}</p></details>'
                     f'</div>')
             claims_html = (
-                '<div class="box claims"><h4>Grid connection register</h4>'
+                '<div class="box claims"><h4>Other power indicators</h4>'
                 + "".join(_claim_rows)
                 + f'<p class="help">{esc(ccl.CLAIMS_CAVEAT)}</p></div>')
         else:
@@ -1490,6 +1501,28 @@ def main() -> int:
                    + (" <span class='prov'>· may rise</span>" if is_prov and mw else "")
                    + "</span>") if mw else f"—<span class='q'>{esc(est.basis)}</span>"
 
+        # A confidence tier and a count, never a megawatt figure: the main
+        # row is scanned and sorted, and a number here beside Declared
+        # power would read as directly comparable to it. It is not — a
+        # register claim can be a different quantity type from the site's
+        # own figure, and "tentative" exists precisely to say a match is
+        # a lead rather than an attribution. Collapsing several of those
+        # into one "highest" number would launder that distinction away.
+        _tier_rank = {"strong": 3, "probable": 2, "tentative": 1}
+        if site_claims:
+            best = max(site_claims, key=lambda c: _tier_rank[c["confidence"]])
+            _n = len(site_claims)
+            ind_label = best["confidence"] + (f" ×{_n}" if _n > 1 else "")
+            ind_title = "; ".join(f"{c['claim_name']} ({c['confidence']})"
+                                  for c in site_claims)
+            ind_class = "known" if best["confidence"] == "strong" else "unknown"
+            ind_cell = (f'<span class="tag {ind_class}" title="{esc(ind_title)}">'
+                       f'{esc(ind_label)}</span>')
+            ind_sort = _tier_rank[best["confidence"]] * 100 + _n
+        else:
+            ind_cell = "—"
+            ind_sort = 0
+
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="{1 if known else 0}"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="{est.value_mw or ''}"
@@ -1499,6 +1532,7 @@ def main() -> int:
 <td data-v="{esc(trim(summary,80))}">{esc(trim(summary, 118)) or '—'}
  {'' if descriptive else '<span class="q">the register holds no description of the development itself, only procedural applications</span>'}</td>
 <td class="mw" data-v="{est.value_mw or ''}">{mw_cell}</td>
+<td data-v="{ind_sort}">{ind_cell}</td>
 <td data-v="{esc(cap_label)}"><span class="tag {'known' if known else 'unknown'}">{esc(cap_label)}</span></td>
 <td data-v="{esc(addr)}">{esc(trim(addr, 105)) or '—'} {maplink}</td>
 <td data-v="{read}">{read}/{held}<span class="q">documents read{
@@ -1506,7 +1540,7 @@ def main() -> int:
  f'onclick="event.stopPropagation()">Drive</a>' if _durl and held else ''
 }</span></td>
 </tr>
-<tr class="detail"><td colspan="6">
+<tr class="detail"><td colspan="7">
  {site_banner}
  <div class="grid">
   <div class="col-record">
@@ -1533,9 +1567,21 @@ def main() -> int:
      <div><span class="lbl">{'Source documents' if held else 'Drive'}</span>
       <span class="val">{drive_html}</span></div>
     </div></div>
+
+   <div class="box parties"><h4>Who is behind it</h4>
+    <dl class="kv">
+     <dt>Applicant / operator</dt><dd>{counted(prof.get('applicants'))}</dd>
+     <dt>Advisers</dt><dd>{counted(prof.get('advisers'))}</dd>
+     <dt>Planning authority</dt><dd>{counted(prof.get('authorities'))}</dd>
+     <dt>Barbour project</dt><dd>{esc(btitle or '—')}
+      {f'<span class="help">{esc(bstage or "")}</span>' if bstage else ''}</dd>
+     <dt>Nearest energy project</dt><dd>{near_html}</dd>
+    </dl>
+    <p class="help">Names are counted: the organisation named forty times is the developer,
+     the one named twice is usually a consultee's consultant.</p></div>
   </div>
 
-  <div class="box"><h4>Power</h4>
+  <div class="box"><h4>Declared power</h4>
    <dl class="kv">
     <dt>Best available</dt><dd>{('<strong>'+mw+' MW</strong>') if mw else '—'}
      {'<span class="prov"> ' + esc(site_profile.PROVISIONAL_MARK) + '</span>' if is_prov and mw else ''}</dd>
@@ -1565,18 +1611,6 @@ def main() -> int:
    </dl>
    <p class="help">{esc(prof.get('generator_caveat') or '')}</p>
    <p class="help">{esc(prof.get('cooling_caveat') or '')}</p></div>
-
-  <div class="box"><h4>Who is behind it</h4>
-   <dl class="kv">
-    <dt>Applicant / operator</dt><dd>{counted(prof.get('applicants'))}</dd>
-    <dt>Advisers</dt><dd>{counted(prof.get('advisers'))}</dd>
-    <dt>Planning authority</dt><dd>{counted(prof.get('authorities'))}</dd>
-    <dt>Barbour project</dt><dd>{esc(btitle or '—')}
-     {f'<span class="help">{esc(bstage or "")}</span>' if bstage else ''}</dd>
-    <dt>Nearest energy project</dt><dd>{near_html}</dd>
-   </dl>
-   <p class="help">Names are counted: the organisation named forty times is the developer,
-    the one named twice is usually a consultee's consultant.</p></div>
   {ctx_html}
  </div>
 
@@ -1642,11 +1676,12 @@ def main() -> int:
  <span class="q">{esc(authority or '')}</span></td>
 <td data-v="{esc(trim(summary,80))}">{esc(trim(summary, 118)) or '—'}</td>
 <td class="mw" data-v="">—<span class="q">no application yet</span></td>
+<td data-v="0">—</td>
 <td data-v="{esc(cap_label)}"><span class="tag unknown">{esc(cap_label)}</span></td>
 <td data-v="{esc(address or '')}">{esc(trim(address, 105)) or '—'} {maplink}</td>
 <td data-v="-1">—<span class="q">nothing published</span></td>
 </tr>
-<tr class="detail"><td colspan="6">
+<tr class="detail"><td colspan="7">
  <div class="banner" style="margin-top:0"><b>No application submitted yet.</b>
   {esc(site_profile.NO_DOCUMENT_REASONS['pre_application'])}</div>
  <div class="grid">
@@ -2424,6 +2459,7 @@ def main() -> int:
  <th>{dl("Sites","Site name","Site")}</th>
  <th>{dl("Sites","Proposal","Proposal")}</th>
  <th data-num="1">{dl("Sites","Power MW (best available)","Power MW")}</th>
+ <th data-num="1">{dl("Sites","External power indicators","Power indicators")}</th>
  <th>{dl("Sites","Capacity status","Status")}</th>
  <th>{dl("Sites","Latitude / Longitude / Coordinate source","Location")}</th>
  <th data-num="1">{dl("Sites","Documents held / Documents analysed","Read")}</th>
