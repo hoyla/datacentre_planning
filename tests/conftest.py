@@ -76,6 +76,17 @@ def _ensure_test_database() -> None:
             if cur.fetchone()[0] is None:
                 cur.execute((MIGRATIONS_DIR / "005_projects.sql").read_text())
                 conn.commit()
+            # Migration 006 — sites + site_members.
+            cur.execute("SELECT to_regclass('public.sites')")
+            if cur.fetchone()[0] is None:
+                cur.execute((MIGRATIONS_DIR / "006_sites.sql").read_text())
+                conn.commit()
+            # Migration 021 — capacity_claims + capacity_claim_matches.
+            cur.execute("SELECT to_regclass('public.capacity_claims')")
+            if cur.fetchone()[0] is None:
+                cur.execute(
+                    (MIGRATIONS_DIR / "021_capacity_claims.sql").read_text())
+                conn.commit()
     finally:
         conn.close()
 
@@ -105,8 +116,9 @@ def db_conn(integration_db: str):
             cur.execute(
                 "TRUNCATE TABLE project_applications, projects, "
                 "colocated_candidates, findings, triage, documents, "
-                "applications, source_snapshots, council_aliases "
-                "RESTART IDENTITY CASCADE"
+                "applications, source_snapshots, council_aliases, "
+                "capacity_claim_matches, capacity_claims, site_members, "
+                "sites RESTART IDENTITY CASCADE"
             )
         conn.commit()
         yield conn

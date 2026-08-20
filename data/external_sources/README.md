@@ -40,6 +40,40 @@ Anonymised by the publisher; do not attempt to match rows to sites
 except as a deliberate, method-labelled adjudication.
 Licence: UK Power Networks open data terms (attribution required).
 
+## neso-ea-register.xlsx
+
+NESO's *Existing Agreements (EA) Register*, published alongside the Gate 2
+connections-reform results, committed verbatim. Downloaded 2026-08-19
+during the demand-sources research sweep and re-downloaded byte-identical
+2026-08-20 from:
+https://www.neso.energy/document/373996/download
+sha256: `a96e29b4bf2d43c2d69a552ddecf7244e01a2ef045e93bbdfc2c318e60b0960c`
+
+3,478 project rows (one sheet, header on spreadsheet row 5): Project Name,
+Associated Installed Capacity (MW), Existing Connection Date, Existing
+Connection Point, expressed-interest-in-Gate-1 flag, Technology Type. The
+only public NESO artefact naming transmission **demand** customers with MW:
+119 rows carry Technology Type "Transmission Connected Demand", 49,440 MW
+in total, of which at least 20 are explicitly data-centre-named.
+
+Caveats that must travel with any use: inclusion was **consent-based**
+(the file's own banner: "PUBLIC - last updated 11/6/25 following developer
+request to remove a project form the public EA list" — so absence proves
+nothing, and the register can shrink); it records **pre-reform contracted
+positions**, not Gate 2 outcomes; capacity is the contracted connection
+ceiling, not IT load, built capacity or observed draw; the update date
+"11/6/25" is read as 11 June 2025 (British format, consistent with the
+Gate 2 timeline) but the format is not stated. No licence is stated on the
+document; it is a published NESO document quoted with citation.
+
+Sanity anchors for any re-parse: 3,478 data rows; 119 demand rows summing
+49,440 MW; largest demand row "Walpole Flexible Generation" 2,550 MW;
+"Iver 2 Ark Estates" 435 MW at "Uxbridge Moor (Iver B 132kV)".
+
+Loaded into `capacity_claims` (migration 021) by
+`scripts/load_capacity_claims.py`, which reads this file plus the
+hand-adjudicated site matches in `neso-ea-register-matches.yaml`.
+
 ## ukpn-dc-profiles-per-site.json
 
 Per-site aggregate (96 rows) computed 2026-08-12 from UK Power Networks'

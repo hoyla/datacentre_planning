@@ -1,0 +1,291 @@
+# Hand-adjudicated matches: NESO EA Register demand rows -> sites.
+#
+# Each entry asserts that one register row and one site record describe
+# the same physical project, with the evidence written out. `row` is the
+# spreadsheet row in neso-ea-register.xlsx as Excel displays it.
+# Confidence vocabulary (enforced by migration 021):
+#   strong    - name identity between the register row and the site or
+#               its planning record; no plausible competing referent.
+#   probable  - independent details triangulate (substation + capacity +
+#               a press-corroborated or address-level link) but the row
+#               name alone would not identify the site.
+#   tentative - place and scale agree and no competing corpus candidate
+#               exists, but nothing names the site. Consumers should
+#               render these as leads, not attributions.
+#
+# The `considered` section records rows that were examined and NOT
+# matched, with the reason — a tested-and-empty result is not the same
+# thing as an untested one (the EXTERNAL_DATA_SOURCES.md discipline).
+# Every register figure is contracted transmission connection capacity;
+# none of these matches implies the site will draw, build or even keep
+# that capacity.
+
+matches:
+  - row: 272
+    claim_name: Drax Power Station Data Centre
+    site_id: 324
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      The register row names Drax Power Station; the site is "Drax Power
+      Station, New Road, Drax, Selby YO8 8PH". One power station of this
+      name exists. The register's 1,200 MW (Trent Valley North Node B,
+      2039) is contracted connection capacity for a data-centre project
+      at the station and says nothing about the planning application's
+      own scale.
+
+  - row: 578
+    claim_name: Eggborough DC
+    site_id: 98
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "Eggborough DC", 300 MW at Leeds North Node B; the
+      site is "Eggborough Power Station - 2 Data Centres" (Selby). One
+      Eggborough. This also resolves the Eggborough gas/data-centre
+      question flagged as unverified in docs/EXTERNAL_DATA_SOURCES.md §3:
+      a demand-side agreement exists in the register alongside the
+      2,450 MW generation TEC entry.
+
+  - row: 752
+    claim_name: West Burton Data Centre
+    site_id: 175
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "West Burton Data Centre", 500 MW at West Burton
+      400kV; the site is "West Burton Power Station, South Road, West
+      Burton, Nottinghamshire" (Bassetlaw). The register also carries
+      "West Burton Giga" at 1,000 MW on the same substation — left
+      unmatched (see considered); this match covers only the row that
+      names a data centre.
+
+  - row: 723
+    claim_name: Mecure Data Centre
+    site_id: 139
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "Mecure Data Centre", 435 MW at Elstree 400kV. Site
+      139 is the former Mercure Hotel scheme, Tylers Way, Watford bypass
+      (Hertsmere; applications 25/1257/PPA and 25/1781/FUL). The
+      register's misspelling is itself corroborating: the planning
+      record for 25/1257/PPA spells the address "The Mecure Hotel" the
+      same way. The scheme's Environmental Statement states 168 MW IT /
+      218.4 MW at PUE 1.3 — the 435 MW register figure is roughly twice
+      the ES total, a divergence to report, not reconcile.
+
+  - row: 313
+    claim_name: Riverside Industrial Estate
+    site_id: 409
+    method: name_and_substation
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "Riverside Industrial Estate", 80 MW at Elstree B
+      275/132kV. Site 409 is Units 4-5 Riverside Industrial Estate,
+      London Colney — inside the Elstree GSP catchment, and the only
+      Riverside Industrial Estate in the corpus. "Riverside Industrial
+      Estate" is a common name nationally, which is what holds this
+      below strong.
+
+  - row: 541
+    claim_name: Elstree 400MW Demand
+    site_id: 102
+    method: substation_capacity_press
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "Elstree 400MW Demand", 400 MW at Letchmore Heath
+      132kV. DC01UK (now Equinix) stated publicly that its South Mimms
+      campus "already has a power reservation of 400MVA" at the
+      Elstree/Letchmore Heath substation (DatacenterDynamics,
+      2025-01-24). Capacity and substation both agree; the row name
+      names nobody, which is what holds this below strong. Site 102 is
+      the Hertsmere host-authority record; the same scheme also appears
+      as cross-boundary observation records (sites 171, 172, 228, 229
+      in Barnet and Enfield) — a site-materialisation duplication noted
+      at adjudication time.
+
+  - row: 1637
+    claim_name: Sutton Courtenay Datacentre
+    site_id: 68
+    method: address_and_substation
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "Sutton Courtenay Datacentre", 99.9 MW at Didcot
+      132kV. Site 68 is "Amazon Data Centre Didcot - Data Centre 1"
+      (Vale of White Horse), whose planning-record address places it in
+      Sutton Courtenay parish. The register names the parish, not the
+      operator, and other schemes exist around Didcot (the register's
+      separate "Didcot Road 2" row is left unmatched), so probable
+      rather than strong. 99.9 MW sitting just under a 100 MW threshold
+      is a detail worth a reporter's attention in its own right.
+
+  - row: 1127
+    claim_name: MedwayOne Datacentre
+    site_id: 418
+    method: name_and_substation
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "MedwayOne Datacentre", 340 MW at North Kent Node C.
+      MedwayOne is the commercial redevelopment of the former Kingsnorth
+      Power Station site, Hoo St Werburgh — site 418. The register names
+      the development brand rather than the site address, and the
+      connection point is a generic node name, so probable.
+
+  - row: 834
+    claim_name: Medway
+    site_id: 418
+    method: substation_and_scale
+    confidence: tentative
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "Medway", 300 MW at Kingsnorth 400kV — the substation
+      is on the Kingsnorth Power Station site itself (site 418), and the
+      row sits beside the MedwayOne row in the same register. But
+      "Medway" names a whole authority, and a 300 MW connection at
+      Kingsnorth could serve another occupier of the wider site. A lead,
+      not an attribution.
+
+  - row: 630
+    claim_name: Waltham Cross Farm 2
+    site_id: 49
+    method: substation_and_scale
+    confidence: tentative
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "Waltham Cross Farm 2", 350 MW at Waltham Cross B
+      400kV. Site 49 is the Google data centre at Waltham Cross,
+      Cheshunt (Broxbourne) — the only corpus scheme at this substation
+      and the only one plausibly at this scale there. Nothing in the row
+      names Google, "Farm 2" is unexplained, and Google discloses no MW
+      anywhere public, so this stays tentative despite the scale fit.
+
+  - row: 632
+    claim_name: Waltham Cross Farm 2
+    site_id: 49
+    method: substation_and_scale
+    confidence: tentative
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Second "Waltham Cross Farm 2" row, 300 MW at the same substation
+      with a later connection date (2033-11-30 against 2033-04-04) —
+      read as a second phase or plot of the same project as row 630, and
+      matched to site 49 on the same reasoning and with the same
+      reservations.
+
+  - row: 1080
+    claim_name: RHT2
+    site_id: 97
+    method: place_and_scale
+    confidence: tentative
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "RHT2", 57 MW at Rye House GSP, Hoddesdon. Site 97
+      (Xylem Industrial Estate, Bingley Road, Hoddesdon — Broxbourne) is
+      the corpus's only Hoddesdon data-centre scheme, marketed as a
+      "powered and permitted" shell, and its floor-area estimate
+      (~69 MW) is the right order. "RHT2" names nothing; Rye House GSP
+      serves more than one estate. A lead only.
+
+  - row: 1547
+    claim_name: Rye House (Tertiary)
+    site_id: 97
+    method: place_and_scale
+    confidence: tentative
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "Rye House (Tertiary)", 57 MW at Rye House 400kV —
+      same capacity, same date and same GSP family as RHT2 (row 1080),
+      read as a related or successive agreement for the same Hoddesdon
+      project, and matched to site 97 on the same reasoning and with the
+      same reservations.
+
+  - row: 927
+    claim_name: GTR GB2
+    site_id: 443
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "GTR GB2", 200 MW, connection point "International
+      Trading Estates, Bath Road - GB2 - Substation 132kV No 2"
+      (2037). Site 443 (PTNO-12842719) is the International Trading
+      Estate, Trident Way, Southall — applicant "GTR London 2 S.a.r.l.
+      (Global Technical Realty / GTR)" per the 250949FUL planning
+      record, and "GB2" is that scheme's own project code in its
+      document references (Chetwoods Design and Access Statement
+      "GB2-CA-XX-XX-RP-A-XXXX-06100", Whitby Wood drainage report
+      "GB2-WW-ZZ-XX-RP-C-ZZZZ-00001"). The application's drawings
+      include 132kV cable ducting and joint bays, matching the
+      register's on-estate 132kV substation. Residual doubt: the
+      register says "Bath Road" where the planning record's address is
+      Trident Way, off Brent Road — read as the register's own label
+      for the connection location, not a competing site. Held in
+      `considered` until 2026-08-20, when the estate's applications
+      were split out of the Union Park site record (site 61) into site
+      443; matching before that split would have attributed GTR's
+      claim to a site labelled Ark Union Park.
+
+  - row: 968
+    claim_name: ITE (Bath Road - GTR) - Uxbridge Moor
+    site_id: 443
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-20
+    evidence: >-
+      Register row "ITE (Bath Road - GTR) - Uxbridge Moor", 150 MW at
+      Uxbridge Moor (Iver B 132kV), 2029. The row name carries both
+      the estate (ITE = International Trading Estate) and the
+      applicant (GTR — "GTR London 2 S.a.r.l. (Global Technical Realty
+      / GTR)" per the 250949FUL planning record), and no other GTR
+      scheme or International Trading Estate exists in the corpus. A
+      separate agreement from row 927 — different connection point and
+      date — so the campus holds two register claims (350 MW combined
+      contracted connection capacity, which is a ceiling someone
+      agreed with NESO, not IT load and not build). Same "Bath Road"
+      residual as row 927.
+
+# Rows examined and deliberately not matched. Reasons recorded so the
+# next adjudicator starts from the nulls, not from zero.
+considered:
+  - rows: [1508, 722, 764]
+    claim_name: Iver 1/2/3 Ark Estates
+    reason: >-
+      1,305 MW of contracted Ark demand at Uxbridge Moor (Iver B) with
+      no Ark scheme at Iver anywhere in the corpus — Ark's known corpus
+      presence is Union Park (Hayes). Either pre-application land or a
+      scheme our sweeps have not seen. A null worth reporting, not
+      matching.
+  - rows: [1459]
+    claim_name: Sundon DC
+    reason: >-
+      600 MW at Sundon GSP (Central Bedfordshire). Corpus Central Beds
+      sites (Linmere Island 48 MW, Houghton Regis North) are adjacent
+      but neither fits the name or the scale.
+  - rows: [0]
+    claim_name: Fiddler's Ferry Data Centre / Micklefield DC / Cardiff DC /
+      IPC Tremorfa Demand / Laleham DC / Edinburgh Business Park /
+      Clydebridge DC / Inchinnan DC / Jawcraig DC / Digital and
+      Manufacturing Campus / West Burton Giga / Cottam Giga / Ratcliffe
+      Data Centre / Seagull Data connect / This Gravity / West Horndon
+      Estate / Quest Park / Didcot Road 2
+    reason: >-
+      Examined against the corpus 2026-08-20; either no corpus site
+      exists in the right place (Fiddler's Ferry, Micklefield, the
+      Scottish rows, Gravity, West Horndon, Quest Park, Ratcliffe,
+      the Giga rows) or more than one real-world candidate fits and
+      nothing disambiguates (Cardiff DC could be Latos Rover Way or
+      Vantage St Mellons; Laleham DC's name and connection point point
+      at different places; Edinburgh Business Park conflicts with the
+      Heriot-Watt campus scheme's location; Didcot Road 2 is generic).
+      Rows listed by name because several were checked as a class;
+      the placeholder row number 0 marks this entry as documentation,
+      not a loadable match.
