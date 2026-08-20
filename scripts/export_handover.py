@@ -470,6 +470,15 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "IT load, total site power, grid connection, on-site generation, "
      "then a floor-area inference — losing authority at each step. The "
      "three columns to its right say which step and how much to trust it."),
+    ("Sites", "External power indicators",
+     "Whether this site has a live match in the Capacity claims sheet, "
+     "and the strongest confidence tier among its matches: 'strong', "
+     "'probable' or 'tentative', with a count where there is more than "
+     "one. Deliberately not a megawatt figure — a claim can be a "
+     "different quantity from this row's own Power MW (a contracted "
+     "grid ceiling is not IT load), so a number here would read as "
+     "directly comparable to Power MW when it is not. Hover the tag, or "
+     "open the site panel, for the claim names and their own figures."),
     ("Sites", "Figures provisional?",
      "Whether this row's findings-derived values come from a complete "
      "reading. Where they do not, every such value is a floor rather than a "
