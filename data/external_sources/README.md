@@ -112,6 +112,44 @@ Figures, quotes, locators and hand-adjudicated site matches live in
 match no site: Meridian Park (an operating Enfield data centre absent
 from this corpus entirely) and the A9 building (no location stated).
 
+## operator_snapshots/ and operator-claims.yaml
+
+What operators publish about their own sites, snapshotted because a
+marketing page can change any day and a figure quoted in a published
+story has to be recoverable a year later. Each snapshot holds the page's
+visible text plus any JSON-LD or counter attributes, with the URL, fetch
+date and the sha256 of the HTML that produced it. Refresh with
+`scripts/fetch_operator_snapshots.py`.
+
+**The weakest authority in the claims store**, and labelled so wherever
+it renders: marketing material, not an audited or regulatory disclosure,
+and it may count capacity not yet built. It earns its place because it is
+the only source describing a site's whole intended build-out, and because
+it is published by the same companies that file audited accounts — so a
+disagreement is between two of a company's own numbers, not a question of
+whose source to trust. Ark's Spring Park is **55 MW** here and **41.68 MW
+built** in its FY2025 filing; 41.68 + 13.5 under construction = 55.18.
+
+Figures are captured from structured data where operators bury them:
+Ark's pages render capacity as JavaScript counters reading "0 MW", with
+the real values carried twice over — as a schema.org `Total Capacity`
+property and as `fb-count-target` attributes, which agree for all seven
+sites. Every claim quotes a verbatim span that must still appear in its
+snapshot (whitespace-normalised), asserted by
+`dcp.capacity_claims.verify_operator_quotes`.
+
+Operators' own terms are preserved rather than translated — "Total
+Capacity", "Total compute capacity" and "IT load" are not synonyms, and
+across the wider 2026-08-20 survey seven distinct terms were in use for
+what a reader would call the size of a data centre.
+
+One figure is deliberately **not** loaded: Greystoke's AI Growth Zone
+page states Humber Tech Park "can provide 384 GW of computing power",
+roughly eight times GB peak demand, against 384 MW on two other pages of
+the same site. It is recorded under `noted:` in the claims file, because
+a developer publishing it is a finding but loading it would poison every
+aggregate it touched.
+
 ## ukpn-dc-profiles-per-site.json
 
 Per-site aggregate (96 rows) computed 2026-08-12 from UK Power Networks'

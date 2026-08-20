@@ -57,6 +57,10 @@ CONFIDENCE_VOCAB = ("strong", "probable", "tentative")
 SOURCE_TITLES = {
     "neso_ea_register": "NESO Existing Agreements Register",
     "companies_house": "Companies House filed accounts",
+    # Operator claims override this with the operator's own name, since
+    # "who is saying it" is the whole point of the weakest-authority
+    # source; this is the fallback if that attribute is ever missing.
+    "operator_website": "Operator's own website",
 }
 
 QUANTITY_LABELS = {
@@ -252,6 +256,118 @@ def verify_ch_quotes(claims: list[FiledClaim] | None = None,
     return problems
 
 
+# ---------------------------------------------------------------------------
+# Operator websites: what a company tells its customers.
+#
+# The weakest authority in the store and labelled so wherever it renders.
+# It earns its place for two reasons: it is the only source describing a
+# site's whole intended build-out, and it is published by the same
+# companies that file audited accounts — so where the two disagree, both
+# numbers are the company's own and the divergence is reportable rather
+# than a question of whose source to believe.
+#
+# Verification is the same shape as the filings: a verbatim span that must
+# still appear in the committed snapshot. Operator pages change without
+# notice, so a figure that has moved fails the check instead of drifting.
+
+OPERATOR_CLAIMS_PATH = ROOT / "data" / "external_sources" / "operator-claims.yaml"
+OPERATOR_SNAPSHOT_DIR = ROOT / "data" / "external_sources" / "operator_snapshots"
+OPERATOR_SOURCE_KEY = "operator_website"
+
+
+def _norm_ws(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def load_operator_document(path: Path = OPERATOR_CLAIMS_PATH) -> dict:
+    return yaml.safe_load(path.read_text())
+
+
+def load_operator_claims(path: Path = OPERATOR_CLAIMS_PATH) -> list[FiledClaim]:
+    cfg = load_operator_document(path)
+    sources = {s["key"]: s for s in cfg.get("sources", [])}
+    out = []
+    for c in cfg.get("claims", []):
+        src = sources[c["source"]]
+        snap = OPERATOR_SNAPSHOT_DIR / f"{c['snapshot']}.txt"
+        url = ""
+        if snap.exists():
+            m = re.search(r"^# url: (.+)$", snap.read_text(), re.MULTILINE)
+            url = m.group(1).strip() if m else ""
+        as_at = c.get("as_at")
+        out.append(FiledClaim(
+            source_key=OPERATOR_SOURCE_KEY,
+            company_name=src["operator"],
+            company_number="",
+            claim_name=c["claim_name"],
+            quantity_type=c["quantity_type"],
+            value=float(c["value"]),
+            unit=c["unit"],
+            stage=c.get("stage"),
+            as_at=as_at if isinstance(as_at, date) else None,
+            locator=c["snapshot"],
+            quote=c["quote"].strip(),
+            url=url,
+            company_level=False,
+            attrs={
+                "operator": src["operator"],
+                # The operator's own word for the quantity, kept because
+                # "Total Capacity", "Total compute capacity" and "IT load"
+                # are not synonyms and the difference is the story.
+                "operator_term": c["term"],
+                "note": c.get("note"),
+                "quote": c["quote"].strip(),
+                "snapshot": c["snapshot"],
+                "source_document": c["snapshot"],
+                "document_stem": c["snapshot"],
+            },
+        ))
+    return out
+
+
+def load_operator_matches(path: Path = OPERATOR_CLAIMS_PATH) -> list[dict]:
+    return list(load_operator_document(path).get("matches", []))
+
+
+def verify_operator_quotes(claims: list[FiledClaim] | None = None,
+                           snapshot_dir: Path = OPERATOR_SNAPSHOT_DIR) -> list[str]:
+    """Every claim's verbatim span must still appear in its snapshot.
+
+    Whitespace-normalised on both sides: the snapshots are extracted text
+    and JSON, where line breaks carry no meaning, but the digits and words
+    do.
+    """
+    claims = claims if claims is not None else load_operator_claims()
+    problems = []
+    for c in claims:
+        f = snapshot_dir / f"{c.attrs['snapshot']}.txt"
+        if not f.exists():
+            problems.append(f"{c.claim_name}: no snapshot {f.name}")
+            continue
+        if _norm_ws(c.quote) not in _norm_ws(f.read_text()):
+            problems.append(
+                f"{c.claim_name}: quote not found in {f.name} — the page may "
+                f"have changed; re-run scripts/fetch_operator_snapshots.py "
+                f"and re-read the figure")
+    return problems
+
+
+def validate_operator(claims: list[FiledClaim],
+                      matches: list[dict]) -> list[str]:
+    problems = []
+    names = [c.claim_name for c in claims]
+    dupes = {n for n in names if names.count(n) > 1}
+    problems += [f"duplicate claim_name {n!r}" for n in sorted(dupes)]
+    for m in matches:
+        if m["claim_name"] not in names:
+            problems.append(f"match names no claim: {m['claim_name']!r}")
+        if m["confidence"] not in CONFIDENCE_VOCAB:
+            problems.append(f"{m['claim_name']}: confidence {m['confidence']!r}")
+        if len(m.get("evidence", "").strip()) < 40:
+            problems.append(f"{m['claim_name']}: evidence too thin to defend")
+    return problems + verify_operator_quotes(claims)
+
+
 def load_site_claims(cur) -> dict[str, list[dict]]:
     """Live matches joined to their claims, keyed by site_key.
 
@@ -263,7 +379,9 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
                cl.attrs->>'connection_point',
                cl.attrs->>'existing_connection_date',
                cl.as_at, cl.source_key, cl.source_url, cl.source_locator,
-               m.method, m.confidence, m.evidence
+               m.method, m.confidence, m.evidence,
+               cl.attrs->>'operator', cl.attrs->>'operator_term',
+               cl.value_original, cl.unit_original, cl.stage
         FROM capacity_claim_matches m
         JOIN capacity_claims cl ON cl.id = m.claim_id
         JOIN sites s ON s.id = m.site_id
@@ -271,13 +389,17 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
         ORDER BY cl.value_mw DESC NULLS LAST, cl.claim_name""")
     out: dict[str, list[dict]] = {}
     for (key, name, mw, qty, point, conn_date, as_at, src, url, locator,
-         method, confidence, evidence) in cur.fetchall():
+         method, confidence, evidence, operator, term,
+         value_original, unit_original, stage) in cur.fetchall():
         out.setdefault(key, []).append({
             "claim_name": name, "value_mw": mw, "quantity_type": qty,
             "connection_point": point, "connection_date": conn_date,
             "as_at": as_at, "source_key": src, "source_url": url,
             "source_locator": locator, "method": method,
             "confidence": confidence, "evidence": evidence,
+            "operator": operator, "operator_term": term,
+            "value_original": value_original, "unit_original": unit_original,
+            "stage": stage,
         })
     return out
 

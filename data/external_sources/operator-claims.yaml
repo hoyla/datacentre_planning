@@ -1,0 +1,316 @@
+# Capacity figures operators publish about their own sites.
+#
+# The weakest-authority source in the claims store, and labelled as such:
+# marketing material, not an audited or regulatory disclosure. It earns
+# its place because it is the only source that covers a site's whole
+# intended build-out, and because where it disagrees with the same
+# company's audited accounts — Ark's Spring Park is 55 MW here and
+# 41.68 MW built in its FY2025 filing — the disagreement is reportable.
+#
+# Every claim quotes a verbatim span that must still appear in the
+# committed snapshot under operator_snapshots/ (whitespace-normalised),
+# checked by dcp.capacity_claims.verify_operator_quotes. Refresh the
+# snapshots with scripts/fetch_operator_snapshots.py; a figure that has
+# moved will fail the check rather than drift silently.
+#
+# Two things this file deliberately does not do. It does not convert the
+# operator's term into ours — "Total Capacity", "Total compute capacity"
+# and "IT load" are recorded as printed, because they are not synonyms.
+# And it does not load a figure that is plainly a unit error: Greystoke's
+# AI Growth Zone page states Humber Tech Park "can provide 384 GW of
+# computing power", roughly eight times UK peak demand, against 384 MW on
+# two other pages of the same site. That is recorded under `noted` below,
+# not as a claim, because loading it would poison every aggregate it
+# touched.
+
+sources:
+  - key: ark_website
+    operator: Ark Data Centres
+    snapshot_dir: operator_snapshots
+    note: >-
+      Capacity is rendered by JavaScript counters that read "0 MW" in the
+      raw HTML. The real values are carried twice — in schema.org JSON-LD
+      as a "Total Capacity" property, and as fb-count-target attributes —
+      and the two agree for all seven sites. Ark is the only operator
+      surveyed that date-stamps its figures ("Updated: 1.1.25").
+
+  - key: greystoke_website
+    operator: Greystoke Land
+    snapshot_dir: operator_snapshots
+    note: >-
+      A developer rather than an operator: all three schemes are consented
+      and unbuilt, and the site labels them "Planning approved". Note the
+      real domain is greystoke.co.uk — greystokeland.com is a parked
+      lander. Its own pages disagree on the grid position: "more than
+      2.5 GW of accepted grid connections" on the home page against
+      "2 GWs of accepted grid connections" on the AI Growth Zone page.
+
+claims:
+  # --- Ark, per campus ---------------------------------------------------
+  - source: ark_website
+    snapshot: ark-cody-park
+    claim_name: Cody Park
+    quantity_type: announced_capacity
+    value: 51
+    unit: MW
+    term: Total Capacity
+    stage: operational since 2011
+    as_at: 2025-01-01
+    quote: '"name": "Total Capacity", "value": "51"'
+    note: >-
+      Visible label is "Total compute capacity"; the homepage calls the
+      portfolio equivalent "Secured compute capacity". Page also states 6
+      data centres, against 5 buildings in the FY2025 accounts.
+
+  - source: ark_website
+    snapshot: ark-spring-park
+    claim_name: Spring Park
+    quantity_type: announced_capacity
+    value: 55
+    unit: MW
+    term: Total Capacity
+    stage: operational since 2010
+    as_at: 2025-01-01
+    quote: '"name": "Total Capacity", "value": "55"'
+    note: >-
+      The sharpest divergence in the store: Ark's own audited accounts
+      give Spring Park as 41.68 MW built at 30 June 2025 with a further
+      13.5 MW under construction. 41.68 + 13.5 = 55.18, so the website
+      figure appears to count capacity not yet built while the audited
+      figure does not. Same company, same site, same week.
+
+  - source: ark_website
+    snapshot: ark-union-park
+    claim_name: Union Park
+    quantity_type: announced_capacity
+    value: 99
+    unit: MW
+    term: Total Capacity
+    stage: operational since 2024
+    as_at: 2025-01-01
+    quote: '"name": "Total Capacity", "value": "99"'
+
+  - source: ark_website
+    snapshot: ark-alliance-park
+    claim_name: Alliance Park
+    quantity_type: announced_capacity
+    value: 50
+    unit: MW
+    term: Total Capacity
+    stage: under construction
+    as_at: 2025-01-01
+    quote: '"name": "Total Capacity", "value": "50"'
+
+  - source: ark_website
+    snapshot: ark-longcross-park
+    claim_name: Longcross Park
+    quantity_type: announced_capacity
+    value: 54
+    unit: MW
+    term: Total Capacity
+    stage: operational since 2025
+    as_at: 2025-01-01
+    quote: '"name": "Total Capacity", "value": "54"'
+
+  - source: ark_website
+    snapshot: ark-meridian-park
+    claim_name: Meridian Park
+    quantity_type: announced_capacity
+    value: 16
+    unit: MW
+    term: Total Capacity
+    stage: operational since 2020
+    as_at: 2025-01-01
+    quote: '"name": "Total Capacity", "value": "16"'
+    note: >-
+      16 here against 16.36 MW built in the FY2025 accounts — the website
+      figure is the rounded one. No corresponding site exists in this
+      corpus, so this is an operating data centre the planning sweep has
+      never seen, from two independent directions.
+
+  - source: ark_website
+    snapshot: ark-elstree
+    claim_name: Former Mercure Hotel (Hilfield Park)
+    quantity_type: announced_capacity
+    value: 200
+    unit: MW
+    term: Total Capacity
+    stage: from 2029
+    quote: '"name": "Total Capacity", "value": "~200"'
+    note: >-
+      Printed as "~200" — an approximation, recorded as 200 with the
+      tilde preserved in the quote. The same page's prose says instead
+      that "250MVA will be delivered from 2028": a different number, a
+      different unit and a different year, on one page. Unlike Ark's
+      operating sites this page carries no "Updated" date and no postcode
+      or coordinates in its structured data.
+
+  # --- Greystoke, per scheme --------------------------------------------
+  - source: greystoke_website
+    snapshot: greystoke-home
+    claim_name: Abbots Langley
+    quantity_type: announced_capacity
+    value: 96
+    unit: MW
+    term: IT load
+    stage: planning approved
+    quote: 96MW IT load Planning approved
+    note: >-
+      Stated as "96 MW data centre project" on the data-centres page, with
+      900,000 sq ft (GEA) and £1bn investment.
+
+  - source: greystoke_website
+    snapshot: greystoke-home
+    claim_name: Humber Tech Park
+    quantity_type: announced_capacity
+    value: 384
+    unit: MW
+    term: IT load
+    stage: planning approved
+    quote: 384MW IT load Planning approved
+    note: >-
+      The same 384 MW appears in the planning documents and in Data Center
+      Map, but those are not three independent sources: EXTERNAL_DATA_-
+      SOURCES.md §2 established that DCM's planned-site figures are read
+      off the same planning documents. Treat as one figure with three
+      mouths. See `noted` below for the 384 GW version on the operator's
+      own AI Growth Zone page.
+
+  - source: greystoke_website
+    snapshot: greystoke-home
+    claim_name: West London Technology Park
+    quantity_type: announced_capacity
+    value: 90
+    unit: MW
+    term: IT load
+    stage: planning approved
+    quote: 90MW IT load Planning approved
+
+matches:
+  - claim_name: Cody Park
+    site_id: 14
+    method: name_and_postcode
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Ark's page gives postcode GU14 0LH, which is the postcode carried by
+      site 14's own application addresses ("Cody Park, A101 Ively Road
+      Farnborough GU14 0LH"), and site 14's documents name Ark as
+      applicant 64 times. Same campus as the Companies House built-capacity
+      claim already matched here, so the two sit side by side: 51 MW
+      announced against 48.78 MW built.
+
+  - claim_name: Spring Park
+    site_id: 33
+    method: name_and_postcode
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Ark's page gives SN13 9GB at Spring Park, Corsham; site 33 is
+      "SPRING PARK - TWO DATA CENTRES P3 & P4" with addresses at Spring
+      Park, Westwells Road, Hawthorn, Corsham and 142 Ark applicant
+      findings. The 55 MW announced figure sits beside the 41.68 MW
+      audited built figure already matched to this site.
+
+  - claim_name: Union Park
+    site_id: 61
+    method: name_and_postcode
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Ark's page gives UB3 4DG; site 61 is named "NORTH HYDE GARDENS
+      UNION PARK - DATA CENTRES" and its live application postcodes are
+      UB3 4QQ, UB3 4QR, UB3 4RF, UB4 0RH and UB4 0SL — the same Hayes
+      district, under the same name. Matched only after the site 61 split
+      retired its International Trading Estate members to site 443; before
+      that this claim would have attached to a record holding two campuses.
+
+  - claim_name: Alliance Park
+    site_id: 67
+    method: name_and_postcode
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Exact postcode identity: Ark's Alliance Park page gives W3 0RZ, and
+      site 67 ("PROJECT ALLIANCE PARK WESTERN AVENUE - DATA CENTRE",
+      Ealing) carries W3 0RZ on its application. Name matches too. Ark
+      labels it under construction, so no audited built figure exists for
+      comparison yet.
+
+  - claim_name: Former Mercure Hotel (Hilfield Park)
+    site_id: 139
+    method: name_and_place
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Ark names the site "Former Mercure Hotel (Hilfield Park)"; site 139
+      is the former Mercure Hotel scheme on Tylers Way, Watford (WD25
+      8JH), and Hilfield Park adjoins that location. This match also
+      identifies the operator, which the planning record does not
+      foreground. The site now carries three figures from three audiences:
+      168 MW IT / 218.4 MW total in the environmental statement, 435 MW
+      contracted in NESO's register, and ~200 MW (or 250 MVA) here.
+
+  - claim_name: Abbots Langley
+    site_id: 91
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Greystoke names the scheme "Abbots Langley Data Centre"; site 91 is
+      "ABBOTS LANGLEY DATA CENTRE" (Three Rivers District Council). One
+      scheme of that name.
+
+  - claim_name: Humber Tech Park
+    site_id: 95
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Greystoke names "Humber Tech Park" in North Lincolnshire; site 95 is
+      "THE HUMBER TECH PARK DATA CENTRE" (North Lincolnshire Council).
+
+  - claim_name: West London Technology Park
+    site_id: 77
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Greystoke names "West London Technology Park" next to the M25 in
+      Buckinghamshire; site 77 is "WEST LONDON TECHNOLOGY PARK - DATA
+      CENTRE" (Buckinghamshire Council).
+
+  - claim_name: Longcross Park
+    site_id: 36
+    method: postcode_only
+    confidence: tentative
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Ark's Longcross Park page gives KT16 0EE, which site 36 carries on
+      one of its applications. But site 36 is "LONGCROSS GARDEN VILLAGE
+      DEVELOPMENT" — a housing-led masterplan on the former DERA site,
+      not a data centre record — so the postcode may simply place Ark's
+      campus within the same former estate rather than within this
+      scheme. A lead for someone to resolve from the Runnymede register,
+      not an attribution.
+
+considered:
+  - claim_name: Meridian Park
+    reason: >-
+      No site in this corpus corresponds to Ark's Enfield data centre,
+      exactly as its Companies House built-capacity figure found. Two
+      independent sources describing an operating data centre the
+      planning sweep has never captured.
+
+noted:
+  - subject: Greystoke, Humber Tech Park — 384 GW
+    snapshot: greystoke-ai-growth-zone
+    quote: can provide 384 GW of computing power
+    reason: >-
+      Deliberately not loaded as a claim. 384 GW is roughly eight times
+      Great Britain's peak electricity demand and about 150 times the
+      2.5 GW the same page claims for the whole North Lincolnshire AI
+      Growth Zone; two other pages on the same site give 384 MW. It is a
+      unit error, recorded here because a developer publishing it on a
+      government-facing investment page is a finding, and because loading
+      it would poison every aggregate it touched.
