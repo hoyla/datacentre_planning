@@ -91,6 +91,82 @@ def test_validation_catches_a_renamed_claim():
 
 
 # ---------------------------------------------------------------------------
+# Rendering support: both artefacts draw wording from the module, so the
+# vocabulary has to cover everything the schema admits.
+
+def test_every_schema_quantity_has_a_label():
+    # Migration 021's CHECK constraint vocabulary, verbatim.
+    schema_vocab = {
+        "it_load", "grid_connection", "total_site", "onsite_generation",
+        "cooling", "energy_storage", "thermal_input",
+        "built_capacity", "metered_consumption", "announced_capacity"}
+    assert set(cc.QUANTITY_LABELS) == schema_vocab
+
+
+def test_caveat_names_what_contracted_capacity_is_not():
+    for absent in ("IT load", "built capacity", "draws"):
+        assert absent in cc.CLAIMS_CAVEAT
+
+
+@pytest.mark.integration
+def test_site_claim_loaders_round_trip(db_conn):
+    with db_conn.cursor() as cur:
+        cur.execute(
+            "INSERT INTO sites (site_key, classification, radius_km) "
+            "VALUES ('rt-site', 'ours_only', 0.5) RETURNING id")
+        site_id = cur.fetchone()[0]
+        cur.execute(
+            """
+            INSERT INTO capacity_claims
+                (source_key, claim_name, quantity_type, value_original,
+                 unit_original, value_mw, as_at, source_url, source_locator,
+                 attrs)
+            VALUES ('neso_ea_register', 'RT DC', 'grid_connection',
+                    250, 'MW', 250, '2025-06-11', 'https://example', 'row 9',
+                    '{"connection_point": "Somewhere 400kV",
+                      "existing_connection_date": "2031-10-31"}')
+            RETURNING id
+            """)
+        claim_id = cur.fetchone()[0]
+        cur.execute(
+            """
+            INSERT INTO capacity_claims
+                (source_key, claim_name, quantity_type, value_original,
+                 unit_original, value_mw, as_at, source_url, source_locator)
+            VALUES ('neso_ea_register', 'Unmatched DC', 'grid_connection',
+                    90, 'MW', 90, '2025-06-11', 'https://example', 'row 10')
+            """)
+        cur.execute(
+            """
+            INSERT INTO capacity_claim_matches
+                (claim_id, site_id, method, confidence, evidence, matched_by)
+            VALUES (%s, %s, 'name_identity', 'strong',
+                    'Round-trip evidence long enough for the validator.',
+                    'hand:test')
+            """, (claim_id, site_id))
+
+        by_site = cc.load_site_claims(cur)
+        assert list(by_site) == ["rt-site"]
+        (claim,) = by_site["rt-site"]
+        assert claim["value_mw"] == 250
+        assert claim["connection_point"] == "Somewhere 400kV"
+        assert claim["connection_date"] == "2031-10-31"
+        assert claim["confidence"] == "strong"
+
+        rows = cc.load_claim_rows(cur)
+        assert len(rows) == 2
+        matched = next(r for r in rows if r["claim_name"] == "RT DC")
+        unmatched = next(r for r in rows if r["claim_name"] == "Unmatched DC")
+        assert matched["site_key"] == "rt-site"
+        assert unmatched["site_key"] is None and unmatched["confidence"] is None
+
+        # A retired match drops out of both loaders' live views.
+        cur.execute("UPDATE capacity_claim_matches SET retired_at = now()")
+        assert cc.load_site_claims(cur) == {}
+        assert all(r["site_key"] is None for r in cc.load_claim_rows(cur))
+
+
+# ---------------------------------------------------------------------------
 # Loader contract, against the migrated test database
 
 @pytest.mark.integration

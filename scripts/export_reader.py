@@ -277,6 +277,17 @@ tr.detail td{padding:14px 18px 18px 30px}
    boxes. Left in the grid's auto-flow it landed in the first column,
    stranding the documents section below an empty row. */
 .box.ctx{grid-column:2 / -1}
+/* Same shape as the context band: register claims carry a paragraph of
+   match evidence each, which a column slot would fold into a ribbon. */
+.box.claims{grid-column:2 / -1}
+.box.claims .claim{margin-bottom:10px}
+.box.claims details>summary{cursor:pointer;font-size:12px;color:var(--accent);
+  list-style:none}
+.box.claims details>summary::-webkit-details-marker{display:none}
+.box.claims details>summary:before{content:"▸ ";display:inline-block;
+  transition:transform .12s}
+.box.claims details[open]>summary:before{transform:rotate(90deg)}
+.box.claims details>p{margin-top:6px;max-width:70em}
 @media (max-width:1100px){
   .grid{grid-template-columns:1fr 1fr}
   /* Two boxes wide enough to want the full width again: dissolving the
@@ -285,6 +296,7 @@ tr.detail td{padding:14px 18px 18px 30px}
   .box.proposal{grid-column:1 / -1;grid-row:auto}
   .box.identity{grid-column:1 / -1;grid-row:auto}
   .box.ctx{grid-column:1 / -1}
+  .box.claims{grid-column:1 / -1}
 }
 @media (max-width:700px){
   .grid{grid-template-columns:1fr}
@@ -950,6 +962,7 @@ def main() -> int:
     args = ap.parse_args()
 
     hv = _handover()
+    from dcp import capacity_claims as ccl
     from dcp import consumption_context as cc
     from dcp import external_aggregates as extagg
     from dcp import origin as origin_mod
@@ -1082,6 +1095,14 @@ def main() -> int:
             WHERE rn = 1""")
         power_src = {(k, q): r for k, q, r in cur.fetchall()}
 
+        # External capacity claims: grid-register figures attached to
+        # sites by hand-adjudicated inference (dcp/capacity_claims). They
+        # render in their own box, never into the site's power estimate —
+        # a contracted ceiling is not the quantity a planning application
+        # states, and the divergence between the two is the finding.
+        claims_by_site = ccl.load_site_claims(cur)
+        n_claims_total = len(ccl.load_claim_rows(cur))
+
         # A figure adjudicated as somebody else's must not appear in this
         # list looking like the site's own. Ten of them did: the panel
         # ranks power findings to the top, and "22,700 MW" is a Savills
@@ -1203,6 +1224,7 @@ def main() -> int:
     desnz = cc.load_series()
     ctx_mapped = ctx_unmapped = 0
     ctx_unrecognised: set[str] = set()
+    claims_sites_rendered = claims_rows_rendered = 0
     for r in site_rows:
         (key, cls, name, lat, lon, csrc, councils, n_apps, refs, verdicts,
          docs, findings_n, it, tot, grid, gen, ncap, nexc, families,
@@ -1391,6 +1413,57 @@ def main() -> int:
             ctx_html = ""
         ctx_unrecognised.update(cc.unrecognised(councils))
 
+        # Grid-register claims: rendered beside the planning-derived
+        # power, never into it. Tentative matches say what they are, and
+        # the adjudication evidence travels with every row — the match is
+        # our inference, so the reasoning has to be one click away.
+        site_claims = claims_by_site.get(key, [])
+        if site_claims:
+            claims_sites_rendered += 1
+            claims_rows_rendered += len(site_claims)
+            _claim_rows = []
+            for c in site_claims:
+                qty = ccl.QUANTITY_LABELS.get(c["quantity_type"],
+                                              c["quantity_type"])
+                try:
+                    _cd = dt.date.fromisoformat(c["connection_date"] or "")
+                    conn_date = f"{_cd.day} {_cd:%B %Y}"
+                except ValueError:
+                    conn_date = c["connection_date"]
+                head = (f"<p><strong>{float(c['value_mw']):,.4g} MW</strong> "
+                        f"{esc(qty)} — register entry "
+                        f"“{esc(c['claim_name'])}”"
+                        + (f", {esc(c['connection_point'])}"
+                           if c["connection_point"] else "")
+                        + (f", connection date {esc(conn_date)}"
+                           if conn_date else "")
+                        + ".</p>")
+                conf = (f"{c['confidence']} match"
+                        + (f" — {ccl.TENTATIVE_NOTE}"
+                           if c["confidence"] == "tentative" else "")
+                        + f" · {esc(c['method']).replace('_', ' ')}")
+                src_title = ccl.SOURCE_TITLES.get(c["source_key"],
+                                                  c["source_key"])
+                _as_at = c["as_at"]
+                src = (f'<a href="{esc(c["source_url"])}" target="_blank" '
+                       f'rel="noopener">{esc(src_title)}</a>'
+                       + (f", as at {_as_at.day} {_as_at:%B %Y}"
+                          if _as_at else "")
+                       + (f", {esc(c['source_locator'])}"
+                          if c["source_locator"] else ""))
+                _claim_rows.append(
+                    f'<div class="claim">{head}'
+                    f'<p class="help">{conf} · {src}</p>'
+                    f'<details><summary>How this was matched</summary>'
+                    f'<p class="help">{esc(c["evidence"])}</p></details>'
+                    f'</div>')
+            claims_html = (
+                '<div class="box claims"><h4>Grid connection register</h4>'
+                + "".join(_claim_rows)
+                + f'<p class="help">{esc(ccl.CLAIMS_CAVEAT)}</p></div>')
+        else:
+            claims_html = ""
+
         def _q(v, qt, _k=key):
             if not v:
                 return "—"
@@ -1410,7 +1483,8 @@ def main() -> int:
                        (name, key, addr, ", ".join(councils or []), full_desc,
                         prof.get("applicants"), prof.get("advisers"),
                         prof.get("cooling_method"), btitle,
-                        near[0]["name"] if near else "", " ".join(refs or [])))
+                        near[0]["name"] if near else "", " ".join(refs or []),
+                        " ".join(c["claim_name"] for c in site_claims)))
         mw = "" if est.value_mw is None else f"{est.value_mw:,.0f}"
         mw_cell = (f"{mw}<span class='q'>{esc(est.basis)}"
                    + (" <span class='prov'>· may rise</span>" if is_prov and mw else "")
@@ -1476,6 +1550,7 @@ def main() -> int:
     <dt>Excluded figures</dt><dd>{nexc or 0}
      <span class="help">market context, not this site</span></dd>
    </dl></div>
+  {claims_html}
 
   <div class="box"><h4>Generation, cooling and water</h4>
    <dl class="kv">
@@ -2450,6 +2525,19 @@ def main() -> int:
     if ctx_unrecognised:
         print(f"  Consumption context: UNRECOGNISED council prefixes — add "
               f"to dcp/consumption_context.py: {sorted(ctx_unrecognised)}")
+    # No silent gaps: every live claim match either rendered on a panel
+    # or is named here. A shortfall means a matched site fell out of the
+    # site rows — retired, or filtered upstream — and its claim would
+    # otherwise vanish without a trace.
+    _claims_live = sum(len(v) for v in claims_by_site.values())
+    print(f"  Capacity claims: {n_claims_total} claims held, {_claims_live} "
+          f"matched to sites, rendered on {claims_sites_rendered} site "
+          f"panels ({claims_rows_rendered} claim rows)")
+    if claims_rows_rendered != _claims_live:
+        _missing = sorted(set(claims_by_site) -
+                          {r[0] for r in site_rows})
+        print(f"  Capacity claims: NOT RENDERED — matched sites absent "
+              f"from the site rows: {_missing}")
     return 0
 
 

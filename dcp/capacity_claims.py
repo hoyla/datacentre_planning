@@ -47,6 +47,97 @@ DEMAND_TECHNOLOGY = "Transmission Connected Demand"
 
 CONFIDENCE_VOCAB = ("strong", "probable", "tentative")
 
+# ---------------------------------------------------------------------------
+# Rendering support. Both artefacts — the reader's site panels and the
+# workbook's Capacity claims sheet — draw their wording and their rows
+# from here, so they cannot disagree about what a claim is or what it
+# does not mean (the two-prose-definitions lesson).
+
+SOURCE_TITLES = {
+    "neso_ea_register": "NESO Existing Agreements Register",
+}
+
+QUANTITY_LABELS = {
+    "it_load": "IT load",
+    "grid_connection": "contracted grid connection",
+    "total_site": "total site power",
+    "onsite_generation": "on-site generation",
+    "cooling": "cooling capacity",
+    "energy_storage": "energy storage",
+    "thermal_input": "thermal input",
+    "built_capacity": "built capacity",
+    "metered_consumption": "metered consumption",
+    "announced_capacity": "announced capacity",
+}
+
+# The caveat that must travel with every rendered claim. Contracted
+# capacity is the quantity most often mistaken for a site's "real"
+# demand, so the sentence names what it is not.
+CLAIMS_CAVEAT = (
+    "Contracted connection capacity is a ceiling a developer once agreed "
+    "with the grid operator — not IT load, not built capacity, and not "
+    "what the site draws. The register is consent-based and records "
+    "pre-reform positions, so absence proves nothing and entries can "
+    "shrink or lapse.")
+
+# Tentative matches are rendered as what they are. The matches file says
+# it in its header; the artefacts say it beside each tentative row.
+TENTATIVE_NOTE = "a lead, not an attribution"
+
+
+def load_site_claims(cur) -> dict[str, list[dict]]:
+    """Live matches joined to their claims, keyed by site_key.
+
+    Only sites with a live (unretired) match appear; most claims match
+    nothing and are reachable through load_claim_rows instead.
+    """
+    cur.execute("""
+        SELECT s.site_key, cl.claim_name, cl.value_mw, cl.quantity_type,
+               cl.attrs->>'connection_point',
+               cl.attrs->>'existing_connection_date',
+               cl.as_at, cl.source_key, cl.source_url, cl.source_locator,
+               m.method, m.confidence, m.evidence
+        FROM capacity_claim_matches m
+        JOIN capacity_claims cl ON cl.id = m.claim_id
+        JOIN sites s ON s.id = m.site_id
+        WHERE m.retired_at IS NULL AND s.retired_at IS NULL
+        ORDER BY cl.value_mw DESC NULLS LAST, cl.claim_name""")
+    out: dict[str, list[dict]] = {}
+    for (key, name, mw, qty, point, conn_date, as_at, src, url, locator,
+         method, confidence, evidence) in cur.fetchall():
+        out.setdefault(key, []).append({
+            "claim_name": name, "value_mw": mw, "quantity_type": qty,
+            "connection_point": point, "connection_date": conn_date,
+            "as_at": as_at, "source_key": src, "source_url": url,
+            "source_locator": locator, "method": method,
+            "confidence": confidence, "evidence": evidence,
+        })
+    return out
+
+
+def load_claim_rows(cur) -> list[dict]:
+    """Every claim, with its live match where one exists — the workbook
+    sheet's rows. Unmatched claims are most of the register and belong in
+    the artefact: they are the demand pipeline the planning system may
+    not have seen yet."""
+    cur.execute("""
+        SELECT cl.claim_name, cl.value_mw, cl.quantity_type,
+               cl.attrs->>'connection_point',
+               cl.attrs->>'existing_connection_date',
+               cl.as_at, cl.source_key, cl.source_url, cl.source_locator,
+               s.site_key, s.display_name,
+               m.method, m.confidence, m.evidence
+        FROM capacity_claims cl
+        LEFT JOIN capacity_claim_matches m
+               ON m.claim_id = cl.id AND m.retired_at IS NULL
+        LEFT JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+        ORDER BY cl.value_mw DESC NULLS LAST, cl.claim_name""")
+    cols = ("claim_name", "value_mw", "quantity_type", "connection_point",
+            "connection_date", "as_at", "source_key", "source_url",
+            "source_locator", "site_key", "site_name",
+            "method", "confidence", "evidence")
+    return [dict(zip(cols, r)) for r in cur.fetchall()]
+
 
 @dataclass(frozen=True)
 class Claim:
