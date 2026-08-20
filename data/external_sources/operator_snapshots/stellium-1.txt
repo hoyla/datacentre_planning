@@ -1,0 +1,830 @@
+# url: https://stelliumdc.com/stellium-1/
+
+# fetched: 2026-08-20
+
+# sha256(html): a8a0c79f941f4af43455f36c654bb401edb1d27611eb97ba8d6346b11025ff14
+
+## STRUCTURED
+
+(none)
+
+## VISIBLE TEXT
+
+Stellium 1 - Stellium 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Data Centres 
+ 
+ Stellium 1 
+ Stellium 1 DC Pictures 
+ Certifications & Memberships 
+ Virtual Tour 
+ Operations 
+ FAQs 
+ 
+ 
+ Stellium Data Centre Network 
+ 
+ Global Subsea Network 
+ National Network 
+ Metro Network (Owned) 
+ NCL-IX (Newcastle Internet Exchange) 
+ Connectivity Providers 
+ 
+ 
+ Services 
+ 
+ OCP Ready ™ 
+ Cloud Ready 
+ 
+ Amazon AWS 
+ Microsoft Azure 
+ Google Cloud 
+ IBM Cloud 
+ Oracle Cloud 
+ 
+ 
+ Rack Ready 
+ 
+ Less Than 20 Racks 
+ Greater Than 20 Racks 
+ 
+ 
+ Interconnection Services 
+ 
+ Connectivity Providers 
+ Cross Connects 
+ 
+ 
+ 
+ 
+ Industries 
+ 
+ HPC & AI Data Centre Services 
+ Energy Services 
+ Technology Internet Services 
+ Media & Streaming Services Data Centres 
+ Healthcare 
+ Fintech & High Frequency Trading 
+ 
+ 
+ About Us 
+ 
+ Management Team 
+ Careers 
+ Sustainability & Carbon Reduction 
+ News & Blog 
+ Events 
+ Resources 
+ 
+ North of England data centre market report 
+ 
+ 
+ 
+ 
+ Why North East England 
+ UK AI Growth Zone 
+ Contact Us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Select Page 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Stellium Data Centres 
+ Stellium 1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Covering an area of more than 4,264m2 and divided into four 4MW IT data halls whilst being fully scalable, it’s one of the most efficient colocation data centres in the UK. 
+ Connected direct to the 275KV National Grid , Stellium Data Centres ensure low-cost, ultra-reliable power at whatever levels you need. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Stellium Data Centre 1 Facts: 
+ 
+ 
+ 
+ 
+ 
+ 
+ 80 MWs (designed to scale to 180 MWs) of REGO certified renewable power 
+ Tier-3+ designed 
+ OCP Ready TM ISO- 27001 , ISO- 90001, ISO- 140001, ISO- 22301, ISO- 200001 Cyber Essentials+ and PSN Network certified facility 
+ 4,264 m2 of IT space (traditional water-cooled) 
+ 4 x 1066 m2 IT sectors 
+ AquaComms North Atlantic Loop & Altibox NO-UK CLS (Cable Landing Stations, inside our highly secure data centre) 
+ 2 x Meet-Me rooms 
+ PUE rating at 1.24 
+ Support from low to high density racks ( including HPC ) 
+ BREEAM Rated Excellent 
+ 
+ 
+ 
+ 
+ 
+ 
+ Why Newcastle? 
+ 
+ 
+ 
+ 
+ 
+ There are many reasons to choose Newcastle as your location of choice . Why continue to locate in congested London with increasing power costs and repeated issues with infrastructure when: 
+ 
+ 
+ 
+ 
+ 
+ 
+ Stellium provides 80 MWs (designed to scale to 180 MWs) of REGO certified renewable power at Stellium Newcastle. 
+ Our location in the North East is one of the lowest carbon intensity regions in the United Kingdom. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Source : National Grid ESO 
+ 
+ 
+ 
+ 
+ 
+ 
+ Stellium has no cooling issues – unlike London data centres who have experienced major cooling issues, Stellium have had none. 
+ Stellium’s Tier 3+ data centre in Newcastle operates in less hostile temperatures than London, rarely exceeding 22 deg C v London’s 32 deg C ( June 2023 ).The consequences are lower cooling bills and a cooling system that always works well within its design parameters. 
+ Stellium provides metered power contracts – in London the infrastructure to give metered contracts is not always available. Energy is now 70% of your colocation cost so this is a major issue for your business in terms of transparency. 
+ Stellium provides mobilisation time for contracts up to 1.3MW in 4 weeks. 
+ One of the most accredited data centres in the UK, including OCP Ready™ certification for AI and HPC data centre services 
+ Stellium has no latency congestion . In fact we provide some of the lowest latency now available in the UK. As the landing station for the latest international subsea fibre cables, Newcastle is now closer to New York than London is. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Power usage effectiveness (PUE): 
+ Delivers a verified design PUE of 1.24 when operated within the industry-recommended temperature and humidity parameters. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Tier 3+ design: 
+ Our colocation data centres meets all Tier 3+ requirements of concurrent maintainability, diverse engineering and avoidance of single points of failure. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Campus electrical power: 
+ 80MVA via four 20MVA 11kV feeds to two dedicated SSE switch-rooms, with scalability up to 180MVA. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ IT power density & Cooling: 
+ 11MW IT power delivering 8kW racks (3kW per square metre) across each data hall, with a local capability of up to 50kW per rack. 
+ HPC cooling of client racks from 10 to 100kW using in-row/rear door chilled water cooling. 
+ Bespoke designs available for fully immersive cooling up to 200kW per rack can be supported. 
+ 
+ 
+ 
+ 
+ Contact us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Speak to our Data Centre Team 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Full Name 
+ 
+ 
+ 
+ 
+ 
+ 
+ Business Name 
+ 
+ 
+ 
+ 
+ 
+ 
+ Email Address 
+ 
+ 
+ 
+ 
+ 
+ 
+ Telephone Number 
+ 
+ 
+ 
+ 
+ 
+ 
+ What services or products are you interested in? 
+ 
+ 
+ 
+ 
+ 
+ Get in Touch 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact Us 
+ Sitemap 
+ Privacy Policy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Copyright © Stellium Datacenters 
+ info@stelliumdc.com 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Follow Follow 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact Us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Full Name 
+ 
+ 
+ 
+ 
+ 
+ 
+ Business Name 
+ 
+ 
+ 
+ 
+ 
+ 
+ Email Address 
+ 
+ 
+ 
+ 
+ 
+ 
+ Telephone Number 
+ 
+ 
+ 
+ 
+ 
+ 
+ What services or products are you interested in? 
+ 
+ 
+ 
+ 
+ 
+ Get in Touch 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ Virtual Tour Contact Us 
+ 
+ 
+ 
+ 
+ Manage Consent 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ To provide the best experiences, we use technologies like cookies to store and/or access device information. Consenting to these technologies will allow us to process data such as browsing behavior or unique IDs on this site. Not consenting or withdrawing consent, may adversely affect certain features and functions. 
+ 
+ 
+ 
+ 
+ 
+ Functional 
+ 
+ 
+ 
+ Functional 
+ 
+ Always active 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is strictly necessary for the legitimate purpose of enabling the use of a specific service explicitly requested by the subscriber or user, or for the sole purpose of carrying out the transmission of a communication over an electronic communications network. 
+ 
+ 
+
+ 
+ 
+ 
+ Preferences 
+ 
+ 
+ Preferences 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is necessary for the legitimate purpose of storing preferences that are not requested by the subscriber or user. 
+ 
+ 
+
+ 
+ 
+ 
+ Statistics 
+ 
+ 
+ Statistics 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access that is used exclusively for statistical purposes. 
+ The technical storage or access that is used exclusively for anonymous statistical purposes. Without a subpoena, voluntary compliance on the part of your Internet Service Provider, or additional records from a third party, information stored or retrieved for this purpose alone cannot usually be used to identify you. 
+ 
+ 
+ 
+ 
+ 
+ Marketing 
+ 
+ 
+ Marketing 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The technical storage or access is required to create user profiles to send advertising, or to track the user on a website or across several websites for similar marketing purposes. 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Manage options 
+ Manage services 
+ Manage {vendor_count} vendors 
+ Read more about these purposes 
+ 
+ 
+
+ 
+
+ 
+ Accept 
+ Deny 
+ View preferences 
+ Save preferences 
+ View preferences 
+ 
+
+ 
+ 
+ 
+ {title} 
+ {title} 
+ {title} 
+ 
+ 
+ 
+ 
+ Manage consent

@@ -1,0 +1,1730 @@
+# url: https://cyrusone.com/data-centers/emea/london-uk-lon1
+
+# fetched: 2026-08-20
+
+# sha256(html): 865b4664993da0ba68b2b00109b0be7ae3aa2c6d6ce6d6e4031ddd4e9022b4e9
+
+## STRUCTURED
+
+(none)
+
+## VISIBLE TEXT
+
+London, UK: LON1 | CyrusOne 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+
+ 
+ 
+
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+
+ This is a search field with an auto-suggest feature attached. 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ There are no suggestions because the search field is empty. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Login
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COMPANY 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About Us 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Leadership 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COMMITMENTS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Health & Safety 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Communities 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Compliance 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ DATA CENTERS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ North America 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Emea 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Apac 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+ 
+ 
+ 
+ 
+ north-america 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Arizona 
+ 
+ 
+ 
+ 
+ 
+ Chandler, AZ, PHX1-PHX8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Illinois 
+ 
+ 
+ 
+ 
+ 
+ Aurora, IL, CHI1-CHI3 
+ 
+ 
+ 
+ 
+ 
+ Lombard, IL, CHI5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Iowa 
+ 
+ 
+ 
+ 
+ 
+ Council Bluffs, IA, OCB1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ New York Metro 
+ 
+ 
+ 
+ 
+ 
+ Somerset, NJ, NYM1 
+ 
+ 
+ 
+ 
+ 
+ Totowa, NJ, NYM2 
+ 
+ 
+ 
+ 
+ 
+ Norwalk, CT, NYM5 
+ 
+ 
+ 
+ 
+ 
+ Wappingers Falls, NY, NYM7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ North Carolina 
+ 
+ 
+ 
+ 
+ 
+ Durham, NC, DUR1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Ohio 
+ 
+ 
+ 
+ 
+ 
+ Cincinnati, OH, CIN2 
+ 
+ 
+ 
+ 
+ 
+ Lebanon, OH, CIN5 
+ 
+ 
+ 
+ 
+ 
+ Florence, KY, CIN6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Texas 
+ 
+ 
+ 
+ 
+ 
+ Austin, TX, AUS2-AUS3 
+ 
+ 
+ 
+ 
+ 
+ Carrollton, TX, DFW1 
+ 
+ 
+ 
+ 
+ 
+ Lewisville, TX, DFW2 
+ 
+ 
+ 
+ 
+ 
+ Allen, TX, DFW3-DFW5 
+ 
+ 
+ 
+ 
+ 
+ Houston, TX, HOU3-HOU4 
+ 
+ 
+ 
+ 
+ 
+ San Antonio, TX, SAT1 
+ 
+ 
+ 
+ 
+ 
+ San Antonio, TX - SAT2-SAT4 
+ 
+ 
+ 
+ 
+ 
+ San Antonio, TX, SAT5-SAT6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Virginia 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA1-NVA3 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA4 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA5-NVA7 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA8 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Washington 
+ 
+ 
+ 
+ 
+ 
+ Quincy, WA, PNW1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ emea 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ france 
+ 
+ 
+ 
+ 
+ 
+ Paris, PAR1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Germany 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA1 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA2 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA3 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA4 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA5 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA6 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Ireland 
+ 
+ 
+ 
+ 
+ 
+ Dublin, DUB1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Italy 
+ 
+ 
+ 
+ 
+ 
+ Milan, MIL1 
+ 
+ 
+ 
+ 
+ 
+ Milan, MIL2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Netherlands 
+ 
+ 
+ 
+ 
+ 
+ Amsterdam, AMS1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ spain 
+ 
+ 
+ 
+ 
+ 
+ Madrid, MAD1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ UK 
+ 
+ 
+ 
+ 
+ 
+ London, LON1 
+ 
+ 
+ 
+ 
+ 
+ London, LON2 
+ 
+ 
+ 
+ 
+ 
+ London, LON3 
+ 
+ 
+ 
+ 
+ 
+ London, LON4 
+ 
+ 
+ 
+ 
+ 
+ London, LON5 
+ 
+ 
+ 
+ 
+ 
+ London, LON6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ apac 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Japan 
+ 
+ 
+ 
+ 
+ 
+ Osaka, OSK1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ SOLUTIONS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Hyperscale 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Build-to-Suit 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ AI Data Centers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Colocation 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ RESOURCES 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Blog 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Press Releases 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Media Coverage 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Spec Sheets & White Papers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Events 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Let’s Connect
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ × 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Data centers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Emea 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ London, UK: LON1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Data Centers 
+ London, UK 
+ LON1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 12 Liverpool Road, Slough, Berkshire, SL1 4QZ, United Kingdom
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download Spec Sheet
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ SEND MEDIA REQUESTS TO 
+ 
+ 
+ 
+ 
+ press@cyrusone.com 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ CyrusOne's purpose-built data center in London offers customized solutions and technical sophistication. 
+ 
+ 
+ Strategically located in Slough, UK, and close to Heathrow Airport, our LON1 data center delivers 8.72 MW IT capacity to 4,309 sq. m. of world-class technical space within one building over two stories. Each data hall is meticulously engineered for maximum efficiency and scalability, tailored to meet unique customer requirements. 
+ The facility offers ultra-low PUE through Indirect Adiabatic Air Cooling and features advanced power and building monitoring systems. A team of on-site mechanical and electrical (M&E) engineers is available 24x7x365, implementing rigorous Planned Preventative Maintenance (PPM) programs to guarantee peak performance. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Key Features: 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 4,309 sq. m. 
+ Technical IT Space 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 8.72 MW 
+ Total Megawatts IT Capacity 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Technical Specifications 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Active/Active dual redundant power supplies of 15 MVA 
+ IT power capability of 2,000W/sq. m. with higher capacity available 
+ Highly resilient, concurrently maintainable infrastructure 
+ Onsite electric vehicle charging points 
+ 1,400 mm return air plenum with 4,400 mm clear height 
+ Floor loading 10kN per sq. m. 
+ Three-stage fire detection systems 
+ VESDA implementation throughout 
+ Gas suppression with dedicated bottles 
+ Multi-layered security with 24x7x365 staffing 
+ Advanced access control systems 
+ Secure delivery bay with 3-ton goods lift s 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ ISO 14001 Environmental Management certified 
+ Ultra-low PUE through Indirect Adiabatic Air Cooling 
+ 100% powered by renewable energy since 2021 
+ Zero Waste to Landfill program 
+ Sustainable building materials 
+ Local contractor and staff sourcing where possible 
+ Protected ecological features 
+ Electric vehicle charging infrastructure 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ -->
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact Us 
+ Connect with Our Team for Expert Guidance 
+ 
+ 
+ 
+ Our specialized team is ready to help you navigate the complexities of digital infrastructure. Whether you're expanding globally, optimizing your data center strategy, or looking for sustainable solutions, we'll guide you through every step of your journey. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ READY TO BE UNSTOPPABLE? 
+ Partner with CyrusOne for scalable, secure data solutions. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Global Headquarters 
+ 2850 North Harwood Street Suite 2200 Dallas, Texas 75201, USA 
+ 
+ 
+ EUROPEAN OFFICE 
+ 101 New Cavendish Street London, W1W 6XH, United Kingdom 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ SOLUTIONS 
+ 
+ Build-to-Suit 
+ Hyperscale 
+ AI Data Centers 
+ Colocation 
+ 
+ COMPANY 
+ 
+ About Us 
+ Leadership 
+ Careers 
+ 
+ RESOURCES 
+ 
+ Blogs 
+ Brochures & White Papers 
+ Press Releases/Media Coverage 
+ 
+ COMMITMENTS 
+ 
+ Sustainability 
+ Health & Safety 
+ Communities 
+ Compliance 
+ Customers 
+ 
+ DATA CENTERS 
+ 
+ North America 
+ EMEA 
+ APAC 
+ 
+ CAREERS 
+ 
+ CONTACT US 
+ LOGIN 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ ©CyrusOne 2026 / Privacy Policy / EU Privacy Policy / Social Media Policy / CCPA Notice / Vendor Terms / Corporate Policies & Disclosures

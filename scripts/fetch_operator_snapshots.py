@@ -56,7 +56,67 @@ PAGES: dict[str, list[tuple[str, str]]] = {
         ("greystoke-home", "https://greystoke.co.uk/"),
         ("greystoke-ai-growth-zone", "https://greystoke.co.uk/ai-growth-zone"),
     ],
+    "virtus": [
+        ("virtus-saunderton", "https://virtusdatacentres.com/locations/uk/london/saunderton-campus"),
+        ("virtus-slough-campus", "https://virtusdatacentres.com/locations/uk/london/slough-campus"),
+        ("virtus-stockley-park", "https://virtusdatacentres.com/locations/uk/london/stockley-park-campus"),
+        ("virtus-hayes", "https://virtusdatacentres.com/locations/uk/london/hayes-campus"),
+        ("virtus-enfield", "https://virtusdatacentres.com/locations/uk/london/enfield-campus"),
+    ],
+    "kao": [
+        ("kao-harlow", "https://kaodata.com/locations/harlow/"),
+        ("kao-slough", "https://kaodata.com/locations/slough/"),
+        ("kao-northolt", "https://kaodata.com/locations/northolt/"),
+        ("kao-manchester", "https://kaodata.com/locations/manchester/"),
+    ],
+    # The only operator publishing an IT figure and a grid figure for the
+    # same site, which is the sole calibration anywhere in this survey for
+    # how far the two diverge.
+    "cyrusone": [
+        ("cyrusone-lon1", "https://cyrusone.com/data-centers/emea/london-uk-lon1"),
+        ("cyrusone-lon6", "https://cyrusone.com/data-centers/emea/london-uk-lon6"),
+    ],
+    "colt": [
+        ("colt-london-4", "https://www.coltdatacentres.net/en-GB/our-locations/data-centre-locations-europe/london-4"),
+        ("colt-london-6-7-8", "https://www.coltdatacentres.net/en-GB/our-locations/data-centre-locations-europe/london-6-7-8"),
+    ],
+    "ntt": [
+        ("ntt-london-1", "https://services.global.ntt/en-us/services/data-centers/emea/london-1-data-center"),
+        ("ntt-hemel-3", "https://services.global.ntt/en-us/services/data-centers/emea/hemel-hempstead-3-data-center"),
+    ],
+    "vantage": [
+        ("vantage-cardiff", "https://vantage-dc.com/data-center-locations/emea/cardiff-united-kingdom/"),
+        ("vantage-london-i", "https://vantage-dc.com/data-center-locations/emea/london-i-united-kingdom/"),
+    ],
+    "puredc": [
+        ("puredc-brent-cross", "https://puredc.com/london-brent-cross"),
+        ("puredc-park-royal", "https://puredc.com/our-london-park-royal-site"),
+    ],
+    "ada": [
+        ("ada-docklands", "https://adainfrastructure.com/en-US/docklands"),
+    ],
+    "globalswitch": [
+        ("globalswitch-london", "https://www.globalswitch.com/data-centres/london/"),
+    ],
+    "stellium": [
+        ("stellium-1", "https://stelliumdc.com/stellium-1/"),
+    ],
+    # Bears on an existing tentative match: our Hoddesdon site currently
+    # carries two 57 MW NESO rows, and nLighten's site in the same town is
+    # an order of magnitude smaller.
+    "nlighten": [
+        ("nlighten-london", "https://nlighten.com/en/edge-location/london/"),
+    ],
+    # Capacity is present but never rendered: bare integers in
+    # __NEXT_DATA__ under field_utility_power_capacity.
+    "digitalrealty": [
+        ("digitalrealty-london", "https://www.digitalrealty.co.uk/data-centers/emea/london"),
+    ],
 }
+
+
+def _norm(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def visible_text(raw: str) -> str:
@@ -79,6 +139,23 @@ def structured(raw: str) -> list[str]:
         r'(?:fb-count-target|data-to-value|data-end)="([^"]+)"', raw)
     if counters:
         out.append("COUNTER TARGETS: " + ", ".join(counters))
+
+    # Figures carried in embedded application state and never rendered.
+    # Digital Realty ships a per-site field_utility_power_capacity to the
+    # browser and displays none of it. Captured as bounded fragments
+    # rather than whole payloads, which run to megabytes: the snapshot has
+    # to stay small enough to read and to review in a diff.
+    scripts = "\n".join(re.findall(r"<script[^>]*>(.*?)</script>", raw, re.DOTALL))
+    seen, frags = set(), []
+    for m in re.finditer(
+            r'"[a-z_]*(?:power|capacity)[a-z_]*"\s*:\s*(?:"[^"]{0,60}"|'
+            r'\[[^\]]{0,200}\]|\d+)', scripts, re.IGNORECASE):
+        s = _norm(m.group(0))
+        if s not in seen:
+            seen.add(s)
+            frags.append(s)
+    if frags:
+        out.append("EMBEDDED FIGURES:\n" + "\n".join(frags[:60]))
     return out
 
 

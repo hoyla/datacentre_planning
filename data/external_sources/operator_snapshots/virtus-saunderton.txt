@@ -1,0 +1,337 @@
+# url: https://virtusdatacentres.com/locations/uk/london/saunderton-campus
+
+# fetched: 2026-08-20
+
+# sha256(html): 0f2fe295c824ae9929c6836dbf42464a9f2f4d7a8de2ea9a046a1a436c5f3b22
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/Organization/base",
+   "@type": "Organization",
+   "image": {
+    "@id": "https://virtusdatacentres.com/#/schema/ImageObject/logo"
+   },
+   "logo": {
+    "@id": "https://virtusdatacentres.com/#/schema/ImageObject/logo",
+    "@type": "ImageObject",
+    "contentUrl": "images/logos/virtus-data-centres.svg",
+    "url": "images/logos/virtus-data-centres.svg"
+   },
+   "name": "VIRTUS Data Centres",
+   "url": "https://virtusdatacentres.com/"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/WebSite/base",
+   "@type": "WebSite",
+   "name": "VIRTUS",
+   "potentialAction": {
+    "@type": "SearchAction",
+    "query-input": "required name=search_term_string",
+    "target": "https://virtusdatacentres.com/component/finder/search?q={search_term_string}&amp;Itemid=101"
+   },
+   "publisher": {
+    "@id": "https://virtusdatacentres.com/#/schema/Organization/base"
+   },
+   "url": "https://virtusdatacentres.com/"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/WebPage/base",
+   "@type": "WebPage",
+   "about": {
+    "@id": "https://virtusdatacentres.com/#/schema/Organization/base"
+   },
+   "description": "VIRTUS\u2019 Saunderton Campus delivers energy-efficient, high-capacity colocation just outside London, ideal for enterprises needing scale and resilience.\r\n",
+   "inLanguage": "en-GB",
+   "isPartOf": {
+    "@id": "https://virtusdatacentres.com/#/schema/WebSite/base"
+   },
+   "name": "Saunderton Data Centre Campus - VIRTUS",
+   "url": "https://virtusdatacentres.com/locations/uk/london/saunderton-campus"
+  },
+  {
+   "@id": "https://virtusdatacentres.com/#/schema/com_content/article/715",
+   "@type": "Article",
+   "headline": "London Data Centres | Saunderton Campus",
+   "inLanguage": "en-GB",
+   "isPartOf": {
+    "@id": "https://virtusdatacentres.com/#/schema/WebPage/base"
+   },
+   "name": "London Data Centres | Saunderton Campus"
+  }
+ ]
+}
+
+{
+ "@context": "http://schema.org",
+ "@type": "Organization",
+ "name": "VIRTUS Data Centres",
+ "sameAs": [
+  "http://www.twitter.com/VIRTUSDCs",
+  "https://www.youtube.com/channel/UCVDaezuqxPXg4VQQH0Cyqfg",
+  "https://www.linkedin.com/company/virtus-data-centres/"
+ ],
+ "url": "https://virtusdatacentres.com/"
+}
+
+## VISIBLE TEXT
+
+Saunderton Data Centre Campus - VIRTUS 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Locations 
+ 
+ 
+ UK 
+ 
+ 
+ London Data Centres | Stockley Park Campus London Data Centres | Slough Campus London Data Centres | Saunderton Campus Hayes Campus Enfield Campus Germany 
+ 
+ 
+ Berlin Data Centres | Marienpark Campus Berlin Data Centres | Wustermark Campus Italy Solutions 
+ 
+ 
+ AI Ready Data Centres Build to Suit Data Centres Colocation Data Centres 
+ 
+ 
+ Data Centre Rack Solutions Data Centre Cage Colocation Data Centre Suite High Performance Computing (HPC) Services 
+ 
+ 
+ Cloud Connectivity Data Centre Security ServiceNow Market Place 
+ 
+ 
+ Market Place: Cloud Connect Market Place: Bespoke Solutions Market Place: Connectivity Platform Market Place: Services Market Place: AWS Market Place: C4L Market Place: Coreix Market Place: Daisy Group Market Place: ERA Market Place: Exponential-e Market Place: Inatech Market Place: Microsoft Azure Market Place: ServerSpace Market Place: Accesspoint Market Place: The Legal DC Market Place: Unitas Global Market Place: EX Networks Market Place: VMhosts Market Place: AssureStor Marketplace: Global Cloud Xchange Market Place: CommScope Market Place: L3C Market Place: Romonet Market Place: euNetworks Market Place: LINX Market Place: Pacnet Market Place: SSE Enterprise Telecoms Market Place: Virgin Media Business Market Place: Zayo Market Place: TeliaSonera Market Place: Viatel Market Place: Belcom247 Market Place: Technimove Market Place: Venus Networks Market Place: OryxAlign Market Place: Secura Market Place: PacketFabric Media 
+ 
+ 
+ Video Gallery 
+ 
+ 
+ General Videos AI VIRTUS Blog News & Press Releases Downloads About Us 
+ 
+ 
+ Global Data Centre Platform Vision & Values People Board of Directors Investors Partners Careers Why VIRTUS 
+ 
+ 
+ Agile Commercials 
+ 
+ 
+ Examples of VIRTUS Flex Going Green? Operational Excellence Quality Credentials Sustainability 
+
+ 
+ 
+ 
+ 
+ 
+ +44 (0)20 7499 1300 
+ Contact Us 
+ LOGIN --> 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ London Data Centres | Saunderton Campus Covering more than 50 acers of land, the campus sets a new benchmark in mega scale data centre capacity for cloud and AI in Europe 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Campus Overview Delivering 78MW of IT load across four separate data centres, the VIRTUS Saunderton Campus is strategically located close to the existing Slough data centre ecosystem. Covering more than 50 acers of land, the campus sets a new benchmark in mega scale data centre capacity for cloud and AI in Europe. With a blank canvas, the facilities will utilise the latest in cooling technologies to cater for customers of all size. The data centres will be able to support both standard density racks and High Performance Compute within the same environment and will be able to support racks in excess of 100kW per rack. Sustainable Power 
+ Supporting VIRTUS' journey towards the goal of achieving net zero emissions on all reportable activities by 2030, the campus will utilise 100% renewable energy consistent with the rest of the VIRTUS portfolio. 
+ VIRTUS has committed to a zero-waste-to-landfill principle during the facility’s operation and aims to achieve Leadership in Energy and Environmental Design (LEED) Gold accreditation for sustainability. Other sustainability features include implementation of rainwater harvesting and exploration of waste heat use for adjacent farming. 
+ Additionally, an annual carbon offset payment will be made to the local authority for ten years, contributing to local environmental improvement projects. 
+ 
+ State-of-the-Art Technology: 
+ At the core of the VIRTUS Saunderton Campus lies a dedication to state-of-the-art technology and innovation to ensure operational excellence and the delivery of scale and flexibility to meet the demands of new Artificial Intelligence and Machine Learning workloads. Designed with the distinct purpose of supporting the growing demands of hyperscale, government and enterprise customers, the campus is primed to cater for the ever-expanding server computer density that is required by cloud computing and generative AI applications. VIRTUS continues to invest and innovate so its customers have access to the latest technologies, including the ability to support racks in excess of 100kW per rack by utilising that latest liquid cooling technologies. 
+ 
+ Optimised Location: 
+ The Saunderton Campus is located in close proximity the existing Slough Data Centre campus and surrounding ecosystem. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Back 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainable Campus 
+ Data centres powered by 100% renewable energy 
+ Sourced from only solar, wind or tidal power 
+ Designed to support deployments in excess of 100kW per rack 
+ Designed For Scale 78MW of IT load across four state of the art facilities AI Ready Data Centres built to support the next generation in IT workloads Close proximity to existing Slough data centre ecosystem Downloads VIRTUS Saunderton Campus Specifications Sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Get in touch 
+ To discuss your requirements or find out more about our locations and services 
+ 
+ +44 (0)20 7499 1300 
+ 
+ Contact Us 
+ 
+ 
+ 
+ 
+ 
+ Home 
+ 
+ > 
+ 
+ 
+ 
+ Locations 
+ 
+ > 
+ 
+ 
+ 
+ UK 
+ 
+ > 
+ 
+ 
+ 
+ London Data Centres | Saunderton Campus 
+ 
+ 
+ 
+ 
+ 
+ Follow Us 
+ 
+ Twitter 
+ LinkedIn 
+ YouTube 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Head Office 
+ 20 Balderton Street London W1K 6TL 
+ 
+ +44 (0)20 7499 1300 
+ 
+ 
+ This email address is being protected from spambots. You need JavaScript enabled to view it. 
+ 
+ 
+ 
+ Our Locations UK Europe Services Colocation High Performance Computing Cloud & Connectivity ServiceNow Market Place Why Virtus Agile Commercials Operational Excellence Quality Credentials Sustainability Careers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COPYRIGHT © 2002-2024 VIRTUS. All rights reserved 
+ Privacy Policy Modern Slavery Statement Right to be Forgotten UK Tax Strategy Statement Stakeholder Code Of Conduct Terms and Conditions Language Definitions Impressum - Germany 
+ 
+ 
+ View desktop site 
+ 
+ 
+ Menu

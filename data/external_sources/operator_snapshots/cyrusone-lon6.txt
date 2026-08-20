@@ -1,0 +1,1738 @@
+# url: https://cyrusone.com/data-centers/emea/london-uk-lon6
+
+# fetched: 2026-08-20
+
+# sha256(html): f2b7ae6bf745fa355eaa773a1a15a361ffc66a10a40bbd94004fccdbed467cc0
+
+## STRUCTURED
+
+(none)
+
+## VISIBLE TEXT
+
+Data Center -- London, UK: LON6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+
+ 
+ 
+
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+
+ This is a search field with an auto-suggest feature attached. 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ There are no suggestions because the search field is empty. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Contact
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Login
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COMPANY 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About Us 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Leadership 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COMMITMENTS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Health & Safety 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Communities 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Compliance 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Customers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ DATA CENTERS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ North America 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Emea 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Apac 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+ 
+ 
+ 
+ 
+ north-america 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Arizona 
+ 
+ 
+ 
+ 
+ 
+ Chandler, AZ, PHX1-PHX8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Illinois 
+ 
+ 
+ 
+ 
+ 
+ Aurora, IL, CHI1-CHI3 
+ 
+ 
+ 
+ 
+ 
+ Lombard, IL, CHI5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Iowa 
+ 
+ 
+ 
+ 
+ 
+ Council Bluffs, IA, OCB1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ New York Metro 
+ 
+ 
+ 
+ 
+ 
+ Somerset, NJ, NYM1 
+ 
+ 
+ 
+ 
+ 
+ Totowa, NJ, NYM2 
+ 
+ 
+ 
+ 
+ 
+ Norwalk, CT, NYM5 
+ 
+ 
+ 
+ 
+ 
+ Wappingers Falls, NY, NYM7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ North Carolina 
+ 
+ 
+ 
+ 
+ 
+ Durham, NC, DUR1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Ohio 
+ 
+ 
+ 
+ 
+ 
+ Cincinnati, OH, CIN2 
+ 
+ 
+ 
+ 
+ 
+ Lebanon, OH, CIN5 
+ 
+ 
+ 
+ 
+ 
+ Florence, KY, CIN6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Texas 
+ 
+ 
+ 
+ 
+ 
+ Austin, TX, AUS2-AUS3 
+ 
+ 
+ 
+ 
+ 
+ Carrollton, TX, DFW1 
+ 
+ 
+ 
+ 
+ 
+ Lewisville, TX, DFW2 
+ 
+ 
+ 
+ 
+ 
+ Allen, TX, DFW3-DFW5 
+ 
+ 
+ 
+ 
+ 
+ Houston, TX, HOU3-HOU4 
+ 
+ 
+ 
+ 
+ 
+ San Antonio, TX, SAT1 
+ 
+ 
+ 
+ 
+ 
+ San Antonio, TX - SAT2-SAT4 
+ 
+ 
+ 
+ 
+ 
+ San Antonio, TX, SAT5-SAT6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Virginia 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA1-NVA3 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA4 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA5-NVA7 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA8 
+ 
+ 
+ 
+ 
+ 
+ Sterling, VA, NVA9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Washington 
+ 
+ 
+ 
+ 
+ 
+ Quincy, WA, PNW1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ emea 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ france 
+ 
+ 
+ 
+ 
+ 
+ Paris, PAR1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Germany 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA1 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA2 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA3 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA4 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA5 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA6 
+ 
+ 
+ 
+ 
+ 
+ Frankfurt, FRA7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Ireland 
+ 
+ 
+ 
+ 
+ 
+ Dublin, DUB1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Italy 
+ 
+ 
+ 
+ 
+ 
+ Milan, MIL1 
+ 
+ 
+ 
+ 
+ 
+ Milan, MIL2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Netherlands 
+ 
+ 
+ 
+ 
+ 
+ Amsterdam, AMS1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ spain 
+ 
+ 
+ 
+ 
+ 
+ Madrid, MAD1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ UK 
+ 
+ 
+ 
+ 
+ 
+ London, LON1 
+ 
+ 
+ 
+ 
+ 
+ London, LON2 
+ 
+ 
+ 
+ 
+ 
+ London, LON3 
+ 
+ 
+ 
+ 
+ 
+ London, LON4 
+ 
+ 
+ 
+ 
+ 
+ London, LON5 
+ 
+ 
+ 
+ 
+ 
+ London, LON6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ apac 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Japan 
+ 
+ 
+ 
+ 
+ 
+ Osaka, OSK1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ SOLUTIONS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Hyperscale 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Build-to-Suit 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ AI Data Centers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Colocation 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ RESOURCES 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Blog 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Press Releases 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Media Coverage 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Spec Sheets & White Papers 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Events 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Let’s Connect
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ × 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Data centers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Emea 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ London, UK: LON6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Data Centers 
+ London, UK 
+ LON6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Seven Hills Rd Iver Heath Iver SL0 0PA United Kingdom
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download Spec Sheet
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ SEND MEDIA REQUESTS TO 
+ 
+ 
+ 
+ 
+ press@cyrusone.com 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Transformative Sustainable Campus Delivers Advanced Technology with Environmental Leadership 
+ 
+ 
+ CyrusOne LON6 is a transformative, sustainable, biodiverse, and community-focused data center development strategically located in Iver Heath, Buckinghamshire, close to Iver Grid Supply Point, and able to serve both West London Availability Zones. The facility will deliver 90 MW of IT capacity to 30,000 sqm highly complex technical infrastructure across ten 9 MW data halls designed to be fully integrated into the landscape. 
+ The development project will restore and reconnect communities, delivering 71% Biodiversity Net Gain through the creation of an ecologically rich parkland and new habitats that will enhance the quality of the Colne Valley Regional Park.. A Training Centre will improve economic and educational opportunities for the local and wider area through the extension of CyrusOne’s successful partnership with the UTC Heathrow. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Key Features: 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 30,000 sq. m. 
+ Technical IT Space 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 90 MW 
+ Total Megawatts IT Capacity 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Technical Specifications 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Ten 9 MW data halls (six ground level, four lower ground) 
+ 160 MVA power capacity via 132 kV active/active feeds 
+ 99.999% reliability with concurrent maintainability 
+ Block redundant UPS topology with 8-minute battery backup 
+ N+1 Free cooling air cooled chillers 
+ Dual fed ring chilled water system 
+ Low PUE (<1.3) through free-cooling technology 
+ ASHRAE optimized operating temperatures 
+ Four diverse fiber routes with carrier-neutral access 
+ 2.5-metre high security perimeter fence 
+ PAS 68 rated security gates 
+ 24x7x365 on-site security and M&E engineers 
+ Biometric access control systems 
+ Three-stage fire detection with VESDA 
+ Nitrogen filled pre-action sprinkler system 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sustainability 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ BREEAM "Excellent" target certification 
+ 100% renewable energy powered 
+ 71% Biodiversity Net Gain 
+ Planting over 670 trees (including 145 fruit trees) 
+ Over 7,000sqm of woodland and 90,600sqm of mixed meadow areas and acid grassland. 
+ 18 acres of public-access green space, with 6.7 acres dedicated exclusively for wildlife preservation 
+ Zero Waste to Landfill program 
+ Photovoltaic panels providing 64% office energy 
+ Rainwater collection and reuse system 
+ Electric vehicle charging in 50% of parking 
+ Heat export capability 
+ 25-year Landscape Ecological Management Plan 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ -->
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Gallery 
+ Connect with Our Team for Expert Guidance 
+ 
+ 
+ 
+ Our specialized team is ready to help you navigate the complexities of digital infrastructure. Whether you're expanding globally, optimizing your data center strategy, or looking for sustainable solutions, we'll guide you through every step of your journey. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ READY TO BE UNSTOPPABLE? 
+ Partner with CyrusOne for scalable, secure data solutions. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Global Headquarters 
+ 2850 North Harwood Street Suite 2200 Dallas, Texas 75201, USA 
+ 
+ 
+ EUROPEAN OFFICE 
+ 101 New Cavendish Street London, W1W 6XH, United Kingdom 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ SOLUTIONS 
+ 
+ Build-to-Suit 
+ Hyperscale 
+ AI Data Centers 
+ Colocation 
+ 
+ COMPANY 
+ 
+ About Us 
+ Leadership 
+ Careers 
+ 
+ RESOURCES 
+ 
+ Blogs 
+ Brochures & White Papers 
+ Press Releases/Media Coverage 
+ 
+ COMMITMENTS 
+ 
+ Sustainability 
+ Health & Safety 
+ Communities 
+ Compliance 
+ Customers 
+ 
+ DATA CENTERS 
+ 
+ North America 
+ EMEA 
+ APAC 
+ 
+ CAREERS 
+ 
+ CONTACT US 
+ LOGIN 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ ©CyrusOne 2026 / Privacy Policy / EU Privacy Policy / Social Media Policy / CCPA Notice / Vendor Terms / Corporate Policies & Disclosures
