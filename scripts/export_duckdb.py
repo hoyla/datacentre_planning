@@ -57,6 +57,24 @@ TABLES: dict[str, str] = {
         LEFT JOIN applications a ON a.id = m.application_id
         LEFT JOIN projects p ON p.id = m.project_id
         WHERE m.retired_at IS NULL""",
+    # External capacity claims and their site matches, exported keyed by
+    # site_key like everything else. The claim rows stay unjoined to the
+    # sites table's own columns — the match is the only bridge, and it
+    # carries its confidence, method and evidence so a query can decide
+    # which tiers to trust.
+    "capacity_claims": """
+        SELECT cl.id AS claim_id, cl.source_key, cl.claim_name,
+               cl.quantity_type, cl.value_original, cl.unit_original,
+               cl.value_mw, cl.stage, cl.as_at,
+               cl.attrs->>'connection_point' AS connection_point,
+               cl.attrs->>'existing_connection_date' AS connection_date,
+               cl.source_url, cl.source_locator, cl.inserted_at
+        FROM capacity_claims cl""",
+    "capacity_claim_matches": """
+        SELECT m.claim_id, s.site_key, m.method, m.confidence, m.evidence,
+               m.matched_by, m.inserted_at, m.retired_at, m.retired_reason
+        FROM capacity_claim_matches m
+        JOIN sites s ON s.id = m.site_id""",
     "applications": """
         SELECT a.application_ref,
                split_part(a.application_ref,'/',1) AS council,
@@ -302,6 +320,16 @@ def main() -> None:
         ("verdict_note", "triage_verdicts is append-only and multi-rubric; use the "
                          "latest_verdict view for one row per application per rubric. "
                          "model_input is exactly what the model saw."),
+        ("capacity_claims_note", "External figures as their source states them "
+                         "(currently NESO's Existing Agreements Register: "
+                         "contracted grid connection capacity, not IT load or "
+                         "built capacity or observed draw). Never join value_mw "
+                         "onto a site's own power columns; the bridge is "
+                         "capacity_claim_matches, whose confidence tier "
+                         "('tentative' is a lead, not an attribution) and "
+                         "written evidence travel with every match. Matches "
+                         "with retired_at set are withdrawn assertions kept "
+                         "as history."),
     ])
     con.close()
 

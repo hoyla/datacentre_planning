@@ -20,6 +20,13 @@ Six sheets, in the order a new reader meets them:
   deliberately never joined to — the planning-derived rows. They measure
   different quantities from planning documents, which is itself the
   point: the sheet shows what each side can and cannot see.
+- **Capacity claims** — site-level figures from named external sources
+  (currently NESO's Existing Agreements Register), one row per claim as
+  the source states it. Where a claim is matched to a site the match is
+  a hand-adjudicated inference and its confidence, method and written
+  evidence are columns. The Sites sheet's power columns remain
+  planning-derived only; a register figure never becomes a site's
+  number.
 - **Provenance** — run metadata plus the corpus-level statement of known
   retrieval gaps, so the coverage caveats live in the deliverable rather
   than in a covering email.
@@ -675,6 +682,30 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "application, and this workbook includes the built estate back to "
      "2015. The workbook column is recomputed from the Sites sheet at "
      "every generation."),
+    ("Capacity claims", "All columns",
+     "One row per claim from a named external source — currently the "
+     "119 transmission demand rows of NESO's Existing Agreements "
+     "Register (published with the Gate 2 connections-reform results; "
+     "snapshot and caveats in data/external_sources/README.md). Every "
+     "figure is contracted grid connection capacity: a ceiling a "
+     "developer once agreed with the grid operator, not IT load, not "
+     "built capacity, and not what any site draws. The register is "
+     "consent-based and records pre-reform positions, so absence "
+     "proves nothing and entries can shrink or lapse. Most claims "
+     "match no site in this workbook — that is the demand pipeline the "
+     "planning system may not have seen yet, and the blank is the "
+     "finding."),
+    ("Capacity claims", "Matched site / confidence / method / evidence",
+     "Where a claim names the same physical project as a site row, the "
+     "attachment is a hand-adjudicated inference, not a join: 'strong' "
+     "means name identity with no plausible competing referent; "
+     "'probable' means independent details triangulate but the row name "
+     "alone would not identify the site; 'tentative' means place and "
+     "scale agree and nothing more — a lead, not an attribution. The "
+     "evidence column is the written reasoning behind the match, and a "
+     "register figure is never copied into the Sites sheet: where it "
+     "diverges from the planning-derived figure for the same site, the "
+     "divergence is the story."),
 ]
 
 
@@ -852,6 +883,7 @@ def main() -> None:
     from collections import defaultdict
     from urllib.parse import urlparse
 
+    from dcp import capacity_claims as ccl
     from dcp import consumption_context as cc
     from dcp import external_aggregates as extagg
     from dcp import proposal
@@ -1424,6 +1456,45 @@ def main() -> None:
         for c in row:
             if c.value is not None:
                 c.alignment = Alignment(wrap_text=True, vertical="top")
+
+    # ---- Capacity claims ----------------------------------------------------
+    # Site-level external figures, the other permitted form beside the
+    # aggregates above: each row is a claim as its source states it, and
+    # where a hand-adjudicated match attaches it to a site the match's
+    # confidence, method and written evidence are columns — the match is
+    # our inference, so its reasoning ships with it. Deliberately a
+    # separate sheet: the Sites sheet's power columns stay
+    # planning-derived only, and the divergence between a register figure
+    # and a planning figure for the same site is a finding, not an error.
+    ws = _sheet("Capacity claims", [
+        "Register entry", "MW", "Quantity", "Connection point",
+        "Connection date", "Register as at", "Register row",
+        "Matched site", "Match confidence", "Match method",
+        "Match evidence", "Source", "Source URL"])
+    with db.connect() as conn, conn.cursor() as cur:
+        claim_rows = ccl.load_claim_rows(cur)
+    for c in claim_rows:
+        ws.append([
+            c["claim_name"], c["value_mw"],
+            ccl.QUANTITY_LABELS.get(c["quantity_type"], c["quantity_type"]),
+            c["connection_point"], c["connection_date"],
+            c["as_at"].isoformat() if c["as_at"] else None,
+            c["source_locator"],
+            c["site_name"] or c["site_key"],
+            c["confidence"], c["method"], c["evidence"],
+            ccl.SOURCE_TITLES.get(c["source_key"], c["source_key"]),
+            c["source_url"]])
+    for col, width in (("A", 40), ("B", 9), ("C", 24), ("D", 40), ("E", 14),
+                       ("F", 14), ("G", 12), ("H", 44), ("I", 14), ("J", 22),
+                       ("K", 90), ("L", 34), ("M", 48)):
+        ws.column_dimensions[col].width = width
+    for row in ws.iter_rows(min_row=2):
+        for c in row:
+            if c.value is not None:
+                c.alignment = Alignment(wrap_text=True, vertical="top")
+    n_claim_matches = sum(1 for c in claim_rows if c["confidence"])
+    print(f"  Capacity claims: {len(claim_rows)} claims, "
+          f"{n_claim_matches} matched to sites")
 
     # ---- Provenance --------------------------------------------------------
     ws = _sheet("Provenance", ["Field", "Value"])
