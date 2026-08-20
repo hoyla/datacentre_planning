@@ -479,6 +479,19 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "grid ceiling is not IT load), so a number here would read as "
      "directly comparable to Power MW when it is not. Hover the tag, or "
      "open the site panel, for the claim names and their own figures."),
+    ("Sites", "Where the power columns come from, and what not to compare",
+     "Every power column on this sheet is read from the site's own "
+     "planning documents and adjudicated as describing this site — the "
+     "applicant's stated figures, not anyone else's estimate of them. "
+     "The Capacity claims sheet holds a different class of number "
+     "entirely: grid registers, accounts filed at Companies House, and "
+     "operators' own websites, each measuring a different quantity with "
+     "different authority behind it. The two are deliberately kept in "
+     "separate sheets and must not be compared cell against cell. Where "
+     "they diverge — an operator's website claiming more than its own "
+     "audited accounts, a contracted grid ceiling far above a declared "
+     "IT load — the divergence is a finding to report, not an error to "
+     "reconcile."),
     ("Sites", "Figures provisional?",
      "Whether this row's findings-derived values come from a complete "
      "reading. Where they do not, every such value is a floor rather than a "

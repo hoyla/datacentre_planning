@@ -1,0 +1,65 @@
+ARK DATA CENTRES LIMITED
+
+DIRECTORS' REPORT (CONTINUED)
+FOR THE YEAR ENDED 30 JUNE 2025
+
+Energy and carbon report
+Ark recognises the impact of climate change, and our focus has always been on sustainable data centre development without any
+compromise to the availability or security required by our customers.
+
+Our commitment to sustainable stewardship is demonstrated by:
+
+Continuing the "Lessons Learned" process and new technology review after all major projects.
+
+Working with Climate Neutral Data Centre Pact (CNDCP), techUK and the Major Energy Users Council (MEUC) to promote best
+practice and appropriate target setting to achieve the appropriate UN Sustainable Development Goals.
+
+Complying with all legal and other requirements appropriate to Ark's resource consumption, efficiency targets and reporting
+requirements {Energy Efficiency Directive (EED), Climate Change Agreements (CCA) etc).
+
+Procuring 100% Renewable or Carbon-Free Energy where possible - through Carbon-free or Renewable Certificates (such as
+REGOs) up to 3 years ahead or via appropriate PPAs.
+
+Measuring and reporting our Power Usage Effectiveness improvements (PUE) against defined targets m line with CNDCP
+initiatives and Green Loans, in accordance with BS EN 50600 and certified under [SO 50001.
+
+Measuring and reporting our Carbon Usage Effectiveness improvements (CUE) in line with GIIG and SECR protocols. in
+accordance with BS EN 50600 and certified under ISO 14001. Reporting carbon emissions in our Carbon Reduction Plan in
+compliance with PPN 06/21.
+
+Maintaining our existing ISO 14001 (Environmental Management System) certification, The ISO 14001 Certificate and
+supporting Environmental Policy are published on the Ark website,
+
+Maintaining our existing ISO 50001 (Energy Management System) certification, The ISO 30001 Certiticate and supporting
+Energy Management Policy are published on the Ark website.
+
+Ark reports its annual operating energy and carbon usage by calendar year to align with the reporting requirements of our CCA, UKETS,
+Planning Obligations and EA Operating Permits. The information provided below is therefore for the years ended 31 December 2024 and
+
+31 December 2023.
+2024 2023
+
+Energy consumption MWh MWh
+
+Aggregate of total energy consumption in the year 280,597 239,803
+
+Aggregate of IT energy consumption in the year 203,608 164,622
+
+2024 2023
+Emissions af CO2 equivalent mnctric tonnes mictric tonnes
+
+Scope | - direct emissions
+- Refrigerant (F-Gas} losses 2,340
+- On site standby generation 6
+
+Scope 2 - indirect emissions
+- Electricity purchased (Market based}
+Scope 3 - other indirect emissions
+
+- Business travel, employee commuting & homeworking, waste generated & upstream transportation
+
+Total gross cmissions
+
+Carbon efficiency metric
+Carbon Usage Effectiveness (tonnesCO2eVIT Consumption (MWh) 0.085
+
