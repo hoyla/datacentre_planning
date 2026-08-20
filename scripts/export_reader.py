@@ -291,6 +291,10 @@ tr.detail td{padding:14px 18px 18px 30px}
    position, pushing Generation into a track meant for something else
    and leaving row 1 half-empty. A full-width item is safe only at the
    end of the sequence, which is where .ctx has always lived. */
+/* Where the panel's numbers come from, set apart from the caveats that
+   follow each figure: it qualifies the whole box, not one row. */
+.help.provenance{border-left:2px solid var(--line);padding-left:9px;
+  margin-bottom:9px}
 .box.claims .claim{margin-bottom:10px}
 .box.claims details>summary{cursor:pointer;font-size:12px;color:var(--accent);
   list-style:none}
@@ -1468,10 +1472,24 @@ def main() -> int:
                     f'<details><summary>How this was matched</summary>'
                     f'<p class="help">{esc(c["evidence"])}</p></details>'
                     f'</div>')
+            # Only the caveats for quantities this site actually has:
+            # a generic wall of them would be skipped, and the one that
+            # matters would go with it.
+            _seen_q, _caveats = set(), []
+            for c in site_claims:
+                q = c["quantity_type"]
+                if q in _seen_q:
+                    continue
+                _seen_q.add(q)
+                if q in ccl.QUANTITY_CAVEATS:
+                    _caveats.append(
+                        f'<p class="help"><b>'
+                        f'{esc(ccl.QUANTITY_LABELS.get(q, q).capitalize())}:'
+                        f'</b> {esc(ccl.QUANTITY_CAVEATS[q])}</p>')
             claims_html = (
                 '<div class="box claims"><h4>Other power indicators</h4>'
-                + "".join(_claim_rows)
-                + f'<p class="help">{esc(ccl.CLAIMS_CAVEAT)}</p></div>')
+                f'<p class="help provenance">{esc(ccl.INDICATORS_NOTE)}</p>'
+                + "".join(_claim_rows) + "".join(_caveats) + '</div>')
         else:
             claims_html = ""
 
@@ -1595,7 +1613,8 @@ def main() -> int:
     {mixed_note}
     <dt>Excluded figures</dt><dd>{nexc or 0}
      <span class="help">market context, not this site</span></dd>
-   </dl></div>
+   </dl>
+   <p class="help provenance">{esc(ccl.DECLARED_POWER_NOTE)}</p></div>
   {claims_html}
 
   <div class="box"><h4>Generation, cooling and water</h4>

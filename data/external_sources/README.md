@@ -74,6 +74,44 @@ Loaded into `capacity_claims` (migration 021) by
 `scripts/load_capacity_claims.py`, which reads this file plus the
 hand-adjudicated site matches in `neso-ea-register-matches.yaml`.
 
+## ark-accounts-fy2025.pdf, kao-accounts-fy2025.pdf, companies_house_ocr/
+
+Statutory accounts filed at Companies House, committed because they are
+the evidence behind per-site and per-company power figures and because a
+filed document is immutable once filed — unlike a portal dataset, this
+snapshot can never diverge from its source.
+
+| File | Company | Filing | Filed | sha256 |
+|---|---|---|---|---|
+| `ark-accounts-fy2025.pdf` | Ark Data Centres Limited (05656968) | Full accounts to 30 June 2025 | 2025-12-17 | `63caea3de3f43f4a18b86efa6f7146f2e1e8b7e96973311eb637dc186eaa1a50` |
+| `kao-accounts-fy2025.pdf` | Kao Data Limited (11756346) | Full accounts to 31 March 2025 | 2025-12-18 | `275f71fd02d9f1aafa51a51e43a7242bd9118bd81ccfc4205e1325c2517a99b8` |
+
+**Companies House scans what it publishes.** Neither PDF has a text
+layer — every page is an image. Figures were therefore transcribed by eye
+from pages rendered at 300 DPI, not lifted from OCR, because OCR misreads
+a digit silently and a wrong digit in a capacity figure is the one error
+this project cannot absorb. The OCR of each *cited* page is committed
+under `companies_house_ocr/` so the transcription can be re-checked
+offline, and `dcp.capacity_claims.verify_ch_quotes` asserts every
+transcribed figure still appears in the digits of the page it cites —
+a stand-in for the quote round-trip that text-layer sources get.
+
+**Scope, established 2026-08-20.** Per-site megawatts are peculiar to
+Ark. The latest full accounts for Kao Data, Yondr Group, Vantage UK,
+Global Switch and CloudHQ UK were pulled and OCR'd, and **none states a
+capacity figure of any kind**; Virtus filed new accounts on 19 and 20
+August 2026 whose documents were not yet retrievable. Ark discloses
+per-campus capacity because it is a UK-only company whose entire business
+is four UK campuses. What *is* statutory is SECR energy reporting, and
+that produces company totals only — which is why the consumption claims
+carry `company_level` and are never matched to a site.
+
+Figures, quotes, locators and hand-adjudicated site matches live in
+`companies-house-claims.yaml` and load through
+`scripts/load_capacity_claims.py`. Two of the six Ark capacity figures
+match no site: Meridian Park (an operating Enfield data centre absent
+from this corpus entirely) and the A9 building (no location stated).
+
 ## ukpn-dc-profiles-per-site.json
 
 Per-site aggregate (96 rows) computed 2026-08-12 from UK Power Networks'

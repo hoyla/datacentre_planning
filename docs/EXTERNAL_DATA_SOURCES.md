@@ -541,6 +541,43 @@ statutory filings rather than marketing claims, and a story in itself.
 next 5 years." Also POSTnote
 [PN-0762](https://post.parliament.uk/research-briefings/post-pn-0762/).
 
+### Companies House — tested 2026-08-20, and mostly a null
+
+Statutory accounts were surveyed after the August research sweep flagged
+them as a possible per-site capacity source. **The generalisation does not
+hold.** The latest full accounts of Kao Data, Yondr Group, Vantage UK,
+Global Switch and CloudHQ UK contain no capacity figure of any kind;
+Virtus filed on 19–20 August 2026 and its documents were not yet
+retrievable. Per-campus megawatts appear in **Ark Data Centres Limited**
+alone, because Ark is a UK-only company whose whole business is four UK
+campuses — the disclosure is a narrative choice in the business review,
+not a statutory requirement.
+
+What *is* statutory is SECR energy reporting, and it yields **company
+totals, never a site split**. Ark: 280,597 MWh total and 203,608 MWh IT
+for calendar 2024. Kao: 121,962.26 MWh for the year to 31 March 2025
+(self-verifying — divided by the stated revenue it reproduces the printed
+energy intensity of 0.001911 exactly), alongside a PUE of 1.52 and WUE of
+0.18, with consumption stated to be metered site by site via MPAN meters
+and simply not published at that granularity.
+
+**The number worth reporting comes from putting the two together.**
+203,608 MWh of IT load over 2024's 8,784 hours averages 23.2 MW against
+108.42 MW of built capacity across the same four sites — **about 21%**.
+Total draw including cooling averages 29.5%; implied PUE 1.38. UK Power
+Networks' half-hourly metering of around 100 real data centres gives a
+median mean-utilisation of **18.1%**. An audited set of company accounts
+and a network operator's meters, entirely independent of each other, land
+in the same band — which is the empirical answer to treating contracted
+or built capacity as demand.
+
+Acquisition notes: the API needs a key (`CH_API_KEY`), and the document
+endpoint 302s to S3, which rejects a request still carrying the
+Authorization header — follow the redirect unauthenticated. Everything
+Companies House publishes is scanned, so figures are transcribed from
+rendered pages by eye and re-checked against committed OCR of the cited
+page; see `data/external_sources/README.md`.
+
 ---
 
 ## 7. Recommendations

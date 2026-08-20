@@ -1,0 +1,281 @@
+# Capacity and consumption claims transcribed from Companies House filings.
+#
+# Companies House scans almost everything it publishes, so these documents
+# have no text layer. Every figure below was read from the page rendered at
+# 300 DPI and checked by eye, not lifted from OCR — OCR misreads a digit
+# silently, which is the one failure mode this project cannot tolerate in a
+# number. The OCR of each cited page is committed alongside
+# (companies_house_ocr/) so the transcription can be re-checked cheaply and
+# a test can assert the figures still appear on the page they cite.
+#
+# What generalises and what does not, established 2026-08-20 by pulling the
+# latest full accounts for six other operators (Virtus, Kao, Yondr, Vantage,
+# Global Switch, CloudHQ): **per-site megawatts are an Ark peculiarity.**
+# None of the others states a capacity figure of any kind. Ark discloses it
+# because Ark is a UK-only company whose whole business is four UK campuses.
+# SECR energy reporting is the part that is statutory, and it produces
+# company totals, never site figures — so consumption claims here are
+# deliberately left unmatched to any site.
+
+sources:
+  - key: ark_fy2025
+    company_name: ARK DATA CENTRES LIMITED
+    company_number: "05656968"
+    filing: Full accounts made up to 30 June 2025
+    filed: 2025-12-17
+    ch_document_id: MzQ5NTAxNDIxN2FkaXF6a2N4
+    url: https://find-and-update.company-information.service.gov.uk/company/05656968/filing-history/MzQ5NTAxNDIxN2FkaXF6a2N4/document?format=pdf
+    local_pdf: ark-accounts-fy2025.pdf
+    sha256: 63caea3de3f43f4a18b86efa6f7146f2e1e8b7e96973311eb637dc186eaa1a50
+    pages: 35
+    scanned: true
+
+  - key: kao_fy2025
+    company_name: KAO DATA LIMITED
+    company_number: "11756346"
+    filing: Full accounts made up to 31 March 2025
+    filed: 2025-12-18
+    ch_document_id: H37LN6s62-GqAFlGqDGw3BqoZl4g-_7pBbsZDEcdZ4I
+    url: https://find-and-update.company-information.service.gov.uk/company/11756346/filing-history/MzQ5NTEzNjI1OGFkaXF6a2N4/document?format=pdf
+    local_pdf: kao-accounts-fy2025.pdf
+    sha256: 275f71fd02d9f1aafa51a51e43a7242bd9118bd81ccfc4205e1325c2517a99b8
+    pages: 51
+    scanned: true
+
+claims:
+  # --- Ark, per-campus built capacity (strategic report, page 4) ---------
+  - source: ark_fy2025
+    claim_name: Cody Park
+    quantity_type: built_capacity
+    value: 48.78
+    unit: MW
+    stage: built
+    as_at: 2025-06-30
+    locator: page 4
+    holder: Ark Estates Cody Park Limited
+    quote: >-
+      Ark Estates Cody Park Limited owns the Cody Park site, which had
+      48.78 MW (2024: 48.78 MW) of built capacity as of 30 June 2025,
+      split across 5 buildings. In addition, 800kW of further capacity is
+      under construction.
+
+  - source: ark_fy2025
+    claim_name: Cody Park (under construction)
+    quantity_type: built_capacity
+    value: 800
+    unit: kW
+    stage: under construction
+    as_at: 2025-06-30
+    locator: page 4
+    holder: Ark Estates Cody Park Limited
+    note: >-
+      Stated as 800kW — the only figure on the page not given in MW.
+      Transcribed in the unit printed; the loader derives 0.8 MW into
+      value_mw so it sorts beside the rest without the original being
+      overwritten.
+    quote: >-
+      In addition, 800kW of further capacity is under construction.
+
+  - source: ark_fy2025
+    claim_name: Spring Park
+    quantity_type: built_capacity
+    value: 41.68
+    unit: MW
+    stage: built
+    as_at: 2025-06-30
+    locator: page 4
+    holder: Ark Estates Spring Park Limited
+    note: >-
+      The comparative is given as "(2023: 41.68 MW)" where every other
+      bullet on the page says 2024. Transcribed as printed — it is the
+      company's own slip, not an OCR artefact, and it is verified against
+      the rendered page.
+    quote: >-
+      Ark Estates Spring Park Limited owns the Spring Park site, which had
+      41.68 MW (2023: 41.68 MW) of built capacity as of 30 June 2025,
+      split across 5 buildings, with a further 13.5MW under construction.
+
+  - source: ark_fy2025
+    claim_name: Spring Park (under construction)
+    quantity_type: built_capacity
+    value: 13.5
+    unit: MW
+    stage: under construction
+    as_at: 2025-06-30
+    locator: page 4
+    holder: Ark Estates Spring Park Limited
+    quote: >-
+      with a further 13.5MW under construction.
+
+  - source: ark_fy2025
+    claim_name: Meridian Park
+    quantity_type: built_capacity
+    value: 16.36
+    unit: MW
+    stage: built
+    as_at: 2025-06-30
+    locator: page 4
+    holder: Ark Estates Enfield Limited
+    quote: >-
+      Ark Estates Enfield Limited owns Meridian Park, which has a built
+      capacity of 16.36 MW (2024: 16.36 MW).
+
+  - source: ark_fy2025
+    claim_name: A9 building
+    quantity_type: built_capacity
+    value: 1.6
+    unit: MW
+    stage: built
+    as_at: 2025-06-30
+    locator: page 4
+    holder: Ark A9 GP Limited
+    quote: >-
+      Ark A9 GP Limited owns the A9 building, which has a built capacity
+      of 1.6MW (2024: 1.6MW).
+
+  # --- Ark, company-wide metered consumption (SECR, page 8) -------------
+  # Company totals across all four sites. Never matched to a site: there
+  # is no published split, and attaching a group figure to one campus
+  # would be misattribution of exactly the kind this store exists to stop.
+  - source: ark_fy2025
+    claim_name: Ark Data Centres Limited — total energy consumption
+    quantity_type: metered_consumption
+    value: 280597
+    unit: MWh
+    stage: calendar year 2024
+    as_at: 2024-12-31
+    locator: page 8
+    company_level: true
+    quote: >-
+      Aggregate of total energy consumption in the year 280,597
+
+  - source: ark_fy2025
+    claim_name: Ark Data Centres Limited — IT energy consumption
+    quantity_type: metered_consumption
+    value: 203608
+    unit: MWh
+    stage: calendar year 2024
+    as_at: 2024-12-31
+    locator: page 8
+    company_level: true
+    note: >-
+      Averaged over 2024's 8,784 hours this is 23.2 MW of IT load against
+      108.42 MW of built capacity across the same company's four sites —
+      about 21%. UK Power Networks' half-hourly metering of around 100
+      real data centres gives a median mean-utilisation of 18.1%, an
+      independent source in the same band. Ark reports energy by calendar
+      year while capacity is stated at 30 June 2025, so the two are close
+      but not coincident.
+    quote: >-
+      Aggregate of IT energy consumption in the year 203,608
+
+  # --- Kao, company-wide metered consumption (SECR, page 11) ------------
+  - source: kao_fy2025
+    claim_name: Kao Data Limited — total electricity
+    quantity_type: metered_consumption
+    value: 121962.26
+    unit: MWh
+    stage: year to 31 March 2025
+    as_at: 2025-03-31
+    locator: page 11
+    company_level: true
+    note: >-
+      The scan renders the decimal point faintly, but the figure is
+      self-verifying: 121,962.26 divided by the stated revenue of
+      £63,814,156 gives 0.001911, exactly the energy intensity printed
+      beneath it (the prior year does the same). Kao states consumption is
+      metered site by site via MPAN meters — so a site-level split exists
+      internally and is simply not published. Reported alongside a PUE of
+      1.52 (2024: 1.57) and WUE of 0.18 (2024: 0.27).
+    attrs:
+      pue: 1.52
+      pue_prior: 1.57
+      wue: 0.18
+      wue_prior: 0.27
+      revenue_gbp: 63814156
+    quote: >-
+      Total electricity (MWh) 121,962.26
+
+# Hand-adjudicated matches to sites, same discipline as the NESO register.
+matches:
+  - claim_name: Cody Park
+    site_id: 14
+    method: name_and_applicant
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Ark's accounts name "the Cody Park site", owned by Ark Estates Cody
+      Park Limited. Site 14 carries addresses reading "Cody Park, A101
+      Ively Road Farnborough GU14 0LH" and "Cody Technology Park Ively
+      Road Farnborough", and its planning documents name Ark as applicant
+      64 times — identity of both campus and company. The campus also
+      appears as five further site records in neighbouring authorities
+      (7 Hart, 240 Guildford, 319/320 Rushmoor, 355 Surrey Heath), none
+      with any applicant finding: a cross-boundary materialisation
+      artefact, not a rival candidate. The 48.78 MW is the whole campus,
+      so it should be read against site 14 as the campus's principal
+      record rather than as a figure for one planning application.
+
+  - claim_name: Cody Park (under construction)
+    site_id: 14
+    method: name_and_applicant
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Same sentence and same campus as the 48.78 MW built figure above;
+      recorded separately because 800kW under construction is a different
+      quantity from capacity already built, and merging them would state
+      a total the company never stated.
+
+  - claim_name: Spring Park
+    site_id: 33
+    method: name_and_applicant
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Ark's accounts name "the Spring Park site", owned by Ark Estates
+      Spring Park Limited. Site 33 is "SPRING PARK - TWO DATA CENTRES P3 &
+      P4" with addresses at Spring Park, Westwells Road, Hawthorn,
+      Corsham, and 142 Ark applicant findings across its documents. Site
+      385 covers the same campus from a separate application and carries
+      no applicant findings.
+
+  - claim_name: Spring Park (under construction)
+    site_id: 33
+    method: name_and_applicant
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-20
+    evidence: >-
+      Same sentence and campus as the 41.68 MW built figure; kept as its
+      own claim for the same reason, and because 13.5MW under
+      construction at Corsham is a forward-looking number a reporter may
+      want to track separately.
+
+# Claims examined and deliberately left unmatched, with the reason.
+considered:
+  - claim_name: Meridian Park
+    reason: >-
+      16.36 MW of built capacity at an operating Ark data centre in
+      Enfield, and there is no corresponding site anywhere in this
+      corpus — Enfield's only site records are the Metaswitch building
+      and two cross-boundary observations of the South Mimms scheme.
+      An existing data centre the planning sweep has never seen is a
+      finding in its own right, and matching it to nothing is the honest
+      record of that.
+
+  - claim_name: A9 building
+    reason: >-
+      Ark lists the A9 building as a separate holding from the three
+      campuses, and states no location for it. Cody Park's buildings are
+      lettered in the same series (site 14's addresses include A50, A57
+      and A101), which makes Cody Park a plausible home — but plausible
+      is not evidence, and folding 1.6 MW into Cody Park would inflate a
+      campus figure the company reported separately.
+
+  - claim_name: Company-level consumption (Ark and Kao)
+    reason: >-
+      SECR figures are company totals covering every site the company
+      operates — four for Ark, several for Kao. No published split
+      exists, so there is no honest way to attach them to one site.
+      They are loaded as unmatched claims and belong in an operator-level
+      view rather than a site panel.

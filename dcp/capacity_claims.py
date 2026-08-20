@@ -18,6 +18,7 @@ any consumer that renders a claim renders its quantity_type beside it.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
@@ -55,6 +56,7 @@ CONFIDENCE_VOCAB = ("strong", "probable", "tentative")
 
 SOURCE_TITLES = {
     "neso_ea_register": "NESO Existing Agreements Register",
+    "companies_house": "Companies House filed accounts",
 }
 
 QUANTITY_LABELS = {
@@ -70,19 +72,184 @@ QUANTITY_LABELS = {
     "announced_capacity": "announced capacity",
 }
 
-# The caveat that must travel with every rendered claim. Contracted
-# capacity is the quantity most often mistaken for a site's "real"
-# demand, so the sentence names what it is not.
-CLAIMS_CAVEAT = (
-    "Contracted connection capacity is a ceiling a developer once agreed "
-    "with the grid operator — not IT load, not built capacity, and not "
-    "what the site draws. The register is consent-based and records "
-    "pre-reform positions, so absence proves nothing and entries can "
-    "shrink or lapse.")
+# Where each panel's numbers come from, said in the artefacts rather than
+# left for a reader to infer from a heading. The two panels sit side by
+# side and both are megawatts, which is precisely why the difference in
+# provenance has to be stated: one is what an applicant told a planning
+# authority, the other is an accumulating mixture of registers, filed
+# accounts and operators' own marketing, of varying authority and
+# measuring different quantities.
+
+DECLARED_POWER_NOTE = (
+    "Every figure here is read from this site's own planning documents — "
+    "the application, its environmental statement and supporting reports — "
+    "and adjudicated as describing this site rather than the market or "
+    "another scheme.")
+
+INDICATORS_NOTE = (
+    "These come from outside the planning system: grid registers, accounts "
+    "filed at Companies House, operators' own websites. Each measures a "
+    "different quantity with different authority behind it, so they are "
+    "not directly comparable with the declared figures or with each other. "
+    "Where they diverge, the divergence is the finding — not an error to "
+    "reconcile.")
+
+# One line per quantity, shown only for the quantities a site actually
+# has. A single flat caveat stopped working once the sources multiplied:
+# what needs saying about a contracted ceiling is not what needs saying
+# about a marketing figure.
+QUANTITY_CAVEATS = {
+    "grid_connection": (
+        "A connection ceiling contracted with the grid operator — not what "
+        "is built, and not what the site draws. Consent-based registers "
+        "also mean absence proves nothing, and entries can lapse."),
+    "built_capacity": (
+        "Capacity the operator reports as already built, from audited "
+        "accounts filed at Companies House."),
+    "announced_capacity": (
+        "The operator's own published figure for the site. Marketing "
+        "material, not an audited or regulatory disclosure, and it may "
+        "count capacity not yet built."),
+    "metered_consumption": (
+        "Energy actually metered over a period, not a power rating. Where "
+        "it is a company total it covers every site that company operates "
+        "and cannot be attributed to this one."),
+}
 
 # Tentative matches are rendered as what they are. The matches file says
 # it in its header; the artefacts say it beside each tentative row.
 TENTATIVE_NOTE = "a lead, not an attribution"
+
+
+# ---------------------------------------------------------------------------
+# Companies House: filed accounts, hand-transcribed.
+#
+# A different acquisition problem from the NESO register. Companies House
+# scans what it publishes, so there is no text layer and no cell to read a
+# number out of: every figure is transcribed by eye from the page rendered
+# at 300 DPI. OCR of the cited pages is committed beside the PDFs, not to
+# source the figures — a silent digit misread is exactly what this project
+# cannot afford in a number — but so the transcription can be re-checked
+# without re-rendering, and so a test can assert each figure still appears
+# on the page it cites.
+#
+# Scope, established by probing six other operators on 2026-08-20: per-site
+# megawatts are peculiar to Ark. What is statutory is SECR energy
+# reporting, and that yields company totals only, which is why consumption
+# claims here carry company_level and are never matched to a site.
+
+CH_CLAIMS_PATH = ROOT / "data" / "external_sources" / "companies-house-claims.yaml"
+CH_OCR_DIR = ROOT / "data" / "external_sources" / "companies_house_ocr"
+CH_SOURCE_KEY = "companies_house"
+
+
+@dataclass(frozen=True)
+class FiledClaim:
+    source_key: str
+    company_name: str
+    company_number: str
+    claim_name: str
+    quantity_type: str
+    value: float
+    unit: str
+    stage: str | None
+    as_at: date | None
+    locator: str
+    quote: str
+    url: str
+    company_level: bool
+    attrs: dict
+
+
+def load_ch_document(path: Path = CH_CLAIMS_PATH) -> dict:
+    return yaml.safe_load(path.read_text())
+
+
+def load_ch_claims(path: Path = CH_CLAIMS_PATH) -> list[FiledClaim]:
+    cfg = load_ch_document(path)
+    sources = {s["key"]: s for s in cfg.get("sources", [])}
+    out = []
+    for c in cfg.get("claims", []):
+        src = sources[c["source"]]
+        attrs = dict(c.get("attrs") or {})
+        attrs.update({
+            "company_name": src["company_name"],
+            "company_number": src["company_number"],
+            "filing": src["filing"],
+            "filed": str(src["filed"]),
+            "holder": c.get("holder"),
+            "note": c.get("note"),
+            "quote": c["quote"].strip(),
+            "company_level": bool(c.get("company_level")),
+            "source_document": src["key"],
+            # The committed PDF's stem is also the OCR filename stem, so
+            # the quote check can find the right page without a mapping.
+            "document_stem": Path(src["local_pdf"]).stem,
+        })
+        as_at = c.get("as_at")
+        out.append(FiledClaim(
+            source_key=CH_SOURCE_KEY,
+            company_name=src["company_name"],
+            company_number=src["company_number"],
+            claim_name=c["claim_name"],
+            quantity_type=c["quantity_type"],
+            value=float(c["value"]),
+            unit=c["unit"],
+            stage=c.get("stage"),
+            as_at=as_at if isinstance(as_at, date) else None,
+            locator=c["locator"],
+            quote=c["quote"].strip(),
+            url=src["url"],
+            company_level=bool(c.get("company_level")),
+            attrs=attrs,
+        ))
+    return out
+
+
+def mw_of(value: float, unit: str) -> float | None:
+    """Megawatts beside the original, never instead of it. Returns None
+    where the unit does not convert — MWh is energy, not power, and a
+    consumption figure has no megawatt value however much a column would
+    like one."""
+    u = unit.strip().lower()
+    if u == "mw":
+        return value
+    if u == "kw":
+        return value / 1000
+    return None
+
+
+def _digit_blob(text: str) -> str:
+    """Every digit in the page, separators removed.
+
+    OCR of these scans drops decimal points and sometimes commas, so
+    "121,962.26" comes back as "121,962 26". Matching a digit run against
+    a separator-free blob survives that, while a wrong digit — the error
+    this check exists to catch — still fails to match. Deliberately not
+    tokenised: token boundaries are exactly what the scan loses.
+    """
+    return re.sub(r"[^0-9]", "", text)
+
+
+def verify_ch_quotes(claims: list[FiledClaim] | None = None,
+                     ocr_dir: Path = CH_OCR_DIR) -> list[str]:
+    """Problems as strings; empty means every transcribed figure is still
+    present in the OCR of the page it cites."""
+    claims = claims if claims is not None else load_ch_claims()
+    problems = []
+    for c in claims:
+        page = c.locator.replace("page ", "p")
+        f = ocr_dir / f"{c.attrs['document_stem']}-{page}.txt"
+        if not f.exists():
+            problems.append(f"{c.claim_name}: no OCR for {c.locator} ({f.name})")
+            continue
+        blob = _digit_blob(f.read_text())
+        printed = f"{c.value:f}".rstrip("0").rstrip(".")
+        want = _digit_blob(printed)
+        if want and want not in blob:
+            problems.append(
+                f"{c.claim_name}: {c.value} {c.unit} not found on {c.locator}")
+    return problems
 
 
 def load_site_claims(cur) -> dict[str, list[dict]]:
@@ -187,6 +354,34 @@ def load_register_demand_claims(path: Path = REGISTER_PATH) -> list[Claim]:
             technology_verbatim=str(tech).strip(),
         ))
     return claims
+
+
+def load_ch_matches(path: Path = CH_CLAIMS_PATH) -> list[dict]:
+    """Matches for the filed-accounts claims, keyed by claim_name rather
+    than a row number — a filing has no rows, and the claim names in the
+    file are unique by construction (asserted in validate_ch)."""
+    return list(load_ch_document(path).get("matches", []))
+
+
+def validate_ch(claims: list[FiledClaim], matches: list[dict]) -> list[str]:
+    problems = []
+    names = [c.claim_name for c in claims]
+    dupes = {n for n in names if names.count(n) > 1}
+    problems += [f"duplicate claim_name {n!r}" for n in sorted(dupes)]
+    for m in matches:
+        if m["claim_name"] not in names:
+            problems.append(f"match names no claim: {m['claim_name']!r}")
+        if m["confidence"] not in CONFIDENCE_VOCAB:
+            problems.append(f"{m['claim_name']}: confidence {m['confidence']!r}")
+        if len(m.get("evidence", "").strip()) < 40:
+            problems.append(f"{m['claim_name']}: evidence too thin to defend")
+    # A company-level figure must never carry a site match.
+    company_level = {c.claim_name for c in claims if c.company_level}
+    for m in matches:
+        if m["claim_name"] in company_level:
+            problems.append(
+                f"{m['claim_name']}: company-level claim matched to a site")
+    return problems + verify_ch_quotes(claims)
 
 
 def load_matches(path: Path = MATCHES_PATH) -> list[Match]:

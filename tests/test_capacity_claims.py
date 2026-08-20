@@ -91,6 +91,52 @@ def test_validation_catches_a_renamed_claim():
 
 
 # ---------------------------------------------------------------------------
+# Companies House filed accounts
+#
+# These come from scans with no text layer, transcribed by eye from the
+# rendered page. The guarantee that matters is that every transcribed
+# figure still appears in the OCR of the page it cites — a cheap, offline
+# stand-in for the quote round-trip the text-layer sources get.
+
+def test_every_filed_figure_appears_on_its_cited_page():
+    assert cc.verify_ch_quotes() == []
+
+
+def test_filed_batch_is_valid():
+    assert cc.validate_ch(cc.load_ch_claims(), cc.load_ch_matches()) == []
+
+
+def test_units_convert_only_where_they_mean_the_same_thing():
+    assert cc.mw_of(48.78, "MW") == 48.78
+    assert cc.mw_of(800, "kW") == 0.8
+    # Energy is not power, however much a megawatt column would like it.
+    assert cc.mw_of(280597, "MWh") is None
+
+
+def test_printed_units_are_preserved_not_normalised():
+    by_name = {c.claim_name: c for c in cc.load_ch_claims()}
+    uc = by_name["Cody Park (under construction)"]
+    assert (uc.value, uc.unit) == (800, "kW"), \
+        "the page says 800kW; storing 0.8 MW would overwrite the source"
+
+
+def test_company_level_claims_are_never_matched_to_a_site():
+    claims = cc.load_ch_claims()
+    company_level = {c.claim_name for c in claims if c.company_level}
+    assert company_level, "expected SECR consumption to be company-level"
+    matched = {m["claim_name"] for m in cc.load_ch_matches()}
+    assert not (company_level & matched)
+
+
+def test_a_wrong_digit_is_caught():
+    claims = list(cc.load_ch_claims())
+    good = next(c for c in claims if c.claim_name == "Cody Park")
+    from dataclasses import replace
+    bad = replace(good, value=48.79)  # one digit out
+    assert cc.verify_ch_quotes([bad])
+
+
+# ---------------------------------------------------------------------------
 # Rendering support: both artefacts draw wording from the module, so the
 # vocabulary has to cover everything the schema admits.
 
@@ -103,9 +149,27 @@ def test_every_schema_quantity_has_a_label():
     assert set(cc.QUANTITY_LABELS) == schema_vocab
 
 
-def test_caveat_names_what_contracted_capacity_is_not():
-    for absent in ("IT load", "built capacity", "draws"):
-        assert absent in cc.CLAIMS_CAVEAT
+def test_contracted_capacity_caveat_names_what_it_is_not():
+    caveat = cc.QUANTITY_CAVEATS["grid_connection"]
+    for absent in ("not what is built", "not what the site draws"):
+        assert absent in caveat
+
+
+def test_both_panels_state_their_provenance():
+    """The two panels sit side by side and both are megawatts, so each has
+    to say where its numbers come from rather than leave it to a heading."""
+    assert "planning documents" in cc.DECLARED_POWER_NOTE
+    assert "outside the planning system" in cc.INDICATORS_NOTE
+    assert "not directly comparable" in cc.INDICATORS_NOTE
+
+
+def test_every_external_quantity_has_a_caveat():
+    """Any quantity that can reach the indicators panel must carry a line
+    saying what it is — a new source type must not arrive silently."""
+    external = {"grid_connection", "built_capacity", "announced_capacity",
+                "metered_consumption"}
+    assert external <= set(cc.QUANTITY_CAVEATS)
+    assert set(cc.QUANTITY_CAVEATS) <= set(cc.QUANTITY_LABELS)
 
 
 @pytest.mark.integration
