@@ -41,6 +41,15 @@ row per `(site, source, quantity_type, value, stage, as_at, source_url)` —
 with no adjudication between them. The divergences are findings. They only
 survive as findings if both numbers are kept.
 
+*Built 2026-08-20* as `capacity_claims` plus `capacity_claim_matches`
+(migration 021): claims verbatim from the source, site attachment as a
+separate hand-adjudicated inference with written evidence, retirable but
+never deleted. First source loaded: NESO's Existing Agreements Register
+(`data/external_sources/neso-ea-register.xlsx` and its matches file, via
+`scripts/load_capacity_claims.py`) — the register surfaced by the
+2026-08-19/20 demand-sources research sweep as the only public NESO
+artefact naming transmission demand customers with MW.
+
 ---
 
 ## 2. Commercial directories
