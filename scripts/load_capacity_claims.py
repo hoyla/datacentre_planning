@@ -36,8 +36,11 @@ def main() -> int:
     matches = cc.load_matches()
     ch_claims = cc.load_ch_claims()
     ch_matches = cc.load_ch_matches()
+    op_claims = cc.load_operator_claims()
+    op_matches = cc.load_operator_matches()
     problems = (cc.validate_matches(claims, matches)
-                + cc.validate_ch(ch_claims, ch_matches))
+                + cc.validate_ch(ch_claims, ch_matches)
+                + cc.validate_operator(op_claims, op_matches))
     if problems:
         for p in problems:
             print(f"INVALID: {p}", file=sys.stderr)
@@ -47,6 +50,8 @@ def main() -> int:
           f"{len(matches)} matches, batch valid.")
     print(f"{len(ch_claims)} filed-accounts claims, {len(ch_matches)} matches, "
           f"every figure verified against the OCR of its cited page.")
+    print(f"{len(op_claims)} operator-website claims, {len(op_matches)} "
+          f"matches, every quote verified against its committed snapshot.")
     if args.dry_run:
         return 0
 
@@ -111,60 +116,68 @@ def main() -> int:
                 if cur.fetchone():
                     inserted_matches += 1
 
-            # --- Companies House filed accounts --------------------------
-            ch_ids: dict[str, int] = {}
-            for fc in ch_claims:
-                cur.execute(
-                    """
-                    INSERT INTO capacity_claims
-                        (source_key, claim_name, quantity_type,
-                         value_original, unit_original, value_mw, stage,
-                         as_at, source_url, source_locator, attrs)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (source_key, claim_name, quantity_type,
-                                 value_original, unit_original, as_at,
-                                 source_locator)
-                    DO NOTHING
-                    RETURNING id
-                    """,
-                    (fc.source_key, fc.claim_name, fc.quantity_type, fc.value,
-                     fc.unit, cc.mw_of(fc.value, fc.unit), fc.stage, fc.as_at,
-                     fc.url, fc.locator, json.dumps(fc.attrs)),
-                )
-                row = cur.fetchone()
-                if row:
-                    ch_ids[fc.claim_name] = row[0]
-                    inserted_claims += 1
-                else:
+            # --- Sources whose claims are named rather than numbered -----
+            # Filed accounts and operator websites share a shape: a
+            # FiledClaim, and matches keyed by claim_name. One loop, so a
+            # fix to the insert logic cannot reach one source and miss
+            # the other.
+            for filed, filed_matches in ((ch_claims, ch_matches),
+                                         (op_claims, op_matches)):
+                ids: dict[str, int] = {}
+                for fc in filed:
                     cur.execute(
                         """
-                        SELECT id FROM capacity_claims
-                        WHERE source_key = %s AND claim_name = %s
-                          AND source_locator = %s
+                        INSERT INTO capacity_claims
+                            (source_key, claim_name, quantity_type,
+                             value_original, unit_original, value_mw, stage,
+                             as_at, source_url, source_locator, attrs)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        ON CONFLICT (source_key, claim_name, quantity_type,
+                                     value_original, unit_original, as_at,
+                                     source_locator)
+                        DO NOTHING
+                        RETURNING id
                         """,
-                        (fc.source_key, fc.claim_name, fc.locator))
-                    ch_ids[fc.claim_name] = cur.fetchone()[0]
+                        (fc.source_key, fc.claim_name, fc.quantity_type,
+                         fc.value, fc.unit, cc.mw_of(fc.value, fc.unit),
+                         fc.stage, fc.as_at, fc.url, fc.locator,
+                         json.dumps(fc.attrs)),
+                    )
+                    row = cur.fetchone()
+                    if row:
+                        ids[fc.claim_name] = row[0]
+                        inserted_claims += 1
+                    else:
+                        cur.execute(
+                            """
+                            SELECT id FROM capacity_claims
+                            WHERE source_key = %s AND claim_name = %s
+                              AND source_locator = %s
+                            """,
+                            (fc.source_key, fc.claim_name, fc.locator))
+                        ids[fc.claim_name] = cur.fetchone()[0]
 
-            for m in ch_matches:
-                cur.execute(
-                    """
-                    INSERT INTO capacity_claim_matches
-                        (claim_id, site_id, method, confidence, evidence,
-                         matched_by)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (claim_id, site_id, method, md5(evidence))
-                    DO NOTHING
-                    RETURNING id
-                    """,
-                    (ch_ids[m["claim_name"]], m["site_id"], m["method"],
-                     m["confidence"], m["evidence"].strip(), m["matched_by"]),
-                )
-                if cur.fetchone():
-                    inserted_matches += 1
+                for m in filed_matches:
+                    cur.execute(
+                        """
+                        INSERT INTO capacity_claim_matches
+                            (claim_id, site_id, method, confidence, evidence,
+                             matched_by)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                        ON CONFLICT (claim_id, site_id, method, md5(evidence))
+                        DO NOTHING
+                        RETURNING id
+                        """,
+                        (ids[m["claim_name"]], m["site_id"], m["method"],
+                         m["confidence"], m["evidence"].strip(),
+                         m["matched_by"]),
+                    )
+                    if cur.fetchone():
+                        inserted_matches += 1
         conn.commit()
 
-    n_claims = len(claims) + len(ch_claims)
-    n_matches = len(matches) + len(ch_matches)
+    n_claims = len(claims) + len(ch_claims) + len(op_claims)
+    n_matches = len(matches) + len(ch_matches) + len(op_matches)
     print(f"OK. {inserted_claims} claims and {inserted_matches} matches "
           f"inserted ({n_claims - inserted_claims} claims, "
           f"{n_matches - inserted_matches} matches already present).")

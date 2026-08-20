@@ -137,6 +137,54 @@ def test_a_wrong_digit_is_caught():
 
 
 # ---------------------------------------------------------------------------
+# Operator websites
+#
+# The weakest-authority source, and the one most likely to move under us:
+# a marketing page can change any day. The quote check is what turns that
+# from silent drift into a failing test.
+
+def test_every_operator_quote_is_still_in_its_snapshot():
+    assert cc.verify_operator_quotes() == []
+
+
+def test_operator_batch_is_valid():
+    assert cc.validate_operator(cc.load_operator_claims(),
+                                cc.load_operator_matches()) == []
+
+
+def test_operator_terms_are_preserved_not_translated():
+    """"Total Capacity" and "IT load" are not synonyms; the store keeps
+    whichever word the operator used."""
+    terms = {c.attrs["operator_term"] for c in cc.load_operator_claims()}
+    assert {"Total Capacity", "IT load"} <= terms
+
+
+def test_operator_claims_are_all_announced_capacity():
+    for c in cc.load_operator_claims():
+        assert c.quantity_type == "announced_capacity", c.claim_name
+
+
+def test_a_changed_page_fails_rather_than_drifts():
+    claims = list(cc.load_operator_claims())
+    from dataclasses import replace
+    moved = replace(claims[0], quote='"name": "Total Capacity", "value": "999"')
+    assert cc.verify_operator_quotes([moved])
+
+
+def test_the_unit_error_is_documented_but_not_loaded():
+    """Greystoke publishes 384 GW where two other pages say 384 MW. It is
+    recorded as a finding and kept out of the claims, because loading it
+    would poison every aggregate it reached."""
+    doc = cc.load_operator_document()
+    noted = doc.get("noted", [])
+    assert any("384 GW" in n["subject"] for n in noted)
+    values = {(c.claim_name, c.value, c.unit)
+              for c in cc.load_operator_claims()}
+    assert ("Humber Tech Park", 384.0, "MW") in values
+    assert not any(u == "GW" for _, _, u in values)
+
+
+# ---------------------------------------------------------------------------
 # Rendering support: both artefacts draw wording from the module, so the
 # vocabulary has to cover everything the schema admits.
 

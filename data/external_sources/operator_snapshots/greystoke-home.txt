@@ -1,0 +1,299 @@
+# url: https://greystoke.co.uk/
+
+# fetched: 2026-08-20
+
+# sha256(html): 977f57c34b55ebd6bec310e2de79067a9397678f7480ed99cf563ae6e0d13316
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org/",
+ "@type": "WebSite",
+ "name": "Greystoke 2024",
+ "url": "https://www.greystoke.co.uk"
+}
+
+## VISIBLE TEXT
+
+-->
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Greystoke | Making Infrastructure Happen 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+
+ top of page Homepage What We Do Data Centres AI Growth Zone Contact Project Update: 15.12.25 – Regional support builds for Northern Lincolnshire AI Growth Zone Making Infrastructure Happen Greystoke masterplans and delivers UK data centres 2500 MW planned compute capacity in total £25bn of investment opportunities 10,000s of construction jobs 3x hyperscale data centre projects 2140 well-paid permanent roles NLAIGZ planned AI 
+
+ Growth Zone Delivering 
+
+ Digital 
+
+ Infrastructure Three consented data centres 
+ 
+Greystoke is a leader in data centre development in the UK. We are set to deliver nearly 600 MW of new computing power through our three consented hyperscale data centre projects. 
+
+ ​ 
+
+ 2.5 GW pipeline 
+
+ ​ 
+
+ We have 2.5 GW of data centre projects in progress in total and more than 2.5 GW of accepted grid connections. 
+
+ ​ 
+
+ Northern Lincolnshire AI Growth Zone 
+
+ ​ 
+
+ We are bringing forward the proposed Northern Lincolnshire AI Growth Zone, in partnership with local stakeholders. This will see four new AI data centres co-located with the UK’s most advanced clean energy cluster, driving £20bn+ of investment. 
+
+ ​ 
+
+ Activating investment 
+
+ ​ 
+
+ We bring together technology companies, investors, local authorities and utilities, enabling investment in data centres to be activated. 
+
+ ​ 
+
+ New jobs and opportunities 
+ 
+
+ Our projects are ready to create thousands of new jobs, alongside education and training opportunities, biodiversity gains and improved access to green spaces. Our 2.5 GW pipeline of data centre projects includes: Abbots Langley Abbots Langley Data Centre is a cloud data centre project located within the Hemel Hempstead Availability Zone 
+ 
+
+ 
+ 
+ £1bn investment 
+ 
+ 
+ 230 local jobs 
+ 
+ 
+ 96MW IT load 
+ 
+ 
+ Planning approved 
+ 
+ More info 
+ 
+ 
+ 
+ 
+ Humber Tech Park Humber Tech Park is a dedicated AI training data centre project located in North Lincolnshire 
+
+ 
+
+ 
+ 
+ £3bn investment 
+ 
+ 
+ 370 local jobs 
+ 
+ 
+ 384MW IT load 
+ 
+ 
+ Planning approved 
+ 
+ More info 
+ 
+ 
+ 
+ 
+ West London Tech Park The project is located in both the Slough and Hayes availability zones 
+ 
+
+ 
+ 
+ £1bn investment 
+ 
+ 
+ 260 local jobs 
+ 
+ 
+ 90MW IT load 
+ 
+ 
+ Planning approved 
+ 
+ More info 
+ 
+ 
+ 
+ 
+ Working together to create digital infrastructure with: 
+ 
+ Investors 
+ 
+ 
+ UK Government 
+ 
+ 
+ Customers 
+ 
+ 
+ Local government 
+ 
+ 
+ ​ Communities 
+ 
+ 
+ Delivery partners 
+ 
+ 
+ Land owners 
+ 
+ 
+ Developers 
+ 
+ Greystoke is a trading name of Greystoke Land Limited 
+
+ Greystoke ©2024 Privacy Policy Careers bottom of page

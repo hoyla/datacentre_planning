@@ -1445,20 +1445,37 @@ def main() -> int:
                     conn_date = f"{_cd.day} {_cd:%B %Y}"
                 except ValueError:
                     conn_date = c["connection_date"]
-                head = (f"<p><strong>{float(c['value_mw']):,.4g} MW</strong> "
-                        f"{esc(qty)} — register entry "
+                # The figure as its source printed it — 800 kW stays 800 kW
+                # and an MWh consumption total never acquires a megawatt
+                # sign — with the normalised MW only where it differs.
+                _orig = (f"{float(c['value_original']):,.10g} "
+                         f"{c['unit_original']}")
+                _mw = c["value_mw"]
+                if _mw is not None and c["unit_original"] != "MW":
+                    _orig += f" <span class='help'>({float(_mw):,.4g} MW)</span>"
+                # An operator's own word for the quantity is evidence, so
+                # it is shown instead of ours where one exists.
+                _qty = c["operator_term"] or qty
+                _entry = ("register entry" if c["source_key"] == "neso_ea_register"
+                          else "for")
+                head = (f"<p><strong>{_orig}</strong> "
+                        f"{esc(_qty)} — {_entry} "
                         f"“{esc(c['claim_name'])}”"
                         + (f", {esc(c['connection_point'])}"
                            if c["connection_point"] else "")
                         + (f", connection date {esc(conn_date)}"
                            if conn_date else "")
+                        + (f" <span class='help'>({esc(c['stage'])})</span>"
+                           if c["stage"] else "")
                         + ".</p>")
                 conf = (f"{c['confidence']} match"
                         + (f" — {ccl.TENTATIVE_NOTE}"
                            if c["confidence"] == "tentative" else "")
                         + f" · {esc(c['method']).replace('_', ' ')}")
-                src_title = ccl.SOURCE_TITLES.get(c["source_key"],
-                                                  c["source_key"])
+                src_title = (c["operator"] + " (own website)"
+                             if c["operator"] else
+                             ccl.SOURCE_TITLES.get(c["source_key"],
+                                                   c["source_key"]))
                 _as_at = c["as_at"]
                 src = (f'<a href="{esc(c["source_url"])}" target="_blank" '
                        f'rel="noopener">{esc(src_title)}</a>'
