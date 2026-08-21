@@ -1036,24 +1036,11 @@ def main() -> None:
         # deciding it locally.
         cov_detail = site_profile.load_coverage_detail(conn)
 
-    site_floorspace: dict[str, float] = {}
-    with db.connect() as conn, conn.cursor() as cur:
-        cur.execute("""
-            SELECT s.site_key,
-                   percentile_cont(0.5) WITHIN GROUP (ORDER BY f.value_number)
-            FROM findings f
-            JOIN site_members sm ON sm.application_id = f.application_id
-                 AND sm.retired_at IS NULL
-            JOIN sites s ON s.id = sm.site_id
-            WHERE f.value_number IS NOT NULL
-              AND f.value_number BETWEEN 500 AND 400000
-              AND lower(f.value_unit) IN ('sqm','m2','sq m','square metres',
-                                          'square meters')
-              AND f.signal_type = ANY(%s)
-            GROUP BY s.site_key""", (list(scale.FLOORSPACE_SIGNAL_TYPES),))
-        for site_key, median_sqm in cur.fetchall():
-            if median_sqm:
-                site_floorspace[site_key] = float(median_sqm)
+    # Shared with the reader, which used to pass None here and so showed
+    # nothing for the 43 sites this figure covers. One loader, so the
+    # two artefacts cannot disagree about a site's floor area.
+    with db.connect() as conn:
+        site_floorspace = scale.load_site_floorspace(conn)
 
     drive_urls = _drive_folder_map()
 
@@ -1389,9 +1376,6 @@ def main() -> None:
     # dcp/external_aggregates (entered once, with provenance); everything
     # on this workbook's side of the comparison is computed from the
     # estimates the Sites sheet just displayed.
-    DISCLOSED_BASES = ("Disclosed IT load", "Disclosed total site demand",
-                       "Grid connection capacity",
-                       "Standby generation capacity")
     ws = wb.create_sheet("External aggregates")
 
     def _agg_title(text):
@@ -1439,7 +1423,7 @@ def main() -> None:
                "This workbook: sites with a disclosed or plant-derived "
                "figure"])
     disclosed_mw = [v for b, v, _ in agg_figures
-                    if b in DISCLOSED_BASES and v is not None]
+                    if b in scale.DISCLOSED_BASES and v is not None]
     for (label, _lo, _hi, n_proj, mw, pct), (_l, ours) in zip(
             extagg.OFGEM_QUEUE_BANDS, extagg.band_counts(disclosed_mw)):
         ws.append([label, n_proj, mw, pct, ours])
