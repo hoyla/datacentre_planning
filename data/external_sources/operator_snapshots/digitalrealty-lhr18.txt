@@ -1,0 +1,19 @@
+# url: https://www.digitalrealty.com/data-centers/emea/london/lhr18
+
+# fetched: 2026-08-21
+
+# sha256(html): b0c88cb6ce88f70976ad2dad57d854da7c763a3cfde20afc043fea31831115be
+
+## STRUCTURED
+
+EMBEDDED FIGURES:
+"field_utility_power_capacity":[{"value":"4000"}]
+"field_sum_utility_power_capacity":[{"value":"392.8k+ kW"}]
+
+## VISIBLE TEXT
+
+LHR18 Data Center | Oliver’s Yard | Digital Realty Data Centers Locations Locations Americas EMEA APAC Data Center Design Data Center Design Security & Compliance Sustainable Data Centers PlatformDIGITAL® Colocation Colocation Data Center Services Powered Base Buildings® Data Center Suites Build-to-Suit High-Density Colocation Connectivity Featured solution ServiceFabric® Connect Campus Connect Cross Connect Internet Exchange IP Bandwidth Metro Connect Partners Find a Partner Partner Solutions AWS Google Cloud IBM Cloud Oracle Cloud NVIDIA HPE Greenlake Microsoft Azure Dell Partner & Provider Directory Find a partner Become a Partner Become a Partner Partner Program Expertise & Resources Expertise Digital Transformation Data Insights Hub PlatformDIGITAL Solutions Expert Teams DRIL Use Cases AI Data Cloud Network Industries Automotive Professional Services Financial Services Public Sector Healthcare Retail Insurance Service Providers Manufacturing Transportation Media & Entertainment Utilities Resources Digital Realty Blog The Fabric Resource Library Blueprints Design Guide Solution Briefs Case Studies White Papers Analyst Reports Webinars Reports Videos Blog About Our Company Learn More Impact Leadership Newsroom Investor Relations Careers Customer Support Projects Contact Get in Touch Contact Customer Care Media Inquiries Corporate Headquarters Digital Realty Global Headquarters Login Data Centers PlatformDIGITAL® Partners Expertise & Resources About Language Login Data Centers PlatformDIGITAL® Partners Expertise & Resources About Language English Login Connect with us Home ... london LHR18 London
+LHR18 Our 6 interconnected campuses in London comprise the largest data center resource with high-bandwidth 100G connectivity options between all colocations. Request a tour LHR18 Oliver’s Yard, London, EC1Y 1HQ Facility brochure Capabilities Space Versatile and scalable colocation environments for your ever-evolving needs. Building structure : 3+ stories Total building size : 37,500 ft² (3,500 m²) Power From multi-megawatt suites to single cabinet deployments, our power solutions keep your enterprise running. UPS redundancy : N+1 Cooling Reliable and energy-efficient cooling systems to protect your critical IT infrastructure. Cooling redundancy : N+1 Recognized quality 
+ Compliance Empowering your success with comprehensive compliance coverage. SOC2 PCI-DSS ISO 9001 ISO 14001 ISO 27001 ISO 45001 ISO 50001 Sustainability Leading the industry in energy efficiency and sustainable performance. Renewable Energy % 100 % Security & Infrastructure Your IT infrastructure is everything. We make it our priority to protect it. Biometric/ Photo badge access CCTV with 90+ day backup You’ve got a direct line to our experts. Let’s talk.
+ Related resources View all Webinars Enterprise Webinars Americas From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers

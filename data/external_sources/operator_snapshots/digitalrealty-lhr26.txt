@@ -1,0 +1,21 @@
+# url: https://www.digitalrealty.com/data-centers/emea/london/lhr26
+
+# fetched: 2026-08-21
+
+# sha256(html): ce53b901ece064ba2b051287eac3a1dd5cb68fb282d5b9df4912f5f1785a497e
+
+## STRUCTURED
+
+EMBEDDED FIGURES:
+"field_utility_power_capacity":[]
+"field_sum_utility_power_capacity":[{"value":"392.8k+ kW"}]
+
+## VISIBLE TEXT
+
+LHR26 Data Center | 630 Ajax Ave, Slough | Digital Realty Data Centers Locations Locations Americas EMEA APAC Data Center Design Data Center Design Security & Compliance Sustainable Data Centers PlatformDIGITAL® Colocation Colocation Data Center Services Powered Base Buildings® Data Center Suites Build-to-Suit High-Density Colocation Connectivity Featured solution ServiceFabric® Connect Campus Connect Cross Connect Internet Exchange IP Bandwidth Metro Connect Partners Find a Partner Partner Solutions AWS Google Cloud IBM Cloud Oracle Cloud NVIDIA HPE Greenlake Microsoft Azure Dell Partner & Provider Directory Find a partner Become a Partner Become a Partner Partner Program Expertise & Resources Expertise Digital Transformation Data Insights Hub PlatformDIGITAL Solutions Expert Teams DRIL Use Cases AI Data Cloud Network Industries Automotive Professional Services Financial Services Public Sector Healthcare Retail Insurance Service Providers Manufacturing Transportation Media & Entertainment Utilities Resources Digital Realty Blog The Fabric Resource Library Blueprints Design Guide Solution Briefs Case Studies White Papers Analyst Reports Webinars Reports Videos Blog About Our Company Learn More Impact Leadership Newsroom Investor Relations Careers Customer Support Projects Contact Get in Touch Contact Customer Care Media Inquiries Corporate Headquarters Digital Realty Global Headquarters Login Data Centers PlatformDIGITAL® Partners Expertise & Resources About Language Login Data Centers PlatformDIGITAL® Partners Expertise & Resources About Language English Login Connect with us Home ... london LHR26 London
+LHR26 Nestled in the Slough Trading Estate just 15 minutes from London Heathrow, our Slough Data Center Campus offers unmatched connectivity and expansion potential. Compliant with rigorous and pivotal standards like SOC2 and ISO 27001, LHR26 is a sustainable, secure, and scalable foundation for your business' future. Request a tour LHR26 630 Slough, London, SL14DG Facility brochure Capabilities Space We’ve got room for your growth. Total building size : 98,500 ft² (9,150 m²) Power Powering your digital transformation. UPS redundancy : N+1 Cooling Cooling that never quits. Cooling redundancy : N+1 Certified by the best 
+ Sustainability Harnessing the power of data to deliver sustainable performance. 
+ Renewable Energy % 100 % Carbon-Free Energy % 100 % Security & Infrastructure We protect every detail of your data. 
+ 24x7 onsite security personnel Biometric / Card access CCTV with 90 day backup You’ve got a direct line to our experts. Let’s talk.
+ Related resources View all Blog EMEA Blog EMEA From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers

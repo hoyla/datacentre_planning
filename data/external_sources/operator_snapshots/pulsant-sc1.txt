@@ -1,0 +1,1668 @@
+# url: https://www.pulsant.com/colocation/sc-1
+
+# fetched: 2026-08-21
+
+# sha256(html): 1549b79e7f5c91f57db96f2b1c55abbab515bb4e3b294f90aab04f0e4efc5981
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@type": "LocalBusiness",
+ "address": {
+  "@type": "PostalAddress",
+  "addressCountry": "United Kingdom",
+  "addressLocality": "Edinburgh",
+  "postalCode": "EH12 9LB",
+  "streetAddress": "The Clocktower, South Gyle Crescent"
+ },
+ "description": "Colocation data centre in Edinburgh (South Gyle). Enquire online to get closer to the edge with Pulsant.",
+ "email": "info@pulsant.com",
+ "name": "Pulsant",
+ "openingHours": "-",
+ "telephone": "0345 119 9900"
+}
+
+## VISIBLE TEXT
+
+Colocation Data Centre - Edinburgh (South Gyle) - Pulsant 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+
+
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ ✕ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Challenges 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Challenges 
+ 
+ 
+ 
+ 
+ 
+ Data sovereignty 
+ 
+ 
+ Cloud repatriation 
+ 
+ 
+ AI 
+ 
+ 
+ Consolidating infrastructure 
+ 
+ 
+ Supply chain constraints 
+ 
+ 
+ Business resilience 
+ 
+ 
+ Moving off-premise 
+ 
+ 
+ Sustainability 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ Got a challenge with your infrastructure that you need help solving? 
+ 
+ 
+ 
+ 
+ Speak to us 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Colocation 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Our Data Centres 
+ 
+ 
+
+ 
+ 
+ Scotland 
+ 
+ 
+ Edinburgh South Gyle SC-1 
+ 
+ 
+ Edinburgh SC-2 
+ 
+ 
+ Edinburgh SC-3 
+ 
+ 
+ 
+
+ 
+ 
+ North of England 
+ 
+ 
+ Manchester NW-1 
+ 
+ 
+ Rotherham YH-1 
+ 
+ 
+ Newcastle NE-1 
+ 
+ 
+ Newcastle NE-2 
+ 
+ 
+ Birmingham WM-1 
+ 
+ 
+
+ 
+ 
+ South of England 
+ 
+ 
+ Milton Keynes SE-1 
+ 
+ 
+ Maidenhead SE-2 
+ 
+ 
+ Reading SE-3 
+ 
+ 
+ Reading SE-4 
+ 
+ 
+ Croydon LN-1 
+ 
+ 
+ Fareham SE-5 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ The best way to experience one of our regional data centres is through booking a tour. 
+ 
+ 
+ 
+ 
+ Arrange a Tour 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ IaaS 
+ 
+ 
+ 
+ 
+ 
+ 
+ Partner 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Partner 
+ 
+ 
+ 
+ 
+ 
+ Partner Programme 
+ 
+ 
+ Pulsant Ecosystem 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+ 
+ Contact us 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ About us 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ About us 
+ 
+ 
+ 
+ 
+ 
+ Meet the team 
+ 
+ 
+ Careers 
+ 
+ 
+ Environment, Social & Governance 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers at Pulsant 
+ We are always looking for talented people to come and join our growing team, take a look at our latest vacancies. 
+ 
+ 
+ 
+ 
+ Join the team 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Content hub 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Content hub 
+ 
+ 
+
+ 
+ 
+ 
+ Topics 
+ 
+ 
+ Colocation 
+ 
+ 
+ Connectivity 
+ 
+ 
+ IaaS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Resources 
+ 
+ 
+ Announcements 
+ 
+ 
+ Blogs 
+ 
+ 
+ Client success stories 
+ 
+ 
+ Podcasts 
+ 
+ 
+ Publications 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ Search the Pulsant website 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Search 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Need Help 
+ Can't find what you're looking for? 
+ 
+ 
+ 
+ 
+ Contact our team 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Pulsant Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Amito Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Having problems with your account? Contact our support team for help. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ Contact Us 
+ 
+
+ 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+
+ 
+ 
+ Edinburgh South Gyle SC-1
+ 
+ Regional Connectivity Hub 
+ 
+
+ 
+ 
+ 
+ 
+ Get Started 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Technical information 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Edinburgh South Gyle SC-1 
+ The most connected data centre in Scotland 
+ Edinburgh South Gyle SC–1 is Scotland’s most connected data centre, enabling clients with substantial connectivity requirements to seamlessly cross-connect to over 22 on-site carriers, including the LINX Scotland internet exchange and Megaport. This highly resilient site is located just 6.5 miles west of central Edinburgh, this facility is conveniently accessible by road and rail, and can be easily reached from Edinburgh Airport via tram. Flexible colocation options include private suites, high-density racks, full, half, and quarter racks and private cages. 
+ SC–1 is part of Pulsant’s network of 14 interconnected UK data centres, connected via the Pulsant Edge Fabric, a 100Gb national network for low-latency access to 1,600+ cloud services, network provider and business partners. 
+ Scotland is home to some of the fastest-growing technology and financial organisations in the UK, boasting a highly educated and skilled workforce in tech roles. Pulsant has the largest footprint of highly connected data centres in Scotland with three located on the outskirts of Edinburgh. 
+ 
+ 
+ 
+ 
+ 
+ Book a tour 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download data sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ SC-1 Facilities 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Breakout area
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Remote hands
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Build room
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Meeting room
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Equipment storage
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ EV charging
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Hot & cold drinks
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Wi-Fi
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ Take a tour of Edinburgh SC-1 
+
+ 
+ 
+ Arrange a tour 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ Technical Information 
+
+ 
+ 
+ 
+ 
+ Download data sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Building 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Total building size 
+ 4,648m² 
+ 
+ 
+ 
+ Total data hall space 
+ 2,628m² 
+ 
+ 
+ 
+ Deployments 
+ Full / half / quarter racks 
+ 
+ 
+ 
+ 
+ High-density racks 
+ 
+ 
+ 
+ 
+ Private suites 
+ 
+ 
+ 
+ 
+ Cages 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Security 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 24x7 on-site security 
+ CCTV 
+ Keycard Access 
+ Dual authentication 
+ Perimeter fencing 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Environment 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Cooling: N+1 
+ Smoke / heat sensors 
+ VESDA 
+ Double-knock alert systems 
+ Gas or water mist fire suppression 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Power 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Total IT power 
+ 3.4MW 
+ 
+ 
+ 
+ Incoming power supplies 
+ 2 
+ 
+ 
+ 
+ Renewable energy procurement 
+ 100% 
+ 
+ 
+ 
+ UPS redundancy 
+ 2N 
+ 
+ 
+ 
+ Standby power configuration 
+ N+1 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Carrier neutral 
+ Edge Fabric enabled 
+ Diverse cable routing 
+ Cloud on-ramp 
+ Dark fibre infrastructure / optical waves 
+ Cross connects & structured cabling 
+ Networking and peering providers: 22 
+ LINX Scotland 
+ Megaport™ access on-prem 
+ Carrier availability: Below Zero, Brightsolid, BT, Capita, Cogent, Colt, CityFibre, CommsWorld, Giganet, GTT, Highland Networks, High Speed Office, Janet, LINX, Lumen, Megaport, NEOS, Tampnet, Verizon, Virgin Media, Vodafone, Xtraordinary & Zayo 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Accreditations 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ Got a question about Edinburgh SC-1? 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Book a tour 
+ Get in touch with one of our experts to arrange a tour. If it’s easier, email sales@pulsant.com 
+ 
+ 
+ Close 
+ 
+ 
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ General Enquiries 
+ 0345 119 9900 
+ info@pulsant.com 
+ 
+ 
+ Follow Us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ What we do 
+ 
+ 
+ 
+ 
+ 
+ platformEDGE™
+ 
+ 
+ 
+ 
+ 
+ Colocation
+ 
+ 
+ 
+ 
+ 
+ Connectivity
+ 
+ 
+ 
+ 
+ 
+ IaaS
+ 
+ 
+ 
+ 
+ 
+
+ About Pulsant 
+ 
+ 
+ 
+ 
+ 
+ Meet the team
+ 
+ 
+ 
+ 
+ 
+ Careers
+ 
+ 
+ 
+ 
+ 
+ ESG
+ 
+ 
+ 
+ 
+ 
+ Partner programme
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Content Hub 
+ 
+ 
+ 
+ 
+ 
+ Blog posts
+ 
+ 
+ 
+ 
+ 
+ Client success stories
+ 
+ 
+ 
+ 
+ 
+ Podcasts
+ 
+ 
+ 
+ 
+ 
+ FAQs
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ © Pulsant 2026
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Terms and conditions
+ 
+ 
+ 
+ 
+ 
+ Cookie & privacy policy
+ 
+ 
+ 
+ 
+ 
+ Modern slavery statement
+ 
+ 
+ 
+ 
+ 
+ Corporate governance and sustainability
+ 
+ 
+ 
+ 
+ 
+ Gender pay gap

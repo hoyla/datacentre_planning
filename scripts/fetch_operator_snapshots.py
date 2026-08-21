@@ -101,6 +101,25 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     "stellium": [
         ("stellium-1", "https://stelliumdc.com/stellium-1/"),
     ],
+    # The most complete small-operator disclosure found: a "Total IT
+    # power" figure for every one of its fourteen sites, in the same
+    # words each time.
+    "pulsant": [
+        ("pulsant-sc1", "https://www.pulsant.com/colocation/sc-1"),
+        ("pulsant-sc2", "https://www.pulsant.com/colocation-medway-datacentre"),
+        ("pulsant-sc3", "https://www.pulsant.com/colocation-newbridge-datacentre"),
+        ("pulsant-nw1", "https://www.pulsant.com/colocation-manchester-datacentre"),
+        ("pulsant-yh1", "https://www.pulsant.com/colocation-rotherham-datacentre"),
+        ("pulsant-ne1", "https://www.pulsant.com/colocation-newcastle-central-datacentre"),
+        ("pulsant-ne2", "https://www.pulsant.com/colocation-newcastle-ne2"),
+        ("pulsant-wm1", "https://www.pulsant.com/colocation-birmingham-wm1"),
+        ("pulsant-se1", "https://www.pulsant.com/colocation-milton-keynes-datacentre"),
+        ("pulsant-se2", "https://www.pulsant.com/colocation-maidenhead-datacentre"),
+        ("pulsant-se3", "https://www.pulsant.com/colocation-reading-south-datacentre"),
+        ("pulsant-se4", "https://www.pulsant.com/colocation-reading-east-datacentre"),
+        ("pulsant-se5", "https://www.pulsant.com/colocation-fareham-se5"),
+        ("pulsant-ln1", "https://www.pulsant.com/colocation-south-london-datacentre"),
+    ],
     # Bears on an existing tentative match: our Hoddesdon site currently
     # carries two 57 MW NESO rows, and nLighten's site in the same town is
     # an order of magnitude smaller.
@@ -108,9 +127,26 @@ PAGES: dict[str, list[tuple[str, str]]] = {
         ("nlighten-london", "https://nlighten.com/en/edge-location/london/"),
     ],
     # Capacity is present but never rendered: bare integers in
-    # __NEXT_DATA__ under field_utility_power_capacity.
+    # __NEXT_DATA__ under field_utility_power_capacity. The metro page
+    # carries every UK value but strips the facility they belong to, so
+    # each site is fetched individually — one page, one figure, no
+    # inference. Note .co.uk 301s to .com; the canonical host is used
+    # here so the snapshot's URL is the one that answers.
     "digitalrealty": [
         ("digitalrealty-london", "https://www.digitalrealty.co.uk/data-centers/emea/london"),
+        ("digitalrealty-lgw14", "https://www.digitalrealty.com/data-centers/emea/london/lgw14"),
+        ("digitalrealty-lgw15", "https://www.digitalrealty.com/data-centers/emea/london/lgw15"),
+        ("digitalrealty-lgw16", "https://www.digitalrealty.com/data-centers/emea/london/lgw16"),
+        ("digitalrealty-lhr13", "https://www.digitalrealty.com/data-centers/emea/london/lhr13"),
+        ("digitalrealty-lhr17", "https://www.digitalrealty.com/data-centers/emea/london/lhr17"),
+        ("digitalrealty-lhr18", "https://www.digitalrealty.com/data-centers/emea/london/lhr18"),
+        ("digitalrealty-lhr19", "https://www.digitalrealty.com/data-centers/emea/london/lhr19"),
+        ("digitalrealty-lhr20", "https://www.digitalrealty.com/data-centers/emea/london/lhr20"),
+        ("digitalrealty-lhr26", "https://www.digitalrealty.com/data-centers/emea/london/lhr26"),
+        ("digitalrealty-lhr27", "https://www.digitalrealty.com/data-centers/emea/london/lhr27"),
+        ("digitalrealty-lon1", "https://www.digitalrealty.com/data-centers/emea/london/lon1"),
+        ("digitalrealty-lon2", "https://www.digitalrealty.com/data-centers/emea/london/lon2"),
+        ("digitalrealty-lon3", "https://www.digitalrealty.com/data-centers/emea/london/lon3"),
     ],
 }
 

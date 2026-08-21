@@ -1,0 +1,21 @@
+# url: https://www.digitalrealty.com/data-centers/emea/london/lon1
+
+# fetched: 2026-08-21
+
+# sha256(html): 83252971583c0d38650a7b781403817f88af7e9d676f8621b5b488a2fcecc9d2
+
+## STRUCTURED
+
+EMBEDDED FIGURES:
+"field_utility_power_capacity":[{"value":"16000"}]
+"field_sum_utility_power_capacity":[{"value":"392.8k+ kW"}]
+
+## VISIBLE TEXT
+
+LON1 Data Center | 11 Hanbury Street (Block B) | Digital Realty Data Centers Locations Locations Americas EMEA APAC Data Center Design Data Center Design Security & Compliance Sustainable Data Centers PlatformDIGITAL® Colocation Colocation Data Center Services Powered Base Buildings® Data Center Suites Build-to-Suit High-Density Colocation Connectivity Featured solution ServiceFabric® Connect Campus Connect Cross Connect Internet Exchange IP Bandwidth Metro Connect Partners Find a Partner Partner Solutions AWS Google Cloud IBM Cloud Oracle Cloud NVIDIA HPE Greenlake Microsoft Azure Dell Partner & Provider Directory Find a partner Become a Partner Become a Partner Partner Program Expertise & Resources Expertise Digital Transformation Data Insights Hub PlatformDIGITAL Solutions Expert Teams DRIL Use Cases AI Data Cloud Network Industries Automotive Professional Services Financial Services Public Sector Healthcare Retail Insurance Service Providers Manufacturing Transportation Media & Entertainment Utilities Resources Digital Realty Blog The Fabric Resource Library Blueprints Design Guide Solution Briefs Case Studies White Papers Analyst Reports Webinars Reports Videos Blog About Our Company Learn More Impact Leadership Newsroom Investor Relations Careers Customer Support Projects Contact Get in Touch Contact Customer Care Media Inquiries Corporate Headquarters Digital Realty Global Headquarters Login Data Centers PlatformDIGITAL® Partners Expertise & Resources About Language Login Data Centers PlatformDIGITAL® Partners Expertise & Resources About Language English Login Connect with us Home ... london LON1 London 
+LON1 Hanbury Street is situated as part of our highly connected London City Campus. Hanbury Street is a high-performance colocation site offering an extensive choice of network and cloud connectivity in the heart of the City. Request a tour LON1 11 Hanbury Street (Block B) E1 6QR, United Kingdom Facility brochure Capabilities Space From single cabinets to full suites, we have space solutions as diverse as your needs. Total building size : 101,000 ft² (9,400 m²) Power Energy-efficient solutions powering your success. UPS redundancy : 2N Cooling Best-in-class cooling practices and optimal designs to support you with high-performance, reliable data center solutions. Cooling redundancy : N+1 We've got your details covered 
+ Compliance We’re globally certified by the industry’s most trusted organizations. 
+ SOC2 ISO 9001 ISO 22301 ISO 27001 PCI-DSS ISO 14001 Sustainability Elevating efficiency, reducing waste, and building responsibly. 
+ Certifications BREEAM Renewable Energy % 100 % You’ve got a direct line to our experts. Let’s talk.
+ Related resources View all Webinars Enterprise Webinars Americas From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers
