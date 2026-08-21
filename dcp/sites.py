@@ -9,6 +9,14 @@ method is the one validated by the Barbour superset reconciliation
 extraction, plus materialisation into the ``sites`` / ``site_members``
 tables (migration 006).
 
+The spatial join treats proximity as same-site evidence, which is false
+in dense corridors: two campuses can sit closer together than the
+radius. ``data/priors/site_partitions.yaml`` holds the hand-adjudicated
+campus boundaries the radius cannot see — a partitioned node takes no
+spatial edge to a node outside its partition, while documentary edges
+(project links, family references) are honoured and extend the
+partition to the nodes they attach.
+
 Identity rules (stable across re-materialisation):
 
 - A cluster containing at least one real (non-tender) Barbour project is
@@ -63,6 +71,24 @@ def _load_inferred_coords(data_dir: Path) -> dict[str, tuple[float, float]]:
         for e in payload.get("entries") or []:
             out[e["ref"]] = (float(e["lat"]), float(e["lon"]))
     return out
+
+
+def _load_site_partitions(data_dir: Path) -> tuple[dict[str, str], dict[str, str]]:
+    """Hand-adjudicated campus boundaries: application_ref → partition
+    name and Barbour Ptno → partition name. Empty when the priors file
+    is absent."""
+    import yaml
+    app_part: dict[str, str] = {}
+    proj_part: dict[str, str] = {}
+    path = data_dir / "priors" / "site_partitions.yaml"
+    if path.exists():
+        payload = yaml.safe_load(path.read_text()) or {}
+        for p in payload.get("partitions") or []:
+            for ref in p.get("applications") or []:
+                app_part[str(ref).upper()] = p["name"]
+            for ptno in p.get("projects") or []:
+                proj_part[str(ptno)] = p["name"]
+    return app_part, proj_part
 
 
 def build_clusters(conn, *, radius_km: float = 1.0,
@@ -148,6 +174,29 @@ def build_clusters(conn, *, radius_km: float = 1.0,
 
     by_id = {a["id"]: a for a in apps}
     by_ref = {a["ref"].upper(): a for a in apps}
+
+    # Campus partitions. An entry naming a ref or Ptno the corpus does
+    # not hold is a typo, and a typo silently re-merges the campuses the
+    # file exists to keep apart — so unknowns fail the run rather than
+    # weaken the boundary.
+    app_part, proj_part = _load_site_partitions(data_dir)
+    ptnos = {str(p["ptno"]) for p in projects}
+    unknown = ([r for r in app_part if r not in by_ref]
+               + [n for n in proj_part if n not in ptnos])
+    if unknown:
+        raise ValueError(
+            "site_partitions.yaml names records not in the corpus: "
+            + ", ".join(sorted(unknown)))
+    partition: dict[tuple, str] = {}
+    for a in apps:
+        name = app_part.get(a["ref"].upper())
+        if name:
+            partition[("A", a["id"])] = name
+    for p in projects:
+        name = proj_part.get(str(p["ptno"]))
+        if name:
+            partition[("P", p["id"])] = name
+
     dc_apps = [a for a in apps if a["in_universe"]]
     linked_ids = {aid for _pid, aid in links}
     node_ids = {a["id"] for a in dc_apps} | linked_ids
@@ -234,6 +283,36 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             _join(("A", x), via)
             _join(("A", y), via)
 
+    # Documentary closure of the partitions, before any spatial edge is
+    # considered: a node the record itself attaches to a partitioned
+    # node (project link, family reference) belongs to that campus, so
+    # it inherits the partition rather than acting as a bridge — without
+    # this, one family edge into a partition plus one spatial edge out
+    # of it would re-merge the campuses the partition separates. Two
+    # partitions joined documentarily means the record contradicts the
+    # hand adjudication; that is surfaced, never silently resolved.
+    if partition:
+        proj_by_id = {p["id"]: p for p in projects}
+        comp = defaultdict(list)
+        for node in ([("A", n) for n in node_ids]
+                     + [("P", p["id"]) for p in projects]):
+            comp[uf.find(node)].append(node)
+        for members in comp.values():
+            names = {partition[m] for m in members if m in partition}
+            if len(names) > 1:
+                labelled = sorted(
+                    (by_id[i]["ref"] if k == "A"
+                     else f"PTNO-{proj_by_id[i]['ptno']}")
+                    + f"={partition[(k, i)]}"
+                    for k, i in members if (k, i) in partition)
+                raise ValueError(
+                    "documentary edges join records from different site "
+                    "partitions: " + ", ".join(labelled))
+            if names:
+                name = next(iter(names))
+                for m in members:
+                    partition.setdefault(m, name)
+
     located = ([("A", a["id"], a["lat"], a["lon"])
                 for a in (by_id[n] for n in node_ids) if a["lat"] is not None]
                + [("P", p["id"], p["lat"], p["lon"]) for p in projects
@@ -243,6 +322,11 @@ def build_clusters(conn, *, radius_km: float = 1.0,
         for j in range(i + 1, len(located)):
             k2, id2, la2, lo2 = located[j]
             if abs(la1 - la2) > 0.02 or abs(lo1 - lo2) > 0.03:
+                continue
+            # A spatial edge never crosses a partition boundary: within
+            # the radius but on different campuses is exactly the case
+            # the priors file adjudicates.
+            if partition.get((k1, id1)) != partition.get((k2, id2)):
                 continue
             if hav_km(la1, lo1, la2, lo2) <= radius_km:
                 uf.union((k1, id1), (k2, id2))

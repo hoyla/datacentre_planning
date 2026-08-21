@@ -1,0 +1,67 @@
+# Hand-adjudicated campus boundaries the spatial clustering cannot see.
+#
+# The clustering in dcp/sites.py treats proximity within the radius
+# (1 km — campus scale) as same-site evidence. In dense corridors that
+# premise fails: two campuses can sit closer together than the radius,
+# and the union-find then merges them into one site record. A partition
+# names the applications and Barbour projects that form one campus;
+# build_clusters will not create a SPATIAL edge between a partitioned
+# node and any node outside its partition. Documentary edges (project
+# links, family references) are honoured and extend the partition to
+# the records they attach; documentary edges joining two different
+# partitions fail the run — the record contradicting the adjudication
+# is surfaced, never silently resolved.
+#
+# Maintenance duty: a new application on a partitioned campus must be
+# added to its partition unless a family edge already ties it to a
+# listed member. An unlisted application with no family edge cannot
+# spatially join the partition and will materialise into whichever
+# unpartitioned site is in radius — for the entry below, that means a
+# new Ealing conditions discharge (whose slashless parent references
+# the description miner cannot read) would land in the Union Park site
+# until listed here.
+#
+# Each entry records:
+#   - name:         stable slug for the partition
+#   - reason:       the evidence that these are distinct campuses
+#   - applications: application_refs (must exist in the corpus)
+#   - projects:     Barbour Ptnos (projects.external_ref; must exist)
+
+partitions:
+  - name: international-trading-estate-southall
+    reason: |
+      Two distinct campuses materialised as one site: PTNO-12511337,
+      "NORTH HYDE GARDENS UNION PARK - DATA CENTRES" (site 61 in the
+      2026-08-06 materialisation). Ark's Union Park campus is at North
+      Hyde Gardens, Hayes (Hillingdon 75111/* and the surrounding
+      cluster); this partition is GTR's campus at the International
+      Trading Estate, Trident Way, Southall — applicant "GTR London 2
+      S.a.r.l. (Global Technical Realty / GTR)" per the 250949FUL
+      planning record — consented 19/12/2025, with its conditions
+      discharges and Hillingdon's out-of-borough consultation on the
+      same scheme. Portal coordinates put the nearest cross-campus
+      pair 0.28 km apart (Hillingdon/39704/APP/2025/812 to the Union
+      Park applications), well inside the 1 km radius, so the merge is
+      a direct spatial edge, not an artefact of chaining. Found during
+      the 2026-08-20 NESO EA Register capacity-claims pilot: register
+      rows 927 and 968 name the International Trading Estate and could
+      not defensibly be matched to a site labelled Union Park
+      (data/external_sources/neso-ea-register-matches.yaml).
+    applications:
+      - Ealing/244364SCO
+      - Ealing/250949FUL
+      - Ealing/260588CND
+      - Ealing/260589CND
+      - Ealing/260590CND
+      - Ealing/260718CND
+      - Ealing/260719CND
+      - Ealing/260783CND
+      - Ealing/260786CND
+      - Ealing/260790CND
+      - Ealing/260830CND
+      - Ealing/260831CND
+      - Ealing/260832CND
+      - Ealing/260925CND
+      - Hillingdon/39704/APP/2025/812
+    projects:
+      - "12842719"
