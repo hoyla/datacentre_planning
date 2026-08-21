@@ -1,0 +1,1664 @@
+# url: https://www.pulsant.com/colocation-newcastle-ne2
+
+# fetched: 2026-08-21
+
+# sha256(html): a35d58779ae7e72fe5bd5adbecc2bc6982f500c922bafaa4103ec26c93b73564
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@type": "LocalBusiness",
+ "address": {
+  "@type": "PostalAddress",
+  "addressCountry": "United Kingdom",
+  "addressLocality": "Tyne & Wear",
+  "postalCode": "NE27 0QF",
+  "streetAddress": "New York Way, North Shields"
+ },
+ "description": "Colocation data centre in Newcastle (East). Enquire online to get closer to the edge with Pulsant.",
+ "email": "info@pulsant.com",
+ "name": "Pulsant",
+ "openingHours": "-",
+ "telephone": "0345 119 9900"
+}
+
+## VISIBLE TEXT
+
+Colocation Data Centre - Newcastle (East) - Pulsant 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+
+
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ ✕ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Challenges 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Challenges 
+ 
+ 
+ 
+ 
+ 
+ Data sovereignty 
+ 
+ 
+ Cloud repatriation 
+ 
+ 
+ AI 
+ 
+ 
+ Consolidating infrastructure 
+ 
+ 
+ Supply chain constraints 
+ 
+ 
+ Business resilience 
+ 
+ 
+ Moving off-premise 
+ 
+ 
+ Sustainability 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ Got a challenge with your infrastructure that you need help solving? 
+ 
+ 
+ 
+ 
+ Speak to us 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Colocation 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Our Data Centres 
+ 
+ 
+
+ 
+ 
+ Scotland 
+ 
+ 
+ Edinburgh South Gyle SC-1 
+ 
+ 
+ Edinburgh SC-2 
+ 
+ 
+ Edinburgh SC-3 
+ 
+ 
+ 
+
+ 
+ 
+ North of England 
+ 
+ 
+ Manchester NW-1 
+ 
+ 
+ Rotherham YH-1 
+ 
+ 
+ Newcastle NE-1 
+ 
+ 
+ Newcastle NE-2 
+ 
+ 
+ Birmingham WM-1 
+ 
+ 
+
+ 
+ 
+ South of England 
+ 
+ 
+ Milton Keynes SE-1 
+ 
+ 
+ Maidenhead SE-2 
+ 
+ 
+ Reading SE-3 
+ 
+ 
+ Reading SE-4 
+ 
+ 
+ Croydon LN-1 
+ 
+ 
+ Fareham SE-5 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ The best way to experience one of our regional data centres is through booking a tour. 
+ 
+ 
+ 
+ 
+ Arrange a Tour 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ IaaS 
+ 
+ 
+ 
+ 
+ 
+ 
+ Partner 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Partner 
+ 
+ 
+ 
+ 
+ 
+ Partner Programme 
+ 
+ 
+ Pulsant Ecosystem 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+ 
+ Contact us 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ About us 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ About us 
+ 
+ 
+ 
+ 
+ 
+ Meet the team 
+ 
+ 
+ Careers 
+ 
+ 
+ Environment, Social & Governance 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers at Pulsant 
+ We are always looking for talented people to come and join our growing team, take a look at our latest vacancies. 
+ 
+ 
+ 
+ 
+ Join the team 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Content hub 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Content hub 
+ 
+ 
+
+ 
+ 
+ 
+ Topics 
+ 
+ 
+ Colocation 
+ 
+ 
+ Connectivity 
+ 
+ 
+ IaaS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Resources 
+ 
+ 
+ Announcements 
+ 
+ 
+ Blogs 
+ 
+ 
+ Client success stories 
+ 
+ 
+ Podcasts 
+ 
+ 
+ Publications 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ Search the Pulsant website 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Search 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Need Help 
+ Can't find what you're looking for? 
+ 
+ 
+ 
+ 
+ Contact our team 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Pulsant Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Amito Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Having problems with your account? Contact our support team for help. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ Contact Us 
+ 
+
+ 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+
+ 
+ 
+ Newcastle NE-2
+ 
+ Regional Edge Data Centre 
+ 
+
+ 
+ 
+ 
+ 
+ Get Started 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Technical information 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Newcastle NE-2 
+ Located in North Shields 
+ Newcastle NE-2 is a highly accredited data centre located 7 miles northeast of Newcastle city centre, with 5 on-site carriers. This facility is ideally suited to support low density power requirements. 
+ NE-2 is part of Pulsant's network of 14 interconnected UK data centres, connected via the Pulsant Edge Fabric, a 100Gb national network for low-latency access to 1,600+ cloud services, network providers, and business partners. 
+ The North of England is home to a number of thriving cities and businesses are looking to capitalise on an increasing talent pool combined with lower operational costs. Pulsant has a significant footprint of facilities in the North with 5 data centres spread across 4 major locations, offering low-latency edge connectivity to regional technology hubs. 
+ 
+ 
+ 
+ 
+ 
+ Book a tour 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download data sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ NE-2 Facilities 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Breakout area
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Remote hands
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Build room
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Meeting room
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Equipment storage
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Package recycling
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Hot & cold drinks
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Wi-Fi
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ Take a tour of Newcastle NE-2 
+
+ 
+ 
+ Arrange a tour 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ Technical Information 
+
+ 
+ 
+ 
+ 
+ Download data sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Building 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Total building size 
+ 816m² 
+ 
+ 
+ 
+ Total data hall space 
+ 374m² 
+ 
+ 
+ 
+ Deployments 
+ Full / half / quarter racks 
+ 
+ 
+ 
+ 
+ High-density racks 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Security 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Remote monitoring 
+ CCTV 
+ Keycard access 
+ Perimeter fencing 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Environment 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Cooling: N+1 
+ Smoke / heat sensors 
+ VESDA 
+ Double-knock alert systems 
+ Gas fire suppression 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Power 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Total IT power 
+ 250kW 
+ 
+ 
+ 
+ Renewable energy procurement 
+ 100% 
+ 
+ 
+ 
+ UPS redundancy 
+ N 
+ 
+ 
+ 
+ Standby power configuration 
+ N 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Carrier neutral 
+ Edge Fabric enabled 
+ Diverse cable routing 
+ Cloud on-ramp 
+ Cross connects & structured cabling 
+ Networking & peering providers: 5 
+ Carrier availability: BT, Cogent, Virgin Media, Vodafone & Zayo 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Accreditations 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ Find out more about Newcastle NE-2 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Book a tour 
+ Get in touch with one of our experts to arrange a tour. If it’s easier, email sales@pulsant.com 
+ 
+ 
+ Close 
+ 
+ 
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ General Enquiries 
+ 0345 119 9900 
+ info@pulsant.com 
+ 
+ 
+ Follow Us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ What we do 
+ 
+ 
+ 
+ 
+ 
+ platformEDGE™
+ 
+ 
+ 
+ 
+ 
+ Colocation
+ 
+ 
+ 
+ 
+ 
+ Connectivity
+ 
+ 
+ 
+ 
+ 
+ IaaS
+ 
+ 
+ 
+ 
+ 
+
+ About Pulsant 
+ 
+ 
+ 
+ 
+ 
+ Meet the team
+ 
+ 
+ 
+ 
+ 
+ Careers
+ 
+ 
+ 
+ 
+ 
+ ESG
+ 
+ 
+ 
+ 
+ 
+ Partner programme
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Content Hub 
+ 
+ 
+ 
+ 
+ 
+ Blog posts
+ 
+ 
+ 
+ 
+ 
+ Client success stories
+ 
+ 
+ 
+ 
+ 
+ Podcasts
+ 
+ 
+ 
+ 
+ 
+ FAQs
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ © Pulsant 2026
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Terms and conditions
+ 
+ 
+ 
+ 
+ 
+ Cookie & privacy policy
+ 
+ 
+ 
+ 
+ 
+ Modern slavery statement
+ 
+ 
+ 
+ 
+ 
+ Corporate governance and sustainability
+ 
+ 
+ 
+ 
+ 
+ Gender pay gap

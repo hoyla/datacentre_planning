@@ -1,0 +1,22 @@
+# url: https://www.digitalrealty.com/data-centers/emea/london/lhr20
+
+# fetched: 2026-08-21
+
+# sha256(html): 36a0facf9cce4620d451a7b593d07c0c8271bcacd3ec269b4dee165089ab9fb3
+
+## STRUCTURED
+
+EMBEDDED FIGURES:
+"field_utility_power_capacity":[{"value":"8000"}]
+"field_sum_utility_power_capacity":[{"value":"392.8k+ kW"}]
+
+## VISIBLE TEXT
+
+LHR20 Data Center | 227 Marsh Wall | Digital Realty Data Centers Locations Locations Americas EMEA APAC Data Center Design Data Center Design Security & Compliance Sustainable Data Centers PlatformDIGITAL® Colocation Colocation Data Center Services Powered Base Buildings® Data Center Suites Build-to-Suit High-Density Colocation Connectivity Featured solution ServiceFabric® Connect Campus Connect Cross Connect Internet Exchange IP Bandwidth Metro Connect Partners Find a Partner Partner Solutions AWS Google Cloud IBM Cloud Oracle Cloud NVIDIA HPE Greenlake Microsoft Azure Dell Partner & Provider Directory Find a partner Become a Partner Become a Partner Partner Program Expertise & Resources Expertise Digital Transformation Data Insights Hub PlatformDIGITAL Solutions Expert Teams DRIL Use Cases AI Data Cloud Network Industries Automotive Professional Services Financial Services Public Sector Healthcare Retail Insurance Service Providers Manufacturing Transportation Media & Entertainment Utilities Resources Digital Realty Blog The Fabric Resource Library Blueprints Design Guide Solution Briefs Case Studies White Papers Analyst Reports Webinars Reports Videos Blog About Our Company Learn More Impact Leadership Newsroom Investor Relations Careers Customer Support Projects Contact Get in Touch Contact Customer Care Media Inquiries Corporate Headquarters Digital Realty Global Headquarters Login Data Centers PlatformDIGITAL® Partners Expertise & Resources About Language Login Data Centers PlatformDIGITAL® Partners Expertise & Resources About Language English Login Connect with us Home ... london LHR20 London
+LHR20 Located in London Docklands, Sovereign House is within close proximity to both Canary Wharf and the City of London, with easy access to the city's many transport links. This data center provides 53,862 sq ft of premium customer space over 6 floors and is a major carrier-neutral and fiber-rich hub, offering access to key telecommunication providers, ISPs, IXPs, and global Cloud providers. Request a tour LHR20 227 Marsh Wall, London E14 9SD 
+ Facility brochure Capabilities Space Versatile and scalable colocation environments for your ever-evolving needs. Building structure : 6+ stories Total building size : 66,736 ft² (6,200 m²) Power From multi-megawatt suites to single cabinet deployments, our power solutions keep your enterprise running. UPS redundancy : N+1 Cooling Reliable and energy-efficient cooling systems to protect your critical IT infrastructure. Cooling redundancy : N+1 We've got your details covered 
+ Compliance Empowering your success with comprehensive compliance coverage. 
+ PCI-DSS SOC2 ISO 27001 ISO 14001 ISO 9001 ISO 45001 ISO 50001 Security & Infrastructure Your IT infrastructure is everything. We make it our priority to protect it. 
+ Biometrics – iris scan Proximity access card You’ve got a direct line to our experts. Let’s talk.
+ Related resources View all Webinars Enterprise Webinars Americas From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers

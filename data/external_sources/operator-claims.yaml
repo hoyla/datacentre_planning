@@ -106,6 +106,42 @@ sources:
       load, utility supply or installed UPS, so no quantity can be
       inferred beyond "a number the company publishes".
 
+  - key: digitalrealty_website
+    operator: Digital Realty
+    snapshot_dir: operator_snapshots
+    note: >-
+      Publishes nothing about capacity on any rendered page — the Power
+      section of each facility shows only "UPS redundancy: 2N" — while
+      shipping a per-site figure to the browser in embedded application
+      state under field_utility_power_capacity. Each facility page carries
+      exactly one such value, so attribution needs no inference; the metro
+      page carries all of them with the facility stripped, which is why
+      the sites are fetched individually. The eleven populated UK values
+      sum to exactly 179,900, matching the metro aggregate string
+      "179.9k+ kW" in the same payload — which is what establishes the
+      unit as kW rather than anything else. The quantity is *utility*
+      power, grid supply rather than IT load, so it is recorded as
+      grid_connection and is not comparable with the IT figures other
+      operators headline. LHR26 and LHR27, both on Ajax Avenue in Slough,
+      carry the field empty and are the only UK sites that do.
+
+  - key: stellium_website
+    operator: Stellium Datacenters
+    snapshot_dir: operator_snapshots
+
+  - key: pulsant_website
+    operator: Pulsant
+    snapshot_dir: operator_snapshots
+    note: >-
+      Publishes "Total IT power" for all fourteen of its UK sites, in the
+      same words each time — the most complete disclosure of any operator
+      surveyed, and the smallest estate: 22.12 MW in total. None is
+      matched to a corpus site; these are long-established colocation
+      facilities that mostly predate this project's planning window, and
+      their pages carry no postcode to match on. They are loaded unmatched
+      because "discloses everything, and is tiny" is a fact worth holding
+      with evidence rather than asserting.
+
   - key: nlighten_website
     operator: nLighten
     snapshot_dir: operator_snapshots
@@ -497,7 +533,383 @@ claims:
       space and 3,600 kW of power" — present tense for the same number the
       panel below calls an end-state.
 
+  # --- Digital Realty: shipped to the browser, shown to nobody --------
+  # Recorded as grid_connection: the field is *utility* power, the
+  # supply into the building, not the IT load other operators headline.
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lgw14
+    claim_name: Digital Realty LGW14 (Woking, GU21 3BA)
+    quantity_type: grid_connection
+    value: 64000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"64000"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lgw15
+    claim_name: Digital Realty LGW15 (Crawley, RH10 9BE)
+    quantity_type: grid_connection
+    value: 16000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"16000"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lgw16
+    claim_name: Digital Realty LGW16 (Crawley, RH10 9BD)
+    quantity_type: grid_connection
+    value: 16000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"16000"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lhr13
+    claim_name: Digital Realty LHR13 (Chessington, KT9 1SJ)
+    quantity_type: grid_connection
+    value: 14400
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"14400"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lhr17
+    claim_name: Digital Realty LHR17 (West Drayton, UB7 0NA)
+    quantity_type: grid_connection
+    value: 6500
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"6500"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lhr18
+    claim_name: Digital Realty LHR18 (Oliver's Yard, EC1Y 1HQ)
+    quantity_type: grid_connection
+    value: 4000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"4000"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lhr19
+    claim_name: Digital Realty LHR19 (Docklands, E14 9SZ)
+    quantity_type: grid_connection
+    value: 3000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"3000"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lhr20
+    claim_name: Digital Realty LHR20 (Marsh Wall, E14 9SD)
+    quantity_type: grid_connection
+    value: 8000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"8000"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lon1
+    claim_name: Digital Realty LON1 (Hanbury Street, E1 6QR)
+    quantity_type: grid_connection
+    value: 16000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"16000"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lon2
+    claim_name: Digital Realty LON2 (Hanbury Street, E1 6QR)
+    quantity_type: grid_connection
+    value: 16000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"16000"}]'
+
+  - source: digitalrealty_website
+    snapshot: digitalrealty-lon3
+    claim_name: Digital Realty LON3 (Hanbury Street, E1 6QR)
+    quantity_type: grid_connection
+    value: 16000
+    unit: kW
+    term: field_utility_power_capacity
+    stage: present in the page's data, absent from the page
+    quote: '"field_utility_power_capacity":[{"value":"16000"}]'
+
+  # --- Stellium and the rest of Global Switch's London estate ---------
+  - source: stellium_website
+    snapshot: stellium-1
+    claim_name: Stellium 1 (Newcastle, Cobalt Park)
+    quantity_type: announced_capacity
+    value: 11
+    unit: MW
+    term: IT power
+    stage: operational
+    quote: 11MW IT power delivering 8kW racks
+    note: >-
+      The same page also describes the building as "divided into four 4MW
+      IT data halls", which sums to 16 MW against the 11 MW stated here.
+      Both are Stellium's own figures on one page; neither is loaded as a
+      correction of the other.
+
+  - source: stellium_website
+    snapshot: stellium-1
+    claim_name: Stellium campus (Newcastle, Cobalt Park) — grid supply
+    quantity_type: grid_connection
+    value: 80
+    unit: MVA
+    term: Campus electrical power
+    stage: with scalability up to 180MVA
+    quote: 'Campus electrical power: 80MVA via four 20MVA 11kV feeds'
+    note: >-
+      Stellium's AI Growth Zone page states the same quantities in MW
+      rather than MVA — "supplied with up to 80 MW ... scale to 180 MW" —
+      with no power factor given anywhere. The unit printed on this page
+      is MVA, so that is what is recorded, and no megawatt value is
+      derived.
+
+  - source: globalswitch_website
+    snapshot: globalswitch-london
+    claim_name: Global Switch London North
+    quantity_type: announced_capacity
+    value: 18
+    unit: MW
+    term: (no term given)
+    stage: —
+    quote: London North 18 MW
+
+  - source: globalswitch_website
+    snapshot: globalswitch-london
+    claim_name: Global Switch London South
+    quantity_type: announced_capacity
+    value: 70
+    unit: MW
+    term: (no term given)
+    stage: —
+    quote: London South 70 MW
+    note: >-
+      With London East's 87 MW these are the whole of Global Switch's
+      published London estate: 175 MW carried as three bare numbers in a
+      contact block, none of them saying what quantity it is.
+
+
+  # --- Pulsant: fourteen sites, fourteen figures ----------------------
+  # The most complete disclosure of any operator surveyed, and the
+  # smallest estate: the same phrase on every page, and 22 MW in total
+  # across all fourteen — less than one Ark building.
+
+  - source: pulsant_website
+    snapshot: pulsant-sc1
+    claim_name: Pulsant SC-1 (Edinburgh South Gyle)
+    quantity_type: announced_capacity
+    value: 3.4
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 3.4MW
+
+  - source: pulsant_website
+    snapshot: pulsant-sc2
+    claim_name: Pulsant SC-2 (Edinburgh)
+    quantity_type: announced_capacity
+    value: 2.16
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 2.16MW
+
+  - source: pulsant_website
+    snapshot: pulsant-sc3
+    claim_name: Pulsant SC-3 (Edinburgh Newbridge)
+    quantity_type: announced_capacity
+    value: 1.3
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 1.3MW
+
+  - source: pulsant_website
+    snapshot: pulsant-nw1
+    claim_name: Pulsant NW-1 (Manchester)
+    quantity_type: announced_capacity
+    value: 1
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 1MW
+
+  - source: pulsant_website
+    snapshot: pulsant-yh1
+    claim_name: Pulsant YH-1 (Rotherham)
+    quantity_type: announced_capacity
+    value: 180
+    unit: kW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 180kW
+
+  - source: pulsant_website
+    snapshot: pulsant-ne1
+    claim_name: Pulsant NE-1 (Newcastle Central)
+    quantity_type: announced_capacity
+    value: 720
+    unit: kW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 720kW
+
+  - source: pulsant_website
+    snapshot: pulsant-ne2
+    claim_name: Pulsant NE-2 (Newcastle East)
+    quantity_type: announced_capacity
+    value: 250
+    unit: kW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 250kW
+
+  - source: pulsant_website
+    snapshot: pulsant-wm1
+    claim_name: Pulsant WM-1 (Birmingham)
+    quantity_type: announced_capacity
+    value: 2
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 2MW
+
+  - source: pulsant_website
+    snapshot: pulsant-se1
+    claim_name: Pulsant SE-1 (Milton Keynes)
+    quantity_type: announced_capacity
+    value: 2.2
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 2.2MW
+
+  - source: pulsant_website
+    snapshot: pulsant-se2
+    claim_name: Pulsant SE-2 (Maidenhead)
+    quantity_type: announced_capacity
+    value: 1
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 1MW
+
+  - source: pulsant_website
+    snapshot: pulsant-se3
+    claim_name: Pulsant SE-3 (Reading South)
+    quantity_type: announced_capacity
+    value: 2.8
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 2.8MW
+
+  - source: pulsant_website
+    snapshot: pulsant-se4
+    claim_name: Pulsant SE-4 (Reading East)
+    quantity_type: announced_capacity
+    value: 760
+    unit: kW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 760kW
+
+  - source: pulsant_website
+    snapshot: pulsant-se5
+    claim_name: Pulsant SE-5 (Fareham)
+    quantity_type: announced_capacity
+    value: 3
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 3MW
+
+  - source: pulsant_website
+    snapshot: pulsant-ln1
+    claim_name: Pulsant LN-1 (Croydon)
+    quantity_type: announced_capacity
+    value: 1.35
+    unit: MW
+    term: Total IT power
+    stage: operational
+    quote: Total IT power 1.35MW
+
 matches:
+  - claim_name: Digital Realty LHR13 (Chessington, KT9 1SJ)
+    site_id: 414
+    method: postcode_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-21
+    evidence: >-
+      Digital Realty's LHR13 page gives KT9 1SJ; site 414 is "Fountain
+      Court Cox Lane Chessington KT9 1SJ" — the same postcode, which in
+      Chessington covers the Cox Lane industrial area rather than a
+      residential spread. The site's own planning record has no capacity
+      figure, so this is a grid-supply number for a site the planning
+      system describes without one.
+
+  - claim_name: Digital Realty LHR19 (Docklands, E14 9SZ)
+    site_id: 6
+    method: postcode_identity
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-21
+    evidence: >-
+      LHR19 gives E14 9SZ, matching site 6 ("EUROHUB DATA CENTRE - THE
+      POINT GREENWICH VIEW"). Digital Realty acquired Interxion, whose
+      London estate included the Greenwich View/Marsh Wall cluster, and
+      the survey records LHR19 as "Cloud House". Held below strong because
+      E14 9SZ covers several buildings around Greenwich View Place and the
+      operator's page names no street.
+
+  - claim_name: Digital Realty LON1 (Hanbury Street, E1 6QR)
+    site_id: 5
+    method: postcode_and_operator
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-21
+    evidence: >-
+      LON1, LON2 and LON3 are the three blocks at 11 Hanbury Street,
+      E1 6QR; site 5 is "INTERXION - DATA CENTRE" at E1 6QL, the adjacent
+      unit on the same street. Digital Realty acquired Interxion in 2020,
+      so the corpus record's operator name and the claim's operator are
+      the same company under its former brand. The one-letter postcode
+      difference is why this is probable rather than strong.
+
+  - claim_name: Digital Realty LON2 (Hanbury Street, E1 6QR)
+    site_id: 5
+    method: postcode_and_operator
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-21
+    evidence: >-
+      The second of three blocks at 11 Hanbury Street, matched to the
+      Interxion record on the same reasoning as LON1 and kept as its own
+      claim because Digital Realty reports the three separately.
+
+  - claim_name: Digital Realty LON3 (Hanbury Street, E1 6QR)
+    site_id: 5
+    method: postcode_and_operator
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-21
+    evidence: >-
+      The third of three blocks at 11 Hanbury Street, matched to the
+      Interxion record on the same reasoning as LON1 and LON2. The three
+      together carry 48 MW of utility supply against a planning record
+      that states no capacity at all.
+
   - claim_name: VIRTUS Saunderton Campus
     site_id: 1
     method: name_and_operator
@@ -768,17 +1180,14 @@ noted:
     snapshot: digitalrealty-london
     quote: '"field_utility_power_capacity":"179.9k+ kW"'
     reason: >-
-      Digital Realty's London metro page ships per-site utility power
-      capacity to the browser inside its embedded application state and
-      displays none of it: eleven UK facilities carry a bare integer under
-      field_utility_power_capacity, and those eleven sum to exactly
-      179,900, matching the metro aggregate string the same payload
-      carries. The unit is confirmed by that arithmetic rather than
-      asserted. Not loaded as per-site claims because the metro page's
-      fragments cannot be tied to individual facilities without fetching
-      each site page — the next tranche's work. Note the quantity is
-      *utility* power, grid supply rather than IT load, so it is not
-      comparable with the IT figures other operators headline.
+      The metro page's own aggregate, kept as the arithmetic check on the
+      per-site claims now loaded above: the eleven populated UK facility
+      values sum to exactly 179,900, which is what establishes the unit as
+      kW. Not itself a claim — "179.9k+ kW" is a rounded string with a
+      plus sign, not a figure. Digital Realty renders none of this on any
+      page; the Power section of each facility shows only "UPS redundancy:
+      2N". LHR26 and LHR27, both on Ajax Avenue in Slough, carry the field
+      empty and are the only UK sites that do.
 
   - subject: Greystoke, Humber Tech Park — 384 GW
     snapshot: greystoke-ai-growth-zone

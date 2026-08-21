@@ -1,0 +1,1859 @@
+# url: https://www.pulsant.com/colocation-milton-keynes-datacentre
+
+# fetched: 2026-08-21
+
+# sha256(html): 170a9fe31cd3f39620ee8831fe515f25f4729cba05ba681f339d4a19bd606395
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@type": "VideoObject",
+ "caption": {
+  "@type": "MediaObject",
+  "contentUrl": "https://www.pulsant.com/media-transcripts/200095505046/en.vtt",
+  "inLanguage": "en",
+  "name": "en Captions"
+ },
+ "contentUrl": "https://2535600.fs1.hubspotusercontent-na1.net/hubfs/2535600/Milton%20Keynes%20Digital%20DC.mp4",
+ "dateModified": "2025-11-18T16:22:35.436Z",
+ "duration": "PT1M26S",
+ "height": 1080,
+ "name": "Milton Keynes Digital DC",
+ "thumbnailUrl": "https://2535600.fs1.hubspotusercontent-na1.net/hubfs/2535600/Milton%20Keynes%20Digital%20DC.mp4/medium.jpg?t=1763482955436",
+ "uploadDate": "2025-11-18T16:16:33.249Z",
+ "width": 1920
+}
+
+{
+ "@context": "https://schema.org",
+ "@type": "LocalBusiness",
+ "address": {
+  "@type": "PostalAddress",
+  "addressCountry": "United Kingdom",
+  "addressLocality": "Milton Keynes",
+  "postalCode": "MK14 6LY",
+  "streetAddress": "St. Neots House, Rockingham Drive"
+ },
+ "description": "Colocation data centre in Milton Keynes. Enquire online to get closer to the edge with Pulsant.",
+ "email": "info@pulsant.com",
+ "name": "Pulsant",
+ "openingHours": "-",
+ "telephone": "0345 119 9900"
+}
+
+## VISIBLE TEXT
+
+Colocation Data Centre - Milton Keynes - Pulsant 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+
+
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ ✕ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Challenges 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Challenges 
+ 
+ 
+ 
+ 
+ 
+ Data sovereignty 
+ 
+ 
+ Cloud repatriation 
+ 
+ 
+ AI 
+ 
+ 
+ Consolidating infrastructure 
+ 
+ 
+ Supply chain constraints 
+ 
+ 
+ Business resilience 
+ 
+ 
+ Moving off-premise 
+ 
+ 
+ Sustainability 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ Got a challenge with your infrastructure that you need help solving? 
+ 
+ 
+ 
+ 
+ Speak to us 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Colocation 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Our Data Centres 
+ 
+ 
+
+ 
+ 
+ Scotland 
+ 
+ 
+ Edinburgh South Gyle SC-1 
+ 
+ 
+ Edinburgh SC-2 
+ 
+ 
+ Edinburgh SC-3 
+ 
+ 
+ 
+
+ 
+ 
+ North of England 
+ 
+ 
+ Manchester NW-1 
+ 
+ 
+ Rotherham YH-1 
+ 
+ 
+ Newcastle NE-1 
+ 
+ 
+ Newcastle NE-2 
+ 
+ 
+ Birmingham WM-1 
+ 
+ 
+
+ 
+ 
+ South of England 
+ 
+ 
+ Milton Keynes SE-1 
+ 
+ 
+ Maidenhead SE-2 
+ 
+ 
+ Reading SE-3 
+ 
+ 
+ Reading SE-4 
+ 
+ 
+ Croydon LN-1 
+ 
+ 
+ Fareham SE-5 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ The best way to experience one of our regional data centres is through booking a tour. 
+ 
+ 
+ 
+ 
+ Arrange a Tour 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ IaaS 
+ 
+ 
+ 
+ 
+ 
+ 
+ Partner 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Partner 
+ 
+ 
+ 
+ 
+ 
+ Partner Programme 
+ 
+ 
+ Pulsant Ecosystem 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+ 
+ Contact us 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ About us 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ About us 
+ 
+ 
+ 
+ 
+ 
+ Meet the team 
+ 
+ 
+ Careers 
+ 
+ 
+ Environment, Social & Governance 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Careers at Pulsant 
+ We are always looking for talented people to come and join our growing team, take a look at our latest vacancies. 
+ 
+ 
+ 
+ 
+ Join the team 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Content hub 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Content hub 
+ 
+ 
+
+ 
+ 
+ 
+ Topics 
+ 
+ 
+ Colocation 
+ 
+ 
+ Connectivity 
+ 
+ 
+ IaaS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Resources 
+ 
+ 
+ Announcements 
+ 
+ 
+ Blogs 
+ 
+ 
+ Client success stories 
+ 
+ 
+ Podcasts 
+ 
+ 
+ Publications 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+ 
+ Contact 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ Search the Pulsant website 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Search 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Need Help 
+ Can't find what you're looking for? 
+ 
+ 
+ 
+ 
+ Contact our team 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Pulsant Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Amito Portal 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Having problems with your account? Contact our support team for help. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ Contact Us 
+ 
+
+ 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+
+ 
+ 
+ Milton Keynes SE-1
+ 
+ Regional Edge Data Centre 
+ 
+
+ 
+ 
+ 
+ 
+ Get Started 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Technical information 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 1.2MW high-density compute available now 
+ 
+ Less than 2m/s latency to London Docklands and Slough 
+ Up to 400Gbps bandwidth 
+ 10 connectivity partners on-site 
+ International connectivity via 
+ Megaport™ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Milton Keynes SE-1 
+ Ready for AI workloads 
+ Milton Keynes SE-1 was originally constructed as a financial services data centre with high security in mind. This facility is highly resilient with 10 carriers on site, including access to Megaport, and is located 54 miles northwest of Central London, in the heart of England. The site benefits from a new data hall enabling high density compute up to 20kW. 
+ SE-1 is part of Pulsant’s network of 14 interconnected UK data centres, connected via the Pulsant Edge Fabric, a 100Gb national network for low-latency access to 1,600+ cloud services, network providers, and business partners. 
+ Pulsant has a significant footprint of 6 colocation facilities spread across the South of England providing connectivity to over 25,000 tech companies based in Central London. This region is the most densely populated in the UK and houses the ‘M4 Corridor’ which has grown into a technology hub for a large number of digital organisations. 
+ 
+ 
+ 
+ 
+ 
+ Book a tour 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download data sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ Take a tour of SE-1 
+
+ 
+ 
+ Arrange a tour 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ SE-1 Facilities 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Breakout area
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Remote hands
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Build room
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Meeting room
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Equipment storage
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Package recycling
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Hot & cold drinks
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Wi-Fi
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ Technical Information 
+
+ 
+ 
+ 
+ 
+ Download data sheet 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Building 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Total building size 
+ 2,027m² 
+ 
+ 
+ 
+ Total data hall space 
+ 1,116m² 
+ 
+ 
+ 
+ Deployments 
+ Full / half / quarter racks 
+ 
+ 
+ 
+ 
+ High-density racks 
+ 
+ 
+ 
+ 
+ Cages 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Security 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 24x On-site security 
+ CCTV 
+ Keycard access 
+ Perimeter fencing 
+ Vehicle anti-tailgate barrier 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Environment 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Cooling N+1 
+ Smoke / heat sensors 
+ VESDA 
+ Double-knock alert systems 
+ Gas fire suppression 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Power 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Total IT power 
+ 2.2MW 
+ 
+ 
+ 
+ Renewable energy procurement 
+ 100% 
+ 
+ 
+ 
+ UPS redundancy 
+ 2N 
+ 
+ 
+ 
+ Standby power configuration 
+ N+1 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Connectivity 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Carrier neutral 
+ Edge Fabric enabled 
+ Diverse cable routing 
+ Cloud on-ramp 
+ Cross connects and structured cabling 
+ Networking & peering providers: 10 
+ Megaport™ PoP 
+ Carrier availability: BT, CityFibre, Colt, CommsWorld, Lumen, NEOS, Megaport, Virgin Media, Vodafone & Zayo 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Accreditations 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ Find out more about Milton Keynes SE-1 
+ 
+ 
+ 
+ 
+ 
+ 
+ Get in touch 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ Milton Keynes Latest News 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Data Centres 
+ UK data centre operator launches high-density facility outside London 
+ > Read more 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Data Centres 
+ 
+ 
+ UK data centre operator launches high-density facility outside London 
+ 
+ 
+ 
+ > Read more 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Data Centres Edge 
+ 
+ 
+ An accelerated evolution and advanced ecosystem: the opportunity within Milton Keynes 
+ 
+ 
+ 
+ > Read more 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Blog Data Centres 
+ 
+ 
+ Better when closer: the role of the data centre in your network 
+ 
+ 
+ 
+ > Read more 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Book a tour 
+ Get in touch with one of our experts to arrange a tour. If it’s easier, email sales@pulsant.com 
+ 
+ 
+ Close 
+ 
+ 
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ General Enquiries 
+ 0345 119 9900 
+ info@pulsant.com 
+ 
+ 
+ Follow Us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ What we do 
+ 
+ 
+ 
+ 
+ 
+ platformEDGE™
+ 
+ 
+ 
+ 
+ 
+ Colocation
+ 
+ 
+ 
+ 
+ 
+ Connectivity
+ 
+ 
+ 
+ 
+ 
+ IaaS
+ 
+ 
+ 
+ 
+ 
+
+ About Pulsant 
+ 
+ 
+ 
+ 
+ 
+ Meet the team
+ 
+ 
+ 
+ 
+ 
+ Careers
+ 
+ 
+ 
+ 
+ 
+ ESG
+ 
+ 
+ 
+ 
+ 
+ Partner programme
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Content Hub 
+ 
+ 
+ 
+ 
+ 
+ Blog posts
+ 
+ 
+ 
+ 
+ 
+ Client success stories
+ 
+ 
+ 
+ 
+ 
+ Podcasts
+ 
+ 
+ 
+ 
+ 
+ FAQs
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ © Pulsant 2026
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Terms and conditions
+ 
+ 
+ 
+ 
+ 
+ Cookie & privacy policy
+ 
+ 
+ 
+ 
+ 
+ Modern slavery statement
+ 
+ 
+ 
+ 
+ 
+ Corporate governance and sustainability
+ 
+ 
+ 
+ 
+ 
+ Gender pay gap
