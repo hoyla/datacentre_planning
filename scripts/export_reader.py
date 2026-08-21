@@ -2574,7 +2574,9 @@ def main() -> int:
     arrived at. The <b>?</b> beside any column heading jumps straight to its definition.</p></div>
   <div class="part"><h3>Workbook<span class="pill">spreadsheet</span></h3>
    <p class="what">The same rows with all {len(hv.SITE_HEADERS)} columns, filterable and
-    pivotable, with a provenance sheet.</p>
+    pivotable, with a provenance sheet — and the sheets behind the Operators view:
+    every capacity claim, what each operator tells which audience, and the figures
+    for sites told more than one thing.</p>
    <p class="when"><b>Reach for it when</b> you want to slice the data yourself.
     &nbsp;<a href="{WORKBOOK_SHEET_URL}" target="_blank" rel="noopener">Open the
     spreadsheet</a> <span class="help">· or the .xlsx

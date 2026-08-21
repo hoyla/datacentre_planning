@@ -450,7 +450,10 @@ DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Source portal",
      "Link to one of the site's applications on the council's public "
      "register — the most recently received one holding a link. Per-"
-     "application links are on the Applications sheet."),
+     "application links are on the Applications sheet. Where the label "
+     "reads '1 of N registers', the site spans more than one planning "
+     "authority and each keeps its own register: the link reaches one of "
+     "them, and the Applications sheet has the rest."),
     ("Sites", "Applications / Application refs",
      "Member planning applications of this site (grouping decided at "
      "materialisation; 'Joined site via' on the Applications sheet says "
@@ -1186,8 +1189,12 @@ def main() -> None:
 
         portal = site_portal.get(key)
         n_hosts = len(site_hosts.get(key, ()))
+        # "(1 of 5)" was true and unreadable: it never said what the five
+        # were. A site can span councils, and each council has its own
+        # register, so the link can only ever reach one of them — say
+        # which thing is being counted.
         portal_label = ("Open portal" if n_hosts <= 1
-                        else f"Open portal (1 of {n_hosts})")
+                        else f"Open portal (1 of {n_hosts} registers)")
 
         row = [
             key, cls, name, proposal_cell, proposal_flag,
