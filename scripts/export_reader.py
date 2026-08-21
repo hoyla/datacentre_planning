@@ -381,6 +381,35 @@ table.stats td.none{color:var(--mut)}
 table.stats td.n{font-variant-numeric:tabular-nums;text-align:right;width:74px;
   white-space:nowrap}
 table.stats td.help{width:52%}
+/* Operator rows expand, the same one-at-a-time gesture as the Sites
+   table. Every number in that table is an aggregate — six sites, eleven
+   figures — and an aggregate a reader cannot open is an assertion.
+   The panel underneath is where the sites are named and every figure
+   carries the document it was published in. */
+table.stats tr.op{cursor:pointer}
+table.stats tr.op:hover>td{background:rgba(127,127,127,.06)}
+table.stats tr.op.open>td{background:var(--soft);
+  box-shadow:inset 0 1px 0 var(--accent)}
+table.stats tr.op td:first-child:before{content:"▸";color:var(--mut);
+  margin-right:7px;display:inline-block;transition:transform .12s}
+table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
+.opdetail h5{margin:14px 0 6px;font-size:11.5px;font-weight:650;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
+.opdetail h5:first-child{margin-top:0}
+.opdetail .claim{margin:0 0 9px}
+.opdetail .claim p{margin:0 0 2px}
+.opdetail .sitelist{margin:0}
+.opdetail details>summary,.opsite details>summary{cursor:pointer;
+  font-size:12px;color:var(--accent);list-style:none}
+.opdetail details>summary::-webkit-details-marker,
+.opsite details>summary::-webkit-details-marker{display:none}
+.opdetail details>summary:before,.opsite details>summary:before{
+  content:"▸ ";display:inline-block;transition:transform .12s}
+.opdetail details[open]>summary:before,
+.opsite details[open]>summary:before{transform:rotate(90deg)}
+.opsite{margin-bottom:12px}
+.opsite .claim{margin:0 0 9px}
+.opsite .claim p{margin:0 0 2px}
 .charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;
   margin:12px 0 6px}
 figure.chart{margin:0}
@@ -1033,6 +1062,16 @@ function closeSiteRow(tr){
 document.querySelectorAll('tr.site').forEach(tr=>tr.addEventListener('click',e=>{
   if(e.target.closest('a'))return;
   if(tr.classList.contains('open')) closeSiteRow(tr); else openSiteRow(tr);
+}));
+/* Operator rows, same gesture. No hash for these: an operator is not a
+   shareable object in this release, and a second hash prefix would
+   compete with the #site- links the panel is full of. */
+document.querySelectorAll('tr.op').forEach(tr=>tr.addEventListener('click',e=>{
+  if(e.target.closest('a'))return;
+  const was=tr.classList.contains('open');
+  document.querySelectorAll('tr.op.open').forEach(o=>{
+    o.classList.remove('open'); o.nextElementSibling.classList.remove('on');});
+  if(!was){tr.classList.add('open'); tr.nextElementSibling.classList.add('on');}
 }));
 const rows=[...document.querySelectorAll('tr.site')];
 const q=document.getElementById('q'),f=document.getElementById('f'),
@@ -2130,28 +2169,140 @@ def main() -> int:
         return (f'<td class="yes">{len(got)}'
                 f'<span class="q">figure{"" if len(got) == 1 else "s"}</span></td>')
 
+    def _site_a(key, name, n=52):
+        """A site name that opens the site.
+
+        href *and* onclick: the href is what a right-click copies and
+        what still works if scripting is off, the onclick does the work
+        without a round trip through hashchange — which would not fire
+        at all if the reader is already on that site's hash.
+        """
+        if not key:
+            return esc(trim(name or "—", n))
+        return (f'<a href="#site-{quote(key, safe="")}" '
+                f'onclick="return goSite(\'{esc(key)}\')">'
+                f'{esc(trim(name or key, n))}</a>')
+
+    def _op_source(c):
+        """Where one figure came from: the link, and where to look in it.
+
+        Nothing on this page is allowed to be an assertion, so every
+        figure carries this line. A planning figure cites the
+        application and, where the adjudication recorded one, the
+        document it was read out of; an external claim cites the source
+        it was published in and the confidence of the match that put it
+        against this site.
+        """
+        bits = []
+        if c["source_key"] == "planning_documents":
+            app, ref = c.get("application_url"), esc(c["claim_name"])
+            bits.append(f'<a href="{esc(app)}" target="_blank" rel="noopener">'
+                        f'{ref}</a>' if app else ref)
+            doc = c.get("source_url")
+            if doc and doc != app:
+                bits.append(f'<a href="{esc(doc)}" target="_blank" '
+                            f'rel="noopener">the document</a>')
+        else:
+            title = ccl.SOURCE_TITLES.get(c["source_key"], c["source_key"])
+            url = c.get("source_url")
+            bits.append(f'<a href="{esc(url)}" target="_blank" rel="noopener">'
+                        f'{esc(title)}</a>' if url else esc(title))
+        if c.get("locator"):
+            bits.append(esc(c["locator"]))
+        _as = c.get("as_at")
+        if _as:
+            bits.append(f"as at {_as.day} {_as:%B %Y}")
+        if c.get("confidence"):
+            bits.append(
+                f'{esc(c["confidence"])} match'
+                + (f' ({esc(c["method"]).replace("_", " ")})'
+                   if c.get("method") else ""))
+        return " · ".join(bits)
+
+    def _op_figure(c, with_site=True):
+        """One figure, its source, and what the source actually says."""
+        qual = []
+        if c.get("term"):
+            # "Published as", not "the operator calls this". Most of
+            # these are the operator's own printed phrase, but Digital
+            # Realty's eleven are the JSON key the figure is carried
+            # under in the page's data — published, and recorded as
+            # printed, but not a phrase anybody wrote to be read.
+            qual.append(f'published as “{esc(c["term"])}”')
+        if c.get("stage"):
+            qual.append(esc(c["stage"]))
+        ev = ""
+        if c.get("quote"):
+            ev += ('<details><summary>What the source says</summary>'
+                   f'<p class="help">{esc(trim(c["quote"], 700))}</p>'
+                   '</details>')
+        if c.get("evidence"):
+            ev += ('<details><summary>How this was matched to the site'
+                   '</summary>'
+                   f'<p class="help">{esc(c["evidence"])}</p></details>')
+        return (
+            '<div class="claim"><p>'
+            f'<strong>{float(c["value"]):,.10g} {esc(c["unit"])}</strong> '
+            f'{esc(ccl.QUANTITY_LABELS.get(c["quantity_type"], c["quantity_type"]))}'
+            + (f' — {_site_a(c.get("site_key"), c.get("site_name"))}'
+               if with_site and c.get("site_key") else "")
+            + (f' <span class="q">{esc(c["claim_name"])}</span>'
+               if c.get("claim_name")
+               and c["source_key"] != "planning_documents" else "")
+            + '</p>'
+            + f'<p class="help">{" · ".join(qual + [_op_source(c)])}</p>'
+            + ev + '</div>')
+
+    def _op_detail(r):
+        """Everything the row above it counts, itemised and linked."""
+        parts = []
+        if r.site_names:
+            parts.append(
+                f'<h5>The {len(r.site_names)} site'
+                f'{"" if len(r.site_names) == 1 else "s"} these figures '
+                f'attach to</h5><p class="sitelist">'
+                + " · ".join(_site_a(k, n, 60) for k, n in r.site_names)
+                + '</p>')
+        else:
+            parts.append(
+                '<h5>Sites</h5><p class="help">None of this operator\'s '
+                'published figures has been matched to a site in this '
+                'dataset, so the row above counts no sites. The figures '
+                'themselves are below, with their sources.</p>')
+        for key, label in _AUD:
+            got = r.by_audience.get(key) or []
+            if not got:
+                continue
+            parts.append(
+                f'<h5>{esc(label)} — {len(got)} figure'
+                f'{"" if len(got) == 1 else "s"}</h5>'
+                + "".join(_op_figure(c) for c in got))
+        return f'<div class="opdetail">{"".join(parts)}</div>'
+
     _op_body = "".join(
-        f'<tr><td><strong>{esc(r.operator)}</strong></td>'
+        f'<tr class="op"><td><strong>{esc(r.operator)}</strong></td>'
         f'<td class="n">{r.audiences}</td>'
         f'<td class="n">{len(r.sites) or "—"}</td>'
         + "".join(_aud_cell(r, k) for k, _ in _AUD)
         + f'<td class="help">{esc("; ".join(sorted(t for t in r.terms if t)) or "—")}</td>'
-          f'</tr>'
+          f'</tr><tr class="detail"><td colspan="8">{_op_detail(r)}</td></tr>'
         for r in op_rows)
 
     # Same quantity, two audiences: the only comparison where a gap is
     # unambiguously a gap rather than two different measurements.
     _lfl = [(d, q) for d in op_divs for q in d.get("like_for_like", [])]
     _lfl.sort(key=lambda x: -x[1]["ratio"])
+
     def _lfl_values(values):
         return "".join(
             f'<div>{float(c["value"]):,.4g} MW '
             f'<span class="q">'
-            f'{esc(dict(_AUD).get(c["audience"], c["audience"]))}</span></div>'
+            f'{esc(dict(_AUD).get(c["audience"], c["audience"]))} — '
+            f'{_op_source(c)}</span></div>'
             for c in values)
 
     _lfl_rows = "".join(
-        f'<tr><td>{esc(trim(d["site"], 46))}</td>'
+        f'<tr><td>{_site_a(d.get("site_key"), d["site"], 46)}</td>'
         f'<td>{esc(ccl.QUANTITY_LABELS.get(q["quantity_type"], q["quantity_type"]))}</td>'
         f'<td>{_lfl_values(q["values"])}</td>'
         f'<td class="n">{q["ratio"]:.2f}&times;</td></tr>'
@@ -2164,10 +2315,13 @@ def main() -> int:
  <div class="banner"><b>Read this as a description, not a scoreboard.</b>
   {esc(odis.FAIRNESS_NOTE)}</div>
  <h3>What each operator publishes, and to whom</h3>
- <table class="stats"><thead><tr><th scope="col">Operator</th>
+ <p class="help">Every count in this table opens. Click a row for the sites it covers and
+ for each figure behind it — the value, what the operator called it, the document or page
+ it was published in, and how it was matched to a site.</p>
+ <table class="stats" id="tbl-ops"><thead><tr><th scope="col">Operator</th>
   <th scope="col">Audiences</th><th scope="col">Sites here</th>
   {"".join(f'<th scope="col">{esc(lbl)}</th>' for _, lbl in _AUD)}
-  <th scope="col">Terms it uses for capacity</th></tr></thead>
+  <th scope="col">Terms the figures are published under</th></tr></thead>
   <tbody>{_op_body}</tbody></table>
  <p class="help">{esc(odis.METHOD_NOTE)}</p>
 
@@ -2176,24 +2330,17 @@ def main() -> int:
  supposed to be smaller than total site power, and a contracted grid connection is a
  different thing again. The comparison below is the narrow one where a gap really is a
  gap — one quantity, one site, more than one audience.</p>
- {f'<table class="stats"><thead><tr><th scope="col">Site</th><th scope="col">Quantity</th><th scope="col">Figures on record</th><th scope="col">Ratio</th></tr></thead><tbody>{_lfl_rows}</tbody></table>' if _lfl_rows else '<p class="help">None currently.</p>'}
+ {f'<table class="stats"><thead><tr><th scope="col">Site</th><th scope="col">Quantity</th><th scope="col">Figures on record, and where each was published</th><th scope="col">Ratio</th></tr></thead><tbody>{_lfl_rows}</tbody></table>' if _lfl_rows else '<p class="help">None currently.</p>'}
  <p class="help">A ratio of 1.00× is corroboration, not coincidence: two audiences given
  the same number by the same developer, arrived at independently by this project.</p>
 
  <h3>Every site whose figures reached more than one audience</h3>
  <p class="help">{len(op_divs)} sites. Figures are shown in the unit each source printed,
- grouped by who was told. Open the site in the Sites tab for the evidence behind each
- match.</p>
+ grouped by who was told. Site names open the site; each figure carries the source it was
+ published in and, where the source is a document, what it says.</p>
  {"".join(
-   f'<div class="box" style="margin-bottom:12px"><h4>{esc(trim(d["site"], 70))}</h4>'
-   + "".join(
-       f'<p style="margin:0 0 4px"><strong>{float(c["value"]):,.10g} {esc(c["unit"])}</strong> '
-       f'{esc(ccl.QUANTITY_LABELS.get(c["quantity_type"], c["quantity_type"]))}'
-       f' <span class="q">{esc(dict(_AUD).get(c["audience"], c["audience"]))}'
-       + (f' · {esc(c["term"])}' if c["term"] else "")
-       + (f' · {esc(c["confidence"])} match' if c["confidence"] else "")
-       + f'</span></p>'
-       for c in d["claims"])
+   f'<div class="box opsite"><h4>{_site_a(d.get("site_key"), d["site"], 70)}</h4>'
+   + "".join(_op_figure(c, with_site=False) for c in d["claims"])
    + '</div>'
    for d in op_divs)}
 """

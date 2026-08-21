@@ -731,6 +731,45 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "register figure is never copied into the Sites sheet: where it "
      "diverges from the planning-derived figure for the same site, the "
      "divergence is the story."),
+    ("Operator disclosure", "All columns",
+     "One row per operator, counting the figures it has stated to each "
+     "of four audiences: the planning authority (the site's own "
+     "application documents), the grid operator (NESO's register), the "
+     "auditors (accounts filed at Companies House) and customers (the "
+     "operator's own website). The counts are aggregates and the sheet "
+     "names what each one covers: 'Which sites' lists the sites behind "
+     "the count, and every figure counted here appears as its own row "
+     "on Figures by audience with the source it was published in. "
+     "Read it as a description of disclosure, not a scoreboard: almost "
+     "none of these companies is obliged to publish capacity at all, "
+     "and an empty column is not evidence of concealment."),
+    ("Operator disclosure", "Audiences told / Terms the figures are "
+     "published under",
+     "'Audiences told' counts how many of the four have been given a "
+     "figure. The terms column reproduces what each figure was "
+     "published under, unconverted — 'Total Capacity', 'IT load' and "
+     "'Total IT power' are not synonyms and are not merged. Where a "
+     "figure was carried in a page's underlying data rather than in "
+     "its text, the term is the data key it was carried under, which "
+     "is why one operator's entry is a machine field name."),
+    ("Figures by audience", "All columns",
+     "One row per figure, for every site where more than one audience "
+     "was given one. Figures are in the unit the source printed, and "
+     "MVA is never converted to MW because no power factor is "
+     "published. 'Source' opens the document or page the figure was "
+     "published in, 'Where in the source' is the page or row within "
+     "it, and 'What the source says' is the verbatim span the figure "
+     "was read from — checked against the committed snapshot rather "
+     "than transcribed. Planning-derived rows carry the project's own "
+     "adjudication of the application documents and are marked "
+     "'(planning-derived)' in the confidence column, because there is "
+     "no external match to score."),
+    ("Figures by audience", "Same quantity, different audience?",
+     "Marks the narrow comparison where a gap really is a gap: one "
+     "site, one quantity, more than one audience. Elsewhere a "
+     "difference between figures is usually two different measurements "
+     "— IT load is supposed to be smaller than total site power, and a "
+     "contracted grid connection is a different thing again."),
 ]
 
 
@@ -1533,9 +1572,10 @@ def main() -> None:
     # is read from power_adjudication rather than from claims.
     ws = _sheet("Operator disclosure", [
         "Operator", "Audiences told", "Sites in this dataset",
+        "Which sites",
         "Told the planning authority", "Told the grid operator",
         "Told the auditors", "Told customers",
-        "Terms the operator uses for capacity"])
+        "Terms the figures are published under"])
     with db.connect() as conn, conn.cursor() as cur:
         op_rows = od.load_rows(cur)
         op_divs = od.load_divergences(cur)
@@ -1547,15 +1587,19 @@ def main() -> None:
         return f"{len(got)} figure{'' if len(got) == 1 else 's'}"
 
     for r in op_rows:
+        # The count and the list, side by side: a bare "6 sites" is an
+        # assertion, and the Figures by audience sheet is where each of
+        # those sites' figures is itemised with its source.
         ws.append([r.operator, r.audiences, len(r.sites),
+                   "; ".join(n for _k, n in r.site_names) or "—",
                    _cell(r, "planning"), _cell(r, "grid"),
                    _cell(r, "auditors"), _cell(r, "customers"),
-                   "; ".join(sorted(t for t in r.terms if t)) or "—"])
+                   "; ".join(t for t in sorted(r.terms) if t) or "—"])
     ws.append([])
     ws.append([od.FAIRNESS_NOTE])
     ws.append([od.METHOD_NOTE])
-    for col, width in (("A", 30), ("B", 14), ("C", 20), ("D", 24), ("E", 22),
-                       ("F", 20), ("G", 20), ("H", 60)):
+    for col, width in (("A", 30), ("B", 14), ("C", 20), ("D", 60), ("E", 24),
+                       ("F", 22), ("G", 20), ("H", 20), ("I", 60)):
         ws.column_dimensions[col].width = width
     for row in ws.iter_rows(min_row=2):
         for c in row:
@@ -1565,8 +1609,9 @@ def main() -> None:
     # ---- Figures by audience ------------------------------------------------
     ws = _sheet("Figures by audience", [
         "Site", "Audience", "Figure", "Unit", "Quantity",
-        "Operator's term", "Stated as", "Match confidence",
-        "Same quantity, different audience?"])
+        "Published as", "Named in the source as", "Match confidence",
+        "Same quantity, different audience?",
+        "Source", "Where in the source", "What the source says"])
     for d in op_divs:
         lfl = {q["quantity_type"] for q in d.get("like_for_like", [])}
         for c in d["claims"]:
@@ -1577,9 +1622,13 @@ def main() -> None:
                 c["value"], c["unit"], c["quantity_type"],
                 c["term"] or "—", c["claim_name"],
                 c["confidence"] or "(planning-derived)",
-                "yes" if c["quantity_type"] in lfl else ""])
+                "yes" if c["quantity_type"] in lfl else "",
+                _hyperlink(c.get("source_url"), "Open the source"),
+                c.get("locator") or "—",
+                c.get("quote") or "—"])
     for col, width in (("A", 46), ("B", 24), ("C", 10), ("D", 8), ("E", 20),
-                       ("F", 26), ("G", 40), ("H", 18), ("I", 16)):
+                       ("F", 26), ("G", 40), ("H", 18), ("I", 16),
+                       ("J", 18), ("K", 20), ("L", 70)):
         ws.column_dimensions[col].width = width
     print(f"  Operator disclosure: {len(op_rows)} operators, "
           f"{len(op_divs)} sites told more than one audience")
