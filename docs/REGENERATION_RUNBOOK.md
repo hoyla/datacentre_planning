@@ -308,6 +308,33 @@ side and the API is the far side.
 
 ### 7. Rebuild the artefacts — BEFORE step 5 stages them
 
+**Check the sync ledger is populated first.** Both the reader and the
+workbook read their Drive links out of
+`data/exports/.drive_sync_state.json`, and a site missing from it gets no
+link and the words *"not yet synced to Drive"*. Building before the
+first-ever sync is fine, because there is nothing to link to yet.
+Building against an *absent* ledger is not: it produces artefacts that
+tell every reader their documents are missing, and nothing about them
+looks broken.
+
+That happened on 2026-08-21. `data/exports/` had been cleaned between
+releases, taking the staging tree and the ledger with it, and the 2.2
+reader shipped saying "not yet synced to Drive" on 416 of 430 sites —
+all of which were on Drive. The order in this heading is still right;
+the assumption underneath it is that a previous sync's ledger survives.
+Check it does:
+
+```sh
+python -c "import json;d=json.load(open('data/exports/.drive_sync_state.json'));\
+r=[v for k,v in d['folders'].items() if k.endswith('/sites')][0];\
+print(sum(1 for k in d['folders'] if k.startswith(r+'/')),'site folders')"
+```
+
+If that is far below the site count, run steps 5 and 6 first to rebuild
+the ledger, then come back and build the artefacts. Rebuilding a lost
+ledger costs about an hour of API calls and no upload bandwidth — the
+md5s all match, so nothing is re-sent.
+
 First carry the pagination into the database, or every citation from a
 Word file, a workbook or a deck goes out calling its section a page:
 

@@ -41,7 +41,22 @@ BACKUP_FOLDER_URL = f"https://drive.google.com/drive/folders/{BACKUP_FOLDER_ID}"
 # pipeline writes: `dc_handover_phase1.xlsx` in the folder above is
 # regenerated on every export, and the Sheet does not follow it. Re-import
 # after a regeneration that matters, or the two will drift.
+#
+# 2.2 is a *new* Sheet, not a refresh of 2.1's. sheet_sync.py writes into
+# an existing Sheet and cannot add tabs — that restraint is deliberate,
+# since a tab it created would arrive unformatted and be reformatted by
+# hand after every release. 2.2 introduced four (Capacity claims,
+# Operator disclosure, Figures by audience, External aggregates), so
+# refreshing in place would have silently left the whole capacity-claims
+# release out of the Sheet. scripts/create_workbook_sheet.py makes the
+# replacement; the previous Sheet is left where it is, so a citation of
+# 2.1's keeps resolving.
 WORKBOOK_SHEET_URL = (
+    "https://docs.google.com/spreadsheets/d/"
+    "1KBhBD4vv-R24p2WaCCBlQH3hWZEndbSIqdyi3XYmVUQ/edit")
+
+# The Sheet 2.1 was published as, kept so its citations keep resolving.
+WORKBOOK_SHEET_URL_PHASE21 = (
     "https://docs.google.com/spreadsheets/d/"
     "18WB-yRWxOa3IRNQLIR4nOsKMKCQ4WsCA83Je73CUpdw"
     "/edit?gid=1246662960#gid=1246662960")
