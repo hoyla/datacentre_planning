@@ -1,150 +1,217 @@
-# Session handover — 2026-08-11
+# Session handover — 2026-08-21
 
-**Update 2026-08-12:** PRs #60 (Pinpoint link) and #61 (external
-aggregates beside the planning data) are merged. The next build is
-specified in [PLAN_CONSUMPTION_CONTEXT.md](PLAN_CONSUMPTION_CONTEXT.md)
-— per-site consumption context from the DESNZ local-authority series,
-approved by Luke, all inputs committed under `data/external_sources/`
-(read its README before touching them; two snapshots are
-registration-gated and cannot be re-fetched). A separate session is
-fixing the workbook Provenance sheet's stale phase labels. The rest of
-this document is the 2026-08-11 state and still applies.
-
-For whoever picks this up next. Written at the end of the day the 2.1
-release was regenerated, with nothing running.
-
-Read [ROADMAP.md](../ROADMAP.md) for what is outstanding,
-[HISTORY.md](../HISTORY.md) for why things are the way they are, and
-[REGENERATION_RUNBOOK.md](REGENERATION_RUNBOOK.md) for the release chain
-and its traps. This document covers only what is *in flight* and what is
-easy to get wrong.
+Written at the end of the day the capacity-claims work landed and the
+2.2 release was built. Replaces the 2026-08-11 handover, which described
+the 2.1 release as in flight; 2.1 shipped, and everything in it is now
+history. Read [ROADMAP.md](../ROADMAP.md) for what is outstanding,
+[HISTORY.md](../HISTORY.md) for why things are as they are, and
+[REGENERATION_RUNBOOK.md](REGENERATION_RUNBOOK.md) for the release chain.
+This document covers what is *in flight*, what is easy to get wrong, and
+the one substantial piece of work that has been scoped but not started.
 
 ---
 
 ## What is running right now
 
-**Nothing.** The Studio reader was stopped deliberately with `TERM` at
-12:15 so the 2.1 boundary would be clean — everything read is
-adjudicated, and nothing was written underneath the exports.
-
-**Restart it once 2.1 is merged**, and not before, or the boundary stops
-being the thing the release was stamped at:
-
-```sh
-ssh hoyla@192.168.50.113 'cd Code/datacentre_planning &&
-  HF_HUB_OFFLINE=1 nohup .venv/bin/python -u scripts/deepread_run.py --tier A \
-    >> data/deepread_run.log 2>&1 &'
-```
-
-Resume is a database query — documents already logged for this
-(model, prompt_version) are skipped — so stopping cost nothing but the
-time it has been off. [MAC_STUDIO.md](MAC_STUDIO.md) has the live-check
-that does not lie (`pgrep -f deepread_run` matches a leftover `tail -f`).
+**Nothing.** The Studio deep-read has not been restarted since the 2.1
+boundary. No new documents were acquired and no new reading happened in
+any of this work — everything added is *external* evidence about sites
+the corpus already held.
 
 ---
 
-## What 2.1 is, and what is left of it
+## What 2.2 is
 
-A correctness release. **No new documents were acquired and almost no new
-reading happened** — 2 documents were recovered from a parse-failure
-backlog. What changed is what the artefacts are willing to claim, and
-several things they were claiming wrongly.
+A source release, not a reading release. It answers the question Luke
+opened the arc with: **how do we find out the real power demands, when
+so few planning applications state one?** 344 of 442 sites still have no
+demand figure in their own documents, and the answer turned out not to
+be better extraction but other audiences.
 
-Left to do, in order:
+A data centre's size is stated to at least four of them, and the release
+now holds all four:
 
-1. **Merge the release branch.** That is what deploys — EdgeOne builds
-   from git, so writing `index.html` is not publishing it. This was a
-   correction Luke made mid-session and it is worth keeping straight.
-2. **Re-probe the gate from outside**, after the merge:
-   `scripts/probe_gate.sh https://dc-review-gdn-hoyla.edgeone.app`. 22
-   paths plus a forged cookie. A browser with a session cannot show you
-   what this checks.
-3. **Restart the Studio** (above).
-4. **Luke is archiving the phase 2 workbook and database** from the Drive
-   root by hand.
+| Audience | Source | In the store |
+|---|---|---|
+| The planning authority | the site's own application documents | `power_adjudication` (unchanged) |
+| The grid operator | NESO's Existing Agreements Register | 119 claims |
+| The auditors | accounts filed at Companies House | 12 claims |
+| Customers | operators' own websites | 59 claims |
+
+190 claims, 42 matched to 26 sites, across 15 operators. Every figure is
+machine-verified against a committed snapshot — a spreadsheet row, the
+OCR of a filed-accounts page, or a captured web page — and every match
+to a site is a hand-adjudicated inference carrying written evidence.
+
+**The findings worth knowing, because they are what the release is for:**
+
+- **Utilisation is about a fifth of capacity, from three independent
+  directions.** Ark's audited accounts give ~21% of built capacity
+  drawn; VIRTUS's give ~15% of capacity *billed to customers*; UK Power
+  Networks' half-hourly metering of ~100 real data centres gives a
+  median of 18.1%. The VIRTUS figure is the sharpest because its
+  denominator is capacity customers are paying for.
+- **The same quantity, told differently to two audiences.** Only three
+  sites currently qualify, and the comparison is deliberately narrow —
+  IT load is *supposed* to be smaller than total site power, so most
+  differences are not disagreements. Kingsnorth is 340 MW to the grid
+  operator and 49.9 MW to the planning authority; the former Mercure
+  Hotel 435 MW and 120 MW. South Mimms is 400 MW to both, which is the
+  useful one: two audiences given the same number, reached here by two
+  independent routes.
+- **Digital Realty publishes per-site capacity and renders none of it.**
+  Eleven UK facilities carry a figure in embedded page state under
+  `field_utility_power_capacity`; the visible page shows only "UPS
+  redundancy: 2N". The eleven sum to exactly 179,900, matching the
+  aggregate in the same payload, which is what establishes the unit.
+- **Ark's Elstree page identifies the operator** behind the former
+  Mercure Hotel scheme, which the planning record does not foreground.
 
 ---
 
-## What was wrong, and is now not
+## What is left of the 2.2 release
 
-Each of these reached a released artefact, and each was reported by
-someone using it rather than found by a test.
+Built and **not yet deployed.** EdgeOne builds from git, so writing
+`index.html` is not publishing it — **the merge is the deploy.**
 
-**A number that did not say what it counted.** A site panel read
-"Standby generators: 109" above "Diesel (147), HVO (39)". 109 is plant;
-147 and 39 are passages of text mentioning a fuel. Both correct, neither
-saying what it was of, two lines apart. Now "109 units" and "Diesel (147
-mentions)". The same idiom was in three places — fuels, cooling methods,
-party names — and is now one function.
+1. **Merge the release branch.** Then and only then, re-probe the gate
+   from outside: `scripts/probe_gate.sh https://dc-review-gdn-hoyla.edgeone.app`.
+   A browser with a session cannot show you what that checks.
+2. **Drive staging and sync** (runbook steps 5 and 6) — not run.
+   `build_drive_staging.py` must run *after* the artefacts exist, and it
+   prints which release folder it chose. Read that line.
+3. **The Google Sheet** (step 8) — not run. It writes into the sheet
+   people are using, so it is Luke's call rather than the runner's.
+4. **Backup** — done, `dcp_2026-08-21T0746.dump.gpg`, 141 MB, verified,
+   on Drive.
 
-**A page number that was not a page.** 17,724 findings cite an index that
-is not a page: a `.docx` has sections, a workbook has sheets. The
-extractor has recorded which since the format loaders landed, but the
-caches are files and every export is SQL, so it never reached a reader.
-`documents.pagination` now carries it (migration 020) and
-`extract.cite_page` renders it once for everyone.
-
-**Map card links that did nothing.** The card is a child of the map, so
-pressing a link started a map drag, and the first pixel of movement hid
-the card before the mouseup. All three links failed at once, which reads
-as "links are broken" rather than a map bug.
-
-**An 800 MW site that was 300.** North Hyde Gardens published 800 MW of
-on-site generation against a 256 MW site. The document says plainly:
-"100 generators across the site giving a thermal output of over 800mw and
-nearly 300MWe". Two readers described it as thermal in their own
-reasoning and filed it as generation anyway.
+Artefacts are in `data/exports/phase2.2_build/`.
 
 ---
 
 ## Things that will bite
 
-**The release folder default.** `build_drive_staging.py` used to default
-`--release-dir` to a hardcoded `phase2_build`, so the 2.1 run staged
-phase 2's workbook and database beside 2.1's per-site files and said so
-in one line that reads like success. Now defaults to the newest
-`*_build` and prints which it chose. **Read that line.**
+**`backup_db.py` never loaded `.env`.** Fixed today. Every other entry
+point loads it for `DATABASE_URL`; this one talks to Postgres through
+Docker and so never needed to, which meant the passphrase sitting in
+`.env` was invisible to it and the script exited telling you to export a
+variable you had already set. A backup that quietly does not happen is
+the worst kind.
 
-**Numbers hardcoded in the data dictionary drift.** The count of sites
-disclosing water consumption exists as three independent figures written
-at three moments — HISTORY 93, the dictionary 76, live 119 — and only
-the third is currently true. Making them computed is ROADMAP work, not
-done. Until then, measure before quoting any dictionary statistic.
+**The pre-push hook stopped a stranded commit today.** A PR had been
+merged while work continued on its branch; pushing there would have put
+the commit somewhere nobody would read again. It refuses and tells you
+to re-cut from main. Trust it.
 
-**`FLOOR_AREA_KW_PER_SQM = 1.71` is due a re-measurement**, not a change.
-It drives the published estimate for every site with no disclosed
-capacity. An ad-hoc query suggested it may have moved, but with different
-criteria from the original calibration, so it is a flag and nothing more.
-Reproduce the original criteria from git history first.
+**Two corrections were made to conclusions stated confidently.** Both
+are worth knowing as a pattern rather than as facts:
 
-**Two prose definitions is one too many.** `load_coverage_detail` counts
-prose as tiers A and B and reports the repetitive tier separately. Any
-new consumer must use that definition, or the page shows two numbers for
-one quantity — which it briefly did during this release, caught only by
-building the artefact and reading it.
+- *"Per-site megawatts are peculiar to Ark"* was wrong because for
+  VIRTUS I read the operating company (06762600), which states no
+  capacity, and not the property company (09840065), which states a
+  great deal. Checking one entity of a group and generalising is the
+  same error the corpus's site-fragmentation keeps teaching.
+- A tentative match of two 57 MW NESO rows to the Hoddesdon site rested
+  on that site being *"the corpus's only Hoddesdon data centre"* — a
+  fact about the corpus, not about Hoddesdon. Surveying operators
+  turned up a second one. Retired, with the reason on the row.
 
-**Verify the built artefact, not the diff.** Three of this session's
-defects — the two prose definitions, a chip that took its own flex
-column, an energy checkbox that went dead — were invisible in review and
-obvious in a browser.
+**Site fragmentation is still the main matching hazard.** Cody Park
+spans six site records across four councils; JVC Business Park four;
+Colt's Hayes campus three, which is why Colt's claims are loaded
+unmatched. Site 61 was split during this work (International Trading
+Estate moved to 443) and that split is what made the Union Park match
+safe.
+
+**Never let an external figure become a site's own number.** The two
+reader panels now say where their figures come from, and per-quantity
+caveats replace the single flat one. A test asserts every quantity type
+that can reach the indicators panel has a caveat, so a new source
+cannot arrive unlabelled.
+
+---
+
+## The next substantial piece: Environment Agency permit schedules
+
+Scoped, costed and **not started**. This is the biggest remaining lever
+on the 344 sites with no disclosed figure, and the only item on the list
+that is real engineering rather than curation.
+
+**Why it works.** Data-centre standby generator fleets are sized to peak
+load plus redundancy, and they need environmental permits. The permit
+*documents* state what the register does not: Virtus Slough gives 31
+generators totalling 180.5 MWth with per-engine ratings; Ark Cody Park
+69 generators at ~260 MWth; Amazon Hayes 14 × 8.01 MWth. Thermal input
+divided by roughly 2.4–2.5 bounds a site's electrical demand, from a
+statutory document.
+
+**What exists.** The Environment Agency's Installations register is a
+daily-refreshed bulk CSV at
+`https://environment.data.gov.uk/public-register/downloads/industrial-installations`
+(5,199 rows), with a query API supporting `name-search`, `number-search`,
+`local-authority` and radius search via `easting`/`northing`/`dist`.
+Around 78 permits match data-centre operators — Amazon 11, Equinix 8,
+Virtus 6, Ark 5, Digital Realty 4, NTT 3 and others. Records carry
+eastings and northings, so they **join to sites on geography without
+fuzzy name matching**. Roughly half carry a `Document URL` to a permit
+PDF on gov.uk; the rest, mostly newer, do not.
+
+**The design question to settle first.** Permits attach to *sites*, not
+to planning applications, and this pipeline's whole findings layer is
+keyed on `application_id`. Deep-reading a permit PDF through the
+existing machinery would need an application to hang it on, and there
+isn't one. Decide this before writing an adapter — the honest options
+are a site-keyed document table, or claims carrying their own evidence
+the way `capacity_claims` already does. The second is cheaper and fits
+what is already built.
+
+**Known limits, so nobody discovers them late.** Existing plant of
+1–5 MWth needs no permit until 1 January 2029, so smaller and older
+sites are under-represented. Emergency-only backup is excluded from
+specified-generator permitting altogether — but that exclusion is void
+if the plant provides balancing services or Capacity Market/DSR, which
+is why the Capacity Market register turned out to be a dead end and also
+why it explains itself. Wales is NRW's register, Scotland SEPA's, both
+under different regimes.
+
+---
+
+## The other open threads
+
+- **Regulator responses.** NESO and Ofgem were written to on 2026-08-12,
+  replies due ~10 September. A CCA site-level consumption FoI to
+  DESNZ/EA and EIR requests to the DNOs are worth sending and have not
+  been; ~28 days each, so starting them is cheap and waiting is the
+  cost. EIR is the right frame for the DNOs — address the *licensed*
+  plc, not the management company, and note that section 105 of the
+  Utilities Act is near-absolute under FOIA but disapplied for
+  environmental information by EIR regulation 5(6).
+- **Two VIRTUS filings** made up to 31 December 2025 were filed on 19
+  and 20 August 2026 and their images are still not retrievable from
+  the Companies House document API. Worth retrying.
+- **A fourth operator tranche** would be cheap: add URLs to `PAGES` in
+  `fetch_operator_snapshots.py`, run it, add curated claims with
+  verbatim quotes. Colt is blocked on the Hayes fragmentation.
+- **UKPN's gated datasets** — the Large Demand List and "Data Centres by
+  Local Authority" — are behind Luke's portal login and unpulled.
 
 ---
 
 ## How Luke works
 
-He is a journalist who has spent three decades on newsroom software, on
-the product and UX side, and he finds bugs by opening the thing and
-poking it. Every reader defect fixed today came from him or a reporter
-using the release, not from a test.
+Unchanged from the last handover and worth repeating. He is a journalist
+who has spent three decades on newsroom software, on the product and UX
+side, and he finds defects by opening the thing and poking it. Several
+of this session's fixes came from him reading a rendered panel: the
+layout break the claims box caused, the pompous sentence in a lede, the
+invented term in a column headed "terms the operator uses".
 
-He wants pushback, not agreement, and he is right often enough that the
-pushback has to be grounded rather than reflexive — twice today he
-challenged a change and was right to, and once he overrode a documented
-convention for a reason I did not have (he knew which users were on which
-artefact).
+He wants pushback, and he is right often enough that the pushback has to
+be grounded rather than reflexive. He asked for a raw megawatt figure on
+the main site row; the argument against it — that a number there reads
+as comparable to the planning figure beside it when the quantities
+differ — was accepted on its merits, and the column now shows a
+confidence tier instead.
 
-**When he corrects something, build the durable form** — a default, a
-constant, a shared function, a test — rather than resolving to remember.
-And when a claim is retracted, sweep every place it was asserted: code,
-comments, commit messages, PR bodies, the runbook, HISTORY, and the
-reader's own dictionary text.
+**When he corrects something, build the durable form** — a constant, a
+test, a shared function — rather than resolving to remember.

@@ -63,6 +63,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+# Every other entry point loads .env for DATABASE_URL; this one talks to
+# Postgres through Docker and so never needed it, which is why the
+# passphrase sitting in .env has been invisible to it. Without this the
+# script exits telling you to export a variable you have already set,
+# and the backup quietly does not happen.
+from dotenv import load_dotenv  # noqa: E402
+
+load_dotenv(ROOT / ".env")
+
 BACKUP_DIR = ROOT / "data" / "backups"
 CONTAINER = os.environ.get("DCP_PG_CONTAINER", "datacentre_planning-postgres-1")
 PG_USER = os.environ.get("DCP_PG_USER", "dcp")
