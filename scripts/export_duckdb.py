@@ -42,6 +42,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
 from dcp import db, signals  # noqa: E402
+from dcp import operator_disclosure  # noqa: E402
 
 TABLES: dict[str, str] = {
     "sites": """
@@ -303,6 +304,20 @@ def main() -> None:
                     [tuple(_coerce(v) for v in r) for r in rows])
             counts[name] = len(rows)
 
+    # The canonical operator, beside the name the source printed rather
+    # than over it. Filed accounts name a legal entity and a website
+    # names a brand, so grouping capacity_claims by published_by splits
+    # Ark into "ARK DATA CENTRES LIMITED" and "Ark Data Centres" — two
+    # rows here for the one row the reader and the workbook show. The
+    # mapping is this project's inference, hand-checked and small, and
+    # it belongs with the data rather than only inside the module that
+    # renders it. published_by is untouched.
+    con.execute("ALTER TABLE capacity_claims ADD COLUMN operator VARCHAR")
+    con.execute("UPDATE capacity_claims SET operator = published_by")
+    for legal, brand in operator_disclosure.COMPANY_TO_OPERATOR.items():
+        con.execute("UPDATE capacity_claims SET operator = ? "
+                    "WHERE published_by = ?", [brand, legal])
+
     # Environmental signals: derived deterministically, same lexicon as the
     # workbook, so the two artefacts agree.
     con.execute("""CREATE TABLE environmental_signals
@@ -348,7 +363,10 @@ def main() -> None:
                          "under, and the verbatim span it was read from — "
                          "everything needed to rebuild the operator "
                          "disclosure comparison the reader and the workbook "
-                         "show. Never join value_mw onto a site's own power "
+                         "show. Group by operator, not published_by: the "
+                         "latter is the name the source printed, and one "
+                         "company's filed accounts and website print two "
+                         "different ones. Never join value_mw onto a site's own power "
                          "columns; the bridge is capacity_claim_matches, "
                          "whose confidence tier ('tentative' is a lead, not "
                          "an attribution) and written evidence travel with "
