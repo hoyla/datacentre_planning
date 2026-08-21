@@ -833,18 +833,27 @@ function stickyOffset(){
 if('scrollRestoration' in history) history.scrollRestoration='manual';
 
 function scrollRowToTop(r, tries){
-  window.scrollTo({top: Math.max(0, window.scrollY
-    + r.getBoundingClientRect().top - stickyOffset() - 8)});
+  const y = Math.max(0, window.scrollY
+    + r.getBoundingClientRect().top - stickyOffset() - 8);
+  window.scrollTo({top: y});
   const n = tries || 0;
-  // Deliberately setTimeout and not requestAnimationFrame: rAF is
-  // throttled or suspended in a background tab, which is exactly where
-  // a shared link is opened — the recipient middle-clicks it and reads
-  // it later. The correction has to run whether or not the tab is
-  // being painted.
-  if(n < 6) setTimeout(() => {
+  // Keep correcting until the row actually sits where it should. This
+  // page is eight megabytes and a cold, uncached load reflows for a
+  // while after the load event, so a short burst of retries lands
+  // confidently in the wrong place — the row ends up a thousand pixels
+  // above the viewport and the reader sees an unrelated part of the
+  // table. Nothing announces "layout is finished", so measure instead.
+  //
+  // setTimeout rather than requestAnimationFrame: rAF is throttled or
+  // suspended in a background tab, which is exactly where a shared link
+  // gets opened — middle-clicked now, read later.
+  if(n < 25) setTimeout(() => {
+    // If the page has moved for any reason other than us, the reader is
+    // scrolling and this must stop fighting them.
+    if(Math.abs(window.scrollY - y) > 2) return;
     if(Math.abs(r.getBoundingClientRect().top - stickyOffset() - 8) > 4)
       scrollRowToTop(r, n + 1);
-  }, 60);
+  }, 120);
 }
 
 function goSite(key){
