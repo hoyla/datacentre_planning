@@ -906,6 +906,7 @@ def main() -> None:
     from urllib.parse import urlparse
 
     from dcp import capacity_claims as ccl
+    from dcp import operator_disclosure as od
     from dcp import consumption_context as cc
     from dcp import external_aggregates as extagg
     from dcp import proposal
@@ -1517,6 +1518,64 @@ def main() -> None:
     n_claim_matches = sum(1 for c in claim_rows if c["confidence"])
     print(f"  Capacity claims: {len(claim_rows)} claims, "
           f"{n_claim_matches} matched to sites")
+
+    # ---- Operator disclosure ------------------------------------------------
+    # The same companies, across four audiences. Computed from the claims
+    # so it cannot disagree with the Capacity claims sheet or the site
+    # panels; see dcp/operator_disclosure.py for why the planning column
+    # is read from power_adjudication rather than from claims.
+    ws = _sheet("Operator disclosure", [
+        "Operator", "Audiences told", "Sites in this dataset",
+        "Told the planning authority", "Told the grid operator",
+        "Told the auditors", "Told customers",
+        "Terms the operator uses for capacity"])
+    with db.connect() as conn, conn.cursor() as cur:
+        op_rows = od.load_rows(cur)
+        op_divs = od.load_divergences(cur)
+
+    def _cell(row, key):
+        got = row.by_audience.get(key) or []
+        if not got:
+            return "—"
+        return f"{len(got)} figure{'' if len(got) == 1 else 's'}"
+
+    for r in op_rows:
+        ws.append([r.operator, r.audiences, len(r.sites),
+                   _cell(r, "planning"), _cell(r, "grid"),
+                   _cell(r, "auditors"), _cell(r, "customers"),
+                   "; ".join(sorted(t for t in r.terms if t)) or "—"])
+    ws.append([])
+    ws.append([od.FAIRNESS_NOTE])
+    ws.append([od.METHOD_NOTE])
+    for col, width in (("A", 30), ("B", 14), ("C", 20), ("D", 24), ("E", 22),
+                       ("F", 20), ("G", 20), ("H", 60)):
+        ws.column_dimensions[col].width = width
+    for row in ws.iter_rows(min_row=2):
+        for c in row:
+            if c.value is not None:
+                c.alignment = Alignment(wrap_text=True, vertical="top")
+
+    # ---- Figures by audience ------------------------------------------------
+    ws = _sheet("Figures by audience", [
+        "Site", "Audience", "Figure", "Unit", "Quantity",
+        "Operator's term", "Stated as", "Match confidence",
+        "Same quantity, different audience?"])
+    for d in op_divs:
+        lfl = {q["quantity_type"] for q in d.get("like_for_like", [])}
+        for c in d["claims"]:
+            ws.append([
+                d["site"], dict(
+                    (k, lbl) for k, lbl, _ in od.AUDIENCES).get(
+                        c["audience"], c["audience"]),
+                c["value"], c["unit"], c["quantity_type"],
+                c["term"] or "—", c["claim_name"],
+                c["confidence"] or "(planning-derived)",
+                "yes" if c["quantity_type"] in lfl else ""])
+    for col, width in (("A", 46), ("B", 24), ("C", 10), ("D", 8), ("E", 20),
+                       ("F", 26), ("G", 40), ("H", 18), ("I", 16)):
+        ws.column_dimensions[col].width = width
+    print(f"  Operator disclosure: {len(op_rows)} operators, "
+          f"{len(op_divs)} sites told more than one audience")
 
     # ---- Provenance --------------------------------------------------------
     ws = _sheet("Provenance", ["Field", "Value"])
