@@ -47,6 +47,7 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
+from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from dotenv import load_dotenv
@@ -814,9 +815,36 @@ function stickyOffset(){
        + h(document.querySelector('.view.on .controls'))
        + h(document.querySelector('.view.on table thead'));
 }
-function scrollRowToTop(r){
-  const y = window.scrollY + r.getBoundingClientRect().top - stickyOffset() - 8;
-  window.scrollTo({top: Math.max(0, y)});
+// Scroll, then check where the row actually landed and correct.
+//
+// One shot is enough when a row is opened by clicking, because the page
+// is already laid out. It is not enough for a shared link opened cold:
+// clearing the filters puts hundreds of rows back into the table and
+// expands a panel, and a position computed before that reflow lands
+// over a thousand pixels out — far enough that the site is off screen
+// and the page looks blank. Measuring the result is the only way to be
+// sure, since there is no single event that means "layout is done".
+// Browsers restore the previous scroll position on a reload or a
+// back-navigation, and they do it *after* load handlers run — so it
+// silently overrode the jump to a linked site, landing the reader
+// thousands of pixels past it with the row off screen. The tell was the
+// same wrong offset recurring exactly across separate reloads. This
+// page decides where it starts.
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+
+function scrollRowToTop(r, tries){
+  window.scrollTo({top: Math.max(0, window.scrollY
+    + r.getBoundingClientRect().top - stickyOffset() - 8)});
+  const n = tries || 0;
+  // Deliberately setTimeout and not requestAnimationFrame: rAF is
+  // throttled or suspended in a background tab, which is exactly where
+  // a shared link is opened — the recipient middle-clicks it and reads
+  // it later. The correction has to run whether or not the tab is
+  // being painted.
+  if(n < 6) setTimeout(() => {
+    if(Math.abs(r.getBoundingClientRect().top - stickyOffset() - 8) > 4)
+      scrollRowToTop(r, n + 1);
+  }, 60);
 }
 
 function goSite(key){
@@ -831,10 +859,50 @@ function goSite(key){
   apply();
   const r=document.querySelector('tr.site[data-key="'+CSS.escape(key)+'"]');
   if(r){
-    if(!r.classList.contains('open')){
-      r.classList.add('open'); r.nextElementSibling.classList.add('on');
-    }
-    soon(()=>scrollRowToTop(r));
+    openSiteRow(r);          // closes whatever else was open, and scrolls
+  } else {
+    // A link to a site this release does not contain — an older key, or
+    // a site retired by a re-materialisation. Say so rather than
+    // silently landing the reader on an unfiltered table.
+    const n=document.getElementById('n');
+    if(n) n.textContent='That site is not in this release';
+  }
+  return false;
+}
+// A site's own address. Keys carry slashes — SITE-Aberdeen/180242/DPP —
+// so they are encoded going in and decoded coming out; fromHash already
+// decodes. replaceState rather than push, to match how the tabs behave:
+// the back button steps between views, not between rows.
+function siteHash(key){
+  history.replaceState(null,'','#site-'+encodeURIComponent(key));
+}
+function copySiteLink(key, el){
+  const url=location.href.split('#')[0]+'#site-'+encodeURIComponent(key);
+  // Put it in the address bar first, so the fallback below is always
+  // true: whatever the clipboard does, the link is somewhere the reader
+  // can get at it.
+  siteHash(key);
+  let settled=false;
+  const say=(msg)=>{ if(settled) return; settled=true;
+                     const was=el.textContent; el.textContent=msg;
+                     setTimeout(()=>{el.textContent=was;}, 2200); };
+  // The clipboard API needs a secure context *and* a focused document,
+  // and when the document is not focused the promise can simply never
+  // settle rather than rejecting — leaving a reader who clicked with no
+  // feedback at all. Hence the timer: the message is guaranteed even if
+  // the promise is not.
+  setTimeout(()=>say('Copy it from the address bar'), 700);
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(url).then(
+      ()=>say('Link copied'), ()=>say('Copy it from the address bar'));
+  } else {
+    const t=document.createElement('textarea');
+    t.value=url; t.style.position='fixed'; t.style.opacity='0';
+    document.body.appendChild(t); t.select();
+    try{ say(document.execCommand('copy') ? 'Link copied'
+                                          : 'Copy it from the address bar'); }
+    catch(e){ say('Copy it from the address bar'); }
+    document.body.removeChild(t);
   }
   return false;
 }
@@ -887,14 +955,46 @@ function fromHash(){
     show('dict', true);
     const el=document.getElementById(h);
     if(el) soon(()=>el.scrollIntoView({block:'center'}));
+  } else if(h.startsWith('site-')){
+    // A link straight to one open site. goSite clears the filters
+    // first, because a shared link has to work for someone whose
+    // filters are not the sender's — and the default filter hides
+    // sites under 100 MW.
+    goSite(h.slice(5));
   } else if(TABS.includes(h)){
     show(h, true);
   }
 }
 addEventListener('hashchange', fromHash);
+// One row open at a time, so that the address bar always names exactly
+// what is on screen and a copied URL means what the sender saw. Rows
+// used to expand independently; Luke traded that for an unambiguous
+// link, on the grounds that shareable links are the better way to hold
+// several sites at once — one per tab, each with its own address.
+function openSiteRow(tr){
+  document.querySelectorAll('tr.site.open').forEach(other=>{
+    if(other!==tr){
+      other.classList.remove('open');
+      other.nextElementSibling.classList.remove('on');
+    }
+  });
+  tr.classList.add('open'); tr.nextElementSibling.classList.add('on');
+  siteHash(tr.dataset.key);
+  // Always bring the opened row to the top. With one row open at a
+  // time, opening a site below a taller open one collapses that first
+  // and everything above shifts up — so the row a reader just clicked
+  // would jump out from under the cursor. Scrolling it to a fixed
+  // position makes where it lands predictable rather than a function of
+  // how tall the previous panel happened to be.
+  soon(()=>scrollRowToTop(tr));
+}
+function closeSiteRow(tr){
+  tr.classList.remove('open'); tr.nextElementSibling.classList.remove('on');
+  history.replaceState(null,'','#sites');
+}
 document.querySelectorAll('tr.site').forEach(tr=>tr.addEventListener('click',e=>{
   if(e.target.closest('a'))return;
-  tr.classList.toggle('open'); tr.nextElementSibling.classList.toggle('on');
+  if(tr.classList.contains('open')) closeSiteRow(tr); else openSiteRow(tr);
 }));
 const rows=[...document.querySelectorAll('tr.site')];
 const q=document.getElementById('q'),f=document.getElementById('f'),
@@ -1617,6 +1717,12 @@ def main() -> int:
        'stronger signal than any one of them.</span>'}</span></div>
      <div><span class="lbl">{'Source documents' if held else 'Drive'}</span>
       <span class="val">{drive_html}</span></div>
+     <div><span class="lbl">Share</span><span class="val">
+      <a href="#site-{esc(quote(key, safe=''))}" data-key="{esc(key)}"
+         onclick="event.stopPropagation();
+         return copySiteLink(this.dataset.key, this)">Copy link to this site</a>
+      <span class="help">Opens straight to this panel, with filters
+       cleared so it works for whoever you send it to.</span></span></div>
     </div></div>
 
    <div class="box parties"><h4>Who is behind it</h4>
