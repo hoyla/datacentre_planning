@@ -595,6 +595,25 @@ function clearSubset(){
   document.getElementById('mapsubset').hidden=true;
   mapFilter();
 }
+/* The map's search box searches exactly what the Sites tab's box
+   searches, by reading the row's own haystack out of the table instead
+   of keeping a second, thinner copy in MAPPTS. Two reasons: a term that
+   matched an applicant or a proposal on the Sites tab used to find
+   nothing on the map, and — since seeAllOnMap now mirrors the term
+   across — a narrower haystack here would quietly drop sites the
+   projection contains and make the overlay's count wrong.
+   Built on first use: this script is defined before the table is
+   parsed. */
+let SITEHAY=null;
+function siteHay(id){
+  if(SITEHAY===null){
+    SITEHAY=new Map();
+    for(const r of document.querySelectorAll('#tbl-sites tr.site'))
+      SITEHAY.set(r.dataset.key, r.dataset.hay);
+  }
+  const h=SITEHAY.get(id);
+  return h===undefined ? null : h;
+}
 function mapFilter(){
   const s=(document.getElementById('mq').value||'').toLowerCase().trim();
   const showE=document.getElementById('me').checked;
@@ -603,7 +622,7 @@ function mapFilter(){
   for(const p of MAPPTS){
     let ok = p.k==='e' ? showE : showS;
     if(ok&&map.subset&&p.k==='s') ok = map.subset.has(p.id);
-    if(ok&&s) ok=p.h.includes(s);
+    if(ok&&s) ok=(p.k==='s' ? (siteHay(p.id) || p.h) : p.h).includes(s);
     if(ok&&big&&p.k!=='e'){
       ok = p.mw===null ? !document.getElementById('munk').checked : p.mw>=100;
     }
@@ -777,15 +796,25 @@ function seeAllOnMap(){
   const plotted=MAPPTS.filter(p=>p.k==='s'&&want.has(p.id));
   show('map', true);
   map.subset=want;
-  // The map's own controls start from neutral, or a leftover 100 MW
-  // toggle would filter the projection again and the count would lie.
   document.getElementById('me').checked=false;
   document.getElementById('ms').checked=true;
-  document.getElementById('mq').value='';
-  document.getElementById('mbig').setAttribute('aria-pressed','false');
-  document.getElementById('munk').checked=false;
-  document.getElementById('munk').disabled=true;
-  document.getElementById('munklab').classList.add('off');
+  // The two power controls and the search term are mirrored from the
+  // Sites tab rather than reset. They were reset, so that a control
+  // left over from an earlier visit could not filter the projection a
+  // second time and make the count lie — but that left the sidebar
+  // reporting "100 MW or greater: off" while the reader was looking at
+  // exactly the >=100 MW set, which is the same lie told the other way
+  // round. Copying is safe where clearing was: both tabs test the same
+  // figure with the same rule (est.value_mw, blank meaning undisclosed)
+  // and, since siteHay() below, search the same string — so re-applying
+  // any of them to a subset they already produced changes nothing.
+  const _big=document.getElementById('big').getAttribute('aria-pressed')==='true';
+  document.getElementById('mbig').setAttribute('aria-pressed', _big);
+  document.getElementById('munk').checked=
+    _big && document.getElementById('unk').checked;
+  document.getElementById('munk').disabled=!_big;
+  document.getElementById('munklab').classList.toggle('off', !_big);
+  document.getElementById('mq').value=document.getElementById('q').value;
   MAPPTS.forEach(p=>{p.sel=false;});
   plotted.forEach(p=>{p.sel=true;});
   mapFilter();
