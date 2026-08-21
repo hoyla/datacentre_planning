@@ -1050,18 +1050,6 @@ matches:
       findings. The 55 MW announced figure sits beside the 41.68 MW
       audited built figure already matched to this site.
 
-  - claim_name: Union Park
-    site_id: 61
-    method: name_and_postcode
-    confidence: strong
-    matched_by: hand:claude-opus-5:2026-08-20
-    evidence: >-
-      Ark's page gives UB3 4DG; site 61 is named "NORTH HYDE GARDENS
-      UNION PARK - DATA CENTRES" and its live application postcodes are
-      UB3 4QQ, UB3 4QR, UB3 4RF, UB4 0RH and UB4 0SL — the same Hayes
-      district, under the same name. Matched only after the site 61 split
-      retired its International Trading Estate members to site 443; before
-      that this claim would have attached to a record holding two campuses.
 
   - claim_name: Alliance Park
     site_id: 67
@@ -1133,6 +1121,25 @@ matches:
       not an attribution.
 
 considered:
+  - claim_name: Union Park
+    reason: >-
+      Matched to site 61 on 2026-08-20 and **retired 2026-08-21**. The
+      evidence said the site-61 split had left that record clean; it had
+      not. The split removed the International Trading Estate, which was
+      one of about seven campuses sharing the record — site 61 still
+      holds 294 members dominated by the former Nestlé factory (286
+      applications) and reaching as far as Western International Market,
+      under a display name that reads "NORTH HYDE GARDENS UNION PARK".
+      The postcodes I checked were the conflation, not the campus: UB3
+      4RF is the Nestlé site, and I read district proximity as identity.
+      Ark's Union Park is real and is somewhere inside site 61, but a
+      figure attached to a record that is mostly another campus is
+      misattributed. What would settle it: an adjudicated partition for
+      Union Park in data/priors/site_partitions.yaml, the same treatment
+      the International Trading Estate got. Until then no claim should
+      attach to site 61 at all — it is a record whose name describes one
+      of the campuses it contains.
+
   - claim_name: Colt London 4 (Hayes campus)
     reason: >-
       Colt names the campus "London Hayes" and states no street address.
