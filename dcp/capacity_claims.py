@@ -74,6 +74,7 @@ QUANTITY_LABELS = {
     "built_capacity": "built capacity",
     "metered_consumption": "metered consumption",
     "announced_capacity": "announced capacity",
+    "let_capacity": "capacity let to customers",
 }
 
 # Where each panel's numbers come from, said in the artefacts rather than
@@ -118,6 +119,10 @@ QUANTITY_CAVEATS = {
         "Energy actually metered over a period, not a power rating. Where "
         "it is a company total it covers every site that company operates "
         "and cannot be attributed to this one."),
+    "let_capacity": (
+        "How much of the estate has been contracted or billed to "
+        "customers — not what is built, and not what those customers "
+        "then draw."),
 }
 
 # Tentative matches are rendered as what they are. The matches file says

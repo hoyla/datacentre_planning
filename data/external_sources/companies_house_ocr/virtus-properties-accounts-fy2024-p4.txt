@@ -1,0 +1,58 @@
+VIRTUS Data Centres Properties Limited
+
+Strategic report
+
+for the year ended 31 December 2024
+
+The directors present their Strategic report on VIRTUS Data Centres Properties Limited ("the Company") and its
+subsidiaries (the "Group" or "VIRTUS") for the year ended 31 December 2024.
+
+Principal activities
+
+VIRTUS designs, builds, operates and maintains carrier neutral data centres in the United Kingdom and the Group’s
+principal business is the provision of reliable, resilient and responsible digital infrastructure to enable delivery of colocation
+services within these facilities to our customers.
+
+Strategy
+
+VIRTUS has a guiding vision to be a trusted global leader through being different by design. We aim to be the data centre
+provider that customers want to come to, a business that customers want to work with and a company that people want to
+work for, and seek to achieve this by delivering outstanding safety, sustainability and customer propositions every day
+through our expanding portfolio of data centre sites in the UK.
+
+Business review
+
+During 2024 UK sales have continued to grow across the core sectors of cloud services, education and enterprise,
+consistent with the ongoing and increasing demand in all segments of modern society for digital services and their
+supporting infrastructure. No new sites went live during 2024 but an additional 6. 3MW at our LONDON7 site and
+3.4MW at LONDON11 started billing during the year.
+
+At the end of 2024, VIRTUS had a portfolio of 11 live sites that are 98% contracted to customers (2023: 98%), including a
+significant proportion occupied by major hyperscale customers, Our two development sites that are nearing completion -
+LONDON(12 at Slough and LONDON 14 at Stockley Park - add a further 43.0MW of sellable capacity, with discussions with
+major potential customers for those sites well advanced as at the end of the year.
+
+In the UK, 181.8MW of the total design capacity was contracted to customers, with 179.8MW billable to customers as of
+the year-end (2023: 180.7MW contracted and 170.5MW billable).
+
+Group revenue in 2024 was £486.2m (2023: £359.0m) representing an increase of 35% on 2023. This was driven primarily
+by growth in power revenue, up 81% to £258.5m (2023: £142.5m) due to significantly higher power prices in the first three
+quarters of 2024 compared to the prior year which are passed through to customers, plus higher power draw from both
+new and existing customer deployments. These higher input energy costs reduced subsequently from the start of Q4 2024
+in line with the wider energy market and hence power input costs and billings to customers have been iower despite the
+actual volumes of power being drawn remaining stable. Underlying colocation revenue also grew by 9% to £209.1m
+(2023: £192.7m) driven by a 8.7MW increase in billable capacity across existing sites during the year, in particular at
+LONDON7 and LONDON11.
+
+The business made an operating profit of £45.2m in 2024, compared to £50.8m in 2023, the decrease being due primarily
+to a higher goodwill impairment charge in 2024. The Group's result for the financial year was a net profit of £9.8m (2023:
+net loss of £2.9m).
+
+During 2024, the Group funded its ongoing site development and operating activities through drawdowns against debt
+facilities and utilisation of cash flow generated from operations.
+
+The Group made a scheduled debt repayment on its main facility of £10.0m on 31 December 2024 (2023: £7.5m), reducing
+the remaining facility size to £1,135.3m. Of this, £941.3m was drawn and £194.0m remained available to draw at the end
+of 2024, with a total of £231.1m drawn down during the year to fund ongoing site development.
+
+The balance of cash on hand at 31 December 2024 was £35.9m (2023: £32.0m).

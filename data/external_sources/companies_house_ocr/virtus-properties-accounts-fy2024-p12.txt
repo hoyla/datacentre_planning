@@ -1,0 +1,52 @@
+VIRTUS Data Centres Properties Limited
+
+Directors’ report
+
+for the year ended 31 December 2024 (continued)
+Environmental reporting (continued)
+
+Streamlined Energy & Carbon Reporting (SECR) (continued)
+
+VIRTUS is dedicated to achieving net zero emissions by the year 2030 for all our reportable activities, in direct support of
+the UK Government's ‘Path to Net Zero by 2050’ and climate change commitments.
+
+For the year ended 31 December 2024, the quantity of total emissions by the Group was 18,066.5 tonnes of carbon dioxide
+equivalent (CO2e). We have used the GHG Protocol Corporate Accounting and Reporting standard (revised edition) and
+emission factors from the UK government’s GHG Conversion Factors for Group Reporting to calculate the below
+disclosures. The standard requires a statement of relevant intensity ratios, which are an expression of the quantity of
+emissions in relation to a quantifiable factor of the business activity.
+
+GHG emissions data for year ended 31 December 2024
+(figures in tonnes of COze)
+
+2024 2023
+
+Mandatory reporting
+Scope 1 - consumption of gas oil/natural gas and HVAC emissions 1,488.9 1,073.5
+Scope 2 - consumption of electricity by site processes/systems - -
+1,488.9 1,073.5
+
+Optional reporting
+Scope 3 - consumption of electricity in transmission/ distribution; and 16,577.6 13,374.9
+business travel
+16,577.6 13,374.9
+Total emissions for year 18,066.5 14,448.4
+
+Energy consumption by site processes and systems used to calculate emissions in 2024 was 233,133 MWh (2023: 207,939
+MWh). Through our commitment to secure and procure 100% renewable, non-combusted energy for our data centres,
+VIRTUS has achieved 100% withdrawal of our Scope 2 emissions (barring transmission and distribution losses) related to
+service provision to our Customers and 99% removal of our total GHG emissions inventory. Scope 2 emissions are therefore
+reported as nil.
+
+Intensity ratios (tonnes of CO2e per unit)
+
+2024 2023
+Ratio of carbon emissions to average installed kW of IT load (tonnes CO2e / 0.10 0.10
+kW)
+Ratio of carbon emissions to average billed KW of IT load (tonnes CO2e / kW) 0.10 0.09
+
+VIRTUS will continue to assess its sustainability and usage metrics in order to set annual goals that promote continued
+reduction in GHG emissions. We understand that 100% sustainability cannot in practice be attained, however VIRTUS is
+committed to closing the gap as much as is practicably possible.
+
+10
