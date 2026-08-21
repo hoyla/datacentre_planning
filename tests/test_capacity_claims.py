@@ -207,7 +207,8 @@ def test_every_schema_quantity_has_a_label():
     schema_vocab = {
         "it_load", "grid_connection", "total_site", "onsite_generation",
         "cooling", "energy_storage", "thermal_input",
-        "built_capacity", "metered_consumption", "announced_capacity"}
+        "built_capacity", "metered_consumption", "announced_capacity",
+        "let_capacity"}
     assert set(cc.QUANTITY_LABELS) == schema_vocab
 
 
@@ -229,7 +230,7 @@ def test_every_external_quantity_has_a_caveat():
     """Any quantity that can reach the indicators panel must carry a line
     saying what it is — a new source type must not arrive silently."""
     external = {"grid_connection", "built_capacity", "announced_capacity",
-                "metered_consumption"}
+                "metered_consumption", "let_capacity"}
     assert external <= set(cc.QUANTITY_CAVEATS)
     assert set(cc.QUANTITY_CAVEATS) <= set(cc.QUANTITY_LABELS)
 

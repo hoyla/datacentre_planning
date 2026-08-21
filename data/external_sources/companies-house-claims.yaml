@@ -8,14 +8,26 @@
 # (companies_house_ocr/) so the transcription can be re-checked cheaply and
 # a test can assert the figures still appear on the page they cite.
 #
-# What generalises and what does not, established 2026-08-20 by pulling the
-# latest full accounts for six other operators (Virtus, Kao, Yondr, Vantage,
-# Global Switch, CloudHQ): **per-site megawatts are an Ark peculiarity.**
-# None of the others states a capacity figure of any kind. Ark discloses it
-# because Ark is a UK-only company whose whole business is four UK campuses.
-# SECR energy reporting is the part that is statutory, and it produces
-# company totals, never site figures — so consumption claims here are
-# deliberately left unmatched to any site.
+# What generalises and what does not, established 2026-08-20 and corrected
+# 2026-08-21. The first pass pulled the latest accounts for six operators
+# and concluded that per-site megawatts are an Ark peculiarity. That was
+# too strong, and the fault was mine: for VIRTUS I read the operating
+# company, 06762600, which states no capacity. The *property* company,
+# 09840065, reports how much of the estate is contracted and billable to
+# customers, and gives per-site increments — 6.3MW added at LONDON7 and
+# 3.4MW at LONDON11 during 2024. Checking one entity of a group and
+# generalising to the group is exactly the error the corpus's own
+# site-fragmentation problems keep teaching.
+#
+# The narrower claim survives: no operator surveyed publishes a per-site
+# *total* except Ark, and the statutory part is SECR energy reporting,
+# which produces company totals only. Consumption claims here are
+# therefore never matched to a site.
+#
+# Two Virtus filings made up to 31 December 2025 were filed on 19 and 20
+# August 2026 and their images were still unavailable from the document
+# API on 21 August. Worth retrying: they should carry the same
+# disclosures a year newer.
 
 sources:
   - key: ark_fy2025
@@ -41,6 +53,19 @@ sources:
     sha256: 275f71fd02d9f1aafa51a51e43a7242bd9118bd81ccfc4205e1325c2517a99b8
     pages: 51
     scanned: true
+
+  - key: virtus_props_fy2024
+    company_name: VIRTUS DATA CENTRES PROPERTIES LIMITED
+    company_number: "09840065"
+    filing: Full accounts made up to 31 December 2024
+    filed: 2025-08-26
+    ch_document_id: (via filing history; see url)
+    url: https://find-and-update.company-information.service.gov.uk/company/09840065/filing-history
+    local_pdf: virtus-properties-accounts-fy2024.pdf
+    sha256: 2d744838314fcb667e5e3d8c333ba1ab0f5099016f963a301eb363aa38695c2e
+    pages: 94
+    scanned: true
+
 
 claims:
   # --- Ark, per-campus built capacity (strategic report, page 4) ---------
@@ -197,6 +222,63 @@ claims:
       Total electricity (MWh) 121,962.26
 
 # Hand-adjudicated matches to sites, same discipline as the NESO register.
+  # --- VIRTUS: capacity sold, and the energy actually drawn -------------
+  - source: virtus_props_fy2024
+    claim_name: VIRTUS UK portfolio — contracted to customers
+    quantity_type: let_capacity
+    value: 181.8
+    unit: MW
+    stage: contracted, at 31 December 2024
+    as_at: 2024-12-31
+    locator: page 4
+    company_level: true
+    quote: >-
+      In the UK, 181.8MW of the total design capacity was contracted to
+      customers
+    note: >-
+      A quantity no other source in this store reports: not what is
+      built, not what is marketed, not what the grid agreed to supply,
+      but how much of the estate has been let. The prior year is given
+      as 180.7MW contracted.
+
+  - source: virtus_props_fy2024
+    claim_name: VIRTUS UK portfolio — billable to customers
+    quantity_type: let_capacity
+    value: 179.8
+    unit: MW
+    stage: billable, at 31 December 2024
+    as_at: 2024-12-31
+    locator: page 4
+    company_level: true
+    quote: with 179.8MW billable to customers as of
+    note: >-
+      Prior year 170.5MW billable. Read against the same accounts'
+      energy figure this is the sharpest utilisation evidence in the
+      store: 233,133 MWh over 2024's 8,784 hours is an average draw of
+      about 26.5 MW against 179.8 MW of capacity customers were being
+      billed for — roughly 15%. Ark's own accounts give about 21% of
+      built capacity, and UK Power Networks' metering of around 100 real
+      data centres a median of 18.1%. Three independent sources, one
+      band.
+
+  - source: virtus_props_fy2024
+    claim_name: VIRTUS Group — energy consumption
+    quantity_type: metered_consumption
+    value: 233133
+    unit: MWh
+    stage: calendar year 2024
+    as_at: 2024-12-31
+    locator: page 12
+    company_level: true
+    quote: >-
+      Energy consumption by site processes and systems used to calculate
+      emissions in 2024 was 233,133 MWh
+    note: >-
+      Prior year 207,939 MWh. Group-wide and not attributable to any one
+      site; VIRTUS reports Scope 2 as nil on a 100% renewable
+      procurement basis, so the megawatt-hours are the useful figure
+      here rather than the emissions.
+
 matches:
   - claim_name: Cody Park
     site_id: 14
