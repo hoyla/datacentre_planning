@@ -68,6 +68,17 @@ TABLES: dict[str, str] = {
                cl.value_mw, cl.stage, cl.as_at,
                cl.attrs->>'connection_point' AS connection_point,
                cl.attrs->>'existing_connection_date' AS connection_date,
+               -- Who published it, what they called it, and the span it
+               -- was read from. The reader's Operators view and the
+               -- workbook's two operator sheets are both built from
+               -- these four; without them the same analysis cannot be
+               -- reproduced here, which would make this file a narrower
+               -- view of the store than the artefacts built on it.
+               coalesce(cl.attrs->>'operator',
+                        cl.attrs->>'company_name') AS published_by,
+               cl.attrs->>'company_number' AS company_number,
+               cl.attrs->>'operator_term' AS published_as,
+               cl.attrs->>'quote' AS source_quote,
                cl.source_url, cl.source_locator, cl.inserted_at
         FROM capacity_claims cl""",
     "capacity_claim_matches": """
@@ -320,16 +331,29 @@ def main() -> None:
         ("verdict_note", "triage_verdicts is append-only and multi-rubric; use the "
                          "latest_verdict view for one row per application per rubric. "
                          "model_input is exactly what the model saw."),
-        ("capacity_claims_note", "External figures as their source states them "
-                         "(currently NESO's Existing Agreements Register: "
-                         "contracted grid connection capacity, not IT load or "
-                         "built capacity or observed draw). Never join value_mw "
-                         "onto a site's own power columns; the bridge is "
-                         "capacity_claim_matches, whose confidence tier "
-                         "('tentative' is a lead, not an attribution) and "
-                         "written evidence travel with every match. Matches "
-                         "with retired_at set are withdrawn assertions kept "
-                         "as history."),
+        ("capacity_claims_note", "External figures as their source states "
+                         "them, from three sources with different standing: "
+                         "NESO's Existing Agreements Register (contracted "
+                         "grid connection capacity), accounts filed at "
+                         "Companies House (built capacity and metered "
+                         "consumption, audited), and operators' own websites "
+                         "(marketing material, the weakest of the three). "
+                         "source_key says which. quantity_type says what a "
+                         "figure measures and is never elided: a contracted "
+                         "connection, an IT load, a built capacity and an "
+                         "observed draw are four different quantities and "
+                         "must not be compared as one. published_by, "
+                         "published_as and source_quote carry who published "
+                         "the figure, the term or data key they published it "
+                         "under, and the verbatim span it was read from — "
+                         "everything needed to rebuild the operator "
+                         "disclosure comparison the reader and the workbook "
+                         "show. Never join value_mw onto a site's own power "
+                         "columns; the bridge is capacity_claim_matches, "
+                         "whose confidence tier ('tentative' is a lead, not "
+                         "an attribution) and written evidence travel with "
+                         "every match. Matches with retired_at set are "
+                         "withdrawn assertions kept as history."),
     ])
     con.close()
 

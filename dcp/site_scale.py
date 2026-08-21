@@ -276,6 +276,52 @@ FLOORSPACE_SIGNAL_TYPES = (
 )
 
 
+def load_site_floorspace(conn) -> dict[str, float]:
+    """Building floorspace per site key, as the median of what is stated.
+
+    Lives here rather than in an exporter because two artefacts feed it
+    to `power_estimate` and they must not disagree about what a site's
+    floor area is. They did: the reader passed None from the day it was
+    written, so 43 sites carried an estimated figure in the workbook and
+    read "no capacity disclosed" in the web view, while the data
+    dictionary both artefacts render described the estimate as though
+    both produced it.
+
+    The median, not the maximum: a site's documents state floorspace
+    many times over — per building, per phase, gross and net — and the
+    largest is usually the whole development quoted in an early
+    document. The bounds drop obvious nonsense at both ends; the signal
+    types that carry land parcels are excluded upstream, in
+    FLOORSPACE_SIGNAL_TYPES.
+    """
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT s.site_key,
+                   percentile_cont(0.5) WITHIN GROUP (ORDER BY f.value_number)
+            FROM findings f
+            JOIN site_members sm ON sm.application_id = f.application_id
+                 AND sm.retired_at IS NULL
+            JOIN sites s ON s.id = sm.site_id AND s.retired_at IS NULL
+            WHERE f.value_number IS NOT NULL
+              AND f.value_number BETWEEN 500 AND 400000
+              AND lower(f.value_unit) IN ('sqm','m2','sq m','square metres',
+                                          'square meters')
+              AND f.signal_type = ANY(%s)
+            GROUP BY s.site_key""", (list(FLOORSPACE_SIGNAL_TYPES),))
+        return {k: float(v) for k, v in cur.fetchall() if v}
+
+
+# The bases that rest on something a person wrote down about this
+# development — three disclosures and one inference from plant that is
+# sized to the load. "Estimated from floorspace" is deliberately absent:
+# it is this project's own arithmetic, and it does not belong in a count
+# compared against a register of contracted connections. Both artefacts
+# read this tuple, because they used to keep the distinction in two
+# places and only one of them applied it.
+DISCLOSED_BASES = ("Disclosed IT load", "Disclosed total site demand",
+                   "Grid connection capacity", "Standby generation capacity")
+
+
 @dataclass(frozen=True)
 class PowerEstimate:
     """A rankable figure plus everything needed to read it honestly."""

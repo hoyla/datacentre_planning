@@ -1349,6 +1349,11 @@ def main() -> int:
         # to a reporter run off both, and they are different numbers on
         # purpose — see site_profile.load_coverage_detail.
         cov_detail = site_profile.load_coverage_detail(conn)
+        # The same loader the workbook uses. Passing None here was the
+        # reason 43 sites read "no capacity disclosed" in this view and
+        # carried a floor-area estimate in the workbook — one dataset
+        # answering "how big is this?" two ways.
+        site_floorspace = scale.load_site_floorspace(conn)
 
     apps_by_site = defaultdict(list)
     for r in app_rows:
@@ -1445,7 +1450,8 @@ def main() -> int:
         p_read = _cd.get("prose_read", read)
         apps = apps_by_site.get(key, [])
         est = scale.power_estimate(it_load_mw=it, total_site_mw=tot, grid_mw=grid,
-                                   generation_mw=gen, floorspace_sqm=None,
+                                   generation_mw=gen,
+                                   floorspace_sqm=site_floorspace.get(key),
                                    has_documents=bool(docs),
                                    prose_held=p_held, prose_read=p_read)
         cap_key, cap_label = site_profile.capacity_status(
@@ -1454,7 +1460,13 @@ def main() -> int:
         known = cap_key not in NOT_YET_KNOWN
         is_prov, prov_note = site_profile.provisional(p_held, p_read)
         if est.value_mw:
-            site_mw_values.append(est.value_mw)
+            # Only figures somebody stated. A floor-area estimate is
+            # displayed on the row, where its basis sits beside it, but
+            # it is kept out of the counts compared against Ofgem's
+            # connection queue — the workbook draws the same line, and
+            # the reason is in scale.DISCLOSED_BASES.
+            if est.basis in scale.DISCLOSED_BASES:
+                site_mw_values.append(est.value_mw)
             power_basis_counts[est.basis] = \
                 power_basis_counts.get(est.basis, 0) + 1
         addr = max((a[15] or "" for a in apps), key=len, default="") or \
@@ -2470,12 +2482,14 @@ def main() -> int:
  <table class="stats queue"><thead><tr><th scope="col">MW band</th>
   <th scope="col">Queue: projects</th><th scope="col">Queue: MW</th>
   <th scope="col">Queue: share</th>
-  <th scope="col">Sites here with a figure</th></tr></thead>
+  <th scope="col">Sites here: disclosed or plant-derived</th></tr></thead>
   <tbody>{queue_rows_html}</tbody></table>
  <p class="m">The queue columns are Ofgem's Table 1 — contracted connection capacity, which
  is headroom rather than consumption. This release's column counts sites whose documents
  yield a disclosed IT load, total site demand, grid connection or standby generation figure,
- banded the same way. The two universes overlap but neither contains the other: the queue
+ banded the same way. The floor-area estimates this release shows on 43 site rows are left
+ out of it: they are this project's own arithmetic, and they do not belong in a count set
+ against a register of figures developers contracted for. The two universes overlap but neither contains the other: the queue
  includes projects that have never filed a planning application — Ofgem's consultation
  argues much of it never will — and this release includes the built estate back to 2015.
  The comparison shows what each side can see, not a shortfall to be subtracted. The
