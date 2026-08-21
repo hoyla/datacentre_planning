@@ -77,6 +77,10 @@ class OperatorRow:
     sites: set = field(default_factory=set)
     by_audience: dict = field(default_factory=dict)
     terms: set = field(default_factory=set)
+    # (site_key, display_name) for every site in `sites`, so a consumer
+    # can name and link them rather than printing a bare count. A count
+    # on its own is an assertion; the list is the evidence for it.
+    site_names: list = field(default_factory=list)
 
     @property
     def audiences(self) -> int:
@@ -90,22 +94,27 @@ def load_rows(cur) -> list[OperatorRow]:
                coalesce(cl.attrs->>'operator', cl.attrs->>'company_name'),
                cl.claim_name, cl.value_original, cl.unit_original,
                cl.quantity_type, cl.attrs->>'operator_term',
-               m.site_id
+               m.site_id, s.site_key, s.display_name, cl.source_url,
+               cl.source_locator, m.confidence, cl.stage,
+               cl.attrs->>'quote', m.evidence, m.method, cl.as_at
         FROM capacity_claims cl
         LEFT JOIN capacity_claim_matches m
                ON m.claim_id = cl.id AND m.retired_at IS NULL
+        LEFT JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
         ORDER BY cl.id""")
     raw = cur.fetchall()
 
     # Which operator owns which site, from the claims that name one.
     site_operator: dict[int, str] = {}
-    for src, who, _n, _v, _u, _q, _t, site_id in raw:
+    for src, who, _n, _v, _u, _q, _t, site_id, *_rest in raw:
         if site_id and who:
             site_operator.setdefault(
                 site_id, COMPANY_TO_OPERATOR.get(who, who))
 
     rows: dict[str, OperatorRow] = {}
-    for src, who, name, value, unit, qty, term, site_id in raw:
+    for (src, who, name, value, unit, qty, term, site_id, site_key,
+         site_name, source_url, locator, confidence, stage, quote,
+         evidence, method, as_at) in raw:
         operator = COMPANY_TO_OPERATOR.get(who, who) if who else None
         # An unattributed register row belongs to whoever else claims the
         # site it matched. Without a match it belongs to nobody, which is
@@ -120,6 +129,11 @@ def load_rows(cur) -> list[OperatorRow]:
             row.by_audience.setdefault(audience, []).append({
                 "claim_name": name, "value": value, "unit": unit,
                 "quantity_type": qty, "term": term, "site_id": site_id,
+                "site_key": site_key, "site_name": site_name,
+                "source_url": source_url, "locator": locator,
+                "confidence": confidence, "stage": stage,
+                "source_key": src, "quote": quote, "evidence": evidence,
+                "method": method, "as_at": as_at,
             })
         if site_id:
             row.sites.add(site_id)
@@ -136,6 +150,13 @@ def load_rows(cur) -> list[OperatorRow]:
         told = [p for s in row.sites for p in planning.get(s, [])]
         if told:
             row.by_audience["planning"] = told
+        meta = {}
+        for claims in row.by_audience.values():
+            for c in claims:
+                if c.get("site_id") and c.get("site_key"):
+                    meta.setdefault(c["site_id"],
+                                    (c["site_key"], c["site_name"]))
+        row.site_names = [meta[s] for s in sorted(row.sites) if s in meta]
     return sorted(rows.values(),
                   key=lambda r: (-r.audiences, -len(r.sites), r.operator))
 
@@ -153,11 +174,16 @@ def load_planning_figures(cur, site_ids) -> dict[int, list[dict]]:
         return {}
     cur.execute("""
         SELECT DISTINCT ON (sm.site_id, pa.quantity_type)
-               sm.site_id, pa.quantity_type, pa.value_mw, a.application_ref
+               sm.site_id, pa.quantity_type, pa.value_mw, a.application_ref,
+               s.site_key, s.display_name, a.url,
+               d.url, f.evidence_text, f.evidence_page
         FROM power_adjudication pa
         JOIN applications a ON a.id = pa.application_id
+        LEFT JOIN findings f ON f.id = pa.finding_id
+        LEFT JOIN documents d ON d.id = pa.document_id
         JOIN site_members sm ON sm.application_id = a.id
                             AND sm.retired_at IS NULL
+        JOIN sites s ON s.id = sm.site_id AND s.retired_at IS NULL
         WHERE sm.site_id = ANY(%s)
           AND pa.verdict = 'site_capacity'
           AND pa.value_mw IS NOT NULL
@@ -165,11 +191,22 @@ def load_planning_figures(cur, site_ids) -> dict[int, list[dict]]:
         ORDER BY sm.site_id, pa.quantity_type, pa.value_mw DESC""",
                 (list(site_ids),))
     out: dict[int, list[dict]] = {}
-    for site_id, qty, mw, ref in cur.fetchall():
+    for (site_id, qty, mw, ref, site_key, site_name, url,
+         doc_url, quote, page) in cur.fetchall():
         out.setdefault(site_id, []).append({
             "audience": "planning", "source_key": "planning_documents",
             "claim_name": ref, "value": mw, "unit": "MW",
             "quantity_type": qty, "term": None, "confidence": None,
+            "site_id": site_id, "site_key": site_key, "site_name": site_name,
+            # The document the figure was read out of, falling back to the
+            # application on the portal when the adjudication carries no
+            # document — a link to the file itself beats a link to the
+            # folder it is in, but either beats an assertion.
+            "source_url": (doc_url if (doc_url or "").startswith("http")
+                           else url),
+            "application_url": url,
+            "locator": f"page {page}" if page else None,
+            "quote": quote, "stage": None,
         })
     return out
 
@@ -183,10 +220,11 @@ def load_divergences(cur) -> list[dict]:
     outlier beside megawatts.
     """
     cur.execute("""
-        SELECT s.id, s.display_name,
+        SELECT s.id, s.display_name, s.site_key,
                cl.source_key, cl.claim_name, cl.value_original,
                cl.unit_original, cl.quantity_type,
-               cl.attrs->>'operator_term', m.confidence
+               cl.attrs->>'operator_term', m.confidence,
+               cl.source_url, cl.source_locator, cl.attrs->>'quote'
         FROM capacity_claim_matches m
         JOIN capacity_claims cl ON cl.id = m.claim_id
         JOIN sites s ON s.id = m.site_id
@@ -194,14 +232,16 @@ def load_divergences(cur) -> list[dict]:
           AND cl.quantity_type <> 'metered_consumption'
         ORDER BY s.id, cl.source_key""")
     by_site: dict[int, dict] = {}
-    for (sid, name, src, claim, value, unit, qty, term, conf) in cur.fetchall():
+    for (sid, name, skey, src, claim, value, unit, qty, term,
+         conf, source_url, locator, quote) in cur.fetchall():
         d = by_site.setdefault(sid, {"site_id": sid, "site": name,
-                                     "claims": []})
+                                     "site_key": skey, "claims": []})
         d["claims"].append({
             "audience": SOURCE_TO_AUDIENCE.get(src, src),
             "source_key": src, "claim_name": claim, "value": value,
             "unit": unit, "quantity_type": qty, "term": term,
-            "confidence": conf,
+            "confidence": conf, "source_url": source_url,
+            "locator": locator, "quote": quote,
         })
     planning = load_planning_figures(cur, list(by_site))
     for sid, d in by_site.items():
