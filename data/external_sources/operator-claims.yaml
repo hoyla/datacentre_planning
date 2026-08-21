@@ -330,7 +330,6 @@ claims:
     quantity_type: announced_capacity
     value: 8.8
     unit: MW
-    term: (building figure, status Operational)
     stage: operational
     quote: KLON-01 (8.8MW Operational)
 
@@ -340,7 +339,6 @@ claims:
     quantity_type: announced_capacity
     value: 8.8
     unit: MW
-    term: (building figure, status Operational)
     stage: operational
     quote: KLON-02 (8.8MW Operational)
 
@@ -350,7 +348,6 @@ claims:
     quantity_type: announced_capacity
     value: 17.6
     unit: MW
-    term: (building figure, status Under Development)
     stage: under development
     quote: KLON-03 (17.6MW Under Development)
 
@@ -360,7 +357,6 @@ claims:
     quantity_type: announced_capacity
     value: 36
     unit: MW
-    term: (building figure, status Planned)
     stage: planned
     quote: KLON-04 (36MW Planned)
 
@@ -370,7 +366,6 @@ claims:
     quantity_type: announced_capacity
     value: 20
     unit: MW
-    term: (building figure, status Operational)
     stage: operational
     quote: KLON-06 (20MW Operational)
 

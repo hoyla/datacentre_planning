@@ -314,7 +314,7 @@ def load_operator_claims(path: Path = OPERATOR_CLAIMS_PATH) -> list[FiledClaim]:
                 # The operator's own word for the quantity, kept because
                 # "Total Capacity", "Total compute capacity" and "IT load"
                 # are not synonyms and the difference is the story.
-                "operator_term": c["term"],
+                "operator_term": c.get("term"),
                 "note": c.get("note"),
                 "quote": c["quote"].strip(),
                 "snapshot": c["snapshot"],
