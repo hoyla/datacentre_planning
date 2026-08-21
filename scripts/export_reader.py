@@ -371,6 +371,12 @@ table.stats.queue{max-width:620px}
 table.stats.queue td.n{width:105px}
 table.stats.queue th[scope=col]{vertical-align:bottom}
 table.stats tr.lead th[scope=row]{font-weight:650}
+/* Told / not told. The dash has to read as "nothing published here",
+   not as a missing value we failed to collect, so it is muted rather
+   than absent and the filled cell says how many figures. */
+table.stats td.yes{color:var(--ok);font-weight:600}
+table.stats td.yes .q{color:var(--mut);font-weight:400;margin-left:4px}
+table.stats td.none{color:var(--mut)}
 table.stats td.n{font-variant-numeric:tabular-nums;text-align:right;width:74px;
   white-space:nowrap}
 table.stats td.help{width:52%}
@@ -980,6 +986,7 @@ def main() -> int:
     from dcp import capacity_claims as ccl
     from dcp import consumption_context as cc
     from dcp import external_aggregates as extagg
+    from dcp import operator_disclosure as odis
     from dcp import origin as origin_mod
     from dcp import proposal as prop
     from dcp import signals as sig
@@ -1957,6 +1964,87 @@ def main() -> int:
     _d_towerhamlets = round(cc.change_pct(desnz["Tower Hamlets"]))
     _d_hertsmere = round(cc.change_pct(desnz["Hertsmere"]))
 
+    # ---- Operators: the same companies, told to four audiences ----------
+    with db.cursor(dict_rows=False) as _cur:
+        op_rows = odis.load_rows(_cur)
+        op_divs = odis.load_divergences(_cur)
+    _AUD = [(k, lbl) for k, lbl, _ in odis.AUDIENCES]
+
+    def _aud_cell(row, key):
+        got = row.by_audience.get(key) or []
+        if not got:
+            return '<td class="none">—</td>'
+        return (f'<td class="yes">{len(got)}'
+                f'<span class="q">figure{"" if len(got) == 1 else "s"}</span></td>')
+
+    _op_body = "".join(
+        f'<tr><td><strong>{esc(r.operator)}</strong></td>'
+        f'<td class="n">{r.audiences}</td>'
+        f'<td class="n">{len(r.sites) or "—"}</td>'
+        + "".join(_aud_cell(r, k) for k, _ in _AUD)
+        + f'<td class="help">{esc("; ".join(sorted(t for t in r.terms if t)) or "—")}</td>'
+          f'</tr>'
+        for r in op_rows)
+
+    # Same quantity, two audiences: the only comparison where a gap is
+    # unambiguously a gap rather than two different measurements.
+    _lfl = [(d, q) for d in op_divs for q in d.get("like_for_like", [])]
+    _lfl.sort(key=lambda x: -x[1]["ratio"])
+    def _lfl_values(values):
+        return "".join(
+            f'<div>{float(c["value"]):,.4g} MW '
+            f'<span class="q">'
+            f'{esc(dict(_AUD).get(c["audience"], c["audience"]))}</span></div>'
+            for c in values)
+
+    _lfl_rows = "".join(
+        f'<tr><td>{esc(trim(d["site"], 46))}</td>'
+        f'<td>{esc(ccl.QUANTITY_LABELS.get(q["quantity_type"], q["quantity_type"]))}</td>'
+        f'<td>{_lfl_values(q["values"])}</td>'
+        f'<td class="n">{q["ratio"]:.2f}&times;</td></tr>'
+        for d, q in _lfl)
+
+    operators_html = f"""
+ <p class="lede">A data centre's size is stated to at least four different audiences: the
+ planning authority, the grid operator, the auditors and its customers. This page puts
+ those figures beside each other, one row per operator.</p>
+ <div class="banner"><b>Read this as a description, not a scoreboard.</b>
+  {esc(odis.FAIRNESS_NOTE)}</div>
+ <h3>What each operator publishes, and to whom</h3>
+ <table class="stats"><thead><tr><th scope="col">Operator</th>
+  <th scope="col">Audiences</th><th scope="col">Sites here</th>
+  {"".join(f'<th scope="col">{esc(lbl)}</th>' for _, lbl in _AUD)}
+  <th scope="col">Terms it uses for capacity</th></tr></thead>
+  <tbody>{_op_body}</tbody></table>
+ <p class="help">{esc(odis.METHOD_NOTE)}</p>
+
+ <h3>The same quantity, told to two audiences</h3>
+ <p>Most of the differences between these figures are not disagreements: IT load is
+ supposed to be smaller than total site power, and a contracted grid connection is a
+ different thing again. The comparison below is the narrow one where a gap really is a
+ gap — one quantity, one site, more than one audience.</p>
+ {f'<table class="stats"><thead><tr><th scope="col">Site</th><th scope="col">Quantity</th><th scope="col">Figures on record</th><th scope="col">Ratio</th></tr></thead><tbody>{_lfl_rows}</tbody></table>' if _lfl_rows else '<p class="help">None currently.</p>'}
+ <p class="help">A ratio of 1.00× is corroboration, not coincidence: two audiences given
+ the same number by the same developer, arrived at independently by this project.</p>
+
+ <h3>Every site whose figures reached more than one audience</h3>
+ <p class="help">{len(op_divs)} sites. Figures are shown in the unit each source printed,
+ grouped by who was told. Open the site in the Sites tab for the evidence behind each
+ match.</p>
+ {"".join(
+   f'<div class="box" style="margin-bottom:12px"><h4>{esc(trim(d["site"], 70))}</h4>'
+   + "".join(
+       f'<p style="margin:0 0 4px"><strong>{float(c["value"]):,.10g} {esc(c["unit"])}</strong> '
+       f'{esc(ccl.QUANTITY_LABELS.get(c["quantity_type"], c["quantity_type"]))}'
+       f' <span class="q">{esc(dict(_AUD).get(c["audience"], c["audience"]))}'
+       + (f' · {esc(c["term"])}' if c["term"] else "")
+       + (f' · {esc(c["confidence"])} match' if c["confidence"] else "")
+       + f'</span></p>'
+       for c in d["claims"])
+   + '</div>'
+   for d in op_divs)}
+"""
+
     methodology_html = f"""
  <p class="lede">How this dataset was built, what has been measured about its accuracy, and
  where its edges are. Every figure below is generated with the page, so it describes this
@@ -2288,6 +2376,7 @@ def main() -> int:
  <button id="tab-apps" aria-selected="false" onclick="show('apps')">Applications<span class="pill">{len(app_rows):,}</span></button>
  <button id="tab-energy" aria-selected="false" onclick="show('energy')">Energy projects<span class="pill">{len(nsip)}</span></button>
  <button id="tab-map" aria-selected="false" onclick="show('map')">Map</button>
+ <button id="tab-operators" aria-selected="false" onclick="show('operators')">Operators<span class="pill">{len(op_rows)}</span></button>
  <button id="tab-method" aria-selected="false" onclick="show('method')">Methodology</button>
  <button id="tab-dict" aria-selected="false" onclick="show('dict')">Data dictionary</button>
  <button id="tab-notes" aria-selected="false" onclick="show('notes')">Assistant's notes</button>
@@ -2555,6 +2644,8 @@ def main() -> int:
  </div>
 </div>
 </section>
+
+<section id="view-operators" class="view"><div class="wrap">{operators_html}</div></section>
 
 <section id="view-method" class="view"><div class="wrap">{methodology_html}</div></section>
 
