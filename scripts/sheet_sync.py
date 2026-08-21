@@ -139,6 +139,16 @@ def reconcile_columns(have: list[str], want: list[str]) -> list[dict]:
     # sideways for nothing; the values write alone fills it.
     if not any(h.strip() for h in have):
         return []
+    # Not every generated tab is a table. External aggregates is a report
+    # — a title in A1, then several small tables down the sheet — so its
+    # "header row" is one heading followed by blanks, padded out to the
+    # width of the widest table below. Reconciling by name asked to
+    # insert five nameless columns, which would have pushed that whole
+    # tab five columns to the right and left the formatting describing
+    # empty space. A column with no name cannot be matched by name, so
+    # the header ends where the names do.
+    want = list(want[:next((i for i, n in enumerate(want)
+                            if not n.strip()), len(want))])
     edits: list[dict] = []
     cur = list(have)
     # Remove what the export no longer produces, right to left so the
