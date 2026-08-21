@@ -181,32 +181,7 @@ matches:
       matched to site 49 on the same reasoning and with the same
       reservations.
 
-  - row: 1080
-    claim_name: RHT2
-    site_id: 97
-    method: place_and_scale
-    confidence: tentative
-    matched_by: hand:claude-fable-5:2026-08-20
-    evidence: >-
-      Register row "RHT2", 57 MW at Rye House GSP, Hoddesdon. Site 97
-      (Xylem Industrial Estate, Bingley Road, Hoddesdon — Broxbourne) is
-      the corpus's only Hoddesdon data-centre scheme, marketed as a
-      "powered and permitted" shell, and its floor-area estimate
-      (~69 MW) is the right order. "RHT2" names nothing; Rye House GSP
-      serves more than one estate. A lead only.
 
-  - row: 1547
-    claim_name: Rye House (Tertiary)
-    site_id: 97
-    method: place_and_scale
-    confidence: tentative
-    matched_by: hand:claude-fable-5:2026-08-20
-    evidence: >-
-      Register row "Rye House (Tertiary)", 57 MW at Rye House 400kV —
-      same capacity, same date and same GSP family as RHT2 (row 1080),
-      read as a related or successive agreement for the same Hoddesdon
-      project, and matched to site 97 on the same reasoning and with the
-      same reservations.
 
   - row: 927
     claim_name: GTR GB2
@@ -256,6 +231,24 @@ matches:
 # Rows examined and deliberately not matched. Reasons recorded so the
 # next adjudicator starts from the nulls, not from zero.
 considered:
+  - rows: [1080, 1547]
+    claim_name: RHT2 / Rye House (Tertiary)
+    reason: >-
+      Matched tentatively to site 97 (3 Bingley Road, Hoddesdon) on
+      2026-08-20 and **retired 2026-08-21**. The match rested on site 97
+      being the only Hoddesdon data centre in this corpus, and that
+      premise turned out to be about the corpus rather than about
+      Hoddesdon: nLighten publishes a second Hoddesdon facility, absent
+      from these records entirely. Nothing else supported it — site 97's
+      documents state no capacity, name no substation and never mention
+      Rye House, and the row names read like network asset references
+      rather than customer projects. Two rows of 57 MW at a Rye House
+      connection point may well belong to a data centre; there is no
+      evidence they belong to this one. What would settle it: a utilities
+      or energy statement in the Broxbourne file for 07/24/0348/F, or a
+      street address for nLighten's Hoddesdon site, which its own page
+      does not give.
+
   - rows: [1508, 722, 764]
     claim_name: Iver 1/2/3 Ark Estates
     reason: >-
