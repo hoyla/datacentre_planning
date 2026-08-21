@@ -65,3 +65,34 @@ partitions:
       - Hillingdon/39704/APP/2025/812
     projects:
       - "12842719"
+
+# Known boundaries still to adjudicate, recorded so the next person
+# starts from the list rather than rediscovering it.
+#
+# Site 61 is not fixed by the partition above; it is one campus less
+# conflated. After the International Trading Estate moved to site 443 it
+# still holds 294 members, dominated by the former Nestlé factory (286
+# applications) and reaching as far as Western International Market,
+# under a display name that reads "NORTH HYDE GARDENS UNION PARK". The
+# name describes one of the campuses it contains.
+#
+# That is not cosmetic. A capacity claim matched to site 61 on
+# 2026-08-21 — Ark's 99 MW for Union Park — was retired precisely
+# because the record is mostly somewhere else, and no claim should
+# attach to site 61 until these are separated. The campuses the subtask
+# identified, each needing its own adjudicated boundary and written
+# evidence:
+#
+#   Union Park / North Hyde Gardens   (Ark)
+#   Former Nestlé factory             (~180 Hillingdon 1331/* applications)
+#   Southall Gas Works / The Straight
+#   Tudor Works                       (Colt London 4 and 5)
+#   Hayes Bridge Retail Park          (Colt London 6-8)
+#   Silverdale Road
+#   Western International Market
+#
+# Everything in the Hayes/Southall corridor is pairwise within 1 km, so
+# no radius separates them: each needs the same treatment the ITE got,
+# which is documentary evidence that a set of applications is one
+# campus. Colt's claims are currently unmatched for the same reason —
+# its own pages name the campus "London Hayes" and no street.
