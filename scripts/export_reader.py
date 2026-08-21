@@ -856,8 +856,15 @@ function sticky(){
   }
 }
 addEventListener('resize', sticky);
+// Read from the DOM, never hand-listed. Two hardcoded arrays of view
+// names — one here and one for the hash router — is one list too many:
+// the Operators tab shipped in 2.2 missing from both, so selecting it
+// switched every view off and none on, and the page went blank. A tab
+// that exists in the markup is a tab, and that is the only definition.
+const VIEWS=[...document.querySelectorAll('section.view')]
+  .map(s=>s.id.replace(/^view-/,''));
 function show(v, quiet){
-  for(const k of ['start','sites','apps','energy','map','method','dict','notes']){
+  for(const k of VIEWS){
     const el=document.getElementById('view-'+k), tb=document.getElementById('tab-'+k);
     if(el) el.classList.toggle('on', k===v);
     if(tb) tb.setAttribute('aria-selected', k===v);
@@ -871,7 +878,9 @@ function show(v, quiet){
   // back button steps between tabs, and a dictionary entry can be linked.
   if(!quiet) history.replaceState(null,'','#'+v);
 }
-const TABS=['start','sites','apps','energy','map','method','dict'];
+// Same source as show(): a view is linkable because it exists, not
+// because someone remembered to add it here.
+const TABS=VIEWS;
 function fromHash(){
   const h=decodeURIComponent(location.hash.replace(/^#/,''));
   if(h.startsWith('dict-')){
