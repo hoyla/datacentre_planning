@@ -147,17 +147,27 @@ def attachments(path: str) -> tuple[str, list[dict]]:
 
 
 def kind_of(title: str) -> str:
-    """Permit or decision document. Both are worth having — the permit
-    carries Schedule 1, the decision document carries the Environment
-    Agency's own account of what it permitted and why — but only the
-    permit is the operative one, so the reader has to be able to tell."""
+    """Which of the three documents an attachment is.
+
+    All three are worth having. The permit carries Schedule 1. A
+    variation notice restates the schedule as amended, so where one
+    exists it is the *current* position and the original permit is
+    history. The decision document carries the Environment Agency's own
+    account of what it permitted and why, and is never the operative
+    text — so the reader has to be able to tell them apart.
+
+    "Pemit" is not a typo here. It is the Environment Agency's typo, in
+    the published title of the VIRTUS Slough Campus attachment, and
+    without it that permit — 31 generators, 180.5 MWth — is classified
+    as "other" and never read.
+    """
     t = title.lower()
     if "decision" in t:
         return "decision"
-    if "permit" in t:
-        return "permit"
     if "variation" in t:
         return "variation"
+    if "permit" in t or "pemit" in t:
+        return "permit"
     return "other"
 
 

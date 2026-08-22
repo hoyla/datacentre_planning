@@ -26,12 +26,12 @@
 #
 # **Several site records hold a whole industrial estate.** Site 23 alone
 # — named "BARCLAYS BANK - DATA CENTRE  SOLAR PV PANELS" — has 35
-# applications spread across the Slough Trading Estate, and eight permits
-# from six different operators fall inside it, totalling 1,249 MWth. It
+# applications spread across the Slough Trading Estate, and nine permits
+# from seven different operators fall inside it, totalling 1,430 MWth. It
 # is the only site record within 4 km of any of them. Attaching any one
 # of those permits to it would assert that Equinix's campus, CyrusOne's,
-# Amazon's, Iron Mountain's and VIRTUS LONDON11 are all the same site.
-# So none of them is attached, and the eight are listed under
+# VIRTUS's, Amazon's, Iron Mountain's and VIRTUS LONDON11 are all the
+# same site. So none of them is attached, and the nine are listed under
 # `considered` instead, where they are evidence for the partitioning work
 # in data/priors/site_partitions.yaml rather than evidence about a site.
 
@@ -99,7 +99,7 @@ matches:
       publication for this permit is titled "RH1 1AX, Digital Realty (UK)
       Limited", which identifies the operator behind the vehicle.
 
-  - claim_name: NTT Global Data Centers UK EMEA Limited, NTT Global Data Centers UK EMEA Limited (EPR/CP3902LV)
+  - claim_name: NTT Dagenham Data Centre (EPR/CP3902LV)
     site_id: 42
     method: name_identity
     confidence: strong
@@ -133,6 +133,38 @@ matches:
       2.1) is worth reading rather than reconciling: they are different
       quantities, and the fleet is sized for redundancy.
 
+  - claim_name: Romford North Data Centre (EPR/FP3630EU)
+    site_id: 408
+    method: address_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-22
+    evidence: >-
+      Green Mountain DC UK Limited holds a permit at RM7 7PN, and site
+      408 is "3 King George Close Romford RM7 7PN" — the same postcode,
+      the only site record within 2 km, and its applications describe the
+      installation the permit describes: "Erection of a rear extension to
+      the existing data centre" and a change of use "to plant and
+      machinery facility ancillary to the" data centre. 113 MWth read
+      from the variation notice, which supersedes the original permit.
+
+  - claim_name: KAO Data Harlow Campus (EPR/WE4588AB)
+    site_id: 117
+    method: name_identity
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-22
+    evidence: >-
+      The variation notice is addressed to "Harlow Operations Limited,
+      KAO Data Harlow Campus, London Road, Harlow CM17 9NA" and heads its
+      pages "KAO Data Harlow Campus"; site 117 is "KAO DATA CAMPUS -
+      KLON-03 - DATA CENTRE", 80 m away, and its applications are for
+      "Four new data centres and security gatehouse" on the South
+      Redevelopment Site of the Harlow Campus. The other Kao record, site
+      34 (Kao Park, Project Nobel), is 2.1 km off. Probable rather than
+      strong for two reasons: the permit states 152.26 MWth as "the total
+      thermal capacity for the campus" while the site record is named for
+      one building of it, and site 117 also holds applications for
+      Harlow Innovation Park, a separate scheme.
+
 # Permits examined and deliberately NOT matched. A tested-and-empty
 # result is not the same thing as an untested one.
 considered:
@@ -145,14 +177,16 @@ considered:
       - Ajax Avenue Datacentre (EPR/YP3935QM)
       - LD11x (EPR/CP3409BH)
       - LON11 Data Centre (EPR/DP3348QS)
+      - Virtus Slough Campus Data Centres (EPR/BP3945QX)
     why: >-
-      All eight fall inside site 23, the only site record on the Slough
-      Trading Estate, which holds 35 applications across at least six
-      operators' campuses. 1,249 MWth of permitted standby plant sits
+      All nine fall inside site 23, the only site record on the Slough
+      Trading Estate, which holds 35 applications across at least seven
+      operators' campuses. 1,430 MWth of permitted standby plant sits
       inside one site record. Matching any one of them would assert an
       identity between campuses that are plainly distinct — Equinix's LD4
       to LD10, CyrusOne London 4/5, Amazon's Buckingham Avenue site, Iron
-      Mountain LON3, VIRTUS LONDON11 and GTR's GB One. Revisit once site
+      Mountain LON3, the VIRTUS Slough campus, VIRTUS LONDON11 and GTR's
+      GB One. Revisit once site
       23 is partitioned; the permits' grid references are the sharpest
       partition evidence available, since each names a campus and gives
       its coordinates.
@@ -202,18 +236,22 @@ considered:
   - claims:
       - LHR11/12 (EPR/YP3329SB)
       - Colt - Powergate (EPR/DP3107LF)
+      - Equinix Powergate (EPR/TP3500PB)
     why: >-
-      Both fall inside site 59, "MICROSOFT DATA CENTRE  BASHLEY ROAD",
+      All three fall inside site 59, "MICROSOFT DATA CENTRE  BASHLEY ROAD",
       which holds 106 applications and whose own addresses are at Chandos
       Road Trading Estate, Park Royal. Vantage's LHR11/12 is at 2 Black
-      Arrow House on that same Chandos Road and Colt's Powergate is 360 m
-      off, so all three are Park Royal neighbours rather than one site.
+      Arrow House on that same Chandos Road; Colt's Powergate is 360 m
+      off on Volt Avenue, and Equinix's Powergate 2 — a further 199 MWth,
+      read from a variation notice — is on the same avenue. Four Park
+      Royal neighbours, one site record.
 
   - claims:
       - Telehouse Docklands Datacentre (EPR/SP3237JU)
       - 240, East India Dock House (EPR/BP3530YR)
       - Brick Lane Data Centre (EPR/QP3434DR)
       - LD8 (EPR/DP3906BE)
+      - Docklands Technical Centre (EPR/EP3507SL)
     why: >-
       Docklands, and the same aggregation problem. Site 5 is named
       "INTERXION - DATA CENTRE" but its applications include Global
@@ -225,6 +263,17 @@ considered:
       schedules 27, "increasing to 145 MWth if the future expansion is
       required", so the permitted headroom is half as much again as the
       installed fleet.
+
+  - claims:
+      - Data Centre Staples Corner (EPR/QP3706LH)
+    why: >-
+      409.36 MWth — 56 generators at 7.31 MWth each — at 14 JVC Business
+      Park, Staples Corner, and the largest permitted fleet in this
+      register outside Didcot and Stockley Park. Site 63 shares the
+      postcode and holds 41 applications at 1-5 JVC Business Park and JVC
+      House, 12 JVC Business Park, but JVC Business Park spans four site
+      records in this corpus and the permit is at number 14. Left for the
+      partitioning.
 
   - claims:
       - Crawley Data Centre Campus (EPR/EP3022ST)
@@ -255,6 +304,7 @@ considered:
       - Swindon Data Centre Back-up Generation Facility (EPR/FP3000LY)
       - London 14 Data Centre (EPR/UP3624SW)
       - London Two (EPR/TP3839QU)
+      - Virtus Data Centres Stockley Park Campus (EPR/AP3903PD)
     why: >-
       No site record describes these. Woking (214 MWth, Digital Realty)
       and Narborough (107.8 MWth, Santander's own data centres) have
@@ -266,4 +316,7 @@ considered:
       National Data Centre record at Old Burderop Hospital, a different
       scheme. VIRTUS LONDON14 and Zenium's "London Two" both sit beside
       site 37, VIRTUS LONDON5 at Unit D Prologis Park — adjacent units on
-      one park, not the same installation.
+      one park, not the same installation. And VIRTUS's Stockley Park
+      campus, 78 generators across four data halls and 470 MWth, has no
+      site record within 2 km at all: the second-largest permitted fleet
+      in this register stands at a campus the corpus does not hold.

@@ -65,9 +65,22 @@ vocabulary or the words "data centre" in the holder or address, *and* an
 activity type authorising combustion plant. 42 of those have a permit
 publication on gov.uk (35 linked from the register's own Document URL
 column, seven more recovered through gov.uk's search API by permit
-number), and 35 of those state a readable total thermal input,
-5,879 MWth in all. The largest is Amazon's Didcot North campus at
-925 MWth across 129 generators.
+number), and every one of the 42 yields a readable total thermal input:
+**7,439 MWth in all**. Of those, 31 state a total that their own
+per-engine breakdown corroborates, four state a total with a breakdown
+that disagrees, four state no total and are summed from the breakdown,
+and three state a total with no breakdown to check it against. Each
+claim carries which of the four it is. The largest is Amazon's Didcot
+North campus at 925 MWth across 129 generators, then VIRTUS Stockley
+Park at 470 and JVC Business Park, Staples Corner, at 409.36.
+
+Thirty-five figures come from an original permit and six from a
+variation notice, which supersedes the permit it varies and is therefore
+the current position wherever one exists. The forty-second is VIRTUS's
+Slough campus, whose attachment gov.uk titles "**Pemit**: Virtus Holdco
+Limited" — the Environment Agency's typo, and worth knowing about
+because classifying documents on the word "permit" alone drops 180.5
+MWth on the floor.
 
 **The register carries no capacity.** Not one column of it. Every
 megawatt figure here comes from the permit PDF, which is why the PDFs
@@ -101,9 +114,11 @@ permit holders are data-centre operators and why, and records the false
 positives a shorter token list produced. The second attaches permits to
 sites, one adjudication at a time with written evidence, and — as
 importantly — records the permits examined and deliberately not
-attached. Eight permits from six operators, 1,249 MWth, fall inside a
+attached. Nine permits from seven operators, 1,430 MWth, fall inside a
 single site record covering the whole Slough Trading Estate; none is
-matched, and the reasons are the partitioning evidence.
+matched, and the reasons are the partitioning evidence. Eight of the 42
+claims are matched and 34 are recorded as considered-and-set-aside; a
+test asserts that no claim is quietly neither.
 
 ## neso-ea-register.xlsx
 

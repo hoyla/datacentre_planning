@@ -170,7 +170,37 @@ def test_every_quote_is_still_on_the_page_it_cites():
 def test_the_batch_validates():
     claims = ea.load_ea_claims()
     assert ea.validate_ea(claims, ea.load_ea_matches()) == []
-    assert len(claims) >= 30
+
+
+def test_claim_count_and_total():
+    """The anchors recorded in data/external_sources/README.md. A
+    silently-replaced snapshot, or a reader that quietly stops matching a
+    sentence shape, moves one of these."""
+    claims = ea.load_ea_claims()
+    assert len(claims) == 42
+    assert round(sum(c.value for c in claims)) == 7439
+    assert max(c.value for c in claims) == 925.0
+
+
+def test_variation_notices_and_the_agencys_typo_are_both_read():
+    """Six figures come from a variation notice, which supersedes the
+    permit it varies. A seventh — VIRTUS Slough, 180.5 MWth — is titled
+    "Pemit" on gov.uk, and classifying on the word "permit" alone loses
+    it."""
+    kinds = {}
+    for c in ea.load_ea_claims():
+        kinds[c.attrs["document_kind"]] = kinds.get(c.attrs["document_kind"],
+                                                    0) + 1
+    assert kinds == {"permit": 35, "variation": 6, "other": 1}
+    slough = next(c for c in ea.load_ea_claims()
+                  if c.attrs["permission_number"] == "EPR/BP3945QX")
+    assert slough.value == 180.5
+
+
+def test_a_variation_says_so_in_its_stage():
+    for c in ea.load_ea_claims():
+        varied = c.stage.endswith(", as varied")
+        assert varied == (c.attrs["document_kind"] == "variation")
 
 
 def test_every_claim_is_matched_or_explicitly_set_aside():

@@ -490,10 +490,18 @@ The aggregated total combustion capacity on site is approximately
 260MWth."
 
 **What landed.** 5,198 register rows → 97 candidates → 42 with a permit
-publication on gov.uk → **35 claims, 5,879 MWth**, of which 27 are
-corroborated by their own per-engine breakdown. Six matched to sites by
-hand. The largest is Amazon's Didcot North campus at 925 MWth across 129
-generators.
+publication on gov.uk → **42 claims, 7,439 MWth**, of which 31 state a
+total their own per-engine breakdown corroborates. Eight matched to
+sites by hand. The largest is Amazon's Didcot North campus at 925 MWth
+across 129 generators, then VIRTUS Stockley Park at 470 and JVC Business
+Park, Staples Corner, at 409.36.
+
+Six of the 42 are read from a variation notice rather than the original
+permit, because a variation supersedes what it varies and is the current
+position. A seventh was nearly lost to a typo that is not ours: gov.uk
+titles the VIRTUS Slough attachment "Pemit: Virtus Holdco Limited", and
+classifying documents on the word "permit" alone dropped 180.5 MWth —
+31 generators on the Slough campus — on the floor.
 
 **Three design decisions worth keeping.**
 
@@ -515,8 +523,9 @@ more like it converts.
 reads these. The Environment Agency writes permits to a template, so
 regex is enough — and where regex is enough, a failure is loud. The
 per-engine ratings are summed and compared against the stated total, and
-the comparison is on the claim: 27 agree, and the eight that do not say
-so. Two near-misses justify the whole apparatus. Ark's Spring Park
+the comparison is on the claim: 31 agree, four disagree, four documents
+state no total and are summed from the breakdown, and three state a
+total with no breakdown to check it against. Each claim says which. Two near-misses justify the whole apparatus. Ark's Spring Park
 permit writes the fleet and the total as one sentence — "The total
 thermal input of the 33 standby generators is 5 generators of 3.9 MWth …
 (approximately 120MWth in total)" — and taking the first megawatt figure
@@ -525,15 +534,17 @@ Slough permit prints "13 X 5.714 MWthgenerators" with no space and "2 X
 6.857th MWth" with a stray unit, and dropping those two groups turned
 331.084 MWth into 243.088. Both are now tests.
 
-**The matching is mostly a null, and the null is the finding.** Twenty-
-nine of the 35 claims are unmatched, and almost none of that is about
-the permits. A permit describes plant that exists; most of this corpus
+**The matching is mostly a null, and the null is the finding.**
+Thirty-four of the 42 claims are unmatched, and almost none of that is
+about the permits. A permit describes plant that exists; most of this corpus
 describes schemes that were proposed, and proximity cannot tell a
 campus from its neighbour. More sharply, several site records hold a
-whole industrial estate: **eight permits from six operators, 1,249 MWth,
-all fall inside site 23**, the only site record on the Slough Trading
-Estate. Site 5 holds Interxion, Global Switch and Telehouse; site 59
-holds Vantage and Colt alongside Microsoft. Every one is written into
+whole industrial estate: **nine permits from seven operators, 1,430
+MWth, all fall inside site 23**, the only site record on the Slough
+Trading Estate. Site 5 holds Interxion, Global Switch and Telehouse;
+site 59 holds Vantage, Colt and Equinix alongside Microsoft. And
+VIRTUS's Stockley Park campus — 470 MWth, the second-largest fleet in
+the register — has no site record within 2 km at all. Every one is written into
 `ea-permit-matches.yaml` under `considered` with its reason, which makes
 the permits the best partition evidence the project has — each names a
 campus and gives its grid reference.

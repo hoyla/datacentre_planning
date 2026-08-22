@@ -321,22 +321,24 @@ None is abandoned; each is a known, scoped piece of work.
   2018. Parent-backfill already pulled in substantive pre-2018 parents; a
   separate sweep would catch cases with no child in our window.
 - **Environment Agency permits — the tail, not the source.** The
-  register and 35 permit claims landed on 2026-08-22 (HISTORY, and
-  `docs/EXTERNAL_DATA_SOURCES.md` §6). Three things are left. **Sixty-two
-  candidates have no permit publication on gov.uk**, mostly MCP
-  registrations, which are lighter-touch and may not be published at all;
-  whether the Environment Agency will supply them on request has not been
-  asked. **Six permits state a total with no per-engine breakdown to
-  check it against**, and their schedules would give one to a reader.
-  **Twenty-nine claims are unmatched**, and most are unmatched because a
+  register and 42 permit claims — 7,439 MWth — landed on 2026-08-22
+  (HISTORY, and `docs/EXTERNAL_DATA_SOURCES.md` §6). Three things are
+  left. **Fifty-five candidates have no permit publication on gov.uk**,
+  mostly MCP registrations, which are lighter-touch and may not be
+  published at all; whether the Environment Agency will supply them on
+  request has not been asked. **Eleven claims are not fully
+  self-corroborating** — three state a total with no breakdown to check
+  it against, four state one their breakdown disagrees with, and four
+  state none at all — and reading their schedules would settle each one.
+  **Thirty-four claims are unmatched**, and most are unmatched because a
   site record covers a whole estate rather than because the permit is
-  obscure — so the matching is blocked behind the partitioning below
+  obscure, so the matching is blocked behind the partitioning below
   rather than behind anything about the permits.
 - **Site partitioning, now with evidence.** The permits are the sharpest
   partition evidence the project has, because each one names a campus and
-  gives its grid reference. Eight permits from six operators, 1,249 MWth,
-  fall inside site 23 alone, which is the only site record on the whole
-  Slough Trading Estate. Site 5 holds Interxion, Global Switch and
+  gives its grid reference. Nine permits from seven operators,
+  1,430 MWth, fall inside site 23 alone, which is the only site record on
+  the whole Slough Trading Estate. Site 5 holds Interxion, Global Switch and
   Telehouse; site 59 holds Vantage and Colt as well as Microsoft; site 11
   holds Amazon and NTT. `data/external_sources/ea-permit-matches.yaml`
   lists each of these under `considered` with the reason.
