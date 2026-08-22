@@ -1,0 +1,59 @@
+ 
+Permit number 
+EPR/EP3507SL 18 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+TS IC3 Performance of SCR systems 
+The operator shall submit a written report to the Environment 
+Agency for assessment and written approval. The report must 
+contain: 
+  
+- Detailed information on the specification of the suitability 
+of the NOx sensors and urea solution dosing to the SCR 
+systems 
+- Evidence of the initial calibration of the NOx sensors and 
+verification of the levels of unabated and abated NOx 
+emissions upstream and downstream of the SCR system 
+according to a methodology consistent with web guide 
+‘Monitoring stack emissions: low risk MCPs and specified 
+generators’ Published 20 March 2024 (formerly known as 
+TGN M5) 
+- Confirmation that the SCR systems achieve the NOx 
+abatement performance stated in the application 
+documents referred to in table S1.2, or a proposal for 
+remedial actions when this is not achieved 
+- A plan to periodically calibrate the NOx sensors and 
+verify the performance of the SCR systems, including the 
+proposed frequencies. 
+ 
+The operator must implement the proposals in the report in line 
+with the timescales agreed within the Environment Agency’s 
+written approval. 
+ 
+ 
+Within 3 months from 
+the date of issue of 
+the variation  
+EPR/EP3507SL/V002 
+or as agreed in 
+writing with the 
+Environment Agency 
+Improvement conditions for Telehouse North 
+TN IC1 The operator shall produce an Air Quality Management Plan in 
+conjunction with the Local Authority outlining response 
+measures to be taken in the event of a grid failure. This should 
+include but not be limited to the following considerations:  
+• the response should be tailored to reflect the predicted 
+potential impact indicated by the air dispersion 
+modelling at individual receptors;  
+• specific timescales for response measures; 
+• how local conditions during a grid failure might 
+influence the response required, for example 
+meteorological conditions or time of day; 
+• contingency for how the response will be carried out in 
+the event scenario i.e. loss of power; and 
+• timescales for continued review of the management 
+plan. 
+The agreed Air Quality Management Plan shall be submitted to 
+the Environment Agency for approval. 
+Complete 

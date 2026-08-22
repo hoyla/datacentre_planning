@@ -1,0 +1,44 @@
+ 
+ Page 6 of 17  
+exceedances of the ES; the probability is reported as less than 1%, and 
+therefore ‘highly unlikely.’    
+ 
+No other exceedances of relevant ESs are predicted for any other 
+pollutant or averaging period. 
+ 
+4. OM2 – for the ‘realistic’ 1-hour emergency power outage event, 
+exceedances of the 1-hour NO2 ES are predicted should the event 
+coincide with the worst-case meteorological conditions. However, the 
+probability of exceedance is reported as 0% as the duration of the OM2 
+scenario is only 1 hour per year, and less than the 18 exceedance hours 
+permitted by the 1-hour NO2 ES. 
+ 
+No other exceedances of relevant ESs are predicted for any other 
+pollutant or averaging period. 
+ 
+We agree with the conclusions of the applicant’s ecological assessment, which 
+are based on the results presented in section 6 of the air quality report, and can 
+be summarised as follows:   
+1. MSM1 and MSM2 - PCs for NOx (annual and daily mean concentrations), 
+nitrogen deposition and acid deposition are not likely lead to a significant 
+effect. 
+ 
+2. OM1 and OM2 - for the ‘hypothetical worst-case’ 72-hour emergency 
+power outage event, PCs for annual mean NOx, nitrogen deposition and 
+acid deposition are not likely lead to a significant effect.   
+ 
+Exceedances of the daily mean NOx critical level (CLE) of 75 µg/m3 are 
+predicted at all six ecological receptors.  The OM1 scenario is presented 
+as a theoretical worst-case and is not permitted as a normal operation.  It 
+is representative of an emergency operation allowed to happen only in the 
+unlikely event of failure of electrical supply from the grid.  Measures are in 
+place at the site to prevent and manage/mitigate the occurrence of this 
+emergency operation. The primary prevention measure relied upon to 
+avoid this emergency scenario occurring is the highly reliable design of the 
+electrical grid and of the site connections to it (described in the BAT 
+section below).  The requirement to run the back-up generators in an 
+emergency is therefore minimised as far as possible and a 72-hour outage 
+scenario is considered highly unlikely.   
+ 
+For the more realistic power outage duration of 1 hour (OM2), there would 
+be no exceedances of NOx CLE or the relevant critical loads for nitrogen 

@@ -1,0 +1,39 @@
+ 
+Page 2 of 17 
+Key issues of the Decision 
+In reaching our decision to grant the permit we took into consideration the 
+following matters: 
+1. The Installation 
+The installation is subject to the Environmental Permitting Regulations (EPR) as 
+it carries out an activity listed in Part 1 of Schedule 1 to the EPR:  
+• Section 1.1 Part A(1)(a): Burning any fuel in an appliance with a rated 
+thermal input of 50 megawatts or more.  
+ 
+The data centre facility is located at 111 Buckingham Avenue, Slough, Berkshire, 
+identified by the national grid reference SU 95817 81065. 
+The development comprises one main building which will be used as a data 
+centre (LON3) and a 3-storey gantry adjacent to the main building that will house 
+the Emergency Standby Generators (ESGs). The data centre will be powered 
+using electricity from the national grid under normal operational conditions. 
+The permit authorises the operation of the ESGs serving the data centre in the 
+event of failure in the electrical grid supply. The 17 ESGs, including 1 Rolls 
+Royce 12V1600G10F generator (1.15 MWth; Gantry Level 0) and 16 Rolls Royce 
+20V4000G94LF generators (7.01 MWth; Gantry Level 2), with a combined 
+thermal input of approximately 113.31 MWth, will be capable of providing a N+1 
+level of resilience. These ESGs are designed for limited operation, for 
+maintenance, testing, and emergencies, the permit does not allow the export of 
+electricity to the National Grid.  
+The ESGs will be fuelled using gas oil or Hydrogenated Vegetable Oil (HVO). 
+Fuel will be stored in integrally bunded belly tanks at the sub-base of each ESG. 
+The total fuel storage capacity of the site is 714,000 litres. 
+2. Best Available Techniques (BAT) 
+Choice of Technology and Fuel 
+The Applicant considered a range of technologies and fuels as part of the design 
+and specification phase. At this time the latest generation of gas oil powered 
+generators are optimally viable for operators based on availability, reliability, 
+capital and operating costs. Alternatives, including natural gas engines, battery 
+storage, hydrogen fuel cells, solar panels and wind turbines were considered but 
+are not operationally viable for this installation. 
+We accept that gas oil powered generators are presently a commonly used 
+technology for standby generators in data centres. We are satisfied that the 
+applicant has provided sufficient justification to show that their proposal is BAT. 

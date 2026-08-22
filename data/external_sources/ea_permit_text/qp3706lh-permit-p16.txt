@@ -1,0 +1,41 @@
+ 
+Permit number                             
+Error! Unknown document property name. 16 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+• For monthly testing, no more than 2.5 hours of 
+operation shall be carried out in any 24-hour period 
+for site 2. 
+ 
+Along with the following operational loads during an 
+emergency: 
+• Site 1 generators operate at no more than 75% load. 
+• Site 2 generators operate at no more than 90% load. 
+ 
+Application 
+EPR/BP3800PZ/V002 
+Fuel storage, containment and drainage. 20/11/24 
+27/01/25 
+13/02/25 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1  Monitoring Plan 
+The operator shall submit a monitoring plan for approval by the 
+Environment Agency detailing their proposal for the implementation of 
+the flue gas monitoring requirements specified in table S3.1 of this 
+permit. 
+ 
+The monitoring plan shall be in accordance with web guide ‘Monitoring 
+stack emissions: low risk MCPs and specified generators’, published 16 
+February 2021 (formerly known as TGN M5). 
+ 
+The plan shall include, but not necessarily be limited to the following 
+considerations: 
+• When the generators are not fitted with sampling ports, a 
+proposal to install them within the shortest practical timeline; and 
+• Details of any relevant safety, cost and operational constraints 
+affecting the monitoring regime, in support of any proposed 
+deviation from the testing regime specified in table S3.1 of this 
+permit.  
+Complete 

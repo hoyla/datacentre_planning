@@ -1,0 +1,58 @@
+EPR/LP3303PR/A001 
+Date issued: 26/02/2020  7 
+Aspect considered Decision 
+Biodiversity, heritage, 
+landscape and nature 
+conservation 
+The application is within the relevant distance criteria of a site of heritage, 
+landscape or nature conservation, and/or protected species or habitat. 
+We have assessed the application and its potential to affect all known sites of 
+nature conservation, landscape and heritage and/or protected species or 
+habitats identified in the nature conservation screening report as part of the 
+permitting process. 
+We consider that the application will not affect any sites of nature 
+conservation, landscape and heritage, and/or protected species or habitats 
+identified. 
+We have not consulted Natural England on the application. The decision was 
+taken in accordance with our guidance. 
+We have sent an Appendix 11 to Natural England for information only. The 
+decision was taken in accordance with our guidance. An Appendix 4 was 
+saved to our electronic document records management system (EDRM) for 
+audit purposes only. 
+Environmental risk assessment 
+Environmental risk 
+ 
+We have reviewed the operator's assessment of the environmental risk from 
+the facility. 
+The operator’s risk assessment is satisfactory. 
+The assessment shows that, applying the conservative criteria in our 
+guidance on environmental risk assessment, all emissions may be 
+categorised as environmentally insignificant with the exception of short term 
+emissions of NO2 during testing and emergency operation. 
+For the three testing scenarios, the Environment Agency audit agrees with 
+the applicants conclusions.  
+Predicted Environmental Concentrations (PECs) could exceed the ST NO2 
+Environmental Standard (ES) at human receptors. The maximum number of 
+hours of exceedances is 54 hours in a year. 
+The probability of breaching the hourly NO2 ES is 0.75%, and therefore 
+highly unlikely.  
+NOx, nutrient nitrogen and acid deposition impacts are insignificant for 
+protected conservation areas.  
+With regards to emergency operations:  
+Exceedances are unlikely provided emergency operations do not occur more 
+than 18 hours per year.  
+Exceedances of the AEGL-1 for NO2 over 10 minutes, 30 minutes and 1 hour 
+periods at public exposure locations. Indicating an air quality incident level 
+event under emergency operations.  
+ Provided that power outages do not occur, exceedances are unlikely. In the 
+last nine years none of the data centres have operated for emergency power 
+generation.  
+Operating techniques 
+General operating 
+techniques 
+ 
+We have reviewed the techniques used by the operator and compared these 
+with the relevant guidance notes and we consider them to represent 
+appropriate techniques for the facility.  
+The operating techniques that the applicant must use are specified in table 
+S1.2 in the environmental permit. 

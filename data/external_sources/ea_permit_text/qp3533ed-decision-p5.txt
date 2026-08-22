@@ -1,0 +1,53 @@
+ 
+ 
+• Option 4 – Piped natural gas turbine generators 
+• Option 5 – Hydrogen fuel cell generators 
+• Option 6 – Gas turbines and fast start aero engine based gas turbines 
+ 
+The BAT assessment highlighted that option 2, LPG spark ignition generators, 
+would not be suitable as they are not as reliable as diesel generators in 
+providing frequency stability and therefore will require additional equipment to 
+correct for this.  
+ 
+Option 3, piped natural gas spark ignition generators, was ruled out as the 
+reliance on gas network rather than onsite fuel creates a single point of failure 
+that is unlikely to meet the resilience requirements of the installation. Onsite 
+storage of natural gas would require excessive storage space. Option 4, piped 
+natural gas turbines, was also ruled out on this basis and slow cold start 
+capability. 
+ 
+Option 5, hydrogen fuel cell generators, were considered in the BAT options 
+assessment. However they were ruled out due to being new technology 
+without proven installations in back up generation capacity. Furthermore, they 
+are considered unsuitable for providing back  up power due to their high 
+operating temperatures and consequential start up time and hydrogen gas 
+can be difficult to store for long periods of time.  
+ 
+Option 6, gas turbines, are not proven reliable for high integrity data centres. 
+The synchronising process is not as efficient as diesel based systems due to 
+poor turn down of gas turbines, significant risks with storing gas and 
+increased risk from failure of a single unit. Therefore, they are unlikely to be 
+resilient enough for the installation requirements. Fast start aero engines were 
+also considered but, similarly to the gas turbines, synchronising multiple units 
+is difficult and unreliable. Large single units are unsuitable due to poor turn 
+down. Therefore, they do  not provide the required flexibility and have a high 
+risk of failure. The gas turbines and fast start aero engines would require 
+battery uninterruptable power supply (UPS) to cover the longer (40 second) 
+start up period, in order to achieve the same resilience as diesel generators.  
+ 
+Fast start is a fundamental requirement of the technology as it is essential to 
+resume, almost instantaneously, a supply of electricity in the event of loss of 
+power to the site. Diesel generators are the preferred option for the supply of 
+backup power for data centres and are a proven technology for providing 
+reliable resilience of functionality which can be started from cold very quickly. 
+Santander consider that option 1, diesel engine generators run on fuel oil, is 
+the best technology and should be used to provide the emergency power 
+supply to Carlton Park Data Centre 1 and 2.  
+ 
+Emissions to Air 
+ 
+The Operator has assessed emissions using a number of operating 
+scenarios. These are described in the application as events 1, 2 and 3.  
+ 
+EPR/QP3533ED/A001   Page 5 of 22 
+ 

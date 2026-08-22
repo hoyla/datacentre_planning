@@ -1,0 +1,32 @@
+ 
+ Page 2 of 17 
+generators will provide electrical power to the data centre in the event of failure in 
+the electrical grid supply along with the existing 9 standby generators (Phase III, 
+IV and V). 
+The permit does not allow the export of electricity to the National Grid.  
+2. Testing and Maintenance 
+ 
+Operation of the generators will occur via testing and maintenance and in the event 
+of an outage of power at the facility. Operating scenarios are as follows:  
+Testing and maintenance  
+The planned operation of the installation is: 
+ 
+Operation During an Emergency Event 
+The generators would also run in the event of a loss of power supply, i.e. 
+temporary grid blackout; the generators will be utilised to maintain the required 
+power supply. The generators are designed to automatically activate and provide 
+the required power to the data centre pending restoration of mains power, at 
+which time they shall automatically ramp down and switch back to utility supply.  
+ 
+Under normal circumstances, electricity to the site will be provided by UK Power 
+Distribution. The electrical infrastructure is such that there are two supply routes 
+or ‘feeds’, A and B. Each feed can support the full site load, meaning that if one 
+feed was to fail, electrical provision to the installation would not be compromised. 
+A site wide failure is considered extremely rare as it would require a catastrophic 
+regional failure on the grid, or at the supplying power station, and would likely 
+impact not only the site but the surrounding London area. As a result, the grid 
+connection is considered to be highly reliable as demonstrated in the grid 
+reliability letter provided with the application (calculated as 99.999612% for 
+period 2021/22). Therefore, it is considered very unlikely that the generators 
+would run for extended periods during a blackout event.  
+ 

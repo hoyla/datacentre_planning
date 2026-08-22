@@ -1,0 +1,40 @@
+ 
+EPR/ZP3527SS/A001                            Page 11 of 25 
+Fuel Storage - Receiver Tanks 
+Gas oil or equivalent fuel will also be stored at the site in 2 above ground receiver 
+tanks providing further fuel storage from which the belly tanks will be fed.   
+Fuel storage - There are 2 above ground bulk storage tanks and each stores 
+2,500 litres of fuel. Therefore, there is a total of 5,000 litres of fuel (2 bulk storage 
+tanks @ 2,500 litres = 5,000 litres) stored in the above ground bulk storage 
+tanks. 
+The total capacity for fuel storage on this site is 629,000 litres. 
+ 
+Containment Protection - Day (Belly) Tanks 
+The generator sets are present inside the Energy Centre building. 
+Each generator will be provided with a day tank containing sufficient fuel for the 
+units to operate for a minimum of 72 hours at 100% load, with each tank 
+operating independently. Each tank will be located underneath the generator it 
+serves, with fuel being transferred from the tanks to the generating sets via 
+pumps and pipelines. Each day tank will be contstructed from carbon steel fully 
+welded internally and externally and manufactured to the water environment 
+standard for oil storage. 
+The independent day tanks will be fed from the receiver tanks located inside the 
+Energy Centre building via one of two external fill points. 
+The day tanks will have the following protection measures to ensure no loss of 
+containment: 
+• Constructed from carbon steel fully welded internally and externally and 
+manufactured to the water environment standard for oil storage. 
+• The tanks conform to BS 799 pat 5 type J 2010 with a max working head 
+above tank of 0.5m and are integrally bunded to 110%. 
+• Located internally in the generator building limiting exposure to the 
+elements and reducing the risk of corrosion and spillages entering the 
+environment. 
+• Overfill prevention valves - probes in tank which set off an alarm at the fill 
+point cabinet if filling process exceeds the max levels. 
+• Leak detection - float switch within the tank bund to provide leak detection 
+which sets off an alarm at the fill point cabinet. 
+• Level detectors linked to fuel control panel in the fuel fill cabinet showing 
+actual tank contents.  
+• All generator enclosures will be fitted with fire detection systems - 
+Generators and tanks are to be fitted with valves that will automatically 
+shut in the event of a fire shutting off the fuel supply.  

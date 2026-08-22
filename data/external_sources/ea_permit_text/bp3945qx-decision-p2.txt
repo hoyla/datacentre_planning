@@ -1,0 +1,37 @@
+ 
+                       Page 2 of 18 
+OFFICIAL 
+OFFICIAL 
+Unless the decision document specifies otherwise we have accepted the 
+applicant’s proposals. 
+Read the permitting decisions in conjunction with the environmental permit.   
+Key issues of the decision 
+In reaching our decision to grant the permit we took into consideration the 
+following matters: 
+ 
+Overview of the Installation  
+The site is part of a new electronic data storage centre which includes back-up 
+electricity generation capacity, a Schedule 1 S1.1 Part A(1)(a) activity under the 
+Environmental Permitting Regulations (the burning of any fuel in an appliance 
+with a rated thermal input of 50 or more megawatts (MW)).  The site is located in 
+an area of light industrial and commercial developments on the Slough Trading 
+Estate in Slough.  The nearest residential receptors are approximately 150 m to 
+the north east of the site.   
+The combustion plant only operates for limited routine testing and maintenance 
+or in an emergency scenario if the National Grid power supply fails. The 
+combustion activity comprises 31 gas oil fuelled standby generators (SBGs):  
+LON4: 
+5 x 7.28 MWth 
+3 x 6.04 MWth 
+3 x 5.61 MWth 
+8 x 6.04 MWth 
+LON3: 
+6 x 4.72 MWth 
+LON10: 
+6 x 5.42 MWth 
+The aggregated total combustion capacity on site will be 180.51 MWth. 
+Each generator has a dedicated exhaust stack ranging from 10 to 16 metres 
+above ground level. 
+Electrical power is provided to the data centre from the National Grid.  In the 
+event of a failure of this electrical supply, the operator will utilise the generators to 
+maintain power to the data centre.  The generators will be used solely for the 

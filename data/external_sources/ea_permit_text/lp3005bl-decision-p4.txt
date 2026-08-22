@@ -1,0 +1,46 @@
+ 
+ Page 4 of 19  
+ 
+Modelling of Impacts 
+The applicant submitted an air dispersion modelling report which assesses the 
+potential impact of emissions of NO2, PM10, SO2 and Hydrocarbons from the 
+generators on local air quality. The ADMS 5 software dispersion model was used 
+to predict atmospheric concentrations of the identified pollutants; we accept that 
+the use of this model is appropriate for these circumstances. 
+ 
+The following parameters were used for input data into the model: 
+• Meteorological Data from RAF Benson Met Office 2016 – 2018 
+• A complex terrain map of the local area 
+• Surface roughness length of 0.5m (representative of suburban areas) 
+• Building wake effects from the adjacent data-hall (136m x 67m footprint, 
+12.4m high) 
+• Four different operating scenarios 
+o Testing scenario 1 – each generator individually tested at 25% load 
+for 0.5 hours twice a year. 
+o Testing scenario 2 – each generator tested at 100% load twice a 
+year. 
+o Full-building test – all generators operating at 100% load for up to 
+two hours once per year. 
+o Emergency operation – all 11 generators operating at 100% load 
+for 72 hours. 
+• Emissions are from 15m high stacks of 0.6m diameter 
+• Pollutant emission rates of NOx, PM10 and Hydrocarbons for generators 
+typical of those likely to be installed at the installation (TA Luft 2g). 
+• Ambient (background) air quality data for NO2 has been obtained from the 
+worse annual mean monitored at Lune Close Didcot between 2014 and 
+2019. 
+• Ambient (background) air quality for PM10, Hydrocarbons, SO2 and CO 
+obtained from DEFRA-mapped background concentration estimates. 
+ 
+We have reviewed the parameters used in the model and agree that suitable, 
+reasonable worse-case options have been used to provide a conservative 
+estimate of the impact. We have audited the model input files used by ADMS 5 
+and found that they are in agreement with those stated in the report.    
+The model included an ass essment of the long- term impact on air quality , 
+comparing the mean annual process contributions of the pollutants from the 
+installation against the long-term (annual) air quality standard. The purpose of the 
+generators is to provide electrical power over a short period of time (up to three 
+days) in the event of grid failure. We have included restrictions in the permit limiting 
+the emergency operation of the installation to a maximum of 500 hours a year and 
+we expect the operator to comply with the maintenance testing schedule stated in 
+the application documents and included in the permit operating techniques table 

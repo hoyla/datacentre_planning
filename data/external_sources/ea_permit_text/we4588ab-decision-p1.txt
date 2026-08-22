@@ -1,0 +1,34 @@
+ 
+Permitting Decisions- Bespoke Permit 
+ 
+ LIT 11984 3/6/2026  Page 1 of 17 
+We have decided to grant the permit for KAO Data Harlow Campus operated by 
+Harlow Operations Limited. 
+The permit number is EPR/WE4588AB/V002. 
+The permit was granted on 03/06/2026. 
+The application is for the addition of standby diesel generators to the existing data 
+centre campus. The proposed changes are as follows: 
+• Add two additional generators to the existing KLON1 data centre, each 
+with a rated thermal input of 4.61 MW. KLON1 would now have seven 
+generators. 
+• Add four additional generators to the existing KLON2 data centre, each 
+with a rated thermal input of 4.61 MW. KLON2 would now have seven 
+generators. 
+• Add a new data centre, KLON3, to the campus. KLON3 would comprise 
+11 generators each with a rated thermal input of 8.01 MW. 
+The combined thermal input of the facility would increase from approximately 36 
+MW to 152 MW. The generators provide an emergency back-up electricity supply 
+to allow the data centres to continue operating during a loss of electrical power 
+from the grid or an internal power supply failure. 
+We consider in reaching that decision we have taken into account all relevant 
+considerations and legal requirements and that the permit will ensure that the 
+appropriate level of environmental protection is provided. 
+Purpose of this document 
+This decision document provides a record of the decision-making process. It: 
+● summarises the decision making process in the decision considerations 
+section to show how the main relevant factors have been taken into 
+account 
+● highlights key issues in the determination 
+● shows how we have considered the consultation responses 
+Unless the decision document specifies otherwise we have accepted the 
+applicant’s proposals. 

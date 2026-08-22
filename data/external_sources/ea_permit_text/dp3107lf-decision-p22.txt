@@ -1,0 +1,37 @@
+ 
+Page 22 of 25 
+As the plant is limited to less than 500 hours of emergency operation by permit 
+condition 2.3.3 and less than 50 hours for maintenance and testing in permit 
+table S1.2, air emission limits are not applicable. 
+Monitoring 
+We have decided that monitoring should be carried out for the parameters listed 
+in the permit, using the methods detailed and to the frequencies specified. In 
+particular: 
+We have specified monitoring of emissions of carbon monoxide from emission 
+points EP1 to EP13 (new and existing medium combustion plant), with a 
+minimum frequency of once every 1,500 hours of operation or every five years 
+(whichever comes first). This monitoring has been included in the permit in order 
+to comply with the requirements of Medium Combustion Plant Directive (MCPD), 
+which specifies the minimum requirements for monitoring of carbon monoxide 
+emissions, regardless of the reduced operating hours of the plant. 
+We have also specified monitoring of emissions of nitrogen oxides (NOx) from 
+emission points EP4 and EP9 to EP13 (new medium combustion plant), with the 
+same frequency specified for the monitoring of carbon monoxide emissions. In 
+setting out this requirement, we have applied our regulatory discretion, as we 
+consider that this limited monitoring, to happen in concurrence with the carbon 
+monoxide monitoring, is proportionate to the risk associated with the emissions of 
+NO
+x from the installation.  
+Taking into account the limited hours of operation of the engines operating at the 
+installation, and the fact that we are not setting emission limits for NOx and 
+carbon monoxide, we consider this monitoring can be carried out in line with web 
+guide ‘Monitoring stack emissions: low risk MCPs and specified generators’ 
+Published 20 March 2024 (formerly known as TGN M5). 
+We have set an improvement condition (IC2) requesting the operator to submit a 
+monitoring plan for approval by the Environment Agency detailing the operator’s 
+proposal for the implementation of the flue gas monitoring requirements specified 
+in the permit.  
+The first monitoring measurements are to be carried out within four months of the 
+issue date of the permit or the date when the MCP is first put into operation, 
+whichever is later for the new MCP (EP4 and EP9 – EP13). The first monitoring 
+measurements for the existing MCP (EP1 – EP3 and EP5 – EP8) can be 

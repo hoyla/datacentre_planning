@@ -1,0 +1,49 @@
+ 
+ Page 11 of 19  
+there is redundancy built into the design. While a smaller number of larger 
+generators would be able to meet the power requirement, we agree that 
+matching individual generator capacity to individual transformer size is 
+appropriate in this case following the phased development of the data centre. 
+The configuration of the electrical supply prevents the consideration of a greater 
+number of smaller generators. Of the variety of generators considered, the 
+efficiency of their engines was similar regardless of capacity.  
+ 
+In order to minimise the need for emergency operation, the datacentre has two 
+separate substation feeds, each capable of supporting 100% of the load. To 
+address short term fluctuations, brown-outs or black-outs, the site has an 
+uninterruptable power supply which can supply power until the generators 
+operate.  
+ 
+ 
+ 
+Protection of Land, Surface Water & Groundwater 
+ 
+There are no fugitive emissions to land or groundwater from the installation. The 
+generators are located in containers over hard-standing or concrete flooring. 
+Externally, the Site consists of new hard standing. Diesel, hazardous waste and 
+hazardous materials storage is bunded and/or indoors, such that any source of 
+potential contamination is prevented from discharge to land. 
+ 
+The bulk fuel tank is fully bunded to 110% of its volume and includes a leak 
+detection system. Individual day tanks are integrally-bunded with leak detection 
+alarms and are under cover so not subject to rainwater incursion. The refuelling 
+area is served by a full-retention interceptor connected into the site surface water 
+drainage system.  
+ 
+An accident management plan will be established prior to commencing operation 
+of the installation. It will detail those actions required in the event of an 
+emergency or accident/incident. This will include small incidents such as minor 
+spills and leaks and complaints, as well as major incidents such as fire and major 
+spills. In particular, a system for recording and allocating appropriate follow-up for 
+accidents, incidents and non-conformances will be established prior to operation.  
+ 
+Rainwater is kept separate from any areas in which there may be any potential 
+contaminants. Surface water from exterior hardstanding areas is passed through 
+an interceptor before entering the site drainage system where it joins rainwater 
+from the roof areas. The surface water system discharge into the Moor Ditch via 
+a system of balancing (attenuation) ponds 
+. 
+Drainage drawings are provided in the application. Details of the existing 
+condition of the Site can be found in the Site Condition Report supplied with the 
+application, which we have reviewed. 
+  

@@ -1,0 +1,23 @@
+ 
+Permit number 
+EPR/AP3903PD  39 
+Generator emergency scenario – to be provided within 24 hours of grid failure 
+Permit number: [EPR/AB1234CB] Operator: [A Company Name Limited] 
+Facility name: [Unit A, Anytown]     Emergency Scenario Form: 16/11/2021 
+ 
+ 
+Reporting of generator emergency scenario operation for the period from [DD/MM/YY] to [DD/MM/YY] 
+ 
+Parameter  
+Date of grid failure  [DD/MM/YY] 
+Time of grid failure   
+Number of generators operating immediately after the failure  
+Number of generators operating 2 hours after failure  
+Anticipated duration of the mains supply failure  
+ 
+Operator’s comments: 
+ 
+ 
+ 
+ 
+ 

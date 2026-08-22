@@ -1,0 +1,77 @@
+ 
+Permit number 
+EPR/QP3434DR 10 
+Schedule 1 – Operations  
+Table S1.1 activities 
+Activity 
+reference  
+Activity listed in Schedule 
+1 of the EP Regulations  
+Description of specified 
+activity  
+Limits of specified 
+activity  
+AR1 Section 1.1 Part A(1)(a) 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 or more 
+megawatts.  
+ 
+Operation of emergency 
+standby generators burning 
+diesel solely for the purpose 
+of providing electricity to 
+Lon 1, Lon 2 and Lon 3 in 
+the event of a failure of 
+supply from the National 
+Grid comprising 13 standby 
+generators with a total net 
+thermal input of 57.59 
+MWth in the following 
+configuration:  
+Lon1: 
+2 x 3.62 MWth 
+1 x 4.85 MWth 
+5 x 4.25 MWth 
+Lon2: 
+5 x 4.85 MWth 
+From receipt of raw 
+materials and generation of 
+electricity to despatch of 
+waste.  
+ 
+Electricity produced at the 
+installation cannot be 
+exported to the National 
+Grid. 
+ 
+ 
+Directly Associated Activities 
+AR2 Directly Associated Activity Storage of raw materials From receipt of raw 
+materials to use within the 
+facility. 
+AR3 Directly Associated Activity Surface water drainage Input to site drainage 
+system until discharge to 
+surface water drain. 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application Answer to Question 3 on Form EPB: Part B3, which confirms 
+operating in accordance with TGN EPR 1.01.  
+Risk Assessment, April 2017, Issue 1.0, which provides 
+details of the appraisal of risk and the mitigation in place on 
+site.   
+BAT Options Assessment, 29 May 2017, Issue 1.0, which 
+includes a commitment to ensure BAT for future plant.  
+Duly Made 
+14/08/17 
+Response to Schedule 5 
+Notice dated 09/01/18  
+Environmental Permit Compliance Manual, 19 May 2017, 
+Issue 1.0, which details site procedures to ensure permit 
+compliance.  
+Site Work Instruction – Permitting, 17 January 2018, V2, 
+which provides details of responsible people.  
+26/01/18 
+  
+  

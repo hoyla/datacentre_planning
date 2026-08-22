@@ -1,0 +1,51 @@
+ 
+                       Page 6 of 20 
+Sulphur dioxide 10 ug/m3 Annual mean 
+Nutrient Nitrogen Depends on location – 
+see modelling report  
+Annual mean 
+Acidity deposition Depends on location – 
+see modelling report 
+Annual mean 
+ 
+Maintenance testing 
+ 
+Human Receptors: 
+ 
+Short Term impacts 
+applicants’ assessment 
+ 
+Scenarios 1 and 2 – There were no predicted exceedances of any Environmental 
+Standard (ES) for any pollutant assessed except for NO2 1-hour mean. The 
+short-term emissions screened out alone where the process contribution (PC) 
+was less than 10% of the significance threshold and in the case of AEGL-1 
+emissions were below 940 ug/m3. 
+ 
+For NO2, the report highlights that considering Scenario 1 and 2 separately, it is 
+not possible that generator operation alone could cause an exceedance of the 
+99.79th percentile 1-hour mean, as the operational events are below the 18 
+permissible hours of exceedance that are allowed per year. 
+ 
+Scenario 3- There were no predicted exceedances of the ES for CO 8-hour 
+mean, SO2 15-minute mean, SO2 1-hour mean and AEGL-1. The short-term 
+emissions screened out following the consideration of background 
+concentrations, the Predicted Environmental Concentrations (PEC) were less 
+than 100% of the significance threshold for SO2 and CO. The short-term 
+emissions screened out alone where the process contribution (PC) was less than 
+10% of the significance threshold for NO. In the case of AEGL-1 emissions were 
+below 940 ug/m3. 
+ 
+For NO2 1-hour mean, PM10 24-hour mean, SO2 24-hour mean and NO 1-hour 
+mean exceedances were predicted. The report highlights that it is not possible 
+that Scenario 3 alone could cause an exceedance of the NO2 99.79th percentile 
+1-hour mean, as the operational events are below the 18 permissible hours of 
+exceedance that are allowed each year. No discussion is included in the report 
+for exceedances of PM10 24 hour mean and SO2 24-hour mean for this Scenario 
+alone. We considered this as part of our audit. For NO 1- hour mean the 
+applicant undertook statistical analysis and calculated the probability of an 
+exceedance was 0.57% and can thus be considered highly unlikely. 
+ 
+Environment Agency Audit 
+ 
+Our audit of the modelling confirms that short term process contributions are 
+unlikely to cause an exceedance at any of the receptors for any pollutant. 

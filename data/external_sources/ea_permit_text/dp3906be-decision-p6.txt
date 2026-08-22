@@ -1,0 +1,42 @@
+ 
+ EPR/DP3906BE                         Page 6 of 14 
+For the emergency scenarios, the PCs are above the insignificance criteria of 1% 
+for long-term (LT) NO2 and 10% for ST NO2, ST PM10, NO2 AEGL-1s and ST NO. 
+We predict that only the PECs for ST NO2 and ST PM10 have the potential to 
+exceed the ES. 
+Our probability analysis indicates that an exceedance of the hourly mean NO2 ES 
+was unlikely for this scenario, based on a worst-case 72-hour operational period. 
+The ST PM10 ES cannot be breached in 72 hours of emergency operation as it 
+would require at least 35 days of exceedance of the 50 μg/m3 threshold. 
+Information provided by the consultant on historical power outages at the facility 
+indicate that that this is highly unlikely to occur. 
+It is worth noting that since 2016 when the site was acquired by the Operator, 
+there have been three outages, detailed below: 
+− On the 29th March 2022, two emergency back-up diesel fired generators 
+were run between 12:42 and 17:35 due to an electric high voltage supply 
+cable failing on site;  
+− On the 19th May 2022, two emergency back-up diesel fired generators 
+were run between 17:55 and 21:20 due to an off-site power disturbance; 
+and 
+− On the 3rd June 2022, two emergency back-up diesel fired generators 
+were run between 18:35 until 00:47 on 04/06/2022 due to an off-site power 
+disturbance. 
+The data seems to confirm the probability analysis. 
+The testing scenario is unlikely to make a significant contribution or cause an 
+exceedance of any critical loads and levels at ecological receptors. 
+We cannot rule out an exceedance of the 24-hour NOX critical level of 200μg/m3 
+at the Millwall and West India Docks LWS during the emergency scenario. Our 
+sensitivity analysis indicates that without building downwash effects, 
+exceedances are unlikely. This LWS is located within the building cavity region; 
+validation studies demonstrate that building downwash effects may introduce a 
+high degree of uncertainty, indicating a low level of confidence in predictions at 
+the LWS. 
+Thus, we have specified an improvement condition IC1 requiring the operator to 
+determine the actual short-term NOX concentrations at the site boundary through 
+monitoring to contribute to the validation of conclusions reached in the air quality 
+assessment within the application and to inform the air quality management plan. 
+Permit conditions 
+Permit condition 2.3.5 includes a maximum 500 hour ‘emergency/standby 
+operational limit’ for any or all the plant producing on-site power under the limits 
+of the combustion activity; and thereby emission limit values (ELVs) to air are not 
+required within the permit. Monitoring is required for the two newly installed 

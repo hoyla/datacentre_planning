@@ -1,0 +1,48 @@
+Permit number             
+EPR/AB1234CD 2 
+Colt - Powergate  
+Permit number EPR/DP3107LF 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows.   
+The site is a data centre which consists of an Environmental Permitting Regulations (EPR) Schedule 1 listed 
+activity: 
+Section 1.1 Part A(1) (a) for the burning of any fuel in an appliance with a rated thermal input of 50 or more 
+megawatts (MW). 
+The permit authorises the operation of standby electricity generating plant at a data centre located within the 
+London Borough of Ealing at national grid reference TQ 20971 82811. The data centre will under normal 
+operating conditions be powered by grid supplied electricity. 
+The contingency standby power solution comprises 3 x 4.17MWth, 1 x 2.86MWth, 3 x 4.27MWth, 1 x 
+4.3MWth and 5 x 5.9MWth liquid fuelled generators with an aggregated thermal input of approximately 
+62MWth. Seven generators have been operational since 2001 and are classified as existing medium 
+combustion plant (MCP). The remaining 6 generators are classified as new MCP and are emissions 
+optimised 2g TA-luft. The power solution is integrated within the data centre design providing on-site 
+electrical generating capacity to be used in the event of power outages to the data centre.  
+The generators can operate on either gas oil or an agreed equivalent substitute.  
+The standby electricity generating plant is limited to operating less than 500 hours/year, including the testing 
+regime. It is estimated that each engine will be tested for approximately 12.5 hours/year. It is essential that 
+the standby system is routinely tested to ensure the engines function correctly in the event of them being 
+required to operate. 
+Each engine will be tested at off/low load (0% for up to 15 minutes) once every 6 months. 
+Each engine will be tested individually at building load (up to. 50% for up to one hour) every month. 
+The 7 existing generators and 1 of the new generators are supplied directly by 4 x bulk fuel storage tanks 
+which are adjacent to the generators. Two of these tanks are externally bunded to 110% capacity. The other 
+2 are double skinned to 110% capacity.  The remaining 5 new generators will be served by 5 x double 
+skinned and bunded day tanks, which are fed from 3 x integrally bunded bulk tanks, also located adjacent to 
+the generators. Each day and bulk storage tank has leak detection and overfill alarms. Fuel transfer from 
+bulk tanks to the generators is via double skinned above-ground pipework. The total fuel storage capacity is 
+368,222 litres.  
+Exhaust gases from each generator will be discharged through an individual vertical flue resulting in 13 
+emission points EP1 to EP13. 
+There will be no process effluent discharge from the installation. Uncontaminated surface water run- off from 
+the roof and hard-standing will drain to the surface water drainage system at emission points SW1 to SW4. 
+Surface water drainage from the area of the site where the new generators and associated fuel storage are 
+located will pass via an oil-water separator before reaching emission point SW4. The remaining areas of the 
+site drain into emissions points SW1 to SW3 without passing through a separator.  
+The installation is located within Powergate Business Park. As such the immediate surrounding area is 
+predominately industrial and commercial. There are however residential receptors nearby. There are no 
+Local Nature Reserves within 1 km of the Site and no Sites of Special Scientific Interest within 2km of the 
+Site. There are 2 protected European sites within 10km, however no significant environmental impact from 
+the installation is expected at these. The London Borough of Ealing has designated the area an Air Quality 
+Management Area (AQMA) for exceeding the annual mean NO
+2 objective and the 24-hour mean PM10 

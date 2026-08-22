@@ -1,0 +1,36 @@
+ 
+Page 16 of 25 
+Protection of Land, Surface Water & Groundwater 
+Fuel is stored in bulk fuel tanks which are located externally, above ground on 
+cement plinths. Due to the nature of the site being part legacy generators 
+(operational since 2001) and part new generators, bulk tank specifications differ 
+across the site. Three existing generators and one new generator are fed by ISC 
+bulk tank 1 and 2. Four existing generators are fed by FDC bulk tank 1 and 2. 
+The remaining five new generators are fed by bulk tanks IDC5-7, via individual 
+day tanks. There are no receiver/day tanks for existing ISC and FDC generators. 
+Fuel is fed from bulk tanks to the generators / day tanks via double skinned 
+above ground pipework. 
+Each bulk tank is fitted with a digital OLE electronic gauge which can be read at 
+the tank or remotely via the monitoring system. These will produce an alert in the 
+event of overfill or leakage.  
+The ISC tanks are double skinned with integral bunding. These tanks conform to 
+BS 799, and are manufactured with steel conforming to BS EN 1025 and fuel 
+pipework is double skinned and conforms to BS1387.  
+The FDC tanks are bunded to 110%. These tanks conform to BS 799 pat 5 type J 
+2010 and are manufactured with steel conforming to BS 4360 43A.  
+The new IDC5-7 bulk tanks are to be integrally bunded to 110%. Overfill 
+Prevention Valves (OPV) are to be fitted to the tank fill line to help prevent 
+overfilling. Leak detect float switches will be provided within tank bunds should 
+the primary tank become compromised. 
+The existing ISC and FDC bulk tanks are refuelled via connections in 
+independent fill point cabinets. The fill points for both ISC and the FDC tanks are 
+located within lockable cabinets and are accessed from the pavement on Volt 
+Avenue. These fill points are currently external to the site boundary. Drip trays 
+are present to capture minor spills. Within the fill cabinet there are pneumatic 
+gauges to measure tank levels as well as tank overfill prevention controls/alarms, 
+which are connected to the monitoring system.  
+Surface water arising from the areas of the site where the legacy ISC and FDC 
+bulk tanks are located drains into three surface water emission points SW1 to 
+SW3. It does not pass through any form of interceptor before reaching these 
+emission points. Improvement condition IC3 has been added to the permit to 
+address this. 

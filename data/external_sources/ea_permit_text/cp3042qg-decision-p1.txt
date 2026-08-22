@@ -1,0 +1,42 @@
+ 
+Permitting Decisions- Bespoke Permit 
+ 
+EPR/CP3042QG/A001 Decision Document  8/12/2023     Page 1 of 26 
+We have decided to grant the permit for GB One Data Centre operated by GTR Management 
+Services Limited. 
+The permit number is EPR/CP3042QG 
+The application is for the operation of standby electricity generating combustion plant at a data 
+centre in an industrial and commercial area of Slough, approximately 1.7km north-west of Slough 
+town centre at national grid reference SU 95949 80764. 
+The combustion plant comprises: 
+• 21 diesel fired Kohler SDMO KD4500-E generators operating as standby backup 
+generators each with a thermal input of 8.877 MWth. 
+ 
+• The combined net rated thermal input of all diesel backup generators on site is 186.417 
+MWth (21 x 8.877 MWth standby generators). 
+ 
+We have specified the fuel to be burned in the engines to consist of gas oil or equivalent 
+substitute to be agreed in writing with the Environment Agency with a sulphur concentration of 
+0.001% w/w. We are in the process of developing our position on the use of gas oil substitute 
+fuels such as hydrotreated vegetable oil (HVO), therefore we have required that if any of these 
+fuels are proposed, written agreement is sought by the operator from the Environment Agency’s 
+regulatory officer. Email received on 11/08/2023 advising Environment Agency of change of fuel. 
+Operator to use both diesel and HVO fuel in back-up generators. This change was agreed by us 
+on 14/08/2023. 
+The default generator specification as a minimum for new plant to minimise the impacts of 
+emissions to air (NOx) is 2g TA-Luft (or equivalent standard) or an equivalent NOx emission 
+concentration of 2000 mg/m3. The operator has confirmed that the 21 to be used at the data 
+centre are emissions optimised to 2g-TA Luft or US EPA tier 2 or equivalent. Additionally, an SCR 
+NOx abatement system is installed, which reduces the NOx air emissions per generator from 
+1493 mg/Nm3 to 190 mg/Nm3. 
+Operation of the data centre combustion plant will be regulated as a Section 1.1 Part A (1) (a) 
+activity under the Environmental Permitting (England and Wales) Regulations (EPR) 2016 for the 
+burning of any fuel in an appliance with a rated thermal input of 50 or more megawatts (MW). The 
+thermal input of the data centre is 186.417 MWth. 
+The generators will supply emergency power to the data centre in the event of National Grid 
+failure. In non-emergency scenarios, they will be operated only for testing and maintenance 
+purposes to an agreed schedule. They will not provide any electricity themselves to the National 
+Grid and all electricity generated will be used within the data centre.  
+We consider in reaching that decision we have taken into account all relevant considerations and 
+legal requirements and that the permit will ensure that the appropriate level of environmental 
+protection is provided. 

@@ -1,0 +1,54 @@
+EPR/HP3136DK/A001 
+Date issued: 12/10/2018  5 
+Noise 
+The site will only run engines regularly for maintenance 30 minutes quarterly for each data hall and an 
+annual test for each generator. Prolonged operation will only occur in an emergency situation where the 
+National Grid supply is lost. This however is deemed a low risk and the operator has taken measures as 
+described in this document to reduce the potential for grid failure. The potential for prolonged noise is 
+therefore considered to be low. 
+To minimise noise from the operation, the generators, chillers, fans and transformers are housed in acoustic 
+containers. The engines also undergo regular maintenance to minimise noise. Although no noise 
+management plan has been requested to date, permit condition 3.4 enables the Environment Agency to 
+request one if considered necessary in the future. We have received no noise complaints regarding this site. 
+Due to the nature of the site, to ensure noise emissions are prevented during maintenance and emergency 
+operation we have included improvement condition IC5 which requires the Operator to undertake a noise 
+survey and assessment in line with BS4142 2014 during operation of the generators to determine levels of 
+impact. In the event a risk of noise is identified, the operator shall propose measures to minimise the 
+identified noise risk along with timescales for approval. The operator will be required to implement these 
+noise reduction measures within the timescale agreed with the Environment Agency.  
+BAT 
+We accept that oil fired diesel generators are presently a commonly used technology for standby generators 
+in data centres. However we requested a BAT assessment detailing the choice of engine, the particular 
+configuration and plant sizing meeting the standby arrangement. 
+ 
+The default generator specification as a minimum for new plant to minimise the impacts of emissions to air 
+(NOx) is 2g TA-Luft (or equivalent standard) or an equivalent NOx emission concentration of 2000mg/m
+3. 
+The generator specifications on the site have emissions significantly higher than this. The BAT assessment 
+attributed this to the generators being on site when it was purchased. We do acknowledge that it would not 
+be practicable to require the operator at this stage to upgrade all plant to BAT standards. However upgrade 
+of some plant could be considered as part of the requirement to reduce short term nitrogen dioxide outlined 
+in improvement condition IC4.  
+ 
+Retrofit abatement techniques for existing installations for engine emissions such as selective catalytic 
+reduction (SCR) would not normally be expected for standby plant to mitigate the emissions for 
+standby/emergency operat ion. The Operator confirmed that they will carry out further investigation into 
+reductions in short term NOx and may consider options such as changes to operational control of the plant, 
+modifications to the flue gas dispersion or installation of NO
+x reduction equipment. Options such as these will 
+need to be considered further through the response to improvement condition IC4. 
+The operator will put multiple measures in place to minimise the risk of failure including a single serving 
+substation, dual grid connects and management systems for preventing data centre failure. The site only 
+operates under limited routine maintenance or in an emergency scenario. 
+ 
+Protection of groundwater through effective containment measures 
+Each set of generators is housed within bunded containers with sufficient capacity to contain a complete loss 
+of fluids held within the generator / engine. Associated diesel tanks also have secondary containment in the 
+form of an outer tank with 110% capacity of the inner tank. Leak detection alarms are installed within the 
+tanks and all fuel fill points are bunded. The gener ator and diesel tanks are served by a preventative 
+maintenance programme and spill prevention kits are located in the plant areas. Because of the nature of the 
+site there is sufficient security and CCTV in place to manage access, and vehicle movements are minimal. 
+Crash barriers are also provided around tanks to prevent impact.  
+The operator has confirmed that th ey have oil interceptors installed on the drainage system surrounding the 
+fuel tank/fill points. We are not satisfied this re present appropriate tertiary containment in line with 
+appropriate industry standards. 

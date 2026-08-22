@@ -1,0 +1,52 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 25 of 26 
+reduced frequency of testing; undertaking testing at times when background air quality 
+concentrations are reduced. 
+ 
+5. Recommendation that assessment is provided by the operator on the emergency power 
+outage scenario, as well as the impacts from other data centres on the background air 
+quality and potential impacts from the proposed permit. 
+ 
+6. Recommendation that justification is provided as to why the operator has assessed 
+potential impacts from a 24 hour and 72 hour blackout scenario.  
+ 
+7. Recommendation that assessment is provided by the operator on the proposed annual 
+full load in-service test on each set of 7 generators.  
+ 
+Summary of actions taken: 
+With regard to appropriate permit conditions, background air quality and the assessment of 
+surrounding data centres on background air quality during testing and the emergency operation 
+scenario the following applies: 
+As described in more detail in the Air Quality Section above, we audited the operator’s air quality 
+assessment, including undertaking detailed check modelling and completing sensitivity analysis.   
+The facility is not located in an Air Quality Management Area (AQMA) but is located within 400m 
+of an AQMA and so abatement in the form of selective catalytic reduction (SCR) would be 
+implemented to achieve a NOx emission limit value (ELV) of 190 mg/m3 (at 15% O2). The 
+operator has derived the background NO2 concentrations for human health receptors from the 
+Defra predicted background concentrations for 2023 and from local monitoring data measured by 
+Slough borough council. We included sensitive human receptors which were not included by the 
+operator and are satisfied that worst-case emissions from the site will not cause an exceedance 
+of the relevant ES at all receptors. In conclusion, based on the modelled operating envelope and 
+the results from our audit, the site is unlikely to cause an exceedance of an environmental 
+standard at human health receptors. However, we cannot rule out exceedances of the annual 
+NO2 environmental standard as a result of an emergency grid failure scenario, but historical grid 
+reliability suggests exceedances are unlikely to occur. 
+With regard to the absence of a risk assessment of other potential air emissions, for example 
+particulate matter, the operator submitted an Air Quality Assessment that assessed the impacts 
+of nitrogen dioxide (NO2) for human health, and on nitrogen oxides (NOx) and nutrient and acid 
+nitrogen deposition for ecological impacts, as these are the principal pollutants of concern with 
+respect to emissions from low sulphur diesel oil generators. However, the generators will be 
+installed with Selective Catalytic Reduction (SCR) technology to control the NOx emissions to 
+safeguard human health; thus, the assessment also considers the potential for emissions of 
+ammonia (NH3) associated with slippage from the installation. The operator scoped out the 
+impacts of sulphur dioxide and particulate matter stating that these emissions will be negligible 
+due to the properties of the low sulphur diesel fuel, as evidenced by the absence of emission limit 
+values for these pollutants from this fuel type under Schedule 25A of the EPR. Potential 
+emissions of volatile organic compounds and carbon monoxide are excluded on the same basis.  
+We accept the operator’s approach. Based on particulate emissions data provided in the  
+technical data sheets submitted with the application, we agree that the total operational hours and 
+emergency running period will not be long enough to cause exceedances of the relevant 
+Environmental Standards. We have however, included a condition in the permit restricting the fuel 
+to ultra-low sulphur gas oil or alternative fuels as agreed in writing with the Environment Agency.   
+With regard to the recommendation that documentation on management of air quality impacts 
+(AQMP) is submitted in advance of any permit granting to support the decision -making process 

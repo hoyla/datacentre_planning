@@ -1,0 +1,40 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 16 of 28 
+• All tanks are stiffened in accordance with BS 799-5:2010. 
+• BS EN 12285-2. 
+ 
+The bulk fuel tanks have leak detection in place which alarms if fuel is detected 
+within the secondary containment. There is also remote monitoring of tank levels 
+with alarms that sound if there is a change in fuel levels. All alarms are linked to 
+the local control system and BMS system. The tanks will be protected against 
+corrosion internally by being treated with an anticorrosion coating and externally 
+by being painted to C3 standards. 
+Fuel Dump Tanks 
+There are two dump tanks on site – one within the north tank room and one 
+within the south tank room. Each of the day (belly) tanks in the generator rooms 
+will be fitted with a dump valve. In the event of a fire in the generator room, the 
+dump valve opens and drains the fuel into the dump tank on the ground floor and 
+then pumped from the dump tanks into the bulk storage tanks. 
+Positioning of the tanks within a building with impervious surfacing limits potential 
+risks to land, surface water and groundwater. Spill kits will be available within the 
+building, and visual external inspections of tanks will be undertaken daily. 
+Fuel delivery points are located to the north and south of the enclosed building 
+(serving the north tank room and south tank room respectively). The area is over 
+hardstanding, with all surface water drainage leading to two new interceptors.  
+Pipework 
+All pipework is constructed from heavy duty welded carbon steel and conforms to 
+Guidance for Pollution Prevention 2. All pipework located outside of secondary 
+containment, or out of sight of Operators will be double skinned, i.e. between fill 
+point and bulk tank room, as well as within pipework risers to generator 
+plantrooms. 
+The pipework will be inspected regularly, and leaks will be detected by the 
+manual inspection of outer skin at low points. The secondary containment is 
+monitored with automated leak detection with an alarm to the local control system 
+and BMS system. 
+Fuel Delivery Areas, Drainage & Interceptors 
+Two new fuel delivery areas will be installed as part of this Variation (north car 
+park and south car park). The delivery areas will have impermeable surfacing 
+and will drain to oil/water interceptors.  
+Two new oil/water interceptors will be installed as part of this Variation (north car 
+park and south car park). The two new interceptors will have a capacity of 10,000 
+litres, each covering a 720m3 drainage area. The tankers that make the deliveries 

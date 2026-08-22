@@ -1,0 +1,47 @@
+ 
+Page 4 of 17 
+3. Testing and Maintenance 
+Operation of the generators will occur via testing and maintenance and in the 
+event of an outage of power at the facility. The black start testing where all 16 
+main generators are tested simultaneously is not expected to be required every 
+year. As such, it is expected that there will be 20 hours of testing per year per 
+individual main power stream generator and admin generator. Including black 
+start testing this could increase to 22 hours per year for main power stream 
+generators. Testing schedule is as follows: 
+Generator Frequency Number Load Annual 
+hours Total 
+Individual generator testing (only one test at a time) 
+Main Power Stream 
+(4000kVA) 0.5 hours every 2 weeks 
+16 45% 13 208 
+Admin (500kVA) 1 45% 13 13 
+Main Power Stream 
+(4000kVA) 1 hour every 3 months 
+16 45% 4 64 
+Admin (500kVA) 1 45% 4 4 
+Main Power Stream 
+(4000kVA) 1.5 hours every 6 months 
+16 100% 3 48 
+Admin (500kVA) 1 100% 3 3 
+Simultaneous generator testing 
+Main Power Stream 
+(4000kVA) 2 hours per year 
+simultaneously 
+(black start test) 
+  
+12 99% 2 24 
+Main Power Stream 
+(4000kVA) 2 51% 2 4 
+Main Power Stream 
+(4000kVA) 2 25% 2 4 
+ 
+Operation During an Emergency Event 
+The power supply into the Installation is constantly monitored. Should the power 
+supply be interrupted the sites Uninterruptable Power Supply (UPS) will ensure 
+continuity of supply. The generators are automatically triggered to start once the 
+power supply has been interrupted, providing power quickly following the failure 
+of the National Grid supply, at which point the UPS would revert to standby. Once 
+started, the generators will remain operational until the mains restoration 
+detection equipment determines that the supply from the National Grid is stable. 
+The return to the National Grid supply is an automated process, with the National 
+Grid and generator supplies being interlocked to ensure that parallel running 

@@ -1,0 +1,39 @@
+ 
+ Page 4 of 17 
+The way in which the Applicant used dispersion models, its selection of input data, 
+use of background data and the assumptions it made have been reviewed by the 
+Environment Agency to establish the robustness of the Applicant’s air impact 
+assessment. The ou tput from the model has then been used to inform further 
+assessment of health impacts and impact on habitats and conservation sites. 
+Our review of the Applicant’s assessment leads us to agree with the Applicant’s 
+conclusions. 
+The Applicant’s modelling predictions are summarised in the following sections. 
+Air Quality Impacts (human health) 
+Predicted impacts for the Testing and Maintenance 
+The predicted pollutant concentrations for all Phases were below the relevant 
+long-term and short-term environmental standards (ES) at all receptor locations 
+and are not considered to be significant. 
+ 
+Predicted impacts for Emergency Power Outage 
+The Operator’s maximum 1-hour mean NO2 predicted environmental contribution 
+(PEC) exceeds the ES at 3 receptor locations. With a maximum PEC of 145% of 
+the ES. The hypergeometric distribution analysis indicates that the probability of 
+exceedance is >5% at 10 receptor of the 31 relevant receptor locations. However, 
+there are no predicted of exceedances of the Acute Exposure Guidelines Levels 
+(AEGL-1) for NO 2 at any of the relevant sensitive receptor locations.  AEGL 1 
+represents the least severe health effects which are transient and reversible upon 
+cessation of exposure . The Operator has highlighted that the modelling for 
+Scenario 2 is based on all but one generator from each Phase operating 
+cumulatively, however in reality only the generators required to meet the electrical 
+load will operate during an emergency outage. 
+As the risk of the emergency power outage scenario occurring is very unlikely  (1 
+in every 10 years) based on electrical grid reliability for the area and inbuilt design 
+resilience we are satisfied that there is no significant risk of harm to human. 
+Air Quality Impacts (Habitats) 
+We identified the following European sites within the 10 km screening distance of 
+the facility: 
+• Epping Forest Special Area of Conservation (SAC). 
+ 
+The following non-statutory local wildlife and conservation sites are located within 
+2 Km of the installation: 
+ 

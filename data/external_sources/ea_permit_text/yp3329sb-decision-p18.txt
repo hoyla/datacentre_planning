@@ -1,0 +1,45 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 18 of 28 
+provide adequate secondary containment for coolant and lubrication oil held within the generator 
+set. 
+Urea Solution (AdBlue or similar) 
+Containment Protection - Day Tanks 
+Adjacent to each generator is an integrally bunded (110%) mild steel day tank, containing fuel for 
+the operation of the specific generator, and a similar sized stainless steel bunded tank containing 
+SCR reagent (AdBlue or similar).  
+The day tanks for urea will have the following protection measures to ensure no loss of 
+containment: 
+• Designed to BS799-5:2010 and bund to BS EN 10025.  
+• The tanks have capacity of 1,137 litres, whilst the bund has a capacity of 1,516 litres.  
+Containment Protection - Above Ground Storage Tank 
+For LHR11 a 10,000 litre above-ground stainless steel tank for urea (AdBlue) will be installed 
+within a bunded container unit providing storage to supply the bunded SCR reagent day tanks on 
+each of the generators. 
+The above-ground tank for urea will have the following protection measures to ensure no loss of 
+containment: 
+• Designed to BS79905:2010 and bunded to BS EN 10025. Tank is located in a bunded 
+container. The bund has a capacity of 110% containment. 
+• The bund includes a leak detection sensor which is connected to the generator system 
+SCADA. 
+• All material storage containers will be provided with suitable and adequate containment 
+measures, in line with the requirements of CIRIA 736. The tank will be inspected as part 
+of the routine generator area inspections.  
+Containment Protection - Underground Storage Tank 
+For LHR12 a 10,000 litre underground steel tank for urea (AdBlue) will be installed providing 
+storage to supply the bunded SCR reagent day tanks on each of the generators . 
+The underground tank for urea will have the following protection measures to ensure no loss of 
+containment: 
+• Designed to BS EN 12285-1 standards, and is double skinned (secondary containment) 
+with a capacity of 110% of the capacity of the primary storage container.  
+• Provide sufficient capacity to hold the total volume of urea stored within the SCR reagent 
+day tanks. 
+• Constructed of steel coated in a polyurethane resin to EN 12285-1 standards, for 
+underground storage of flammable liquids. Skin materials for main tank body and the 
+double skin certified to EN 10025 - 2:2004.  
+• Level monitoring and leak detection system capturing over-and under-pressure scenarios 
+linked to the generator system SCADA.  
+• The urea tank is anchored to a concrete base, providing tertiary protection. 
+• All site infrastructure will be maintained regularly. The urea tank will be inspected and 
+maintained in accordance with the care and maintenance instructions provided by 
+manufacturers. 
+Tertiary Containment  

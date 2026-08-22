@@ -1,0 +1,49 @@
+EPR/SP3237JU/A001 
+Date issued: 24/04/2019  13 
+Consultation 
+The following summarises the responses to consultation with other organisations and our notice on GOV.UK 
+for the public and the way in which we have considered these in the determination process. 
+Responses from organisations listed in the consultation section 
+Response received from 
+Public Health England (PHE), 26 October 2018  
+Brief summary of issues raised 
+PHE recommend that any the permit should contain conditions to ensure that potential emissions (products 
+of combustion) do not impact upon public health. 
+PHE raised the following concerns: 
+ limited consideration has been given to potential PM10, sulphur dioxide and carbon monoxide, 
+particularly noting that the site is within an AQMA for PM10;  
+ a draft air quality action plan is included; however, this only details that liaison with regulators is 
+undertaken in the event of long-term generator operation, as opposed to specific mitigation 
+measures; 
+ no consideration is given to cumulative impacts with the adjacent Global Switch facility; 
+ existing diffusion tube monitoring data has been discounted from modelling, given that these are 
+‘roadside’ locations; however, PHE notes that the site is bounded by ‘A-roads’ to the north, east 
+and south. Furthermore, these concentrations are indicative of recorded (actual) as opposed to 
+modelled concentrations; 
+ consideration should be given to proposed times and dates of routine testing as a mitigation 
+measures to potentially lessen public health impact. 
+In addition the applicant has provided limited detail on site fire management plans and how accidents 
+associated with the site combustion activities and fuel storage would be handled, which the EA may wish 
+to consider as part of the permit application. 
+PHE recommended that the following bodies are consulted: the local authority, the Food Standards 
+Agency and the Director of Public Health. 
+Summary of actions taken or show how this has been covered 
+We carried out an assessment of the air quality modelling provided with the permit Application. Our Air 
+Quality Assessment and Modelling team audited the assessment. As outlined in the key issues above, we 
+agree with the Applicant’s conclusions, that the maintenance scenario is unlikely to cause an exceedance 
+of the EQSs.  
+The emergency scenario was based on 500 operational hours. We would consider a more realistic 
+scenario to be 120 hours based on the history of the site having had no black or brown out events requiring 
+all SBGs to fire up since operations began in 1989. Although we cannot rule out an exceedance of the 
+NO2 EQS it is unlikely that the worst predicted emissions will coincide with the worst meteorological 
+conditions and therefore subsequently causing a breach of the EQS.  
+Furthermore, an improvement condition IC1 has been set requiring an Air Quality Management Plan 
+(AQMP). 
+See key issues above for further information.  
+We have consulted on this application with the Local Authority, the Director of Public Health and the Food 
+Standards Agency, however, no responses were received.  
+ 
+ 
+ 
+ 
+ 

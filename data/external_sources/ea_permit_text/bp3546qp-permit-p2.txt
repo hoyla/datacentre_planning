@@ -1,0 +1,44 @@
+ 
+Permit number                               
+EPR/BP3546QP 2 
+Hemel Hempstead Data Centre  
+Permit number EPR/BP3546QP 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows.   
+This permit authorises the operation by Amazon Data Services UK Limited of: 
+- A number of medium combustion plant (MCP) with thermal input between 1 and 50MWth which 
+aggregate to >50MWth. 
+This is regulated as a Schedule 1, Section 1.1 Part A(1)(a) activity under the Environmental Permitting 
+(England and Wales) Regulations 2016 for the burning of any fuel in an appliance with a thermal input of 50 
+or more megawatts (MW). 
+The site is comprised of 33 containerised generators for emergency back-up energy purposes with a 
+combined thermal input capacity of 222MWth. The generators can operate on gas oil or HVO (hydrotreated 
+vegetable oil). 
+The details of the individual generator inputs and associated limits and monitoring requirements are specified 
+in Tables S1.1 and S3.1.  
+Thirty of the back-up generators are double stacked, the remaining three have individual stacks.  Two 
+generators are included as secondary redundancy back-up. There is also a smaller “house” generator to 
+cover non-critical operations during an emergency – such as office lights and the office fire system etc. 
+All stacks terminate at 25m above ground. 
+There will also be fuel storage facilities regulated under this permit: 
+- Each generator will have a “belly tank” capable of holding 16m3 capacity. 
+- A storage tank of 40m3 capacity will be used to fill the “belly tank”. 
+The storage tank is located within a bund capable of containing 110% of the capacity of the tank. 
+Each “belly tank” is containerised and self-bunded to contain 110% of the tank. 
+The generators will be used solely for the purpose for generating power for the facility. No electricity will be 
+exported from the installation. 
+A testing regime is in place which requires the generators to be operated for a defined period at pre-
+arranged intervals to ensure the generators are available to operate in the event of an emergency. 
+There are two gas oil pumps that serve the sprinkler system for the data halls in the event of fire. They are 
+rated at 104kw thermal output (approximately 300kW thermal input) and operate on gas oil not HVO. They 
+are located within the sprinkler pump house which is not within the installation boundary for this permit. We 
+have not included them within this permit at this stage.  
+The data centre is located within the Prologis Industrial Park located within a light industrial and commercial 
+area towards the east of Hemel Hempstead.  
+The northern boundary of the site consists of a number of businesses and a multi-storey car park. There are 
+warehouses to the east; to the west there is a self-storage facility; and to the southwest there is a hotel, car 
+park and open space. Residential properties are located further to the west and south, approximately 100m 
+from the site boundary. Several major roads are located in proximity to the site, including the A414 
+(Breakspear Way) to the south, the A4147 (Maylands Avenue) to the west. The M1 motorway is located 
+1.2km to the east. 

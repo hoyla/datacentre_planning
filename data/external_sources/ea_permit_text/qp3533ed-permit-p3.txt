@@ -1,0 +1,46 @@
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+ 
+Status log of the permit 
+Description Date Comments 
+Application received 
+EPR/QP3533ED/A001 
+Duly made 
+14/07/2015 
+Application to operate standby diesel generators in 
+the event of National Grid failure and maintenance 
+activities.  
+Response to Schedule 5 Notice 
+dated, 01/09/2015 
+09/09/2015 Clarification on worst case operational event (event 3) 
+of the facility. 
+Response to Schedule 5 Notice 
+dated, 21/09/2015 
+21/09/2015 Confirmation and further detail of the emission 
+concentrations used in the air quality modelling. 
+Additional information received  06/10/2015 Confirmation of event 2 – routine maintenance 
+scenario.  
+Additional information received 19/10/2015 Consideration for the use of fast start aero engines 
+based gas turbines as part of the best available 
+techniques (BAT) assessment.  
+Additional information received 16/11/2015 
+and 
+18/11/2015 
+Clarification of the standby diesel generator emission 
+data from the manufacturers.  
+Additional information received  13/01/2016 Clarification of the oxides of nitrogen emission 
+concentration from the manufacturers.   
+Response to Schedule 5 Notice, 
+dated 22/01/2016 
+23/02/2016 Revised proposal for improved standby generator 
+specifications for the additional 12 standby generators 
+to be installed and options for abatement for the 
+installed 12 standby generators.   
+Permit determined 
+EPR/QP3533ED 
+15/03/2016 Permit issued to Santander UK Plc. 
+ 
+End of introductory note 
+  
+Permit number 
+EPR/QP3533ED 3 

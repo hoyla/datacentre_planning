@@ -1,0 +1,84 @@
+ 
+Permit number                               
+EPR/BP3546QP 11 
+Schedule 1 – Operations 
+Table S1.1 activities 
+Activity 
+reference  
+Activity listed in Schedule 
+1 of the EP Regulations  
+Description of specified 
+activity 
+Limits of specified 
+activity 
+AR1 S1.1 A (1) (a): 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 or more 
+megawatts 
+Operation of 33 emergency 
+standby generators with a 
+total thermal input of 
+approximately 222 MWth. 
+The generators will burn 
+gas oil solely for the 
+purpose of providing 
+electricity to the installation 
+in the event of a failure of 
+supply from the National 
+Grid and during 
+maintenance testing. 
+ 
+30 x 6.86MWth = 
+205.8MWth (main back-up 
+generators). 
+2 x 6.86MWth = 13.72MWth 
+(redundancy generators). 
+1 x 2.57 MWth (“house” 
+generator for office power). 
+Total = 222.09 MWth 
+From receipt of raw 
+materials and generation of 
+electricity to despatch of 
+waste. 
+Electricity produced at the 
+installation cannot be 
+exported to the National 
+Grid.  
+The emergency operational 
+hours of the installation 
+shall not exceed the 
+specifications set out in 
+condition 2.3.6. 
+ Directly Associated Activity 
+AR2 Storage of raw materials From receipt of raw materials to use within the facility. 
+AR3 Surface water drainage Input to site drainage system until discharge to surface 
+water drain (emission point W1 covering generator area).  
+Input to site drainage system until discharge to sewer 
+drain (emission point S1 covering top-up gas oil storage 
+area). 
+ 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application, 
+EPR/BP3546QP/A001 
+Section 5 of the application document, 284474-EP-STR 
+provided in response to section 3a (technical standards) of 
+Part B3 of the application form. 
+Technical standards as described in Data Centre FAQ 
+Headline Approach (v11.0, 11/05/2020), Release to Industry. 
+Duly Made 
+17/03/2023 
+Response to Schedule 5 
+Notice dated 
+03/05/2023. 
+Operating techniques described in the responses to the 
+Notice (including accompanying information): 
+- question 2 on use of uninterruptible power supply in the 
+event of National Grid failure. 
+- question 3d on the management of underground 
+pipework including operation of a vacuum leak detection 
+connected to the central database and monitored 24 
+hours per day. 
+05/06/2023 

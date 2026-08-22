@@ -1,0 +1,76 @@
+Permit number                              
+EPR/TP3839QU 11 
+Schedule 1 – Operations  
+Table S1.1 activities 
+Activity 
+Reference 
+Activity listed in 
+Schedule 1 of the EP 
+Regulations  
+Description of specified 
+activity  
+Limits of specified activity 
+AR1 S1.1 A1 (a) 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 or 
+more megawatts 
+Operation of 16 emergency 
+standby generators with a 
+total thermal input of 
+approximately 86.6 MWth. 
+The generators will burn 
+diesel solely for the purpose 
+of providing electricity to the 
+installation in the event of a 
+failure of supply from the 
+National Grid and during 
+maintenance testing. 
+ 
+7 x 5.03 MWth engines 
+9 x 5.71 MWth engines 
+(Existing Medium 
+Combustion Plant) 
+From receipt of raw materials 
+and generation of electricity to 
+despatch of waste.  
+ 
+Electricity produced at the 
+installation cannot be exported 
+to the National Grid. 
+ 
+The emergency operational 
+hours of the installation shall 
+not exceed the specifications 
+set out in condition 2.3.3 of this 
+permit. 
+Directly Associated Activity 
+AR2 Storage or raw materials From receipt of raw materials to use within the facility. 
+AR3 Surface water drainage From input to site drainage system until discharge to 
+soakaway. Drainage system covering fuel storage and 
+refuelling bays drains via oil interceptor. 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application Application forms B2 and B3 and all referenced supporting 
+information including generators testing schedule. 
+ 
+Duly Made 
+13/08/2021 
+Additional information in 
+response to request for 
+information dated 
+05/06/2023 
+ 
+Generators maintenance testing schedule detailed in 
+response to Schedule 5 Notice: Air Quality Assessment 
+Update at Zenium London Two, AQ1014, dated 24 July 
+2023. 
+Received 
+27/07/2023 
+ 
+ 
+ 
+ 
+ 
+ 

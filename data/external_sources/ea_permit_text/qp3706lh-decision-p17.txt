@@ -1,0 +1,42 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 17 of 28 
+are compartmented into 7,600 litre compartments. Therefore, the maximum fuel 
+spillage is 7,500 litres, which the oil/water interceptors would capture. The spilt 
+fuel would then be pumped out of the interceptors by a registered waste disposal 
+company. 
+The interceptors will be maintained in accordance with manufacturers guidance. 
+The interceptors are monitored and alarmed to the BMS system, which measures 
+the oil levels. There will be an inspection twice per year, with alarm probes 
+removed and cleaned. 
+Drainage areas will be visually inspected daily to identify any defects that may 
+affect the integrity and operational efficiency of the interceptors, or risk of leaks to 
+land/groundwater. 
+Although there will be the installation of two new interceptors, the existing 
+emission points to water will not change. The new drainage system installed as 
+part of this Variation, links in with the site’s existing drainage system which 
+discharges to emission points W1 and W2 as already permitted. 
+We have included a Pre-operational Condition (PO2) for the Operator to 
+undertake a review of all liquid storage, containment and bunds at the site. This 
+review will be carried out by a qualified structural engineer and will compare all 
+liquid storage, containment and bunds against the standards set out in CIRIA 
+guidance: Containment systems for the prevention of pollution (C736). We have 
+included this PO to satisfy ourselves that the site’s liquid storage, containment 
+and bunding is fit for purpose. 
+Noise 
+Noise is not a significant aspect of data centre permitting (noting that it is only the 
+standby generators and associated gas oil or equivalent fuel supply systems that 
+are permitted – not the operation of the data centre itself). The site will only run 
+the generators regularly as part of the testing regimes described earlier, 
+occurring during daytime hours. Overnight operation of the generators will only 
+occur in an emergency situation.  
+We have reviewed the requirement for a Noise Impact Assessment using our 
+qualitative noise screening criteria. Based on the nature of the Installation and its 
+location, the limited hours of operation and the proposed noise mitigation 
+measures, we anticipate that the risk of noise impacts will not be significant.   
+Consequently, the assessment confirmed that a Noise Impact Assessment and 
+Noise Management Plan are not required. If a Noise Impact Assessment was 
+required, then the Operator would need to submit a Noise Impact Assessment 
+based on The Environmental Permitting (England and Wales) Regulations 2016. 
+However, we have included our standard noise condition in the permit, which 
+allows us to ask for a Noise Management Plan if we become aware of noise-
+related problems on site. 

@@ -1,0 +1,51 @@
+ 
+                       Page 27 of 28 
+APPENDIX 2 
+Human Health Receptors. 
+REF. ID Receptor 
+National Grid 
+X 
+National Grid 
+Y 
+Originally assessed human health receptors   
+HR1 Maddox Road 507893 207306 
+HR2 27 The Flags 507866 207369 
+HR3 26 The Flags 507853 207400 
+HR4 17 The Flags 507806 207472 
+HR5 9 Arundell Close 507779 207525 
+HR6 22 Barley Croft 508159 207282 
+HR7 22 Hales Park Close 508154 207768 
+HR8 33 Highland Drive 507996 207208 
+HR9 
+Holiday Inn Hemel 
+Hempstead 508520 207432 
+HR10 7 Maddox Road 507918 207225 
+HR11 17 Barley Croft 508113 207244 
+Additional human health receptors assessed after planning decision 
+HR12_A Façade of building A (north) 507897 207409 
+HR12_B Façade of building A (north) 507897 207409 
+HR12_C Façade of building A (north) 507897 207409 
+HR12_D Façade of building A (north) 507897 207409 
+HR13_A Façade of building B (south) 507970 207379 
+HR13_B Façade of building B (south) 507970 207379 
+HR13_C Façade of building B (south) 507970 207379 
+HR13_D Façade of building B (south) 507970 207379 
+HR13_E Façade of building B (south) 507970 207379 
+HR13_F Façade of building B (south) 507970 207379 
+HR13_G Façade of building B (south) 507970 207379 
+HR14_A Façade of building B (east) 507967 207412 
+HR14_B Façade of building B (east) 507967 207412 
+HR14_C Façade of building B (east) 507967 207412 
+HR14_D Façade of building B (east) 507967 207412 
+HR14_E Façade of building B (east) 507967 207412 
+HR14_F Façade of building B (east) 507967 207412 
+HR14_G Façade of building B (east) 507967 207412 
+HR15_A Façade of building B (north) 507937 207423 
+HR15_B Façade of building B (north) 507937 207423 
+HR15_C Façade of building B (north) 507937 207423 
+HR15_D Façade of building B (north) 507937 207423 
+HR15_E Façade of building B (north) 507937 207423 
+HR15_F Façade of building B (north) 507937 207423 
+HR15_G Façade of building B (north) 507937 207423 
+HR16_A Façade of building C (north) 507977 207363 
+HR16_B Façade of building C (north) 507977 207363 

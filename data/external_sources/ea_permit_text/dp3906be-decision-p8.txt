@@ -1,0 +1,38 @@
+ 
+ EPR/DP3906BE                         Page 8 of 14 
+We do acknowledge that it would not be practicable to require the Applicant at 
+this stage to upgrade all plant to BAT standards. Retrofit abatement techniques 
+for existing installations for engine emissions such as SCR would not normally be 
+expected for standby plant to mitigate the emissions for standby/emergency 
+operation, but it may be justified when the results of the environmental risk 
+assessment warrants so. The operator has agreed to equip the generators 
+located outside with SCR. These are identified as B6/7 01, B6/7 02, B8/9 01 and 
+B8/9 02.  
+The operator has also agreed to change the configuration of the stacks for 9 of 
+the generators. The revised stack setups were selected in line with Environment 
+Agency best practice, as prescribed in the Data Centre FAQs (v21) guidance. 
+The stacks for generators B8/9 03, B8/9 06, EC 01, EC 02 and EC 03 are to be 
+changed from horizontal to vertical and extend to roof height plus 3m (40.5m 
+above ground level). The stacks orientation for generators B6/7 01, B6/7 02, B8/9 
+01 and B8/9 02 is already vertical but will be extended by 4 meters (8.9m above 
+ground level for B6/7 and 8.1m above ground level for B8/9). 
+We have included IC3 requesting the Operator to provide evidence that the SCR, 
+DPF and stack configuration changes have been implemented. 
+The data centre’s internal power supply comprises fourteen power supplies which 
+are fed from two separate substations. Of those fourteen supplies, only twelve 
+are used at any one time. The two spare supplies are maintained for use in case 
+of a sudden loss of power to the Site. In such a situation, the Site can switch to 
+use one of the two spare supplies meaning that supply from the National Grid 
+can be maintained rather than relying on the on-site generators to produce 
+electricity. When incoming mains power supply is disrupted, the UPS (battery 
+arrays) on site is designed to last at least 6 minutes. The UPS increases the 
+Site’s resilience to power outages without the on-site generators needing to 
+operate. 
+Decision considerations 
+Confidential information 
+A claim for commercial or industrial confidentiality has not been made. 
+The decision was taken in accordance with our guidance on confidentiality. 
+Identifying confidential information 
+We have not identified information provided as part of the application that we 
+consider to be confidential.   
+The decision was taken in accordance with our guidance on confidentiality. 

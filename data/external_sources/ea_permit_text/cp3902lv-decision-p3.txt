@@ -1,0 +1,37 @@
+ 
+EPR/CP3902LV/V003 
+NTT Dagenham Data Centre  Page 3 of 20 
+ASSESSMENT AGAINST BAT 
+Engine specification 
+We accept that gas oil fired diesel generators are presently a commonly used 
+technology for standby generators in data centres. 
+The default generator specification as a minimum for new plant to minimise the 
+impacts of NOx emissions to air is 2g TA-Luft or EPA Tier 2 (or equivalent 
+standard) or an equivalent NOx emission concentration of 2000 mg/m3. 
+The applicant confirmed that the proposed engines are emissions optimised EPA 
+Tier 2 compliant. 
+The SBGs meet the required standard. We agree with the applicant that the 
+engines are BAT for the proposed operation.  
+Choice of fuel 
+The applicant has proposed to use hydrotreated vegetable oil (HVO) as the fuel, 
+or gas oil when this is unavailable. We agree that HVO is a suitable substitute, 
+and the permit authorises its use. 
+We are in the process of developing our position on the use of other gas oil 
+substitute fuels, therefore we have required that if any of these fuels are 
+proposed, written agreement is sought by the operator from the Environment 
+Agency’s regulatory officer. 
+Table S2.1 of the permit specifies the fuel to burned in the engines to consist of 
+gas oil or equivalent substitute to be agreed in writing with the Environment 
+Agency, with a sulphur concentration of 0.001% w/w max. 
+Liquid fuel and raw material storage 
+SBGs and their associated fuel belly tanks and SCR abatement systems will be 
+located on the ground floor of the LON1B data centre building in dedicated 
+generator rooms. The generator rooms will be contained to 110%. 
+LON1B will benefit from impermeable surfacing. 
+There are no bulk storage fuel tanks on site, apart from the individual SBG belly 
+tanks.  
+Fuel will be stored in a bunded belly tank for each SBG. The belly tank is integral 
+to the SBG units, being located beneath the base of each unit. The belly tank 
+capacity for each SBG is 36m3 (36,000 litres).  
+Based on a total of 24 SBGs, a maximum of approximately 864,000 litres of fuel 
+can be stored at the LON1B data centre.  

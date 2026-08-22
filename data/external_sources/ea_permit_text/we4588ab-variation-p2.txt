@@ -1,0 +1,49 @@
+ 
+Variation and consolidation  
+application number  
+EPR/WE4588AB/V002  2 
+KAO Data Harlow Campus  
+Permit number EPR/WE4588AB 
+Introductory note 
+This introductory note does not form a part of the notice 
+Under the Environmental Permitting (England & Wales) Regulations 201 6 (schedule 5, part 1, paragraph 19) 
+a variation may comprise a consolidated permit reflecting the variations and a notice specifying the variations 
+included in that consolidated permit. 
+Schedule 1 of the notice specifies the conditions that have been varied and schedule 2 comprises a 
+consolidated permit which reflects the variations being made. All the conditions of the permit have been 
+varied and are subject to the right of appeal. 
+This variation is to increase the number of standby generators from 8 to 25, and to change the activity from a 
+standalone Medium Combustion Plant (MCP) permit to a Schedule 1 listed activity under the Environmental 
+Permitting Regulations: Section 1.1 Part A(1)(a): Burning of any fuel in an appliance with a rated thermal 
+input of 50 or more megawatts (MW). The thermal capacities of the already permitted plant will also change 
+due to revised calculations by the operator. The following changes have been made to the individual data 
+centres that make up the campus: 
+KLON-01: The thermal capacity of already permitted generators Gen 1, Gen 7 and Gen 4 have changed 
+from 4.84MWth to 4.48MWth each and Gen 2 and Gen 5 have changed from 5.17MWth to 4.61MWth each. 
+Two additional generators (Gen 3 and Gen 6) each with a thermal capacity of 4.61MWth have been added. 
+None of the generators are fitted with SCR abatement.  
+KLON-02: The thermal capacity of already permitted generators Gen 1, Gen 2 and Gen 7 have changed 
+from 5.17MWth to 4.61MWth each.  Four additional generators (Gen 3, Gen 4, Gen 5 and Gen 6) each with 
+a thermal capacity of 4.61MWth have been added. The already permitted generators are not fitted with SCR 
+abatement, but the additional four are.  
+KLON-03: Eleven new generators (Gen 1 to Gen 11) each with a thermal capacity of 8.01MWth have been 
+added. All eleven generators are fitted with SCR abatement.  
+The SCR NOx abatement system on the generators will be used to limit the NOx emissions to a maximum of 
+190 mg/Nm3 per generator at 15% oxygen. 
+The total thermal capacity for the campus is 152.26MWth. All plant are classified as new MCP, except 
+KLON-01 Gen 1, Gen 7 and Gen 4 which are classified as existing MCP. Due to the introduction of SCR 
+abatement for some of the generators, urea is used as a raw material which is located in individual tanks 
+within the applicable generator containers. Each Urea tank is fabricated from UV stabilised HDPE complete 
+with 110% bund and has a stainless-steel drip free fill point. A thermostatically controlled heater provides 
+frost protection. The tanks have overfill alarms and gauges  
+The remainder of the permit remains unchanged and is as follows: 
+The purpose of the back-up generators is to supply electricity to the site in the event of failure of national grid 
+supplies. The generators are classed as “excluded generators” under the Environmental Permitting 
+Regulations because they operate less than 50 hours per year for the purposes of maintenance and testing 
+and are used for this purpose for approximately 2 hours per month for each generator. The generators do 
+not have a contract to supply electricity to the national grid. 
+The generators are in buildings which form part of an operational data centre campus located in a business 
+park in Harlow. The emissions from each of the generators are via individual exhaust emission stacks . 
+The gas oil (or equivalent substitute) fuel is stored in individual double skinned tanks  (integrally bunded to 
+110% capacity) below each individual generator that they serve. The generators are fed directly from belly 
+tanks, there are no day tanks in use. Balancing lines (double skinned pipes) are present between tanks for 

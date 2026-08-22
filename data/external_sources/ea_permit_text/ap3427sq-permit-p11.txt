@@ -1,0 +1,93 @@
+ 
+Permit number             
+EPR/AP3427SQ 11 
+Schedule 1 – Operations  
+Table S1.1 activities 
+Activity 
+reference  
+Activity listed in Schedule 
+1 of the EP Regulations  
+Description of specified 
+activity  
+Limits of specified 
+activity  
+AR1 Section 1.1 Part A(1) (a) 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 or more 
+megawatts. 
+Operation of 42 emergency 
+standby generators with a 
+total thermal input of 
+approximately 324.6 MWth. 
+ 
+The generators will burn 
+gas oil fuel or equivalent 
+substitute solely for the 
+purpose of providing 
+electricity to the Installation 
+in the event of a failure of 
+supply from the National 
+Grid and during 
+maintenance testing. 
+ 
+Aggregated Back-up 
+Generation (ABG) 
+consisting of: 
+40 x 8 MWth and 2 x 2.1 
+MWth (unabated, New 
+MCP) 
+ 
+From receipt of raw 
+materials and generation of 
+electricity to despatch of 
+waste.  
+ 
+Electricity produced at the 
+Installation cannot be 
+exported to the National 
+Grid. 
+ 
+The emergency operational 
+hours of the Installation 
+shall not exceed the 
+specifications set out in 
+condition 2.3.3 of this 
+permit. 
+Directly Associated Activity 
+AR2 Storage of raw materials From receipt of raw materials to use within the facility. 
+AR3 Surface water drainage SW1 (public surface water sewer). Drainage system 
+covering generator areas, fuel storage and any surfacing 
+beneath above ground fuel transport lines discharged via 
+oil separator to an open watercourse (Ouzel Brook). 
+Discharge from WW1 and WW2, flows into the wider data 
+centre foul water system before it ultimately discharges to 
+Anglian Water foul sewer.  
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application 
+EPR/AP3427SQ/A001 
+Application Forms B2 and B3 and all referenced supporting 
+information. 
+ 
+ Duly Made 
+07/02/2025 
+Application 
+EPR/AP3427SQ/A001 
+Generators maintenance 
+testing schedule  
+Generators maintenance testing schedule detailed in 
+application documents Linmere Island Data Centre 
+EPR/AP3427SQ/A001 Air Quality Assessment dated 
+December 2024. 
+ Duly Made 
+ 07/02/2025 
+Response to Schedule 5 
+Notice dated 22/09/2025 
+Response to question 1 detailing containment control, 
+questions 2 detailing drainage, question 3 detailing 
+interceptor, question 4 detailing maintenance, question 5 
+detailing piping and infrastructure, question 6, detailing 
+operational areas. 
+ 17/10/2025 

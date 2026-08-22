@@ -1,0 +1,45 @@
+EPR/SP3237JU/A001 
+Date issued: 24/04/2019  6 
+Emissions to Surface Water and Land 
+There will be no emissions to surface water or land from the installation. 
+ 
+Noise and Vibration 
+The application contained a noise impact assessment, undertaken by SLR Consulting Limited, which 
+identified sensitive receptors and potential sources of noise from the installation. The primary noise sources 
+on the site are the SBGs, chillers and fans.  
+The assessment was completed in line with British Standard 4142 which assess the impact of industrial and 
+commercial sound on residential receptors by subtracting the measure background from the rating level. 
+BS4142 states: “A difference of +10 dB or more is likely to be an indication of a significant adverse impact, 
+depending on the context.” and “A difference of around + 5 dB is likely to be an indication of an adverse 
+impact, depending on the context.” 
+The assessment modelled the following two scenarios: 
+ normal operations (fans at normal capacity, generators not running); and  
+ emergency operation (fans at high capacity, generators running). 
+Under normal operation the predicted noise level at the most impacted receptor was 46 dB and was not 
+audible above traffic noise during the background survey. During an emergency situation the noise levels 
+maybe audible at receptor locations and a 4 dB penalty was applied for the tonal character of the noise. The 
+predicted noise level at the most impacted receptor, under emergency operations was 53 dB.  
+The background sound level at this receptor was 63 dB during the day and night time. Therefore, during 
+normal operation the noise level from the site is predicted to be 17 dB lower than the derived background. 
+During emergency operation the noise level is predicted to be 6 dB lower than the derived background.  
+In line with BS4142 this indicates that the installation is unlikely to have an adverse impact on nearby 
+receptors.  
+Although no noise management plan has been requested, condition 3.4 enables the Environment Agency to 
+request one if considered necessary in the future.  
+ 
+Best Available Techniques (BAT) 
+Engines  
+The Applicant carried out a review of the following candidate combustion technologies and made an 
+assessment of the technology in order to determine which technology can be considered BAT.  
+ option 1 - diesel fired generators; 
+ option 2 - gas fired generators; 
+ option 3 - fuel oil fired gas turbines; and 
+ option 4 - fuel cell (hydrogen) generators. 
+The assessment considered the following key requirements, for the SBGs to provide emergency back-up 
+electricity, for the candidate technologies:  
+ start-up time; 
+ reliability; 
+ independence of off-system services; and 
+ causing the least environmental impact.  
+The BAT assessment highlighted that option 2, gas fired generators, when compared to diesel generators 
+produce fewer polluting emissions to air. However, the assessment states that they would not be suitable as 

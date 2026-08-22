@@ -1,0 +1,39 @@
+ 
+ Page 11 of 17 
+• No testing of any generators/DRUPS shall be carried out within the same 
+24-hour period as the monthly concurrent testing of the Phase V 
+generators. 
+ 
+Table S1.2 (Operating techniques) 
+The testing and maintenance scenarios are detailed in this document and 
+controlled though permitted operating techniques in table S1.2 of the permit.  
+ 
+Table S1.3 (Improvement programme) 
+IC1 - Air Quality Management Plan (AQMP) 
+Whilst we are satisfied that the maintenance and testing regime is appropriate, 
+given the local issues regarding air quality, including the designation of the 
+AQMA, we have included an improvement condition in the permit. This requires 
+the operator to produce an updated Air Quality Management Plan.  
+IC2 - Performance of SCR systems 
+This condition has been included to ensure that the proposed SCR systems are 
+fit for purpose and as described in the application. 
+IC3 – Monitoring plan – flue gas monitoring requirements 
+This condition has been included requiring the operator to submit a monitoring 
+plan detailing their proposal for the implementation of the flue gas monitoring 
+requirements specified in table S3.1. 
+Table S1.4 (Pre-operational condition for future development) 
+PO1 – Commissioning 
+The Operator has not modelled the commissioning of the proposed new engines 
+in the AQ assessment. It is therefore unclear whether the impact from 
+commissioning has been covered by the existing AQ assessment. For this 
+reason, the Operator is required to submit a report detailing the proposed 
+commissioning and demonstrating the operations are covered within the site’s 
+permitted regular testing regime. If the commissioning is not covered within the 
+site’s permitted regular testing regime, the operator shall submit an 
+environmental risk assessment for approval by the Environment Agency, 
+demonstrating that the environmental risks during the commissioning are 
+minimised and remain not significant. 
+Table S4.2 (Performance parameters) 
+Reporting of testing and maintenance  run hours is required annually . Operation 
+during an emergency scenario requires both notification  within 24 hours  and 
+annual reporting. 

@@ -1,0 +1,188 @@
+ 
+Permit number                              
+EPR/BP3945QX 15 
+OFFICIAL 
+OFFICIAL 
+Schedule 3 – Emissions and monitoring 
+Table S3.1  Point source emissions to air – emission limits and monitoring requirements 
+Emission 
+point ref. & 
+location 
+Source Parameter Limit 
+(including 
+unit)  
+Reference 
+period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+A1 to A8 and 
+A12 to A16 
+(LON4) 
+Emission 
+points from 
+generators as 
+shown on site 
+plan in 
+schedule 7 
+Gas oil fuelled 
+generator 
+exhausts 
+ 
+LON4: 
+5 x 7.28  MWth  
+8 x 6.04 MWth  
+ 
+(Existing Plant) 
+ 
+No 
+parameter 
+set 
+No limit 
+set 
+- - - 
+A9 to A11, 
+A17 to A19 
+(LON4), 
+A21 to A26 
+(LON3) and 
+A27 to A32 
+(LON10) 
+Emission 
+points from 
+generators as 
+shown on site 
+plan in 
+schedule 7 
+Gas oil fuelled 
+generator 
+exhausts 
+ 
+LON4: 
+3 x 6.29 / 6.04 
+MWth  
+3 x 5.71 / 5.61 
+MWth  
+ 
+LON3: 
+6 x 5.14 / 4.72 
+MWth  
+ 
+LON10: 
+6 x 5.14 / 5.42 
+MWth  
+ 
+(New Medium 
+Combustion 
+Plant) 
+Oxides of 
+Nitrogen  
+(NO and 
+NO
+2 
+expressed 
+as NO
+2) 
+No limit 
+set 
+In line with 
+web guide 
+‘Monitoring 
+stack 
+emissions: 
+low risk 
+MCPs and 
+specified 
+generators’   
+Published 16 
+February 
+2021 
+(formerly 
+known as 
+TGN M5)  
+Every 1500 
+hours of 
+operation or 
+once every 
+five years 
+(whichever 
+comes first). 
+[Note 1] 
+ 
+In line with 
+web guide 
+‘Monitoring 
+stack 
+emissions: 
+low risk 
+MCPs and 
+specified 
+generators’   
+Published 16 
+February 
+2021 
+(formerly 
+known as 
+TGN M5)  
+Carbon 
+monoxide 
+No limit 
+set 
+In line with 
+web guide 
+‘Monitoring 
+stack 
+emissions: 
+low risk 
+MCPs and 
+specified 
+generators’   
+Published 16 
+February 
+2021 
+(formerly 
+known as 
+TGN M5) 
+Every 1500 
+hours of 
+operation or 
+once every 
+five years 
+(whichever 
+comes first). 
+[Note 1] 
+ 
+In line with 
+web guide 
+‘Monitoring 
+stack 
+emissions: 
+low risk 
+MCPs and 
+specified 
+generators’   
+Published 16 
+February 
+2021 
+(formerly 
+known as 
+TGN M5) 
+Sulphur 
+dioxide 
+No limit 
+set 
+- No 
+requirement 
+- 
+Particulate 
+Matter 
+No limit 
+set 
+- No 
+requirement 
+- 
+Note 1: Unless otherwise agreed in writing with the Environment Agency as a result of approval of 
+Improvement Condition IC2. 
+ 

@@ -1,0 +1,40 @@
+ 
+LIT 11984  3/6/2026                     Page 8 of 17 
+Due to the identification of the potential for significant adverse impacts during the 
+generator full load testing scenario, we requested that a Noise Management Plan 
+(NMP) be produced. The NMP is included within Table S1.2 as an Operating 
+Technique.  
+Best Available Technique (BAT) 
+We accept that oil fired diesel generators are presently a commonly used 
+technology for standby generators in data centres. 
+The default generator specification as a minimum for new plant to minimise the 
+impacts of emissions to air (NOx) is 2g TA-Luft (or equivalent standard) or an 
+equivalent NOx emission concentration of 2000 mg/m3. The generators on the 
+site meet this standard. We agree with the operator that the engines are BAT for 
+the proposed operation.  
+Fuel storage & delivery 
+Fuel is stored in individual double skinned tanks (integrally bunded to 110% 
+capacity) below each individual generator that they serve. The generators are fed 
+directly from belly tanks; there are no day tanks in use. Balancing lines (double 
+skinned pipes) are present between tanks for the generators within KLON-01 
+only, which allow the tank fuel to be shared between tanks The tanks vary in size 
+from 27,000 litres up to 47,939 litres, with a total combined capacity of 919,252 
+litres. They are fitted with high- and low-level alarms and overfill prevention 
+valves to prevent over filling, with bund and leak detection alarms also present. 
+Each tank has its own local fill point located on the tank itself at the roadside of 
+the generator (i.e. there is no common fill point area remote to the tank), inside a 
+cabinet that will be locked when not in use and located above a drip tray to 
+capture minor spillages during refuelling.  
+The site is covered in hardstanding and for the areas of KLON-02 and KLON-03, 
+surface water drains into oil interceptors prior to discharge from site and into the 
+public surface water sewer system at emission point SW1. A recent Compliance 
+Assessment Report (Report ID: WE4588AB/0586731, 04/11/2025) identified that 
+the surface drainage at KLON-01 appeared to be at risk for delivery spills. An 
+improvement condition has been added to the permit to review this, identify and 
+install a suitable interceptor.  
+We are satisfied that these controls meet the necessary requirements and the 
+likelihood of any release of fuel to the environment has been minimised.  
+Choice of fuel 
+A recent Compliance Assessment Report (Report ID: WE4588AB/0586731, 
+04/11/2025) identified that the generators are currently fuelled on HVO but are 
+able to operate on gas oil also. 

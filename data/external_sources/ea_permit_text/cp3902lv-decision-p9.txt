@@ -1,0 +1,37 @@
+ 
+EPR/CP3902LV/V003 
+NTT Dagenham Data Centre  Page 9 of 20 
+They therefore requested that the testing limitation was set as follows: 
+No other testing at either LON1A or LON1B shall take place within the same day 
+as a LON1A black building (4-hour) test. 
+LON1A black building tests are limited to a maximum of 4 hours within any 24-
+hour period. 
+Environment Agency review of applicant’s assessment 
+We audited the air quality impact assessment and detailed our findings and 
+recommendations in report reference AQMAU-C2845-RP01, dated 04 October 
+2024. 
+We determined that the risk of exceedance of the CO and PM10 ESs was de 
+minimis, therefore, we only considered the impact from NOx emissions in our 
+audit. 
+We note that the applicant proposes to primarily fuel the SBGs with hydrotreated 
+vegetable oil (HVO) but have not precluded the use of diesel where needed. The 
+impact assessment assumes that diesel is the primary fuel. We agree that this is 
+worst-case as HVO would have lower emissions than diesel. 
+The applicant stated that the SCR will not emit ammonia (NH3) via ammonia 
+‘slip’, but that additional abatement in the form of ammonia slip catalysts (ASC) 
+will be present in the SCR to further prevent the release of NH3. We considered 
+the assurances to be sufficient and did not consider NH3 in our audit. 
+For the purposes of the daily NOX outputs, the applicant grouped the maximum 
+number of SBGs that could be expected to be operated in the same 24-hour 
+period into the same model runs. Although not stated in the air quality impact 
+assessment, the applicant’s factoring implies that only one test per SBG bank 
+(LON1A and LON1B) would be run in any 24-hour period. We have applied this 
+assumption in our audit. 
+We asked the applicant to provide a summary of their findings of daily NOx PCs, 
+to support their suggested testing and limitations (see above). We reviewed the 
+additional information setting out impacts for various tests, and the implications 
+for limitation or flexibility on combining tests across LON1A and LON1B. We 
+agree with their conclusions and have included the necessary limitation in table 
+S1.1 of the permit, with a minor change from ‘same day’ to ‘same 24-hour 
+period’. 
+Refer to ‘PERMIT CONDITIONS’ section of this document. 

@@ -1,0 +1,44 @@
+ 
+LIT 11984                                                     Page 10 of 16 
+of mains power outside of acceptable limits (brown outs), will occur during the 
+operational lifetime of the building. In the event of grid failure, power is initially 
+provided by the site’s Uninterruptible Power Supply (UPS) System (arrangement 
+of batteries) until the sites generators start up and take the site electrical load. 
+These start from ‘cold’ to take on the load from the UPS (typically within 15 – 30 
+seconds). The backup generators provide ongoing power until a stable mains 
+electrical supply is restored. 
+The generators and batteries will be used solely for the purpose for generating 
+power for the facility. No electricity will be exported from the installation.  
+We are satisfied that the installation meets BAT relevant to the permitted 
+operation.  
+ 
+ 
+Site Drainage and groundwater 
+In our review we noted that part of the wider Data Centre site is located upon a 
+Principal Aquifer within the Lynch Hill Gravel Member formation. However, this 
+aquifer does not underlie areas of the site used for combustion activities or 
+associated fuel storage (the area covered by the installation boundary).  
+The following measures are proposed to prevent soil and groundwater 
+contamination:   
+• There are petrol interceptors present to reduce the risk from spills entering 
+the site drainage system. 
+• The site is covered in hardstanding, therefore reducing the likelihood of 
+any potential route to ground for spilt fuel.  
+• Generator belly tanks are double skinned and alarmed in the event of leak 
+/ overspill.  
+• Fill points are located over drip trays to capture any spills. 
+• Fuel tanks are located behind walls to protect them from being struck by 
+vehicles moving within the site. 
+ 
+Condition 3.1.2 of the environmental permit requires periodic monitoring at least 
+once every 5 years for groundwater and 10 years for soil, unless such monitoring 
+is based on a systematic appraisal of the risk of contamination. 
+ 
+The data centre is already operational, the drainage and containment 
+infrastructure are therefore already in place and pre-date the permit application. 
+We have set an improvement condition (IC4) which requires the operator to 
+review the drainage and fuel containment measures currently in place at the site 
+against the standards set out tin the Oil Storage Regulations. As part of this 
+improvement condition, they must identify any required improvements and 
+provide an implementation timescale to be agreed by the Environment Agency. 
+  

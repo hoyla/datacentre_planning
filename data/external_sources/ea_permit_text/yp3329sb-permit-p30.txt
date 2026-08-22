@@ -1,0 +1,24 @@
+ 
+Performance parameters 
+ 
+Permit number:  Operator:  
+Facility name:          Form Number: Performance 1, DD/MM/YYYY 
+ 
+Reporting of other performance indicators for the period DD/MM/YYYY to DD/MM/YYYY 
+ 
+Parameter Value Units 
+Gas oil usage   Tonnes 
+Generator annual operation in emergency scenario  Number of runs 
+Run Duration of run  
+1   
+2   
+   
+   
+Generator annual operation for testing and maintenance [Note 1]  Number of runs 
+Run Duration of run  
+1   
+2   
+   
+   
+ 
+Note 1: Provide details of each testing and maintenance test in the following template: 

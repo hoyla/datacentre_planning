@@ -1,0 +1,53 @@
+ 
+ Page 18 of 19  
+should consider whether sufficient mitigation measures are required such 
+as the preparation of an Air Quality Emergency Action Plan.  
+ 
+The consultee also identifies that noise from the installation may be of concern 
+and notes that the applicant has provided a detailed noise assessment. In the 
+case of a severe outage, even though site design and low likelihood of 
+occurrence are stated as mitigating factors, residential receptors may be 
+impacted during night hours.  
+The consultee recommends that the regulator should be satisfied that the 
+installation will not cause significant off-site noise impacts during periods of 
+severe outage and that adequate mitigation is in place.  
+ 
+Based on the H1 screening and detailed modelling provided, testing shows Air 
+Quality Standards (AQS) were unlikely to be breached. However, in emergency 
+scenarios there is the potential for the one hour AQS to be breached for nitrogen 
+oxides. This risk is considered to be acceptable based on the fact that this is 
+based on an extreme worst case scenario and that there has only been 2 or 3 
+instances in the last nine years where the generators have been needed. Even if 
+breaching the AQS for NO
+x for a single hour does not constitute a breach then 
+the consideration of the Acute Exposure Guidance Levels (AEGL) should be 
+made. It is requested that a written action plan is produced for managing 
+emissions during prolonged emergency operation. Based on the information 
+provided risk to human health is considered low.
+ 
+ 
+Summary of actions taken:  
+We agree that emergency operation is extremely unlikely, but have imposed a 
+permit restriction limiting the operation of the installation to 500 hours per year. 
+We have also included the maintenance testing schedule to be followed by the 
+operator in the operating techniques table of the permit (S1.2). 
+Impacts on human receptors screened out for NO
+2 and PM10 pollutants due to 
+the unlikelihood of emergency power generation and low probability of short 
+term exceedances for the pollutants. Our audit of the air quality modelling did 
+not show any exceedance of the AEGLs at residential receptors and we required 
+the operator to submit an isopleth map showing short-term NO2 concentrations 
+around the installation. This indicated that the areas predicted to exceed the 
+AEGL-1 levels were very small in extent and did not coincide with places that 
+the public were likely to congregate. An improvement condition has been set 
+requiring the operator to develop an Air Quality Management Plan. 
+We have imposed standard noise conditions in the permit. We consider that 
+these will be sufficient to control any noise issues arising from the installation. 
+ 
+ 
+Response received from: South Oxfordshire & Vale of the White Horse 
+District Councils – Environmental Health:  
+The consultee noted that, subject to the implementation of the mitigation 
+measures identified within the Noise Impact Assessment for Environmental 
+Permit Application prepared by RPS (dated 12 January 2021), they had no 
+Objections. 

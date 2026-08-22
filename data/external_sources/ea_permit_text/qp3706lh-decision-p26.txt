@@ -1,0 +1,42 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 26 of 28 
+take all appropriate measures to prevent or control pollution, in accordance 
+with the relevant sector guidance and industry best practice. 
+ 
+Summary of actions taken:  
+With regard to appropriate permit conditions concerning the Operator’s Air 
+Quality Assessment the following applies: 
+• As described in more detail in the Air Quality Section above, the Operator 
+submitted an Air Quality Risk Assessment that considered four main 
+operational scenarios: two testing scenarios (monthly and six-monthly) 
+and two emergency scenarios (outage) of 48 hours and 72 hours and the 
+potential impact of those scenarios at 17 discrete human receptor 
+locations, including residential properties, schools, leisure, commercial, 
+industrial and retail.  
+ 
+• We audited the Operator’s air quality assessment, including undertaking 
+detailed check modelling and completing sensitivity analysis.   
+ 
+• We agree with the Operator’s overall conclusions that the site is unlikely to 
+cause an exceedance of an ES at human health receptors providing the 
+electricity grid remains reliable. 
+ 
+• We have set improvement condition (IC6) to require the Operator to 
+reduce NOx emissions further by reviewing the testing regime and 
+assessing other opportunities to reduce emissions. The additional 
+measures specified under IC6 are expected to achieve a reduction of 
+impacts during both the testing and emergency operations. 
+ 
+With regard to appropriate permit conditions concerning appropriate measures to 
+prevent or control pollution in accordance with the relevant sector guidance and 
+industry best practice, the following applies: 
+• As described in more detail in the Protection of Land, Surface Water & 
+Groundwater section above, the Operator has provided evidence of 
+pollution control and/ or prevention. We have also included PO2 for the 
+Operator to undertake a review of all liquid storage, containment and 
+bunds at the site. This review will be carried out by a qualified structural 
+engineer and will compare all containment and bunds against the 
+standards set out in CIRIA guidance: Containment systems for the 
+prevention of pollution (C736). We have included this PO to satisfy 
+ourselves that the site containment and bunding is fit for purpose. 
+ 

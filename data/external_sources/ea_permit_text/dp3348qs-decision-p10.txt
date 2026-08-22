@@ -1,0 +1,41 @@
+ 
+                       Page 10 of 17 
+OFFICIAL 
+OFFICIAL 
+Protection of Land, Surface Water & Groundwater 
+The site is fully concreted, including fuel delivery areas and the two engine 
+compounds.  The surface water drainage system in these areas is separate from 
+the data centre building and car park surface water drainage systems.   
+Surface water run-off from the each of the engine compounds discharges via 
+dedicated bypass interceptors, which are equipped with oil level sensors and 
+alarms, before discharging to two soakaways (emission points W1 and W2).  
+During storm conditions, the storm excess overflows into the Thames Water 
+surface water sewer system (emissions points W3 and W4).  The ultimate 
+discharge point of the surface water sewer is the Chalvey Ditches. 
+Fuel storage areas are inspected daily, including the surfaces and pathways to 
+the drains.   Delivery procedures are included in the operator’s EMS.  All 
+deliveries are planned in advance, supervised and all at-risk drains are covered. 
+The fuel delivery connection points are located within a locked delivery housing 
+with a drip tray also within the container structure.  Tanks are not filled more than 
+95% of capacity.  
+The operator’s EMS also includes procedures for managing accidents, incidents 
+and complaints and details the actions required in the event of small incidents 
+such as minor spills and leaks, as well as major incidents such as fire and larger 
+spills.  
+Fuel (ultra-low sulphur gas oil) is stored in steel belly tanks, one situated under 
+each engine/generator set container.  Gas oil is automatically supplied to the 
+generators from the tanks, which are integrally bunded with the void capacity 
+being 110% of the capacity of the tank, in line with CIRIA guidance and with a 
+leak detection alarm fitted between the inner and outer skins.  The tanks are 
+equipped with overfill prevention valves.   
+We have included improvement condition IC4 that requires the operator to install 
+shut-off valves with oil detection prior to the discharge point into each soakaway.   
+Drainage drawings were provided with the application.  Details of the existing 
+condition of the site can be found in the Site Condition Report supplied with the 
+application, which we have reviewed and consider satisfactory. 
+ 
+ 
+Decision considerations 
+Confidential information 
+A claim for commercial or industrial confidentiality has not been made. 
+The decision was taken in accordance with our guidance on confidentiality. 

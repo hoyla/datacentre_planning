@@ -1,0 +1,45 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 9 of 28 
+Human Health Assessment 
+As a result of our checks, although we do not fully agree with the Operator’s 
+numerical values, the outcome of our checks indicate the following: 
+• The Operator’s testing scenario predictions are unlikely to make a 
+significant contribution or cause an exceedance of an Environmental 
+Standard (ES) at human health receptors.  
+ 
+• We cannot rule out exceedances of the 1-hour mean NO2 ES, 10-minute 
+NO2 AEGL-1 and the 1-hour NO EAL for the emergency scenario. 
+ 
+• We understand from the Operator that the likelihood of emergency 
+operation taking place is considered low as grid outages are unlikely 
+based on historic data, therefore, the likelihood of exceedances of any 
+of the ES is considered low. 
+ 
+Habitats Assessment 
+As a result of our checks, although we do not fully agree with the Operator’s 
+numerical predictions, the outcome of our checks indicate the following: 
+• In the case of the testing scenarios, all PECs are predicted to be within 
+the critical levels and loads at all local nature site receptors. 
+ 
+• We predict exceedances of the annual NOx critical level of 30 μg/m3 and 
+nitrogen deposition critical load of 10 kgN/ha/yr at Brent Reservoir SSSI 
+for the testing scenarios. We note that the background NOx and nitrogen 
+deposition concentrations are already exceeding the respective critical 
+level and load. We note that the physical extent of the exceedances is 
+limited to the easterly section of the SSSI which lies directly to the north of 
+to the Installation site.  
+ 
+• We find exceedances of daily NOx at Brent Reservoir SSSI for both 
+testing scenarios if we do not apply restrictions on the daily operational 
+hours: 
+o For monthly testing, we understand the maximum daily hours of 
+operation for site 1 to be 8 hours and for site 2 to be 2.5 hours; if 
+these are applied as operational restrictions, we do not find 
+exceedances of daily NOx. 
+ 
+o The current permit (ERP/QP3706LH/A001) restricts the six-monthly 
+testing to one 4-hour test per day. For six-monthly testing we have 
+considered the maximum number of hours they could operate to 
+avoid an exceedance. If we restrict six-monthly testing to a 
+maximum of 8-hours of operation within a 24-hour period, we do 
+not find exceedances of daily NOx. 

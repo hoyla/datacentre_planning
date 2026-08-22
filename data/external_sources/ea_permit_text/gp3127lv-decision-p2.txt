@@ -1,0 +1,33 @@
+ 
+LIT 11984  [Publish date]                     Page 2 of 24 
+Either gas oil or Hydrotreated Vegetable Oil (HVO) will be used as fuel. 
+Operation of the data centre combustion plant will be regulated as a Section 1.1 
+Part A (1) (a) activity under the Environmental Permitting (England and Wales) 
+Regulations (EPR) 2016 for the burning of any fuel in an appliance with a rated 
+thermal input of 50 or more megawatts (MW). The aggregated thermal input of 
+the data centre is 925 MWth.  
+The generators will supply emergency power to the data centre in the event of 
+National Grid failure. In non-emergency scenarios, they will be operated only for 
+testing and maintenance purposes to an agreed schedule. They will not provide 
+any electricity themselves to the National Grid and all electricity generated will be 
+used within the data centre. 
+We consider in reaching that decision we have taken into account all relevant 
+considerations and legal requirements and that the permit will ensure that the 
+appropriate level of environmental protection is provided. 
+Purpose of this document 
+This decision document provides a record of the decision-making process. It: 
+● summarises the decision making process in the decision considerations 
+section to show how the main relevant factors have been taken into 
+account 
+● highlights key issues in the determination 
+● shows how we have considered the consultation responses 
+Unless the decision document specifies otherwise we have accepted the 
+applicant’s proposals. 
+Read the permitting decisions in conjunction with the environmental permit.   
+Key issues of the decision 
+In reaching our decision to grant the permit we took into consideration the 
+following matters: 
+ 
+Best Available Techniques (BAT) Assessment – Emergency Power 
+Provision on Site 
+Technology & Fuel 

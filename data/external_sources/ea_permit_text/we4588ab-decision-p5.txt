@@ -1,0 +1,41 @@
+ 
+LIT 11984  3/6/2026                     Page 5 of 17 
+The annual NOX, nutrient nitrogen and acid deposition PCs are all insignificant 
+when combining the total annual operations. 
+Environment Agency audit/assessment 
+Based on our check modelling, we agree with the operator’s overall conclusions 
+that the impacts from the site are unlikely to be significant. Our audit focused on 
+the impacts from NOx emissions. 
+Human health receptors 
+We do not predict any exceedances of the short- or long-term NO2 environmental 
+standard for any modelled scenario. For the emergency scenario, we find that the 
+consultant’s PCs would not exceed the ES if the 15% NO X to NO2 conversion is 
+used.  
+(The consultant states that they have used conversion factors of 70% for long-term 
+and 15% for short-term to calculate the percentage of NO 2 from NOX emissions. 
+We observe from their short -term modelling results that they have likely applied 
+the standard short -term conversion factor of 35% from our guidance. The 
+conversion factor of 15% is likely to be reasonably representative at receptors 
+within the first few hundred meters (approximately 500 m) from the source, which 
+is where maximum PCs are predicted.) 
+ 
+Ecological receptors 
+For the routine readiness and black building tests, results from our check modelling 
+show daily mean NOX PCs are insignificant when using the higher daily mean NOX 
+critical level of 200 µg/m 3. We note that the consultant’s daily mean NO X PCs for 
+the routine readiness and black buildings tests would also be insignificant if 
+assessed against the higher critical level instead of the lower critical level. 
+For the emergency scenario, our daily mean NOX PCs are predicted to exceed the 
+higher critical level should a prolonged power outage coincide with worst -case 
+meteorology, however, we find that exceedances are unlikely, as this is based on 
+a national emergency event. 
+Our annual NOX and nutrient nitrogen and acid deposition PCs are all insignificant 
+against the site-specific critical levels and critical loads. 
+ 
+Air quality management plan (AQMP) 
+When the permit is issued, we have specified that that the operator shall have a 
+written AQMP to manage any issues for prolonged emergency running of the 
+plant. 
+An AQMP will be provided in consultation with the Local Authority. This will 
+outline the response measures to be taken in the event of a National Grid failure 
+and the operation of the generators. This will include consideration of the 

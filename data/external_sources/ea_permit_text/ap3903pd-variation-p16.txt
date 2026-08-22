@@ -1,0 +1,74 @@
+ 
+Permit number 
+EPR/AP3903PD 16 
+Table S1.2 Operating techniques 
+Description Parts Date 
+Received 
+Application for variation 
+EPR/AP3903PD/V002 
+Application document titled ‘Environmental permit application for 
+variation - Virtus Stockley Park Data Centres, EPR/AP3903PD’, 
+dated April 2022, sections:  
+- Section 3 - Form C2 - Supporting Information 
+- Section 4 - Form C3 - Supporting Information 
+- Section 5 – Operating techniques 
+- Appendix D – CAT remap information 
+- Appendix E – SCR information 
+Duly 
+made 
+29/07/22 
+Additional information – 
+variation 
+EPR/AP3903PD/V002 
+Email from Derek Schoehuys in response to request for additional 
+information on the specification of the SCR proposed for London 
+8, items: 
+4. Updated Finning document TEC-220006-001_rev1 
+5. Emissions specification of SCR system 
+6. Time needed to achieve the specified SCR NOx reduction 
+23/09/22 
+Additional information – 
+variation 
+EPR/AP3903PD/V002 
+Document titled ‘Pollution (Oil Spill) Procedure’ 14/10/22 
+Additional information – 
+variation 
+EPR/AP3903PD/V002 
+Letter titled ‘Improvement Conditions for VIRTUS LONDON8 Data 
+Centre, Prologis Park West London, off Horton Road, UB11 1HB – 
+Reference number EPR/AP3903PD/V002’ 
+21/10/22 
+Application for variation  
+EPR/AP3903PD/V004 
+Application document titled ‘Environmental permit variation 
+application - Stockley Park DCs, EPR/AP3903PD’, dated October 
+2023, sections: 
+Section 5.6.5 Engine Emission Standards 
+Section 5.7.1 Operational Scenario (testing) 
+Section 5.7.2 Emergency Scenario 
+Section 5.8 Fuel Storage, deliveries & BAT 
+Section 5.9 Site drainage 
+ 
+Excel File received with application -Virtus Stockley MCPD Annex 
+1 Rev3 AP3903PD V004 09.08.2024 
+Duly 
+Made  
+27/09/24 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 The operator shall carry out detailed air dispersion modelling of the 
+emissions from the generators in London 5 and London 6 at their 
+loading rates whilst in testing and emergency operation modes for a 
+72 hour outage. The operator shall use this modelling to produce a 
+revised air quality modelling report.  
+The report shall be written in accordance with our web guidance 
+‘Environmental permitting: air dispersion modelling reports’. 
+Environmental permitting: air dispersion modelling reports - GOV.UK 
+(www.gov.uk)  
+The air dispersion modelling shall also include an assessment of the 
+predictions of nitrogen dioxide against the relevant US EPA acute 
+exposure guidelines (AEGLs). 
+The report shall be submitted to the Environment Agency for written 
+approval. 
+Completed 

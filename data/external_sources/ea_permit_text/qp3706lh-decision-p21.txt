@@ -1,0 +1,36 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 21 of 28 
+Operating techniques for emissions that screen out as 
+insignificant 
+Emissions of nitrogen oxides (NOx), sulphur dioxide (SO2), carbon monoxide 
+(CO), particulate matter (with a diameter less than 10 microns (PM10)) and total 
+organic carbon (TOC) as benzene have been screened out as insignificant, and 
+so we agree that the Operator’s proposed techniques are Best Available 
+Techniques (BAT) for the Installation.  
+We consider that the emission limits included in the Installation permit reflect the 
+BAT for the sector. 
+National Air Pollution Control Programme 
+We have considered the National Air Pollution Control Programme as required by 
+the National Emissions Ceilings Regulations 2018. By setting permit condition 
+2.3.6, operation of generators in an emergency is limited to 500 hours per year.  
+Furthermore, testing for each MCP is limited to 13 hours per engine per year.  
+Therefore, emissions to air are minimised which will aid the delivery of national 
+air quality targets. We do not consider that we need to include any additional 
+conditions in this permit. 
+Updating permit conditions during consolidation 
+We have updated permit conditions to those in the current generic permit 
+template as part of permit consolidation. The conditions will provide the same 
+level of protection as those in the previous permit. 
+Raw materials 
+We have specified limits and controls on the use of raw materials and fuels. 
+Pre-operational conditions 
+Based on the information in the application, we consider that we need to include 
+pre-operational conditions. The following pre-operational conditions (POs) have 
+been included in the permit: 
+PO1 - Commissioning  
+The Operator shall submit an updated commissioning plan for the engines 
+associated with Variation EPR/QP3706LH/V002 to the Environment Agency for 
+approval. The plan shall provide timescales for the commissioning of the 
+generators and shall demonstrate that the commissioning of the generators is 
+covered within the site’s permitted regular testing regime, thereby minimising 
+durations and impacts.  

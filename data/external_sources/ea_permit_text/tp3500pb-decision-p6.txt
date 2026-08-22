@@ -1,0 +1,48 @@
+ 
+ EPR/TP3500PB/V003   Page 6 of 23 
+OFFICIAL 
+OFFICIAL 
+• The annual NOx and NH3 process contributions are less than 1% of the 
+long-term critical levels applicable at all the ecological conservation sites 
+within screening distance, hence insignificant according to our criteria. 
+ 
+• The nutrient nitrogen and acid deposition process contributions are less 
+than 1% of the long-term critical loads at all ecological conservation sites 
+included in the assessment, hence the long-term impacts on conservation 
+sites are insignificant according to our criteria. 
+ 
+Assessing the risk against the long-term criteria is only part of the assessment 
+and other factors are also relevant to our decision, such as whether risks are 
+acceptable against short-term criteria, whether the installation, as a whole, 
+implements the best available techniques applicable to the sector and whether 
+the emissions are prevented or where that is not practicable minimised. This is 
+discussed in the following paragraphs. 
+Short-term impacts - Testing scenarios 
+ 
+• For NO2, we refer to the short-term ES of 200 g/m3, not to be exceeded 
+for more than 18 hours per year, corresponding to 99.79% of the time. 
+According to the findings of our audit, exceedances of the 99.79th 
+percentile 1-hour NO2 air quality standard are possible during all testing 
+scenarios, should the operations coincide with the worst-case 
+meteorological conditions. However, we have found that the statistical 
+likelihood of exceedances occurring to be highly unlikely when using the 
+hypergeometric probability distribution, in line with our guidance Specified 
+generators: dispersion modelling assessment - GOV.UK (www.gov.uk). 
+ 
+• When exceedances of the short-term NO2 ES are possible, although 
+highly unlikely as concluded by statistical analysis, we assess the 
+magnitude of the worst case NO2 predictions against acute exposure risk 
+criteria. The US EPA Acute Exposure Guidelines (AEGL) were used for 
+this part of the assessment. According to our findings, exceedances of the 
+10-minute, 30-minute and 1-hour NO2 Acute Exposure Guidelines Level-1 
+(AEGL-1) for NO2 are possible during the building load test, should the 
+operations coincide with the worst-case meteorological conditions. 
+ 
+• Exceedances of the 1-hour NO ES for human health are also possible 
+during the building load test should the operations coincide with the worst-
+case meteorological conditions. However, we consider this to be unlikely 
+based on the operating envelope.  
+ 
+• Based on higher daily mean NOx critical level of 200 µg/m3, that we 
+consider applicable at all conservation sites included in the assessment, 
+we have found that exceedances of the daily mean NOx critical level are 

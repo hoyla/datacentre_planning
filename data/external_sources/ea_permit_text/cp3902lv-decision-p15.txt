@@ -1,0 +1,43 @@
+ 
+EPR/CP3902LV/V003 
+NTT Dagenham Data Centre  Page 15 of 20 
+We used worst case assumptions to conduct sensitivity check modelling for the 
+testing regime. Following this analysis, we conclude that below adverse impacts 
+are likely. This means that noise impacts associated with this variation are 
+acceptable. 
+No noise management plan has been requested, however permit condition 3.4.2 
+enables us to request one if it is considered necessary in the future.  
+ 
+NATIONAL GRID RELIABILITY 
+The applicant confirmed that there have been no black outages at the Dagenham 
+data centre since commencement of operations. 
+In 2023 there were two outages, both due to voltage spikes, which were very 
+limited in duration and involved the operation of a small number of LON1A SBGs 
+as summarised below: 
+• 19/06/2023 – duration outage 14 minutes, resulting in the operation of 
+three SBGs; and 
+• 25/11/2023 – duration outage 30 minutes, resulting in the operation of two 
+SBGs. 
+ 
+PROTECTION OF LAND, SURFACE WATER AND GROUNDWATER 
+There are no point source emissions to water or land at the data centre, and no 
+changes to emissions to sewer, including the foul and surface water drainage 
+systems. The LON1B data centre will be connected into the existing LON1A 
+drainage system.  
+ 
+The LON1B tanker refuelling points will be located on the external wall of each 
+generator room. Refuelling vehicles will be required to park in the external hard 
+surfaced yard area adjacent to the north of LON1B where connections to the 
+generator refuelling points will be located. These will be in locked refuelling 
+cabinets located on the external wall of the LON1B data centre building; one per 
+generator room.  
+ 
+Surface water run-off from the external generator refuelling area will drain via a 
+grated drainage channel to the on-site surface water drainage system via an oil 
+interceptor (Class 1 full retention). The interceptor will be fitted with an automatic 
+closure device and high-level audible alarm system for oil and silt levels. Surface 
+water from the interceptor will drain into the on-site surface water drainage 
+system. 
+ 
+Also refer to ‘Liquid fuel and raw material storage’ section of this document. 
+ 

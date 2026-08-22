@@ -1,0 +1,87 @@
+Schedule 1 – Operations  
+Table S1.1 activities 
+Activity listed in Schedule 
+1 of the EP Regulations  
+Description of specified activity  Limits of specified activity  
+Section 1.1 A(1) (a): 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 
+megawatts or more 
+Operation of emergency standby 
+generators burning diesel solely for 
+the purpose of providing electricity 
+to the installation in the event of a 
+failure of supply from the National 
+Grid comprising;  
+12 x 4.49 MWth standby generators 
+in DC1 and 12 x 4.49 MWth standby 
+generators in DC2, with a total 
+combined thermal input of 107.76 
+MWth.  
+From receipt of raw materials and 
+generation of electricity to despatch 
+of products and waste.  
+Electricity produced at the installation 
+cannot be exported to the National 
+Grid.  
+Directly Associated Activity 
+Directly associated activity Gas oil storage From receipt of raw materials to 
+dispatch for use including all 
+associated pipework, handling and 
+transfer to and from storage tanks.  
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application received 
+EPR/QP3533ED/A001 
+Parts B2 and B3 and the referenced supporting information.  
+Further information regarding amended modelling and 
+associated modelling files (email dated 14/07/2015) 
+Duly Made 
+14/07/2015 
+Response to Schedule 5 
+Notice, dated 
+01/09/2015 
+Clarification on worst case operational event (event 3) of the 
+facility.  
+09/09/2015 
+Response to Schedule 5 
+Notice, dated 
+21/09/2015 
+Confirmation and further detail of the emission 
+concentrations used in the air quality modelling. 
+21/09/2015 
+Additional information 
+received  
+Confirmation of the routine maintenance scenario (event 2). 06/10/2015 
+Additional information 
+received  
+Clarification of the standby diesel generator emission data 
+and engine data sheets.  
+16/11/2015 and 
+18/11/2015 
+Additional information 
+received 
+Confirmation of the NOx emission concentration from the 
+manufactures.  
+13/01/2016 
+Response to Schedule 5 
+Notice, dated 
+22/01/2016 
+Revised proposal for improved standby diesel generator 
+specifications for the additional 12 standby generators to be 
+installed and options for abatement for the installed 12 
+standby generators.  
+23/02/2016 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 The operator shall prepare and submit a report including proposals for the 
+further attenuation and/or management of noise for Data Centre 2 and 
+shall include a timescale, to be agreed with the Environment Agency, for 
+Within 6 
+months of 
+permit issue 
+Permit number 
+EPR/QP3533ED 11 

@@ -1,0 +1,58 @@
+EPR/ EP3335JZ/A001 
+Date issued: 28/09/2023 
+ 3 
+ 
+Testing scenarios 
+The applicant modelled the testing operation of the generators according to the following:  
+ 
+• Testing Scenario 1: ‘Fortnightly and Quarterly Test’ scenario accounting for 14 hours of operation 
+per year, per generator, at 25% load. Tested individually. 
+• Testing Scenario 2: ‘Bi-Annual Test’ scenario accounting for 3 hours of operation per year, per 
+generator, at 100% load. Tested individually. 
+• Emergency Scenario: 72-hour grid failure event, with all generators r unning concurrently at 100% 
+load. 
+ 
+The Applicant’s assessment is summarised in the following: 
+• The process contributions (PC) / predicted environmental concentrations (PEC) of CO, particulates, 
+benzene and SO2 are non-significant at all receptors. 
+• The hourly mean percentile PC of NO 2 is anticipated to exceed both short -term screening criteria at 
+four discrete receptors in the vicinity of the site, during a 72-hour grid failure event. However, the PEC 
+is anticipated to be less than the relevant AQS at all receptors, even at the 99.79th percentile. As such, 
+significant short-term impacts on NO2 as a result of an emergency grid failure are not anticipated. 
+• The long-term PC/PEC of NO2 are non-significant at all the human and ecological receptors. 
+• Both long term and short-term increases in pollution concentrations as a result of the operation of the 
+proposed SBGs are not expected to have a significant impact on local air quality, in any normal grid 
+failure or testing scenarios. 
+Although we don’t agree with all the elements  and predictions of the Applicants’ assessment, we agree with 
+their conclusions regarding human health . Taking into account the results of our audit, we are satisfied that 
+the testing regime will not be likely to r esult in breaches of the statutory AQS and significant impacts on the 
+human receptors in the area.  
+Whilst we cannot rule out exceedances of the daily NOX critical level at a number of nearby Local Wildlife 
+Sites (LWS), we consider exceedances to be unlikely provided the grid reliability at the facility remains high.  
+ 
+Emergency scenario 
+An assumed 3 day worst case scenario and 14 generators running concurrently at 100% load for full loss of 
+power has been modelled which we consider a conservative scenario, given the information provided by the 
+Applicant on the reliability of the connection of the installation to the electric grid.  
+For this scenario we found that there is the potential for exceedance of:  
+• The daily (short term) NO2 environmental standards at sensitive human health receptor locations. 
+However the PEC for ST NO2 is not predicted to exceed the environmental standard. 
+• There is unlikely to be any exceedance of the rest of the environmental standards at sensitive 
+human receptor locations outside the site boundary. 
+• Under the testing and emergency scenarios, the PCs are predicted to be insignificant when 
+compared to the relevant critical levels and critical loads for the European habitat sites. The PCs are 
+predicted to be less than 100% for the local nature sites. The applicant has applied the daily NOX 
+critical level of 75 µg/m3. . 
+Our audit of the Applicant’s assessment has lead us to the conclusion that the risk of exceeding the short-
+term statutory AQS for NO2 during the emergency operations of the installation is low. The emergency 
+scenario is unlikely to make a significant contribution to or cause an exceedance of the NOX annual critical 
+level, NH3 annual critical level or the nutrient nitrogen and acid deposition critical loads. We cannot rule out 
+an exceedance of the daily mean NOX critical levels of 75 µg/m3 and 200 µg/m3 at the nearby LWSs as a 
+result of 72 hours of emergency operation. However, we consider the likelihood of exceedances occurring as 
+a result of a major grid failure to be low on the basis that historical data indicates that power outages have 
+been rare.  
+We have specified that the operator shall have a written action Air Quality Management Plan (AQMP) to 
+manage the risks for prolonged emergency running of the plant  and limit the duration of an outage event to 
+less than 50 hours, as far as possible. This needs to be proportionate to the level of risk at the receptors. The 
+operator is expected to work with the Local Authority to develop this plan to ensure local factors are fully 
+considered. This AQMP is included in the permit through improvement condition IC1 . 

@@ -1,0 +1,38 @@
+ 
+LIT 11984  [Publish date]                     Page 23 of 24 
+Response received from: Food Standards Agency 
+Brief summary of issues raised: No response received. 
+ 
+Response received from: Local Authority – Planning 
+Brief summary of issues raised: No response received. 
+ 
+Response received from: Director of Public Health & UK Health Security Agency 
+(UKHSA)  
+Brief summary of issues raised:  
+• The applicant should produce an air quality management plan prior to the 
+facility coming into operation. The Environment Agency should satisfy 
+itself that the proposed measures within the air quality management plan 
+are appropriate to minimise emissions off-site. Measures may include air 
+monitoring to underpin the predicted modelling results.  
+• The applicant should produce an accident management plan prior to 
+operations commencing on the proposed site. The Environment Agency 
+should satisfy itself that the proposed measures within the Accident 
+Management Plan are suitable and minimise the risk of impacts beyond 
+the boundary of the site.  
+• We would also suggest that operators should be encouraged to prevent 
+overlapping plant testing and maintenance scheduling. 
+ 
+Summary of actions taken:  
+With regard to concerns about air quality management, the operator confirmed 
+the generators are emissions-optimised to 2gTA-Luft standard which is 
+considered best available techniques for standby generators for data centres. 
+In addition to this, we have specified that the Operator shall have a written Air 
+Quality Management Plan (AQMP) to manage the risks for prolonged emergency 
+running of the plant and limit the duration of an outage event to less than 50 
+hours, as far as possible. This needs to be proportionate to the level of risk at the 
+receptors. The Operator is expected to work with the Local Authority to develop 
+this plan to ensure local factors are fully considered. 
+With regards to concerns about Accident Management, we have reviewed the 
+operator’s environmental risk assessment incorporating the fugitive emission risk 
+assessment and management plan, and accidents risk assessment and 
+management plan providing measures in place to respond to accidents that may 

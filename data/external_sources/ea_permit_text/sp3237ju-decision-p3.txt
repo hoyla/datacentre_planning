@@ -1,0 +1,52 @@
+EPR/SP3237JU/A001 
+Date issued: 24/04/2019  3 
+ 
+Site Condition Report 
+A site condition report (SCR) was submitted with the application, it includes information on the previous land 
+use and details of the geological setting of the site.  
+Historic land use maps indicate that the site and surrounding area has had various industrial uses associated 
+with shipping (East Dock) and road and rail warehousing. The site formed the eastern end of the East Dock 
+between approximately 1803 and the mid 1980’s. The 8.5 metre deep East Dock was partly filled from the 
+west after World War II, with infilling completed in 1987-8 (the nature of material used to infill the former dock 
+is unknown). The North building at the site was constructed in 1989 and the site has been developed in 
+successive stages since this date in three phases. The east and supporting areas were developed in the 
+early 2000s, the west was developed in the late 2000s and the second northern development occurred in 
+2014.  
+The underlying bedrock is a sedimentary combination of clay, silt and sand of the London Clay Formation, 
+which is classified as an unproductive aquifer. Geological maps show the bedrock is overlain by Alluvium, 
+which are classified as a Secondary (undifferentiated) Aquifer. Areas of made ground and infill are also 
+suspected across the site based on historical land uses, these areas may have higher permeability. The 
+installation does not lie within a groundwater source protection zone. 
+There are a number of surface water features within 500 metres of the installation boundary. The River Lea, 
+a tributary to the River Thames, is located approximately 130 metres east of the site (at its nearest point). 
+The River Thames is located approximately 360 metres to the south of the installation (at its nearest point), 
+with the adjoining East India Dock Basin approximately 190 metres to the south east of the site. An artificial 
+pond is located approximately 15 metres to the south west of the site, with further ponds approximately 130 
+metres to the west. 
+The majority of the site is situated in Flood Zone 2 (areas at risk of flooding during an extreme rainfall event, 
+or between a 1 in 100 and 1 in 1,000 annual probability of river flooding). The north of the site is within Flood 
+Zone 3 (a high risk category due to the risk of alluvial flooding). Both the River Lea and The River Thames 
+benefit from flood defences. 
+There are no recorded pollution incidents within the site boundary that may have affected the land beneath 
+the site. However, due to the long industrial nature of the site it is likely that historic contamination may exist. 
+The SCR therefore included a report on the baseline conditions. The site investigation was undertaken in 
+spring 2018 to provide a baseline report for the whole installation. Previous investigations had been limited to 
+the development of new buildings only. Intrusive ground investigation was conducted between 19 April 2018 
+and 24 April 2018. Groundwater and gas monitoring was then carried out on 30 April 2018, with follow up 
+gas monitoring rounds conducted on 8 May 2018 and 16 May 2018. Six boreholes were investigated. The 
+site investigation revealed that there were no significantly elevated concentrations of any of the 
+determinands in soil samples, with the exception of asbestos which was found in boreholes BH1, BH2 and 
+BH5. The groundwater monitoring revealed that BH2 and BH6 exhibited exceedances of Arsenic and 
+Petroleum Hydrocarbons. The average concentrations of Petroleum Hydrocarbons, Arsenic, and 
+Naphthalene were also in exceedance of Water Quality Standards. Methane and Carbon Dioxide is recorded 
+in low levels during monitoring of gases beneath the site. 
+ 
+Air Quality  
+The installation is situated with an Air Quality Management Area (AQMA) for nitrogen dioxide (NO
+2) and 
+particulates (PM10). The primary pollutant of concern to air quality is NO2 resulting from the combustion 
+process on site. The Applicant has submitted an air dispersion modelling report which assesses the potential 
+impact of emission of NO2 from the generators on local air quality. 
+We have audited the air dispersion modelling and report submitted with the application. Both the 
+maintenance testing and emergency scenarios within the modelling were assessed. The engines will be 
+operated under:  

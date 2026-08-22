@@ -1,0 +1,52 @@
+ 
+Permit number 
+EPR/KP3139DW 16 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC7 The Operator shall submit a report, encompassing all the permitted site 
+including those generators and associated infrastructure to be installed 
+as part of site expansion plans, that outlines a review of options for 
+reducing predicted short term nitrogen dioxide emissions impacts for the 
+scenarios of weekend generator testing, annual generator maintenance 
+and operation of the generators during a national grid failure emergency 
+scenario. This shall include but is not limited to:  
+ A feasibility study in line with Best Available Techniques (BAT) 
+including cost benefit analysis for potential upgrades to 
+generators or stacks including installation of abatement or other 
+changes to infrastructure or operational regimes on site that 
+could reduce emission and increase dispersion;  
+ Proposals for changes in the duration, frequency or timing of 
+engine testing scenarios; 
+ A review into the potential for reductions in the number of 
+generators operating simultaneously during testing and 
+maintenance periods; 
+ An assessment of the control systems used to carry out the 
+testing of the generators and how these have been optimised to 
+minimise emissions 
+ An assessment of the operating systems to ensure only the 
+most efficient engines are used during emergency grid failure 
+scenarios);  
+ Proposal of an appropriate timescale for improvements.  
+ 
+The review and timescale for improvement shall be submitted to the 
+Environment Agency in writing for approval. 
+ 
+The proposals shall be implemented by the operator in line with the 
+timescales agreed by the Environment Agency. 
+01/12/20 
+IC8 The Operator shall carry out a review of the site’s tertiary containment 
+system which serves the oil and diesel storage tanks.  
+The review shall compare the system’s design, method of construction 
+and integrity against the standards outlined in CIRIA guidance C736 – 
+Containment Systems for the Prevention of Pollution or an equivalent 
+industry standard.   
+A written report of the review shall be submitted to the Environment 
+Agency for written approval which details: 
+ the review’s findings and recommendations; 
+ proposals for the implementation of recommended 
+improvements; and 
+ timescales for implementation of improvements. 
+The operator shall implement the recommended improvements to the 
+tertiary containment system within the timescales approved by the 
+Environment Agency. 
+01/06/19 

@@ -1,0 +1,39 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 11 of 28 
+exceedance. Therefore, as the grid reliability in the local area appears to be 
+good, the likelihood of the emergency scenario occurring is expected to be low.  
+Testing 
+The site is unlikely to make a significant contribution to or cause an exceedance 
+of any critical loads and levels at ecological receptors for both testing scenarios 
+for daily NOx providing the following operational restrictions are included in the 
+permit: 
+• Testing of site 1 and site 2 shall not be carried out in the same 24-hour 
+period. 
+ 
+• Testing at site 1 shall involve each generator being tested individually. 
+ 
+• For six-monthly testing, no more than 8 hours of operation shall be carried 
+out in any 24-hour period. 
+ 
+• For monthly testing, no more than 8 hours of operation shall be carried out 
+in any 24-hour period for site 1. 
+ 
+• For monthly testing, no more than 2.5 hours of operation shall be carried 
+out in any 24-hour period for site 2. 
+ 
+However, we are predicting exceedances of annual NOx and nitrogen deposition 
+at Brent Reservoir SSSI for the testing scenarios. 
+For the 6 monthly testing the annual NOx is predicted to be: 
+• LT PC > 1% of critical level, it is 2.2% 
+• LT PEC > 70% of critical level, it is 117.9% 
+ 
+For the 6 monthly testing the nitrogen deposition is predicted to be: 
+• LT PC > 1% of critical load, it is 1.87%  
+• LT PEC > 70% of critical load, it is 117.9% 
+ 
+For the monthly testing the annual NOx is predicted to be: 
+• LT PC > 1% of critical level, it is 1%. 
+• LT PEC > 70% of critical level, it is 118.7% 
+ 
+The background NOx and nitrogen deposition concentrations already exceed 
+their relevant critical level and load at Brent Reservoir SSSI. 

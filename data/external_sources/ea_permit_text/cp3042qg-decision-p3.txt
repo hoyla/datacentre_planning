@@ -1,0 +1,28 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 3 of 26 
+Key issues of the decision 
+Nature of the site 
+The operator applied to permit GB One Data Centre in Slough. There are currently a significant 
+number of data centres located in close proximity in the Slough area and as of August 2022 there 
+were 26 data centres all located in the same area as shown below. 
+ 
+If the National Grid was to fail in this area, then the majority of the data centres connected to the 
+same grid would go offline and their back-up diesel or equivalent fuel generators would be put 
+into action. Therefore, in order to reduce the NOx air emissions to acceptable levels in the event 
+of a national grid failure the operator has specified abated engines, which reduces NOx 
+emissions from 1493 mg/Nm3 to 190 mg/Nm3 per generator. 
+ 
+Best Available Techniques (BAT) Assessment – Emergency Power 
+Provision on Site 
+Technology 
+The operator carried out a BAT assessment of the viable technologies capable of providing 
+emergency power at the data centre. 
+They considered the following technologies: 
+• Diesel engines 
+• Gas turbines 
+• Aero engine gas turbines 
+• Gas engines 
+ 
+They compared these technologies against the following considerations: 
+• Start-up time 
+• Reliability 

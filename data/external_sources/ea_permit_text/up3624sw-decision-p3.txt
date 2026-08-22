@@ -1,0 +1,43 @@
+ 
+London 14 Data Centre EPR/UP3624SW                     Page 3 of 17 
+Annually 
+Every year each generator will be tested for 20 minutes at 100% load followed by 
+75% load for 120 minutes . Again, generators would be tested separately to  
+minimise the short-term impact on local air quality.  
+Operation During an Emergency Event 
+The generators would also run in the event of a loss of power supply, i.e. 
+temporary grid blackout; the generators will be utilised to maintain the required 
+power supply. The generators are designed to automatically activate and provide 
+the required power to the plant pending restoration of mains power, at which time 
+they shall automatically ramp down and switch back to utility supply.  
+ 
+The installation will initially be fed electricity directly from Virtus’ existing Stockley 
+Park Campus, housing London 5-8, via three separate circuits to provide 
+resilience. The incoming power system to the site will consist of three substations 
+on-site, three separate cables from National Grid’s Iver Heath substation, and 
+three electrical feeder breakers at Iver. Two new sub-stations are proposed to be 
+constructed at London 14 which will be connected to Iver Heath, after which point 
+the London 5-8 connection will be replaced. The proposed electrical design at 
+London 14 mirrors that in other Virtus datacentres, whereby the system is set up 
+in a ring main unit/circuit, such that if the site was to lose one board, the power 
+can be supplied from the other side of the circuit. 
+ 
+The application states that National Grid National Electrical Transmission System 
+Performance Report 2021/22 states that the overall reliability of supply during 
+2021-22 was: 99.999612%. The longest loss of supply incident lasted 300 mins 
+(7.5 hours) in Elstree, Watford, with a total of 25.7 MWh not supplied. It is also 
+reported that a portion of demand was restored within 3 minutes. Therefore, it is 
+considered very unlikely that the generators would run for extended periods 
+during a blackout event.  
+ 
+The Applicant has conservatively assessed the impact on air quality based on all 
+16 generators operating at 100% load for up to 72 hours to cover an emergency 
+power outage scenario. This is in line with Environment Agency guidance.   
+3. Air Quality Assessment 
+ 
+The Applicant’s assessment of the impact of air quality is set out in Air Impact 
+Assessment Rev C dated 27th September 2024 of the Application. The assessment 
+comprises: 
+• Dispersion modelling of emissions to air from the operation of the 
+installation. 
+• A study of the impact of emissions on nearby sensitive conservation sites. 

@@ -1,0 +1,47 @@
+ 
+                       Page 22 of 32 
+Emission velocity (m/s) 45.5 34.5 
+NOx emission (g/s) 2.04 3.94 
+CO  emission (g/s) 1.77 3.42 
+PM emission (g/s) 0.35 0.68 
+  
+Total Gensets 32 15 
+NOx emission (g/s) from HH4 65.2 59.1 
+CO emission (g/s) from HH4 56.5 51.3 
+PM emission (g/s) from HH4 11.3 10.3 
+Total hours per year testing 736 345 
+NOx emission (t/yr) from HH4 172.7 73.5 
+CO emission (t/yr) from HH4 149.7 63.7 
+PM emission (t/yr) from HH4 29.9 12.7 
+As the number of engines to be installed in the revised HH4 phase 1 scope is less than the total 
+proposed for the original HH4 scenario, there will be a significant reduction in the hours these 
+generators will be operational each year for planned testing or maintenance. 
+The total mass emissions (g/s) for NOx, CO and particulate matter (PM) from the newly proposed 
+HH4 phase 1 operation are less than in the original scenario with all HH4 generators operational. 
+The effect of the decrease in velocity will be offset by the larger stack diameter which will 
+maintain plume momentum and hence not significantly change dispersion characteristics. The 
+new exit velocity of 34.5 m/s would remain an acceptable figure. 
+We have assessed emissions in both scenarios using our air emissions screening tool and 
+conclude that the impact in the revised HH4 phase 1 scenario is not greater than that in the 
+original scenario of HH4 operating with thirty two KD1800 generators. 
+We have also checked the modelled emission rates and agree that these rates outlined for the 
+revised scenario above are internally consistent with the other data information such as stack 
+internal diameter, velocity, volume flows, temperatures, oxygen and moisture concentrations etc. 
+They are also plausible considering the additional scale of the plant. 
+In relation to releases to air, the conclusions of our assessment on the original permit application 
+remain valid for the proposed reconfiguration and operation, and permitting, of only HH4 phase 1. 
+However if revised HH4 phase 2 comes on line, predicted impacts may be substantially higher 
+and will require more detailed assessment to demonstrate they do not impact adversely on air 
+quality. Because of this, no improvement or pre-operational conditions are included relating to the 
+operation or permitting of HH4 phase 2. Should the applicant wish to expand HH4 operation to 
+include the additional fifteen generators in phase 2, they must apply for a substantial variation to 
+the existing environmental permit - submitting a detailed air quality assessment. 
+Diesel Storage and Containment: 
+The Kohler KD1800 generators proposed for HH4 in the original application would have had a 
+belly tank each with a capacity of 27,000 litres of diesel. With thirty two such generators 
+proposed, the total maximum diesel stored on site would have been 864,000 litres. 
+The belly tanks for the newly proposed Kohler T2500 generators are larger than previously 
+proposed and can contain 40,000 litres of diesel. As there are only fifteen of these generators in 
+the newly defined HH4 phase 1, the maximum amount of diesel that can be stored on site is 
+600,000 litres – less than that proposed in the original application. As outlined in the original 
+application, there will be no external diesel storage tank at HH4 site and belly tanks will be filled 

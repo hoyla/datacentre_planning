@@ -1,0 +1,49 @@
+EPR/PP3003PW/A001 
+Date issued: 07/07/2020  12 
+off-grid maintenance days and most importantly times/days to avoid adding to “at risk” high ambient pollutant 
+background levels. 
+The permit application must assess and provide evidence of actual reliability data for the local electricity grid 
+distribution (including data centre internal electrical design) for the Environment Agency to judge the realistic 
+likelihood of the plant needing to operate for prolonged periods in an emergency mode (especially if 
+emissions modelled have the potential to exceed short term air quality standards). 
+Reporting of standby engine maintenance run hours is required annually and any electrical outages (planned 
+or grid failures regardless of duration) require both immediate notification of the Environment Agency and 
+annual reporting. 
+9. Noise 
+The Applicant has identified that the risk of impact from noise is low and that measures are in place to 
+minimise noise. These include  
+ Large backup electricity generators associated with main power failure for all buildings are installed 
+at ground level, within individual high performance acoustically attenuated enclosures and with 
+silenced exhausts.  
+ The engines also undergo regular maintenance to minimise noise. 
+ Prolonged operation will only occur in an emergency situation where the National Grid supply is lost. 
+This however is deemed a low risk and the Applicant has taken measures as described in this 
+document to reduce the potential for grid failure. The potential for prolonged noise is therefore 
+considered to be low. 
+9.1 Applicant’s noise assessment 
+The applicant assessed the following scenarios. 
+‘Normal Operation’ - assesses acoustic impact of plant which will normally be running, such us the internal 
+plant rooms with associated ventilation inlet and outlet louvers at the buildings’ facades. 
+The ‘Emergency Backup’ scenario assesses the acoustic impact of the extremely unlikely event of roof-
+mounted air cooled condensing units associated with emergency cooling system operation and ground level 
+backup electricity generators operation associated with main power failure occurring simultaneously. 
+9.2 Applicant’s conclusions  
+The Applicant’s report concluded that the ‘normal operations’ are not expected to have an adverse noise 
+impact at the nearest and most exposed noise-sensitive receptors, when assessed in accordance with 
+BS4142:2014. 
+The Applicant’s report concluded that ‘combined backup and emergency operation’ would have a significant 
+adverse noise impact when assessed in accordance with BS4142:2014. However, taking into account the 
+emergency and very occasional occurrence of this scenario, it is considered appropriate to extend the 
+Assessment to comply with BS8233:2014/WHO Guidelines. This Assessment has found that in the worst-
+case scenario of all emergency plant from all buildings operating at the same time, the BS8233:2014/WHO 
+Guidelines at external amenity areas are generally achieved. The Indoor Ambient Noise Levels targets are 
+slightly exceeded at some properties, but they would remain within the +5 dB at which ‘reasonable’ acoustic 
+conditions can be expected. Only at one detached property to the south is the target for good acoustic 
+conditions exceeded by a larger margin (+6 dB), which is only +1 dB above the ‘reasonable’ acoustic 
+conditions target.  
+Based on the absolute worst-case scenario assessed (the extremely unlikely event of all emergency cooling 
+plant and all standby generators operating at the same time), and the minimal exceedance of the 
+WHO/S8233 targets in one case, their assessment concluded that the ‘emergency operation’ of the plant will 
+not produce a significant adverse noise effect at the nearest sensitive receptors. 
+ 
+ 

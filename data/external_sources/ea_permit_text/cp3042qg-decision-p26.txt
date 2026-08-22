@@ -1,0 +1,20 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 26 of 26 
+and assessment of potential impact, we have included improvement condition IC1 that requires 
+the operator to produce an Air Quality Management Plan outlining response measures to be 
+taken in the event of a grid failure. This is the standard approach for the sector. 
+With regard to justification as to why the operator has assessed potential impacts from a 24 hour 
+and 72 hour blackout scenario, the operator supplied a 24 hour ‘worst-case scenario’ with their 
+application. However, they were requested by us to provide a 72 hour ‘worst -case scenario’ as 
+this is the Environment Agency’s worst-case standard for data centres. 
+With regard to an air quality assessment being provided by the operator on the proposed annual 
+full load in-service test on each set of 7 generators as proposed in the operator’s ‘Supporting 
+Document’ dated 13/06/2022, this testing regime has since been revised. The Air Quality 
+Assessment dated 26/04/2023 set out the testing regime of the generators being tested for an 
+hour each month in banks of three or four (total operation is 12 hours per generator per year).  An 
+email from the operator dated 21/06/2023 confirmed that the generators are going to be tested 
+individually for 30 minutes every fortnight, and that the modelling was done in banks of three and 
+four to provide a conservative assessment. We audited the testing scenarios in the operator’s air 
+quality assessment, including undertaking detailed check modelling and completing sensitivity 
+analysis and are satisfied that the site is unlikely to cause an exceedance of an environmental 
+standard at human health receptors during the testing scenarios. 

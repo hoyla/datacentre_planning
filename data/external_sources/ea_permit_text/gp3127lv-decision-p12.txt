@@ -1,0 +1,39 @@
+ 
+LIT 11984  [Publish date]                     Page 12 of 24 
+Any fuel entering the drainage system is directed to the interceptor, where alarms 
+are integrated with the control system. Upon detection of a leak, pumps 
+automatically shut down to prevent further release. 
+Where pipework passes above surfaces not connected to an interceptor, 
+double-walled containment with integrated vacuum leak detection is installed. 
+Leak detection within these pipelines is achieved through pressure monitoring: a 
+loss of integrity triggers an alarm at the fuel control panel. Fuel is contained 
+within the outer wall and removed during repair works. 
+Fuel pipes located within plant rooms (situated adjacent to the storage tanks and 
+housing associated equipment) are single-walled. Plant rooms have no drainage 
+connections, ensuring that any leakage is fully contained within the room. A 
+floor-mounted leak detection probe will raise an alarm if oil is detected. 
+Integrated vacuum/pressure monitoring systems provide early detection of leaks 
+within double-contained pipework. Alarms trigger operator intervention and 
+enable controlled removal of any product held within the secondary containment. 
+Leak detection probes within plant rooms raise an alarm if oil is detected on the 
+floor. Operators will initiate spill response procedures and engage a specialist 
+contractor to remove fuel and undertake repairs. 
+The operator confirmed they maintain a formal Spill Response Plan, which sets 
+out procedures for managing any leak or spill identified during operations. Key 
+elements include: 
+• Internal and external notifications 
+• Spill containment actions 
+• Clean-up procedures 
+• Disposal of contaminated materials 
+• Inspection and cleaning of affected drainage infrastructure 
+• Post-incident review to assess response effectiveness 
+Relevant staff will receive training in the implementation of this plan. 
+ 
+Raw Material Storage, and Distribution  
+ 
+The main materials used are gas oil or hydrotreated vegetable oil (HVO), 
+lubrication oil, and small quantities of glycol and corrosion inhibitors within the 
+closed circuit cooling systems. These systems are contained within each 
+generator unit and do not require routine refilling. 
+ 
+Inspection and Maintenance 

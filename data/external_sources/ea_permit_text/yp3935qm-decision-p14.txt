@@ -1,0 +1,44 @@
+EPR/YP3935QM/A001 
+Date issued: 01/07/19  14 
+Decision checklist  
+ 
+Aspect considered Decision 
+Receipt of application 
+Confidential information A claim for commercial or industrial confidentiality has been made. 
+This related to: 
+• Contact details for site personnel; 
+• Floor plans, drawings, photographs of sensitive areas included within 
+the Fire Risk Assessment and Emergency Action Plan.  
+We have accepted the claim for confidentiality in relation to the contact details 
+of site personnel. We have excluded names, e-mail addresses and telephone 
+numbers. 
+We have accepted the claim for confidentiality with regard to the floor plans, 
+drawings and photographs of sensitive locations included within the Fire Risk 
+Assessment and Emergency Action Plan. Redacted copies of these 
+documents have been submitted and accepted. The operator has also 
+removed generic information from the Fire Risk Assessment and included 
+that in an expanded section of the Site Risk Assessment relating to 
+management of fire risk. 
+Our guidance document, “Data Centre FAQ Headline Approach” (01/06/18) 
+states that: 
+“We are unlikely to need the following information in an application:  
+1. Site drawings of detailed Data Centre infrastructure like halls, 
+electrical circuits, transformers, security, 
+2. Contact details of site staff 
+3. Data Centre Site specific operating procedures which don’t relate to 
+the permitted combustion process.” 
+The decision was taken in accordance with our guidance on confidentiality. 
+Identifying confidential 
+information  
+We have not identified information provided as part of the application that we 
+consider to be confidential.  
+Consultation 
+Consultation The consultation requirements were identified in accordance with the 
+Environmental Permitting Regulations and our public participation statement. 
+The application was publicised on the GOV.UK website. 
+We consulted the following organisations: 
+- Food Standards Agency; 
+- Health & Safety Executive; 
+- Public Health England; 
+- Director of Public Health (Slough Borough Council) 
+- Director of Public Health (Bracknell Forest Council); 

@@ -1,0 +1,51 @@
+EPR/KP3139DW/A001 
+Date issued: 18/01/19  4 
+Managing emissions:  
+To address the predicted exceedances in short term NO2 limits at sensitive receptors the operator will be 
+required to minimise the potential impact of emissions through a staged programme of improvement 
+conditions.  
+Improvement Condition, IC4, requires the operator to produce an Air Quality Management Plan in 
+conjunction with the Local Authority that outlines response measures to be taken in the event of National 
+Grid failure. 
+Improvement Condition, IC5, requires the operator to determine the actual emissions produced by the 
+generators during the testing and emergency operation scenarios. The emission rates used in the air quality 
+modelling were derived from the manufacturer’s datasheets and do not necessarily reflect the emission rates 
+being delivered by the generators in practice. This is because the generators will be operated at reduced 
+loads during testing (15-35%) and maintenance (0%) rather than at the 100% loading rate from which the 
+emissions used in the air quality modelling were derived. This will therefore be more representative of 
+emission rates in operational practice. 
+Following this, Improvement Condition, IC6, requires the operator to confirm by monitoring or testing the 
+predicted short term NO
+2 concentrations at the sensitive receptors close to the boundary of the site and use 
+these concentrations to revise, if necessary, the air quality management plan produced in response to 
+Improvement Condition, IC4.  
+Improvement Condition, IC7, then requires the operator to review options for reducing predicted short term 
+NO2 emissions for both testing/maintenance and emergency operations. The focus on NO2 in this 
+Improvement Condition is because of the predicted breaches in the air quality modelling report of short-term 
+NO2 concentration limits. Completion of this Improvement Condition will necessitate the review of the testing 
+regime (duration, number of engines, loading), the generators (compliance with best practice TA-Luft 
+standards) and the infrastructure of the stack emission points (stack height, orientation). The operator should 
+also provide a cost benefit analysis related to the improvements necessary to reduce the NO2 emissions 
+from the generators (particularly those causing most concern – those with highest emission rates, those with 
+non-vertical or short stacks and those closest to sensitive receptors). 
+We believe that this is the most appropriate mechanism for driving improvements from the operator in the 
+area of NO2 emissions and dispersion. This approach of issuing a permit with these improvement conditions 
+while allowing continued operation is justified as our audit of the air dispersion modelling provided in the 
+application indicated that, although there were predicted exceedances of short term NO2 limits during the 
+routine generator testing/maintenance scenarios, the probability of those NO2 exceedance hours coinciding 
+with the worst meteorological hours during the maintenance scenario is low. 
+For the case of emergency operation, Improvement Condition, IC4, requires the operator to produce a Local 
+Air Quality Management Plan in conjunction with the Local Authority outlining their response measures to be 
+taken in the event of National Grid failure. 
+ 
+Protection against Power Outage and Minimisation of Generator Operation: 
+The operator has put in place multiple measures to minimise the risk of power failure including two separate 
+electrical substations, each of which has two individual sources, Sides “A” and “B”, meaning the site has 
+effectively four power supply routes. If one of these were to fail, the site could switch to an alternative 
+unaffected supply reducing the duration of any emergency generator operation. It is expected that the site 
+can make this switch in 30 – 60 minutes which would then be the maximum duration the standby generators 
+would be expected to operate. 
+The site has also an environmental management system (EMS) accredited to ISO14001 and regular 
+maintenance, testing and inspection regimes are in place to ensure reliable operation of the site including its 
+infrastructure necessary for maintaining National Grid power supply. 
+ 

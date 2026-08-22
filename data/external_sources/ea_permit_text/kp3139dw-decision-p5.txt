@@ -1,0 +1,51 @@
+EPR/KP3139DW/A001 
+Date issued: 18/01/19  5 
+Reliability of Power Delivery in Event of National Grid Outage: 
+There is a built-in redundancy to the number of standby generators present on site to ensure they can 
+always support the site in the event of any power failure. In the case of Colt Welwyn, the built in redundancy 
+is “2n” meaning that there are twice as many generators on site than would be required to deliver full site 
+power load. 
+ 
+Permit Conditions: 
+The permit will include a maximum 500 hours per annum ‘emergency/standby operational limit’ for any or all 
+the plant producing on-site power under the limits of the combustion activity. Therefore emission limit values 
+(ELVs) to air and engine emissions monitoring are not required within the permit. Emergency hours’ 
+operation includes those unplanned hours required to come off grid to make emergency repair of electrical 
+infrastructure associated but occurring only within the data centre itself. 
+Each individual generator with its own discharge stack, can be maintained, tested and used in a planned way 
+for up to 500 hours per calendar year each without ELVs or associated monitoring under the Industrial 
+Emissions Directive (IED) and Medium Combustion Plant Directive (MCPD). The Environment Agency 
+expects planned testing and generator operations to be organised to minimise occasions and durations 
+(subject to client requirements). 
+The permit has a limit on the activity to exclude voluntary ‘elective power operation’ such as demand side 
+response (i.e. on-site use) or grid short term operating reserve (STOR) (i.e. off-site export of electricity) and 
+Frequency Control by Demand Management (FCDM) for grid support. This is primarily to differentiate data 
+centres from ‘diesel arrays’ that voluntarily operate within the balancing market and importantly provide a 
+clear way to demonstrate minimisation of emissions to air as ‘emergency plant’. 
+Operational and management procedures should reflect the outcomes of the air quality modelling by 
+minimising the duration of testing, phasing engines into subgroups, avoiding whole site tests and planning 
+off-grid maintenance days and most importantly times/days to avoid adding to “at risk” high ambient pollutant 
+background levels. 
+The permit application has assessed and provided evidence of the actual reliability of the local electricity grid 
+distribution allowing the Environment Agency to judge that the realistic likelihood of the plant needing to 
+operate for prolonged periods in an emergency mode is low. However, the atmospheric dispersion modelling 
+provided in the application, albeit at very much worst case scenario, has predicted that the emissions of NO
+2 
+from operation of the generators for solely testing purposes over weekends may itself have the potential to 
+exceed short term air quality standards. Although AQMAU has assessed the risk of the exceedance hours 
+coinciding with worst case meteorological hours as low, improvement conditions are included in the permit to 
+address this. 
+Reporting of standby engine maintenance run hours is required annually and any electrical outages (planned 
+or grid failures regardless of duration) require both immediate notification of the Environment Agency and 
+annual reporting. 
+ 
+Considerations on Medium Combustion Plant Directive and Specified Generator 
+Regulations: 
+The diesel generator (0.3MWth input)  used for powering the site fire sprinkler system is included as a 
+Directly Associated Activity (DAA) in the permit as the sprinkler system serves equipment included within the 
+installation boundary such as the standby generators. No emission limits apply to the generator as its power 
+rating is <1MWth.  
+The diesel generator (0.98MWth) that supplies power to administration offices is not included as a DAA as 
+these offices are not within the installation boundary. This generator is not a medium combustion plant as its 
+capacity is <1MWth and neither is it a specified generator as it is not part of a capacity agreement or an 
+agreement to provide balancing services. 

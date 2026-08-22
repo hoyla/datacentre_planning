@@ -1,0 +1,13 @@
+ 
+Permit number                             
+Error! Unknown document property name. 21 
+Table S1.4 Pre-operational measures 
+Reference Pre-operational measures 
+PO2 Containment 
+At least one month before operation the operator shall undertake a review of all liquid 
+storage, bunds and secondary containment at the site and submit a written report to 
+the Environment Agency for assessment and written approval.  
+The review shall be carried out by a qualified structural engineer and compare all liquid 
+storage, bunds and secondary containment against the standards set out in CIRIA 
+guidance: Containment systems for the prevention of pollution (C736).   
+  

@@ -1,0 +1,25 @@
+ 
+Page 3 of 25 
+All of the generators are subject to a maintenance testing schedule to ensure that 
+they are maintained and can perform if/when required. The testing schedule is as 
+follows;  
+1. Planned Preventative Maintenance Start-up test:  Each generator will be 
+tested individually for 15mins at 0% load. This will occur every 6 months 
+(twice per year). Total hours per generator per year = 0.5. 
+2. Building load test: Each generator will be tested individually for one hour at 
+the current generators load, depending on which of the three data halls it 
+serves. Each different data hall will be tested on a different week, so no 
+more than 5 engines will be tested in a single week. Once a year the 
+monthly test will be replaced an annual test that will see all 13 generators 
+tested consecutively in a single day. Total hours per generator per year = 
+12.  
+This testing schedule is summarised in the table below from the Non-Technical 
+Summary V2 
+ 
+Consideration has been given to the presence of an additional data centre in 
+close proximity to the installation. Agreement has been sought for testing at Colt 
+Powergate to take place on weekdays and for the other nearby site to undertake 
+testing on weekends in order to avoid any testing occurring simultaneously. The 
+testing regime proposed at the installation is contained within the Non-Technical 
+Summary V2 which has been listed within Table S1.2 Operating Techniques of 
+the permit.  

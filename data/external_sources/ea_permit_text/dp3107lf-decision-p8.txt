@@ -1,0 +1,47 @@
+ 
+Page 8 of 25 
+• Short Term NO2: 1-hour mean NO2 concentrations are predicted to 
+exceed the associated ES at 13 receptor locations during the emergency 
+scenario.  
+• Short Term PM10: 24-hour mean PM10 concentrations are predicted to 
+exceed the associated ES at 2 receptor locations.  
+ 
+• AEGL-1: Predicted NO2 concentrations were below the relevant AEGL-1 
+at 8 of the 14 sensitive receptor locations over the modelled 5 year period 
+for all exposure periods considered. Exceedances were predicted at the 
+remaining 6 sensitive receptor locations. 
+ 
+• Short Term NO: The PC proportion of the ES is less than 10% at 5 
+receptor locations and the PEC is less than 20% at 8 locations sensitive to 
+short term-term exposure. As such, impacts can be screened out as not 
+significant in accordance with the initial stage of the Environment Agency 
+screening criteria  
+ 
+Ecological Impact 
+Testing and maintenance scenario 
+• Long Term: The NOx PC is less than 1% of the ES at both Special 
+Area of Conservation (SAC) receptor locations (ER3 Richmond Park, 
+ER4 Wimbledon Common) and less than 100% at all Local Nature 
+Reserve (LNR) / Sites of Importance for Nature Conservation (SINC) 
+receptor locations. As such, impacts on annual mean NOx 
+concentrations at these locations can be screened out as insignificant in 
+accordance with the initial stage of the Environment Agency screening 
+criteria.  
+ 
+• Short Term: The NO
+x PC proportion of the adopted ES is less than 
+10% at both SAC receptor locations (ER3 Richmond Park, ER4 
+Wimbledon Common) and less than 100% at 19 (out of 24) LNR/SINC 
+receptor locations. As such, impacts on 24-hour mean NOx 
+concentrations at these locations can be screened out as insignificant in 
+accordance with the initial stage of the Environment Agency screening 
+criteria. At the remaining 5 LNR/SINC receptor locations (ER5 - ER7 
+Wesley Playing Fields and ER8 - ER9 Grand Union Canal), the PC 
+proportion of the ES is above 100%. As such, impacts on 24-hour mean 
+NO
+x concentrations cannot be screened as insignificant in accordance 
+with the Environment Agency screening criteria. Predicted 
+concentrations are considered to represent a worst-case scenario 
+whereby the worst meteorological conditions overlap with the testing 
+period.  
+ 

@@ -1,0 +1,52 @@
+ 
+Permit number 
+EPR/AP3903PD 19 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+environmental risk assessment documentation submitted as part of 
+application for variation V002. 
+In addition, evidence shall be provided to demonstrate that the 
+monitoring personnel holds appropriate qualifications. 
+As part of this improvement condition, the Operator shall also propose 
+a plan for approval by the Environment Agency addressing the 
+periodic maintenance of the SCR system and calibration of the 
+monitoring systems relied upon to attain a consistent and reliable NOx 
+abatement performance.  
+IC8 SCR fitting to London 8, phase 2 
+The operator shall submit a report for approval by the Environment 
+Agency confirming the completed installation and commissioning of 
+the proposed selective catalytic reduction (SCR) systems in the 
+remaining 7 of the 14 engines in London 8.  
+The report shall demonstrate that the performance of the SCR 
+systems installed in each generator is confirmed to be compliant with 
+the design specification and environmental risk assessment 
+documentation submitted as part of application for variation V002. The 
+performance testing shall include MCERTS air emission monitoring of 
+oxides of nitrogen, according to standard BS EN 14792; and 
+MCERTS air emission monitoring of ammonia, according to standard 
+EN ISO 21877.  
+The report shall demonstrate that the urea dosing has been optimised 
+to prevent ammonia slip in excess of the figures modelled in the 
+environmental risk assessment documentation submitted as part of 
+application for variation V002. 
+In addition, evidence shall be provided to demonstrate that the 
+monitoring personnel holds appropriate qualifications. 
+As part of this improvement condition, the Operator shall also propose 
+a plan for approval by the Environment Agency addressing the 
+periodic maintenance of the SCR system and calibration of the 
+monitoring systems relied upon to attain a consistent and reliable NOx 
+abatement performance. 
+31/12/2025 
+IC9 Performance of SCR systems 
+The operator shall submit a written report to the Environment Agency 
+for assessment and written approval. The report must contain: 
+• Detailed information on the specification of the suitability of the 
+NOx sensors and urea solution dosing to the SCR systems  
+• Evidence of the initial calibration of the NOx sensors and 
+verification of the levels of unabated and abated NOx 
+emissions upstream and downstream of the SCR system 
+according to a methodology consistent with web guide 
+‘Monitoring stack emissions: low risk MCPs and specified 
+generators’ Published 20 March 2024 (formerly known as TGN 
+M5)  
+01/03/26 

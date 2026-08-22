@@ -1,0 +1,29 @@
+ 
+London 14 Data Centre EPR/UP3624SW                     Page 17 of 17 
+b) Interference with the air transfer louvered façade could lead to changes to 
+dispersion. However, we note the building is accounted for in the model 
+and this impact is likely to be minimal. 
+c) We are satisfied that emissions to air from the generators are unlikely to 
+be a significant risk to human health or the environment, as discussed 
+earlier in this document. Visual impact is not a consideration for the permit 
+determination. 
+3. Member of the public – response received 31/07/2024 
+ 
+Brief summary of issues raised: 
+a) Concern that the air quality impact assessment provided does not include 
+an in-combination impact assessment with VIRTUS data centre permitted 
+under EPR/AP3903PD.  
+b) Will the air quality management plan for this new facility also include the 
+other 4 data centres for a co-ordinated response in case of emergency? 
+ 
+Summary of actions taken: 
+a. For testing and emergency scenarios, the Operator predicts insignificant 
+short-term impacts for NO2 at receptors to the west of London 14 Data 
+Centre (in proximity to Virtus Data Centres Stockley Park campus). 
+Therefore, an in-combination impacts assessment is not required. 
+b. The Air Quality Management Plan is required under improvement 
+condition IC1. The condition includes a requirement for the Operator to 
+consider how local conditions during a grid failure might influence the 
+response required. This should include consideration of other nearby data 
+centres that may also be affected by a grid failure.   
+ 

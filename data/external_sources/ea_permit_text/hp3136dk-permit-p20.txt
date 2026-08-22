@@ -1,0 +1,40 @@
+Permit number 
+EPR/HP3136DK 20 
+Schedule 6 – Interpretation 
+“accident” means an accident that may result in pollution. 
+“application” means the application for this permit, together with any additional information supplied by the 
+operator as part of the application and any response to a notice served under Schedule 5 to the EP 
+Regulations. 
+“authorised officer” means any person authorised by the Environment Agency under section 108(1) of The 
+Environment Act 1995 to exercise, in accordance with the terms of any such authorisation, any power 
+specified in section 108(4) of that Act. 
+“EP Regulations” means The Environmental Permitting (England and Wales) Regulations SI 2016 No.1154 
+and words and expressions used in this permit which are also used in the Regulations have the same 
+meanings as in those Regulations. 
+“emissions of substances not controlled by emission limits” means emissions of substances to air, water or 
+land from the activities, either from the emission points specified in schedule 3 or from other localised or 
+diffuse sources, which are not controlled by an emission or background concentration limit. 
+“groundwater” means all water, which is below the surface of the ground in the saturation zone and in direct 
+contact with the ground or subsoil. 
+“Industrial Emissions Directive” means DIRECTIVE 2010/75/EU OF THE EUROPEAN PARLIAMENT AND 
+OF THE COUNCIL of 24 November 2010 on industrial emissions 
+“List of Wastes” means the list of wastes established by Commission Decision 2000/532/EC replacing 
+Decision 94/3/EC establishing a list of wastes pursuant to Article 1(a) of Council Directive 75/442/EEC on 
+waste and Council Decision 94/904/EC establishing a list of hazardous waste pursuant to Article 1(4) of 
+Council Directive 91/689/EEC on hazardous waste, as amended from time to time.. 
+“MCERTS” means the Environment Agency’s Monitoring Certification Scheme. 
+“Natural gas” means naturally occurring methane with no more than 20% by volume of inert or other 
+constituents. 
+“shut down” is any period where the plant is being returned to a non-operational state. 
+“start up” is any period, where the plant has been non-operational, until fuel has been fed to the plant to 
+initiate steady-state conditions. 
+Where a minimum limit is set for any emission parameter, for example pH, reference to exceeding the limit 
+shall mean that the parameter shall not be less than that limit. 
+Unless otherwise stated, any references in this permit to concentrations of substances in emissions into air 
+means: 
+• in relation to emissions from combustion processes, the concentration in dry air at a temperature of 
+273K, at a pressure of 101.3 kPa and with an oxygen content of 3% dry for liquid and gaseous fuels, 6% 
+dry for solid fuels; and/or 
+• in relation to emissions from non-combustion sources, the concentration at a temperature of 273K and at 
+a pressure of 101.3 kPa, with no correction for water vapour content. 
+“year” means calendar year ending 31 December. 

@@ -1,0 +1,44 @@
+ 
+                       Page 2 of 17 
+OFFICIAL 
+OFFICIAL 
+Overview of the Installation  
+The site is part of a new electronic data storage centre which includes back-up 
+electricity generation capacity, a Schedule 1 S1.1 Part A(1)(a) activity under the 
+Environmental Permitting Regulations (the burning of any fuel in an appliance 
+with a rated thermal input of 50 or more megawatts (MW)).  The site is located in 
+an area of light industrial and commercial developments on the Slough Trading 
+Estate in Slough.  The nearest residential receptors are over 250 metres to the 
+south west of the site.   
+The combustion plant only operates for limited routine testing and maintenance 
+or in an emergency scenario if the National Grid power supply fails. The 
+combustion activity comprises twelve 6 MWth gas oil fuelled standby generators. 
+The aggregated total combustion capacity on site will be 72 MWth. 
+Each generator has an exhaust, which is 15 metres above ground level. 
+Electrical power is provided to the data centre from the National Grid.  In the 
+event of a failure of this electrical supply, the operator will utilise the generators to 
+maintain power to the data centre.  The generators will be used solely for the 
+purpose of providing a back-up power supply, with no electricity being exported 
+from the installation.  
+The generators are subject to a routine maintenance testing schedule -  each 
+generator is tested one at time to minimise air quality impact, at 0% load for 15 
+minutes per month, for eleven months of the year.  Every year the generators are 
+also subject to an additional test, undertaken during the twelfth month of the year.  
+The annual test consists of running the generators sequentially at 100% load for 
+20 minutes, then reducing to 75% load for 120 minutes.  The testing scenarios 
+total 5.1 hours of operation per generator per year and 60.6 hours of operation in 
+total per year. 
+ 
+Furthermore, the operator has provided a management procedure that applies to 
+this and other Virtus data centres in the locality (LON9 Data Centre and Virtus 
+Slough Campus Data Centres) and ensures that during testing and maintenance, 
+only one generator is to be worked on at any one time if the generator is required 
+to run.  The procedure is included in Table S1.2 (Operating Techniques) of the 
+permit. 
+ 
+Each of the generators runs on ultra-low sulphur gas oil fuel, although alternative 
+fuels that can be demonstrated to have an equivalent or lower environmental 
+impact may be agreed in writing with the Environment Agency as they become 
+available.  Each generator has a dedicated, above ground 29,475 litre fuel tank - 
+sufficient fuel for 48 hours run time at emergency (near full) load.   
+ 

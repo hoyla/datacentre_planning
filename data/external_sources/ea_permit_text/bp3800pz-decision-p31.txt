@@ -1,0 +1,50 @@
+ 
+                       Page 31 of 32 
+and 36-hours. They also noted that the requirement on the operator to produce the Air Quality 
+Management Plan which must consider the predicted exposure of individual receptors, 
+meteorological conditions, contingency for how the response to loss of power will be carried out 
+and specific timescale for response measures substantively addressed their recommendation 
+with respect to the emergency scenario. 
+They noted the importance of not exceeding EH40 limits or Acute Exposure Guideline Levels 
+(AEGLs).  
+They recommended that the Environment Agency satisfied itself that the applicant suitably 
+assesses, and mitigates the potential health consequences of short term exposure to high levels 
+of nitrogen dioxide even for periods of less than 18 hours. 
+Summary of actions taken: 
+(a) The applicant analysed further the outcomes of the air dispersion modelling to investigate the 
+meteorological conditions that would lead to the highest impact at sensitive receptors. They 
+assessed the meteorological conditions during maximum potential 1-hour NO2 means for both the 
+maintenance/testing and outage scenarios. They considered temperature, wind speed, wind 
+direction, cloud cover and relative humidity. They concluded that the main driver to impacting on 
+air quality was wind speed with the highest impacts generally occurring during calm conditions 
+(i.e., when wind speeds were below the limit of detection) or during conditions of low wind speed 
+(where this wind speed was <2 m/s). 
+The applicant proposed that the Air Emissions Risk Assessment demonstrated that the probability 
+of the routine testing and maintenance hours across a year coinciding with meteorological 
+conditions that would lead to an exceedance of the nitrogen dioxide limit values are less than 1% 
+and therefore highly unlikely. As such, the applicant proposed that no specific measures in 
+relation to the routine testing and maintenance scenarios is considered to be required, especially 
+given the precautionary assumptions already embedded in the assessment, e.g. assuming 
+standby generators operate at full load for all testing and simultaneous testing across the 4 data 
+centres which is not the case. 
+In addition, the applicant has revised the configuration of the HH4 data centre such that we have 
+permitted only HH4 phase 1 which includes 15 generators instead of the 32 generators included 
+in the original HH4 plan. This means that the testing/maintenance operations at HH4 will occur for 
+only 345 hours/year rather than the 736 hours/year in the original application. This will further 
+reduce the potential impact from testing/maintenance operations across the permitted sites. 
+The improvement condition (IC8) which has been included in the permit requiring the operator to 
+review options for reducing predicted short term nitrogen dioxide emissions and their potential for 
+impact on human health (and ecological) receptors, includes a requirement on the operator to 
+take into account those weather conditions demonstrated by modelling to have the greatest 
+potential for environmental impact in order to reduce emissions, improve dispersion and reduce 
+potential environmental impact. 
+(b) The applicant demonstrated that modelled and predicted NO2 levels at a location outside of 
+the four data centre sites, at which an Environment Agency monitoring device had been located, 
+had been significantly higher than those levels actually monitored – predictions of 800 µg/m3 NO2 
+compared with maximum levels of 120 µg/m3 NO2 measured. We believe that this indicates the 
+modelled NO2 emissions are very much a worst case scenario. 
+The reduction in the testing/maintenance hours in the permitted HH4 phase 1 also will result in a 
+reduction in the potential environmental impact from NO2 releases during testing/maintenance.  
+As the Environment Agency monitoring of NO2 has been carried out at Hemel Hempstead and the 
+data is being correlated with operation at the three on-line data centres (Campus, Centro and 
+Maylands), we do not believe further NO2 monitoring is required by the operator at this stage. 

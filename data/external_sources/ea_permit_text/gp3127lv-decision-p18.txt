@@ -1,0 +1,39 @@
+ 
+LIT 11984  [Publish date]                     Page 18 of 24 
+Pre-operational conditions 
+Based on the information in the application, we consider that we need to include 
+pre-operational conditions. The following pre-operational conditions have been 
+included in the permit: 
+1 - Commissioning 
+At least one month before operation the operator shall submit a commissioning 
+plan to the Environment Agency for approval. The plan shall provide timescales 
+for the commissioning of the gas oil generators and shall demonstrate that the 
+commissioning of the gas oil generators is covered within the site’s permitted 
+regular testing regime, thereby minimising durations and impacts. 
+We have included this pre-operational condition as the risk assessment 
+submitted with the application does not cover the commissioning phase. 
+2 – Pre-operational measures for site condition 
+This pre-operational condition is added to ensures that, before permitted 
+activities commence, the operator submits sufficient baseline information to 
+establish the condition of land and groundwater within the permitted installation 
+boundary. Where remediation has been completed, this must include the initial 
+verification report, with any later relevant monitoring or addendum reports 
+submitted when available and reflected in the Site Condition Report as 
+appropriate. 
+Any update to the Site Condition Report will be subject to Environment Agency 
+review and approval. Later information will be considered to determine whether it 
+updates the baseline position or indicates a change in site condition after 
+commencement of permitted activities. Information indicating deterioration after 
+commencement would not normally be treated as a revision to the baseline 
+condition. 
+ 
+Improvement programme 
+Based on the information on the application, we consider that we need to include 
+an improvement programme. 
+We consider that IC2 and IC3 are appropriate because, in the prolonged 72-hour 
+emergency scenario, our assessment indicates that 100th percentile 1-hour NO2 
+process contributions are predicted to exceed the AEGL-1 for NO2 at a number 
+of receptors. However, we agree that any such exceedance is unlikely overall 
+because it would require a national emergency blackout event coinciding with 
+worst-case meteorological conditions, and this scenario is considered unlikely 
+provided grid reliability remains high. Therefore, these two improvement 

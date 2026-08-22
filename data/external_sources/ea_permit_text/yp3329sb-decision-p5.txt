@@ -1,0 +1,43 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 5 of 28 
+The operator confirms that an investigatory procedure will commence which will include visual 
+investigation of the area served by the interceptor, temporary isolation of the surface water 
+system whilst the source of the trigger is investigated, and arrangement for removal of oil from the  
+interceptor where an event has taken place. 
+ 
+Interceptors will be inspected on a six-monthly basis as recommended by the manufacturer and 
+where required arrangements will be made for removal of silt/oil by a licenced waste contractor.  
+ 
+Point Source Emissions to Land 
+The operator has confirmed that there will be point source emissions to land from the Installation 
+in the form of soakaways.  
+The only soakaway serving the permitted area is the southern attenuation tank on LHR12 which 
+captures drainage from the generator gantry area. The soakaway point source discharge point is 
+referenced as SL1 on the Plan in Schedule 7 of the permit. 
+The soakaway is lined with a geotextile and geomembrane and is protected by an interceptor, the 
+area also includes a firewater retention chamber. 
+The soakaways include access points which allow for CCTV surveying and jetting to clear 
+blockages and buildup of sediment. The maintenance procedures (including frequency) will  be 
+finalised as part of the commissioning process and transition to the operations team for the  
+Installation. 
+Air Quality 
+In line with the Environment Agency’s guidance (Air emissions risk assessment for your 
+environmental permit - GOV.UK (www.gov.uk)) and the relevant parts of the guidance applicable 
+to the assessment of air dispersion modelling of emissions from generators (Specified 
+generators: dispersion modelling assessment - GOV.UK (www.gov.uk)) the operator submitted 
+detailed air dispersion modelling and impact assessment to assess the predicted impacts on 
+human receptors and ecological sites.  
+The methodology for risk assessment of point source emissions to air, and the associated 
+definitions, are set out in our guidance Air emissions risk assessment for your environmental 
+permit - GOV.UK (www.gov.uk). 
+Operator’s Assessment of Potential Impact on Air Quality 
+The operator submitted an Air Emissions Risk Assessment prepared by Ramboll UK Limited (the 
+consultant), which considered the potential impacts of the principal pollutants of concern with 
+respect to emissions to air from low sulphur gas oil/ HVO generators. The consultant has 
+assessed potential impacts at human and ecological receptors for nitrogen oxides (NO x), 
+ammonia (NH3), sulphur dioxide (SO2), carbon monoxide (CO), particulate matter (with a 
+diameter less than 10 microns (PM10) and 2.5 microns (PM2.5)) within the defined screening 
+distances.  
+Human Receptors 
+They considered 75 discrete human receptor locations, including residential properties, hotels 
+and workplaces. 

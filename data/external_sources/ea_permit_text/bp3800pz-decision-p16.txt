@@ -1,0 +1,50 @@
+ 
+                       Page 16 of 32 
+o A pressure delivery over-fill prevention valve; 
+o Leak detection alarms connected to the BMS; 
+o The generator sets have pressure relief valves to prevent over pressurisation of diesel 
+supplied from the belly tanks; and. 
+o To minimise the risk or corrosion all pipework is painted or is constructed of corrosion 
+resistant material. 
+ 
+Maylands Datacentre: 
+o A “belly” tank fuel monitoring system which will alarm, via the datacentre Building 
+Management System (BMS) to the on-site control room, in the event of a diesel tank 
+volume decrease when the generators are not operating. 
+o For those belly tanks that are filled directly from a refuelling vehicle, the fill points are 
+located in a lockable cabinet provided with a drip tray designed to capture any minor 
+spillages of oil from the fill point during delivery, which is integral to the generator 
+container unit.  
+o The tank fill point cabinets remain locked when not in use; 
+o Tank level gauge; 
+o A pressure delivery over-fill prevention valve to prevent over pressurisation of diesel 
+supplied from the bulk tanks (Suite 1 generators only); 
+o High and low level alarms connected to the BMS; 
+o The generator sets have pressure relief valves to prevent over pressurisation of diesel 
+supplied from the belly tanks; and. 
+o To minimise risk or corrosion all pipework is painted or is constructed of corrosion 
+resistant material. 
+Centro Datacentre: 
+o A “belly” tank fuel monitoring system which will alarm, via the datacentre Building 
+Management System (BMS) to the on-site control room, in the event of a diesel tank 
+volume decrease when the generators are not operating. 
+o Tank level gauge; 
+o High and low level alarms connected to the BMS; 
+o A pressure delivery over-fill prevention valve to prevent over pressurisation of diesel 
+supplied from the bulk tanks; 
+o The generator sets have pressure relief valves to prevent over pressurisation of diesel 
+supplied from the belly tanks; and. 
+o To minimise the risk or corrosion all pipework is painted or is constructed of corrosion 
+resistant material. 
+ 
+Containment Protection – Bulk Storage Tanks: 
+Maylands and Centro Datacentres: 
+o Integrated secondary containment (110% containment capacity); 
+o A tank fuel monitoring system which will alarm, via the datacentre Building Management 
+System (BMS) to the on-site control room, in the event of a diesel tank volume decrease 
+when the generators are not operating. 
+o The fill points are located in a lockable cabinet provided with a drip tray designed to 
+capture any minor spillages of oil from the fill point during delivery, which is integral to the 
+bulk tank unit; 
+o Level gauges connected to the BMS; 
+o High and low level alarms connected to the BMS; 

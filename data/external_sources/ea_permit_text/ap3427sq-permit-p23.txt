@@ -1,0 +1,47 @@
+ 
+Permit number             
+EPR/AP3427SQ 23 
+Schedule 6 – Interpretation 
+“Accident” means an accident that may result in pollution. 
+“Application” means the application for this permit, together with any additional information supplied by the 
+operator as part of the application and any response to a notice served under Schedule 5 to the EP 
+Regulations. 
+“Authorised officer” means any person authorised by the Environment Agency under section 108(1) of The 
+Environment Act 1995 to exercise, in accordance with the terms of any such authorisation, any power 
+specified in section 108(4) of that Act. 
+“Emissions of substances not controlled by emission limits” means emissions of substances to air, water or 
+land from the activities, either from the emission points specified in schedule 3 or from other localised or 
+diffuse sources, which are not controlled by an emission or background concentration limit. 
+“Emissions to land” includes emissions to groundwater. 
+“Energy efficiency” means the annual net plant energy efficiency, the value for which is calculated from the 
+operational data collected over the year. 
+“EP Regulations” means The Environmental Permitting (England and Wales) Regulations SI 2016 No.1154 
+and words and expressions used in this permit which are also used in the Regulations have the same 
+meanings as in those Regulations. 
+“Existing MCP” means an MCP first put into operation before 20/12/2018.  
+“Gas oil” includes diesel and is defined in Article 3(19) of the MCPD. 
+“Groundwater” means all water, which is below the surface of the ground in the saturation zone and in direct 
+contact with the ground or subsoil. 
+“Industrial Emissions Directive” means DIRECTIVE 2010/75/EU OF THE EUROPEAN PARLIAMENT AND 
+OF THE COUNCIL of 24 November 2010 on industrial emissions, as read in accordance with Schedule 1A 
+to the Environmental Permitting (England and Wales) Regulations 2016. 
+“MCERTS” means the Environment Agency’s Monitoring Certification Scheme.  
+“Medium Combustion Plant” or ”MCP” means a combustion plant with a rated thermal input equal to or 
+greater than 1 MW but less than 50 MW. 
+“Medium Combustion Plant Directive” or “MCPD” means Directive 2015/2193/EU of the European Parliament 
+and of the Council on the limitation of emissions of certain pollutants into the air from medium combustion 
+plants, as read in accordance with Schedule 1A to the Environmental Permitting (England and Wales) 
+Regulations 2016. 
+“New MCP” means an MCP first put into operation on or after 20/12/2018. 
+“Operating hours” means the time, expressed in hours, during which a combustion plant is operating and 
+discharging emissions into the air, excluding start-up and shut-down periods. 
+“Shut-down” is any period where the plant is being returned to a non-operational state. 
+“Start-up” is any period where the plant has been non-operational, until fuel has been fed to the plant to 
+initiate steady-state conditions. 
+Unless otherwise stated, any references in this permit to concentrations of substances in emissions into air 
+means: 
+• in relation to emissions from combustion processes, the concentration in dry air at a temperature of 
+273K, at a pressure of 101.3 kPa and with an oxygen content of 3% dry for liquid and gaseous fuels 
+other than gas engines or gas turbines, 6% dry for solid fuels. 
+• • in relation to emissions from gas engines or gas turbines, the concentration in dry air at a temperature 
+of 273K, at a pressure of 101.3 kPa and with an oxygen content of 15% dry for liquid and gaseous fuels.  

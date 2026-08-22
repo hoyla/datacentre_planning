@@ -1,0 +1,74 @@
+ 
+Permit number            
+EPR/NP3735JX 16 
+ 
+Table S3.2 Point source emissions to sewer, effluent treatment plant or other transfers off -site– 
+emission limits and monitoring requirements 
+Emission point ref. & 
+location 
+Source Parameter   Limit 
+(incl. 
+Unit) 
+Reference 
+period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+W1 as shown on the 
+‘drainage annotation’ 
+submitted on  
+13/06/2022 with 
+application 
+EPR/NP3735JX/A001. 
+Emission to Thames 
+Water combined 
+sewer. 
+Uncontaminated 
+Surface water 
+from hard 
+standing via an 
+oil interceptor. 
+- - - - - 
+ 
+ 
+Schedule 4 – Reporting 
+Parameters, for which reports shall be made, in accordance with conditions of this permit, are listed below.  
+Table S4.1 Reporting of monitoring data 
+Parameter Emission or 
+monitoring 
+point/reference 
+Reporting period Period begins 
+- - - - 
+ 
+Table S4.2 Performance parameters 
+Parameter Frequency of assessment Units 
+ Gas oil usage Annually tonnes 
+Generator operation for 
+testing/maintenance 
+Annually - total hours operation for site 
+(hours) 
+- total hours operation per 
+generator (hours) 
+- total number of runs per 
+generator (quantity and 
+dates) 
+- number of minutes per 
+generator run (minutes) 
+Generator operation for emergency 
+running 
+Within 24 hours of emergency 
+operation commencing 
+- date and time of National 
+Grid failure; 
+- number of generators 
+operating immediately after 
+National Grid failure 
+(number); 
+- number of generators 
+operating two hours after 
+National Grid failure 
+(number); 
+- Anticipated duration of 
+mains supply failure (hours) 

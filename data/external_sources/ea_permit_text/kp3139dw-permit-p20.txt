@@ -1,0 +1,56 @@
+ 
+Permit number 
+EPR/KP3139DW 20 
+Schedule 4 – Reporting 
+Parameters, for which reports shall be made, in accordance with conditions of this permit, are listed below.  
+Table S4.1 Reporting of monitoring data 
+Parameter Emission or monitoring 
+point/reference 
+Reporting period Period begins 
+Emissions to sewer 
+Parameters as required by 
+condition 3.5.1 
+S1, S2, S3 Annually 01/01/19 
+ 
+Table S4.2 Performance parameters 
+Parameter Frequency of assessment Units 
+Diesel usage Annually tonnes 
+Generator operation for 
+testing/maintenance  
+Report to be submitted annually - total hours for the site (hours) 
+- total hours per generator (hours) 
+- total number of runs per generator 
+(number) 
+- number of minutes per run (minutes) 
+Generator operation for 
+emergency running 
+Within 24 hours of emergency 
+operation commencing 
+- date and time of National Grid failure; 
+- number of generators operating 
+immediately after the failure (number); 
+- number of generators operating two 
+hours after the failure (number); 
+- total duration (anticipated duration) of 
+mains supply failure (hours) 
+Generator operation for 
+emergency running 
+Annually - total number of runs (number); 
+- total duration of runs (hours). 
+ 
+Table S4.3 Reporting forms 
+Media/parameter Reporting format Date of form 
+Sewer Form “sewer 1”or other form as agreed in writing by 
+the Environment Agency 
+18/01/19 
+Other performance 
+indicators 
+Form “performance 1” or other form as agreed in writing 
+by the Environment Agency 
+18/01/19 
+Generator operation during 
+emergency scenario 
+Form “emergency scenario” or other form as agreed in 
+writing by the Environment Agency 
+18/01/19 
+ 

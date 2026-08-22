@@ -1,0 +1,127 @@
+Permit number               
+EPR/ZP3527SSEPR/AB1234CD 17 
+ 
+Table S3.2 Point Source emissions to water (other than sewer) and land – emission limits and 
+monitoring requirements 
+Emission 
+point ref. & 
+location 
+Source Parameter   Limit 
+(incl. 
+unit) 
+Reference 
+Period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+SWMH1 
+Emission point 
+as shown on 
+site plan in 
+schedule 7 
+[Note 1] 
+Clean and 
+uncontaminated 
+surface water 
+via oil/ water 
+interceptor 
+No 
+parameter 
+set 
+No limit 
+set 
+- - - 
+SWMH2 
+Emission point 
+as shown on 
+site plan in 
+schedule 7 
+[Note 1]  
+Clean and 
+uncontaminated 
+surface water 
+via oil/ water 
+interceptor 
+No 
+parameter 
+set 
+No limit 
+set 
+- - - 
+Note 1: Emission to Campus Surface Water Sewer, ultimately discharging to the River Crane. 
+ 
+Table S3.3 Point source emissions to sewer, effluent treatment plant or other transfers off -site– 
+emission limits and monitoring requirements 
+Emission point 
+ref. & location 
+Source Parameter   Limit 
+(incl. 
+Unit) 
+Reference 
+period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+FWMH1 
+Emission point 
+as shown on site 
+plan in schedule 
+7 [Note 1] 
+Clean and 
+uncontaminated 
+surface water 
+via oil/ water 
+interceptor 
+No 
+parameter 
+set 
+No limit 
+set 
+- - - 
+Note 1: Emission to Campus Foul Sewer, ultimately discharging to the River Thames via Thames Water 
+public sewer and Beckton Sewage Treatment Works. 
+ 
+Table S3.4 Process monitoring requirements 
+Emission point 
+reference or source or 
+description of point of 
+measurement 
+Parameter Monitoring 
+frequency  
+Monitoring 
+standard or 
+method  
+Other specifications  
+EP1-EP12 
+ 
+Emission points from 
+generators as shown on 
+site plan in schedule 7 
+ 
+ 
+SCR abatement 
+efficiency 
+Continuous  Continuous 
+reading of NOx 
+sensors fitted to 
+SCR system to 
+manufacturer’s 
+specification. 
+  
+Periodic 
+validation 
+according to the 
+plan approved by 
+the Environment 
+Agency in 
+response to 
+Minimum abatement of 
+NOx, in accordance 
+with operating 
+techniques in 
+application documents 
+listed in table S1.2 

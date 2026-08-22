@@ -1,0 +1,38 @@
+ 
+                       Page 6 of 28 
+Although the PC is not insignificant (>10%), the PEC (taking into account background) is 
+less than the hourly mean SO2 EAL.  
+The operator proposed that, as there are no predicted exceedances of the air quality 
+standard at any of the assessed receptors and the testing of the standby back-up 
+generators is not a continuously operating process, the impact from the generators on 
+the SO2 hourly mean EAL would be acceptable for scenarios 1-3. 
+(h) SO2 daily mean. 
+The modelling predicted that the largest predicted PC of SO2 daily mean was 29.1μg/m3 
+at receptor HR17_G (on the façade of the new residential building C, south) which is 
+23% of the EAL of 125μg/m3. The largest PEC is 37.0μg/m3 also at HR17_G, which is 
+30% of the EAL. 
+Although the PC is not insignificant (>10%), the PEC (taking into account background) is 
+less than the hourly mean SO2 EAL.  
+The operator proposed that, as there are no predicted exceedances of the air quality 
+standard at any of the assessed receptors and the testing of the standby back-up 
+generators is not a continuously operating process, the impact from the generators on 
+the SO2 hourly mean EAL would be acceptable for scenarios 1-3. 
+(i) CO hourly mean. 
+The modelling predicted that the largest PC of CO hourly mean was 222.8μg/m3 at 
+receptor HR14_G (on the façade of the new residential building B, west) which is less 
+than 1% of the EAL of 30,000μg/m3. The largest PEC is 600.4μg/m3 also at HR14_G, 
+which is 2% of the EAL. 
+The operator predicted that the impact from the generators on the CO hourly mean EAL 
+would be insignificant for scenarios 1-3. 
+(j) CO 8-hour rolling mean. 
+The modelling predicted that the largest PC of CO hourly mean was 405.4μg/m3 at 
+receptor HR14_G (on the façade of the new residential building B, west) which is 4.1% 
+of the EAL of 30,000μg/m3. The largest PEC was 782.9μg/m3 also at HR14_G, which is 
+7.8% of the EAL. 
+The operator predicted that the impact from the generators on the CO hourly mean EAL 
+would be insignificant for scenarios 1-3. 
+ 
+Summary: 
+We have carried out our own checks on the operator’s modelling and have used 
+alternative meteorological data years, higher background NO2 concentrations, terrain 
+data and alternative building configurations. 

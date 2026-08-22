@@ -1,0 +1,82 @@
+ 
+ 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 Air Quality Management Plan 
+ 
+The operator shall produce an AQMP in conjunction with the Local 
+Authority outlining response measures to be taken in the event of a 
+grid failure. This must include, but not be limited to, the following 
+considerations:  
+• The response should be tailored to reflect the predicted 
+potential impact indicated by the air dispersion modelling at 
+individual receptors;  
+• Preventative and reactive actions to be implemented to limit 
+the duration of an outage event to less than 50 hours as far 
+as possible; 
+• Specific timescales for response measures; 
+• How local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or 
+time of day; 
+• Contingency for how the response will be carried out in the 
+event scenario i.e. loss of power;  
+• Timescales for continued review of the management plan; 
+and 
+• Addition of indicative air quality monitoring stations around 
+the site to inform on air quality during extended periods of 
+standby generator running including prolonged grid outages. 
+ 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+ 
+Within 6 months from 
+the date of issue of the 
+permit 
+EPR/JP3929SJ/A001 
+IC2 Short-term nitrogen oxides concentrations - monitoring plan 
+ 
+The operator shall submit a written report to the Environment Agency 
+for assessment and written approval detailing proposals for a 
+monitoring programme to verify the predicted short-term nitrogen 
+oxides (NOx) concentrations at the boundary of the site or off-site 
+locations of sensitive receptors.  
+ 
+The proposal shall detail the monitoring methods and equipment that 
+will be used, having consideration for, but not necessarily be limited 
+to:  
+• Representative monitoring of ambient air quality during 
+operations, at the downwind boundary of the site, or off site 
+locations during all the testing scenarios using reference 
+equivalent (or greater) monitoring methods as set out in EA 
+Technical Guidance Note M8 or subsequent revisions of that 
+document, or using alternative techniques agreed in advance 
+with the Environment Agency to an equal or greater standard. 
+ 
+(The plant should not be operated solely to enable the 
+monitoring to take place. Monitoring should be done when 
+other activities (such as testing) require the plant to be 
+operated); 
+ 
+Submit the written report 
+within 6 months of issue 
+of 
+EPR/JP3929SJ/A001or 
+as agreed in writing with 
+the Environment Agency 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

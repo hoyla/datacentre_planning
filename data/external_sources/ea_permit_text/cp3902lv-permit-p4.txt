@@ -1,0 +1,62 @@
+Variation and consolidation  
+application number  
+EPR/CP3902LV/V003 4 
+All SBGs (except the 12 x 4.1 MWth LON1A phase 1 SBGs), are fitted with SCR NOx abatement systems. 
+The 16 LON1A SBGs SCR system uses IMS-eco technology, which has a target of reducing NOx emissions 
+by 79%. Each SCR abatement system will take between 5 and 10 minutes to reach the 79% NO x reduction, 
+based on a load of between 75% and 100%. The SCR NOx abatement system will reduce the NOx emissions 
+to 667mg/m3 per generator at 100% load and 5% oxygen (257mg/m3 at 15% oxygen).   
+Each SCR abatement system will have a 2,000 litre AdBlue bulk tank, located beneath the inlet attenuator of 
+the SBG container unit.  
+To prevent ammonia slip, Ammonia Slip Catalysts (ASC) are used. The ASC technology is designed to 
+control up to 20 ppm of ammonia in the exhaust gas from SCR, based on the SCR design target which is 
+79% NOx reduction. 
+The 24 LON1B SBGs will be supplied with SCR abatement, designed to reduce NOx emissions to meet the 
+Medium Combustion Plant Directive (MCPD) emission limit for NOx of 190 mg/m3 @ 15% oxygen. At the 
+time of variation EPR/CP3902LV/V003, the SCR abatement system had not been selected and a pre-
+operational condition was set to address this. 
+ 
+The status log of a permit sets out the permitting history, including any changes to the permit reference 
+number.   
+Status log of the permit 
+Description Date Comments 
+Application EPR/CP3902LV/A001 Duly made 
+14/12/2020 
+Application for a combustion facility consisting of 42 
+gas oil generators providing emergency power to an 
+electronic data centre. 
+Response to Schedule 5 notice 
+dated 26/03/2021 
+21/05/2021 Response to Schedule 5 providing information 
+regarding the assessment of air emissions, emissions 
+standards of the generators, emissions abatement, 
+BAT, bunding and containment, grid resilience, 
+accident management, maintenance inspection and 
+testing and with regards to condition of the land. 
+Response to Schedule 5 notice 
+dated 26/03/2021 
+15/07/2021 Response to Schedule 5 providing further information 
+in response to follow up questions (dated 
+30/06/2021). 
+Response to Schedule 5 notice 
+dated 26/03/2021 
+05/08/2021 Response to Schedule 5 providing further information 
+in response to follow up questions (dated 
+20/07/2021).  
+Additional Information 01/07/2021 Response to request for information (dated 
+01/07/2021), height of stacks above adjacent 
+buildings. 
+Additional Information 26/08/2021 Response to request for information (dated 
+09/08/2021), providing an explanation of methodology 
+used for calculating probability of exceedance at 
+ecological receptors. 
+Additional Information  16/09/2021 Response to request for information (dated 
+06/09/2021), probability of exceedance at ecological 
+receptors follow up questions. 
+Additional Information 18/10/2021 Response to request for information (dated 
+15/10/2021), revised installation boundary plan 
+submitted. 
+Permit determined 
+EPR/CP3902LV                                  
+16/12/2021 Permit issued to NTT Global Data Centers EMEA UK 
+Ltd. 

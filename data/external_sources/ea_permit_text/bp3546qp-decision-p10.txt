@@ -1,0 +1,36 @@
+ 
+                       Page 10 of 28 
+Ecological Receptors. 
+Scenarios 1 -3 (Planned operations). 
+The consultant has grouped scenarios 1-3 assuming a total of 19 hours of operation per 
+generator each year. This still provides a conservative approach assuming generators 
+operate at 100% load. The results also use the worst possible year for meteorological 
+data which again is a conservative approach to assigning risk.  
+(a) NOx annual mean. 
+The largest predicted Process Contribution (PC) in NOx annual mean is <0.01μg/m3 at 
+all ecological receptors ER1 – ER12, which is less than 1% of the EAL of 30μg/m3. The 
+largest Predicted Environmental Concentration (PEC) from the modelling is 26.2μg/m3 at 
+ER7, which is less than 88% of the EAL. 
+There were no predicted exceedances of the EAL. Neither of the screening criteria for 
+ecological sites were exceeded, as the PC for the Chiltern Beechwoods SAC (ER1) was 
+less than 1%, and the PCs for all other local nature sites were less than 100%.  
+Therefore, the impact from the generators on the NOx annual mean EAL at the sensitive 
+receptors was assessed as insignificant. 
+(b) NOx daily mean. 
+The largest predicted PC in NOx daily mean is 1.1μg/m3 at receptor ER2 (Maylands 
+Wood Ancient Woodland, Local Wildlife Site) which is 1% of the EAL of 75μg/m3. The 
+largest PEC predicted is 52.9μg/m3 at ER7 (Westwick Row Wood, Local Wildlife Site), 
+which is approximately 70% of the EAL. 
+There were no predicted exceedances of the EAL. Neither of the screening criteria for 
+ecological sites were exceeded, as the PC for the Chiltern Beechwoods SAC (ER1) was 
+less than 10% and the PCs for all the other local nature sites were less than 100%. No 
+exceedances of the EAL were predicted. 
+Therefore, the impact from the generators on the NOx daily mean EAL at the sensitive 
+receptors was assessed as insignificant. 
+(c) SO2 annual mean. 
+The largest predicted PC in SO2 annual mean is <0.01μg/m3 at receptor ER2 (Maylands 
+Wood Ancient Woodland, Local Wildlife Site), which is less than 1% of the EAL of 
+20μg/m3. The largest PEC predicted is 7.7μg/m3 at ER3, which is 38% of the EAL. 
+There were no predicted exceedances of the EAL. Neither of the screening criteria for 
+ecological sites were exceeded, as the PC for the Chiltern Beechwoods SAC (ER1) was 
+less than 1%, and the PCs for all other local nature sites were less than 100%. 

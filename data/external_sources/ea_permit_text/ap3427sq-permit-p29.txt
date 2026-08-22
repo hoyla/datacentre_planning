@@ -1,0 +1,32 @@
+ 
+ 
+Parameter Value Units 
+2   
+   
+   
+ 
+Note 1: Provide details of each testing and maintenance test in the following template: 
+Generator operation for testing and 
+maintenance 
+Repeat for each test 
+Date of test DD/MM/YY 
+Test type Description such as: ‘Off load / On load / Load Bank’ 
+Start / End 
+time 
+XX:XX / XX:XX 
+Generators 
+testing 
+sequence and 
+duration 
+- Data Hall xxx – number of generators – 0.5 hours (time start 
+xx:xx; time end xx:xx) 
+ 
+Followed by 
+- Data Hall xxx – number of generators – 0.5 hours (time start 
+xx:xx; time end xx:xx) 
+ 
+Comments / 
+Additional 
+information on 
+the test 
+ 

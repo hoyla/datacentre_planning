@@ -1,0 +1,44 @@
+ 
+                       Page 21 of 32 
+of the application submission, this IC also includes a requirement for the operator to outline any 
+safety, cost or operational constraints that might result in the operator not being able to comply 
+with the monitoring requirements in Table S3.1.  
+IC10 which requires the operator to review surface water discharge from sites at Maylands and 
+Centro and provide updated detailed drainage plans for these sites. It also requires the operator 
+to review discharge of uncontaminated surface water from the four sites to demonstrate that they 
+would not cause overloading at a sewage treatment works should site surface waters be directed 
+to such a facility. 
+ 
+Risk Assessment of Revised Configuration for HH4 (Phase 1) Data Centre. 
+As discussed, the applicant revised the configuration of the HH4 site during the application 
+process. The applicant proposed instead to install a smaller number of larger generators (Kohler 
+T2500C model) with an overall thermal input greater than that proposed for HH4 in the original 
+application (Kohler KD1800 model). The T2500C generators comply with the 2g TA-Luft standard 
+and achieve 2,000 mg/m3 NOx emissions. 
+Original HH4 Proposal: 
+32 generators installed across two phases with a total thermal input of 131.2 MWth. 
+ 
+Revised HH4 Phase 1 Proposal (2021/2022): 
+15 generators installed with a total thermal input of 71.4 MWth. 
+Proposed Future HH4 Phase 2 Proposal (2023): 
+15 further generators installed with a total thermal input of 71.4 MWth. 
+The applicant submitted a revised environmental risk assessment for HH4 phase 1 which they 
+proposed demonstrated that the environmental risk from HH4 phase 1 was no greater than the 
+environmental risk for the full HH4 configuration in the original application. They agreed that they 
+could not demonstrate that the environmental risk from the reconfigured HH4 phase 1 and phase 
+2 would be no greater than that for HH4 in the original application. 
+We have reviewed the revised risk assessment for HH4 phase 1. 
+Impact of Air Emissions: 
+The stacks for the fifteen generators in HH4 phase 1 are located at fifteen of the locations 
+previously assessed for the thirty two generators to be installed in HH4 in accordance with the 
+original design. The emission parameters for the revised HH4 phase 1 compared with the original 
+HH4 scenario are: 
+. 
+Parameter Original HH4 
+Revised HH4 
+Phase 1 
+Stack height (m) 12 12 
+Stack internal diameter (m) 0.35 0.558 
+Volume flow (Nm3/s) 2.72 5.26 
+Actual flow rate (Am3/s) 4.38 8.43 
+Emission temperature (oC) 504 500 

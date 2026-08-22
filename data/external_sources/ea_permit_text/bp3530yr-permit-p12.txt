@@ -1,0 +1,68 @@
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+• Regard for how local conditions during a grid failure might 
+influence the response required, for example meteorological 
+conditions or time of day; 
+• Contingency for how the response will be carried out in the event 
+scenario i.e. loss of power; and 
+• Timescales for continued review of the management plan. 
+The Air Quality Management Plan shall be submitted to the Environment 
+Agency for approval prior to implementation. 
+IC2 Submit a written plan to the Environment Agency for technical assessment 
+and approval. The plan must contain  the measures to comply with an 
+emission limit of 190mg/m3 for oxides of nitrogen for all engines which will 
+operate Frequency Control by Demand Management  after 30/11/20. The 
+operator shall undertake a full appraisal, including cost/benefit analysis, of 
+the practicable, technical and economic feasibility of reducing aerial 
+emissions by such means as installing selective catalytic reduction (SCR), 
+increasing the emission point stack heights to improve dispersion of 
+pollutants or other such techniques. Where development is identified to be 
+practicable, as well as technically and economically feasible; the report 
+shall contain a schedule of works, with timescales for completion. 
+ 
+The notification requirements of condition 2.4.2 will be deemed to have 
+been complied with on submission of the plan. 
+ 
+You must implement the plan as approved , and from the date stipulated 
+by the Environment Agency 
+ 
+Submission of 
+Plan 
+30/11/2019 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Implementation 
+of Plan 
+30/11/2020 
+IC3 The operator shall undertake a site drainage survey of sub- surface 
+drainage systems within the installation boundary and provide a report to 
+establish the integrity of the systems and demonstrate that the risk of 
+fugitive emissions from the installation is minimised.  
+Where the requirement for improvements is identified, the report shall 
+include a schedule of works for the proposed improvements with 
+timescales for completion. 
+Completion of the survey shall also establish the location(s) where 
+discharge of site drainage from the site enters the combined sewer, as 
+required by Table S3.2, and confirm if any abatement (such as 
+interceptors) is afforded to the discharge. 
+Within 12 
+months of 
+permit issue 
+ 
+ 
+ 
+Schedule 2 – Waste types, raw materials and fuels 
+Table S2.1 Raw materials and fuels 
+Raw materials and fuel description Specification 
+Gas oil  Not exceeding 0.1% w/w sulphur content 
+  
+Permit number 
+EPR/BP3530YR 12 

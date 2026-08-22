@@ -1,0 +1,42 @@
+ 
+                       Page 5 of 17 
+OFFICIAL 
+OFFICIAL 
+and continuously for 72 hours, i.e. 72 hours of operation per generator in 
+total. 
+The operator considered continuous monitoring and diffusion tube measurements 
+in the vicinity of the site and used the highest background concentration from the 
+closest background monitoring locations in the assessment.  Where relevant, 
+background concentrations at ecological receptors have been derived from the 
+UK Air Pollution Information System (APIS) database. 
+We have audited the air dispersion modelling assessment report and 
+supplementary Technical Note and carried out check modelling and sensitivity 
+analysis.  We reviewed the selection of modelling inputs, modelling methodology 
+and assumptions, selection and distribution of receptors, the outputs of the 
+modelling exercise, statistical interpretation of modelling outputs and conclusions 
+of the assessment.  
+The operator’s assessment concludes that no significant effects are likely at 
+human health and ecological receptors.  We note that the operator did not assess 
+nitrogen monoxide (NO) against the relevant Environmental Assessment Levels 
+(EALs).  
+We agree with the conclusions of the applicant’s assessment of impacts at 
+human receptors, which are based on the process contributions (PCs) and 
+predicted environmental concentrations (PECs) given in section 8 of the air 
+quality report, and can be summarised as follows. 
+For both testing scenarios: 
+• the probability of exceeding the EA for hourly mean NO
+2 is less than 
+1%, i.e., highly unlikely.  
+• For the long-term, annual NO2 PCs are insignificant, i.e. less than 1% 
+of the ES at all human health receptors. 
+• there are no predicted exceedances of any of the US EPA Acute 
+Exposure Guideline Levels (AEGLs)1. 
+ 
+For the emergency scenario: 
+• exceedance of the short-term NO2 ES is highly unlikely at any 
+sensitive receptors.  
+• there are no exceedances of the AEGL-1 at hourly or sub-hourly 
+timescales at any receptors.  
+ 
+1 Acute Exposure Guideline levels for Selected Airborne Chemicals, Committee of Toxicology Volume 11, 
+2012 

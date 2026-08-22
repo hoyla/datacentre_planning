@@ -1,0 +1,47 @@
+ 
+LIT 11984                                                     Page 5 of 16 
+• The process contributions (PC) of particulates (PM10) are less than 1% of 
+the long-term air quality standard (AQS) at all modelled sensitive receptors 
+and are therefore insignificant. 
+• Predicted 90.41%ile 24-hour mean PM10 concentrations were not 
+considered for Scenario 1. This is because the site will be operating for a 
+maximum 13 non-consecutive hours of the year and as such, it is 
+extremely unlikely that the 24-hour AQS for PM10 (50μg/m3) will be 
+exceeded on 35 days. 
+• Predicted 8-hour rolling mean CO concentrations were not considered for 
+Scenario 1. This is because the site will be operating for a maximum 13-
+hours of the year and the generators will never be operating for 
+consecutive hours during this scenario. As such, it is extremely unlikely 
+that the 8-hour rolling mean AQS for CO will be exceeded as this based 
+on a rolling average. 
+• The long-term PC/PEC of NO2 are not significant at all the human 
+receptors.  
+• The Applicant didn’t model for short term NO2 as the site will be operating 
+for a maximum of 13 non-consecutive hours of the year and as such, it is 
+extremely unlikely that the 99.79%ile 1-hour AQS for NO2 (200μg/m3) will 
+be exceeded more than 18 times a year. 
+However, our checks indicated that NO2 peaks exceed the short-term 
+environmental standard at a number of receptors locations in proximity of 
+the installation. Therefore, we requested that the applicant undertake 
+further assessment to assess the magnitude of the potential exceedances 
+against acute exposure risk criteria. The US EPA Acute Exposure 
+Guidelines (AEGL) were used for this part of the assessment.  
+Two additional modelling exercises were carried out. The second was 
+based on actual monitoring data. Predicted NO2 concentrations were 
+above the relevant AEGL-1 at 10 of the 30 sensitive receptor locations 
+over the modelled 5 year period for the 10 minute, 30 minute and 1 hour 
+periods. The AEGL-1 was not exceeded at any location over the 4 and 8-
+hour period. Although there are still exceedances, the peaks have reduced 
+significantly when compared to the previous model due to changes in the 
+testing operating envelope and more realistic modelling input parameters 
+based on actual monitoring data. Prior to these changes the AEGL-1 was 
+exceeded at 16 of the 30 sensitive rector locations and the peaks were 
+much higher in some locations. We have set improvement condition (IC3) 
+to require the Operator to reduce NOx emissions further by reviewing the 
+testing regime and assessing other opportunities to reduce emissions. The 
+additional measures specified under IC3 are also expected to achieve a 
+reduction of NO emissions which are currently showing an exceedance of 
+the environmental standard at 5 sensitive receptors. 
+ 
+ 
+ 

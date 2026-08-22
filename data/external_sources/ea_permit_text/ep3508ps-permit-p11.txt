@@ -1,0 +1,88 @@
+ 
+Permit number             
+EPR/EP3508PS 11 
+ 
+Schedule 1 – Operations  
+Table S1.1 activities 
+Activity 
+reference  
+Activity listed in 
+Schedule 1 of the EP 
+Regulations  
+Description of specified activity   Limits of specified activity  
+AR1 Section 1.1 A (1) (a): 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 
+megawatts or more. 
+Operation of 32 emergency 
+standby generators with a total 
+thermal input of approximately 
+201.28MWth. 
+The generators will burn diesel 
+solely for the purpose of providing 
+electricity to the installation in the 
+event of a failure of supply from 
+the National Grid and during 
+maintenance testing. 
+32 x 6.29MWth (New MCP) 
+From receipt of raw 
+materials and generation of 
+electricity to despatch of 
+waste.  
+ 
+Electricity produced at the 
+installation cannot be 
+exported to the National 
+Grid. 
+ 
+The emergency operational 
+hours of the installation shall 
+not exceed the 
+specifications set out in 
+condition 2.3.6. 
+ Directly Associated Activity 
+AR2 Storage of raw 
+materials 
+Storage of raw materials including 
+diesel. 
+From receipt of raw 
+materials to use within the 
+installation. 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application 
+EPR/EP3508PS/A001 
+Application forms B2 and B3 and all referenced supporting 
+information.  
+Duly Made 
+12/11/2021 
+Response to Schedule 5 
+Notice dated 15/12/2021
+  
+Responses to questions 1–19. Providing further details 
+regarding: discharge to water controls, electrical outage 
+procedures, maintenance testing, control measures in place 
+during diesel delivery, diesel distribution pipework, diesel 
+containment measures, Best Available Techniques (BAT), TA-
+Luft emissions standards, abatement, grid reliability, 
+secondary and tertiary containment and fire prevention 
+measures. 
+04/02/2022 
+Additional information  Further clarification on Schedule 5 questions 1-5, 7-9 and 11. 
+Providing further clarification on the Schedule 5 response 
+regarding: discharge to water controls, electrical outage 
+procedures, maintenance testing, control measures in place 
+during diesel delivery, diesel containment measures, Best 
+Available Techniques (BAT), TA-Luft emissions standards and 
+grid reliability. 
+23/02/2022 
+Additional information 
+Request dated 23/03/2022 
+Response to request for information providing BAT summary 
+regarding choice of engines, height of stacks above adjacent 
+buildings and a revised installation boundary plan. 
+09/03/2022, 
+30/03/2022 
+ 

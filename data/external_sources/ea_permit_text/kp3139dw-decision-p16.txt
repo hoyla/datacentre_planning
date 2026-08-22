@@ -1,0 +1,57 @@
+EPR/KP3139DW/A001 
+Date issued: 18/01/19  16 
+measures to be taken in the event of National Grid failure; 
+- Carry out analysis of emissions from generators at site loads during testing, maintenance and 
+emergency scenarios and use this data to rea ssess the atmospheric dispersion modelling to 
+produce a more realistic prediction of air quality around the site rather than the worst case 
+scenario presented in the application; 
+- Confirm the short term nitrogen dioxide levels predicted in the reassessed air dispersion 
+modelling. 
+Using this information, the operator is required to investigate how to reduce nitrogen dioxide emissions or 
+improve atmospheric dispersion by changes to the generator testing regimes, stack height or stack 
+orientation. 
+A Pre-Operational Measure has been included in the permit requiring the operator to submit a detailed 
+design report to the Environment Agency prior to installation of any new generators that will address the 
+generator type, emission levels, stack height and orientation in order to ensure that emissions are reduced 
+and/or air dispersion is enhanced. 
+We are satisfied that the issue of predicted levels of nitrogen dioxide exceeding short-term exposure limits 
+can be addressed through improvement conditions as our audit of the air dispersion modelling submitted in 
+the application found that, although exceedances of shor t term nitrogen dioxide li mits at local receptors 
+were predicted during periods of routine generator maintenance, the probability of these exceedance hours 
+coinciding with worst meteorological hours during maintenance scenarios was low. 
+The site has a fire suppression system in place acro ss the site as is the case  for any facility in the 
+datacentre. 
+ 
+Response received from 
+Director of Public Health, Hertfordshire County Council 
+Brief summary of issues raised 
+The comments raised by Public Health England (PHE) were shared with the Director of Public Health 
+(DPH) as PHE specifically requested that we consult DPH (although we had already commenced this 
+process). 
+DPH indicated that, based on the conclusions of the air dispersion modelling report, they had concerns on 
+potential impact on local air quality and believed that actual monitoring data might be required to allow a 
+more realistic view on local impact. 
+DPH also requested that further information be sought on the noise levels produced by the generators in 
+the individual testing regimes proposed. 
+Summary of actions taken or show how this has been covered 
+Improvement Conditions have been included in the permit requiring the operator to: 
+- Produce an Air Quality Management Plan in conjunction with the local authority outlining 
+measures to be taken in the event of National Grid failure; 
+- Carry out analysis of emissions from generators at site loads during testing, maintenance and 
+emergency scenarios and use this data to rea ssess the atmospheric dispersion modelling to 
+produce a more realistic prediction of air quality around the site rather than the worst case 
+scenario presented in the application; 
+- Confirm the short term nitrogen dioxide levels predicted in the reassessed air dispersion 
+modelling. Using this information, the operator is required to investigate how to reduce NO 2 
+emissions or improve atmospheric dispersion by changes to the generator testing regimes, 
+stack height or stack orientation. 
+A Pre-Operational Measure has been included in the permit requiring the operator to submit a detailed 
+design report to the Environment Agency prior to installation of any new generators that will address the 
+generator type, emission levels, stack height and orientation in order to ensure that emissions are reduced 
+and/or air dispersion is enhanced. 
+We are satisfied that the issue of predicted levels of NO
+2 exceeding short-term exposure limits can be 
+addressed through improvement conditions as our audit of the air dispersion modelling submitted in the 
+application found that, although exceedances of short term NO2 limits at local receptors were predicted 
+during periods of routine generator maintenance, the probability of the NO2 exceedance hours coinciding 
+with worst meteorological hours during maintenance scenarios was low. 

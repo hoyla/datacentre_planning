@@ -1,0 +1,53 @@
+ 
+ 
+quantities of waste items may be generated during routine maintenance 
+activities. The site management system will include procedures for the 
+collection and disposal or recovery of any waste oils and any other wastes 
+that are generated.  
+ 
+Based upon the information in the application, we are satisfied that the 
+appropriate measures will be in place to prevent or where that is not 
+practicable to minimise pollution from odour and waste. 
+ 
+Noise and Vibration 
+ 
+The application contained a noise impact assessment, undertaken by Sandy 
+Brown Associates, which identified sensitive receptors, potential sources of 
+noise from the installation and their noise attenuation measures. 
+Measurements were taken from various locations around the site to establish 
+existing noise levels. The measured background noise levels were used to 
+derive ‘noise limits’ for normal and emergency operations. For noise 
+assessments, for permit applications, BS4142 should be used rather than 
+‘noise limits’. BS4142 assesses the impact of industrial and commercial sound 
+on residential receptors by subtracting the measured background from the 
+rating level. BS4142 states: “A difference of +10 dB or more is likely to be an 
+indication of a significant adverse impact, depending on the context.” and “A 
+difference of around +5 dB is likely to be an indication of an adverse impact, 
+depending on the context.” 
+ 
+The lowest measured background noise levels recorded during the 
+assessment are 44 dBA in the daytime and 34 dBA in the night-time. The 
+assessment predicts a noise level of 47 dBA at the most sensitive residential 
+receptor. This is based on measured levels from existing operational 
+generators and corrected to assume all proposed units in the nearest data 
+centre (Data Centre 2) will be operating at full load. 
+ 
+Making no rating corrections this would result in a difference of +3 dB and +13 
+dB over the lowest measured background for daytime and night-time 
+respectively.  This indicates no adverse impact during the daytime and 
+significant adverse impact during the night time. However, the context of the 
+operations needs to be taken into account. The generators are only likely to 
+be operational infrequently, less than 4% of the year for maintenance and 
+national grid failure of both Data Centres simultaneously. Maintenance is 
+scheduled to be 1 hour for each unit per year and is likely to be during 
+daytime hours. Grid failure is most likely due to overload during peak periods, 
+which is normally daytime hours, or due to extreme weather conditions which 
+are rare, difficult to predict and will change the soundscape significantly. 
+Therefore, although the assessment indicates the potential for significant 
+adverse noise impact at the most sensitive receptor during the night time, the 
+probability of this occurring is likely to be very small. 
+ 
+The generators will be housed within the main Data Centre buildings which 
+will provide acoustic attenuation and screening. Furthermore, the exhaust 
+EPR/QP3533ED/A001   Page 12 of 22 
+ 

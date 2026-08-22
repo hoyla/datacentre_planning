@@ -1,0 +1,56 @@
+ 
+ 
+Emissions of Oxides of Nitrogen (NOx) 
+ 
+Additional information, on the generator emission concentrations, was 
+received as a result of a request for further information (Application Bespoke 
+Schedule 5 Response – confirmation of NOx emission concentration, dated 
+13/01/2016). This highlighted higher pollutant concentrations than those used 
+in the original air dispersion modelling. However, after assessment of the 
+results, we are satisfied that the revised emission concentrations for sulphur 
+dioxide (SO2) and particulate matter (PM10) would not lead to exceedances of 
+the relevant environmental quality standard (EQS) and the original 
+conclusions can be used.  
+ 
+The NO
+x emission concentrations required more detailed assessment and 
+therefore we carried out modelling sensitivity using the revised concentration. 
+For the purpose of event 3, we re-evaluated the statistical likelihood of 
+operating their emergency scenario for one 24 hour period every five years, 
+which the Operator confirmed would be a more realistic scenario. The 
+conclusions of this are: 
+• it is unlikely that there would be any exceedances of the long term 
+annual EQS of 40 ug/m3 at any of the receptors under all events; and 
+• it is unlikely that under event 2 that there will be exceedances of the 
+short term EQS of 200 ug/m3; 
+• it is likely under events 1 and 3 there could be an exceedance of the 
+short term EQS of 200 ug/m3. 
+ 
+Currently on site only half of the generators have been installed across both 
+data centres, six diesel generators in Data Centre 1 and six in Data Centre 2. 
+The Operator has confirmed that the second 12 generators will have lower 
+emissions of NO
+x (less than 2000 mg/m3 compared to the existing generators 
+which have a 4000 mg/m3 design). Therefore, we have included a pre 
+operational condition (PO1) requiring the Operator to submit a report 
+containing a comprehensive review of the best available generator options, 
+prior to installing the outstanding 12 back up diesel generators. An 
+improvement condition, IC2, has also been included requesting the Operator 
+to carry out a detailed assessment of the emissions to air from the existing 12 
+standby generators using the emission concentrations provided by the 
+manufacturers.  
+ 
+Emissions of Sulphur Dioxide and Particulate Matter 
+ 
+Events 1 & 2 
+ 
+The air quality assessment has modelled the impacts of events 1 and 2 
+combined by calculating the total number of hours per year that each 
+generator would operate, and modelling the operation as an equivalent 
+number of hours. Following this principle the modelled scenario comprises 12 
+generators running at full power for one hour once a week for 12 months (624 
+hours). This is a reasonable approach for calculating the impact of annual 
+average pollutant concentrations.  
+ 
+EPR/QP3533ED/A001   Page 7 of 22 
+ 

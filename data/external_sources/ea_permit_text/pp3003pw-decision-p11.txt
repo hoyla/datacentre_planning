@@ -1,0 +1,53 @@
+EPR/PP3003PW/A001 
+Date issued: 07/07/2020  11 
+The Applicant stated that the geology of the site is fissured limestone strata, therefore free draining. It is 
+therefore very important that there are no diesel leaks on site that can drain directly into groundwater. The 
+most vulnerable areas on site for potential drainage would be the site soakaways and infiltration pond. 
+The site drainage plans suggests that some of the runoff from areas from building SQ17 and P1 where 
+generators are located do not pass through an interceptor prior to discharge to soak away or infiltration pond. 
+To manage these risk the Applicant  has demonstrated that they will prevent spi llage through robust diesel 
+storage, handling and distribution systems with internal and external inspection and maintenances systems 
+to ensure the risk of diesel leaks and spills are low (refer to fuel containment  section 7.1 above). 
+ 
+7.3 Environment Agency Assessment of drainage and containment 
+ 
+We have reviewed the Applicant’s secondary containment proposals and based on the Applicant’s proposal s 
+as summarised above in section  7.1, we are satisfied that the site’s secondary containment is adequate to  
+manage the risk posed. 
+ 
+We are not satisfied that the tertiary containment and drainage  are in a suitable state and  that their design 
+entirely meets the requirements of the industry standards. To ensure contaminated drainage does not have 
+an adverse impact, we have included improvement conditions within the permit. 
+ 
+We have included improvement condition IC2 in the permit which requires the operator to carry out a review 
+of the site’s tertiary containment system in line with relevant industry standards. The o perator will then be 
+required to implement the recommendations of the review in order to bring the tertiary containment in line with 
+relevant industry standard. This is to ensure, in the event the secondary containment which serves the oil and 
+diesel storage tanks or the sites distribution pipe work fails, that there is another element of containment. This 
+will hold liquid spills to prevent pollution and allow time to deploy addition spill measures if an incident 
+escalates. 
+ 
+We have also included IC 3 in the permit which requires  the operator to review their use and location of the 
+site soakaways and infiltration ponds  which are free draining to ground. They must review the  measures in 
+place to protect these features in the event of a diesel spill and impleme nted the finding of their review as 
+agreed with the Environment Agency. 
+ 
+ 
+8. Permit conditions 
+The permit will include a maximum 500 hour ‘emergency/standby operational limit’ for any or all the plant 
+producing on-site power under the limits of the combust ion activity; and thereby emission limit values to air 
+(and thus engine emissions monitoring) are not required within the permit. Emergency hours’ operation 
+includes those unplanned hours required to come off grid to make emergency repair of electrical 
+infrastructure associated but occurring only within the data centre itself. 
+Each individual generator with its own discharge stack, can be maintained, tested and used in a planned way 
+for up to 500 hours per calendar year each without ELVs or associated monit oring under the Industrial 
+Emissions Directive (IED) and Medium Combustion Plant Directive (MCPD). The Environment Agency 
+expects planned testing and generator operations to be organised to minimise occasions and durations 
+(subject to client requirements). 
+The permit has a limit on the activity to exclude voluntary ‘elective power operation’ such as demand side 
+response (i.e. on-site use) or grid short term operating reserve (STOR) (i.e. off -site export of electricity) and 
+Frequency Control by Demand Manage ment (FCDM) for grid support . This is primarily to differentiate data 
+centres from ‘diesel arrays’ that voluntarily operate within the balancing market  and importantly provide a 
+clear way to demonstrate minimisation of emissions to air as ‘emergency plant’. 
+Operational and management procedures should reflect the outcomes of the air quality modelling by 
+minimising the duration of testing, phasing engines into subgroups, avoiding whole site tests and planning 

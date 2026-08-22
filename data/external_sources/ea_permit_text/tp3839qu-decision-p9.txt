@@ -1,0 +1,49 @@
+ 
+LIT 11984                                                     Page 9 of 16 
+The permit application has assessed and provided evidence of the actual 
+reliability of the local electricity grid distribution allowing the Environment Agency 
+to judge that the realistic likelihood of the plant needing to operate for prolonged 
+periods in an emergency mode is low. The Applicant confirmed that the 
+generators have not run for more than 30-minutes as a result of a power outage 
+in at least 5 years. 
+Reporting of standby generator maintenance run hours is required annually and 
+any electrical outages (planned or grid failures regardless of duration) require 
+both annual reporting and immediate notification of the Environment Agency.  
+It is anticipated that the timescale of operation is likely to be short. They will only 
+operate in this mode when the National Grid is off-line. The Applicant has put 
+multiple measures in place to minimise the risk of National Grid supply failure 
+including dual redundant power supplies. 
+ 
+Best Available Techniques 
+As outlined in the Environment Agency’s ‘Data Centre FAQ’ document, we 
+accept that oil fired diesel generators are presently a commonly used technology 
+for standby generators. Currently diesel generators are the preferred option for 
+the supply of backup power for data centres and are a proven technology for 
+providing reliable resilience of functionality which can be started from cold very 
+quickly.  
+The default generator specification as a minimum for new plant to minimise the 
+impacts of emissions to air of NOx is 2g TA-Luft (or equivalent standard) or an 
+equivalent NOx emission concentration of 2000mg/m3 at 5% reference oxygen 
+and normal conditions. The Operator has confirmed that the AVK generators 
+meet the 2g TA-Luft standard, but the CAT generators have emissions higher 
+than this. These CAT generators were installed in two phases, the first four in 
+2017 and the following five in 2018. We acknowledge the engines are being 
+permitted retrospectively and that it would not be practicable to require the 
+Applicant at this stage to upgrade existing plant to BAT standards. However, 
+these generators will be considered as part of the requirement to reduce short 
+term nitrogen dioxide levels (improvement condition IC3). 
+ 
+The flues / exhaust stacks from the generators are at a height of 5.14 metres for 
+the AVK generators and 9.6 metres for the CAT generators. They are existing 
+generators so no stack height assessment done as part of the permit 
+determination. 
+ 
+The installation has incorporated redundancy to help ensure that power provision 
+is not interrupted even in the event of a mains failure. the redundancy 
+arrangement for both generator configurations is n+1. This is when the site is at 
+full electrical load. This arrangement means that there is a generator spare 
+should one fail to start. 
+ 
+The main source of power at the installation is electricity, supplied via the 
+National Grid. As with all buildings supplied with power via the national electricity 
+grid, there is a risk that mains failure events (black outs) or fluctuations in quality 

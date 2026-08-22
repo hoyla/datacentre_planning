@@ -1,0 +1,50 @@
+ 
+ Page 4 of 17 
+during August. We consider the consultant’s assumptions to be 
+representative of operations. 
+ 
+2. Scenario 2 represents the annual Mains Failure Test (maintenance test 4 
+above) where each data centre is tested individually for 90 minutes. 
+Therefore, 16 generators are assumed to be operational simultaneously. 
+Although the testing could be conducted during school term time the 
+scenario has assumed that it will be undertaken between 09:00 and 17:00 
+during the school holidays. The consultant has used an emission factoring 
+file to only model emissions from Scenario 2 between the hours of 09:00 
+and 17:00 Monday to Friday during August. We consider the consultant’s 
+assumptions to be representative of operations. 
+ 
+3. Scenario 3 represents an emergency power outage event where all 32 
+generators are modelled as operating together for a maximum of 37 hours 
+a year.  
+ 
+Maintenance testing 
+ 
+Human Receptors: 
+ 
+Short Term impacts 
+ 
+Scenarios 1 and 2 – There were no predicted exceedances of any Environmental 
+Standard (ES) for any pollutant assessed.  
+ 
+The short-term emissions either screened out alone where the process 
+contribution (PC) was less than 10% of the significance threshold or, following 
+the consideration of background concentrations, where the Predicted 
+Environmental Concentration (PEC) was less than 100% of the significance 
+threshold. Therefore, on this basis all short-term emissions screen out and no 
+further assessment is necessary. 
+ 
+Our audit of the modelling confirms that short term process contributions are 
+unlikely to cause an exceedance at any of the receptors for any pollutant. 
+ 
+Long Term impacts 
+ 
+Scenarios 1 and 2 - There were no predicted exceedances of any Environmental 
+Standard (ES) for any pollutant assessed.   
+ 
+The long-term emissions either screened out alone where the process 
+contribution (PC) was less than 1% of the significance threshold or, following the 
+consideration of background concentrations, where the Predicted Environmental 
+Concentration (PEC) was less than 100% of the significance threshold. 
+Therefore, on this basis all long-term emissions screen out and no further 
+assessment is necessary. 
+ 

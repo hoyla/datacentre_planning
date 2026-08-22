@@ -1,0 +1,62 @@
+BAT for FCDM Operation. 
+The Operator has also operated the DRUPS as part of a scheme known as Frequency Control by Demand 
+Management (FCDM). FCDM is similar to several schemes available to data centre operators which 
+necessitates non-emergency operation of the DRUPS. There are two main bodies responsible for this, a 
+Distribution Network Operator (DNO) or an independent third party aggregator. Normally, the National Grid 
+will make a request to an aggregator to request a site / sites switches from grid supply to onsite generation 
+during periods of high demand where the grid cannot meet current requirements. FCDM requires only the 
+DRUPS units to be operated to support the site, to reduce demand on the national grid when the frequency 
+of electricity supply dips significantly. Without FCDM intervention there could be a power loss to the 
+surrounding area. The frequency is unlikely to be more than 12 times a year for up to 30 minutes at a time. In 
+practice it is likely that this will replace the monthly test, therefore there is negligible impact on the total hours 
+of operation in a year and therefore on environmental impacts e.g. air quality.   
+Although the installation is excluded from the Specified Generator regulations (as required by Schedule 25 B 
+of Statutory Instrument 2018 No. 110 made 29 January 2018), due to it having over 50 MWth combustion 
+activities, we consider that the requirements of the regulations are BAT for the installation.  The Specified 
+Generator Guidance explains how to comply with the provisions of the Specified Generator Regulations. It 
+explains the scope and definitions and details how the regulations apply to different types of generators. 
+ 
+Firm Frequency Response for Data Centres: Data Centres require very stable frequency of electricity 
+supply to maintain the integrity of the IT functions they support. Data Centre operators will periodically 
+proactively operate their onsite emergency backup generation when the transmission system frequency is 
+unstable to prevent damage or disruption to data processing functions. The Environment Agency considers 
+such operation to constitute an onsite emergency and are thus excluded when this activity is not part of a 
+formal agreement or contract. Such periods of operation will be kept to a minimum.  However, Backup 
+Generator means a generator that is operated for the sole purpose of providing power at a site during an 
+onsite emergency from the 1 January 2019. Balancing Services, and Demand Side Response operations, 
+whether procured or not, such as Triad Avoidance or Fast Frequency Response are not on site emergencies 
+and a generator that provides these services is not excluded.
+ Balancing service means any services 
+procured by the transmission system operator in order to balance demand and supply, and to ensure the 
+security and quality of electricity supply across the national transmission system for Great Britain. For 
+example, generators can be generating for their own use, sometimes known as Demand Side Response, or 
+for export. Services include but are not limited to: Enhanced Frequency Response, Enhanced Reactive 
+Power Service, Fast Reserve, Firm Frequency Response and Short Term Operating Reserve.  
+A response to a Schedule 5 request for information received on 18/01/2019 confirmed that the Operator was 
+under contract to provide generation under FCDM and as such under the Specified Generator Regulations 
+the generators would be considered to be Tranche A generators. As explained above we consider that the 
+requirements of the regulations are BAT even for plant excluded due to their size consequently the 
+generators are required to meet the standard ELV for nitrogen oxides = 190 mg/Nm3 at a temperature of 
+273.15 K, a pressure of 101.3 kPa and after correction for the water vapour content of the waste gases to 
+dry gas and at a standardised O2 of 15%. This is the equivalent of 500 mg/Nm3 at 5% O2. This Standard 
+ELV is applicable to all generator technologies and fuels is tighter than that required by the MCPD and will 
+minimise emissions due to the need for SCR abatement. At the time of determination of this application the 
+generators have no form of NOx abatement and are not capable of meeting these emission limits. An 
+improvement condition, IC 2, is included in the permit which requires the Operator to demonstrate to the 
+Environment Agency that it has modified the plant and equipment at the site in order to meet the above ELV  
+before it can demonstrate BAT for FCDM operation. 
+Protection of Groundwater 
+ 
+The site is covered in hardstanding. Diesel tanks are double skinned and part of a preventative maintenance 
+programme. Leak detection alarms are installed within the tanks. Each set of generators are housed within 
+bunded containers. Fuel lines to generators are enclosed.  
+ 
+Storm drains in the generator compound run into the oil interceptors. The interceptors are cleaned on an annual 
+basis. 
+ 
+Each set of generators are housed within bunded containers sufficient to contain complete loss of all fluids 
+held within the generator / engine. Spill prevention kits are located in the plant areas.  
+ 
+EPR/BP3530YR/A001 
+Date issued: 25/6/2019 
+ 5 

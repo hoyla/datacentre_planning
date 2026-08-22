@@ -1,0 +1,48 @@
+ 
+                       Page 7 of 20 
+ 
+We agree with the applicants’ conclusions that the number of hours of testing 
+mean that it is not possible to exceed the 18 permissible hours with regards to 
+the number of permissible exceedances of the NO2 1-hour mean. Considering 
+Scenarios 1,2 and 3 separately. 
+ 
+We undertook our own statistical analysis to calculate the probability of an 
+exceedance for all pollutants which have short term assessment criteria. We 
+concluded that there is unlikely to be an exceedance of the short term ES for 
+NO2, NO, CO, SO2, PM10 and AEGL-1 for Scenarios 1, 2 and 3 separately. 
+ 
+Long Term impacts 
+ 
+Long term Process Contributions (PC) for PM10 and PM 2.5 are less than the 1% 
+significance threshold of the ES at receptor locations for both pollutants and all 
+scenarios. The long term NO2 PC is predicted to be 8.8% of the ES. The applicant 
+has factored the annual PCs to reflect the annual operations. NO was not included 
+in the original modelling report, we requested in Schedule 5  #3 that predictions 
+were provided for short-term NO only, as our audit showed long-term NO screened 
+out.  
+ 
+As part of our audit for LT standards we have calculated PCs assuming 25 hours 
+of operation over a year with only 8 generators operating simultaneously, which 
+is an estimate of the cumulative impact of all 3 testing scenarios. All annual mean 
+results were predicted to be below the relevant ES. 
+ 
+Ecological Receptors: 
+ 
+There are two Special Conservation Areas (SACs) within 10 km of the installation 
+(Richmond Park SAC and Wimbledon Common SAC), four Local Nature Reserves 
+(LNR) and fifteen Local Wildlife Sites (LWS). The applicant did not assess all of 
+the LWS and LNR, we included all the sites as part of our audit. 
+ 
+Long-term and short-term impacts were considered. The modelling considered air-
+borne NOx. In addition to nitrogen deposition and acidification considering inputs 
+from both Nitrogen and Sulphur Dioxide.  
+ 
+The long-term emissions screen out alone as the process contribution (PC) was 
+less than 1% of the significance threshold for acid deposition and nutrient nitrogen, 
+and for Oxides of Nitrogen (NO x) and SO 2 the predicted environmental 
+concentration (PEC) was less than 100%. Therefore, all pollutants screened out 
+for long term criteria and no further assessment is necessary. 
+ 
+The only short -term assessment required for ecological receptors is the 24 -hour 
+mean for Oxides of Nitrogen (NO x). There were predicted to be exceedances at 
+four Local Wildlife Sites (LWS) all other ecological sites screen out. The applicant 

@@ -1,0 +1,55 @@
+ 
+Permit number 
+EPR/AP3903PD 18 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC5 The operator shall submit a monitoring plan for approval by the 
+Environment Agency detailing their proposal for the implementation of 
+the flue gas monitoring requirements specified in Table S3.1, in line 
+with web guide ‘Monitoring stack emissions: low risk MCPs and 
+specified generators’ Published 16 February 2021 (formerly known as 
+TGN M5). The plan shall include, but not limited to: 
+• When the generators are not fitted with sampling ports, a 
+proposal to install them within the shortest practical timeline; 
+• Details of any relevant safety, cost and operational constraints 
+affecting the monitoring regime, in support of any proposed 
+deviation from the testing regime specified in table S3.1. 
+Completed 
+IC6 The operator shall submit a plan to reduce the predicted short term 
+nitrogen dioxide (NOx) emissions impacts during the maintenance, 
+testing and emergency operations of the standby generators installed 
+in London 5 and London 6 data halls. This shall include (but should 
+not be limited to):  
+• A feasibility study assessing the potential upgrades to the 
+infrastructure or other changes to the operational regimes that 
+could reduce emissions of NOx and increase dispersion. The 
+study shall include an assessment of the following options 
+(not limited to): changes to stack configuration to enhance 
+dispersion; reduced testing schedule; upgrading the standby 
+engines to reduce emissions or installing newer ones with 
+lower emissions of NOx; installing NOx abatement. 
+• A proposal for the implementation of the improvement options 
+that are considered feasible and economically viable, 
+including detailed justification and cost information in support 
+of the justification; and 
+• A proposal for the shortest practical timescale for the 
+implementation of the selected improvements.  
+The plan and the proposed timescale for improvement shall be 
+submitted to the Environment Agency in writing for approval. 
+Completed 
+IC7 SCR fitting to London 8, phase 1 
+The operator shall submit a report for approval by the Environment 
+Agency confirming the completed installation and commissioning of 
+the proposed selective catalytic reduction (SCR) systems on 7 of the 
+14 engines in London 8.  
+The report shall demonstrate that the performance of the SCR 
+systems installed in each generator is confirmed to be compliant with 
+the design specification and environmental risk assessment 
+documentation submitted as part of application for variation V002. The 
+performance testing shall include MCERTS air emission monitoring of 
+oxides of nitrogen, according to standard BS EN 14792; and 
+MCERTS air emission monitoring of ammonia, according to standard 
+EN ISO 21877.  
+The report shall demonstrate that the urea dosing has been optimised 
+to prevent ammonia slip in excess of the figures modelled in the 
+31/03/2023 

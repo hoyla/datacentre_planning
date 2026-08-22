@@ -1,0 +1,39 @@
+ 
+                       Page 9 of 28 
+The operator noted these results include the overly conservative assumption that the 
+generators will operate for all hours of the year, in order to calculate the 99.9th 
+percentile. Therefore, the operator predicted it was unlikely the SO2 15-minute mean 
+EAL would be exceeded. As this scenario was also unlikely to occur, the operator 
+concluded the impact would be acceptable. 
+(d) SO2 hourly mean. 
+The modelling predicted that the largest PC of SO2 99.73rd percentile hourly mean was 
+95.8μg/m3 at receptor HR14_G (on the façade of the new residential building B, west) 
+which is 27% of the EAL of 350μg/m3. The largest PEC was 103.6μg/m3 also at 
+HR14_G, which is 30% of the EAL. 
+The operator noted that these results include the overly conservative assumption that 
+the generators will operate for all hours of the year, in order to calculate the 99.73rd 
+percentile. Therefore, the operator predicted it was unlikely that the SO2 hourly mean 
+EAL would be exceeded. As this scenario was also unlikely to occur, the operator 
+concluded the impact would be acceptable. 
+(e) CO hourly mean. 
+The modelling predicted the largest PC of CO hourly mean was 452.0g/m3 at receptor 
+HR14_G (on the façade of the new residential building B, west) which is less than 1.5% 
+of the EAL of 30,000μg/m3. The largest PEC was 829.6μg/m3 also at HR14_G, which is 
+3% of the EAL. The impact from this predicted concentration would be insignificant. 
+The operator also noted that these results include the overly conservative assumption 
+that the generators will operate for all hours of the year, in order to calculate the 
+maximum concentration. Therefore, the operator predicted it was unlikely that the CO 
+hourly mean EAL would be exceeded. As this scenario was also unlikely to occur, the 
+operator concluded the impact would be insignificant. 
+(f) CO 8-hour rolling mean. 
+The modelling predicted the largest predicted PC of CO hourly mean was 405.4μg/m3 at 
+receptor HR14_G (on the façade of the new residential building B, west) which was less 
+than 4% of the EAL of 30,000μg/m3. The largest PEC was 782.9μg/m3 also at HR14_G, 
+which is 8% of the EAL. The impact from this predicted concentration would be 
+insignificant. 
+The operator also noted that these results include the overly conservative assumption 
+that the generators will operate for all hours of the year, in order to calculate the 
+maximum concentration. Therefore, the operator predicted it was unlikely that the CO 8-
+hour rolling mean EAL would be exceeded. As this scenario was also unlikely to occur, 
+the operator concluded the impact would be insignificant. 
+  

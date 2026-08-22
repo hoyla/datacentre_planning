@@ -1,0 +1,35 @@
+ 
+Page 4 of 25 
+Generators and fuel tanks are located above-ground. The 7 existing generators 
+and 1 of the new generators are supplied directly by 4 x bulk fuel storage tanks 
+which are adjacent to the generators. Two of these tanks are externally bunded. 
+The other 2 are double skinned to 110% capacity.  The remaining 5 new 
+generators will be served by 5 x double skinned day tanks bunded to 110% 
+capacity, which are fed from 3 x integrally bunded bulk tanks, also located 
+adjacent to the generators. Each day and bulk storage tank have leak detection 
+and overfill alarms. Fuel transfer from bulk tanks to the generators is via double 
+skinned above-ground pipework. The total fuel storage capacity is 368,222 litres. 
+The site is covered in hardstanding.  
+Air Quality Assessment   
+Our online guidance (“Air emissions risk assessment for your environmental 
+permit”, gov.uk) sets out how air emissions risk assessments should be 
+completed, by calculating the impact of emissions and comparing against 
+appropriate environmental standards. 
+The applicant submitted air dispersion modelling as part of their Air Quality 
+Impact Assessment, which allowed the process contribution (PC) to be predicted 
+at any human and ecological receptor that could be impacted by the operation of 
+the Schedule 1 Part A(1) 1.1(a) activity. 
+The PC is the estimated concentration of an emitted substance, and when 
+calculated within a dispersion model, takes into account relevant parameters of 
+the release and surrounding conditions, including local meteorology. 
+Once short-term and long-term PCs have been calculated, they are compared 
+with Environmental Standards (ES). 
+PCs are considered insignificant if: 
+• The long-term PC is less than 1% of the relevant ES; and 
+• The short-term PC is less than 10% of the relevant ES. 
+The long term 1% PC insignificance threshold is based on the judgements that: 
+• It is unlikely that an emission at this level will make a significant 
+contribution to air quality; and 
+• The threshold provides a substantial safety margin to protect health and 
+the environment. 
+The short term 10% insignificance threshold is based on the judgements that: 

@@ -1,0 +1,54 @@
+ 
+Permit number             
+EPR/EP3508PS 2 
+ 
+CyrusOne London 4/5 Datacentres  
+Permit number EPR/EP3508PS 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows:   
+The site is an electronic data storage centre which includes back-up generation capacity, a Schedule 1, Section 
+1.1 Part A (1) 1.1 activity under the Environmental Permitting (England and Wales) Regulations 2016 (the 
+burning of any fuel in an appliance with a rated thermal input of 50 or more megawatts (MW). The site is located 
+on the edge of an industrial estate adjacent to a residential area. The National Grid Reference for the site is SU 
+95240 80620. The site is approximately 4.07 hectares in size. The surrounding area is a mix of industrial, 
+commercial and residential uses. 
+ 
+The combustion plant only operates under limited routine maintenance or in an emergency scenario. The 
+emergency combustion activity comprises 32 diesel fuelled standby generators. Each generator has a thermal 
+input of 6.29 MW. The aggregated total combustion capacity on site is 201.28 MWth. Each generator has an 
+exhaust, which is 16.5m above ground level and are above the height of the closest buildings.  
+ 
+Electrical power is provided to the data centre from the National Grid. However, in the event of a failure in the 
+electrical supply, the operator will utilise the generators to maintain the electrical supply. The generators will be 
+used solely for the purpose of generating power for the facility. No electricity will be exported from the 
+installation. There are two datacentres on the site referred to as LON4 and LON5. Each data centre is served by 
+16 generators, which are arranged into two banks of 8 generators. There are two electri city feeds from the 
+National Grid. In the event that one of the feeds fails then the generators connected to that feed would start until 
+power is reinstated or until all transformers are supplied by the remaining feed. If both electricity feeds fail, if the 
+supply became variable or there was a National Grid outage then all of the generators would start. Once a 
+secure electricity supply has been established the generators will shutdown sequentially. All the generators are 
+subject to a maintenance testing schedule.  
+ 
+The engines run on diesel fuel which is stored in 32 diesel storage tanks. Each generator has its own dedicated 
+storage tank which is located above ground on concrete plinths underneath each generator, which are housed 
+in steel containers. The tanks store 31,000 litres each and each tank has an integral bund of 110% capacity. 
+The site is covered in concrete hardstanding. The surface drainage system directs run -off into an oil interceptor 
+prior to discharge from site to a series of soakaways. There will be tertiary containment provided throughout the 
+site which will be designed and constructed in line with the requirements of CIRIA 736, full details of which will 
+be provided by Improvement Condition 3.  
+ 
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+Status log of the permit 
+Description Date Comments 
+Application EPR/EP3508PS/A001 Duly made 
+12/11/2021 
+Application for Data Centre operating 32 standby diesel 
+powered generators. 
+Additional information received 04/02/2022 Response to Schedule 5 Notice (dated 15/12/2021) 
+providing further details regarding: discharge to water 
+controls, electrical outage procedures, maintenance 
+testing, control measures in place during diesel 
+delivery, diesel distribution pipework, diesel 
+containment measures, Best Available Techniques 

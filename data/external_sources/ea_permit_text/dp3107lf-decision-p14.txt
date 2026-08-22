@@ -1,0 +1,37 @@
+ 
+Page 14 of 25 
+The site partly operates with N+1 resilience in accordance with the Uptime 
+Institute’s Tier III design and partly with N after any failure in accordance with 
+Uptime Institute’s Tier IV design.  Generators share the load in the event of an 
+emergency scenario, and therefore can still operate if one engine begins to fail.  
+Furthermore, during maintenance of one generator, the others can provide full 
+cover in an emergency scenario. 
+Routine Testing 
+Duration of testing must be minimised, with operators seeking to keep individual 
+generator testing to below 50 hours per annum each.  Testing should be 
+scheduled to avoid adding to “at risk” high ambient pollutant background levels. 
+In addition, the operator proposes to undertake testing at alternate times of the 
+week to the adjacent data centre on the industrial park. 
+To minimise short impacts from routine testing, the operator has proposed the 
+following regime: 
+• Off load testing:  Each generator will be tested individually for 15mins at 
+0% load. This will occur every 6 months (twice per year). Total hours per 
+generator per year = 0.5. 
+• B uilding load test: Each generator will be tested individually for one hour at 
+the current generators load, depending on which of the three data halls it 
+serves. Each different data hall will be tested on a different week, so no 
+more than 5 engines will be tested in a single week. Once a year the 
+monthly test will be replaced an annual test that will see all 13 generators 
+tested consecutively in a single day. Total hours per generator per year = 
+12  
+Generators will not be tested simultaneously; they will be tested during the day 
+avoiding peak traffic times (when background NOx levels would be at their 
+highest).  As a result of the testing regime, each generator will run for no more 
+than 12.5 hours per year for routine testing. 
+Electrical Reliability 
+As the operation of generators is considered undesirable, the incoming power 
+system was designed to ensure that only the most major power outages would 
+trigger the need for the generators to be used to support the data centre. 
+Initially when a fault is detected an ‘uninterruptible power supply’ is provided by 
+on-site battery arrays to cover any potential loss or deduction in the supply to 
+data servers. 

@@ -230,7 +230,7 @@ def test_every_external_quantity_has_a_caveat():
     """Any quantity that can reach the indicators panel must carry a line
     saying what it is — a new source type must not arrive silently."""
     external = {"grid_connection", "built_capacity", "announced_capacity",
-                "metered_consumption", "let_capacity"}
+                "metered_consumption", "let_capacity", "thermal_input"}
     assert external <= set(cc.QUANTITY_CAVEATS)
     assert set(cc.QUANTITY_CAVEATS) <= set(cc.QUANTITY_LABELS)
 

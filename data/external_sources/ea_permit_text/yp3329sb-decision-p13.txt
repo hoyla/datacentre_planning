@@ -1,0 +1,52 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 13 of 28 
+• Utilises uninterruptable power supply (UPS). In the event of a power supply interruption, 
+or variation in supply which is out of tolerance, the immediate power demand of the site 
+will be met via a UPS. The UPS consists of banks of batteries capable of meeting the full 
+load capacity of the site for approximately 10 minutes. The generators are automatically 
+triggered to start once the power supply has been interrupted, providing power within 20 
+seconds of the failure of the National Grid supply, at which point the UPS would revert to 
+standby. 
+ 
+• Has developed automated systems which detect fluctuations in the electrical supply to 
+the site, where such events could negatively impact the data centres operation then the 
+UPS can be automatically utilised, and generators brought online as required.  
+ 
+• Has designed the data centres so that the status of the supply interruption is constantly 
+monitored, facilitating single or multiple generators to start depending on the severity of 
+the failure in the supply. Once started the generators will remain operational until the 
+mains restoration detection equipment determines that the supply from the National Grid 
+is stable. The return to the National Grid supply is an automated process, with the 
+National Grid and generator supplies being interlocked to ensure that parallel running 
+cannot be achieved. The generators will not synchronise with the mains supply at any 
+time. 
+ 
+• Has designed the data centres so that each generator will be independent in terms of fuel 
+supply, cooling, fire safety, shut down and control, and for resilience reasons there will be 
+no common points of failure between any two sets.  
+ 
+• Has developed multiple electrical feed connections. The electricity supply arrangements 
+for the site include two diverse routes and associated infrastructure (e.g., transformers) 
+providing a 2N level of resilience, where N is the power demand of the Instal lation. 
+ 
+• A perimeter fence is present along the site boundary and all access points are secured 
+with gates, which will only open for authorised personnel. 
+ 
+• CCTV is present covering all external areas of the Installation, which shall be monitored 
+at all times by site security.  
+ 
+• As part of the security deployment, cameras shall be installed in surrounding areas, 
+including corridors and roadways leading to, or around the Installation to capture and 
+record images of personnel movement.  
+ 
+• A Security team is present at the site on a permanent basis. Regular site surveillance 
+walks are undertaken by the security team. 
+Operational hours 
+In order to minimise generator operation, we set operational hour limits for data centres at 500 
+hours as they are permitted for emergency use only. The limit on the emergency use of 500 hours 
+is for the Installation as a whole i.e. as soon as one generator starts operating the hours count 
+towards the 500 hours.  
+The operational hours on the site will be monitored and reported as follows:  
+• Emergency operation limited to 500 hours for the Installation via permit condition 2.3.3.  
+• Maintenance and testing regime limited to <50 hours per stack, linked to operating 
+techniques table S1.2. 

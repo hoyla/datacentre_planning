@@ -1,0 +1,34 @@
+ 
+ Page 6 of 19  
+calculated the likelihood of such an event as 1.46x10-11% per annum and so 
+considerers such an event as extremely unlikely. Our audit of the modelling was 
+unable to replicate this probability. However our statistical analysis indicated the 
+testing regimes are extremely unlikely to coincide with more than 18 exceedance 
+hours. 
+ 
+The modelling also indicates that, at its maximum point within the modelled area, 
+NOx levels may exceed the level associated with discomfort when exceeded over 
+short-term periods (Acute Exposure Guideline Level – AEGL-1 – 940µg/m3), 
+although there are no residential receptors at this point. This is the level at which 
+Public Heath England may advise members of the public to take protective action 
+such as leaving the area or sheltering indoors. In response to a request for 
+further information, the operator submitted an isopleth map showing areas where 
+the AEGL-1 level is predicted to be exceeded; these are shown to be very limited 
+in extent and not in places where the public are likely to remain for significant 
+periods. 
+ 
+We have therefore included an improvement condition (IC1) requiring the operator 
+to produce an Air Quality Management Plan in conjunction with the Local Authority 
+which outlines the measures to be taken in the event of a grid failure. 
+Short-term Predicted PM10 Impact at Human Receptors 
+The applicant has not modelled the PM10 impact from the Emergency scenario 
+because the number of days of operation of the installation does not exceed the 
+35-day threshold above which the Air Quality Objective for Particulate Matter 
+applies. We have included a permit condition limiting the hours of operation in 
+Emergency to 500 hours per year (20 days). 
+All of the short-term process contributions of PM10 are below 10% of the Air 
+Quality Objective and are therefore not considered to be significant. There is no 
+short-term Air Quality Objective for PM2.5, but assuming that all the PM is of 
+PM2.5 and comparing this against the more stringent long-term Air Quality 
+Objective, the Process Contribution will remain below 10% of the objective and 
+therefore not considered significant.  

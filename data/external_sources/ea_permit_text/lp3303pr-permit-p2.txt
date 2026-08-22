@@ -1,0 +1,46 @@
+ 
+Permit number 
+EPR/LP3303PR 2 
+Equinix Slough Campus Data Centre  
+Permit number EPR/LP3303PR 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows. 
+The site is a data centre which consists of a Schedule 1 Part A(1) 1.1 activity under the Environmental 
+Permitting Regulations for the burning of any fuel in an appliance with a rated thermal input of 50 or more 
+megawatts (MW). 
+The combustion plant consists of 69 emergency standby generators burning diesel solely for the purpose of 
+providing electricity to the installation in the event of a failure of supply from the National Grid . 
+Comprising;  
+Data centre LD4, 8 X 5.029 MWth and 2 X 5.143 MWth  generators 
+Data centre LD5, 6 X 5.714 MWth and 8 X 5.200 MWth  generators 
+Data centre LD6, 24 X 3.829 MWth generators 
+Data centre LD7, 4 X 5.714 MWth and 2 X 6.857th MWth generators 
+Data centre LD10, 2 X 0.967 MWth and 13 X 5.714 MWthgenerators 
+ 
+The total installed capacity is 331.084 MWth. 
+ 
+Electrical power is provided to the data centre from the National Grid. However, in the event of a failure in 
+the electrical supply, the operator will utilise the generators to maintain the electrical supply. The generators 
+will be used solely for the purpose for generating power for the facility. No electricity will be exported from 
+the installation. 
+ 
+The diesel fuel is stored in individual double skinned day tanks adjacent to the generators. The day tanks are 
+refilled from bulk storage tanks except in LD 10 where generators 1-2 have 2,500 litre day tanks and 
+generators 3-5 have 19,600 litre day tanks, tanks which are filled directly from delivery tankers. 
+Bulk storage tanks are provided as follows; 
+Data centre LD 4, 2 tanks of 55,000 litres each. 
+Data centre LD 5, 3 tanks of 66,000 litres each. 
+Data centre LD 6, 3 tanks of 80,000 litres each. 
+Data centre LD 7, 3 tanks of 81,000 litres each 
+Data centre LD10, 3 tanks of 47,600 litres each. 
+ 
+All tanks are fitted with overfill alarms and are housed within bunded enclosures equipped with leakage 
+alarms. 
+The site is covered in hard standing and surface water gullies drain into an oil interceptor prior to discharge 
+from site. There is no sewer connection related to the process. 
+The standby generators are designed and configured so that in the event of a mains failure all the generators 
+will fire up then subsequently ramp down to meet the load at the site. All the generators are subject to a 
+maintenance testing schedule.  
+The Campus is located on the Slough Trading Estate. 
+Equinix operate five data centres on the trading estate, all of which are included within this permit.  

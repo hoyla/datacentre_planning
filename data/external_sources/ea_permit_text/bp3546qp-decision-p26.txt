@@ -1,0 +1,26 @@
+ 
+                       Page 26 of 28 
+APPENDIX 1. 
+Ecological Receptors. 
+Reference 
+ID Receptor 
+National Grid 
+X 
+National Grid 
+Y 
+ER1 Chilterns Beechwood SAC 500448 209977 
+ER2 Maylands Wood AW, LWS 507520 207861 
+ER3 Widmore Wood AW, LWS 507418 208561 
+ER4 Yewtree Wood AW 507043 208773 
+ER5 Rant Meadow Wood/Bennets End Pit LWS 507326 206493 
+ER6 Holy Trinity Church, Leverstock Green LWS 508502 206554 
+ER7 Westwick Row Wood LWS 509338 206429 
+ER8 Disused Railway Line, Hemel Hempstead LWS 506940 208808 
+ER9 Disused Railway Line, Hemel Hempstead LWS 507260 208943 
+ER10 Disused Railway Line, Hemel Hempstead LWS 507915 209515 
+ER11 Paradise Fields Central LWS 506073 206910 
+ER12 Blackwater Wood AW, LWS 509422 205831 
+ 
+SAC = Special Area of Conservation; AW = Ancient Woodland; 
+LWS = Local Wildlife Site. 
+ 

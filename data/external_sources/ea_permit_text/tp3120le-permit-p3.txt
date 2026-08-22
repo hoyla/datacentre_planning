@@ -1,0 +1,25 @@
+ 
+Permit number 
+EPR/TP3120LE 3 
+Status log of the permit 
+Description Date Comments 
+Application EPR/TP3120LE/A001 Duly made 
+19/12/24 
+Application to operate 17 standby gas oil fuelled 
+generators in the event of National Grid failure and for 
+testing and maintenance activities. 
+Additional information received 28/05/25 Revised technical document and site plans. 
+Additional information received 19/06/25 Revised technical document and site condition report. 
+Additional information received 22/07/25 Received Appendix 3 of the site condition report - 
+Ground Investigation Report. 
+Additional information received 29/08/25 Additional information regarding accident management, 
+management of fire water run-off, and site drainage. 
+Additional information received 12/12/25 Revised Operational Report. 
+Permit determined 
+EPR/TP3120LE 
+07/01/25 Permit issued to Iron Mountain (UK) Data Centre 
+Limited. 
+ 
+End of introductory note 
+ 
+  

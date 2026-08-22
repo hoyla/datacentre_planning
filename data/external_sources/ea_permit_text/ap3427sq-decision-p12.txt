@@ -1,0 +1,40 @@
+ 
+Page 12 of 29 
+the emergency use of 500 hours is for the Installation as a whole i.e. as soon as 
+one generator starts operating the hours count towards the 500 hours.  
+The operational hours on the site will be monitored and reported as follows:  
+• Emergency operation limited to 500 hours for the Installation via permit 
+condition 2.3.3.  
+• Maintenance and testing regime limited to <50 hours per stack, linked to 
+operating techniques table S1.2. 
+ 
+ 
+Containment and Prevention of Pollution to Ground, Surface water and 
+Groundwater 
+Fuel Storage, Distribution and Containment 
+The operator has demonstrated that there are robust systems in place for the 
+containment of fuel. There is an internal gauge in the tank cabinet. It sits on top 
+of the tank within the cabinet, so is protected from the external environment, 
+reducing the risk of any damage occurring. The sight gauge has no valve as it 
+sits above the fuel. The fuel storage and management system for the Installation 
+comprises belly tanks, bulk storage tanks, delivery infrastructure, spill control 
+measures, and compliance features. All taps and valves will be locked shut when 
+not in use.  
+ 
+Fuel Storage – Belly Tanks 
+Each generator is equipped with an integrally bunded belly tank with a capacity of 
+16,000 litres and bunding to 110% capacity. Tanks are fitted with multiple alarms 
+(low, low-low, high, high-high, and leak detection) to detect pressure loss, 
+significant leakage, and abnormal fluid levels during filling and operation.  
+All alarms are connected to the Electrical Power Monitoring System (EPMS) for 
+remote monitoring. Daily visual checks are conducted to identify minor leaks not 
+detected by alarms.  
+Each generator includes a fuel polishing unit to maintain fuel integrity by 
+continuous circulation and filtration. These units also have leak detection linked 
+to EPMS.  
+Belly tanks are welded internally and externally and manufactured to the Water 
+Environment Standard for Oil Storage. Tanks are permanently plumbed into the 
+bulk fuel storage system, reducing the risk of spills by not having temporary 
+pipeline connections. 
+ 
+ 

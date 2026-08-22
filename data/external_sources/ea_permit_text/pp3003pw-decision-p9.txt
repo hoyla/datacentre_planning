@@ -1,0 +1,52 @@
+EPR/PP3003PW/A001 
+Date issued: 07/07/2020  9 
+5. Emissions management 
+Retrofitting abatement techniques for existing installations for engine emissions such as selective catalytic 
+reduction (SCR) would not normally be expected for standby plant to mitigate the emissions for 
+standby/emergency operation. The default generator specification as a minimum for new plant to minimise 
+the impacts of emissions to air (NOx) is 2g TA -Luft (or equivalent standard) or an equivalent NOx emission 
+concentration of 2000mg/m3. 
+ 
+To ensure emissions are minimised the Applicant has demonstrated that: 
+ Multiple measures are in place to minimise the risk of National Grid supply failure including multiple 
+grid connection and management systems for preventing data centre failure (see section 6 on 
+uptime). 
+ Ark Date Centres Limited operates the management systems aligned and certified to the following 
+standards; 
+ ISO 9001:2015 – Quality Management System 
+ ISO 27001: 2013 – Information Security Management System 
+ ISO 22301:2012 – Business Continuity Management System 
+ ISO 14001:2015 – Environmental Management System 
+ ISO 50001:2011 – Energy Management System 
+ The site has moved from using a low voltage (LV) standby generating solution to a high voltage (HV) 
+standby generating solution. This has resulted in a 31% reduction in installed generation capacity. 
+This reduction in capacity leads, by its nature, to reduced fuel storage requirements, along with 
+reduced air and noise pollution potential. 
+ In 10 years of operation there has been no grid event that has caused all the standby generators to 
+start simultaneously. Over the same period there has been one on site power failure, during a 
+thunder storm that impacted Module 1 of P1 causing the 3 standby generators associated with this 
+module to start.  
+Further to this the Environment Agency has specified in IC 1 that the Operator shall have a written air quality 
+action plan to manage the prolonged emergency running of the plant. This will include a sensitive receptors 
+list, rev iew of mitigation and evaluation against modelled risk co nditions. The action plan will include 
+measures proportionate to the level of risk at the receptors. The Operator is expected to work with the local 
+authority to develop this plan to ensure local factors are fully considered. 
+6. Uptime 
+In addition to the above ISO standards and best practice, Ark Data Centres Limited operate in line with the 
+principles of the Uptime Institute, an industry assessment of the maintenance and operation of Data Centres.   
+They are deployed to meet the requirements of a Tier III concurrently maintainable facility (as defined by the 
+Uptime Institute). 
+With regards to security, the site is accredited to ISO27001, the information security management system 
+standard. This is to help ensure that the site maintains its assets in a manner to reduce the risk of unplanned 
+downtime, and subsequent standby generator operation, due to issues such as security breaches. The site 
+also has security infrastructure and a 24-hour on-site security presence. 
+The operator will put multiple measures in place to minimise the risk of failure including: 
+ Five supplies to Spring Park are operated as two concurrently maintainable supply systems. 
+ Data centres SQ17, P1 and P2 are supplied via two 40MVA supplies both (A and B) from the SEE 
+Norrington Primary Substation, capable of supplying 40MVA on a single supply. This means that the 
+emergency standby generator will only start if both the grid supplies fail. 
+ Data centres P3 and P4 are supplied via three 24MVA supplies (A, B and C) from SSE Norrington 
+primary substation, capable of supplying 48MVA via any two of the three supplies. The standby 
+generator will only start if two of the three grid supplies fail. 
+ For all emergency generators to start simultaneously three of the five supplies to site need to fail 
+simultaneously. 

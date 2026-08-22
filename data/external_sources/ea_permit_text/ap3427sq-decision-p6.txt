@@ -1,0 +1,42 @@
+ 
+Page 6 of 29 
+any residual firewater contamination. Remediation of the attenuation pond may 
+also be undertaken if deemed necessary. This could include the removal and 
+replacement of surface topsoil materials in the pond which would then be taken 
+offsite for treatment/disposal at an appropriate waste facility. 
+ 
+Firewater generated within refuelling laybys will drain to the foul drainage system 
+and be captured in the 10,000 L interceptors. Each interceptor is fitted with an 
+outfall valve that can be closed under the Emergency Response Plan to prevent 
+discharge. If capacity is exceeded, firewater will back up into the layby and, if 
+necessary, enter the surface water system for containment in the attenuation 
+pond.  
+ 
+In the event of a fire, the valve located at the surface water drainage discharge 
+point will be manually closed. The Installation’s Emergency Response Plan 
+requires the closing of this valve in the event of a fire. This will prevent surface 
+water from escaping the boundary of the Installation via surface water drainage 
+discharge point (SW1).  
+ 
+ 
+ 
+Air Quality 
+In line with the Environment Agency’s guidance (Air emissions risk assessment 
+for your environmental permit - GOV.UK (www.gov.uk)) and the relevant parts of 
+the guidance applicable to the assessment of air dispersion modelling of 
+emissions from generators (Specified generators: dispersion modelling 
+assessment - GOV.UK (www.gov.uk)) the operator submitted detailed air 
+dispersion modelling and impact assessment to assess the predicted impacts on 
+human receptors and ecological sites.  
+The methodology for risk assessment of point source emissions to air, and the 
+associated definitions, are set out in our guidance Air emissions risk assessment 
+for your environmental permit - GOV.UK (www.gov.uk). 
+Operator’s Assessment of Potential Impact on Air Quality 
+The operator submitted an Air Emissions Risk Assessment prepared by Ove 
+Arup & Partners (the consultant), which considered the potential impacts of the 
+principal pollutants of concern with respect to emissions to air from low sulphur 
+gas oil/ HVO generators. The consultant has assessed the potential long-term 
+and short-term impacts of nitrogen oxides (NOX), particulate matter (PM), and 
+sulphur dioxide (SO2) at sensitive human and ecological receptors within the 
+defined screening distances.  
+Human Receptors 

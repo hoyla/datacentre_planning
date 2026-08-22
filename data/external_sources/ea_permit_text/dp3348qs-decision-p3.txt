@@ -1,0 +1,47 @@
+ 
+                       Page 3 of 17 
+OFFICIAL 
+OFFICIAL 
+The fuel tanks installed are integrally bunded steel tanks fitted with a level probe 
+and gauge, overfill prevention valve, high-and low-level alarms and bund alarms 
+to alert of leaks between the two skins of the storage tanks.   
+The tanks are inspected externally on a daily basis for signs of corrosion and are 
+subject to 5 yearly empty tank inspections. 
+A fuel polishing unit, comprising a filter to remove particulates and water, is fixed 
+to each tank and is operated to minimise wastage by maintaining the quality of 
+the fuel during long periods of storage and non-use.   
+The tanks are protected by vehicle movement impact by barriers or concrete 
+bollards, and are positioned on raised concrete plinths.  The site is engineered to 
+slope to the drainage system and bypass interceptor. 
+The operator’s EMS includes procedures for supervised fuel delivery (which 
+includes covering of at-risk drains and provision of spill kits) and management of 
+spills and leaks.  A spill response exercise is undertaken routinely to test the 
+procedure. 
+ 
+Air Quality  
+In line with the Environment Agency’s guidance (https://www.gov.uk/guidance/air-
+emissions-risk-assessment-for-your-environmental-permit) an d the relevant parts 
+of the guidance applicable to the assessment of air dispersion modelling of 
+emissions from generators (https://www.gov.uk/guidance/specified-g enerators-
+dispersion-modelling-assessment )  the applicant submitted detailed air dispersion 
+modelling and impact assessment to assess the predicted impacts on human 
+receptors and ecological sites.  
+The methodology for risk assessment of point source emissions to air, and the 
+associated definitions, are set out in our guidance 
+https://www.gov.uk/guidance/air-emissions-risk-assessment-for-your-
+environmental-permit. 
+The applicant’s assessment of the impact of emissions to air is detailed in 
+application document titled ‘Virtus Data Centres London 11 Air Quality 
+Assessment’, ref: 70091311 AQ01 version 1.0 dated 28/10/2022, supplemented 
+by the applicant’s response to our request for information dated 14/10/2022, 
+which was received by the Environment Agency on 04/11/2022 and which 
+includes a ‘Technical Note’ ref: 70092911, dated 04/11/2022. 
+The primary pollutants of concern that have been assessed by the applicant are 
+nitrogen dioxide (NO
+2) and nitrogen oxides (NOx) using emissions data from 
+manufacturer’s data sheets.  The applicant used a statistical analysis 
+methodology to determine the likelihood of the worst predicted emissions from 
+the operations of the standby emergency plant coinciding with the worst 
+meteorological hours over the modelled operating envelope, and subsequently 
+causing a breach of the short-term Environmental Standard (ES) for NO
+2 for 

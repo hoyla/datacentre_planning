@@ -1,0 +1,35 @@
+ 
+Permitting Decisions- Bespoke Permit 
+ 
+ LIT 11984 [Publish date]  Page 1 of 18 
+OFFICIAL 
+OFFICIAL 
+We have decided to grant the permit for Virtus Slough Campus Data Centres 
+operated by Virtus Holdco Limited. 
+The permit number is EPR/BP3945QX   
+The application is for 31 emergency standby ultra-low sulphur gas oil fuelled 
+generators (SBGs) providing electricity to the Slough Data Centre Campus in the 
+event of a failure of supply from the National Grid, or an internal component 
+failure requiring disconnection from the grid.  During such events there is a 
+potential for a delay between fault detection and initial operation of the back-up 
+generators and the initial cover for loss of external power is provided by on-site 
+battery arrays. 
+The campus comprises three buildings, referred to as: 
+• London 3 (LON3) – 6 SBGs, aggregated capacity 28.3 MWth 
+• London 4 (LON4) – 19 SBGs, aggregated capacity 119.7 MWth 
+• London 10 (LON10) – 6 SBGs, aggregated capacity 28.3 MWth 
+ 
+Each building is operated independently but under a common management 
+system and management structure.  The rated capacity of each engine ranges 
+from 5.42 MWth to 7.28 MWth; the aggregated thermal input of all the generators 
+on the campus is 180.5 MWth. 
+We consider in reaching that decision we have taken into account all relevant 
+considerations and legal requirements and that the permit will ensure that the 
+appropriate level of environmental protection is provided. 
+Purpose of this document 
+This decision document provides a record of the decision-making process. It: 
+● summarises the decision making process in the decision considerations 
+section to show how the main relevant factors have been taken into 
+account 
+● highlights key issues in the determination 
+● shows how we have considered the consultation responses 

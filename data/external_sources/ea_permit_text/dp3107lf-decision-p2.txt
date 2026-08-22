@@ -1,0 +1,38 @@
+ 
+Page 2 of 25 
+Key issues of the decision 
+In reaching our decision to grant the permit we took into consideration the 
+following matters: 
+Overview of the Installation   
+The installation is located within the London Borough of Ealing at national grid 
+reference TQ 20971 82811, in Powergate Business park, an area of industrial 
+and commercial developments.  
+The site is an existing data centre that has been operational since 2001. There 
+are seven existing engines at the site that have been operational since before 
+2010. Proposed expansion works resulted in the addition of six new engines in 
+2023. 
+The permit authorises the operation of 13 standby liquid fuelled generators 
+serving a data centre, in the event of failure in the electrical grid supply.
+ The 
+generators are not permitted to support Short-Term Operating Reserve (STOR) 
+and/or triad management activities. The permit does not allow the export of 
+electricity to the National Grid.   
+The contingency standby power solution comprises 3 x 4.17MWth, 1 x 
+2.86MWth, 3 x 4.27MWth, 1 x 4.3MWth and 5 x 5.9MWth generators with an 
+aggregated thermal input of approximately 62MWth. They will be fuelled with gas 
+oil (or equivalent substitute to be agreed in writing with the Environment Agency) 
+with a maximum sulphur concentration of 0.001% w/w. Each generator has a 
+stack between 10.5 and 13.63 m in height. 
+The installation is subject to the Environmental Permitting Regulations (EPR) as 
+it carries out an activity listed in Part 1 of Schedule 1 to the EPR:   
+Section 1.1 Part A(1)(a): Burning any fuel in an appliance with a rated thermal 
+input of 50 megawatts or more.   
+The activity falls under Chapter II of the Industrial Emissions Directive (IED). The 
+liquid fuelled generators are classed as medium combustion plant (MCP) as part 
+of a Chapter II installation. The Medium Combustion Plant Directive (MCPD) 
+requirements are fulfilled through compliance with Chapter II of Directive 
+2010/75/EU.  
+The incoming power system has been designed to reduce the likelihood of power 
+outages at the installation and consists of two separate cables originating at one 
+substation.  Each feed can support the full site load, meaning that if one feed was 
+to fail electrical provision to the installation would not be compromised. 

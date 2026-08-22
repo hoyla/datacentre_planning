@@ -1,0 +1,76 @@
+ 
+Permit number 
+EPR/FP3630EU  15 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Response to Schedule 5 
+Notice dated 18/02/15 
+All sections. Revised air dispersion modelling and impact 
+assessment. 
+27/03/2015 
+Variation Application 
+EPR/FP3630EU/V002 
+Response to questions in section 3, 4 and 6 of Part C3 of the 
+application form. Part C2.5 of the Application Form. 
+Supporting documents - Non-technical Summary; 
+Environmental Risk assessment; Best Available Technique 
+Assessment; Acoustic Report; Site Plans. 
+Duly made 
+16/09/2024 
+Variation Application 
+EPR/FP3630EU/V002 
+Generators maintenance 
+testing schedule  
+Generators maintenance testing schedule detailed in 
+application document ‘Air Quality Dispersion Modelling 
+Assessment at Lon1-East. V5’ Report – dated Oct 2025 – 
+Section 3.2.  
+ 
+ 
+27/10/2025 
+Variation Application 
+EPR/FP3630EU/V002 
+SCR abatement   
+ 
+NOx abatement efficiency for the selective catalytic reduction 
+systems (SCR) fitted to emission points EP10 to E17 
+detailed in application document ‘Best Available Technique 
+Assessment- March 2024’ 
+22/04/2025 
+ 
+Additional Information 
+received via email 
+ Additional information on containment – All parts 11/04/2025 
+Additional information 
+received via email. 
+Additional information on testing – All parts  10/07/2025 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 Air Quality Management Plan (AQMP) 
+The operator shall produce an updated AQMP in conjunction with 
+the Local Authority outlining response measures to be taken in the 
+event of a grid failure. This must include, but not be limited to, the 
+following considerations:  
+• The response should be tailored to reflect the predicted 
+potential impact indicated by the air dispersion modelling at 
+individual receptors;  
+• Preventative and reactive actions to be implemented to limit 
+the duration of an outage event to less than 50 hours as far 
+as possible; 
+• Specific timescales for response measures; 
+• How local conditions during a grid failure might influence 
+the response required, for example meteorological 
+conditions or time of day; 
+• Contingency for how the response will be carried out in the 
+event scenario i.e. loss of power;  
+• Timescales for continued review of the management plan; 
+and 
+• Addition of indicative air quality monitoring stations around 
+the site to inform on air quality during extended periods of 
+standby generator running including prolonged grid 
+outages. 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+21/08/2026 

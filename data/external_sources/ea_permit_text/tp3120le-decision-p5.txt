@@ -1,0 +1,42 @@
+ 
+Page 5 of 17 
+cannot be achieved. The generators will not synchronise with the mains supply at 
+any time. 
+The application states that National Grid National Electrical Transmission System 
+Performance Report 2022/23 states that the overall reliability of supply over the  
+period 2022-23 was: 99.999981%. Therefore, it is considered very unlikely that 
+the generators would run for extended periods during a blackout event.  
+ 
+The Applicant has conservatively assessed the impact on air quality based on all 
+17 generators operating at 100% load for up to 72 hours to cover an emergency 
+power outage scenario. This is in line with Environment Agency guidance. 
+4. Air quality assessment 
+The primary pollutants of concern to air quality from the combustion processes at 
+the installation are nitrogen dioxide (NO2), carbon monoxide (CO), particulates 
+(PM10) and sulphur dioxide (SO2) resulting from the combustion process on site. 
+We don’t consider SO2 emissions to be a risk from the operation of the 
+installation as we have included a condition in the permit restricting the fuel to 
+ultra-low sulphur gas oil, resulting in negligible emissions of sulphur. 
+The Applicant’s assessment of the impact of air quality is set out in document 
+Iron Mountain LON-3 Data Centre Air Quality Assessment (AQA), revision 2, 
+dated 28th May 2024.  
+The assessment comprises: 
+• Dispersion modelling of emissions to air from the operation of the ESGs at 
+LON-3 data centre. 
+• Dispersion modelling of emissions to air from the operation of the ESGs at 
+LON-3 in combination with the ESGs at LON-2 data centre 
+(EPR/PP3309MK/A001). 
+• A study of the impact of emissions on nearby sensitive conservation sites. 
+ 
+As a worst-case scenario, emissions from annual testing of ESGs assumed 636 
+maximum annual operating hours for a single generator for the main generator 
+and 57 hours for the admin generator. Once commissioned the total annual 
+testing hours for the generators will reduce to 352 for main generator and 20 
+hours for admin per year. 
+The air dispersion modelling carried out by the applicant used the Atmospheric 
+Dispersion Modelling System (ADMS 6) version 6.0.0.1 which we consider an 
+appropriate air quality modelling tool for regulatory purposes. The model used 
+five years of meteorological data observed at Heathrow Airport meteorological 
+station, which is located approximately 10 km southeast of the facility, between 
+2018 and 2022. We consider this station to be reasonably representative of the 
+meteorological conditions at the site. 

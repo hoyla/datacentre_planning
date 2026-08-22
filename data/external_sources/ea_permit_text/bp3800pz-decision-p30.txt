@@ -1,0 +1,50 @@
+ 
+                       Page 30 of 32 
+(b) An improvement condition (IC8) has been included in the permit requiring the operator to 
+review options for reducing predicted short term nitrogen dioxide emissions and their potential for 
+impact on human health (and ecological) receptors. This review will include stack heights – 
+particularly at data centres Campus and HH4 (phase 1) which have been demonstrated by air 
+dispersion modelling to have the highest potential for environmental impact. 
+(c) An improvement condition (IC1) has been included in the permit requiring the operator to 
+produce an Air Quality Management Plan in conjunction with the Local Authority. The operator 
+agreed that this improvement condition should include a reference to the Air Quality Management 
+Plan considering outages of less than 18 hours. 
+ 
+Response received from: Public Health England – Response 2 
+Brief summary of issues raised:  
+The consultee noted that reducing public exposures to non-threshold pollutants (such as 
+particulate matter and nitrogen dioxide) below air quality standards has potential public health 
+benefits. They supported approaches which minimise or mitigate public exposure to non-
+threshold air pollutants and address inequalities (in exposure) and encourage their consideration 
+during site design, operational management, and regulation.  
+They noted they had reviewed the additional information supplied and consider that the 
+Environment Agency may wish to seek additional reassurance from the applicant with respect to 
+potential impacts on public health.  
+(a) The consultee noted that the applicant had supplied additional information with respect to 
+comparison between modelled (100%ile) and monitored data at a sensitive receptor over several 
+months which provided some reassurance regarding the testing and maintenance scenario 
+although no additional modelling had been supplied for operating conditions which were more 
+representative. They noted that the Environment Agency may wish to consider if it was 
+reasonable to request the applicant to conduct additional modelling for maintenance/testing 
+scenarios. 
+The consultee also noted that, in respect to the emergency scenario, the applicant had supplied 
+the outputs of additional modelling for shorter, more realistic periods of outage. However, the 
+consultee believed the applicant’s responses did not fully address their previous comments with 
+respect to evaluating the risk assessment. They noted that the Environment Agency may wish to 
+recommend that the applicant analyses the outputs of the modelling to understand the conditions 
+that give rise to the worst case conditions and that any monitoring and mitigation is designed for 
+these conditions. 
+(b) The consultee noted that the applicant’s response on identifying appropriate checks and 
+controls to prevent adverse impacts on public health (with control of emissions preferable to 
+strategies reliant on public warning and informing) did not fully address their comments with 
+respect to providing that reassurance. They suggested that concentrations of NO2 should be 
+considered alongside generator operation duration for an assessment of potential exposure of the 
+public at off-site locations. They suggested that the Environment Agency may wish to consider 
+whether the applicant should develop and communicate messaging or alerts for testing and 
+outages and/or should conduct monitoring of NO2 emissions, especially during the annual testing 
+for each data centre to further refine exposure assessment modelling. 
+(c) The consultee noted that, in relation to potentially unacceptable acute exposure occurring both 
+during routine testing/maintenance or in a shorter period than 18 hours of power outage, the 
+operator had agreed that an improvement condition relating to creation of an Air Quality 
+Management Plan would include outage scenarios less than 18 hours. They also noted that the 
+operator supplied the outputs of additional modelling for more realistic outage periods of 1-hour 

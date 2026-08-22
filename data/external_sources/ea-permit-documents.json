@@ -1,0 +1,2731 @@
+{
+  "ap3427sq": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 565426,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 32,
+        "sha256": "14be40f3f8124508b841a75e5a64845157656bf69e5141c5a74cd74219f27c78",
+        "stem": "ap3427sq-permit",
+        "title": "Permit Issued: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/69846ac9a886d1b3227bd6de/Application_Bespoke_A001_Permit_Issue_-_29012026.pdf"
+      },
+      {
+        "bytes": 284305,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 29,
+        "sha256": "ae661323ebfa164078ef6044ec77078e4199b8dcd4390e8b88cd8e11c6f504b1",
+        "stem": "ap3427sq-decision",
+        "title": "Decision Document: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/69846ade468d351e1406b4b8/Application_Bespoke_A001_Decision_Document_-_29012026.pdf"
+      }
+    ],
+    "easting": 503503,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Central Bedfordshire",
+    "northing": 225622,
+    "operator": "Amazon Web Services",
+    "permission_date": "2026-02-05",
+    "permission_number": "EPR/AP3427SQ",
+    "postcode": "LU5 5GX",
+    "publication_path": "/government/publications/ec2a-2fa-amazon-data-services-uk-limited-environmental-permit-issued-eprap3427sqa001",
+    "publication_title": "EC2A 2FA, Amazon Data Services UK Limited: environmental permit issued \u2013 EPR/AP3427SQ/A001",
+    "site_address": "Linmere Island Data Centre, Sundon Road, Luton, LU5 5GX"
+  },
+  "ap3522se": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 464434,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "Kyndryl UK Limited",
+    "kind": "enterprise",
+    "local_authority": "Portsmouth",
+    "northing": 105216,
+    "operator": "Kyndryl",
+    "permission_date": "2024-05-13",
+    "permission_number": "EPR/AP3522SE",
+    "postcode": "PO6 3AU",
+    "publication_path": null,
+    "site_address": "IBM, IBM Data Centre North Harbour, North Harbour, Cosham, Portsmouth, PO6 3AU"
+  },
+  "ap3903pd": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 595940,
+        "fetched": "2026-08-21",
+        "kind": "variation",
+        "pages": 40,
+        "sha256": "9814150e185399c9bdad3810ddfc16e5fc36b15af622dd1f3c202eabd21d3a1d",
+        "stem": "ap3903pd-variation",
+        "title": "Variation notice: Virtus HoldCo Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/67c5c255b0bb6528ee866d2d/Application_Variation_V004_Notice_Issued_-_25022025.pdf"
+      },
+      {
+        "bytes": 203555,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 11,
+        "sha256": "39d9f3cc1f7115488418570d4d5a951029d8707d6dbd12fa46969f03eb71346f",
+        "stem": "ap3903pd-decision",
+        "title": "Decision document: Virtus HoldCo Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/67c5c26a750837d7604dbdaf/Application_Variation_V004_Decision_Document_-_25022025.pdf"
+      }
+    ],
+    "easting": 572900,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "VIRTUS HOLDCO LIMITED",
+    "kind": "colocation",
+    "local_authority": "Hillingdon",
+    "northing": 180150,
+    "operator": "VIRTUS Data Centres",
+    "permission_date": "2021-08-04",
+    "permission_number": "EPR/AP3903PD",
+    "postcode": "UB11 1HB",
+    "publication_path": "/government/publications/ub11-1hb-virtus-holdco-limited-environmental-permit-issued-eprap3903pdv004",
+    "publication_title": "UB11 1HB, Virtus HoldCo Limited: environmental permit issued \u2013 EPR/AP3903PD/V004",
+    "site_address": "Prologis Park, Virtus Data Centres Stockley Park campus, Horton Road, London, UB11 1HB"
+  },
+  "bp3322lu": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 410078,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "Pulsant Limited",
+    "kind": "colocation",
+    "local_authority": "Birmingham",
+    "northing": 283731,
+    "operator": "Pulsant",
+    "permission_date": "2025-12-08",
+    "permission_number": "EPR/BP3322LU",
+    "postcode": "B11 3RZ",
+    "publication_path": null,
+    "site_address": "Pulsant, 20 Westwood Avenue, Birmingham, B11 3RZ"
+  },
+  "bp3425sd": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 476955,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "kind": "enterprise",
+    "local_authority": "West Northamptonshire",
+    "northing": 258451,
+    "operator": "Barclays",
+    "permission_date": "2023-10-24",
+    "permission_number": "EPR/BP3425SD",
+    "postcode": "NN4 7SG",
+    "publication_path": null,
+    "site_address": "Barclays Northampton Campus, Barclays Northampton Campus, 1234 Pavillion Drive, Northampton, NN4 7SG"
+  },
+  "bp3530yr": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 137731,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 9,
+        "sha256": "8e131a7fdedf4cd0d678f7c19073ab73ca7accbc32e2e41d1257d63d62515c96",
+        "stem": "bp3530yr-decision",
+        "title": "Decision document: Global Switch Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5d15e22c40f0b609ccf7e4b5/Decision_Document.pdf"
+      },
+      {
+        "bytes": 1508313,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 21,
+        "sha256": "c97e8b553353414e67be47d2119f41ea228b7aaca9d8b18774f200edbb24783a",
+        "stem": "bp3530yr-permit",
+        "title": "Permit: Global Switch Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5d15e23440f0b609cbdc46fd/Permit.pdf"
+      }
+    ],
+    "easting": 538580,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "GLOBAL SWITCH LIMITED",
+    "kind": "colocation",
+    "local_authority": "Tower Hamlets",
+    "northing": 180990,
+    "operator": "Global Switch",
+    "permission_date": "2019-06-25",
+    "permission_number": "EPR/BP3530YR",
+    "postcode": "E14 9YY",
+    "publication_path": "/government/publications/e14-9yy-global-switch-limited-environmental-permit-issued-eprbp3530yra001",
+    "publication_title": "E14 9YY, Global Switch Limited: environmental permit issued - EPR/BP3530YR/A001",
+    "site_address": "240, East India Dock House, East India Dock Road, East India Dock Road, London, E14 9YY"
+  },
+  "bp3546qp": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 291691,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 30,
+        "sha256": "5fecfa449ed78fa04d08a72853a46d2d69d03c2bae6e1ff4de18a7166bd65c98",
+        "stem": "bp3546qp-permit",
+        "title": "Permit Issued: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6582d78023b70a000d234cea/Application_Bespoke_Issued_-_19122023.pdf"
+      },
+      {
+        "bytes": 383037,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 28,
+        "sha256": "9b1d3d683d73a7c19a1d4a432582c85950ed686dd29027c02953fd6de8005994",
+        "stem": "bp3546qp-decision",
+        "title": "Decision Document: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6582d797fc07f300128d456a/Application_Bespoke_Decision_Document_-_19122023.pdf"
+      }
+    ],
+    "easting": 508120,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Dacorum",
+    "northing": 207510,
+    "operator": "Amazon Web Services",
+    "permission_date": "2023-12-19",
+    "permission_number": "EPR/BP3546QP",
+    "postcode": "HP2 4ZB",
+    "publication_path": "/government/publications/hp2-4zb-amazon-data-services-uk-limited-environmental-permit-issued-eprbp3546qpa001",
+    "publication_title": "HP2 4ZB, Amazon Data Services UK Limited: environmental permit issued - EPR/BP3546QP/A001",
+    "site_address": "3A , Hemel Hempstead Data Centre - Emergency Back-up, Blossom Way, Hemel Hempstead, Hertfordshire, HP2 4ZB"
+  },
+  "bp3800pz": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 968097,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 32,
+        "sha256": "45cf14409185a5e678c7f864eb030bec6823a5460ad716b0f264586c0bc2fcbb",
+        "stem": "bp3800pz-permit",
+        "title": "Permit: NTT Global Data Centers EMEA UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6204fb3ed3bf7f314b6ab82f/Permit_BP3800PZ.pdf"
+      },
+      {
+        "bytes": 674550,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 32,
+        "sha256": "aa5c440edba939f03a6dd00482a9a73dc468de77cf63b0c11338dd65f323b000",
+        "stem": "bp3800pz-decision",
+        "title": "Decision document: NTT Global Data Centers EMEA UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6204fb57e90e077f7ca77840/Decision_Document_BP3800PZ.pdf"
+      }
+    ],
+    "easting": 508130,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "NTT GLOBAL DATA CENTERS EMEA UK LTD",
+    "kind": "colocation",
+    "local_authority": "Dacorum",
+    "northing": 208440,
+    "operator": "NTT Global Data Centers",
+    "permission_date": "2021-12-17",
+    "permission_number": "EPR/BP3800PZ",
+    "postcode": "HP2 7SU",
+    "publication_path": "/government/publications/hp2-7up-hp2-7su-hp2-7df-hp2-7eq-ntt-global-data-centers-emea-uk-limited-environmental-permit-issued-eprbp3800pza001",
+    "publication_title": "HP2 7UP, HP2 7SU, HP2 7DF, HP2 7EQ, NTT Global Data Centers EMEA UK Limited: environmental permit issued - EPR/BP3800PZ/A001",
+    "site_address": "NTT GDC EMEA UK Limited, Hemel Hempstead Datacentres - EPR/BP3800PZ/A001, 3 Centro Boundary Way, Hemel Hempstead, HP2 7SU"
+  },
+  "bp3825sm": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 537395,
+    "generators": [
+      "operator_address"
+    ],
+    "holder": "CANARY WHARF MANAGEMENT LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Tower Hamlets",
+    "northing": 180408,
+    "operator": "Barclays",
+    "permission_date": "2024-01-16",
+    "permission_number": "EPR/BP3825SM",
+    "postcode": "E14 4EY",
+    "publication_path": null,
+    "site_address": "Barclays Execution Services Ltd, 5 North Colonnade, London, E14 4EY"
+  },
+  "bp3945qx": {
+    "activity": "Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 319786,
+        "fetched": "2026-08-21",
+        "kind": "other",
+        "pages": 22,
+        "sha256": "b92fba5172e6b32c2dccec6b80ff191b02b7e7e130ec6e2775e3964c68ea708a",
+        "stem": "bp3945qx-permit",
+        "title": "Pemit: Virtus Holdco Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/64d24548e5491a000d4b59d2/Permit_Virtus_Campus_EPRBP3945QXA001.pdf"
+      },
+      {
+        "bytes": 248506,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 18,
+        "sha256": "5f4a52e693c301481140b87fc7c697a2e3432ec91ca9bfaa553c70191edc3c36",
+        "stem": "bp3945qx-decision",
+        "title": "Decision Document: Virtus Holdco Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/64d2455ba4045e000da84c1b/Decision_document_Campus_EPRBP3945QXA001.pdf"
+      }
+    ],
+    "easting": 495720,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "VIRTUS HOLDCO LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 181330,
+    "operator": "VIRTUS Data Centres",
+    "permission_date": "2023-08-08",
+    "permission_number": "EPR/BP3945QX",
+    "postcode": "SL1 4QZ",
+    "publication_path": "/government/publications/sl1-4qz-virtus-holdco-limited-environmental-permit-issued-eprbp3945qxa001",
+    "publication_title": "SL1 4QZ, Virtus Holdco Limited: environmental permit issued - EPR/BP3945QX/A001",
+    "site_address": "Virtus Slough Campus Data Centres, Virtus Slough Campus Data Centres, 14 Liverpool Road, Slough Trading Estate, Slough, SL1 4QZ"
+  },
+  "cp3042qg": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 389142,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 28,
+        "sha256": "52f114d20ae7b144f644c03fd3954ab9194f98455403a9608578ec1392a984f8",
+        "stem": "cp3042qg-permit",
+        "title": "Permit: GTR Management Services Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/657afb27254aaa000d050d70/Application_Bespoke_Permit_-_08122023.pdf"
+      },
+      {
+        "bytes": 563653,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 26,
+        "sha256": "d3ab40efac25d8b038f226989e18e97e4c5e8b2a08cf64eff820d540a64a0279",
+        "stem": "cp3042qg-decision",
+        "title": "Decision document: GTR Management Services Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/657afbca0467eb000d55f829/Application_Bespoke_Decision_Document_-_08122023.pdf"
+      }
+    ],
+    "easting": 495950,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "GTR MANAGEMENT SERVICES LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 180760,
+    "operator": "unattributed",
+    "permission_date": "2023-12-14",
+    "permission_number": "EPR/CP3042QG",
+    "postcode": "SL1 4BG",
+    "publication_path": "/government/publications/sl1-4bg-gtr-management-services-limited-environmental-permit-issued-eprcp3042qga001",
+    "publication_title": "SL1 4BG, GTR Management Services Limited: environmental permit issued - EPR/CP3042QG/A001",
+    "site_address": "GB One Data Centre, GB One Data Centre, Ajax Avenue, Slough, SL1 4BG"
+  },
+  "cp3347jv": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [],
+    "easting": 495900,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "VIRTUS LONDON 9 LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 180900,
+    "operator": "VIRTUS Data Centres",
+    "permission_date": "2023-09-12",
+    "permission_number": "EPR/CP3347JV",
+    "postcode": "SL1 4QU",
+    "publication_path": null,
+    "site_address": "470-474, LON9 Data Centre, Malton Avenue, Slough Trading Estate, Slough, SL1 4QU"
+  },
+  "cp3409bh": {
+    "activity": "Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 224719,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 21,
+        "sha256": "12f2da12c8efa6aba0b951463c4b2d030f17dcfe23d0d0f94c9e5fc1513cc121",
+        "stem": "cp3409bh-permit",
+        "title": "Permit: Equinix (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/602b89e88fa8f5038238e9fa/Permit_CP3409BH.pdf"
+      },
+      {
+        "bytes": 110020,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 13,
+        "sha256": "ed7752b4637b9ad43831ecfc2dd9cb72df1834abddb919687e31ce6d831e3935",
+        "stem": "cp3409bh-decision",
+        "title": "Decision document: Equinix (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/602b8a35e90e070556671415/Decision_Document_CP3409BH.pdf"
+      }
+    ],
+    "easting": 494558,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 181312,
+    "operator": "Equinix",
+    "permission_date": "2021-02-09",
+    "permission_number": "EPR/CP3409BH",
+    "postcode": "SL1 4JW",
+    "publication_path": "/government/publications/sl1-4jw-equinix-uk-limited-environmental-permit-issued-eprcp3409bha001",
+    "publication_title": "SL1 4JW, Equinix (UK) Limited: environmental permit issued - EPR/CP3409BH/A001",
+    "site_address": "765, Equinix LD11X, Henley Road, Slough Trading Estate, Slough, SL1 4JW"
+  },
+  "cp3726su": {
+    "activity": "Medium Combustion Plant and Specified Generator",
+    "documents": [],
+    "easting": 409597,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Bournemouth, Christchurch and Poole",
+    "northing": 91556,
+    "operator": "Barclays",
+    "permission_date": "2024-09-18",
+    "permission_number": "EPR/CP3726SU",
+    "postcode": "BH8 8EH",
+    "publication_path": null,
+    "site_address": "The Helm, The Helm, 37 Holdenhurst Road, Bournemouth, BH8 8EH"
+  },
+  "cp3902lv": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 1134640,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 35,
+        "sha256": "502dffbe39c8ba3d0fa4402397fe2f44ea59208aae437829f704fd7be388e22b",
+        "stem": "cp3902lv-permit",
+        "title": "Permit: NTT Global Data Centers EMEA UK LTD",
+        "url": "https://assets.publishing.service.gov.uk/media/67694844e6ff7c8a1fde9d29/Application_Variation_V003_Notice_Issued_-_17122024.pdf"
+      },
+      {
+        "bytes": 251174,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 20,
+        "sha256": "63473a233a5cc57d5d8bc3f9da43963ae4824094d0aeb5d4bdfaa7869c3a373b",
+        "stem": "cp3902lv-decision",
+        "title": "Decision Document: NTT Global Data Centers EMEA UK LTD",
+        "url": "https://assets.publishing.service.gov.uk/media/6769485a4e2d5e9c0bde9d1f/Application_Variation_V003_Decision_Document_-_17122024.pdf"
+      }
+    ],
+    "easting": 551020,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "NTT GLOBAL DATA CENTERS EMEA UK LTD",
+    "kind": "colocation",
+    "local_authority": "Barking and Dagenham",
+    "northing": 185370,
+    "operator": "NTT Global Data Centers",
+    "permission_date": "2021-12-31",
+    "permission_number": "EPR/CP3902LV",
+    "postcode": "RM10 7FZ",
+    "publication_path": "/government/publications/rm10-7fz-ntt-global-data-centers-emea-uk-ltd-environmental-permit-issued-eprcp3902lvv003",
+    "publication_title": "RM10 7FZ, NTT Global Data Centers EMEA UK LTD: environmental permit issued \u2013 EPR/CP3902LV/V003",
+    "site_address": "NTT Global Data Centers UK EMEA Limited, NTT Global Data Centers UK EMEA Limited EPR/CP3902LV, Yewtree Avenue, Dagenham, RM10 7FZ"
+  },
+  "db3490yy": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 376891,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Cheshire East",
+    "northing": 375009,
+    "operator": "Barclays",
+    "permission_date": "2022-03-30",
+    "permission_number": "EPR/DB3490YY",
+    "postcode": "WA16 9EU",
+    "publication_path": null,
+    "site_address": "Radbroke Hall, Barclays Radbroke Hall, Stocks Lane, Knutsford, WA16 9EU"
+  },
+  "dp3107lf": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 319409,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 23,
+        "sha256": "9b2ff477b3370dd2809fa0b10f038962275234806bd8d5deb8943555fd941bb5",
+        "stem": "dp3107lf-permit",
+        "title": "Permit: Colt Data Centre Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6659b3c2d470e3279dd3346e/Application_Bespoke_Permit_Issued_-_23052024.pdf"
+      },
+      {
+        "bytes": 323368,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 25,
+        "sha256": "8033bb7ab526e5dea814f93e51b63cf83c9b45788356bc37ab36f37532697075",
+        "stem": "dp3107lf-decision",
+        "title": "Decision Document: Colt Data Centre Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6659b3d58f90ef31c23ebcd9/Applicatin_Bespoke_Decision_Document_23052024.pdf"
+      }
+    ],
+    "easting": 520970,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "COLT DATA CENTRE SERVICES UK LIMITED",
+    "kind": "colocation",
+    "local_authority": "Ealing",
+    "northing": 182810,
+    "operator": "Colt Data Centre Services",
+    "permission_date": "2024-05-31",
+    "permission_number": "EPR/DP3107LF",
+    "postcode": "NW10 6PN",
+    "publication_path": "/government/publications/nw10-6pw-colt-data-centre-services-uk-limited-environmental-permit-issued-eprdp3107lfa001",
+    "publication_title": "NW10 6PW, Colt Data Centre Services UK Limited: environmental permit issued \u2013 EPR/DP3107LF/A001",
+    "site_address": "Unit 9 - 13, Colt - Powergate, Colt - Powergate EPR/DP3107LF, Volt Avenue, Powergate Business Park, North Acton, NW10 6PN"
+  },
+  "dp3348qs": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 334039,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 21,
+        "sha256": "63cb758f925ec29619f5bf89fdf9410c5645a6b5a2658519c195a8806e65c596",
+        "stem": "dp3348qs-permit",
+        "title": "Permit: Virtus London 11 Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/64c3b343f92186001486674c/Permit_Virtus_LON11_EPRDP3348QSA001.pdf"
+      },
+      {
+        "bytes": 239435,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 17,
+        "sha256": "6874b7a5910d200f8811bf1692af833003aea77627757193d8b82dfdce8ce682",
+        "stem": "dp3348qs-decision",
+        "title": "Decision Document: Virtus London 11 Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/64c3b3547aea5b000d6a8e15/Decision_document_Virtus_LON11_EPRDP3348QSA001.pdf"
+      }
+    ],
+    "easting": 495390,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "VIRTUS LONDON 11 LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 180900,
+    "operator": "VIRTUS Data Centres",
+    "permission_date": "2023-07-26",
+    "permission_number": "EPR/DP3348QS",
+    "postcode": "SL1 4HA",
+    "publication_path": "/government/publications/sl1-4ha-virtus-london-11-limited-environmental-permit-issued-eprdp3348qsa001",
+    "publication_title": "SL1 4HA, Virtus London 11 Limited: environmental permit issued \u2013 EPR/DP3348QS/A001",
+    "site_address": "580, LON11 Data Centre, Ipswich Road, Slough Trading Estate, Slough, SL1 4HA"
+  },
+  "dp3442qv": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 456412,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 24,
+        "sha256": "1f62d70024da49b92e32355462b87bbe36747f642e042a19f0a10b158fb5d17a",
+        "stem": "dp3442qv-permit",
+        "title": "Permit: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/651ab8c17c2c4a000d95e33d/Application_Bespoke_Permit_28092023.pdf"
+      },
+      {
+        "bytes": 193171,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 9,
+        "sha256": "d0c5d9cef1937bc301beba384b57d1bf9f1ddaf267df67cbc07238b3e5e11125",
+        "stem": "dp3442qv-decision",
+        "title": "Decision Document: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/651ab8d97c2c4a000d95e33e/Application_Bespoke_Decision_Document_29092023.pdf"
+      }
+    ],
+    "easting": 510450,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Hillingdon",
+    "northing": 179330,
+    "operator": "Amazon Web Services",
+    "permission_date": "2023-10-02",
+    "permission_number": "EPR/DP3442QV",
+    "postcode": "UB3 4DG",
+    "publication_path": "/government/publications/ub3-4dg-amazon-data-services-uk-limited-environmental-permit-issued-eprdp3442qva001",
+    "publication_title": "UB3 4DG, Amazon Data Services UK Limited: environmental permit issued - EPR/DP3442QV/A001",
+    "site_address": "North Hyde Gardens, Hayes Data Centre Emergency Back-up Generation Facility, Hayes Data Centre Emergency Back-up Generation Facility, Bulls Bridge Industrial Estate, Hayes, UB3 4DG"
+  },
+  "dp3528lq": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 338067,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "nLighten Chester Limited",
+    "kind": "colocation",
+    "local_authority": "Cheshire West and Chester",
+    "northing": 372430,
+    "operator": "nLighten",
+    "permission_date": "2025-11-05",
+    "permission_number": "EPR/DP3528LQ",
+    "postcode": "CH1 6LT",
+    "publication_path": null,
+    "site_address": "Chester Data Centre, Telford Court, Chester, CH1 6LT"
+  },
+  "dp3728ll": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 335287,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "nLighten Liverpool Limited",
+    "kind": "colocation",
+    "local_authority": "Wychavon",
+    "northing": 383404,
+    "operator": "nLighten",
+    "permission_date": "2026-01-16",
+    "permission_number": "EPR/DP3728LL",
+    "postcode": "CH62 3RD",
+    "publication_path": null,
+    "site_address": "Liverpool Data Centre, Liverpool Data Centre, Georgia Avenue, Bromborough, CH62 3RD"
+  },
+  "dp3906be": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 696272,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 27,
+        "sha256": "cdcb22d1ad4a145a80c79c694abecb91f08dc22a81ce5ea0ca58b47975b6923c",
+        "stem": "dp3906be-permit",
+        "title": "Permit: Equinix (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/653b76f1e6c968000daa9c07/Application_Bespoke_Permit-16102023.pdf"
+      },
+      {
+        "bytes": 207202,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 14,
+        "sha256": "6e4c22743caf9fe189739cc6faae0b6849194195807e8973b1dfd3cfb1891cfd",
+        "stem": "dp3906be-decision",
+        "title": "Decision Document: Equinix (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/653b771180884d000df71bf7/Application_Bespoke_Decision_Document-16102023.pdf"
+      }
+    ],
+    "easting": 537890,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Tower Hamlets",
+    "northing": 179560,
+    "operator": "Equinix",
+    "permission_date": "2023-10-26",
+    "permission_number": "EPR/DP3906BE",
+    "postcode": "E14 9GE",
+    "publication_path": "/government/publications/e14-9ge-equinix-uk-limited-environmental-permit-issued-eprdp3906bea001",
+    "publication_title": "E14 9GE, Equinix (UK) Limited: environmental permit issued \u2013 EPR/DP3906BE/A001",
+    "site_address": "6/7/8/9, LD8, LD8, Harbour Exchange Square, London, E14 9GE"
+  },
+  "ep3022st": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 390465,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 26,
+        "sha256": "9a8c6f7244d733243d90ad7ff25755580125a5a11b6d1818630d0af1eb5a5606",
+        "stem": "ep3022st-permit",
+        "title": "Permit: Digital Realty (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6846bf500392ed9b784c01a1/Application_Bespoke_A001_Permit_Issued_-_02062025.pdf"
+      },
+      {
+        "bytes": 263045,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 19,
+        "sha256": "6f4e7f2c97ffea913b7e54cf9b49d901e9750d71d9c1bb71b391cd0833c9c73b",
+        "stem": "ep3022st-decision",
+        "title": "Decision document: Digital Realty (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6846bf6757f3515d9611f0e3/Application_Bespoke_A001_Decision_Document_-_02062025.pdf"
+      }
+    ],
+    "easting": 528670,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "DIGITAL REALTY (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Reigate and Banstead",
+    "northing": 151462,
+    "operator": "Digital Realty",
+    "permission_date": "2025-06-09",
+    "permission_number": "EPR/EP3022ST",
+    "postcode": "RH10 9BD",
+    "publication_path": "/government/publications/rh10-9bd-digital-realty-uk-limited-environmental-permit-issued-eprep3022sta001",
+    "publication_title": "RH10 9BD, Digital Realty (UK) Limited: environmental permit issued \u2013 EPR/EP3022ST/A001",
+    "site_address": "Digital Realty Crawley Data Centre Campus, Unit 1 and Unit 2, Manor Royal, Crawley, RH10 9BD"
+  },
+  "ep3247jv": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [],
+    "easting": 510860,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "VIRTUS HAYES LIMITED",
+    "kind": "colocation",
+    "local_authority": "Hounslow",
+    "northing": 178690,
+    "operator": "VIRTUS Data Centres",
+    "permission_date": "2024-03-20",
+    "permission_number": "EPR/EP3247JV",
+    "postcode": "UB2 5XX",
+    "publication_path": null,
+    "site_address": "Western International Park, LON2 Data Centre, Hayes Road, Hayes, UB2 5XX"
+  },
+  "ep3335jz": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [],
+    "easting": 519060,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "DIGITAL REALTY (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Kingston upon Thames",
+    "northing": 156460,
+    "operator": "Digital Realty",
+    "permission_date": "2020-10-29",
+    "permission_number": "EPR/EP3335JZ",
+    "postcode": "KT9 1SJ",
+    "publication_path": null,
+    "site_address": "Digital Realty, Fountain Court, Digital Realty Chessington (LHR13), Cox Lane, Chessington, Kingston upon Thames, KT9 1SJ"
+  },
+  "ep3507sl": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 1103823,
+        "fetched": "2026-08-21",
+        "kind": "variation",
+        "pages": 35,
+        "sha256": "fe0676536fb10a68571823fd715aa120bfb4872ed988b441d2673688f58fa293",
+        "stem": "ep3507sl-variation",
+        "title": "Variation Notice: Telehouse International Corporation of Europe Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/677d04edd721a08c006654e3/Application_Variation_V002_Notice_Issued_-_19122024.pdf"
+      },
+      {
+        "bytes": 329281,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 14,
+        "sha256": "95e58caf7a718a5f8a26172ab1683a9bf80c50a2d68754b9b6ba1462ce67c8ff",
+        "stem": "ep3507sl-decision",
+        "title": "Decision Document: Telehouse International Corporation of Europe Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/677d050299c93b7286a3973b/Application_Variation_V002_Decision_Document_-_19122024.pdf"
+      }
+    ],
+    "easting": 538620,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "TELEHOUSE INTERNATIONAL CORPORATION OF EUROPE LTD",
+    "kind": "colocation",
+    "local_authority": "Tower Hamlets",
+    "northing": 180630,
+    "operator": "Telehouse",
+    "permission_date": "2020-10-13",
+    "permission_number": "EPR/EP3507SL",
+    "postcode": "E14 2EH",
+    "publication_path": "/government/publications/e14-2aa-telehouse-international-corporation-of-europe-limited-environmental-permit-issued-eprep3507slv002",
+    "publication_title": "E14 2AA, Telehouse International Corporation of Europe Limited: environmental permit  issued \u2013 EPR/EP3507SL/V002",
+    "site_address": "Docklands Technical centre, Docklands Technical Centre, 1 Paul Julius Close, Blackwall Way Poplar, London, E14 2EH"
+  },
+  "ep3508ps": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 391600,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 23,
+        "sha256": "ba3385654f9f7b9918d616ceb245875044c5015dfb48bd6503d4ae531b89e94c",
+        "stem": "ep3508ps-permit",
+        "title": "Permit: CyrusOne UK4 Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6283a2abd3bf7f1f40ca50a7/Permit_EP3508PS_A001.pdf"
+      },
+      {
+        "bytes": 216056,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 17,
+        "sha256": "e6593ac2f634a3d00a7aef64a784dc3e32dd5191ee20377a601790590481b4bc",
+        "stem": "ep3508ps-decision",
+        "title": "Decision document: CyrusOne UK4 Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6283a2bfd3bf7f1f46f9b672/Decision_Document_EP3508PS_A001.pdf"
+      }
+    ],
+    "easting": 495240,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "CYRUSONE UK4 LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 180620,
+    "operator": "CyrusOne",
+    "permission_date": "2022-03-30",
+    "permission_number": "EPR/EP3508PS",
+    "postcode": "SL1 4AA",
+    "publication_path": "/government/publications/sl1-4aa-cyrusone-uk4-limited-environmental-permit-issued-eprep3508psa001",
+    "publication_title": "SL1 4AA, CyrusOne UK4 Limited: environmental permit issued - EPR/EP3508PS/A001",
+    "site_address": "225, CyrusOne (London 4), CyrusOne London 4/5 Datacentres EPR/EP3508PS, Bath Road, Slough, SL1 4AA"
+  },
+  "ep3608pm": {
+    "activity": "Directly Associated Activity (included and an MCP)|Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [],
+    "easting": 495340,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "CYRUSONE UK3 LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 181680,
+    "operator": "CyrusOne",
+    "permission_date": "2021-02-16",
+    "permission_number": "EPR/EP3608PM",
+    "postcode": "SL1 4ST",
+    "publication_path": null,
+    "site_address": "700, CyrusOne London 3 Datacentre, Stirling Road, Slough, SL1 4ST"
+  },
+  "fb3795ye": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 501743,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "VIRGIN MEDIA LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Slough",
+    "northing": 178758,
+    "operator": "Virgin Media",
+    "permission_date": "2022-04-06",
+    "permission_number": "EPR/FB3795YE",
+    "postcode": "SL3 8XP",
+    "publication_path": null,
+    "site_address": "Langley Data Centre, Virgin Media Digital Media Centre, Heron Drive, Langley, Slough, SL3 8XP"
+  },
+  "fp3000ly": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 417326,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 23,
+        "sha256": "6c23915371b85e5f4dfe5fa7493771dc33726055fa69668126517d2f32463193",
+        "stem": "fp3000ly-permit",
+        "title": "Permit:  Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/624bfbd8e90e075f06b3730f/Permit_FP3000LY.pdf"
+      },
+      {
+        "bytes": 290150,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 18,
+        "sha256": "775d97d52ca23dba0db5dd555d548fb6a02ff0d9c26af0f7c6015c56b9111443",
+        "stem": "fp3000ly-decision",
+        "title": "Decision document: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/624bfbebd3bf7f32afeba097/Decision_Document_FP3000LY.pdf"
+      }
+    ],
+    "easting": 416403,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Swindon",
+    "northing": 180545,
+    "operator": "Amazon Web Services",
+    "permission_date": "2022-03-10",
+    "permission_number": "EPR/FP3000LY",
+    "postcode": "SN4 0QD",
+    "publication_path": "/government/publications/sn4-0qd-amazon-data-services-uk-limited-environmental-permit-issued-eprfp3000lya001",
+    "publication_title": "SN4 0QD, Amazon Data Services UK Limited: environmental permit issued - EPR/FP3000LY/A001",
+    "site_address": "Swindon Data Centre, Swindon Data Centre Emergency Back-up Generation Facility EPR/FP3000LY, Brimble Hill Road, Burderop Park, Brimble Hill, Swindon, SN4 0QD"
+  },
+  "fp3328sm": {
+    "activity": "Medium Combustion Plant and Specified Generator",
+    "documents": [],
+    "easting": 531063,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "Pulsant Limited",
+    "kind": "colocation",
+    "local_authority": "Croydon",
+    "northing": 163259,
+    "operator": "Pulsant",
+    "permission_date": "2023-12-21",
+    "permission_number": "EPR/FP3328SM",
+    "postcode": "CR0 4RR",
+    "publication_path": null,
+    "site_address": "Unit 1, South London Data Centre, 35 Imperial Way, Croydon, London, CR0 4RR"
+  },
+  "fp3625mj": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 507909,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Dacorum",
+    "northing": 207381,
+    "operator": "Amazon Web Services",
+    "permission_date": "2026-03-03",
+    "permission_number": "EPR/FP3625MJ",
+    "postcode": "HP2 4FQ",
+    "publication_path": null,
+    "site_address": "Plot 3, Maylands Avenue Data Centre, Maylands Avenue, Hemel Hempstead, HP2 4FQ"
+  },
+  "fp3630eu": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 363962,
+        "fetched": "2026-08-21",
+        "kind": "variation",
+        "pages": 30,
+        "sha256": "1b286a6872c58e39c762fbe86752c46a08c3f68dad1df15f344ada084fcbfd8b",
+        "stem": "fp3630eu-variation",
+        "title": "Variation notice: Green Mountain DC UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/69a160923e672177d0bc7767/Application_Variation_V002_Notice_Issue_-_19022026.pdf"
+      },
+      {
+        "bytes": 306748,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 17,
+        "sha256": "195faee220b10cee12df5df90c87abd9861f2e9501d6a5c22e7ece9cd83832ec",
+        "stem": "fp3630eu-decision",
+        "title": "Decision document: Green Mountain DC UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/69a160a1c497bac082bc776c/Application_Variation_V002_Decision_Document_-_19022026.pdf"
+      }
+    ],
+    "easting": 550270,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "GREEN MOUNTAIN DC UK LIMITED",
+    "kind": "colocation",
+    "local_authority": "Havering",
+    "northing": 189800,
+    "operator": "Green Mountain",
+    "permission_date": "2015-04-21",
+    "permission_number": "EPR/FP3630EU",
+    "postcode": "RM7 7PN",
+    "publication_path": "/government/publications/rm7-7pn-green-mountain-dc-uk-limited-environmental-permit-issued-eprfp3630euv002",
+    "publication_title": "RM7 7PN, Green Mountain DC UK Limited: environmental permit issued \u2013 EPR/FP3630EU/V002",
+    "site_address": "ISDC Development (No2 Limited, Romford North Data Centre, Unit 3 King George close, Romford, Essex, RM7 7PN"
+  },
+  "fp3900le": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [],
+    "easting": 484740,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Bracknell Forest",
+    "northing": 169120,
+    "operator": "Amazon Web Services",
+    "permission_date": "2021-12-15",
+    "permission_number": "EPR/FP3900LE",
+    "postcode": "RG12 1HN",
+    "publication_path": null,
+    "site_address": "Amen Corner Business Park, Bracknell Data Centre - Back-up Generation Facility - EPR/FP3900LE, Cain Road, Binfield, Bracknell, RG12 1HN"
+  },
+  "gp3127lv": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 533729,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 27,
+        "sha256": "321370de423b66ac3dd2a2ce9c58951a7f9edf8bb2f9d2355bac08eac61fec6f",
+        "stem": "gp3127lv-permit",
+        "title": "Permit: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6a7077d10ddb7e4831c62b62/Application_Bespoke_A001_Permit_-27072026.pdf"
+      },
+      {
+        "bytes": 279084,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 24,
+        "sha256": "31b2c1dab04bfc3b85f195177d19bf72a19a730edda4fb5ee05b90e251f48c62",
+        "stem": "gp3127lv-decision",
+        "title": "Decision document: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6a7077d1cceb23e86789783c/Application_Bespoke_A001_Decision_Document_-_27072026.pdf"
+      }
+    ],
+    "easting": 451378,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Vale of White Horse",
+    "northing": 191803,
+    "operator": "Amazon Web Services",
+    "permission_date": "2026-08-03",
+    "permission_number": "EPR/GP3127LV",
+    "postcode": "OX11 7BF",
+    "publication_path": "/government/publications/ox11-7bf-amazon-data-services-uk-limited-environmental-permit-issued-eprgp3127lva001",
+    "publication_title": "OX11 7BF, Amazon Data Services UK Limited: environmental permit issued - EPR/GP3127LV/A001",
+    "site_address": "Didcot North Data Centre Campus, former Didcot A Power Station, Didcot, Oxfordshire, OX11 7BF"
+  },
+  "gp3721sq": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 459146,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 26,
+        "sha256": "62e4708970477c83a5bce69a3ee914e15697d43a0de0ba9410d61decc9da1589",
+        "stem": "gp3721sq-permit",
+        "title": "Permit: Colt Data Centre Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6899ecc19c63e0ee87656a7e/Application_Bespoke_A001_Permit_-_30_07_2025.pdf"
+      },
+      {
+        "bytes": 211635,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 15,
+        "sha256": "7101aa9e81a86b54d52869de5fe4ae054b057d7d31ebeb89e0a4d8311b6394b0",
+        "stem": "gp3721sq-decision",
+        "title": "Decision document: Colt Data Centre Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6899eccdad0cbc0e27643221/Application_Bespoke_A001_Decision_document_-_30_07_2025.pdf"
+      }
+    ],
+    "easting": 511533,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "COLT DATA CENTRE SERVICES UK LIMITED",
+    "kind": "colocation",
+    "local_authority": "Hillingdon",
+    "northing": 180192,
+    "operator": "Colt Data Centre Services",
+    "permission_date": "2025-08-11",
+    "permission_number": "EPR/GP3721SQ",
+    "postcode": "UB4 0SL",
+    "publication_path": "/government/publications/ub4-0sl-colt-data-centre-services-uk-limited-environmental-permit-issued-eprgp3721sqa001",
+    "publication_title": "UB4 0SL, Colt Data Centre Services UK Limited: environmental permit issued - EPR/GP3721SQ/A001",
+    "site_address": "Colt - Hayes, Colt - Hayes, BEACONSFIELD ROAD, HAYES, HILLINGDON, UB4 0SL"
+  },
+  "hp3136dk": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 210063,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 21,
+        "sha256": "ed3d90f286122eb37a0c93f3cd1e4870de01ce53dcc1976e771f64553ff008ab",
+        "stem": "hp3136dk-permit",
+        "title": "Permit: Digital Realty (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5bc5e469e5274a3614f69035/Permit.pdf"
+      },
+      {
+        "bytes": 95636,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 11,
+        "sha256": "0635221254ba49b6be9dd4d6e68a83d3db7075dc43e78d18e882443711e18079",
+        "stem": "hp3136dk-decision",
+        "title": "Decision document: Digital Realty (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5bc5e480e5274a3632522023/Decision_document.pdf"
+      }
+    ],
+    "easting": 508900,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "DIGITAL REALTY (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Watford",
+    "northing": 194950,
+    "operator": "Digital Realty",
+    "permission_date": "2018-10-12",
+    "permission_number": "EPR/HP3136DK",
+    "postcode": "WD18 8UA",
+    "publication_path": "/government/publications/wd18-8ua-digital-realty-uk-limited-environmental-permit-issued",
+    "publication_title": "WD18 8UA, Digital Realty (UK) Limited: environmental permit issued",
+    "site_address": "9-17, The Chess Building, Digital Realty Watford (LHR14) - EPR/HP3136DK, Caxton Way, Watford, Hertfordshire, WD18 8UA"
+  },
+  "jp3024sa": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 519875,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "Vodafone Limited",
+    "kind": "enterprise",
+    "local_authority": "Ealing",
+    "northing": 182584,
+    "operator": "Vodafone",
+    "permission_date": "2024-04-19",
+    "permission_number": "EPR/JP3024SA",
+    "postcode": "NW10 7PH",
+    "publication_path": null,
+    "site_address": "PRLON2, PRLON2, Coronation Road, Park Royal, London, NW10 7PH"
+  },
+  "jp3300sn": {
+    "activity": "Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [],
+    "easting": 535680,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "kind": "colocation",
+    "local_authority": "Enfield",
+    "northing": 193000,
+    "operator": "Ark Data Centres",
+    "permission_date": "2021-05-11",
+    "permission_number": "EPR/JP3300SN",
+    "postcode": "N9 0BD",
+    "publication_path": null,
+    "site_address": "Meridian Park Data Centre, Meridian Park Data Centre EPR/JP3300SN, 10 Adra Road, Enfield, London, N9 0BD"
+  },
+  "jp3424ss": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 487865,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "Vodafone Limited",
+    "kind": "enterprise",
+    "local_authority": "Bracknell Forest",
+    "northing": 168945,
+    "operator": "Vodafone",
+    "permission_date": "2024-05-30",
+    "permission_number": "EPR/JP3424SS",
+    "postcode": "RG12 2PW",
+    "publication_path": null,
+    "site_address": "The Sterling Centre, The Sterling Centre, Eastern Road, Bracknell, RG12 2PW"
+  },
+  "jp3824sh": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 385370,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "Vodafone Limited",
+    "kind": "enterprise",
+    "local_authority": "Manchester",
+    "northing": 398008,
+    "operator": "Vodafone",
+    "permission_date": "2024-04-04",
+    "permission_number": "EPR/JP3824SH",
+    "postcode": "M1 2NP",
+    "publication_path": null,
+    "site_address": "Manchester Unit 1, Manchester Unit 1, Piccadilly Trading Estate, Manchester, M1 2NP"
+  },
+  "jp3924sc": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 532839,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "Vodafone Limited",
+    "kind": "enterprise",
+    "local_authority": "Hackney",
+    "northing": 182764,
+    "operator": "Vodafone",
+    "permission_date": "2024-04-02",
+    "permission_number": "EPR/JP3924SC",
+    "postcode": "N1 6EF",
+    "publication_path": null,
+    "site_address": "Chart Street, Chart Street, Vodafone, 32-43 Chart Street, Hoxton, London Borough of Hackney, N1 6EF"
+  },
+  "jp3929sj": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 399510,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 25,
+        "sha256": "b50f19901d3371bdf343a7c0f7ed234996a3bc4a031d798d1542fdaf619912ce",
+        "stem": "jp3929sj-permit",
+        "title": "Permit Issued: Digital Realty (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/67adda1c2c594609b38acd38/Application_Bespoke_A001_Permit_-_11_02_2025.pdf"
+      },
+      {
+        "bytes": 265596,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 19,
+        "sha256": "3943b712639dd26b5bb2a06a5f2625861079030d103fd2355b18a4a1965a3b7f",
+        "stem": "jp3929sj-decision",
+        "title": "Decision Document: Digital Realty (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/67adda2a2c594609b38acd39/Application_Bespoke_A001_Decision_Document_-_11_02_2025.pdf"
+      }
+    ],
+    "easting": 528670,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "Redhill Data Centre Limited",
+    "kind": "colocation",
+    "local_authority": "Reigate and Banstead",
+    "northing": 151462,
+    "operator": "Digital Realty",
+    "permission_date": "2025-02-17",
+    "permission_number": "EPR/JP3929SJ",
+    "postcode": "RH1 1AX",
+    "publication_path": "/government/publications/rh1-1ax-digital-realty-uk-limited-environmental-permit-issued-eprjp3929sja001",
+    "publication_title": "RH1 1AX, Digital Realty (UK) Limited: environmental permit issued - EPR/JP3929SJ/A001",
+    "site_address": "Unit 2 & 3 Redhill Data Centre, St Anne's Boulevard, Redhill, RH1 1AX"
+  },
+  "kp3139dw": {
+    "activity": "Directly Associated Activity (included and an MCP)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 230858,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 27,
+        "sha256": "fb13cd04a3d90116960f5ccc7f82610848bb6ce5cc923f97c366bb373114f8b1",
+        "stem": "kp3139dw-permit",
+        "title": "Permit: Colt Technology Services",
+        "url": "https://assets.publishing.service.gov.uk/media/5c46fe23e5274a6e40f38fd6/Permit.pdf"
+      },
+      {
+        "bytes": 135035,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 18,
+        "sha256": "bba878a74970477ada183dd80d4102e03f851654cfa59c823782bd5196fa02c7",
+        "stem": "kp3139dw-decision",
+        "title": "Decision document: Colt Technology Services",
+        "url": "https://assets.publishing.service.gov.uk/media/5c46fe3be5274a6e52aa6071/Decision_document.pdf"
+      }
+    ],
+    "easting": 525360,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "COLT DATA CENTRE SERVICES UK LIMITED",
+    "kind": "colocation",
+    "local_authority": "Welwyn Hatfield",
+    "northing": 212800,
+    "operator": "Colt Data Centre Services",
+    "permission_date": "2019-01-18",
+    "permission_number": "EPR/KP3139DW",
+    "postcode": "AL7 1QA",
+    "publication_path": "/government/publications/al7-1qa-colt-technology-services-environmental-permit-issued",
+    "publication_title": "AL7 1QA, Colt Technology Services: environmental permit issued",
+    "site_address": "20, Colt Welwyn Garden - EPR/KP3139DW, Blackfan Road, Welwyn Garden City, AL7 1QA"
+  },
+  "lp3005bl": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 321658,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 21,
+        "sha256": "80ee7a91752e17c61280d4baad3f91a422dc2f5a4289ae3dad305d07bfdf7264",
+        "stem": "lp3005bl-permit",
+        "title": "Permit: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/617c0f83d3bf7f56020e500a/Permit_-_LP3005BL_Final.pdf"
+      },
+      {
+        "bytes": 130960,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 19,
+        "sha256": "09495639020fbe246a1523a39d2678459b9c1c7d21aa5b257a25807a8ba4f906",
+        "stem": "lp3005bl-decision",
+        "title": "Decision document: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/617c0f958fa8f529777ffd49/Decision_Document_-_LP3005BL_Final.pdf"
+      }
+    ],
+    "easting": 450890,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Vale of White Horse",
+    "northing": 191490,
+    "operator": "Amazon Web Services",
+    "permission_date": "2021-10-12",
+    "permission_number": "EPR/LP3005BL",
+    "postcode": "OX11 7TT",
+    "publication_path": "/government/publications/ox11-7tt-amazon-data-services-uk-limited-environmental-permit-issued-eprlp3005bla001",
+    "publication_title": "OX11 7TT, Amazon Data Services UK Limited: environmental permit issued - EPR/LP3005BL/A001",
+    "site_address": "Former Didcot A Power Station, Didcot Data Centre - Emergency Back-up Generation Facility  EPR/LP3005BL, Milton Road, Didcot, OX11 7TT"
+  },
+  "lp3205lw": {
+    "activity": "Directly Associated Activity (included and an MCP)|Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [],
+    "easting": 495200,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 181200,
+    "operator": "Equinix",
+    "permission_date": "2021-11-05",
+    "permission_number": "EPR/LP3205LW",
+    "postcode": "SL1 4AX",
+    "publication_path": null,
+    "site_address": "Slough Trading Estate, Equinix Slough Campus, Equinix LD13x Data Centre - EPR/LP3205LW, Buckingham Avenue, Slough, Slough, SL1 4AX"
+  },
+  "lp3303pr": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 483512,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 21,
+        "sha256": "f29de521a0798933c09eaa1fb5d1384f9046fbc38b39d3e37a708e5f29e2305b",
+        "stem": "lp3303pr-permit",
+        "title": "Permit:Equinix (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5e5f8cdc86650c513869ed1a/Permit.pdf"
+      },
+      {
+        "bytes": 235206,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 10,
+        "sha256": "30101e77c3228137494ef31f0a610fa3c6b44cd3d943bb1f7731c73a8bc37546",
+        "stem": "lp3303pr-decision",
+        "title": "Decision document:Equinix (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5e5f8d1ad3bf7f108502ec85/Decision_Document.pdf"
+      }
+    ],
+    "easting": 495200,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 181250,
+    "operator": "Equinix",
+    "permission_date": "2020-02-26",
+    "permission_number": "EPR/LP3303PR",
+    "postcode": "SL1 4AX",
+    "publication_path": "/government/publications/sl1-4ax-equinix-uk-limited-environmental-permit-issued-eprlp3303pra001",
+    "publication_title": "SL1 4AX, Equinix (UK) Limited: environmental permit issued - EPR/LP3303PR/A001",
+    "site_address": "Slough Trading Estate, Equinix Slough Campus Data Centre, Equinix Slough Campus Data Centre, Buckingham Avenue, Slough, SL1 4AX"
+  },
+  "lp3426sk": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [],
+    "easting": 386320,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Gloucester",
+    "northing": 218361,
+    "operator": "Barclays",
+    "permission_date": "2025-09-05",
+    "permission_number": "EPR/LP3426SK",
+    "postcode": "GL4 3RU",
+    "publication_path": null,
+    "site_address": "Gloucester Data Centre, Barnett Way, Barnwood, Gloucester, Gloucestershire, GL4 3RU"
+  },
+  "lp3926sa": {
+    "activity": "Medium Combustion Plant and Specified Generator",
+    "documents": [],
+    "easting": 537911,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Tower Hamlets",
+    "northing": 180343,
+    "operator": "Barclays",
+    "permission_date": "2025-05-15",
+    "permission_number": "EPR/LP3926SA",
+    "postcode": "E14 5HP",
+    "publication_path": null,
+    "site_address": "1 Churchill Place (1CP), 1 Churchill Place, Canary Wharf, London, E14 5HP"
+  },
+  "mp3521la": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 517708,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "BT PLC",
+    "kind": "enterprise",
+    "local_authority": "Ealing",
+    "northing": 180477,
+    "operator": "BT",
+    "permission_date": "2025-10-28",
+    "permission_number": "EPR/MP3521LA",
+    "postcode": "W5 5DA",
+    "publication_path": null,
+    "site_address": "EALING TE, EALING TE, EALING GREEN, EALING, W5 5DA"
+  },
+  "mp3620mr": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 451549,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Vale of White Horse",
+    "northing": 191459,
+    "operator": "Amazon Web Services",
+    "permission_date": "2026-01-15",
+    "permission_number": "EPR/MP3620MR",
+    "postcode": "OX11 7BF",
+    "publication_path": null,
+    "site_address": "Purchas Road Data Centre, Purchas Road, Didcot, Oxfordshire, OX11 7BF"
+  },
+  "mp3822st": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 380620,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Trafford",
+    "northing": 396850,
+    "operator": "Equinix",
+    "permission_date": "2024-03-21",
+    "permission_number": "EPR/MP3822ST",
+    "postcode": "M17 1HE",
+    "publication_path": null,
+    "site_address": "Equinix MA3, Joule House, Equinix MA3, 76 Trafford Wharf Road, Trafford Park, Manchester, M17 1HE"
+  },
+  "np3121lf": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 622576,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "ZENIUM UK LIMITED",
+    "kind": "colocation",
+    "local_authority": "Liverpool",
+    "northing": -5527064,
+    "operator": "Zenium",
+    "permission_date": "2025-11-19",
+    "permission_number": "EPR/NP3121LF",
+    "postcode": "SL1 4QZ",
+    "publication_path": null,
+    "site_address": "Unit 12, LON 1, Liverpool Road, Slough, SL1 4QZ"
+  },
+  "np3422ss": {
+    "activity": "Medium Combustion Plant and Specified Generator",
+    "documents": [],
+    "easting": 378548,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "Pulsant Limited",
+    "kind": "colocation",
+    "local_authority": "Trafford",
+    "northing": 396147,
+    "operator": "Pulsant",
+    "permission_date": "2024-07-15",
+    "permission_number": "EPR/NP3422SS",
+    "postcode": "M32 0QT",
+    "publication_path": null,
+    "site_address": "Cobra Court, Manchester Data Centre, 1-2 Ball Green, Trafford Park, Manchester, M32 0QT"
+  },
+  "np3524sk": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 510559,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "VERIZON UK LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Hounslow",
+    "northing": 174570,
+    "operator": "Verizon",
+    "permission_date": "2024-03-20",
+    "permission_number": "EPR/NP3524SK",
+    "postcode": "TW14 0XQ",
+    "publication_path": null,
+    "site_address": "Skyways Building, Central Way, Heathrow, Feltham, TW14 0XQ"
+  },
+  "np3735jx": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 479378,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 22,
+        "sha256": "e0cbb26e5ae7fa7ae3bff925a3ceed67fbb96d165190afa303d0b6ea191dbaf4",
+        "stem": "np3735jx-permit",
+        "title": "Permit: CL International Management (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/62d6bd60d3bf7f28583b0173/Application_Bespoke_Issued_-_PDF_-_12072022_.pdf"
+      },
+      {
+        "bytes": 221824,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 20,
+        "sha256": "eac2a0d1785d6da490fc0ffc40fd9bd94e7bd8b37bfbeef22fe23f4157104d63",
+        "stem": "np3735jx-decision",
+        "title": "Decision document: CL International Management (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/62d6bd8a8fa8f50bfcd3f539/DD_Application_Bespoke_Permit-_12072022_.pdf"
+      }
+    ],
+    "easting": 529710,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "CL INTERNATIONAL MANAGEMENT (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Sutton",
+    "northing": 166730,
+    "operator": "unattributed",
+    "permission_date": "2022-07-11",
+    "permission_number": "EPR/NP3735JX",
+    "postcode": "EC3M 7AF",
+    "publication_path": "/government/publications/ec2y-5au-cl-international-management-uk-limited-environmental-permit-issued-eprnp3735jxa001",
+    "publication_title": "EC2Y 5AU, CL International Management (UK) Limited: environmental permit issued - EPR/NP3735JX/A001",
+    "site_address": "C/o Ascendas Reit (Croydon) UK Limited, Croydon Data Centre (LGW13) EPR/NP3735JX, The Scalpel, 18th Floor, 52 Lime Street, London, EC3M 7AF"
+  },
+  "np3826sa": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 410689,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "Vodafone Limited",
+    "kind": "enterprise",
+    "local_authority": "Swindon",
+    "northing": 183640,
+    "operator": "Vodafone",
+    "permission_date": "2024-04-15",
+    "permission_number": "EPR/NP3826SA",
+    "postcode": "SN5 6LA",
+    "publication_path": null,
+    "site_address": "Swindon Internet Solutions Centre, Swindon Internet Solutions Centre, Whitehall Way, Windmill Hill Business Park, Swindon, SN5 6LA"
+  },
+  "pp3003pw": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 485225,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 21,
+        "sha256": "e8aabbac54df355310892ae130146591b3e8ef318aa2901cccfd4a348f7095a6",
+        "stem": "pp3003pw-permit",
+        "title": "Permit: Ark Data Centres Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5f0728333a6f4004019bff34/Permit.pdf"
+      },
+      {
+        "bytes": 245467,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 17,
+        "sha256": "f253583cf48227037a0507d50c0831abbd01582f39637012521ea47e5e491c4c",
+        "stem": "pp3003pw-decision",
+        "title": "Decision document: Ark Data Centres Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5f072844d3bf7f2bf63bddf7/Decision_Document.pdf"
+      }
+    ],
+    "easting": 384920,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "kind": "colocation",
+    "local_authority": "Wiltshire",
+    "northing": 168930,
+    "operator": "Ark Data Centres",
+    "permission_date": "2020-07-07",
+    "permission_number": "EPR/PP3003PW",
+    "postcode": "SN13 9GB",
+    "publication_path": "/government/publications/sn13-9gb-ark-data-centres-limited-environmental-permit-issued-eprpp3003pwa001",
+    "publication_title": "SN13 9GB, Ark Data Centres Limited: environmental permit issued - EPR/PP3003PW/A001",
+    "site_address": "Ark Data Centres, Spring Park Data Centre - EPR/PP3003PW, Westwells Road, Corsham, Wiltshire, SN13 9GB"
+  },
+  "pp3225sx": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 534650,
+    "generators": [
+      "dc_in_name",
+      "operator_address"
+    ],
+    "holder": "Enfield DC Service Company Limited",
+    "kind": "colocation",
+    "local_authority": "Enfield",
+    "northing": 196568,
+    "operator": "VIRTUS Data Centres",
+    "permission_date": "2023-09-13",
+    "permission_number": "EPR/PP3225SX",
+    "postcode": "EN1 1TH",
+    "publication_path": null,
+    "site_address": "Virtus Enfield LONDON1 Data Centre, Unit 3, Virtus Enfield LONDON1 Data Centre, Trade City, Crown Road, Enfield, EN1 1TH"
+  },
+  "pp3309mk": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 437287,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 22,
+        "sha256": "33015d203d0f760c97b09d9a14bab32646c2fc26ac42bcd45519d9ef28f0fcaf",
+        "stem": "pp3309mk-permit",
+        "title": "Permit: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/63cfc8248fa8f53fe508fc01/PP3309MK_A001_Application_Bespoke_Permit.pdf"
+      },
+      {
+        "bytes": 229122,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 17,
+        "sha256": "59f8a53a10412de8da59f607d18b652513a0695e0ae100a491c1a8bb94a5707c",
+        "stem": "pp3309mk-decision",
+        "title": "Decision document: Amazon Data Services UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/63cfc847d3bf7f3c40d67246/PP3309MK_A001_Application_Bespoke_Decision_Document.pdf"
+      }
+    ],
+    "easting": 495732,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Slough",
+    "northing": 181088,
+    "operator": "Amazon Web Services",
+    "permission_date": "2023-01-19",
+    "permission_number": "EPR/PP3309MK",
+    "postcode": "SL1 4PF",
+    "publication_path": "/government/publications/sl1-4pf-amazon-data-services-uk-limited-environmental-permit-issued-eprpp3309mka001",
+    "publication_title": "SL1 4PF, Amazon Data Services UK Limited: environmental permit issued - EPR/PP3309MK/A001",
+    "site_address": "110, Data Centre, Datacentre EPR/PP3309MK, Buckingham Avenue, Trading Estate, Slough, Berkshire, SL1 4PF"
+  },
+  "qp3434dr": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 226290,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 18,
+        "sha256": "231d3d4600aa56e99feb3109c7b9f8b8eeaa0898d1798f57118176672f9c7d79",
+        "stem": "qp3434dr-permit",
+        "title": "Permit: Interxion Carrier Hotel Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5af1a76e40f0b642eb9cf949/Permit.pdf"
+      },
+      {
+        "bytes": 127437,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 11,
+        "sha256": "99dc6f805ca9af7814273b636cdd57642b611c8fb3985533245817ed568e6460",
+        "stem": "qp3434dr-decision",
+        "title": "Decision document: Interxion Carrier Hotel Limited: ",
+        "url": "https://assets.publishing.service.gov.uk/media/5af1a77940f0b642dfffd97a/Decision_Document_-_Brick_Lane_Data_Centre.pdf"
+      }
+    ],
+    "easting": 533830,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "INTERXION CARRIER HOTEL LIMITED",
+    "kind": "colocation",
+    "local_authority": "Tower Hamlets",
+    "northing": 182070,
+    "operator": "Digital Realty (Interxion)",
+    "permission_date": "2018-05-04",
+    "permission_number": "EPR/QP3434DR",
+    "postcode": "E1 6QL",
+    "publication_path": "/government/publications/e1-6ql-interxion-carrier-hotel-limited-environmental-permit-issued",
+    "publication_title": "E1 6QL, Interxion Carrier Hotel Limited: environmental permit issued",
+    "site_address": "5th Floor, 91-95, Brick Lane Data Centre EPR/QP3434DR, Brick Lane, London, E1 6QL"
+  },
+  "qp3533ed": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 260224,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 20,
+        "sha256": "8d63337f1e07c053eab885a5e4346af4952f41269f44608f571395c967b43f58",
+        "stem": "qp3533ed-permit",
+        "title": "Permit: Santander UK plc",
+        "url": "https://assets.publishing.service.gov.uk/media/5a7f20d740f0b6230268d9ac/Permit.pdf"
+      },
+      {
+        "bytes": 133724,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 22,
+        "sha256": "d88233f2d1f828a2938f46975274c930ac3ae8881162431f87cc4cf0acac9c34",
+        "stem": "qp3533ed-decision",
+        "title": "Decision document: Santander UK plc",
+        "url": "https://assets.publishing.service.gov.uk/media/5a7f45aeed915d74e33f5672/Decision_Document.pdf"
+      }
+    ],
+    "easting": 453710,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "SANTANDER UK PLC",
+    "kind": "enterprise",
+    "local_authority": "Blaby",
+    "northing": 298290,
+    "operator": "Santander",
+    "permission_date": "2016-03-15",
+    "permission_number": "EPR/QP3533ED",
+    "postcode": "LE19 0AL",
+    "publication_path": "/government/publications/le19-0al-santander-uk-plc-environmental-permit-issued",
+    "publication_title": "LE19 0AL, Santander UK plc: environmental permit issued",
+    "site_address": "Data Centre 1 and 2, Narborough Combustion Plant EPR/QP3533ED, Carlton Park, Narborough, Leicestershire, LE19 0AL"
+  },
+  "qp3706lh": {
+    "activity": "Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 546615,
+        "fetched": "2026-08-21",
+        "kind": "variation",
+        "pages": 34,
+        "sha256": "50288dd9e88748a5d8baf5fb724c9f2d811b65b49098944df272a18f46308a84",
+        "stem": "qp3706lh-permit",
+        "title": "Variation notice: PDCG (Group Services) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/68371f0e4115cfe5bfaa2cb0/Application_Variation_V002_Permit_-_20052025.pdf"
+      },
+      {
+        "bytes": 299353,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 28,
+        "sha256": "31d9bfc9b8c617048505abd873dc4740f2d55a3fc65f26250cf53fa0683fbfeb",
+        "stem": "qp3706lh-decision",
+        "title": "Decision document: PDCG (Group Services) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/68371f204115cfe5bfaa2cb1/Application_Variation_V002_Descision_Document_-_20052025.pdf"
+      }
+    ],
+    "easting": 522270,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "PDCG (GROUP SERVICES) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Brent",
+    "northing": 187210,
+    "operator": "unattributed",
+    "permission_date": "2022-09-04",
+    "permission_number": "EPR/QP3706LH",
+    "postcode": "NW2 7BA",
+    "publication_path": "/government/publications/nw2-7ba-pdcg-group-services-limited-environmental-permit-issued-eprqp3706lhv002",
+    "publication_title": "NW2 7BA, PDCG (Group Services) Limited: environmental permit issued \u2013 EPR/QP3706LH/V002",
+    "site_address": "JVC Business Park, 14, Data Centre Staples Corner - EPR/QP3706LH, Priestley Way, Staples Corner, London, NW2 7BA"
+  },
+  "qp3828la": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 481107,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "nLighten Milton Keynes Limited",
+    "kind": "colocation",
+    "local_authority": "Milton Keynes",
+    "northing": 238851,
+    "operator": "nLighten",
+    "permission_date": "2025-11-10",
+    "permission_number": "EPR/QP3828LA",
+    "postcode": "MK11 3JB",
+    "publication_path": null,
+    "site_address": "Milton Keynes Data Centre, 1 Brick Close, Kiln Farm, Milton Keynes, MK11 3JB"
+  },
+  "rp3328sv": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 484468,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "SANTANDER UK PLC",
+    "kind": "enterprise",
+    "local_authority": "Milton Keynes",
+    "northing": 238337,
+    "operator": "Santander",
+    "permission_date": "2023-12-01",
+    "permission_number": "EPR/RP3328SV",
+    "postcode": "MK9 1UP",
+    "publication_path": null,
+    "site_address": "Santander, Unity Place, 200 Grafton Gate, Milton Keynes, Buckinghamshire, MK9 1UP"
+  },
+  "sp3004sb": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [],
+    "easting": 497896,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "kind": "colocation",
+    "local_authority": "Runnymede",
+    "northing": 165526,
+    "operator": "Ark Data Centres",
+    "permission_date": "2025-11-14",
+    "permission_number": "EPR/SP3004SB",
+    "postcode": "KT16 0EE",
+    "publication_path": null,
+    "site_address": "Longcross Park, Longcross Park, Chobham Lane, Longcross, Chertsey, KT16 0EE"
+  },
+  "sp3028lm": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 504885,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "BT PLC",
+    "kind": "enterprise",
+    "local_authority": "Bedford",
+    "northing": 249986,
+    "operator": "BT",
+    "permission_date": "2025-08-18",
+    "permission_number": "EPR/SP3028LM",
+    "postcode": "MK40 1BA",
+    "publication_path": null,
+    "site_address": "Bedford ATE, Bedford ATE, Harpur Street, Bedford, Bedfordshire, MK40 1BA"
+  },
+  "sp3237ju": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 264901,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 20,
+        "sha256": "40d2ecdef754ed1f22076e9aac9e6c1ae92464154308c36d87ba10540f14a09b",
+        "stem": "sp3237ju-permit",
+        "title": "Permit: Telehouse International Corporation of Europe Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5cc3087bed915d05605aa3ab/Permit_SP3237JU.pdf"
+      },
+      {
+        "bytes": 108324,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 14,
+        "sha256": "70f929ad7c73375e2ba75ef9c30aeef0b9f3503198f63d7908aea1313bc2054e",
+        "stem": "sp3237ju-decision",
+        "title": "Decision document: Telehouse International Corporation of Europe Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5cc3089040f0b64039aede55/Decision_Document_SP3237JU.pdf"
+      }
+    ],
+    "easting": 538620,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "TELEHOUSE INTERNATIONAL CORPORATION OF EUROPE LIMITED",
+    "kind": "colocation",
+    "local_authority": "Tower Hamlets",
+    "northing": 180630,
+    "operator": "Telehouse",
+    "permission_date": "2019-04-24",
+    "permission_number": "EPR/SP3237JU",
+    "postcode": "E14 2EH",
+    "publication_path": "/government/publications/e14-2aa-telehouse-international-corporation-of-europe-limited-environmental-permit-issued",
+    "publication_title": "E14 2AA, Telehouse International Corporation of Europe Limited: environmental permit issued",
+    "site_address": "Docklands Technical centre, Docklands Technical Centre, 1 Paul Julius Close, Blackwall Way Poplar, London, E14 2EH"
+  },
+  "tp3120le": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 473748,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 21,
+        "sha256": "7f5a78cd3d0a5fecd00ebcc3fb9c704c27cf328ffdf92ff695d05e50e0a99e2c",
+        "stem": "tp3120le-permit",
+        "title": "Permit: Iron Mountain (UK) Data Centre Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6968eb235fd54abe6531a7ed/Application_Bespoke_A001_Permit_Issue_-_07012026.pdf"
+      },
+      {
+        "bytes": 218622,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 17,
+        "sha256": "55456e95585a593911e496913332a98726a75226c7afb1741bbdb165302127a2",
+        "stem": "tp3120le-decision",
+        "title": "Decision Document: Iron Mountain (UK) Data Centre Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6968eb326958e5645144b0d1/Application_Bespoke_A001_Decision_document_-_07012026.pdf"
+      }
+    ],
+    "easting": 495857,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "IRON MOUNTAIN (UK) DATA CENTRE LIMITED",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 181041,
+    "operator": "Iron Mountain Data Centers",
+    "permission_date": "2026-01-15",
+    "permission_number": "EPR/TP3120LE",
+    "postcode": "SL1 4PF",
+    "publication_path": "/government/publications/sl1-4pf-iron-mountain-uk-data-centre-limited-environmental-permit-issued-eprtp3120lea001",
+    "publication_title": "SL1 4PF, Iron Mountain (UK) Data Centre Limited: environmental permit issued \u2013 EPR/TP3120LE/A001",
+    "site_address": "LON3 Data Centre, 111 Buckingham Avenue, Slough, Berkshire, SL1 4PF"
+  },
+  "tp3500pb": {
+    "activity": "Directly Associated Activity (included and an MCP)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 409259,
+        "fetched": "2026-08-21",
+        "kind": "variation",
+        "pages": 32,
+        "sha256": "275082f067c045325c50eaaccddc598f1d0cc81a6dd996000cb4b993aa1dbf29",
+        "stem": "tp3500pb-variation",
+        "title": "Variation notice: Equinix (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/659d56477e39680013a81a40/Variation_Notice_TP3500PB-V003.pdf"
+      },
+      {
+        "bytes": 275403,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 23,
+        "sha256": "2a3faad8f6bf55e4bd435299bf89714714635728a447755dd70541e2926ab243",
+        "stem": "tp3500pb-decision",
+        "title": "Decision document: Equinix (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/659d5659aaae22000d56dc91/Decision_Document_TP3500PB-V003.pdf"
+      }
+    ],
+    "easting": 520930,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Ealing",
+    "northing": 182730,
+    "operator": "Equinix",
+    "permission_date": "2020-09-08",
+    "permission_number": "EPR/TP3500PB",
+    "postcode": "NW10 6PW",
+    "publication_path": "/government/publications/nw10-6pw-equinix-uk-limited-environmental-permit-issued-eprtp3500pbv003",
+    "publication_title": "NW10 6PW, Equinix (UK) Limited: environmental permit issued - EPR/TP3500PB/V003",
+    "site_address": "2 Powergate Business Park, Equinix (UK) Limited - EPR/TP3500PB, Volt Avenue, Park Royal, Ealing, NW10 6PW"
+  },
+  "tp3527sd": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 531864,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "Lumen Technologies UK Limited",
+    "kind": "enterprise",
+    "local_authority": "Islington",
+    "northing": 182819,
+    "operator": "Lumen",
+    "permission_date": "2024-09-27",
+    "permission_number": "EPR/TP3527SD",
+    "postcode": "EC1V 7EB",
+    "publication_path": null,
+    "site_address": "Goswell Road, 260-266 Goswell Road, Islington, London, EC1V 7EB"
+  },
+  "tp3530dv": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 338525,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 19,
+        "sha256": "e54ad3ceab693c0358f8a78eeea93e1b88b8730b9038172091b88510d386e52d",
+        "stem": "tp3530dv-permit",
+        "title": "Permit: Digital Realty (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5a97f797e5274a5b87c300e5/Permit_Digital_Realty__UK_.pdf"
+      },
+      {
+        "bytes": 215975,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 7,
+        "sha256": "306b6c774af62040f0b03128bfaa8a61b43073632d935875c4001026c7addbb4",
+        "stem": "tp3530dv-decision",
+        "title": "Decision document: Digital Realty (UK) Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5a97f7a5e5274a5b87c300e6/Decision_Document_Digital_Realty__UK_.pdf"
+      }
+    ],
+    "easting": 498490,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "DIGITAL REALTY (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Woking",
+    "northing": 159250,
+    "operator": "Digital Realty",
+    "permission_date": "2018-02-27",
+    "permission_number": "EPR/TP3530DV",
+    "postcode": "GU21 3BA",
+    "publication_path": "/government/publications/gu21-3ba-digital-realty-uk-limited-environmental-permit-issued",
+    "publication_title": "GU21 3BA, Digital Realty (UK) Limited: environmental permit issued",
+    "site_address": "Woking Data Centre, Woking Data Centre EPR/TP3530DV, Goldsworth Park Trading Estate, Unit 21, Kestrel Way, GU21 3BA"
+  },
+  "tp3839qu": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 370734,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 25,
+        "sha256": "13e6a77295ddfb35582a90169b0ba257522be04215344a57ada50851476c6013",
+        "stem": "tp3839qu-permit",
+        "title": "Permit Issued: Zenium UK2 Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/664359b5b7249a4c6e9d33da/Application_Bespoke_Issued_-_24042024.pdf"
+      },
+      {
+        "bytes": 206341,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 16,
+        "sha256": "4638e36844fa762cd73585f139afee046929f6d66306442a1fc0fea2cfc0736d",
+        "stem": "tp3839qu-decision",
+        "title": "Decision Document: Zenium UK2 Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/664359c8b7249a4c6e9d33db/Application_Bespoke_Decision_Document_-_24042024.pdf"
+      }
+    ],
+    "easting": 507850,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "ZENIUM UK2 LIMITED",
+    "kind": "colocation",
+    "local_authority": "Hillingdon",
+    "northing": 179300,
+    "operator": "Zenium",
+    "permission_date": "2024-05-14",
+    "permission_number": "EPR/TP3839QU",
+    "postcode": "UB7 9FN",
+    "publication_path": "/government/publications/ub7-9fn-zenium-uk2-limited-environmental-permit-issued-eprtp3839qua001",
+    "publication_title": "UB7 9FN, Zenium UK2 Limited: environmental permit issued \u2013 EPR/TP3839QU/A001",
+    "site_address": "Unit F, Prologis Distribution Park, London Two, London Two, Stockley Road, West Drayton, UB7 9FN"
+  },
+  "up3526lc": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 510296,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "kind": "hyperscale",
+    "local_authority": "Hillingdon",
+    "northing": 179447,
+    "operator": "Amazon Web Services",
+    "permission_date": "2025-10-15",
+    "permission_number": "EPR/UP3526LC",
+    "postcode": "UB3 3BL",
+    "publication_path": null,
+    "site_address": "Silverdale Estate Data Centre, Silverdale Estate Data Centre, Silverdale Road, Hayes, UB3 3BL"
+  },
+  "up3528sq": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 537592,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "CYXTERA TECHNOLOGY UK LIMITED",
+    "kind": "colocation",
+    "local_authority": "Tower Hamlets",
+    "northing": 179193,
+    "operator": "Cyxtera",
+    "permission_date": "2023-10-23",
+    "permission_number": "EPR/UP3528SQ",
+    "postcode": "E14 9NN",
+    "publication_path": null,
+    "site_address": "LHR2 Data Centre, 7 Greenwich View Pl, London, E14 9NN"
+  },
+  "up3624sw": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 397685,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 24,
+        "sha256": "67722b6995a7f1f64f2de335baf9607178fda38c786ad91bf73e64c9b11980fe",
+        "stem": "up3624sw-permit",
+        "title": "Permit: Virtus Holdco Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/67ceee0c1e2f37b1f3fd1400/Permit_London_14_Data_Centre.pdf"
+      },
+      {
+        "bytes": 217284,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 17,
+        "sha256": "c69a9aa5b2f2aae0fda256e17a041fb8e2828ca97745c361a40d1dd799a304e9",
+        "stem": "up3624sw-decision",
+        "title": "Decision Document: Virtus Holdco Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/67ceee211e2f37b1f3fd1401/Decision_Document_London_14_Data_Centre.pdf"
+      }
+    ],
+    "easting": 508045,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "VIRTUS HOLDCO LIMITED",
+    "kind": "colocation",
+    "local_authority": "Hillingdon",
+    "northing": 179594,
+    "operator": "VIRTUS Data Centres",
+    "permission_date": "2025-03-10",
+    "permission_number": "EPR/UP3624SW",
+    "postcode": "UB3 1QF",
+    "publication_path": "/government/publications/ub3-1qf-virtus-holdco-limited-environmental-permit-issued-eprup3624swa001",
+    "publication_title": "UB3 1QF, Virtus Holdco Limited: environmental permit issued - EPR/UP3624SW/A001",
+    "site_address": "LONDON14 Datacentre: DC6, Unit D, Plot C, Prologis park Heathrow, LONDON14 Datacentre, Stockley Road, Hayes, UB3 1QF"
+  },
+  "vb3295yy": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 538084,
+    "generators": [
+      "dc_in_name",
+      "operator_address"
+    ],
+    "holder": "COLT TECHNOLOGY SERVICES",
+    "kind": "colocation",
+    "local_authority": "Tower Hamlets",
+    "northing": 180617,
+    "operator": "Colt Data Centre Services",
+    "permission_date": "2022-10-06",
+    "permission_number": "EPR/VB3295YY",
+    "postcode": "E14 9XX",
+    "publication_path": null,
+    "site_address": "COLT DATA CENTRE, Poplar Business Park, WILLIAMSBURG PLAZA, LONDON, TOWER HAMLETS, E14 9XX"
+  },
+  "vp3225sc": {
+    "activity": "Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [],
+    "easting": 520804,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "VDC LHR21 LIMITED",
+    "kind": "colocation",
+    "local_authority": "Ealing",
+    "northing": 183004,
+    "operator": "Vantage Data Centers",
+    "permission_date": "2025-07-09",
+    "permission_number": "EPR/VP3225SC",
+    "postcode": "NW10 6PF",
+    "publication_path": null,
+    "site_address": "37-39, Vantage LHR21, NORTH ACTON ROAD, LONDON, EALING, NW10 6PF"
+  },
+  "vp3235dj": {
+    "activity": "Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [
+      {
+        "bytes": 397400,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 20,
+        "sha256": "27631e2f9366b631e8853c161106bd476799e7a8bef3c6ce09a0dfccd67d44c3",
+        "stem": "vp3235dj-permit",
+        "title": "Permit: Ark Data Centres Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5e328b0ced915d09393b8808/Permit_VP3235DJ.pdf"
+      },
+      {
+        "bytes": 209266,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 7,
+        "sha256": "09928a600591e7c49f2874d24bd6724b40cd82be69cd413a0b24897c4868d906",
+        "stem": "vp3235dj-decision",
+        "title": "Decision document: Ark Data Centres Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5e328b1eed915d093b9d3d4b/Decision_Document_VP3235DJ.pdf"
+      }
+    ],
+    "easting": 484070,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "kind": "colocation",
+    "local_authority": "Hart",
+    "northing": 154340,
+    "operator": "Ark Data Centres",
+    "permission_date": "2020-01-27",
+    "permission_number": "EPR/VP3235DJ",
+    "postcode": "GU14 0LH",
+    "publication_path": "/government/publications/gu14-0lh-ark-data-centres-limited-environmental-permit-issued-eprvp3235dja001",
+    "publication_title": "GU14 0LH, Ark Data Centres Limited: environmental permit issued - EPR/VP3235DJ/A001",
+    "site_address": "A57, Cody Park, Cody Park Data Centre, Cody Park Data Centre, Old Ively Road, Farnborough, Hampshire, GU14 0LH"
+  },
+  "vp3722lt": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 359750,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "nLighten Bristol Limited",
+    "kind": "colocation",
+    "local_authority": "South Gloucestershire",
+    "northing": 182582,
+    "operator": "nLighten",
+    "permission_date": "2025-12-16",
+    "permission_number": "EPR/VP3722LT",
+    "postcode": "BS32 4SX",
+    "publication_path": null,
+    "site_address": "Bristol Data Centre, 1120 AZTEC WEST, BRISTOL, SOUTH GLOUCESTERSHIRE, BS32 4SX"
+  },
+  "vp3821lt": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 537976,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "nLighten London Limited",
+    "kind": "colocation",
+    "local_authority": "Broxbourne",
+    "northing": 208731,
+    "operator": "nLighten",
+    "permission_date": "2025-10-10",
+    "permission_number": "EPR/VP3821LT",
+    "postcode": "EN11 0NT",
+    "publication_path": null,
+    "site_address": "Abbey House, Hoddesdon Data Centre, Geddings Road, Hoddesdon, Hertfordshire, EN11 0NT"
+  },
+  "vp3929sh": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 409042,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "Vodafone Limited",
+    "kind": "enterprise",
+    "local_authority": "Birmingham",
+    "northing": 290459,
+    "operator": "Vodafone",
+    "permission_date": "2023-05-26",
+    "permission_number": "EPR/VP3929SH",
+    "postcode": "B6 7JJ",
+    "publication_path": null,
+    "site_address": "Unit 14, Gravelly MTX, Junction 6 Industrial Park, Electric Avenue, Birmingham, B6 7JJ"
+  },
+  "we2798ab": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 379914,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Salford",
+    "northing": 401112,
+    "operator": "Equinix",
+    "permission_date": "2023-08-18",
+    "permission_number": "EPR/WE2798AB",
+    "postcode": "M27 8BX",
+    "publication_path": null,
+    "site_address": "Equinix MA6, MA5, Swinton, Greater Manchester, M27 8BX"
+  },
+  "we4588ab": {
+    "activity": "Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 585067,
+        "fetched": "2026-08-21",
+        "kind": "variation",
+        "pages": 28,
+        "sha256": "2432ec6ac148ef0062e1246f047eb5805cc2f3beb55e543c7dcf2fa4d41a56fb",
+        "stem": "we4588ab-variation",
+        "title": "Variation Notice: Harlow Operations Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6a202c57dbcb60fc6ccb29d1/Application_Variation_V002_Notice_-03062026.pdf"
+      },
+      {
+        "bytes": 205399,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 17,
+        "sha256": "3b431a69bbc89bc0811cce33dbaf4df40583bb3a2733699de84a4c198a47b725",
+        "stem": "we4588ab-decision",
+        "title": "Decision Document: Harlow Operations Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/6a202c72dbcb60fc6ccb29d2/Application_Variation_V002_Decision_Document_-_03062026.pdf"
+      }
+    ],
+    "easting": 547072,
+    "generators": [
+      "operator_address"
+    ],
+    "holder": "HARLOW OPERATIONS LIMITED",
+    "kind": "colocation",
+    "local_authority": "Harlow",
+    "northing": 210069,
+    "operator": "Kao Data",
+    "permission_date": "2023-08-18",
+    "permission_number": "EPR/WE4588AB",
+    "postcode": "CM17 9NA",
+    "publication_path": "/government/publications/cm17-9na-harlow-operations-limited-environmental-permit-issued-eprwe4588abv002",
+    "publication_title": "CM17 9NA, Harlow Operations Limited: environmental permit issued - EPR/WE4588AB/V002",
+    "site_address": "Kao Data Campus, KAO Data Harlow Campus, London Road, Harlow, Essex, CM17 9NA"
+  },
+  "we9618aa": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 384400,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "kind": "colocation",
+    "local_authority": "Manchester",
+    "northing": 396410,
+    "operator": "Equinix",
+    "permission_date": "2021-01-06",
+    "permission_number": "EPR/WE9618AA",
+    "postcode": "M15 6SE",
+    "publication_path": null,
+    "site_address": "Enterprise House, MA1, Lloyd Street North, Manchester Science Park, Lancashire, M15 6SE"
+  },
+  "xb3299yg": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 379766,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "VIRGIN MEDIA LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Salford",
+    "northing": 397667,
+    "operator": "Virgin Media",
+    "permission_date": "2023-05-17",
+    "permission_number": "EPR/XB3299YG",
+    "postcode": "M50 2UE",
+    "publication_path": null,
+    "site_address": "400 Metroplex, T1520 Metroplex, Broadway, Salford, M50 2UE"
+  },
+  "xp3624mn": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 380952,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "Vodafone Limited",
+    "kind": "enterprise",
+    "local_authority": "Gloucester",
+    "northing": 214980,
+    "operator": "Vodafone",
+    "permission_date": "2026-05-13",
+    "permission_number": "EPR/XP3624MN",
+    "postcode": "GL2 4LS",
+    "publication_path": null,
+    "site_address": "Gloucester Data Centre facility, Gloucester Data Centre facility, located at Falcon Close, Quedgeley, Gloucester, Gloucestershire, GL2 4LS"
+  },
+  "yp3329sb": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 424747,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 34,
+        "sha256": "a89726d2127fd3011bcbd6fe524d949fe68f47cb59656eb23ef792d273678da0",
+        "stem": "yp3329sb-permit",
+        "title": "Permit: VDC LHR11 Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/66cefb03913d4f9812597bd5/Permit_YP3329SB.pdf"
+      },
+      {
+        "bytes": 309009,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 28,
+        "sha256": "65b4c58642baf590b35b1638ce0169124323126a923db2cdce90f63fef5d7d44",
+        "stem": "yp3329sb-decision",
+        "title": "Decision document: VDC LHR11 Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/66cefb13704a0794913a89a2/Decision_Document_YP3329SB.pdf"
+      }
+    ],
+    "easting": 521150,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "VDC LHR11 LIMITED",
+    "kind": "colocation",
+    "local_authority": "Ealing",
+    "northing": 182355,
+    "operator": "Vantage Data Centers",
+    "permission_date": "2024-08-28",
+    "permission_number": "EPR/YP3329SB",
+    "postcode": "NW10 6NF",
+    "publication_path": "/government/publications/nw10-6nf-vdc-lhr11-limited-environmental-permit-issued-epryp3329sb",
+    "publication_title": "NW10 6NF, VDC LHR11 Limited: environmental permit issued - EPR/YP3329SB",
+    "site_address": "2 Black Arrow House, LHR11/12, Chandos Rd, London, NW10 6NF"
+  },
+  "yp3426sy": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 531855,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "Volta Data Centres Limited",
+    "kind": "colocation",
+    "local_authority": "Islington",
+    "northing": 182227,
+    "operator": "Volta Data Centres",
+    "permission_date": "2024-06-17",
+    "permission_number": "EPR/YP3426SY",
+    "postcode": "EC1V 0AB",
+    "publication_path": null,
+    "site_address": "Volta Data Centre, 36-43 Great Sutton Street, London, EC1V 0AB"
+  },
+  "yp3633qa": {
+    "activity": "New Medium Combustion Plant before 20th December 2018 - 25A(a) & 12(1A)(a)",
+    "documents": [],
+    "easting": 496260,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "NTT GLOBAL DATA CENTERS EMEA UK LTD",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 180610,
+    "operator": "NTT Global Data Centers",
+    "permission_date": "2022-06-20",
+    "permission_number": "EPR/YP3633QA",
+    "postcode": "SL1 4BG",
+    "publication_path": null,
+    "site_address": "665 to 670, NTT GDC EMEA UK Limited EPR/YP3633QA, Ajax Avenue, Slough, SL1 4BG"
+  },
+  "yp3724sq": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 436236,
+    "generators": [
+      "operator_name"
+    ],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "kind": "enterprise",
+    "local_authority": "Sunderland",
+    "northing": 552087,
+    "operator": "Barclays",
+    "permission_date": "2024-01-15",
+    "permission_number": "EPR/YP3724SQ",
+    "postcode": "SR3 3XW",
+    "publication_path": null,
+    "site_address": "Doxford Park, Barclays Sunderland, 35 Admiral Way, Sunderland, SR3 3XW"
+  },
+  "yp3728lp": {
+    "activity": "MCP",
+    "documents": [],
+    "easting": 408356,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "nLighten UK Data Centres Limited",
+    "kind": "colocation",
+    "local_authority": "Birmingham",
+    "northing": 286714,
+    "operator": "nLighten",
+    "permission_date": "2025-11-21",
+    "permission_number": "EPR/YP3728LP",
+    "postcode": "B9 4ER",
+    "publication_path": null,
+    "site_address": "Garrison Technology Park, Birmingham Data Centre, 3 Westley Street, Birmingham, B9 4ER"
+  },
+  "yp3935qm": {
+    "activity": "Directly Associated Activity (included and an MCP)|Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 230421,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 25,
+        "sha256": "59a275ed42a1a3d7fc6c24a153a9dbe13d9b894e5e5a5afd39e2046f25c0340e",
+        "stem": "yp3935qm-permit",
+        "title": "Permit: Cyxtera Technology UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5d23426e40f0b609cd040678/Permit_Issued__pdf_.pdf"
+      },
+      {
+        "bytes": 135843,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 18,
+        "sha256": "eb083425aa277138e6c547f599a2d50237522bef8fb7d145801d30854cbb6359",
+        "stem": "yp3935qm-decision",
+        "title": "Decision document: Cyxtera Technology UK Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/5d23428040f0b609f298d9e6/Decision_document__pdf_.pdf"
+      }
+    ],
+    "easting": 495990,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "LHR1 Data Center Holdings Limited",
+    "kind": "colocation",
+    "local_authority": "Slough",
+    "northing": 180690,
+    "operator": "unattributed",
+    "permission_date": "2019-07-01",
+    "permission_number": "EPR/YP3935QM",
+    "postcode": "SL1 4DG",
+    "publication_path": "/government/publications/sl1-4dg-cyxtera-technology-uk-limited-environmental-permit-issued-epryp3935qma001",
+    "publication_title": "SL1 4DG, Cyxtera Technology UK Limited: environmental permit issued \u2013 EPR/YP3935QM/A001",
+    "site_address": "628 - 635, Ajax Avenue Datacentre, Ajax Avenue, Slough, Berkshire, SL1 4DG"
+  },
+  "zp3128sd": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|MCP",
+    "documents": [],
+    "easting": 535013,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "GLOBAL INFRASTRUCTURE UK LIMITED",
+    "kind": "colocation",
+    "local_authority": "Broxbourne",
+    "northing": 201461,
+    "operator": "unattributed",
+    "permission_date": "2025-05-28",
+    "permission_number": "EPR/ZP3128SD",
+    "postcode": "EN8 8XH",
+    "publication_path": null,
+    "site_address": "Data Center at Maxwells Farm West, Great Cambridge Road, Cheshunt, EN8 8XH"
+  },
+  "zp3238dk": {
+    "activity": "Directly Associated Activity (included and an MCP)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)",
+    "documents": [],
+    "easting": 533100,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "UBS AG",
+    "kind": "enterprise",
+    "local_authority": "Lewisham",
+    "northing": 181790,
+    "operator": "UBS",
+    "permission_date": "2019-06-03",
+    "permission_number": "EPR/ZP3238DK",
+    "postcode": "EC2M 2QY",
+    "publication_path": null,
+    "site_address": "5, Broadgate Data Centre - EPR/ZP3238DK, Broadgate, London, EC2M 2QY"
+  },
+  "zp3321sh": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|MCP",
+    "documents": [],
+    "easting": 507523,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "SF LHR LTD",
+    "kind": "colocation",
+    "local_authority": "Hounslow",
+    "northing": 173102,
+    "operator": "unattributed",
+    "permission_date": "2025-12-15",
+    "permission_number": "EPR/ZP3321SH",
+    "postcode": "TW14 8RS",
+    "publication_path": null,
+    "site_address": "SF LHR Ltd, LON1 Data Centre, Unit 4 Westgate Industrial Estate, Feltham, TW14 8RS"
+  },
+  "zp3527ss": {
+    "activity": "Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)",
+    "documents": [
+      {
+        "bytes": 593743,
+        "fetched": "2026-08-21",
+        "kind": "permit",
+        "pages": 33,
+        "sha256": "5de3beea2ce2f709ae059ebbae9d46bbb9896afef727b4b5b04581cc78363417",
+        "stem": "zp3527ss-permit",
+        "title": "Permit: Ark Data Centres Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/68e64d858c1db6022d0ca226/Application_Bespoke_A001_Permit_-_03102025.pdf"
+      },
+      {
+        "bytes": 251073,
+        "fetched": "2026-08-21",
+        "kind": "decision",
+        "pages": 25,
+        "sha256": "376508b0a4532ca6b602da7adeaa53b4fe162ce62c6abb3dd2abfbeadae6bca5",
+        "stem": "zp3527ss-decision",
+        "title": "Decision Document: Ark Data Centres Limited",
+        "url": "https://assets.publishing.service.gov.uk/media/68e64d9649e17d00a56fff0e/Application_Bespoke_A001_Decision_Document_-_03102025.pdf"
+      }
+    ],
+    "easting": 510436,
+    "generators": [
+      "dc_in_name",
+      "operator_name"
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "kind": "colocation",
+    "local_authority": "Hillingdon",
+    "northing": 179275,
+    "operator": "Ark Data Centres",
+    "permission_date": "2025-10-08",
+    "permission_number": "EPR/ZP3527SS",
+    "postcode": "UB3 4QQ",
+    "publication_path": "/government/publications/ub3-4qq-ark-data-centres-limited-environmental-permit-issued-eprzp3527ssa001",
+    "publication_title": "UB3 4QQ, Ark Data Centres Limited: environmental permit issued - EPR/ZP3527SS/A001",
+    "site_address": "Bulls Bridge Industrial Estate, Union Park, North Hyde Gardens, Hayes, UB3 4QQ"
+  }
+}

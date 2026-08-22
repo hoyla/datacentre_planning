@@ -1,0 +1,41 @@
+ 
+                       Page 16 of 17 
+OFFICIAL 
+OFFICIAL 
+applied to the operator are consistent across businesses in this sector and have 
+been set to achieve the required legislative standards. 
+Consultation Responses 
+The following summarises the responses to consultation with other organisations 
+and our notice on GOV.UK for the public and the way in which we have 
+considered these in the determination process. 
+Responses from organisations listed in the consultation 
+section: 
+Response received from UK Health Security Agency. 
+Brief summary of issues raised:  
+1. Recommendation that two sensitive human receptor locations which are 
+not referenced within the applicant’s air quality assessment are 
+considered. 
+2. Recommendation that the modelling of the stack height is appropriate. 
+3. Recommendation that the noise impact assessment is considered when 
+available. 
+4. Recommendation that a cumulative assessment for health impacts be 
+undertaken that takes account of other applications for data centres within 
+the same trading estate. 
+ 
+Summary of actions taken: 
+As described in more detail in the Air Quality section above, we audited the 
+applicant’s air quality assessment, including undertaking detailed check 
+modelling and completing sensitivity analysis.  The stack height within the 
+submitted reports match those used within the applicant’s modelling files.  This 
+modelling forms the basis of their results and conclusions.  We included sensitive 
+human receptors which were not included by the applicant and are satisfied that 
+worst-case emissions from the site will not cause an exceedance of the relevant 
+ES at all receptors. 
+In conclusion, we are satisfied that no significant effects on human health are 
+likely from the operation of the proposed installation.   
+With regard to the recommendation that the overall cumulative impact is 
+considered for other similar activities in the locality at application stage, we 
+requested the operator provide a site management procedure that considers 
+routine testing of standby generators across the three Virtus application data 
+centre sites in the locality (this site and the LON9 Data Centre and Virtus Slough 
+Campus Data Centres).  The procedure ensures that no more than one generator 

@@ -1,0 +1,77 @@
+Permit number                              
+EPR/CP3409BH 11 
+Schedule 1 – Operations  
+Table S1.1 activities 
+Activity 
+reference  
+Activity listed in Schedule 
+1 of the EP Regulations  
+Description of specified 
+activity  
+Limits of specified 
+activity  
+AR1 S1.1 A1 (a) Operation of emergency 
+standby generators burning 
+diesel solely for the purpose 
+of providing electricity to the 
+installation in the event of a 
+failure of supply from the 
+National Grid comprising;  
+ 
+12 x 8 MWth engines 
+ 
+From receipt of raw material 
+(diesel) to combustion in 
+Emergency standby 
+generators for electricity 
+production to exhaust of 
+products of combustion to 
+atmosphere to generation, 
+storage and dispatch of 
+wastes. 
+ 
+Electricity produced at the 
+installation cannot be 
+exported to the National 
+Grid.  
+ 
+The operational hours of 
+the installation shall not 
+exceed the specifications 
+set out in condition 2.3.5.
+ 
+ 
+Generators shall only be 
+operated for on-site 
+emergencies and not for 
+elective power generation, 
+such as Balancing 
+Services, Demand Side 
+Response operations 
+including Frequency Control 
+Demand Management 
+(FCDM) or Triad 
+Avoidance. 
+ Directly Associated Activity 
+AR2 Storage or raw materials From receipt of raw 
+materials to use within the 
+facility. 
+AR3 Surface water drainage Input to site drainage 
+system until discharge to 
+surface water drain via 
+interceptors. 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application Application forms B2 and B3 and all referenced supporting 
+information.  
+ 
+Duly Made 
+13/07/2020 
+Response to Schedule 5 
+Notice dated 24/08/2020
+  
+Response to Schedule 5 providing further information 
+regarding: BAT, Plant sixing and number, Plant configuration, 
+Thermal input, Stack height and configuration, Maintenance 
+28/09/2020 

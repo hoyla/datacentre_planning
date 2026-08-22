@@ -1,0 +1,44 @@
+ 
+                       Page 19 of 20 
+for when works are conducted near such assets. A National Grid Engineer has 
+reviewed the proposal and confirmed that there is no objection to the application.  
+Summary of actions taken: no action required. 
+ 
+Response received from: Public Health England (now the UK Health Security 
+Agency). 
+Brief summary of issues raised: The operator identified the main emissions of 
+concern from the generators as nitrogen dioxide, sulphur dioxide and 
+particulates. They identify that there are 5 separate power supplies and therefore, 
+the risk of an outage across the whole site is unlikely. They note that an air 
+quality modelling assessment has been submitted and that it does not consider 
+an emergency outage scenario. They note that there are exceedances of the 
+NO2 1 hour-mean, PM10 24 hour-mean and SO2 24 hour-mean. They note that 
+this has the potential for health impacts. There is the potential for NO2 to exceed 
+high and very high pollution bands of DEFRA air quality index. They identify that 
+the installation is within an Air Quality Management Area and that the 
+considerations of local authority should be taken into account. They recommend 
+additional mitigation measures are needed to prevent exceedances of air quality 
+thresholds, that boundary monitoring is included and that testing is only 
+undertaken in favourable weather conditions. The potential for noise is discussed 
+and that appropriate measures should be in place. There is no accident 
+management plan included with the application.  
+Summary of actions taken: All of the main emissions as identified by PHE have 
+been assessed in the air quality assessment. We agree that the chance of all 
+generators operating is unlikely. A revised air quality modelling report was 
+submitted on 19/09/22 which included an emergency scenario, we have audited 
+this report and agree with its conclusions. Where the modelling reports show any 
+exceedances the applicant/the EA has undertaken statistical analysis to 
+determine the probability of an exceedance occurring. For all pollutants and 
+assessment criteria the risk is low. When making this conclusion we also took 
+into account that an exceedance would need to coincide with the worst-case 
+meteorological data and that there has been no historic operation of the 
+generators during an electrical outage since the site became operational in 2011. 
+It is also on this basis that we do not consider the need for any mitigation 
+measures to be installed or that any other stipulations are put in place e.g. 
+regarding weather conditions. However, we have included improvement 
+conditions in the permit requesting that the operator should consider potential 
+options to reduce emissions/ improve dispersion in order to improve their 
+environmental performance. This is primarily to bring the installation in line with 
+BAT emission standards.  
+We consulted with the local authority as part of the consultation process. They 
+did not raise any concerns regarding the Air Quality Management Area. We have 

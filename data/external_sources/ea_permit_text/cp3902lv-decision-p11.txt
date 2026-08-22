@@ -1,0 +1,38 @@
+ 
+EPR/CP3902LV/V003 
+NTT Dagenham Data Centre  Page 11 of 20 
+LON1B commissioning tests 
+We predict exceedances of the daily NOx critical level of 200 μg/m3 at two local 
+nature sites (ER1 and ER2) for the commissioning scenario. There are however 
+high uncertainties associated with building downwash effects. Our sensitivity 
+analysis indicates that without building downwash effects, exceedances are 
+unlikely. We have a low level of confidence in predictions at these locations, but 
+we cannot rule out exceedances. We note that the physical extent of the 
+exceedances is limited to a small area to the south of the installation. 
+The applicant had not specified how long the commissioning period would be and 
+have assumed a full year of operation in their modelling, which may be 
+conservative. 
+We asked the applicant for further information to provide clarification for the 
+commissioning period. They confirmed that the commissioning period would just 
+be applicable until the LON1B SBGs were fully commissioned and operational. 
+This means that impacts associated with commissioning are not an ongoing 
+event, but just cover the time taken to complete the commissioning. 
+On the basis of the limited time associated with the commissioning period, 
+modelling uncertainties and the small area of exceedance, we are satisfied that 
+we do not need to include any additional controls in the permit. 
+AIR QUALITY MANAGEMENT PLAN (AQMP) 
+ 
+We have included an improvement condition which requires the operator to have 
+a written AQMP including both the LON1A and LON1B SBGs to manage any 
+issues for prolonged emergency running of the plant. 
+ 
+An AQMP will be provided in consultation with the Local Authority. This will 
+outline the response measures to be taken in the event of a National Grid failure 
+and the operation of the SBGs. This will include consideration of the predicted 
+potential impact indicated by the air dispersion modelling at individual receptors, 
+timescales for response measures, considerations of local conditions relevant 
+during a grid failure, contingency measures and how this plan will be reviewed. 
+EMISSION LIMITS 
+As the plant is limited to less than 500 hours of emergency operation per year by 
+permit condition 2.3.5 and less than 50 hours per year for maintenance and 
+testing in permit table S1.2, air emission limits are not applicable. 

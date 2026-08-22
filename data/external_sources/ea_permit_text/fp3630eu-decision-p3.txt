@@ -1,0 +1,41 @@
+ 
+ Page 3 of 17 
+The Applicant has conservatively assessed the impact on air quality based on site 
+load (assumed to be 75%) for 72 hours with all but one generator from each phase 
+operating cumulatively. This is in line with Environment Agency guidance.   
+3. Air Quality Assessment 
+ 
+The Applicant’s assessment of the impact of air quality is set out in: 
+• Air Quality Dispersion Modelling Assessment at LON1 -East. April. 2025’ – 
+assessment of emergency scenario (note that this version of the AQ 
+assessment has modelled ‘testing and maintenance’ scenario, however the 
+‘testing and maintenance’ schedule was subsequently updated). 
+• Air Quality Dispersion Modelling Assessment at LON1 -East. Oct. 2025’ – 
+assessment of ‘testing and maintenance’ scenario. 
+ 
+The assessments comprised: 
+• Dispersion modelling of emissions to air from the operation of the 
+installation. 
+• A study of the impact of emissions on nearby sensitive conservation sites. 
+ 
+The air dispersion modelling carried out by the applicant used the ADMS 6.0 
+software which we consider an appropriate air quality modelling tool for 
+regulatory purposes. The model used 5 years meteorological data (2015-2019) 
+from the London City Airport meteorological station and included the potential 
+effects of buildings in the modelling domain on the dispersion of the emitted 
+pollutants. The assessment carried out by the Applicant also included a 
+sensitivity analysis of the modelling set up and a statistical interpretation of short-
+term exceedances of air quality standards. The statistical analysis was based on 
+the hypergeometric probability distribution and followed the methodology set out 
+in our web guidance on dispersion modelling assessment for generators. The 2 
+operating scenarios detailed above were modelled. 
+Each generator has its own  exhaust stack. Phase III, IV and V generators are 
+14.2m high; and Phase VI generators are 13.97m high. 
+Generator operating parameters and emission concentrations are based on the 
+generator manufacturer’s performance and emission data.  
+Each of the 8 new generators is fitted with Selective Catalytic Reduction (SCR) 
+NOx abatement. It has been estimated by the Applicant that it will take 10 minutes 
+for the SCR to warm-up before becoming effective. Once the SCR is effective, it is 
+proposed that the NOX emissions from the generators will be reduced by 95%. The 
+use of SCR will therefore only be applicable to the annual testing scenario and the 
+emergency scenario. 

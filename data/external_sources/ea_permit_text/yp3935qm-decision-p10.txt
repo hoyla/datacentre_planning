@@ -1,0 +1,47 @@
+EPR/YP3935QM/A001 
+Date issued: 01/07/19  10 
+Containment and Prevention of Pollution to Ground and Groundwater: 
+Tanks/Bunds/Pipework and Containment: 
+Cyxtera currently has the capacity for the storage of up to 258,300 litres of diesel on the site with an 
+additional 6,800 litres required for the four proposed standby generators as part of the site expansion plan.  
+There are three integrally bunded, horizontal, above ground bulk storage tanks: 
+- 1 x 96,000 litres; 
+- 1 x 84,000 litres; 
+- 1 x 56,000 litres. 
+Each standby generator also has its own day tank: 
+- 5 x 1,100 litres 
+- 4 x 1,700 litres 
+- 5 x 2,000 litres 
+- 4 x 1,700 litres (for proposed additional generators). 
+The bulk storage tanks are designed to provide adequate secondary containment – 110% of the internal 
+volume of the tank. They have high and low level alarms and are fitted with leak detection alarms. 
+Remote fill points are used for the filling of the bulk tanks on the LO5 data centre site. These are above 
+ground double-skinned pipes (pipe in pipe arrangement) fitted with leak detection alarms. The remote fill 
+points are also fitted with drip trays to capture any minor spills during delivery. With respect to the LO1 data 
+centre, the diesel fill points are located directly on the bulk diesel storage tank within a tank cabinet and the 
+fill point in each cabinet is also provided with a drip tray. 
+The fuel pipework from the bulk diesel tanks to the standby generator day tanks are also double skinned 
+(pipe in pipe arrangement) and have leak detection alarms. 
+Each standby generator is located, along with its own diesel day tank, in a steel container. Nine of these day 
+tanks are single skinned whilst five are double skinned. The tanks that would serve the proposed four new 
+standby generators are proposed to be double-skinned. Leakage from these tanks would be contained within 
+the raised floor (200cm raised) of the container unit.  
+The containment provided by the containers is sufficient to retain the entire contents of the day tanks within 
+those containers: 
+- The 1,100 litres day tanks are housed in container s with containment capacity of 6,030 litres; 
+- The 1,700 litres and 2,000 litres day tanks are housed in containers with containment capacity of 
+5,820 litres. 
+All the day tanks have fuel level gauges and low/critical low and high/critical high alarms which automatically 
+report to the site Building Management System. 
+Should there be a risk of leakage exiting the container unit, each container is fitted with a bund alarm. All 
+containers containing diesel tanks alarm both locally and on the Building Management System.  
+A comprehensive site inspection and maintenance programme is in place to prevent or detect leaks from 
+equipment containing diesel. Bulk diesel storage tanks and associated pipework are subject to annual 
+inspections, including tank integrity testing, by a specialist third-party contractor. In addition to tanks and 
+pipework, this inspection considers the bunding, fill pipes, pumps/dispensers and spill kits. 
+Cyxtera personnel also undertake monthly visual inspections of the bulk diesel tanks and daily inspections of 
+the individual standby generators and their associated day tanks. 
+All deliveries of diesel to site are supervised by trained Cyxtera personnel from the point at which the 
+delivery vehicle arrives at the Cyxtera site. During diesel offloading operations, surface water drainage grids 
+in proximity to the offloading operation are temporarily covered with a heavy duty rubber mat or spill 
+absorbent socks are placed around them. 

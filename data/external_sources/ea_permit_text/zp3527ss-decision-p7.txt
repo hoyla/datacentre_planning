@@ -1,0 +1,34 @@
+ 
+EPR/ZP3527SS/A001                            Page 7 of 25 
+Human Receptors 
+The Consultant modelled 20 discrete human receptor locations to represent 
+relevant public exposure. 
+Ecological Receptors 
+They considered the following protected European sites:  
+• South West London Waterbodies Special Protection Area (SPA) 
+• Richmond Park Special Area of Conservation (SAC) 
+ 
+They also considered 12 Sites of Importance for Nature Conservation (SINCs) 
+and 1 Priority Woodland as receptor points. 
+The data centre is situated in an Air Quality Management Area (AQMA) 
+(Hillingdon AQMA) declared by the London Borough of Hillingdon in 2003 for 
+exceedances of the UK Air Quality Standard (AQS) for annual mean 
+concentrations of nitrogen dioxide (NO2). The site is also located in close 
+proximity to an Air Quality Focus Area (AQFA), which is an area of known 
+elevated concentrations of NO2 and high levels of human exposure.  
+The Consultant assessed four scenarios: three testing and one emergency. 
+Scenario 1: Monthly start up testing - all generators run simultaneously at 10% 
+load for 15 minutes. 
+Scenario 2: Quarterly testing - all generators run simultaneously at 80% load for 
+1 hour. 
+Scenario 3: Annual on load testing - generators run independently at 100% load 
+for 2 hours each. 
+Scenario 4: Emergency Scenario - all generators operate simultaneously at 
+100% load for 72 hours. 
+Their conclusions were: 
+Impact on Human Health Receptors 
+• No exceedances of any Long Term (LT) environmental standards (ES) for 
+any modelled scenario. 
+• No exceedances of any Short term (ST) ES for any modelled scenario. 
+• No exceedances of acute exposure guideline levels (AEGL) for any 
+modelled scenario. 

@@ -1,0 +1,49 @@
+EPR/YP3935QM/A001 
+Date issued: 01/07/19  11 
+Cyxtera has a number of formal procedures and a site emergency action plan outlining actions to be taken in 
+the event of a leak or spillage of diesel. Cyxtera personnel are trained in the requirements of these 
+procedures and have also received emergency spill training from an approved external contractor.  
+To avoid the risk of collision damage and potential loss of diesel, the bulk storage tanks are constructed on 
+raised concrete plinths and located away from areas of routine traffic activity. For those tanks that could 
+experience traffic movements in their vicinity, crash barriers are provided around them.  
+Small amounts of other potentially polluting raw materials are used in operation/maintenance of the standby 
+generators: 
+- Lubricating oil; 
+- Transformer oil (not containing polychlorinated biphenyls). 
+However neither of these will be permanently stored on site. Instead they will be brought to site for specific 
+scheduled or unplanned maintenance activities. 
+ 
+Surface Infrastructure, Drainage and Soakaways: 
+The site sits on a concrete base and is covered in good quality hardstanding that reduces the potential for 
+any leak of diesel or other materials to reach underlying soils or groundwater. Further protection from 
+pollution is provided by the Slough Industrial Estate drainage infrastructure. 
+Regular documented inspections of diesel storage tanks, standby generator containers and distribution 
+pipework are in place to ensure that there are no leaks of diesel from any of this infrastructure. 
+There are five release points for surface water from site to be discharged to municipal foul sewer, S1 – S5. 
+Discharge points S1 and S4 serve surface water runoff from non-operational areas of site or solely roof 
+water runoff. Discharges offsite through S1 and S4 do not pass through an oil interceptor. Discharge points 
+S2 and S3, located close to car parking areas, and S5, have oil interceptors in place. The points discharge of 
+surface water runoff from the rear yard of data centre LO1 to municipal foul sewer. We have required the 
+operator to carry out weekly visual assessment of discharge through S5 as this is the only release point 
+within the operational site area where diesel may be present.  
+The operator stated that the geology of the site is drift clay over the clay of the Lambeth Group. However we 
+believe that the geology of the site is Langley Silt (unproductive stratum) over Taplow Gravel Formation 
+(Principal Aquifer) over Lambeth Group (Secondary A Aquifer). The operator therefore may have not fully 
+included and considered the Taplow Gravel Principal Aquifer within the conceptual site model. Any drainage 
+through this site is likely to be into this aquifer. It is therefore very important that there are no diesel leaks on 
+site that can drain into the gravel aquifer. 
+The most vulnerable areas on site for potential drainage into the aquifer would be the site soakaways. These 
+were developed in partnership with Thames Water as a means of managing surface water run-off. When the 
+building known as data centre, LO1, was constructed, Thames Water allowed only a limited volume of 
+surface water runoff to be discharged into their municipal drainage systems. To manage this restriction on 
+discharge, the site was developed such that the surface water runoff from the rear yard and car parking 
+areas of LO1 was directed to the Thames Water drainage system and the surface water runoff from the roof 
+was directed to site soakaways, W3 and W4. 
+When the site was expanded to construct building LO5, the Thames Water drainage systems were nearing 
+capacity and again Thames Water would permit only limited site surface water to be discharged into their 
+drainage systems. Two further soakaways were constructed to manage the LO5 surface water runoff from 
+the roof and rear yard with all other surface water runoff (from car parking area and a small non-operational 
+area to the north-west of LO5) being discharged to the Thames Water drainage systems. 
+Although the soakaways may appear a vulnerable area where diesel spillages could drain off-site possibly to 
+an aquifer, the site has robust diesel storage, handling and distribution systems with internal and external 
+inspection and maintenances systems to ensure the risk of diesel leaks and spills are low. 

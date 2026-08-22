@@ -1,0 +1,46 @@
+Permit number               
+EPR/ZP3527SSEPR/AB1234CD 2 
+Union Park 
+Permit number EPR/ZP3527SS 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows.   
+The site comprises a data centre which consists of an Environmental Permitting Regulations (EPR) 2016 
+Schedule 1 listed activity: 
+Section 1.1 Part A(1) (a) for the burning of any fuel in an appliance with a rated thermal input of 50 or more 
+megawatts (MW). 
+The combustion plant comprises 12 x 8.01 MWth gas oil or equivalent fuelled standby generators (new 
+Medium Combustion Plant (MCP)), with an aggregated total combustion capacity on -site of approximately 
+96.12 MWth. The gas oil or equivalent fuelled generators are solely used to provide standby electricity 
+generation capacity to power the data centre in the event of a grid power failure. The data centre is 
+operational 24 hours/day, 7 days/week and the electricity supply arrangements for the site include two 
+diverse routes and associated infrastructure (e.g., transformers) providing a 2N level of resilience, where N is 
+the power demand of the Installation.  
+The primary pollutants of concern to air quality from the combustion processes at the Installation are oxides 
+of nitrogen (NOx), carbon monoxide (CO), particulates (PM10, PM2.5), sulphur dioxide (SO2) and ammonia 
+(NH3) from the SCR abatement. The default generator specification as a minimum for new plant to minimise 
+the impacts of emissions to air (NOx) is 2g-TA Luft or US EPA Tier 2 or an equivalent standard. The 12 
+generators to be used at the data centre are emissions optimised to meet the US EPA Tier 2 standard. The 
+generators also include a Selective Catalytic Reduction (SCR) NOx abatement system within the design. The 
+SCR NOx abatement system on the generators will be used to limit the NOx emissions to a maximum of 95 
+mg/Nm3 per generator at 5% oxygen, which is below the Medium Combustion Plant Directive (MCPD) 2015 
+limit for new gas oil or equivalent fuelled engines. 
+The 12 generators will be located inside the Energy Centre building. During the normal operations of the site, 
+the generators are only run for maintenance and testing, according to a specified testing schedule 
+incorporated into table S1.2 of the permit. No electricity is exported from the Installation.  
+Gas oil or equivalent fuel will be stored at the site in day (belly) tanks. The day tanks are located underneath 
+each generator set. The day tanks have been designed in line with current standards and are bunded (110% 
+capacity) to meet The Control of Pollution (Oil Storage) (England) Regulations 2001. The independent day 
+tanks are fed from two receiver tanks located inside the Energy Centre building. 
+The 12 day tanks store approximately 52,000 litres of fuel each, the 2 receiver tanks store approximately 
+2,500 litres of fuel each. The total capacity for gas oil or equivalent fuel storage on site is 629,000 litres.    
+Uncontaminated surface water from the site either drains to the River Crane or to the public foul sewer via 
+oil/water interceptors before ultimately discharging into the River Thames. The site is covered in 
+hardstanding to reduce the likelihood of potential leaks contaminating the underlying soils.   
+The Installation known as Union Park Data Centre and associated Energy Centre (EC3) is located in Hayes,  
+an urban location, which is relatively industrial in the immediate vicinity with residential properties to the north 
+and south at national grid reference TQ 10436 79275. 
+There are 3 protected European sites within 10 km and 12 local sites within 2 km of the Installation.  
+The data centre is situated in an Air Quality Management Area (AQMA) (Hillingdon AQMA) declared by the 
+London Borough of Hillingdon in 2003 for exceedances of the UK Air Quality Standard (AQS) for annual 
+mean concentrations of nitrogen dioxide (NO2). The site is also located in close proximity to an Air Quality 

@@ -1,0 +1,45 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 17 of 26 
+water sewer. Drainage systems will be maintained in good condition and regularly cleaned/ 
+inspected to prevent blockages. The tank storage area also has bunding and poured concrete 
+walls with appropriate joints to prevent weak points and seepage minimising the risk of an 
+unplanned release of diesel or equivalent fuel leaving the site. Additionally, should diesel or 
+equivalent fuel enter the surface water drainage system there is an on-site interceptor present.   
+External areas surrounding the tanker unloading bay will be laid to engineered concrete which 
+drains to a central point, where a sealed collection sump is present for use in the event of a spill 
+during delivery. The sump beneath the unloading bay is sized at 7,000 litres, equal to a single 
+compartment of a multi-compartment fuel delivery tanker. This sump is connected to the drainage 
+system via a lockable penstock valve, which is kept closed during filling operations.  Additionally, 
+deliveries will take place from tankers in a bunded fuel unloading area minimising the risk of an 
+unplanned release of diesel or equivalent fuel leaving the site. 
+ 
+Noise 
+Noise is not a significant aspect of data centre permitting (noting that it is only the standby 
+generators and associated diesel or equivalent fuel supply systems that are permitted – not the 
+operation of the data centre itself). The site will only run the generators regularly as part of the 
+testing regimes described earlier, occurring during daytime hours. Overnight operation of the 
+generators will only occur in an emergency situation. As this is a new installation it is not possi ble 
+to consider the likelihood of overnight operation by examining the frequency of historical outages, 
+but the potential for prolonged power outages in the area is considered to be low.  
+However, the operator has carried out a Noise Impact Assessment for the operation of the Kohler 
+KD4500-E generators at the data centre. 
+Operator’s assessment of potential noise impact: 
+The operator submitted a Noise Impact Assessment which considered the potential impacts of 
+noise emissions on the nearest residential Noise Sensitive Receptors (NSRs) and commercial 
+premises with respect to the operation of Kohler KD4500-E generators.  
+The operator included the following sources of noise generation per building: 
+• 16No. ‘low-noise’ chillers (not regulated) 
+• 43No. direct expansion (DX) air conditioning units (not regulated) 
+• 10No. air handling units (AHUs) (not regulated) 
+• 7No. 4.5 MVA emergency generators 
+• Sound break-out through building envelope 
+They considered 2 residential receptors and 6 commercial receptors. 
+The operator assessed two scenarios: 
+Normal operations and emergency operations. 
+ 
+Their conclusions were: 
+Impact on Residential Receptors 
+Normal and Emergency Operations 
+• Once contextual factors have been considered, an “Indication of Low Impact depending 
+on the context” for the daytime (07:00 – 23:00hrs) and night-time (23:00 – 07:00hrs) 
+during normal and emergency operations. 

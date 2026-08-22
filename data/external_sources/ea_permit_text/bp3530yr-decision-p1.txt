@@ -1,0 +1,40 @@
+ 
+Permitting decisions  
+Bespoke permit  
+We have decided to grant the permit for East India Dock Road, London North and London East Data Centres 
+operated by Global Switch Limited. 
+The permit number is EPR/BP3530YR. 
+We consider in reaching that decision we have taken into account all relevant considerations and legal 
+requirements and that the permit will ensure that the appropriate level of environmental protection is 
+provided. 
+Purpose of this document 
+This decision document provides a record of the decision making process. It summarises the decision 
+making process in the decision checklist to show how all relevant factors have been taken in to account.  
+This decision document provides a record of the decision making process. It: 
+• highlights key issues in the determination 
+• summarises the decision making process in the decision checklist to show how all relevant factors 
+have been taken into account 
+• shows how we have considered the consultation responses. 
+Unless the decision document specifies otherwise we have accepted the applicant’s proposals. 
+Read the permitting decisions in conjunction with the environmental permit. The introductory note 
+summarises what the permit covers. 
+Key issues of the decision 
+Description of the installation 
+The site is an existing data centre which consists of a Schedule 1 Part A(1) 1.1 activity under the 
+Environmental Permitting Regulations for the burning of any fuel in an appliance with a rated thermal input of 
+50 or more megawatts (MW). 
+The combustion plant provides for the event of a failure in the electrical supply, whereby the operator will 
+utilise standby Diesel Rotary Uninterruptable Power (DRUP) units to maintain operational resilience. The 
+DRUPS will not be used solely for the purpose for generating power for the facility . They can be employed as 
+providers of a scheme known as Frequency Control by Demand Management (FCDM) This would mean 
+occasionally running the DRUPS units to support the site in response to frequency dips in the electricity 
+supply. This would reduce demand on the national grid and likely prevent outages to the surrounding area.  
+However when the facility operates in this manner the generators will be equivalent to tranche A generators 
+and so will have to comply with an emission limit of 190mg/m3 for oxides of nitrogen as soon as practicable, 
+as required by the specified generator regulations, and improvement condition IC 2 has been set within the 
+permit to reflect this.  This is discussed further in this document in the section “BAT for FCDM Operations”. 
+ 
+The data centres are known as London North and London East.  
+EPR/BP3530YR/A001 
+Date issued: 25/6/2019 
+ 1 

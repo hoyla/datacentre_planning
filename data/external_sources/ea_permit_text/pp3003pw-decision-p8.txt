@@ -1,0 +1,47 @@
+EPR/PP3003PW/A001 
+Date issued: 07/07/2020  8 
+ 
+4.2.2.2 Environment Agency dispersion modelling sensitivity and check modelling 
+Neither report produced by the Applicant’s consultant was satisfactory, we therefore had to carry out detailed 
+check dispersion modelling and sensitivity analysis using ADMS Version 5.2 to Event 1 and 2 (Service test 
+scenarios), and Event 3 (grid outage scenario). 
+Our own observations included:  
+ Our own meteorological data 
+ Surface roughness value  
+ Individual generator stacks  
+ Our own calculated emission rates and source parameters for all individual diesel generators based 
+on manufacturer’s specifications 
+ Predictions at ecological receptor locations to NOx, SO2, nutrient nitrogen and acid depositions. 
+Event 1 (test scenario) and Event 2 (annual service test scenario) 
+We found that: 
+ For all parameters, the impacts at ecological receptors are insignificant. 
+Event 3 (grid outage event scenario) 
+We found that: 
+ The annual atmospheric NOX and SO2 impacts at ecological receptors are unlikely to be significant 
+against the critical levels. 
+ The nutrient nitrogen and acid deposition impacts are unlikely to be significant at ecological sites 
+against the critical loads. 
+ There are potential exceedances of d aily NO X critical level at Bath and Bradford  upon Avon Bats 
+SAC, Box Mine SSSI, Chapel Plaister Verge LWS, Kingsmoor Wood LWS and Box Hill Common 
+LWS. 
+ The daily NOX impacts at the rest of the ecological receptors are unlikely to be significant against the 
+critical levels. 
+Event 3 further assessment 
+For the daily NO X impact for Event 3, we  calculated the maximum 1 hourly (100 th percentile) emission 
+concentrations at the ecological receptors and averaged them to 4 hours of operation in a day. This a very 
+conservative assumption. 
+As a result, we can con clude that there is a potential to exceed daily environmental standards at Bath and 
+Bradford upon Avon Bats SAC, Box Mine SSSI, Chapel Plaister Verge LWS, Kingsmoor Wood LWS and Box 
+Hill Common LWS receptor locations if power outage is prolonged for longer than 4 hours in a year. However 
+past operations indicate that the risk of power outage is low, based on the stated 4 hours of o peration over 
+the past 10 year  (refer to section 5  for further information on reducing emissions from the emergency 
+scenario Event 3). 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

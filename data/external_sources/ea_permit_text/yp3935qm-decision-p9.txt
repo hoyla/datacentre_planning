@@ -1,0 +1,52 @@
+EPR/YP3935QM/A001 
+Date issued: 01/07/19  9 
+The noise assessment indicated that the predicted rating levels during the daytime period at the three 
+sensitive receptor locations during operation of the 18 standby generators were significantly below the 
+background sound levels recorded at these locations. There may also be a noise attenuation effect from a 
+large commercial building close to the south east of the Cyxtera facility which could reduce noise levels 
+recorded at the sensitive receptors on Thirkleby Close and Lake Avenue. 
+It is concluded therefore that daytime emergency use, testing and maintenance would not have an adverse 
+impact on the assessed nearby noise-sensitive receptors. 
+The night-time assessments indicated that, in the case of Thirkleby Close, the noise rating level during 
+operation of the 18 standby generators would exceed the background level by 3dB. As the exceedance of 
+background level is <5dB, the potential for adverse impact on this receptor is low. 
+All non-emergency operation of the generators will occur only during daytime periods, any exceedance at the 
+Thirkleby Close receptor would only be an adverse risk in emergency operation during night-time hours. As 
+there have been no occurrences of emergency operation of generators on site during ten years of operation 
+and any emergency operation, should it occur, could happen day or night, it is concluded that the site 
+operation will not have an adverse impact at nearby noise-sensitive receptors. 
+There is no history of noise complaints directed at the Cyxtera facility. Although no formal noise 
+management plan has been requested from the site, permit condition 3.4 enables the Environment Agency 
+to request one if considered necessary in the future. 
+Summary of Measured Noise Levels 
+Location Period L Aeq,T L A90 L A10 L AMAX 
+  Daytime 57.0 48.8 58.5 74.5
+1. Thirkleby Close NightTime 49.0 39.3 44.5 67.1
+  Daytime 54.7 44.9 57.5 74.8
+2. Lake Avenue NightTime 47.0 38.5 46.1 66.7
+  Daytime 59.0 48.7 60.3 76.7
+3. Oakfield Avenue Ni ghtTime 57.1 38.9 51.9 74.3
+ 
+Predicted Specific Sound Levels 
+Location Daytime Night-Time 
+1. Thirkleby Close 41.2 40.1
+2. Lake Avenue 9.5 9.8
+3. Oakfield Avenue 18.3 18.3
+ 
+BS4142:2014 
+Assessment 
+Receptor Time 
+Predicted Specific 
+Sound 
+Predicted 
+Rating 
+Derived 
+Background 
+Sound Difference 
+    Level (L Aeq,T) Level (L Ar, T) Level (L A90)   
+  Daytime 41 43 49 -6 
+1. Thirkleby Close NightTime 40 42 39 +3 
+  Daytime 10 12 45 -33 
+2. Lake Avenue NightTime 10 12 39 -27 
+  Daytime 18 20 49 -29 
+3. Oakfield Avenue NightTime 18 20 39 -19 

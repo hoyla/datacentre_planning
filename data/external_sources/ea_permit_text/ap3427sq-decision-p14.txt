@@ -1,0 +1,42 @@
+ 
+Page 14 of 29 
+failsafe. These components will be regularly maintained under the Environmental 
+Management System (EMS). 
+Fuel deliveries will be conducted by trained tanker drivers and supervised by 
+qualified site engineering personnel, following the Standard Operating Procedure 
+(SOP) for Fuel Delivery Refill of Receiver and Belly Tanks. The SOP, 
+incorporated into the EMS, covers pre-work checks, delivery procedures, system 
+verification, emergency scenarios, and inspection of spill containment measures 
+such as drip trays. The Operator has also prepared a Spill Response Plan 
+detailing notification, containment, cleanup, disposal, drainage checks, and post-
+response review. Spill kits designed for diesel will be deployed to prevent 
+hazardous liquids entering drainage systems, and procedures will be updated 
+following any spill to minimise recurrence. 
+ 
+Containment Protection - Pipework 
+The pipework on site will have protection measures in place to prevent loss of 
+containment. Diesel will be pumped from the central top-up tanks to the belly 
+tanks located beneath the generators. Underground fuel pipes will be double-
+skinned and fitted with leak detection, and their length will be minimised wherever 
+possible. Above-ground pipes will be single-skinned and positioned close to 
+building perimeters. All pipework will be regularly maintained and visually 
+inspected prior to, during, and after refuelling operations. 
+Generators, fuel storage areas, and above-ground pipelines will be located on or 
+over hardstanding drip trays to provide secondary containment. The underground 
+fuel distribution system has been designed and installed in accordance with best 
+practice and relevant standards. Warning tape has been installed above the 
+pipework in compliance with National Joint Utilities Group (NJUG) standards, and 
+pipes are laid in suitable backfill material. Additional vibration protection 
+measures are not required due to the low frequency of heavy vehicle movements 
+on site. 
+Underground pipelines will consist of double-skinned stainless-steel pipes 
+(BRUGG flexwell or equivalent) with integrated leak detection. Non-corrosive 
+plastic (PLX/PE) double-walled pipes with vacuum leak detection, certified to EN 
+14125, will also be used. Leak detection will be linked to the main monitoring 
+system, and daily visual inspections will be carried out on above-ground 
+pipework. No mechanical joints will be present in the underground system, 
+reducing potential leak points. 
+Single-skinned pipelines will only be used between belly tanks and generators, 
+contained within generator enclosures. These seamless carbon steel pipes will 
+only hold fuel during generator operation, which is limited to approximately 50 
+hours per year for testing or emergencies. During operation, generators will be 

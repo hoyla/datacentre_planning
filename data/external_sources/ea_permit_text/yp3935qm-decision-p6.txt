@@ -1,0 +1,30 @@
+EPR/YP3935QM/A001 
+Date issued: 01/07/19  6 
+Reliability of Power Delivery in Event of National Grid Outage: 
+There is a built-in redundancy to the number of standby generators present on site to ensure they can 
+always support the site in the event of any power failure. In the case of Cyxtera Ajax Avenue, the built in 
+redundancy is “N + 1” meaning that there is one more standby generator on site than would be required to 
+deliver the full power load to site should grid connection fail. 
+ 
+Permit Conditions: 
+The permit will include a maximum 500 hours per annum ‘emergency/standby operational limit’ for the 
+installation. Emission limit values (ELVs) to air and engine emissions monitoring are therefore not required 
+within the permit. Emergency hours’ operation includes those unplanned hours required to come off grid to 
+make emergency repair of electrical infrastructure associated but occurring only within the data centre itself. 
+Each individual generator with its own discharge stack, can be maintained, tested and used in a planned way 
+for up to 500 hours per calendar year each without ELVs or associated monitoring under the Industrial 
+Emissions Directive (IED) and Medium Combustion Plant Directive (MCPD). The Environment Agency 
+expects planned testing and generator operations to be organised to minimise occasions and durations 
+(subject to client requirements). 
+The permit has a limit on the activity to exclude voluntary ‘elective power operation’ such as demand side 
+response (i.e. on-site use) or grid short term operating reserve (STOR) (i.e. off-site export of electricity) and 
+Frequency Control by Demand Management (FCDM) for grid support. This is primarily to differentiate data 
+centres from ‘diesel arrays’ that voluntarily operate within the balancing market and importantly provide a 
+clear way to demonstrate minimisation of emissions to air as ‘emergency plant’. 
+The permit application has assessed and provided evidence of the reliability of the local electricity grid 
+distribution allowing the Environment Agency to judge that the realistic likelihood of the plant needing to 
+operate for prolonged periods in an emergency mode is very low. 
+Reporting of standby engine maintenance run hours is required annually and any electrical outages (planned 
+or grid failures regardless of duration) require both immediate notification to the Environment Agency and 
+annual reporting. 
+ 

@@ -1,0 +1,46 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 8 of 28 
+have uplifted both the testing and emergency emission rates to account for 10 minutes of 
+unabated emissions within 1 hour, as a worst-case.  
+ 
+• The generators will emit NH3 due to ammonia ‘slip’ from the SCR. The emission rate has 
+been assumed to be the BAT upper emission concentration of 15 mg/Nm 3, which we 
+agree is conservative.  
+ 
+• If emissions from multiple generators are released at the same time within the same 
+stack, the plumes will act as a single plume with combined source characteristics. This is 
+likely to influence plume buoyancy and dispersion. The consultant has combined th e 
+LHR11 stacks into four stacks, arranged as “five in one stack and four in three other 
+stacks”. We agree that this is appropriate but note that the consultant has not combined 
+stacks for LHR12; we have tested sensitivity to grouping the LHR12 stacks into five 
+combined stacks for the emergency scenario, to account for the merged plumes. In the 
+case of testing, all generators will be tested individually therefore there will be no risk of 
+plume merging.  
+ 
+• The consultant has omitted consideration of annual and hourly mean nitrogen monoxide 
+(NO) EALs of 310 µg/m3 and 4,400 µg/m3, respectively. They have also not assessed 
+against the annual and hourly mean NH3 EALs for human health of 180 µg/m3 and 2,500 
+µg/m3, respectively. We have considered the risks of exceeding these ES in our checks. 
+ 
+Their conclusions were: 
+Impact on Human Health Receptors 
+Scenario 1: Routine maintenance/ testing 
+Nitrogen Dioxide (NO2) 
+• Annual Mean - The maximum PCs at all locations are less than 1% of the long-term AQS; 
+the PCs are, therefore, insignificant.  
+ 
+• 1 Hour Mean (100%ile) - The PEC concentrations at the assessed receptor locations all 
+have concentrations less than AEGL-1.  
+ 
+Scenario 2: Electrical grid outage of 72 hours 
+Nitrogen Dioxide (NO2) 
+• Annual Mean - The maximum PCs are less than 1% of the long-term AQS; the PCs are, 
+therefore, insignificant. 
+ 
+• 1 Hour Mean (100%ile) - The PEC concentrations at the assessed receptors all have 
+concentrations less than AEGL-1. 
+PM10 
+• Daily Mean - The maximum PC is less than 10% of the critical level and therefore 
+insignificant, no further consideration of the PEC is required. 
+ 
+ 

@@ -61,6 +61,7 @@ SOURCE_TITLES = {
     # "who is saying it" is the whole point of the weakest-authority
     # source; this is the fallback if that attribute is ever missing.
     "operator_website": "Operator's own website",
+    "ea_permit": "Environment Agency public register",
 }
 
 QUANTITY_LABELS = {
@@ -123,6 +124,14 @@ QUANTITY_CAVEATS = {
         "How much of the estate has been contracted or billed to "
         "customers — not what is built, and not what those customers "
         "then draw."),
+    "thermal_input": (
+        "The rated thermal input of the site's standby generators, from "
+        "its environmental permit. It is fuel burned, not electricity "
+        "delivered: roughly 2.4 to 2.5 units of thermal input produce one "
+        "of electrical output, and a fleet is built to carry peak load "
+        "plus redundancy. So it bounds what a site can draw rather than "
+        "stating what it does. Plant of 1–5 MWth needs no permit until "
+        "1 January 2029, so no permit is not no generators."),
 }
 
 # Tentative matches are rendered as what they are. The matches file says

@@ -1,0 +1,38 @@
+ 
+Permitting Decisions- Variation 
+ 
+EPR/QP3706LH/V002 Decision Document      Page 1 of 28 
+We have decided to grant the Variation for Data Centre Staples Corner operated 
+by PDCG (Group Services) Limited. 
+The Variation number is EPR/QP3706LH/V002. 
+The permit was issued on 20/05/2025. 
+The application is to vary an Installation permit for a data centre which has a 
+Schedule 1 Part A(1) 1.1(a) activity for burning any fuel in an appliance with a 
+rated thermal input of 50 or more megawatts.  
+The Variation will involve the installation and operation of an additional 40 gas oil 
+or equivalent fuelled generators (Medium Combustion Plant (MCP)) with 
+subsequent fuel storage. 
+Combustion plant on site: 
+• Existing Site 1 (LON1B1): 16x gas oil or equivalent fuelled MTU 20V4000 
+DS4000 generators each with thermal input of 7.31 MWth (16 generators 
+with total thermal input of 116.96 MWth) (New MCP) – already permitted. 
+ 
+• Variation Site 2 (LON1B2): 40x gas oil or equivalent fuelled MTU 
+20V4000 DS4000 generators each with thermal input of 7.31 MWth (40 
+generators with total thermal input of 292.4 MWth) (New MCP) – variation 
+to existing permit. 
+ 
+The Variation will lead to:  
+• Total number of MTU 20V4000 DS4000 gas oil or equivalent fuelled 
+generators (New MCP) on site = 56.  
+ 
+• Total thermal rated input of site = 56x 7.31 MWth MTU 20V4000 DS4000 
+generators (56 generators with a total input of 409.36 MWth).  
+ 
+• Increase in the permitted boundary. 
+ 
+The data centre generators will only operate under a limited scheduled 
+programme of routine testing and maintenance or in an emergency site power 
+outage scenario. Electrical power is normally provided to the data centre from the 
+National Grid. However, in the event of a failure in this electrical supply, the 
+Operator will utilise the generators to maintain an electrical power supply to the 

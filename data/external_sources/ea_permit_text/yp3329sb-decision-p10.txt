@@ -1,0 +1,48 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 10 of 28 
+Scrubs LNR is below 1% of the critical load function at all assessed habitats, and 
+therefore no further consideration needs to be given. 
+ 
+Scenario 2: Electrical grid outage of 72 hours 
+Nitrogen Oxides (NOx) 
+• Annual Mean - The maximum predicted PCs at all the assessed ecological sites are well 
+below 1% of the critical level, as such they are insignificant. 
+ 
+• Daily Mean - The daily mean PC is below 10% for Richmond Park SAC and Wimbledon 
+Common SAC and is therefore insignificant for these sites. However, the daily mean is 
+over 100% for 14 of the modelled ecological receptors, therefore, potentially significant.  
+There are only 3 sites where the maximum predicted daily mean NOx concentration is 
+above 200μg/m3. 
+ 
+Ammonia (NH3) 
+• Annual Mean - The maximum PCs are less than 1% of the critical level for Richmond 
+Park SAC and Wimbledon Common SAC, and less than 100% for modelled local nature 
+sites. No further consideration of the PEC is required. 
+ 
+Nitrogen Deposition 
+• The predicted nitrogen deposition on Broadleaved, Mixed and Yew Woodland habitat and 
+Dry Heaths for Richmond Park SAC and Wimbledon Common SAC does not exceed 1% 
+of the critical load and is therefore insignificant.  
+ 
+• Nitrogen deposition was also undertaken for all modelled local nature sites. The 
+maximum contribution to nitrogen deposition is less than 100% of the critical loads at all 
+of the locally designated sites and is therefore insignificant. 
+ 
+Acid Deposition 
+• The predicted total acid deposition on Broadleaved, Mixed and Yew Woodland habitat 
+and Dry Heaths for Richmond Park SAC and Wimbledon Common SAC is below 1% of 
+the critical load function at all assessed habitats, and therefore no further consideration 
+needs to be given. 
+ 
+• Acid deposition was also undertaken for all modelled local nature sites. The maximum 
+contribution to acid deposition is less than 100% of the critical loads and is therefore 
+insignificant. 
+ 
+The consultant concludes: 
+• In an emergency scenario the emergency generators can operate up to 1780 hours per 
+year with a 1% probability of exceeding the short term NO2 objective.  
+ 
+• Predicted annual mean NO2 impacts have been factored to 72 hours to represent a 
+maximum emergency scenario.  
+ 
+• Predicted annual mean NO2 at all relevant receptor locations are not significant.  

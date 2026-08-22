@@ -1,0 +1,43 @@
+ 
+Page 2 of 19 
+Key issues of the decision 
+Overview of the Installation 
+The installation is located at Unit 2 and Unit 3 Redhill Data Centre, St Anne’s 
+Boulevard, Foxboro Park, Redhill, RH1 1AX (NGR: TQ 52865 15146), within the 
+southern part of a light industrial and commercial area.  Residential areas are to 
+the south and west of the site with the nearest residential receptor approximately 
+50m to the south of the installation.  There are four local wildlife sites (LWS) and 
+ancient woodlands within 2km of the installation.  Furthermore, the following 
+designated sites are within 2km of the installation: Mole Gap to Reigate 
+Escarpment Site of Special Scientific Interest (SSSI); and 10km of the site: Mole 
+Gap to Reigate Escarpment Special Area of Conversation (SAC). 
+The installation consists of a Schedule 1 Part A(1) 1.1(a) activity for burning fuel 
+in an appliance with a rated thermal input of 50 or more megawatts.  The activity 
+falls under Chapter II of the Industrial Emissions Directive (IED).  All generators 
+on site with a thermal input ≥1MWth are classed as Medium Combustion Plant 
+(MCP).  The Medium Combustion Plant Directive (MCPD) requirements are 
+fulfilled through compliance with Chapter II of Directive 2010/75/EU. 
+Unit 2 and Unit 3 are currently managed separately; however we consider them 
+to be part of the same installation for environmental permitting due to their 
+proximity and having the same legal operator. 
+There are 21 generators (all commissioned before 20/12/2018), with an 
+aggregated thermal input of 72.4 MWth to the following breakdown: 
+Thermal Input of 
+Generator(s) 
+Number of generators Associated air emission 
+point(s) 
+4.4 MWth 4 A1 – A4 
+0.51 MWth 1 A5 
+3.34 MWth 6 A6 – A11 
+0.59 MWth 1 A12 
+3.74 MWth 9 A13 – A21 
+ 
+Generators provide power to the data centre in the event of an emergency, 
+including failure of the local electricity transmission network, or an internal failure 
+requiring disconnection from the grid.  They are not permitted to support Short-
+Term Operating Reserve (STOR) and/or Triad management activity. 
+Both Unit 2 and Unit 3 have two separate cables from the grid originating from 
+two separate substations (Three Bridges and Caterham), limiting likelihood of the 
+generators all operating in an emergency. 
+The operator has set out a program of monthly (10 minutes), quarterly (20 
+minutes) and annual (1 hour) testing to ensure that generators are maintained 

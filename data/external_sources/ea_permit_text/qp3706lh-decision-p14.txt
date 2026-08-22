@@ -1,0 +1,41 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 14 of 28 
+• For six-monthly testing, no more than 8 hours of operation shall be carried 
+out in any 24-hour period. 
+• For monthly testing, no more than 8 hours of operation shall be carried out 
+in any 24-hour period for site 1. 
+• For monthly testing, no more than 2.5 hours of operation shall be carried 
+out in any 24-hour period for site 2. 
+ 
+Following our assessment, we find that the proposed permission is not likely to 
+damage any of the flora, fauna or geological or physiological features which are 
+of special interest. 
+Overall, we agree with the Consultant’s conclusions that the site is unlikely to 
+cause an exceedance of an ES at human health receptors and is unlikely to 
+make a significant contribution to or cause an exceedance of any critical loads 
+and levels at ecological receptors providing operational restrictions are included 
+in the permit and the electricity grid remains reliable. 
+We do note that the site has a very large number of unabated plant in close 
+proximity to residential receptors (<300 m). The Operator has not proposed 
+abatement on any of the generators, however, if emissions to air become a 
+problem at this site, the Operator may be required to fit abatement in the form of 
+Selective Catalytic Reduction (SCR) or to at least get the generators SCR-ready 
+(i.e. planned with available space to retrofit equipment for abating emissions).  
+In the same way, if the site wishes to expand in the future, the Operator may be 
+expected to go beyond BAT and fit SCR to manage the impact of peak emissions 
+from emergency operation and/or testing and maintenance on long term Air 
+Quality Standards as per our guidance contained in Data Centre FAQ Headline 
+Approach v21. 
+We have set improvement condition (IC6) to require the Operator to reduce NOx 
+emissions further by reviewing the testing regime and assessing other 
+opportunities to reduce emissions (e.g. SCR abatement). The additional 
+measures specified under IC6 are expected to achieve a reduction of impacts 
+during both the testing and emergency operations.  
+Protection of Land, Surface Water & Groundwater 
+The 40 new generators are housed in a fully enclosed building, situated in pairs, 
+and over 5 floors (8 per floor); each generator has its own day (belly) tank.  
+Site 2 (LON1B2) also has 20 bulk fuel storage tanks which represent 1 storage 
+tank per 2 generators. However, these tanks act together as a larger balancing 
+tank and are not dedicated to the pair of tanks which they serve. 
+The tanks are positioned underneath the engines at ground level, minimising 
+pipe-runs and pumping distances to point of use.  

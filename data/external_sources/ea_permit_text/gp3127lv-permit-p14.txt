@@ -1,0 +1,63 @@
+Permit number  
+EPR/GP3127LV 
+ 14 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+ 
+Once approved in writing, the output of the monitoring exercise 
+shall be used to inform / revise the AQMP and implement emission 
+reduction measures, if necessary. Revisions to the AQMP and/or 
+emission reduction measures shall be delivered in accordance with 
+the timescales agreed in writing with the Environment Agency.  
+ 
+ 
+ 
+As agreed in writing 
+with the Environment 
+Agency  
+IC4 Monitoring plan - flue gas monitoring requirements 
+The operator shall submit a monitoring plan for approval by the 
+Environment Agency detailing their proposal for the implementation 
+of the flue gas monitoring requirements specified in table S3.1, in 
+line with web guide ‘Monitoring stack emissions: low risk MCPs and 
+specified generators’ Published 20 March 2024 (formerly known as 
+TGN M5). The plan shall include, but not necessarily be limited to: 
+• When the generators are not fitted with sampling ports, a 
+proposal to install them within the shortest practical 
+timeline; 
+• Details of any relevant safety, cost and operational 
+constraints affecting the monitoring regime, in support of 
+any proposed deviation from the testing regime specified in 
+permit table S3.1.  
+ 
+Within 3 months from 
+the date of issue of the 
+permit 
+EPR/GP3127LV/A001 
+or as otherwise agreed 
+in writing with the 
+Environment Agency 
+ 
+ 
+Table S1.4 Pre-operational measures 
+Reference Pre-operational measures 
+PO1 Commissioning 
+At least one month before operation the operator shall submit a commissioning plan to 
+the Environment Agency for approval. The plan shall provide timescales for the 
+commissioning of the gas oil generators and shall demonstrate that the commissioning 
+of the gas oil generators is covered within the site’s permitted regular testing regime, 
+thereby minimising durations and impacts. 
+ 
+When the commissioning is not covered within the site’s permitted regular testing 
+regime, the operator shall submit an environmental risk assessment for approval by 
+the Environment Agency, demonstrating that the environmental risks during the 
+commissioning are minimised and remain not significant. The commissioning of the 
+engines shall not begin prior to receiving written approval to the plan and associated 
+environmental risk assessment by the Environment Agency. 
+The plan shall be implemented in accordance with the Environment Agency’s written 
+approval. 
+PO 2 Submission of Baseline Information Following Completion of Remediation 
+Before commencement of any permitted activities, the operator must ensure that the 
+Environment Agency has received and approved baseline condition information 
+sufficient to establish the condition of land and groundwater within the permitted 
+installation boundary at the start of permitted activities. 
