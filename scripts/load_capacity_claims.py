@@ -59,10 +59,13 @@ def main() -> int:
           f"every figure verified against the OCR of its cited page.")
     print(f"{len(op_claims)} operator-website claims, {len(op_matches)} "
           f"matches, every quote verified against its committed snapshot.")
+    _checked = ("every quote re-verified against the page it cites"
+                if ea.have_permit_text() else
+                "quotes as committed; the permit text is not on this "
+                "machine, so they were not re-verified against the source")
     print(f"{len(ea_claims)} Environment Agency permit claims "
           f"({sum(c.value for c in ea_claims):,.0f} MWth), {len(ea_matches)} "
-          f"matches, every figure verified against the committed text of "
-          f"the page it cites.")
+          f"matches, {_checked}.")
     if args.dry_run:
         return 0
 

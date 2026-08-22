@@ -37,6 +37,14 @@ from dcp import ea_permits as ea
 
 
 def readings() -> int:
+    if not ea.have_permit_text():
+        print(f"No permit text under {ea.TEXT_DIR}. The documents are not "
+              f"committed; fetch them first:\n"
+              f"    scripts/fetch_ea_permits.py --documents\n"
+              f"The claims themselves are in "
+              f"{ea.CLAIMS_PATH.relative_to(ea.ROOT)} and need no fetch.",
+              file=sys.stderr)
+        return 1
     manifest = ea.load_manifest()
     with_doc = [(s, e) for s, e in sorted(manifest.items())
                 if any(d.get("kind") == "permit" for d in e["documents"])]
@@ -62,6 +70,33 @@ def readings() -> int:
         print(f"    page {r.total_page}: “{(r.total_quote or '')[:150]}”")
         print()
     print(f"{read} of {len(with_doc)} permits state a readable total.")
+    return 0
+
+
+def write_claims() -> int:
+    """Regenerate the committed claims file from the local permit text.
+
+    The one step that needs the fetched documents. Everything downstream
+    — the loader, the artefacts, the tests — reads the file this writes,
+    so a clone with no documents is still a working checkout.
+    """
+    if not ea.have_permit_text():
+        print(f"No permit text under {ea.TEXT_DIR}. Fetch the documents "
+              f"first:\n    scripts/fetch_ea_permits.py --documents",
+              file=sys.stderr)
+        return 1
+    claims = ea.build_ea_claims()
+    problems = ea.verify_ea_quotes(claims)
+    if problems:
+        for p in problems:
+            print(f"INVALID: {p}", file=sys.stderr)
+        return 1
+    before = len(ea.load_ea_claims()) if ea.CLAIMS_PATH.exists() else 0
+    ea.write_claims_file(claims)
+    print(f"Wrote {ea.CLAIMS_PATH.name}: {len(claims)} claims, "
+          f"{sum(c.value for c in claims):,.1f} MWth "
+          f"(was {before}). Every quote verified against the page it "
+          f"cites.")
     return 0
 
 
@@ -118,14 +153,20 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--readings", action="store_true")
     ap.add_argument("--candidates", action="store_true")
+    ap.add_argument("--write-claims", action="store_true",
+                    help="Re-derive the claims from the local permit text "
+                         "and write data/external_sources/"
+                         "ea-permit-claims.yaml.")
     ap.add_argument("--km", type=float, default=2.0)
     ap.add_argument("--only")
     args = ap.parse_args()
+    if args.write_claims:
+        return write_claims()
     if args.readings:
         return readings()
     if args.candidates:
         return candidates(args.km, args.only)
-    ap.error("pass --readings or --candidates")
+    ap.error("pass --readings, --candidates or --write-claims")
 
 
 if __name__ == "__main__":

@@ -82,7 +82,7 @@ The PDF is not redistributed; readers wanting the source should request
 or download from Foxglove directly.
 
 ### Environment Agency public register (`data/external_sources/ea-industrial-installations.zip`,
-`ea_permit_text/`)
+`ea-permit-claims.yaml`)
 
 The Environment Agency's *Industrial installations* public register,
 downloaded from
@@ -100,12 +100,19 @@ to attribution and to the register's own re-use conditions
   "Contains Environment Agency information © Environment Agency and/or
   database right". Carried in code as `dcp.ea_permits.ATTRIBUTION` so an
   artefact cannot render a permit figure without it.
-- **Redistributed**, unusually for this repository: the register snapshot
-  and the extracted permit text are committed, because the licence allows
-  it and because a published thermal-input figure has to stay checkable
-  from a fresh clone. The permit **PDFs** are not — they live under
-  `data/raw/ea_permits/` and are re-fetchable from the URLs and sha256s
-  in `data/external_sources/ea-permit-documents.json`.
+- **Not redistributed**, on the same footing as the planning documents
+  above. The permit PDFs and their extracted text live under
+  `data/raw/ea_permits/`, which is gitignored: they are public documents
+  at permanent gov.uk URLs, so this repository fetches them rather than
+  republishing them. The licence would allow republishing; consistency
+  with the rest of `data/raw/` is the reason not to.
+- **The register snapshot is** committed, because it is a daily file with
+  no version of its own and no archive behind it — yesterday's is simply
+  gone. So is `ea-permit-claims.yaml`, which holds each claim with the
+  verbatim sentence it was read from, so a published figure stays
+  checkable from a clone without the documents; and
+  `ea-permit-documents.json`, which pins every document's URL, sha256,
+  byte count and page count for re-fetching.
 - The licence explicitly grants no endorsement and no warranty: the
   Environment Agency is not liable for errors in the register, and does
   not endorse this use of it.
@@ -147,7 +154,7 @@ planning document by its application reference.
   output; workbook and derived rows not redistributed.
 - **Environment Agency permits**: Conditional Licence — attribute
   "Contains Environment Agency information © Environment Agency and/or
-  database right"; register snapshot and permit text redistributed, PDFs
-  not.
+  database right"; register snapshot and derived claims committed,
+  permit documents fetched rather than redistributed.
 - **Council planning documents**: not redistributed by this repo;
   per-document licensing applies if reproduced elsewhere.

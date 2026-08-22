@@ -480,10 +480,11 @@ The 2.2 release said a data centre's size is stated to at least four
 audiences and held all four. There is a fifth, and it is the only one a
 company cannot decline: the environmental regulator.
 
-**Why it works.** A data centre's diesel standby fleet is sized to peak
-load plus redundancy, a fleet that size needs an environmental permit,
-and the permit states in prose what the planning application often does
-not. Ark's Cody Park permit: "The combustion plant comprises 69 diesel
+**Why it works.** Burning any fuel in plant rated at 50 MW thermal input
+or more is a permitted activity under the Environmental Permitting
+Regulations, a data centre's diesel standby fleet crosses that
+threshold, and the permit states in prose what the planning application
+often does not. Ark's Cody Park permit: "The combustion plant comprises 69 diesel
 fuelled standby generators. 36 of the generators have a thermal input of
 2.71MWth, 24 generators at 5.38MWth and 9 generators at 3.66MWth each.
 The aggregated total combustion capacity on site is approximately
@@ -513,11 +514,25 @@ into a numeric column.
 
 *Thermal input is not electrical demand, and the loader does not pretend
 otherwise.* `value_mw` is null on every one of these claims. MWth does
-not *convert* to MW; dividing by roughly 2.4–2.5 is an inference about
-generator efficiency, and it belongs to a reporter making it in the open
-rather than to a loader making it quietly. This is the same rule that
-keeps MWh out of the megawatt column, applied to a unit that looks much
-more like it converts.
+not *convert* to MW, and there is no constant to convert it with: the one
+permit stating both quantities is Telehouse Docklands, "The rated
+generation capacity of the SBGs ranges from 1.6 megawatt electrical
+(MWe) to 2.4 MWe (average thermal input of 5.1 MWth)", which puts
+thermal input at roughly two to three times the electrical rating. That
+is a reporter's inference to make in the open, with its spread stated,
+rather than a loader's to make quietly. Same rule that keeps MWh out of
+the megawatt column, applied to a unit that looks much more like it
+converts.
+
+An earlier draft of the caveat told the reader to divide by "roughly 2.4
+to 2.5" and asserted that these fleets are "sized to peak load plus
+redundancy". Both sentences came from the 2026-08-21 handover, neither
+had a source, and both went into reader-facing text before anyone
+checked. They are now replaced by what the permits themselves say, with
+the permit named, and a test asserts the caveat still names it. Five of
+the 42 state their redundancy — "N+1", "one generator more than would be
+required to provide the total power for the site" — and the other 37 say
+nothing about it, so nothing is assumed for them.
 
 *The extraction is deterministic and cross-checks itself.* No model
 reads these. The Environment Agency writes permits to a template, so

@@ -1,11 +1,12 @@
 """Environment Agency permits: what a data centre's standby fleet is rated at.
 
 The largest remaining lever on the sites whose planning documents disclose
-no power figure, and it works because of a statutory accident. A data
-centre's diesel standby fleet is sized to peak load plus redundancy, and
-a fleet that size needs an environmental permit. The permit is a public
-document, and it states the thing the application does not: how many
-generators, at what rated thermal input each, totalling what.
+no power figure, and it works because of a statutory accident. Burning
+any fuel in plant rated at 50 MW thermal input or more is a permitted
+activity under the Environmental Permitting Regulations, and a data
+centre's diesel standby fleet crosses that threshold. The permit is a
+public document, and it states the thing the application does not: how
+many generators, at what rated thermal input each, totalling what.
 
 Ark's Cody Park permit is the shape of it — "The combustion plant
 comprises 69 diesel fuelled standby generators. 36 of the generators have
@@ -27,13 +28,30 @@ is not a figure, and writing 50 into a numeric column would be exactly
 the kind of number-that-means-something-else this project refuses.
 
 **Thermal input is not electrical demand.** A 260MWth fleet is not a
-260MW site. Dividing by roughly 2.4–2.5 for generator efficiency bounds
-the electrical capacity the fleet can support, and that bound is an
-inference to be made in the open by a reporter, not a conversion to be
-done silently in a loader. So `value_mw` is null on every claim here:
-MWth does not convert to MW, it *implies* a range in MW, and the two are
-not the same operation. The quantity carries its own caveat and the
-reader prints the thermal figure as the permit prints it.
+260MW site, and the ratio between them is not a constant this module is
+entitled to assert. One permit in the set states both quantities —
+Telehouse Docklands, "The rated generation capacity of the SBGs ranges
+from 1.6 megawatt electrical (MWe) to 2.4 MWe (average thermal input of
+5.1 MWth)" — which puts thermal input at roughly two to three times the
+electrical rating, and that is one observation rather than an
+engineering constant. So `value_mw` is null on every claim here: MWth
+does not convert to MW, it *implies* a range in MW, and the two are not
+the same operation. The bound is a reporter's inference to make in the
+open with its spread stated, never a loader's conversion. The quantity
+carries its own caveat and the reader prints the thermal figure as the
+permit prints it.
+
+**A fleet is larger than the load it carries, and the permits say so
+rather than this module assuming it.** Five of the 42 state their
+redundancy: "The redundancy of the standby generators on site is
+“N+1”, which means there is one generator more than would be required
+to provide the total power for the site in event of external power
+failure" (Ark Spring Park, EPR/PP3003PW, and near-identically at Ajax
+Avenue), and Amazon Hayes puts it in numbers — "only 12 of the 14
+generators would need to operate to carry the sites electrical load with
+2 acting as redundancy". Where a permit states it, the reading captures
+it in `PermitReading.redundancy`. Where it does not, nothing here
+supplies it.
 
 **Neither a company name nor a postcode is an identity.** Two candidate
 generators run over the register — the words "data centre" in the holder
@@ -63,7 +81,8 @@ from pathlib import Path
 
 import yaml
 
-from dcp.capacity_claims import CONFIDENCE_VOCAB, FiledClaim
+from dcp.capacity_claims import (CONFIDENCE_VOCAB, QUANTITY_CAVEATS,
+                                 QUANTITY_LABELS, FiledClaim)
 
 ROOT = Path(__file__).parent.parent
 EXTERNAL = ROOT / "data" / "external_sources"
@@ -72,14 +91,24 @@ REGISTER_PATH = EXTERNAL / "ea-industrial-installations.zip"
 REGISTER_MEMBER = "industrial-installations.csv"
 OPERATORS_PATH = EXTERNAL / "ea-permit-operators.yaml"
 MANIFEST_PATH = EXTERNAL / "ea-permit-documents.json"
-TEXT_DIR = EXTERNAL / "ea_permit_text"
 CLAIMS_PATH = EXTERNAL / "ea-permit-claims.yaml"
 
-# Where the permit PDFs land. Not committed — data/raw/ is gitignored and
-# stays that way (DATA-LICENSING.md). The committed trail is the manifest,
-# which carries each document's URL and sha256, plus the text of the pages
-# the claims quote, so a claim can be re-checked without the PDFs.
+# Where the permit PDFs and their extracted text land. Not committed:
+# data/raw/ is gitignored and these are public documents at permanent
+# gov.uk URLs, so this repository treats them the way it treats the
+# 55,678 planning documents — fetched, not redistributed
+# (DATA-LICENSING.md).
+#
+# What is committed instead is the pair that makes a published figure
+# checkable without them: `ea-permit-documents.json`, which pins every
+# document's URL, sha256, byte count and page count, and
+# `ea-permit-claims.yaml`, which holds each claim with the verbatim
+# sentence it was read from. That is the same shape as the filed-accounts
+# and operator-website sources — a committed file of claims with quotes —
+# and it is a stronger reproducibility contract than a copy of the text,
+# because it pins the bytes rather than a derivation of them.
 PDF_DIR = ROOT / "data" / "raw" / "ea_permits"
+TEXT_DIR = PDF_DIR / "text"
 
 SOURCE_KEY = "ea_permit"
 REGISTER_URL = ("https://environment.data.gov.uk/public-register/downloads/"
@@ -501,16 +530,12 @@ def read_permit_text(pages: list[str], slug: str,
 # Rendering support, shared with dcp.capacity_claims so the artefacts
 # cannot describe a thermal figure two different ways.
 
-QUANTITY_LABEL = "rated thermal input"
-
-QUANTITY_CAVEAT = (
-    "The rated thermal input of the site's standby generators, from its "
-    "environmental permit. It is fuel burned, not electricity delivered, "
-    "and not what the site draws from the grid: a fleet is sized to carry "
-    "peak load plus redundancy, and roughly 2.4 to 2.5 units of thermal "
-    "input produce one of electrical output. It bounds a site's demand "
-    "rather than stating it. Plant of 1–5 MWth needs no permit until "
-    "1 January 2029, so an absent permit proves nothing.")
+# Deliberately not restated here. An earlier draft carried its own copy
+# of the label and the caveat, which is how a store ends up with two
+# prose definitions of one quantity that drift apart; dcp.capacity_claims
+# holds the single version every artefact renders.
+QUANTITY_LABEL = QUANTITY_LABELS["thermal_input"]
+QUANTITY_CAVEAT = QUANTITY_CAVEATS["thermal_input"]
 
 SOURCE_TITLE = "Environment Agency public register"
 
@@ -631,9 +656,14 @@ def claim_name_for(entry: dict, title: str | None = None) -> str:
     return f"{title or _site_name(entry)} ({entry['permission_number']})"
 
 
-def load_ea_claims(manifest: dict | None = None,
-                   text_dir: Path = TEXT_DIR) -> list[FiledClaim]:
-    """One claim per permit that states a total thermal input.
+def build_ea_claims(manifest: dict | None = None,
+                    text_dir: Path = TEXT_DIR) -> list[FiledClaim]:
+    """Read the local permit text and derive one claim per stated total.
+
+    Needs the fetched documents, so it runs only where they are —
+    `scripts/read_ea_permits.py --write-claims` is the one caller, and it
+    writes the result to CLAIMS_PATH, which is what everything else
+    reads. Everyone downstream of that file works from a fresh clone.
 
     A permit with no readable total produces no claim. That is the
     honest outcome and not a gap to be filled by a model: an MCP
@@ -712,6 +742,78 @@ def load_ea_claims(manifest: dict | None = None,
     return out
 
 
+_CLAIM_FIELDS = ("claim_name", "company_name", "quantity_type", "value",
+                 "unit", "stage", "as_at", "locator", "quote", "url")
+
+
+def write_claims_file(claims: list[FiledClaim],
+                      path: Path = CLAIMS_PATH) -> None:
+    """Commit the derived claims, so the permit text does not have to be.
+
+    Every other claim source in this store is a committed file of claims
+    with verbatim quotes; this one is generated rather than hand-written,
+    which is the only difference. What it buys is that a published figure
+    stays checkable from a clone — the sentence it was read from is right
+    here — while 1,835 pages of emission-limit tables and monitoring
+    conditions that nothing cites stay out of the repository.
+    """
+    body = [{f: (getattr(c, f) if f != "as_at"
+                 else (c.as_at.isoformat() if c.as_at else None))
+             for f in _CLAIM_FIELDS} | {"attrs": c.attrs}
+            for c in claims]
+    path.write_text(
+        "# Environment Agency permit claims, generated — do not hand-edit.\n"
+        "#\n"
+        "# Written by scripts/read_ea_permits.py --write-claims from the\n"
+        "# permit text under data/raw/ea_permits/, which is not committed.\n"
+        "# Each claim carries the verbatim sentence it was read from, so a\n"
+        "# figure can be checked here without the documents; re-fetch them\n"
+        "# with scripts/fetch_ea_permits.py --documents to re-verify against\n"
+        "# the source, which the test suite does whenever they are present.\n"
+        "#\n"
+        f"# {ATTRIBUTION}.\n\n"
+        + yaml.safe_dump({"claims": body}, sort_keys=False,
+                         allow_unicode=True, width=76))
+
+
+def load_ea_claims(path: Path = CLAIMS_PATH) -> list[FiledClaim]:
+    """The committed claims. Empty only if the file is genuinely empty."""
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{path.name} is missing. It is generated from the permit text "
+            f"by scripts/read_ea_permits.py --write-claims; fetch the "
+            f"documents first with scripts/fetch_ea_permits.py --documents.")
+    doc = yaml.safe_load(path.read_text()) or {}
+    out = []
+    for c in doc.get("claims", []):
+        as_at = c.get("as_at")
+        out.append(FiledClaim(
+            source_key=SOURCE_KEY,
+            company_name=c["company_name"],
+            company_number="",
+            claim_name=c["claim_name"],
+            quantity_type=c["quantity_type"],
+            value=float(c["value"]),
+            unit=c["unit"],
+            stage=c.get("stage"),
+            as_at=(as_at if isinstance(as_at, date)
+                   else date.fromisoformat(as_at) if as_at else None),
+            locator=c["locator"],
+            quote=c["quote"],
+            url=c["url"],
+            company_level=False,
+            attrs=c["attrs"],
+        ))
+    return out
+
+
+def have_permit_text(text_dir: Path = TEXT_DIR) -> bool:
+    """Whether the fetched documents are on this machine. They are not in
+    the repository, so every check that needs them says so rather than
+    reporting a clean pass over nothing."""
+    return text_dir.is_dir() and any(text_dir.glob("*.txt"))
+
+
 def load_ea_matches(path: Path = MATCHES_PATH) -> list[dict]:
     if not path.exists():
         return []
@@ -727,8 +829,15 @@ def verify_ea_quotes(claims: list[FiledClaim] | None = None,
     also guards the extractor — a regex that silently starts matching the
     wrong sentence would still produce a quote, and the quote is what a
     reporter would publish.
+
+    Returns an empty list where the documents are not on this machine,
+    because they are not in the repository. That is a skip and not a
+    pass, and callers say which: `validate_ea` reports it, and the test
+    that exercises this marks itself skipped rather than green.
     """
     claims = claims if claims is not None else load_ea_claims()
+    if not have_permit_text(text_dir):
+        return []
     problems = []
     for c in claims:
         page = c.locator.rpartition(" page ")[2]

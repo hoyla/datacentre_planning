@@ -1,9 +1,0 @@
-Permit number             
-EPR/AB1234CD 22 
-• in relation to emissions from combustion processes, the concentration in dry air at a temperature of 
-273K, at a pressure of 101.3 kPa and with an oxygen content of 3% dry for liquid and gaseous fuels 
-other than gas engines or gas turbines, 6% dry for solid fuels; and/or 
-• in relation to emissions from non-combustion sources, the concentration at a temperature of 273K and at 
-a pressure of 101.3 kPa, with no correction for water vapour content “year” means calendar year ending 
-31 December. 
-“year” means calendar year ending 31 December.
