@@ -10,8 +10,8 @@ permit's own grid reference.
 
 Nothing here writes a match. The output is the working paper for the
 adjudication that goes, by hand and with written evidence, into
-data/external_sources/ea-permit-matches.yaml. Proximity is a candidate
-generator and never an identity: one site record can hold several
+environment-agency-permit-matches.yaml under data/external_sources.
+Proximity is a candidate generator and never an identity: one site record can hold several
 campuses, and reading district proximity as identity is exactly what
 produced the Union Park match that had to be retired.
 
@@ -156,7 +156,7 @@ def main() -> int:
     ap.add_argument("--write-claims", action="store_true",
                     help="Re-derive the claims from the local permit text "
                          "and write data/external_sources/"
-                         "ea-permit-claims.yaml.")
+                         "environment-agency-permit-claims.yaml.")
     ap.add_argument("--km", type=float, default=2.0)
     ap.add_argument("--only")
     args = ap.parse_args()

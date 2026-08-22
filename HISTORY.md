@@ -484,8 +484,8 @@ company cannot decline: the environmental regulator.
 or more is a permitted activity under the Environmental Permitting
 Regulations, a data centre's diesel standby fleet crosses that
 threshold, and the permit states in prose what the planning application
-often does not. Ark's Cody Park permit: "The combustion plant comprises 69 diesel
-fuelled standby generators. 36 of the generators have a thermal input of
+often does not. Ark's Cody Park permit: "The combustion plant comprises
+69 diesel fuelled standby generators. 36 of the generators have a thermal input of
 2.71MWth, 24 generators at 5.38MWth and 9 generators at 3.66MWth each.
 The aggregated total combustion capacity on site is approximately
 260MWth."
@@ -540,8 +540,10 @@ regex is enough — and where regex is enough, a failure is loud. The
 per-engine ratings are summed and compared against the stated total, and
 the comparison is on the claim: 31 agree, four disagree, four documents
 state no total and are summed from the breakdown, and three state a
-total with no breakdown to check it against. Each claim says which. Two near-misses justify the whole apparatus. Ark's Spring Park
-permit writes the fleet and the total as one sentence — "The total
+total with no breakdown to check it against. Each claim says which.
+
+Two near-misses justify the whole apparatus. Ark's Spring Park permit
+writes the fleet and the total as one sentence — "The total
 thermal input of the 33 standby generators is 5 generators of 3.9 MWth …
 (approximately 120MWth in total)" — and taking the first megawatt figure
 after the word "total" published a 120 MWth site as **3.9**. Equinix's
@@ -559,10 +561,11 @@ MWth, all fall inside site 23**, the only site record on the Slough
 Trading Estate. Site 5 holds Interxion, Global Switch and Telehouse;
 site 59 holds Vantage, Colt and Equinix alongside Microsoft. And
 VIRTUS's Stockley Park campus — 470 MWth, the second-largest fleet in
-the register — has no site record within 2 km at all. Every one is written into
-`ea-permit-matches.yaml` under `considered` with its reason, which makes
-the permits the best partition evidence the project has — each names a
-campus and gives its grid reference.
+the register — has no site record within 2 km at all. Every one is
+written into `environment-agency-permit-matches.yaml` under
+`considered` with its reason, which makes the permits the best partition
+evidence the project has — each names a campus and gives its grid
+reference.
 
 **Two register errors found by looking.** One Digital Realty permit
 gives a Crawley address with Redhill coordinates and a Redhill local

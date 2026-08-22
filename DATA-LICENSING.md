@@ -81,8 +81,7 @@ top-10 cases. Foxglove retains copyright over their original report.
 The PDF is not redistributed; readers wanting the source should request
 or download from Foxglove directly.
 
-### Environment Agency public register (`data/external_sources/ea-industrial-installations.zip`,
-`ea-permit-claims.yaml`)
+### Environment Agency public register (`data/external_sources/environment-agency-*`)
 
 The Environment Agency's *Industrial installations* public register,
 downloaded from
@@ -108,11 +107,11 @@ to attribution and to the register's own re-use conditions
   with the rest of `data/raw/` is the reason not to.
 - **The register snapshot is** committed, because it is a daily file with
   no version of its own and no archive behind it — yesterday's is simply
-  gone. So is `ea-permit-claims.yaml`, which holds each claim with the
-  verbatim sentence it was read from, so a published figure stays
-  checkable from a clone without the documents; and
-  `ea-permit-documents.json`, which pins every document's URL, sha256,
-  byte count and page count for re-fetching.
+  gone. So is `environment-agency-permit-claims.yaml`, which holds each
+  claim with the verbatim sentence it was read from, so a published
+  figure stays checkable from a clone without the documents; and
+  `environment-agency-permit-documents.json`, which pins every
+  document's URL, sha256, byte count and page count for re-fetching.
 - The licence explicitly grants no endorsement and no warranty: the
   Environment Agency is not liable for errors in the register, and does
   not endorse this use of it.

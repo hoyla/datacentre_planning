@@ -340,8 +340,8 @@ None is abandoned; each is a known, scoped piece of work.
   1,430 MWth, fall inside site 23 alone, which is the only site record on
   the whole Slough Trading Estate. Site 5 holds Interxion, Global Switch and
   Telehouse; site 59 holds Vantage and Colt as well as Microsoft; site 11
-  holds Amazon and NTT. `data/external_sources/ea-permit-matches.yaml`
-  lists each of these under `considered` with the reason.
+  holds Amazon and NTT. Each of these is listed under `considered`, with
+  the reason, in `environment-agency-permit-matches.yaml`.
 - **Still not sent, and still cheap:** an EIR request to NESO for the
   project-level demand connection queue, and an FoI to DESNZ/EA for
   site-level CCA consumption. Both have lead times, so starting them is
