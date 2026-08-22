@@ -406,7 +406,7 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
         JOIN capacity_claims cl ON cl.id = m.claim_id
         JOIN sites s ON s.id = m.site_id
         WHERE m.retired_at IS NULL AND s.retired_at IS NULL
-        ORDER BY cl.value_mw DESC NULLS LAST, cl.claim_name""")
+        ORDER BY cl.value_mw DESC NULLS LAST, cl.claim_name, cl.id""")
     out: dict[str, list[dict]] = {}
     for (key, name, mw, qty, point, conn_date, as_at, src, url, locator,
          method, confidence, evidence, operator, term,
@@ -440,7 +440,7 @@ def load_claim_rows(cur) -> list[dict]:
         LEFT JOIN capacity_claim_matches m
                ON m.claim_id = cl.id AND m.retired_at IS NULL
         LEFT JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
-        ORDER BY cl.value_mw DESC NULLS LAST, cl.claim_name""")
+        ORDER BY cl.value_mw DESC NULLS LAST, cl.claim_name, cl.id""")
     cols = ("claim_name", "value_mw", "quantity_type", "connection_point",
             "connection_date", "as_at", "source_key", "source_url",
             "source_locator", "site_key", "site_name",

@@ -773,6 +773,45 @@ about a marketing figure or a thermal rating. A test asserts every
 quantity type that can reach the indicators panel carries a caveat, so a
 new source cannot arrive unlabelled.
 
+**A build has to be a function of its inputs.** Diffing a build against
+the last release is how regressions are caught here, and until
+2026-08-22 that check was running against an artefact the database did
+not fully determine. Two runs of the reader's per-site findings query
+inside one `REPEATABLE READ` transaction — one snapshot, so the corpus
+could not move underneath it — returned 2,503 of 10,425 rows in a
+different position and **80 rows in a different set, across 69 sites**.
+Those sites rendered a different selection of findings on two builds of
+the same data.
+
+Four causes, one mistake in four costumes, and the fourth only became
+visible once the first three were fixed and the diff shrank to 42 lines.
+A `row_number()` window ranking on a boolean and a string length with
+nothing unique after them, so which rows survived `rn <= N` was
+arbitrary among ties. An outer select with no `ORDER BY` at all. A
+`DISTINCT ON` breaking ties on a timestamp two rows can share. And then,
+in the rendering rather than the SQL, three `sorted(counts.items(),
+key=lambda kv: -kv[1])` — Python sorts stably, so labels tied on a count
+came out in whatever order the rows had arrived in, and one site's
+cooling methods read "also referenced: Heat reuse / offtake, Air-cooled"
+on one build and the reverse on the next.
+
+The rule is now stated where it can be checked: **every ordering that
+reaches an artefact must be total**, in SQL and in Python alike, and a
+tie in a sort key is the same defect as a tie in an `ORDER BY`. The same
+missing tiebreaks were swept out of the workbook and DuckDB exports at
+the same time, since one fixed exporter and three unfixed ones still
+leaves the diff too noisy to read.
+
+What is worth keeping is how it was found and what did *not* find it.
+It had survived a 560-test suite, because undefined behaviour is not
+reliably reproducible: reverting the fix and re-running the new
+integration tests, which build a deliberate tie, shows them passing
+against the broken query — with a handful of rows Postgres returns them
+in insertion order anyway. The fault only shows at corpus scale. What
+caught it was running one query twice against one snapshot and
+comparing, which is now a test, and reading a two-build diff, which is
+now small enough to read.
+
 ---
 
 ## How this project is worked on

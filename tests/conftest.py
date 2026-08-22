@@ -81,6 +81,28 @@ def _ensure_test_database() -> None:
             if cur.fetchone()[0] is None:
                 cur.execute((MIGRATIONS_DIR / "006_sites.sql").read_text())
                 conn.commit()
+            # Migration 008 — power_adjudication, and 009's signal_family
+            # on findings. Both are read by the reader's per-site findings
+            # query, so tests/test_export_ordering.py cannot exercise the
+            # real SQL without them. 007 comes along because it is the
+            # deep-read bookkeeping the other two are written against.
+            cur.execute("SELECT to_regclass('public.deepread_log')")
+            if cur.fetchone()[0] is None:
+                cur.execute((MIGRATIONS_DIR / "007_deepread.sql").read_text())
+                conn.commit()
+            cur.execute("SELECT to_regclass('public.power_adjudication')")
+            if cur.fetchone()[0] is None:
+                cur.execute(
+                    (MIGRATIONS_DIR / "008_power_adjudication.sql").read_text())
+                conn.commit()
+            cur.execute(
+                "SELECT 1 FROM information_schema.columns "
+                "WHERE table_name = 'findings' AND column_name = 'signal_family'"
+            )
+            if cur.fetchone() is None:
+                cur.execute(
+                    (MIGRATIONS_DIR / "009_signal_family.sql").read_text())
+                conn.commit()
             # Migration 021 — capacity_claims + capacity_claim_matches.
             cur.execute("SELECT to_regclass('public.capacity_claims')")
             if cur.fetchone()[0] is None:
@@ -118,6 +140,7 @@ def db_conn(integration_db: str):
                 "colocated_candidates, findings, triage, documents, "
                 "applications, source_snapshots, council_aliases, "
                 "capacity_claim_matches, capacity_claims, site_members, "
+                "power_adjudication, deepread_log, "
                 "sites RESTART IDENTITY CASCADE"
             )
         conn.commit()

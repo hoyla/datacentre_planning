@@ -200,7 +200,7 @@ def load_planning_figures(cur, site_ids) -> dict[int, list[dict]]:
           AND pa.verdict = 'site_capacity'
           AND pa.value_mw IS NOT NULL
           AND pa.quantity_type IN ('it_load', 'total_site', 'grid_connection')
-        ORDER BY sm.site_id, pa.quantity_type, pa.value_mw DESC""",
+        ORDER BY sm.site_id, pa.quantity_type, pa.value_mw DESC, pa.id DESC""",
                 (list(site_ids),))
     out: dict[int, list[dict]] = {}
     for (site_id, qty, mw, ref, site_key, site_name, url,
@@ -242,7 +242,7 @@ def load_divergences(cur) -> list[dict]:
         JOIN sites s ON s.id = m.site_id
         WHERE m.retired_at IS NULL AND s.retired_at IS NULL
           AND cl.quantity_type <> 'metered_consumption'
-        ORDER BY s.id, cl.source_key""")
+        ORDER BY s.id, cl.source_key, cl.id""")
     by_site: dict[int, dict] = {}
     for (sid, name, skey, src, claim, value, unit, qty, term,
          conf, source_url, locator, quote) in cur.fetchall():

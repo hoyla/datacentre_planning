@@ -74,6 +74,39 @@ NOT_YET_KNOWN = ("not_yet_analysed", "partially_analysed", "no_documents",
 # characterise the evidence, not so many that the page becomes the corpus.
 FINDINGS_PER_SITE = 14
 
+# Hoisted out of the builder so a test can run it twice against one
+# database snapshot and compare. Every ordering in it is total —
+# `f.id` in the window, `id DESC` in the CTE, `site_key, rn` on the
+# outer select — because without those three the same database
+# produced a different artefact on each build: 2,503 of 10,425 rows
+# in a different position and 80 in a different *set*, across 69
+# sites, measured 2026-08-22. Diffing a build against the last
+# release is how regressions are caught here, so a build that is
+# not a function of its inputs disables the check.
+FINDINGS_SQL = """
+            WITH adj AS (
+              SELECT DISTINCT ON (finding_id) finding_id, verdict
+              FROM power_adjudication
+              ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC,
+                       id DESC)
+            SELECT site_key, signal_type, value_text, value_number, value_unit,
+                   verdict FROM (
+              SELECT s.site_key, f.signal_type, f.value_text, f.value_number,
+                     f.value_unit, adj.verdict,
+                     row_number() OVER (PARTITION BY s.site_key
+                       ORDER BY (f.signal_family IN ('power_demand','power_generation',
+                                 'power_grid','cooling','water','eia_process')) DESC,
+                                length(coalesce(f.value_text,'')) DESC,
+                                f.id) AS rn
+              FROM findings f
+              JOIN site_members m ON m.application_id=f.application_id AND m.retired_at IS NULL
+              JOIN sites s ON s.id=m.site_id
+              LEFT JOIN adj ON adj.finding_id = f.id
+              WHERE s.retired_at IS NULL AND f.value_text IS NOT NULL
+                AND f.signal_family <> 'unclassified') t
+            WHERE rn <= %s
+            ORDER BY site_key, rn"""
+
 
 def _handover():
     spec = importlib.util.spec_from_file_location(
@@ -1293,7 +1326,8 @@ def main() -> int:
             SELECT site_key, quantity_type, application_ref FROM (
               SELECT s.site_key, pa.quantity_type, a.application_ref,
                      row_number() OVER (PARTITION BY s.site_key, pa.quantity_type
-                                        ORDER BY pa.value_mw DESC) AS rn
+                                        ORDER BY pa.value_mw DESC,
+                                                 pa.id DESC) AS rn
               FROM power_adjudication pa
               JOIN applications a ON a.id = pa.application_id
               JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
@@ -1317,26 +1351,7 @@ def main() -> int:
         # market forecast sitting in a Chiltern application. They are kept
         # rather than hidden -- a reader seeing what the documents contain
         # is the point -- but each is labelled with whose it is.
-        cur.execute("""
-            WITH adj AS (
-              SELECT DISTINCT ON (finding_id) finding_id, verdict
-              FROM power_adjudication
-              ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC)
-            SELECT site_key, signal_type, value_text, value_number, value_unit,
-                   verdict FROM (
-              SELECT s.site_key, f.signal_type, f.value_text, f.value_number,
-                     f.value_unit, adj.verdict,
-                     row_number() OVER (PARTITION BY s.site_key
-                       ORDER BY (f.signal_family IN ('power_demand','power_generation',
-                                 'power_grid','cooling','water','eia_process')) DESC,
-                                length(coalesce(f.value_text,'')) DESC) AS rn
-              FROM findings f
-              JOIN site_members m ON m.application_id=f.application_id AND m.retired_at IS NULL
-              JOIN sites s ON s.id=m.site_id
-              LEFT JOIN adj ON adj.finding_id = f.id
-              WHERE s.retired_at IS NULL AND f.value_text IS NOT NULL
-                AND f.signal_family <> 'unclassified') t
-            WHERE rn <= %s""", (FINDINGS_PER_SITE,))
+        cur.execute(FINDINGS_SQL, (FINDINGS_PER_SITE,))
         findings = defaultdict(list)
         for k, st, vt, vn, vu, verdict in cur.fetchall():
             findings[k].append((st, vt, vn, vu, verdict))
