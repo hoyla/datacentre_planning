@@ -56,8 +56,8 @@ supplies it.
 **Neither a company name nor a postcode is an identity.** Two candidate
 generators run over the register — the words "data centre" in the holder
 or address, and a curated operator vocabulary in
-data/external_sources/ea-permit-operators.yaml — and both are labelled
-on the candidate rather than collapsed into a yes. Every attachment of a
+`environment-agency-permit-operators.yaml` under data/external_sources —
+and both are labelled on the candidate rather than collapsed into a yes. Every attachment of a
 permit to a site is then hand-adjudicated with written evidence, as the
 capacity claims are, because an operator with several campuses in one
 district is the Union Park failure waiting to happen again.
@@ -87,11 +87,11 @@ from dcp.capacity_claims import (CONFIDENCE_VOCAB, QUANTITY_CAVEATS,
 ROOT = Path(__file__).parent.parent
 EXTERNAL = ROOT / "data" / "external_sources"
 
-REGISTER_PATH = EXTERNAL / "ea-industrial-installations.zip"
+REGISTER_PATH = EXTERNAL / "environment-agency-industrial-installations.zip"
 REGISTER_MEMBER = "industrial-installations.csv"
-OPERATORS_PATH = EXTERNAL / "ea-permit-operators.yaml"
-MANIFEST_PATH = EXTERNAL / "ea-permit-documents.json"
-CLAIMS_PATH = EXTERNAL / "ea-permit-claims.yaml"
+OPERATORS_PATH = EXTERNAL / "environment-agency-permit-operators.yaml"
+MANIFEST_PATH = EXTERNAL / "environment-agency-permit-documents.json"
+CLAIMS_PATH = EXTERNAL / "environment-agency-permit-claims.yaml"
 
 # Where the permit PDFs and their extracted text land. Not committed:
 # data/raw/ is gitignored and these are public documents at permanent
@@ -100,10 +100,10 @@ CLAIMS_PATH = EXTERNAL / "ea-permit-claims.yaml"
 # (DATA-LICENSING.md).
 #
 # What is committed instead is the pair that makes a published figure
-# checkable without them: `ea-permit-documents.json`, which pins every
-# document's URL, sha256, byte count and page count, and
-# `ea-permit-claims.yaml`, which holds each claim with the verbatim
-# sentence it was read from. That is the same shape as the filed-accounts
+# checkable without them: `environment-agency-permit-documents.json`,
+# which pins every document's URL, sha256, byte count and page count,
+# and `environment-agency-permit-claims.yaml`, which holds each claim
+# with the verbatim sentence it was read from. That is the same shape as the filed-accounts
 # and operator-website sources — a committed file of claims with quotes —
 # and it is a stronger reproducibility contract than a copy of the text,
 # because it pins the bytes rather than a derivation of them.
@@ -550,7 +550,7 @@ SOURCE_TITLE = "Environment Agency public register"
 # the committed page text, and the only hand-written file is the matches —
 # which permit belongs to which site, and why.
 
-MATCHES_PATH = EXTERNAL / "ea-permit-matches.yaml"
+MATCHES_PATH = EXTERNAL / "environment-agency-permit-matches.yaml"
 
 STAGE = "permitted standby generation"
 
