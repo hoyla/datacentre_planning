@@ -165,10 +165,26 @@ drained by the next start, before the cohort is selected.
 
 ## The laptop dependency, and how to remove it
 
-**Postgres lives on the laptop**, in Docker, at `192.168.50.213:5433`.
-The Studio's `.env` points there. So the Studio only reads while the
-laptop is awake and on the same network — closing the lid stalls it, and
-taking the laptop to work stops it entirely.
+**Postgres lives on the laptop**, in Docker, at `192.168.50.179:5433`
+(90011, user `hoyla`). The Studio's `.env` must point there. So the
+Studio only reads while the laptop is awake and on the same network —
+closing the lid stalls it, and taking the laptop to work stops it
+entirely.
+
+> **Migrated 2026-08-18.** The database moved off the old laptop
+> (`192.168.50.213`, user `luke_hoyland`) to 90011. Until the Studio's
+> `.env` is updated it still names the old address, and the failure is
+> silent: a read started against a stale pointer drains its spool into
+> a database that is no longer authoritative, and the two diverge with
+> nothing raising an error. Update the Studio's `.env` *before* the
+> next read, and `docker compose down` on the old laptop so a stale
+> pointer fails loudly instead of succeeding quietly.
+>
+> **Done.** Checked 2026-08-22: the corroboration read was inserting
+> findings into 90011 as the check ran, so the Studio's `.env` was
+> updated and the hazard above is history rather than a live warning.
+> Kept because the failure mode returns the next time the database
+> moves — which the section below says it should, after Phase 2.
 
 That no longer stops the read — see *If the laptop will be away* above:
 the run goes offline, keeps reading and spools. What the dependency still

@@ -12,7 +12,7 @@
     <array>
         <string>/bin/zsh</string>
         <string>-lc</string>
-        <string>cd /Users/luke_hoyland/Code/Other_GitHub/datacentre_planning &amp;&amp; set -a &amp;&amp; . "$HOME/.config/datacentre_planning/backup.env" &amp;&amp; set +a &amp;&amp; .venv/bin/python scripts/backup_db.py</string>
+        <string>cd "$HOME/Code/hoyla_github/datacentre_planning" &amp;&amp; set -a &amp;&amp; . "$HOME/.config/datacentre_planning/backup.env" &amp;&amp; set +a &amp;&amp; .venv/bin/python scripts/backup_db.py</string>
     </array>
 
     <key>StartCalendarInterval</key>
@@ -21,10 +21,17 @@
         <key>Minute</key><integer>0</integer>
     </dict>
 
+    <!-- Absolute, and deliberately not $HOME: launchd does no variable
+         expansion in these two keys, unlike the command above, which is
+         a zsh string and does. Which means these are the one part of
+         this file that is specific to the machine it was last edited
+         on — check them before `cp`ing it into ~/Library/LaunchAgents
+         (docs/BACKUP.md), or the job fails to start with nowhere to
+         say so. -->
     <key>StandardOutPath</key>
-    <string>/Users/luke_hoyland/Code/Other_GitHub/datacentre_planning/logs/backup.log</string>
+    <string>/Users/hoyla/Code/hoyla_github/datacentre_planning/logs/backup.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/luke_hoyland/Code/Other_GitHub/datacentre_planning/logs/backup.log</string>
+    <string>/Users/hoyla/Code/hoyla_github/datacentre_planning/logs/backup.log</string>
 
     <!-- Deliberately absent: RunAtLoad. A backup should happen on a
          schedule, not every time someone logs in. And no KeepAlive — if
