@@ -142,7 +142,7 @@ def fuels_for(texts) -> tuple[list[tuple[str, int]], bool]:
         for _key, pattern, label in _FUEL_COMPILED:
             if pattern.search(t):
                 counts[label] = counts.get(label, 0) + 1
-    ranked = sorted(counts.items(), key=lambda kv: -kv[1])
+    ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
     # CHP claimed on a single passing mention is usually a comparison to
     # someone else's scheme; require corroboration.
     return ranked, chp >= 2
@@ -188,6 +188,14 @@ def ranked_label(ranked, floor: float, *, noun: str = MENTION_NOUN) -> str:
     are the same claim about the same kind of number, and when the
     wording of that claim changes it should not change in only two of the
     three places.
+
+    Callers must rank on `(-count, label)`, not on `-count` alone. Python
+    sorts stably, so a bare count leaves labels tied on the same count in
+    whatever order the rows arrived from the database — and two builds of
+    one database then print "also referenced: Heat reuse / offtake,
+    Air-cooled" and "…: Air-cooled, Heat reuse / offtake". A tie in a
+    sort key is the same defect as a tie in an ORDER BY; see
+    tests/test_export_ordering.py for why that matters here.
     """
     if not ranked:
         return ""
@@ -308,7 +316,7 @@ def cooling_profile(texts) -> tuple[str, str]:
                 counts[label] = counts.get(label, 0) + 1
     if not counts:
         return "", ""
-    ranked = sorted(counts.items(), key=lambda kv: -kv[1])
+    ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
     return ranked_label(ranked, COOLING_SECONDARY_FLOOR), (
         "Cooling technologies named in this site's documents, counted by "
         "how many passages name each — not by how much plant is installed. "
@@ -713,7 +721,7 @@ def _parties_for_sites(conn) -> dict[str, dict]:
         # Floor 0 keeps every one of the top few named — an adviser is not
         # demoted to 'also referenced' for being named less often than the
         # developer, which is the normal case rather than a weak signal.
-        ranked = sorted(counts.items(), key=lambda kv: -kv[1])[:top]
+        ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:top]
         return ranked_label([(display[k], n) for k, n in ranked], 0)
 
     return {site_key: {

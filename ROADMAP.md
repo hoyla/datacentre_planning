@@ -191,28 +191,6 @@ investigation.
 
 ## Smaller things
 
-- **The reader build is not reproducible, and it is not only ordering.**
-  Two builds of an unchanged database differ, which matters because
-  diffing a build against the last release is how regressions get caught
-  here. The handover recorded this as a row-order problem handed to
-  another session; **nothing landed, and it is worse than described.**
-  Measured 2026-08-22 by running the reader's per-site findings query
-  twice inside one `REPEATABLE READ` transaction, so the corpus could
-  not move underneath it: 2,503 of 10,425 rows came back in a different
-  position, and **80 rows differed in membership across 69 sites** —
-  those sites would render a different set of findings on two builds of
-  the same data.
-
-  Three causes in one query (`scripts/export_reader.py`, the findings
-  block around line 1320), all of them missing tiebreaks:
-  the `row_number()` window orders by a boolean and
-  `length(value_text)` with nothing unique after them, so which findings
-  survive the `rn <= N` cut is arbitrary among ties; the outer select has
-  no `ORDER BY` at all; and the `adj` CTE's `DISTINCT ON` can pick either
-  of two adjudications sharing a verdict class and an `inserted_at`.
-  Adding `f.id` to the window, `ORDER BY site_key, rn` to the outer
-  select and `, id DESC` to the CTE should close all three — small, but
-  it changes rendered output, so rebuild and diff rather than assuming.
 - **Re-measure the 1.71 kW/m² floor-area factor.** It drives the
   published power estimate for every site with no disclosed capacity. An
   ad-hoc query on 2026-08-11 suggested it may have moved — 88 sites now
@@ -265,6 +243,18 @@ investigation.
   to the string would make that class impossible; making them computed
   (above) is the better fix, and the test is what stops the next one
   being hardcoded.
+
+  **A build is not yet asserted to be a function of its inputs.** Two
+  builds of one database differed on 42 lines until 2026-08-22 (HISTORY:
+  *A build has to be a function of its inputs*), and they now differ only
+  on the generation timestamp. Nothing holds that. The check is cheap and
+  the discipline already exists — diffing a build against the last
+  release — so a test that builds the reader twice against a fixed
+  snapshot and asserts the two are identical apart from the stamp would
+  close it. Note the trap found while fixing it: an integration test on a
+  small fixture does *not* catch this, because Postgres returns a handful
+  of tied rows in insertion order regardless. It has to be at scale, or
+  it has to read the query.
 
   **The pattern to copy** is `tests/test_release_defaults.py`: it asserts
   a *rule* over the whole tree — no default may name a release — rather

@@ -103,7 +103,8 @@ TABLES: dict[str, str] = {
                a.first_seen_at
         FROM applications a""",
     "triage_verdicts": """
-        SELECT a.application_ref, t.model, t.verdict, t.worth_deep_read,
+        SELECT t.id AS triage_id,
+               a.application_ref, t.model, t.verdict, t.worth_deep_read,
                array_to_string(t.signals, ', ') AS signals, t.why, t.confidence,
                t.raw_response->>'rubric' AS rubric,
                t.raw_response->>'prompt_version' AS prompt_version,
@@ -131,7 +132,8 @@ TABLES: dict[str, str] = {
           SELECT DISTINCT ON (finding_id)
                  finding_id, verdict, quantity_type, value_mw, unit_note
           FROM power_adjudication
-          ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC)
+          ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC,
+                   id DESC)
         SELECT a.application_ref, f.signal_type, f.value_text, f.value_number,
                f.value_unit, f.evidence_text, f.evidence_page,
                -- Whose division evidence_page indexes. Only a PDF has
@@ -263,11 +265,14 @@ VIEWS: dict[str, str] = {
         LEFT JOIN verd  ON verd.site_key  = s.site_key
         LEFT JOIN barb  ON barb.site_key  = s.site_key""",
     "latest_verdict": """
-        SELECT application_ref, verdict, worth_deep_read, confidence, rubric,
-               prompt_version, enriched, why, signals, inserted_at
+        SELECT triage_id, application_ref, verdict, worth_deep_read,
+               confidence, rubric, prompt_version, enriched, why, signals,
+               inserted_at
         FROM (SELECT *, row_number() OVER (PARTITION BY application_ref, rubric
-                                           ORDER BY inserted_at DESC) AS rn
-              FROM triage_verdicts) WHERE rn = 1""",
+                                           ORDER BY inserted_at DESC,
+                                                    triage_id DESC) AS rn
+              FROM triage_verdicts) WHERE rn = 1
+        ORDER BY application_ref, rubric""",
 }
 
 
@@ -345,7 +350,11 @@ def main() -> None:
                            "source_url and obtained record how each file was got."),
         ("verdict_note", "triage_verdicts is append-only and multi-rubric; use the "
                          "latest_verdict view for one row per application per rubric. "
-                         "model_input is exactly what the model saw."),
+                         "model_input is exactly what the model saw. triage_id is "
+                         "the store's own key for the row: it makes a single "
+                         "verdict citable, and it is what latest_verdict breaks "
+                         "ties on so that two exports of one database agree "
+                         "about which verdict is the latest."),
         ("capacity_claims_note", "External figures as their source states "
                          "them, from three sources with different standing: "
                          "NESO's Existing Agreements Register (contracted "

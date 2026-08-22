@@ -73,7 +73,7 @@ from dcp import db  # noqa: E402
 SITE_SQL = """
 WITH latest AS (
   SELECT DISTINCT ON (application_id) application_id, verdict, confidence, model
-  FROM triage ORDER BY application_id, inserted_at DESC),
+  FROM triage ORDER BY application_id, inserted_at DESC, id DESC),
 app_docs AS (
   SELECT application_id, count(*) AS n FROM documents GROUP BY application_id),
 app_findings AS (
@@ -180,7 +180,7 @@ SELECT s.site_key, s.classification, s.display_name,
        -- Correlated rather than joined because array_agg cannot flatten
        -- the per-application arrays across a site group; runs once per
        -- site against an indexed column.
-       (SELECT array_agg(fam || ' (' || n || ')' ORDER BY n DESC)
+       (SELECT array_agg(fam || ' (' || n || ')' ORDER BY n DESC, fam)
           FROM (SELECT f2.signal_family AS fam, count(*) AS n
                   FROM findings f2
                   JOIN site_members m3
@@ -228,7 +228,7 @@ APP_SQL = """
 WITH latest AS (
   SELECT DISTINCT ON (application_id) application_id, verdict, confidence,
          model, why, signals
-  FROM triage ORDER BY application_id, inserted_at DESC),
+  FROM triage ORDER BY application_id, inserted_at DESC, id DESC),
 app_docs AS (
   SELECT application_id, count(*) AS n FROM documents GROUP BY application_id),
 app_findings AS (
