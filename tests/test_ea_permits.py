@@ -158,9 +158,37 @@ def test_thermal_input_never_becomes_electrical_megawatts():
 def test_thermal_input_carries_a_caveat_and_a_label():
     assert "thermal_input" in cc.QUANTITY_CAVEATS
     assert "thermal_input" in cc.QUANTITY_LABELS
+    assert "not electricity delivered" in cc.QUANTITY_CAVEATS["thermal_input"]
+
+
+def test_the_caveat_sources_its_thermal_to_electrical_range():
+    """An earlier version of this caveat told the reader to divide by
+    "roughly 2.4 to 2.5", a figure taken from a handover and traceable to
+    no source at all. The one permit stating both quantities gives 1.6 to
+    2.4 MWe against an average 5.1 MWth — a spread of about two to three
+    times, not a constant. The caveat has to name where that comes from
+    and has to give a range, because a reader who divides by a single
+    number gets a false precision this data cannot support.
+    """
     caveat = cc.QUANTITY_CAVEATS["thermal_input"]
-    for absent in ("not electricity delivered", "2.4"):
-        assert absent in caveat
+    assert "Telehouse" in caveat
+    assert "two and three times" in caveat
+    # And the sentence it rests on is in the store, not just in prose.
+    telehouse = next(c for c in ea.load_ea_claims()
+                     if c.attrs["permission_number"] == "EPR/SP3237JU")
+    assert "1.6 megawatt electrical" in "".join(
+        ea.permit_pages(telehouse.attrs["document_stem"])
+    ) or not ea.have_permit_text()
+
+
+def test_the_caveat_does_not_assume_the_fleet_equals_the_load():
+    """Five permits state redundancy and each says the fleet is bigger
+    than the site needs; the earlier caveat asserted that of all 42."""
+    caveat = cc.QUANTITY_CAVEATS["thermal_input"]
+    assert "redundancy" in caveat
+    assert "N+1" in caveat
+    stated = [c for c in ea.load_ea_claims() if c.attrs["redundancy"]]
+    assert stated, "the reading must capture redundancy where it is stated"
 
 
 def test_every_quote_is_still_on_the_page_it_cites():

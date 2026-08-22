@@ -127,10 +127,16 @@ QUANTITY_CAVEATS = {
     "thermal_input": (
         "The rated thermal input of the site's standby generators, from "
         "its environmental permit. It is fuel burned, not electricity "
-        "delivered: roughly 2.4 to 2.5 units of thermal input produce one "
-        "of electrical output, and a fleet is built to carry peak load "
-        "plus redundancy. So it bounds what a site can draw rather than "
-        "stating what it does. Plant of 1–5 MWth needs no permit until "
+        "delivered, and the two are not interchangeable: the one permit "
+        "here that states both — Telehouse Docklands — gives engines of "
+        "1.6 to 2.4 MW electrical at an average 5.1 MWth, so thermal "
+        "input runs somewhere between two and three times the electrical "
+        "rating, and where a site sits in that range is not something "
+        "this figure says. Nor is a fleet the same as a load: five of "
+        "these permits state their redundancy, and each says the fleet "
+        "is larger than the site needs — Ark Spring Park's is \u201cN+1\u201d, "
+        "\u201cone generator more than would be required to provide the total "
+        "power for the site\u201d. Plant of 1\u20135 MWth needs no permit until "
         "1 January 2029, so no permit is not no generators."),
 }
 

@@ -502,9 +502,14 @@ North campus: 129 generators, 925 MWth.
 
 **Why it does not breach recommendation 1 below.** It is not an external
 MW becoming a site column. Thermal input is its own quantity in the
-claims vocabulary, `value_mw` is null on every one of these rows because
-MWth does not convert to MW, and the ratio that turns one into the other
-— roughly 2.4 to 2.5 — is left for a reporter to apply in the open.
+claims vocabulary and `value_mw` is null on every one of these rows,
+because MWth does not convert to MW. Nor is there a constant to convert
+it with: the one permit in the set stating both quantities is Telehouse
+Docklands, "The rated generation capacity of the SBGs ranges from 1.6
+megawatt electrical (MWe) to 2.4 MWe (average thermal input of 5.1
+MWth)", which puts thermal input at roughly two to three times the
+electrical rating. That spread is a reporter's to apply in the open, and
+to state.
 
 **Limits that travel with it.** Existing plant of 1–5 MWth needs no
 permit until 1 January 2029, so an absent permit proves nothing.
@@ -513,9 +518,21 @@ the plant provides balancing services or Capacity Market/DSR — which is
 the same exclusion that made the Capacity Market register a dead end in
 §4, and explains why. Wales is NRW's register and Scotland SEPA's.
 
+**A caution about the fleet, from the permits rather than from
+engineering folklore.** A standby fleet is not a measure of load, and
+five of the 42 say so themselves: Ark Spring Park's redundancy is
+"N+1", "one generator more than would be required to provide the total
+power for the site in event of external power failure", and Amazon Hayes
+states that "only 12 of the 14 generators would need to operate to carry
+the sites electrical load". Where a permit states its redundancy the
+reading captures it; the other 37 say nothing about it, and nothing
+should be assumed for them.
+
 Licence: Environment Agency Conditional Licence — redistribution
-permitted with attribution, which is why the snapshot and the permit
-text are committed where most sources here are not.
+permitted with attribution. The register snapshot is committed because it
+is a daily file with no archive behind it; the permit documents are
+fetched rather than republished, like everything else under
+`data/raw/`.
 
 ### DESNZ sub-national electricity consumption — in use since 2026-08-12
 

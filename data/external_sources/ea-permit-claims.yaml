@@ -1,0 +1,2164 @@
+# Environment Agency permit claims, generated — do not hand-edit.
+#
+# Written by scripts/read_ea_permits.py --write-claims from the
+# permit text under data/raw/ea_permits/, which is not committed.
+# Each claim carries the verbatim sentence it was read from, so a
+# figure can be checked here without the documents; re-fetch them
+# with scripts/fetch_ea_permits.py --documents to re-verify against
+# the source, which the test suite does whenever they are present.
+#
+# Contains Environment Agency information © Environment Agency and/or database right.
+
+claims:
+- claim_name: Linmere Island Data Centre (EPR/AP3427SQ)
+  company_name: AMAZON DATA SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 324.6
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2026-02-05'
+  locator: permit page 11
+  quote: Operation of 42 emergency standby generators with a total thermal input
+    of approximately 324.6 MWth.
+  url: https://www.gov.uk/government/publications/ec2a-2fa-amazon-data-services-uk-limited-environmental-permit-issued-eprap3427sqa001
+  attrs:
+    permission_number: EPR/AP3427SQ
+    permit_title: Linmere Island Data Centre
+    holder: AMAZON DATA SERVICES UK LIMITED
+    operator: Amazon Web Services
+    operator_kind: hyperscale
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: LU5 5GX
+    local_authority: Central Bedfordshire
+    easting: 503503
+    northing: 225622
+    generator_count: 42
+    engines:
+    - - 40
+      - 8.0
+    - - 2
+      - 2.1
+    engines_count: 42
+    engines_total_mwth: 324.2
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 324.2 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: Operation of 42 emergency standby generators with a total thermal input
+      of approximately 324.6 MWth.
+    document_kind: permit
+    document_title: 'Permit Issued: Amazon Data Services UK Limited'
+    document_stem: ap3427sq-permit
+    document_sha256: 14be40f3f8124508b841a75e5a64845157656bf69e5141c5a74cd74219f27c78
+    document_url: https://assets.publishing.service.gov.uk/media/69846ac9a886d1b3227bd6de/Application_Bespoke_A001_Permit_Issue_-_29012026.pdf
+    source_document: ap3427sq-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Virtus Data Centres Stockley Park Campus (EPR/AP3903PD)
+  company_name: VIRTUS HOLDCO LIMITED
+  quantity_type: thermal_input
+  value: 470.0
+  unit: MWth
+  stage: permitted standby generation, as varied
+  as_at: '2021-08-04'
+  locator: variation page 14
+  quote: Operation of 78 emergency standby generators, across four data halls,
+    with a total thermal input of approximately 470 MWth.
+  url: https://www.gov.uk/government/publications/ub11-1hb-virtus-holdco-limited-environmental-permit-issued-eprap3903pdv004
+  attrs:
+    permission_number: EPR/AP3903PD
+    permit_title: Virtus Data Centres Stockley Park Campus
+    holder: VIRTUS HOLDCO LIMITED
+    operator: VIRTUS Data Centres
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: UB11 1HB
+    local_authority: Hillingdon
+    easting: 572900
+    northing: 180150
+    generator_count: 78
+    engines:
+    - - 21
+      - 6.285
+    - - 5
+      - 5.714
+    - - 5
+      - 6.857
+    - - 5
+      - 5.714
+    - - 24
+      - 6.285
+    - - 14
+      - 6.857
+    - - 4
+      - 6.857
+    engines_count: 78
+    engines_total_mwth: 497.676
+    redundancy: null
+    covers_sites: null
+    corroboration: the stated total is 470.0 MWth and the per-engine ratings read
+      from this document sum to 497.676 MWth; the two do not agree, and why is
+      worth reading the permit for — Telehouse Docklands states 93.6 MWth for
+      19 generators and schedules 27, the difference being an expansion the permit
+      already authorises
+    summed_from_engines: false
+    quote: Operation of 78 emergency standby generators, across four data halls,
+      with a total thermal input of approximately 470 MWth.
+    document_kind: variation
+    document_title: 'Variation notice: Virtus HoldCo Limited'
+    document_stem: ap3903pd-variation
+    document_sha256: 9814150e185399c9bdad3810ddfc16e5fc36b15af622dd1f3c202eabd21d3a1d
+    document_url: https://assets.publishing.service.gov.uk/media/67c5c255b0bb6528ee866d2d/Application_Variation_V004_Notice_Issued_-_25022025.pdf
+    source_document: ap3903pd-variation
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: 240, East India Dock House (EPR/BP3530YR)
+  company_name: GLOBAL SWITCH LIMITED
+  quantity_type: thermal_input
+  value: 159.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2019-06-25'
+  locator: permit page 2
+  quote: London East has a total of 37 DRUPS units with a total thermal capacity
+    of 159 MWth.
+  url: https://www.gov.uk/government/publications/e14-9yy-global-switch-limited-environmental-permit-issued-eprbp3530yra001
+  attrs:
+    permission_number: EPR/BP3530YR
+    permit_title: null
+    holder: GLOBAL SWITCH LIMITED
+    operator: Global Switch
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: E14 9YY
+    local_authority: Tower Hamlets
+    easting: 538580
+    northing: 180990
+    generator_count: null
+    engines: []
+    engines_count: null
+    engines_total_mwth: null
+    redundancy: null
+    covers_sites: null
+    corroboration: no per-engine breakdown was found, so the stated total is unchecked
+    summed_from_engines: false
+    quote: London East has a total of 37 DRUPS units with a total thermal capacity
+      of 159 MWth.
+    document_kind: permit
+    document_title: 'Permit: Global Switch Limited'
+    document_stem: bp3530yr-permit
+    document_sha256: c97e8b553353414e67be47d2119f41ea228b7aaca9d8b18774f200edbb24783a
+    document_url: https://assets.publishing.service.gov.uk/media/5d15e23440f0b609cbdc46fd/Permit.pdf
+    source_document: bp3530yr-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Hemel Hempstead Data Centre (EPR/BP3546QP)
+  company_name: AMAZON DATA SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 222.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2023-12-19'
+  locator: permit page 2
+  quote: The site is comprised of 33 containerised generators for emergency back-up
+    energy purposes with a combined thermal input capacity of 222MWth.
+  url: https://www.gov.uk/government/publications/hp2-4zb-amazon-data-services-uk-limited-environmental-permit-issued-eprbp3546qpa001
+  attrs:
+    permission_number: EPR/BP3546QP
+    permit_title: Hemel Hempstead Data Centre
+    holder: AMAZON DATA SERVICES UK LIMITED
+    operator: Amazon Web Services
+    operator_kind: hyperscale
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: HP2 4ZB
+    local_authority: Dacorum
+    easting: 508120
+    northing: 207510
+    generator_count: 33
+    engines:
+    - - 30
+      - 6.86
+    - - 2
+      - 6.86
+    - - 1
+      - 2.57
+    engines_count: 33
+    engines_total_mwth: 222.09
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 222.09 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The site is comprised of 33 containerised generators for emergency
+      back-up energy purposes with a combined thermal input capacity of 222MWth.
+    document_kind: permit
+    document_title: 'Permit Issued: Amazon Data Services UK Limited'
+    document_stem: bp3546qp-permit
+    document_sha256: 5fecfa449ed78fa04d08a72853a46d2d69d03c2bae6e1ff4de18a7166bd65c98
+    document_url: https://assets.publishing.service.gov.uk/media/6582d78023b70a000d234cea/Application_Bespoke_Issued_-_19122023.pdf
+    source_document: bp3546qp-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Hemel Hempstead Data Centres (EPR/BP3800PZ)
+  company_name: NTT GLOBAL DATA CENTERS EMEA UK LTD
+  quantity_type: thermal_input
+  value: 265.64
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2021-12-17'
+  locator: permit page 12
+  quote: Operation of 64 emergency standby generators across four sites with a
+    total thermal input of approximately 265.64 MWth.
+  url: https://www.gov.uk/government/publications/hp2-7up-hp2-7su-hp2-7df-hp2-7eq-ntt-global-data-centers-emea-uk-limited-environmental-permit-issued-eprbp3800pza001
+  attrs:
+    permission_number: EPR/BP3800PZ
+    permit_title: Hemel Hempstead Data Centres
+    holder: NTT GLOBAL DATA CENTERS EMEA UK LTD
+    operator: NTT Global Data Centers
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: HP2 7SU
+    local_authority: Dacorum
+    easting: 508130
+    northing: 208440
+    generator_count: 64
+    engines: []
+    engines_count: null
+    engines_total_mwth: null
+    redundancy: null
+    covers_sites: four
+    corroboration: no per-engine breakdown was found, so the stated total is unchecked
+    summed_from_engines: false
+    quote: Operation of 64 emergency standby generators across four sites with
+      a total thermal input of approximately 265.64 MWth.
+    document_kind: permit
+    document_title: 'Permit: NTT Global Data Centers EMEA UK Limited'
+    document_stem: bp3800pz-permit
+    document_sha256: 45cf14409185a5e678c7f864eb030bec6823a5460ad716b0f264586c0bc2fcbb
+    document_url: https://assets.publishing.service.gov.uk/media/6204fb3ed3bf7f314b6ab82f/Permit_BP3800PZ.pdf
+    source_document: bp3800pz-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Virtus Slough Campus Data Centres (EPR/BP3945QX)
+  company_name: VIRTUS HOLDCO LIMITED
+  quantity_type: thermal_input
+  value: 180.5
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2023-08-08'
+  locator: other page 2
+  quote: The total aggregated capacity of all 31 generators at the installation
+    is 180.5 MWth.
+  url: https://www.gov.uk/government/publications/sl1-4qz-virtus-holdco-limited-environmental-permit-issued-eprbp3945qxa001
+  attrs:
+    permission_number: EPR/BP3945QX
+    permit_title: Virtus Slough Campus Data Centres
+    holder: VIRTUS HOLDCO LIMITED
+    operator: VIRTUS Data Centres
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Combustion;
+      Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)
+    postcode: SL1 4QZ
+    local_authority: Slough
+    easting: 495720
+    northing: 181330
+    generator_count: 31
+    engines:
+    - - 5
+      - 7.28
+    - - 8
+      - 6.04
+    - - 3
+      - 6.04
+    - - 3
+      - 5.61
+    - - 6
+      - 4.72
+    - - 6
+      - 5.42
+    engines_count: 31
+    engines_total_mwth: 180.51
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 180.51 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The total aggregated capacity of all 31 generators at the installation
+      is 180.5 MWth.
+    document_kind: other
+    document_title: 'Pemit: Virtus Holdco Limited'
+    document_stem: bp3945qx-permit
+    document_sha256: b92fba5172e6b32c2dccec6b80ff191b02b7e7e130ec6e2775e3964c68ea708a
+    document_url: https://assets.publishing.service.gov.uk/media/64d24548e5491a000d4b59d2/Permit_Virtus_Campus_EPRBP3945QXA001.pdf
+    source_document: bp3945qx-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: GB One Data Centre (EPR/CP3042QG)
+  company_name: GTR MANAGEMENT SERVICES LIMITED
+  quantity_type: thermal_input
+  value: 186.417
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2023-12-14'
+  locator: permit page 2
+  quote: The combustion plant comprises 21 x 8.877 MWth gas oil fuelled standby
+    generators, with an aggregated total combustion capacity on-site of approximately
+    186.417 MWth.
+  url: https://www.gov.uk/government/publications/sl1-4bg-gtr-management-services-limited-environmental-permit-issued-eprcp3042qga001
+  attrs:
+    permission_number: EPR/CP3042QG
+    permit_title: GB One Data Centre
+    holder: GTR MANAGEMENT SERVICES LIMITED
+    operator: null
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity
+      (Included)
+    postcode: SL1 4BG
+    local_authority: Slough
+    easting: 495950
+    northing: 180760
+    generator_count: 21
+    engines:
+    - - 21
+      - 8.877
+    engines_count: 21
+    engines_total_mwth: 186.417
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 186.417 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The combustion plant comprises 21 x 8.877 MWth gas oil fuelled standby
+      generators, with an aggregated total combustion capacity on-site of approximately
+      186.417 MWth.
+    document_kind: permit
+    document_title: 'Permit: GTR Management Services Limited'
+    document_stem: cp3042qg-permit
+    document_sha256: 52f114d20ae7b144f644c03fd3954ab9194f98455403a9608578ec1392a984f8
+    document_url: https://assets.publishing.service.gov.uk/media/657afb27254aaa000d050d70/Application_Bespoke_Permit_-_08122023.pdf
+    source_document: cp3042qg-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: LD11x (EPR/CP3409BH)
+  company_name: EQUINIX (UK) LIMITED
+  quantity_type: thermal_input
+  value: 96.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2021-02-09'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is 96 MWth.
+  url: https://www.gov.uk/government/publications/sl1-4jw-equinix-uk-limited-environmental-permit-issued-eprcp3409bha001
+  attrs:
+    permission_number: EPR/CP3409BH
+    permit_title: LD11x
+    holder: EQUINIX (UK) LIMITED
+    operator: Equinix
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly
+      Associated Activity (Included)
+    postcode: SL1 4JW
+    local_authority: Slough
+    easting: 494558
+    northing: 181312
+    generator_count: null
+    engines:
+    - - 12
+      - 8.0
+    engines_count: 12
+    engines_total_mwth: 96.0
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 96.0 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is 96 MWth.
+    document_kind: permit
+    document_title: 'Permit: Equinix (UK) Limited'
+    document_stem: cp3409bh-permit
+    document_sha256: 12f2da12c8efa6aba0b951463c4b2d030f17dcfe23d0d0f94c9e5fc1513cc121
+    document_url: https://assets.publishing.service.gov.uk/media/602b89e88fa8f5038238e9fa/Permit_CP3409BH.pdf
+    source_document: cp3409bh-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: NTT Dagenham Data Centre (EPR/CP3902LV)
+  company_name: NTT GLOBAL DATA CENTERS EMEA UK LTD
+  quantity_type: thermal_input
+  value: 49.2
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2021-12-31'
+  locator: permit page 2
+  quote: 'LON1A with 28 SBGs (classed as ‘new’ MCPs as part of the IED) already
+    permitted are: 12 SBGs each with a thermal rated input of 4.1 MWth (total
+    thermal rated input of 49.2 MWth) (phase 1); and 16 SBGs each with a thermal
+    rated unput of 6.947 MWth (total thermal rated input of 111.15 MWth (phases
+    2 and 3).'
+  url: https://www.gov.uk/government/publications/rm10-7fz-ntt-global-data-centers-emea-uk-ltd-environmental-permit-issued-eprcp3902lvv003
+  attrs:
+    permission_number: EPR/CP3902LV
+    permit_title: NTT Dagenham Data Centre
+    holder: NTT GLOBAL DATA CENTERS EMEA UK LTD
+    operator: NTT Global Data Centers
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: RM10 7FZ
+    local_authority: Barking and Dagenham
+    easting: 551020
+    northing: 185370
+    generator_count: null
+    engines:
+    - - 12
+      - 4.1
+    engines_count: 12
+    engines_total_mwth: 49.2
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 49.2 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: 'LON1A with 28 SBGs (classed as ‘new’ MCPs as part of the IED) already
+      permitted are: 12 SBGs each with a thermal rated input of 4.1 MWth (total
+      thermal rated input of 49.2 MWth) (phase 1); and 16 SBGs each with a thermal
+      rated unput of 6.947 MWth (total thermal rated input of 111.15 MWth (phases
+      2 and 3).'
+    document_kind: permit
+    document_title: 'Permit: NTT Global Data Centers EMEA UK LTD'
+    document_stem: cp3902lv-permit
+    document_sha256: 502dffbe39c8ba3d0fa4402397fe2f44ea59208aae437829f704fd7be388e22b
+    document_url: https://assets.publishing.service.gov.uk/media/67694844e6ff7c8a1fde9d29/Application_Variation_V003_Notice_Issued_-_17122024.pdf
+    source_document: cp3902lv-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Colt - Powergate (EPR/DP3107LF)
+  company_name: COLT DATA CENTRE SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 62.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2024-05-31'
+  locator: permit page 2
+  quote: The contingency standby power solution comprises 3 x 4.17MWth, 1 x 2.86MWth,
+    3 x 4.27MWth, 1 x 4.3MWth and 5 x 5.9MWth liquid fuelled generators with an
+    aggregated thermal input of approximately 62MWth.
+  url: https://www.gov.uk/government/publications/nw10-6pw-colt-data-centre-services-uk-limited-environmental-permit-issued-eprdp3107lfa001
+  attrs:
+    permission_number: EPR/DP3107LF
+    permit_title: Colt - Powergate
+    holder: COLT DATA CENTRE SERVICES UK LIMITED
+    operator: Colt Data Centre Services
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity
+      (Included)
+    postcode: NW10 6PN
+    local_authority: Ealing
+    easting: 520970
+    northing: 182810
+    generator_count: 1
+    engines:
+    - - 3
+      - 4.17
+    - - 1
+      - 2.86
+    - - 3
+      - 4.27
+    - - 1
+      - 4.3
+    - - 5
+      - 5.9
+    engines_count: 13
+    engines_total_mwth: 61.98
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 61.98 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The contingency standby power solution comprises 3 x 4.17MWth, 1 x
+      2.86MWth, 3 x 4.27MWth, 1 x 4.3MWth and 5 x 5.9MWth liquid fuelled generators
+      with an aggregated thermal input of approximately 62MWth.
+    document_kind: permit
+    document_title: 'Permit: Colt Data Centre Services UK Limited'
+    document_stem: dp3107lf-permit
+    document_sha256: 9b2ff477b3370dd2809fa0b10f038962275234806bd8d5deb8943555fd941bb5
+    document_url: https://assets.publishing.service.gov.uk/media/6659b3c2d470e3279dd3346e/Application_Bespoke_Permit_Issued_-_23052024.pdf
+    source_document: dp3107lf-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: LON11 Data Centre (EPR/DP3348QS)
+  company_name: VIRTUS LONDON 11 LIMITED
+  quantity_type: thermal_input
+  value: 72.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2023-07-26'
+  locator: permit page 2
+  quote: At the site there are 12 standby generators with an aggregated capacity
+    of 72 MWth.
+  url: https://www.gov.uk/government/publications/sl1-4ha-virtus-london-11-limited-environmental-permit-issued-eprdp3348qsa001
+  attrs:
+    permission_number: EPR/DP3348QS
+    permit_title: LON11 Data Centre
+    holder: VIRTUS LONDON 11 LIMITED
+    operator: VIRTUS Data Centres
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: SL1 4HA
+    local_authority: Slough
+    easting: 495390
+    northing: 180900
+    generator_count: 12
+    engines:
+    - - 12
+      - 6.0
+    engines_count: 12
+    engines_total_mwth: 72.0
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 72.0 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: At the site there are 12 standby generators with an aggregated capacity
+      of 72 MWth.
+    document_kind: permit
+    document_title: 'Permit: Virtus London 11 Limited'
+    document_stem: dp3348qs-permit
+    document_sha256: 63cb758f925ec29619f5bf89fdf9410c5645a6b5a2658519c195a8806e65c596
+    document_url: https://assets.publishing.service.gov.uk/media/64c3b343f92186001486674c/Permit_Virtus_LON11_EPRDP3348QSA001.pdf
+    source_document: dp3348qs-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: North Hyde Gardens, Hayes Data Centre Emergency Back-up Generation
+    Facility (EPR/DP3442QV)
+  company_name: AMAZON DATA SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 112.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2023-10-02'
+  locator: permit page 2
+  quote: The total (aggregated) capacity is approximately 112 MW(th) and so is
+    captured as a Schedule 1, Part A(1)(a) under the Environmental Permitting
+    Regulations burning fuel of any fuel in an appliance with a rated thermal
+    input of 50 megawatts (MW) or more comprised of New Medium Combustion Plant
+    (MCP).
+  url: https://www.gov.uk/government/publications/ub3-4dg-amazon-data-services-uk-limited-environmental-permit-issued-eprdp3442qva001
+  attrs:
+    permission_number: EPR/DP3442QV
+    permit_title: null
+    holder: AMAZON DATA SERVICES UK LIMITED
+    operator: Amazon Web Services
+    operator_kind: hyperscale
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: UB3 4DG
+    local_authority: Hillingdon
+    easting: 510450
+    northing: 179330
+    generator_count: 14
+    engines:
+    - - 14
+      - 8.01
+    engines_count: 14
+    engines_total_mwth: 112.14
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 112.14 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The total (aggregated) capacity is approximately 112 MW(th) and so
+      is captured as a Schedule 1, Part A(1)(a) under the Environmental Permitting
+      Regulations burning fuel of any fuel in an appliance with a rated thermal
+      input of 50 megawatts (MW) or more comprised of New Medium Combustion Plant
+      (MCP).
+    document_kind: permit
+    document_title: 'Permit: Amazon Data Services UK Limited'
+    document_stem: dp3442qv-permit
+    document_sha256: 1f62d70024da49b92e32355462b87bbe36747f642e042a19f0a10b158fb5d17a
+    document_url: https://assets.publishing.service.gov.uk/media/651ab8c17c2c4a000d95e33d/Application_Bespoke_Permit_28092023.pdf
+    source_document: dp3442qv-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: LD8 (EPR/DP3906BE)
+  company_name: EQUINIX (UK) LIMITED
+  quantity_type: thermal_input
+  value: 64.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2023-10-26'
+  locator: permit page 2
+  quote: The combustion plant comprises 17 diesel fuelled standby generators and
+    9 boilers, with an aggregated total combustion capacity on-site of approximately
+    64 MWth.
+  url: https://www.gov.uk/government/publications/e14-9ge-equinix-uk-limited-environmental-permit-issued-eprdp3906bea001
+  attrs:
+    permission_number: EPR/DP3906BE
+    permit_title: LD8
+    holder: EQUINIX (UK) LIMITED
+    operator: Equinix
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: E14 9GE
+    local_authority: Tower Hamlets
+    easting: 537890
+    northing: 179560
+    generator_count: 17
+    engines:
+    - - 7
+      - 5.71
+    - - 2
+      - 3.89
+    - - 1
+      - 2.91
+    - - 1
+      - 2.42
+    - - 2
+      - 1.33
+    - - 1
+      - 1.12
+    - - 1
+      - 1.09
+    - - 1
+      - 0.92
+    - - 1
+      - 0.87
+    engines_count: 17
+    engines_total_mwth: 59.74
+    redundancy: null
+    covers_sites: null
+    corroboration: the stated total is 64.0 MWth and the per-engine ratings read
+      from this document sum to 59.74 MWth; the two do not agree, and why is worth
+      reading the permit for — Telehouse Docklands states 93.6 MWth for 19 generators
+      and schedules 27, the difference being an expansion the permit already authorises
+    summed_from_engines: false
+    quote: The combustion plant comprises 17 diesel fuelled standby generators
+      and 9 boilers, with an aggregated total combustion capacity on-site of approximately
+      64 MWth.
+    document_kind: permit
+    document_title: 'Permit: Equinix (UK) Limited'
+    document_stem: dp3906be-permit
+    document_sha256: cdcb22d1ad4a145a80c79c694abecb91f08dc22a81ce5ea0ca58b47975b6923c
+    document_url: https://assets.publishing.service.gov.uk/media/653b76f1e6c968000daa9c07/Application_Bespoke_Permit-16102023.pdf
+    source_document: dp3906be-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Crawley Data Centre Campus (EPR/EP3022ST)
+  company_name: DIGITAL REALTY (UK) LIMITED
+  quantity_type: thermal_input
+  value: 72.6
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2025-06-09'
+  locator: permit page 12
+  quote: Operation of 17 emergency stand- by generators with a total thermal input
+    of approximately 72.6 MWth.
+  url: https://www.gov.uk/government/publications/rh10-9bd-digital-realty-uk-limited-environmental-permit-issued-eprep3022sta001
+  attrs:
+    permission_number: EPR/EP3022ST
+    permit_title: Crawley Data Centre Campus
+    holder: DIGITAL REALTY (UK) LIMITED
+    operator: Digital Realty
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: RH10 9BD
+    local_authority: Reigate and Banstead
+    easting: 528670
+    northing: 151462
+    generator_count: 17
+    engines:
+    - - 8
+      - 3.93
+    - - 2
+      - 1.23
+    - - 7
+      - 5.49
+    engines_count: 17
+    engines_total_mwth: 72.33
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 72.33 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: Operation of 17 emergency stand- by generators with a total thermal
+      input of approximately 72.6 MWth.
+    document_kind: permit
+    document_title: 'Permit: Digital Realty (UK) Limited'
+    document_stem: ep3022st-permit
+    document_sha256: 9a8c6f7244d733243d90ad7ff25755580125a5a11b6d1818630d0af1eb5a5606
+    document_url: https://assets.publishing.service.gov.uk/media/6846bf500392ed9b784c01a1/Application_Bespoke_A001_Permit_Issued_-_02062025.pdf
+    source_document: ep3022st-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Docklands Technical Centre (EPR/EP3507SL)
+  company_name: TELEHOUSE INTERNATIONAL CORPORATION OF EUROPE LTD
+  quantity_type: thermal_input
+  value: 35.264
+  unit: MWth
+  stage: permitted standby generation, as varied
+  as_at: '2020-10-13'
+  locator: variation page 2
+  quote: Telehouse South The site consists of 4 x 8.816 MWth diesel engines.
+  url: https://www.gov.uk/government/publications/e14-2aa-telehouse-international-corporation-of-europe-limited-environmental-permit-issued-eprep3507slv002
+  attrs:
+    permission_number: EPR/EP3507SL
+    permit_title: Docklands Technical Centre
+    holder: TELEHOUSE INTERNATIONAL CORPORATION OF EUROPE LTD
+    operator: Telehouse
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: E14 2EH
+    local_authority: Tower Hamlets
+    easting: 538620
+    northing: 180630
+    generator_count: null
+    engines:
+    - - 4
+      - 8.816
+    engines_count: 4
+    engines_total_mwth: 35.264
+    redundancy: null
+    covers_sites: null
+    corroboration: the document states no total; this is the sum of the per-engine
+      ratings it lists, and is a floor if the list continues beyond the quoted
+      passage
+    summed_from_engines: true
+    quote: Telehouse South The site consists of 4 x 8.816 MWth diesel engines.
+    document_kind: variation
+    document_title: 'Variation Notice: Telehouse International Corporation of
+      Europe Limited'
+    document_stem: ep3507sl-variation
+    document_sha256: fe0676536fb10a68571823fd715aa120bfb4872ed988b441d2673688f58fa293
+    document_url: https://assets.publishing.service.gov.uk/media/677d04edd721a08c006654e3/Application_Variation_V002_Notice_Issued_-_19122024.pdf
+    source_document: ep3507sl-variation
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: CyrusOne London 4/5 Datacentres (EPR/EP3508PS)
+  company_name: CYRUSONE UK4 LIMITED
+  quantity_type: thermal_input
+  value: 201.28
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2022-03-30'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is 201.28 MWth.
+  url: https://www.gov.uk/government/publications/sl1-4aa-cyrusone-uk4-limited-environmental-permit-issued-eprep3508psa001
+  attrs:
+    permission_number: EPR/EP3508PS
+    permit_title: CyrusOne London 4/5 Datacentres
+    holder: CYRUSONE UK4 LIMITED
+    operator: CyrusOne
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity
+      (Included)
+    postcode: SL1 4AA
+    local_authority: Slough
+    easting: 495240
+    northing: 180620
+    generator_count: null
+    engines:
+    - - 32
+      - 6.29
+    engines_count: 32
+    engines_total_mwth: 201.28
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 201.28 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is 201.28 MWth.
+    document_kind: permit
+    document_title: 'Permit: CyrusOne UK4 Limited'
+    document_stem: ep3508ps-permit
+    document_sha256: ba3385654f9f7b9918d616ceb245875044c5015dfb48bd6503d4ae531b89e94c
+    document_url: https://assets.publishing.service.gov.uk/media/6283a2abd3bf7f1f40ca50a7/Permit_EP3508PS_A001.pdf
+    source_document: ep3508ps-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Swindon Data Centre Back-up Generation Facility (EPR/FP3000LY)
+  company_name: AMAZON DATA SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 69.7
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2022-03-10'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is 69.7 MWth.
+  url: https://www.gov.uk/government/publications/sn4-0qd-amazon-data-services-uk-limited-environmental-permit-issued-eprfp3000lya001
+  attrs:
+    permission_number: EPR/FP3000LY
+    permit_title: Swindon Data Centre Back-up Generation Facility
+    holder: AMAZON DATA SERVICES UK LIMITED
+    operator: Amazon Web Services
+    operator_kind: hyperscale
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity
+      (Included)
+    postcode: SN4 0QD
+    local_authority: Swindon
+    easting: 416403
+    northing: 180545
+    generator_count: null
+    engines:
+    - - 10
+      - 6.8
+    - - 1
+      - 1.7
+    engines_count: 11
+    engines_total_mwth: 69.7
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 69.7 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is 69.7 MWth.
+    document_kind: permit
+    document_title: 'Permit:  Amazon Data Services UK Limited'
+    document_stem: fp3000ly-permit
+    document_sha256: 6c23915371b85e5f4dfe5fa7493771dc33726055fa69668126517d2f32463193
+    document_url: https://assets.publishing.service.gov.uk/media/624bfbd8e90e075f06b3730f/Permit_FP3000LY.pdf
+    source_document: fp3000ly-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Romford North Data Centre (EPR/FP3630EU)
+  company_name: GREEN MOUNTAIN DC UK LIMITED
+  quantity_type: thermal_input
+  value: 113.0
+  unit: MWth
+  stage: permitted standby generation, as varied
+  as_at: '2015-04-21'
+  locator: variation page 2
+  quote: The total aggregated theoretical input thermal capacity of the installation
+    is 113MWth, w hich is above the threshold of 50 MWth prescribed under Schedule
+    1, Section 1.1 Part A(1)(a) Combus tion activities.
+  url: https://www.gov.uk/government/publications/rm7-7pn-green-mountain-dc-uk-limited-environmental-permit-issued-eprfp3630euv002
+  attrs:
+    permission_number: EPR/FP3630EU
+    permit_title: Romford North Data Centre
+    holder: GREEN MOUNTAIN DC UK LIMITED
+    operator: Green Mountain
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: RM7 7PN
+    local_authority: Havering
+    easting: 550270
+    northing: 189800
+    generator_count: null
+    engines:
+    - - 2
+      - 6.14
+    - - 2
+      - 4.51
+    - - 5
+      - 6.57
+    - - 8
+      - 7.4
+    engines_count: 17
+    engines_total_mwth: 113.35
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 113.35 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The total aggregated theoretical input thermal capacity of the installation
+      is 113MWth, w hich is above the threshold of 50 MWth prescribed under Schedule
+      1, Section 1.1 Part A(1)(a) Combus tion activities.
+    document_kind: variation
+    document_title: 'Variation notice: Green Mountain DC UK Limited'
+    document_stem: fp3630eu-variation
+    document_sha256: 1b286a6872c58e39c762fbe86752c46a08c3f68dad1df15f344ada084fcbfd8b
+    document_url: https://assets.publishing.service.gov.uk/media/69a160923e672177d0bc7767/Application_Variation_V002_Notice_Issue_-_19022026.pdf
+    source_document: fp3630eu-variation
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Didcot North Data Centre Campus (EPR/GP3127LV)
+  company_name: AMAZON DATA SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 925.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2026-08-03'
+  locator: permit page 11
+  quote: Operation of 129 emergency standby generators with a total thermal input
+    of approximately 925 MWth.
+  url: https://www.gov.uk/government/publications/ox11-7bf-amazon-data-services-uk-limited-environmental-permit-issued-eprgp3127lva001
+  attrs:
+    permission_number: EPR/GP3127LV
+    permit_title: Didcot North Data Centre Campus
+    holder: AMAZON DATA SERVICES UK LIMITED
+    operator: Amazon Web Services
+    operator_kind: hyperscale
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: OX11 7BF
+    local_authority: Vale of White Horse
+    easting: 451378
+    northing: 191803
+    generator_count: 129
+    engines:
+    - - 122
+      - 7.5
+    - - 3
+      - 1.3
+    - - 4
+      - 1.9
+    engines_count: 129
+    engines_total_mwth: 926.5
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 926.5 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: Operation of 129 emergency standby generators with a total thermal
+      input of approximately 925 MWth.
+    document_kind: permit
+    document_title: 'Permit: Amazon Data Services UK Limited'
+    document_stem: gp3127lv-permit
+    document_sha256: 321370de423b66ac3dd2a2ce9c58951a7f9edf8bb2f9d2355bac08eac61fec6f
+    document_url: https://assets.publishing.service.gov.uk/media/6a7077d10ddb7e4831c62b62/Application_Bespoke_A001_Permit_-27072026.pdf
+    source_document: gp3127lv-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Colt - Hayes (EPR/GP3721SQ)
+  company_name: COLT DATA CENTRE SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 283.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2025-08-11'
+  locator: permit page 2
+  quote: The facility will house a total of 44 ESGs, including 17 Rolls Royce
+    MTU DS3100 generators and 27 Rolls Royce MTU DS3600 generators, with a combined
+    thermal input of approximately 283 MWth.
+  url: https://www.gov.uk/government/publications/ub4-0sl-colt-data-centre-services-uk-limited-environmental-permit-issued-eprgp3721sqa001
+  attrs:
+    permission_number: EPR/GP3721SQ
+    permit_title: null
+    holder: COLT DATA CENTRE SERVICES UK LIMITED
+    operator: Colt Data Centre Services
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: UB4 0SL
+    local_authority: Hillingdon
+    easting: 511533
+    northing: 180192
+    generator_count: 17
+    engines:
+    - - 17
+      - 6.42
+    - - 27
+      - 6.43
+    engines_count: 44
+    engines_total_mwth: 282.75
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 282.75 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The facility will house a total of 44 ESGs, including 17 Rolls Royce
+      MTU DS3100 generators and 27 Rolls Royce MTU DS3600 generators, with a combined
+      thermal input of approximately 283 MWth.
+    document_kind: permit
+    document_title: 'Permit: Colt Data Centre Services UK Limited'
+    document_stem: gp3721sq-permit
+    document_sha256: 62e4708970477c83a5bce69a3ee914e15697d43a0de0ba9410d61decc9da1589
+    document_url: https://assets.publishing.service.gov.uk/media/6899ecc19c63e0ee87656a7e/Application_Bespoke_A001_Permit_-_30_07_2025.pdf
+    source_document: gp3721sq-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Digital Realty Watford (EPR/HP3136DK)
+  company_name: DIGITAL REALTY (UK) LIMITED
+  quantity_type: thermal_input
+  value: 132.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2018-10-12'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is 132MWth.
+  url: https://www.gov.uk/government/publications/wd18-8ua-digital-realty-uk-limited-environmental-permit-issued
+  attrs:
+    permission_number: EPR/HP3136DK
+    permit_title: Digital Realty Watford
+    holder: DIGITAL REALTY (UK) LIMITED
+    operator: Digital Realty
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: WD18 8UA
+    local_authority: Watford
+    easting: 508900
+    northing: 194950
+    generator_count: 3
+    engines:
+    - - 3
+      - 4.0
+    - - 3
+      - 3.6
+    - - 3
+      - 3.4
+    - - 31
+      - 3.2
+    engines_count: 40
+    engines_total_mwth: 132.2
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 132.2 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is 132MWth.
+    document_kind: permit
+    document_title: 'Permit: Digital Realty (UK) Limited'
+    document_stem: hp3136dk-permit
+    document_sha256: ed3d90f286122eb37a0c93f3cd1e4870de01ce53dcc1976e771f64553ff008ab
+    document_url: https://assets.publishing.service.gov.uk/media/5bc5e469e5274a3614f69035/Permit.pdf
+    source_document: hp3136dk-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Unit 2 & 3 Redhill Data Centre (EPR/JP3929SJ)
+  company_name: Redhill Data Centre Limited
+  quantity_type: thermal_input
+  value: 72.4
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2025-02-17'
+  locator: permit page 11
+  quote: Schedule 1 – Operations Table S1.1 activities Activity reference Activity
+    listed in Schedule 1 of the EP Regulations Description of specified activity
+    Limits of specified activity AR1 Section 1.1 Part A1(a) Burning any fuel in
+    an appliance with a rated thermal input of 50 or more megawatts Operation
+    of 21 emergency standby generators with a total thermal input of approximately
+    72.4 MWth.
+  url: https://www.gov.uk/government/publications/rh1-1ax-digital-realty-uk-limited-environmental-permit-issued-eprjp3929sja001
+  attrs:
+    permission_number: EPR/JP3929SJ
+    permit_title: null
+    holder: Redhill Data Centre Limited
+    operator: Digital Realty
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: RH1 1AX
+    local_authority: Reigate and Banstead
+    easting: 528670
+    northing: 151462
+    generator_count: 21
+    engines:
+    - - 4
+      - 4.4
+    - - 9
+      - 3.74
+    - - 6
+      - 3.34
+    - - 1
+      - 0.59
+    - - 1
+      - 0.51
+    engines_count: 21
+    engines_total_mwth: 72.4
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 72.4 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: Schedule 1 – Operations Table S1.1 activities Activity reference Activity
+      listed in Schedule 1 of the EP Regulations Description of specified activity
+      Limits of specified activity AR1 Section 1.1 Part A1(a) Burning any fuel
+      in an appliance with a rated thermal input of 50 or more megawatts Operation
+      of 21 emergency standby generators with a total thermal input of approximately
+      72.4 MWth.
+    document_kind: permit
+    document_title: 'Permit Issued: Digital Realty (UK) Limited'
+    document_stem: jp3929sj-permit
+    document_sha256: b50f19901d3371bdf343a7c0f7ed234996a3bc4a031d798d1542fdaf619912ce
+    document_url: https://assets.publishing.service.gov.uk/media/67adda1c2c594609b38acd38/Application_Bespoke_A001_Permit_-_11_02_2025.pdf
+    source_document: jp3929sj-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Colt - Welwyn (EPR/KP3139DW)
+  company_name: COLT DATA CENTRE SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 266.54
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2019-01-18'
+  locator: permit page 12
+  quote: 'The standby emergency generators comprise: - 30 generators at 5.52MWth;
+    - 4 generators at 4.49MWth; - 2 generators at 3.69MWth; - 9 generators at
+    2.30MWth; - 30 generators at 1.83MWth.'
+  url: https://www.gov.uk/government/publications/al7-1qa-colt-technology-services-environmental-permit-issued
+  attrs:
+    permission_number: EPR/KP3139DW
+    permit_title: Colt - Welwyn
+    holder: COLT DATA CENTRE SERVICES UK LIMITED
+    operator: Colt Data Centre Services
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (included and an MCP)|Combustion; Any
+      Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)
+    postcode: AL7 1QA
+    local_authority: Welwyn Hatfield
+    easting: 525360
+    northing: 212800
+    generator_count: 30
+    engines:
+    - - 30
+      - 5.52
+    - - 4
+      - 4.49
+    - - 2
+      - 3.69
+    - - 9
+      - 2.3
+    - - 30
+      - 1.83
+    engines_count: 75
+    engines_total_mwth: 266.54
+    redundancy: null
+    covers_sites: null
+    corroboration: the document states no total; this is the sum of the per-engine
+      ratings it lists, and is a floor if the list continues beyond the quoted
+      passage
+    summed_from_engines: true
+    quote: 'The standby emergency generators comprise: - 30 generators at 5.52MWth;
+      - 4 generators at 4.49MWth; - 2 generators at 3.69MWth; - 9 generators at
+      2.30MWth; - 30 generators at 1.83MWth.'
+    document_kind: permit
+    document_title: 'Permit: Colt Technology Services'
+    document_stem: kp3139dw-permit
+    document_sha256: fb13cd04a3d90116960f5ccc7f82610848bb6ce5cc923f97c366bb373114f8b1
+    document_url: https://assets.publishing.service.gov.uk/media/5c46fe23e5274a6e40f38fd6/Permit.pdf
+    source_document: kp3139dw-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Didcot Datacentre (EPR/LP3005BL)
+  company_name: AMAZON DATA SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 69.7
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2021-10-12'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is 69.7 MWth.
+  url: https://www.gov.uk/government/publications/ox11-7tt-amazon-data-services-uk-limited-environmental-permit-issued-eprlp3005bla001
+  attrs:
+    permission_number: EPR/LP3005BL
+    permit_title: Didcot Datacentre
+    holder: AMAZON DATA SERVICES UK LIMITED
+    operator: Amazon Web Services
+    operator_kind: hyperscale
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: OX11 7TT
+    local_authority: Vale of White Horse
+    easting: 450890
+    northing: 191490
+    generator_count: null
+    engines:
+    - - 10
+      - 6.8
+    - - 1
+      - 1.7
+    engines_count: 11
+    engines_total_mwth: 69.7
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 69.7 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is 69.7 MWth.
+    document_kind: permit
+    document_title: 'Permit: Amazon Data Services UK Limited'
+    document_stem: lp3005bl-permit
+    document_sha256: 80ee7a91752e17c61280d4baad3f91a422dc2f5a4289ae3dad305d07bfdf7264
+    document_url: https://assets.publishing.service.gov.uk/media/617c0f83d3bf7f56020e500a/Permit_-_LP3005BL_Final.pdf
+    source_document: lp3005bl-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Equinix Slough Campus Data Centre (EPR/LP3303PR)
+  company_name: EQUINIX (UK) LIMITED
+  quantity_type: thermal_input
+  value: 331.084
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2020-02-26'
+  locator: permit page 2
+  quote: Comprising; Data centre LD4, 8 X 5.029 MWth and 2 X 5.143 MWth generators
+    Data centre LD5, 6 X 5.714 MWth and 8 X 5.200 MWth generators Data centre
+    LD6, 24 X 3.829 MWth generators Data centre LD7, 4 X 5.714 MWth and 2 X 6.857th
+    MWth generators Data centre LD10, 2 X 0.967 MWth and 13 X 5.714 MWthgenerators
+    The total installed capacity is 331.084 MWth.
+  url: https://www.gov.uk/government/publications/sl1-4ax-equinix-uk-limited-environmental-permit-issued-eprlp3303pra001
+  attrs:
+    permission_number: EPR/LP3303PR
+    permit_title: Equinix Slough Campus Data Centre
+    holder: EQUINIX (UK) LIMITED
+    operator: Equinix
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: SL1 4AX
+    local_authority: Slough
+    easting: 495200
+    northing: 181250
+    generator_count: 8
+    engines:
+    - - 8
+      - 5.029
+    - - 2
+      - 5.143
+    - - 6
+      - 5.714
+    - - 8
+      - 5.2
+    - - 24
+      - 3.829
+    - - 4
+      - 5.714
+    - - 2
+      - 6.857
+    - - 2
+      - 0.967
+    - - 13
+      - 5.714
+    engines_count: 69
+    engines_total_mwth: 331.084
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 331.084 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: Comprising; Data centre LD4, 8 X 5.029 MWth and 2 X 5.143 MWth generators
+      Data centre LD5, 6 X 5.714 MWth and 8 X 5.200 MWth generators Data centre
+      LD6, 24 X 3.829 MWth generators Data centre LD7, 4 X 5.714 MWth and 2 X
+      6.857th MWth generators Data centre LD10, 2 X 0.967 MWth and 13 X 5.714
+      MWthgenerators The total installed capacity is 331.084 MWth.
+    document_kind: permit
+    document_title: Permit:Equinix (UK) Limited
+    document_stem: lp3303pr-permit
+    document_sha256: f29de521a0798933c09eaa1fb5d1384f9046fbc38b39d3e37a708e5f29e2305b
+    document_url: https://assets.publishing.service.gov.uk/media/5e5f8cdc86650c513869ed1a/Permit.pdf
+    source_document: lp3303pr-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Croydon Data Centre (LW13) (EPR/NP3735JX)
+  company_name: CL INTERNATIONAL MANAGEMENT (UK) LIMITED
+  quantity_type: thermal_input
+  value: 109.1
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2022-07-11'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is 109.1 MWth.
+  url: https://www.gov.uk/government/publications/ec2y-5au-cl-international-management-uk-limited-environmental-permit-issued-eprnp3735jxa001
+  attrs:
+    permission_number: EPR/NP3735JX
+    permit_title: Croydon Data Centre (LW13)
+    holder: CL INTERNATIONAL MANAGEMENT (UK) LIMITED
+    operator: null
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: EC3M 7AF
+    local_authority: Sutton
+    easting: 529710
+    northing: 166730
+    generator_count: 28
+    engines:
+    - - 28
+      - 3.5
+    - - 3
+      - 3.7
+    engines_count: 31
+    engines_total_mwth: 109.1
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 109.1 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is 109.1 MWth.
+    document_kind: permit
+    document_title: 'Permit: CL International Management (UK) Limited'
+    document_stem: np3735jx-permit
+    document_sha256: e0cbb26e5ae7fa7ae3bff925a3ceed67fbb96d165190afa303d0b6ea191dbaf4
+    document_url: https://assets.publishing.service.gov.uk/media/62d6bd60d3bf7f28583b0173/Application_Bespoke_Issued_-_PDF_-_12072022_.pdf
+    source_document: np3735jx-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Spring Park Data Centre (EPR/PP3003PW)
+  company_name: ARK DATA CENTRES LIMITED
+  quantity_type: thermal_input
+  value: 120.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2020-07-07'
+  locator: permit page 2
+  quote: The total thermal input of the 33 standby generators is 5 generators
+    of 3.9 MWth and 10 generators of 2.7 MWth 12 generators of 3.6MWth and 6 generators
+    of 5.1 MWth (approximately 120MWth in total).
+  url: https://www.gov.uk/government/publications/sn13-9gb-ark-data-centres-limited-environmental-permit-issued-eprpp3003pwa001
+  attrs:
+    permission_number: EPR/PP3003PW
+    permit_title: Spring Park Data Centre
+    holder: ARK DATA CENTRES LIMITED
+    operator: Ark Data Centres
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: SN13 9GB
+    local_authority: Wiltshire
+    easting: 384920
+    northing: 168930
+    generator_count: 33
+    engines:
+    - - 5
+      - 3.9
+    - - 10
+      - 2.7
+    - - 12
+      - 3.6
+    - - 6
+      - 5.1
+    engines_count: 33
+    engines_total_mwth: 120.3
+    redundancy: N+1
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 120.3 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The total thermal input of the 33 standby generators is 5 generators
+      of 3.9 MWth and 10 generators of 2.7 MWth 12 generators of 3.6MWth and 6
+      generators of 5.1 MWth (approximately 120MWth in total).
+    document_kind: permit
+    document_title: 'Permit: Ark Data Centres Limited'
+    document_stem: pp3003pw-permit
+    document_sha256: e8aabbac54df355310892ae130146591b3e8ef318aa2901cccfd4a348f7095a6
+    document_url: https://assets.publishing.service.gov.uk/media/5f0728333a6f4004019bff34/Permit.pdf
+    source_document: pp3003pw-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Slough Data Centre Back-up Generation Facility (EPR/PP3309MK)
+  company_name: AMAZON DATA SERVICES UK LIMITED
+  quantity_type: thermal_input
+  value: 151.34
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2023-01-19'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is 151.34 MWth.
+  url: https://www.gov.uk/government/publications/sl1-4pf-amazon-data-services-uk-limited-environmental-permit-issued-eprpp3309mka001
+  attrs:
+    permission_number: EPR/PP3309MK
+    permit_title: Slough Data Centre Back-up Generation Facility
+    holder: AMAZON DATA SERVICES UK LIMITED
+    operator: Amazon Web Services
+    operator_kind: hyperscale
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity
+      (Included)
+    postcode: SL1 4PF
+    local_authority: Slough
+    easting: 495732
+    northing: 181088
+    generator_count: null
+    engines:
+    - - 18
+      - 8.13
+    - - 2
+      - 2.5
+    engines_count: 20
+    engines_total_mwth: 151.34
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 151.34 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is 151.34 MWth.
+    document_kind: permit
+    document_title: 'Permit: Amazon Data Services UK Limited'
+    document_stem: pp3309mk-permit
+    document_sha256: 33015d203d0f760c97b09d9a14bab32646c2fc26ac42bcd45519d9ef28f0fcaf
+    document_url: https://assets.publishing.service.gov.uk/media/63cfc8248fa8f53fe508fc01/PP3309MK_A001_Application_Bespoke_Permit.pdf
+    source_document: pp3309mk-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Brick Lane Data Centre (EPR/QP3434DR)
+  company_name: INTERXION CARRIER HOTEL LIMITED
+  quantity_type: thermal_input
+  value: 57.59
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2018-05-04'
+  locator: permit page 2
+  quote: 'Brick Lane Data Centre has 13 standby generators housed at Lon 1 and
+    Lon 2 (Lon 1: 2 x 3.62 MWth, 1 x 4.85 MWth, 5 x 4.25 MWth. Lon 2: 5 x 4.85
+    MWth) with a total aggregated net thermal input of 57.59 MWth.'
+  url: https://www.gov.uk/government/publications/e1-6ql-interxion-carrier-hotel-limited-environmental-permit-issued
+  attrs:
+    permission_number: EPR/QP3434DR
+    permit_title: Brick Lane Data Centre
+    holder: INTERXION CARRIER HOTEL LIMITED
+    operator: Digital Realty (Interxion)
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: E1 6QL
+    local_authority: Tower Hamlets
+    easting: 533830
+    northing: 182070
+    generator_count: 13
+    engines:
+    - - 2
+      - 3.62
+    - - 1
+      - 4.85
+    - - 5
+      - 4.25
+    - - 5
+      - 4.85
+    engines_count: 13
+    engines_total_mwth: 57.59
+    redundancy: null
+    covers_sites: null
+    corroboration: the document states no total; this is the sum of the per-engine
+      ratings it lists, and is a floor if the list continues beyond the quoted
+      passage
+    summed_from_engines: true
+    quote: 'Brick Lane Data Centre has 13 standby generators housed at Lon 1 and
+      Lon 2 (Lon 1: 2 x 3.62 MWth, 1 x 4.85 MWth, 5 x 4.25 MWth. Lon 2: 5 x 4.85
+      MWth) with a total aggregated net thermal input of 57.59 MWth.'
+    document_kind: permit
+    document_title: 'Permit: Interxion Carrier Hotel Limited'
+    document_stem: qp3434dr-permit
+    document_sha256: 231d3d4600aa56e99feb3109c7b9f8b8eeaa0898d1798f57118176672f9c7d79
+    document_url: https://assets.publishing.service.gov.uk/media/5af1a76e40f0b642eb9cf949/Permit.pdf
+    source_document: qp3434dr-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Data Centre 1 and 2, Narborough Combustion Plant (EPR/QP3533ED)
+  company_name: SANTANDER UK PLC
+  quantity_type: thermal_input
+  value: 107.76
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2016-03-15'
+  locator: permit page 11
+  quote: 'Schedule 1 – Operations Table S1.1 activities Activity listed in Schedule
+    1 of the EP Regulations Description of specified activity Limits of specified
+    activity Section 1.1 A(1) (a): Burning any fuel in an appliance with a rated
+    thermal input of 50 megawatts or more Operation of emergency standby generators
+    burning diesel solely for the purpose of providing electricity to the installation
+    in the event of a failure of supply from the National Grid comprising; 12
+    x 4.49 MWth standby generators in DC1 and 12 x 4.49 MWth standby generators
+    in DC2, with a total combined thermal input of 107.76 MWth.'
+  url: https://www.gov.uk/government/publications/le19-0al-santander-uk-plc-environmental-permit-issued
+  attrs:
+    permission_number: EPR/QP3533ED
+    permit_title: null
+    holder: SANTANDER UK PLC
+    operator: Santander
+    operator_kind: enterprise
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: LE19 0AL
+    local_authority: Blaby
+    easting: 453710
+    northing: 298290
+    generator_count: 12
+    engines:
+    - - 12
+      - 4.49
+    - - 12
+      - 4.49
+    engines_count: 24
+    engines_total_mwth: 107.76
+    redundancy: null
+    covers_sites: null
+    corroboration: the document states no total; this is the sum of the per-engine
+      ratings it lists, and is a floor if the list continues beyond the quoted
+      passage
+    summed_from_engines: true
+    quote: 'Schedule 1 – Operations Table S1.1 activities Activity listed in Schedule
+      1 of the EP Regulations Description of specified activity Limits of specified
+      activity Section 1.1 A(1) (a): Burning any fuel in an appliance with a rated
+      thermal input of 50 megawatts or more Operation of emergency standby generators
+      burning diesel solely for the purpose of providing electricity to the installation
+      in the event of a failure of supply from the National Grid comprising; 12
+      x 4.49 MWth standby generators in DC1 and 12 x 4.49 MWth standby generators
+      in DC2, with a total combined thermal input of 107.76 MWth.'
+    document_kind: permit
+    document_title: 'Permit: Santander UK plc'
+    document_stem: qp3533ed-permit
+    document_sha256: 8d63337f1e07c053eab885a5e4346af4952f41269f44608f571395c967b43f58
+    document_url: https://assets.publishing.service.gov.uk/media/5a7f20d740f0b6230268d9ac/Permit.pdf
+    source_document: qp3533ed-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Data Centre Staples Corner (EPR/QP3706LH)
+  company_name: PDCG (GROUP SERVICES) LIMITED
+  quantity_type: thermal_input
+  value: 409.36
+  unit: MWth
+  stage: permitted standby generation, as varied
+  as_at: '2022-09-04'
+  locator: variation page 2
+  quote: • Total thermal rated input of site = 56x 7.31 MWth generators (56 generators
+    with a total input of 409.36 MWth).
+  url: https://www.gov.uk/government/publications/nw2-7ba-pdcg-group-services-limited-environmental-permit-issued-eprqp3706lhv002
+  attrs:
+    permission_number: EPR/QP3706LH
+    permit_title: Data Centre Staples Corner
+    holder: PDCG (GROUP SERVICES) LIMITED
+    operator: null
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (Included)|Combustion; Any Fuel =>50MW
+      - 1.1 A(1) a)
+    postcode: NW2 7BA
+    local_authority: Brent
+    easting: 522270
+    northing: 187210
+    generator_count: 56
+    engines:
+    - - 56
+      - 7.31
+    engines_count: 56
+    engines_total_mwth: 409.36
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 409.36 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: • Total thermal rated input of site = 56x 7.31 MWth generators (56
+      generators with a total input of 409.36 MWth).
+    document_kind: variation
+    document_title: 'Variation notice: PDCG (Group Services) Limited'
+    document_stem: qp3706lh-permit
+    document_sha256: 50288dd9e88748a5d8baf5fb724c9f2d811b65b49098944df272a18f46308a84
+    document_url: https://assets.publishing.service.gov.uk/media/68371f0e4115cfe5bfaa2cb0/Application_Variation_V002_Permit_-_20052025.pdf
+    source_document: qp3706lh-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Telehouse Docklands Datacentre (EPR/SP3237JU)
+  company_name: TELEHOUSE INTERNATIONAL CORPORATION OF EUROPE LIMITED
+  quantity_type: thermal_input
+  value: 93.6
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2019-04-24'
+  locator: permit page 2
+  quote: The aggregated total thermal input of the 19 SBGs is 93.6 MWth, increasing
+    to 145 MWth if the future expansion is required.
+  url: https://www.gov.uk/government/publications/e14-2aa-telehouse-international-corporation-of-europe-limited-environmental-permit-issued
+  attrs:
+    permission_number: EPR/SP3237JU
+    permit_title: Telehouse Docklands Datacentre
+    holder: TELEHOUSE INTERNATIONAL CORPORATION OF EUROPE LIMITED
+    operator: Telehouse
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: E14 2EH
+    local_authority: Tower Hamlets
+    easting: 538620
+    northing: 180630
+    generator_count: 27
+    engines:
+    - - 4
+      - 4.32
+    - - 5
+      - 4.28
+    - - 2
+      - 4.56
+    - - 8
+      - 6.16
+    - - 8
+      - 5.96
+    engines_count: 27
+    engines_total_mwth: 144.76
+    redundancy: null
+    covers_sites: null
+    corroboration: the stated total is 93.6 MWth and the per-engine ratings read
+      from this document sum to 144.76 MWth; the two do not agree, and why is
+      worth reading the permit for — Telehouse Docklands states 93.6 MWth for
+      19 generators and schedules 27, the difference being an expansion the permit
+      already authorises
+    summed_from_engines: false
+    quote: The aggregated total thermal input of the 19 SBGs is 93.6 MWth, increasing
+      to 145 MWth if the future expansion is required.
+    document_kind: permit
+    document_title: 'Permit: Telehouse International Corporation of Europe Limited'
+    document_stem: sp3237ju-permit
+    document_sha256: 40d2ecdef754ed1f22076e9aac9e6c1ae92464154308c36d87ba10540f14a09b
+    document_url: https://assets.publishing.service.gov.uk/media/5cc3087bed915d05605aa3ab/Permit_SP3237JU.pdf
+    source_document: sp3237ju-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: LON3 Data Centre (EPR/TP3120LE)
+  company_name: IRON MOUNTAIN (UK) DATA CENTRE LIMITED
+  quantity_type: thermal_input
+  value: 113.31
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2026-01-15'
+  locator: permit page 11
+  quote: Permit number EPR/TP3120LE 11 Schedule 1 – Operations Table S1.1 activities
+    Activity reference Activity listed in Schedule 1 of the EP Regulations Description
+    of specified activity Limits of specified activity AR1 Section 1.1 Part A1(a)
+    Burning any fuel in an appliance with a rated thermal input of 50 or more
+    megawatts Operation of 17 emergency standby generators with a total thermal
+    input of approximately 113.31 MWth.
+  url: https://www.gov.uk/government/publications/sl1-4pf-iron-mountain-uk-data-centre-limited-environmental-permit-issued-eprtp3120lea001
+  attrs:
+    permission_number: EPR/TP3120LE
+    permit_title: LON3 Data Centre
+    holder: IRON MOUNTAIN (UK) DATA CENTRE LIMITED
+    operator: Iron Mountain Data Centers
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: SL1 4PF
+    local_authority: Slough
+    easting: 495857
+    northing: 181041
+    generator_count: 17
+    engines:
+    - - 16
+      - 7.01
+    - - 1
+      - 1.15
+    engines_count: 17
+    engines_total_mwth: 113.31
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 113.31 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: Permit number EPR/TP3120LE 11 Schedule 1 – Operations Table S1.1 activities
+      Activity reference Activity listed in Schedule 1 of the EP Regulations Description
+      of specified activity Limits of specified activity AR1 Section 1.1 Part
+      A1(a) Burning any fuel in an appliance with a rated thermal input of 50
+      or more megawatts Operation of 17 emergency standby generators with a total
+      thermal input of approximately 113.31 MWth.
+    document_kind: permit
+    document_title: 'Permit: Iron Mountain (UK) Data Centre Limited'
+    document_stem: tp3120le-permit
+    document_sha256: 7f5a78cd3d0a5fecd00ebcc3fb9c704c27cf328ffdf92ff695d05e50e0a99e2c
+    document_url: https://assets.publishing.service.gov.uk/media/6968eb235fd54abe6531a7ed/Application_Bespoke_A001_Permit_Issue_-_07012026.pdf
+    source_document: tp3120le-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Equinix Powergate (EPR/TP3500PB)
+  company_name: EQUINIX (UK) LIMITED
+  quantity_type: thermal_input
+  value: 199.0
+  unit: MWth
+  stage: permitted standby generation, as varied
+  as_at: '2020-09-08'
+  locator: variation page 2
+  quote: The total thermal input of the site is now approximately 199 MWth.
+  url: https://www.gov.uk/government/publications/nw10-6pw-equinix-uk-limited-environmental-permit-issued-eprtp3500pbv003
+  attrs:
+    permission_number: EPR/TP3500PB
+    permit_title: Equinix Powergate
+    holder: EQUINIX (UK) LIMITED
+    operator: Equinix
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Directly Associated Activity (included and an MCP)|Combustion; Any
+      Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)
+    postcode: NW10 6PW
+    local_authority: Ealing
+    easting: 520930
+    northing: 182730
+    generator_count: 21
+    engines:
+    - - 13
+      - 5.7
+    - - 8
+      - 6.4
+    engines_count: 21
+    engines_total_mwth: 125.3
+    redundancy: null
+    covers_sites: null
+    corroboration: the stated total is 199.0 MWth and the per-engine ratings read
+      from this document sum to 125.3 MWth; the two do not agree, and why is worth
+      reading the permit for — Telehouse Docklands states 93.6 MWth for 19 generators
+      and schedules 27, the difference being an expansion the permit already authorises
+    summed_from_engines: false
+    quote: The total thermal input of the site is now approximately 199 MWth.
+    document_kind: variation
+    document_title: 'Variation notice: Equinix (UK) Limited'
+    document_stem: tp3500pb-variation
+    document_sha256: 275082f067c045325c50eaaccddc598f1d0cc81a6dd996000cb4b993aa1dbf29
+    document_url: https://assets.publishing.service.gov.uk/media/659d56477e39680013a81a40/Variation_Notice_TP3500PB-V003.pdf
+    source_document: tp3500pb-variation
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Woking Data Centre (EPR/TP3530DV)
+  company_name: DIGITAL REALTY (UK) LIMITED
+  quantity_type: thermal_input
+  value: 214.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2018-02-27'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is 214MWth.
+  url: https://www.gov.uk/government/publications/gu21-3ba-digital-realty-uk-limited-environmental-permit-issued
+  attrs:
+    permission_number: EPR/TP3530DV
+    permit_title: Woking Data Centre
+    holder: DIGITAL REALTY (UK) LIMITED
+    operator: Digital Realty
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: GU21 3BA
+    local_authority: Woking
+    easting: 498490
+    northing: 159250
+    generator_count: 55
+    engines:
+    - - 55
+      - 3.16
+    - - 8
+      - 4.15
+    - - 2
+      - 3.3
+    engines_count: 65
+    engines_total_mwth: 213.6
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 213.6 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is 214MWth.
+    document_kind: permit
+    document_title: 'Permit: Digital Realty (UK) Limited'
+    document_stem: tp3530dv-permit
+    document_sha256: e54ad3ceab693c0358f8a78eeea93e1b88b8730b9038172091b88510d386e52d
+    document_url: https://assets.publishing.service.gov.uk/media/5a97f797e5274a5b87c300e5/Permit_Digital_Realty__UK_.pdf
+    source_document: tp3530dv-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: London Two (EPR/TP3839QU)
+  company_name: ZENIUM UK2 LIMITED
+  quantity_type: thermal_input
+  value: 86.6
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2024-05-14'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is approximately 86.6
+    MWth.
+  url: https://www.gov.uk/government/publications/ub7-9fn-zenium-uk2-limited-environmental-permit-issued-eprtp3839qua001
+  attrs:
+    permission_number: EPR/TP3839QU
+    permit_title: London Two
+    holder: ZENIUM UK2 LIMITED
+    operator: Zenium
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: UB7 9FN
+    local_authority: Hillingdon
+    easting: 507850
+    northing: 179300
+    generator_count: null
+    engines:
+    - - 7
+      - 5.03
+    - - 9
+      - 5.71
+    engines_count: 16
+    engines_total_mwth: 86.6
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 86.6 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is approximately 86.6
+      MWth.
+    document_kind: permit
+    document_title: 'Permit Issued: Zenium UK2 Limited'
+    document_stem: tp3839qu-permit
+    document_sha256: 13e6a77295ddfb35582a90169b0ba257522be04215344a57ada50851476c6013
+    document_url: https://assets.publishing.service.gov.uk/media/664359b5b7249a4c6e9d33da/Application_Bespoke_Issued_-_24042024.pdf
+    source_document: tp3839qu-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: London 14 Data Centre (EPR/UP3624SW)
+  company_name: VIRTUS HOLDCO LIMITED
+  quantity_type: thermal_input
+  value: 110.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2025-03-10'
+  locator: permit page 11
+  quote: Operation of 16 emergency standby generators with a total thermal input
+    of approximately 110 MWth.
+  url: https://www.gov.uk/government/publications/ub3-1qf-virtus-holdco-limited-environmental-permit-issued-eprup3624swa001
+  attrs:
+    permission_number: EPR/UP3624SW
+    permit_title: London 14 Data Centre
+    holder: VIRTUS HOLDCO LIMITED
+    operator: VIRTUS Data Centres
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: UB3 1QF
+    local_authority: Hillingdon
+    easting: 508045
+    northing: 179594
+    generator_count: 16
+    engines: []
+    engines_count: null
+    engines_total_mwth: null
+    redundancy: null
+    covers_sites: null
+    corroboration: no per-engine breakdown was found, so the stated total is unchecked
+    summed_from_engines: false
+    quote: Operation of 16 emergency standby generators with a total thermal input
+      of approximately 110 MWth.
+    document_kind: permit
+    document_title: 'Permit: Virtus Holdco Limited'
+    document_stem: up3624sw-permit
+    document_sha256: 67722b6995a7f1f64f2de335baf9607178fda38c786ad91bf73e64c9b11980fe
+    document_url: https://assets.publishing.service.gov.uk/media/67ceee0c1e2f37b1f3fd1400/Permit_London_14_Data_Centre.pdf
+    source_document: up3624sw-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Cody Park Data Centre (EPR/VP3235DJ)
+  company_name: ARK DATA CENTRES LIMITED
+  quantity_type: thermal_input
+  value: 260.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2020-01-27'
+  locator: permit page 2
+  quote: The aggregated total combustion capacity on site is approximately 260MWth.
+  url: https://www.gov.uk/government/publications/gu14-0lh-ark-data-centres-limited-environmental-permit-issued-eprvp3235dja001
+  attrs:
+    permission_number: EPR/VP3235DJ
+    permit_title: Cody Park Data Centre
+    holder: ARK DATA CENTRES LIMITED
+    operator: Ark Data Centres
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly
+      Associated Activity (Included)|Combustion; Any Fuel =>50MW - 1.1 A(1) a)
+    postcode: GU14 0LH
+    local_authority: Hart
+    easting: 484070
+    northing: 154340
+    generator_count: 36
+    engines:
+    - - 36
+      - 2.71
+    - - 24
+      - 5.38
+    - - 9
+      - 3.66
+    engines_count: 69
+    engines_total_mwth: 259.62
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 259.62 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The aggregated total combustion capacity on site is approximately 260MWth.
+    document_kind: permit
+    document_title: 'Permit: Ark Data Centres Limited'
+    document_stem: vp3235dj-permit
+    document_sha256: 27631e2f9366b631e8853c161106bd476799e7a8bef3c6ce09a0dfccd67d44c3
+    document_url: https://assets.publishing.service.gov.uk/media/5e328b0ced915d09393b8808/Permit_VP3235DJ.pdf
+    source_document: vp3235dj-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: KAO Data Harlow Campus (EPR/WE4588AB)
+  company_name: HARLOW OPERATIONS LIMITED
+  quantity_type: thermal_input
+  value: 152.26
+  unit: MWth
+  stage: permitted standby generation, as varied
+  as_at: '2023-08-18'
+  locator: variation page 2
+  quote: The total thermal capacity for the campus is 152.26MWth.
+  url: https://www.gov.uk/government/publications/cm17-9na-harlow-operations-limited-environmental-permit-issued-eprwe4588abv002
+  attrs:
+    permission_number: EPR/WE4588AB
+    permit_title: KAO Data Harlow Campus
+    holder: HARLOW OPERATIONS LIMITED
+    operator: Kao Data
+    operator_kind: colocation
+    candidate_generators:
+    - operator_address
+    activity: Medium Combustion Plant collectively =>50MW - 1.1 A(1) a)|Directly
+      Associated Activity (Included)
+    postcode: CM17 9NA
+    local_authority: Harlow
+    easting: 547072
+    northing: 210069
+    generator_count: null
+    engines:
+    - - 3
+      - 4.48
+    - - 4
+      - 4.61
+    - - 3
+      - 4.61
+    - - 4
+      - 4.61
+    - - 11
+      - 8.01
+    engines_count: 25
+    engines_total_mwth: 152.26
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 152.26 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The total thermal capacity for the campus is 152.26MWth.
+    document_kind: variation
+    document_title: 'Variation Notice: Harlow Operations Limited'
+    document_stem: we4588ab-variation
+    document_sha256: 2432ec6ac148ef0062e1246f047eb5805cc2f3beb55e543c7dcf2fa4d41a56fb
+    document_url: https://assets.publishing.service.gov.uk/media/6a202c57dbcb60fc6ccb29d1/Application_Variation_V002_Notice_-03062026.pdf
+    source_document: we4588ab-variation
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: LHR11/12 (EPR/YP3329SB)
+  company_name: VDC LHR11 LIMITED
+  quantity_type: thermal_input
+  value: 225.7
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2024-08-28'
+  locator: permit page 2
+  quote: The combustion plant comprises 37 x 6.1 MWth gas oil/ HVO fuelled standby
+    generators (new Medium Combustion Plant (MCP)), with an aggregated total combustion
+    capacity on-site of approximately 225.7 MWth.
+  url: https://www.gov.uk/government/publications/nw10-6nf-vdc-lhr11-limited-environmental-permit-issued-epryp3329sb
+  attrs:
+    permission_number: EPR/YP3329SB
+    permit_title: LHR11/12
+    holder: VDC LHR11 LIMITED
+    operator: Vantage Data Centers
+    operator_kind: colocation
+    candidate_generators:
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity
+      (Included)
+    postcode: NW10 6NF
+    local_authority: Ealing
+    easting: 521150
+    northing: 182355
+    generator_count: null
+    engines:
+    - - 37
+      - 6.1
+    engines_count: 37
+    engines_total_mwth: 225.7
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 225.7 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The combustion plant comprises 37 x 6.1 MWth gas oil/ HVO fuelled standby
+      generators (new Medium Combustion Plant (MCP)), with an aggregated total
+      combustion capacity on-site of approximately 225.7 MWth.
+    document_kind: permit
+    document_title: 'Permit: VDC LHR11 Limited'
+    document_stem: yp3329sb-permit
+    document_sha256: a89726d2127fd3011bcbd6fe524d949fe68f47cb59656eb23ef792d273678da0
+    document_url: https://assets.publishing.service.gov.uk/media/66cefb03913d4f9812597bd5/Permit_YP3329SB.pdf
+    source_document: yp3329sb-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Ajax Avenue Datacentre (EPR/YP3935QM)
+  company_name: LHR1 Data Center Holdings Limited
+  quantity_type: thermal_input
+  value: 98.0
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2019-07-01'
+  locator: permit page 2
+  quote: The total thermal input of the 18 standby generators would be 9 generators
+    of 5.71MWth and 9 generators of 5.14MWth (approximately 98MWth in total).
+  url: https://www.gov.uk/government/publications/sl1-4dg-cyxtera-technology-uk-limited-environmental-permit-issued-epryp3935qma001
+  attrs:
+    permission_number: EPR/YP3935QM
+    permit_title: Ajax Avenue Datacentre
+    holder: LHR1 Data Center Holdings Limited
+    operator: null
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Directly Associated Activity (included and an MCP)|Medium Combustion
+      Plant collectively =>50MW - 1.1 A(1) a)|Directly Associated Activity (Included)
+    postcode: SL1 4DG
+    local_authority: Slough
+    easting: 495990
+    northing: 180690
+    generator_count: 18
+    engines:
+    - - 9
+      - 5.71
+    - - 9
+      - 5.14
+    engines_count: 18
+    engines_total_mwth: 97.65
+    redundancy: N+1
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 97.65 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The total thermal input of the 18 standby generators would be 9 generators
+      of 5.71MWth and 9 generators of 5.14MWth (approximately 98MWth in total).
+    document_kind: permit
+    document_title: 'Permit: Cyxtera Technology UK Limited'
+    document_stem: yp3935qm-permit
+    document_sha256: 59a275ed42a1a3d7fc6c24a153a9dbe13d9b894e5e5a5afd39e2046f25c0340e
+    document_url: https://assets.publishing.service.gov.uk/media/5d23426e40f0b609cd040678/Permit_Issued__pdf_.pdf
+    source_document: yp3935qm-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
+- claim_name: Union Park (EPR/ZP3527SS)
+  company_name: ARK DATA CENTRES LIMITED
+  quantity_type: thermal_input
+  value: 96.12
+  unit: MWth
+  stage: permitted standby generation
+  as_at: '2025-10-08'
+  locator: permit page 2
+  quote: The combustion plant comprises 12 x 8.01 MWth gas oil or equivalent fuelled
+    standby generators (new Medium Combustion Plant (MCP)), with an aggregated
+    total combustion capacity on -site of approximately 96.12 MWth.
+  url: https://www.gov.uk/government/publications/ub3-4qq-ark-data-centres-limited-environmental-permit-issued-eprzp3527ssa001
+  attrs:
+    permission_number: EPR/ZP3527SS
+    permit_title: Union Park
+    holder: ARK DATA CENTRES LIMITED
+    operator: Ark Data Centres
+    operator_kind: colocation
+    candidate_generators:
+    - dc_in_name
+    - operator_name
+    activity: Combustion; Any Fuel =>50MW - 1.1 A(1) a)|Directly Associated Activity
+      (Included)
+    postcode: UB3 4QQ
+    local_authority: Hillingdon
+    easting: 510436
+    northing: 179275
+    generator_count: null
+    engines:
+    - - 12
+      - 8.01
+    engines_count: 12
+    engines_total_mwth: 96.12
+    redundancy: null
+    covers_sites: null
+    corroboration: the per-engine ratings sum to 96.12 MWth, which agrees with
+      the stated total
+    summed_from_engines: false
+    quote: The combustion plant comprises 12 x 8.01 MWth gas oil or equivalent
+      fuelled standby generators (new Medium Combustion Plant (MCP)), with an
+      aggregated total combustion capacity on -site of approximately 96.12 MWth.
+    document_kind: permit
+    document_title: 'Permit: Ark Data Centres Limited'
+    document_stem: zp3527ss-permit
+    document_sha256: 5de3beea2ce2f709ae059ebbae9d46bbb9896afef727b4b5b04581cc78363417
+    document_url: https://assets.publishing.service.gov.uk/media/68e64d858c1db6022d0ca226/Application_Bespoke_A001_Permit_-_03102025.pdf
+    source_document: zp3527ss-permit
+    attribution: Contains Environment Agency information © Environment Agency
+      and/or database right
