@@ -758,10 +758,13 @@ that Colt's operator claims are loaded unmatched. Site 61 holds 287
 applications, 188 of which name the former Nestle factory, and reading
 district proximity as identity is what put the Union Park capacity match
 there before it was retired. The mechanism for drawing a boundary exists
-— `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py` — but
-only one boundary has been drawn with it, the International Trading
-Estate split that moved records to site 443. Until more are, treat any
-match to a site record covering an industrial estate as suspect; the
+— `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py` — and
+one boundary has been drawn with it, the International Trading Estate
+split that moved records to site 443. The seven campuses still tangled
+inside site 61 are named in that same file, under the partitions, so
+the next attempt starts from the list rather than rediscovering it.
+Until they are drawn, treat any match to a site record covering an
+industrial estate as suspect; the
 Environment Agency permits are the sharpest evidence for where the
 boundaries fall, because each names a campus and gives a grid reference.
 

@@ -362,12 +362,17 @@ None is abandoned; each is a known, scoped piece of work.
   Telehouse; site 59 holds Vantage and Colt as well as Microsoft; site 11
   holds Amazon and NTT. Each of these is listed under `considered`, with
   the reason, in `environment-agency-permit-matches.yaml`. The mechanism
-  is `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py`;
-  note that it currently records **one** partition, the International
-  Trading Estate split — an earlier handover said it held the six
-  boundaries site 61 still needs, and it does not. Site 61 holds 287
-  applications, 188 of them naming the former Nestle factory, and any
-  match to it stays suspect until they are drawn.
+  is `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py`. It
+  holds one drawn partition — the International Trading Estate split —
+  and, under it, the seven campuses site 61 still needs separating,
+  already named with the evidence each would take: Union Park / North
+  Hyde Gardens, the former Nestlé factory, Southall Gas Works, Tudor
+  Works, Hayes Bridge Retail Park, Silverdale Road and Western
+  International Market. **Start there rather than re-deriving the
+  list.** Everything in that corridor is pairwise within a kilometre, so
+  no radius separates them; each needs documentary evidence that a set
+  of applications is one campus, which is what the ITE split has. Until
+  they are drawn, any match to site 61 stays suspect.
 - **Requests outstanding, and requests never sent.** NESO and Ofgem were
   written to on 2026-08-12 and replies are due around 10 September. Three
   more are worth sending and have not been: a CCA site-level consumption
