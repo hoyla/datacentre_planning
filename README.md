@@ -36,6 +36,11 @@ workbook, a queryable database, and the source documents themselves.
   other datasets that claim to measure data-centre capacity, what each
   one's MW actually is, and why none of them can be merged into a column
   here. Read before proposing a triangulation source.
+- [docs/SCALE_RANKING_RESEARCH.md](docs/SCALE_RANKING_RESEARCH.md) —
+  how to rank the 304 sites with no power figure well enough to choose
+  fifty for manual corroboration, and a survey of sources not yet
+  tried, each marked checked or unverified. Candidates for the
+  EXTERNAL_DATA_SOURCES process, not conclusions.
 - [DATA-LICENSING.md](DATA-LICENSING.md) — per-source upstream terms.
   Barbour ABI data is licensed and **requires credit** in published
   output.
