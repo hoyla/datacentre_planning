@@ -1,0 +1,13 @@
+ 
+Permit number 
+EPR/DP3906BE 18 
+Table S3.3 Process monitoring requirements 
+Emission point reference or source or 
+description of point of measurement 
+Parameter Monitoring frequency  Monitoring standard 
+or method  
+Other specifications  
+ 
+SCR Urea levels Continuous − In accordance with SCR/DPF 
+Operating & maintenance information 
+DPF Dust levels Continuous − 

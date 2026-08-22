@@ -40,6 +40,71 @@ Anonymised by the publisher; do not attempt to match rows to sites
 except as a deliberate, method-labelled adjudication.
 Licence: UK Power Networks open data terms (attribution required).
 
+## ea-industrial-installations.zip, ea_permit_text/, ea-permit-documents.json
+
+The Environment Agency's **Industrial installations** public register,
+downloaded 2026-08-21 from
+https://environment.data.gov.uk/public-register/downloads/industrial-installations
+sha256: `769ec9fa7d1bd51aeaf564deb5daab6d7b74725ca4eba10b20d6eb06466c57d0`
+
+It is **a zip, not the bare CSV the URL implies** — curl it and you get
+570 KB beginning `PK\x03\x04`. Committed as downloaded and unpacked in
+memory, so the snapshot stays byte-identical to what was served. The
+register is regenerated daily and carries no internal version, so the
+download date is the only date it can speak as of
+(`dcp.ea_permits.AS_AT`).
+
+5,198 rows: Permission Number, Name, Activity Type Description, Document
+URL, Site Address, Site Postcode, Site Grid Reference, Easting, Northing,
+Local Authority, Permission Date. A query API alongside it supports
+`name-search`, `number-search`, `local-authority` and radius search via
+`easting`/`northing`/`dist`.
+
+**Anchors for any re-pull.** 97 rows are candidates — a curated operator
+vocabulary or the words "data centre" in the holder or address, *and* an
+activity type authorising combustion plant. 42 of those have a permit
+publication on gov.uk (35 linked from the register's own Document URL
+column, seven more recovered through gov.uk's search API by permit
+number), and 35 of those state a readable total thermal input,
+5,879 MWth in all. The largest is Amazon's Didcot North campus at
+925 MWth across 129 generators.
+
+**The register carries no capacity.** Not one column of it. Every
+megawatt figure here comes from the permit PDF, which is why the PDFs
+are fetched and their text committed. `ea_permit_text/` holds every page
+of every fetched document, one file per page, so a quote can be
+re-checked from a fresh clone. `ea-permit-documents.json` is the
+manifest: the publication path, and for each document its title, URL,
+sha256, size and page count. The PDFs themselves live under
+`data/raw/ea_permits/`, which is gitignored.
+
+**Known limits, which travel with any use.** Existing plant of 1–5 MWth
+needs no permit until 1 January 2029, so smaller and older sites are
+under-represented and an absent permit proves nothing. Emergency-only
+backup is excluded from specified-generator permitting altogether — the
+exclusion is void if the plant provides balancing services or Capacity
+Market/DSR. Wales is NRW's register and Scotland SEPA's, both under
+different regimes. And the register contradicts itself in places: one
+Digital Realty permit gives a Crawley address with Redhill coordinates
+and a Redhill local authority, and one Croydon installation is located
+at its holder's registered office in the City of London.
+
+Licence: Environment Agency Conditional Licence — re-use and
+redistribution permitted with attribution, "Contains Environment Agency
+information © Environment Agency and/or database right". See
+DATA-LICENSING.md.
+
+## ea-permit-operators.yaml, ea-permit-matches.yaml
+
+The two hand-written files behind the permit claims. The first says which
+permit holders are data-centre operators and why, and records the false
+positives a shorter token list produced. The second attaches permits to
+sites, one adjudication at a time with written evidence, and — as
+importantly — records the permits examined and deliberately not
+attached. Eight permits from six operators, 1,249 MWth, fall inside a
+single site record covering the whole Slough Trading Estate; none is
+matched, and the reasons are the partitioning evidence.
+
 ## neso-ea-register.xlsx
 
 NESO's *Existing Agreements (EA) Register*, published alongside the Gate 2

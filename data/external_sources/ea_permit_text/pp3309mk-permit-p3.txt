@@ -1,0 +1,27 @@
+ 
+Permit number                              
+EPR/PP3309MK 3 
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+ 
+Status log of the permit 
+Description Date Comments 
+Application EPR/PP3309MK/A001 Duly made 
+25/02/2022 
+Application for a combustion facility 
+consisting of 20 diesel engines providing 
+emergency power to an electronic 
+datacentre.  
+Further Information received, response to 
+Schedule 5 Notice 
+28/09/2022 Updates to air quality modelling 
+assessment, confirmation of engine 
+standards and an updated site plan 
+Permit determined EPR/PP3309MK                   
+(Billing ref. PP3309MK) 
+19/01/2023 Permit issued to Amazon Data Services 
+UK Limited. 
+ 
+End of introductory note 
+ 
+  

@@ -1,0 +1,37 @@
+ 
+Crawley Data Centre Campus        EPR/EP3022ST               Page 3 of 19 
+o Testing scenarios Unit 1  
+▪ Scenario 1: Monthly off load test – Generators tested 
+individually (10 minutes) 
+▪ Scenario 2: Quarterly test – Generators tested individually (3 
+hours) 
+▪ Scenario 3: Annual load bank test - Generators tested 
+individually (1 hour) 
+▪ Scenario 4: Annual black building test - Generators tested 
+simultaneously (4 hours) 
+o Testing scenarios Unit 2  
+▪ Scenario 1: Monthly off load test - Generators tested 
+simultaneously (10 minutes) 
+▪ Scenario 2: Quarterly test - Generators tested 
+simultaneously (10 minutes) 
+▪ Scenario 3: Six-monthly test - Generators tested individually 
+(10 minutes) 
+▪ Scenario 4: Annual load bank test - Generators tested 
+simultaneously (2 hours) 
+o Emergency scenarios 5 and 6: In the event of power grid outage (all 
+generators running simultaneously for 72 hours at 100% load). This 
+has examined each unit operating individually, and a worst-case 
+scenario of both units operating simultaneously. 
+ 
+The Applicant has stated that there have been 2 historic power outages where the 
+standby generators were required to power Unit 1 since it was first operational in 
+2020 with each outage lasting for less than 1 hour. For Unit 1 there have been no 
+outages since 2015, however one generator was required to run for a period of 32 
+hours due to a power supply issue in 2021. 
+3. Air Quality Assessment 
+ 
+The Applicant’s assessment of the impact of air quality is set out in Air Dispersion 
+Modelling Report, dated November 2024. The assessment comprises: 
+• Dispersion modelling of emissions to air from the operation of the 
+installation. 
+• A study of the impact of emissions on nearby sensitive conservation sites. 

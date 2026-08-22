@@ -1,0 +1,44 @@
+ 
+EPR/CP3902LV/V003 
+NTT Dagenham Data Centre  Page 8 of 20 
+The probability of an exceedance is also presented for a more realistic 1 -
+hour outage with the probability of exceedance falling to less than 1%; 
+• the PC does not exceed 100% of the annual mean CLe or CLo at any of the 
+locally designated sites; and 
+• the PC exceeds 100% of the maximum daily mean CLe at most of the locally  
+designated sites, however not ER6 and ER13. 
+LON1B commissioning tests 
+Note: The results are based on the unlikely scenario of the commissioning tests  
+coinciding with the worst-case conditions for dispersal of emissions. 
+• the annual mean NO2 PC is low, not exceeding 2.5% of the ES at all of the 
+selected human receptors locations and the ES is not predicted to be 
+exceeded; 
+• statistical analysis of the probability of exceedances of the 1-hour mean NO2 
+ES predicts exceedances to be ‘highly unlikely’ at all of the selected human 
+receptors; 
+• statistical analysis of the probability of exceedances of the 1-hour mean NO2 
+AEGL-1 predicts exceedances to be ‘highly unlikely’ at all of the selected 
+human receptors; 
+• the PC does not exceed 100% of the annual mean CLe or CLo and daily 
+mean Cle at any of the locally designated sites therefore it can be concluded 
+that there is ‘no significant pollution’. 
+ 
+LON1A and LON1B testing and limitations 
+Additional information was provided by the applicant setting out impacts for 
+various scheduled testing operations, and the implications for limitation or 
+flexibility on combining tests across LON1A and LON1B. They confirmed that the 
+model remained unchanged from that provided with the application, with the 
+exception of model averaging period outputs which had the 1-hour, 4-hour, 6-
+hour and 12-hour rolling means added to reflect the various testing durations.  
+They concluded that: 
+• No other tests should take place in the same 24-hour period as the 
+LON1A 4-hour black building maintenance schedule model 2 (MSM2) test 
+and this test should not extend beyond 4-hours; 
+• LON1B black building test (MSM2) is of sufficiently low impact that other 
+MSM1 tests could be undertaken at LON1A for up to 14 hours (e.g. 
+accommodating 2x 6-hour UPS wraparound tests). 
+They confirmed that in reality, on the day of a black building test at LON1B, no 
+other testing would be undertaken at LON1B, however there may be limited 
+MSM1 type testing required at LON1A. They confirmed that the additional results 
+provided demonstrated that this could be accommodated without an 
+unacceptable risk of an exceedance of the NOx critical level. 

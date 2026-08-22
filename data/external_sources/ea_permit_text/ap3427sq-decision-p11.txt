@@ -1,0 +1,41 @@
+ 
+Page 11 of 29 
+Emergency exceedances, while possible, are extremely rare events due to 
+system reliability. 
+ 
+Protection Against Power Outage and Minimisation of Generator Operation 
+The largest risk of gaseous emissions from the site occurring which could impact 
+human health or ecological receptors would be if the gas oil or equivalent fuel 
+generators had to operate for any significant period of time following a National 
+Grid failure. 
+To address this scenario and minimise emissions, the operator: 
+Uses power distribution system, on-site, starting from the High Voltage 9HV 
+(132kV) UKPN connection at Sundon substation down to the Operators 132/20kV 
+Transformer, it is designed to be safe reliable, robust and efficiency and have a 
+high in-built redundancy.  
+Building A and Building B are both equipped with a Catcher system which is an 
+electrical infrastructure element that provides redundant power to the critical 
+loads. This system is shared across all electrical lineups.  
+Each Building will be equipped with two catcher distinct systems consisting of a 
+Catcher Unit Substation Switchboard (MEDS-1.1C and MEDS-2.1C) with a 
+dedicated utility supply and an emergency generator for the provision of power. 
+The Catcher installation distributes the "reserve" power from the catcher MEDS 
+to downstream equipment connected throughout the data centre building, when 
+needed. 
+In each critical electrical lineup, the Utility Switchboard is supplied from a third 
+"catcher" source in addition to the utility and generator sources. This allows 
+critical loads to be automatically transferred to the catcher system in case of 
+failure on the normal power supply or equipment. The catcher system helps 
+reduce generator runtime by providing an alternative backup power source to the 
+critical loads. Instead of relying solely on the generators for backup power during 
+a utility failure, the catcher system can take over and supply power to the critical 
+loads. This allows the generators to remain in standby mode, reducing their 
+runtime.  
+In case of loss of mains supply, a certain amount of load is transferred to one of 
+the catchers and the other catcher can be utilised to provide a fully available 
+second source for all the unaffected lineups and the critical load. Catcher loading 
+will be monitored and actively balanced through the use of a Dynamic Load 
+Balancing (DLB MK2) control system.  
+Operational hours 
+In order to minimise generator operation, we set operational hour limits for data 
+centres at 500 hours as they are permitted for emergency use only. The limit on 

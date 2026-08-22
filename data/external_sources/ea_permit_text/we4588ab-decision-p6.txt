@@ -1,0 +1,35 @@
+ 
+LIT 11984  3/6/2026                     Page 6 of 17 
+predicted potential impact indicated by the air dispersion modelling at individual 
+receptors, timescales for response measures, considerations of local conditions 
+relevant during a grid failure, contingency measures and how this plan will be 
+reviewed.  
+The approved plan will be incorporated into table S1.2 of the permit.  
+ 
+Operating hours 
+The Medium Combustion Plant (MCP) will be operated on limited hours, with 
+permit tables S1.1 and S1.2 securing the necessary requirements. 
+New MCPs operating less than 500 hours per year as a three-year rolling 
+average are exempt from meeting Medium Combustion Plant Directive (MCPD) 
+emission limits, refer to Emission limits section of this document.  
+Permit conditions 
+2.3.6 
+The permit includes a maximum 500 hour ‘emergency/standby operational limit’ 
+for any or all the plant producing on-site power under the limits of the combustion 
+activity; and thereby emission limit values (ELVs) to air are not required within the 
+permit. Emergency hours’ operation includes those unplanned hours required to 
+come off grid to make emergency repair of electrical infrastructure associated but 
+occurring only within the data centre itself. 
+4.2.2 
+Reporting of standby engine maintenance run hours is required annually and any 
+electrical outages (planned or grid failures regardless of duration) requires both 
+immediate notification to the Environment Agency and annual reporting. 
+Table S1.1 (Activities) 
+Includes necessary additional operational controls.  
+Refer also to Noise section below. 
+Table S1.2 (Operating techniques) 
+Incorporates the testing and maintenance scenarios and relevant technical 
+standards. It will also incorporate the approved AQMP.  
+Table S1.3 (Improvement programme) 
+Whilst we are satisfied that the maintenance and testing regime is appropriate,  
+we have included improvement conditions in the permit: 

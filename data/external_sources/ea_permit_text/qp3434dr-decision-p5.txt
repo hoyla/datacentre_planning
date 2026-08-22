@@ -1,0 +1,52 @@
+EPR/QP3434DR/A001 
+Date issued: 04/05/18  5 
+Overall diesel generators are considered to be BAT for provision of backup power at this site due to the 
+requirement for a cost effective, reliable and proven technique to provide operational resilience. As a proven 
+technology, there are also proven technological and design options available to mitigate the risks of adverse 
+environmental impacts, which have been considered by the Applicant.  
+The default generator specification as a minimum for new plant to minimise the impacts of emissions to air 
+(NOx) is 2g TA-Luft (or equivalent standard) or an equivalent NOx emission concentration of 2000mg/m 3. 
+The operator has committed to ensure future generators, which would be subject to a permit variation, meet 
+BAT requirements.  
+ 
+Noise Impacts 
+Noise assessment  
+The primary noise source on site are the generators. In April 2017, noise mitigation works were carried out at 
+the site which involved blocking some acoustic weaknesses in the building structure that had been allowing 
+some sound to escape from the generator room.  
+The Applicant submitted a noise survey with the permit application to assess the effectiveness of a noise 
+mitigation works. The key findings are as follows:  
+• Noise at the site has reduced by around 5dBA following completion of the noise mitigation works. Noise 
+monitoring data recorded prior to installation supports this assessment.   
+• The majority of generators at the site do not cause noise above the lowest daytime background level 
+measured as 54 dBLA90 at the nearest receptor.  
+• Three of the generators do have the potential to cause noise above background, with the highest 
+measured impact at the nearest receptor being 58 dBLAeq.  
+It should be noted that there are no known noise complaints regarding the site. Whilst we would consider the 
+night-time background level to be the worst-case ambient conditions, the operator has justified the use of the 
+daytime background in their assessment due to the most likely operating scenario (testing) only occurring 
+during the daytime. The results of the assessment show that the level of noise from these three generators is 
+not a level where complaints are likely (+4 dBA above background).  
+The site maintenance and testing regime is currently arranged to ensure the impacts of noise are minimised. 
+Given the improvements made on site as detailed above, we will now expect the operator, through the 
+review of their EMS, to ensure that the impacts on lo cal air quality are also given consideration when the 
+maintenance and testing schedule is devised in the future.  
+Permit conditions  
+At this time we are satisfied that a site specific Noise Management Plan (NMP) is not required beyond the 
+controls detailed in the management system. However, the permit conditions contain a provision for the 
+Environment Agency to request the applicant to produce and implement a NMP should the activities give rise 
+to noise and/or vibration beyond the installation boundary.  
+ 
+Soil and Groundwater Impacts 
+There are a number of fuel storage tanks at the installation, which store diesel to supply the generators. A 
+potentially significant risk is associated with the on-site bulk storage of fuel and the potential for leaks or 
+spills from re-fuelling, or from damage to the tanks. 
+ 
+The Applicant submitted an appraisal of the fuel storage arrangements and controls at the installation to 
+demonstrate their soil and groundwater protection methodology, including compliance with the Control of 
+Pollution (Oil Storage) (England) Regulations 2001 (OSR), and guidance on Oil Storage Regulations for 
+Businesses, where appropriate.  
+ 
+All tanks are metal and meet British Standard 799-5, me eting the OSR and as such can be considered BAT. 
+In addition, all tanks are double skinned and are able to contain an extra 10% of the capacity of the tank. 
+ 

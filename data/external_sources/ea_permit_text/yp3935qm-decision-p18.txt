@@ -1,0 +1,49 @@
+EPR/YP3935QM/A001 
+Date issued: 01/07/19  18 
+Consultation 
+The following summarises the responses to consultation with other organisations, our notice on GOV.UK for 
+the public and the way in which we have considered these in the determination process. 
+Responses from organisations listed in the consultation section 
+Response received from 
+Public Health England (PHE) 
+Brief summary of issues raised 
+The consultee noted the applicant’s site is located in a predominately industrial area approximately 3km 
+north east of Slough with closet receptors being a number of properties located approximately 160m south 
+east of the site boundary. 
+The consultee recommended that any environmental permit issued for the site should contain conditions to 
+ensure products of diesel combustion (nitrogen dioxide, particulate matter, carbon monoxide and sulphur 
+dioxide) from back-up generator operation do not impact on public health.  
+PHE noted that the air dispersion modelling provided by the applicant indicated there could be an 
+exceedance of the short-term nitrogen dioxide air quality standard in a worst case scenario. The consultee 
+noted that the Environment Agency may wish to assess whether measures to limit nitrogen dioxide 
+emissions from the generators have been fully considered. They suggested modelling could be repeated 
+once generators were commissioned. 
+PHE noted that limited fire prevention and accident management scenarios were provided and 
+recommended further consideration be given to the implementation of fire prevention measures to 
+minimise impact on public health in the event of a fire on site.  
+Summary of actions taken or show how this has been covered 
+Improvement Conditions (IC) have been included in the permit: 
+- IC1 requiring the operator to produce an Air Quality Management Plan in conjunction with the Local 
+Authority to outline response measures following any loss of National Grid power supply; 
+- IC2 requiring the operator to propose a method of analysing ambient air to verify the predicted 
+short-term nitrogen dioxide concentrations at sensitive receptors (human and ecological) and use 
+this to update the Air Quality Management Plan if required; 
+- IC3 requiring the operator to review options for reducing the predicted impact of short-term nitrogen 
+dioxide emissions due to standby generator operation after National Grid failure. 
+The site has demonstrated they implement a detailed third-party fire risk assessment and action any areas 
+of non-conformance identified. The site has fire alarms, aspiration, detection and sprinkler systems. The 
+site has a 24/7 security team on site, a minimum of three persons on site at any time, over 500 CCTV 
+cameras, a site access control system and fencing at heights from 3 m to 10 m on the perimeter of the site. 
+The standby generators shutdown automatically in the event of fire. Inspections are carried out on bulk 
+storage tanks and containers holding standby generators to identify and remedy any leaks, spills or 
+abnormal operation that could increase fire risk. 
+  
+ 
+No representations received from:  
+ Health & Safety Executive  
+ Food Standards Agency  
+ Slough Borough Council (Director of Public Health)  
+ Bracknell Forest Council (Director of Public Health)  
+ Slough Borough Council Planning Authority  
+ Slough Borough Council Environmental Planning Authority.  
+ 

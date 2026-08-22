@@ -1,0 +1,39 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 2 of 28 
+Read the permitting decisions in conjunction with the environmental permit.   
+Key issues of the decision 
+Nature of the site 
+The operator applied to permit two data centres – LHR11 and LHR12 at the same location, 
+known as Park Royal, within the London Borough of Ealing. Both data centres will be located on a 
+single site wholly owned and operated by VDC, and will share a common site boundary, drainage 
+network, electrical supply infrastructure, fuel supply systems as well as internal road network.  
+Therefore, it is proposed that the Installation should be permitted as a single site under our data 
+centre guidance as we would clearly regard a company’s individual campus or obvious 
+standalone boundary as a single site. 
+LHR11 is classed as Phase 1: 17 generators are planned to be installed in 2024. 
+LHR12 is classed as Phase 2: 20 generators are planned to be installed in 2025. 
+Therefore, the site will have a total of 37 generators. All have been permitted as part of this one 
+application. 
+Best Available Techniques (BAT) Assessment – Emergency Power 
+Provision on Site 
+Technology & Fuel 
+The operator carried out a BAT assessment of the viable technologies and fuel capable of 
+providing emergency power at the data centre. 
+As outlined in the Environment Agency’s ‘Data Centre FAQ’ document, we accept that gas oil or 
+equivalent fuel generators are presently a commonly used technology for standby generators. 
+Currently gas oil or equivalent fuel generators are the preferred option for the supply of backup 
+power for data centres and are a proven technology for providing reliable resilience of 
+functionality which can be started from cold very quickly.  
+We have specified the fuel to be burned in the engines to consist of gas oil or equivalent 
+substitute to be agreed in writing with the Environment Agency with a sulphur concentration of 
+0.001% w/w. We are in the process of developing our position on the use of gas oil substitute 
+fuels such as hydrotreated vegetable oil (HVO), therefore we have required that if any of these 
+fuels are proposed, written agreement is sought by the operator from the Environment Agency’s 
+regulatory officer. The operator confirmed that it is anticipated that the units will primarily be run 
+using HVO with a maximum sulphur content of 5mg/kg. Low sulphur gas oil will be used to run 
+the generators if required as an alternative. Email received on 13/06/2024 advising Environment 
+Agency of change of fuel. Operator to use both gas oil and HVO fuel in backup generators. This 
+change was agreed by us on 14/06/2024. 
+ 
+ 
+ 

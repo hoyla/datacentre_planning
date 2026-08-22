@@ -1,0 +1,46 @@
+ 
+                       Page 10 of 20 
+whole. As operations are restricted to 500 hours, emission limit values (ELVs) to 
+air are not required within the permit.  
+ 
+The Environment Agency expects the number of and duration of planned testing 
+and generator operations to be minimised as much as possible (subject to client 
+requirements). The BAT expectation is that individual generator testing is below 
+50 hours/annum which is drawn from the MCPD specified generator guidance. In 
+this instance the operator is maintaining and testing each generator for a total of 
+3 hours a year (based on email attachment provided 12/11/2021). This is in line 
+with BAT and below the level at which ELVs would be needed. 
+ 
+The permit has a limit on the activity to exclude voluntary ‘elective power 
+operation’ such as demand side response (i.e. on-site use) or grid short term 
+operating reserve (STOR) (i.e. off-site export of electricity) and Frequency 
+Control by Demand Management (FCDM) for grid support. This is primarily to 
+differentiate data centres from ‘diesel arrays’ that voluntarily operate within the 
+balancing market and importantly provide a clear way to demonstrate 
+minimisation of emissions to air as ‘emergency plant’. 
+ 
+Operational and management procedures should reflect the outcomes of the air 
+quality modelling by minimising the duration of testing, phasing generators into 
+subgroups, avoiding whole site tests and planning off-grid maintenance days and 
+most importantly times/days to avoid adding to “at risk” high ambient pollutant 
+background levels. 
+As explained previously in the Air Quality section of this document, under the 
+heading Emergency Scenario, the risk of the generators needing to operate for a 
+prolonged period of time is low.  
+Reporting of standby engine maintenance run hours is required annually and any 
+electrical outages (planned or grid failures regardless of duration) require both 
+annual reporting and immediate notification to the Environment Agency. 
+ 
+Noise 
+The site will only run the engines regularly as part of the testing regime described 
+earlier, with each engine run for 3 hours per year. This occurs during daytime 
+hours both during weekdays for monthly and quarterly testing and the weekends 
+for the Annual Load Bank test, and is not classed as part of normal operations.  
+Prolonged operation will only occur in an emergency situation where the National 
+Grid supply is lost. The operator has provided details of historical outages at this 
+installation. There have been no outages as a result of the loss of power from the 
+National Grid since the site began operations as a data centre in 2011. 
+Therefore, the potential for prolonged noise is also considered to be very low. 
+ 
+An assessment of the potential impact of noise has been undertaken in the 
+Environmental Risk Assessment (ERA). The document outlines that in addition to 

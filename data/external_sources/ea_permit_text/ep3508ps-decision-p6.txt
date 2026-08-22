@@ -1,0 +1,49 @@
+ 
+ Page 6 of 17 
+This is a new site and all generators installed meet TA-Luft 2g emissions 
+standards. The stack height for the generators is 16.5m which is above the height 
+of the surrounding buildings. The diesel generators installed are in line with BAT, 
+and dispersion has been maximised. 
+ 
+An emergency outage is an event that will be for a number of hours. Therefore, 
+only short-term assessment criteria need to be considered. No exceedances are 
+predicted for the pollutants PM10, SO2 and CO. These screen out and are not 
+considered below. Discussion below is with regards to short term NO2 and NOx.  
+ 
+Human Receptors: 
+ 
+For Scenario 3, the operator predicts that the 99.79th percentile 1-hour NO2 ES 
+is likely to be exceeded if Scenario 3 operates for 19 hours or more during the 
+worst-case meteorological conditions.  
+ 
+The next stage is to calculate the probability of this predicted exceedance 
+occurring through a hypergeometric probability distribution assessment. The 
+results of the assessment were that the probability of an exceedance of the 1-
+hour NO2 ES remains below 1% as long as the number of hours of operation do 
+not exceed 37 hours a year. A probability of less than 1% is defined as a highly 
+unlikely event in our guidance. The predicted emissions during Scenario 3 are 
+therefore, concluded as being acceptable. 
+ 
+Our audit of the modelling confirms that short term process contributions of NO2 
+are highly unlikely to cause an exceedance at any of the receptors. Therefore, we 
+agree with the operators conclusions. 
+ 
+Ecological Receptors: 
+ 
+The operator predicts exceedances of the daily mean NOx critical level of 75 
+µg/m3 at all of the non-statutory ecological sites included in the assessment 
+based on Scenario 3 occurring for 24-hours during the worst-case meteorological 
+conditions. The operator concludes that due to the infrequent operations of 
+Scenario 3, exceedances of the daily mean NOx critical level are unlikely to occur 
+in reality. The consultant has not gone to the next stage and provided quantitative 
+evidence for their conclusions such as a statistical analysis based upon a 
+hypergeometric probability distribution.  
+ 
+The consultant does not predict any exceedances at European designated 
+statutory ecological sites. 
+ 
+Our audit of the modelling confirms that short term process contributions of NO2 
+are unlikely (less than 5% probability) to cause an exceedance at any of the 
+habitats receptors. This is based on our own statistical analysis using the 
+hypergeometric probability distribution and consideration that Scenario 3 is an 
+event that is highly unlikely to occur.  

@@ -1,0 +1,47 @@
+Variation and consolidation  
+application number  
+EPR/CP3902LV/V003 3 
+The site is an electronic data storage centre which consists of a Schedule 1 listed activity under the 
+Environmental Permitting Regulations: 
+ 
+Section 1.1 Part A(1)(a): Burning of any fuel in an appliance with a rated thermal input of 50 or more 
+megawatts (MW).   
+The activity falls under Chapter II of the Industrial Emissions Directive (IED). The liquid fuelled standby 
+generators (SBGs) are classed as Medium Combustion Plant (MCP) as part of a Chapter II installation. The 
+Medium Combustion Plant Directive (MCPD) requirements are fulfilled through compliance with Chapter II of 
+Directive 2010/75/EU. Operating as new MCPs as part of a Chapter II installation, they will be used as back-
+up generators, only providing power at the site during a power outage.  
+There are 52 SBGs with a total thermal input capacity of 335.15 MWth, classed as ‘new’ MCPs as part of the 
+IED. 
+The SBGs will be used solely to generate power for the facility in the event of an emergency situation , such 
+as a brown- or black-out of the local electricity transmission network. No electricity will be exported from the 
+installation.  
+LON1A 
+12 SBGs each with a thermal rated input of 4.1 MWth (total thermal rated input of 49.2 MWth) (phase 1)  (no 
+Selective Catalytic Reduction (SCR) abatement installed); and 
+16 SBGs each with a thermal rated unput of 6.947 MWth (total thermal rated input of 111.15 MWth ) (phases 
+2 and 3) (SCR abatement installed). 
+LON1B 
+22 SBGs each with a thermal rated input of 7.6 MWth (total thermal rated input of 167.2 MWth)  (SCR 
+abatement installed); and 
+2 SBGs each with a thermal rated input of 3.8 MWth (total thermal rated input of 7.6 MWth)  (SCR abatement 
+installed). 
+The gas oil and/or hydrotreated vegetable oil (HVO) fuel for the LON1A SBGs is stored in bunded belly tanks 
+with an integral bund of 110% capacity. The belly tanks are integral to the container units, located beneath 
+the base of each SBG unit. These tanks are raised off ground level on concrete plinths and housed within 
+proprietary steel container units. 
+The gas oil and/or HVO fuel for the LON1B SBGs is stored at the LON1B data centre building in belly tanks 
+which sit below the individual SBGs within the internal SBG rooms. Each generator room is bunded to 
+provide 110% containment of the maximum volume of SBG fuel stored within the belly tank within these 
+rooms. 
+In total, a maximum of 724,000 litres (LON1A) and 864,000 litres (LON1B) of liquid fuel can be stored at the 
+data centre, and there is no bulk storage of liquid fuel. 
+The plant is permitted to operate for less than 500 emergency hours per year, and for less than 50 hours per 
+year for the testing of each SBG.  
+The on-site surface water drainage system drains all run-off in the area via an oil interceptor, which is 
+discharged into the municipal combined sewer system. 
+The main emissions from the installation are to air in the form of oxides of nitrogen (NOx), sulphur dioxide, 
+particulate matter and carbon monoxide.  
+The minimum default generator specification for new plant, to minimise the impacts from NOx emissions to 
+air, is 2g-TA Luft or US EPA Tier 2 or an equivalent standard. All 52 SBGs are emissions optimised to meet 
+the US EPA Tier 2 standard.  

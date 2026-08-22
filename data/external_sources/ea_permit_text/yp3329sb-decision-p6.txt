@@ -1,0 +1,44 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 6 of 28 
+Ecological Receptors 
+They considered the following protected European sites:  
+Special Areas of Conservation (SAC): 
+• Richmond Park 
+• Wimbledon Common 
+ 
+They considered the following local sites: 
+Local Nature Reserves (LNR): 
+• Wormwood Scrubs 
+ 
+The consultant’s assessment of ecological impacts also identified 50 Local Wildlife Sites (LWS) 
+as receptor points. 
+The data centre is situated in an Air Quality Management Area (AQMA) (Ealing AQMA) declared 
+by the London Borough of Ealing in 2000 for annual mean NO2 and 24-hour PM10. 
+The consultant assessed two scenarios: 
+Scenario 1: Routine maintenance/ testing - As part of the testing and maintenance regime, the 
+generators will be tested individually, up to 2 hours per month. This equates to 24 hours per year 
+per generator, or 888 hours in total per year for all plant. It has been assumed by the consultant 
+that the single generator stack with the highest process contributions (PCs), ‘Stack LHR11_17’, 
+runs continuously at 100% load to provide worst-case predictions. Annual mean results have 
+been factored down, to represent a total annual operating time of 888 hours. 
+Scenario 2: Electrical grid outage of 72 hours - All generators operate concurrently at 100% load 
+across the site for 72 hours (worst case scenario). 
+They made the following assumptions regarding the maintenance and operational scenarios to 
+ensure a conservative assessment was undertaken, we do not agree with all of their assumptions 
+and have audited their Air Quality Assessment accordingly: 
+• The consultant used ADMS 6 to predict emissions of NOx from the gas oil generators. 
+They used five years of meteorological data observed at London Heathrow Airport 
+between 2018 and 2022. The airport is located approximately 10 km west of the data 
+centre and is likely to be representative of the modelling domain. We have conducted 
+sensitivity analysis to the additional years of 2016 and 2017 at Heathrow and 
+meteorological data from the London Weather Centre, which is approximately 15 km 
+northeast of the site. This station shows a slightly different wind profile to those observed 
+at Heathrow and may be more representative of the dispersion site. 
+ 
+• The consultant applied a surface roughness value of 1.5 m for the dispersion site, 
+representative of large urban areas. This a high surface roughness option in ADMS, 
+representative of areas such as central London. We have tested sensitivity to a lower 
+surface roughness of 0.7 m, which we consider to be more representative of the site as 
+this falls between the land use types parkland, open suburbia, cities and woodlands as 
+defined by the model inputs. The consultant applied a surface roughness of 0.5 m for the 
+meteorological site, representative of parkland, open suburbia. We have tested sensitivity 

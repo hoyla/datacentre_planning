@@ -1,0 +1,41 @@
+ 
+ Page 10 of 17 
+from site by an appointed third-party contractor and managed by a suitably 
+regulated waste management contractor. 
+Based upon the information in the application, we are satisfied that the 
+appropriate measures will be in place to prevent or where that is not practicable 
+to minimise pollution from waste.  
+10. Operational hours 
+We set operational hour limits for data centres at 500 hours as they are permitted 
+for emergency use only. The limit on the emergency use of 500 hours is for the 
+installation as a whole i.e. as soon as one generator starts operating the hours 
+count towards the 500 hours.  
+The operational hours on the site will be monitored and reported as follows:  
+Emergency operation limited to 500 hours for the installation via permit condition 
+2.3.6.  
+Maintenance and testing regime limited to <50 hours per generator, linked to 
+operating techniques table S1.2 
+ 
+11. Permit Conditions 
+ 
+Permit condition 2.3.6 
+The permit includes a maximum 500-hour operational limit for the emergency 
+standby generators. The 500 hours includes testing and maintenance. 
+ 
+Table S1.1 (Activities) 
+ 
+Includes the following operational control: 
+ 
+• Electricity produced at the installation cannot be exported to the National 
+Grid. 
+ 
+This control places a limit on the activity to exclude voluntary ‘elective power 
+generation’ such as Balancing Services, Demand Side Response operations 
+including Frequency Control Demand Management (FCDM) or Triad Avoidance . 
+This is primarily to differentiate data centres from ‘diesel  (gas oil)  arrays’ that 
+voluntarily operate within the balancing market , and importantly a clear way to 
+demonstrate minimisation of emissions to air as ‘emergency plant’. 
+As discussed above we have also included the following operational restrictions: 
+• Testing of generators/DRUPS shall not be carried out for longer than 6 
+hours in any 24-hour period. 
+ 

@@ -1,0 +1,81 @@
+ 
+Permit number 
+EPR/DP3906BE 19 
+Schedule 4 – Reporting 
+Parameters, for which reports shall be made, in accordance with conditions of this permit, are listed below.  
+ 
+Table S4.1 Reporting of monitoring data 
+Parameter Emission or 
+monitoring 
+point/reference 
+Reporting period Period begins 
+Emissions to air  
+Parameters as 
+required by condition 
+3.5.1.  
+ 
+A10, A11 Every 1500 hours of 
+operation once or every 
+three years (whichever 
+comes first).  
+1 January 
+Note 1  
+A3, A4, A7, A8, A9 Every 1500 hours of 
+operation once or every 
+three years (whichever 
+comes first).  
+01/01/2025 
+A1, A2, A5, A6, A12, 
+A13, A14, A15, A16, 
+A17 
+Every 1500 hours of 
+operation once or every 
+three years (whichever 
+comes first).  
+01/01/2030 
+Process monitoring 
+parameters as 
+required by condition 
+3.5.1.  
+SCR/DPF Annually  1 January 
+Note 1: Unless otherwise agreed in writing with the Environment Agency as a result of approval of 
+improvement condition IC2 in this permit.  
+ 
+Table S4.2 Performance parameters 
+Parameter Frequency of 
+assessment 
+Units 
+Gas oil usage Annually Tonnes 
+Generator operation for 
+testing and maintenance  
+Report to be 
+submitted annually 
+Total hours for the site (hours), 
+Total hours per generator (hours), Total number of runs 
+per generator (quantity and dates) 
+Number of minutes per run (minutes) 
+Generator operation 
+during emergency 
+scenario 
+Within 24 hours if 
+operation 
+commences 
+Date and time of grid failure, 
+Number of generators operating immediately after the 
+failure, 
+Number of generators operating two hours after failure, 
+Anticipated duration of the mains supply failure (hours) 
+Generator operation 
+during emergency 
+scenario 
+Annually Total number of runs (quantity), duration of runs (hours) 
+Indicative SCR 
+performance in 
+accordance with IC3 
+Annually or as 
+agreed in writing by 
+the Environment 
+Agency 
+Indicative abatement efficiency and achieved output 
+concentration 
+ 

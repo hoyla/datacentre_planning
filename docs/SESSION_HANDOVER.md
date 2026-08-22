@@ -1,4 +1,4 @@
-# Session handover — 2026-08-21
+# Session handover — 2026-08-21, extended 2026-08-22
 
 Written at the end of the day the capacity-claims work landed, 2.2 was
 built, and 2.2 shipped — the release chain ran to the end, so nothing
@@ -10,9 +10,10 @@ Read [ROADMAP.md](../ROADMAP.md) for what is outstanding,
 [REGENERATION_RUNBOOK.md](REGENERATION_RUNBOOK.md) for the release chain.
 This document covers what is easy to get wrong, what landed late enough
 that it is not yet in HISTORY, and the one substantial piece of work
-that is scoped and not started — the Environment Agency permit
-schedules, whose register has now been pulled and looked at, so that
-section states measured numbers rather than estimates.
+that was scoped and not started — the Environment Agency permit
+schedules. **That piece was built on 2026-08-22**; the section below now
+records what it produced and what is left of it rather than what it
+would cost.
 
 ---
 
@@ -45,8 +46,9 @@ documents disclose or their standby plant implies, 43 more can only be
 estimated from floorspace, and 304 have neither. The answer turned out
 not to be better extraction but other audiences.
 
-A data centre's size is stated to at least four of them, and the release
-now holds all four:
+A data centre's size is stated to at least five of them, and the store
+now holds all five — the fifth arrived after 2.2 shipped, so it is in the
+database and the artefacts rebuild with it, but not in the 2.2 files:
 
 | Audience | Source | In the store |
 |---|---|---|
@@ -54,6 +56,7 @@ now holds all four:
 | The grid operator | NESO's Existing Agreements Register | 119 claims |
 | The auditors | accounts filed at Companies House | 12 claims |
 | Customers | operators' own websites | 59 claims |
+| The environmental regulator | permits on the Environment Agency's public register | 35 claims (added 2026-08-22) |
 
 190 claims, 41 matched to 25 sites, across 15 operators — 3 matches
 have been retired, the last of them Union Park (see below). Every figure is
@@ -215,74 +218,75 @@ cannot arrive unlabelled.
 
 ---
 
-## The next substantial piece: Environment Agency permit schedules
+## What the Environment Agency permits produced (2026-08-22)
 
-Scoped, costed and **not started**. This is the biggest remaining lever
-on the 344 sites with no disclosed figure, and the only item on the list
-that is real engineering rather than curation.
+Built. The full account is in HISTORY; this is what someone picking it
+up needs and would otherwise get wrong.
 
-**Why it works.** Data-centre standby generator fleets are sized to peak
-load plus redundancy, and they need environmental permits. The permit
-*documents* state what the register does not: Virtus Slough gives 31
-generators totalling 180.5 MWth with per-engine ratings; Ark Cody Park
-69 generators at ~260 MWth; Amazon Hayes 14 × 8.01 MWth. Thermal input
-divided by roughly 2.4–2.5 bounds a site's electrical demand, from a
-statutory document.
+**The register carries no capacity.** Not one column. It is an index —
+permit number, holder, address, grid reference, and for some rows a link
+to the permit on gov.uk — and the permit PDF is the source. So a
+register row is never a claim. This is the opposite way round from every
+other external source in the store, and it is why
+`scripts/fetch_ea_permits.py` has two stages.
 
-**What exists — measured, not estimated.** The register was pulled and
-looked at on 2026-08-21, which corrected two things this section used to
-say. It is at
-`https://environment.data.gov.uk/public-register/downloads/industrial-installations`
-and is **a zip, not a bare CSV** — curl it and you get 570 KB of
-`PK\x03\x04`. Unpacked: 5,198 rows, columns `Permission Number, Name,
-Activity Type Description, Document URL, Site Address, Site Postcode,
-Site Grid Reference, Easting, Northing, Local Authority, Permission
-Date`. A query API supports `name-search`, `number-search`,
-`local-authority` and radius search via `easting`/`northing`/`dist`.
+**What is on disk and what is not.** The register snapshot
+(`data/external_sources/ea-industrial-installations.zip`, a zip despite
+the URL) and the text of every fetched permit page
+(`ea_permit_text/`, 1,835 files) are **committed**, which is unusual
+here and is possible because the Environment Agency Conditional Licence
+allows redistribution with attribution. The PDFs are not: they are under
+`data/raw/ea_permits/`, gitignored, re-fetchable from the URLs and
+sha256s in `ea-permit-documents.json`.
 
-**86 rows match data-centre operators**, not the ~78 estimated: Amazon
-12, Equinix 8, Virtus 7, Colt 6, nLighten 6, Ark 5, Vantage 4, Digital
-Realty 4, NTT 3, Pulsant 3, plus 21 whose site name simply says "data
-centre". Activity types are the right ones — 51 Combustion, 24 MCP, 8
-"Medium Combustion Plant collectively >=50MW".
+**The numbers, as anchors for a re-pull.** 5,198 register rows → 97
+candidates → 42 with a permit publication → 35 claims, 5,879 MWth, 27 of
+them corroborated by their own per-engine breakdown. Six matched. Amazon
+Didcot North is the largest at 925 MWth over 129 generators.
+`scripts/read_ea_permits.py --readings` prints all of it, including the
+permits that yielded nothing.
 
-**All 86 carry eastings and northings. 38 of 86 carry a `Document
-URL`** to the permit PDF, and the PDFs are where the per-engine ratings
-are.
+**Three things that will bite.**
 
-**The geography join is a candidate generator, not an identity.** The
-old wording — that coordinates let permits "join to sites without fuzzy
-name matching" — is too optimistic, and testing it by postcode showed
-why: 36 permit-site pairs, 17 of them with documents, and obvious false
-positives among them. One site matched Telehouse, Global Switch *and*
-Interxion because its applications span several Docklands postcodes;
-another picked up CyrusOne, Amazon, Iron Mountain and Virtus London 9
-because it aggregates half of Slough. This is the Union Park lesson
-again: proximity is not identity where one site record holds several
-campuses. Expect to adjudicate each match by hand, with written
-evidence and a confidence tier, exactly as the capacity claims are.
+- **Never convert MWth to MW in code.** `value_mw` is null on all 35 and
+  must stay null. The ÷2.4–2.5 is a physical inference, not a unit
+  conversion, and the reader prints "260 MWth" precisely because it
+  would otherwise print "(260 MW)" beside it. A test asserts it.
+- **Re-pulling the register moves the candidate set.** It is regenerated
+  daily with no internal version, so `ea_permits.AS_AT` and
+  `REGISTER_SHA256` are the only record of which day's file the claims
+  came from. `--register` refuses to write anything that is not a zip
+  and tells you to update both.
+- **The extraction is regex and is meant to fail loudly.** Two sentence
+  shapes have already produced wrong figures — Ark Spring Park read
+  120 MWth as 3.9, Equinix Slough read 331.084 as 243.088 — and both are
+  now tests in `tests/test_ea_permits.py`. If a new permit shape stops
+  matching, the permit reports as unread. Do not paper over that with a
+  model; go and look at the sentence.
 
-**The design question is already answered.** It used to read as an open
-choice between a site-keyed document table and claims carrying their
-own evidence. Take the second: `thermal_input` is **already** in the
-`capacity_claims` quantity vocabulary — it went in with migration 022
-and nothing has used it yet. An EA permit figure is an external claim
-from a named source with a document URL, a locator and a verbatim
-quote, matched to a site by adjudication. No new tables, nothing to
-hang a permit on an application for, and it inherits the quote
-round-trip check and the retire-don't-delete discipline as they stand.
+**Most claims are unmatched, and that is the useful part.** Twenty-nine
+of 35. Almost none of it is about the permits: a permit describes plant
+that exists while most of this corpus describes schemes that were
+proposed, and several site records hold a whole industrial estate.
+**Eight permits from six operators, 1,249 MWth, all fall inside site
+23** — the only site record on the entire Slough Trading Estate. Site 5
+holds Interxion, Global Switch and Telehouse. Site 59 holds Vantage and
+Colt as well as Microsoft. Site 11 holds Amazon and NTT. Each is written
+into `ea-permit-matches.yaml` under `considered`, with the reason, and
+together they are the sharpest partition evidence the project has:
+every permit names a campus and gives its grid reference.
 
-So the shape is: an adapter that loads the 86 rows as claims, then a
-deep read of the 38 permit documents for per-engine ratings.
+**Two register errors, found by looking.** A Digital Realty permit gives
+a Crawley address with Redhill coordinates and a Redhill local
+authority. A Croydon installation is located at its holder's registered
+office in the City of London. Neither is matched, both are recorded.
 
-**Known limits, so nobody discovers them late.** Existing plant of
-1–5 MWth needs no permit until 1 January 2029, so smaller and older
-sites are under-represented. Emergency-only backup is excluded from
-specified-generator permitting altogether — but that exclusion is void
-if the plant provides balancing services or Capacity Market/DSR, which
-is why the Capacity Market register turned out to be a dead end and also
-why it explains itself. Wales is NRW's register, Scotland SEPA's, both
-under different regimes.
+**What is left.** Sixty-two candidates have no permit publication —
+mostly MCP registrations, which are lighter-touch; whether the
+Environment Agency will supply those on request has not been asked. Six
+permits state a total with no breakdown to check it against. And the
+matching is blocked behind the site partitioning rather than behind
+anything about the permits.
 
 ---
 

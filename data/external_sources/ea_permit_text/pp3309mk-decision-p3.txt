@@ -1,0 +1,45 @@
+ 
+ Page 3 of 17  
+ 
+The main emissions from the installation are to air in the form of nitrogen oxides, 
+sulphur dioxide, particulate matter and carbon monoxide. The site is covered in 
+hardstanding, uncontaminated surface water from the generator compounds is 
+discharged via the surface water drainage system. Surface water run-off from the 
+generator compounds will drain via an oil interceptor (17,000 litre capacity Class 
+1 full retention interceptor). Following the interceptor, the surface water runoff will 
+drain into an on-site soakaway 
+ 
+ 
+ 
+Air Quality  
+In line with the Environment Agency’s guidance (https://www.gov.uk/guidance/air-
+emissions-risk-assessment-for-your-environmental-permit) and the relevant parts 
+of the guidance applicable to the assessment of air dispersion modelling of 
+emissions from generators (https://www.gov.uk/guidance/specified-generators-
+dispersion-modelling-assessment ) the Applicant submitted detailed air 
+dispersion modelling and impact assessment to assess the predicted impacts on 
+human receptors and ecological sites.  
+The methodology for risk assessment of point source emissions to air, and the 
+associated definitions, are set out in our guidance 
+https://www.gov.uk/guidance/air-emissions-risk-assessment-for-your-
+environmental-permit. 
+The applicant’s assessment of the impact of emissions to air is detailed in 
+application document titled ‘Amazon Data Services UK Limited, LON2 Data 
+Centre, Slough, Air Emissions Risk Assessment’, ref: 410.11808.00001 version 
+V1.3, dated October 2021, supplemented by the applicant’s response to 
+Schedule 5 notice dated 17/08/2022, which was received by the Environment 
+Agency on 28/09/2022 and which includes a ‘Technical Note’ ref: 
+410.11808.00001. 
+The primary pollutants of concern that have been assessed by the applicant are 
+nitrogen dioxide (NO2), nitrogen oxides (NOx) and particulate matter (PM).   
+The applicant screened out the impacts of sulphur dioxide (SO2) as negligible 
+due to the use of low-sulphur gas oil and so this pollutant was not specifically 
+modelled. We have included a condition in the permit restricting the fuel to ultra-
+low sulphur gas oil.  
+Carbon monoxide (CO) was also assessed but we consider that this will also be 
+negligible for modern and well-maintained efficient generators which allow for the 
+complete combustion of the fuel with the appropriate combustion conditions in 
+line with the equipment manufacturer’s specification.  
+The Lakes Aermod-view software dispersion model was used to predict 
+atmospheric concentrations of the identified pollutants; we accept that the use of 
+this model is appropriate for these circumstances. 

@@ -1,0 +1,49 @@
+Permit number 
+EPR/SP3237JU 12 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+taken in the event of a grid failure. This should include but not be limited 
+to the following considerations:  
+ the response should be tailored to reflect the predicted potential 
+impact indicated by the air dispersion modelling at individual 
+receptors;  
+ specific timescales for response measures; 
+ how local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or time 
+of day; 
+ contingency for how the response will be carried out in the event 
+scenario i.e. loss of power; and 
+ timescales for continued review of the management plan. 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+IC2 The operator shall produce a report outlining the maintenance and 
+operating regime following the first year of operation following permitting. 
+This shall include but is not limited to the following points:  
+ reduce routine operational hours to less than 50 hours per year, 
+per SBG; 
+ a justification for not reducing the operational hours if this isn’t 
+put in place; and 
+ any additional improvements that have been identified to reduce 
+emissions during the maintenance testing and operation of the 
+generators. This should include timescales for the 
+implementation of the improvements.  
+The operator shall submit this report in writing to the Environment Agency 
+for approval. 
+Within 15 
+months of 
+permit issue 
+IC3 The operator shall undertake an investigation into the following two 
+proposals: 
+ installing an oil interceptor on the surface water drainage system 
+around the North Building; and 
+ diverting the surface water runoff around the North Building via an 
+existing oil interceptor.   
+A report should be produced outlining which option they will proceed with, 
+justification for why it is the most appropriate method and the timescales 
+for the implementation.   
+The operator shall implement the proposals as agreed in writing with the 
+Environment Agency.  
+Within 6 
+months of 
+permit issue.  
+ 

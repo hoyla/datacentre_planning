@@ -1,0 +1,34 @@
+EPR/QP3434DR/A001 
+Date issued: 04/05/18  2 
+Description of the installation 
+Brick Lane Data Centre is an installation centred on National Grid Reference TQ 33799 82048. The 
+installation comprises standby generators supporting three adjacent data hubs; “Lon 1”, “Lon 2” and “Lon 3”, 
+which require an uninterruptible power supply for critical computing equipment such as servers, 
+telecommunications, network and storage systems in the event of a failure of supply from the National Grid.  
+Brick Lane Data Centre has 13 standby generators housed at Lon 1 and Lon 2 (Lon 1: 2 x 3.62 MWth, 1 x 
+4.85 MWth, 5 x 4.25 MWth. Lon 2: 5 x 4.85 MWth) with a total aggregated net thermal input of 57.59 MWth. 
+The 13 standby generators provide back-up power to all three data hubs.  
+The operation of this plant constitutes a Schedule 1 activity under Part A(1) Section 1.1 of the Environmental 
+Permitting Regulations for the burning of any fuel in an appliance with a rated thermal input of 50 or more 
+megawatts (MW).  
+Apparatus on site will bring the generators online should grid supply fail, whilst batteries provide 
+instantaneous emergency power prior to generator start up. It takes approximately 7-10 seconds for the 
+generators to start and accept load. 
+The installation has the capacity to store up to 121,120 litres of fuel via a number of tanks of varying size, 
+which are integrally bunded and/or contained within buildings.  
+Each generator has its own stack which vents the products of combustion to air. Clean and uncontaminated 
+surface water run-off from the site is discharged to the Thames Water Combined Sewer.  
+The installation is sited in a heavily built up area in close proximity to a range of buildings including 
+residential properties, commercial premises, schools and workplaces. The site falls within the Tower Hamlets 
+Air Quality Management Area.  
+Epping Forest Special Area of Conservation and Lee Valley Special Protection Area and Ramsar are located 
+within 10 kilometres of the installation.   
+The operating scenarios for the installation are as follows: 
+• Monthly maintenance test: Each generator operates in turns (one at a time) for up to 30 minutes every 
+month on a weekday during the daytime (9am to 4pm) at 10% load. 
+• UPS maintenance test: Each generator is tested twice a year for 6 hours on weekends during daytime 
+(10am to 4pm) in pairs at 30% load. 
+• Emergency operations: Loss of power from the National Grid during outages. The site has a resilience 
+level of n+1, meaning that the site load can be met with one of the generators in each bank not running.  
+ 
+There is no other combustion plant on site ≥ 1MW. 

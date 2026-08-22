@@ -1,0 +1,74 @@
+ 
+Permit number 
+EPR/UP3624SW 16 
+Table S3.2 Point Source emissions to land – emission limits and monitoring requirements  
+Emission point 
+ref. & location 
+Source Parameter   Limit 
+(incl. 
+unit)   
+Reference 
+period 
+Monitoring 
+frequency 
+Monitoring 
+standard 
+or method 
+S1 and S2 on 
+site plan in 
+schedule 7 
+emission to 
+soakaway 
+Uncontaminated 
+surface water 
+runoff via oil-
+water separator 
+Oil and grease None 
+visible 
+Spot 
+sample 
+Weekly - 
+ 
+Table S3.3 Process monitoring requirements 
+Emission point 
+reference or source or 
+description of point of 
+measurement 
+Parameter Monitoring 
+frequency  
+Monitoring 
+standard or 
+method  
+Other specifications  
+A1 – A16 from generators 
+as shown in Schedule 7 
+ 
+  
+SCR abatement 
+efficiency 
+Continuous  Continuous 
+reading of 
+NOx sensors 
+fitted to SCR 
+system to 
+manufacturer’s 
+specification. 
+  
+Periodic 
+validation 
+according to 
+the plan 
+approved by 
+the 
+Environment 
+Agency in 
+response to 
+improvement 
+condition IC2. 
+Minimum abatement of 
+NOx, in accordance with 
+operating techniques in 
+application documents listed 
+in table S1.2 
+ 
+ 

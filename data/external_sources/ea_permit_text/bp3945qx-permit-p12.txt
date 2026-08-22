@@ -1,0 +1,77 @@
+ 
+Permit number                              
+EPR/BP3945QX 12 
+OFFICIAL 
+OFFICIAL 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 Air Quality Management Plan 
+The Operator shall produce an Air Quality Management Plan in 
+conjunction with the Local Authority outlining response measures to 
+be taken in the event of a grid failure. The plan should consider and 
+co-ordinate measures taken at other Virtus data centres operating in 
+the locality (LON9 Data Centre and LON11 Data Centre).  This 
+should include but not be limited to the following considerations:  
+• The response should be tailored to reflect the predicted 
+potential impact indicated by the air dispersion modelling at 
+individual receptors 
+• Specific timescales for response measures 
+• How local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or 
+time of day 
+• Contingency for how the response will be carried out in the 
+event scenario i.e. loss of power 
+• Selection of appropriate times for full-scale testing of the 
+generators 
+• Timescales for continued review of the management plan. 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+31/01/2025 
+unless otherwise 
+agreed by the 
+Environment Agency 
+IC2 Monitoring of emissions 
+The operator shall submit a monitoring plan for approval by the 
+Environment Agency detailing their proposal for the implementation of 
+the flue gas monitoring requirements specified in Table S3.1, in line 
+with web guide ‘Monitoring stack emissions: low risk MCPs and 
+specified generators’ Published 16 February 2021 (formerly known as 
+TGN M5).  The plan shall include, but not limited to: 
+• When the generators are not fitted with sampling ports, a 
+proposal to install them within the shortest practical timeline 
+• Details of any relevant safety, cost and operational 
+constraints affecting the monitoring regime, in support of any 
+proposed deviation from the testing regime specified in table 
+S3.1.  
+31/10/2023  
+unless otherwise 
+agreed by the 
+Environment Agency 
+IC3 Emissions performance 
+For the generators emitting from the following emission points: 
+A6, A7, A8, A12, A13, A14, A15, A16 
+The operator shall provide evidence for approval by the Environment 
+Agency that the generators been remapped to comply with either of 
+the emissions standards (i.e. TA Luft 2g or US EPA Tier II) or an 
+equivalent standard. 
+31/12/2023 
+unless otherwise 
+agreed by the 
+Environment Agency 
+IC4 BAT compliance 
+For the generators emitting from the following emission points: 
+A9, A10, A11, A17, A18, A19 
+The operator shall provide evidence for approval by the Environment 
+Agency that the generators comply with BAT emissions standards 
+(i.e. TA Luft 2g or US EPA Tier II or an equivalent standard). 
+31/10/2023  
+unless otherwise 
+agreed by the 
+Environment Agency 
+IC5 BAT compliance 
+For the generators emitting from the following emission points:  
+A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32  
+31/07/2024  
+unless otherwise 
+agreed by the 
+Environment Agency  

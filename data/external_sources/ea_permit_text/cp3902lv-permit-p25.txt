@@ -1,0 +1,34 @@
+ 
+Permit number 
+EPR/CP3902LV  18 
+Table S3.1 Point source emissions to air – emission limits and monitoring requirements 
+Emission point ref. & location 
+Note 4 
+Source Parameter Limit (including 
+unit)  
+Reference period Monitoring 
+frequency Note 2 
+Monitoring 
+standard or 
+method Note 3 
+Vents associated with liquid fuel 
+storage tanks (located beneath 
+each of the 52 SBGs). 
+Vents from 
+storage tanks for:  
+LON1A SBGs 
+(GEN H-1 to GEN 
+3-4) and 
+LON1B SBGs 
+(GEN-01-HA to 
+GEN-01-C6/4) 
+No parameters set  No limit set - 
+ 
+- 
+ 
+-  
+Note 1: Unless otherwise agreed in writing with the Environment Agency as a result of approval of Improvement Condition IC2.  
+Note 2: In accordance with condition 3.5.2 of this permit. 
+Note 3: Monitoring requirements are defined at a temperature of 273.15 K, a pressure of 101.3 kPa and after correction for th e water vapour content of the waste 
+gases at a standardised oxygen content of 15% for the SBGs. 
+Note 4: Monitoring requirements are applicable to each SBG emission point.  

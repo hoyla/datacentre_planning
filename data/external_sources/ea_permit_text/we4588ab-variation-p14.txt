@@ -1,0 +1,73 @@
+ 
+Permit number 
+EPR/WE4588AB  14 
+Table S1.2 Operating techniques 
+Description Parts Date 
+Received 
+Application  
+EPR/WE4588AB/V002 
+Application form Part C3. 
+ 
+Duly Made 
+02/07/2025 
+Application 
+EPR/WE4588AB/V002 
+Generators maintenance testing 
+schedule  
+Generators maintenance testing schedule detailed in 
+application document ‘Air Quality Impact Assessment 
+Report’ January 7 2026 
+ 
+ 
+ 
+12/01/2026 
+Application 
+EPR/WE4588AB/V002 
+SCR abatement   
+ 
+NOx abatement efficiency for the selective catalytic 
+reduction systems (SCR) fitted to emission points KLON-
+02 Gen 3, Gen 4, Gen 5 and Gen 6 and to KLON-03 Gen 
+1 to Gen 11 detailed in application document ‘Air Quality 
+Impact Assessment Report’ January 7 2026 
+ 
+12/01/2026 
+Application 
+EPR/WE4588AB/V002Additional 
+information received 
+Noise Management Plan 09/03/2026 
+Application 
+EPR/WE4588AB/V002Additional 
+information received 
+Load bank testing arrangements detailed in email 20/03/2026 
+ 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 Air Quality Management Plan (AQMP) 
+The operator shall produce an AQMP in conjunction with the Local 
+Authority outlining response measures to be taken in the event of a 
+grid failure. This must include, but not be limited to, the following 
+considerations:  
+• The response should be tailored to reflect the predicted 
+potential impact indicated by the air dispersion modelling at 
+individual receptors;  
+• Preventative and reactive actions to be implemented to limit 
+the duration of an outage event to less than 50 hours as far 
+as possible; 
+• Specific timescales for response measures; 
+• How local conditions during a grid failure might influence 
+the response required, for example meteorological 
+conditions or time of day; 
+• Contingency for how the response will be carried out in the 
+event scenario i.e. loss of power;  
+• Timescales for continued review of the management plan; 
+and 
+• Addition of indicative air quality monitoring stations around 
+the site to inform on air quality during extended periods of 
+standby generator running including prolonged grid 
+outages.  
+Within 6 months from 
+the date of issue of the 
+permit 
+EPR/WE4588AB/V002 

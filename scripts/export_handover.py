@@ -733,10 +733,13 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "divergence is the story."),
     ("Operator disclosure", "All columns",
      "One row per operator, counting the figures it has stated to each "
-     "of four audiences: the planning authority (the site's own "
+     "of five audiences: the planning authority (the site's own "
      "application documents), the grid operator (NESO's register), the "
-     "auditors (accounts filed at Companies House) and customers (the "
-     "operator's own website). The counts are aggregates and the sheet "
+     "auditors (accounts filed at Companies House), customers (the "
+     "operator's own website) and the environmental regulator (the "
+     "standby generator fleet in the site's environmental permit, a "
+     "thermal rating in MWth rather than electrical megawatts). The "
+     "counts are aggregates and the sheet "
      "names what each one covers: 'Which sites' lists the sites behind "
      "the count, and every figure counted here appears as its own row "
      "on Figures by audience with the source it was published in. "
@@ -943,6 +946,7 @@ def main() -> None:
 
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill
+    from openpyxl.utils import get_column_letter
 
     from collections import defaultdict
     from urllib.parse import urlparse
@@ -1550,15 +1554,18 @@ def main() -> None:
           f"{n_claim_matches} matched to sites")
 
     # ---- Operator disclosure ------------------------------------------------
-    # The same companies, across four audiences. Computed from the claims
-    # so it cannot disagree with the Capacity claims sheet or the site
-    # panels; see dcp/operator_disclosure.py for why the planning column
-    # is read from power_adjudication rather than from claims.
+    # The same companies, across every audience the store holds. Computed
+    # from the claims so it cannot disagree with the Capacity claims
+    # sheet or the site panels; see dcp/operator_disclosure.py for why
+    # the planning column is read from power_adjudication rather than
+    # from claims. The columns come from od.AUDIENCES rather than being
+    # written out here, so adding a source adds a column instead of
+    # quietly dropping one.
+    _aud_cols = [f"Told {lbl[0].lower()}{lbl[1:]}" for _k, lbl, _d
+                 in od.AUDIENCES]
     ws = _sheet("Operator disclosure", [
         "Operator", "Audiences told", "Sites in this dataset",
-        "Which sites",
-        "Told the planning authority", "Told the grid operator",
-        "Told the auditors", "Told customers",
+        "Which sites", *_aud_cols,
         "Terms the figures are published under"])
     with db.connect() as conn, conn.cursor() as cur:
         op_rows = od.load_rows(cur)
@@ -1576,15 +1583,14 @@ def main() -> None:
         # those sites' figures is itemised with its source.
         ws.append([r.operator, r.audiences, len(r.sites),
                    "; ".join(n for _k, n in r.site_names) or "—",
-                   _cell(r, "planning"), _cell(r, "grid"),
-                   _cell(r, "auditors"), _cell(r, "customers"),
+                   *[_cell(r, k) for k, _l, _d in od.AUDIENCES],
                    "; ".join(t for t in sorted(r.terms) if t) or "—"])
     ws.append([])
     ws.append([od.FAIRNESS_NOTE])
     ws.append([od.METHOD_NOTE])
-    for col, width in (("A", 30), ("B", 14), ("C", 20), ("D", 60), ("E", 24),
-                       ("F", 22), ("G", 20), ("H", 20), ("I", 60)):
-        ws.column_dimensions[col].width = width
+    _widths = [30, 14, 20, 60] + [24] * len(od.AUDIENCES) + [60]
+    for i, width in enumerate(_widths):
+        ws.column_dimensions[get_column_letter(i + 1)].width = width
     for row in ws.iter_rows(min_row=2):
         for c in row:
             if c.value is not None:

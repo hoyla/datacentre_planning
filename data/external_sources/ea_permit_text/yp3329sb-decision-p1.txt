@@ -1,0 +1,34 @@
+ 
+Permitting Decisions- Bespoke Permit 
+ 
+EPR/YP3329SB/A001 Decision Document                 2024      Page 1 of 28 
+We have decided to grant the permit for LHR11/12 operated by VDC LHR11 Limited. 
+The permit number is EPR/YP3329SB. 
+The permit was granted on 14/08/2024. 
+The application is for the operation of standby electricity generating combustion plant at two data 
+centres on the same site. The site is located within a predominately mixed industrial and 
+commercial area, known as Park Royal, within the London Borough of Ealing at national grid 
+reference TQ 21147 82397. 
+The combustion plant comprises: 
+37 gas oil/ HVO fired Kohler KD3500E derated to 3250 kVA generators operating as standby 
+backup generators each with a thermal input of 6.1 MWth.  
+The combined net rated thermal input of all gas oil/ HVO backup generators on site is 225.7 
+MWth (37 x 6.1 MWth standby generators). 
+Operation of the data centre combustion plant will be regulated as a Section 1.1 Part A (1) (a) 
+activity under the Environmental Permitting (England and Wales) Regulations (EPR) 2016 for the 
+burning of any fuel in an appliance with a rated thermal input of 50 or more megawatts (MW). The 
+aggregated thermal input of the data centres is 225.7 MWth. 
+The generators will supply emergency power to the data centres in the event of National Grid 
+failure. In non-emergency scenarios, they will be operated only for testing and maintenance 
+purposes to an agreed schedule. They will not provide any electricity themselves to the National 
+Grid and all electricity generated will be used within the data centre.  
+We consider in reaching that decision we have taken into account all relevant considerations and 
+legal requirements and that the permit will ensure that the appropriate level of environmental 
+protection is provided. 
+Purpose of this document 
+This decision document provides a record of the decision-making process. It: 
+● summarises the decision making process in the decision considerations section to show 
+how the main relevant factors have been taken into account 
+● highlights key issues in the determination 
+● shows how we have considered the consultation responses 
+Unless the decision document specifies otherwise we have accepted the applicant’s proposals.  

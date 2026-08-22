@@ -1,0 +1,62 @@
+ 
+Permit Number            
+EPR/BP3800PZ            16 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+The operator shall carry out the sampling and testing to characterise 
+baseline soil and groundwater data at these three data centre sites within 
+the timescales approved by the Environment Agency. 
+IC7 The operator shall submit a report to the Environment Agency verifying the 
+predicted short-term nitrogen oxides concentrations at the boundary of the 
+sites. The report shall include but is not limited to: 
+ Monitoring of ambient air quality at the boundary of the site during 
+the all the testing scenarios using monitoring methods agreed in 
+advance with the Environment Agency  
+ A comparison of modelled against monitored concentrations of 
+nitrogen dioxide and nitrogen monoxide 
+ A demonstration that appropriate monitoring location(s) were 
+selected at the boundary of the site, taking into account the 
+modelled predictions and the weather conditions prevalent at the 
+time of the monitoring 
+ Evidence to demonstrate that the monitoring team holds appropriate 
+qualifications. 
+The output of the verification exercise should be used to inform / revise the 
+air quality management plan if necessary. 
+30/11/2022 
+IC8 The operator shall submit to the Environment Agency for written approval a 
+plan to reduce the predicted short term nitrogen dioxide and nitrogen 
+monoxide emissions impact during the maintenance, testing and emergency 
+operations of the standby generators. This shall include but is not limited to:  
+ Considerations of the conclusions of the validation exercise 
+specified in improvement condition IC7 to inform a feasibility study 
+including cost benefit analysis for upgrades or other changes to 
+infrastructure or operational regimes on site that could reduce 
+emissions of NOx and increase dispersion; 
+ Use of the above information to propose appropriate changes, 
+including but not limited to an assessment of the following options: 
+changes to stack configuration to enhance dispersion (e.g. vertical 
+emission points and increased stack heights); amending the testing 
+schedule to reduce the daily emissions from the testing operations; 
+upgrading the standby engines to reduce emissions or installing 
+newer ones with lower emissions of NOx; installing NOx abatement. 
+If changes in the height of the stacks are demonstrated to be 
+effective, but are not deemed feasible due to local planning 
+restrictions, the Operator shall provide evidence of the engagement 
+carried out with the Local Authority planning department, in support 
+of this conclusion, and propose other emission reduction options. 
+ The Operator shall submit an updated air dispersion modelling 
+study demonstrating how the proposed option(s), selected among 
+those assessed, result in reduced levels of oxides of nitrogen at the 
+sensitive receptors, including the non-statutory ecological sites in 
+proximity of the installation;  
+ Proposal of the shortest practical timescale for the implementation 
+of the selected improvements.  
+ Proposals for optimising the duration, frequency or timing of engine 
+testing scenarios whilst taking into account those weather 
+conditions demonstrated by modelling to have the greatest potential 
+for environmental impact in order to reduce emissions, improve 
+dispersion and reduce potential environmental impact; 
+ A review into the potential for reductions in the number of 
+generators operating simultaneously during testing and 
+maintenance periods; 
+31/03/2023 

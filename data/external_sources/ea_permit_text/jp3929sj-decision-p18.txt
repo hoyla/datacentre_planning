@@ -1,0 +1,45 @@
+ 
+Page 18 of 19 
+Responses from organisations listed in the consultation 
+section: 
+Response received from: UKHSA 
+Brief summary of issues raised: 
+- Nitrogen dioxide is the main emission of concern 
+- Dispersion modelling indicates that nitrogen dioxide levels off site exceed 
+guidance and thresholds. 
+- Concerns during emergency scenarios that emission levels exceed US 
+EPA AEGL Level 1 for Units 2 and 3, and HSE workplace exposure limits 
+are exceeded for Unit 3. 
+- Although Unit 2 and 3 have independent power supplies, both power 
+supplies could fail. 
+- Unit 1 should be considered within worst case modelling. 
+- Infrastructure plans are not clear regarding tanks / underground pipework.  
+Conditions of this infrastructure is not clear from the application, 
+particularly with regard to integrity testing on underground pipework. 
+- UKHSA would support the applicants offer to monitor air quality at the site 
+boundary. 
+ 
+Summary of action taken / responses: 
+- An audit of the dispersion modelling has been undertaken by our AQMAU 
+team, with sensitivity checks conducted; more detail is in the key issues 
+section of this decision document.  Following our audit: 
+o The Applicant adjusted their testing regimes and re-modelled to 
+reduce PCs and ensure testing of the generators does not lead to 
+exceedances of environmental standards. 
+o We do not predict exceedances of AEGL 1 during any testing 
+scenarios. 
+o There is potential for exceedances of EQS’ and critical levels/loads 
+during emergency operation, however we agree that emergency 
+scenarios are highly unlikely.  IC1 has been included for the 
+operator to produce an AQMP in conjunction with the local 
+authority.  IC2 and IC3 have been included to ensure monitoring at 
+the site boundary is undertaken, and emission reduction measures 
+are implemented if necessary, in agreement with the Environment 
+Agency. 
+- We agree with the applicant’s assessment that operation of generators is 
+highly unlikely, given that each Unit is connected to two different electrical 
+substations (Three Bridges and Caterham).  The Applicant provided 
+additional information regarding electrical reliability and past operation 
+during emergencies.  This is discussed in the ‘Key Issues’ section above. 
+- Unit 1 is not a data centre and is not considered within the applicant’s 
+modelling; we are satisfied with the approach taken. 

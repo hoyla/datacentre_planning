@@ -1,0 +1,18 @@
+ 
+    Page 2 of 14 
+Key issues of the decision 
+1. Testing regime 
+1.1 Telehouse North (TN) 
+Annual planned testing regime for standby generators (SBG) in building N2 has 
+been reduced from 60 hours to 53 hours per year. Building N2 includes two new 
+SBGs that were permitted in 2019 but not previously installed. Details of the 
+testing regime is shown in the table below: 
+ 
+1.2 Telehouse South (TS) 
+The operator modelled the impact of the maintenance and testing regime for the 
+replacement SBGs at the TS data centre. When we audited the air dispersion 
+modelling, we found a possible exceedance at receptor HR37 of the NO2 AEGL-1 
+and the 1 hour NO EAL. The table below shows the changes that the operator 
+made to the testing regime. The operator also changed their proposal so that 
+only 4 new engines were proposed:  
+ 

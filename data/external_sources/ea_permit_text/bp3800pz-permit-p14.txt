@@ -1,0 +1,69 @@
+ 
+Permit Number            
+EPR/BP3800PZ            14 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Additional information 
+received 
+Operating techniques described in the responses to a request 
+for further information (including accompanying information): 
+- Operation of standby engines during periods related to 
+neither maintenance/testing nor emergency outage 
+scenarios.  
+03/08/21 
+Additional information 
+received 
+Operating techniques described in the responses to a request 
+for further information (including accompanying information): 
+- Management of surface water discharges. 
+01/10/21 and 
+16/11/21 
+Additional information 
+received 
+Operating techniques described in the responses to a request 
+for further information (including accompanying information): 
+- Monitoring of diesel levels in belly tanks and above ground 
+storage tanks to detect a potential leak. 
+11/10/21 
+Additional information 
+received 
+Operating techniques described in the responses to a request 
+for further information (including accompanying information): 
+- Sections 2 – 10 of Document “HH4 Data Centre Phase 1 
+Operation Risk Assessment”. 
+20/10/21 
+ 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 The operator shall produce an Air Quality Management Plan in conjunction 
+with the Local Authority outlining response measures to be taken in the 
+event of a National Grid failure. This should include but not be limited to the 
+following considerations:  
+ The response should be tailored to reflect the predicted potential 
+impact indicated by the air dispersion modelling at individual 
+receptors;  
+ Preventative and reactive actions to be implemented to limit  the 
+duration of an outage event to less than 50 hours as far as possible; 
+ Specific timescales for response measures; 
+ How local conditions during a National Grid failure might influence 
+the response required, for example meteorological conditions or 
+time of day; 
+ Contingency for how the response will be carried out in the event 
+scenario i.e. loss of power; and 
+ Timescales for continued review of the management plan. 
+The Air Quality Management Plan shall include consideration of grid 
+outages which last less than 18 hours as potentially unacceptable acute 
+exposure may occur to human health receptors because of generator 
+operation for less than 18 hours. 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for written approval. 
+30/06/2022 
+IC2 The operator shall carry out a review of the tertiary containment systems 
+which serve the diesel storage tanks (belly tanks and bulk storage tanks) at 
+all four data centre sites.  
+The review shall compare the design, method of construction and integrity 
+of the systems against the standards outlined in CIRIA guidance C736 – 
+Containment Systems for the Prevention of Pollution or an equivalent 
+industry standard.  
+28/02/2022 

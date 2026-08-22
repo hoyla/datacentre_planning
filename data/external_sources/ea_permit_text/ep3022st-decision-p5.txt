@@ -1,0 +1,43 @@
+ 
+Crawley Data Centre Campus        EPR/EP3022ST               Page 5 of 19 
+ 
+Predicted impacts Testing Scenario 3 Unit 1 - Annual Load Bank Testing & Unit 2 
+– Six monthly testing: 
+The predicted pollutant concentrations for scenario 3 were below the relevant 
+short-term environmental standards (ES) for NO2, PM10, CO and SO2 at all 
+receptor locations and are not considered to be significant 
+Predicted impacts for Testing Scenario 4 Unit 1 – Annual Black Building Test & 
+Unit 2 – Annual Load Bank Test: 
+For Unit 1 the predicted pollutant concentrations for scenario 4 were below the 
+relevant short-term environmental standards (ES) for PM10, CO and SO2 at all 
+receptor locations and are not considered to be significant. For short-term 
+pollutant concentration for NO2 exceedances were predicted for human health, 
+however annual testing is 4 hours, so more than 18 exceedances of the short-
+term standard is not possible.  
+Our check modelling assessment showed that there is a potential for exceedance 
+of the short-term NO2 environmental standard for Unit 1, however the probability 
+of an exceedance is considered less than 5% and therefore unlikely. 
+For Unit 1 an exceedance of the 1-hour Acute Exposure Guidance Level (AEGL) 
+1 was  also predicted by the Applicant’s modelling assessment , the PEC is 
+predicted to be 100.1% of the AEGL1 . The Applicant stated that “AEGL 1 
+represents the least severe health effects which are transient and reversible upon 
+cessation of exposure”. The assumptions used in the modelling assessment are 
+considered to be highly  conservative and therefore the marginal exceedance of 
+the AEGL1 is unlikely to occur under actual operating conditions  and we are 
+therefore satisfied there will be no significant health impacts. 
+The predicted pollutant concentrations from Unit 2 were below the relevant short-
+term environmental standards (ES) for NO2, PM10, CO and SO2 at all receptor 
+locations and are not considered to be significant. 
+ 
+Predicted Impacts for Testing Scenarios 5 & 6 Unit 1 & Unit 2 - In the event of 
+power grid outage (all generators running simultaneously for 72 hours at 100% 
+load). This has examined each unit operating individually, and a worst -case 
+scenario of both units operating simultaneously. 
+For emergency scenario 5 for Unit 1 & Unit 2, the Applicant’s assessment 
+predicted no exceedances of short-term environmental standards (ES) for PM10, 
+CO and SO2 at all receptor locations and are not considered to be significant. 
+ 
+For NO2 the Applicant’s assessment showed an exceedance of the short -term 
+environmental standard was predicted,  however the hypergeometric probability 
+calculation shows less than 0.01% probability of exceeding the objective more than 
+the 18 allowed exceedances . They also predicted a marginal exceedance of the 

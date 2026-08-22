@@ -1,0 +1,44 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 4 of 26 
+• Independence of off-system services 
+• Causing the least environmental impact 
+ 
+The operator demonstrated there were significant reasons for not selecting gas turbines, aero 
+engine gas turbines and gas engines. Aero engine gas turbines, gas engines and diesel engines 
+all provided the fast response speed required but the diesel engines had a significantly greater 
+environmental impact than the gas turbines and engines. 
+Fuel 
+The operator further justified the choice of low sulphur diesel over gas as a fuel for the engines 
+because it allowed the required level of resilience at the data centres. The storage of sufficient 
+gas on-site as a fuel source was not possible due to restraints on available space. Additionally, 
+there were increased health and safety risks associated with such storage. There would be  a 
+reliance on an off-site supply of gas, which would have to be provided to the sites via a pipeline 
+operated and maintained by a third party. Should this supply of gas be interrupted there would be 
+no emergency back-up generation for the sites, and as such would not meet the resilience 
+requirements of the facilities. 
+From the options considered, the operator therefore demonstrated that low sulphur diesel 
+engines were BAT to provide emergency/ standby power for the data centre on the basis that: 
+• The engines provide a fast response speed to the required load (fast start-up of standby 
+generators for data centres is fundamental to their operation as an almost instantaneous 
+supply of electricity is required in the event of power loss to the site). 
+ 
+• The need for a reliable supply of fuel (diesel) is essential to ensure resilience (the on-site 
+storage of sufficient quantities of diesel fuel provides the required level of independent 
+performance reliability on site). 
+ 
+• Diesel engines have low maintenance costs and replacement parts are readily available.  
+ 
+Email received on 11/08/2023 advising Environment Agency of change of fuel. Operator to use 
+both diesel and HVO fuel in back-up generators. This change was agreed by us on 14/08/2023. 
+NOx emissions are similar to diesel, but CO2 and particulates would be lower. 
+Based on this assessment and the fact that diesel or equivalent fuel generators are presently a 
+commonly used technology for standby generators in data centres (Emergency backup diesel 
+engines on installations: best available techniques (BAT) - GOV.UK (www.gov.uk)) we accept 
+that low sulphur diesel or equivalent fuel fired generators can be considered BAT.   
+Managing emissions 
+Point Source Emissions to Air 
+The operator has taken measures to minimise emissions from the diesel or equivalent fuel 
+generators both in emergency and test/ maintenance operation.  
+The Data Centre FAQ Headline Approach v21 specifies the BAT emissions specification for new 
+diesel-fired reciprocating engines as 2g TA-Luft (or equivalent standard). This is the European 
+standard that we have concluded that we will use to infer what BAT is for sites.   

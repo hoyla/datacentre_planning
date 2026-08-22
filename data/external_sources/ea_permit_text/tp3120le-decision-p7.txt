@@ -1,0 +1,40 @@
+ 
+Page 7 of 17 
+• 100th percentile 1-hour NO2 Process Contributions (PCs) are not 
+predicted to exceed the Acute Exposure Guideline Levels (AEGL-1).  
+• 1-hour NO PCs are predicted to be insignificant for operation of LON-3 
+alone. 1- hour NO PCs are ‘not insignificant’ in-combination, but they are 
+not predicted to exceed the ES. 
+ 
+Emergency: 
+The Applicant’s AQA results indicate the following: 
+• 1-hour 99.79th percentile NO2 PCs are predicted to exceed the 1-hour 
+NO2 ES. For LON-3 in isolation, a 72-hour emergency outage scenario is 
+predicted to have a 5% chance of exceeding the 1-hour NO2 ES. For 
+LON-2 and LON-3 in-combination, the Applicant predicts that that there 
+would be a 5% chance of exceeding the 1-hour NO2 ES if there were over 
+65 hours of emergency operation. However, the regions where the 
+chance of an exceedance of the ES is greater than 5% seem to be within 
+the site boundary (Figure 7-1 of the AQA). 
+• 100th percentile 1-hour NO2 PCs are not predicted to exceed the AEGL-1 
+values.  
+• 1-hour NO PCs are not predicted to exceed the ES. 
+• The Applicant does not predict exceedances of any long-term ES when 
+considering the total annual emissions. 
+ 
+We have reviewed the Applicant’s modelling, including the choice of the model, 
+the assumptions made and the background data used. Although exceedances of 
+the 1-hour mean NO2 environmental standard for the 72-hour emergency 
+scenario cannot be ruled out, as this represents a national emergency event and 
+is considered unlikely to occur, we consider that the Applicant’s proposal is in line 
+with Environment Agency’s guidance and no further mitigation measures are 
+required. Therefore, we agree with the Applicant’s conclusions that emissions to 
+air are insignificant or are unlikely to cause an exceedance of any environmental 
+standards at human health receptors. 
+Air Quality Impacts (Habitats) 
+The Applicant has identified the following European sites within the 10 km 
+screening distance of the facility: 
+• Burnham Beeches Special Area of Conservation (SAC). 
+• Windsor Forest and Great Park SAC. 
+• South West London Waterbodies Special Protection Area (SPA) & Ramsar. 
+ 

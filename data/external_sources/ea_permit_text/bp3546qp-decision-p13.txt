@@ -1,0 +1,36 @@
+ 
+                       Page 13 of 28 
+We expect that the minimum specification for new back-up generators to minimise 
+impact on air quality is 2g TA-Luft or Tier II US EPA, or equivalent with a maximum NOx 
+emission concentration of 2,000mg/m3 at standard reference conditions and 5% oxygen. 
+The generators to be installed at the Amazon Hemel Hempstead data centre have 
+emissions that meet this requirement. 
+ 
+Noise. 
+As only the gas oil/HVO generators and bulk gas oil/HVO storage tanks are included 
+within the installation boundary, the most significant noise sources will be the operation 
+of those generators and tanker movements on site delivering fuel. Other noise sources 
+such as the chillers and fans serving the main data centre halls are not included within 
+the installation boundary. 
+The operator submitted a Noise Impact Assessment which they subsequently updated to 
+consider impact on the new apartments which will be the closest inhabited dwellings 
+once they are constructed. They used manufacturer’s sound data for the new generators 
+and considered a worst-case scenario where all generators are operating at the same 
+time. As discussed previously, this would only occur in the unlikely case of full National 
+Grid power outage. 
+The operator concluded that the existing residual sound level is higher than the predicted 
+specific sound level at the nearest receptors and that, therefore, it was unlikely that the 
+data centre specific sound level will be audible against the existing soundscape. 
+With this worst-case scenario and very conservative approach, the operator concluded 
+that the sound emissions from the data centre will be equivalent to a low impact or below 
+adverse impact at the residential receptors. 
+We have audited the operator’s noise impact assessment and noise modelling and 
+agree with their conclusions. 
+We have decided that no specific noise requirements are required in the permit other 
+than the standard condition, 3.4. 
+ 
+Electrical Reliability. 
+The operator noted that power for the data centre will be supplied by the National Grid 
+which operates its transmission system in accordance with the Security and Quality of 
+Supply Standard which is a requirement of its Transmission Licence. In accordance with 
+this standard, a level of redundancy is also built into the transmission system. 

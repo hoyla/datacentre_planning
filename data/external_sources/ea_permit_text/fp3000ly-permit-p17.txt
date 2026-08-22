@@ -1,0 +1,62 @@
+ 
+Permit number                              
+EPR/FP3000LY 17 
+ 
+Schedule 4 – Reporting 
+Table S4.1 Reporting of monitoring data 
+Parameter Emission or monitoring 
+point/reference 
+Reporting period Period begins 
+Emissions to air 
+Parameters as required by 
+condition 3.5.1. 
+A1 to A11 Every 1500 hours 
+of operation or 
+once every five 
+years (whichever 
+comes first). 
+Within 4 months 
+of the issue date 
+of the permit or 
+the date when the 
+engine is first put 
+into operation, 
+whichever is later. 
+[Note 1] 
+ 
+Note 1: Unless otherwise agreed in writing with the Environment Agency as a result of approval of 
+Improvement Condition IC2. 
+ 
+Table S4.2 Performance parameters 
+Parameter Frequency of assessment Units 
+Diesel usage Annually Tonnes 
+Generator operation for maintenance  Report to be submitted annually - Total hours for the 
+site (hours), 
+- Total hours per 
+generator (hours),  
+- Total number of runs 
+per generator 
+(quantity) 
+- Number of minutes 
+per run (minutes) 
+Generator operation during 
+emergency scenario 
+Within 24 hours if operation commences - Date and time of grid 
+failure, 
+- Number of 
+generators operating 
+immediately after the 
+failure, 
+- Number of 
+generators operating 
+two hours after failure, 
+- Anticipated duration 
+of the mains supply 
+failure (hours) 
+Generator operation during 
+emergency scenario 
+Annually - Total number of runs 
+(quantity) 
+- Duration of runs 
+(hours) 
+ 

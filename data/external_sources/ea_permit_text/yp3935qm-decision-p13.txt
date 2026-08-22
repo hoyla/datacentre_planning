@@ -1,0 +1,37 @@
+EPR/YP3935QM/A001 
+Date issued: 01/07/19  13 
+The permit application appeared to indicate that the uncontaminated surface water from site was discharged 
+to municipal foul sewer which is contrary to the advice given by Thames Water. Further information on the 
+matter, including a drainage plan supplied by Thames Water, demonstrated that there is a municipal surface 
+water sewer present on the road outside the Cyxtera site. The landlord for the site confirmed that the surface 
+water drainage from the site ultimately discharges into the Thames Water municipal surface water drainage 
+system rather than the Thames Water municipal foul water drainage system. 
+The discharge to this surface water drainage system is included as an Operating Technique within Table 
+S1.2 of the permit. 
+ 
+Improvement Conditions: 
+IC1: To ensure that the operator has defined response measures to be taken in the event of National Grid 
+power failure, the operator shall, in conjunction with the local authority, produce an Air Quality Management 
+Plan outlining actions to be taken in the event of electrical grid failure. 
+IC2: To compare nitrogen dioxide concentrations produced during operation with those predicted from the air 
+quality modelling, the operator shall propose to the Environment Agency a method for testing ambient air for 
+nitrogen dioxide. Should such a method be feasible and produce valid results and conclusions, it will be used 
+to confirm the short-term nitrogen dioxide concentrations in proximity to the generators, at site boundary and 
+at local sensitive receptors by monitoring or testing of actual ambient levels. 
+IC3: In order to determine if improvements are required to the site infrastructure or operation to reduce the 
+impact of short-term nitrogen dioxide emissions, the operator shall carry out a feasibility study (including cost 
+benefit analysis) of options for minimising this impact through either reducing emissions or increasing 
+dispersion. This shall include the testing of emissions from one Cummins C2500 D5A engine and one MTU 
+16V4000 G63 engine which are the only types of engine operating on site. This should encompass all the 
+permitted facility, including generators and infrastructure to be commissioned as part of site expansion 
+programmes and consider upgrades of generators, changes to stack heights and review of generator testing 
+and maintenance regimes. 
+IC4: To ensure sufficient sealed drainage and containment is in place on site in accordance with CIRIA 
+guidance, the operator shall carry out a review of the tertiary containment system on site that serves diesel 
+storage tanks proposing, with timescales, any improvements necessary. 
+IC5: To ensure that there is a recorded system that is suitable and sufficient to give warning of potential 
+contamination of ground and groundwater, the operator shall propose for approval and carry out a 
+programme of soil and groundwater investigation and reporting. 
+IC6: In order to ensure there is no risk of surface water contaminated with diesel potentially discharging to 
+site soakaways and possibly draining to local aquifers, the operator shall review the operation, location and 
+protection of site soakaways.

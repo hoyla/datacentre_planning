@@ -1,0 +1,50 @@
+ 
+Permit number 
+EPR/EP3507SL 20 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+Improvement conditions that apply to whole site 
+IC5 Monitoring plan - flue gas monitoring requirements  
+The operator shall submit a monitoring plan for approval by the 
+Environment Agency detailing their proposal for the 
+implementation of the flue gas monitoring requirements 
+specified in table S3.1, in line with web guide ‘Monitoring stack 
+emissions: low risk MCPs and specified generators’ Published 
+16 February 2021 (formerly known as TGN M5). The plan shall 
+include, but not necessarily be limited to: 
+• When the generators are not fitted with sampling ports, 
+a proposal to install them within the shortest practical 
+timeline; 
+Details of any relevant safety, cost and operational constraints 
+affecting the monitoring regime, in support of any proposed 
+deviation from the testing regime specified in permit table S3.1. 
+Within 3 months from 
+the date of issue of 
+the variation  
+EPR/EP3507SL/V002 
+ IC6 Air Quality Management Plan (AQMP)  
+ 
+The operator shall produce an Air Quality Management Plan 
+that covers Telehouse North and South, outlining the response 
+measures to be taken in the event of a grid failure. This should 
+include but not be limited to the following considerations:  
+• Regard for the pressures on the local Air Quality 
+Management Area, including liaison with the Local 
+Authority.   
+• Regard for the predicted potential impact indicated by 
+the air dispersion modelling at individual receptors;  
+• Specific timescales for response measures; 
+• Regard for how local conditions during a grid failure 
+might influence the response required, for example 
+meteorological conditions or time of day; 
+• Contingency for how the response will be carried out in 
+the event scenario i.e. loss of power; and 
+• Timescales for continued review of the management 
+plan. 
+The Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval prior to implementation. 
+Within 6 months from 
+the date of issue of 
+the variation  
+EPR/EP3507SL/V002 
+ 

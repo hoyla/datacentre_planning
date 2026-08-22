@@ -1,0 +1,45 @@
+ 
+LIT 11984                                                     Page 6 of 16 
+Emergency (scenario 2) 
+An assumed 72-hour case scenario has been modelled which we consider a 
+conservative scenario, given the information provided by the Applicant on the 
+reliability of the connection of the installation to the electric grid.   
+For this scenario we found that there is the potential for exceedance at sensitive 
+human health receptor locations of the NO2 short-term environmental standards, 
+NO2 AEGL-1, and NO environmental standards. 
+The short-term NOx process contributions for the emergency operations of the 
+site are above the insignificance threshold set in our guidance, however the 
+structural preventative measures taken to avoid the occurrence of this 
+emergency scenario make the source/pathway/receptor mechanism very 
+unlikely. For the installation, we consider that the reasonably likely 
+source/pathway/receptor mechanism would consist of periodic testing operations 
+of the diesel generators. 
+The Applicant has confirmed that the generators have not run for more than 30-
+minutes as a result of a power outage in at least 5 years. Provided power 
+outages continue to be unlikely the risk of an air quality exceedance form 
+emergency operation is low. Also, in the event of an outage, all of the generators 
+would operate and then they would “load shed” until the appropriate number of 
+generators were operating to support the IT load of the building. So it is unlikely 
+all generators would remain operational for a prolonged period of time. 
+ 
+Air quality improvement conditions 
+We have specified that the operator shall have a written action Air Quality 
+Management Plan (AQMP) to manage the risks for prolonged emergency running 
+of the plant and limit the duration of an outage event to less than 50 hours, as far 
+as possible. This needs to be proportionate to the level of risk at the receptors. The 
+operator is expected to work with the Local Authority to develop this plan to ensure 
+local factors are fully considered. This AQMP is included in the permit through 
+improvement condition 1 (IC1). 
+We have set improvement condition  2 (IC2) requiring the operator to detail 
+proposals and subsequently undertake a monitoring programme to verify the 
+predicted short -term nitrogen oxides (NOx) and dust concentrations at the 
+boundary of the site or off-site locations of sensitive receptors as appropriate. 
+Improvement condition 3 (IC3) requires the operator to submit a report detailing 
+the results and conclusions of the emissions monitoring undertaken as part of IC2. 
+This will contribute to the validation of conclusions reached in the air quality 
+assessment and inform the air quality management plan. IC3 also requires the 
+operator to review the options for reducing the predicted emission impacts. T he 
+reduction measures are expected to achieve a reduction of impacts during both 
+the maintenance/testing and emergency operations.  In setting IC2 and IC3  we 
+have considered the level of the NOx peaks predicted by the Applicant’s modelling. 
+ 

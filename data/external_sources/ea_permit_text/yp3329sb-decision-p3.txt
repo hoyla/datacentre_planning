@@ -1,0 +1,46 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 3 of 28 
+Managing Emissions 
+Point Source Emissions to Air 
+Emissions to air from the Installation will principally comprise combustion gases arising from the 
+operation of the generation plant under emergency, testing and maintenance scenarios.  
+The primary pollutants of concern to air quality from the combustion processes at the Installation 
+are nitrogen dioxide (NO2), carbon monoxide (CO), particulates (PM10), sulphur dioxide (SO2) 
+and ammonia (NH3) from the SCR abatement. 
+The operator has taken measures to minimise emissions from the gas oil or equivalent fuel 
+generators under emergency, testing and maintenance scenarios.  
+Both the Data Centre FAQ Headline Approach v21 and Emergency backup diesel engines on 
+installations: best available techniques (BAT) - GOV.UK (www.gov.uk) specifies the BAT 
+emissions specification for new gas oil-fired reciprocating engines as emissions optimised to 2g-
+TA Luft or US EPA Tier 2 or an equivalent. These are the international standards that we have 
+concluded that we will use to infer what BAT is for sites.   
+The operator has confirmed that the 37 generators to be used at the data centres are emissions 
+optimised to meet the US EPA Tier 2 standard at 75% load. The operator has also included a 
+Selective Catalytic Reduction (SCR) NOx abatement system within the design . The SCR NOx 
+abatement system on the generators will be used to limit the NOx emissions to a maximum of 
+190 mg/Nm3 per generator at 15% oxygen, which is the Medium Combustion Plant Directive 
+(MCPD) 2015 limit for new gas oil engines. 
+We do not consider SO2 emissions to be a risk from the operation of the Installation as we have 
+included a condition in the permit restricting the fuel to ultra-low sulphur gas oil, resulting in 
+negligible emissions of sulphur. However, the operator has confirmed that the SO2 emission rate 
+is based on the fuel flow of the engine assuming a maximum sulphur content in the fuel of 5mg/kg 
+(0.0005%) as advised by the supplier; this is consistent with both low sulphur gas oil and HVO.  
+The ammonia emission rate (due to slip from the use of SCR) is assumed to be equivalent to the 
+BAT upper emission concentration of 15 mg/Nm3 on a conservative basis. 
+Aqueous Releases from Site 
+The Installation has separate foul and surface water drainage systems.  
+The foul system discharges into the foul public sewer on Chandos Road. The surface water 
+system discharges into the surface water public sewer on Chandos Road. Both of these public 
+sewer systems combine in Victoria Road to become one foul and surface water combined sewer. 
+All the public sewer systems are operated by Thames Water. The combined sewer discharges to 
+Beckton Wastewater Treatment Works and ultimately the River Thames. 
+Point Source Emissions to Foul Sewer 
+The operator has confirmed that there will be no process emissions to the public foul sewer 
+system associated with the regulated activity undertaken at the Installation. 
+Only uncontaminated surface water runoff will be discharged to the public foul sewer from the 
+areas surrounding: 
+ 
+• LHR11 generator building via a 10,000 litre full retention interceptor. The operator 
+confirms that there is no regular discharge anticipated and the drainage provides a 
+capture and containment approach for spills.  
+ 

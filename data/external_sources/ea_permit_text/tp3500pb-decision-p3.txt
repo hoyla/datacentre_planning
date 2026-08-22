@@ -1,0 +1,42 @@
+ 
+ EPR/TP3500PB/V003   Page 3 of 23 
+OFFICIAL 
+OFFICIAL 
+impermeable to oil and water. Most of the generators also have individual double 
+skinned day tanks. 
+The 4 new engines proposed to be installed in the HV building are specified to 
+TA Luft 2g standard and are fitted with Selective Catalytic Reduction (SCR) 
+systems to abate approximately 90% of the emissions of oxides of nitrogen, 
+compared to their unabated operations. According to revised documentation 
+submitted with the application, the 4 new engines were fitted with SCR to comply 
+with the conditions of the planning granted by the local authority. 
+The overarching testing regime remains as originally permitted, with fortnightly 
+start-up tests, quarterly building tests and an annual load bank test. However, 
+there have been some changes to the groupings of generators to incorporate the 
+new generators on site. In summary: 
+1. Start-up test (fortnightly): Each generator is operated for 5 minutes, one 
+after the other with no electrical load (NOx emissions 30% of maximum). 
+This takes approximately 3 hours to run all the engines.  
+2. Building Load test (3 times a year, every 4 months): Groups of up to 17 
+generators are operated simultaneously for an hour at 60% electrical load. 
+One group is tested after another. Previously groups of up to 13 engines 
+were run together, now the maximum number of engines in group 8 has 
+increased to 17 to include the additional 4 new engines.  
+3. Load Bank test (annually): Each engine is operated one after the other for 
+one hour at 100% load. 
+ 
+Air quality 
+The Applicant reviewed and updated the air quality assessment that was 
+submitted as part of the original Environmental Permit application reflecting the 
+addition of the 4 new generators. 
+The Applicant’s assessment was carried out in line with the Environment 
+Agency’s guidance (https://www.gov.uk/guidance/air-emissions-risk-assessment-
+for-your-environmental-permit) and the relevant parts of the guidance applicable 
+to the assessment of air dispersion modelling of emissions from generators 
+(https://www.gov.uk/guidance/specified-generators-dispersion-modelling-
+assessment ). 
+The methodology for risk assessment of point source emissions to air, the 
+associated definitions, and the relevant environmental standards (ES) are set out 
+in our guidance https://www.gov.uk/guidance/air-emissions-risk-assessment-for-
+your-environmental-permit. 
+Process contributions (PCs) are considered Insignificant if: 

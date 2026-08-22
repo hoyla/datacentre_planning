@@ -1,0 +1,45 @@
+ 
+                       Page 14 of 28 
+As noted previously, the operator has confirmed that the National Grid’s National 
+Electricity Transmission System Performance Report 2021-21 reported the longest loss 
+of supply lasted 454 minutes (7.5 hours in Tinsley Park, Sheffield over 190km north of 
+the Amazon Hemel Hempstead site). 
+The National Grid’s National Electricity Transmission System Performance Report 2020-
+219 states that the overall reliability of supply during 2020–21 was: 99.999966%.  
+During 2020–21, the Report states that there were 455 events where transmission 
+circuits were disconnected either automatically or by urgent manual switching. The vast 
+majority of these events had no impact on electricity users, with 10 resulting in loss of 
+supplies to customers. None of the supply incidents reported in 2020-2021 were in the 
+vicinity of the data centre site. The total estimated unsupplied energy for these 10 
+incidents during 2020–21 was 74.36 MWh. 
+The probability of a significant National Grid outage resulting in prolonged operation of 
+the emergency back-up generators is therefore very low. 
+The operator has also incorporated additional resilience on site about electrical power 
+supply. 
+Uninterrupted Power Supply (UPS) systems are in place on IT racks. There is a 100kVA 
+UPS system installed within the house electrical room that serves all areas outside of the 
+data hall. Two 40kVA UPS units are also installed within each of the data hall electrical 
+rooms, serving the data hall controls to manage any short-term fluctuations of the mains 
+power supply. 
+The power distribution system, on the data centre site, starting from the High Voltage 
+(HV) (132kV) intake substation down to the Low Voltage distribution, is designed to be 
+safe, reliable, robust, and efficient and have in-built redundancy.  
+ 
+Similarly, for the grid connection to the data centre to fail, it would require a number of 
+failures to the upstream distribution network to occur simultaneously. 
+ 
+The Operator has designed and implemented systems with built-in redundancy, based 
+on High Voltage power supply connections from an electricity grid, being the primary 
+power source to the site. A dual redundant circuit provides security of supply in the event 
+of a fault or loss of supply from one source with the other circuit capable of supplying full 
+load to the site. To achieve this redundancy, the operator is implementing a system that 
+will entail the full electrical supply being split 50%/50% (dual-feeds) from alternative 
+supply sources, each capable of supplying the 100%, if required, of the data centre 
+power. 
+ 
+Essentially, the data centre will be supplied from the National Grid by an adjacent 
+132/33kV substation with two separate circuits from two separate feeders from the 
+Elstree National Grid (NG) 400/132kV upstream substation. In the event of a loss of 
+supply from a single source, 50% of the development is still on the alternative source, 
+while the remaining 50% is on back-up emergency generators temporarily until the site’s 
+own distribution system can be rearranged to resume supply from the available source. 

@@ -1,0 +1,69 @@
+ 
+Permit number                              
+EPR/DP3348QS 12 
+OFFICIAL 
+OFFICIAL 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+• The response should be tailored to reflect the predicted potential 
+impact indicated by the air dispersion modelling at individual 
+receptors 
+• Specific timescales for response measures 
+• How local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or time 
+of day 
+• Contingency for how the response will be carried out in the event 
+scenario i.e. loss of power 
+• Selection of appropriate times for full-scale testing of the 
+generators 
+• Timescales for continued review of the management plan. 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+IC2 Monitoring of emissions 
+The operator shall submit a monitoring plan for approval by the 
+Environment Agency detailing their proposal for the implementation of 
+the flue gas monitoring requirements specified in Table S3.1, in line with 
+web guide ‘Monitoring stack emissions: low risk MCPs and specified 
+generators’ Published 16 February 2021 (formerly known as TGN M5). 
+The plan shall include, but not limited to: 
+• When the generators are not fitted with sampling ports, a 
+proposal to install them within the shortest practical timeline 
+• Details of any relevant safety, cost and operational constraints 
+affecting the monitoring regime, in support of any proposed 
+deviation from the testing regime specified in table S3.1.  
+31/10/2023  
+unless otherwise 
+agreed by the 
+Environment 
+Agency 
+IC3 BAT compliance 
+For the generators emitting from the following emission points: 
+EP1, EP2, EP3, EP4, EP5, EP6, EP7, EP8, EP9, EP10, 2P11, EP12 
+The operator shall provide evidence for approval by the Environment 
+Agency that the generators to comply with BAT emissions standards (i.e. 
+TA Luft 2g or US EPA Tier II or an equivalent standard). 
+31/01/2024 
+unless otherwise 
+agreed by the 
+Environment 
+Agency 
+IC4 Drainage 
+The operator shall submit a written report for approval by the 
+Environment Agency setting out proposed measures to minimise 
+pollution risk as a result of leaks and spillages from the installation.   
+The report shall have regard to guidance CIRIA C736: Containment 
+systems for the prevention of pollution, and shall include, but not be 
+limited to: 
+• consideration of the installation of physical devices, e.g. shut-off 
+valves with oil detection, prior to the discharge point into each 
+soakaway (emission points W1 and W2).   
+• an updated drainage plan showing the location of any installed 
+physical devices. 
+On approval, the operator shall implement the measures agreed to a 
+timetable agreed in writing with the Environment Agency.   
+31/01/2024 
+unless otherwise 
+agreed by the 
+Environment 
+Agency 
+  

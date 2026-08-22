@@ -1,0 +1,37 @@
+ 
+Permitting Decisions- Bespoke Permit 
+ 
+ LIT 11984 [Publish date]  Page 1 of 24 
+We have decided to grant the permit for Didcot North Data Centre Campus 
+operated by Amazon Data Services UK Limited. 
+The permit number is EPR/GP3127LV 
+The permit was granted on 27/07/2026  
+The application is for the installation and operation of standby electricity 
+generating combustion plant at a data centre. The data centre, known as Didcot 
+North Data Centre Campus, is located on part of the former Didcot A Power 
+Station in Didcot, Oxfordshire, centred at national grid reference SU 51443 
+91794. 
+The combustion plant comprise: 
+129 generators with a combined net thermal input of approximately 925 MWth, 
+providing emergency backup power to four data centre buildings (DCA, DCB, 
+DCC and DCD). This includes 122 main backup generators serving the four data 
+centre buildings, four house generators serving non-critical loads in the data 
+centre buildings, (one per building), and three smaller backup generators: one 
+generator for the substation and two for the Central Industrial Water Building 
+(CIWB) serving as ancillary backup units. 
+The generator arrangements will be as follows:  
+• Data centre building A – Is 3 storey and will have 38 x 
+7.5 MWth generators which will be double stacked, plus a smaller 
+1.9 MWth ‘house’ generator (total of 39).  
+• Data centre building B – Is 3 storey and will have 38 x 
+7.5 MWth generators which will be double stacked, plus a smaller 
+1.9 MWth ‘house’ generator (total of 39).  
+• Data centre building C – Is 3 storey and will have 38 x 
+7.5 MWth generators which will be double stacked, plus a smaller 
+1.9 MWth ‘house’ generator (total of 39).  
+• Data centre building D – Is single storey and will have 8 x 
+7.5 MWth standby generators plus a smaller 1.9 MWth ‘house’ generator 
+(total of 9).  
+• Backup power to the CIWB will be provided by 2 x 1.3 MWth generators.  
+• A single 1.3 MWth generator will serve the onsite substation.  
+ 

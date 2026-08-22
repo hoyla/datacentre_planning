@@ -1,0 +1,89 @@
+Permit number  
+EPR/GP3127LV 
+ 11 
+Schedule 1 – Operations  
+Table S1.1 activities 
+Activity 
+reference  
+Activity listed in Schedule 
+1 of the EP Regulations  
+Description of specified 
+activity  
+Limits of specified 
+activity  
+AR1 Section 1.1 Part A(1) (a) 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 or more 
+megawatts. 
+Operation of 129 
+emergency standby 
+generators with a total 
+thermal input of 
+approximately 925 MWth. 
+ 
+The generators will burn 
+gas oil fuel or equivalent 
+substitute solely for the 
+purpose of providing 
+electricity to the Installation 
+in the event of a failure of 
+supply from the National 
+Grid and during 
+maintenance testing. 
+ 
+Aggregated Back-up 
+Generation (ABG) 
+consisting of: 
+122 x 7.5MWth unabated, 
+new MCP 
+3 x 1.3MWth unabated, new 
+MCP 
+And house Generators 
+consisting of:  
+4 x1.9MWth unabated, new 
+MCP 
+ 
+From receipt of raw 
+materials and generation of 
+electricity to despatch of 
+waste.  
+ 
+Electricity produced at the 
+Installation cannot be 
+exported to the National 
+Grid. 
+ 
+The emergency operational 
+hours of the Installation 
+shall not exceed the 
+specifications set out in 
+condition 2.3.3 of this 
+permit. 
+Directly Associated Activity 
+AR2 Storage of raw materials From receipt of raw materials to use within the facility. 
+AR3 Surface water drainage From collection of surface water from generator areas, 
+and roofs, hardstanding, fuel storage and handling and 
+paved areas to discharge to Moor Ditch via points W1 and 
+W2  
+ 
+Table S1.2 Operating techniques 
+Description Parts Date 
+Received 
+Application 
+EPR/GP3127LV/A001 
+Application Forms B2 and B3 and all referenced supporting 
+information. 
+ 
+ Duly Made 
+28/11/2025 
+Application 
+EPR/GP3127LV/A001 
+Generators maintenance 
+testing schedule  
+Generators maintenance testing schedule detailed in 
+application document “Didcot North Data Centre Campus 
+EPR/GP3127LV/A001 Air Quality Assessment dated 
+September 2025.” 
+ Duly Made 
+ 28/11/2025 

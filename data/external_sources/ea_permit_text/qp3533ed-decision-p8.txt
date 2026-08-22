@@ -1,0 +1,92 @@
+ 
+ 
+The process contribution (PC) for Events 1 and 2 are summarised in the 
+tables below. The figures shown indicate the maximum off site ground level 
+impacts and those at the most significantly impacted human receptor location, 
+Busy Bees Nursery 1
+st floor.  
+ 
+Table 1- Events 1 and 2 predicted short term impacts 
+Pollutant  EQS/EAL 
+µg/m3  
+2 x 
+background 
+concentration 
+µg/m3 [1] 
+PC 
+µg/m3 
+[2] 
+PC as % 
+of 
+EQS/EAL 
+PEC µg/m3 
+(PC + 2 x 
+background) 
+PEC as % 
+of 
+EQS/EAL 
+[3] 
+SO2 (15 
+min) 
+266 8.26 9.75 3.67 18.01 6.77 
+SO2 (1 hr) 350 8.26 0.23 0.07 8.49 2.43 
+SO2 (24 
+hr) 
+125 8.26 0.49 0.39 8.75 7 
+PM10 (24 
+hr) 
+50 32.56 0.001 0.002 32.56 65.12 
+ 
+Note [1] The concentration is taken as twice the long term background level for Short 
+Term Environmental Quality Standard (EQS) / Environmental Assessment 
+Level (EAL) standards referenced to an hourly averaging value. 
+ 
+Note [2] Representative of worst case impact at Busy Bees Nursery 1st floor. 
+  
+Note [3] Where the PC is demonstrated to be less than 10% of the short term 
+EQS/EAL, a level below which we consider to indicate insignificant impact, 
+further consideration of the PEC is not required.   
+ 
+Table 2 – Events 1 and 2 predicted long term impacts  
+Pollutant  EQS/EAL 
+µg/m3  
+Background 
+concentration 
+µg/m3  
+PC µg/m3 
+[1] 
+PC as % 
+of 
+EQS/EAL 
+PEC 
+µg/m3 
+PEC as % 
+of 
+EQS/EAL 
+[2] [3] 
+SO2 - - - - - - 
+PM10 40 16.28 0.009 0.02 16.29 40.72 
+ 
+Note [1]  Representative of worst caste impact at Busy Bees Nursery 1st floor.  
+ 
+Note [2] Where the PC is demonstrated to be less than 1% of the long term EAL, a 
+level below which we consider to indicate insignificant impact, further 
+consideration of the PEC is not required. 
+ 
+Note [3] Where the PEC is demonstrated to be greater than 70% of the long term 
+EAL, a level below which we consider to indicate as not being a significant 
+impact, more detailed assessment is required.
+ 
+ 
+Screening out emissions which are insignificant 
+ 
+In accordance with Environment Agency guidance H1 Annex F, the following 
+emissions are considered insignificant as the short term impact is < 10% of 
+the relevant short term EQS’s/EAL’s and < 1% of the long term EQS/EAL. 
+These are:   
+• SO
+2 short term (15 min, 1hr and 24 hr); 
+• PM10 short term; and 
+• PM10 long term. 
+EPR/QP3533ED/A001   Page 8 of 22 
+ 

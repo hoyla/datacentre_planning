@@ -1,0 +1,51 @@
+ 
+                       Page 13 of 32 
+ensuring the required level of resilience to demonstrate maximum uptime for critical IT 
+infrastructure; 
+ 
+- Utilises an array of batteries on each site (UPS) which can provide power, virtually 
+instantaneous, to the on-site systems that are critical for the operation of the site as a 
+datacentre until the diesel generators are started; 
+ 
+- Has developed multiple electrical feed connections: 
+o Campus site has two 33kV feeds from the National Grid each capable of serving 
+the full customer load demand at that datacentre; 
+o Maylands has two 11kV feeds from the National Grid each capable of serving the 
+full customer load demand at that datacentre; 
+o HH4 has two 132kV feeds from the National Grid each capable of serving the full 
+customer load demand at that datacentre; 
+o Centro has one 11kV feed from the National Grid. 
+ 
+- Has ensured there are no direct and dedicated power links shared between all 4 
+datacentres and each datacentre has its own independent power links to the National 
+Grid: 
+o Campus connects to Springway Grid substation; 
+o Centro connects to Hemel East Primary substation; 
+o Maylands connects to Hemel North Primary substation. 
+ 
+These three substations all connect to the Pickets End Grid substation. The Pickets End 
+Grid substation has 2 separate 132kV feeds - one incoming line from Elstree-Sundon 
+132KV and the other from Watford 132KV. The 2 feeds for HH4 are connected directly to 
+the Elstree-Sundon 132KV power line (direct to a pylon). 
+It is only failure of both 132kV power lines noted above that would trigger operation of the 
+generators across all four NTT Hemel Hempstead data centre sites. Such a failure would 
+impact the whole of Hemel Hempstead and wider area and the risk of their failure is 
+extremely unlikely. 
+Failure of the Elstree-Sundon 132kV power line would impact HH4 datacentre only. 
+Failure of Pickets End substation would impact the Campus, Maylands and Centro 
+datacentres. 
+Failure of the Springway Grid substation would impact Campus only. 
+Failure of the Hemel East Primary substation would impact Centro only. 
+Failure of the Hemel North Primary substation will impact the Maylands only. 
+In event of an electrical failure, the required number of generators at the datacentre or 
+datacentres would operate to meet the customer load at the datacentre at that particular 
+time. 
+- Has arranged the datacentres into multiple customer suites which each have the required 
+infrastructure, including generators: 
+o Campus datacentre has twelve customer suites all independent from each other; 
+o Maylands has six customer suites served by either four or two generators all 
+independent from each other; 
+o HH4 (original scope) has six customer suites each served by five generators 
+which are independent of each other; 
+o Centro has three customer suites which are linked in terms of electrical supply 
+allowing four generators to serve the suites as required. 

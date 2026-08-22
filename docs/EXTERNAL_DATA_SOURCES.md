@@ -474,6 +474,48 @@ trial.
 
 ## 6. Other statutory sources
 
+### Environment Agency public register — in use since 2026-08-22
+
+The second statutory source to reach the artefacts, and the first that
+carries capacity. It works for a reason none of the commercial
+directories can copy: a data centre's diesel standby fleet is sized to
+peak load plus redundancy, a fleet that size needs an environmental
+permit, and the permit is a public document that states the fleet's
+rating when the planning application states nothing at all.
+
+The register itself is at
+https://environment.data.gov.uk/public-register/downloads/industrial-installations
+and is **a zip, not the bare CSV the URL implies**. 5,198 rows; no
+capacity column anywhere in it. What it carries is a permit number, a
+holder, an address, a grid reference and — for two thirds of the rows
+that matter — a link to the permit on gov.uk. So the register is an
+index and the permit is the source, which is the opposite way round from
+every other dataset in this document.
+
+**Measured yield, 2026-08-21/22.** 97 candidate rows (a curated operator
+vocabulary or "data centre" in the holder or address, *and* an activity
+type authorising combustion plant). 42 have a permit publication; 35 of
+those state a readable total thermal input, 5,879 MWth in all. Six are
+matched to sites by hand. The largest single permit is Amazon's Didcot
+North campus: 129 generators, 925 MWth.
+
+**Why it does not breach recommendation 1 below.** It is not an external
+MW becoming a site column. Thermal input is its own quantity in the
+claims vocabulary, `value_mw` is null on every one of these rows because
+MWth does not convert to MW, and the ratio that turns one into the other
+— roughly 2.4 to 2.5 — is left for a reporter to apply in the open.
+
+**Limits that travel with it.** Existing plant of 1–5 MWth needs no
+permit until 1 January 2029, so an absent permit proves nothing.
+Emergency-only backup is outside specified-generator permitting unless
+the plant provides balancing services or Capacity Market/DSR — which is
+the same exclusion that made the Capacity Market register a dead end in
+§4, and explains why. Wales is NRW's register and Scotland SEPA's.
+
+Licence: Environment Agency Conditional Licence — redistribution
+permitted with attribution, which is why the snapshot and the permit
+text are committed where most sources here are not.
+
 ### DESNZ sub-national electricity consumption — in use since 2026-08-12
 
 The one statutory source surveyed here that made it into the artefacts,
@@ -585,6 +627,11 @@ page; see `data/external_sources/README.md`.
 1. **Do not add any external MW as a site column.** Nothing surveyed here
    measures the same quantity as a planning application, and DCM's planned-
    site figures are derived from the same documents this project reads.
+   *Still holds.* The Environment Agency permits added in §6 are the
+   test of it: they are the strongest external figures found anywhere in
+   this survey, they are statutory, and they still went in as claims
+   beside the planning data with their own quantity type rather than
+   into a column.
 2. **Do not build TEC or the Capacity Market as pipeline stages.** TEC does
    not work for co-location; the Capacity Market yields 14 sites, which is
    an afternoon of reporter verification rather than an engineering task.

@@ -1,0 +1,29 @@
+Permit number 
+EPR/DP3442QV 13 
+16 February 2021 (formerly known as TGN M5). The plan shall 
+include, but not limited to:  
+• When the generators are not fitted with sampling 
+ports, a proposal to install them within the shortest 
+practical timeline;  
+• Details of any relevant safety, cost and 
+operational constraints affecting the monitoring regime, 
+in support of any proposed deviation from the testing 
+regime specified in table S3.1.   
+  
+ 
+Table S1.4 Pre-operational measures 
+Reference Pre-operational measure 
+PO1 At least 1 month before operation the operator shall submit a commissioning plan to 
+the Environment Agency for approval. The plan will provide the timescales for the 
+commissioning of the diesel generators and shall demonstrate that the commissioning 
+of the diesel generators is covered within the site’s permitted regular testing regime, 
+thereby minimising durations and impacts. When the commissioning is not covered 
+within the site’s permitted regular testing regime, the operator shall submit an 
+environmental risk assessment for approval by the Environment Agency, 
+demonstrating that the environmental risks during commissioning are minimised and 
+remain not significant. The commissioning of the engines shall not begin pri or to 
+receiving written approval to the plan and associated environmental risk assessment 
+by the Environment Agency. 
+The plan shall be implemented in accordance with the Environment Agency’s written 
+approval. 
+  

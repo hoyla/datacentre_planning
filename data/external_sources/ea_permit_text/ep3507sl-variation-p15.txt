@@ -1,0 +1,109 @@
+ 
+Permit number 
+EPR/EP3507SL 15 
+Schedule 1 – Operations 
+Table S1.1 activities 
+Activity 
+reference 
+Activity listed in 
+Schedule 1 of the EP 
+Regulations  
+Description of specified 
+activity 
+Limits of specified activity  
+AR1  
+ 
+ 
+ 
+Section 1.1 A(1) (a): 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 
+megawatts or more. 
+Operation of emergency standby 
+generators burning gas oil solely 
+for the purpose of providing 
+electricity to the installation in the 
+event of a failure of supply from 
+the National Grid comprising; 4 x 
+8.816 MWth input at Telehouse 
+South (TS). 
+ 
+Operation of 27 emergency 
+standby generators burning gas 
+oil solely for the purpose of 
+providing electricity to the 
+installation in the event of a 
+failure of supply from the 
+National Grid comprising;  
+ 
+• 4 x 4.32 MWth 
+• 2 x 4.28 MWth 
+• 4 x 5.96 MWth 
+• 2 x 6.805 MWth 
+• 2 x 4.56 MWth 
+• 3 x 4.28 MWth 
+• 4 x 6.16 MWth 
+• 3 x 5.37 MWth 
+• 3 future generators (total 
+thermal input of 19 MWth, 
+individual thermal input as 
+approved through pre-
+operational condition PO1) 
+standby generators with a total 
+thermal input of 145 MWth at 
+Telehouse North (TN). 
+From receipt of raw materials 
+and generation of electricity 
+to despatch of products and 
+waste.  
+Including selective catalytic 
+reduction (SCR) 
+systems fitted to emission 
+points A1 to A4 according to 
+the operating techniques 
+specified in Table S1.2 
+ 
+Generators shall only be 
+operated for on-site 
+emergencies and not for 
+elective power generation, 
+such as Balancing Services, 
+Demand Side Response 
+operations including 
+Frequency Control Demand 
+Management (FCDM) or 
+Triad Avoidance. 
+ 
+The emergency operating 
+hours of the installation shall 
+not exceed the specifications 
+set out in condition 2.3.5 of 
+this permit. 
+Testing of engines is limited 
+as follows: 
+- Testing shall not be carried 
+out for longer than 4 hours 
+per building for the northern 
+campus (TN) and 8 hours 
+for the southern campus 
+building (TS), in any 24-hour 
+period. 
+- Testing shall not be carried 
+out at more than two 
+northern campus (TN) 
+buildings, within any 24-hour 
+period in which the southern 
+campus building (TS) is also 
+tested. 
+- Testing shall not be carried 
+out at both the North and 
+West buildings within the 
+same 24-hour period. 
+    
+Directly Associated Activity 
+AR2 Directly associated 
+activity 
+Gas Oil storage From receipt of raw materials 
+to dispatch for use including 
+all associated pipework, 

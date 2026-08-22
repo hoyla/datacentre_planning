@@ -1,0 +1,64 @@
+ 
+Permit number 
+EPR/CP3902LV  8 
+Schedule 1 – Operations  
+Table S1.1 activities 
+Activity 
+reference  
+Activity listed in 
+Schedule 1 of the EP 
+Regulations  
+Description of specified activity  Limits of specified activity  
+AR1 Section 1.1 Part A1(a) 
+Burning any fuel in an 
+appliance with a rated 
+thermal input of 50 or 
+more megawatts. 
+ 
+Operation of 52 emergency standby generators (SBGs) with a 
+total thermal input of approximately 335.15 MWth.  
+ 
+The SBGs will burn gas oil and/or hydrotreated vegetable oil 
+(HVO) solely for the purpose of providing electricity to the 
+installation in the event of a failure of supply from the National 
+Grid and during maintenance testing. 
+ 
+LON1A - New MCPs 
+12 x 4.1 MWth SBGs 
+16 x 6.947 MWth SBGs 
+ 
+LON1B - New MCPs 
+22 x 7.6 MWth SBGs 
+2 x 3.8 MWth SBGs 
+ 
+2 x 0.206 MWth diesel-fired, firewater sprinkler pumps. 
+From receipt of raw materials and generation of 
+electricity to despatch of waste.  
+ 
+Including selective catalytic reduction (SCR) fitted to 
+emission points: 
+LON1A 
+GEN 2-1 to GEN 3-4. 
+LON1B 
+GEN-01-HA to GEN-01-C6/4 
+ 
+The emergency operational hours of the installation shall 
+not exceed the specifications set out in condition 2.3.5 of 
+this permit. 
+ 
+No other testing at either LON1A or LON1B shall take 
+place within the same 24-hour period as a LON1A black 
+building (4-hour) test. 
+ 
+LON1A black building tests are limited to a maximum of 
+4 hours within any 24-hour period. 
+ 
+Electricity produced at the installation cannot be 
+exported to the National Grid.  
+Activity 
+reference 
+Directly Associated Activity 
+AR2 Storage or raw 
+materials 
+From receipt of raw materials to use within the facility. 
+AR3 Surface water drainage From input to site drainage system until discharge to surface water sewer via interceptor (emission point SW1).  

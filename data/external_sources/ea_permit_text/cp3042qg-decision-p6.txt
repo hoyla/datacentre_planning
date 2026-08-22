@@ -1,0 +1,45 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 6 of 26 
+Point Source Emissions to Land 
+The operator has confirmed that there will be point source emissions to land from the Installation 
+in the form of soakaways. 
+There are 3 soakaways present at the installation beneath the southern car parking areas. The 
+soakaway point source discharge points are referenced as SL1, SL2 and SL3 on the Plan in 
+Schedule 7 of the permit 
+The “milk crate” type soakaways are situated between the 3 interceptors and the final outfall to 
+the public surface water drainage network on Ajax Avenue. 
+The soakaways are plastic crates with a geotextile liner between the crates and the surrounding 
+gravel fill. The system is required to slow the release of surface water to the surface water sewer 
+system. The soakaways will not require maintenance. Given their cellular structure it would be 
+difficult to insert a drainage camera. 
+As the operator has confirmed that no process effluent or contaminated emissions would be 
+discharged from the site to sewer or surface water drainage, we accept that Application Form B6 
+and consultation with our water quality specialists is not needed. 
+Air Quality 
+For combustion applications, we normally require the operator to submit a full air dispersion 
+model as part of their application. Air dispersion modelling enables the process contribution (PC) 
+to be predicted at any environmental receptor that might be impacted by the plant.  
+Once short term (ST) and long term (LT) PCs have been calculated in this way, they are 
+compared with Environmental Standards (ES). ES are described in our web guide ‘Air emissions 
+risk assessment for your environmental permit’.  
+Our web guide sets out the relevant ES as: 
+• Ambient Air Directive Limit Values 
+• Ambient Air Directive and 4th Daughter Directive Target Values 
+• UK Air Quality Strategy Objectives 
+• Environmental Assessment Levels 
+ 
+Where an Ambient Air Directive (AAD) Limit Value exists, the relevant standard is the AAD Limit 
+Value. Where an AAD Limit Value does not exist, AAD target values, UK Air Quality Strategy 
+(AQS) Objectives or Environmental Assessment Levels (EALs) are used. Our web guide sets out 
+EALs which have been derived to provide a similar level of protection to Human Health and  the 
+Environment as the AAD limit values, AAD target and AQS objectives. In a very small number of 
+cases, e.g., for emissions of lead, the AQS objective is more stringent that the AAD value. In such 
+cases, we use the AQS objective for our assessment. 
+AAD target values, AQS objectives and EALs do not have the same legal status as AAD limit 
+values, and there is no explicit requirement to impose stricter conditions than BAT in order to 
+comply with them. However, they are a standard for harm and any significant contribution to a 
+breach is likely to be unacceptable. 
+PCs are screened out as Insignificant if: 
+• The long-term PC is less than 1% of the relevant ES; and 
+• The short-term PC is less than 10% of the relevant ES. 
+ 

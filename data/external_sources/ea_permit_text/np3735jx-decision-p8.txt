@@ -1,0 +1,49 @@
+ 
+                       Page 8 of 20 
+concluded that exceedances are unlik ely due to the low number of operational 
+hours. 
+ 
+Our audit agreed with the applicant’s assessment and we agree that exceedances 
+are unlikely for the NOx 24 hour mean due to the low number of operational hours. 
+Also, exceedances were only predicted should operations coincide with worst-case 
+operational hours. No further assessment is necessary. 
+ 
+Emergency scenario 
+ 
+The emergency scenario  (Scenario 4) that has been modelled is based upon all 
+generators operating simultaneously for 2 hours followed by half the generators 
+operating for 120 hours. Shutting down half the generators after 2 hours reflects 
+what would happen in reality should there be an elec tricity outage. There is no 
+basis set out in the modelling report as to why 122 hours has been chosen. We 
+would expect an emergency scenario to be modelled for 72 hours as a worst-case 
+scenario for this type of operation. As such 122 hours is likely to be an over 
+estimation of emissions for the emergency scenario. 
+ 
+Prolonged operation of the installation is not expected. Short term operation is 
+more realistic for the reasons described below. 
+ 
+We requested details of all instances when the generators have been used in an 
+emergency scenario as a result of grid failure. The operator confirmed that the 
+generators have not operated other than for maintenance purposes since the site 
+became operational in 2011.  
+ 
+This is an existing site and all generators installed do not meet TA-Luft 2g or Tier 
+2 USEPA emissions standards. The stacks are also below the height of the 
+surrounding buildings. The diesel generators installed are currently not in line 
+with BAT, an improvement condition has been included requiring the operator to 
+explore potential options to reduce NOx emissions to meet BAT standards. 
+ 
+An emergency outage is an event that will be for a number of hours. Therefore, 
+only short-term assessment criteria need to be considered.  
+ 
+Human Receptors: 
+ 
+For Scenario 4, the applicant predicts exceedances of the NO2 1-hour mean. 
+ 
+For NO2 1-hour mean the operator undertook statistical analysis to predict the 
+probability of an exceedance occurring over the 122 hours of operation. The 
+probability of exceeding the ES more than the 18 allowable exceedances is 
+100% and the probability of more than 64 exceedances is 0.001% (We do not 
+agree with this approach and have undertaken our own assessment of risk based 
+on the number of operational hours required for the risk of an exceedance to be 
+5% and 1%). 

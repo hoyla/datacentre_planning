@@ -1,0 +1,53 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 7 of 28 
+to a lower surface roughness of 0.3 m, representative of agricultural areas (max), which 
+we consider to be most similar to Heathrow. 
+ 
+• The consultant has modelled predictions across a 700 m x 700 m grid with a 7 m 
+resolution. The consultant did not include terrain in their assessment. We agree that the 
+terrain in the vicinity of the site is generally flat and therefore should not noticeably affect 
+modelling results, so have not tested sensitivity to this. 
+ 
+• The generator stacks are vertical, with a release height of 50 m. Airflow around buildings 
+is often complex and may create zones of strong turbulence (cavity zones) and 
+downward mixing on the lee side, an effect known as building downwash. The consultant 
+chose to include 24 buildings in the model. We have tested sensitivity to including the 
+main buildings only, to see how this impacts upon dispersion. Our audit has shown that 
+dispersion is good, due to the height of the stacks and facility buildings; buildi ng 
+downwash effects are therefore not expected to be substantial, and we have not tested 
+sensitivity to this.  
+ 
+• The proposed facility is in an AQMA. The consultant has derived the background 
+concentrations for human health receptors from a review of continuous and diffusion tube 
+monitoring sites for the London Borough of Ealing. The consultant has applied an annual 
+background value of 25.4 µg/m3, which is the mean average of the nearest two diffusion 
+tubes, EA41 (1 Shaftesbury Gardens) and EA43 (165 Wells House Road) for 2022, which 
+we do not consider appropriate due to the lingering impact of Covid-19 on traffic figures 
+during 2022. We have identified a higher annual mean NO2 concentration of 37 µg/m 3, 
+taken from the John Keble Primary School automatic monitoring site in the London 
+Borough of Brent, which we have applied to our modelling as a conservative background 
+concentration. The consultant has used the Defra background maps to establish baseline 
+NOx concentrations and APIS to determine the site-specific nitrogen and acid critical 
+loads for the European nature sites. We agree that APIS is a suitable source of critical 
+load baseline information for ecological sites.  
+ 
+• The consultant chose a 70% long-term and 35% short-term NOx to NO2 conversion, in 
+line with our guidance. We have tested sensitivity to a lower short term conversion rate of 
+15%, which is likely to be reasonably representative at receptors within the first few 
+hundred meters (approximately 500m) from the source, which is where maximum PCs 
+are predicted. 
+ 
+• The consultant has calculated emission rates based on information provided by the 
+operator and have submitted the technical data sheets for the generators. The operator 
+has confirmed that the generators to be used at the data centres are emissions optimised 
+to meet the US EPA Tier 2 standard at 75% load. The operator has also included a 
+Selective Catalytic Reduction (SCR) NOx abatement system within the desi gn to limit the 
+NOx emissions to 190 mg/Nm3 at 15% oxygen. 
+ 
+• The consultant has stated in their technical note dated 28 th March 2024 that the SCR will 
+not be effective for the first 5 to 15 minutes of operation, as the engine will start from a 
+cold state and requires a minimum temperature to function correctly. The consultant did 
+not account for this in their AQA, but within the technical note they have factored their 
+PCs to account for unabated emissions being released during the first 10 minutes of 
+operation within an hourly period. While this approach is appropriate, they have not fully 
+considered the impact on hourly NO2 exceedances in the technical note. In our audit we 

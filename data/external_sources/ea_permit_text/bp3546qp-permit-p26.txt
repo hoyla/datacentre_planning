@@ -1,0 +1,52 @@
+ 
+ 
+Emissions to Air Reporting Form 
+ 
+ 
+Permit number: [EPR/AB1234CB] Operator: [A Company Name Limited] 
+Facility name: [Unit A, Anytown]        Emissions to Air Reporting Form: version 1, 08/03/2021 
+ 
+Reporting of emissions to air for the period from [DD/MM/YY] to [DD/MM/YY] 
+ 
+Emission 
+point 
+Substance / 
+parameter 
+Emission 
+Limit Value 
+Reference period Test 
+method 1 
+Result 2 Sample dates 
+and times 3 
+Uncertainty 4 
+[e.g. A1] [e.g. Oxides 
+of nitrogen 
+(NO and NO2 
+expressed as 
+NO2)] 
+[e.g. 200 
+mg/m3] 
+[e.g. daily average] [e.g. BS EN 
+14181] 
+[State 
+result] 
+[State relevant 
+dates and time 
+periods] 
+[State uncertainty 
+if not 95% 
+confidence 
+interval] 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+ 
+Signed: [Name]  Date: [DD/MM/YY] 
+(Authorised to sign as representative of the operator)  
+ 

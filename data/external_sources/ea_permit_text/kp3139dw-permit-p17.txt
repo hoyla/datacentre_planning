@@ -1,0 +1,38 @@
+ 
+Permit number 
+EPR/KP3139DW 17 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC9 The operator shall submit a revised drainage plan covering the entire 
+site to the Environment Agency for approval.  
+The site drainage plan shall  
+ be drawn to scale 
+ outlines and differentiates the exact locations of all subsurface 
+drainage routes (surface water and foul sewer),  
+ be annotated with all emission points for aqueous discharges 
+off-site and on-site oil interceptors.  
+ 
+In the event the drainage plan indicates there are surface water 
+discharges from the facility which do not pass through an oil interceptor 
+prior to discharge. The operator shall submit to the Environment Agency 
+proposals and timescale for directing drainage to an oil interceptor prior 
+to discharge off-site. 
+ 
+The proposals shall be implemented by the operator in line with 
+timescales agreed by the Environment Agency. 
+01/06/19 
+ 
+Table S1.4 Pre-operational measures for future development 
+Reference Operation Pre-operational measures 
+POM1 Generator installation for site expansion. Prior to the installation of new standby 
+generators 61 - 75, the operator shall 
+submit a detailed design report to the 
+Environment Agency. The report shall 
+demonstrate how the specification of the 
+generator, height and orientation of 
+discharge flue, location of generator and 
+operational programme are designed to 
+minimise NOx emissions and optimise 
+atmospheric dispersion with a view to 
+reducing any impact of short-term NOx 
+emissions on sensitive local receptors. 

@@ -1,0 +1,53 @@
+EPR/VP3235DJ/A001 
+Date issued: 27/01/2020 
+ 2 
+The standby generators are designed and configured so that in the event of a mains failure all the generators 
+will fire up then subsequently ramp down to meet the load demand at the site. All the generators are subject 
+to a testing schedule which is as follows:  
+ 
+ Scenario 1 - Weekly testing  
+Each week a different group of 4 generators is tested. This includes running the generators 
+simultaneously to an off -load power (up to 3 0% maximum continuous rating (MCR)) for 10 minutes. 
+Once a quarter the 4 generators selected for testing are run simultaneously for 15 minutes at up to 
+80% MCR.  
+ Scenario 2 - Annual service testing  
+Annually a full service test is undertaken where once a year one standby diesel generator is started, 
+loaded using a load bank (up to 100% maximum continuous rating (MCR)) . This scenario is usually 
+undertaken over a two-hour period. Only one generator is tested per day. 
+ Scenario 3 - Grid Outage Event 
+Standby operation of the generators will only occur in the event of a power failure. A Grid Outage 
+Event of up to five days loss of grid power at a frequency of once per five years has been assumed 
+as a worst case event. The applicant has confirmed that in the past 10 years the maximum number 
+of hours that the generators have been required to run has been 4 hours. 
+Air Quality 
+The primary pollutant of concern to air quality is nitrogen dioxide (NO2) resulting from the combustion process 
+on site. The Applicant has submitted an air dispersion modelling report which assesses the potential impact of 
+emission of NO2 from the generators on local air quality.  
+The data centre is not situated in an Air Quality Management Area (AQMA) and there are no AQMAs within 
+2km of the site.  
+We have  audited the air dispersion modelling and report submitted with the permit application. Both the 
+maintenance testing and emergency scenarios within the modelling were assessed.  
+ 
+Data inputs and assumptions for the submitted modelling 
+The modelling was based on the incorrect NOX emission rates for the generators associated with buildings 
+A101 and A102. They used a value of 0.656 g/s, which is inconsistent with the generator data sheets in the 
+latest air quality submission. We have conducted sensitivity analysis to 1.689 g/s from these generators.  
+The emissions from the sixty nine generators were consolidated into four point sources, one for each of the 
+four buildings A101, A102, A103 and A104. This method led to inaccurate predictions for ground level 
+concentrations close to the site. 
+The nitrogen monoxide (NO) Environmental Assessment Levels were not considered. They had however 
+assessed against the United States Environmental Protection Agency Acute Exposure Guideline Levels 
+(AEGLs). We considered NO and NO2 impacts in our checks.  
+The eastern side of the Cody Sports and Social Club grounds, which is close to the data centre and where 
+predicted NOX levels are higher were not considered. We considered all locations where human health public 
+exposure is likely in our checks.  
+A NOX to NO2 conversion ratio of 15% was assumed, referencing our generic diesel generators short term 
+NO2 risk assessment report. This is likely to be appropriate for public exposure within 500 m.  
+ADMS v.5 was used with meteorological data from the nearby Farnborough Airport for the years 20 11 - 2015 
+and a dispersion site surface roughness length of 0.5 m. We tested sensitivity to lower values.  
+The effects of adjacent buildings were taken into account. 
+Maintenance testing 
+For ‘event 1 - weekly testing’ we have concluded that there is unlikely to be any exceedance of EAL at human 
+health receptors or habitats sites. 
+For the ‘event 2 - service test scenario’, which is a two hour test of each generator individually on separate 
+days, we found that:  

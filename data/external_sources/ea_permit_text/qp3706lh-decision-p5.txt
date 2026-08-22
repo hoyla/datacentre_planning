@@ -1,0 +1,38 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 5 of 28 
+Operator’s Assessment of Potential Impact on Air Quality 
+The Operator submitted an Air Emissions Risk Assessment prepared by Hoare 
+Lea (the Consultant), commissioned by PDCG (Group Services) Limited (the 
+applicant). Two addendums were also submitted by the Operator, which 
+addressed requests from the Environment Agency including assessment of 100th 
+percentile NO2 and NO EALs (first addendum) and assessment of 72-hour 
+emergency operation and combined annual impacts of testing (second 
+addendum). All three considered the potential impacts of the principal pollutants 
+of concern with respect to emissions to air from low sulphur gas oil generators.  
+The Operator submitted the reports in support of their permit Variation application 
+to operate a set of 40 standby gas oil or equivalent fuelled generators at their 
+Installation additional to the standby generators already on site. The existing 
+plant, permitted under ERP/QP3706LH/A001, comprises 16 generators with a 
+total combined thermal input of approximately 116.96 MWth. The new standby 
+generators (SBG) proposed in the Variation will increase the combined thermal 
+input to 409.36 MWth. 
+The Consultant has modelled the generator emissions under the assumption of 
+gas oil fuel, when in reality the generators will be run on HVO fuel, which has a 
+lower emission rate for oxides of nitrogen. 
+The Consultant has assessed potential impacts at human and ecological 
+receptors for nitrogen oxides (NOx), particulate matter (PM10), sulphur dioxide 
+(SO2), carbon monoxide (CO), and total organic carbon (TOC) as benzene within 
+the defined screening distances.   
+Human Receptors 
+They considered 17 discrete human receptor locations, including residential 
+properties, schools, leisure, commercial, industrial and retail.  
+Ecological Receptors 
+They considered the following protected sites:  
+Site of Special Scientific Interest (SSSI): 
+Brent Reservoir 
+ 
+They considered the following local sites: 
+Local Wildlife Sites (LWS): 
+• Brent Reservoir 
+• Harp Island 
+• Grange roundabout nature area  

@@ -1,0 +1,50 @@
+ 
+                       Page 5 of 32 
+- Open cycle gas turbines; 
+- Aero derivative gas turbines; 
+- Gas engines; 
+- Diesel engines. 
+They compared these technologies against the following considerations: 
+- Start-up time; 
+- Reliability; 
+- Independence of off-system services; 
+- Causing the least environmental impact. 
+The operator demonstrated there were significant reasons for not selecting combined cycle gas 
+turbines, open cycle gas turbines and aero derivative gas turbines. However both gas engines 
+and diesel engines provided the fast response speed required but the diesel engines had a 
+significantly greater environmental impact from gaseous releases. 
+The operator further justified the choice of diesel over gas as a fuel for the engines because it 
+allowed the required level of resilience at the datacentres. The NTT datacentre customer 
+contracts were based on the requirement for each datacentre to have on-site sufficient energy 
+storage to provide up to 36 hours of fuel supply for the generators in the event of an unplanned 
+emergency situation. 
+The storage of sufficient gas on-site as a fuel source was not possible due to restraints on 
+available space. Additionally there were increased health and safety risks associated with such 
+storage. There would be reliance on an off-site supply of gas, which would have to be provided to 
+the sites via a pipeline operated and maintained by a third party. Should this supply of gas be 
+interrupted there would be no emergency back-up generation for the sites, and as such would not 
+meet the resilience requirements of the facilities. 
+From the options considered, the applicant therefore demonstrated that diesel engines were BAT 
+to provide emergency/standby power for the datacentres on the basis that: 
+- These engines provide a fast response speed to the required load (fast start-up of 
+standby generators for datacentres is fundamental to their operation as an almost 
+instantaneous supply of electricity is required in the event of power loss to the site). 
+- The need for a reliable supply of fuel (diesel) is essential to ensure reliance (the on-site 
+storage of sufficient quantities of diesel fuel provides the required level of independent 
+performance reliability on site). 
+- Diesel engines have low maintenance costs and replacement parts are readily available. 
+ 
+Based on this assessment and the fact that diesel generators are presently a commonly used 
+technology for standby generators in data centres, we accept that diesel fired generators can be 
+considered BAT. 
+ 
+The operator has justified the use across the four datacentres of a larger number of smaller 
+generators rather than fewer but larger generators: 
+ 
+- A larger number of smaller generators allows them the flexibility to achieve the required 
+electrical output in the event of an emergency situation with only the necessary number of 
+generators operating to deliver the required electrical load. This would result in reduced 
+consumption of diesel and hence generation of less emissions to air from the generators. 
+ 
+- The generators have been selected based on the customer demand and the required 
+electrical load for each datacentre suite. This ensures that the generators are operated at 

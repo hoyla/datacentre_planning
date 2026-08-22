@@ -1,0 +1,80 @@
+Permit number 
+EPR/DP3442QV 11 
+Schedule 1 – Operations  
+Table S1.1 activities  
+Activity 
+reference  
+Activity listed in Schedule 1 of the EP 
+Regulations   
+Description of specified 
+activity  
+Limits of 
+specified activity   
+AR1   
+  
+  
+  
+Section 1.1 A(1) (a): Burning any fuel in 
+an appliance with a rated thermal input 
+of 50 megawatts or more.  
+Operation of 14 emergency 
+standby generators with a 
+total thermal input of 
+approximately 112.14 Mwth 
+ 
+14 x 8.01 MWth (New MCP) 
+From receipt of raw 
+materials and 
+generation of 
+electricity to 
+despatch of 
+waste.   
+  
+Electricity 
+produced at the 
+installation cannot 
+be exported to the 
+National Grid.  
+  
+The emergency 
+operational hours 
+of the installation 
+shall not exceed 
+the specifications 
+set out in condition 
+2.3.5.   
+Directly Associated Activity  
+AR3  Directly associated activity  Storage of raw materials - 
+Gas Oil storage  
+From receipt of raw 
+materials to 
+dispatch for use 
+including all 
+associated 
+pipework, handling 
+and transfer to and 
+from storage 
+tanks.  
+AR4 Directly associated activity  Storage of raw materials – 
+Urea Storage 
+From receipt of raw 
+materials to 
+dispatch for use 
+including all 
+associated 
+pipework, handling 
+and transfer to and 
+from storage 
+tanks.  
+AR5  Directly associated activity  Surface water drainage   Input to site 
+drainage system 
+until discharge to 
+surface water drain 
+via interceptors 
+(emission point 
+W1).  
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,48 @@
+EPR/KP3139DW/A001 
+Date issued: 18/01/19  13 
+Aspect considered Decision 
+The operating techniques that the applicant must use are specified in table 
+S1.2 in the environmental permit. 
+Operating techniques for 
+emissions that do not 
+screen out as insignificant 
+Emissions of nitrogen dioxide (NO2) cannot be screened out as insignificant. 
+We have assessed whether the proposed techniques are BAT. 
+We agree with the applicant that the use of diesel generators to supply power 
+to site in the event of National Grid outage is BAT when compared with 
+alternative power generation techniques such as spark ignition engines, gas 
+turbines, hydrogen fuel cells or selective catalytic reduction. 
+We have imposed an improvement condition requiring the operator to assess 
+improvements in existing systems (generators and emission locations) for 
+future generators to be installed to increase capacity at the site. 
+Noise management 
+ 
+We have reviewed the noise management plan in accordance with our 
+guidance on noise assessment and control. 
+We consider that the noise management plan is not satisfactory as it did not 
+address potential noise from all the proposed standby generators planned to 
+be present when the site is at full capacity. 
+We consider that the activities carried out at the site have the potential to 
+cause noise and/or vibration that might cause pollution outside the site and 
+consider it appropriate to impose specific measures. We have included a 
+specific improvement condition requiring the operator to carry out an 
+additional noise survey. During the permit determination process, the 
+operator has already commissioned that survey and a report is awaited. See 
+the Key Issues Section of this document for further details. 
+Permit conditions 
+Pre-operational conditions Based on the information in the application, we consider that we need to 
+impose a pre-operational condition for future development.  
+Further information is included in the Key Issues Section of this document. 
+Improvement programme Based on the information on the application, we consider that we need to 
+impose an improvement programme. 
+Further information is included in the Key Issues Section of this document. 
+Emission limits We have decided that emission limits are not required in the permit. 
+Reporting We have specified reporting in the permit to ensure the site is operated to the 
+standards specified in the operating techniques (including prevention of oil 
+and grease in surface water discharged from site) and to ensure the operator 
+informs us of any operation of the facility in emergency mode. 
+Operator competence 
+Management system There is no known reason to consider that the operator will not have the 
+management system to enable it to comply with the permit conditions. 
+The decision was taken in accordance with the guidance on operator 
+competence and how to develop a management system for environmental 

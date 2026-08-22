@@ -1,0 +1,49 @@
+ 
+                       Page 4 of 20 
+We do not consider SO2 emissions to be a risk from the operation of the 
+proposed installation as we have included a condition in the permit restricting the 
+fuel to ultra-low sulphur diesel, resulting in negligible emissions of sulphur. 
+ 
+The applicant has confirmed that the generators will be operating at 100% load 
+during an emergency scenario in the event of the loss of power from the National 
+Grid. The emission concentrations used in the air quality modelling were based 
+upon the manufactures data sheets and were 3280mg/m3 for 3 Perkins 
+4012TAG2A engines and 5100 mg/m3 for the 28 Perkins 401246TWG3A engines 
+(both at 273 K, 101 kPa, dry and 5% O2). The emissions are not in line with the 
+TA-Luft 2g or Tier 2 USEPA emissions standards. This is discussed in detail in 
+the BAT section of this document. 
+ 
+Emissions data sheets for the engines have been provided by the applicant, 
+which we consider as being representative of the emissions from the engines. 
+The applicant has confirmed that the engine emissions presented are based on 
+100% engine loading, which reflects how the engines are used in an emergency 
+scenario. Therefore, the emissions concentrations used in the modelling are 
+appropriate.   
+ 
+We audited the air dispersion modelling and report submitted with the permit 
+application. Both the maintenance testing and emergency scenarios within the 
+modelling were assessed. We agreed with the applicant’s conclusions that 
+predicted levels for the three testing regimes and emergency operations were 
+unlikely to cause an exceedance of the Environmental Standard (ES) for human 
+receptors for NO2, NO, PM10, PM2.5, SO2 and CO and ecological receptors for 
+NOx and SO2.  
+ 
+Four modelling scenarios were run to represent the operations at the installation. 
+Scenarios 1, 2 and 3 assess emissions from generator run times during routine 
+testing and maintenance operations. Scenario 3 represents an emergency power 
+outage where there is loss of power from the National Grid or from an internal 
+power supply failure.  
+ 
+• Scenario 1: Monthly Testing – each generator runs for 5 minutes i.e., 
+within each data hall, each generator is tested simultaneously, then the 
+generators within the next data hall are tested, and so on. 
+• Scenario 2: Quarterly Testing – each generator runs for 15 minutes with 
+sequential data hall testing. 
+• Scenario 3: Annual Load Bank Test – each generator runs for 1 hour with 
+sequential data hall testing. 
+• Scenario 4: Emergency Operation – all generators running for 2 hours 
+followed by half of the generators in each data hall running for 5 days. The 
+applicant explains that only 16 of the generators are needed to meet the 
+site load during emergency operations, therefore, 15 generators would be 
+switched off after the first two hours of a prolonged Scenario 4. 
+ 

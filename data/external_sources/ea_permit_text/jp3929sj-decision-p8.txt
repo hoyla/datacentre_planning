@@ -1,0 +1,40 @@
+ 
+Page 8 of 19 
+Short-term impacts on Ecological Receptors 
+• Process contributions of NOX at all statutory ecological receptors are less 
+than 1% of the environmental standard, therefore we consider impacts 
+from these emissions to be insignificant. 
+• Process contributions of NOX at all local wildlife sites is less than 100% of 
+the environmental standard, therefore we consider impacts from these 
+emissions to be insignificant. 
+Emergency Scenarios: 
+Two emergency scenarios were modelled by the Consultant: 
+• Generators running consecutively for 120 hours, Units 2 and 3 operating 
+separately 
+• Generators from both Units 2 and 3 operating simultaneously for 72 hours. 
+ 
+We consider these scenarios represent a conservative worst case scenario for 
+this installation, given the information provided by the Applicant on the reliability 
+of the connection of the installation to the electric grid. 
+Short-term impacts on both Human and Ecological Receptors 
+We found that there is the potential for exceedance of the NO2, NO2 AEGL-1 and 
+NO short-term environmental standards at sensitive human receptors, and 
+exceedance of the NOX short-term environmental standards at ecological 
+receptors.  However, the structural preventative measures taken to avoid the 
+occurrence of this scenario make the source/pathway/receptor mechanism very 
+unlikely.  For the installation, we consider that the reasonably likely 
+source/pathway/receptor mechanism would consist of periodic testing operation 
+of the generators. 
+The Applicant has confirmed that since 2015, all generators have not been 
+required to run outside of their normal testing regime, aside from one power fault 
+in 2022 which caused only two generators to run simultaneously for a short 
+period. 
+Provided power outages continue to be unlikely, the risk of an air quality 
+exceedance from emergency operation is low.  Furthermore, Emergency 
+Scenario 2 assumes all engines running for 72 hours, whereas in practice, 6 
+generators would ramp down following initial switch on, to support the load of the 
+data centre servers, and buildings.  All generators would not remain operational 
+for a prolonged period to time. 
+Long-term impacts on both Human and Ecological Receptors 
+We found no exceedances of any human or ecological long-term environmental 
+standards.  Furthermore, long-term PCs for SO2, nutrient nitrogen and acid 

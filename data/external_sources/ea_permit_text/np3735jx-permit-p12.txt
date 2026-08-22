@@ -1,0 +1,65 @@
+ 
+Permit number            
+EPR/NP3735JX 12 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Exposure Guidance Limits (AEGLs) and Nitrogen Monoxide 
+(NO).  
+ 
+Maintenance testing hours specified in Modelling Report 
+Addendum: ‘Schedule 5 Response Report, March 2022, 
+Bureau Veritas.’ 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 The operator shall produce an Air Quality Management Plan in 
+conjunction with the Local Authority outlining response measures to be 
+taken in the event of a grid failure. This should include but not be limited 
+to the following considerations:  
+• The response should be tailored to reflect the predicted 
+potential impact indicated by the air dispersion modelling at 
+individual receptors;  
+• Preventative and reactive actions to be implemented to limit  
+the duration of an outage event is limited to less than 50 hours 
+as far as possible; 
+• Specific timescales for response measures; 
+• How local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or 
+time of day; 
+• Contingency for how the response will be carried out in the 
+event scenario i.e. loss of power; and 
+• Timescales for continued review of the management plan. 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+Within 6 months from 
+the date of issue of 
+the permit 
+EPR/NP3735JX/A001 
+IC2 The operator shall submit a plan to reduce the predicted short term 
+nitrogen dioxide (NOx) emissions impacts during the maintenance, 
+testing and emergency operations of the standby generators. This shall 
+include but is not limited to:  
+• A feasibility study including cost benefit analysis for upgrades 
+or other changes to infrastructure or operational regimes on site 
+that could reduce emissions of NOx and increase dispersion; 
+• Use of the above information to propose appropriate changes, 
+including but not limited to an assessment of the following 
+options: changes to stack configuration to enhance dispersion 
+(e.g. vertical emission points and increased stack heights); 
+amending the testing schedule to reduce the daily emissions 
+from the testing operations; upgrading the standby engines to 
+reduce emissions or installing newer ones with lower emissions 
+of NOx; installing NOx abatement. If changes in the height of 
+the stacks are demonstrated to be effective, but are not 
+deemed feasible due to local planning restrictions, the Operator 
+shall provide evidence of the engagement carried out with the 
+Local Authority planning department, in support of this 
+conclusion, and propose other emission reduction options. 
+• The Operator shall submit an updated air dispersion modelling 
+study demonstrating how the proposed option(s), selected 
+among those assessed, result in reduced levels of oxides of 
+Within 9 months from 
+the date of issue of 
+the permit 
+EPR/NP3735JX/A001 

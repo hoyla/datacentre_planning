@@ -1,0 +1,46 @@
+ 
+ Page 7 of 17 
+4. Noise and Vibration 
+ 
+The Application contained a noise impact assessment (NIA) which identified local 
+noise-sensitive receptors, potential sources of noise at the proposed plant and 
+noise attenuation measures. Measurements were taken of the prevailing ambient 
+noise levels to produce a baseline noise survey and an assessment was carr ied 
+out in accordance with BS4142:2014 to compare the predicted generator plant 
+rating noise levels with the established background levels.  
+ 
+We have reviewed the Applicant’s NIA and our review concluded that the noise 
+impact from the installation is likely to be low and therefore we are satisfied that 
+noise impact on nearby sensitive receptors will not be significant. 
+ 
+5. Best Available Techniques (BAT) 
+Technology and Fuel 
+The Applicant considered a range of technologies and fuels as part of the design 
+and specification phase. The Applicant considers the latest generation of gas 
+oil/HVO powered generators to be BAT for this site.  Alternatives, including diesel 
+rotary uninterruptible power supply engines (DRUPS), natural gas engines, LPG 
+engines, gas turbines and hydrogen fuel cells were considered but were not 
+considered operationally viable for this installation.  
+ 
+We accept that gas oil/HVO powered generators are presently a commonly used 
+technology for standby generators in data centres. We are satisfied that the 
+applicant has provided sufficient justification to show that their proposal is BAT. 
+ 
+Engine Specification 
+ 
+Environment Agency guidance specifies the BAT emissions specifications for 
+new gas oil fired reciprocating engines as 2g TA-Luft or US EPA Tier II (or 
+equivalent standard) with NOx emission levels in the range of 2000 mg/m3 at  
+5% oxygen and reference conditions. 
+ 
+The 8 new generators proposed for this installation and included in the Air Quality 
+assessment are emissions optimised and achieve the Tier II USE EPA standard. 
+The maximum design load is 75% per generator and at this load unabated NOx 
+emissions are 1,865mg/Nm3 (at 5% oxygen and standard temperature and 
+pressure). Furthermore, so as to minimise the potential impact of NOx emissions 
+at nearby sensitive receptors, the generators will be fitted with Selective Catalytic 
+Reduction (SCR) emissions abatement with a minimum NOx emission reduction 
+of 81%. We are satisfied that the applicant has provided sufficient justification to 
+show that their proposal is BAT. 
+ 
+ 

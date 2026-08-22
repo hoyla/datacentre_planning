@@ -1,0 +1,21 @@
+Permit number               
+EPR/ZP3527SSEPR/AB1234CD 14 
+Table S1.4 Pre-operational measures 
+Reference Pre-operational measures 
+PO1 Commissioning 
+At least one month before operation the operator shall submit a commissioning plan to 
+the Environment Agency for approval. The plan shall provide timescales for the 
+commissioning of the generators and shall demonstrate that the commissioning of the 
+generators is covered within the site’s permitted regular testing regime, thereby 
+minimising durations and impacts. 
+When the commissioning is not covered within the site’s permitted regular testing 
+regime, the operator shall submit an environmental risk assessment for approval by 
+the Environment Agency, demonstrating that the environmental risks during the 
+commissioning are minimised and remain not significant. The commissioning of the 
+engines shall not begin prior to receiving written approval to the plan and associated 
+environmental risk assessment by the Environment Agency. 
+The plan shall be implemented in accordance with the Environment Agency’s written 
+approval. 
+ 
+ 
+  

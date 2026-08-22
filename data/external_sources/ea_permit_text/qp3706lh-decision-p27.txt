@@ -1,0 +1,42 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 27 of 28 
+Representations from individual members of the public 
+Brief summary of issues raised:  
+1. The proposal to install 40 new generators that do not meet the 2G 
+standard and do not have Selective Catalytic Reduction (SCR) fitted for a 
+site located in an AQMA is unacceptable.  
+ 
+2. The site is located within an area of poor air quality with exceedances of 
+the NO2 standards. The current proposal is unacceptable and if approved 
+would create a precedent for other data centre Operators to do the same 
+and ignore the requirements from the EA FAQ document. 
+ 
+Summary of actions taken:  
+With regards to the new engines not meeting the 2G standard and not having 
+SCR fitted for a site in an AQMA, the following applies: 
+• As described in more detail in the Point Source Emissions to Air section 
+above, the Operator has taken measures to minimise emissions from the 
+gas oil or equivalent fuel generators under emergency, testing and 
+maintenance scenarios. 
+   
+• Both the Data Centre FAQ Headline Approach v21 and Emergency 
+backup diesel engines on installations: best available techniques (BAT) - 
+GOV.UK (www.gov.uk) specifies the BAT emissions specification for new 
+gas oil fired reciprocating engines as emissions optimised to 2g-TA Luft or 
+US EPA Tier 2 or an equivalent. These are the international standards that 
+we have concluded that we will use to infer what BAT is for sites.   
+ 
+• The Operator has confirmed that the additional generators to be used at 
+the data centre are emissions optimised to meet the US EPA Tier 2 
+standard.  
+ 
+With regards to the site being located within an area of poor air quality with 
+exceedances of the NO2 standards, the following applies: 
+• As described in more detail in the Air Quality Section above, the Operator 
+submitted an Air Quality Risk Assessment that considered four main 
+operational scenarios: two testing scenarios (monthly and six-monthly) 
+and two emergency scenarios (outage) of 48 hours and 72 hours and the 
+potential impact of those scenarios at 17 discrete human receptor 
+locations, including residential properties, schools, leisure, commercial, 
+industrial and retail.   
+ 

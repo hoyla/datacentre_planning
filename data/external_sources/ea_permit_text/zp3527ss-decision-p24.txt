@@ -1,0 +1,45 @@
+ 
+EPR/ZP3527SS/A001                            Page 24 of 25 
+Response received from UK Health Security Agency (previously Public Health 
+England)  
+Brief summary of issues raised:  
+• Noted that the Operator indicates that generator testing and maintenance 
+scheduling will not overlap with neighbouring sites. Recommendation that 
+where possible other mitigation measures such as undertaking the testing 
+and maintenance in favourable weather conditions that aid dispersion to 
+minimise the potential for impacts on public health are considered. 
+ 
+• The Operator plans to produce an air quality management plan once the 
+site is operational, which would be implemented in the event of a grid 
+failure. Recommendation that the Environment Agency should satisfy 
+themselves that the proposed measures within the air quality management 
+plan are appropriate to minimise exposures off-site.  
+ 
+• The Operator’s Environmental Risk Assessment outlines a number of 
+mitigation measures related to presented accident/ incident scenarios. 
+This includes a PPM regime which will be implemented once operational 
+to cover visible emissions occurrences, visual checks on leaks/ spills/ 
+smoke emissions and generator maintenance but no additional details are 
+provided. Recommendation that the Environment Agency should satisfy 
+themselves that there are appropriate procedures in place. 
+ 
+Summary of actions taken:  
+With regard to the Operator’s generator testing and maintenance schedule, as 
+described in more detail in the Air Quality Section above, we audited the 
+Operator’s air quality assessment, including undertaking detailed check 
+modelling and completing sensitivity analysis. We agree with the Consultant’s 
+overall conclusions that the site is unlikely to cause an exceedance of an ES at 
+human health receptors and is unlikely to make a significant contribution to or 
+cause an exceedance of any critical loads and levels at ecological receptors 
+providing they adhere to their testing and maintenance schedule. 
+With regard to the air quality management plan, we have specified that the 
+Operator shall have a written Air Quality Management Plan (AQMP) to manage 
+the risks for prolonged emergency running of the plant and limit the duration of an 
+outage event to less than 50 hours, as far as possible. This needs to be 
+proportionate to the level of risk at the receptors. The Operator is expected to 
+work with the Local Authority to develop this plan to ensure local factors are fully 
+considered.  
+ 
+With regard to the Operator’s proposed PPM regime, we have received further 
+information from the Operator regarding their PPM and inspection regime and we 
+are satisfied that there are appropriate procedures in place. 

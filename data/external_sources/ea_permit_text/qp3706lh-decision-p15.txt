@@ -1,0 +1,40 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 15 of 28 
+The Variation will lead to an additional fuel storage capacity of 1,193,500 litres 
+which comprises of: 
+• 40x day (belly) fuel tanks with a capacity of 1,200 litres. 
+• 17x bulk fuel tanks with a capacity of 61,000 litres. 
+• 2x bulk fuel tanks with a capacity of 38,500 litres.  
+• 1x bulk fuel tank with a capacity of 31,500 litres. 
+ 
+The existing permit allows a total capacity of 691,200 litres of fuel to be stored. 
+Following this Variation, the total fuel permitted to be stored on site will be 
+1,884,700 litres. 
+Day (Belly) Tanks 
+This Variation will lead to the addition of 40 new day (belly) tanks which are 
+adjacent to the new generators. Each day (belly) tank has a capacity of 1,200 
+litres. The day (belly) tanks are constructed from carbon steel sheets of varying 
+thickness dependent on tank size and are double skinned (integrally bunded).  
+The day (belly) tanks conform to the following specifications and standards: 
+• BS 799 Welding to be carried out i.a.w. BS EN 1011-1:2009 with reference 
+to BS EN 1011-2:2001. 
+• Inspection & testing to be carried out i.a.w. B EN 1011-1:2009. 
+• All tanks are stiffened in accordance with BS 799-5:2010. 
+• BS EN 12285-2. 
+ 
+The day (belly) tanks have leak detection in place which alarms if fuel is detected 
+within the secondary containment. There is also remote monitoring of tank levels 
+with alarms that sound if there is a change in fuel levels. All alarms are linked to 
+the local control system and BMS system. The tanks will be protected against 
+corrosion internally by being treated with an anticorrosion coating and externally 
+by being painted to C3 standards. 
+Bulk Fuel Tanks 
+This Variation will lead to the addition of 20 new bulk fuel tanks which are located 
+on the ground floor of the building underneath the banks of generators in the 
+north tank room and south tank room. The bulk fuel tanks vary in capacity. The 
+tanks are constructed from carbon steel sheets of varying thickness dependent 
+on tank size and are double skinned (integrally bunded).  
+The bulk fuel tanks conform to the following specifications: 
+• BS 799 Welding to be carried out i.a.w. BS EN 1011-1:2009 with reference 
+to BS EN 1011-2:2001. 
+• Inspection & testing to be carried out i.a.w. B EN 1011-1:2009. 

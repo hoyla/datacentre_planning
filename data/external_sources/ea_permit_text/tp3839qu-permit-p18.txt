@@ -1,0 +1,72 @@
+Permit number                              
+EPR/TP3839QU 18 
+Schedule 4 – Reporting 
+Parameters, for which reports shall be made, in accordance with conditions of this permit, are listed below.  
+Table S4.1 Reporting of monitoring data 
+Parameter Emission or 
+monitoring 
+point/reference 
+Reporting period Period begins 
+Emissions to air  
+Parameters as required by 
+condition 3.5.1.  
+ 
+A1 to A16 Every 1500 hours of 
+operation once or every 
+five years (whichever 
+comes first)   
+From date of acceptance 
+of first monitoring 
+measurements under 
+condition 3.5.2   
+Note 1  
+ 
+Note 1: Unless otherwise agreed in writing with the Environment Agency as a result of approval of 
+Improvement Condition IC5.  
+ 
+Table S4.2 Performance parameters 
+Parameter Frequency of assessment Units 
+Gas oil (or equivalent substitute 
+agreed in writing with the 
+Environment Agency) usage 
+Annually Tonnes 
+Generator operation for 
+maintenance  
+Report to be submitted 
+annually 
+- Total hours for the site (hours), 
+- Total hours per generator (hours),  
+- Total number of runs per generator 
+(quantity) 
+- Number of minutes per run 
+(minutes) 
+Generator operation during 
+emergency scenario 
+Within 24 hours if operation 
+commences 
+- Date and time of grid failure, 
+- Number of generators operating 
+immediately after the failure, 
+- Number of generators operating two 
+hours after failure, 
+- Anticipated duration of the mains 
+supply failure (hours) 
+Generator operation during 
+emergency scenario 
+Annually - Total number of runs (quantity) 
+- Duration of runs (hours) 
+ 
+Table S4.4 Reporting forms 
+Parameter Reporting form Form version 
+number and date 
+Air  Emissions to Air Reporting Form or other form as agreed 
+in writing by the Environment Agency 
+Version 1, 
+08/03/2021  
+Other performance 
+parameters 
+Other Performance Parameters Reporting Form, or other 
+form as agreed in writing by the Environment Agency 
+As agreed with 
+the Environment 
+Agency 

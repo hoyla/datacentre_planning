@@ -1,0 +1,40 @@
+ 
+LIT 11984  [Publish date]                     Page 5 of 24 
+If firewater is used, the drainage system has been designed to contain potentially 
+contaminated run off. In such circumstances, penstock valves will be closed so 
+firewater is held within the system until it can be removed and the drains flushed. 
+Small spills will be managed by the interceptors, while larger incidents will rely on 
+the containment provided by the drainage system. The operator confirmed 
+containment of firewater and spillages will comply with CIRIA Guide C736 
+Containment systems for the prevention of pollution. 
+ Interceptors 
+The operator confirms a full oil retention interceptor (class 1) with automated 
+closure devices local to point source of pollution risks (fuel storage or delivery 
+areas) will be provided. The oil interceptors are included within the surface water 
+drainage system for each generator compound, and these will be regularly 
+emptied and maintained. 
+Hydrocarbon detectors are installed within interceptors located in areas of 
+concrete hardstanding. These detectors identify changes in water composition 
+(e.g., conductivity) and generate a critical alarm. The system automatically closes 
+the drainage outlet upstream of the attenuation pond, ensuring any fuel is 
+retained in the interceptor. Specialist contractors will be engaged to remove 
+contaminated water and reinstate the interceptor following an alarm event. 
+ 
+Air Quality 
+In line with the Environment Agency’s guidance (Air emissions risk assessment 
+for your environmental permit - GOV.UK (www.gov.uk)) and the relevant parts of 
+the guidance applicable to the assessment of air dispersion modelling of 
+emissions from generators (Specified generators: dispersion modelling 
+assessment - GOV.UK (www.gov.uk)) the operator submitted detailed air 
+dispersion modelling and impact assessment to assess the predicted impacts on 
+human receptors and ecological sites.  
+The methodology for risk assessment of point source emissions to air, and the 
+associated definitions, are set out in our guidance Air emissions risk assessment 
+for your environmental permit - GOV.UK (www.gov.uk). 
+Applicant’s Assessment of Potential Impact on Air Quality 
+The applicant submitted an Air Emissions Risk Assessment prepared by Hoare 
+Lea (the consultant), which considered the potential impacts of the principal 
+pollutants of concern with respect to emissions to air from low sulphur gas oil/ 
+HVO generators. The consultant has assessed the potential long-term and short-
+term impacts of nitrogen oxides (NOx), particulate matter (PM), volatile organic 
+compounds (VOCs) assessed as benzene, carbon monoxide (CO), and sulphur 

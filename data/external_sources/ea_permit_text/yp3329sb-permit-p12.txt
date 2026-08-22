@@ -1,0 +1,61 @@
+Permit number          
+EPR/YP3329SB 12 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application 
+EPR/YP3329SB/A001 
+SCR Abatement 
+NOx abatement efficiency for the selective catalytic reduction 
+systems (SCR) detailed in application documents Chandos 
+Road – LHR11 and LHR12 EPR/YP3329SB/A001 Air Quality 
+dated November 2023, supplemented by ‘Technical Note’ 
+dated 28/03/2024. 
+ Duly Made 
+ 29/02/24 
+Application 
+EPR/YP3329SB/A001 
+Noise management plan in response to Form B3, Section 3b 
+General requirements (Table 4) of the application form. 
+ Duly Made 
+29/02/24 
+Response to Schedule 5 
+Notice dated 19/04/2024 
+Response to questions 2-6 detailing containment control and 
+questions 7-8 detailing drainage. 
+ 24/05/24 
+Response to Request for 
+Further Information 
+dated 05/06/24  
+Detailing tanker unloading bay containment.  19/06/24 
+ 27/06/24 
+ 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 Air Quality Management Plan (AQMP) 
+The operator shall produce an AQMP in conjunction with the Local 
+Authority outlining response measures to be taken in the event of a grid 
+failure. This should include but not be limited to the following 
+considerations:  
+• The response should be tailored to reflect the predicted potential 
+impact indicated by the air dispersion modelling at individual 
+receptors;  
+• Preventative and reactive actions to be implemented to limit the 
+duration of an outage event to less than 50 hours as far as 
+possible; 
+• Specific timescales for response measures; 
+• How local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or time 
+of day; 
+• Contingency for how the response will be carried out in the event 
+scenario i.e. loss of power;  
+• Timescales for continued review of the management plan; and 
+• Addition of indicative air quality monitoring stations around the 
+site to inform on air quality during extended periods of standby 
+generator running including prolonged grid outages. 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+Within 6 months 
+from the date of 
+issue of the 
+permit  
+EPR/YP3329SB 

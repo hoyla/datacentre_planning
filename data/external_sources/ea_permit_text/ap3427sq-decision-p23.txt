@@ -1,0 +1,41 @@
+ 
+Page 23 of 29 
+The following improvement conditions (ICs) have been included in the permit: 
+ 
+IC1 - Air Quality Management Plan (AQMP) 
+We have specified that the operator shall have a written action Air Quality 
+Management Plan (AQMP) to manage the risks for prolonged emergency running 
+of the plant and limit the duration of an outage event to less than 50 hours, as far 
+as possible. This needs to be proportionate to the level of risk at the receptors. 
+The operator is expected to work with the Local Authority to develop this plan to 
+ensure local factors are fully considered. 
+ 
+IC2 - Short-term nitrogen oxides and dust concentrations - monitoring 
+plan 
+We have set improvement condition 2 (IC2) requiring the operator to detail 
+proposals and subsequently undertake a monitoring programme to verify the 
+predicted short-term nitrogen oxides (NOx) and dust concentrations at the 
+boundary of the site or off-site locations of sensitive receptors as appropriate. 
+ 
+IC3 - Short-term nitrogen oxides and dust concentrations - monitoring 
+report 
+Improvement condition 3 (IC3) requires the operator to submit a report detailing 
+the results and conclusions of the emissions monitoring undertaken as part of 
+IC2. This will contribute to the validation of conclusions reached in the air 
+quality assessment and inform the air quality management plan. IC3 also 
+requires the operator to review the options for reducing the predicted emission 
+impacts. The reduction measures are expected to achieve a reduction of 
+impacts during both the maintenance/testing and emergency operations. In 
+setting IC2 and IC3 we have considered the level of the NOx peaks predicted 
+by the Applicant’s modelling. 
+ 
+IC4 - Monitoring plan - flue gas monitoring requirements 
+The operator shall submit a monitoring plan for assessment and written 
+approval by the Environment Agency detailing their proposal for the 
+implementation of the flue gas monitoring requirements specified in table S3.1, 
+in line with web guide ‘Monitoring stack emissions: low risk MCPs and specified 
+generators’ Published 04 June 2024 (formerly known as TGN M5). 
+ 
+We have included this improvement condition to ensure that they comply with the 
+monitoring requirements of the permit.  
+ 

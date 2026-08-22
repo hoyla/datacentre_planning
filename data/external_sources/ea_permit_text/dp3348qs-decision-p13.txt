@@ -1,0 +1,36 @@
+ 
+                       Page 13 of 17 
+OFFICIAL 
+OFFICIAL 
+The operating techniques that the applicant must use are specified in table S1.2 
+in the environmental permit. 
+Use of conditions other than those from the template 
+Based on the information in the application, we consider that we do not need to 
+include conditions other than those in our permit template. 
+National Air Pollution Control Programme 
+We have considered the National Air Pollution Control Programme as required by 
+the National Emissions Ceilings Regulations 2018.  By setting emission limit 
+values in line with technical guidance, or by imposing a limit to the operational 
+hours through the permit conditions, we are minimising emissions to air.  This will 
+aid the delivery of national air quality targets.  We do not consider that we need 
+to include any additional conditions in this permit. 
+Raw materials 
+We have specified limits and controls on the use of raw materials and fuels. 
+Improvement programme 
+Based on the information on the application, we consider that we need to include 
+an improvement programme. 
+We have included an improvement condition IC1 that requires the operator to 
+develop an air quality management plan in conjunction with the Local Authority.  
+The plan should consider and co-ordinate measures taken at other Virtus data 
+centres operating in the locality (LON9 Data Centre and Virtus Slough Campus 
+Data Centres). 
+We have included an improvement programme (IC2) on monitoring of emissions 
+(see ‘Monitoring’ section below). 
+We have included improvement condition IC3 that requires the operator to 
+provide evidence that the generators have been remapped to comply with BAT 
+emissions standards (i.e. TA Luft 2g or US EPA Tier II or an equivalent 
+standard). 
+We have included improvement condition IC4 that requires the operator to install 
+shut-off valves with oil detection prior to the discharge point into each soakaway.   
+Emission Limits 
+We have decided that emission limits are not required in the permit. 

@@ -1,0 +1,48 @@
+ 
+Page 12 of 25 
+Based on the modelled emergency scenario representing a 72-hour power outage, 
+we found that: 
+• The 99.79th percentile 1-hour NO2 PCs and PECs could exceed the ES, 
+however, statistical analysis using a hypergeometric probability 
+distribution indicates that the chance of exceedance is less than 1% 
+which we consider highly unlikely. 
+For annual impacts, inclusive of both testing and 72 hours of emergency 
+operations, we find that: 
+• The annual NO
+2 PCs are ‘not insignificant’; however, the PECs are all 
+below the relevant ES. 
+Ecological assessment 
+Based on the modelled testing scenario where each engine is tested individually, 
+we found that: 
+• We cannot rule out exceedances of the daily mean NO
+X critical level of 
+200 µg/m 3 during the annual test where all 13 generators are tested 
+individually for one hour within the same 24- hour period, should 
+operations coincide with worst-case meteorological conditions. Note that 
+this is a once -a-year event and predicted exceedances are s mall, 
+therefore, we consider exceedances to be unlikely. 
+• For the monthly test, the daily mean NO X PCs are unlikely to cause an 
+exceedance of the daily mean NO X critical level of 200 µg/m 3 provided 
+no more than five engines are tested within a single day.  
+• The BAT Assessment1 for Colt Powergate states that each data hall is 
+tested on separate weeks (Table 4.1). The largest data hall contains five 
+generators, so there will be no more than five hours of testing in a single 
+day. 
+• We have modelled the 100
+th percentile 1-hour NOX PC and assumed 
+that this PC occurs for five hours within a 24- hour period to calculate a 
+reasonable worst-case daily mean NO X PC. Our daily mean NO X PCs 
+are not predicted to exceed the critical level of 200 µg/m3. 
+Based on the modelled emergency scenario representing a 72-hour power outage, 
+we find that: 
+• The daily mean NOX PCs could exceed the 200 µg/m3 critical level at the 
+Silverlink Metro and Dudding Hill Loop LWS, Wesley Playing Fields LWS 
+and London’s Canals LWS should prolonged emergency operations 
+coincide with worst -case meteorological conditions, however, we 
+consider exceedances to be unlikely provided grid reliability remains 
+high. 
+For annual impacts, inclusive of both testing and 72 hours of emergency 
+operations, we find that: 
+ 
+1 Colt Powergate Data Centre – Best Available Technique Assessment – DP3107LF, reference 10290863, 
+data June 2022. 

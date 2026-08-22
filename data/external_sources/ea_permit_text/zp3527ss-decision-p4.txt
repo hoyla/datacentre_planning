@@ -1,0 +1,39 @@
+ 
+EPR/ZP3527SS/A001                            Page 4 of 25 
+commence during the first 15 to 20 minutes of generator operation (warm-up 
+time), but for the purposes of the Air Quality Assessment, it was assumed that 
+ammonia slip would occur as soon as the genrators operated. This is considered 
+BAT. 
+Aqueous Releases from Site 
+The Operator confirmed that there will be no process emissions to surface water, 
+foul sewer, groundwater, or land associated with the site. 
+The Operator confirmed that the site’s drainage system is split into separate foul 
+and surface water networks. This network serves the entire campus irrespective 
+of the Operator/permit boundaries as it was originally designed for a single 
+Operator for all 3 data centres. 
+As this site (EC3) lies adjacent to EC1 and EC2 (already permitted), the surface 
+water and foul drainage emission points for EC3 will be the existing emission 
+points in the EC1 and EC2 permit. These emission points will not be included in 
+the permit as there cannot be dual regulation as it is already in the permit for EC1 
+and EC2. Therefore, 3 manholes have been identified that are close to the 
+boundary with EC1 and EC2 that are considered to be the point at which the 
+surface water and foul drainage system is discharged from EC3 into the campus 
+drainage system of EC1 and EC2. 
+The Operator confirms that there will be an arrangement between both Operators 
+regarding action to be taken should pollution be identified at any of the listed 
+emissions points to determine the source of the pollution and which Operator is 
+at fault and thus responsible. 
+Point Source Emissions to Foul Sewer 
+The Operator confirmed that there will be no contaminated emissions to the site 
+foul sewer system associated with the regulated activity undertaken at the 
+Installation. 
+Drainage from the fuel filling area, which includes the receiver fuel storage tanks 
+discharges to the site foul sewer system via a Class I forecourt separator. 
+The site foul sewer system covering EC3 discharges into the already permitted 
+EC1 and EC2 site via 1 manhole referenced as FWMH1 on the Plan in Schedule 
+7 of the permit.  
+The campus foul sewer system then discharges from EC1 and EC2 via a point 
+source emission into the public foul sewer system maintained by Thames Water 
+referenced as FW1 on the Plan in Schedule 7 of the permit (FW1 is not covered 
+by this permit).The final point of discharge from the sewer is the River Thames 
+via Beckton Sewage Treatment Works. 

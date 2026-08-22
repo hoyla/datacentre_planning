@@ -1,0 +1,36 @@
+ 
+LIT 11984  [Publish date]                     Page 6 of 24 
+dioxide (SO2) at sensitive human and ecological receptors within the defined 
+screening distances. 
+Although the consultant assessed VOCs as benzene, they used an old benzene 
+environmental standard (ES), applying the 1-hour ES rather than the new 24-
+hour ES for all scenarios, and an inappropriate statistical approach. We have 
+therefore assessed the 100th percentile 24-hour PCs against the current 
+standard. Though there are exceedances for VOCs as benzene, we consider that 
+VOC as benzene, is likely to be low for modern, well-maintained and efficiently 
+operated generators, where combustion is optimised in accordance with the 
+manufacturer’s specification. As such we don’t consider VOCs to be an issue.   
+Human Receptors 
+The consultant has modelled predictions at 61 discrete receptor locations to 
+represent human exposure.  
+Ecological Receptors 
+Using the Environment Agency guidance distance criteria, the consultant 
+identified 27 SSSIs and 3 SACs (Oxford Meadows SAC, Little Wittenham SAC 
+and Cothill Fen SAC) within the wider 15 km screening distance, and 1 Ancient 
+Woodland within 2 km. No European sites are located within 10 km of the facility. 
+The 27 SSSIs are: 
+• Appleton Lower Common SSSI  
+• Ashridge Wood SSSI  
+• Aston Upthorpe Downs SSSI  
+• Barrow Farm Fen SSSI  
+• Brasenose Wood and Shotover Hill SSSI  
+• Cothill Fen SSSI  
+• Culham Brake SSSI  
+• Cumnor SSSI  
+• Dry Sandford Pit SSSI  
+• Frilford Heath Ponds and Fens SSSI  
+• Holies Down SSSI  
+• Hurst Hill SSSI  
+• Iffley Meadows SSSI  
+• Lamb and Flag Quarry SSSI  
+• Langley's Lane Meadow SSSI  

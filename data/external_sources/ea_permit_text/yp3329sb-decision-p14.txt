@@ -1,0 +1,44 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 14 of 28 
+Containment and Prevention of Pollution to Ground, Surface water and 
+Groundwater 
+Fuel Storage, Distribution and Containment 
+The operator has demonstrated that there are robust systems in place for the containment of fuel.  
+Fuel Storage - Day (Belly) Tanks 
+Gas oil or equivalent fuel will be stored at the site in day (belly) tanks. The day tanks will be 
+located adjacent to each generator set providing the generators with a minimum of 1‐hour fuel 
+storage capacity. 
+Fuel storage - There are 37-day tanks on site and each stores approximately 1,000 litres of fuel. 
+Therefore, there is a total of 37,000 litres of fuel (37 generators @ 1,000 litres = 37,000 litres) 
+stored in the day tanks. 
+Fuel Storage - Below Ground Bulk Storage Tanks 
+Gas oil or equivalent fuel will also be stored at the site in 4 below ground bulk storage tanks 
+providing 24‐hours fuel storage capacity for all 37 generator units at the Installation. 
+Fuel storage - There are 4 below ground bulk storage tanks and each stores 90,000 litres of fuel. 
+Therefore, there is a total of 360,000 litres of fuel (4 bulk storage tanks @ 90,000 litres = 360,000 
+litres) stored in the below ground bulk storage tanks. 
+The total capacity for fuel storage on this site is 397,000 litres. This is considered by the operator 
+to represent sufficient capacity to enable the operation of all generators at the site at full load for a 
+maximum period of 24-hours without the need to refuel (providing redundancy of N+1). 
+Containment Protection - Day (Belly) Tanks 
+The generator sets are present inside a generator building for LHR11 (17 generators) and within 
+dedicated acoustic enclosures on a gantry for LHR12 (20 generators). No drainage exists within 
+the structures accommodating the generator units. 
+Each generator will be provided with a day tank containing sufficient fuel for the units to operate 
+for a minimum of one hour at 100% load, with each tank operating independently.  Each day tank 
+will be contstructed from mild steel and be located adjacent to the generator it serves, with fuel 
+being transferred from the tanks to the generating sets using pumps located within tank.  
+The independent day tanks will be fed from the below ground bulk tanks located externally to the 
+generator buildings, via the fuel pump located within a dedicated pump room within each 
+generator building. Each of the day tanks will permanently be plumbed into the bulk fuel storage 
+system. 
+The day tanks will have the following protection measures to ensure no loss of containment:  
+• Constructed from mild steel to BS 799-5:2010 with a secondary containment (integrally 
+bunded) capacity of 110% of the capacity of the primary storage container. 
+• Located internally in the generator building/container, limiting exposure to the elements 
+and reducing the risk of corrosion. 
+• Automatic leak detection with bund alarms to detect any failure in the primary 
+containment structure. The bund alarms will be linked to the SCADA system which 
+monitors the generators and associated equipment.  
+• Level detectors linked to the SCADA system showing actual tank contents.  
+• A common overfill and drain line connected to an external dump tank for LHR11 only. 

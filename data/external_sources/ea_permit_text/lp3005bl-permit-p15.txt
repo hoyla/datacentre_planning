@@ -1,0 +1,126 @@
+Permit number                              
+EPR/LP3005BL 15 
+Schedule 3 – Emissions and monitoring 
+Table S3.1  Point source emissions to air – emission limits and monitoring requirements 
+Emission point 
+ref. & location 
+Source Parameter Limit 
+(including 
+unit)  
+Reference 
+period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+A1 to A11 
+Emission points 
+from generators 
+as shown on site 
+plan in schedule 
+7 
+Diesel 
+generator 
+exhausts 
+10 x 6.8 
+MWth 
+1 x 1.7 
+MWth 
+Oxides of 
+Nitrogen  
+(NO and 
+NO2 
+expressed 
+as NO2) 
+No limit set - No 
+requirement 
+ 
+- 
+Carbon 
+monoxide 
+No limit set - No 
+requirement 
+- 
+Sulphur 
+dioxide 
+No limit set - No 
+requirement 
+- 
+Particulate 
+Matter 
+No limit set - No 
+requirement 
+- 
+Vents associated 
+with bulk diesel 
+storage tank 
+Vents from 
+bulk 
+storage 
+tank   
+No 
+parameter 
+set 
+No limit set - No 
+requirement 
+- 
+ 
+Table S3.2 Point Source emissions to water (other than sewer) and land – emission limits and 
+monitoring requirements 
+Emission point 
+ref. & location 
+Source 
+Parameter   Limit 
+(incl. 
+Unit) 
+Reference 
+period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+W1  
+Emission point 
+to Moor Ditch as 
+shown on site 
+plan in schedule 
+7 
+Uncontaminated 
+surface water 
+via interceptor 
+and balancing 
+pond 
+- - - - - 
+ 
+Table S3.3 Point source emissions to sewer, effluent treatment plant or  other transfers off-site– 
+emission limits and monitoring requirements 
+Emission point 
+ref. & location 
+Source Parameter   Limit 
+(incl. 
+Unit) 
+Reference 
+period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+S1  
+Emission point to 
+Thames Water 
+sewer as shown 
+on site plan in 
+schedule 7. 
+Potentially 
+contaminated  
+rainwater 
+from 
+generator 
+stacks 
+- - - - - 
+ 
+ 
+ 

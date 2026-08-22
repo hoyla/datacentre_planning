@@ -1,12 +1,20 @@
-"""Who tells what to whom: the same companies, across four audiences.
+"""Who tells what to whom: the same companies, across five audiences.
 
-A data centre's size is stated to at least four different audiences, and
-this project now holds all four — the planning authority (the site's own
+A data centre's size is stated to at least five different audiences, and
+this project now holds all five — the planning authority (the site's own
 application documents), the grid operator (NESO's register of contracted
-connections), the auditors (accounts filed at Companies House) and
-customers (the operator's own website). This module puts them beside each
-other, one row per operator, computed from `capacity_claims` so nothing
-here can drift from the figures the site panels show.
+connections), the auditors (accounts filed at Companies House), customers
+(the operator's own website) and the environmental regulator (the standby
+generator fleet in the site's environmental permit). This module puts
+them beside each other, one row per operator, computed from
+`capacity_claims` so nothing here can drift from the figures the site
+panels show.
+
+The regulator's column is different in kind from the other four and is
+labelled so wherever it renders. It is a thermal rating in MWth, not
+electrical megawatts, so it never enters the like-for-like comparison
+below — but it is the only one of the five that a company cannot decline
+to make, and it is the best-covered: 35 permits against 12 filings.
 
 **The subject is the pattern of disclosure, not a scoreboard of secrecy.**
 Almost none of these companies has any duty to publish capacity at all,
@@ -48,12 +56,16 @@ AUDIENCES = (
       "Companies House.")),
     ("customers", "Customers",
      "Capacity published on the operator's own website."),
+    ("regulator", "The environmental regulator",
+     ("Rated thermal input of the standby generator fleet, from the "
+      "site's environmental permit. Thermal, not electrical.")),
 )
 
 SOURCE_TO_AUDIENCE = {
     "neso_ea_register": "grid",
     "companies_house": "auditors",
     "operator_website": "customers",
+    "ea_permit": "regulator",
 }
 
 FAIRNESS_NOTE = (

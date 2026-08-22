@@ -1,0 +1,37 @@
+ 
+Page 10 of 19 
+emissions with NOX concentration of 1830mg/m3 at 5% reference oxygen and 
+normal conditions (at 100% load).  All other existing generators do not meet 2g 
+TA-Luft, Tier II US EPA or an equivalent standard.  We have included 
+Improvement Conditions IC2 and IC3 to ensure impacts from NOX emissions at 
+the site boundary are monitored, and improvements to reduce these impacts are 
+undertaken where required. 
+Electrical Reliability 
+As the operation of generators is considered undesirable, the incoming power 
+system was designed to ensure that only the most major power outages would 
+trigger the need for the generators to be used to support the data centre. 
+Initially when a fault is detected an ‘uninterruptible power supply’ is provided by 
+on-site battery arrays to cover any potential loss or deduction in the supply to 
+data servers for 6 minutes. 
+Power to the site is provided by the National Grid, received from two substations.  
+Therefore, if either power feed is unavailable, the on-site power system could be 
+re-aligned without engaging back-up generators. 
+The applicant noted that since 2015, the generators have only run outside of 
+normal testing once during a power fault in 2022, which caused two generators to 
+run.  
+Permit Conditions 
+The permit limits use of generators to exclude voluntary elective power 
+generation (e.g. Triad avoidance, STOR etc).  Furthermore, generators are 
+limited to 500 hours per year for emergency back-up. 
+Routine testing of generators is <50 hours per year, with the operating 
+techniques incorporated into Table S1.2 in the permit.  Emission limit values have 
+not been incorporated into the permit, as they are not applicable when operating 
+the combustion plant for <500 hours per year. 
+Monitoring requirements are included in the permit for all plant, with initial 
+measurements required before 01/01/2030.  This monitoring is included for NOx 
+and CO every 1500 hours of operation or once every five years (whichever 
+comes first). 
+Limits to the AR1 activity within the permit exclude any elective power operation 
+such as Short-Term Operating Reserve (STOR) and triad management activities. 
+ 
+ 

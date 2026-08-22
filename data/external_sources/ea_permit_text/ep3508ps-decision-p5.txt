@@ -1,0 +1,47 @@
+ 
+ Page 5 of 17 
+Our audit of the modelling agrees with the operator’s conclusion that 
+exceedances of any relevant long-term environmental standard of any pollutant 
+assessed is unlikely.  
+ 
+Ecological Receptors: 
+ 
+Short-term and long-term impacts were considered. The modelling considered air-
+borne NOx,. In addition to nitrogen deposition and acidification  considering inputs 
+from both Nitrogen and Sulphur Dioxide.  
+ 
+The short and long-term emissions either screened out alone where the process 
+contribution (PC) was less than 1% or 10% of the significance threshold or, 
+following the consideration of background concentrations, where the Predicted 
+Environmental Concentration (PEC) was less than 100% of the significance 
+threshold. Therefore, on this basis all short and long-term emissions screen out 
+and no further assessment is necessary. 
+ 
+Our audit of the modelling agrees with the operator’s conclusion that NOx, 
+nutrient nitrogen and acid deposition exceedances of all environmental standards 
+for any pollutant are unlikely.  
+ 
+Emergency scenario 
+ 
+The emergency scenario that has been modelled is based upon all generators 
+operating simultaneously for  37 hours. The number of hours used has not been 
+defined based upon an anticipated emergency scenario  or the amount of fuel 
+stored on site (48 hours) . It is a calculated value which defines the maximum 
+number of hours the site could operate during an emergency for the probability of 
+an exceedance to be highly unlikely for human receptors or unlikely for ecological 
+receptors.  
+ 
+Prolonged operation of the installation is not expected. Short term operation is 
+more realistic for the reasons described below. 
+ 
+The permit application has assessed and provided evidence of the reliability of 
+the National Electricity Grid distribution allowing the Environment Agency (EA) to 
+judge that the realistic likelihood of the plant needing to operate for prolonged 
+periods in an emergency mode is low. As this is a new bespoke application, there 
+are no records available for historical outages at the site. There are historic 
+records for the operational CyrusOne UK4 Limited datacentres referred to as 
+CyrusOne London 1 (not regulated by the EA), CyrusOne London 2 (not 
+regulated under EPR) and CyrusOne London 3 (not regulated by the EA). There 
+is no record of any grid failure at these installations (response to request for 
+information 23/02/2022). 
+ 

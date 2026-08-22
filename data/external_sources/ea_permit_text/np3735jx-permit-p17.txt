@@ -1,0 +1,28 @@
+ 
+Permit number            
+EPR/NP3735JX 17 
+ 
+Table S4.2 Performance parameters 
+Parameter Frequency of assessment Units 
+Generator operation for emergency 
+running 
+Annually - total number of occurrences 
+of operation of generators 
+(number); 
+- total duration of operation of 
+generators (hours) 
+ 
+Table S4.3 Reporting forms 
+Parameter Reporting form Form version 
+number and date 
+Other performance 
+indicators 
+Form Performance 1 or other form as agreed in writing by 
+the Environment Agency 
+07/07/2022 
+Generator operation during 
+emergency scenario 
+Form Emergency Scenario or other form as agreed in 
+writing by the Environment Agency 
+07/07/2022 
+  

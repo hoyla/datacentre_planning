@@ -1,0 +1,47 @@
+ 
+                       Page 19 of 32 
+Maylands. 
+Run-off drains to the on-site surface water drainage system via an oil interceptor prior to off-site 
+discharge into the municipal sewer system. Surface water runoff discharges via one discharge 
+point (ML-SW1) off site. The location of discharge point ML-SW1 is presented on its site plan in 
+Schedule 7 (drawing 002C in the permit application documentation). 
+There are two interceptors on the Maylands site. The surface water runoff from the area where 
+the generators and associated bulk diesel storage are located is directed via the interceptor 
+located in the south western area of the datacentre site, prior to discharge off site into the 
+municipal drainage system. 
+Centro. 
+Run-off from plant areas drains to the on-site surface water drainage system prior to off-site 
+discharge into the municipal sewer system.  Surface water runoff discharges via discharge point 
+(Centro C-SW1) off site. There are no oil interceptors in place on the Centro datacentre site. The 
+location of discharge point Centro C-SW1 is presented on its site plan in Schedule 7 (drawing 
+002B in the permit application documentation). 
+HH4 (Phase 1). 
+Run-off from plant areas drain to the on-site surface water drainage system prior to off-site 
+discharge into the municipal surface water drainage system operated by Thames Water Limited 
+via discharge point HH4-SW1. All run-off from this area will drain to the on-site surface water 
+drainage system via a full retention oil interceptor (with an alarm to indicate the presence of oil) 
+and a below ground storm water attenuation tank (700m3) prior to off-site discharge into the 
+municipal sewer system. The interceptor will be emptied, cleaned and maintained at least 
+annually by an appointed specialist contractor. The location of discharge point HH4-SW1 is 
+presented on its site plan in Schedule 7 (drawing 002D in the permit application documentation). 
+An improvement condition, IC10, has been included in the permit requiring the operator to confirm 
+surface water discharge from the Maylands and Centro sites and to assess, with improvements if 
+required, whether the surface water from the four data centre sites eventually is discharged to a 
+waste water (sewage) treatment plant. 
+ 
+Permit Conditions. 
+The permit will include a maximum 500 hours per annum ‘emergency/standby operational limit’ 
+for any or all the plant producing on-site power under the limits of the combustion activity. 
+Therefore emission limit values (ELVs) to air and engine emissions monitoring are not required 
+within the permit. Emergency hours’ operation includes those unplanned hours required to come 
+off grid to make emergency repair of electrical infrastructure associated but occurring only within 
+the data centre itself. 
+Each individual generator with its own discharge stack, can be maintained, tested and used in a 
+planned way for up to 500 hours per calendar year each without ELVs or associated monitoring 
+under the Industrial Emissions Directive (IED) and Medium Combustion Plant Directive (MCPD). 
+The Environment Agency expects planned testing and generator operations to be organised to 
+minimise occasions and durations (subject to client requirements). 
+The permit prevents any electricity produced at the installation from being exported to the 
+National Grid. 
+Operational and management procedures should reflect the outcomes of the air quality modelling 
+by minimising the duration of testing, the duration and frequency of whole site tests and planning 

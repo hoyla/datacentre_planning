@@ -1,0 +1,46 @@
+EPR/PP3003PW/A001 
+Date issued: 07/07/2020  3 
+3. Hours of operation 
+The Applicant intends to plan their maintenance and proposes operation of 33 generators which will be less 
+than 500 hours. Operation of the generators includes: 
+ Every month one group of standby generators is tested. 
+ Annually a full service test is undertaken where one stand-by diesel generator is started and loaded 
+using a load bank. Only one generator is tested per day; 
+ In the event of main power supply (grid failure). 
+ 
+In 10 years of operation there has been no grid event that has caused all the standby generators to start 
+simultaneously and the maximum number of hours generators have been required to run in an emergency 
+scenario has been 4 hours. 
+4. Air Quality 
+The Applicant submitted two air dispersion modelling  assessments; report June 2019 and a revised report 
+August 2019. The revised August 2019 report assessed the potential impact of emissions from the 
+generators on local air quality. The pollutants associated with the generators, as provided by the generator 
+manufacturers are nitrogen oxides (NOx), carbon monoxide (CO), particulate matter (PM 10), Sulphur Dioxide 
+(SO2) and formaldehyde (CH 2O). The assessment therefore focuses on these pollutants. The data centre is 
+not situated in an Air Quality Management Area (AQMA) and there are no AQMAs within 2km of the site.  
+We audited the air dispersion modelling and report submitted with the permit application. Both the 
+maintenance testing and emergency scenarios within the modelling were assessed. 
+The Applicant modelled three operational events. 
+ Event 1 (Engine Test Scenario) 
+Currently the standby generators are tested on a rotating basis. Every Saturday morning every 
+month, one group of standby generators is tested, which includes running four generators 
+simultaneously to an off-load power for 10 minutes. On the third month, this differs with every 
+Saturday morning one group of standby generators is tested, which includes running four generators 
+simultaneously to an on-load power (up to 80%) for 15 minutes. 
+ Event 2 (Engine Annual Service Test Scenario)  
+Annually a full-Service Test is undertaken where one stand-by diesel generator is started, loaded 
+using a load bank. This scenario is usually undertaken over a two-hour period, only one generator is 
+tested per day. 
+ Event 3. (National Grid Outage Event Scenario) 
+Operation of all generators in a National Grid outage scenario. 
+ 
+4.1 Human receptors  
+4.1.1 Applicant’s assessment 
+For human receptors the Applicant’s revised report dated August 2019 concluded overall there will be no 
+notable discomfort, irritation, or certain asymptomatic non-sensory effects at any of the nearest human 
+receptors. The Applicant has chosen to assess each operational event against the Acute Exposure Guideline 
+Levels (AEGLs) and concluded the following: 
+ 
+ 
+ 
+ 

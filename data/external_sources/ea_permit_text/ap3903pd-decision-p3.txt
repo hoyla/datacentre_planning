@@ -1,0 +1,36 @@
+ 
+    Page 3 of 11 
+ecological receptors due to the operation of the generators at the Stockley Park 
+Campus. 
+The conclusions from reports AQ2 and AQ3, submitted with application 
+EPR/AP3903PD/V002 have not changed.  
+The applicant’s assessment is presented below. 
+Human health receptors 
+Virtus Test 1 
+● The hourly mean NO2 PC is insignificant at all assessed human receptors. 
+● As SCR use requires a minimum exhaust temperature of approximately 
+320 ºC, it will not be operational during offload testing (i.e. Virtus Test 1). 
+Therefore, there is no potential for NH3 emissions and is scoped out for the 
+Virtus Test 1 scenario. 
+Virtus Test 2 
+● The hourly mean NO2 PC is ‘not insignificant’ for some human health 
+receptors, i.e., over 10% of the ES. However, the predicted environmental 
+concentrations (PECs) are below the ES. 
+● The annual and hourly mean NH3 PCs are insignificant compared to the 
+relevant ES.  
+● There are no predicted exceedances of any of the US EPA Acute Exposure 
+Guideline Levels (AEGLs) used for emergency response at the assessed 
+human health receptors. 
+Virtus Emergency 2 
+● The highest hourly mean (100th percentile) NO2 prediction exceeds 200 
+µg/m3 at some receptors, including residential properties. 
+● For 72 hours of emergency operations, exceedance of the hourly NO2 ES 
+is highly unlikely. 
+● The annual and hourly mean NH3 PCs are insignificant compared to the 
+ES. 
+● Exceedance of AEGL-1 is highly unlikely at the assessed discrete human 
+receptors. There is a potential to exceed the AEGL-1 as a maximum on the 
+grid (to the north of the site on Horton Road) when taking background 
+concentrations into account, although this only occurs at the boundary of 
+the site car park in an area where exposure of members of the public is 
+less likely. On sub-hourly timescales (down to 10 minutes), the AEGL-1 

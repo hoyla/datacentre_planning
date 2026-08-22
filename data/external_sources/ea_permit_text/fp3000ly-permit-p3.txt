@@ -1,0 +1,25 @@
+ 
+Permit number                              
+EPR/FP3000LY 3 
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+Status log of the permit 
+Description Date Comments 
+Application EPR/FP3000LY/A001 Duly made 
+13/04/2021 
+Application for a combustion facility 
+consisting of 11 diesel engines providing 
+emergency power to an electronic 
+datacentre.  
+Further Information received 17/12/2021 Further information on additional full 
+building testing scenario. 
+Further information received 21/12/2021 Further information on emission points 
+and containment. 
+Permit determined EPR/FP3000LY                   
+(Billing ref. FP3000LY) 
+10/03/2022 Permit issued to Amazon Data Services 
+UK Limited. 
+ 
+End of introductory note 
+ 
+  

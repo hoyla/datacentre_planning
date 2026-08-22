@@ -1,0 +1,47 @@
+ 
+Permit number 
+EPR/PP3003PW 2 
+ 
+Spring Park Data Centre  
+Permit number EPR/PP3003PW 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows.   
+Ark Data Centres Limited operates a data centre consisting of 5 units known as SQ17, P1, P2, P3 and P4 
+located on Westwells Road within the Spring Park industrial estate. Electricity for operation of the data 
+centres is provided by five connections to the National Grid. Due to the need to ensure availability of 
+uninterrupted power supply at all times, the site incorporates 33 diesel-fired standby generators. The total 
+thermal input of the 33 standby generators is 5 generators of 3.9 MWth and 10 generators of 2.7 MWth 12 
+generators of 3.6MWth and 6 generators of 5.1 MWth (approximately 120MWth in total). The redundancy of 
+the standby generators on site is “N+1”, which means there is one generator more than would be required to 
+provide the total power for the site in event of external power failure. 
+This facility consists of the following scheduled activity under the Environmental Permitting (England and 
+Wales) Regulations 2016: 
+- Section 1.1 A(1) (a): Burning any fuel in an appliance with a rated thermal input of 50 megawatts or 
+more. 
+As no individual plant is larger than 15 MWth, the activity falls under Chapter II of the IED. The plant are 
+classed as medium combustion plant as part of a Chapter II installation. Medium Combustion Plant Directive 
+(MCPD) requirements are fulfilled through compliance with Chapter II of Directive 2010/75/EU. The engines 
+are classed at emergency/standby plant. 
+The diesel for the generators is stored in belly tanks beneath each generator with various individual 
+operating capacities from 15,500 litres up to 34,000 litres. Data centre unit SQ17, P1 and P2 have belly 
+tanks that are interconnected. Each standby generator is located in its own steel container with its own tank. 
+Interconnected tanks contain enough diesel for 72 hours of operation. Each generator has an exhaust stack, 
+each set has a different height which ranges from 4.52 m to 5.62 m above ground level. 
+Surface runoff from hardstanding areas surrounding the standby generation plant will be collected in a series 
+of liner channel drains and discharges to sewer via a petrol interceptor (subject to improvement condition). 
+External areas to P1, P3 and P4 will be disposed through attenuation and soakaway. Building P2 hard 
+standing drains to interceptor prior to discharge to sewer. Storm water runoff from the roof of all four data 
+centre buildings is discharged via attenuation pond and soakway. Buildings P2, P3 and P4 are undergoing 
+installation of roof water rainwater harvesting. 
+The surrounding area is predominately commercial and residential with agriculture to the south. The nearest 
+sensitive human receptors to the site are residential properties approximately 270 m to the East and 630 m 
+to the North. The National Grid reference for the site is ST 84830 68848. The site is approximately 14.7 
+hectares in size. 
+There are 4 SACs (Special Area of Conservation) within 10km, 5 SSSIs (Sites of Special Scientific Interest) 
+and 14 LWSs (Local wildlife sites) within 2km. 
+The status log of a permit sets out the permitting history, including any changes to the permit reference 
+number.   
+ 
+ 
+ 

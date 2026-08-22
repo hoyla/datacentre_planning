@@ -1,0 +1,47 @@
+EPR/KP3139DW/A001 
+Date issued: 18/01/19  10 
+Improvement Conditions: 
+IC1: As limited information on existing ground conditions was submitted in the permit application, the 
+operator shall submit to the Environment Agency for approval a proposal for a baseline soil and groundwater 
+investigation (to include any potential on-going monitoring requirements) for the entire site.  
+IC2: To demonstrate that the proposal for baseline soil and groundwater investigation has been completed 
+and the data produced is sufficient to define the condition of the site, the operator shall submit to the 
+Environment Agency for review and approval, a baseline report detailing the outcome of the soil and 
+groundwater investigation proposed in IC1. 
+IC3: The noise assessment submitted with the permit application requires some additional work to 
+appropriately address all potential noise sources and scenarios on site, the operator shall undertake a noise 
+assessment against the requirements of BS4142:2014 during routine operation of the site including all 
+periods of testing and maintenance proposed. A report shall be submitted to the Environment Agency that 
+includes any measures proposed to minimise or abate noise with appropriate timescales. 
+IC4: To ensure that the operator has defined response measures to be taken in the event of National Grid 
+power failure, the operator shall, in conjunction with the local authority, produce an Air Quality Management 
+Plan outlining actions to be taken in the event of electrical grid failure. 
+IC5: As the air quality modelling submitted in the application was based on worst-case scenarios with 
+manufacturer’s emission data from equipment specification reports not representative operational data, the 
+operator shall carry out physical monitoring of the emissions from the generators at their operational loads 
+during testing, maintenance and emergency operation and use these data in producing and submitting a 
+revised air dispersion modelling report. 
+IC6: To compare nitrogen dioxide concentrations produced during operation with those predicted from the air 
+quality modelling, the operator shall confirm the short-term nitrogen dioxide concentrations predicted in 
+proximity to the generators, at site boundary and at local sensitive receptors by monitoring or testing of 
+actual ambient levels.  
+IC7: In order to determine if improvements are required to the site infrastructure or operation to reduce the 
+impact of short-term nitrogen dioxide emissions, the operator shall, using data from IC5 & IC6, carry out a 
+feasibility study (including cost benefit analysis) of options for minimising this impact through either reducing 
+emissions or increasing dispersion. This should encompass all the permitted facility, including generators 
+and infrastructure to be commissioned as part of site expansion programmes and consider upgrades of 
+generators, changes to stack heights/orientations and review of generator testing and maintenance regimes.  
+IC8: To ensure sufficient sealed drainage and containment is in place on site in accordance with CIRIA 
+guidance, the operator shall carry out a review of the tertiary containment system on site that serves diesel 
+storage tanks proposing, with timescales, any improvements necessary.  
+IC9: As the site drainage plan presented in the permit application is largely indicative in nature based on 
+historic drawings and more recent site inspections, the operator shall revise and submit to the Environment 
+Agency for approval, an updated and comprehensive site drainage plan that demonstrates all surface water 
+discharges pass via an interceptor before discharge from site. 
+ 
+Decision checklist  
+Aspect considered Decision 
+Receipt of application 
+Confidential information A claim for commercial or industrial confidentiality has been made. 
+The applicant made a claim for commercial confidentiality on a number of 
+aspects of the application including: 

@@ -24,6 +24,7 @@ load_dotenv(ROOT / ".env")
 
 from dcp import capacity_claims as cc
 from dcp import db
+from dcp import ea_permits as ea
 
 
 def main() -> int:
@@ -38,9 +39,12 @@ def main() -> int:
     ch_matches = cc.load_ch_matches()
     op_claims = cc.load_operator_claims()
     op_matches = cc.load_operator_matches()
+    ea_claims = ea.load_ea_claims()
+    ea_matches = ea.load_ea_matches()
     problems = (cc.validate_matches(claims, matches)
                 + cc.validate_ch(ch_claims, ch_matches)
-                + cc.validate_operator(op_claims, op_matches))
+                + cc.validate_operator(op_claims, op_matches)
+                + ea.validate_ea(ea_claims, ea_matches))
     if problems:
         for p in problems:
             print(f"INVALID: {p}", file=sys.stderr)
@@ -52,6 +56,10 @@ def main() -> int:
           f"every figure verified against the OCR of its cited page.")
     print(f"{len(op_claims)} operator-website claims, {len(op_matches)} "
           f"matches, every quote verified against its committed snapshot.")
+    print(f"{len(ea_claims)} Environment Agency permit claims "
+          f"({sum(c.value for c in ea_claims):,.0f} MWth), {len(ea_matches)} "
+          f"matches, every figure verified against the committed text of "
+          f"the page it cites.")
     if args.dry_run:
         return 0
 
@@ -122,7 +130,8 @@ def main() -> int:
             # fix to the insert logic cannot reach one source and miss
             # the other.
             for filed, filed_matches in ((ch_claims, ch_matches),
-                                         (op_claims, op_matches)):
+                                         (op_claims, op_matches),
+                                         (ea_claims, ea_matches)):
                 ids: dict[str, int] = {}
                 for fc in filed:
                     cur.execute(
@@ -135,27 +144,29 @@ def main() -> int:
                         ON CONFLICT (source_key, claim_name, quantity_type,
                                      value_original, unit_original, as_at,
                                      source_locator)
-                        DO NOTHING
-                        RETURNING id
+                        DO UPDATE SET attrs = EXCLUDED.attrs
+                        RETURNING id, (xmax = 0) AS was_inserted
                         """,
                         (fc.source_key, fc.claim_name, fc.quantity_type,
                          fc.value, fc.unit, cc.mw_of(fc.value, fc.unit),
                          fc.stage, fc.as_at, fc.url, fc.locator,
                          json.dumps(fc.attrs)),
                     )
-                    row = cur.fetchone()
-                    if row:
-                        ids[fc.claim_name] = row[0]
+                    # The claim — source, name, quantity, value, unit,
+                    # date, locator — is what the unique index protects
+                    # and is never rewritten. `attrs` is the derived
+                    # envelope around it, regenerated from the committed
+                    # files on every run: the quote, the operator
+                    # attribution, the document sha. Refreshing it is how
+                    # an edit to a committed YAML reaches the store
+                    # without a delete; leaving it stale would let the
+                    # database and the file that produced it disagree,
+                    # which is the failure this project can least afford.
+                    # xmax = 0 distinguishes a real insert from an update.
+                    cid, was_inserted = cur.fetchone()
+                    ids[fc.claim_name] = cid
+                    if was_inserted:
                         inserted_claims += 1
-                    else:
-                        cur.execute(
-                            """
-                            SELECT id FROM capacity_claims
-                            WHERE source_key = %s AND claim_name = %s
-                              AND source_locator = %s
-                            """,
-                            (fc.source_key, fc.claim_name, fc.locator))
-                        ids[fc.claim_name] = cur.fetchone()[0]
 
                 for m in filed_matches:
                     cur.execute(
@@ -176,8 +187,9 @@ def main() -> int:
                         inserted_matches += 1
         conn.commit()
 
-    n_claims = len(claims) + len(ch_claims) + len(op_claims)
-    n_matches = len(matches) + len(ch_matches) + len(op_matches)
+    n_claims = len(claims) + len(ch_claims) + len(op_claims) + len(ea_claims)
+    n_matches = (len(matches) + len(ch_matches) + len(op_matches)
+                 + len(ea_matches))
     print(f"OK. {inserted_claims} claims and {inserted_matches} matches "
           f"inserted ({n_claims - inserted_claims} claims, "
           f"{n_matches - inserted_matches} matches already present).")

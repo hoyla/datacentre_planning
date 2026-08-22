@@ -1,0 +1,49 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 12 of 28 
+• For both scenarios, all PECs are predicted to be within the relevant long-term ES at all 
+human health receptors. We note that for the testing scenario the PCs were insignificant 
+against both long-and short-term ES at all human health receptor locations. We predict 
+that exceedances of the 10-minute and 1-hour AEGL 1 for NO2, and the hourly EALs for 
+NH3, NO and NO2 are unlikely for the emergency scenario. 
+ 
+Habitats Assessment 
+As a result of our checks, although we do not fully agree with the operator’s numerical 
+predictions, the outcome of our checks indicates that the consultant’s testing scenario predictions 
+are unlikely to make a significant contribution or cause an exceedance of critical loads and levels 
+at any ecological receptor. However, we cannot rule out exceedances of both the daily NOx 
+critical level of 75 μg/m3 and the alternative daily NOx critical level of 200 μg/m 3 at three Local 
+Wildlife Sites for the emergency scenario. The likelihood of emergency operations taking place is 
+considered low, provided that grid outages are unlikely. 
+We find: 
+• For both scenarios, all PECs are predicted to be within the critical levels and loads at all 
+ecological receptors. We note that for the testing scenario the PCs were insignificant 
+against both long-and short-term critical levels and loads at all ecological receptor 
+locations.  
+ 
+• We cannot rule out exceedances of the daily NOx critical level of 75 µg/m3 at 18 LWS 
+receptor points for the emergency scenario. The higher daily critical level of 200 µg/m 3 
+may be appropriate to use for these designations. The Silverlink Metro and Dudding Hill 
+Loop Railsides in Ealing LWS, Old Oak Common Sidings Birch Wood LWS and London’s 
+Canals LWS are likely to exceed for daily NOx in the emergency scenario, even when 
+considering the use of the higher critical level of 200 µg/m 3.  
+ 
+• We note that the likelihood of emergency operations taking place is a more important 
+factor in considering the risks of daily NOx critical level exceedance, therefore, as the grid 
+reliability in the local area appears to be good, the likelihood of the emergency scenario 
+occurring is expected to be low. 
+ 
+We agree with the consultant’s overall conclusions that the site is unlikely to cause an 
+exceedance of an ES at human health receptors and is unlikely to make a significant contribution 
+to or cause an exceedance of any critical loads and levels at ecological receptors  providing the 
+electricity grid remains reliable.  
+Protection Against Power Outage and Minimisation of Generator Operation 
+The largest risk of gaseous emissions from the site occurring which could impact human health or 
+ecological receptors would be if the gas oil or equivalent fuel generators had to operate for any 
+significant period of time following a National Grid failure. 
+To address this scenario and minimise emissions, the operator: 
+• Has designed the data centres so the generators will be capable of providing an N+1 
+level of resilience with each of the generators running in standby mode, which is 
+applicable for supplying power to support the maximum electrical demand, including 
+starting and distorted loads for the duration of power interruption of a reliable utility 
+source. 
+ 

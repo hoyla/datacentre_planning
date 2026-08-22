@@ -1,0 +1,42 @@
+ 
+ EPR/TP3500PB/V003   Page 5 of 23 
+OFFICIAL 
+OFFICIAL 
+• the short -term PC is less than 10% of the short -term environmental 
+standard for protected conservation areas 
+• the long -term PC is less than 1% of the long term environmental 
+standard for protected conservation areas 
+If the long-term PC is greater than 1% we look at the background concentration 
+and calculate the predicted environmental concentration (PEC). If the  PEC at the 
+statutorily protected ecological receptor  is less than 70% of the long-term 
+environmental standard for protected conservation areas, the emissions are 
+considered insignificant. 
+According to our guidance, the insignificance criteria for non -statutory protected 
+ecological receptors are: 
+• the short -term PC is less than 100% of the short -term environmental 
+standard for protected conservation areas 
+• the long -term PC is less than 100% of the long -term environmental 
+standard for protected conservation areas 
+ 
+The air dispersion modelling report submitted by the Applicant assesses the 
+potential impact of emissions of nitrogen dioxide (NO2) and particulates (PM10) 
+from the generators on local air quality. The primary pollutant of concern to air 
+quality is (NO2), resulting from the combustion process on site. SO2 is not 
+considered to be an issue as all fuel used is ultra-low sulphur diesel, leading to 
+negligible impacts; the fuel type is specified in the permit in Table S2.1. 
+The data centre is situated in an Air Quality Management Area (AQMA) in the 
+borough of Ealing. There are a further 3 AQMAs within 2 km as follows; Brent 
+Borough 350 metres to the North, Hammersmith and Fulham 500 metres to the 
+East, Kensington and Chelsea 1.9 kilometres to the East. The London Borough 
+of Ealing were consulted; their comments and our responses are shown in the 
+consultation section. 
+The Environment Agency’s Air Quality Modelling and Assessment Unit (AQMAU) 
+has audited the updated air dispersion modelling report submitted for this 
+variation.  
+The outcomes of our audit are summarised in the following:  
+Long-term impacts (all scenarios combined) 
+• The process contributions for all pollutants are predicted to be less than 
+1% of the applicable long-term environmental standards for human health, 
+hence the risk to human health associated with long-term operations is 
+considered insignificant. 
+  

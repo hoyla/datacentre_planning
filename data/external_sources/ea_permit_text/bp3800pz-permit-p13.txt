@@ -1,0 +1,60 @@
+ 
+Permit Number            
+EPR/BP3800PZ            13 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+section 3a – technical standards in Part B3 of the application 
+form.  
+Technical standards as described in Data Centre FAQ 
+Headline Approach (v10, 01/06/18, Release to Industry. 
+Response to Schedule 5 
+Notice dated 11/03/21. 
+Operating techniques described in the responses to the Notice 
+(including accompanying information): 
+- Response to question 2 on site staffing (operational and 
+maintenance); 
+- Response to question 5 on checks and controls in place 
+during routine testing/maintenance and emergency outage 
+scenarios to prevent adverse impact on human health from 
+generator emissions; 
+- Response to question 10 on use of hinged covers on 
+exhaust stacks at Centro site; 
+- Response to question 12 on primary abatement measures 
+on the combustion units; 
+- Response to question 14 on the use of a larger number of 
+smaller thermal input generators on all four data centre 
+sites; 
+- Response to question 15 on the filling of belly tanks with 
+diesel and the actions to be taken in the event of loss of 
+containment when offloading diesel; 
+- Response to question 16 on the filling of above ground 
+diesel storage tanks, the management of their diesel 
+containment systems and inspection/maintenance 
+systems; 
+- Response to question 17 on the operation of spillage 
+procedures; 
+- Response to question 18 on the frequency and methods of 
+inspections of underground rainwater harvesting and 
+attenuation tanks to ensure their integrity; 
+- Response to question 19 on prevention of diesel 
+contamination of surface water run-off at Centro site which 
+operates without an oil interceptor; 
+- Response to questions 20, 21 and 25 on operation of data 
+centre connection to the National Grid to ensure resilience 
+in the event of Grid failures; 
+- Response to question 22 on fire control within generator 
+containment units; 
+- Response to question 23 on preventing collision damage 
+to generator containment units; 
+- Response to question 24 on management of flood risk; 
+- Response to question 26 on the automatic control of 
+generator start-ups in the event of National Grid failure; 
+- Response to question 27 on the integration and control of 
+maintenance and testing regimes to ensure no more than 
+two generators are in operation at the same time for these 
+scenarios; 
+- Response to questions 28 and 29 on infrastructure testing 
+and maintenance procedures; 
+- Response to question 32 on operation of generators to 
+limit the impact of noise. 
+24/03/21 

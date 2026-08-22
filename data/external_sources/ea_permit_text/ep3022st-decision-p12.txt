@@ -1,0 +1,43 @@
+ 
+Crawley Data Centre Campus        EPR/EP3022ST               Page 12 of 19 
+13. Operational hours 
+We set operational hour limits for data centres at 500-hours as they are permitted 
+for emergency use only. The limit on the emergency use of 500 hours is for the 
+installation as a whole i.e. as soon as one generator starts operating the hours 
+count towards the 500 hours.  
+The operational hours on the site will be monitored and reported as follows:  
+Emergency operation limited to 500 hours for the installation via permit condition 
+2.3.6.  
+Maintenance and testing regime limited to <50 hours per generator, linked to 
+operating techniques table S1.2 
+ 
+14. Permit Conditions 
+ 
+Permit condition 2.3.6 
+The permit includes a maximum 500-hour operational limit for the emergency 
+standby generators. The 500 hours includes testing and maintenance. 
+ 
+ 
+Table S1.1 (Activities) 
+Includes some additional operational controls: 
+• Testing of the generators shall only take place during daytime periods. 
+• Electricity produced at the installation cannot be exported to the National 
+Grid. 
+The first bullet is to minimise the impact from noise, refer to the Noise and Vibration 
+section of this document. 
+Table S1.1  (second bullet point)  also places a limit on the activity to exclude 
+voluntary ‘elective power generation’ such as Balancing Services, Demand Side 
+Response operations including Frequency Control Demand Management (FCDM) 
+or Triad Avoidance. This is primarily to differentiate data centres from ‘diesel (gas 
+oil) arrays’ that operate commercially within the balancing market, and importantly, 
+this is a clear way to demonstrate minimisation of emissions to air as ‘emergency 
+plant’. 
+ 
+Table S1.2 (Operating techniques) 
+The testing and maintenance scenarios are detailed in this document and 
+controlled though permitted operating techniques in table S1.2 of the permit.  
+ 
+Table S1.3 (Improvement programme) 
+IC1 - Air Quality Management Plan (AQMP) 
+Whilst we are satisfied that the maintenance and testing regime is appropriate, 
+given the local issues regarding air quality, including the designation of the 

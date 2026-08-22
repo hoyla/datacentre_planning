@@ -1,0 +1,28 @@
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+ 
+Status log of the permit 
+Description Date Comments 
+Application received 
+EPR/BP3530YR/A001 
+Duly made 
+06/11/2017 
+Application to operate standby diesel generators in 
+the event of National Grid failure and maintenance 
+activities.  
+Response to Schedule 5 Notice 
+dated, 07/12/2017 
+21/12/2017 Clarification on worst case operational events and 
+modelling scenarios and model input assumptions, 
+etc.  
+Additional information received  10/05/2018 Revised Air Dispersion Modelling Report.  
+Additional information received 18/01/2019 Clarification of FCDM Operations. 
+Permit determined 
+EPR/BP3530YR 
+(Billing ref: BP3530YR) 
+25/06/2019 Permit issued to Global Switch Limited. 
+ 
+End of introductory note 
+  
+Permit number 
+EPR/BP3530YR 3 

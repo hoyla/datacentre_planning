@@ -1,0 +1,148 @@
+Permit number               
+EPR/ZP3527SSEPR/AB1234CD 16 
+Schedule 3 – Emissions and monitoring 
+Table S3.1 Point source emissions to air – emission limits and monitoring requirements 
+Emission point 
+ref. & location 
+Source Parameter Limit 
+(including 
+unit)  
+Reference 
+period 
+Monitoring 
+frequency 
+[Note 2] 
+Monitoring 
+standard or 
+method 
+EP1-EP12 
+ 
+Emission points 
+from generators 
+as shown on site 
+plan in schedule 
+7 
+ 
+ 
+Gas oil or 
+equivalent 
+fuelled 
+generator 
+exhausts 
+ 
+(New MCP) 
+ 
+ 
+Oxides of 
+Nitrogen  
+(NO and 
+NO2 
+expressed 
+as NO2) 
+No limit set In line with 
+web guide 
+‘Monitoring 
+stack 
+emissions: 
+low risk 
+MCPs and 
+specified 
+generators’   
+Published 
+04 June 
+2024 
+(formerly 
+known as 
+TGN M5)  
+ 
+Every 1500 
+hours of 
+operation or 
+once every 
+five years 
+(whichever 
+comes first). 
+[Note 1] 
+ 
+In line with 
+web guide 
+‘Monitoring 
+stack 
+emissions: 
+low risk 
+MCPs and 
+specified 
+generators’   
+Published 04 
+June 2024 
+(formerly 
+known as 
+TGN M5)  
+ 
+Carbon 
+monoxide 
+No limit set In line with 
+web guide 
+‘Monitoring 
+stack 
+emissions: 
+low risk 
+MCPs and 
+specified 
+generators’   
+Published 
+04 June 
+2024 
+(formerly 
+known as 
+TGN M5)  
+ 
+Every 1500 
+hours of 
+operation or 
+once every 
+five years 
+(whichever 
+comes first). 
+[Note 1] 
+ 
+In line with 
+web guide 
+‘Monitoring 
+stack 
+emissions: 
+low risk 
+MCPs and 
+specified 
+generators’   
+Published 04 
+June 2024 
+(formerly 
+known as 
+TGN M5)  
+ 
+Sulphur 
+dioxide 
+No limit set - - - 
+Particulate 
+Matter 
+No limit set - - - 
+Ammonia No limit set - - - 
+Vents 
+associated 
+with bulk 
+gas oil or 
+equivalent fuel 
+storage 
+tanks 
+Vents from 
+2x receiver 
+fuel storage 
+tanks 
+No 
+parameters 
+set 
+No limit set - - - 
+Note 1: Unless otherwise agreed in writing with the Environment Agency as a result of approval of 
+Improvement Condition IC2 of this permit. 
+Note 2: In accordance with condition 3.5.2 of this permit. 

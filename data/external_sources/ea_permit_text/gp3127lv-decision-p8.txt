@@ -1,0 +1,38 @@
+ 
+LIT 11984  [Publish date]                     Page 8 of 24 
+Emergency scenario 
+  
+• The consultant predicts potentially significant impacts for 1-hour mean 
+NO2 PC. However, the predicted environmental concentration (PEC) for 1-
+hour mean NO2 would have a not significant effect at all modelled 
+receptors and an exceedance of the 1-hour mean NO2 is considered 
+unlikely. 
+• The consultant did not present acute exposure guideline levels (AEGLs) 
+values or an AEGL-based assessment approach. 
+• The consultant’s annual NO2 and 1-hour NO PCs are ‘not insignificant’, 
+but PECs are not expected to exceed the Environmental Standard (ES). 
+ 
+ 
+Impact on Human Receptors 
+ 
+Using NOx-to-NO2 conversion factors (70% long-term; 35% short-term) and 
+modelling 61 human health receptor locations with site-specific background 
+concentrations, the consultant concludes that: 
+ 
+• Long-term ES: The PCs for NO2 are not insignificant when all scenarios 
+are combined, but PECs do not exceed the ES. Therefore, no 
+exceedances for any modelled scenario. 
+• Short-term ES (testing scenarios): PCs for NO2 may be not insignificant, 
+but PECs do not exceed the ES; therefore, no exceedances are predicted. 
+• Emergency scenario is predicted to exceed the ES, however the PECs at 
+the 5% statistical risk percentile do not exceed the ES, indicating that 
+exceedances are unlikely.  
+ 
+ 
+Impact on Ecological Receptors 
+ 
+Using Environment Agency distance screening (15 km European sites/SSSIs; 2 
+km local sites) the consultant identified 31 designated receptors and assessed 
+against Air Quality Technical Advisory Guidance (AQTAG06) critical levels/loads 
+from the Air Pollution Information System (APIS) website. The consultant 
+concludes that: 

@@ -1,0 +1,58 @@
+ 
+ Page 4 of 13 – 09/02/2021 
+ 
+A screening exercise using our H1 tool was undertaken for PM10 based upon a theoretical scenario 
+of all engines operating for 8 consecutive hours in a day. There were no exceedances alone or in-
+combination with the Slough Campus. Therefore, emissions of PM 10 are considered acceptable 
+and have not been considered any further. Consideration below is for NO2 impacts only.  
+ 
+Maintenance testing 
+ 
+Human Receptors: 
+ 
+Short Term impacts 
+ 
+1. Start-up test – There were no predicted exceedences of the Air Quality Standard (AQS) as a 
+result of the start-up testing of the LD11x generators. All short term emissions are less than the 
+10% significance threshold.  
+2. Black building test – It is predicted that there will be three exceedances of the NO2 hourly 
+standard per year. Not all short term emissions are less than 10%. The probability of an impact 
+was considered and is described below.  
+3. Full load test – There were no predicted exceedences of the Air Quality Standard (AQS) as a 
+result of the start-up testing of the LD11x generators. All short term emissions are less than the 
+10% significance threshold.  
+Therefore, the testing re gime considered together for LD 11x has the potential to result in a 
+maximum number of exceedances of 3 hours in a year, which is below the 19 permissible 
+exceedance hours before the standard is breached. 
+ 
+The testing regime for LD11x was considered with the testing regime of the Slough Campus. The 
+statistical likelihood of the combined testing regime to result in an impact was predicted to be 0.7-
+1.0%, therefore, it is highly unlikely that there will be a significant impact. No further assessment is 
+necessary. 
+ 
+Our audit of the modelling was unable to replicate the probability of 0.7%-1.0% presented by the 
+operator. However, we can confirm than the exceedance of the short term NO
+2 Environmental 
+Standard is  unlikely (<5%), our s tatistical analysis indicated the testing regimes are unlikely to 
+coincide with more than 18 exceedance hours.  
+ 
+Long Term impacts 
+ 
+The purpose of the generators is to provide electrical power over a short period of time in the event 
+of grid failure , reflected through only 30 hours of fuel being stored on the installation. We have 
+limited hours of operation for each diesel generator to a maximum of 500 hours a year for 
+emergency use. Therefore, long term impacts will not be an issue, which is shown in the operators 
+modelling results as described below. 
+ 
+Annual emissions from all 3 parts of the testing schedule for both LD11x considered alone and for 
+when LD11x was considered along with the Slough Campus were insignificant (<1% of the AQS). 
+The long term emissions screen out and no further assessment is necessary. 
+ 
+Our au dit of the modelling  confirms that Long Term process contribution s are not likely to be 
+significant at the receptors either alone or when considered with the Slough Campus. 
+ 
+Ecological Receptors: 
+ 
+Short term and long term impacts were considered from LD11x alone and LD11x plus the Slough 
+Campus. The modelling considered air borne NO
+x, Nitrogen deposition and Acidification.  

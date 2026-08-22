@@ -1,0 +1,269 @@
+# Hand-adjudicated matches: Environment Agency permits -> sites.
+#
+# Each entry asserts that one permit and one site record describe the
+# same physical installation, with the evidence written out. `claim_name`
+# is the permit's own name for the installation plus its permit number,
+# exactly as dcp.ea_permits builds it.
+#
+# Confidence vocabulary (enforced by migration 021):
+#   strong    - the permit and the site's planning record name the same
+#               place, usually down to a building or a street number,
+#               and no other site record competes for it.
+#   probable  - a distinctive name and the geography agree, but the site
+#               record is thin or the permit's coordinates sit further
+#               out than a building-level match would.
+#   tentative - place and scale agree and nothing names the site.
+#               Rendered as leads, not attributions.
+#
+# Two things make this list short, and both are the point rather than a
+# shortfall.
+#
+# **A permit describes plant that exists; most of this corpus describes
+# schemes that were proposed.** Where a site record was materialised from
+# applications for a *new* data centre near an operating one, the permit
+# belongs to the neighbour, not to the application. Distance cannot tell
+# those apart and neither can a postcode.
+#
+# **Several site records hold a whole industrial estate.** Site 23 alone
+# — named "BARCLAYS BANK - DATA CENTRE  SOLAR PV PANELS" — has 35
+# applications spread across the Slough Trading Estate, and eight permits
+# from six different operators fall inside it, totalling 1,249 MWth. It
+# is the only site record within 4 km of any of them. Attaching any one
+# of those permits to it would assert that Equinix's campus, CyrusOne's,
+# Amazon's, Iron Mountain's and VIRTUS LONDON11 are all the same site.
+# So none of them is attached, and the eight are listed under
+# `considered` instead, where they are evidence for the partitioning work
+# in data/priors/site_partitions.yaml rather than evidence about a site.
+
+matches:
+  - claim_name: Cody Park Data Centre (EPR/VP3235DJ)
+    site_id: 14
+    method: building_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-22
+    evidence: >-
+      The permit's Schedule 1 places its 69 generators in buildings A101,
+      A102, A103 and A104 at Cody Park, Old Ively Road, Farnborough GU14
+      0LH. Site 14's planning record covers the same buildings on the
+      same road: Hart/19/00352/FUL demolishes A50 and A57 to erect a data
+      centre at "A50 Cody Park Ively Road Farnborough GU14 0LH",
+      Hart/20/00302/CON discharges its drainage condition at "Cody Park,
+      A101", and Hart/21/01886/FUL extends "A105 Data Centre". The
+      permit's own site address begins "A57, Cody Park". Site 7 carries
+      the same campus name but is 1.4 km away with a single 2013
+      condition discharge and no building reference, so it is not a
+      competing referent. The 260 MWth is a standby fleet rating, not
+      this site's electrical demand.
+
+  - claim_name: Spring Park Data Centre (EPR/PP3003PW)
+    site_id: 33
+    method: address_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-22
+    evidence: >-
+      The permit describes "a data centre consisting of 5 units known as
+      SQ17, P1, P2, P3 and P4 located on Westwells Road within the Spring
+      Park industrial estate", postcode SN13 9GB. Site 33's applications
+      are at "Spring Park Data Centre Campus, Land South of Westwells
+      Road, Neston Corsham" and "Hawthorn Works and Former SQ2 Factory
+      Building, Spring Park, Westwells Road", the same postcode. Note
+      that the permit covers five units and the site record is named for
+      two of them (P3 and P4), so the 120 MWth is the campus fleet and
+      not the fleet of the scheme the site is named after.
+
+  - claim_name: Colt - Welwyn (EPR/KP3139DW)
+    site_id: 26
+    method: address_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-22
+    evidence: >-
+      The permit is held by Colt Data Centre Services UK Limited at "20,
+      Colt Welwyn Garden", AL7 1QA, and its coordinates fall 20 m from
+      site 26's centroid. Site 26 is "COLT DATA CENTRE - PROJECT BRENDA"
+      and one of its three applications is at "20 Black Fan Road Welwyn
+      Garden City AL7 1QA" — the same street number and postcode. The
+      site's other two applications are at Mundells, AL7 1GE, about a
+      kilometre away, so the site record spans two locations and this
+      figure describes the Black Fan Road one.
+
+  - claim_name: Unit 2 & 3 Redhill Data Centre (EPR/JP3929SJ)
+    site_id: 114
+    method: address_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-22
+    evidence: >-
+      Permit address "Unit 2 & 3 Redhill Data Centre", RH1 1AX; site
+      114's single application is "1 And 2 St Annes Boulevard Redhill
+      Surrey RH1 1AX", the same postcode, 60 m away. The holder is
+      Redhill Data Centre Limited, and the Environment Agency's own
+      publication for this permit is titled "RH1 1AX, Digital Realty (UK)
+      Limited", which identifies the operator behind the vehicle.
+
+  - claim_name: NTT Global Data Centers UK EMEA Limited, NTT Global Data Centers UK EMEA Limited (EPR/CP3902LV)
+    site_id: 42
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-08-22
+    evidence: >-
+      The permit is held by NTT Global Data Centers EMEA UK Ltd in
+      Barking and Dagenham, RM10 7FZ. Site 42 is "NTT COMMUNICATIONS DATA
+      CENTRE", its single application at "London East Business And
+      Technical Park, Yewtree Avenue, Dagenham" — 1.2 km away and the
+      only site record within 2 km. Operator, borough and the absence of
+      any competing NTT record in the corpus agree. 49.2 MWth is twelve
+      4.1 MWth standby generators.
+
+  - claim_name: Linmere Island Data Centre (EPR/AP3427SQ)
+    site_id: 109
+    method: name_identity
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-22
+    evidence: >-
+      "Linmere Island Data Centre" is the permit's own name for the
+      installation and "LINMERE ISLAND  HOUGHTON REGIS -  48MW DATA
+      CENTRE" is the site's; Linmere is the name of one development at
+      Houghton Regis and nothing else in the corpus carries it. Probable
+      rather than strong because site 109 holds a single application
+      (CentralBedfordshire/CB/24/03164/FULL, two data centre buildings on
+      land east of Sundon Road) whose centroid is 1.6 km from the
+      permit's grid reference, and because the postcode LU5 5GX matches
+      instead against site 402, a housing allocation that happens to
+      share it. The gap between the site's planning name (48 MW) and the
+      permitted fleet (324.6 MWth, 40 generators at 8.0 MWth and two at
+      2.1) is worth reading rather than reconciling: they are different
+      quantities, and the fleet is sized for redundancy.
+
+# Permits examined and deliberately NOT matched. A tested-and-empty
+# result is not the same thing as an untested one.
+considered:
+  - claims:
+      - Equinix Slough Campus Data Centre (EPR/LP3303PR)
+      - CyrusOne London 4/5 Datacentres (EPR/EP3508PS)
+      - GB One Data Centre (EPR/CP3042QG)
+      - Slough Data Centre Back-up Generation Facility (EPR/PP3309MK)
+      - LON3 Data Centre (EPR/TP3120LE)
+      - Ajax Avenue Datacentre (EPR/YP3935QM)
+      - LD11x (EPR/CP3409BH)
+      - LON11 Data Centre (EPR/DP3348QS)
+    why: >-
+      All eight fall inside site 23, the only site record on the Slough
+      Trading Estate, which holds 35 applications across at least six
+      operators' campuses. 1,249 MWth of permitted standby plant sits
+      inside one site record. Matching any one of them would assert an
+      identity between campuses that are plainly distinct — Equinix's LD4
+      to LD10, CyrusOne London 4/5, Amazon's Buckingham Avenue site, Iron
+      Mountain LON3, VIRTUS LONDON11 and GTR's GB One. Revisit once site
+      23 is partitioned; the permits' grid references are the sharpest
+      partition evidence available, since each names a campus and gives
+      its coordinates.
+
+  - claims:
+      - North Hyde Gardens, Hayes Data Centre Emergency Back-up Generation Facility (EPR/DP3442QV)
+      - Union Park (EPR/ZP3527SS)
+      - Colt - Hayes (EPR/GP3721SQ)
+    why: >-
+      Hayes. The first two fall within 250 m of site 61, which still
+      holds around six campuses and against which the Union Park capacity
+      claim had to be retired; the third is Colt's Hayes campus, which
+      spans three site records and is why Colt's operator claims are
+      loaded unmatched. Note that the Ark permit's own title for its
+      installation is "Union Park" — the Environment Agency puts Ark's
+      Union Park at UB3 4QQ, Bulls Bridge Industrial Estate, which is a
+      fact worth carrying into the site-61 partitioning rather than into
+      a match.
+
+  - claims:
+      - Didcot North Data Centre Campus (EPR/GP3127LV)
+      - Didcot Datacentre (EPR/LP3005BL)
+    why: >-
+      Two Amazon permits at the former Didcot A Power Station, 925 MWth
+      (129 generators) and 69.7 MWth (11), against one site record —
+      site 68, "AMAZON DATA CENTRE  DIDCOT - DATA CENTRE 1". A record
+      named "data centre 1" cannot absorb a campus permit for 925 MWth
+      without asserting that the campus and the first building are the
+      same thing. Left unmatched, and flagged: 925 MWth is by a wide
+      margin the largest permitted standby fleet in this register, and
+      what it implies about the Didcot campus deserves its own look.
+
+  - claims:
+      - Hemel Hempstead Data Centre (EPR/BP3546QP)
+      - Hemel Hempstead Data Centres (EPR/BP3800PZ)
+    why: >-
+      Both fall inside site 11, "GYRON LIMITED - NEW DATA CENTRE AND
+      STORAGE FACILITY", whose five applications span Maylands Avenue and
+      Blossom Way. Amazon's permit address, "3A Blossom Way, HP2 4ZB", is
+      an exact string match for one of those applications, which is
+      suggestive — but the site is named for Gyron, an NTT company, and
+      attaching Amazon's 222 MWth to it would attribute one operator's
+      fleet to another's record. NTT's own permit is explicitly a
+      multi-site figure ("64 emergency standby generators across four
+      sites"), so it cannot describe a single site at all.
+
+  - claims:
+      - LHR11/12 (EPR/YP3329SB)
+      - Colt - Powergate (EPR/DP3107LF)
+    why: >-
+      Both fall inside site 59, "MICROSOFT DATA CENTRE  BASHLEY ROAD",
+      which holds 106 applications and whose own addresses are at Chandos
+      Road Trading Estate, Park Royal. Vantage's LHR11/12 is at 2 Black
+      Arrow House on that same Chandos Road and Colt's Powergate is 360 m
+      off, so all three are Park Royal neighbours rather than one site.
+
+  - claims:
+      - Telehouse Docklands Datacentre (EPR/SP3237JU)
+      - 240, East India Dock House (EPR/BP3530YR)
+      - Brick Lane Data Centre (EPR/QP3434DR)
+      - LD8 (EPR/DP3906BE)
+    why: >-
+      Docklands, and the same aggregation problem. Site 5 is named
+      "INTERXION - DATA CENTRE" but its applications include Global
+      Switch House on Nutmeg Lane, Mulberry Place, and land west of 240
+      East India Dock Road — so it is a Docklands record, not an
+      Interxion one, even though its centroid happens to sit 10 m from
+      Interxion's Brick Lane permit. Telehouse is a further note worth
+      keeping: its permit states 93.6 MWth for 19 standby generators and
+      schedules 27, "increasing to 145 MWth if the future expansion is
+      required", so the permitted headroom is half as much again as the
+      installed fleet.
+
+  - claims:
+      - Crawley Data Centre Campus (EPR/EP3022ST)
+    why: >-
+      The register disagrees with itself. The site address is "Digital
+      Realty Crawley Data Centre Campus, Unit 1 and Unit 2, Manor Royal,
+      Crawley, RH10 9BD", which is in Crawley; the Local Authority column
+      says Reigate and Banstead, and the easting and northing put it 60 m
+      from Redhill, 10 km away. Two of the three fields point at Redhill,
+      where Digital Realty also holds EPR/JP3929SJ, and the address
+      points at Crawley. Not matched until which is right is established.
+
+  - claims:
+      - Croydon Data Centre (LW13) (EPR/NP3735JX)
+    why: >-
+      The register's address for this permit is the holder's registered
+      office — "C/o Ascendas Reit (Croydon) UK Limited, The Scalpel, 18th
+      Floor, 52 Lime Street, London EC3M 7AF" — with a Local Authority of
+      Sutton, while the installation is named for Croydon. The
+      coordinates follow the registered office, so no site is within
+      range and the geography here is worth nothing until the real
+      address is established.
+
+  - claims:
+      - Woking Data Centre (EPR/TP3530DV)
+      - Data Centre 1 and 2, Narborough Combustion Plant (EPR/QP3533ED)
+      - Digital Realty Watford (EPR/HP3136DK)
+      - Swindon Data Centre Back-up Generation Facility (EPR/FP3000LY)
+      - London 14 Data Centre (EPR/UP3624SW)
+      - London Two (EPR/TP3839QU)
+    why: >-
+      No site record describes these. Woking (214 MWth, Digital Realty)
+      and Narborough (107.8 MWth, Santander's own data centres) have
+      nothing within 2 km at all, which is a finding about the corpus
+      rather than about the permits — an operating data centre with no
+      planning application in our window. Watford's permit is at the
+      Chess Building, WD18 8UA, and the nearest record is a different
+      building 280 m away. Amazon's Swindon fleet is 1.2 km from a
+      National Data Centre record at Old Burderop Hospital, a different
+      scheme. VIRTUS LONDON14 and Zenium's "London Two" both sit beside
+      site 37, VIRTUS LONDON5 at Unit D Prologis Park — adjacent units on
+      one park, not the same installation.

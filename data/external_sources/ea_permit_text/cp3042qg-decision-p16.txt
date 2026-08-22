@@ -1,0 +1,54 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 16 of 26 
+isolated, and the secondary pipeline remains operational while the leaking pipeline is 
+drained, and investigations are undertaken. 
+ 
+• Each length of pipeline is expected to be one continuous piece of pipeline, with no joints. 
+Should an intermediate jointing pit be required, it will be a sealed chamber with manhole 
+access above. 
+ 
+Containment Protection - Tanker Unloading Bay 
+The tanker unloading bay will have the following protection measures to ensure no loss of 
+containment: 
+• The tanker unloading bay is an engineered concrete area which drains to a central point, 
+where a sealed collection sump is present for use in the event of a spill during delivery. 
+The sump beneath the unloading bay is sized at 7,000 litres, equal to a single 
+compartment of a multi-compartment fuel delivery tanker. This sump is connected to the 
+drainage system via a lockable penstock valve, which is kept closed during filling 
+operations. 
+ 
+• Although Section 5.4.4 of CIRIA C736 recommends removal of penstocks where they 
+drain to interceptors, the operation of penstocks will be tightly controlled by a checklist 
+completed by the facilities manager and delivery driver for every delivery. Furthermore, 
+the interceptor has an isolator valve at the outfall triggered by the oil probe in the 
+interceptor, providing an additional layer of protection on any spillages leaving the site. 
+Visual checks on the tanker bay will be carried out before opening the penstock following 
+completion of deliveries. 
+ 
+• A tanker unloading procedure will be documented within the EMS which includes the 
+process for draining the sump of uncontaminated rainwater, and processes to deal with 
+fuel spills and leaks. 
+ 
+• A planned preventative maintenance programme will be in place to ensure equipment 
+and infrastructure (e.g. bunds, surfacing, pipework) are in good condition.  
+ 
+• Spill kits will be available for use in the unlikely event of an unplanned fuel release. A spill 
+procedure will be developed for the site as part of the Environmental Management 
+System. 
+ 
+• Fuel loading and unloading activities will be conducted in line with best practices. This is 
+not expected to eliminate the potential for accidental spillages, but they are expected to 
+limit the duration of such event and therefore the potential consequences. 
+ 
+• Deliveries will take place from tankers in a bunded fuel unloading area to the main top up 
+tanks. 
+ 
+• Approved suppliers will be arranged for the delivery of diesel or equivalent fuel, which will 
+be undertaken in accordance with delivery procedures which will be developed as part of 
+the Environmental Management System. 
+ 
+Tertiary containment is provided by the hardstanding of the external areas of the tank storage 
+area and unloading bay. 
+External areas surrounding the diesel or equivalent fuel storage tanks will be laid down to 
+hardstanding and provided with surface water drains to collect and discharge contaminated water 
+run-off through the on-site interceptors before discharging to soakaways and the public surface 

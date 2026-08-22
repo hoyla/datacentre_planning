@@ -1,0 +1,59 @@
+ 
+ Page 7 of 13 – 09/02/2021 
+outage, prior to that the last record of supply failure was in 2017. The risk of ‘LD11x’ to be 
+operated for a prolonged period is low. Therefore, the potential for prolonged noise is also 
+considered to be low. 
+ 
+Despite this, the operator has taken measures to minimise noise emissions. The generators are 
+housed in acoustic enclosures and all flues are wrapped in acoustic insulation. The operator also 
+commissioned a noise modelling assessment which recommended that a 17.5m noise screen 
+was installed to the south of the site. This has been installed. 
+ 
+The limited hours of operation combined with the proposed noise mitigation measures are 
+considered to be sufficient to control noise arising from the installation. 
+ 
+BAT 
+ 
+As outlined in the Environment Agency’s ‘Data Centre FAQ’ document, we accept that oil fired 
+diesel generators are presently a commonly used technology for standby generators. However 
+we requested a BAT assessment detailing the choice of engine, the particular configuration and 
+plant sizing to meet the standby arrangement (e.g. 2n).  
+ 
+The default generator specification as a minimum for new plant to minimise the impacts of 
+emissions to air of NOx is 2g TA-Luft (or equivalent standard) or an equivalent NOx emission 
+concentration of 2000mg/m3. All of the engines meet the 2g standard emissions.  
+ 
+The number and size of the engines matches the requirements of the data centre. Maximum 
+demand calculations have been carried out to affirm the generators are sized (and not oversized) 
+for the design load. The site operates to an n+1 standby arrangement, where n is the load 
+requirement of the data centre.  
+ 
+The size constraints of the site prevents the consideration of a greater number of smaller 
+generators. Larger generators are also generally more efficient than smaller ones. This 
+configuration would also increase the number of hours of testing that would be required each 
+year. A smaller number of larger generators would equally be difficult to fit within the size of the 
+site. Of the variety of engines considered, the efficiency of the engines was similar regardless of 
+capacity.  
+ 
+In order to minimise the need for emergency operation, each building has two separate 
+substation feeds. To address short term fluctuations, brown-outs or black-outs, the site has 
+uninterruptable power supplies. This can supply power for six minutes, until the generators kick 
+in.  
+ 
+Protection of Groundwater 
+ 
+There are no fugitive emissions to land or groundwater from the data centre. The generators are 
+located in containers over hard-standing or concrete flooring. Externally, the Site consists of new 
+hard standing. Diesel, hazardous waste and hazardous materials storage is bunded and/or 
+indoors, such that any source of potential contamination is prevented from discharge to land. 
+ 
+Bulk fuel tanks are fully-bunded to 110% of their volume. The day tanks are double skinned (self-
+bunded) with leak detection alarms. The majority are under cover and not subject to rainwater 
+incursion. 
+ 
+Equinix has emergency response procedures in place in the event of a release of oil or diesel, 
+processes for the planning for such eventualities and checklists to audit the response in case 
+such an event occurs. Rainwater is kept separate from any areas in which there may be any 
+potential contaminants and is allowed to run off to the surface water drainage serving the trading 
+estate. 
+ 

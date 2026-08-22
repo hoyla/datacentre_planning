@@ -1,0 +1,53 @@
+ 
+Page 4 of 19 
+Quarterly Testing A maximum of two 
+generators are tested at 
+simultaneously; the 
+landlord generator is 
+always tested on its 
+own. 
+Each suite of engines is 
+tested simultaneously.  
+Testing is split over nine 
+days (not necessarily in 
+this order) as follows: 
+Day 1: Suite S110 
+Day 2: Suite S120 
+Day 3: Suite S130 
+Day 4: Suite S140 
+Day 5: Suite S150 
+Day 6: Landlord 
+generator 
+Day 7: Generator 160-1 
+Day 8: Generator 160-2 
+Day 9: Generator 160-3 
+Annual Testing A maximum of two 
+generators are tested at 
+simultaneously; the 
+landlord generator is 
+always tested on its 
+own. 
+Generators are not 
+tested simultaneously.  
+Testing is split over nine 
+days (not necessarily in 
+this order) as follows: 
+Day 1: Suite S110 
+Day 2: Suite S120 
+Day 3: Suite S130 
+Day 4: Suite S140 
+Day 5: Suite S150 
+Day 6: Landlord 
+generator 
+Day 7: Generator 160-1 
+Day 8: Generator 160-2 
+Day 9: Generator 160-3 
+Air Quality 
+Our online guidance (“Air emissions risk assessment for your environmental 
+permit”, gov.uk) sets out how air emissions risk assessments should be 
+completed, by calculating the impact of emissions and comparing against 
+appropriate environmental standards. 
+The applicant submitted air dispersion modelling as part of their Air Quality 
+Impact Assessment, which allowed the process contribution (PC) to be predicted 
+at any human and ecological receptor that could be impacted by the operation of 
+the Schedule 1 Part A(1) 1.1(a) activity. 

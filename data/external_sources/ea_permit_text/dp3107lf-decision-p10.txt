@@ -1,0 +1,42 @@
+ 
+Page 10 of 25 
+Emergency scenario 
+• Long term: The NOx PC is less than 1% of the ES at both SAC receptor 
+locations (ER3 Richmond Park, ER4 Wimbledon Common) and less than 
+100% at all LNR/SINC receptor locations. As such, impacts on annual 
+mean NOx concentrations at these locations can be screened out as 
+insignificant in accordance with the initial stage of the Environment Agency 
+screening criteria. 
+• Short term: The PC proportion of the ES is less than 10% at 1 SAC 
+receptor location (ER4 Wimbledon Common) and less than 100% at 17 
+(out of 24) LNR/SINC receptor locations. As such, impacts on 24-hour 
+mean NOx concentrations at these locations can be screened out as 
+insignificant in accordance with the initial stage of the Environment Agency 
+screening criteria. At the remaining 1 SAC (ER3 Richmond Park) and the 
+7 LNR/SINC receptor locations (ER5-ER9
+ Wesley Playing Fields and 
+Grand Union Canal , ER14 The Canal Feeder, ER26 North Acton 
+Cemetery), the PC proportion of the ES are above 1% and 100% 
+respectively. As such, impacts on 24-hour mean NOx concentrations 
+cannot be screened as insignificant in accordance with the Environment 
+Agency screening criteria. Predicted concentrations are considered to 
+represent a worst case scenario where by the worst meteorological 
+conditions overlap with the testing period. 
+• Nitrogen and Acid Deposition: The PC proportion of the Low and High 
+ESs for both nitrogen and acid deposition is less than 1% at both SAC 
+receptor locations (ER3 Richmond Park, ER4 Wimbledon Common) and 
+less than 100% at all LNR/SINC receptor locations. As such, impacts on 
+annual mean nitrogen and acid deposition rates at these locations can be 
+screened out as insignificant in accordance with the initial stage of the 
+Environment Agency screening criteria. 
+Environment Agency review of operator assessment of potential impact on 
+air quality 
+We audited the dispersion modelling and Air Quality Impact Assessment, 
+carrying out check modelling and sensitivity analysis.  We reviewed the selection 
+of modelling inputs, methodologies and assumptions, selection of receptors, 
+outputs of the model, statistical interpretations, and conclusions of the 
+assessment. 
+We agree with the consultant’s conclusions regarding human health as their 
+numerical predictions and statistical analysis indicates that exceedances of the 
+relevant environmental standards are unlikely at sensitive human health receptor 
+locations during both testing and emergency operations. 

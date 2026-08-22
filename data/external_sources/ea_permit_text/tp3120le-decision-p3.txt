@@ -1,0 +1,40 @@
+ 
+Page 3 of 17 
+We have specified the fuel to burned in the engines to consist of gas oil or 
+equivalent substitute to be agreed in writing with the Environment Agency with a 
+sulphur concentration of 0.001% w/w. We are in the process of developing our 
+position on the use gas oil substitute fuels, therefore we have required that if any 
+of these fuels are proposed, written agreement is sought by the operator from the 
+Environment Agency’s regulatory officer. 
+The Applicant has informed us of their intention to use HVO as a substitute for 
+gas oil. We consider this to be acceptable. HVO is increasingly used across the 
+data centre sector as a lower-carbon alternative to conventional fossil fuels. It is 
+subject to the same fuel quality specifications as gas oil, including limits on 
+sulphur content. We are satisfied that using HVO will not result in emissions that 
+exceed those associated with gas oil and that no further assessment is required. 
+Engine Specification 
+Environment Agency guidance specifies the BAT emissions specifications for 
+new diesel-fired reciprocating engines as 2g TA-Luft or US EPA Tier II (or 
+equivalent standard) with NOx emission levels in the range of 2000 mg/m3 at 5% 
+oxygen and reference conditions. 
+The generators proposed for the installation are emissions optimised and meet 
+the above US EPA Tier II specification at 75% load which is the intended typical 
+operational load, we are satisfied this is in line with Environment Agency 
+guidance. 
+Fuel Storage 
+At the sub-base of each ESG there will be an integrally bunded 42m3 belly tank, 
+containing gas oil/HVO for the operation of the specific generator. The belly tanks 
+will be equipped with leak detection and integral bunding having a capacity of 
+110% of the tank volume. Individual fuel polishing systems will be installed within 
+each generator enclosure. The belly tanks shall have an access hatch to allow for 
+inspection, a tank vent and a fill point connection to allow for the delivery of fuel 
+to each tank from the fuel transfer tanks. The belly tanks will be automatically 
+refuelled from the delivery road tankers, providing 48-hours fuel storage capacity 
+and a redundancy of N+1. The total fuel storage capacity of the site is 714,000 
+litres. 
+Operational areas of the site will be covered in good quality hardstanding. 
+Dedicated drainage interceptors to be installed acting as a tertiary containment to 
+prevent spill fuel entering surface waters. All fuel fill lines will have class I 
+proprietary leak detection systems and double walls. The Applicant has 
+confirmed that the fuel storage and distribution system will be compliant with the 
+Oil storage regulations for businesses. 

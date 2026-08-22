@@ -1,0 +1,39 @@
+ 
+ EPR/TP3500PB/V003   Page 12 of 23 
+OFFICIAL 
+OFFICIAL 
+Reporting of standby engine maintenance run hours is required annually and any 
+electrical outages (both those planned and those resulting from grid failures 
+regardless of duration) require both immediate notification to the Environment 
+Agency and annual reporting. 
+Noise 
+The Applicant reviewed and updated the Noise Management Plan and Noise 
+Impact Assessment as part of the variation application. The site will only run the 
+engines regularly as part of the testing regime described earlier, for short periods 
+of time. This occurs during daytime hours at the weekend. Prolonged operation 
+might only occur in an emergency situation where the National Grid supply is lost. 
+The Applicant has provided evidence to suggest that emergency operations are 
+extremely rare. As such this is deemed a low risk and the potential for prolonged 
+noise is therefore considered to be low. 
+The Applicant has taken measures to minimise noise emissions: 
+● The existing PG1 generators are located within acoustic containers (no 
+change with this variation); 
+● The existing PG2 generators are located: 
+o within the PG2 building; or 
+o within acoustic containers to the north of the PG2 building. 
+There are no changes with this variation to the noise mitigation measures 
+relating to the existing PG2 generators; 
+● The proposed four new generators will be housed within the HV building, 
+again to the north of the PG2 building. Fresh air intake acoustic louvres 
+will be located at ground level whilst the generator exhausts and air outlets 
+will be on top of the building. The design includes acoustic louvres for the 
+air inlet and silencers for the outlet / exhaust for the new generators. 
+Due to the nature of the operation and measures implemented, we consider the 
+installation to be low risk in relation to noise, so a detailed assessment of the 
+submitted noise report has not been completed. Permit condition 3.4.2 enables 
+the Environment Agency to request a revised Noise Management Plan if 
+considered necessary in the future. 
+Best Available Techniques (BAT)  
+We accept that oil-fired diesel generators are presently a commonly used 
+technology for standby generators in data centres. The Operator reviewed and 
+updated the BAT assessment submitted as part of the original Environmental 

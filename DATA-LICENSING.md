@@ -81,6 +81,35 @@ top-10 cases. Foxglove retains copyright over their original report.
 The PDF is not redistributed; readers wanting the source should request
 or download from Foxglove directly.
 
+### Environment Agency public register (`data/external_sources/ea-industrial-installations.zip`,
+`ea_permit_text/`)
+
+The Environment Agency's *Industrial installations* public register,
+downloaded from
+https://environment.data.gov.uk/public-register/downloads/industrial-installations
+(a zip, despite the URL), together with the text of the environmental
+permits it links to on gov.uk.
+
+Licensed under the
+[Environment Agency Conditional Licence](https://www.gov.uk/government/publications/environment-agency-conditional-licence/environment-agency-conditional-licence),
+which permits copying, publishing, adapting and commercial re-use subject
+to attribution and to the register's own re-use conditions
+([data.gov.uk record](https://www.data.gov.uk/dataset/1b268e32-d399-4e1c-87a0-00a17a11fce6/compliance-ratings-waste-and-installations)).
+
+- **Attribution required**, in the Environment Agency's own words:
+  "Contains Environment Agency information © Environment Agency and/or
+  database right". Carried in code as `dcp.ea_permits.ATTRIBUTION` so an
+  artefact cannot render a permit figure without it.
+- **Redistributed**, unusually for this repository: the register snapshot
+  and the extracted permit text are committed, because the licence allows
+  it and because a published thermal-input figure has to stay checkable
+  from a fresh clone. The permit **PDFs** are not — they live under
+  `data/raw/ea_permits/` and are re-fetchable from the URLs and sha256s
+  in `data/external_sources/ea-permit-documents.json`.
+- The licence explicitly grants no endorsement and no warranty: the
+  Environment Agency is not liable for errors in the register, and does
+  not endorse this use of it.
+
 ### ONS / GSS codes
 
 GSS codes used for `councils.gss_code` and `council_aliases` follow the
@@ -116,5 +145,9 @@ planning document by its application reference.
 - **PlanIt data**: courtesy attribution to planit.org.uk.
 - **Barbour ABI**: commercial licence — credit "Barbour ABI" in published
   output; workbook and derived rows not redistributed.
+- **Environment Agency permits**: Conditional Licence — attribute
+  "Contains Environment Agency information © Environment Agency and/or
+  database right"; register snapshot and permit text redistributed, PDFs
+  not.
 - **Council planning documents**: not redistributed by this repo;
   per-document licensing applies if reproduced elsewhere.

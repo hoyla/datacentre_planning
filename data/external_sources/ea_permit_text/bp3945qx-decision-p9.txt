@@ -1,0 +1,50 @@
+ 
+                       Page 9 of 18 
+OFFICIAL 
+OFFICIAL 
+ 
+Operational and management procedures should reflect the outcomes of the air 
+quality modelling by minimising the duration of testing, phasing generators into 
+subgroups, avoiding whole site tests and planning off-grid maintenance days and 
+most importantly times/days to avoid adding to “at risk” high ambient pollutant 
+background levels. 
+The permit application has assessed and provided evidence of the actual 
+reliability of the local electricity grid distribution allowing the Environment Agency 
+to judge that the realistic likelihood of the plant needing to operate for prolonged 
+periods in an emergency mode is low. 
+Reporting of standby generator maintenance run hours is required annually and 
+any electrical outages (planned or grid failures regardless of duration) require 
+both annual reporting and immediate notification of the Environment Agency. 
+ 
+It is anticipated that the timescale of operation is likely to be short.  They will only 
+operate in this mode when the National Grid is off-line.  The operator has put 
+multiple measures in place to minimise the risk of National Grid supply failure 
+including dual substation connection and management systems for preventing 
+data centre failure. 
+ 
+The permit includes requirement to carry out on-going monitoring of the 
+emissions from the generators (see Monitoring section of this document).  As the 
+applicant has not planned the installation of suitable monitoring ports at the 
+present, on the assumption that no monitoring would be required, we have 
+included an improvement condition (IC2) requiring the operator to demonstrate 
+that appropriate sample locations are included in the design of the generators.   
+ 
+ 
+Assessment of Best Available Techniques 
+As outlined in the Environment Agency’s ‘Data Centre FAQ’ document, we 
+accept that gas oil fired generators are presently a commonly used technology 
+for standby generators.  However, we require a BAT assessment detailing the 
+choice of generator, the particular configuration and plant sizing to meet the 
+standby arrangement.  
+The default generator specification as a minimum for new plant to minimise the 
+impacts of emissions to air of NO
+x is 2g TA-Luft or Tier II US EPA, or an 
+equivalent NOx emission concentration of 2000mg/m3 at 5% reference oxygen 
+and normal conditions.  
+ 
+Medium combustion plant is considered to be existing plant if it is put into 
+operation before 20 December 2018.  Whilst the following engines are 
+considered to be existing plant, we consider that they nevertheless represent 
+BAT, i.e. emissions optimised to be 2g TA-Luft compliant: 
+ 
+5 x 7.28 MWth generators (LON4 emission points A1 – A5) 

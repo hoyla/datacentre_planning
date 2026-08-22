@@ -1,0 +1,51 @@
+ 
+Permit number 
+EPR/KP3139DW 14 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 The operator shall submit proposals for baseline soil and groundwater 
+investigation to the Environment Agency for written approval. 
+ 
+The proposals must cover the entirety of the site occupied by the data 
+centre, follow appropriate British and International Standards and 
+include the following 
+ a description of the scope of investigation including 
+characterisation of the physical state of soil under the site,  
+ a suite of analyses to be undertaken (for both soil and 
+groundwater) 
+ potential future monitoring requirements and timescales.  
+ 
+The proposed investigative programme shall ensure that all information 
+necessary to make a quantified comparison with the state of the site 
+upon definitive cessation of activities and surrender of the environmental 
+permit is available. 
+01/09/19 
+IC2 The operator shall submit a baseline report to the Environment Agency, 
+for written approval. The report shall presents and discusses the results 
+and analyses of the baseline investigation produced as part of IC1 and 
+outline any requirements for future monitoring and timescales for 
+implementation to satisfy the requirements of Condition 3.1.2 of the 
+permit. 
+01/01/20 
+IC3 The Operator shall undertake a noise assessment during all periods of 
+scheduled generator testing and maintenance. The assessment shall be 
+in accordance with the procedures given in BS4142: 2014 (Rating 
+industrial noise affecting mixed residential and industrial areas) in order 
+to verify the assessment provided within the application.  
+ 
+The assessment shall include, but not be limited to:  
+ a review of the noise sources from the facility (where any noise 
+sources are identified as exhibiting tonal contributions, they 
+shall be quantified by means of frequency analysis); 
+ a review of noise mitigation measures. 
+ 
+A written report shall be provided to the Environment Agency for 
+approval detailing the findings of the noise assessment.  
+ 
+The report shall include: 
+ a review of whether any improvements are required  
+ proposals and timescales for their implementation. 
+ 
+The proposals submitted in the report shall be implemented by the 
+operator from the date of approval in writing by the Environment Agency. 
+01/04/20 

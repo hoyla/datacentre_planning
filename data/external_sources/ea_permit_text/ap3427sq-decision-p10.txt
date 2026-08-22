@@ -1,0 +1,39 @@
+ 
+Page 10 of 29 
+We carried out modelling checks and sensitivity analysis using ADMS version 
+6.0.2.0 based on the consultant’s modelling files. The sensitivity analysis 
+considered in this audit included:  
+• Our own meteorological data observed at London Luton Airport 
+meteorological station. 
+• Using a lower short-term NOX to NO2 conversion ratio.  
+• Consideration of acid and nitrogen deposition for the emergency scenario. 
+ 
+Human Health Assessment 
+For the testing and emergency scenarios, all PECs are predicted to be within the 
+relevant long-term and short-term ES at all human health receptors. 
+Routine testing and emergency operations are unlikely to make a significant 
+contribution to or cause an exceedance of an environmental standard at human 
+health receptors. 
+ 
+Habitats Assessment 
+For the emergency scenario, we cannot rule out exceedances of the daily NOx 
+critical level of 200 µg/m³ at ecological receptors. However, as the 72-hour 
+emergency scenario represents a national ‘black start’ power outage event, the 
+likelihood of exceedances occurring is expected to be low. 
+No other exceedances of critical levels or loads are predicted at any ecological 
+receptor for either testing or emergency scenarios. 
+Critical loads are not available on APIS for Sundon Chalk Quarry SSSI. The 
+designated features at this SSSI are known to be sensitive to acid and nitrogen, 
+and APIS recommends obtaining site-specific advice. As proxy values, applied a 
+nitrogen deposition critical load of 10 kgN/ha/yr and the acid deposition critical 
+load for ‘calcareous grassland,’ which is the likely habitat present. For added 
+conservatism, our audit assessed against a lower nitrogen deposition critical load 
+of 5 kgN/ha/yr. Predicted contributions (PCs) for testing and emergency 
+scenarios are insignificant compared to these indicative critical loads. 
+The facility emits NOx and SO₂, which can contribute to acidification, nutrient 
+enrichment, and toxic contamination, potentially altering ecological composition.  
+We carried out an audit on the operator’s assessment of the impact of NOx, SO₂, 
+acid deposition, and nutrient nitrogen deposition on Sundon Chalk Quarry SSSI 
+and Fancott Woods and Meadows SSSI. We concluded that for all scenarios, 
+impacts are predicted to be insignificant or highly unlikely and are therefore not 
+expected to damage the features of these SSSIs in any of the scenarios. 

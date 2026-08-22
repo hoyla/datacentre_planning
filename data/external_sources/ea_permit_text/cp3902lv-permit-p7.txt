@@ -1,0 +1,46 @@
+Variation and consolidation  
+application number  
+EPR/CP3902LV/V003 7 
+Schedule 1 
+The following conditions were varied as a result of the application made by the operator:   
+• Table S1.1 Activities, as referenced by conditions 2.1.1 and 2.3.5, to update activity reference AR1 
+with the LON1B SBGs.  
+• Table S1.2 Operating techniques, as referenced by conditions 2.3.1 and 2.3.2, to include the 
+relevant operating techniques.  
+• Table S1.3 Improvement programme requirements, as referenced by condition 2.4.1 , to include 
+improvement conditions IC4 and IC5 for the LON1B SBGs.  
+• Table S1.4 Pre-operational measures, as referenced by condition 2.5.1, to include pre-operational 
+conditions PO2 and PO3 for the LON1B SBGs. 
+• Table S3.1 Point source emissions to air – emission limits and monitoring requirements, as 
+referenced by conditions 3.1.1, 3.5.1 and 3.5.4, to include monitoring requirements for the LON1B 
+SBGs.  
+• Table S3.3 Process monitoring requirements, as referenced by condition 3.5.1 to include monitoring 
+requirements for the LON1B SBGs.  
+• Table S4.1 Reporting of monitoring data, as referenced by condition 4.2.3, to include reporting 
+requirements for the LON1B SBGs. 
+• Table S4.2 Performance parameters, as referenced by condition 4.2.2, to include performance 
+parameters for the LON1B SBGs and AdBlue usage for LON1A and LON1B SBGs. 
+• Schedule 7, Site plan, as referenced by condition 2.2.1, to include the LON1B SBGs and associated 
+emission points.  
+ 
+The following conditions were varied/deleted as a result of an Environment Agency initiated variation:  
+• Registered office address amended consistent with details on Companies House on GOV.UK. 
+• Condition 1.5.1, Climate change deleted in accordance with the current permit template. 
+• Table S1.3 Improvement programme requirements, as referenced by condition 2.4.1 , to clarify that 
+improvement conditions IC1 to IC3 are relevant to LON1A SBGs, that IC1 is superseded by IC4 and 
+to amend IC3 wording to remove ‘At least 1 month prior to operation of the additional 16 engines’ 
+(included in error, it is not a pre-operational condition). 
+• Table S1.4 Pre-operational measures, as referenced by condition 2.5.1, to clarify that pre-
+operational condition PO1 is relevant to LON1A SBGs and to amend wording from ‘with this 
+variation’ to ‘by variation EPR/CP3902LV/V002’. 
+• Table S3.1 Point source emissions to air – emission limits and monitoring requirements, as 
+referenced by conditions 3.1.1, 3.5.1 and 3.5.4, to confirm that the 16 x 6.947 MWth SBGs are fitted 
+with SCR and to update the LON1A source from ‘gas oil generator exhausts’ to ‘SBG exhausts’. 
+• Table S4.1 Reporting of monitoring data, as referenced by condition 4.2.3, note 1 to the table is 
+amended to refer to IC2 instead of IC4.  
+• Schedule 6, Interpretation, as referenced by condition 4.4.1, amended to include the relevant 
+reference conditions for emissions to air from the SBGs (engines).  
+ 
+Schedule 2 – consolidated permit 
+Consolidated permit issued as a separate document. 
+ 

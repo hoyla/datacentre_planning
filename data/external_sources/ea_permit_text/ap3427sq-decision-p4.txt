@@ -1,0 +1,40 @@
+ 
+Page 4 of 29 
+an equivalent. These are the international standards that we have concluded that 
+we will use to infer what BAT is for sites.   
+The operator has confirmed that the 42 generators to be used at the data centres 
+are emissions optimised to meet the US EPA Tier 2 standard.  
+We do not consider SO2 emissions to be a risk from the operation of the 
+Installation as we have included a condition in the permit restricting the fuel to 
+ultra-low sulphur gas oil, resulting in negligible emissions of sulphur. HVO has 
+the same sulphur content restrictions set in the permit as gas oil. 
+Aqueous Releases from Site 
+The Installation has separate foul and surface water drainage systems.  
+The foul water from WW1 and WW2 enters the wider data centre foul water 
+system before discharging to the Anglian Water foul sewer (subject to 
+agreement).  
+Surface water from SW1 flows to Ouzel Brook after treatment through the 
+attenuation pond and oil separator. 
+Point Source Emissions to Foul Sewer 
+The foul water discharges from the permitted Installation will occur at two 
+emission points, WW1 and WW2, as shown on the Installation Boundary and 
+Emission Points Drawing. These discharges comprise surface water from 
+generator refuelling laybys, which will pass through an oil interceptor before 
+entering the foul drainage system.   
+The connection to the Anglian Water foul sewer network is subject to agreement, 
+for which an application has been submitted.  
+ 
+Point Source Emissions to Surface Water Sewer 
+The operator has confirmed that there will be no contaminated emissions to the 
+public surface water sewer system associated with the regulated activity 
+undertaken at the Installation. 
+ 
+Uncontaminated surface water runoff from the Installation and the wider data 
+centre site will flow to the attenuation pond (southwest corner), which has an 
+impermeable liner and a Penstock valve for emergency isolation. Before 
+discharge via SW1, water passes through the interceptor downstream of the flow 
+control device, ensuring oil separation before entering an open water course 
+(Ouzel Brook). 
+Fuel spill kits will be present at the time of refuelling. All spillages will be logged, 
+investigated and corrective action will be taken.   
+ 

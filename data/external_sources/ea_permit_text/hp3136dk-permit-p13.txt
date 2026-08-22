@@ -1,0 +1,59 @@
+Permit number 
+EPR/HP3136DK 13 
+Table S1.3 Improvement programme requirements
+Reference Requirement Date 
+IC3 The Operator shall submit a report to the Environment Agency verifying 
+the predicted short-term nitrogen dioxide concentrations at the boundary 
+of the site. The report shall include but is not limited to: 
+ Monitoring of ambient air quality at  the boundary of the site during 
+the ‘pull the plug’ operating scenario using monitoring methods 
+agreed in advance with the Environment Agency; 
+ A comparison of modelled against monitored concentrations of 
+nitrogen dioxide; 
+ A demonstration that appropriate monitoring location(s) were 
+selected at the boundary of the site, taking into account the 
+modelled predictions and the weather conditions prevalent at the 
+time of the monitoring; and 
+ Details of the MCERTS qualifications held by the monitoring 
+team.  
+The output of the verification exercise should be used to revise the air 
+quality management plan if necessary. 
+12/04/2020 
+IC4 The Operator shall submit a review of options for reducing predicted short 
+term nitrogen dioxide emissions impacts for the grid failure emergency 
+scenario. This shall include but is not limited to:  
+ Monitoring of engine emissions to validate the impact assessment 
+submitted with the application; 
+ A feasibility study including cost benefit analysis for potential 
+upgrades or other changes to infrastructure or operational 
+regimes on site that could increase dispersion; 
+ Use of the above information to propose appropriate changes in 
+stack height or other potential options for decreasing emissions or 
+increasing dispersion to ensure emergency scenario emission 
+levels do not exceed acceptable maximum levels specified in 
+relevant guidance at sensitive receptors; and 
+ Proposal of an appropriate timescale for improvements.  
+The review and timescale for improvement shall be submitted to the 
+Environment Agency in writing for approval. 
+12/10/2020 
+IC5 The Operator shall undertake a noise assessment during normal 
+operations in accordance with the procedures given in BS4142: 2014 
+(Rating industrial noise affecting mixed residential and industrial areas) in 
+order to verify the assessment provided within the application. The 
+assessment shall include, but not be limited to:  
+ 
+ A review of the noise sources from the facility. Where any noise 
+sources are identified as exhibiting tonal contributions, they shall be 
+quantified by means of frequency analysis; and 
+ 
+ A review of noise mitigation measures. 
+A report shall be provided to the Environment Agency detailing the 
+findings of the assessment and a review of whether any improvements 
+are required together with proposals and timescales for their 
+implementation. 
+12/10/2019 
+IC6 The Operator shall carry out a review  of the site’s tertiary containment 
+system which serves the oil and diesel storage tanks  
+The review shall compare the system’s design, method of construction 
+and integrity against the standards outlined in CIRIA guidance C736 – 
+12/01/2018 

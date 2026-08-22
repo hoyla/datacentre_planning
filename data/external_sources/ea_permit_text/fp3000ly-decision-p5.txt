@@ -1,0 +1,44 @@
+ 
+ Page 5 of 18  
+exercise, statistical interpretation of modelling outputs and conclusions of the 
+assessment.  
+The conclusions of the Applicant’s assessment are summarised in the following: 
+ No exceedances of the air quality standards (AQS) or environmental 
+standards (ES) for CO, SO2, particulates (PM10 and PM 2.5), NO  and 
+hydrocarbons (as benzene) are predicted under any of the modelled 
+scenarios; 
+ No exceedances of the long-term AQS for NO 2 are predicted under any of 
+the modelled scenarios; 
+ The Applicant did not assess against the 24  hour ES for Benzene nor the 
+short term or long term ES for nitric oxide. We checked these and predicted 
+no exceedances of the ES for any scenario. 
+ The 99.79th percentile NO 2 hourly air modelling predictions potentially 
+exceed the concentration corresponding to the short-term AQS (i.e. 200 
+g/m3) at human receptors locations in proximity of the installation, when all 
+the emergency diesel generators  are operated simultaneously for testing 
+purposes (full-building test) and during an emergency black-out. 
+Therefore further investigation was required to look at the actual likelihood 
+of these scenarios resulting in a breach of short-term NO2 AQS.  
+The Applicant referred to a statistical analysis methodology to determine 
+the likelihood of the worst predicted emissions from the operations of the 
+standby emergency plant coinciding with the worst meteorological hours 
+over the modelled operating envelope, and subsequently causing a breach 
+of the short-term air quality standard for NO2 for more than 18 hours in a 
+year, corresponding to the 99.79th percentile specification for the short-
+term NO2 AQS. The statistical analysis was based on the hypergeometric 
+probability distribution and followed the methodology set out in our web 
+guidance on dispersion modelling assessment for generators. 
+The results of the Applicant’s analysis show that, given the small number of 
+operating hours, it is extremely unlikely (less than 1%) that any of these 
+scenarios result in an exceedance of the short-term NO2 AQS for more than 
+18 hours per year. 
+ Our assessment considered the  magnitude of the worst case NO 2 
+predictions against acute exposure risk criteria , during the simultaneous 
+operation of all 11 standby generators . The US EPA Acute Exposure 
+Guidelines (AEGL) were used for this part of the assessment.  The 
+assessment showed that offsite exceedances of the 10-min AEGL-1 for NO2 
+(corresponding to 940 g/m3) are unlikely. 
+ The Applicant assessed that the maximum annual -mean process 
+contributions are less than 1% of the relevant critical levels (for NOx and 
+SO2) and critical loads (for nutrient nitrogen deposition and acidification) at 
+all ecological receptors for all the testing scenarios.  

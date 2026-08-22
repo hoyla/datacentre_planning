@@ -1,0 +1,44 @@
+Variation and consolidation  
+application number  
+EPR/QP3706LH/V002  3 
+The contingency standby power solution comprises 56x 7.31 MWth (new MCP) gas oil or equivalent fuelled 
+generators with an aggregated thermal input of 409.36 MWth.  
+The default generator specification as a minimum for new plant to minimise the impacts of emissions to air 
+(NOx) is 2g TA-Luft or US EPA Tier 2 (or equivalent standard) or an equivalent NOx emission concentration 
+of 2000 mg/m3. The operator has confirmed that all generators in use at the data centre are compliant with 
+the US EPA Tier 2 standard. 
+The generators can operate on either gas oil or an agreed equivalent substitute.  
+ 
+The data centre generators will only operate under a limited scheduled programme of routine testing and 
+maintenance or in an emergency site power outage scenario. Electrical power is normally provided to the 
+data centre from the National Grid. However, in the event of a failure in this electrical supply, the operator will 
+utilise the generators to maintain an electrical power supply to the site. The generators will be used solely for 
+the purpose for generating power for the facility. No electricity will be exported from the Installation. 
+ 
+Each generator on site 1 (LON1B1) has its own double skinned day (belly) tank (1,200 litres) and its own 
+dedicated bulk fuel storage tank (42,000 litres). Each generator on site 2 (LON1B2) has its own double 
+skinned day (belly) tank (1,200 litres). Site 2 (LON1B2) also has 20 bulk fuel storage tanks (ranging from 
+31,500 litres to 61,000 litres) across the site which represent 1 storage tank per 2 generators. However, 
+these tanks act together as a larger balancing tank and are not dedicated to the pair of ta nks which they 
+serve. The tanks are positioned at ground level below each engine and have leak detection. The total fuel 
+storage capacity is 1,884,700 litres.  
+The Installation falls under the following Environmental Permitting Regulations (EPR) Schedule 1 listed 
+activity description: 
+Section 1.1 Part A(1)(a) - Burning any fuel in an appliance with a rated thermal input of 50 or more megawatts.  
+ 
+On site 1 (LON1B1) exhaust gases from each pair of generators will be discharged through a common plenum 
+at 8 emission points A1 a/b to A8 a/b.  On site 2 (LON1B2) exhaust gases from each generator will be 
+discharged through their own individual stacks at 40 emission points A9 to A48. 
+ 
+There will be no process effluent discharge from the Installation. Uncontaminated surface water run -off from 
+the roof and hard-standing will drain via oil-water separators to the surface water drainage system at emission 
+points W1 and W2.  
+ 
+The Installation is within the 2 km screening distance of the Brent Reservoir Site of Special Scientific Interest 
+(SSSI) and a number of wildlife sites, however no significant environmental impact from the Installation is 
+expected there. 
+There will be an Environmental Management System (EMS) in place based on the ISO 14001 standard.  
+ 
+The schedules specify the changes made to the permit. 
+The status log of a permit sets out the permitting history, including any changes to the permit reference 
+number.  

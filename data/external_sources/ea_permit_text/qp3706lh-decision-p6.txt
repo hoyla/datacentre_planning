@@ -1,0 +1,39 @@
+ 
+EPR/QP3706LH/V002 Decision Document      Page 6 of 28 
+• Dollis Hill Reservoir  
+• Gladstone Park  
+• Dudding Hill Loop between Cricklewood and Harlesden  
+• Railway Cutting  
+• Metropolitan Line between Kilburn and Neasdon  
+• Clitterhouse Playing Fields  
+• Clarefield Park  
+• Lower Dollis Brook  
+• Hendon Park and Northern Line  
+• Silk Stream and Burnt Oak Brook  
+• Kingsbury Road Bank  
+• Meadow Way Copse  
+ 
+No Special Area of Conservation (SAC), Special Protection Area (SPA) or 
+Ramsar site was identified within the 10 km screening distance. 
+The data centre is situated in Brent Air Quality Management Area (AQMA) 
+declared for annual mean NO2 and 24-hour PM10 exceedances. 
+The Consultant modelled four main operational scenarios: two testing scenarios 
+(monthly and six-monthly) and two emergency scenarios (outage) of 48 hours 
+and 72 hours. 
+The Consultant stated that testing will occur between 08:00 and 20:00 hours but 
+has run the model for a full year (8,760 hours), undertaking statistical analysis to 
+establish the probability of exceeding the 1-hour mean NO2 Environmental 
+Standard (ES). Annual mean results have been factored to the total hours of 
+operation.  
+The Consultant confirmed in their second addendum that site 1 and site 2 will not 
+be tested within the same 24-hour period. 
+Monthly Testing 
+Monthly testing regimes for site 1 (existing) and site 2 (proposed) are not 
+identical. Site 1 monthly routine testing involves each SBG operating individually 
+for 30 minutes at 10% engine load. This is consistent with the existing permit 
+(ERP/QP3706LH/A001). At site 2, the SBGs are tested in groups of eight (total of 
+5 groups) for 30 minutes at 50% load. The Consultant has confirmed that site 2 
+groups would not be tested within the same hourly period.  
+Six-monthly Testing 
+Six-monthly testing represents routine testing during which the site 1 and site 2 
+SBGs are operated individually at 100% load for 4 hours, twice per year. 

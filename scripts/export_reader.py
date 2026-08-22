@@ -1661,8 +1661,9 @@ def main() -> int:
                 # An operator's own word for the quantity is evidence, so
                 # it is shown instead of ours where one exists.
                 _qty = c["operator_term"] or qty
-                _entry = ("register entry" if c["source_key"] == "neso_ea_register"
-                          else "for")
+                _entry = {"neso_ea_register": "register entry",
+                          "ea_permit": "permitted at"}.get(
+                              c["source_key"], "for")
                 head = (f"<p><strong>{_orig}</strong> "
                         f"{esc(_qty)} — {_entry} "
                         f"“{esc(c['claim_name'])}”"
@@ -1677,8 +1678,14 @@ def main() -> int:
                         + (f" — {ccl.TENTATIVE_NOTE}"
                            if c["confidence"] == "tentative" else "")
                         + f" · {esc(c['method']).replace('_', ' ')}")
+                # Only the operator-website source is titled by the
+                # operator; every other source carries an operator name
+                # too — a permit holder, a filing company — and titling
+                # those by it would caption an Environment Agency permit
+                # as the operator's own marketing.
                 src_title = (c["operator"] + " (own website)"
-                             if c["operator"] else
+                             if c["source_key"] == "operator_website"
+                             and c["operator"] else
                              ccl.SOURCE_TITLES.get(c["source_key"],
                                                    c["source_key"]))
                 _as_at = c["as_at"]
@@ -2168,7 +2175,7 @@ def main() -> int:
     _d_towerhamlets = round(cc.change_pct(desnz["Tower Hamlets"]))
     _d_hertsmere = round(cc.change_pct(desnz["Hertsmere"]))
 
-    # ---- Operators: the same companies, told to four audiences ----------
+    # ---- Operators: the same companies, told to five audiences ----------
     with db.cursor(dict_rows=False) as _cur:
         op_rows = odis.load_rows(_cur)
         op_divs = odis.load_divergences(_cur)
@@ -2321,9 +2328,11 @@ def main() -> int:
         for d, q in _lfl)
 
     operators_html = f"""
- <p class="lede">A data centre's size is stated to at least four different audiences: the
- planning authority, the grid operator, the auditors and its customers. This page puts
- those figures beside each other, one row per operator.</p>
+ <p class="lede">A data centre's size is stated to at least five different audiences: the
+ planning authority, the grid operator, the auditors, its customers and the environmental
+ regulator. This page puts those figures beside each other, one row per operator. The
+ regulator's column is the odd one out — it is the thermal rating of the standby generator
+ fleet, in MWth, so it sizes what the site is built to survive rather than what it draws.</p>
  <div class="banner"><b>Read this as a description, not a scoreboard.</b>
   {esc(odis.FAIRNESS_NOTE)}</div>
  <h3>What each operator publishes, and to whom</h3>

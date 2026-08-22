@@ -1,0 +1,49 @@
+ 
+                       Page 10 of 18 
+OFFICIAL 
+OFFICIAL 
+The following engines are also existing plant and are there not required to 
+operate to BAT standards: 
+ 
+8 x 6.04 MWth generators (LON4 emission points A6 – A8 and A12 – A16) 
+ 
+Nevertheless, the operator committed to remapping these engines to BAT 
+standard and we have therefore included improvement condition IC3 to require 
+the operator to provide evidence of this by 31 January 2024. 
+ 
+The operator confirmed that the following engines, which are new medium 
+combustion plant, have been installed with the emissions optimised software and 
+are therefore Tier 2 compliant, which represents BAT: 
+ 
+3 x 5.61 MWth generators (LON4 emission points A9 – A11) 
+3 x 6.04 MWth generators (LON4 emission points and A17 – A19) 
+ 
+The operator provided generic CAT certification for the generator types and 
+indicative emission concentrations for emissions optimised variants via 
+manufacturer’s data sheets, but was unable to provide compliance certificates for 
+the specific engines, because they were not available from the supplier at the 
+time of determination.  We have therefore included improvement condition IC3 to 
+require the operator to provide evidence of this within three months of permit 
+issue.   
+ 
+The operator confirmed that the following engines were commissioned after 
+20 December 2018 and are therefore considered to be new medium combustion 
+plant but do not currently meet the BAT standard: 
+ 
+6 x 4.72 MWth generators (LON3 emission points A21 – A26) 
+6 x 5.42 MWth (LON 10 emission points A27 – A32) 
+The operator has committed to improvements to all the non-compliant engines 
+(A21 – A32).  We have therefore included improvement condition IC5, which 
+requires the operator to propose measures to achieve BAT compliance, to be 
+agreed with the Environment Agency and implemented to an agreed timetable.  
+Where relevant the operator shall demonstrate through further air quality 
+assessment that the environmental risks of the proposed measures are 
+minimised and not significant. 
+ 
+The engine exhaust emissions from each LON 3 and LON 4 generator is mixed 
+with engine cooling air before being discharged to atmosphere via vertical stacks 
+10-16m above ground level.  LON10 engines are individually exhausted via 
+vertical stacks to a height of 16m above ground level.  
+ 
+The choice and configuration of back up energy plant is driven by the data centre 
+design i.e. matching the number and size of the SBGs to the power supply 

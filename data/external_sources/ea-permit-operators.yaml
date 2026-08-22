@@ -1,0 +1,198 @@
+# Which Environment Agency permit holders are data-centre operators.
+#
+# The register does not say. It carries a permit holder's registered
+# company name and a site address, and the only thing that makes a row
+# interesting here is that the name belongs to somebody who runs data
+# centres. That judgement cannot be inferred from the file, so it is
+# written down: one entry per token, each with the operator it stands
+# for and why it is in the list.
+#
+# Tokens are matched case-insensitively against `Name` + `Site Address`
+# together, because several holders are single-purpose vehicles whose
+# name says nothing ("SF LHR LTD", "GTR MANAGEMENT SERVICES LIMITED")
+# while their address names the campus.
+#
+# This is a candidate generator, not an identity. A row matching a token
+# still has to authorise combustion plant to become a candidate, and a
+# candidate still has to be adjudicated by hand before it attaches to a
+# site. The Union Park lesson applies at the operator level too: a
+# company name in common is not a site in common, least of all for
+# operators running several campuses.
+#
+# `kind` is editorial, and it is here because the two kinds answer
+# different questions. A colocation or hyperscale operator's standby
+# fleet sizes a merchant data centre. A bank's or a telecoms company's
+# fleet sizes its own back office, which is a data centre but not part
+# of the build-out this investigation is about.
+
+operators:
+  # --- Hyperscale ---------------------------------------------------
+  - token: "amazon data services"
+    operator: Amazon Web Services
+    kind: hyperscale
+    note: The AWS UK permit-holding entity. `AMAZON UK SERVICES LTD.`
+      is the fulfilment-centre company and is deliberately not a token.
+
+  # --- Colocation and wholesale -------------------------------------
+  - token: "ark data centres"
+    operator: Ark Data Centres
+    kind: colocation
+  - token: "equinix"
+    operator: Equinix
+    kind: colocation
+  - token: "virtus"
+    operator: VIRTUS Data Centres
+    kind: colocation
+    note: Covers VIRTUS HOLDCO, VIRTUS HAYES and the numbered London
+      SPVs, which are separate companies on one estate.
+  - token: "colt data centre"
+    operator: Colt Data Centre Services
+    kind: colocation
+  - token: "colt technology"
+    operator: Colt Technology Services
+    kind: colocation
+    note: The network company rather than the data-centre arm; its
+      Docklands permit is still a data-centre standby fleet.
+  - token: "digital realty"
+    operator: Digital Realty
+    kind: colocation
+  - token: "redhill data centre"
+    operator: Digital Realty
+    kind: colocation
+    note: Digital Realty's Redhill SPV. The Environment Agency's own
+      publication for this permit is titled "Digital Realty (UK)
+      Limited", which is where the identification comes from.
+  - token: "interxion"
+    operator: Digital Realty (Interxion)
+    kind: colocation
+  - token: "ntt global data centers"
+    operator: NTT Global Data Centers
+    kind: colocation
+  - token: "cyrusone"
+    operator: CyrusOne
+    kind: colocation
+  - token: "telehouse"
+    operator: Telehouse
+    kind: colocation
+  - token: "global switch"
+    operator: Global Switch
+    kind: colocation
+  - token: "iron mountain"
+    operator: Iron Mountain Data Centers
+    kind: colocation
+  - token: "kao data"
+    operator: Kao Data
+    kind: colocation
+  - token: "pulsant"
+    operator: Pulsant
+    kind: colocation
+  - token: "nlighten"
+    operator: nLighten
+    kind: colocation
+  - token: "volta data"
+    operator: Volta Data Centres
+    kind: colocation
+  - token: "zenium"
+    operator: Zenium
+    kind: colocation
+    note: Zenium's UK estate was bought by CyrusOne in 2018; the permits
+      still stand in the Zenium companies' names.
+  - token: "cyxtera"
+    operator: Cyxtera
+    kind: colocation
+  - token: "green mountain dc"
+    operator: Green Mountain
+    kind: colocation
+  - token: "vantage data"
+    operator: Vantage Data Centers
+    kind: colocation
+    note: Deliberately "vantage data", not "vantage" — a bare token
+      matches Vantage Farm, a Shropshire poultry installation, and
+      Vantage Waste Solutions.
+  - token: "vdc lhr"
+    operator: Vantage Data Centers
+    kind: colocation
+    note: Vantage's Park Royal SPV — VDC is the company's own prefix and
+      LHR its London campus code.
+  - token: "lhr1 data center holdings"
+    operator: unattributed
+    kind: colocation
+    note: An SPV named for a London campus code. Whose it is has not
+      been established, which is why the operator is left unattributed
+      rather than guessed.
+  - token: "sf lhr"
+    operator: unattributed
+    kind: colocation
+  - token: "gtr management services"
+    operator: unattributed
+    kind: colocation
+    note: Slough Trading Estate, SL1 4BG — the same postcode as an NTT
+      permit. Identity unestablished.
+  - token: "pdcg (group services)"
+    operator: unattributed
+    kind: colocation
+  - token: "enfield dc service company"
+    operator: unattributed
+    kind: colocation
+  - token: "harlow operations"
+    operator: unattributed
+    kind: colocation
+  - token: "cl international management"
+    operator: unattributed
+    kind: colocation
+  - token: "global infrastructure uk"
+    operator: unattributed
+    kind: colocation
+
+  # --- Enterprise and telecoms --------------------------------------
+  # Real data centres, but their own back office rather than merchant
+  # capacity. Kept because the permitted fleet is still a measured
+  # standby capacity at a known postcode, and excluded from any count
+  # of the commercial build-out by `kind`.
+  - token: "bt plc"
+    operator: BT
+    kind: enterprise
+  - token: "vodafone limited"
+    operator: Vodafone
+    kind: enterprise
+  - token: "verizon uk"
+    operator: Verizon
+    kind: enterprise
+  - token: "virgin media"
+    operator: Virgin Media
+    kind: enterprise
+  - token: "lumen technologies"
+    operator: Lumen
+    kind: enterprise
+    note: Not "lumen" — that matches Lumentum Technology, an optical
+      components manufacturer.
+  - token: "barclays execution services"
+    operator: Barclays
+    kind: enterprise
+  - token: "santander uk"
+    operator: Santander
+    kind: enterprise
+  - token: "ubs ag"
+    operator: UBS
+    kind: enterprise
+  - token: "kyndryl"
+    operator: Kyndryl
+    kind: enterprise
+
+# Names that look like a hit and are not. Recorded so that widening the
+# token list later cannot quietly re-admit them, and so the shape of the
+# false positives is visible: every one is a token that was too short.
+rejected:
+  - name: Vantage Farm (Michael Harrison), TF9 3RZ
+    why: Intensive poultry farming. Matched a bare "vantage".
+  - name: Vantage Waste Solutions Ltd, S9 1BG
+    why: Hazardous waste storage. Matched a bare "vantage".
+  - name: Greenergy Biofuels Limited, DN40 2QU
+    why: Biodiesel production. Matched a speculative "greenergy",
+      which was never a data-centre operator.
+  - name: Lumentum Technology UK Limited, NN12 8EQ
+    why: Optical components. Matched a bare "lumen".
+  - name: Future Industrial Services Limited, HU3 4TT
+    why: Hazardous waste treatment.
+  - name: Precision Micro Limited, B24 9GZ
+    why: Photochemical etching.

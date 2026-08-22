@@ -1,0 +1,47 @@
+ 
+ Page 4 of 18  
+installation as we have included a condition in the permit restricting the fuel to 
+ultra-low sulphur diesel, resulting in negligible emissions of sulphur. Carbon 
+monoxide and unburnt hydrocarbons emissions were also included but we 
+consider that these will also be negligible for modern and well maintained 
+efficient generators which allow for the complete combustion of the fuel with the 
+appropriate combustion conditions in line with the equipment manufacturer’s 
+specification.  
+ 
+The applicant submitted an air dispersion modelling report which assesses the 
+potential impact of emissions of NOx, particulates (PM10 and PM2.5), SO2 and 
+hydrocarbons from the generators on local air quality. The ADMS 5 software 
+dispersion model was used to predict atmospheric concentrations of the identified 
+pollutants; we accept that the use of this model is appropriate for these 
+circumstances. 
+ 
+The following parameters were used for input data into the model: 
+ Meteorological Data from Lyneham meteorological station 2015 – 2019 
+ A complex terrain map of the local area 
+ Surface roughness length of 0.5m (representative of suburban areas) 
+ Building wake effects from the adjacent data-hall (136m x 67m footprint, 
+12.4m high) 
+ Four different operating scenarios were modelled: 
+o Testing scenario 1 – each generator individually tested at 25% load 
+for 0.5 hours twice a year. 
+o Testing scenario 2 – each generator tested at 100% load twice a 
+year. 
+o Full-building test – all generators operating at 100% load for up to 
+two hours once per year. 
+o Emergency operation – all 11 generators operating at 100% load 
+for 72 hours. 
+ Emissions are from 15m high stacks of 0.6m diameter 
+ Pollutant emission rates of NOx, particulates and hydrocarbons for 
+generators typical of those likely to be installed at the installation (TA Luft 
+2g). 
+ Ambient (background) air quality for NO2, particulates, hydrocarbons, SO2 
+and CO obtained from DEFRA-mapped background concentration 
+estimates. 
+ Where relevant, background concentrations at each designated site have 
+been derived from the UK Air Pollution Information System (APIS) 
+database. 
+The Environment Agency Air Quality Modelling and Assessment Unit (AQMAU) 
+has audited the air dispersion modelling report and addenda submitted with the 
+permit application and carried out check modelling and sensitivity analysis. The 
+audit has reviewed the selection of modelling inputs, modelling methodology and 
+assumptions, selection and distribution of receptors, the outputs of the modelling 

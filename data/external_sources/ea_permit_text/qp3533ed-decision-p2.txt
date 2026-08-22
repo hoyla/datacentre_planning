@@ -1,0 +1,47 @@
+ 
+ 
+Key issues of the decision  
+The Installation  
+The installation is subject to the Environmental Permitting Regulations (EPR) 
+as it carries out an activity listed in Part 1 of Schedule 1 to the EPR:  
+• Section 1.1 A(1) (a): Burning any fuel in an appliance with a rated 
+thermal input of 50 megawatts or more.  
+And includes the following Directly Associated Activity (DAA): 
+• Diesel bulk storage tanks, accompanying pipe work and fill points. 
+ 
+The permit authorises the operation of standby diesel generators serving two 
+data centres, in the event of failure in the electrical grid supply. Data Centre 1 
+and Date Centre 2 are served by two separate feed supplies from the National 
+Grid. The permit does not allow the export of electricity to the National Grid.  
+ 
+The installation is located at Carlton Business Park, Narborough, 
+Leicestershire. The site is centred approximately on National Grid reference 
+453711,298245. Carlton Park is predominantly an office location, however, 
+there is a leisure facility and nursery close to the site.  
+ 
+The nearest residential properties are located approximately 60 metres west 
+of Data Centre 2 and 250 metres west of Data Centre 1. The principal habitats 
+are Enderby Warren Quarry and Narborough Bog which are designated as 
+Sites of Special Scientific Interest (SSSI) and located 1.7 kilometres (km) and 
+1.1 km from the installation, respectively. A number of Local Wildlife Sites 
+(LWS) have also been identified, with the closest being Ashlands Crack 
+Willow, located 985 metres from the site.  
+ 
+The generators will be configured in two groups of six standby generators, 
+making a total of 12 generators at each data centre and 24 generators across 
+both data centres. Each generator has a full power thermal input of 4.49 
+megawatts. The thermal capacity of the site is as follows:  
+• 53.88 MWth (at Day 1); and 
+• 107.76 MWth (at Day 2) 
+ 
+Diesel fuel will be stored in four bulk fuel tanks, which are housed within 
+subterranean bunkers. There will be two bunkers on each site, each 
+containing two bulk fuel tanks. Each tank will have a capacity of 67,500 litres. 
+The bulk tanks will be fitted with an overfill alarm float and overfill prevention 
+valve. They will also be double skinned, as will the interconnecting pipe work.  
+ 
+There will be no process effluent discharge from the installation.  
+Uncontaminated water from roof and hard standing run off will drain via a 
+below ground surface water drainage system to attenuation tanks with the 
+EPR/QP3533ED/A001   Page 2 of 22 
+ 

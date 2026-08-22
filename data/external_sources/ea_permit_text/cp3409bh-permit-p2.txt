@@ -1,0 +1,55 @@
+Permit number                              
+EPR/CP3409BH 2 
+LD11x  
+Permit number EPR/CP3409BH 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows.   
+The site is an electronic data storage centre which includes back-up generation capacity a Schedule 1 Part 
+A(1) 1.1 activity under the Environmental Permitting Regulations (the burning of any fuel in an appliance with 
+a rated thermal input of 50 or more megawatts (MW). The site is located on the Slough Trading Estate. The 
+National Grid Reference for the site is SU 94547 81314. The site is approximately 0.755 hectares in size. 
+The surrounding area is a mix of industrial, commercial and residential uses. 
+ 
+The combustion plant only operates under limited routine maintenance or in an emergency scenario. The 
+emergency combustion activity comprises 12 diesel fuelled standby generators. Each generator has a 
+thermal input of 8 MW. The aggregated total combustion capacity on site is 96 MWth. Each generator has an 
+exhaust, which is 16m above ground level.  
+ 
+Electrical power is provided to the data centre from the National Grid. However, in the event of a failure in 
+the electrical supply, the operator will utilise the generators to maintain the electrical supply. The generators 
+will be used solely for the purpose of generating power for the facility. No electricity will be exported from the 
+installation. The standby generators are designed and configured so that in the event of a mains failure all 
+the generators will fire up with 11 generators sharing the load evenly with the 12
+th running with no load. The 
+12th would operate if one of generators were to fail. If only one of the dual electricity feeds to the National 
+Grid were to fail approximately half of the generators would start, with the load transferring back to the 
+remaining feed once it has been deemed reliable. All the generators are subject to a maintenance testing 
+schedule.  
+ 
+The engines run on diesel fuel which is stored in four bulk diesel storage tanks below the generators. The 
+tanks are 82,800 litres each. Each generator is situated inside its own bunded container, also containing 
+double skinned diesel day tanks. The generator containers are stacked on top of each other thus making it 
+two generator containers high. The site is covered in hardstanding, and surface water gullies drain into an oil 
+interceptor prior to discharge from site to sewer. There is no sewer connection directly to the permitted 
+activities. 
+ 
+The main emissions from the installation are to air in the form of nitrogen oxides, sulphur dioxide, particulate 
+matter and carbon monoxide. 
+ 
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+Status log of the permit 
+Description Date Comments 
+Application EPR/CP3409BH/A001 Duly made 
+13/07/2020 
+Application for a combustion facility consisting of 12 
+diesel engines providing emergency power to an 
+electronic data centre.  
+Response to Schedule 5 notice 
+dated 24/08/2020 
+28/09/2020 Response to Schedule 5 providing information 
+regarding BAT, plant sizing and number, plant 
+configuration, thermal input,  stack heights and 
+arrangements, maintenance, grid reliability, oil 
+storage, drainage, noise and fire. 

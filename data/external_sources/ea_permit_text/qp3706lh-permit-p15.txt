@@ -1,0 +1,78 @@
+ 
+Permit number                             
+Error! Unknown document property name. 15 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application 
+EPR/QP3706LH/A001 
+Response to section 3a – technical standards, Part B3 of the 
+application form 
+Supporting information 
+Noise impact assessment including attenuation measures for 
+the engines and generators 
+22/03/2022 
+Application 
+EPR/QP3706LH/A001 
+Air Quality Assessment report (June 2021) -  
+Table 3.3 Operational hours and loads (maintenance and 
+testing)  
+Table 3.4 Emission parameters 
+This document has been superseded by the Generators 
+maintenance testing schedule detailed in application 
+documents for EPR/QP3706LH/V002. 
+22/03/2022 
+Application 
+EPR/QP3706LH/A001 
+Engine operation and fuel storage 07/04/2022 
+Application 
+EPR/QP3706LH/A001 
+Fuel type and storage 19/04/2022 
+Application 
+EPR/QP3706LH/A001 
+Fuel delivery operating procedure 01/09/2022 
+Application 
+EPR/QP3706LH/V002 
+Application Forms C2, C2.5 and C3 and all referenced 
+supporting information. 
+Duly Made 
+22/08/2024 
+Application 
+EPR/BP3800PZ/V002 
+Generators maintenance 
+testing schedule 
+Generators maintenance testing schedule detailed in 
+application documents: 
+ 
+Priestley Way, Brent (Site 2), Brent Cross, London, PDCG 
+(Group Services) Ltd - Air Quality Air Emissions Risk 
+Assessment (LON1B2V3A-E1-HL-ZZ-XX-RPT-Y-80000 
+Revision P04) dated 22/08/2024. 
+ 
+Supplemented by: 
+EPR/QP3706LH/V002 - Additional Air Quality 
+Information (Revision: 01) dated 29/10/2024.  
+ 
+EPR/QP3706LH/V002 - Additional Air Quality 
+Information - Response to Schedule 5 Notice (Revision: 01) 
+dated 13/02/2025.  
+ 
+Along with the following operational restrictions on generator 
+testing: 
+• Testing of site 1 and site 2 shall not be carried out in 
+the same 24-hour period. 
+• Testing at site 1 shall involve each generator being 
+tested individually. 
+• For six-monthly testing, no more than 8 hours of 
+operation shall be carried out in any 24-hour period. 
+• For monthly testing, no more than 8 hours of 
+operation shall be carried out in any 24-hour period 
+for site 1. 
+Duly Made 
+22/08/2024 
+29/10/24 
+ 
+ 
+ 
+ 
+13/02/25 

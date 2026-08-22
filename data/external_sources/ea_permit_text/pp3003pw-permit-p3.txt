@@ -1,0 +1,27 @@
+ 
+Permit number 
+EPR/PP3003PW 3 
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+ 
+Status log of the permit 
+Description Date Comments 
+Application 
+EPR/PP3003PW/A001 
+Duly made 
+17/04/19 
+Application for Data Centre operating 33 standby 
+diesel powered generators. 
+Response to Schedule 5 Notice 
+dated 16/05/19 
+28/06/19 Additional information on the data centre BAT 
+assessment, drainage, containment, noise 
+assessment and air quality assessments. 
+Additional information 20/04/20 Revised air quality assessment. 
+Permit determined 
+EPR/PP3003PW 
+(PAS Billing ref. PP3003PW). 
+07/07/20 Permit issued to Ark Data Centres Limited. 
+ 
+End of introductory note 
+ 

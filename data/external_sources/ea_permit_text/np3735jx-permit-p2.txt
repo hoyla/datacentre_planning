@@ -1,0 +1,49 @@
+ 
+Permit number            
+EPR/NP3735JX 2 
+ 
+Croydon Data Centre (LW13)  
+Permit number EPR/NP3735JX 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows.   
+The site is an electronic data storage centre which includes back-up generation capacity, a Schedule 1 Part 
+A(1) 1.1 activity under the Environmental Permitting Regulations (the burning of any fuel in an appliance with a 
+rated thermal input of 50 or more megawatts (MW). The site is located on an Industrial Estate which is adjacent 
+to Beddington Water Treatment Plant. The National Grid Reference for the site is TQ 29694 66752. The site is 
+approximately 1.2 hectares in size. The surrounding area is primarily industrial with some residential uses. 
+ 
+The combustion plant only operates under limited routine maintenance or in an emergency scenario. The 
+emergency combustion activity comprises 31 diesel fuelled standby generators. The thermal input of the 
+generators is as follows: 28 are 3.5 MWth and 3 are 3.7 MWth. The aggregated total combustion capacity on 
+site is 109.1 MWth. All plant was installed between 2007 and 2009 with the site beginning operations as a data 
+centre in 2011. This is before December 2018, they are therefore classed as ‘existing plant’ under the Medium 
+Combustion Plant Directive (MCPD).  
+ 
+Electrical power is provided to the data centre from the National Grid. However, in the event of a failure in the 
+electrical supply, the operator will utilise the generators to maintain the electrical supply. The generators will be 
+used solely for the purpose of generating power for the facility. No electricity will be exported from the 
+installation. The data centre consists of 5 data halls (DH1 – DH5). There are a total of 7 electricity feeds into the 
+data centre, which are organised as follows: 2 feeds to DH1, 2 feeds to DH2 and DH3, 2 feeds to DH4 and DH5 
+and one feed to the landlord area (office, meeting room, reception and kitchen area). Each of the 7 electricity 
+feeds can be run on either an A or B power input. The generators are organised and controlled to mimic this 
+power input set up. If one of the 2 feeds fail all of the generators would start with generators turned off manually 
+to meet the data centre load and not exceed it. In the event that there is the loss of power across the whole site 
+all generators would start. In a prolonged outage around half of the generators would be turned off after a period 
+of 2 hours to match the load requirements of the data centre. Such a loss of power would require an outage at 
+the 132kVa substation level. All the generators are subject to a maintenance testing schedule.  
+ 
+The generators run on diesel fuel which is stored in 17 above ground bulk storage tanks. The diesel from the 
+bulk storage tanks is piped to the day tanks that are located within each generator container. There are 3 x 
+14,000 litre tanks, 6 x 25,500 litre tanks, and 8 x 22,000 litre tanks, each tank has an integral bund of 110% 
+capacity. The site is covered in concrete hardstanding. The surface drainage system directs run -off into an oil 
+interceptor prior to discharge from site to the municipal combined sewer. The oil interceptor has a capacity of 
+5,000 litres, which includes a manual shut off vale to prevent any surface water discharge off site should this be 
+necessary. 
+ 
+The main emissions from the installation are to air in the form of nitrogen oxides, sulphur dioxide, particulate 
+matter and carbon monoxide. 
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+ 
+ 

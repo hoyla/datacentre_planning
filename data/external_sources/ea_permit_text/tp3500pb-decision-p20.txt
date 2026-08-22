@@ -1,0 +1,36 @@
+ 
+ EPR/TP3500PB/V003   Page 20 of 23 
+OFFICIAL 
+OFFICIAL 
+amend improvement conditions IC01 and IC05 to ensure implementation 
+provisions are included in the wording of these conditions. The additional wording 
+we have added now to IC01 and IC05 should have been included originally and 
+finishes off the condition by ensuring the improvements are actually delivered. 
+Refer to the key issues section for the reasons of this improvement condition.  
+Emission limits 
+No emission limits have been added, amended or deleted as a result of this 
+variation. 
+Monitoring 
+We have decided that monitoring should be carried out for the parameters listed 
+in the permit, using the methods detailed and to the frequencies specified. Refer 
+to the key issues section ‘Other permit conditions’ for further details on the 
+monitoring requirements for the 4 new engines.   
+Reporting 
+We have added reporting in the permit for the following parameters: 
+Emissions of carbon monoxide from the 4 new engines corresponding to 
+emission points A222 to A225 (PG2-22 to PG2-25 as referenced in Schedule 7 
+Site plan in the permit),  
+Emissions of NOx from the new 4 engines corresponding to emission points 
+A222 to A225 (PG2-22 to PG2-25 as referenced in Schedule 7 Site plan in the 
+permit) 
+Continuous process monitoring of NOx from the 4 new engines corresponding to 
+emission points A222 to A225 (PG2-22 to PG2-25 as referenced in Schedule 7 
+Site plan in the permit) for the purpose of the correct operation of the SCR 
+systems and abatement efficiency of the SCR systems. 
+We made these decisions in accordance with our guidance. 
+Management system 
+We are not aware of any reason to consider that the operator will not have the 
+management system to enable it to comply with the permit conditions. 
+The decision was taken in accordance with the guidance on operator 
+competence and how to develop a management system for environmental 
+permits. 

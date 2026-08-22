@@ -1,0 +1,68 @@
+Permit number             
+EPR/AB1234CD 12 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 Air Quality Management Plan (AQMP) 
+The operator shall produce an AQMP in conjunction with the Local 
+Authority outlining response measures to be taken in the event of a 
+grid failure. This should include but not be limited to the following 
+considerations:  
+• The response should be tailored to reflect the predicted 
+potential impact indicated by the air dispersion modelling at 
+individual receptors;  
+• Preventative and reactive actions to be implemented to limit 
+the duration of an outage event to less than 50 hours as far as 
+possible; 
+• Specific timescales for response measures; 
+• How local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or 
+time of day; 
+• Contingency for how the response will be carried out in the 
+event scenario i.e. loss of power; and 
+• Timescales for continued review of the management plan. 
+ 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+ 
+Within 6 months 
+from the date of 
+issue of the permit 
+EPR/DP3107LF 
+IC2 Monitoring plan - flue gas monitoring requirements 
+The operator shall submit a monitoring plan for approval by the 
+Environment Agency detailing their proposal for the implementation of 
+the flue gas monitoring requirements specified in table S3.1, in line 
+with web guide ‘Monitoring stack emissions: low risk MCPs and 
+specified generators’ Published 20 March 2024 (formerly known as 
+TGN M5). The plan shall include, but not necessarily be limited to: 
+• When the generators are not fitted with sampling ports, a 
+proposal to install them within the shortest practical timeline; 
+• Details of any relevant safety, cost and operational constraints 
+affecting the monitoring regime, in support of any proposed 
+deviation from the testing regime specified in permit table 
+S3.1.  
+ 
+Within 3 months 
+from the date of 
+issue of the permit 
+EPR/DP3107LF 
+IC3 Drainage and containment 
+ 
+The operator shall submit a revised drainage plan covering the entire 
+site to the Environment Agency for approval.  
+The site drainage plan shall  
+• be drawn to scale 
+• outlines and differentiates the exact locations of all subsurface 
+drainage routes (surface water and foul sewer),  
+• be annotated with all emission points for aqueous discharges 
+off-site and on-site oil interceptors.  
+ 
+In the event the drainage plan indicates there are surface water 
+discharges from the facility which do not pass through an oil 
+interceptor prior to discharge. The operator shall submit to the 
+Environment Agency proposals and timescale for directing drainage to 
+an oil interceptor prior to discharge off-site. 
+Within 6 months 
+from the date of 
+issue of the permit 
+EPR/DP3107LF 

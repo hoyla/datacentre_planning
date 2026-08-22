@@ -1,0 +1,50 @@
+ 
+ Page 10 of 17  
+power failure, however 2 catcher SBGs will run only partially loaded. The catcher 
+system is designed to be an oversubscribed system to provide redundancy for up 
+to 15 primary power streams, but only 1 primary power stream at a time. The two 
+house SBGs, which will supply a mixture of critical and non-critical power 
+systems, will have a 2N resilience configuration for the power infrastructure they 
+will serve (i.e. twice as many SBGs for the required load) and will run part load.  
+ 
+In order to minimise the need for emergency operation, the data centre has two 
+separate substation feeds. These two 33KV supplies are fed direct from the 
+National Grid; in the event of failure of one feed the remaining feed can provide 
+the required electrical power for the data centre. To address short term 
+fluctuations, brown-outs or black-outs, the site has an uninterruptable power 
+supply (arrays of batteries) which can supply power until the generators operate. 
+ 
+We are satisfied that the installation meets BAT relevant to the permitted 
+operation.  
+ 
+Protection of Land, Surface Water & Groundwater 
+The generators are located in containers over hard-standing or concrete flooring. 
+Externally, the site will consist of new hard standing. Gas-oil, hazardous waste 
+and hazardous materials storage is bunded and/or indoors, such that any source 
+of potential contamination is prevented from discharge to land. 
+Each generator is located above a belly tank which automatically supplies diesel 
+to the generators. The belly tanks for all generator container units will be bunded 
+(110% capacity). The belly tanks will have the following protection measures:  
+ 
+• Tank level gauge.  
+• High and low level alarms connected to the building management system 
+(BMS) and the generator container units. 
+• A pressure delivery over-fill prevention valve.  
+• Leak detection alarms connected to the BMS.  
+• The generator sets have pressure relief valves to prevent over 
+pressurisation of diesel supplied from the belly tanks.  
+• An Engine ECU which will provide instantaneous fuel consumption data 
+which will be automatically collated to calculate total fuel consumption over 
+time.  
+• To minimise the risk of corrosion all pipework is either painted or 
+constructed of corrosion resistant material. 
+ 
+Gas oil is delivered to the site by refuelling vehicles. Gas oil is pumped to a 
+receiver station, which contains multiple fill points for the delivery of fuel to the 
+belly tanks. For the standby generators (SBGs) located on gantry level 2, gas oil 
+is automatically pumped via 2 small secondary contained (110% capacity) above 
+ground receiver tanks (each with a capacity of 1.2m3). The gas oil will 
+automatically be pumped from the receiver tanks directly to these belly tanks. For 
+the SBG located on the ground and 1st gantry levels will be filled directly from the 
+refuelling vehicles via the receiver station.  
+ 

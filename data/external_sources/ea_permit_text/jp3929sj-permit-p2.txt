@@ -1,0 +1,47 @@
+ 
+ 
+Unit 2 & 3 Redhill Data Centre (LGW10 and LGW11)  
+Permit number EPR/JP3929SJ 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows. 
+The Unit 2 & 3 Redhill Data Centre (LGW10 & LGW11) consists of a Schedule 1 Part A(1) 1.1(a) activity for 
+burning any fuel in an appliance with a rated thermal input of 50 or more megawatts, with directly associated 
+activities for storage of raw materials and surface water drainage.  There are 21 standby generators, with an 
+aggregated thermal input of 72.4 MWth, which provide power to the data centre in the event of an emergency, 
+such as failure of the local electricity transmission network, or an internal component failure requiring 
+disconnection from the grid.  Each Unit has a feed from two electrical substations (Three Bridges and 
+Caterham), limiting the likelihood of generators being required to run. 
+The installation is located at St Anne’s Boulevard, Foxboro Park, Redhill, RH1 1AX (NGR: TQ 52865 15146).  
+The area to the north of the site is made up of light industrial and commercial units, with a local wildlife site to 
+the east, and residential areas to the south and west.  The nearest residential receptors are approximately 50m 
+away, to the south of the installation. 
+There are four local wildlife sites within 2km of the installation: Holmethorpe Sandpits Complex SNCI, Royal 
+Alexandra and Albert School SNCI, Gatton Park SNCI and Wray Common SNCI.  There are ancient woodlands 
+within 2km of the site.  Furthermore, the following designated sites are within 2km of the installation: Mole Gap  
+to Reigate Escarpment SSSI; and 10km of the site: Mole Gap to Reigate Escarpment SAC.  
+Generators run on ultra-low sulphur gas oil and discharge emissions to air via individual stacks.  All generators 
+were commissioned before 20/12/2018.  Of the 21 engines on site there are 4 Existing MCPs with a thermal 
+input of 4.4 MWth, 9 Existing MCPs with a thermal input of 3.74 MWth, 6 Existing MCPs with a thermal input of 
+3.34 MWth and two smaller generators both with a thermal input of 0.51 MWth a nd 0.59 MWth. 
+All generators are used for emergency provision only, therefore routine operations are for testing and 
+maintenance.  During an emergency, all 21 engines fire up, and ramp down to 16 engines which can support 
+the load for the site. 
+At Unit 2, all generators (air emission points A1 – A5) are tested monthly for 10 minutes off-load, quarterly for 20 
+minutes on-load and annually for one hour at 100-110% load.  At Unit 3, all generators (air emission points A6 – 
+A21) are tested monthly for 10 minutes off-load, quarterly for 20 minutes at 50% load, and annually for one hour 
+at 100-110% load.  The designed total test period for each generator is 260 minutes.  
+Generators and fuel tanks are all above ground, outside the main data centre building , with some pipeline 
+underground.   Generators emitting via A1 – A4 and A13 – A21 are fed by individual 10,000 litre bulk tanks; 
+generators emitting via A5 and A12 are fed by individual 2,000 litre bulk tanks; generators emitting via A6 – A11 
+are fed by individual 8,000 litre bulk tanks and a shared 48,000 litre bulk tank.  Total fuel storage on site is 
+therefore 150,000 litres. 
+Gas oil is pumped from road tankers into storage tanks.  Fuel delivery and storage areas are located over 
+hardstanding and the areas are served by two interceptors – one for drainage at Unit 2, and the second for Unit 
+3.  The surface run-off from these areas is emitted to surface water sewer at emission points W1 and W2.  
+There are no other emissions to water or sewer from the installation. 
+Unit 2 and Unit 3 are managed independently and operate under separate environmental management 
+systems; both are certified to ISO 14001. 
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number. 
+ 

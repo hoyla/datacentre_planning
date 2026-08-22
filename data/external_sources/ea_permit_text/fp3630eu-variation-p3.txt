@@ -1,0 +1,38 @@
+ 
+Variation and consolidation  
+application number  
+EPR/FP3630EU/V002  3 
+The operator implements an EMS to manage the potential environmental risks associated with the facility . 
+The schedules specify the changes made to the permit. 
+The status log of the permit sets out the permitting history, including any changes to the permit reference 
+number.  
+ 
+Status log of the permit 
+Description Date Comments 
+Application EPR/FP3630EU/A001 Duly made 
+10/12/14 
+Application for >50MW thermal input back up 
+generator installation. 
+Additional information received 27/01/15 Confirmation of details of underground storage 
+tanks and extent of information regarding ground 
+conditions. 
+Additional information received 27/03/15 Modelling of additional air quality parameters. 
+Permit determined 
+EPR/FP3630EU 
+ 
+21/04/15 Permit issued to ISDC Developments (No2) 
+Limited. (Name changed to Green Mountain DC 
+UK Limited on 25/03/2025). 
+Application EPR/FP3630EU/V002 
+(variation and consolidation) 
+Duly made 
+16/09/2024 
+Application to add 8 new generators. The 
+variation also updates the permit to modern 
+conditions. 
+Variation determined and 
+consolidation issued  
+EPR/FP3630EU 
+19/02/2026 Varied and consolidated permit  
+ 
+End of introductory note  

@@ -1,0 +1,57 @@
+ 
+                       Page 3 of 28 
+Purpose of this document 
+This decision document provides a record of the decision-making process. It: 
+● summarises the decision making process in the decision considerations section 
+to show how the main relevant factors have been taken into account 
+● highlights key issues in the determination 
+● shows how we have considered the consultation responses. 
+Unless the decision document specifies otherwise we have accepted the applicant’s 
+proposals. 
+Read the permitting decisions in conjunction with the environmental permit.   
+Key issues of the decision 
+Air Quality Assessment. 
+Modelling Scenarios: 
+Should the site generators not be required to operate to supply emergency power due to 
+National Grid failure, they will operate only for scheduled testing and maintenance 
+purposes. 
+The applicant modelled four scenarios in total – three testing/maintenance scenarios and 
+one emergency operation scenario. 
+Scenario Operating Profile Description 
+Scenario 1: Biweekly 
+0.5 hour runs 
+fortnightly = 13 hours 
+per year 
+Each of the 33 generators to be 
+tested, one at a time (daytime only). 
+Generators will be tested at 25% 
+load (but conservatively modelled 
+at 100%). 
+Scenario 2: Biannual 
+1.5 hour runs, twice 
+per year = 3 hours 
+per year 
+Each of the 33 generators to be 
+tested, one at a time (daytime only). 
+Generators will be tested at 100% 
+load. 
+Scenario 3: 
+Maintenance 
+3 hours of cumulative 
+running over the 
+course of the year 
+Each of the 33 generators to be 
+tested, one at a time (daytime only). 
+Generators will be tested at 100% 
+load. 
+Scenario 4: 
+Emergency 
+A single (worst case 
+and rare) event of 68 
+hours of running.  
+A single event where 30 generators 
+plus the house generator will 
+operate at 100% load and the two 
+redundancy generators idling at 5% 
+load. 
+  

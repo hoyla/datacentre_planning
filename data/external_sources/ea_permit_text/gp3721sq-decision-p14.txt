@@ -1,0 +1,37 @@
+ 
+    Page 14 of 15 
+Responses from organisations listed in the consultation 
+section: 
+Response received from Hillingdon Council 
+Brief summary of issues raised 
+Concern over impacts from air handling units and recommended setting a noise 
+emission limit. 
+Summary of actions taken 
+Air handling units serve the data centre are not part of the permit. The permitted 
+activity is a combustion activity for the emergency generators. We audited the 
+applicant’s noise impact assessment and are satisfied that there will not be a 
+significant impact and that a noise limit is not appropriate. 
+Response received from UKHSA 
+Brief summary of issues raised 
+The UKHSA recommended the following: 
+i. The Environment Agency should ensure the hourly NO2 process 
+contribution will not cause the air quality standard to be exceeded. 
+ii. The operator should have an air quality management plan. 
+iii. Additional mitigation measures to ensure air quality standards are not 
+exceeded such as boundary monitoring, and ensuring routine testing of 
+the backup generators is only carried out in favourable weather conditions. 
+iv. The Environment Agency should ensure all receptors are accurately 
+described and considered. 
+v. The updated benzene EAL of 30 µg/m3 as a 24 hour average should be 
+used. 
+vi. The assessment of power outage impacts should consider SO2, benzene, 
+and CO. 
+ 
+Summary of actions taken 
+i. We are satisfied that standards will not be exceeded, see key issues 
+section for more details  
+ii. Improvement condition IC01 requires the operator to produce a plan.  
+iii. Based on our audit no further controls are required. 
+iv. Receptors were included in the modelling report, grid references were 
+provided. We are satisfied that appropriate receptor locations were 
+considered. 

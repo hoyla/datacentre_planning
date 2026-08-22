@@ -1,0 +1,45 @@
+ 
+ Page 2 of 17  
+Key issues of the decision 
+In reaching our decision to grant the permit we took into consideration the 
+following matters: 
+ 
+Overview of the Installation  
+The site is part of a new electronic data storage centre which includes back-up 
+generation capacity, a Schedule 1 S1.1 Part A(1) (a) activity under the 
+Environmental Permitting Regulations (the burning of any fuel in an appliance 
+with a rated thermal input of 50 or more megawatts). The site is located on 
+Buckingham Avenue in Slough. The National Grid Reference for the site is SU 
+95697 81097. The nearest residential receptors are approximately 400 m to the 
+north east and 500m to the east. 
+The combustion plant only operates under limited routine maintenance or in an 
+emergency scenario if the National Grid power supply fails. The combustion 
+activity comprises 20 gas oil fuelled standby generators (SBGs), 18 of the SBGs 
+have a thermal input of 8.13 MWth each, the remaining two SBGs will have a 
+thermal input of 2.5 MWth each. The aggregated total combustion capacity on 
+site is 151.34 MWth. The Operator is intending to install 19 SBGs but an 
+additional SBG may be installed in the future in order to future proof the site. 
+Each generator has an exhaust, which is 23m above ground level. 
+Electrical power is provided to the data centre from the National Grid. In the 
+event of a failure of this electrical supply, the operator will utilise the generators to 
+maintain power to the data centre. The generators will be used solely for the 
+purpose of providing a back-up power supply, with no electricity being exported 
+from the installation. The datacentre will be developed in three phases; the first 
+phase is for the installation of 9 SBGs, phase two (approximately 60 weeks after 
+phase 1) is for the installation of 5 SBGs and the final phase, phase 3 is for the 
+installation of the final 5/6 SBGs. 
+The generators are subject to a routine maintenance testing schedule at 45% 
+load, with fortnightly testing for 30 minutes and quarterly testing for 1 hour.  Every 
+six months the generators will also be tested at 100% load for 1.5 hours. During 
+this routine testing, each generator will be tested separately to minimise air 
+quality impact. In addition there will also be an annual emergency test of all 
+generators operating simultaneously and continuously for 4 hours.  The testing 
+scenarios total 24 hours operation per generator per year. 
+ 
+Each of the SBGs runs on gas oil fuel, each generator has a ‘belly tank’ with a 
+capacity of 40,000 litres, the two-house generators each have a belly tank with a 
+capacity of 14,000 litres. In addition, the site has two receiver tanks each with a 
+capacity of 1,200 litres. The receiver tanks will be used to top up the belly tanks. 
+The maximum volume of 750,400 litres of gas oil can be stored at the installation. 
+The belly tanks are bunded to provide 110% containment, fitted with high-and 
+low-level alarms, leak detection and tank level gauges.  

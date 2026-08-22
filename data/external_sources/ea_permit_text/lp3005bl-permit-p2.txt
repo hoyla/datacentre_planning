@@ -1,0 +1,44 @@
+Permit number                              
+EPR/LP3005BL 2 
+Didcot Datacentre   
+Permit number EPR/LP3005BL 
+Introductory note 
+This introductory note does not form a part of the permit 
+The main features of the permit are as follows.   
+The site is an electronic data storage centre which includes back-up generation capacity, a Schedule 1 S1.1 
+Part A(1) (a) activity under the Environmental Permitting Regulations (the burning of any fuel in an appliance 
+with a rated thermal input of 50 or more megawatts (MW). The site is located on part of the former Didcot A 
+Power Station on the outskirts of Didcot. The National Grid Reference for the site is SU 51039 91275. The 
+site is approximately 0.25 hectares in size. The surrounding area is a mix of agricultural, industrial, 
+commercial and residential uses. 
+ 
+The combustion plant only operates under limited routine maintenance or in an emergency scenario when 
+the National Grid power supply fails. The combustion activity comprises 10 diesel-fuelled standby 
+generators, each with a thermal input of 6.8 MW. There is also a single diesel-fuelled standby generator with 
+a thermal input of 1.7 MW. The aggregated total combustion capacity on site is 69.7 MWth. Each generator 
+has an exhaust, which is 15m above ground level.  
+ 
+Electrical power is provided to the data centre from the National Grid. In the event of a failure of this 
+electrical supply, the operator will utilise the generators to maintain power to the datacentre. The generators 
+will be used solely for the purpose of providing a back-up power supply, with no electricity being exported 
+from the installation. The datacentre will be developed in four phases as dictated by customer demand for its 
+services with each phase requiring two 6.8MWth emergency generators; a further pair are held in reserve. 
+The generators are sized to match the electrical requirement of the site’s eight main MV/LV transformers that 
+supply the datacentre. The 1.7MWth generator is dedicated to the datacentre office accommodation.  
+ 
+The generators are subject to a maintenance testing schedule which includes fortnightly testing at 25% load 
+and biannual testing at 100% load. This testing will be carried out one generator sequentially to minimise any 
+air quality impact and totals about twenty hours operation per generator per year. In addition there may also 
+be an annual full-building test of the generators at 100% load for up to two hours 
+ 
+The engines run on diesel fuel and the installation includes a single bunded storage tank of 40,000 litre 
+capacity within the compound. In addition the generators are containerised and each includes a 16,000 litre 
+bunded diesel day tank (6,000 l for the smaller generator) within the container. The installation includes a 
+refuelling area for use by tankers delivering fuel. 
+ 
+The main emissions from the installation are to air in the form of nitrogen oxides, sulphur dioxide, particulate 
+matter and carbon monoxide. The site is covered in hardstanding, and surface water drains into a balancing 
+pond prior to discharge from site to the Moor Ditch. Potentially contaminated rainwater from the exhaust 
+stacks is discharged to sewer. 
+ 
+  

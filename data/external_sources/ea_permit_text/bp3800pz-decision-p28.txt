@@ -1,0 +1,45 @@
+ 
+                       Page 28 of 32 
+Consultation Responses 
+The following summarises the responses to consultation with other organisations, our notice on 
+GOV.UK for the public and the way in which we have considered these in the determination 
+process. 
+Responses from organisations listed in the consultation section: 
+Response received from: Dacorum Borough Council Environmental Health Department – 
+Response 1 
+Brief summary of issues raised:  
+The consultee noted that modelling of the 500-hours electrical grid outage scenario predicted 
+potential exceedances of the 1-hour mean at sensitive receptors in respect of nitrogen dioxide. 
+They said that if such a development resulted in a new air quality management area being 
+declared, the Council would strongly object to such a development being permitted.  
+The consultee also noted that the applicant had considered the likely impact from NOx emissions 
+but not from fine particles, such as PM10 and PM2.5, and they would not be supportive of the 
+application without full consideration of the likely air quality impacts. 
+Summary of actions taken: 
+The scenario of 500 hours emergency outage is not deemed realistic in an operational scenario 
+where none of the generators in the three operational sites have ever operated in an emergency 
+outage since they commenced operation. The operator revised their modelling of emergency 
+outage situations to include more realistic outage scenarios – one hour and 36 hours (the latter 
+period representing the maximum amount of diesel that the data centre is contracted to hold on 
+site in event of national grid outage). 
+The revised modelling indicated that, at both one hour and 36 hour emergency operation, the 
+probability of 1-hour mean NO2 exceeding the AQAL for more than the permitted 18 occasions 
+within a year, is <0.1% and therefore ‘highly unlikely’. 
+The applicant also expanded their modelling to include PM10 PM2.5 and carbon monoxide (CO). 
+For the scenarios of routine testing/maintenance and the 1-hour and 36-hour emergency outages, 
+there were no predicted exceedances of these parameters at the sensitive receptors. We 
+accepted the applicant’s decision to rule out the need to model for SO2 impact due to the use of 
+low sulphur containing fuel in the generators. 
+ 
+Response received from: Dacorum Borough Council Environmental Health Department – 
+Response 2 
+Brief summary of issues raised:  
+The consultee questioned: 
+(a) Whether, in the event of an energy crisis requiring the generators to be operated for a much 
+longer period than the more representative 1-hour or 36-hour periods, there was anything within 
+permit conditions requiring the operator to report their usage from each site; 
+(b) Whether there was any conditions triggering a permit review or corrective action; 
+(c) Whether the cumulative impact of other sites that might be local contributors is considered. 
+ 
+ 
+ 

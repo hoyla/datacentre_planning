@@ -320,18 +320,28 @@ None is abandoned; each is a known, scoped piece of work.
 - **Pre-2018 broader-keyword backfill.** PlanIt thins sharply before
   2018. Parent-backfill already pulled in substantive pre-2018 parents; a
   separate sweep would catch cases with no child in our window.
-- **Environment Agency public register.** Industrial installations and
-  combustion plant, as triangulation against permitted on-site capacity.
-  Before adding this or any other outside source, read
-  [docs/EXTERNAL_DATA_SOURCES.md](docs/EXTERNAL_DATA_SOURCES.md): the
-  commercial directories, the NESO registers and the Capacity Market were
-  each tested against this corpus on 2026-08-10 and the finding was that
-  no external MW can become a column, because none of them measures the
-  quantity a planning application states — and Data Center Map's
-  planned-site figures are read off the same planning documents, so they
-  would corroborate us with our own numbers. The two things there worth
-  actually doing are requests, not downloads: an EIR request to NESO for
-  the project-level demand connection queue, and an FoI to DESNZ/EA for
+- **Environment Agency permits — the tail, not the source.** The
+  register and 35 permit claims landed on 2026-08-22 (HISTORY, and
+  `docs/EXTERNAL_DATA_SOURCES.md` §6). Three things are left. **Sixty-two
+  candidates have no permit publication on gov.uk**, mostly MCP
+  registrations, which are lighter-touch and may not be published at all;
+  whether the Environment Agency will supply them on request has not been
+  asked. **Six permits state a total with no per-engine breakdown to
+  check it against**, and their schedules would give one to a reader.
+  **Twenty-nine claims are unmatched**, and most are unmatched because a
+  site record covers a whole estate rather than because the permit is
+  obscure — so the matching is blocked behind the partitioning below
+  rather than behind anything about the permits.
+- **Site partitioning, now with evidence.** The permits are the sharpest
+  partition evidence the project has, because each one names a campus and
+  gives its grid reference. Eight permits from six operators, 1,249 MWth,
+  fall inside site 23 alone, which is the only site record on the whole
+  Slough Trading Estate. Site 5 holds Interxion, Global Switch and
+  Telehouse; site 59 holds Vantage and Colt as well as Microsoft; site 11
+  holds Amazon and NTT. `data/external_sources/ea-permit-matches.yaml`
+  lists each of these under `considered` with the reason.
+- **Still not sent, and still cheap:** an EIR request to NESO for the
+  project-level demand connection queue, and an FoI to DESNZ/EA for
   site-level CCA consumption. Both have lead times, so starting them is
   cheap and waiting is the cost.
 - **Multimodal pass over drawings.** Rejected in v1 and still rejected:

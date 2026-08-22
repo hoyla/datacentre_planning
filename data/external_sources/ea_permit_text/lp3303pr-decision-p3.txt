@@ -1,0 +1,51 @@
+EPR/LP3303PR/A001 
+Date issued: 26/02/2020  3 
+assessment’ dated 01/11/2016 to calculate the likelihood. The results show that there is a negligible risk of 
+the process resulting in an exceedence of the EQSs and we agree with this conclusion.  
+Improvement condition IC4 is specified in the permit which requires the operator to produce a report 
+outlining the details of the annual maintenance operating regime following the first year of operation 
+following permitting to validate the information provided with the permit application. 
+Emergency scenario 
+Although the site has operated for approximately 8 years without being required to operate in emergency 
+mode, the air quality modelling does indicate that the emergency outage operating scenario could pose a 
+risk to local air quality and identified receptors for short term NO 2. As a result, improvement condition IC6 
+requires the Operator to submit a review of options for reducing predicted short term nitrogen dioxide 
+emissions impacts for the grid failure emergency scenario. Improvement condition IC3 requires the 
+production of an Air Quality Management Plan. 
+The EA has specified that the operator shall  have a written action plan to manage the issue for prolonged 
+emergency running of the plant (including sensitive receptors  list and mitigations, assessments and impacts 
+evaluation against modelled risk conditions i.e. occurrence at periods of most concern in the year, possibly 
+ambient air monitoring surveillance at very sensitive receptors) . This needs to be proportionate to the level of 
+risk at the receptors. The operator is expected to work with the local authority to develop this plan to ensure 
+local factors are fully considered. 
+Improvement condition IC6  requires the Operator to submit a review of options for reducing pred icted short 
+term nitrogen dioxide emissions impacts for the grid failure emergency scenario  – see section on BAT below 
+for further information.  
+We have also specified improvement condition IC 5 requiring the operator to determine the actual short term 
+NOx concentrations at the site boundary through monitoring to contribute to the validation of conclusions 
+reached in the air quality assessment within the application and to inform the air quality management plan.  
+Permit conditions 
+The permit  will include a m aximum 500 hour ‘emergency/standby operational limit’ for any or all the plant 
+producing on-site power under the limits of the combustion activity; and thereby emission limit values ELVs 
+to air (and thus engine emissions monitoring) are not required within  the permit. Emergency hours’ operation 
+includes those unplanned hours required to come off grid to make emergency repair of electrical 
+infrastructure associated but occurring only within the data centre itself.  
+Each individual generator with its own discharge stack, can be maintained, tested and used in a planned way 
+without ELVs or associated monitoring under IED/MCPD. Though clearly the EA expects planned testing and 
+generator operations to be organised to minimise occasions and durations (s ubject to client requirements). 
+The permit has a limit on the activity to exclude voluntary ‘elective power operation’ such as demand side 
+response (i.e. on-site use) or grid  short term operating reserve (STOR) (i.e. off -site export of electricity) and 
+Frequency Control by Demand Management (FCDM) for grid support . This is primarily to differentiate data 
+centres from ‘diesel arrays’ that voluntarily operate within the balancing market , and importantly a clear way 
+to demonstrate minimisation of emissions to air as ‘Emergency plant’. 
+Operations and management procedures should reflect the outcomes of the air quality modelling by 
+minimising the duration of testing, phasing engines into subgroups, avoiding whole site tests and planning 
+off-grid maintenance days and most importantly times/days to avoid adding to “at risk” high ambient pollutant 
+background levels. 
+The permit application must assess and provide evidence of actual reliability data for the local electricity grid 
+distribution (including data centre internal electri cal design) for the EA to judge the realistic likelihood of the 
+plant needing to operate for prolonged periods in an emergency mode (especially if emissions model so as 
+to exceed short term air quality standards). 
+Reporting of standby engine maintenance run hours is required annually and any electrical outages (planned 
+or grid failures regardless of duration) req uires both immediate notification of the Environment Agency and 
+annual reporting. 

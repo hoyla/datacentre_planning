@@ -1,0 +1,33 @@
+ 
+London 14 Data Centre EPR/UP3624SW                     Page 2 of 17 
+The standby power solution comprises 16 x 6.9 MWth gas oil fuelled generators 
+with an aggregated thermal input of 110 MWth. It is integrated within the data 
+centre design providing on-site electrical generating capacity to be used in the 
+event of power outages to the data centre. 
+The permit does not allow the export of electricity to the National Grid.  
+The installation is subject to the Environmental Permitting Regulations (EPR) as 
+it carries out an activity listed in Part 1 of Schedule 1 to the EPR:  
+• Section 1.1 Part A(1)(a): Burning any fuel in an appliance with a rated 
+thermal input of 50 megawatts or more.  
+ 
+The activity falls under Chapter II of the Industrial Emissions Directive (IED). The 
+liquid fuelled generators are classed as medium combustion plant (MCP) as part 
+of a Chapter II installation. The Medium Combustion Plant Directive (MCPD) 
+requirements are fulfilled through compliance with Chapter II of Directive 
+2010/75/EU. 
+The data centre is located within the London Borough of Hillingdon, within an Air 
+Quality Management Area (AQMA) which is managed for nitrogen dioxide (NO2-
+annual mean objective). 
+The applicant’s assessment of the impact of air quality is set out in the following 
+documents: 
+• Air Quality Assessment report, dated 27th September 2024 (Ref: 294760-
+EP-AQ) 
+ 
+2. Testing and Maintenance 
+ 
+Operation of the generators will occur via testing and maintenance and in the event 
+of an outage of power at the facility. Operating scenarios are as follows:  
+Monthly 
+Every month (for eleven months) each generator will be tested for 15 minutes at 
+10% load . Each generator would be tested  separately to minimise short -term 
+impacts on local air quality.  

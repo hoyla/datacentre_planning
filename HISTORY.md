@@ -474,6 +474,85 @@ because the cost is invisible until someone hits it — a citation of "the
 phase 2 workbook" no longer resolves to the file that produced those
 numbers.
 
+### The fifth audience: Environment Agency permits (2026-08-22)
+
+The 2.2 release said a data centre's size is stated to at least four
+audiences and held all four. There is a fifth, and it is the only one a
+company cannot decline: the environmental regulator.
+
+**Why it works.** A data centre's diesel standby fleet is sized to peak
+load plus redundancy, a fleet that size needs an environmental permit,
+and the permit states in prose what the planning application often does
+not. Ark's Cody Park permit: "The combustion plant comprises 69 diesel
+fuelled standby generators. 36 of the generators have a thermal input of
+2.71MWth, 24 generators at 5.38MWth and 9 generators at 3.66MWth each.
+The aggregated total combustion capacity on site is approximately
+260MWth."
+
+**What landed.** 5,198 register rows → 97 candidates → 42 with a permit
+publication on gov.uk → **35 claims, 5,879 MWth**, of which 27 are
+corroborated by their own per-engine breakdown. Six matched to sites by
+hand. The largest is Amazon's Didcot North campus at 925 MWth across 129
+generators.
+
+**Three design decisions worth keeping.**
+
+*The register is an index, not a source of megawatts.* It has no
+capacity column at all. So a register row is never loaded as a claim —
+the permit document is. Rows whose activity type is "Combustion; Any
+Fuel =>50MW" imply a floor, and a floor was deliberately not written
+into a numeric column.
+
+*Thermal input is not electrical demand, and the loader does not pretend
+otherwise.* `value_mw` is null on every one of these claims. MWth does
+not *convert* to MW; dividing by roughly 2.4–2.5 is an inference about
+generator efficiency, and it belongs to a reporter making it in the open
+rather than to a loader making it quietly. This is the same rule that
+keeps MWh out of the megawatt column, applied to a unit that looks much
+more like it converts.
+
+*The extraction is deterministic and cross-checks itself.* No model
+reads these. The Environment Agency writes permits to a template, so
+regex is enough — and where regex is enough, a failure is loud. The
+per-engine ratings are summed and compared against the stated total, and
+the comparison is on the claim: 27 agree, and the eight that do not say
+so. Two near-misses justify the whole apparatus. Ark's Spring Park
+permit writes the fleet and the total as one sentence — "The total
+thermal input of the 33 standby generators is 5 generators of 3.9 MWth …
+(approximately 120MWth in total)" — and taking the first megawatt figure
+after the word "total" published a 120 MWth site as **3.9**. Equinix's
+Slough permit prints "13 X 5.714 MWthgenerators" with no space and "2 X
+6.857th MWth" with a stray unit, and dropping those two groups turned
+331.084 MWth into 243.088. Both are now tests.
+
+**The matching is mostly a null, and the null is the finding.** Twenty-
+nine of the 35 claims are unmatched, and almost none of that is about
+the permits. A permit describes plant that exists; most of this corpus
+describes schemes that were proposed, and proximity cannot tell a
+campus from its neighbour. More sharply, several site records hold a
+whole industrial estate: **eight permits from six operators, 1,249 MWth,
+all fall inside site 23**, the only site record on the Slough Trading
+Estate. Site 5 holds Interxion, Global Switch and Telehouse; site 59
+holds Vantage and Colt alongside Microsoft. Every one is written into
+`ea-permit-matches.yaml` under `considered` with its reason, which makes
+the permits the best partition evidence the project has — each names a
+campus and gives its grid reference.
+
+**Two register errors found by looking.** One Digital Realty permit
+gives a Crawley address with Redhill coordinates and a Redhill local
+authority; one Croydon installation is located at its holder's
+registered office in the City of London. Neither is matched.
+
+**Incidental findings kept.** Telehouse Docklands states 93.6 MWth for
+19 generators and schedules 27, "increasing to 145 MWth if the future
+expansion is required" — permitted headroom half as much again as the
+installed fleet. The Environment Agency's own title for Ark's UB3 4QQ
+permit is "Union Park", which places Ark's Union Park at Bulls Bridge
+Industrial Estate and bears on the site-61 partitioning. And Linmere
+Island is a "48MW data centre" in the planning record with a 324.6 MWth
+permitted fleet — different quantities, and worth reading rather than
+reconciling.
+
 ---
 
 ## Lessons that changed how the code is written

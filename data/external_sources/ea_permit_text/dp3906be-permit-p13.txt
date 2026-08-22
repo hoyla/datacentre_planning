@@ -1,0 +1,62 @@
+ 
+Permit number 
+EPR/DP3906BE 13 
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC2 The operator shall submit a monitoring plan for approval by the 
+Environment Agency detailing their proposal for the implementation of 
+the flue gas monitoring requirements specified in table S3.1 of this 
+permit, in line with web guide ‘Monitoring stack emissions: low risk 
+MCPs and specified generators’ Published 16 February 2021 
+(formerly known as TGN M5) for emission points A10 and A11. The 
+plan shall include, but not necessarily be limited to: 
+− When the generators are not fitted with sampling ports, a 
+proposal to install them within the shortest practical timeline, 
+− Details of any relevant safety, cost and operational constraints 
+affecting the monitoring regime, in support of any proposed 
+deviation from the testing regime specified in table S3.1 of this 
+permit.  
+30/01/24 
+IC3 The operator shall submit a written report to the Environment Agency 
+which demonstrates that the following systems and equipment, as 
+detailed in the response to schedule 5 notice received on 27/03/23, 
+have been installed: 
+− SCR 
+− DPF 
+− Stack configuration 
+The report will also propose indicative target ELV per year, confirming 
+the abatement system meets the specifications (in the agreed start-up 
+time) in the AQ model submitted as part of the permit application. 
+28/02/24 
+IC4 If the report submitted as a result of IC1 shows that the measured 
+emission concentrations is greater than the predicted emission 
+concentrations in the air quality modelling submitted at permit 
+application, the operator shall submit a plan to reduce the predicted 
+short term nitrogen dioxide (NOx) emissions impacts during the 
+maintenance, testing and emergency operations of the standby 
+generators. This shall include but is not limited to:  
+− Considerations of the conclusions of the validation exercise 
+specified in improvement condition IC1 to inform a feasibility 
+study including cost benefit analysis for upgrades or other 
+changes to infrastructure or operational regimes on site that 
+could reduce emissions of NOx and increase dispersion; 
+− Use of the above information to propose appropriate 
+changes, including but not limited to an assessment of the 
+following options: changes to stack configuration to enhance 
+dispersion (e.g. vertical emission points and increased stack 
+heights); amending the testing schedule to reduce the daily 
+emissions from the testing operations; upgrading the standby 
+engines to reduce emissions or installing newer ones with 
+lower emissions of NOx; installing NOx abatement. If 
+changes in the height of the stacks are demonstrated to be 
+effective, but are not deemed feasible due to local planning 
+restrictions, the Operator shall provide evidence of the 
+engagement carried out with the Local Authority planning 
+department, in support of this conclusion, and propose other 
+emission reduction options. 
+− The Operator shall submit an updated air dispersion 
+modelling study demonstrating how the proposed option(s), 
+selected among those assessed, result in reduced levels of 
+oxides of nitrogen at the sensitive receptors, including the 
+non-statutory ecological sites in proximity of the installation;  
+28/02/2025 

@@ -1,0 +1,42 @@
+ 
+ EPR/TP3500PB/V003   Page 4 of 23 
+OFFICIAL 
+OFFICIAL 
+• the long-term process contribution is less than 1% of the relevant ES; and 
+• the short-term process contribution is less than 10% of the relevant ES. 
+The long-term 1% process contribution insignificance threshold is based on the 
+judgements that:  
+• It is unlikely that an emission at this level will make a significant contribution 
+to air quality;  
+• The threshold provides a substantial safety margin to protect health and the 
+environment.  
+The short-term 10% process contribution insignificance threshold is based on the 
+judgements that:  
+• spatial and temporal conditions mean that short-term process contributions 
+are transient and limited in comparison with long -term process 
+contributions;  
+• the threshold provides a substantial safety margin to protect health and the 
+environment.  
+Where an emission is screened out in this way, we would normally consider that 
+the Applicant’s proposals for the prevention and control of the emission to be BAT. 
+That is because if the impact of the emission is already insignificant, it follows that 
+any further reduction in this emission will also be insignificant. 
+However, where an emission cannot be screened out as insignificant, it does not 
+mean it will necessarily be significant. 
+For those pollutants which do not screen out as insignificant, we determine whether 
+exceedances of the relevant ES are likely. This is done through detailed audit and 
+review of the Applicant’s air dispersion modelling taking background 
+concentrations and modelling uncertainties into account. Where an exceedance of 
+an ES is identified, we may require the Applicant to go beyond what would normally 
+be considered BAT for the Installation or we may refuse the Application if the 
+Applicant is unable to provide suitable proposals. Whether or not exceedances are 
+considered likely, the Application is subject to the requirement to operate in 
+accordance with BAT. 
+This is not the end of the risk assessment, because we also take into account local 
+factors for example: 
+• Statutory protected ecological receptors nearby, i.e. Sites of Special 
+Scientific Interest (SSSIs), Ramsar sites, Special Areas of Conservation 
+(SACs) or Special Protection Areas (SPAs).  
+• Non-statutory protected ecological receptors, such as local nature sites 
+ 
+The insignificance criteria for statutory protected ecological receptors are: 

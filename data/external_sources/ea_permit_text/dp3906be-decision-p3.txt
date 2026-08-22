@@ -1,0 +1,43 @@
+ 
+ EPR/DP3906BE                         Page 3 of 14 
+The underground fuel storage tank (UST) was installed in 1999 and is enclosed 
+in concrete casing. The access to this fuel tank is through a hatch one metre 
+below ground level. An integrity test of the UST was undertaken on the 26th April 
+2021. The tank passed the non-destructive testing and was considered to be in 
+good condition with minimal risk of leakage. The UST is equipped with low and 
+low-low levels alarm as well as a water detection system for water ingress. Site 
+operatives monitor the fuel level in the underground fuel tank monthly with an 
+electronic levelling gauge.  
+Point source emissions 
+No point source emissions to water and groundwater are foreseen. 
+There is one point source emission to sewer that discharges storm water only. 
+The storm water is discharged via an oil interceptor, which limits the potential for 
+hydrocarbon to enter the sewerage system in the event of loss of containment 
+from the generator fuel systems and storage. 
+Air quality 
+The Applicant’s air quality risk assessment is set out in the application document 
+titled ‘Air Quality Impact Assessment’ dated 23 March 2023. This included an air 
+dispersion modelling study which assessed the potential impact on local air 
+quality of emissions of oxides of nitrogen (NOx), particulates and ammonia (NH3) 
+from the generators. 
+Anticipated emissions are assessed for: 
+• Human health: by comparison with short-term and long-term nitrogen dioxide 
+(NO2) standards and Acute exposure guideline levels (AEGLs), screening of 
+particulate matter with a diameter of 10 microns or less (PM10), 
+• Protected conservation areas: by comparison with applicable standards for 
+short-term and long-term NOx, long-term NH3, nitrogen deposition and acid 
+deposition. 
+Emissions of PM10 were assessed using a conservative screening scenario. 
+Impacts of PM10 emissions are not expected to be significant. 
+Sulphur dioxide emissions were not assessed as the site uses ultra-low-sulphur 
+diesel and impacts are therefore anticipated to be insignificant. 
+Refer to our web guidance Air emissions risk assessment for your environmental 
+permit for the assessment criteria and methodology, air quality standards (AQS), 
+and definitions of technical parameters. 
+The site is located within the London Borough of Tower Hamlets (LBTH), and 
+within a borough-wide Air Quality Management Area (AQMA) for NO2 and 
+particulates. 
+The air dispersion model carried out by the Applicant used the Lakes AERMOD 
+View 11.2.0, which we consider an appropriate air quality modelling tool for 
+regulatory purposes. The model used 5 years of meteorological data (2015-2019) 
+from the London City airport meteorological station and included the potential 

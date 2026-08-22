@@ -1,0 +1,42 @@
+ 
+Page 6 of 19 
+• The resulting PECs do not exceed 100% of the environmental standards. 
+ 
+Where exceedances are predicted, we may require the applicant to go beyond 
+what would normally be considered BAT for the installation to ensure that ESs 
+are met.  Local factors are also taken into consideration, for example proximity 
+and impacts upon sensitive designated habitats sites (SAC, SPA, Ramsar, 
+SSSI), which may require us to include more stringent conditions within the 
+permit. 
+The applicant’s Air Quality Impact Assessment was completed by a consultant 
+and audited by the Environment Agency’s Air Quality Modelling and Assessment 
+Unit (AQMAU). 
+Modelling was completed for the three testing scenarios (i.e. monthly testing, 
+quarterly testing, annual testing), plus two emergency scenarios – the first where 
+Units 2 and 3 are operating separately, and the second where Units 2 and 3 are 
+required to operate together for 72 hours. 
+The initial modelling we received was completed somewhat conservatively – for 
+example, the consultant conservatively assumed all generator’s annual one-hour 
+testing would be completed on the same day.  The Applicant confirmed that in 
+practice this would never occur. 
+Following our initial audit of the Applicant’s AQIA, we informed the Applicant that 
+they would need to reduce their impacts at the Holmethorpe Sandpit Complex 
+SNCI, as large exceedances were predicted during testing scenarios.  This could 
+be achieved by adjusting their testing regime, heights of stacks, producing less 
+conservative / more realistic modelling.  The Applicant opted to adjust their 
+testing regime and provide updated modelling of air impacts from this testing 
+regime, to ensure there would not be a significant impact at this ecological 
+receptor. 
+We completed sensitivity checks on the modelling provided to determine whether 
+we agree with the impacts modelled, and the conclusions drawn by the 
+Consultant.  As part of these checks, we have used different met data, surface 
+roughness, conversion rates for NOX to NO2 and also included an additional 
+human receptor.  The consultant has assumed a 35% NOX to NO2 conversion in 
+their assessment for human receptors.  Due to the location of receptors, we 
+considered that a 15% conversion rate is more appropriate for receptors within 
+500m of the installation. 
+It is important to note that the installation has been operating for over 10 years, 
+therefore we are aware that background concentrations will already include 
+emissions from the facility. 
+ 
+ 

@@ -1,0 +1,133 @@
+ 
+Permit number 
+EPR/EP3507SL 24 
+Table S3.1  Point source emissions to air – emission limits and monitoring requirements 
+Emission point ref. & 
+location  
+Source Parameter Limit (including 
+unit)  
+Reference period Monitoring 
+frequency [note 2] 
+Monitoring 
+standard or 
+method 
+Emission from Telehouse North 
+A1 to A6 and A11 to 
+A15 Shown on drawing 
+002A in application 
+EPR/EP3507SL/V002 
+ 
+Exhausts of back up diesel 
+generators N-1 to N-6 in 
+North Building  
+(4x 4.32 MWth 
+2 x 4.28 MWth) 
+and E1 to E5 in East 
+Building  
+(2 x 4.56 MWth 
+3 x 4.28 MWth) 
+ 
+(existing medium 
+combustion plant with net 
+rated thermal input of less 
+than 5MW)  
+ 
+ 
+Oxides of 
+nitrogen  
+(NO and NO2 
+expressed as 
+NO2) 
+No limit set In line with web 
+guide ‘Monitoring 
+stack emissions: 
+low risk MCPs and 
+specified 
+generators’   
+Published 20 March 
+2024  
+(formerly known as 
+TGN M5)  
+ 
+Every 1500 hours of 
+operation or once 
+every five years 
+(whichever comes 
+first) from date of 
+acceptance of first 
+monitoring 
+measurements under 
+condition 3.5.5.  
+[Note 1 & note 3] 
+ 
+In line with web 
+guide ‘Monitoring 
+stack emissions: 
+low risk MCPs and 
+specified 
+generators’   
+Published 20 March 
+2024  
+(formerly known as 
+TGN M5)  
+ 
+Carbon 
+monoxide 
+Sulphur dioxide  - - - 
+Particulates  - - - 
+A7 to A10, A16 to A19 
+and A21 to A23 Shown 
+on drawing 002A in 
+application 
+EPR/EP3507SL/V002 
+ 
+ 
+Exhausts of back up diesel 
+generators N2-1 to N2-4 in 
+North Building 2  
+(4 x 5.96 MWth)  
+and generators W1-1 to 
+W1-4 and W1-6 to W1-8 in 
+West Building  
+(4 x 6.16 MWth 
+3 x 5.37 MWth) 
+Oxides of 
+nitrogen  
+(NO and NO2 
+expressed as 
+NO2) 
+No limit set In line with web 
+guide ‘Monitoring 
+stack emissions: 
+low risk MCPs and 
+specified 
+generators’   
+Published 20 March 
+2024  
+(formerly known as 
+TGN M5)  
+ 
+Every 1500 hours of 
+operation or once 
+every five years 
+(whichever comes 
+first) from date of 
+acceptance of first 
+monitoring 
+measurements under 
+condition 3.5.5.  
+[Note 1] 
+ 
+In line with web 
+guide ‘Monitoring 
+stack emissions: 
+low risk MCPs and 
+specified 
+generators’   
+Published 20 March 
+2024  
+(formerly known as 
+TGN M5)  
+ 
+Carbon 
+monoxide 

@@ -1,0 +1,46 @@
+EPR/HP3136DK/A001 
+Date issued: 12/10/2018  2 
+Key issues of the decision 
+The site is an existing data centre which consists of a Schedule 1 Part A(1) 1.1 activity under the 
+Environmental Permitting Regulations for the burning of any fuel in an appliance with a rated thermal input of 
+50 or more megawatts (MW).  
+The combustion plant only operates under limited routine maintenance or in an emergency scenario. The 
+combustion activity comprises 40 diesel fuelled standby generators. 3 of the generators have a thermal input 
+of 4MWth, 3 generators of 3.6 MWth, 3 generators of 3.4 MWth each and 31 generators of 3.2 MWth. The 
+aggregated total combustion capacity on site is 132MWth. Each generator has an exhaust, approximately 
+between 4.4 and 5.5m above ground level.  
+Electrical power is provided to the data centre from the National Grid. However, in the event of a failure in 
+the electrical supply, the operator will utilise the generators to maintain the electrical supply. The generators 
+will be used solely for the purpose of generating power for the facility. No electricity will be exported from the 
+installation. 
+The diesel fuel is stored in individual double skinned tanks below the generators. The tanks vary in size from 
+23,750 litres up to 38,000 litres. Each set of generators are housed within bunded containers. The site is 
+covered in hardstanding and surface water gullies drain into an oil interceptor prior to discharge from site. 
+The fuel tanks are fitted with leakage alarms. There is no sewer connection related to the process. Surface 
+water runoff passes via an oil interceptor to a surface water sewer for the industrial estate. 
+The standby generators are designed and configured so that in the event of mains failure all the generators 
+will fire up then subsequently ramp down to meet the load demand at the site. All the generators are subject 
+to a testing schedule which is as follows:  
+1. On Load: Routine quarterly testing of the site: Each data hall is tested with generators at 46% 
+load for a maximum of 30 min quarterly.  
+2. Load Bank: Annual test that involves each of the 40 generators operating one at a time at 46% 
+load for 1-1.5 hours.  
+The site is located on Watford Business Park. The National Grid Reference for the site is TQ 508927 
+194960. The site is approximately 2.25 hectares in size. The surrounding area is a mix of industrial, 
+commercial and residential uses. 
+There is no sewer connection related to the process. 
+Air Quality  
+The primary pollutant of concern to air quality is nitrogen dioxide (NO 2) resulting from the combustion 
+process on site. The Operator has submitted an air dispersion modelling report which assesses the potential 
+impact of emission of NO2 from the generators on local air quality.  
+The data centre is not situated in an Air Quality Management Area (AQMA) and there are no AQMAs within 
+2km of the site.  
+Our Air Quality Modelling and Assessment Unit (AQMAU ) audited the air dispersion modelling and report 
+submitted with the permit application. Both the maintenance testing and emergency scenarios within the 
+modelling were assessed. 
+ 
+ 
+ 
+ 
+ 
+ 

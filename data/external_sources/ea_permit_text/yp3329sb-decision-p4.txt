@@ -1,0 +1,47 @@
+ 
+EPR/YP3329SB/A001 Decision Document  2024                  Page 4 of 28 
+• LHR11/12 fuel delivery point via a 45 litre bypass interceptor.   
+ 
+The foul sewer point source discharge point into this connection is referenced as S1 on the Plan 
+in Schedule 7 of the permit.  
+ 
+Point Source Emissions to Surface Water Sewer 
+The operator has confirmed that there will be no contaminated emissions to the public surface 
+water sewer system associated with the regulated activity undertaken at the Installation. 
+ 
+Only uncontaminated surface water runoff will be discharged to the public surface water sewer 
+from the areas surrounding: 
+• LHR12 generator gantry area via 10,000 litre full retention interceptor & attenuation tank 
+(soakaway).  
+The surface water drainage system is routed across the site to a flow attenuation system 
+(soakaways) before being pumped into the public surface water sewer. The surface water point 
+source discharge point into this connection is referenced as SW1 on the Plan in Schedule 7 of the 
+permit.  
+The surface water discharge (SW1) from the facility operates on a pumped mechanism, allowing 
+the site to be isolated in the event of a spill through isolation of the pump. There is also an 
+automatic drain closure valve installed to prevent spillages from leaving site through the drainage 
+system. The pump system operates automatically based upon levels within the sump. A manual 
+override will be incorporated and will form part of the emergency response procedure at the site, 
+to be implemented by the operations team.  
+There is no pumped system on the foul network (S1) as this carries domestic effluent from the 
+wider data centre facility. The full retention interceptor provides protection in relation to the 
+generator building and potential loss of containment in this location.  
+Both drainage systems will be inspected via CCTV survey and will be undertaken on a frequency 
+to be determined as part of the transition to the operations team. 
+ 
+Firewater 
+The Installation includes containment for firewater within the generator building for LHR11 and a  
+firewater capture system for the LHR12 generator gantry, full retention interceptors capable of  
+retaining 10,000 litres and a pumped transfer to the drainage system which can be isolated in the 
+event of a fire. This provides three layers of protection in relation to the main fire risk at the 
+Installation (emergency generators). 
+Interceptors 
+There are three alarmed oil/ water interceptors on site, serving the generator locations and the 
+fuel delivery point.  
+There are two 10,000 litre full retention interceptors serving the LHR11 generator building and 
+LHR12 generator gantry area drainage, and a 45 litre capacity bypass interceptor serving the fuel 
+offloading area.  
+ 
+A probe is installed with the interceptors, which will alarm when the presence of oil is detected.  
+The alarms are linked to the generator system SCADA for the data centre. 
+ 

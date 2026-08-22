@@ -1,0 +1,67 @@
+Permit number 
+EPR/HP3136DK 11 
+Schedule 1 – Operations  
+ 
+Table S1.1 activities 
+Activity 
+reference  
+Activity listed in Schedule 
+1 of the EP Regulations  
+Description of specified 
+activity  
+Limits of specified 
+activity 
+AR1 S1.1 A1 (a) Operation of emergency 
+standby generators burning 
+diesel solely for the purpose 
+of providing electricity to the 
+installation in the event of a 
+failure of supply from the 
+National Grid comprising;  
+3 x 4MWth engines 
+3 x 3.6 MWth engines 
+3 x 3.4 MWth engines 
+31 x 3.2 MWth engines 
+From receipt of raw 
+materials and generation of 
+electricity to despatch of 
+waste.  
+ 
+Electricity produced at the 
+installation cannot be 
+exported to the National 
+Grid.  
+ 
+Generators shall only be 
+operated for on-site 
+emergencies and not for 
+elective power generation, 
+such as Balancing 
+Services, Demand Side 
+Response operations 
+including Frequency Control 
+Demand Management 
+(FCDM) or Triad 
+Avoidance. 
+Directly Associated Activity 
+AR2 Storage of raw materials From receipt of raw 
+materials to use within the 
+facility. 
+AR3 Surface water drainage Input to site drainage 
+system until discharge to 
+surface water drain via 
+interceptors. 
+ 
+Table S1.2 Operating techniques 
+Description Parts Date Received
+Application 
+EA/EPR/HP3136DK/A001 
+Section 3, table 3a of Part B3 of the application form. 
+Best Available Technique (BAT) Assessment – Watford. 
+LHR14 – Watford Risk Assessment. 
+Watford - Non-technical summary sections Emissions to air, 
+Emissions to water and Emissions to land. 
+Watford - Non-technical Summary figure 4 - site drainage 
+map. 
+Duly Made 
+18/01/2018 

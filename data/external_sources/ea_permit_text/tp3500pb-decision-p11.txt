@@ -1,0 +1,45 @@
+ 
+ EPR/TP3500PB/V003   Page 11 of 23 
+OFFICIAL 
+OFFICIAL 
+The permit has a limit on the activity to exclude voluntary ‘elective power 
+operation’ such as demand side response (i.e. on-site use) or grid short term 
+operating reserve (STOR) (i.e. off-site export of electricity) and Frequency 
+Control by Demand Management (FCDM) for grid support. This is primarily to 
+differentiate data centres from ‘diesel arrays’ that voluntarily operate within the 
+balancing market and importantly provide a clear way to demonstrate 
+minimisation of emissions to air as ‘emergency plant’. 
+Operational and management procedures should reflect the outcomes of the air 
+quality modelling by minimising the duration of testing, phasing engines into 
+subgroups, avoiding whole site tests and planning off-grid maintenance days and 
+most importantly times/days to avoid adding to “at risk” high ambient pollutant 
+background levels. 
+The Applicant has assessed and provided evidence of the actual reliability of the 
+local electricity grid distribution allowing the Environment Agency to judge that 
+the realistic likelihood of the plant needing to operate for prolonged periods in an 
+emergency mode is low. However, the atmospheric dispersion modelling 
+provided in the application, albeit at very much worst-case scenario, has 
+predicted that the emissions of NO2 from operation of the generators for solely 
+testing purposes over weekends may itself have the potential to exceed short 
+term air quality standards. Some of the improvement conditions included in the 
+permit to address this in the original application remain relevant and have now 
+been combined with a pre-operational condition forbidding the operator to begin 
+operating the new engines prior to obtaining the specific approval from the 
+Environment Agency to this improvement plan (see above).  
+We have also: 
+● Specified an additional improvement condition (IC08) requesting the 
+operator to update the site Air Quality Management Plan to include the 
+risks arising from the proposed new engines. This is because the 
+installation operates under and approved Air Quality Management Plan 
+that needs updating to reflect the changes to the operations after this 
+variation. 
+● Specified an additional pre-operational condition requesting the operator 
+to provide the schedule and assess the risks associated with the 
+commissioning phase for the proposed new engines. This is because, we 
+asked for this information during the determination of this variation 
+application, but the Applicant was not able to respond since the 
+commissioning plan was not defined yet at that time.  
+● Specified a pre-operational condition requiring the operator to validate the 
+performance of the SCR systems during the commissioning of the engines 
+and to propose a plan to periodically calibrate the NOx sensors governing 
+the dosing of urea solution. 

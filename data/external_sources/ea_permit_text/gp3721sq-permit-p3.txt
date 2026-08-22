@@ -1,0 +1,26 @@
+Permit number  
+Error! Unknown document property name. 
+ 3 
+ 
+Status log of the permit 
+Description Date Comments 
+Application 
+EPR/GP3721SQ/A001 
+Duly made 
+04/11/2024 
+Bespoke application for a combustion facility.  
+Additional information request 
+dated 28/02/2025 
+Response 
+received 
+29/05/2025 
+Revised air quality modelling report. 
+Additional information received 09/05/2025 Noise background information 
+Permit determined 
+EPR/GP3721SQ 
+30/07/2025 Permit issued to Colt Data Centre Services UK 
+Limited. 
+ 
+ 
+. 
+End of introductory note  

@@ -1,0 +1,51 @@
+EPR/HP3136DK/A001 
+Date issued: 12/10/2018  4 
+To further manage and minimise emissions, improvement condition IC4 has been included in the permit 
+which requires the Operator to submit a review of options for reducing predicted short term nitrogen dioxide 
+emissions impacts for the grid failure emergency scenario. In the short term this concern will be addressed 
+through the Air Quality Management Plan required by improvement condition IC1. 
+The Environment Agency has specified that the Operator shall have a written action plan to manage the 
+prolonged emergency running of the plant. This will include a sensitive receptors list, review of mitigation, 
+assessments of impacts, and evaluation against modelled ri sk conditions (i.e. occurrence at periods of most 
+concern in the year, possibly ambient air monitoring surveillance at very sensitive receptors). The action plan 
+will include measures proportionate to the level of risk at the receptors. The Operator is expected to work 
+with the local authority to develop this plan to ensure local factors are fully considered. 
+A Schedule 5 notice was issued requesting additional information on potential improvements that could be 
+made on site such as upgrading of generators or increased stack heights to improve dispersion of NO
+2. 
+Improvement condition IC4 requires the Operator to expand of their response to this information request and 
+submit a review of options for reducing predicted short term nitrogen dioxide emissions impacts for the grid 
+failure emergency scenario – see section on BAT below for further information.  
+We have also specified improvement condition IC3 requir ing the Operator to determine the actual short term 
+NOx concentrations at the site boundary through monitoring to validate the conclusions reached in the air 
+quality assessment within the application and to inform the air quality management plan.  
+ 
+Permit conditions 
+The permit will include a maximum 500 hour ‘emergency/standby operational limit’ for any or all the plant 
+producing on-site power under the limits of the combusti on activity; and thereby emission limit values ELVs 
+to air (and thus engine emissions monitoring) are not required within the permit. Emergency hours’ operation 
+includes those unplanned hours required to come off grid to make emergency repair of electrical 
+infrastructure associated but occurring only within the data centre itself. 
+Each individual generator with its own discharge stack, can be maintained, tested and used in a planned way 
+for up to 500 hours per calendar year each without ELVs or associated monitoring under the Industrial 
+Emissions Directive (IED) and Medium Combustion Plant Directive (MCPD). The Environment Agency 
+expects planned testing and generator operations to be organised to minimise occasions and durations 
+(subject to client requirements). 
+The permit has a limit on the activity to exclude voluntary ‘elective power operation’ such as demand side 
+response (i.e. on-site use) or grid short term operating re serve (STOR) (i.e. off-site export of electricity) and 
+Frequency Control by Demand Management (FCDM) for grid support. This is primarily to differentiate data 
+centres from ‘diesel arrays’ that voluntarily operate within the balancing market and importantly provide a 
+clear way to demonstrate minimisation of emissions to air as ‘Emergency plant’. 
+Operational and management procedures should reflect the outcomes of the air quality modelling by 
+minimising the duration of testing, phasing engines into subgroups, avoiding whole site tests and planning 
+off-grid maintenance days and most importantly times/days to avoid adding to “at risk” high ambient pollutant 
+background levels. 
+The permit application must assess and provide evidence of actual reliability data for the local electricity grid 
+distribution (including data centre internal electrical design) for the Environment Agency to judge the realistic 
+likelihood of the plant needing to operate for prolonged periods in an emergency mode (especially if 
+emissions modelled have the potential to exceed short term air quality standards). 
+Reporting of standby engine maintenance run hours is required annually and any electrical outages (planned 
+or grid failures regardless of duration) require both immediate notification of the Environment Agency and 
+annual reporting. 
+ 
+ 

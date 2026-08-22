@@ -1,0 +1,49 @@
+ 
+ EPR/TP3500PB/V003   Page 7 of 23 
+OFFICIAL 
+OFFICIAL 
+possible at the closest non-statutory local nature sites during the building 
+load test should operations coincide with the worst-case meteorological 
+conditions.  
+ 
+• We have found that daily mean NOx process contributions at statutory 
+conservation sites within screening distance are predicted to be 
+insignificant during all testing scenarios. 
+ 
+ 
+Short-term impacts - Emergency scenario 
+• Exceedances of the 99.79th percentile 1-hour NO2 Environmental 
+Standard are predicted if the emergency operations occur for 19 hours or 
+more during the worst-case meteorological conditions. We have used the 
+hypergeometric probability distribution to assess the likelihood of 
+exceedances occurring. We have found that the statistical likelihood of 
+exceedances would be <5% provided emergency operations do not occur 
+for more than 55 hours per year. We consider a <5% chance of 
+exceedances to be unlikely. The Applicant has provided evidence, based 
+on their operational history since 2008, suggesting that emergency 
+operations of the scale modelled in the air emissions assessment 
+submitted with the application are extremely rare. This is consistent with 
+our regulatory experience of similar sites. 
+ 
+• Exceedances of the 1-hour NO environmental standard are possible, 
+should emergency operations occur during the worst-case meteorological 
+conditions. 
+ 
+• Exceedances of the 10-minute, 30-minute and 1-hour NO2 AEGL-1 are 
+predicted, should emergency operations occur during the worst-case 
+meteorological conditions. 
+ 
+• Exceedances of the daily mean NO x critical level are predicted at the 
+closest local nature sites should emergency operations occur during the 
+worst-case meteorological conditions. 
+ 
+• We find that daily mean NO x PCs are predicted to be not insignificant at 
+Richmond Park SAC and Wimbledon Common SAC should emergency 
+operations occur continuously for 24 hours during the worst -case 
+meteorological conditions, however, the PECs do not exceed the critical 
+level. Furthermore, as the applicant has provided evidence to suggest that 
+emergency operations are extremely rare, we consider impacts to statutory 
+conservation sites as a result of emergency outages to be very unlikely. 
+ 
+ 
+ 

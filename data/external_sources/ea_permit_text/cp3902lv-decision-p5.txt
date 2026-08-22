@@ -1,0 +1,42 @@
+ 
+EPR/CP3902LV/V003 
+NTT Dagenham Data Centre  Page 5 of 20 
+a “Closed Loop” system with NOx sensors on the engine out and tailpipe which 
+only doses enough AdBlue that can be used by the SCR catalysts. However, as 
+an extra precaution, the SCR reactor has a layer of Ammonia Slip Catalysts 
+(ASC) that will remove any ammonia to prevent it being emitted from the exhaust. 
+Also refer to ‘Selective catalytic reduction’ section of this document. 
+The applicant provided an assessment of the impact from emissions to air in their 
+report ‘LON1 Phase B Environmental Permit Variation Application. Air Emissions 
+Risk Assessment, LON1B, Dagenham. NTT Global Data Centers EMEA Limited. 
+SLR Project No.: 410.V61547.00001. Revision: V2.0’. 
+Assessment scenarios 
+The assessment scenarios modelled for all SBGs (LON1A & LON1B) were: 
+• routine testing and maintenance scheduled operations; 
+• non-routine emergency outage operations (72-hour outage); and 
+• LON1B commissioning tests. 
+We have incorporated these into table S1.2 of the permit. 
+Assessment criteria 
+The applicant submitted air dispersion modelling as part of their air quality impact 
+assessment, which allowed the process contribution (PC) to be predicted at any 
+human and ecological receptor that could be impacted by the operation of the 
+installation. 
+ 
+The PC is the estimated concentration of an emitted substance, and when 
+calculated within a dispersion model, takes into account relevant parameters of 
+the release and surrounding conditions, including local meteorology. Once short-
+term and long-term PCs have been calculated, they are compared with 
+Environmental Standards (ES). 
+ 
+PCs are considered insignificant if: 
+• The long-term PC is less than 1% of the relevant ES; and 
+• The short-term PC is less than 10% of the relevant ES. 
+When assessing the significance of PCs at local nature sites, we consider that 
+emissions are insignificant if: 
+• The long-term PC is less than 100% of the relevant ES for protected 
+conservation areas; and 
+• The short-term PC is less than 100% of the relevant ES for protected 
+conservation areas. 
+ 
+When an emission is screened out in this way, we would normally consider that 
+the applicant’s proposals for prevention and control of the emission are 

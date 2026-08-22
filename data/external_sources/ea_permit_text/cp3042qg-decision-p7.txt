@@ -1,0 +1,45 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 7 of 26 
+The long term 1% PC insignificance threshold is based on the judgements that:  
+• It is unlikely that an emission at this level will make a significant contribution to air quality;  
+• The threshold provides a substantial safety margin to protect health and the environment.  
+ 
+The short term 10% PC insignificance threshold is based on the judgements that:  
+• Spatial and temporal conditions mean that short term process contributions are transient 
+and limited in comparison with long term process contributions;  
+• The threshold provides a substantial safety margin to protect health and the environment.  
+ 
+Where an emission is screened out in this way, we would normally consider that the operator’s 
+proposals for the prevention and control of the emission to be BAT. That is because if the impact 
+of the emission is already insignificant, it follows that any further reduction in this emission will 
+also be insignificant. 
+However, where an emission cannot be screened out as insignificant, it does not mean it will 
+necessarily be significant. 
+For those pollutants which do not screen out as insignificant, we determine whether exceedances 
+of the relevant ES are likely. This is done through detailed audit and review of the operator’s air 
+dispersion modelling taking background concentrations (Process Contribution + Background 
+Concentration = Predicted Environmental Concentration (PEC)) and modelling uncertainties into 
+account. Where an exceedance of an AAD limit value is identified, we may require the operator to 
+go beyond what would normally be considered BAT for the Installation or we may refuse the 
+application if the operator is unable to provide suitable proposals. Whether or not exceedances 
+are considered likely, the application is subject to the requirement to operate in accordance with 
+BAT. 
+This is not the end of the risk assessment, because we also take into account local factors (for 
+example, particularly sensitive receptors nearby such as a SSSIs, SACs or SPAs). These 
+additional factors may also lead us to include more stringent conditions than BAT.   
+If, as a result of reviewing of the risk assessment and taking account of any additional techniques 
+that could be applied to limit emissions, we consider that emissions would cause significant 
+pollution, we would refuse the Application. 
+Operator’s assessment of potential impact on air quality: 
+The operator submitted an Air Emissions Risk Assessment which considered the potential 
+impacts of the principal pollutants of concern with respect to emissions to air from low sulphur 
+diesel oil generators. The principal pollutants of concern are nitrogen dioxide (NO2) on human 
+health and nitrogen oxides (NOx) and nutrient and acid nitrogen deposition on ecological 
+receptors within the defined screening distances. However, as the generators will be installed 
+with Selective Catalytic Reduction (SCR) technology to control the NOx emissions; th e 
+assessment also considered the potential for emissions of ammonia (NH3) associated with 
+slippage. 
+They considered 12 human health receptors including residential properties, gyms, schools and 
+day nurseries. 
+They considered the following protected European sites: 
+• Burnham Beeches (Special Area of Conservation (SAC)) 

@@ -1,0 +1,107 @@
+ 
+Permit number 
+EPR/CP3902LV  17 
+Table S3.1 Point source emissions to air – emission limits and monitoring requirements 
+Emission point ref. & location 
+Note 4 
+Source Parameter Limit (including 
+unit)  
+Reference period Monitoring 
+frequency Note 2 
+Monitoring 
+standard or 
+method Note 3 
+LON1B (fitted with SCR) 
+GEN-01-HA, GEN-01-HB 
+GEN-01-C1/1, GEN-01-C1/2 
+GEN-01-C1/3, GEN-01-C2/1 
+GEN-01-C2/2, GEN-01-C2/3 
+GEN-01-C2/4, GEN-01-C3/1 
+GEN-01-C3/2, GEN-01-C3/3 
+GEN-01-C3/4, GEN-01-C4/1  
+GEN-01-C4/2, GEN-01-C4/3 
+GEN-01-C5/1, GEN-01-C5/2 
+GEN-01-C5/3, GEN-01-C5/4 
+GEN-01-C6/1, GEN-01-C6/2 
+GEN-01-C6/3, GEN-01-C6/4 
+ 
+From SBGs as shown on the site 
+plan in Schedule 7 of this permit 
+and the ‘Site Layout and 
+Emissions Points’ plan submitted 
+with application 
+EPR/CP3902LV/V003. 
+ 
+SBG exhausts 
+ 
+22 x 7.6 MWth 
+SBGs 
+ 
+2 x 3.8 MWth 
+SBGs 
+ 
+Oxides of Nitrogen  
+(NO and NO2 
+expressed as NO2) 
+ 
+No limit set In line with web guide 
+‘Monitoring stack 
+emissions: low risk 
+MCPs and specified 
+generators’   
+Published 20 March 
+2024 
+(formerly known as 
+TGN M5)  
+ 
+Every 1,500 hours 
+of operation or 
+once every five 
+years (whichever 
+comes first). Note 1 
+ 
+In line with web 
+guide ‘Monitoring 
+stack emissions: 
+low risk MCPs and 
+specified 
+generators’   
+Published 20 March 
+2024 
+(formerly known as 
+TGN M5)  
+Carbon monoxide No limit set In line with web guide 
+‘Monitoring stack 
+emissions: low risk 
+MCPs and specified 
+generators’   
+Published 20 March 
+2024 
+(formerly known as 
+TGN M5)  
+ 
+Every 1,500 hours 
+of operation or 
+once every five 
+years (whichever 
+comes first). Note 1 
+ 
+In line with web 
+guide ‘Monitoring 
+stack emissions: 
+low risk MCPs and 
+specified 
+generators’   
+Published 20 March 
+2024 
+(formerly known as 
+TGN M5)  
+Sulphur dioxide  No limit set - - - 
+Particulates  No limit set - - - 
+Ammonia (from 
+SCR) 
+No limit set - 
+ 
+- 
+ 
+-  

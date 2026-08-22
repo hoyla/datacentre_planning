@@ -1,0 +1,49 @@
+ 
+                       Page 7 of 32 
+ 
+- 9 Local Wildlife Sites: 
+o Disused railway line, Hemel Hempstead; Nicky Way, Dismantled Railway; 
+o High Wood; Woodhall Wood; Widmore Wood; Maylands Wood; 
+o Paradise Fields Central; Rant Meadow Wood/Bennets End Pit; 
+o Holy Trinity Church, Leverstock Green. 
+ 
+- 1 Ancient Woodland 
+o Unnamed Ancient Woodland. 
+The data centre is not situated in an Air Quality Management Area (AQMA) and there are no 
+AQMAs within 2km of the site. The closest AQMA is St. Albans No.2 declared as a result of 
+exceedances of the annual mean NO2. This is located about 3.2 km south east of the four NTT 
+datacentre sites. 
+NTT assessed two scenarios: 
+- Scenario 1 (Routine maintenance scenario - the predictable, managed testing and 
+maintenance activity for the generators ); 
+o Maintenance Schedule 1 – 1 suite of generators at Maylands, 1 suite of generators 
+at Centro, 1 suite of generators at Campus, 1 suite of generators at HH4 have 
+been modelled operating continuously. The annual mean and 1 -hour mean 
+impacts are assessed to account for 13 hours (monthly maintenance 12hrs and 
+black building test) . This will be up to a maximum of 169 hours at any one site 
+based on Campus having 13 suites including a pair of X1000 generators located 
+at Campus. 
+o Maintenance Schedule 2 – 1 suite at Maylands, 1 suite at Centro, 1 suite at 
+Campus, 1 suite at HH4 have been modelled operating continuously. The annual 
+mean and 1 -hour mean impacts are assessed to account for 16 hours (monthly 
+maintenance 12hrs and annual load test). This will be up to a maximum of 512 
+hours at any one site based on HH4 having 32 generators including a pair of X1000 
+generators located at Campus. 
+ 
+- Scenario 2 (Electrical grid outage of 500 hours – the maximum number of hours 
+permitted for emergency operation. All generators (minus redundancies) operate 
+simultaneously across all sites). 
+They made the following assumptions regarding the maintenance and operational scenarios to 
+ensure a conservative assessment was undertaken: 
+- All gensets were modelled at full load which is not the case for uninterruptable power 
+supply (UPS) wrap round maintenance; 
+- Gensets were assumed to be operating simultaneously at each site which is unlikely to 
+be the case; 
+- The genset suite configurations that led to the highest mass emission rates at each site 
+were modelled. 
+The applicant modelled site emissions for every hour in each year of assessment to ensure that 
+site operations coincided with the worst case meteorological conditions. 
+Following further application determination discussions, they expanded their assessment to 
+include the impacts of nitrogen oxides (NOx), particulate matter (PM10 and PM2.5) and carbon 
+monoxide (CO). The potential impact of sulphur dioxide (SO2) was not considered due to the use 
+of low sulphur fuel in the generators. 

@@ -1,0 +1,61 @@
+Permit number 
+EPR/HP3136DK 12 
+Table S1.2 Operating techniques 
+Description Parts Date Received
+Response to Schedule 5 
+Notice dated 25/01/2018
+  
+ 
+All responses including 
+ BAT Justification 
+ Plant configuration 
+ Air quality management plan 
+ Oil storage 
+ Oil use 
+ Emissions standards and reduction measures  
+05/04/2018 
+Additional information Site plan with emissions points and Site Condition Report 
+systematic appraisal methodology.  
+20/07/2018 
+Additional information Site plan with all emissions points. 20/07/2018 
+Additional information Further clarification on site plan with emissions points 
+showing exact location of points EP33 – EP40. 
+30/07/2018 
+Additional information Fuel storage containment detail confirmation of 110% 
+secondary containment 
+31/08/2018 
+ 
+Table S1.3 Improvement programme requirements
+Reference Requirement Date 
+IC1 The Operator shall produce an Air Quality Management Plan in 
+conjunction with the Local Authority outlining response measures to be 
+taken in the event of a grid failure. This should include but not be limited 
+to the following considerations:  
+ The response should be tailored to reflect the predicted potential 
+impact indicated by the air dispersion modelling at individual 
+receptors;  
+ Specific timescales for response measures; 
+ How local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or time 
+of day; 
+ Contingency for how the response will be carried out in the event 
+scenario i.e. loss of power; and 
+ Timescales for continued review of the management plan. 
+The agreed Air Quality Management Plan shall be submitted to the 
+Environment Agency for approval. 
+12/04/2019 
+IC2 The Operator shall produce a report outlining the maintenance and 
+operating regime following the first year of operation following permitting. 
+This shall include but is not limited to the following points:  
+ A demonstration of the reduction in generator use that the 
+revised ‘pull the plug’ operating scenario has achieved; 
+ An update on the control systems used to carry out the testing of 
+the generators and how these have been used to minimise 
+emissions; and 
+ Any additional improvements that have been identified to reduce 
+emissions during the maintenance testing and operation of the 
+generators. This should include timescales for the 
+implementation of the improvements.  
+The operator shall submit this report in writing to the Environment Agency 
+for approval. 
+12/12/2019 

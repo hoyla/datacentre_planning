@@ -1,0 +1,49 @@
+ 
+LIT 11984                                                     Page 8 of 16 
+as a result of a power outage in at least 5 years. Therefore, the potential for 
+prolonged noise is also considered to be very low. 
+An assessment of the potential impact of noise has been undertaken in the 
+Environmental Risk Assessment (ERA). The document outlines that in addition to 
+the limited hours of operation which will control potential for noise, acoustic 
+silencers and a 6.5 metre high acoustic barrier providing sound dampening 
+where generators are in close proximity to the site boundary. The ERA concludes 
+that the risk of noise is low. We agree with this conclusion and that the proposed 
+measures are sufficient to control any noise arising from the installation.  
+Although no noise management plan has been requested to date, condition 3.4 
+enables the Environment Agency to request one if considered necessary in the 
+future.  
+ 
+Permit Conditions  
+The permit will include a maximum 500 hours per annum ‘emergency/standby 
+operational limit’ for any or all the plant producing on-site power under the limits 
+of the combustion activity. Therefore, emission limit values (to air) are not 
+required within the permit. Emergency hours operation includes those unplanned 
+hours required to come off grid to make emergency repair of electrical 
+infrastructure. The limit on the emergency use of 500 hours is for the installation 
+as a whole, meaning that as soon as one generator starts operating the hours 
+count towards the 500 hours. 
+ 
+In addition, the permit allows each individual generator unit to be tested for 
+maintenance. The BAT expectation is that individual generator testing is below 
+50 hours/annum. In this instance the operator proposes to limit testing to each 
+set of generators being tested quarterly for one hour, this is in line with BAT and 
+below the level at which ELVs would be needed. We expect the number of and 
+duration of planned testing and generator operations to be minimised as much as 
+possible. The planned testing operations of the generators shall be limited to the 
+maximum testing hours outlined in the application documents and included by 
+reference in the Operating Techniques Table S1.2 of the permit. 
+ 
+The permit does not allow voluntary / elective power generation such as for 
+demand side response (i.e. on-site use), grid short term operating reserve 
+(STOR) (i.e. off-site export of electricity) or Frequency Control by Demand 
+Management (FCDM) for grid support or elective onsite use of electric power, 
+when this can be supplied from the grid. This is primarily to differentiate data 
+centres from ‘diesel arrays’ that voluntarily operate within the balancing market 
+and importantly provide a clear way to demonstrate minimisation of emissions to 
+air as ‘emergency plant’. 
+ 
+Operational and management procedures should reflect the outcomes of the air 
+quality modelling by minimising the duration of testing, phasing generators into 
+subgroups, avoiding whole site tests and planning off-grid maintenance days and 
+most importantly times/days to avoid adding to “at risk” high ambient pollutant 
+background levels. 

@@ -1,0 +1,40 @@
+ 
+LIT 11984  [Publish date]                     Page 9 of 24 
+• Testing scenarios: Daily mean NOx process contributions are concluded 
+to be insignificant at the designated sites. 
+• Emergency scenario: Daily mean NOx process contributions could exceed 
+the critical level only if a prolonged emergency outage coincides with 
+worst-case meteorology; the consultant concludes this is highly unlikely 
+due to expected high grid reliability and dual sub-station supply. 
+• Annual impacts (all scenarios combined): Annual NOx, SO2, nutrient 
+nitrogen and acid deposition process contributions are concluded to be 
+insignificant or that PECs do not exceed relevant critical levels/loads. 
+ 
+ 
+Environment Agency review of operator assessment of potential impact on 
+air quality 
+ 
+Human health assessment 
+For the testing scenarios, no exceedances of the short-term NO2 environmental 
+standard (ES) are predicted. For the emergency scenario, our modelling 
+indicates that exceedances may occur under worst-case meteorological 
+conditions coinciding with emergency operation. In particular, the 99.79th 
+percentile 1-hour NO2 process contributions (PCs) are predicted to exceed the 
+ES, with a greater than 5% likelihood of exceedance if 72 hours of emergency 
+operation occurs.  
+At the 100th percentile, 1-hour NO2 PCs are predicted to exceed the AEGL-1 for 
+NO2, 1-hour NO PCs are predicted to exceed the ES where 90% of NOx is 
+assumed to be NO, and 24-hour benzene PCs are predicted to exceed the ES 
+where all VOCs are assumed to be benzene, although this is considered unlikely.  
+These exceedances are only predicted for a 72-hour outage under worst-case 
+meteorological conditions and are therefore considered unlikely because such 
+emergency operation is expected to be rare, provided grid reliability remains 
+high. Annual PCs, based on the cumulative operational hours from all testing 
+scenarios plus 72 hours of emergency operation, are either insignificant or the 
+predicted environmental concentrations (PECs) do not exceed the relevant ES. 
+We therefore agree with the applicant’s overall conclusion that significant impacts 
+on human health are unlikely during normal testing and routine operation. We 
+also agree that the emergency scenario represents a highly unlikely operating 
+condition because it assumes a 72-hour national emergency blackout event 
+coinciding with worst-case meteorological conditions. On that basis, we conclude 
+that significant impacts on human health are unlikely, although short-term 

@@ -1,0 +1,48 @@
+ 
+                       Page 10 of 32 
+500 Hours Electrical Grid Outage Scenario: 
+- The PC did not exceed 1% of the annual mean Critical level (CLe) at the SAC (Chilterns 
+Beechwoods); 
+- The maximum daily PC did exceed 10% of the daily mean CLe, the maximum daily PC 
+exceeded 10% of the daily mean CLe and the PEC (predicted environmental 
+concentration) exceeded the CLe meaning that it could not therefore be concluded that 
+there was ‘no likely significant effect’ at the SAC (Chilterns Beechwoods); 
+- The PC did not exceed 100% of the annual mean CL e at the Local Wildlife Sites (LWS). 
+However there was a risk of exceedance of the daily mean CLe for 24-hour continuous 
+operation and therefore it could not be concluded there was ‘no significant pollution’; 
+- Acid deposition and nutrient nitrogen deposition did not exceed the relevant critical loads 
+and could therefore be deemed ‘insignificant’. 
+ 
+Environment Agency review of applicant’s assessment of potential impact on air quality: 
+We have carried out our own audit by means of detailed check modelling and sensitivity analysis 
+on the air quality and habitats assessments presented by the operator.  
+In this assessment we: 
+- Considered meteorological data from a second station at Hatfield Airport in addition to the 
+data from Luton Airport considered by the operator; 
+- Reviewed the outcome of the modelling with differing surface roughness and terrain data 
+from those used by the operator; 
+- Considered a more conservative background for each pollutant (NO2, PM10, PM2.5 and 
+CO) 
+- Assessed predictions against the US EPA Acute Exposure Guideline Levels (AEGLs) and 
+nitrogen monoxide (NO) environmental assessment level both of which the operator had 
+not done. 
+Whilst we did not always agree exactly with their numerical predictions, we did agree with their 
+overall conclusions in regard to the potential impacts on both human health and ecological 
+receptors. 
+We agreed with the applicant’s inclusion of 314 buildings within their modelling assessment. 
+However the majority of stacks are below building heights which will lead to poorer dispersion and 
+higher localised concentrations of pollutants. Whilst the sites at Centro, Campus and Maylands 
+are existing operational facilities, the site at HH4 was being developed at the time of permit 
+application. The operator noted that the stacks at HH4 site “will terminate just below the roof 
+height level”. 
+We have included an improvement condition (IC8) requiring the operator to review the potential 
+for reduced emissions from the generator stacks or improved dispersion of emissions which will 
+require them to review the heights of stacks on the four sites. 
+We have completed a model run with all sources operational and grouped for each site and 
+assessed which site produces the highest contributions to the impacts at nearby receptors. Our 
+results indicate that the Campus site will likely have the highest impacts followed by the new HH4 
+site (original scope of HH4). We conclude that if emissions from the Campus site could 
+preferentially be reduced then this would be beneficial to the overall impacts at receptors. We 
+have included that requirement in IC8. 
+In our assessment of the impact on human health receptors, we have concluded for both 
+testing/maintenance and emergency operation scenarios that: 

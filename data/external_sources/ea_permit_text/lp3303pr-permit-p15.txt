@@ -1,0 +1,100 @@
+ 
+Permit number 
+EPR/LP3303PR 15 
+Schedule 3 – Emissions and monitoring 
+Table S3.1  Point source emissions to air – emission limits and monitoring requirements 
+Emission point 
+ref. & location 
+Source Parameter Limit 
+(including 
+unit)  
+Reference 
+period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+A04O1-A04O8 
+(LD4,01-08) 
+A04O9-AO410 
+(LD4, 09-10) 
+AO501-AO5O6 
+(LD5, 01-6) 
+AO507-AO515 
+(LD5, 07-15) 
+AO601-AO624 
+(LD6, 01-24) 
+AO701-AO704 
+(LD7, 01-04)  
+AO705-AO706 
+(LD7, 05-06) 
+A1001-A1002 
+(LD10, 01-02) 
+A1003-A1005 
+(LD10, 03-05) 
+A1006-A1015 
+(LD10, 06-15) 
+Generator 
+exhausts as 
+shown on Figure 
+3.1, Emission 
+Points to Air. 
+ 
+Diesel 
+generator 
+exhausts  
+ 
+ 
+Oxides of 
+nitrogen  
+(NO and NO2 
+expressed as 
+NO2) 
+No limit set - - - 
+Carbon 
+monoxide 
+No limit set - - - 
+Sulphur 
+dioxide 
+No limit set - - - 
+Vents 
+associated with 
+each of the 14 
+diesel storage 
+tanks 
+Vents from 
+storage 
+tanks 1 to 
+14 
+No parameters 
+set 
+No limit set - - - 
+ 
+Table S3.2 Point Source emissions to water (other than sewer) and land – emission limits and 
+monitoring requirements 
+Emission 
+point ref. & 
+location 
+Source Parameter   Limit 
+(incl. 
+unit) 
+Reference 
+Period 
+Monitoring 
+frequency 
+Monitoring 
+standard or 
+method 
+Emission 
+points to 
+offsite surface 
+Uncontaminated 
+site surface 
+water 
+No 
+parameter 
+set 
+No limit 
+set 
+- - - 

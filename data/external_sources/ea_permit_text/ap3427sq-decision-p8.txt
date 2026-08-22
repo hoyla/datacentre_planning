@@ -1,0 +1,43 @@
+ 
+Page 8 of 29 
+health receptors. 99.79th percentile 1-hour NO2 PCs are predicted to be ‘not 
+insignificant’ but predicted environmental concentrations (PECs) are not 
+predicted to exceed the environmental standards (ES).  
+ 
+Emergency scenario 
+Their results indicate the following:  
+• 1-hour 99.79th percentile NO2 PCs are predicted to exceed the ES. The 
+consultant’s statistical analysis predicts that exceedances of the ES are 
+unlikely to occur at all receptors, apart from at receptor HR17. They 
+predict exceedances at HR17 are still unlikely to occur, because a 72-hour 
+emergency outage is highly unlikely.  
+ 
+• The consultant’s 100th percentile 1-hour, 10-minute and 30-minute NO2 
+PCs are predicted to exceed the Acute Exposure Guideline Levels (AEGL-
+1) values at one receptor, HR17. Again, the low likelihood of a 72-hour 
+emergency outage means that the consultant predicts that the chance of 
+an exceedance is unlikely.  
+ 
+• The consultant’s annual NO2 and 1-hour NO PCs are ‘not insignificant’, 
+but PECs are not expected to exceed the ES. 
+ 
+Consultant’s Conclusion:  
+ 
+Impact on Human Receptors 
+ 
+The consultant reports PCs and PECs from the facility at human health receptors 
+in Appendix C of the AQA. Summaries of the results are provided in tables 13–18 
+of the AQA, while NO PCs and annual PCs for the emergency scenario are 
+presented in the technical note (tables 2–8). The results indicate: 
+ 
+• Long-term ES: No exceedances for any modelled scenario. 
+• Short-term ES: No exceedances for any modelled scenario. 
+Apart from at receptor HR17 of which the predicted exceedances are still 
+unlikely to occur, because a 72-hour emergency outage is highly unlikely 
+due to grid reliability. 
+• AEGL: No exceedances for any modelled scenario apart from the 72-hour 
+emergency scenario at one receptor (HR17). 
+• Cumulative impacts are also considered unlikely, given the negligible 
+process contributions relative to background and standards, so operation 
+of the neighbouring data centre facility is not expected to give rise to 
+cumulative air quality impacts. 

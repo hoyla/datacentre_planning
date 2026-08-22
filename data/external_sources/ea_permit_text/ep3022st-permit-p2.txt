@@ -1,0 +1,45 @@
+ 
+Permit number  
+EPR/EP3022ST  2 
+Crawley Data Centre Campus  
+Permit number EPR/EP3022ST 
+Introductory note 
+This introductory note does not form a part of the notice. 
+The main features of the permit are as follows.   
+The permit authorises the operation of stand-by electricity generating plant at a data centre located in 
+Crawley at national grid reference TQ 28670 51462. The data centre will under normal operating conditions 
+be powered by grid supplied electricity. 
+ 
+The installation falls under the following Environmental Permitting Regulations (EPR) Schedule 1 listed 
+activity description: 
+Section 1.1 Part A(1)(a) - Burning any fuel in an appliance with a rated thermal input of 50 or more megawatts.  
+ 
+The installation comprises 17 stand-by backup generators across 2 units to provide electrical power to the 
+data centre in the event of a failure of power supply from the national grid. The standby generators are 
+medium combustion plant (MCP) gas oil fuelled generators with an aggregated thermal input of 72.6MWth. 
+Unit 1 houses 10 stand-by generators which are Existing MCP. Unit 2 house 7 stand-by generators which 
+are New MCP. 
+ 
+The plant is limited to operating less than 500 hours/year, including the testing regime. It is essential that the 
+standby system is routinely tested to ensure the engines function correctly in the event of them being 
+required to operate in an emergency. 
+ 
+The engines are tested monthly, quarterly, 6 monthly (Unit 2 engines only) and annually.   
+ 
+Unit 1 has eight 3.93MWth generators which are fuelled from four above ground integrally bunded 13,500L gas 
+oil bulk tanks, exhaust gases from each generator will be discharged through individual 16m stacks. There are 
+also two 1.23MW th generators fuelled from an integrally bunded 3050L tank , exhaust gases from each 
+generator will be discharged through individual 14.5m stacks.   
+ 
+Unit 2 has seven 5.49MWth generators each fed by a 2000L day tank, which are themselves fed by two above 
+ground integrally bunded 38,000L gas oil bulk tanks . Exhaust gases from each generator will be discharged 
+through individual 6.8m stacks.  
+ 
+There are no process effluent discharge s from the installation. Uncontaminated surface water r un-off from 
+hard-standing will drain via oil-water interceptors before discharging to a combined sewer.  
+ 
+There are a number of local wildlife sites, local nature reserves and ancient woodland within 2km of the 
+installation. The closest residential properties are located approximately 50m from the data centre boundary. 
+There is an Environmental Management System (EMS) in place based on the ISO 14001 standard.  
+The status log of a permit sets out the permitting history, including any changes to the permit reference 
+number.   

@@ -1,0 +1,39 @@
+ 
+London 14 Data Centre EPR/UP3624SW                     Page 11 of 17 
+Table S1.1 (Activities) 
+Includes some additional operational controls: 
+• Testing of the generators shall only take place during daytime periods. 
+• During monthly and annual testing, each generator shall be tested 
+separately. 
+• Electricity produced at the installation cannot be exported to the National 
+Grid. 
+ 
+The first bullet is to minimise the impact from noise, refer to the Noise and Vibration 
+section of this document. 
+The second two bullets are based on the outcome of the Air Quality Assessment, 
+refer to Air Quality Impacts section of this document. 
+Table S1.1 also places a limit on the activity to exclude voluntary ‘elective power 
+generation’ such as Balancing Services, Demand Side Response operations 
+including Frequency Control Demand Management (FCDM) or Triad Avoidance . 
+This is primarily to differentiate data centres from ‘diesel  (gas oil)  arrays’ that 
+voluntarily operate within the balancing market , and importantly a clear way to 
+demonstrate minimisation of emissions to air as ‘emergency plant’. 
+ 
+Table S1.2 (Operating techniques) 
+The testing and maintenance scenarios are detailed in this document and 
+controlled though permitted operating techniques in table S1.2 of the permit.  
+ 
+Table S1.3 (Improvement programme) 
+IC1 - Air Quality Management Plan (AQMP) 
+Whilst we are satisfied that the maintenance and testing regime is appropriate, 
+given the local issues regarding air quality, including the designation of the 
+AQMA, we have included an improvement condition in the permit. This requires 
+the operator to produce an Air Quality Management Plan.  
+IC2 - Performance of SCR systems 
+This condition has been included to ensure that the proposed SCR systems are 
+fit for purpose and as described in the application. 
+Table S4.2 (Performance parameters) 
+Reporting of testing and maintenance  run hours is required annually . Operation 
+during an emergency scenario requires both notification  within 24 hours  and 
+annual reporting. 
+  

@@ -1,0 +1,39 @@
+ 
+Page 17 of 29 
+generators regularly as part of the testing regimes described earlier, occurring 
+during daytime hours. Overnight operation of the generators will only occur in an 
+emergency situation. As this is a new Installation it is not possible to consider the 
+likelihood of overnight operation by examining the frequency of historical 
+outages, but the potential for prolonged power outages in the area is considered 
+to be low. 
+However, the operator has carried out a Noise Impact Assessment for the 
+operation of the generators at the data centre. 
+ 
+Operator’s assessment of potential noise impact: 
+The operator submitted a Noise Impact Assessment prepared by Colliers 
+Properties LLC to evaluate potential noise impacts from generator operations on 
+nearby sensitive receptors. The assessment adopted a conservative approach by 
+assuming all mechanical plant operates at 100% duty, even though actual 
+operation is expected to average around 80% and full capacity would only occur 
+rarely and for short durations. 
+Key findings include: 
+• Under normal operating conditions and during generator testing, predicted 
+noise levels are not expected to cause disturbance at the nearest 
+residential areas or within nearby commercial spaces. 
+• In a full emergency scenario (e.g., total power outage), predicted noise 
+levels at two southern residential locations could increase slightly 
+compared to typical conditions. However, this exceedance is considered 
+minimal (around 3 dB, generally regarded as barely perceptible) and 
+would occur only during rare, short-term events. 
+• The assessment incorporates significant mitigation measures to minimize 
+noise impacts, particularly for residences closest to the site. 
+• The design has been optimised to balance noise control with site 
+constraints, and the overall approach is considered proportionate to the 
+low likelihood and short duration of high-duty operation. 
+Overall, the assessment concludes that noise from the proposed data centre is 
+unlikely to result in significant adverse effects on nearby sensitive receptors, 
+given the conservative assumptions, rarity of emergency scenarios, and 
+mitigation measures in place. 
+ 
+Environment Agency review of operator’s assessment of potential noise 
+impacts 

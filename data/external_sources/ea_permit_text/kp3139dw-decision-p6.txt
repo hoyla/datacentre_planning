@@ -1,0 +1,50 @@
+EPR/KP3139DW/A001 
+Date issued: 18/01/19  6 
+BAT Assessment: 
+The operator carried out a BAT assessment of the viable technologies capable of providing emergency 
+power at the data centre. 
+They considered the following technologies: 
+- Diesel rotary uninterruptible power supply engines (DRUPS) 
+- Diesel generators 
+- Natural gas (piped) fuelled generators (spark ignition engine) 
+- Natural gas (piped) fuelled generators (gas turbine) 
+- Liquid petroleum fuelled generators (spark ignition engines) 
+- Hydrogen fuel cell technology 
+- Standby gas turbine technology 
+- Selective catalytic reduction 
+Against the following considerations: 
+- Cold start capability 
+- Already proven as a reliable technology 
+- Space requirements 
+- Cost 
+- Fuel suitability and lifetime of stored fuel 
+- Air quality impact 
+- Noise 
+- Global warming impact 
+- Releases to land & water 
+- Fugitive emissions. 
+The conclusion of the assessment was that diesel generators were considered BAT largely due to the 
+modular nature of the site and the high initial costs of alternative technologies. Diesel generators also have a 
+proven reliability and a very good cold start capability. 
+We have accepted that diesel fired generators are presently a commonly used technology for standby 
+generators in data centres. Retrofitting abatement techniques onto existing power generation technologies 
+would not normally be expected for standby plant to mitigate the emission of standby/emergency operation.  
+However, Improvement Condition, IC7, requires the operator to submit a report detailing the results of a 
+review into options for reducing predicted short term NOx concentrations. This will include a feasibility study 
+(including cost benefit analysis) for potential upgrades to infrastructure such as generators or stacks or 
+changes to operational regimes such as duration and frequency of testing regimes with a view to reducing 
+nitrogen dioxide emissions or increasing dispersion of emissions. 
+The default generator specification as a minimum for new plant to minimise the impacts of emissions to air 
+(NOx) is 2g TA-Luft (or equivalent standard) or an equivalent NOx emission concentration of 2,000mg/m
+3. 
+The generator specifications on the site have emissions higher than this due to the fact the site has already 
+been operating for over ten years prior to falling under the requirements of the Environmental Permitting 
+Regulations. We accept that it would not be practicable to require the operator at this stage to upgrade all 
+plant to BAT standards. However upgrade of plant and installation of new engines that meet default 
+generator specification will be considered as part of the expansion programme for the site and the permit 
+requires the operator to investigate reduction in short term nitrogen dioxide emissions. This is an integral part 
+of a comprehensive response to Improvement Condition, IC7. 
+ 
+In order to ensure BAT standards are maintained for installation of any further standby generators as part of 
+the site expansion plan outlined in the permit application, a pre-operational condition for future development 
+requires the operator to submit a detailed design report to the Environment Agency prior to installation of any 

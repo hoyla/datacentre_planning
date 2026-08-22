@@ -1,0 +1,67 @@
+ 
+Permit number 
+EPR/PP3003PW 12 
+Table S1.2 Operating techniques 
+Description Parts Date Received 
+Application Appendix 3 - Spring Park Data Centres: Introduction to Data 
+Supporting IED Application EPR/DP3731YL/A001 - 
+Appendix 3 Technical Note March 2019 
+ 
+P3, P4 and Generation Plant Spring Park Flood assessment 
+surface water drainage strategy August 2017 WIE11565 
+ 
+Appendix 10 Ark Spring Park Energy and Emissions 
+Management Plan 6001-D 
+Duly Made 
+17/04/19 
+Response to Schedule 5 
+Notice dated 16/05/19  
+Responses to questions 1 - 8 28/06/19 
+  
+Table S1.3 Improvement programme requirements 
+Reference Requirement Date 
+IC1 The Operator shall produce an Air Quality Management Plan in 
+conjunction with the Local Authority outlining response measures to be 
+taken in the event of National Grid failure. This should include but not be 
+limited to the following considerations:  
+ The response should be tailored to reflect the predicted potential 
+impact indicated by the air dispersion modelling at individual 
+receptors;  
+ Specific timescales for response measures; 
+ How local conditions during a grid failure might influence the 
+response required, for example meteorological conditions or time of 
+day; 
+ Contingency for how the response will be carried out in the event 
+scenario i.e. loss of power; and 
+ Timescales for continued review of the management plan. 
+ 
+The Air Quality Management Plan shall be submitted to the Environment 
+Agency for approval. 
+07/04/2021 or as 
+agreed in writing 
+with the 
+Environment 
+Agency 
+IC2 The Operator shall carry out a review of the site’s tertiary containment 
+system which serves the oil and diesel storage tanks.  
+ 
+The review shall compare the system’s design, method of construction 
+and integrity against the standards outlined in CIRIA guidance C736 – 
+Containment Systems for the Prevention of Pollution or an equivalent 
+industry standard. The review shall include a review of how the tertiary 
+containment protects the site soakaways. 
+ 
+A written report of the review shall be submitted to the Environment 
+Agency for written approval which details: 
+ The review’s findings and recommendations; 
+ Proposals for the implementation of recommended improvements; 
+and 
+ Timescales for implementation of improvements. 
+The Operator shall implement the recommended improvements to the 
+tertiary containment system within the timescales approved by the 
+Environment Agency. 
+07/04/2021 or as 
+agreed in writing 
+with the 
+Environment 
+Agency 

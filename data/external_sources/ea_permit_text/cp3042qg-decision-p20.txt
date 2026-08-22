@@ -1,0 +1,46 @@
+ 
+EPR/CP3042QG/A001 Decision Document 8/12/2023                         Page 20 of 26 
+The regulated facility 
+We considered the extent and nature of the facility at the site in accordance with RGN2 
+‘Understanding the meaning of regulated facility’, Appendix 2 of RGN2 ‘Defining the scope of the 
+installation’, and Appendix 1 of RGN 2 ‘Interpretation of Schedule 1’. 
+The extent of the facility is defined in the site plan and in the permit. The activities are defined in 
+table S1.1 of the permit. 
+See key issues for more discussion on the nature of the site. 
+The site 
+The operator has provided plans which we consider to be satisfactory. 
+These show the extent of the site of the facility including the discharge points. 
+The plan is included in the permit. 
+Site condition report 
+The operator has provided a description of the condition of the site. During consultation with 
+Environment Agency groundwater and contaminated land teams, it was deemed necessary that 
+further information should be supplied to ensure that the Environment Agency has sufficient 
+information relating to the condition of the site at permit issue. We have therefore, included a pre -
+operational condition in order to satisfy this requirement. 
+It is also noted that during consultation with Environment Agency groundwater and contaminated 
+land teams that there were concerns regarding the decommissioning of the site investigation 
+boreholes. 
+The operator confirmed in an email dated 02/10/2023 that: 
+• The trial pits and hand dug pits were filled in upon completion of the sampling.   
+ 
+• The cable percussive boreholes (15m bgl) and the dynamic sampler boreholes (5m to 6m 
+bgl) were not decommissioned by Delta-Simons following the investigation. The principal 
+contractor has filled these during excavation and slab pouring. 
+ 
+• Boreholes CP102, CP103, CP104 and CP105 are beneath the main concrete slab of the 
+data halls and so are unlikely to be a direct route to ground for any leaks or spills.  
+ 
+• Borehole DS112 is beneath the area of the tank farm and tanker bay which has 
+necessitated the digging out of a substantial area of ground to fit the concrete bases and 
+pads needed for this, which included part filling and concreting over the old borehole 
+location. All areas in the vicinity of this borehole are covered with concrete and or tarmac 
+surfacing and drained to the interceptor. 
+ 
+The Environment Agency do not agree that the site investigation boreholes have been 
+decommissioned in the required manner. Therefore, these boreholes could allow preferential 
+pathways if the slab and/ or upper filled parts of the boreholes were to be compromised at any 
+time in the future, or if the boreholes bridge 2 sub-aquifers. These points of vulnerability will need 
+to be thoroughly investigated at the time of surrender of the permit or at an earlier time.  The 
+information on the location of the boreholes is in documents: Application Bespoke Site Plan 
+Baseline Report 15072022 and Application Bespoke SCRET - GWCL Response - 16052023 on 
+DMS. 

@@ -1,0 +1,42 @@
+ 
+Page 11 of 25 
+We agree with the consultant’s conclusions regarding ecological sites, however, 
+we cannot rule out exceedances of the higher daily mean NOX critical level of 200 
+µg/m3 during the annual test, should these operations coincide with worst-case 
+meteorological conditions. However, as this is a once-a-year event and the 
+exceedances are small, we consider exceedances to be unlikely. We agree that 
+exceedances of this critical level are not predicted during monthly testing. 
+We agree that exceedances of any pollutant are unlikely due to emergency 
+operations provided the grid reliability remains high. The modelled electrical 
+outages likely represent worst case scenarios as the operator stated in their BAT 
+Assessment V2 that, ‘The substation powering the installation has two feeds (A & 
+B). Each feed can support the full site load, meaning that if one feed was to fail, 
+electrical provision to the installation would not be compromised. A site wide 
+failure is considered extremely rare as it would require a catastrophic regional 
+failure on the grid, or at the supplying power station, and would likely impact not 
+only the site but the surrounding London area. 
+The applicant also stated that in the last eight years the Powergate site has had 
+high levels of grid reliability, only experiencing micro-outages or ‘blips’ that last 
+less than 0.1 second. 
+We noted that: 
+• For the assessment of NO
+x impact on ecosystems the consultant adopted 
+the lower critical level of 75 μg/m3.  The higher critical level of 200 μg/m3 is 
+appropriate for use at all ecological receptors identified in this assessment, 
+where PECs are shown to exceed the lower critical level of 75 μg/m
+3 (in 
+accordance with internal guidance AQTAG21).  
+• We found that the consultant could be underpredicting 1-hour NO PCs as 
+they explain that PCs have been averaged over the whole year, rather 
+than reporting a reasonable worst-case hourly maximum. We included an 
+assessment of maximum 1-hour NO impacts in our checks to address this. 
+ 
+• For the emergency scenario 1-hour CO and 24-hour benzene PCs were 
+not assessed, however these were considered in our audit. 
+ 
+The specific findings of our check modelling are summarised below: 
+Human health assessment 
+Based on the modelled testing scenario where each engine is tested individually, 
+we found that: 
+• The 99.79th percentile 1-hour NO2, NO2 AEGL-1s, and 1-hour NO PCs 
+are ‘not insignificant’; however, the PECs are all below the relevant ES.  

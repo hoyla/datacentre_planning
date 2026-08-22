@@ -1,0 +1,39 @@
+ 
+London 14 Data Centre EPR/UP3624SW                     Page 8 of 17 
+5% oxygen and reference conditions. 
+ 
+The generators proposed for this installation and included in the Air Quality 
+assessment are Tier 2 certified and have NOx emission concentrations of 1938 
+mg/Nm3 at 5% O2 and reference conditions (100% load standby mode – nominal  
+emissions) and therefore are in line with BAT. Furthermore, so as to minimise the 
+potential impact of NOx emissions at nearby sensitive receptors, the generators 
+will be fitted with Selective Catalytic Reduction (SCR) emissions abatement with 
+a minimum NOx emission reduction of 95% (<86mg/Nm3 at 5% O2). 
+ 
+Fuel Storage 
+Each engine has its own dedicated above ground carbon steel fuel belly tank 
+(30,868 litre capacity) which are integrally bunded to a capacity of 110% of the 
+tank capacity. The tanks are fitted with leak detection alarms, such that if any fuel 
+is released into the secondary containment and audible alarm will sound. The 
+tanks will be visually checked daily for corrosion, together with 3rd party checks 
+undertaken as part of routine maintenance of the generators. In addition a 5 
+yearly empty tank inspection will be undertaken. The Applicant confirmed that all 
+tanks will comply with the Oil Storage Regulations (SI 2001/2954. The Control of 
+Pollution (Oil Storage) (England) Regulations 2001). 
+Fuel Delivery 
+We are satisfied that the necessary controls will be in place to minimise the risk 
+of pollution. Refuelling is expected to only occur twice a year. The fuel tanker will 
+be parked on an area of impermeable slab that slopes towards drains which are 
+connected to an oil separator. The integrity of the impermeable slab will be 
+visually checked daily.  The oil separator has been sized to accommodate one 
+compartment of a fuel tanker i.e. capable of retaining the full loss of contents of 
+one road tanker.  Delivery & filling activities will be supervised by trained staff. 
+Other pollution controls include permanent kerbing around the perimeter of the 
+service yard, covering all drains within a 20-meter radius of delivery and filling 
+activities; the oil separators have automatic closure devices that activate when oil 
+is detected; localised spill kits; drip trays at fill point and high-level alarms on 
+tanks.  
+Choice of Fuel 
+The applicant confirmed that the emergency generators will be operated on gas 
+oil. We have specified in the permit that gas oil can have a maximum sulphur 
+content of 0.001% (w/w). 

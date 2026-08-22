@@ -1,0 +1,38 @@
+ 
+Page 15 of 19 
+National Air Pollution Control Programme 
+We have considered the National Air Pollution Control Programme as required by 
+the National Emissions Ceilings Regulations 2018.  By setting permit condition 
+2.3.6, operation of generators in an emergency is limited to 500 hours per year.  
+Furthermore, monthly testing for each engine is only 5 hours and 5 minutes per 
+engine, with no engines operating simultaneously.  Therefore, emissions to air 
+are minimised which will aid the delivery of national air quality targets. We do not 
+consider that we need to include any additional conditions in this permit. 
+Raw materials 
+We have specified limits and controls on the use of raw materials and fuels.  
+Tables S2.1 specifies that the gas oil for fuelling generators must have a sulphur 
+content lower than 0.001%.   
+Improvement programme 
+Based on the information on the application, we consider that we need to include 
+an improvement programme.  We have included the following improvement 
+conditions: 
+IC1 requires the operator to produce an Air Quality Management Plan (AQMP) in 
+conjunction with the Local Authority.  This outlines any measure to be taken in 
+the event of a National Grid failure and identifies trigger points during an 
+emergency where the Environment Agency and Local Authority should be 
+notified.  This improvement condition is included in all data centre permits. 
+IC1 is included for the production, in conjunction with the local authority of an 
+AQMP.  IC2 and IC3 are included as we consider the predicted impacts are 
+sufficiently above the EQS for the emergency scenario to require ambient air 
+monitoring. 
+IC4 requires the operator to submit a monitoring plan for approval, outlining their 
+proposal for the implementation of the flue gas monitoring requirements specified 
+in Table S3.1.  This IC also helps to establish a timeline for installation of sample 
+points where required. 
+IC5 requires the Operator to conduct integrity testing on their fuel tanks and fuel 
+pipelines.  Exact specifications for the tanks cannot be provided, and therefore 
+we have included the improvement condition to ensure these aging tanks are still 
+fit for purpose and are being maintained appropriately. 
+IC6 requires the operator to undertake an inspection to confirm the specifications 
+of the two existing interceptors on site.  The interceptors were installed many 
+years ago, and the capacity is unknown.  We have included this improvement 

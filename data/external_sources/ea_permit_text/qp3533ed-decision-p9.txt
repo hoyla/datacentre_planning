@@ -1,0 +1,76 @@
+ 
+ 
+ 
+Conclusion  
+ 
+All emissions (SO2 and PM10), for Event 1 and 2, screen out as being 
+considered insignificant and no further assessment is required.  
+ 
+Event 3  
+ 
+The original modelling of impact for Event 3, submitted with the application, 
+assumed 12 generators being run at full power for all meteorological hours of 
+a year. The consultant then completed statistical analysis on their modelling 
+results to show the likelihood of exceedances based on five consecutive days 
+of the generators being operational.   
+ 
+The process contribution (PC) for Events 3 is summarised in the tables below. 
+The figures shown indicate the maximum off site ground level impacts and 
+those at the most significantly impacted human receptor location, Busy Bees 
+Nursery 1
+st floor.  
+ 
+Table 3- Events 3 predicted short term impacts 
+Pollutant  EQS/EAL 
+µg/m3  
+2 x 
+background 
+concentration 
+µg/m3 [1] 
+PC 
+µg/m3 
+[2] 
+PC as % 
+of 
+EQS/EAL 
+PEC µg/m3 
+(PC + 2 x 
+background) 
+PEC as % 
+of 
+EQS/EAL 
+[3] 
+SO2 (15 
+min) 
+266 8.26 20.91 7.86 29.17 10.97 
+SO2 (1 hr) 350 8.26 15.01 4.29 23.27 6.65 
+SO2 (24 
+hr) 
+125 8.26 9.35 7.48 17.61 14.09 
+ 
+Note [1] The concentration is taken as twice the long term background level for Short 
+Term Environmental Quality Standard (EQS) / Environmental Assessment 
+Level (EAL) standards referenced to an hourly averaging value. 
+ 
+Note [2] Representative of worst case impact at Busy Bees Nursery 1
+st floor. 
+  
+Note [3] Where the PC is demonstrated to be less than 10% of the short term 
+EQS/EAL, a level below which we consider to indicate insignificant impact, 
+further consideration of the PEC is not required.   
+ 
+Screening out emissions which are insignificant 
+ 
+Emissions of SO2 can be screened out as insignificant as the short term 
+impact is < 10% of the relevant short term EQS. No further assessment is 
+required.  
+ 
+Conclusion  
+ 
+All SO
+2 emission, for Event 3, screen out as being considered insignificant 
+and no further assessment is required.  
+ 
+ 
+EPR/QP3533ED/A001   Page 9 of 22 
+ 

@@ -1,0 +1,49 @@
+ 
+                       Page 18 of 32 
+municipal sewer. NTT must update their spill response procedures and provide training to 
+designated NTT staff. 
+As there appears to be a residual risk that there is not suitable tertiary containment on all the sites 
+and/or additional measures and training must be implemented, we have included an improvement 
+programme condition (IC2) requiring NTT review their tertiary containment across the four sites in 
+line with relevant industry standards and implement any improvement work proposed. 
+ 
+Aqueous Releases from Sites. 
+Each datacentre has separate foul and surface water drainage systems. The drainage to foul 
+sewer consists of sanitary foul water (sinks, toilets, cleaning water, etc.). The operation of the 
+datacentres does not result in the generation of trade effluent. 
+There are no discharges to foul sewer within the plant areas on each datacentre site where the 
+generators and diesel storage are located. All run-off from these areas drains to the site specific 
+surface water drainage systems prior to off-site discharge into the municipal surface water 
+drainage system. 
+The surface water drainage system at each of the datacentres will accept surface water runoff 
+from the areas where the generator container units and associated diesel storage are located, 
+along with water from the building roof area and other hard surfaced areas of the site. 
+There are oil/water interceptors at the Campus, Maylands and HH4 sites. The interceptors at 
+Campus and Maylands sites are not alarmed to indicate the presence of oil. Only the interceptor 
+at the newer HH4 site will alarm if oil is present. All interceptors will be emptied, cleaned and 
+maintained at least annually by an appointed specialist contractor. There is currently no oil 
+interceptor at the Centro site. 
+Campus: 
+Water run-off from the permitted area (standby generators and diesel storage areas) drains to the 
+on-site surface water drainage system via an oil interceptor prior to off-site discharge into the 
+municipal surface water drainage system operated by Thames Water Limited. Surface water 
+runoff discharges via one discharge point (Campus CP-SW1) off site into the municipal drainage 
+system. The location of discharge point Campus CP-SW1 is presented on its site plan in 
+Schedule 7 (drawing 002A in the permit application documentation). 
+There are six rainwater harvesting tanks (total 500m3 capacity) beneath the Plant Area where the 
+generators are located, which collect surface water runoff from the site for use to replace 
+evaporative losses from the on-site cooling systems. There is also an attenuation tank beneath 
+the Plant Area where the generators are located. This provides 265m3 capacity to attenuate the 
+flow of surface water to the site’s surface water drainage system and off-site flow into the 
+municipal drainage system. 
+There are three interceptors on the Campus site. The surface water runoff from the Plant Area is 
+directed via an interceptor (Klargester class 1 by-pass oil separator) located in the south of the 
+site prior to discharge off site into the municipal surface water drainage system. 
+There is a second off-site aqueous discharge point on the Campus site, unpermitted, – SW2 
+which drains surface run-off from unpermitted areas such as the carpark and contractors’ 
+compounds. This discharge point does not drain surface water from the permitted installation at 
+Campus – the generators and diesel storage. The scope of IC2 on tertiary containment includes 
+demonstration that robust tertiary containment (or other protection systems) are in place to 
+prevent any oil-contaminated surface water from the permitted Campus installation, being 
+discharged via the unpermitted SW2 release point. 
+ 

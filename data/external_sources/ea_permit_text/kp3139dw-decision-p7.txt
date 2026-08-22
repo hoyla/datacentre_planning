@@ -1,0 +1,47 @@
+EPR/KP3139DW/A001 
+Date issued: 18/01/19  7 
+additional standby generators at the site. The report must demonstrate how the specification of the 
+generator, height and orientation of discharge flue, location of generator and operational programme are 
+designed to minimise NOx emissions and optimise atmospheric dispersion with a view to reducing any 
+impact of short-term NOx emissions on sensitive local receptors. At the time of permit issue (January 2019), 
+the construction works for installation of the additional generators required to complete the site expansion 
+programme (generators 61-75) had commenced.  
+ 
+The operator has justified its use of a large number of smaller generators rather than installation of fewer 
+larger generators because of the modular nature of the site and potential restriction of its expansion plans as 
+new clients would be less able to modify data hall designs to suit their individual needs. Smaller generators 
+can be more readily added to the site giving greater flexibility as the site expands. 
+ 
+The operator has justified not limiting the number of stacks or not grouping stacks into common windshields 
+because that would compromise the “2n” redundancy arrangement as, if one stack was unable to be used, 
+then multiple generators may not be able to operate. In addition, routing stacks to common windshields is 
+problematic due to the geographical location of the generators on site, the amount of pipework and support 
+structures necessary and the overall space constraints on the site due to the fact it was not originally 
+designed as a data centre.  
+ 
+Noise: 
+The site will operate the generators for testing purposes for set periods each weekend. Prolonged operation 
+outside of weekend periods will only occur in an emergency situation where the National Grid supply is lost. 
+This is deemed a low risk as the reliability of the National Grid power supply is very good and the operator 
+has taken measures to reduce the potential for, and the potential impact of, grid failure. The potential for 
+prolonged noise is therefore considered to be low. 
+To minimise noise from the site, the operator has taken a number of steps including: 
+- The walls of ground floor generator rooms are constructed to achieve a specific noise reduction 
+performance; 
+- Acoustic attenuation is fitted to intake louvres and exhaust flues of ground floor generator rooms; 
+- A 5m acoustic screen is located around the ground level indirect evaporative cooling units and a 4m 
+acoustic screen is located around those at rooftop level. 
+The operator provided a noise assessment of site operation to accompany the permit application. Although 
+they based this assessment on the principles of BS4142:2014, it was largely an noise assessment focused 
+on planning requirements and did not address the entirety of noise sources expected when the site is fully 
+operational with its maximum complement of generators. We are satisfied however on a risk-based approach 
+for permitting purposes that the operator has demonstrated that systems are in place on site to manage and 
+minimise noise. There is no history of noise complaints relating to the operation of this site.  
+However to ensure noise emissions are prevented during maintenance and emergency operation we have 
+included improvement condition IC3 which requires the Operator to undertake a noise survey and 
+assessment in line with BS4142:2014 during operation of the generators to determine levels of impact. In the 
+event a risk of noise is identified, the operator shall propose measures to minimise the identified noise risk 
+along with timescales for approval. The operator will be required to implement these noise reduction 
+measures within the timescale agreed with the Environment Agency. 
+Although no noise management plan has been requested to date, permit condition 3.4 enables the 
+Environment Agency to request one if considered necessary in the future.  

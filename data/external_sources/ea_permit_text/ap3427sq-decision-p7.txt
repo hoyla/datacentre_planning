@@ -1,0 +1,40 @@
+ 
+Page 7 of 29 
+The consultant has modelled predictions at 18 discrete receptor locations to 
+represent human exposure.  
+ 
+Ecological Receptors 
+Using the Environment Agency guidance distance criteria, the consultant 
+identified two SSSIs (Sundon Chalk Quarry and Fancott Woods and Meadows), 
+and six local wildlife sites (LWS) within 2 km. No European sites are present 
+within 10 km of the facility. 
+ 
+The six LWS are:  
+River Flit- LWS  
+Chalton scrub and grassland -LWS 
+Fancott Woods and Meadows -LWS 
+Sundon Wood - LWS 
+River Lea/ Riverside Walk - LWS 
+Croda Colloids - LWS 
+ 
+ 
+Testing  
+The consultant modelled three testing scenarios and one emergency scenario. 
+The modelled scenarios are:  
+ 
+• Scenario 1: each generator is tested individually for half an hour fortnightly 
+(13 hours total per generator per year). Generators will be tested at 25% 
+load, but they are modelled operating at 100% load.  
+ 
+• Scenario 2: each generator is tested individually for up to four hours, twice 
+per year at 100% load (eight hours total per generator per year).  
+ 
+• Scenario 3: each generator is tested for up to 10 hours individually over 
+the course of the year at 100% load (10 hours total per generator per 
+year). 
+ 
+• Scenario 4: all generators run together for 72 hours at 100% load to 
+represent a power utility outage. 
+ 
+The consultant predicts insignificant process contributions (PCs) during testing 
+for annual nitrogen dioxide (NO2) and 1-hour nitrogen monoxide (NO) at human 

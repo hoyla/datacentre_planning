@@ -1,0 +1,44 @@
+Variation and consolidation  
+application number  
+EPR/CP3902LV/V003 2 
+NTT Dagenham Data Centre 
+Permit number EPR/CP3902LV 
+Introductory note 
+This introductory note does not form a part of the notice 
+Under the Environmental Permitting (England & Wales) Regulations 2016 (schedule 5, part 1, paragraph 19) 
+a variation may comprise a consolidated permit reflecting the variations and a notice specifying the variations 
+included in that consolidated permit. 
+Schedule 1 of the notice specifies the conditions that have been varied and schedule 2 comprises a 
+consolidated permit which reflects the variations being made. Only the variations specified in schedule 1 are 
+subject to a right of appeal. 
+Purpose of this variation EPR/CP3902LV/V003 
+This variation is for the addition of 24 liquid fuelled standby generators (SBGs) to the data centre, described 
+as phase B of the LON1 data centre development (LON1B). 
+LON1B will involve the construction of a new data centre building located to the south of the existing LON1A 
+(28 SBGs). 
+There will be 24 SBGs within this new data centre building (classed as ‘new’ Medium Combustion Plants 
+(MCP) as part of the Industrial Emissions Directive (IED)): 
+22 SBGs each with a thermal rated input of 7.6 MWth (total thermal rated input of 167.2 MWth); and 
+2 SBGs each with a thermal rated input of 3.8 MWth (total thermal rated input of 7.6 MWth). 
+The LON1B SBGs will have Selective Catalytic Reduction (SCR) abatement to reduce emissions of oxides of 
+nitrogen (NOx) to atmosphere.  
+Based on the proposed changes, the aggregated total combustion capacity for the installation will increase 
+from 160.35 MWth to 335.15 MWth. 
+LON1A with 28 SBGs (classed as ‘new’ MCPs as part of the IED) already permitted are:  
+12 SBGs each with a thermal rated input of 4.1 MWth (total thermal rated input of 49.2 MWth) (phase 1); and  
+16 SBGs each with a thermal rated unput of 6.947 MWth (total thermal rated input of 111.15 MWth (phases 
+2 and 3). 
+ 
+The schedules specify the changes made to the permit. 
+ 
+Main features of the permit 
+The site is located at NTT Dagenham Data Centre, at a National Grid Reference of TQ 51021 85378. It is on 
+an Industrial Estate adjacent to Eastbrookend Country Park, and the surrounding area is a mix of industrial, 
+commercial and residential uses. 
+It is within London Borough of Barking and Dagenham, which is an Air Quality Management Area (AQMA) 
+for the annual and 1-hour mean nitrogen dioxide (NO2) and the 24-hour particulate matter with a diameter of 
+10 micrometres or less. (PM10). 
+There are 13 designated ecological sites within the 2km screening distance, including Local Wildlife Sites 
+and Local Nature Reserves. There are no European Sites within the 10km screening distance, and no Sites 
+of Special Scientific Interest (SSSI) within the 2km screening distance.  
+ 

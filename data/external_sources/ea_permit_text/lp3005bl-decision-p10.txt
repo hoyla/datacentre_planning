@@ -1,0 +1,50 @@
+ 
+ Page 10 of 19  
+ 
+It is anticipated that the timescale of operation is likely to be short. They will only 
+operate in this mode when the National Grid is off-line. The Operator has put in 
+multiple measures in place to minimise the risk of National Grid supply failure 
+including dual substation connection and management systems for preventing 
+data centre failure. 
+ 
+We consider that the commissioning of new generators poses particular risks to 
+the environment. We have therefore included a pre-operational condition (PO4) 
+requiring the submission of commissioning plan, which gives details of how the 
+potential impact on the environment will be managed.   
+ 
+Although the Permit contains no requirement for the on-going monitoring of the 
+emissions from the generators, it is expected that such monitoring will be a future 
+requirement. As the retro-fitting of suitable monitoring ports may be prohibitively 
+expensive, we have included a pre-operational condition (PO5) requiring the 
+operator to demonstrate that appropriate sample locations are included in the 
+design of the generators   
+ 
+ 
+Best Available Techniques 
+ 
+As outlined in the Environment Agency’s ‘Data Centre FAQ’ document, we 
+accept that oil fired diesel generators are presently a commonly used technology 
+for standby generators. However we requested a BAT assessment detailing the 
+choice of generator, the particular configuration and plant sizing to meet the 
+standby arrangement (N+1).  
+ 
+The default generator specification as a minimum for new plant to minimise the 
+impacts of emissions to air of NOx is 2g TA-Luft (or equivalent standard) or an 
+equivalent NOx emission concentration of 2000mg/m3 at 5% reference oxygen 
+and normal conditions. The operator proposed to install generators meeting the 
+2g TA-Luft standard but at the time of the application did not know the exact 
+make/model of generator. We have included a pre-operational condition requiring 
+the operator to submit details of the exact generator make/model they will install 
+before operation and to submit a commissioning plan for each new generator. 
+ 
+The operator has provided a stack height determination, identifying what height is 
+required to provide adequate dispersion of the exhaust gas. The ADMS 5 model 
+as above was used to simulate the effect of different stack heights, aiming to 
+determine if there is a height above which no further benefit is gained. We 
+required the operator to provide a detailed justification of the selected stack 
+height. 
+ 
+We required the operator to demonstrate that the number and size of the 
+generators matches the requirements of the data centre. Each of the eight site 
+MV/LV mains transformers is matched to a back-up generator of similar capacity, 
+with two additional generators in reserve (N+2 configuration). This ensures that 
