@@ -4,14 +4,31 @@ Written 2026-08-10 evening mid-flight and updated after the 2.1 run on
 2026-08-11, for whoever runs the regeneration — including me in a fresh
 session. It assumes nothing about what you remember.
 
-Read [SESSION_HANDOVER.md](SESSION_HANDOVER.md) for the phase 1 context
-and [HISTORY.md](../HISTORY.md) for why the pipeline is shaped this way.
-This covers only the regeneration chain and what is easy to get wrong in
-it.
+Read [HISTORY.md](../HISTORY.md) for why the pipeline is shaped this
+way and [ROADMAP.md](../ROADMAP.md) for what is outstanding. This covers
+only the regeneration chain and what is easy to get wrong in it. (There
+was a SESSION_HANDOVER.md here until 2026-08-22; it was folded into
+those two, which were the documents it kept duplicating.)
 
 ---
 
-## State — phase 2.1 regenerated, 2026-08-11
+## State — 2.2 shipped 2026-08-21; the table below is the 2.1 boundary
+
+**The corpus moves under the artefacts, so every figure in a build is a
+snapshot.** The Phase 3 corroboration read writes to the database
+continuously, and rebuilding an artefact against an unchanged codebase
+moves cells: the 2.2 workbook rebuild shifted sixteen on Sites and
+fifteen on Applications with no code change behind them — mention
+counts, one application's verified-findings count, and Drive links that
+had resolved since. Two consequences. **Before quoting a figure from an
+artefact, check its stamp**; every one carries a generation time and a
+pipeline commit. And when a release needs a clean boundary, stop the
+reader first, as the 2.1 run did.
+
+The table below is the 2.1 boundary, kept because it is the last one
+taken with reading stopped. 2.2 was a source release — external capacity
+claims, no new reading — so it did not move these.
+
 
 **Every step is done except the deploy, which happens when the release
 branch merges** — EdgeOne builds from git, so writing `index.html` is not

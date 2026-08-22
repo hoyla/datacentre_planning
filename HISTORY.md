@@ -474,6 +474,104 @@ because the cost is invisible until someone hits it — a citation of "the
 phase 2 workbook" no longer resolves to the file that produced those
 numbers.
 
+### Phase 2.2 — the four audiences (Aug 19–21)
+
+A source release, not a reading release, and it answers the question the
+whole arc opened with: **how do you find out a data centre's real power
+demand when so few planning applications state one?** Of 456 sites, 109
+had a figure their own documents disclosed or their standby plant
+implied, 43 more could only be estimated from floorspace, and 304 had
+neither. The answer turned out not to be better extraction. It was that
+a data centre's size is stated to several *different* audiences, and
+only one of them is the planning authority.
+
+| Audience | Source | Claims |
+|---|---|---|
+| The planning authority | the site's own application documents | `power_adjudication` |
+| The grid operator | NESO's Existing Agreements Register | 119 |
+| The auditors | accounts filed at Companies House | 12 |
+| Customers | operators' own websites | 59 |
+
+190 claims, 41 matched to 25 sites across 15 operators, three matches
+retired. Every figure machine-verified against a committed snapshot — a
+spreadsheet row, the OCR of a filed-accounts page, a captured web page —
+and every match to a site a hand-adjudicated inference carrying written
+evidence. The design that made it possible is in *What kind of quantity
+is this?* above: claims beside the planning data, never merged into it.
+
+**What the release was for, in four findings.**
+
+- **Utilisation is about a fifth of capacity, from three independent
+  directions.** Ark's audited accounts give ~21% of built capacity
+  drawn; VIRTUS's give ~15% of capacity *billed to customers*; UK Power
+  Networks' half-hourly metering of ~100 real data centres gives a
+  median of 18.1%. The VIRTUS figure is the sharpest, because its
+  denominator is capacity customers are already paying for.
+- **The same quantity, told differently to two audiences.** Only three
+  sites qualified, and the comparison is deliberately narrow: IT load is
+  *supposed* to be smaller than total site power, so most differences
+  are not disagreements. Kingsnorth is 340 MW to the grid operator and
+  49.9 MW to the planning authority; the former Mercure Hotel 435 and
+  120. South Mimms is 400 MW to both — the useful one, two audiences
+  given the same number by two independent routes.
+- **Digital Realty publishes per-site capacity and renders none of it.**
+  Eleven UK facilities carry a figure in embedded page state under
+  `field_utility_power_capacity`; the visible page shows only "UPS
+  redundancy: 2N". The eleven sum to exactly 179,900, matching the
+  aggregate in the same payload, which is what establishes the unit.
+- **Ark's Elstree page identifies the operator** behind the former
+  Mercure Hotel scheme, which the planning record does not foreground.
+
+**Four things landed after the release, all of them from Luke opening
+the artefact and poking it.** The pattern is worth more than the fixes.
+
+*The Operators page counted and cited nothing* — "6 sites here", "11
+figures", no way to reach any of it. Rows now expand to the sites named
+and linked and every figure with its value, what it was published as,
+the document it appeared in, the verbatim span, and for external claims
+the written evidence for the site match. A check counted the 157 source
+links rather than an eye. Two things there were wrong rather than merely
+unsourced: *"the operator calls this X"* was untrue for Digital Realty's
+eleven, where X is a JSON key, and it now reads "published as"; and
+like-for-like ratios show match confidence inline, so a 6.81× divergence
+resting on a tentative match says so on the row.
+
+*The map's sidebar described a different map.* Projecting Sites → Map
+carried the filtered set but reset the map's controls, so the sidebar
+reported "100 MW or greater: off" over exactly the >=100 MW set. The
+search box needed the haystacks unified first — the map searched a
+thinner one, so copying the term across would have dropped sites the
+projection contained.
+
+*The reader and the workbook disagreed about 43 sites.* The workbook
+estimated power from floorspace at 1.71 kW/m²; the reader passed
+`floorspace_sqm=None` and had since the day it was written. A site read
+"30 MW — Estimated from floorspace" in the spreadsheet and "No capacity
+disclosed" on the page. Eight of the 43 are over 100 MW, and the
+reader's default filter hides anything without a figure, so they were
+invisible in the artefact most people open. Both artefacts now call
+`site_scale`.
+
+*The DuckDB was a narrower view than the artefacts built on it*, and one
+trap in the release chain — `sheet_sync` reconciling against the wrong
+report — was fixed the same day.
+
+**And a backup that quietly did not happen.** `backup_db.py` never
+loaded `.env`. Every other entry point loads it for `DATABASE_URL`; this
+one talks to Postgres through Docker and so never needed to, which meant
+the passphrase sitting in `.env` was invisible and the script exited
+telling you to export a variable you had already set.
+
+**Two conclusions stated confidently, both wrong, both the same error.**
+*"Per-site megawatts are peculiar to Ark"* failed because for VIRTUS the
+operating company (06762600) was read, which states no capacity, rather
+than the property company (09840065), which states a great deal. And a
+tentative match of two 57 MW NESO rows to Hoddesdon rested on that being
+*"the corpus's only Hoddesdon data centre"* — a fact about the corpus,
+not about Hoddesdon; surveying operators turned up a second one, and the
+match was retired with the reason on the row. Checking one member of a
+group and generalising is the same mistake in both.
+
 ### The fifth audience: Environment Agency permits (2026-08-22)
 
 The 2.2 release said a data centre's size is stated to at least four
@@ -651,3 +749,63 @@ invisible (migration 013). And the reader asserted that a site's
 documents "were read in full" whenever it held documents and no capacity
 figure, on 173 sites where reading was incomplete or had never started:
 nobody looked, published as nothing to see, on the front page.
+
+**Site fragmentation is the main matching hazard.** Proximity is not
+identity where one site record holds several campuses, and the corpus
+is full of them: Cody Park spans six site records across four councils,
+JVC Business Park four across two, Colt's Hayes campus enough of them
+that Colt's operator claims are loaded unmatched. Site 61 holds 287
+applications, 188 of which name the former Nestle factory, and reading
+district proximity as identity is what put the Union Park capacity match
+there before it was retired. The mechanism for drawing a boundary exists
+— `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py` — but
+only one boundary has been drawn with it, the International Trading
+Estate split that moved records to site 443. Until more are, treat any
+match to a site record covering an industrial estate as suspect; the
+Environment Agency permits are the sharpest evidence for where the
+boundaries fall, because each names a campus and gives a grid reference.
+
+**Never let an external figure become a site's own number.** The two
+reader panels say where their figures come from, and per-quantity
+caveats replaced the single flat one once the sources multiplied — what
+needs saying about a contracted grid ceiling is not what needs saying
+about a marketing figure or a thermal rating. A test asserts every
+quantity type that can reach the indicators panel carries a caveat, so a
+new source cannot arrive unlabelled.
+
+---
+
+## How this project is worked on
+
+Kept here rather than in a handover, because it has been true across
+every session and is the thing a new one most needs.
+
+Luke is a journalist who has spent three decades on newsroom software,
+on the product and UX side. **He finds defects by opening the thing and
+poking it**, and a large share of the corrections recorded above came
+from him reading a rendered panel rather than from a test: the layout
+break the claims box caused, the pompous sentence in a lede, the invented
+term in a column headed "terms the operator uses", 1,835 permit pages
+committed against a repository that redistributes nothing.
+
+**He wants pushback, and he is right often enough that the pushback has
+to be grounded rather than reflexive.** He asked for a raw megawatt
+figure on the main site row; the argument against — that a number there
+reads as comparable to the planning figure beside it when the quantities
+differ — was accepted on its merits, and the column shows a confidence
+tier instead. The reverse happens as often: the permit text should not
+have been committed, and the argument for committing it did not survive
+contact with the repository's own posture.
+
+**Every claim needs a source, including the ones inherited from these
+documents.** "Standby fleets are sized to peak load plus redundancy" and
+"divide thermal input by 2.4–2.5" travelled from a handover into a
+reader-facing caveat with no attribution behind either. Asked for one,
+there was none. A project document records what *this project* decided;
+where it also asserts a fact about the world, that fact entered
+unattributed and every restatement launders it further.
+
+**When he corrects something, build the durable form** — a constant, a
+test, a shared function — rather than resolving to remember. Most of the
+lessons above exist as one of those three.
+

@@ -2,7 +2,7 @@
 # Wait for acquisition and the Drive repair, then rebuild the release once.
 #
 # Written for phase 1 and named for it; kept under that name because
-# SESSION_HANDOVER and ROADMAP both record it running. It now takes the
+# HISTORY and ROADMAP both record it running. It now takes the
 # phase, because artefacts are named for the phase that produced them and
 # a chain hardcoded to phase 1 would rebuild `dc_handover_phase1.xlsx`
 # over a published file with different numbers inside it.

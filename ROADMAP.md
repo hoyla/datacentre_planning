@@ -4,15 +4,23 @@ What is still to do. Everything already built and decided — including
 the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
-Current state: **429 sites** (plus 26 pre-planning), **1,709
+Current state: **430 sites** (plus 26 pre-planning), **1,709
 applications** in the site universe, **55,678 documents**. Findings and
 adjudication counts move while the corroboration pass runs and are
 deliberately not restated here — `scripts/corpus_stats.py` prints them,
 and each release states the boundary it was stamped at.
 
+**Releases 2.1 and 2.2 have both shipped** — 2.2 on 2026-08-21, the
+release that put four external audiences beside the planning record; the
+Environment Agency permits made a fifth on 2026-08-22. What each one
+contains and why is in HISTORY. No release is in flight, and there is no
+session handover: what was outstanding at the end of 2026-08-22 is on
+this page, and everything settled is in HISTORY.
+
 **Reading is complete for phase 2.1**, stamped 2026-08-11 with the
 Studio reader stopped so the boundary is clean: 37,992 of 38,005 prose
-documents read. Two other numbers belong beside that one and are stated
+documents read. The Phase 3 corroboration read continues on the Studio
+and is roughly 60% through its 48,191 in-scope documents. Two other numbers belong beside that one and are stated
 in the reader rather than folded into it — 4,204 documents in the
 repetitive classes are sampled out at one in five by policy, not
 backlog, and 231 are held but contain no words at all, confirmed blank
@@ -183,6 +191,28 @@ investigation.
 
 ## Smaller things
 
+- **The reader build is not reproducible, and it is not only ordering.**
+  Two builds of an unchanged database differ, which matters because
+  diffing a build against the last release is how regressions get caught
+  here. The handover recorded this as a row-order problem handed to
+  another session; **nothing landed, and it is worse than described.**
+  Measured 2026-08-22 by running the reader's per-site findings query
+  twice inside one `REPEATABLE READ` transaction, so the corpus could
+  not move underneath it: 2,503 of 10,425 rows came back in a different
+  position, and **80 rows differed in membership across 69 sites** —
+  those sites would render a different set of findings on two builds of
+  the same data.
+
+  Three causes in one query (`scripts/export_reader.py`, the findings
+  block around line 1320), all of them missing tiebreaks:
+  the `row_number()` window orders by a boolean and
+  `length(value_text)` with nothing unique after them, so which findings
+  survive the `rn <= N` cut is arbitrary among ties; the outer select has
+  no `ORDER BY` at all; and the `adj` CTE's `DISTINCT ON` can pick either
+  of two adjudications sharing a verdict class and an `inserted_at`.
+  Adding `f.id` to the window, `ORDER BY site_key, rn` to the outer
+  select and `, id DESC` to the CTE should close all three — small, but
+  it changes rendered output, so rebuild and diff rather than assuming.
 - **Re-measure the 1.71 kW/m² floor-area factor.** It drives the
   published power estimate for every site with no disclosed capacity. An
   ad-hoc query on 2026-08-11 suggested it may have moved — 88 sites now
@@ -341,11 +371,35 @@ None is abandoned; each is a known, scoped piece of work.
   the whole Slough Trading Estate. Site 5 holds Interxion, Global Switch and
   Telehouse; site 59 holds Vantage and Colt as well as Microsoft; site 11
   holds Amazon and NTT. Each of these is listed under `considered`, with
-  the reason, in `environment-agency-permit-matches.yaml`.
-- **Still not sent, and still cheap:** an EIR request to NESO for the
-  project-level demand connection queue, and an FoI to DESNZ/EA for
-  site-level CCA consumption. Both have lead times, so starting them is
-  cheap and waiting is the cost.
+  the reason, in `environment-agency-permit-matches.yaml`. The mechanism
+  is `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py`;
+  note that it currently records **one** partition, the International
+  Trading Estate split — an earlier handover said it held the six
+  boundaries site 61 still needs, and it does not. Site 61 holds 287
+  applications, 188 of them naming the former Nestle factory, and any
+  match to it stays suspect until they are drawn.
+- **Requests outstanding, and requests never sent.** NESO and Ofgem were
+  written to on 2026-08-12 and replies are due around 10 September. Three
+  more are worth sending and have not been: a CCA site-level consumption
+  FoI to DESNZ/EA, EIR requests to the DNOs, and an EIR request to NESO
+  for the project-level demand connection queue. Each runs ~28 days, so
+  starting them is cheap and waiting is the whole cost. EIR is the right
+  frame for the DNOs — address the *licensed* plc, not the management
+  company, and note that section 105 of the Utilities Act is
+  near-absolute under FOIA but disapplied for environmental information
+  by EIR regulation 5(6).
+- **UKPN's gated datasets are unpulled.** The Large Demand List and
+  "Data Centres by Local Authority" sit behind Luke's portal login;
+  anonymous access returns headers only, so nobody else can fetch them.
+- **Two VIRTUS filings are still not retrievable.** Accounts made up to
+  31 December 2025, filed on 19 and 20 August 2026; the Companies House
+  document API had no images for them as of 2026-08-21. Worth retrying —
+  the property company (09840065) is the one that states capacity, not
+  the operating company.
+- **A fourth operator tranche would be cheap.** Add URLs to `PAGES` in
+  `scripts/fetch_operator_snapshots.py`, run it, add curated claims with
+  verbatim quotes. Colt is blocked on the Hayes fragmentation rather than
+  on the fetching.
 - **Multimodal pass over drawings.** Rejected in v1 and still rejected:
   PDFs are overwhelmingly text-layered, and concealed plant will not be
   in the drawings. Revisit only for a specific application where both
