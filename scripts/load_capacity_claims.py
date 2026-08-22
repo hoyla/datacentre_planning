@@ -31,6 +31,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
                     help="Parse and validate everything; write nothing.")
+    ap.add_argument("--prune", action="store_true",
+                    help="Delete stored claims a derived source no longer "
+                         "produces (see below). Reported without this flag.")
     args = ap.parse_args()
 
     claims = cc.load_register_demand_claims()
@@ -186,6 +189,39 @@ def main() -> int:
                     if cur.fetchone():
                         inserted_matches += 1
         conn.commit()
+
+    # Orphans, for the one source whose claims are derived rather than
+    # listed. The NESO, Companies House and operator claims are written
+    # out by hand, so a claim disappearing from them is a deliberate
+    # edit. The Environment Agency claims are computed from the
+    # committed permit text, and a change to the reader — a better name
+    # for an installation, a page number that moved — produces a claim
+    # the loader inserts beside the old one rather than instead of it.
+    # Reported always, deleted only on --prune, because a stored claim
+    # vanishing from its own source is exactly the drift this project
+    # needs to see rather than tidy away silently.
+    with db.connect() as conn, conn.cursor() as cur:
+        cur.execute("SELECT id, claim_name FROM capacity_claims "
+                    "WHERE source_key = %s", (ea.SOURCE_KEY,))
+        live = {c.claim_name for c in ea_claims}
+        orphans = [(i, n) for i, n in cur.fetchall() if n not in live]
+        if orphans:
+            print(f"\n{len(orphans)} stored Environment Agency claims are no "
+                  f"longer produced by the committed files:")
+            for _i, n in sorted(orphans, key=lambda o: o[1]):
+                print(f"  {n}")
+            if args.prune:
+                ids = [i for i, _n in orphans]
+                cur.execute("DELETE FROM capacity_claim_matches "
+                            "WHERE claim_id = ANY(%s)", (ids,))
+                dropped_matches = cur.rowcount
+                cur.execute("DELETE FROM capacity_claims WHERE id = ANY(%s)",
+                            (ids,))
+                conn.commit()
+                print(f"Pruned {cur.rowcount} claims and {dropped_matches} "
+                      f"matches.")
+            else:
+                print("Re-run with --prune to remove them.")
 
     n_claims = len(claims) + len(ch_claims) + len(op_claims) + len(ea_claims)
     n_matches = (len(matches) + len(ch_matches) + len(op_matches)

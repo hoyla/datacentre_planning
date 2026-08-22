@@ -56,7 +56,7 @@ database and the artefacts rebuild with it, but not in the 2.2 files:
 | The grid operator | NESO's Existing Agreements Register | 119 claims |
 | The auditors | accounts filed at Companies House | 12 claims |
 | Customers | operators' own websites | 59 claims |
-| The environmental regulator | permits on the Environment Agency's public register | 35 claims (added 2026-08-22) |
+| The environmental regulator | permits on the Environment Agency's public register | 42 claims (added 2026-08-22) |
 
 190 claims, 41 matched to 25 sites, across 15 operators — 3 matches
 have been retired, the last of them Union Park (see below). Every figure is
@@ -240,11 +240,18 @@ allows redistribution with attribution. The PDFs are not: they are under
 sha256s in `ea-permit-documents.json`.
 
 **The numbers, as anchors for a re-pull.** 5,198 register rows → 97
-candidates → 42 with a permit publication → 35 claims, 5,879 MWth, 27 of
-them corroborated by their own per-engine breakdown. Six matched. Amazon
-Didcot North is the largest at 925 MWth over 129 generators.
+candidates → 42 with a permit publication → 42 claims, 7,439 MWth, 31 of
+them corroborated by their own per-engine breakdown. Eight matched.
+Amazon Didcot North is the largest at 925 MWth over 129 generators.
 `scripts/read_ea_permits.py --readings` prints all of it, including the
-permits that yielded nothing.
+candidates that yielded nothing.
+
+Six figures come from a variation notice rather than the original
+permit — a variation supersedes what it varies, so it is the current
+position. And gov.uk titles the VIRTUS Slough attachment "Pemit: Virtus
+Holdco Limited"; `kind_of()` in the fetcher matches that typo on
+purpose, because without it 180.5 MWth is silently classified as
+"other" and never read.
 
 **Three things that will bite.**
 
@@ -264,14 +271,15 @@ permits that yielded nothing.
   matching, the permit reports as unread. Do not paper over that with a
   model; go and look at the sentence.
 
-**Most claims are unmatched, and that is the useful part.** Twenty-nine
-of 35. Almost none of it is about the permits: a permit describes plant
+**Most claims are unmatched, and that is the useful part.** Thirty-four
+of 42. Almost none of it is about the permits: a permit describes plant
 that exists while most of this corpus describes schemes that were
 proposed, and several site records hold a whole industrial estate.
-**Eight permits from six operators, 1,249 MWth, all fall inside site
+**Nine permits from seven operators, 1,430 MWth, all fall inside site
 23** — the only site record on the entire Slough Trading Estate. Site 5
-holds Interxion, Global Switch and Telehouse. Site 59 holds Vantage and
-Colt as well as Microsoft. Site 11 holds Amazon and NTT. Each is written
+holds Interxion, Global Switch and Telehouse. Site 59 holds Vantage,
+Colt and Equinix as well as Microsoft. Site 11 holds Amazon and NTT.
+VIRTUS's Stockley Park campus, 470 MWth, has no site record at all. Each is written
 into `ea-permit-matches.yaml` under `considered`, with the reason, and
 together they are the sharpest partition evidence the project has:
 every permit names a campus and gives its grid reference.
@@ -281,10 +289,11 @@ a Crawley address with Redhill coordinates and a Redhill local
 authority. A Croydon installation is located at its holder's registered
 office in the City of London. Neither is matched, both are recorded.
 
-**What is left.** Sixty-two candidates have no permit publication —
+**What is left.** Fifty-five candidates have no permit publication —
 mostly MCP registrations, which are lighter-touch; whether the
-Environment Agency will supply those on request has not been asked. Six
-permits state a total with no breakdown to check it against. And the
+Environment Agency will supply those on request has not been asked.
+Eleven claims are not fully self-corroborating and reading their
+schedules would settle each one. And the
 matching is blocked behind the site partitioning rather than behind
 anything about the permits.
 

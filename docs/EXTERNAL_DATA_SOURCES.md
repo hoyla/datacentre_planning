@@ -494,8 +494,9 @@ every other dataset in this document.
 
 **Measured yield, 2026-08-21/22.** 97 candidate rows (a curated operator
 vocabulary or "data centre" in the holder or address, *and* an activity
-type authorising combustion plant). 42 have a permit publication; 35 of
-those state a readable total thermal input, 5,879 MWth in all. Six are
+type authorising combustion plant). 42 have a permit publication and all
+42 yield a readable total thermal input: 7,439 MWth, 31 of them
+corroborated by the document's own per-engine breakdown. Eight are
 matched to sites by hand. The largest single permit is Amazon's Didcot
 North campus: 129 generators, 925 MWth.
 

@@ -529,6 +529,13 @@ MATCHES_PATH = EXTERNAL / "ea-permit-matches.yaml"
 
 STAGE = "permitted standby generation"
 
+# Which attachment a claim is read from, best first. A variation notice
+# supersedes the permit it varies, so where both exist the variation is
+# the current statement of what is permitted. The decision document is
+# never read for a figure: it explains a decision rather than setting
+# out the schedule, and the two can disagree by design.
+DOCUMENT_PREFERENCE = ("variation", "permit", "other")
+
 
 def load_manifest(path: Path = MANIFEST_PATH) -> dict:
     return json.loads(path.read_text()) if path.exists() else {}
@@ -585,8 +592,14 @@ def _site_name(entry: dict) -> str:
 # than anything derivable from the address — "Cody Park Data Centre"
 # rather than "A57", "Spring Park Data Centre" rather than "Ark Data
 # Centres", "Union Park" rather than "Bulls Bridge Industrial Estate".
+#
+# A variation notice heads its pages the same way but opens with
+# "Variation and consolidation application number" instead, which is why
+# both are matched: without the second form, Virtus's Stockley Park
+# campus is named after the business park it stands on.
 _PERMIT_TITLE_RE = re.compile(
-    r"Permit number\s+EPR/\w+(?:/\w+)?\s+\d{1,3}\s+(.{2,90}?)\s+Permit number",
+    r"(?:Permit number|Variation and consolidation application number)"
+    r"\s+EPR/\w+(?:/\w+)?\s+\d{1,3}\s+(.{2,90}?)\s+Permit number",
     re.I)
 
 # Boilerplate that turns up where a title should be when a permit's first
@@ -630,8 +643,8 @@ def load_ea_claims(manifest: dict | None = None,
     manifest = manifest if manifest is not None else load_manifest()
     out = []
     for slug, entry in sorted(manifest.items()):
-        doc = next((d for d in entry.get("documents", [])
-                    if d.get("kind") == "permit"), None)
+        docs = {d.get("kind"): d for d in entry.get("documents", [])}
+        doc = next((docs[k] for k in DOCUMENT_PREFERENCE if k in docs), None)
         if not doc:
             continue
         pages = permit_pages(doc["stem"], text_dir)
@@ -671,6 +684,8 @@ def load_ea_claims(manifest: dict | None = None,
             # sentence to find.
             "summed_from_engines": reading.total_quote is reading.engines_quote,
             "quote": reading.total_quote,
+            "document_kind": doc["kind"],
+            "document_title": doc["title"],
             "document_stem": doc["stem"],
             "document_sha256": doc["sha256"],
             "document_url": doc["url"],
@@ -685,7 +700,8 @@ def load_ea_claims(manifest: dict | None = None,
             quantity_type="thermal_input",
             value=float(reading.total_mwth),
             unit="MWth",
-            stage=STAGE,
+            stage=(STAGE if doc["kind"] != "variation"
+                   else STAGE + ", as varied"),
             as_at=as_at,
             locator=f"{doc['kind']} page {reading.total_page}",
             quote=reading.total_quote or "",
