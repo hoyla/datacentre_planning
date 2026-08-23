@@ -103,6 +103,26 @@ def test_a_dropped_comma_does_not_refuse_a_quote():
     assert mr.gate(r, _inp()).ok
 
 
+def test_a_space_inside_a_word_on_the_page_does_not_refuse_a_quote():
+    """Ocean Estates, 2026-08-23: the page reads "general buildi ng
+    services"; the quote reads the word. gate-1.1 refused it."""
+    page = ("Of the supply, 3,600kW will be consumed by the IT servers and 60kW "
+            "(13%) by the general buildi ng services. The power  infrastructure "
+            "will achieve a minimum operational efficiency of 97%")
+    inp = _inp()
+    inp = mr.SiteInput("PTNO-1", "A Site", inp.panel,
+                       pages=[mr.Page(41, "Hertsmere/25/1781/FUL", "Energy Statement", 7, page)],
+                       cache={41: ["", "", "", "", "", "", page]})
+    r = _reading("60kW goes to building services.",
+                 [_q("and 60kW (13%) by the general building services. The power "
+                     "infrastructure will achieve")])
+    assert mr.gate(r, inp).ok
+    # A changed word is still a changed word once the spaces are gone.
+    r = _reading("60kW goes to building services.",
+                 [_q("and 60kW (13%) by the landlord building services")])
+    assert not mr.gate(r, inp).ok
+
+
 def test_a_changed_word_still_refuses():
     r = _reading("The IT load is 168 MW.",
                  [_q("housed in quiet enclosures. The total IT load is 168 MW")])
