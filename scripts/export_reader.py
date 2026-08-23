@@ -72,7 +72,30 @@ NOT_YET_KNOWN = ("not_yet_analysed", "partially_analysed", "no_documents",
 
 # Findings shown per site before the list is summarised: enough to
 # characterise the evidence, not so many that the page becomes the corpus.
-FINDINGS_PER_SITE = 14
+# Raised from 14 for the site page (READER_REDESIGN_PLAN §7a), which
+# groups them by family: fourteen spread over ten families showed one
+# passage per family and nothing to group. The round-robin in
+# FINDINGS_SQL means the extra rows are the second and third of each
+# family, never the fifteenth of one; a site with fifteen families gets
+# two of each and a third of the ten it has most of. Measured: 8.8 MB
+# at 14, 10.2 MB at 30, 10.9 MB at 40.
+FINDINGS_PER_SITE = 40
+
+# Per-site, per-family counts of distinct passages, so the grouped list
+# can say "3 of 41" rather than leave a reader guessing how much of the
+# family they are seeing. Distinct passages, for the reason
+# export_handover's app_findings gives: three readers of one sentence
+# are corroboration, not three findings.
+FAMILY_COUNTS_SQL = """
+SELECT s.site_key, f.signal_family,
+       count(DISTINCT (f.document_id, md5(f.evidence_text), f.evidence_page))
+FROM findings f
+JOIN site_members m ON m.application_id = f.application_id AND m.retired_at IS NULL
+JOIN sites s ON s.id = m.site_id
+WHERE s.retired_at IS NULL AND f.value_text IS NOT NULL
+  AND f.signal_family IS NOT NULL AND f.signal_family <> 'unclassified'
+GROUP BY s.site_key, f.signal_family
+"""
 
 # How many sites an organisation must be behind before it gets a chip.
 # Two, so the strip is the organisations with more than one site in the
@@ -113,7 +136,7 @@ FINDINGS_SQL = """
               WHERE s.retired_at IS NULL AND f.value_text IS NOT NULL
                 AND f.signal_family <> 'unclassified')
             SELECT site_key, signal_type, value_text, value_number, value_unit,
-                   verdict FROM (
+                   verdict, signal_family FROM (
               -- Round-robin across families: the first of every family
               -- before the second of any. Each round leads with figures
               -- adjudicated as this site's, then the power families, then
@@ -121,7 +144,7 @@ FINDINGS_SQL = """
               -- length alone put a landscape paragraph labelled it_load at
               -- the top of a site's evidence, four times over.
               SELECT f.site_key, f.signal_type, f.value_text, f.value_number,
-                     f.value_unit, f.verdict,
+                     f.value_unit, f.verdict, f.signal_family,
                      row_number() OVER (PARTITION BY f.site_key
                        ORDER BY f.rf,
                                 coalesce(f.verdict = 'site_capacity', false) DESC,
@@ -271,6 +294,13 @@ button.chip.on{background:var(--fg);border-color:var(--fg);color:var(--bg);
   font-weight:600}
 button.chip .n{color:var(--mut);font-size:11px;margin-left:3px}
 button.chip:disabled{opacity:.5;cursor:not-allowed;border-style:dashed}
+/* The site page. Full width like the table it came from, since the
+   panel's four-column grid was laid out for that width. */
+.sitepage{padding:14px 22px 30px}
+.sitenav{margin:0 0 10px;font-size:13px}
+.sitepage h2{margin:4px 0 2px;font-size:22px;line-height:1.2}
+.sitewhere{margin:0 0 14px;color:var(--mut);font-size:13px}
+#sitehost .grid{margin-top:0}
 /* Signals cards. Square, ruled, no shadow; the count is the one large
    thing on the card because it is the one thing that was computed. */
 .signals{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
@@ -447,6 +477,11 @@ tr.detail td{padding:14px 18px 18px 30px}
 .box p{margin:0 0 8px}
 .kv{display:grid;grid-template-columns:148px 1fr;gap:2px 12px;font-size:12.5px;margin:0}
 .kv dt{color:var(--mut)}.kv dd{margin:0}
+.fams{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:6px 22px}
+.fam{border-top:1px solid var(--line);padding:6px 0 4px;min-width:0}
+.famhead{font-size:12px;margin-bottom:3px}
+.famname{font-weight:600;text-transform:capitalize}
+details.famrest summary{font-size:12px;color:var(--mut);cursor:pointer;margin:2px 0 0 16px}
 ul.find{margin:0;padding-left:16px;font-size:12.5px}
 ul.find li{margin-bottom:3px}
 ul.find .st{color:var(--mut)}
@@ -1027,25 +1062,18 @@ function scrollRowToTop(r, tries){
 }
 
 function goSite(key){
-  show('sites', true);
-  document.getElementById('q').value='';
-  document.getElementById('f').value='all';
-  document.getElementById('o').value='';
-  document.getElementById('big').setAttribute('aria-pressed','false');
-  document.getElementById('unk').checked=false;
-  document.getElementById('unk').disabled=true;
-  document.getElementById('unklab').classList.add('off');
-  // The organisation filter is a filter like any other: a link to one
-  // site has to work for someone whose filters are not the sender's.
-  if(who||cohort){ who=''; cohort=''; paintChips(); }
-  apply();
+  // A link to one site opens that site's page. The table's filters are
+  // left exactly as they were: the page shows regardless of what the
+  // table is filtered to, and back returns the reader to the state they
+  // left — which is the point of having a page rather than a row.
   const r=document.querySelector('tr.site[data-key="'+CSS.escape(key)+'"]');
   if(r){
-    openSiteRow(r);          // closes whatever else was open, and scrolls
+    openSite(r);
   } else {
     // A link to a site this release does not contain — an older key, or
     // a site retired by a re-materialisation. Say so rather than
     // silently landing the reader on an unfiltered table.
+    show('sites', true);
     const n=document.getElementById('n');
     if(n) n.textContent='That site is not in this release';
   }
@@ -1114,10 +1142,15 @@ addEventListener('resize', sticky);
 const VIEWS=[...document.querySelectorAll('section.view')]
   .map(s=>s.id.replace(/^view-/,''));
 function show(v, quiet){
+  // Any tab away from an open site returns its panel to the table, so
+  // the next open starts from a row that still has one.
+  if(v!=='site' && openKey) closeSite(false);
   for(const k of VIEWS){
     const el=document.getElementById('view-'+k), tb=document.getElementById('tab-'+k);
     if(el) el.classList.toggle('on', k===v);
-    if(tb) tb.setAttribute('aria-selected', k===v);
+    // The site page has no tab of its own: it is a place inside Sites,
+    // and the Sites tab stays lit while a reader is on it.
+    if(tb) tb.setAttribute('aria-selected', k===v || (v==='site' && k==='sites'));
   }
   window.scrollTo(0,0);
   sticky();
@@ -1163,30 +1196,49 @@ addEventListener('hashchange', fromHash);
 // used to expand independently; Luke traded that for an unambiguous
 // link, on the grounds that shareable links are the better way to hold
 // several sites at once — one per tab, each with its own address.
-function openSiteRow(tr){
-  document.querySelectorAll('tr.site.open').forEach(other=>{
-    if(other!==tr){
-      other.classList.remove('open');
-      other.nextElementSibling.classList.remove('on');
-    }
-  });
-  tr.classList.add('open'); tr.nextElementSibling.classList.add('on');
-  siteHash(tr.dataset.key);
-  // Always bring the opened row to the top. With one row open at a
-  // time, opening a site below a taller open one collapses that first
-  // and everything above shifts up — so the row a reader just clicked
-  // would jump out from under the cursor. Scrolling it to a fixed
-  // position makes where it lands predictable rather than a function of
-  // how tall the previous panel happened to be.
-  soon(()=>scrollRowToTop(tr));
+/* The site page. The panel's markup lives once, in the <tr class="detail">
+   after each row — that is what keeps an 8 MB page from being a 16 MB
+   one, and it is what scripts/release_diff.py counts links in. Opening a
+   site MOVES that panel into the page's host element and hands it back
+   on the way out, so the page and the row can never show two versions
+   of one site. One site at a time, by construction. */
+let openKey=null, openTr=null, openCell=null;
+function openSite(tr){
+  if(openKey) closeSite(false);
+  const key=tr.dataset.key;
+  const cell=tr.nextElementSibling.firstElementChild;
+  const host=document.getElementById('sitehost');
+  while(cell.firstChild) host.appendChild(cell.firstChild);
+  openKey=key; openTr=tr; openCell=cell;
+  tr.classList.add('open');
+  const name=tr.querySelector('td strong'), where=tr.querySelector('td .q');
+  document.getElementById('sitetitle').textContent=name?name.textContent:key;
+  document.getElementById('sitewhere').textContent=where?where.textContent:'';
+  document.getElementById('sitekey').textContent=key;
+  show('site', true);
+  siteHash(key);
+  window.scrollTo(0,0);
 }
-function closeSiteRow(tr){
-  tr.classList.remove('open'); tr.nextElementSibling.classList.remove('on');
-  history.replaceState(null,'','#sites');
+function closeSite(navigate){
+  if(!openKey) return;
+  const host=document.getElementById('sitehost');
+  while(host.firstChild) openCell.appendChild(host.firstChild);
+  const tr=openTr;
+  tr.classList.remove('open');
+  openKey=null; openTr=null; openCell=null;
+  if(navigate!==false){
+    // Back to the table as the reader left it — filters, chips, sort —
+    // with the row they came from at the top. filterHash() restores the
+    // address bar to the filter state, or #sites.
+    show('sites', true);
+    filterHash();
+    soon(()=>scrollRowToTop(tr));
+  }
 }
+function backToSites(){ closeSite(true); return false; }
 document.querySelectorAll('tr.site').forEach(tr=>tr.addEventListener('click',e=>{
-  if(e.target.closest('a'))return;
-  if(tr.classList.contains('open')) closeSiteRow(tr); else openSiteRow(tr);
+  if(e.target.closest('a, button'))return;
+  openSite(tr);
 }));
 /* Operator rows, same gesture. No hash for these: an operator is not a
    shareable object in this release, and a second hash prefix would
@@ -1492,8 +1544,12 @@ def main() -> int:
         # is the point -- but each is labelled with whose it is.
         cur.execute(FINDINGS_SQL, (FINDINGS_PER_SITE,))
         findings = defaultdict(list)
-        for k, st, vt, vn, vu, verdict in cur.fetchall():
-            findings[k].append((st, vt, vn, vu, verdict))
+        for k, st, vt, vn, vu, verdict, fam in cur.fetchall():
+            findings[k].append((st, vt, vn, vu, verdict, fam))
+        cur.execute(FAMILY_COUNTS_SQL)
+        family_counts: dict[str, dict[str, int]] = defaultdict(dict)
+        for k, fam, n in cur.fetchall():
+            family_counts[k][fam] = int(n)
 
     # Confirmed alias members only, so a proposal in the priors file
     # changes nothing that a reader sees until a person has confirmed it.
@@ -1744,22 +1800,54 @@ def main() -> int:
             ("<p class='help'>No planning applications — known only from Barbour project "
              "intelligence, at pre-planning stage.</p>")
 
+        # Grouped by family, families in the order the round-robin led
+        # with them (adjudicated figures, then the power families, then
+        # cooling, water, EIA, then the rest), rows within a family in
+        # the order they were ranked. The first two of each family are
+        # open; the rest of what was fetched sits behind "show all", and
+        # the count says how many the family holds in total so that "3
+        # of 41" is on the page rather than implied.
+        #
+        # The label audit READER_REDESIGN_PLAN §4.1e describes — a batch
+        # flagging rows whose family does not match their text — does not
+        # exist yet, so nothing is excluded on that ground; the family a
+        # row sits under is the extractor's label, as ever.
+        grouped: dict[str, list] = {}
+        for st, vt, vn, vu, verdict, fam in findings.get(key, []):
+            grouped.setdefault(fam or "other", []).append((st, vt, vn, vu, verdict))
         fl = []
-        for st, vt, vn, vu, verdict in findings.get(key, []):
-            num = f" <strong>{vn:g} {esc(vu or '')}</strong>" if vn is not None else ""
-            # Adjudicated as describing something other than this site.
-            not_ours = {
-                "market_context": "market or sector context, not this site",
-                "policy_target":  "a policy target, not this site",
-                "comparator":     "a different named scheme, not this site",
-            }.get(verdict)
-            tag = (f" <span class='q' style='color:#b3261e'>[{esc(not_ours)}]</span>"
-                   if not_ours else "")
-            fl.append(f"<li><span class='st'>{esc(st)}</span>{num}{tag} — "
-                      f"{esc(trim(vt,190))}</li>")
+        n_shown = 0
+        for fam, rows_ in grouped.items():
+            items = []
+            for st, vt, vn, vu, verdict in rows_:
+                num = f" <strong>{vn:g} {esc(vu or '')}</strong>" if vn is not None else ""
+                # Adjudicated as describing something other than this site.
+                not_ours = {
+                    "market_context": "market or sector context, not this site",
+                    "policy_target":  "a policy target, not this site",
+                    "comparator":     "a different named scheme, not this site",
+                }.get(verdict)
+                tag = (f" <span class='q' style='color:#b3261e'>[{esc(not_ours)}]</span>"
+                       if not_ours else "")
+                items.append(f"<li><span class='st'>{esc(st)}</span>{num}{tag} — "
+                             f"{esc(trim(vt,190))}</li>")
+            n_shown += len(items)
+            total = family_counts.get(key, {}).get(fam, len(items))
+            head = (f"<span class='famname'>{esc(fam.replace('_', ' '))}</span> "
+                    f"<span class='q'>{len(items)} of {total:,} shown</span>"
+                    if total > len(items) else
+                    f"<span class='famname'>{esc(fam.replace('_', ' '))}</span> "
+                    f"<span class='q'>{total:,}</span>")
+            first, rest = items[:2], items[2:]
+            fl.append(
+                f"<div class='fam'><div class='famhead'>{head}</div>"
+                f"<ul class='find'>{''.join(first)}</ul>"
+                + (f"<details class='famrest'><summary>Show {len(rest)} more</summary>"
+                   f"<ul class='find'>{''.join(rest)}</ul></details>" if rest else "")
+                + "</div>")
         if fl:
-            findings_html = "<ul class='find'>" + "".join(fl) + "</ul>"
-            if findings_n and findings_n > len(fl):
+            findings_html = "<div class='fams'>" + "".join(fl) + "</div>"
+            if findings_n and findings_n > n_shown:
                 # Not the workbook: it holds per-site counts and the
                 # adjudicated figures, and a reporter sent there for the
                 # findings themselves found nothing. The full set lives in
@@ -1771,7 +1859,7 @@ def main() -> int:
                 where = (f"<a href='{esc(csv_url)}' target='_blank' rel='noopener'>"
                          f"this site's findings CSV</a>" if csv_url else
                          "the findings CSV in this site's Drive folder")
-                findings_html += (f"<p class='help'>Showing {len(fl)} of {findings_n:,} "
+                findings_html += (f"<p class='help'>Showing {n_shown} of {findings_n:,} "
                                   f"verified findings; the full set is in {where}, "
                                   f"and in the DuckDB file.</p>")
         elif held and read >= held:
@@ -2032,8 +2120,8 @@ def main() -> int:
       <a href="#site-{esc(quote(key, safe=''))}" data-key="{esc(key)}"
          onclick="event.stopPropagation();
          return copySiteLink(this.dataset.key, this)">Copy link to this site</a>
-      <span class="help">Opens straight to this panel, with filters
-       cleared so it works for whoever you send it to.</span></span></div>
+      <span class="help">Opens straight to this site's page, whatever
+       the table is filtered to.</span></span></div>
     </div></div>
 
    <div class="box parties"><h4>Who is behind it</h4>
@@ -3234,6 +3322,16 @@ def main() -> int:
 </div></section>
 
 <section id="view-signals" class="view"><div class="wrap">{signals_html}</div></section>
+
+<section id="view-site" class="view">
+<div class="sitepage">
+ <p class="sitenav"><a href="#sites" onclick="return backToSites()">← Back to the sites
+  table</a> <span class="help">Filters, chips and sort are as you left them.</span></p>
+ <h2 id="sitetitle"></h2>
+ <p class="sitewhere"><span id="sitewhere"></span> <span class="q" id="sitekey"></span></p>
+ <div id="sitehost"></div>
+</div>
+</section>
 
 <section id="view-sites" class="view">
 <div class="controls">

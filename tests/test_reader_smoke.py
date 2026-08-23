@@ -126,19 +126,52 @@ def test_every_tab_shows_exactly_its_view(page):
 
 
 @pytest.mark.integration
-def test_a_site_row_opens_and_the_address_bar_names_it(page):
+def test_a_site_row_opens_its_page_and_back_returns_the_table(page):
+    """READER_REDESIGN_PLAN §7a: a row opens a page, not an expansion.
+
+    The panel's markup is moved from the row into the page and handed
+    back on the way out, so after a round trip the table must hold
+    exactly what it held before — counted by links, the same instrument
+    release_diff uses.
+    """
     page.click("#tab-sites")
+    page.fill("#q", "")
+    page.select_option("#f", "all")
     row = page.locator("#tbl-sites tr.site").first
     key = row.get_attribute("data-key")
-    row.click()
-    assert "open" in row.get_attribute("class")
     detail = page.locator(f"#tbl-sites tr.site[data-key='{key}'] + tr.detail")
-    assert detail.is_visible()
-    assert page.evaluate("() => decodeURIComponent(location.hash)") == f"#site-{key}"
-    # The panel is where the evidence chain starts; it must carry links.
-    assert detail.locator("a[href]").count() >= 2
+    links_before = detail.locator("a[href]").count()
+    assert links_before >= 2, "the panel is where the evidence chain starts"
+
     row.click()
-    assert "open" not in row.get_attribute("class")
+    assert _views_on(page) == ["site"]
+    assert page.evaluate("() => decodeURIComponent(location.hash)") == f"#site-{key}"
+    assert page.locator("#sitetitle").inner_text().strip()
+    assert page.locator("#sitehost a[href]").count() == links_before
+    assert detail.locator("a[href]").count() == 0, "the panel must move, not copy"
+    # The Sites tab stays lit: the page is a place inside Sites.
+    assert page.get_attribute("#tab-sites", "aria-selected") == "true"
+
+    page.click("#view-site .sitenav a")
+    assert _views_on(page) == ["sites"]
+    assert detail.locator("a[href]").count() == links_before
+    assert page.locator("#sitehost *").count() == 0
+    assert "open" not in (row.get_attribute("class") or "")
+
+
+@pytest.mark.integration
+def test_back_from_a_site_keeps_the_filters(page):
+    page.click("#tab-sites")
+    page.fill("#q", "")
+    page.select_option("#f", "power")
+    shown, _ = _count_text(page)
+    row = page.locator("#tbl-sites tr.site:visible").first
+    row.click()
+    assert _views_on(page) == ["site"]
+    page.click("#view-site .sitenav a")
+    assert page.input_value("#f") == "power"
+    assert _count_text(page)[0] == shown
+    page.select_option("#f", "all")
 
 
 @pytest.mark.integration
@@ -321,10 +354,14 @@ def test_deep_links_land(page):
     page.select_option("#f", "power")
     page.evaluate(f"() => {{ location.hash = '#site-{key}'; }}")
     page.wait_for_function(
-        f"() => document.querySelector(\"#tbl-sites tr.site[data-key='{key}']\")"
-        ".classList.contains('open')")
-    assert _views_on(page) == ["sites"]
-    assert page.input_value("#f") == "all", "a shared link must clear the filters"
+        "() => document.querySelector('#view-site').classList.contains('on')")
+    assert _views_on(page) == ["site"]
+    assert page.locator("#sitehost a[href]").count() >= 2
+    # The page shows whatever the table is filtered to; the filter is
+    # the reader's and is not touched by a link.
+    assert page.input_value("#f") == "power"
+    page.click("#view-site .sitenav a")
+    page.select_option("#f", "all")
 
     entry = page.evaluate("() => document.querySelector('#view-dict .entry')?.id")
     assert entry, "dictionary has no entries"
@@ -364,7 +401,7 @@ def test_a_map_card_link_survives_a_real_mouse(page):
     page.mouse.move(x + 1, y + 1)
     page.mouse.up()
     page.wait_for_function("() => location.hash.startsWith('#site-')", timeout=5000)
-    assert _views_on(page) == ["sites"], "the card's link did not leave the map"
+    assert _views_on(page) == ["site"], "the card's link did not leave the map"
 
 
 @pytest.mark.integration
