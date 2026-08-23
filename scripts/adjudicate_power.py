@@ -247,7 +247,16 @@ SCHEMA = {
 # vocabulary that misled is renamed: "per_unit" read as a building
 # ("at Unit 1"), "fleet_total" read as the whole site's fleet when it
 # meant a stated group of engines.
-GENERATION_PROMPT_VERSION = "generation-2.0"
+# 2.1: a basis value for what most renewable and energy-centre figures
+# are — the rated total of ONE named installation, which the passage does
+# not say is the whole site's generation. 2.0 had only "group of
+# machines" or "site", and put Graven Hill's rooftop PV into the first
+# and Trident Way's solar into the second; Luke's note on the latter was
+# "this is the total for renewable sources but that doesn't mean there
+# aren't others". Also: smaller requests, because Elsham's fifty-eight
+# figures with their passages overran the output budget and the answer
+# came back cut off, twice.
+GENERATION_PROMPT_VERSION = "generation-2.1"
 
 GENERATION_PROMPT = """\
 You are auditing extracted figures from UK planning documents for an
@@ -307,6 +316,14 @@ the passage of the row it belongs to.
                         the group total when the figure is the 50 MW.
                         The group may or may not be all the generation
                         on the site; that is not this question.
+  "installation_total"  the rated total of ONE named installation or
+                        kind of plant, with no count of machines stated
+                        and no statement that it is the whole site's
+                        generation: "219kW of Photo-Voltaic (PV)
+                        panels", "an energy centre with the capacity to
+                        generate 49.9 MW", "Total Installed Capacity
+                        (Megawatts) 0.21" under a heading for solar.
+                        A solar array does not preclude a diesel fleet.
   "site_total"          the total generating capacity of the whole
                         development, all plant — only where the passage
                         says so: "total site capacity", "total on-site
@@ -372,7 +389,8 @@ GENERATION_SCHEMA = {
                 "properties": {
                     "finding_id": {"type": "integer"},
                     "figure_basis": {"type": "string", "enum": [
-                        "per_generator", "stated_group_total", "site_total",
+                        "per_generator", "stated_group_total",
+                        "installation_total", "site_total",
                         "not_generation", "unclear"]},
                     "plant_type": {"type": "string", "enum": [
                         "standby_combustion", "prime_combustion",
