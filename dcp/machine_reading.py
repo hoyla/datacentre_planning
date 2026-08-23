@@ -34,7 +34,6 @@ import importlib.util
 import json
 import re
 import sys
-from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -62,6 +61,25 @@ PROMPT_VERSION = "reading-1.2"
 # rather than by the word "should". Every word and figure in a quote
 # must still match, in order.
 #
+# gate-2.0 (2026-08-23, Luke's decision): the paragraph is the unit, not
+# the reading. A reading carries thirty to forty quotes and the model
+# slips on roughly one in a hundred, so gating the whole reading made a
+# third of the sample fail every run — a different third each time.
+# Now each paragraph is judged alone: the ones whose quotes and figures
+# verify render, and a failed one is withheld with its reason where it
+# would have stood. Nothing unverified renders, and one slip no longer
+# costs the thirty-nine verified quotes around it. A reading is refused
+# outright only when it is empty or every paragraph fails.
+#
+# Two narrower changes ride along. Intent verbs are allowed in the
+# questions section alone — "does the applicant intend to run the
+# engines at night?" asks about intent, it does not assert it; every
+# other section still refuses them. And a quote that runs across a page
+# break now verifies: registers' documents carry running headers, and
+# Watford's BREEAM quote was refused for the header sitting mid-sentence
+# where the page turned. Lines that repeat across a document's pages are
+# stripped and the pages joined before the last attempt at a match.
+#
 # gate-1.2 (2026-08-23): whitespace inside the page text is not evidence
 # either. Two of the twenty-site sample's five refusals were extraction
 # artefacts — "the general buildi ng services" on Ocean Estates' page,
@@ -70,7 +88,7 @@ PROMPT_VERSION = "reading-1.2"
 # matches PDF text"); the gate now applies it: after the punctuation
 # pass, the fragments and the page are compared with all whitespace
 # removed, every word and figure still required in order.
-GATE_VERSION = "gate-1.2"
+GATE_VERSION = "gate-2.0"
 
 # The text budget per site, in characters. ~120k tokens: enough for a
 # planning statement, an energy statement, an officer report and the
@@ -96,7 +114,7 @@ KIND_PRIORITY: tuple[str, ...] = (
     r"environmental statement|es (chapter|volume)|screening|scoping",
     r"design and access|application form|s106|section 106",
 )
-_KIND_RES = tuple(re.compile(p, re.I) for p in KIND_PRIORITY)
+_KIND_RES = tuple(re.compile(p, re.IGNORECASE) for p in KIND_PRIORITY)
 
 
 def kind_rank(kind: str | None) -> int:
@@ -578,11 +596,11 @@ def quote_in_text(quote: str, text: str) -> bool:
     page = _VF._normalise(text)
     if _VF._all_fragments_in_order(page, frags):
         return True
-    strip = lambda t: " ".join(_PUNCT_RE.sub(" ", t).split())   # noqa: E731
+    strip = lambda t: " ".join(_PUNCT_RE.sub(" ", t).split())
     if _VF._all_fragments_in_order(strip(page), [strip(f) for f in frags]):
         return True
     # The page's own spaces are not evidence: "buildi ng" is "building".
-    squash = lambda t: strip(t).replace(" ", "")   # noqa: E731
+    squash = lambda t: strip(t).replace(" ", "")
     return _VF._all_fragments_in_order(squash(page), [squash(f) for f in frags])
 
 
@@ -595,7 +613,7 @@ FIGURE_RE = re.compile(
     # A count of plant, with one adjective allowed between the number and
     # the noun: "112 standby generators", "20 gas engines".
     r"|(?:[A-Za-z-]+\s+)?(?:generators?|engines?|units?)\b)",
-    re.I)
+    re.IGNORECASE)
 
 FORBIDDEN = (
     # cross-site comparison and ranking. "largest" is not here: "the
@@ -605,8 +623,6 @@ FORBIDDEN = (
     r"\bcompared (to|with) other\b", r"\branks?\b", r"\bamong the (largest|biggest|smallest)\b",
     r"\b(one of the|the) (largest|biggest|smallest)( \w+)? (in|of) (the|its)\b",
     r"\b(typical|unusual|unusually) (for|of) (a|the) (data centre|scheme|site)",
-    # intent
-    r"\bintends?\b", r"\bintention\b", r"\bwants?\b", r"\bplans? to\b",
     r"\breally\b", r"\bsecretly\b",
     # advice, by its phrases. A question may say "which figure should
     # govern"; a reading may not say what anyone should do about it.
@@ -614,7 +630,36 @@ FORBIDDEN = (
     r"\bworth (investigating|asking|looking|pursuing|checking)\b", r"\bred flag\b",
     r"\bthe story\b", r"\breporters?\b", r"\bjournalists?\b", r"\bwe recommend\b",
 )
-_FORBIDDEN_RES = tuple(re.compile(p, re.I) for p in FORBIDDEN)
+# Asserting intent is forbidden; asking about it is what the questions
+# section is FOR. These apply everywhere except that section.
+FORBIDDEN_ASSERTIONS = (
+    r"\bintends?\b", r"\bintention\b", r"\bwants?\b", r"\bplans? to\b",
+)
+_FORBIDDEN_RES = tuple(re.compile(p, re.IGNORECASE) for p in FORBIDDEN)
+_ASSERTION_RES = tuple(re.compile(p, re.IGNORECASE) for p in FORBIDDEN_ASSERTIONS)
+
+
+def _flow_text(pages: list[str]) -> str:
+    """A document's pages as one text, running headers stripped.
+
+    A line that appears, normalised, on at least three pages and at
+    least half of them is furniture — "REF LON02A-… Date of issue" — and
+    a sentence that crosses a page break has it sitting in the middle.
+    Deterministic, and applied only here at match time: the cache is
+    never rewritten.
+    """
+    from collections import Counter
+    seen = Counter()
+    for page in pages:
+        for line in {" ".join(ln.split()).lower() for ln in page.splitlines() if ln.strip()}:
+            seen[line] += 1
+    floor = max(3, (sum(1 for p in pages if p.strip()) + 1) // 2)
+    headers = {ln for ln, n in seen.items() if n >= floor}
+    kept = []
+    for page in pages:
+        kept.append("\n".join(ln for ln in page.splitlines()
+                               if " ".join(ln.split()).lower() not in headers))
+    return "\n".join(kept)
 
 
 def _num_key(s: str) -> str:
@@ -623,86 +668,122 @@ def _num_key(s: str) -> str:
 
 @dataclass(frozen=True)
 class GateResult:
-    ok: bool
-    reason: str = ""
+    ok: bool                      # at least one paragraph stands
+    reason: str = ""              # set only when the whole reading is refused
     figures_checked: int = 0
     quotes_checked: int = 0
+    paragraphs_passed: int = 0
+    paragraphs_withheld: int = 0
+
+
+def _paragraph_problem(sec: str, para: dict, inp: SiteInput, flows: dict,
+                       panel_quotes: set, facts_text: str) -> str | None:
+    """Why this paragraph may not render, or None. Marks nothing itself."""
+    text = para.get("text") or ""
+    rules = _FORBIDDEN_RES if sec == "questions" else _FORBIDDEN_RES + _ASSERTION_RES
+    for rx in rules:
+        m = rx.search(text)
+        if m:
+            return f"uses '{m.group(0)}', which the rules forbid"
+    others = {k for k in re.findall(r"\b(?:SITE-|PTNO-)[A-Za-z0-9/]+", text)
+              if k != inp.site_key}
+    if others:
+        return f"names another site ({min(others)})"
+
+    def flow(doc_id):
+        if doc_id not in flows:
+            flows[doc_id] = _flow_text(inp.cache[doc_id])
+        return flows[doc_id]
+
+    verified: list[str] = []
+    for q in para.get("quotes") or []:
+        quote = (q.get("quote") or "").strip()
+        if not quote:
+            continue
+        doc_id, page = q.get("document_id"), q.get("page")
+        ok = False
+        if doc_id and doc_id in inp.cache:
+            pages = inp.cache[doc_id]
+            order = ([page - 1, page - 2, page] if page else []) + \
+                    list(range(len(pages)))
+            ok = any(0 <= p < len(pages) and quote_in_text(quote, pages[p])
+                     for p in order)
+            # A sentence that crosses a page break has the document's
+            # running header sitting in the middle of it; match against
+            # the joined, header-stripped flow before giving up.
+            ok = ok or quote_in_text(quote, flow(doc_id))
+        if not ok and (q.get("application_ref") or not doc_id):
+            ok = (" ".join(quote.split()) in panel_quotes
+                  or quote_in_text(quote, facts_text))
+        if not ok:
+            # A real quote under the wrong citation is still a verbatim
+            # run of the site's own documents. Search every cached
+            # document; where it is found, the citation is corrected IN
+            # the reading and the correction recorded beside it, so the
+            # panel links the document the words are actually in and
+            # the model's error stays visible.
+            for other_id, pages in inp.cache.items():
+                if other_id == doc_id:
+                    continue
+                for pno, ptext in enumerate(pages, 1):
+                    if quote_in_text(quote, ptext):
+                        q["cited_document_id"] = doc_id
+                        q["document_id"], q["page"] = other_id, pno
+                        ok = True
+                        break
+                if not ok and quote_in_text(quote, flow(other_id)):
+                    q["cited_document_id"] = doc_id
+                    q["document_id"], q["page"] = other_id, None
+                    ok = True
+                if ok:
+                    break
+        if not ok:
+            return (f"quote not found in document {doc_id or '—'} or any "
+                    f"other the site holds: \"{quote[:80]}\"")
+        verified.append(quote)
+    joined = " ".join(verified)
+    for m in FIGURE_RE.finditer(text):
+        n = _num_key(m.group(1))
+        if not re.search(r"(?<![\d.])" + re.escape(n) + r"(?![\d])",
+                         joined.replace(",", "")):
+            return f"the figure '{m.group(0)}' is not in any quote attached to it"
+    return None
 
 
 def gate(reading: dict, inp: SiteInput) -> GateResult:
-    """Refuse the reading unless every quote verifies and every figure
-    in the prose is in a verified quote of its own paragraph."""
+    """Judge each paragraph alone; refuse the reading only when nothing stands.
+
+    A paragraph that fails gains `withheld: <reason>` in the reading
+    itself — beside the model's words, the way a corrected citation is
+    recorded — and the renderer shows the reason where the paragraph
+    would have stood. A paragraph that passes contributes its counts.
+    """
     sections = (reading or {}).get("sections") or {}
-    figures_checked = quotes_checked = 0
+    figures_checked = quotes_checked = passed = withheld = 0
     panel_quotes = {" ".join(f["quote"].split()) for f in inp.panel["adjudicated_figures"]}
     facts_text = render_facts(inp.panel)
+    flows: dict[int, str] = {}
+    first_reason = ""
     for sec, paras in sections.items():
         for i, para in enumerate(paras or []):
-            text = para.get("text") or ""
-            for rx in _FORBIDDEN_RES:
-                m = rx.search(text)
-                if m:
-                    return GateResult(False, f"{sec} paragraph {i + 1} uses "
-                                             f"'{m.group(0)}', which the rules forbid")
-            others = {k for k in re.findall(r"\b(?:SITE-|PTNO-)[A-Za-z0-9/]+", text)
-                      if k != inp.site_key}
-            if others:
-                return GateResult(False, f"{sec} paragraph {i + 1} names another "
-                                         f"site ({sorted(others)[0]})")
-            verified: list[str] = []
-            for q in para.get("quotes") or []:
-                quote = (q.get("quote") or "").strip()
-                if not quote:
-                    continue
-                quotes_checked += 1
-                doc_id, page = q.get("document_id"), q.get("page")
-                ok = False
-                if doc_id and doc_id in inp.cache:
-                    pages = inp.cache[doc_id]
-                    order = ([page - 1, page - 2, page] if page else []) + \
-                            list(range(len(pages)))
-                    ok = any(0 <= p < len(pages) and quote_in_text(quote, pages[p])
-                             for p in order)
-                if not ok and (q.get("application_ref") or not doc_id):
-                    ok = (" ".join(quote.split()) in panel_quotes
-                          or quote_in_text(quote, facts_text))
-                if not ok:
-                    # A real quote under the wrong citation is still a
-                    # verbatim run of the site's own documents. Search
-                    # every cached document; where it is found, the
-                    # citation is corrected IN the reading and the
-                    # correction is recorded beside it, so the panel
-                    # links the document the words are actually in and
-                    # the model's error stays visible.
-                    for other_id, pages in inp.cache.items():
-                        if other_id == doc_id:
-                            continue
-                        for pno, ptext in enumerate(pages, 1):
-                            if quote_in_text(quote, ptext):
-                                q["cited_document_id"] = doc_id
-                                q["document_id"], q["page"] = other_id, pno
-                                ok = True
-                                break
-                        if ok:
-                            break
-                if not ok:
-                    return GateResult(
-                        False, f"{sec} paragraph {i + 1}: quote not found in "
-                               f"document {doc_id or '—'} or any other the site "
-                               f"holds: \"{quote[:80]}\"")
-                verified.append(quote)
-            joined = " ".join(verified)
-            for m in FIGURE_RE.finditer(text):
-                figures_checked += 1
-                n = _num_key(m.group(1))
-                if not re.search(r"(?<![\d.])" + re.escape(n) + r"(?![\d])",
-                                 joined.replace(",", "")):
-                    return GateResult(
-                        False, f"{sec} paragraph {i + 1}: the figure "
-                               f"'{m.group(0)}' is not in any quote attached to it")
-    if not any(sections.get(k) for k in SECTION_TITLES):
-        return GateResult(False, "the reading is empty")
-    return GateResult(True, "", figures_checked, quotes_checked)
+            problem = _paragraph_problem(sec, para, inp, flows,
+                                         panel_quotes, facts_text)
+            if problem:
+                para["withheld"] = problem
+                withheld += 1
+                first_reason = first_reason or f"{sec} paragraph {i + 1}: {problem}"
+            else:
+                para.pop("withheld", None)
+                passed += 1
+                quotes_checked += sum(1 for q in para.get("quotes") or []
+                                      if (q.get("quote") or "").strip())
+                figures_checked += sum(1 for _ in FIGURE_RE.finditer(
+                    para.get("text") or ""))
+    if passed == 0:
+        reason = ("the reading is empty" if withheld == 0 else
+                  f"all {withheld} paragraphs withheld — first: {first_reason}")
+        return GateResult(False, reason, 0, 0, 0, withheld)
+    return GateResult(True, "", figures_checked, quotes_checked, passed, withheld)
 
 
 # ---------------------------------------------------------------------------
@@ -763,7 +844,7 @@ def document_title(url: str, kind: str) -> str:
     """
     from urllib.parse import unquote
     name = unquote((url or "").rsplit("/", 1)[-1])
-    name = re.sub(r"\.(pdf|docx?|msg|rtf)$", "", name, flags=re.I)
+    name = re.sub(r"\.(pdf|docx?|msg|rtf)$", "", name, flags=re.IGNORECASE)
     name = re.sub(r"-\d{6,}$", "", name)              # the register's id
     name = re.sub(r"^[A-Z0-9]+_[A-Z0-9]+_[A-Z]+-", "", name)   # 25_1781_FUL-
     name = re.sub(r"_+", " ", name).strip()

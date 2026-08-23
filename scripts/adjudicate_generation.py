@@ -62,12 +62,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from dotenv import load_dotenv  # noqa: E402
+from dotenv import load_dotenv
 
 load_dotenv(ROOT / ".env")
 
-from dcp import db, extract  # noqa: E402
-from dcp.site_profile import generation_figure  # noqa: E402
+from dcp import db, extract
+from dcp.site_profile import generation_figure
 
 _spec = importlib.util.spec_from_file_location(
     "adjudicate_power", ROOT / "scripts" / "adjudicate_power.py")
@@ -469,6 +469,23 @@ def run_model(rows: list[dict], all_rows: list[dict], model: str,
 # Scoring
 # ---------------------------------------------------------------------------
 
+# Luke, 2026-08-23, scoring the 2.1 sample: "the significance of the two
+# is the same and they can be grouped together downstream." Both values
+# mean "a subtotal of the site's generation — neither one machine nor
+# the whole site" — and the rollup, the cohorts and the workbook treat
+# them identically, so a disagreement between them is a disagreement
+# about vocabulary, not about the figure. Both values stay in the
+# schema (the distinction reads better on a row than "subtotal"); only
+# the scoring treats them as one family.
+_SUBTOTAL = {"installation_total", "stated_group_total"}
+
+
+def _basis_agrees(hand_value: str, model_value: str | None) -> bool:
+    if hand_value == model_value:
+        return True
+    return hand_value in _SUBTOTAL and (model_value or "") in _SUBTOTAL
+
+
 def score(rows: list[dict], hand: dict[str, dict],
           model_run: dict) -> list[str]:
     """Agreement, per question and per row, printed as lines.
@@ -493,7 +510,7 @@ def score(rows: list[dict], hand: dict[str, dict],
             disagreements.append(f"  {i:>2}. {r['site'][:34]:34} "
                                  f"finding {fid}: no model answer")
             continue
-        b_ok = h["figure_basis"] == m.get("figure_basis")
+        b_ok = _basis_agrees(h["figure_basis"], m.get("figure_basis"))
         p_ok = (h.get("plant_type") or "") == m.get("plant_type")
         basis_hit += b_ok
         plant_hit += p_ok

@@ -38,11 +38,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from dotenv import load_dotenv  # noqa: E402
+from dotenv import load_dotenv
 
 load_dotenv(ROOT / ".env")
 
-from dcp import db, machine_reading as mr, site_cohorts, site_profile  # noqa: E402
+from dcp import db, site_cohorts, site_profile
+from dcp import machine_reading as mr
 
 BATCH_DIR = ROOT / "data" / "machine_reading_batches"
 SAMPLE_DIR = ROOT / "data" / "machine_readings_sample"
@@ -131,7 +132,11 @@ def _markdown(inp: mr.SiteInput, reading: dict, verdict: mr.GateResult,
         lines += [f"**WITHHELD: {verdict.reason}**", ""]
     else:
         lines += [f"Gate: {verdict.figures_checked} figures and "
-                  f"{verdict.quotes_checked} quotes verified.", ""]
+                  f"{verdict.quotes_checked} quotes verified across "
+                  f"{verdict.paragraphs_passed} paragraphs"
+                  + (f"; {verdict.paragraphs_withheld} paragraph"
+                     f"{'s' if verdict.paragraphs_withheld != 1 else ''} withheld"
+                     if verdict.paragraphs_withheld else "") + ".", ""]
     for sec, title in mr.SECTION_TITLES.items():
         lines += [f"## {title}", ""]
         for para in (reading.get("sections") or {}).get(sec) or []:
@@ -191,7 +196,8 @@ def _sample_one(client, conn, key, why, inp, model, effort) -> str:
          "prompt_version": mr.PROMPT_VERSION, "input_hash": inp.input_hash,
          "gate": verdict.__dict__, "reading": reading}, indent=1))
     (SAMPLE_DIR / f"{slug}.md").write_text(_markdown(inp, reading, verdict, model))
-    return (f"{key}: {'OK' if verdict.ok else 'WITHHELD — ' + verdict.reason} "
+    return (f"{key}: "
+            f"{(f'OK ({verdict.paragraphs_withheld} paragraphs withheld)' if verdict.paragraphs_withheld else 'OK') if verdict.ok else 'WITHHELD — ' + verdict.reason} "
             f"({how}; {verdict.figures_checked} figures, "
             f"{verdict.quotes_checked} quotes)")
 

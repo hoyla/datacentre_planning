@@ -210,6 +210,59 @@ def test_naming_this_site_s_own_key_is_fine():
     assert v.ok
 
 
+def test_one_bad_paragraph_is_withheld_and_the_rest_stand():
+    """gate-2.0: the paragraph is the unit. One slip in forty quotes no
+    longer costs the thirty-nine verified ones around it."""
+    r = {"sections": {"what_the_documents_say": [
+            {"text": "The IT load is 168 MW.",
+             "quotes": [_q("The total IT load is 168 MW")]},
+            {"text": "The connection is 120 MW.",
+             "quotes": [_q("a connection of one hundred and twenty megawatts, "
+                           "words the page does not contain")]},
+         ], "questions": [], "not_determined": []}}
+    v = mr.gate(r, _inp())
+    assert v.ok
+    assert (v.paragraphs_passed, v.paragraphs_withheld) == (1, 1)
+    paras = r["sections"]["what_the_documents_say"]
+    assert "withheld" not in paras[0]
+    assert "quote not found" in paras[1]["withheld"]
+
+
+def test_a_reading_whose_every_paragraph_fails_is_refused():
+    r = _reading("The load is 999 MW.", [_q("words the page does not contain")])
+    v = mr.gate(r, _inp())
+    assert not v.ok and v.paragraphs_withheld == 1
+    assert "all 1 paragraphs withheld" in v.reason
+
+
+def test_asking_about_intent_is_a_question_not_an_assertion():
+    ask = "Does the applicant intend to run the engines at night? The energy "          "statement does not say."
+    r = _reading(ask, [], section="questions")
+    assert mr.gate(r, _inp()).ok
+    r = _reading("The applicant intends to run the engines at night.", [],
+                 section="what_the_documents_say")
+    v = mr.gate(r, _inp())
+    assert not v.ok
+
+
+def test_a_quote_across_a_page_break_survives_the_running_header():
+    """Watford's BREEAM refusal: the register document's header sat in
+    the middle of the sentence where the page turned."""
+    header = "REF LON02A-BWE-XX-XX-DN-N-960001 Date of issue 2025-11-04"
+    pages = [f"Something else entirely.\n{header}",
+             f"The aim is to achieve the same number of credits\n{header}",
+             f"{header}\nthat would see the scheme achieving BREEAM Excellent.",
+             f"More text.\n{header}"]
+    inp = _inp()
+    inp = mr.SiteInput("PTNO-1", "A Site", inp.panel,
+                       pages=[mr.Page(41, "Hertsmere/25/1781/FUL", "Design note", 2, pages[1])],
+                       cache={41: pages})
+    r = _reading("The design note describes the BREEAM aim.",
+                 [_q("The aim is to achieve the same number of credits that would "
+                     "see the scheme achieving BREEAM Excellent.")])
+    assert mr.gate(r, inp).ok
+
+
 def test_an_empty_reading_is_refused():
     v = mr.gate({"sections": {"what_the_documents_say": [], "questions": [],
                               "not_determined": []}}, _inp())
