@@ -1,0 +1,181 @@
+"""Organisation identity by evidence, never by similarity.
+
+`dcp/entities.py` already does the safe normalisations — legal suffixes,
+centre/center, conjunctions, spacing — and stops there on purpose: the
+SPV-per-site pattern in this sector means near-identical names are
+routinely different companies, which is exactly the distinction an
+ownership story turns on. What it cannot do is say that "Ark Estates 5
+Ltd" is Ark Data Centres, or that "VDC LHR11 Limited" is Vantage. Those
+are claims about corporate structure, and they need evidence: a Barbour
+client/end-user record, a Companies House filing, a document that says
+"a subsidiary of".
+
+This module reads those claims from `data/priors/organisation_aliases.yaml`,
+validates them, and answers one question: which group does this raw name
+belong to? The raw name is never rewritten anywhere — the group label
+sits beside it (workbook column, reader badge) with the evidence one
+lookup away, per the third principle.
+
+Two rules the loader enforces rather than trusts:
+
+**Every member carries evidence.** An entry with a name and no source
+is a guess with a YAML indent, and is rejected at load.
+
+**Nothing takes effect until a person has confirmed it.** Members are
+`proposed` or `confirmed`; the index the exporters use is built from
+confirmed members only. A session, a batch (READER_REDESIGN_PLAN §5b) or
+a research note can propose; the checkpoint confirms. Proposed entries
+are still validated, so a proposal cannot be malformed when someone
+comes to read it.
+
+Relations are a closed set, because "X is Y" hides four different
+facts: the same organisation under another legal form or spelling; a
+subsidiary; a trading name; a special-purpose vehicle. The badge shows
+the group; the relation is what a reporter needs before writing that
+the group "is behind" the site.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from pathlib import Path
+
+import yaml
+
+from dcp import entities
+
+ROOT = Path(__file__).resolve().parent.parent
+ALIASES_PATH = ROOT / "data" / "priors" / "organisation_aliases.yaml"
+
+RELATIONS = frozenset({"same_organisation", "subsidiary_of", "trading_name_of", "spv_of"})
+STATUSES = frozenset({"proposed", "confirmed"})
+SOURCES = frozenset({"barbour", "companies_house", "document", "operator_website",
+                     "register", "reporter"})
+
+
+class AliasError(ValueError):
+    """The aliases file says something the loader will not accept."""
+
+
+@dataclass(frozen=True)
+class Evidence:
+    source: str
+    ref: str = ""          # Barbour project ref, company number, document id, URL
+    quote: str = ""        # verbatim, where the source is a document
+    note: str = ""
+    date: str = ""
+    site_key: str = ""     # when the evidence is about one site
+
+
+@dataclass(frozen=True)
+class Member:
+    name: str              # as the documents or Barbour write it — never rewritten
+    relation: str
+    status: str
+    evidence: tuple[Evidence, ...]
+
+    @property
+    def key(self) -> str:
+        return entities.canonical_key(self.name)
+
+
+@dataclass(frozen=True)
+class Group:
+    group: str             # the display label
+    note: str = ""
+    members: tuple[Member, ...] = field(default_factory=tuple)
+
+    def member_for(self, key: str) -> Member | None:
+        for m in self.members:
+            if m.key == key:
+                return m
+        return None
+
+
+def _require(cond: bool, where: str, what: str) -> None:
+    if not cond:
+        raise AliasError(f"{where}: {what}")
+
+
+def load_groups(path: Path = ALIASES_PATH) -> list[Group]:
+    """Read and validate the file. Raises AliasError on the first problem."""
+    doc = yaml.safe_load(path.read_text(encoding="utf-8")) if path.exists() else None
+    groups_raw = (doc or {}).get("groups") or []
+    groups: list[Group] = []
+    seen_labels: set[str] = set()
+    seen_keys: dict[str, str] = {}
+    for gi, g in enumerate(groups_raw):
+        where = f"group {gi + 1}"
+        _require(isinstance(g, dict) and g.get("group"), where, "needs a 'group' label")
+        label = str(g["group"]).strip()
+        where = f"group '{label}'"
+        _require(label not in seen_labels, where, "label appears twice")
+        seen_labels.add(label)
+        members: list[Member] = []
+        for mi, m in enumerate(g.get("members") or []):
+            mwhere = f"{where} member {mi + 1}"
+            _require(isinstance(m, dict) and m.get("name"), mwhere, "needs a 'name'")
+            name = str(m["name"]).strip()
+            mwhere = f"{where} member '{name}'"
+            relation = str(m.get("relation") or "").strip()
+            _require(relation in RELATIONS, mwhere,
+                     f"relation must be one of {sorted(RELATIONS)}, got {relation!r}")
+            status = str(m.get("status") or "").strip()
+            _require(status in STATUSES, mwhere,
+                     f"status must be one of {sorted(STATUSES)}, got {status!r}")
+            ev_raw = m.get("evidence") or []
+            _require(bool(ev_raw), mwhere, "has no evidence; a name alone is a guess")
+            evidence = []
+            for ei, e in enumerate(ev_raw):
+                ewhere = f"{mwhere} evidence {ei + 1}"
+                _require(isinstance(e, dict), ewhere, "must be a mapping")
+                source = str(e.get("source") or "").strip()
+                _require(source in SOURCES, ewhere,
+                         f"source must be one of {sorted(SOURCES)}, got {source!r}")
+                _require(bool(e.get("ref") or e.get("quote")), ewhere,
+                         "needs a ref or a quote — something a person can open")
+                evidence.append(Evidence(
+                    source=source, ref=str(e.get("ref") or ""),
+                    quote=str(e.get("quote") or ""), note=str(e.get("note") or ""),
+                    date=str(e.get("date") or ""), site_key=str(e.get("site_key") or "")))
+            member = Member(name, relation, status, tuple(evidence))
+            _require(len(member.key) >= 3, mwhere, "name is too short to key")
+            _require(member.key not in seen_keys, mwhere,
+                     f"also listed under '{seen_keys.get(member.key)}' — one name, one group")
+            seen_keys[member.key] = label
+            members.append(member)
+        groups.append(Group(label, str(g.get("note") or ""), tuple(members)))
+    return groups
+
+
+def alias_index(groups: list[Group], *, confirmed_only: bool = True) -> dict[str, Group]:
+    """Canonical key -> group, over confirmed members unless told otherwise."""
+    index: dict[str, Group] = {}
+    for g in groups:
+        for m in g.members:
+            if confirmed_only and m.status != "confirmed":
+                continue
+            index[m.key] = g
+    return index
+
+
+def group_for(name: str | None, index: dict[str, Group]) -> Group | None:
+    """The group a raw organisation string belongs to, or None.
+
+    Matching is by `entities.canonical_key`, so a member listed as
+    'Vantage Data Centers Ltd' also catches 'Vantage Data Centres Limited'
+    — the spelling and legal-form variants the key already treats as one.
+    Anything further needs its own member entry with its own evidence.
+    """
+    if not name:
+        return None
+    e = entities.parse_entity(name)
+    key = e.key if e else entities.canonical_key(name)
+    return index.get(key)
+
+
+def summary(groups: list[Group]) -> str:
+    confirmed = sum(1 for g in groups for m in g.members if m.status == "confirmed")
+    proposed = sum(1 for g in groups for m in g.members if m.status == "proposed")
+    return (f"{len(groups)} groups, {confirmed} confirmed member{'s' if confirmed != 1 else ''}, "
+            f"{proposed} proposed")
