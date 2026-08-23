@@ -66,7 +66,7 @@ from dotenv import load_dotenv  # noqa: E402
 
 load_dotenv(ROOT / ".env")
 
-from dcp import db  # noqa: E402
+from dcp import db, extract  # noqa: E402
 from dcp.site_profile import generation_figure  # noqa: E402
 
 _spec = importlib.util.spec_from_file_location(
@@ -113,14 +113,14 @@ PER_UNIT_SITES: tuple[tuple[str, int, str], ...] = (
      "headline labelled per unit (Woodlands Park)"),
 )
 
-BASIS_VALUES = ("per_unit", "site_fleet_total", "site_total",
+BASIS_VALUES = ("per_generator", "stated_group_total", "site_total",
                 "not_generation", "unclear")
 PLANT_VALUES = ("standby_combustion", "prime_combustion", "renewable",
                 "storage", "mixed", "unclear")
 
 SHEET_COLUMNS = ("row", "site_key", "site", "finding_id", "figure_mw",
                  "as_extracted", "signal_label", "why_in_sample", "quote",
-                 "figure_basis", "plant_type", "unit_count",
+                 "passage", "figure_basis", "plant_type", "unit_count",
                  "unit_rating_mw", "note")
 
 
@@ -135,7 +135,7 @@ def load_candidates(conn) -> tuple[dict[str, list[dict]], dict[str, str]]:
     with conn.cursor() as cur:
         cur.execute(CANDIDATES_SQL)
         for (site_key, name, app_id, ref, desc, fid, doc_id, stype,
-             value_mw, number, unit, vtext, quote) in cur.fetchall():
+             value_mw, number, unit, vtext, quote, page, sha) in cur.fetchall():
             names[site_key] = name or site_key
             by_site[site_key].append({
                 "site_key": site_key, "site": name or site_key,
@@ -144,9 +144,33 @@ def load_candidates(conn) -> tuple[dict[str, list[dict]], dict[str, str]]:
                 "document_id": doc_id, "signal_type": stype,
                 "value_mw": float(value_mw), "value_number": float(number),
                 "value_unit": unit, "value_text": vtext,
-                "evidence_text": quote,
+                "evidence_text": quote, "evidence_page": page,
+                "passage": _passage(ref, sha, page, quote),
             })
     return by_site, names
+
+
+_page_cache: dict[tuple[str, str], list[str]] = {}
+
+
+def _passage(ref: str, sha: str | None, page: int | None, quote: str) -> str:
+    """The quote with its page around it, from the text cache; the quote
+    alone where the page is not held. The gate verified every quote
+    against this same cache, so a quote with no page here is rare."""
+    if not sha or not page:
+        return ""
+    key = (ref, sha)
+    if key not in _page_cache:
+        path = extract.cache_path_for("documents", ref, sha)
+        try:
+            _page_cache[key] = [p or "" for p in
+                                (json.loads(path.read_text()).get("pages") or [])]
+        except Exception:
+            _page_cache[key] = []
+    pages = _page_cache[key]
+    text = pages[page - 1] if 0 < page <= len(pages) else ""
+    out = _ap.passage_for(quote, text)
+    return out if out != " ".join((quote or "").split()) else ""
 
 
 def _select_rows(rows: list[dict], limit: int) -> list[dict]:
@@ -253,21 +277,31 @@ Prompt version `{version}`. Every row below is a figure the pipeline
 already treats as **this site's own on-site electricity generation**;
 that question is settled and is not what is being asked.
 
-Two questions per row, from the quote alone. Fill the two columns in
-`{csv}` — one value from each list, exactly as written:
+Each row gives the quote the figure was extracted from AND the passage
+around it on the same page — the paragraph before and after — which is
+what the model is given too. The earlier version of this sheet gave the
+quote alone, and most rows were, correctly, unanswerable from it.
 
-**figure_basis** — is the figure one machine, the site's fleet of
-generators, or the site? ("Fleet" throughout means the generators on
-this one site, never an operator's estate of sites.)
+Two questions per row, from the passage. **Where the passage does not
+settle a question, `unclear` is the right answer** — for you and for
+the model. Fill the two columns in `{csv}` — one value from each list,
+exactly as written:
 
-- `per_unit` — the rating of a single generating unit
-- `site_fleet_total` — the combined rating of a stated number of units
-  on this site (never an operator's estate of sites)
-- `site_total` — the development's total generating capacity
+**figure_basis** — what is this figure a figure of?
+
+- `per_generator` — the rating of one generating machine (an engine, a
+  turbine, a generator set). Not a building called a "unit".
+- `stated_group_total` — the combined rating of a stated number of
+  machines ("20 no. 2,499 kW engines with a combined capacity of just
+  under 50 MW"). The group may or may not be all the site's generation;
+  that is not this question.
+- `site_total` — the whole development's total generating capacity, all
+  plant — only where the passage says so. A total for one building, one
+  phase or one kind of plant is not the site's.
 - `not_generation` — not an electrical generating capacity at all: a
   thermal or fuel input, an annual energy figure, a battery rating, a
   demand figure
-- `unclear` — the quote does not settle it
+- `unclear` — the passage does not settle it
 
 **plant_type** — what kind of plant?
 
@@ -277,11 +311,11 @@ this one site, never an operator's estate of sites.)
 - `renewable` — solar, wind, hydro
 - `storage` — battery, UPS, flywheel
 - `mixed` — one figure covering more than one of these
-- `unclear` — the quote does not say
+- `unclear` — the passage does not say
 
-Also, where and only where the quote states them: `unit_count` (how many
-units) and `unit_rating_mw` (one unit's rating, in MW). Never multiply
-them. `note` is free text and is read, not scored.
+Also, where and only where the passage states them: `unit_count` (how
+many machines) and `unit_rating_mw` (one machine's rating, in MW). Never
+multiply them. `note` is free text and is read, not scored.
 
 The model has answered the same rows separately. Its answers are not in
 this sheet on purpose — a sheet that showed them would measure
@@ -309,6 +343,7 @@ def write_sheet(rows: list[dict], out_dir: Path) -> tuple[Path, Path]:
                 "signal_label": r["signal_type"],
                 "why_in_sample": r["why_in_sample"],
                 "quote": " ".join((r["evidence_text"] or "").split()),
+                "passage": r.get("passage") or "(page not held; quote only)",
                 "figure_basis": "", "plant_type": "", "unit_count": "",
                 "unit_rating_mw": "", "note": "",
             })
@@ -317,11 +352,14 @@ def write_sheet(rows: list[dict], out_dir: Path) -> tuple[Path, Path]:
                                 csv=csv_path.name)]
     for i, r in enumerate(rows, 1):
         quote = " ".join((r["evidence_text"] or "").split())
+        passage = r.get("passage") or ""
         lines.append(
             f'**{i}. {r["site"]}** — {r["value_mw"]:g} MW '
             f'(as extracted: {r["value_number"]:g} {r["value_unit"]}; '
             f'label `{r["signal_type"]}`; finding {r["finding_id"]}; '
-            f'{r["why_in_sample"]})\n\n> {quote}\n')
+            f'{r["why_in_sample"]})\n\n> **Quote:** {quote}\n'
+            + (f'>\n> **Passage:** {passage}\n' if passage else
+               '>\n> *(the page is not held; the quote is all there is)*\n'))
     md_path.write_text("\n".join(lines), encoding="utf-8")
     return csv_path, md_path
 
