@@ -337,6 +337,12 @@ SITE_HEADERS = [
     # than competing estimates and some questions need them separately.
     "IT load MW (adjudicated)", "Total site MW (adjudicated)",
     "Grid connection MW (adjudicated)", "On-site generation MW (adjudicated)",
+    # What the generation figure is, by the passage that states it: one
+    # machine's rating or the figure as stated — and the largest fleet
+    # the documents disclose by count and rating, never multiplied. Three
+    # columns because they are three different things (dcp/site_profile).
+    "On-site generation figure basis", "Generator units disclosed (count)",
+    "Generator unit rating MW (disclosed)",
     "Capacity figures attributed to site", "Power figures excluded (context)",
     # --- environment ----------------------------------------------------
     "Facility character", "Scale band", "Scale basis",
@@ -539,6 +545,27 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "scheme states 75 MW per building and, elsewhere, three buildings — "
      "and a generation figure taken from one machine's specification is "
      "not the fleet, where the documents describe dozens of units."),
+    ("Sites", "On-site generation figure basis",
+     "What the 'On-site generation MW' figure is, read from the passages "
+     "that state it: **per unit** — the documents present it as one "
+     "machine's rating (\"112 No. standby generators (likely to be "
+     "3.2MWe\"), so it is not the site's generation; **as stated** — the "
+     "figure stands as the documents give it. Deterministic (dcp/"
+     "site_profile.generation_figure): it fires only where a passage "
+     "states a count or 'each' and the rating it gives matches the "
+     "stored figure, and where a stated count times a stated rating "
+     "equals the figure, the figure is that total whatever another "
+     "sentence calls it. Blank where the site has no generation figure. "
+     "A per-row adjudication of every generation figure is planned and "
+     "will supersede this label."),
+    ("Sites", "Generator units disclosed (count) / Generator unit rating MW (disclosed)",
+     "The largest fleet the documents disclose as a count and a rating in "
+     "one passage (\"up to 650 no. 2,480 kW back-up diesel generators\"), "
+     "reported beside the generation figure and never multiplied into it. "
+     "Where the generation figure is itself a per-unit rating, these are "
+     "that rating and its count. A count here is what one passage says; "
+     "the 'Standby generators (count)' column is the highest count in any "
+     "document and may differ."),
     ("Sites", "Capacity figures attributed to site",
      "How many megawatt figures the adjudication attributed to this site "
      "itself."),
@@ -1240,6 +1267,9 @@ def main() -> None:
             est.value_mw, power_basis_cell, est.confidence, power_caveat_cell,
             ("Yes — reading incomplete" if is_prov else "No"),
             it_load_mw, total_site_mw, grid_mw, gen_mw,
+            prof.get("gen_figure_basis") or "",
+            prof.get("gen_unit_count") if prof.get("gen_unit_count") else "",
+            prof.get("gen_unit_mw") if prof.get("gen_unit_mw") else "",
             n_capacity or "", n_excluded or "",
             scale.CHARACTERS[character].label, band_label,
             scale.BASIS_NOTE[basis],
@@ -1315,7 +1345,7 @@ def main() -> None:
             "",                       # no public register entry exists
             0, "", 0, "", "", "",
             None, cap_label, "", "", "n/a — no documents",
-            None, None, None, None, "", "",
+            None, None, None, None, "", "", "", "", "",
             "", "", "",               # character/scale unknowable pre-application
             "", "", "", "", "", "", "", "",
             ", ".join(sorted(env.keys())),
