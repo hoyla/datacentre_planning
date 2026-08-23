@@ -36,6 +36,13 @@ dependencies = [
     "olefile>=0.47",
     # Claude triage/extraction backend (Sonnet-5-vs-granite trial onward)
     "anthropic>=0.120",
+    # OpenAI batch/chat backend. Every route that uses it imports it
+    # lazily, so it went undeclared while it was the escalation path for
+    # a few deep-reads; READER_REDESIGN_PLAN §3.1 makes it the reading
+    # engine for the redesign's adjudication and summarising work, and
+    # an undeclared dependency of the default path is a trap for the
+    # next person who clones this.
+    "openai>=1.100",
 ]
 
 [project.optional-dependencies]
