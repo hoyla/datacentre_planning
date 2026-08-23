@@ -44,6 +44,7 @@ from dcp import adjudication_gate  # noqa: E402
 from dcp import db, signals  # noqa: E402
 from dcp import operator_disclosure  # noqa: E402
 from dcp import organisations  # noqa: E402
+from dcp import site_cohorts  # noqa: E402
 from dcp import site_profile  # noqa: E402
 
 TABLES: dict[str, str] = {
@@ -366,6 +367,52 @@ def main() -> None:
             "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", alias_rows)
     counts["organisation_aliases"] = len(alias_rows)
 
+    # Cohorts, long format, from the same registry the workbook and the
+    # reader use. Members are computed at export and never stored in
+    # Postgres; the rule_version is what ties a row to the rule that
+    # produced it. Hand-checks ride in the same table with `member`
+    # false where a person checked a site the rule does not select.
+    con.execute("""CREATE TABLE cohorts
+                   (site_key VARCHAR, cohort VARCHAR, cohort_title VARCHAR,
+                    member BOOLEAN, rule_version VARCHAR,
+                    hand_checked VARCHAR, checked_by VARCHAR,
+                    check_date VARCHAR, check_note VARCHAR,
+                    evidence VARCHAR)""")
+    con.execute("""CREATE TABLE cohort_definitions
+                   (cohort VARCHAR, title VARCHAR, family VARCHAR,
+                    "order" INTEGER, rule_version VARCHAR,
+                    definition VARCHAR, rule VARCHAR, "limits" VARCHAR,
+                    withheld VARCHAR, members INTEGER)""")
+    with db.connect() as pg:
+        computed = site_cohorts.compute_all(pg)
+    cohort_rows, def_rows = [], []
+    for c in computed:
+        by_site = {k.site_key: k for k in c.checks}
+        for m in c.result.members:
+            k = by_site.get(m.site_key)
+            cohort_rows.append((
+                m.site_key, c.cohort.key, c.cohort.title, True,
+                c.cohort.rule_version, k.verdict if k else None,
+                k.checked_by if k else None, k.date if k else None,
+                k.note.strip() if k else None,
+                "; ".join(f"{a}={b}" for a, b in m.evidence.items())))
+        for k in c.outside:
+            cohort_rows.append((
+                k.site_key, c.cohort.key, c.cohort.title, False,
+                c.cohort.rule_version, k.verdict, k.checked_by, k.date,
+                k.note.strip(), None))
+        def_rows.append((c.cohort.key, c.cohort.title, c.cohort.family,
+                         c.cohort.order, c.cohort.rule_version,
+                         c.cohort.definition, c.cohort.rule, c.cohort.limits,
+                         c.result.withheld or None, len(c.result.members)))
+    if cohort_rows:
+        con.executemany("INSERT INTO cohorts VALUES (?,?,?,?,?,?,?,?,?,?)",
+                        cohort_rows)
+    con.executemany("INSERT INTO cohort_definitions VALUES (?,?,?,?,?,?,?,?,?,?)",
+                    def_rows)
+    counts["cohorts"] = len(cohort_rows)
+    counts["cohort_definitions"] = len(def_rows)
+
     # Environmental signals: derived deterministically, same lexicon as the
     # workbook, so the two artefacts agree.
     con.execute("""CREATE TABLE environmental_signals
@@ -391,6 +438,21 @@ def main() -> None:
                          "deliberately not exported."),
         ("documents_note", "bytes_path is relative to the pipeline's data store; "
                            "source_url and obtained record how each file was got."),
+        ("cohorts_note", "A cohort is a named rule over the adjudicated "
+                         "figures — sites sharing a measurable property, "
+                         "never a conclusion about them. cohort_definitions "
+                         "carries each rule's definition, the computation "
+                         "in one sentence, and its limits, which state the "
+                         "rule's known blind spots and are required. "
+                         "cohorts is one row per site the rule selects "
+                         "(member = true) plus one per hand-check a person "
+                         "recorded in data/priors/cohort_checks.yaml, "
+                         "including checks on sites the rule does not "
+                         "select (member = false). hand_checked is "
+                         "'holds', 'does_not_hold' or NULL. A cohort with "
+                         "withheld set was not computed in this release, "
+                         "for the reason given; its members are absent, "
+                         "not zero."),
         ("parties_note", "One row per organisation per role per site. The "
                          "role vocabulary is: end_user and applicant "
                          "(as Barbour ABI's project record states them), "

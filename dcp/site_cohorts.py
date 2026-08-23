@@ -1,0 +1,533 @@
+"""Named cohorts: sites that share a measurable property, and nothing more.
+
+READER_REDESIGN_PLAN §6. The design handoff proposed a Signals page of
+cohorts, and its cohorts were defined by example — counts typed into a
+prototype, several of them wrong at the grain level (22 "read in full
+and silent" where the corpus holds 135; 18 two-audience sites where
+there are 3) and one of them unsafe (standby below 10% of stated load,
+which counted rooftop PV and one engine of a hundred and twelve). This
+module is the cohorts as queries, so that a count on the page is the
+number of rows a click produces and nothing else.
+
+Rules a cohort has to meet to be registered here:
+
+**The title states a property, never a cause.** "Demand stated above
+the connection" is a fact about two figures in the documents. "Sites
+planning to run on gas" is a diagnosis, and the reading that diagnosed
+Amazon Didcot as grid-dependent from one engine's spec sheet is in
+HISTORY as the worst error this dataset has produced.
+
+**Limits are required, and the build fails without them.** Every cohort
+is computed from adjudicated figures with known blind spots — a figure
+can be a floor on a partly-read site, a per-unit rating, an export
+limit filed as a connection. The limits text is where those are
+stated, on the card, beside the count, every time.
+
+**Counts are computed, never literal.** A cohort is `compute(conn)`; a
+number typed into a template is the prototype's mistake repeated.
+
+**A cohort may withhold itself.** Where the inputs it needs are not yet
+adjudicated — `generation_exceeds_load` cannot be computed honestly
+until the generation batch has said which figures are fleets and which
+plant is standby — it returns no members and a reason, and the card
+says so. The same refusal `scripts/sweep_null_capacity.py` makes while
+figures await adjudication.
+
+**Hand-checks sit beside the rule, never inside it.** A person's
+verdict on a cohort member lives in `data/priors/cohort_checks.yaml`,
+keyed by site; the rule does not read it. A check on a site the rule
+does not select is reported as a disagreement, not hidden, because that
+is exactly the case that says the rule is wrong.
+
+Registry order is the page order and is explicit. No cohort ranks its
+members; they come out sorted by site key.
+"""
+
+from __future__ import annotations
+
+from collections import defaultdict
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Callable
+
+import yaml
+
+from dcp import site_profile
+
+ROOT = Path(__file__).resolve().parent.parent
+CHECKS_PATH = ROOT / "data" / "priors" / "cohort_checks.yaml"
+
+# The ratio two cohorts turn on. 1.5 rather than 1.0 because the figures
+# being compared are adjudicated from prose and routinely differ by a
+# phase, a rounding or a building; a site whose stated demand is 10%
+# above its connection has told us nothing, one at 150% has.
+RATIO = 1.5
+
+CHECK_VERDICTS = frozenset({"holds", "does_not_hold"})
+
+
+class CohortError(ValueError):
+    """A cohort or a check is malformed. Raised at import or at load."""
+
+
+@dataclass(frozen=True)
+class Member:
+    site_key: str
+    # The figures the rule used, as the rule used them — what a reader
+    # needs to see to check the membership from the workbook.
+    evidence: dict
+
+
+@dataclass(frozen=True)
+class CohortResult:
+    members: tuple[Member, ...]
+    # Why the cohort has no members, when that is a refusal rather than
+    # an empty set. Empty string when the cohort was computed.
+    withheld: str = ""
+    # Facts about the computation a reader should see beside the count:
+    # how many candidates were excluded and why.
+    notes: tuple[str, ...] = ()
+
+    @property
+    def site_keys(self) -> set[str]:
+        return {m.site_key for m in self.members}
+
+
+@dataclass(frozen=True)
+class Cohort:
+    key: str
+    title: str                      # states the property, never a cause
+    family: str                     # coverage | power | generation
+    definition: str                 # prose a reader can follow
+    rule: str                       # the computation, in one sentence
+    limits: str                     # required; see __post_init__
+    order: int
+    rule_version: str
+    compute: Callable = field(repr=False)
+
+    def __post_init__(self):
+        if not self.limits or not self.limits.strip():
+            raise CohortError(f"cohort {self.key!r} has no limits text")
+        if not self.title or not self.definition or not self.rule:
+            raise CohortError(f"cohort {self.key!r} is missing its text")
+
+
+@dataclass(frozen=True)
+class Check:
+    site_key: str
+    cohort: str
+    verdict: str                    # holds | does_not_hold
+    checked_by: str
+    date: str
+    note: str = ""
+
+
+# ---------------------------------------------------------------------------
+# Inputs, loaded once
+# ---------------------------------------------------------------------------
+
+SITE_FIGURES_SQL = """
+WITH adj AS (
+  SELECT DISTINCT ON (finding_id) finding_id, verdict, quantity_type,
+         value_mw, application_id
+  FROM power_adjudication
+  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC)
+SELECT s.site_key,
+       max(adj.value_mw) FILTER (WHERE adj.quantity_type = 'it_load')
+           AS it_load_mw,
+       max(adj.value_mw) FILTER (WHERE adj.quantity_type = 'total_site')
+           AS total_site_mw,
+       max(adj.value_mw) FILTER (WHERE adj.quantity_type = 'grid_connection')
+           AS grid_mw,
+       max(adj.value_mw) FILTER (WHERE adj.quantity_type = 'onsite_generation')
+           AS generation_mw
+FROM adj
+JOIN site_members sm ON sm.application_id = adj.application_id
+     AND sm.retired_at IS NULL
+JOIN sites s ON s.id = sm.site_id
+WHERE s.retired_at IS NULL
+  AND adj.verdict = 'site_capacity' AND adj.value_mw IS NOT NULL
+GROUP BY s.site_key
+"""
+
+# Candidate figures no route has adjudicated, per site: the blocker
+# that makes a silence provisional.
+PENDING_FIGURES_SQL = """
+SELECT s.site_key, count(*)
+FROM sites s
+JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
+JOIN findings f ON f.application_id = sm.application_id
+WHERE s.retired_at IS NULL
+  AND lower(coalesce(f.value_unit, '')) IN ('mw', 'mva', 'gw', 'kva', 'kw')
+  AND NOT EXISTS (SELECT 1 FROM power_adjudication pa
+                  WHERE pa.finding_id = f.id)
+GROUP BY s.site_key
+"""
+
+LIVE_SITES_SQL = """
+SELECT site_key FROM sites WHERE retired_at IS NULL ORDER BY site_key
+"""
+
+
+@dataclass
+class Inputs:
+    """Everything the registry's rules read, fetched once per build."""
+    sites: list[str]
+    figures: dict[str, dict]                 # site_key -> the four MW
+    coverage: dict[str, dict[str, int]]      # site_profile.load_coverage_detail
+    pending: dict[str, int]                  # site_key -> unadjudicated figures
+    generators: dict[str, site_profile.GeneratorProfile]
+    generation: dict[str, site_profile.GenerationFigure]
+
+
+def load_inputs(conn) -> Inputs:
+    figures: dict[str, dict] = {}
+    generators: dict[str, site_profile.GeneratorProfile] = {}
+    gen_rows: dict[str, list] = defaultdict(list)
+    with conn.cursor() as cur:
+        cur.execute(LIVE_SITES_SQL)
+        sites = [r[0] for r in cur.fetchall()]
+        cur.execute(SITE_FIGURES_SQL)
+        for key, it, tot, grid, gen in cur.fetchall():
+            figures[key] = {
+                "it_load_mw": None if it is None else float(it),
+                "total_site_mw": None if tot is None else float(tot),
+                "grid_mw": None if grid is None else float(grid),
+                "generation_mw": None if gen is None else float(gen)}
+        cur.execute(PENDING_FIGURES_SQL)
+        pending = {k: int(n) for k, n in cur.fetchall()}
+        cur.execute(site_profile.GENERATOR_SQL)
+        for key, counts, texts in cur.fetchall():
+            generators[key] = site_profile.generator_profile(
+                counts or (), texts or ())
+        cur.execute(site_profile.GENERATION_FIGURE_SQL)
+        for key, mw, quote in cur.fetchall():
+            gen_rows[key].append((mw, quote))
+    generation = {k: site_profile.generation_figure(v)
+                  for k, v in gen_rows.items()}
+    return Inputs(sites, figures, site_profile.load_coverage_detail(conn),
+                  pending, generators, generation)
+
+
+# ---------------------------------------------------------------------------
+# The rules
+# ---------------------------------------------------------------------------
+
+def _stated_load(f: dict) -> float | None:
+    """The larger of IT load and total site, both adjudicated.
+
+    Both rather than the reader's fallback order (IT load first). The
+    reader wants one headline and prefers the better-defined quantity;
+    a ratio wants the site's own largest statement of what it will
+    draw, and for Northumberland Energy Park that is 1,100 MW of total
+    site against 72 MW of IT load — a different answer to "does demand
+    exceed the connection".
+    """
+    vals = [v for v in (f.get("it_load_mw"), f.get("total_site_mw"))
+            if v is not None]
+    return max(vals) if vals else None
+
+
+def read_in_full_silent(inputs: Inputs) -> CohortResult:
+    """Prose read in full; no figure adjudicated as this site's capacity.
+
+    Prose, not every document. The methodology skips drawings and
+    samples objection letters on purpose, and a site whose only unread
+    documents are elevations has been read. Counting every document
+    gives 65 sites; counting what the deep-read is for gives 134, with
+    11 more waiting on adjudication (2026-08-23). One definition
+    (HISTORY, "one definition of intended-to-be-read"), and it is the
+    reader's. `scripts/sweep_null_capacity.py` calls this.
+
+    A site with capacity-unit findings nobody has adjudicated is not
+    silent; it is waiting. Those are excluded and counted.
+    """
+    members, waiting = [], 0
+    for key in inputs.sites:
+        c = inputs.coverage.get(key)
+        if not c or not c["prose_held"] or c["prose_read"] < c["prose_held"]:
+            continue
+        if inputs.figures.get(key):
+            continue
+        if inputs.pending.get(key):
+            waiting += 1
+            continue
+        members.append(Member(key, {
+            "prose_documents_read": c["prose_read"],
+            "prose_documents_held": c["prose_held"],
+            "documents_held": c["held"]}))
+    notes = ()
+    if waiting:
+        notes = (f"{waiting} further site{'s' if waiting != 1 else ''} "
+                 "read in full but holding capacity-unit findings not yet "
+                 "adjudicated: excluded until they are.",)
+    return CohortResult(tuple(members), notes=notes)
+
+
+def demand_exceeds_connection(inputs: Inputs) -> CohortResult:
+    """Stated load more than 1.5 times the stated grid connection."""
+    members = []
+    for key in inputs.sites:
+        f = inputs.figures.get(key)
+        if not f or f.get("grid_mw") is None:
+            continue
+        load = _stated_load(f)
+        if load is None or load <= f["grid_mw"] * RATIO:
+            continue
+        members.append(Member(key, {
+            "stated_load_mw": load,
+            "load_quantity": ("total_site" if load == f.get("total_site_mw")
+                              else "it_load"),
+            "grid_connection_mw": f["grid_mw"],
+            "ratio": round(load / f["grid_mw"], 2)}))
+    return CohortResult(tuple(members))
+
+
+def generation_no_fuel(inputs: Inputs) -> CohortResult:
+    """On-site generation disclosed by figure or by count; no fuel named.
+
+    One definition, stated: a site is in if it has an adjudicated
+    on-site generation figure OR a generator count in its documents, and
+    its documents name no fuel at all — not diesel, gas, HVO, hydrogen
+    or biofuel. Measured 2026-08-23: 9 sites with a figure, 27 with a
+    count, 34 with either.
+    """
+    members = []
+    for key in inputs.sites:
+        g = inputs.generators.get(key)
+        fig = inputs.generation.get(key)
+        has_count = bool(g and g.count)
+        if not (has_count or fig):
+            continue
+        if g and g.fuel_label:
+            continue
+        members.append(Member(key, {
+            "generation_mw": fig.value_mw if fig else None,
+            "generation_basis": fig.basis if fig else "",
+            "generator_count": g.count if g else None}))
+    return CohortResult(tuple(members))
+
+
+def generation_exceeds_load(inputs: Inputs) -> CohortResult:
+    """Withheld until the generation batch has run.
+
+    The rule is on-site generation above 1.5 times stated load, from
+    the site's own adjudicated figures. Computed today it selects nine
+    sites, and at least two of them are wrong for reasons the batch
+    exists to settle: JVC Business Park's 165 MW is "50 x 3.3 MWt
+    Generators" — heat, not electricity — and Rover Way's 1,000 MW is
+    an "energy capacity" the quote does not attribute to any plant.
+    Until each figure carries a basis (one machine, a fleet, the site)
+    and a plant type (standby, prime, renewable, storage), a cohort on
+    this rule would be the design handoff's standby cohort with the
+    sign flipped.
+    """
+    return CohortResult((), withheld=(
+        "Not computed: the figures this rule compares have not yet been "
+        "adjudicated for what they are — one machine or a fleet, standby "
+        "or prime, electrical or thermal. The generation batch "
+        "(scripts/adjudicate_generation.py) is waiting on its hand-checked "
+        "sample. Computed without it the rule selects nine sites, and at "
+        "least two of them on a thermal figure."))
+
+
+# ---------------------------------------------------------------------------
+# The registry
+# ---------------------------------------------------------------------------
+
+REGISTRY: tuple[Cohort, ...] = (
+    Cohort(
+        key="read_in_full_silent",
+        title="Read in full, and silent on capacity",
+        family="coverage",
+        definition=(
+            "Every prose document held for the site has been analysed, and "
+            "no figure in any of them has been adjudicated as this site's own "
+            "power capacity — IT load, total site load, grid connection or "
+            "on-site generation."),
+        rule=(
+            "prose_read >= prose_held and prose_held > 0; no power_adjudication "
+            "row with verdict site_capacity on any member application; no "
+            "capacity-unit finding awaiting adjudication."),
+        limits=(
+            "Silence in the documents held, which is not the same as silence. "
+            "The register may publish a subset of what was submitted; a "
+            "capacity can be stated in a document the council never put "
+            "online, or in a drawing, which the deep-read skips by design. "
+            "A figure can also be present and not yet adjudicated, in which "
+            "case the site is excluded here until it is. Sites with a "
+            "floor-area estimate are in this cohort: an estimate is this "
+            "project's inference, not the applicant's disclosure."),
+        order=1, rule_version="2026-08-23.1",
+        compute=read_in_full_silent),
+    Cohort(
+        key="demand_exceeds_connection",
+        title="Demand stated above the grid connection",
+        family="power",
+        definition=(
+            "The site's own documents state a load — IT load or total site "
+            "load — more than one and a half times the grid connection they "
+            "also state."),
+        rule=(
+            f"max(it_load_mw, total_site_mw) > {RATIO} × grid_connection_mw, "
+            "all three adjudicated site_capacity, each the largest such figure "
+            "across the site's applications."),
+        limits=(
+            "The two figures can come from different applications at the "
+            "same site, and so describe different buildings or phases rather "
+            "than one scheme's shortfall. A grid figure can be an export "
+            "limit filed as a connection (Kingsnorth's 49.9 MW is one; see "
+            "ROADMAP) or a phase-one offer beside a full-build load. A site "
+            "can also be two schemes clustered by proximity — Ocean Estates "
+            "merges a Salford application with a Trafford one. Hand-checks "
+            "are recorded per site below and are the only thing here that "
+            "says a membership holds."),
+        order=2, rule_version="2026-08-23.1",
+        compute=demand_exceeds_connection),
+    Cohort(
+        key="generation_no_fuel",
+        title="Generation disclosed, fuel not named",
+        family="generation",
+        definition=(
+            "The documents disclose on-site generation — by an adjudicated "
+            "figure, or by a count of generators — and nowhere name what it "
+            "runs on."),
+        rule=(
+            "An adjudicated onsite_generation figure or a generator count > 0 "
+            "from the generator profile, and an empty fuel label from the same "
+            "profile (no diesel, gas, HVO, hydrogen or biofuel term in the "
+            "generator passages)."),
+        limits=(
+            "Fuel is detected by term in the passages the deep-read extracted, "
+            "not by reading every document, so a fuel named once in an "
+            "appendix can be missed; the count disclosed may be one building's "
+            "rather than the site's; and a count of zero is not disclosure of "
+            "none. The figure, where there is one, is labelled by "
+            "generation_figure as one machine's rating or as stated, and the "
+            "per-unit cases are not multiplied."),
+        order=3, rule_version="2026-08-23.1",
+        compute=generation_no_fuel),
+    Cohort(
+        key="generation_exceeds_load",
+        title="On-site generation stated above stated load",
+        family="generation",
+        definition=(
+            "The site's own adjudicated on-site generation figure is more than "
+            "one and a half times its stated load."),
+        rule=(
+            f"generation_mw > {RATIO} × max(it_load_mw, total_site_mw), using "
+            "only fleet-total and site-total figures of combustion plant once "
+            "the generation batch has labelled them; withheld until then."),
+        limits=(
+            "Withheld in this release. The headline generation figure can be "
+            "one machine's rating, a fleet's, the site's, or a thermal input "
+            "rather than an electrical output, and it can be rooftop PV; the "
+            "adjudication that separates those has a prompt but no verdicts "
+            "yet. When it runs, the rule uses combustion plant only, and a "
+            "standby fleet sized to carry the whole load will qualify — "
+            "which is a property of the documents, not a finding about "
+            "intent."),
+        order=4, rule_version="2026-08-23.0",
+        compute=generation_exceeds_load),
+)
+
+FAMILIES = ("coverage", "power", "generation")
+
+
+def _validate_registry() -> None:
+    keys = [c.key for c in REGISTRY]
+    if len(set(keys)) != len(keys):
+        raise CohortError("duplicate cohort key in REGISTRY")
+    orders = [c.order for c in REGISTRY]
+    if orders != sorted(orders) or len(set(orders)) != len(orders):
+        raise CohortError("REGISTRY order must be explicit, unique and ascending")
+    for c in REGISTRY:
+        if c.family not in FAMILIES:
+            raise CohortError(f"cohort {c.key!r}: family {c.family!r} unknown")
+
+
+_validate_registry()
+
+
+def by_key(key: str) -> Cohort:
+    for c in REGISTRY:
+        if c.key == key:
+            return c
+    raise KeyError(key)
+
+
+# ---------------------------------------------------------------------------
+# Hand-checks
+# ---------------------------------------------------------------------------
+
+def load_checks(path: Path = CHECKS_PATH) -> list[Check]:
+    """Read and validate cohort_checks.yaml. Raises CohortError."""
+    doc = yaml.safe_load(path.read_text(encoding="utf-8")) if path.exists() else None
+    out: list[Check] = []
+    known = {c.key for c in REGISTRY}
+    seen: set[tuple[str, str]] = set()
+    for i, raw in enumerate((doc or {}).get("checks") or []):
+        where = f"check {i + 1}"
+        if not isinstance(raw, dict):
+            raise CohortError(f"{where}: must be a mapping")
+        site_key = str(raw.get("site_key") or "").strip()
+        cohort = str(raw.get("cohort") or "").strip()
+        verdict = str(raw.get("verdict") or "").strip()
+        by = str(raw.get("checked_by") or "").strip()
+        date = str(raw.get("date") or "").strip()
+        if not site_key:
+            raise CohortError(f"{where}: needs a site_key")
+        where = f"check {site_key}/{cohort}"
+        if cohort not in known:
+            raise CohortError(f"{where}: cohort must be one of {sorted(known)}")
+        if verdict not in CHECK_VERDICTS:
+            raise CohortError(f"{where}: verdict must be one of "
+                              f"{sorted(CHECK_VERDICTS)}, got {verdict!r}")
+        if not by or not date:
+            raise CohortError(f"{where}: needs checked_by and date")
+        if (site_key, cohort) in seen:
+            raise CohortError(f"{where}: listed twice")
+        seen.add((site_key, cohort))
+        out.append(Check(site_key, cohort, verdict, by, date,
+                         str(raw.get("note") or "")))
+    return out
+
+
+@dataclass(frozen=True)
+class Computed:
+    cohort: Cohort
+    result: CohortResult
+    checks: tuple[Check, ...]           # for this cohort, any site
+
+    @property
+    def confirmed(self) -> int:
+        keys = self.result.site_keys
+        return sum(1 for c in self.checks
+                   if c.verdict == "holds" and c.site_key in keys)
+
+    @property
+    def disputed(self) -> tuple[Check, ...]:
+        """Checks that say does_not_hold on a member: the rule selected
+        a site a person has looked at and rejected."""
+        keys = self.result.site_keys
+        return tuple(c for c in self.checks
+                     if c.verdict == "does_not_hold" and c.site_key in keys)
+
+    @property
+    def outside(self) -> tuple[Check, ...]:
+        """Checks on sites the rule does not select — reported, not hidden."""
+        keys = self.result.site_keys
+        return tuple(c for c in self.checks if c.site_key not in keys)
+
+
+def compute_all(conn, checks: list[Check] | None = None) -> list[Computed]:
+    """Every registered cohort, in registry order, members by site key."""
+    inputs = load_inputs(conn)
+    checks = load_checks() if checks is None else checks
+    out: list[Computed] = []
+    for c in REGISTRY:
+        r = c.compute(inputs)
+        r = CohortResult(tuple(sorted(r.members, key=lambda m: m.site_key)),
+                         r.withheld, r.notes)
+        out.append(Computed(c, r, tuple(k for k in checks if k.cohort == c.key)))
+    return out

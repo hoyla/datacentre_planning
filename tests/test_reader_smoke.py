@@ -237,6 +237,62 @@ def test_a_badge_in_the_table_filters_to_its_organisation(page):
 
 
 @pytest.mark.integration
+def test_signals_cards_count_what_their_chips_leave(page):
+    """READER_REDESIGN_PLAN §6c: a card's count is the chip's row count.
+
+    The prototype's counts were typed in and wrong. Here the number on
+    every computed card is read off the page, the matching chip is
+    clicked, and the table must show exactly that many rows.
+    """
+    page.click("#tab-signals")
+    assert _views_on(page) == ["signals"]
+    cards = page.locator(".box.signal")
+    assert cards.count() >= 3
+    counts = page.evaluate(
+        "() => [...document.querySelectorAll('.box.signal')].map(b => ({"
+        "  key: b.id.replace(/^signal-/, ''),"
+        "  n: (b.querySelector('.sigcount:not(.withheld)')||{}).textContent||null}))")
+    computed = [(c["key"], int(c["n"].split()[0].replace(",", "")))
+                for c in counts if c["n"]]
+    assert computed, "no computed cohort on the page"
+    withheld = [c["key"] for c in counts if not c["n"]]
+    page.click("#tab-sites")
+    page.fill("#q", "")
+    page.select_option("#f", "all")
+    for key, n in computed:
+        chip = page.locator(f'#cohortchips .chip[data-cohort="{key}"]')
+        chip.click()
+        shown, _ = _count_text(page)
+        assert shown == n == _visible_site_rows(page), f"{key}: card says {n}, table shows {shown}"
+        assert page.evaluate("() => decodeURIComponent(location.hash)") == f"#cohort:{key}"
+        chip.click()
+    for key in withheld:
+        assert page.locator(f'#cohortchips .chip[disabled]').count() >= 1
+        assert page.locator(f'#cohortchips .chip[data-cohort="{key}"]').count() == 0
+
+
+@pytest.mark.integration
+def test_the_two_chip_groups_compose_and_both_sit_in_the_url(page):
+    page.click("#tab-sites")
+    page.fill("#q", "")
+    page.select_option("#f", "all")
+    who = page.locator("#whochips .chip").nth(1)
+    coh = page.locator("#cohortchips .chip:not([disabled])").nth(1)
+    who.click(); coh.click()
+    h = page.evaluate("() => decodeURIComponent(location.hash)")
+    assert h.startswith("#who:") and ";cohort:" in h
+    shown, _ = _count_text(page)
+    assert shown == _visible_site_rows(page)
+    # The URL round-trips: reload on it and the same filter is on.
+    page.goto(page.url)
+    page.wait_for_function("() => document.querySelectorAll('tr.site').length > 0")
+    assert page.evaluate("() => decodeURIComponent(location.hash)") == h
+    assert _count_text(page)[0] == shown
+    page.locator("#whochips .chip").first.click()
+    page.locator("#cohortchips .chip").first.click()
+
+
+@pytest.mark.integration
 def test_see_all_on_map_describes_the_same_set(page):
     page.click("#tab-sites")
     page.fill("#q", "")

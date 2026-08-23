@@ -62,7 +62,7 @@ from dotenv import load_dotenv  # noqa: E402
 
 load_dotenv(ROOT / ".env")
 
-from dcp import db, extract  # noqa: E402
+from dcp import db, extract, site_cohorts  # noqa: E402
 
 POWER = re.compile(
     r"\b\d[\d,]*(?:\.\d+)?\s*(?:MW|MVA|MWe|GW|kVA|kW|megawatts?|kilowatts?)\b",
@@ -162,9 +162,37 @@ def main() -> int:
         unadjudicated = dict(cur.fetchall())
 
     no_cap = [(k, n, h, r) for k, n, h, r, has in sites if not has]
-    fully = [(k, n, h) for k, n, h, r in no_cap if r >= h]
-    partly = [(k, n, h, r) for k, n, h, r in no_cap if 0 < r < h]
-    unread = [(k, n, h) for k, n, h, r in no_cap if r == 0]
+    # "Fully read" is the cohort module's definition, not this script's.
+    # This script used to count every document, drawings included, and
+    # put 65 sites in the cohort where the reader's basis column said
+    # 141: two definitions of one claim, and HISTORY already records why
+    # there is to be one ("one definition of intended-to-be-read" —
+    # prose, with the graphical tier skipped and the repetitive tier
+    # sampled by design). dcp.site_cohorts.read_in_full_silent is that
+    # definition, and it already excludes sites whose figures await
+    # adjudication; the provisional banner below stays as belt and
+    # braces for the pages this script sweeps.
+    with db.connect() as conn:
+        inputs = site_cohorts.load_inputs(conn)
+    cohort = site_cohorts.read_in_full_silent(inputs)
+    name_held = {k: (n, h) for k, n, h, _r in no_cap}
+    fully = [(k, *name_held[k]) for k in sorted(cohort.site_keys)
+             if k in name_held]
+    fully_keys = {k for k, _n, _h in fully}
+    waiting = [k for k in name_held if k not in fully_keys
+               and inputs.pending.get(k)
+               and (c := inputs.coverage.get(k)) and c["prose_held"]
+               and c["prose_read"] >= c["prose_held"]]
+
+    def _prose(k):
+        c = inputs.coverage.get(k) or {}
+        return c.get("prose_held", 0), c.get("prose_read", 0)
+    partly = [(k, n, h, _prose(k)[1]) for k, n, h, _r in no_cap
+              if k not in fully_keys and k not in waiting
+              and 0 < _prose(k)[1] < _prose(k)[0]]
+    unread = [(k, n, h) for k, n, h, _r in no_cap
+              if k not in fully_keys and k not in waiting
+              and _prose(k)[1] == 0]
 
     if args.site:
         fully = [t for t in fully if t[0] == args.site] or \
@@ -223,10 +251,14 @@ def main() -> int:
         "## Summary", "",
         f"- Sites with documents and **no adjudicated capacity**: "
         f"{len(no_cap)}",
-        f"  - fully read (the only cohort that can support the claim): "
+        f"  - prose read in full (the only cohort that can support the "
+        f"claim; dcp.site_cohorts.read_in_full_silent, rule "
+        f"{site_cohorts.by_key('read_in_full_silent').rule_version}): "
         f"{len(fully)}",
-        f"  - partly read (floors, not findings): {len(partly)}",
-        f"  - entirely unread: {len(unread)}",
+        f"  - prose read in full but holding capacity-unit findings not "
+        f"yet adjudicated (excluded until they are): {len(waiting)}",
+        f"  - prose partly read (floors, not findings): {len(partly)}",
+        f"  - prose entirely unread: {len(unread)}",
         "",
         f"**Of the fully read: {n_claim} sites genuinely state no "
         f"capacity figure** — {len(clean)} with zero power-unit text "
@@ -272,7 +304,8 @@ def main() -> int:
     print(f"fully-read no-capacity sites: {len(fully)} | clean: {len(clean)} "
           f"| benign-only: {len(benign_only)} | flagged: {len(flagged_sites)} "
           f"| unsweepable: {len(unsweepable)}")
-    print(f"partly read: {len(partly)} | unread: {len(unread)}")
+    print(f"awaiting adjudication: {len(waiting)} | partly read: "
+          f"{len(partly)} | unread: {len(unread)}")
     if provisional:
         print(f"PROVISIONAL — {pending:,} candidate figures await "
               f"adjudication; do not quote this run.")
