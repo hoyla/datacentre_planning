@@ -301,7 +301,11 @@ def main() -> int:
         if b is None or a is None:
             rep.lines.append(f"{kind[1:]}: not on both sides, skipped")
             continue
-        before, after = shaper(b), shaper(a)
+        try:
+            before, after = shaper(b), shaper(a)
+        except Exception as e:  # noqa: BLE001 — any unreadable artefact is a report line, not a crash
+            rep.lines.append(f"{kind[1:]}: could not read ({str(e).splitlines()[0][:120]}); skipped")
+            continue
         comparer(rep, before, after)
         compared += 1
         if kind == ".html":

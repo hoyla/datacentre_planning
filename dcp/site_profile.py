@@ -922,6 +922,20 @@ _AUTHORITY_PHONE_RE = re.compile(r"\s*\(Phone:[^)]*\)\s*$", re.I)
 # the tail.
 BARBOUR_ROLE_SLOTS = range(1, 40)
 
+# Barbour writes a project's principal parties into three FIXED slots —
+# `CyName_Client`, `CyName_Architect`, `CyName_Contractor` — and every
+# further party into numbered slots with a `Role_n` beside the name. The
+# first version of this function read only the numbered slots, and so
+# read the client on 16 of 253 projects: the sixteen that happen to
+# carry a *second* client there. The other 232 clients — Ark Data
+# Centres on Watford Bypass, Avalon DC Limited on Saunderton — were
+# never seen, and the site row said "not established" for a site whose
+# client Barbour states. Measured 2026-08-23: 248 projects name a client
+# in the fixed slot; none of the sixteen numbered clients repeats it.
+BARBOUR_FIXED_SLOTS = (("Client", "CyName_Client"),
+                       ("Architect", "CyName_Architect"),
+                       ("Contractor", "CyName_Contractor"))
+
 
 def barbour_parties(raw_metadata: dict, ref: str = "") -> list[tuple[str, str, str]]:
     """(project ref, role, organisation) from one Barbour record.
@@ -929,13 +943,28 @@ def barbour_parties(raw_metadata: dict, ref: str = "") -> list[tuple[str, str, s
     Names only. The same blocks carry a named individual, their job
     title and their direct line for each party; those stay in
     raw_metadata, where they are already, and never reach an export.
+
+    Fixed slots first, then the numbered ones, so the principal client
+    leads the list where order matters; a name that appears in both is
+    reported once.
     """
+    meta = raw_metadata or {}
     out: list[tuple[str, str, str]] = []
+    seen: set[tuple[str, str]] = set()
+
+    def add(role, name):
+        role, name = str(role).strip(), str(name).strip()
+        if role and name and (role, name) not in seen:
+            seen.add((role, name))
+            out.append((ref, role, name))
+
+    for role, field_name in BARBOUR_FIXED_SLOTS:
+        if meta.get(field_name):
+            add(role, meta[field_name])
     for n in BARBOUR_ROLE_SLOTS:
-        role = (raw_metadata or {}).get(f"Role_{n}")
-        name = (raw_metadata or {}).get(f"CyName_{n}")
+        role, name = meta.get(f"Role_{n}"), meta.get(f"CyName_{n}")
         if role and name:
-            out.append((ref, str(role).strip(), str(name).strip()))
+            add(role, name)
     return out
 
 

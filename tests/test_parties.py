@@ -144,6 +144,27 @@ def test_a_role_without_a_company_is_not_a_party():
         {"Role_4": "Client", "Fname_4": "A"}, "x") == []
 
 
+def test_the_principal_client_lives_in_a_fixed_slot():
+    """Barbour's record for Saunderton, as it stands: the client is in
+    `CyName_Client`, no numbered slot says Client, and the first version
+    of this function returned nothing for it."""
+    meta = {"CyName_Client": "Avalon DC Limited", "CyAddr1_Client": "1 Somewhere",
+            "CyEmail_Client": "x@example.com",
+            "Role_4": "Planner", "CyName_4": "Turley",
+            "Role_5": "Civil engineer", "CyName_5": "WSP"}
+    out = site_profile.barbour_parties(meta, "10234430")
+    assert out[0] == ("10234430", "Client", "Avalon DC Limited")
+    assert ("10234430", "Planner", "Turley") in out
+    assert not any("example.com" in x or "Somewhere" in x for t in out for x in t)
+
+
+def test_a_client_in_both_slots_is_one_party():
+    meta = {"CyName_Client": "Interxion", "Role_4": "Client", "CyName_4": "Interxion",
+            "Role_5": "Client", "CyName_5": "Goldacre Ventures"}
+    out = site_profile.barbour_parties(meta, "11891737")
+    assert [n for _, r, n in out if r == "Client"] == ["Interxion", "Goldacre Ventures"]
+
+
 # ---------------------------------------------------------------------------
 # The authority, and absence
 # ---------------------------------------------------------------------------

@@ -236,11 +236,12 @@ def test_an_organisation_chip_filters_and_is_a_link(page):
     assert page.evaluate("() => decodeURIComponent(location.hash)") == "#who:" + key
     assert chip.get_attribute("aria-pressed") == "true"
 
-    # Every row left is that organisation's.
+    # Every row left is that organisation's — alone, or as one of the
+    # operators an estate record holds.
     assert page.evaluate(
         "k => [...document.querySelectorAll('#tbl-sites tr.site')]"
         "  .filter(r => r.style.display !== 'none')"
-        "  .every(r => r.dataset.who === k)", key)
+        "  .every(r => r.dataset.who.split('|').includes(k))", key)
 
     # Clicking it again is the way back, and so is Any.
     chip.click()
