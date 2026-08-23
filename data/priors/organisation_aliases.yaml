@@ -1,0 +1,136 @@
+# Organisation identity, by evidence. Read by dcp/organisations.py.
+#
+# What this file is for: saying that a name the documents or Barbour use
+# belongs to a group — "Ark Estates 5 Ltd" is Ark Data Centres; "VDC
+# LHR11 Limited" is a Vantage vehicle — so the workbook and the reader can
+# show the group *beside* the raw name. The raw name is never rewritten.
+#
+# What it is not for: anything dcp/entities.canonical_key already merges
+# (legal suffixes, centre/center, "and"/"&", spacing), or per-site
+# representation — "Colliers International acted for Amazon at Linmere
+# Island" is a Barbour client/end-user record for that project and is read
+# from Barbour directly, not asserted here as identity.
+#
+# Schema
+#   groups:
+#     - group: <display label>
+#       note: <optional>
+#       members:
+#         - name: <exactly as a source writes it>
+#           relation: same_organisation | subsidiary_of | trading_name_of | spv_of
+#           status: proposed | confirmed
+#           evidence:            # at least one; each needs a ref or a quote
+#             - source: barbour | companies_house | document | operator_website | register | reporter
+#               ref: <Barbour project ref, company number, document id, URL>
+#               quote: <verbatim, where the source is a document>
+#               note: <optional>
+#               date: <YYYY-MM-DD>
+#               site_key: <optional, when the evidence is about one site>
+#
+# Rules the loader enforces: every member has evidence; a canonical name
+# sits in one group only; relation and status are from the closed sets
+# above. Builds use CONFIRMED members only. Anyone — a session, a batch,
+# a research note — may add a proposed member; confirming one is a
+# person's decision at the release checkpoint (READER_REDESIGN_PLAN §10).
+#
+# Seeded 2026-08-23 from Barbour ABI role blocks, all proposed. The
+# Barbour evidence shows a client and an end user on one project; whether
+# the client is the end user's vehicle, rather than a developer acting
+# for it, is the judgement a confirmation makes.
+
+groups:
+  - group: Vantage Data Centers
+    note: Vantage's UK sites are developed through numbered SPVs (VDC LHR…).
+    members:
+      - name: Vantage Data Centres Limited
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12536509"
+            note: Named as end user on North Acton Road (LHR21); the centres/centers spelling is merged by canonical_key.
+            date: 2026-08-23
+      - name: VDC LHR11 Limited
+        relation: spv_of
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12536509"
+            note: Client of record on North Acton Road (LHR21) with Vantage Data Centres Limited as end user; "VDC" and the LHR numbering are Vantage's.
+            date: 2026-08-23
+
+  - group: Amazon
+    note: Amazon Web Services / Amazon Data Services; several legal entities.
+    members:
+      - name: Amazon UK Services Limited
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12549436"
+            note: Client on Amazon Data Centre Didcot.
+            date: 2026-08-23
+      - name: Amazon Data Services Ireland Ltd
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12818648"
+            note: End user on Linmere Island, Houghton Regis (client of record Colliers International — representation, not identity).
+            date: 2026-08-23
+      - name: Amazon UK (Head Office)
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12549436"
+            note: End user on Amazon Data Centre Didcot (client of record Willow Developments Llc).
+            date: 2026-08-23
+
+  - group: Microsoft
+    members:
+      - name: Microsoft MSFT MCIO Limited
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "client role block"
+            note: Barbour client on two projects; MCIO is Microsoft's cloud infrastructure arm. A Companies House check would confirm.
+            date: 2026-08-23
+      - name: Microsoft UK Limited
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "client role block"
+            date: 2026-08-23
+
+  - group: Colt
+    members:
+      - name: COLT Technology Services
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "client role block"
+            note: Client on three Barbour projects.
+            date: 2026-08-23
+      - name: Colt Data Centre Services
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "client role block"
+            note: Client on four Barbour projects; also the operator name in data/external_sources/operator-claims.yaml.
+            date: 2026-08-23
+
+  - group: Corscale Data Centers
+    members:
+      - name: UK Court Lane DC Limited
+        relation: spv_of
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12684006"
+            note: Client of record on Court Lane 140 MW with Corscale Data Centers as end user; whether the client is Corscale's vehicle or a developer acting for it is the judgement to confirm.
+            date: 2026-08-23
