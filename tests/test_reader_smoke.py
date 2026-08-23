@@ -326,6 +326,33 @@ def test_the_two_chip_groups_compose_and_both_sit_in_the_url(page):
 
 
 @pytest.mark.integration
+def test_a_machine_reading_is_collapsed_labelled_and_quoted(page):
+    """READER_REDESIGN_PLAN §7e. Where a reading exists it renders
+    closed, says what it is before what it says, and every quote names
+    where it is from. Skips when no site carries one yet."""
+    n = page.locator("details.reading").count()
+    if n == 0:
+        pytest.skip("no machine reading in this build")
+    key = page.evaluate(
+        "() => document.querySelector('details.reading').closest('tr.detail')"
+        "  .previousElementSibling.dataset.key")
+    page.evaluate(f"() => {{ location.hash = '#site-{key}'; }}")
+    page.wait_for_function(
+        "() => document.querySelector('#view-site').classList.contains('on')")
+    d = page.locator("#sitehost details.reading").first
+    assert d.count() == 1
+    assert not d.evaluate("el => el.open"), "a reading must render collapsed"
+    label = d.locator("summary").inner_text()
+    assert "machine" in label.lower() and "Not a finding" in label
+    d.locator("summary").click()
+    assert d.evaluate("el => el.open")
+    assert d.locator(".rbody p").count() >= 1
+    # Every quote names its source, and cited documents link out.
+    assert d.locator("ul.rq li .q").count() == d.locator("ul.rq li").count()
+    page.click("#view-site .sitenav a")
+
+
+@pytest.mark.integration
 def test_see_all_on_map_describes_the_same_set(page):
     page.click("#tab-sites")
     page.fill("#q", "")

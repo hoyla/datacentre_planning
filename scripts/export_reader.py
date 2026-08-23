@@ -294,6 +294,26 @@ button.chip.on{background:var(--fg);border-color:var(--fg);color:var(--bg);
   font-weight:600}
 button.chip .n{color:var(--mut);font-size:11px;margin-left:3px}
 button.chip:disabled{opacity:.5;cursor:not-allowed;border-style:dashed}
+/* The machine reading: a collapsed box, one neutral rule, no colour —
+   colour on this page means verification state and this is not one.
+   The summary carries the whole label so that what it is is read
+   before what it says. */
+details.reading{border:1px solid var(--line);border-radius:3px;padding:10px 13px;
+  margin:14px 0 4px}
+details.reading summary{cursor:pointer;list-style:none}
+details.reading summary::-webkit-details-marker{display:none}
+details.reading summary h4{display:inline;margin:0 8px 0 0;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+details.reading summary h4:before{content:"▸  ";font-size:10px}
+details[open].reading summary h4:before{content:"▾  "}
+details.reading summary .help{display:inline}
+.rbody{margin-top:10px;max-width:880px}
+.rbody h5{margin:12px 0 4px;font-size:12px;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--mut)}
+.rbody p{margin:0 0 4px;font-size:13.5px;line-height:1.5}
+ul.rq{margin:0 0 10px;padding-left:18px;font-size:12px;color:var(--mut)}
+ul.rq li{margin-bottom:2px}
+.box.reading.withheld{margin:14px 0 4px;border-radius:3px}
 /* The site page. Full width like the table it came from, since the
    panel's four-column grid was laid out for that width. */
 .sitepage{padding:14px 22px 30px}
@@ -1394,6 +1414,7 @@ def main() -> int:
     from dcp import consumption_context as cc
     from dcp import entities
     from dcp import external_aggregates as extagg
+    from dcp import machine_reading as mreading
     from dcp import operator_disclosure as odis
     from dcp import organisations
     from dcp import site_cohorts
@@ -1562,6 +1583,13 @@ def main() -> int:
         # this one list, so a count on a card is the number of rows the
         # chip leaves.
         cohorts = site_cohorts.compute_all(conn)
+        # The machine readings (§7b–e): the latest per site that passed
+        # the gate, and the reason for any site whose latest was refused.
+        # Rendered collapsed on the site page, labelled as what they are;
+        # never exported.
+        readings = mreading.load_latest(conn)
+        readings_withheld = mreading.load_withheld(conn)
+        cited_docs = mreading.cited_documents(conn, readings)
         # `held`/`read` are every document; `prose_*` are the ones the
         # deep-read is for. The caveats run off prose, the counts shown
         # to a reporter run off both, and they are different numbers on
@@ -1657,6 +1685,65 @@ def main() -> int:
     # DESNZ consumption context, loaded once so every panel compares
     # against the same national change; coverage counted and printed so
     # unmapped sites are a number, never a silent gap.
+    # A machine's reading of a site's documents, rendered collapsed and
+    # labelled as what it is. Only where a reading exists and passed the
+    # gate; a withheld reading is a one-line reason and nothing else,
+    # since the refusal is itself a fact about the site's documents.
+    # The label states; it does not instruct.
+    n_readings_rendered = n_readings_withheld = 0
+
+    def _cite(q):
+        """Where a quote is from: the document, linked to the register's
+        copy, with its page; or the application whose adjudicated figure
+        it is."""
+        doc_id = q.get("document_id")
+        if doc_id:
+            d = cited_docs.get(int(doc_id))
+            page = f', p.{q["page"]}' if q.get("page") else ""
+            if d and d["url"]:
+                return (f'<a href="{esc(d["url"])}" target="_blank" rel="noopener">'
+                        f'{esc(d["title"])}</a>{page} · {esc(d["application_ref"])}')
+            if d:
+                return f'{esc(d["title"])}{page} · {esc(d["application_ref"])}'
+            return f'document {doc_id}{page}'
+        return f'application {esc(q.get("application_ref") or "")}, adjudicated figure'
+
+    def reading_panel(key):
+        nonlocal n_readings_rendered, n_readings_withheld
+        r = readings.get(key)
+        if not r:
+            why = readings_withheld.get(key)
+            if why:
+                n_readings_withheld += 1
+                return (f'<div class="box reading withheld"><h4>A machine\u2019s reading of '
+                        f'this site\u2019s documents</h4><p class="help">Withheld: '
+                        f'{esc(why)}. A reading is shown only where every figure in it '
+                        f'carries a quote that verified against the documents.</p></div>')
+            return ""
+        n_readings_rendered += 1
+        sections = (r["reading"] or {}).get("sections") or {}
+        body = []
+        for sec, title in mreading.SECTION_TITLES.items():
+            paras = sections.get(sec) or []
+            if not paras:
+                continue
+            body.append(f"<h5>{esc(title)}</h5>")
+            for para in paras:
+                quotes = "".join(
+                    f'<li>\u201c{esc(" ".join((q.get("quote") or "").split()))}\u201d '
+                    f'<span class="q">{_cite(q)}</span></li>'
+                    for q in (para.get("quotes") or []))
+                body.append(f'<p>{esc(para.get("text", ""))}</p>'
+                            + (f'<ul class="rq">{quotes}</ul>' if quotes else ""))
+        when = r["inserted_at"].strftime("%-d %B %Y") if r.get("inserted_at") else ""
+        return (f'<details class="box reading"><summary><h4>A machine\u2019s reading of '
+                f'this site\u2019s documents</h4><span class="help">Generated by '
+                f'{esc(r["model"])} on {esc(when)} from {r["documents_read"]} documents '
+                f'({r["pages_read"]} pages); prompt {esc(r["prompt_version"])}. '
+                f'Not a finding. Every figure in it carries a verbatim quote that was '
+                f'verified against the documents before it was stored.</span></summary>'
+                f'<div class="rbody">{"".join(body)}</div></details>')
+
     # The who's-behind-it cell, and the key it filters on.
     #
     # What the badge shows is the most-stated thing known about the site,
@@ -2036,6 +2123,7 @@ def main() -> int:
                           'different buildings rather than contradicting each other.</dd>')
 
         who = who_cell(prof)
+        reading_html = reading_panel(key)
         hay = " ".join(str(x or "").lower() for x in
                        (name, key, addr, ", ".join(councils or []), full_desc,
                         prof.get("operator_group"), prof.get("end_user"),
@@ -2181,6 +2269,7 @@ def main() -> int:
   {ctx_html}
  </div>
 
+ {reading_html}
  <h4 class="sub-head">What the documents say</h4>
  {findings_html}
  {f'''<details class="apps-d"><summary>Show the {len(apps)} planning application{'' if len(apps)==1 else 's'} for this site</summary>{apps_html}</details>''' if apps else apps_html}
@@ -3490,6 +3579,9 @@ def main() -> int:
     # site rows — retired, or filtered upstream — and its claim would
     # otherwise vanish without a trace.
     _claims_live = sum(len(v) for v in claims_by_site.values())
+    print(f"  Machine readings: {n_readings_rendered} rendered, "
+          f"{n_readings_withheld} withheld with a reason, "
+          f"{n_sites - n_readings_rendered - n_readings_withheld} sites with none")
     print(f"  Capacity claims: {n_claims_total} claims held, {_claims_live} "
           f"matched to sites, rendered on {claims_sites_rendered} site "
           f"panels ({claims_rows_rendered} claim rows)")
