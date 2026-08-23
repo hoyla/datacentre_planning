@@ -61,7 +61,16 @@ PROMPT_VERSION = "reading-1.2"
 # quote (recording the correction), and forbids advice by its phrases
 # rather than by the word "should". Every word and figure in a quote
 # must still match, in order.
-GATE_VERSION = "gate-1.1"
+#
+# gate-1.2 (2026-08-23): whitespace inside the page text is not evidence
+# either. Two of the twenty-site sample's five refusals were extraction
+# artefacts — "the general buildi ng services" on Ocean Estates' page,
+# a doubled space on Rover Way's — against quotes that read the page
+# correctly. HISTORY already records the rule ("a literal space never
+# matches PDF text"); the gate now applies it: after the punctuation
+# pass, the fragments and the page are compared with all whitespace
+# removed, every word and figure still required in order.
+GATE_VERSION = "gate-1.2"
 
 # The text budget per site, in characters. ~120k tokens: enough for a
 # planning statement, an energy statement, an officer report and the
@@ -570,7 +579,11 @@ def quote_in_text(quote: str, text: str) -> bool:
     if _VF._all_fragments_in_order(page, frags):
         return True
     strip = lambda t: " ".join(_PUNCT_RE.sub(" ", t).split())   # noqa: E731
-    return _VF._all_fragments_in_order(strip(page), [strip(f) for f in frags])
+    if _VF._all_fragments_in_order(strip(page), [strip(f) for f in frags]):
+        return True
+    # The page's own spaces are not evidence: "buildi ng" is "building".
+    squash = lambda t: strip(t).replace(" ", "")   # noqa: E731
+    return _VF._all_fragments_in_order(squash(page), [squash(f) for f in frags])
 
 
 # A number with a unit, as the rules define it. Thousands separators and
