@@ -88,22 +88,42 @@ FINDINGS_SQL = """
               SELECT DISTINCT ON (finding_id) finding_id, verdict
               FROM power_adjudication
               ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC,
-                       id DESC)
-            SELECT site_key, signal_type, value_text, value_number, value_unit,
-                   verdict FROM (
+                       id DESC),
+            ranked AS (
+              -- Within each family, the figures the adjudication attributed
+              -- to this site come first; then the fullest text; then id.
               SELECT s.site_key, f.signal_type, f.value_text, f.value_number,
-                     f.value_unit, adj.verdict,
-                     row_number() OVER (PARTITION BY s.site_key
-                       ORDER BY (f.signal_family IN ('power_demand','power_generation',
-                                 'power_grid','cooling','water','eia_process')) DESC,
+                     f.value_unit, adj.verdict, f.signal_family, f.id,
+                     row_number() OVER (PARTITION BY s.site_key, f.signal_family
+                       ORDER BY coalesce(adj.verdict = 'site_capacity', false) DESC,
                                 length(coalesce(f.value_text,'')) DESC,
-                                f.id) AS rn
+                                f.id) AS rf
               FROM findings f
               JOIN site_members m ON m.application_id=f.application_id AND m.retired_at IS NULL
               JOIN sites s ON s.id=m.site_id
               LEFT JOIN adj ON adj.finding_id = f.id
               WHERE s.retired_at IS NULL AND f.value_text IS NOT NULL
-                AND f.signal_family <> 'unclassified') t
+                AND f.signal_family <> 'unclassified')
+            SELECT site_key, signal_type, value_text, value_number, value_unit,
+                   verdict FROM (
+              -- Round-robin across families: the first of every family
+              -- before the second of any. Each round leads with figures
+              -- adjudicated as this site's, then the power families, then
+              -- cooling, water and EIA, then the rest. Ranking by text
+              -- length alone put a landscape paragraph labelled it_load at
+              -- the top of a site's evidence, four times over.
+              SELECT f.site_key, f.signal_type, f.value_text, f.value_number,
+                     f.value_unit, f.verdict,
+                     row_number() OVER (PARTITION BY f.site_key
+                       ORDER BY f.rf,
+                                coalesce(f.verdict = 'site_capacity', false) DESC,
+                                CASE f.signal_family
+                                  WHEN 'power_demand' THEN 1 WHEN 'power_generation' THEN 2
+                                  WHEN 'power_grid' THEN 3 WHEN 'cooling' THEN 4
+                                  WHEN 'water' THEN 5 WHEN 'eia_process' THEN 6
+                                  ELSE 7 END,
+                                f.signal_family, f.id) AS rn
+              FROM ranked f) t
             WHERE rn <= %s
             ORDER BY site_key, rn"""
 
@@ -1859,7 +1879,9 @@ def main() -> int:
     <dt>IT load</dt><dd>{_q(it, 'it_load')}</dd>
     <dt>Total site</dt><dd>{_q(tot, 'total_site')}</dd>
     <dt>Grid connection</dt><dd>{_q(grid, 'grid_connection')}</dd>
-    <dt>On-site generation</dt><dd>{_q(gen, 'onsite_generation')}</dd>
+    <dt>On-site generation</dt><dd>{_q(gen, 'onsite_generation')}{
+      f' <span class="help">{esc(prof.get("gen_figure_note"))}</span>'
+      if gen and prof.get("gen_figure_note") else ''}</dd>
     {mixed_note}
     <dt>Excluded figures</dt><dd>{nexc or 0}
      <span class="help">market context, not this site</span></dd>
@@ -2606,10 +2628,16 @@ def main() -> int:
  not errors — they have been checked by hand — and they raise a question the planning file
  cannot answer: where does the rest come from, and when. Two such sites are flagged in this
  release.</p>
- <p class="m"><b>Sites that are grid-dependent by design.</b> Where standby generation is a
- small fraction of stated load, the plant is life-safety only and the site relies wholly on
- the grid. That is an operational fact with public-interest consequences, and it can be read
- straight off the capacity components in the site panel.</p>
+ <p class="m"><b>Generation far below stated load — read the passage before reading the
+ ratio.</b> Where the on-site generation figure is a small fraction of the stated load, the
+ obvious reading is life-safety standby on a grid-dependent site. On this corpus that
+ reading is usually wrong: the generation figure is often one machine's rating standing in
+ for a fleet (Watford Bypass: 3.2 MW beside "112 No. standby generators"; Amazon Didcot once
+ recorded 2.9 MW from one unit's specification where the same documents describe about
+ 100 MW), or rooftop solar counted as generation. The site panel now says which it is,
+ and names any fleet the documents disclose by count and rating — without multiplying.
+ Across the 47 sites stating both figures the ratio's median is 0.75 and the modal case is
+ below half, so no band of it diagnoses the engineering; it says where to look.</p>
  <p class="m"><b>Energy parks with a data centre attached.</b> Several records pair a data
  centre with generation or storage far larger than the computing load — the scheme's centre
  of gravity is arguably the power project, not the building. Worth deciding, per site, which

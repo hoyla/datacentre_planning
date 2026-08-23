@@ -189,6 +189,30 @@ Worth raising with the three councils as well: a listed document that
 downloads as nothing is a public-access failure independent of this
 investigation.
 
+## From the reader redesign — for the adjudication corrections
+
+Found 2026-08-23 while reviewing the reader redesign
+(docs/READER_REDESIGN_PLAN.md §4.1d); the correction belongs in
+`scripts/correct_adjudications.py` as a named rule, so it is recorded
+here rather than applied from the build lane.
+
+- **Export limits stored as grid connections.** Of 810 `grid_connection`
+  rows adjudicated `site_capacity`, 16 across 4 sites quote an *export*
+  figure. Kingsnorth (`SITE-Medway/MC/21/0979`) is the one that reached a
+  headline: "Maximum MW export = 49.9 MW (at unity power factor)" is the
+  49.9 MW energy-from-waste hub's export, and the same offer letter gives
+  the site "an import capacity of 5,000 kVA". So the 2.2 like-for-like
+  "340 MW to the grid operator, 49.9 MW to the planning authority, 6.81×"
+  compares export with import, and the planning-side figure to put
+  beside the register row is 5 MVA, not 49.9 MW. Also export: Yorkshire
+  Energy Park's "permission … to export 21MWe" (`PTNO-12628941`, 21 and
+  9 MW rows) and `PTNO-12669230`'s "18 MW of import capacity 10.5MW of
+  export capacity" (the 18 is right, the 10.5 is not). Measure before
+  adopting, as ever: `evidence_text ~* '\m(export|exporting|exported)\M'`
+  on `grid_connection` rows is the candidate predicate, and at 16 rows a
+  hand pass over the list is cheaper than a clever one. Re-check the
+  Operators tab's like-for-like after.
+
 ## Smaller things
 
 - **Re-measure the 1.71 kW/m² floor-area factor.** It drives the

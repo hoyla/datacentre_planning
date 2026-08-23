@@ -256,6 +256,196 @@ def generator_profile(counts, fuel_texts) -> GeneratorProfile:
 
 
 # ---------------------------------------------------------------------------
+# The generation figure: one machine, or the fleet?
+# ---------------------------------------------------------------------------
+#
+# The on-site generation column takes the largest adjudicated
+# `onsite_generation` figure on the site. Adjudication answers *whose*
+# figure it is and, since 2026-08-10, what *kind* of quantity — but not
+# whether the number describes one engine or all of them, and the
+# documents state both. Amazon Didcot recorded 2.9 MW from "Mechanical
+# Generator - 2,873 kW", one unit's specification, while the same
+# documents say "38 no. 2,640kW generator units per building"; the
+# dataset then described the site as having life-safety backup only,
+# close to the opposite of what the application says. Watford Bypass
+# today shows 3.2 MW above "112 units".
+#
+# Nothing here multiplies. A count and a rating from the documents are
+# reported beside each other, and the figure is labelled for what the
+# passage that states it says it is: a per-unit rating, or the figure as
+# stated. A proper answer — per unit, fleet total or site total, for
+# every generation row — is a batch adjudication question and is planned
+# as one (docs/READER_REDESIGN_PLAN.md §4.1e); this is the deterministic
+# label that stops the number being read as the site's generation until
+# then. It only fires when a passage states a count or "each" *and* the
+# rating it gives matches the stored figure, so it cannot promote a total
+# to a unit rating: "1.5–3 MW per unit (7.5–15 MW total)" stored as 15
+# stays "as stated".
+
+GENERATION_FIGURE_SQL = """
+WITH adj AS (
+  SELECT DISTINCT ON (finding_id) finding_id, verdict, quantity_type, value_mw,
+         application_id
+  FROM power_adjudication
+  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC)
+SELECT s.site_key, adj.value_mw, f.evidence_text
+FROM adj
+JOIN findings f ON f.id = adj.finding_id
+JOIN site_members sm ON sm.application_id = adj.application_id
+     AND sm.retired_at IS NULL
+JOIN sites s ON s.id = sm.site_id
+WHERE s.retired_at IS NULL
+  AND adj.verdict = 'site_capacity'
+  AND adj.quantity_type = 'onsite_generation'
+  AND adj.value_mw IS NOT NULL AND adj.value_mw > 0
+"""
+
+# "26 no. 28000kW", "11no 3072 kW", "171 no. 2,000 kWe", "32 x 2.5MW",
+# "650 no. 2,480 kW back-up diesel generators", and — with words between
+# the count and the rating — "112 No. standby generators (likely to be
+# 3.2MWe". The words are bounded so a count in one clause cannot reach a
+# rating in the next.
+_COUNT_RATING_RE = re.compile(
+    r"(?<![\d.,])(\d{1,4})\s*(?:no\.?|nr\.?|x|×)\s*[,\s]*"
+    r"(?:[A-Za-z()\-/,' ]{0,60}?)"
+    r"([\d,]+(?:\.\d+)?)\s*(MWe?|kWe?)\b", re.I)
+# "26 4 MW generators", "38 2,640kW generator units": a count, a rating and
+# a plant noun, with no "no." between. The noun is required so a page
+# number followed by a figure cannot qualify.
+_COUNT_RATING_NOUN_RE = re.compile(
+    r"(?<![\d.,])(\d{1,4})\s+([\d,]+(?:\.\d+)?)\s*(MWe?|kWe?)\s*"
+    r"(?:\([^)]*\)\s*)?(?:standby |back-?up |diesel |gas |emergency )*"
+    r"(?:generators?|gensets?|engines?|units?|sets?)\b", re.I)
+# "2.4 MW each", "3.2MWe per unit", "2.5 MW (prime) per generator".
+_FIGURE_THEN_EACH_RE = re.compile(
+    r"([\d,]+(?:\.\d+)?)\s*(MWe?|kWe?|megawatts?|kilowatts?)\s*(?:\([^)]*\)\s*)?"
+    r"(?:each|apiece|per (?:unit|generator|engine|set|genset|machine))\b", re.I)
+# "each system providing 104 megawatts", "each generator rated at 2.5 MW".
+# At most four words between, so "each roof would allow for a large
+# array that could yield up to 1.5 MW" does not qualify.
+_EACH_THEN_FIGURE_RE = re.compile(
+    r"\b(?:each|every)\s+(?:[A-Za-z-]+\s+){0,4}?([\d,]+(?:\.\d+)?)\s*"
+    r"(MWe?|kWe?|megawatts?|kilowatts?)\b", re.I)
+
+# How close a stated rating must be to the stored figure to be the same
+# number written twice. Unit conversion and rounding account for the rest.
+_RATING_TOLERANCE = 0.02
+
+
+def _to_mw(number: str, unit: str) -> float:
+    value = float(number.replace(",", ""))
+    return value / 1000 if unit.lower().startswith("k") else value
+
+
+def _same(a: float, b: float) -> bool:
+    return abs(a - b) <= _RATING_TOLERANCE * max(a, b)
+
+
+def _per_unit_evidence(quote: str, value_mw: float) -> tuple[bool, int | None]:
+    """Does this passage present `value_mw` as one unit's rating?
+
+    Returns (per_unit, count). The count is None when the passage says
+    "each" without saying how many.
+    """
+    per_unit, count = False, None
+    for n, rating in _fleets_disclosed(quote):
+        if _same(rating, value_mw):
+            per_unit = True
+            count = max(count or 0, n)
+    if not per_unit:
+        for rx in (_FIGURE_THEN_EACH_RE, _EACH_THEN_FIGURE_RE):
+            for m in rx.finditer(quote):
+                if _same(_to_mw(m.group(1), m.group(2)), value_mw):
+                    per_unit = True
+    return per_unit, count
+
+
+def _fleets_disclosed(quote: str) -> list[tuple[int, float]]:
+    """Every (count, unit MW) pair a passage states, multiplied by nobody."""
+    out = []
+    for rx in (_COUNT_RATING_RE, _COUNT_RATING_NOUN_RE):
+        for m in rx.finditer(quote):
+            n, rating = int(m.group(1)), _to_mw(m.group(2), m.group(3))
+            if n >= 2 and rating > 0:
+                out.append((n, rating))
+    return out
+
+
+@dataclass(frozen=True)
+class GenerationFigure:
+    value_mw: float | None      # the headline figure: the largest adjudicated
+    basis: str                  # "per unit", "as stated", or "" with no figure
+    unit_mw: float | None       # a per-unit rating the documents state
+    unit_count: int | None      # units disclosed at that rating, if stated
+    note: str                   # reader-facing qualification, or ""
+
+
+def generation_figure(rows) -> GenerationFigure:
+    """Label the site's generation figure by what its own passages say.
+
+    `rows` are (value_mw, evidence_text) pairs for every adjudicated
+    on-site generation figure on the site, in any order; the result does
+    not depend on the order (see test_reproducible_ordering for why that
+    matters here).
+    """
+    rows = sorted(((float(v), q or "") for v, q in rows if v),
+                  key=lambda r: (-r[0], r[1]))
+    if not rows:
+        return GenerationFigure(None, "", None, None, "")
+    headline = rows[0][0]
+    fleets = sorted({f for _, q in rows for f in _fleets_disclosed(q)},
+                    key=lambda f: (-(f[0] * f[1]), -f[0], -f[1]))
+    # Arithmetic outranks vocabulary. If some passage gives a count and a
+    # rating whose product is the headline, the headline is that total
+    # however another sentence phrases it — "26 generator systems each
+    # system providing 104 megawatts" sits beside "26 4 MW generators",
+    # and 104 is the fleet, not the engine.
+    for n, rating in fleets:
+        if _same(n * rating, headline):
+            note = (f"As stated: the total of {n:,} units of {rating:g} MW, which "
+                    "the documents give both ways.")
+            # The columns carry the largest fleet disclosed, which may be
+            # a different one: Elsham's 50 MW is twenty gas engines, and
+            # the same passage goes on to "up to 650 no. 2,480 kW back-up
+            # diesel generators".
+            largest = fleets[0]
+            if largest != (n, rating) and largest[0] * largest[1] > headline:
+                note += (f" They also disclose {largest[0]:,} units of "
+                         f"{largest[1]:g} MW, not multiplied.")
+            return GenerationFigure(headline, "as stated", largest[1], largest[0], note)
+    # Several passages can state the headline figure; any one of them
+    # saying "N no." or "each" settles what it is.
+    per_unit, count = False, None
+    for value, quote in rows:
+        if not _same(value, headline):
+            continue
+        pu, n = _per_unit_evidence(quote, value)
+        per_unit = per_unit or pu
+        if n:
+            count = max(count or 0, n)
+    if per_unit:
+        how_many = (f"the documents disclose {count:,} units of {headline:g} MW"
+                    if count else
+                    f"the documents describe units of {headline:g} MW each and do not "
+                    "say how many in the same passage")
+        return GenerationFigure(
+            headline, "per unit", headline, count,
+            f"A per-unit rating, not the site's generation: {how_many}. Not "
+            "multiplied — a count and a rating are reported beside each other, "
+            "never combined into a total.")
+    # The figure stands as stated. If some passage also describes a fleet
+    # by count and rating, say so beside it rather than let the larger
+    # implied number go unmentioned — or be computed silently.
+    if fleets:
+        n, rating = fleets[0]
+        return GenerationFigure(
+            headline, "as stated", rating, n,
+            f"As stated in the documents. They also disclose {n:,} units of "
+            f"{rating:g} MW, not multiplied.")
+    return GenerationFigure(headline, "as stated", None, None, "")
+
+
+# ---------------------------------------------------------------------------
 # Cooling and water
 # ---------------------------------------------------------------------------
 #
@@ -770,6 +960,20 @@ def load_site_profiles(conn) -> dict[str, dict]:
                 ("No water consumption disclosed "
                  f"({n_water} water findings, all drainage or flood related)"
                  if n_water else ""))
+
+    from collections import defaultdict
+    gen_rows: dict[str, list] = defaultdict(list)
+    with conn.cursor() as cur:
+        cur.execute(GENERATION_FIGURE_SQL)
+        for site_key, value_mw, quote in cur.fetchall():
+            gen_rows[site_key].append((value_mw, quote))
+    for site_key, rows in gen_rows.items():
+        g = generation_figure(rows)
+        p = profiles.setdefault(site_key, {})
+        p["gen_figure_basis"] = g.basis
+        p["gen_unit_mw"] = g.unit_mw
+        p["gen_unit_count"] = g.unit_count
+        p["gen_figure_note"] = g.note
 
     for site_key, parties in _parties_for_sites(conn).items():
         profiles.setdefault(site_key, {}).update(parties)

@@ -31,11 +31,15 @@ quote names one, it is recorded; where it does not, the figure carries
 that ambiguity silently.
 
 **generation against load** — generation far below consumption is not an
-error and is usually the interesting fact: a 120 MW hyperscale site with
-2.9 MW of standby plant has life-safety backup only and is wholly
-grid-dependent. Generation far ABOVE consumption is the reverse and
-worth a look: it may be an energy park that happens to host a data
-centre rather than a data centre with generators.
+error, and it is not a diagnosis either. The example this paragraph used
+to give — a 120 MW hyperscale site with 2.9 MW of standby plant, read as
+life-safety backup on a grid-dependent site — was Amazon Didcot, and the
+2.9 MW was one unit's specification where the same documents describe
+"38 no. 2,640kW generator units per building" (HISTORY, 2026-08-10).
+A low ratio says: open the passage and find out whether the figure is
+one machine or the fleet. Generation far ABOVE consumption is worth a
+look for the opposite reason: it may be an energy park that happens to
+host a data centre rather than a data centre with generators.
 
 **plant that is not generation** — batteries, UPS, thermal input and
 storage keep arriving in this column. scripts/correct_adjudications.py
