@@ -213,6 +213,32 @@ here rather than applied from the build lane.
   hand pass over the list is cheaper than a clever one. Re-check the
   Operators tab's like-for-like after.
 
+## From the reader redesign — waiting on a checkpoint
+
+Both are 2.4 work whose next step is a person's, recorded here so the
+build lane does not have to remember them.
+
+- **The generation batch.** `scripts/adjudicate_generation.py` asks
+  every adjudicated on-site generation figure whether it is one machine,
+  a stated fleet or the site, and whether the plant is standby
+  combustion, prime combustion, renewable or storage
+  (READER_REDESIGN_PLAN §4.1e, prompt version `generation-1.2` in the
+  shared prompt file). The forty-row sample is built and the model has
+  answered it; what is outstanding is the hand-check —
+  `data/generation_sample/generation-1.2_sheet.csv`, then `--score`.
+  After that: a migration for the verdicts, the batch over 1,667 figures
+  across 145 applications, and the rollup, workbook columns and cohorts
+  that consume them. Until then nothing is stored and
+  `dcp.site_profile.generation_figure` remains the only labelling, which
+  it does from the passages alone.
+- **Confirming the seed alias groups.** `dcp/organisations.py` builds
+  its index from confirmed members only, and all ten seeded members are
+  proposed, so `operator_group` is empty on all 456 rows and the reader's
+  badge falls back to Barbour's end user or client. Confirming a group
+  is what makes "Ark Estates 5 Ltd" and "Ark Data Centres Ltd" one
+  filter, and what lets a document-named organisation reach the operator
+  field at all.
+
 ## Smaller things
 
 - **Re-measure the 1.71 kW/m² floor-area factor.** It drives the
