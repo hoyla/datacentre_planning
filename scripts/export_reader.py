@@ -1587,8 +1587,7 @@ def main() -> int:
         # the gate, and the reason for any site whose latest was refused.
         # Rendered collapsed on the site page, labelled as what they are;
         # never exported.
-        readings = mreading.load_latest(conn)
-        readings_withheld = mreading.load_withheld(conn)
+        readings, readings_withheld = mreading.load_latest(conn)
         cited_docs = mreading.cited_documents(conn, readings)
         # `held`/`read` are every document; `prose_*` are the ones the
         # deep-read is for. The caveats run off prose, the counts shown
