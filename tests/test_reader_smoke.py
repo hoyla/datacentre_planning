@@ -179,6 +179,64 @@ def test_filters_change_the_count_and_the_count_is_true(page):
 
 
 @pytest.mark.integration
+def test_an_organisation_chip_filters_and_is_a_link(page):
+    """The who's-behind-it chips (READER_REDESIGN_PLAN §5e).
+
+    Three things at once, because they are one behaviour: the chip
+    filters the table, the count it leaves is the number of rows a
+    reader can see, and the URL says which chip is on — a filtered table
+    has to be sendable.
+    """
+    page.click("#tab-sites")
+    page.fill("#q", "")
+    page.select_option("#f", "all")
+    _, total = _count_text(page)
+
+    chip = page.locator("#whochips .chip").nth(1)   # 0 is "Any"
+    key = chip.get_attribute("data-who")
+    assert key, "a chip with no organisation behind it"
+    chip.click()
+    shown, total_now = _count_text(page)
+    assert total_now == total
+    assert 0 < shown < total, "the chip filtered nothing"
+    assert shown == _visible_site_rows(page), "the chip's count lies"
+    assert page.evaluate("() => decodeURIComponent(location.hash)") == "#who:" + key
+    assert chip.get_attribute("aria-pressed") == "true"
+
+    # Every row left is that organisation's.
+    assert page.evaluate(
+        "k => [...document.querySelectorAll('#tbl-sites tr.site')]"
+        "  .filter(r => r.style.display !== 'none')"
+        "  .every(r => r.dataset.who === k)", key)
+
+    # Clicking it again is the way back, and so is Any.
+    chip.click()
+    assert _count_text(page)[0] == total
+    chip.click()
+    page.locator("#whochips .chip").first.click()
+    assert _count_text(page)[0] == total
+
+
+@pytest.mark.integration
+def test_a_badge_in_the_table_filters_to_its_organisation(page):
+    """The badge is the same control as the chip, on the row itself."""
+    page.click("#tab-sites")
+    page.fill("#q", "")
+    page.select_option("#f", "all")
+    _, total = _count_text(page)
+    badge = page.locator("#tbl-sites tr.site button.who").first
+    key = badge.get_attribute("data-who")
+    badge.click()
+    shown, _ = _count_text(page)
+    assert 0 < shown <= total
+    assert shown == _visible_site_rows(page)
+    assert page.evaluate("() => decodeURIComponent(location.hash)") == "#who:" + key
+    # Clicking a badge must not open the row underneath it.
+    assert page.locator("#tbl-sites tr.site.open").count() == 0
+    page.locator("#whochips .chip").first.click()
+
+
+@pytest.mark.integration
 def test_see_all_on_map_describes_the_same_set(page):
     page.click("#tab-sites")
     page.fill("#q", "")

@@ -43,6 +43,8 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 from dcp import adjudication_gate  # noqa: E402
 from dcp import db, signals  # noqa: E402
 from dcp import operator_disclosure  # noqa: E402
+from dcp import organisations  # noqa: E402
+from dcp import site_profile  # noqa: E402
 
 TABLES: dict[str, str] = {
     "sites": """
@@ -323,6 +325,47 @@ def main() -> None:
         con.execute("UPDATE capacity_claims SET operator = ? "
                     "WHERE published_by = ?", [brand, legal])
 
+    # Parties, long format: one row per organisation per role per site,
+    # the same rows the workbook's Parties sheet shows and derived from
+    # the same function, so the two cannot disagree. `organisation` is
+    # the raw name as its source writes it; `group` is the confirmed
+    # alias beside it and is empty until a person has confirmed one.
+    con.execute("""CREATE TABLE parties
+                   (site_key VARCHAR, role VARCHAR, organisation VARCHAR,
+                    "group" VARCHAR, source VARCHAR, source_ref VARCHAR,
+                    barbour_role VARCHAR)""")
+    with db.connect() as pg:
+        profiles = site_profile.load_site_profiles(pg)
+    party_rows = [(key, p.role, p.name, p.group, p.source, p.source_ref,
+                   p.barbour_role)
+                  for key, prof in sorted(profiles.items())
+                  for p in prof.get("parties", ())]
+    if party_rows:
+        con.executemany(
+            "INSERT INTO parties VALUES (?, ?, ?, ?, ?, ?, ?)", party_rows)
+    counts["parties"] = len(party_rows)
+
+    # The alias claims themselves, with their evidence, so a reader can
+    # see why one name was said to be another — proposed members
+    # included, marked as proposed. A group is a claim about corporate
+    # structure; exporting it without what it rests on would make it
+    # look like a fact about the data.
+    con.execute("""CREATE TABLE organisation_aliases
+                   ("group" VARCHAR, organisation VARCHAR, relation VARCHAR,
+                    status VARCHAR, evidence_source VARCHAR,
+                    evidence_ref VARCHAR, evidence_quote VARCHAR,
+                    evidence_note VARCHAR, evidence_date VARCHAR,
+                    evidence_site_key VARCHAR)""")
+    alias_rows = [(g.group, m.name, m.relation, m.status, e.source, e.ref,
+                   e.quote, e.note, e.date, e.site_key)
+                  for g in organisations.load_groups()
+                  for m in g.members for e in m.evidence]
+    if alias_rows:
+        con.executemany(
+            "INSERT INTO organisation_aliases VALUES "
+            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", alias_rows)
+    counts["organisation_aliases"] = len(alias_rows)
+
     # Environmental signals: derived deterministically, same lexicon as the
     # workbook, so the two artefacts agree.
     con.execute("""CREATE TABLE environmental_signals
@@ -348,6 +391,25 @@ def main() -> None:
                          "deliberately not exported."),
         ("documents_note", "bytes_path is relative to the pipeline's data store; "
                            "source_url and obtained record how each file was got."),
+        ("parties_note", "One row per organisation per role per site. The "
+                         "role vocabulary is: end_user and applicant "
+                         "(as Barbour ABI's project record states them), "
+                         "adviser (Barbour's planner, agent, architect or "
+                         "M&E engineer), other (any further Barbour role), "
+                         "operator (a name from the documents that a "
+                         "confirmed alias ties to a group) and "
+                         "named_in_documents (a name the documents use, "
+                         "with the mention count as source_ref, which is "
+                         "all that claim rests on — the firm that wrote "
+                         "the planning statement is named more often than "
+                         "the developer). Organisations named once in a "
+                         "site's documents are not included. `group` is "
+                         "this project's inference and sits beside "
+                         "`organisation`, which is never rewritten; join "
+                         "organisation_aliases for the evidence behind a "
+                         "group, and note that members with status "
+                         "'proposed' are not yet confirmed and are not "
+                         "used to populate `group`."),
         ("verdict_note", "triage_verdicts is append-only and multi-rubric; use the "
                          "latest_verdict view for one row per application per rubric. "
                          "model_input is exactly what the model saw. triage_id is "

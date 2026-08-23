@@ -266,7 +266,11 @@ SELECT p.external_ref, p.title, p.stage_summary, p.dev_type,
        p.authority_name, p.address, p.description,
        p.latitude, p.longitude,
        p.value_gbp, p.floor_area, p.site_area,
-       p.plan_date, p.decision_date
+       p.plan_date, p.decision_date,
+       -- The role blocks. For a pre-planning row Barbour is the only
+       -- source there is, so leaving its parties blank would empty the
+       -- column exactly where it is the whole of what is known.
+       p.raw_metadata
 FROM projects p
 WHERE NOT EXISTS (SELECT 1 FROM project_applications pa
                   WHERE pa.project_id = p.id)
@@ -356,12 +360,19 @@ SITE_HEADERS = [
     "EIA status (from documents)", "EIA indicators (heuristic)",
     "Environmental subjects (description keywords)",
     # --- parties ----------------------------------------------------------
-    # Who is behind the scheme, ranked by how often each is named.
-    # Names are normalised (dcp/entities) so one developer is one row
-    # rather than four spellings; the raw value_text stays on every
-    # findings row for anyone checking the derivation.
-    "Applicant / operator", "Advisers and consultants",
-    "Planning authority (from documents)",
+    # Who is behind the scheme, from the source that states it rather
+    # than from the one that can only count it (dcp/site_profile). One
+    # column per kind of claim: what Barbour records as the end user and
+    # the client; the group a person has confirmed that name belongs to,
+    # beside it and never in place of it; the advisers Barbour names;
+    # and, kept separate, the organisations the documents name with the
+    # count that is all that claim rests on. Every party of every role,
+    # including the roles too specific for a site row, is a row of the
+    # Parties sheet.
+    "End user (Barbour)", "Applicant of record (Barbour)",
+    "Operator group (confirmed alias)", "Advisers (Barbour)",
+    "Also named in documents (mention counts)",
+    "Planning authority (register)", "Parties source",
     # --- findings coverage -------------------------------------------------
     "Finding subjects (top families by volume)",
     "Documents held", "Documents analysed", "Verified findings",
@@ -625,11 +636,49 @@ DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Environmental subjects (description keywords)",
      "Deterministic keyword extraction from application descriptions — a "
      "floor, not a census; the substantive content lives in documents."),
-    ("Sites", "Applicant / operator; Advisers and consultants; Planning authority",
-     "Organisations named in the documents, normalised so spelling "
-     "variants group, ranked by how often named (count in brackets). The "
-     "organisation named forty times is the developer; the one named "
-     "twice is usually a consultee's consultant."),
+    ("Sites", "End user (Barbour); Applicant of record (Barbour); "
+              "Advisers (Barbour)",
+     "Organisations as Barbour ABI's project record states them, names "
+     "only — the same records carry named individuals and their contact "
+     "details, which stay in the source data and are not exported. End "
+     "user is the party the scheme is for; applicant of record is "
+     "Barbour's client; advisers are its planner, agent, architect and "
+     "M&E engineer. Every other role Barbour records is a row on the "
+     "Parties sheet."),
+    ("Sites", "Operator group (confirmed alias)",
+     "The corporate group a name belongs to, where a person has "
+     "confirmed the link with evidence in "
+     "data/priors/organisation_aliases.yaml — 'Ark Estates 5 Ltd' is "
+     "Ark Data Centres. Sits beside the raw name and never replaces it; "
+     "empty where no confirmed group covers the name. Names are grouped "
+     "by evidence, never by resemblance: near-identical company names in "
+     "this sector are routinely different companies."),
+    ("Sites", "Also named in documents (mention counts)",
+     "Organisations the site's documents name, and how many times. A "
+     "count of mentions is not a role: the firm that wrote the planning "
+     "statement is named more often than the developer, and a utilities "
+     "section names whoever has ducts in the road. Organisations named "
+     "once are not listed, and the Parties sheet records how many were "
+     "dropped per site."),
+    ("Sites", "Planning authority (register)",
+     "The council whose register the site's applications sit in, from "
+     "the application record — not from an organisation named in the "
+     "documents. For a pre-planning project with no application, "
+     "Barbour's authority."),
+    ("Sites", "Parties source",
+     "Which of the two sources this row's parties came from: the Barbour "
+     "project record, the documents, both, or neither."),
+    ("Parties", "site_key; role; organisation; source; source ref",
+     "One row per organisation per role per site — the long form the "
+     "Sites columns summarise. 'role' is end user, applicant, operator, "
+     "adviser, other (any further Barbour role) or named in documents. "
+     "'source' is barbour or documents; 'source ref' is the Barbour "
+     "project number or the mention count. 'organisation' is the raw "
+     "name as its source writes it and is never rewritten."),
+    ("Parties", "group; Barbour role",
+     "The confirmed alias group beside the raw name, empty where there "
+     "is none; and, for a Barbour row, the role exactly as Barbour "
+     "writes it, which is more specific than the role column."),
     ("Sites", "Finding subjects (top families by volume)",
      "The site's largest finding families by count — what its documents "
      "are substantively about. Counts are evidence volume, not "
@@ -982,6 +1031,7 @@ def main() -> None:
     from dcp import operator_disclosure as od
     from dcp import consumption_context as cc
     from dcp import external_aggregates as extagg
+    from dcp import organisations
     from dcp import proposal
     from dcp import signals as sig
     from dcp import site_profile
@@ -1058,6 +1108,9 @@ def main() -> None:
     # Derived signals shared with the web view (dcp/site_profile). Both
     # consumers call the same code so neither can present a different
     # answer for the same site.
+    # Confirmed members only, so a proposal in the priors file changes
+    # nothing about a build until a person has confirmed it.
+    alias_index = organisations.alias_index(organisations.load_groups())
     with db.connect() as conn:
         site_profiles = site_profile.load_site_profiles(conn)
         coverage = site_profile.load_coverage(conn)
@@ -1281,9 +1334,13 @@ def main() -> None:
             prof.get("cooling_caveat") or "",
             prof.get("eia_status_label") or "", eia,
             ", ".join(sorted(site_env.get(key, ()))),
-            prof.get("applicants") or "",
+            prof.get("end_user") or "",
+            prof.get("applicant_of_record") or "",
+            prof.get("operator_group") or "",
             prof.get("advisers") or "",
-            prof.get("authorities") or "",
+            prof.get("named_in_documents") or "",
+            prof.get("authority") or "",
+            prof.get("parties_source") or "",
             # Already ordered by count in SQL; the tail is long and thin,
             # so show the families that actually characterise the site and
             # say how many more there are rather than filling the cell.
@@ -1307,8 +1364,10 @@ def main() -> None:
     # columns say.
     existing_keys = {r[0].upper() for r in site_rows}
     appended_barbour = 0
+    barbour_only_parties: dict[str, tuple[str, dict]] = {}
     for (pref, title, pstage, dev_type, authority, address, description,
-         plat, plon, pvalue, pfloor, psite, pplan, pdecision) in barbour_rows:
+         plat, plon, pvalue, pfloor, psite, pplan, pdecision,
+         praw) in barbour_rows:
         pseudo_key = f"PTNO-{pref}"
         if pseudo_key.upper() in existing_keys:
             continue
@@ -1328,6 +1387,11 @@ def main() -> None:
                 f"{p['name']} ({p['ref']})", km, p["capacity"])
         env = sig.environmental_signals(description)
         bsummary, bdescriptive = proposal.summarise([description, title])
+        bparties = site_profile.site_parties(
+            site_profile.barbour_parties(praw or {}, str(pref or "")),
+            (), [site_profile._AUTHORITY_PHONE_RE.sub("", authority or "")],
+            alias_index)
+        barbour_only_parties[pseudo_key] = (title or pseudo_key, bparties)
         ctx_la = cc.authority_for((), authority)
         ctx_pct = cc.change_pct(desnz[ctx_la]) if ctx_la else None
         if ctx_pct is not None:
@@ -1349,7 +1413,10 @@ def main() -> None:
             "", "", "",               # character/scale unknowable pre-application
             "", "", "", "", "", "", "", "",
             ", ".join(sorted(env.keys())),
-            "", "", "",
+            bparties["end_user"], bparties["applicant_of_record"],
+            bparties["operator_group"], bparties["advisers"],
+            bparties["named_in_documents"], bparties["authority"],
+            bparties["parties_source"],
             "", 0, 0, 0, "",
             near_name, near_km, near_cap,
             *ctx_cells,
@@ -1543,6 +1610,52 @@ def main() -> None:
         for c in row:
             if c.value is not None:
                 c.alignment = Alignment(wrap_text=True, vertical="top")
+
+    # ---- Parties -------------------------------------------------------
+    # Long format, one row per organisation per role per site, because a
+    # column per role would need sixty-three of them and would still
+    # merge the two roles one firm holds on one scheme. The Sites sheet's
+    # party columns are a summary of these rows; nothing appears there
+    # that is not here.
+    #
+    # The count of organisations named exactly once is a row of its own
+    # rather than a footnote: those names are excluded from both sheets
+    # (dcp/site_profile.DOCUMENT_NAME_FLOOR), and a reader comparing a
+    # site's parties against its findings CSV should be able to see how
+    # many that was.
+    ws = _sheet("Parties", [
+        "Site key", "Site name", "Role", "Organisation",
+        "Confirmed group", "Source", "Source ref", "Barbour role"])
+    ROLE_LABELS = {
+        "end_user": "End user", "applicant": "Applicant of record",
+        "operator": "Operator", "adviser": "Adviser", "other": "Other role",
+        "named_in_documents": "Named in documents"}
+    n_party_rows = n_named_once = 0
+    for r in site_rows:
+        key, name = r[0], r[2]
+        prof = site_profiles.get(key, {})
+        n_named_once += prof.get("parties_named_once", 0)
+        for party in prof.get("parties", ()):
+            ws.append([key, name or key,
+                       ROLE_LABELS.get(party.role, party.role),
+                       party.name, party.group, party.source,
+                       party.source_ref, party.barbour_role])
+            n_party_rows += 1
+        if prof.get("parties_named_once"):
+            ws.append([key, name or key, "Named once, not listed", "",
+                       "", "documents",
+                       f"{prof['parties_named_once']} organisations", ""])
+    for key, (name, bparties) in sorted(barbour_only_parties.items()):
+        for party in bparties["parties"]:
+            ws.append([key, name, ROLE_LABELS.get(party.role, party.role),
+                       party.name, party.group, party.source,
+                       party.source_ref, party.barbour_role])
+            n_party_rows += 1
+    for col, width in (("A", 34), ("B", 44), ("C", 20), ("D", 44),
+                       ("E", 26), ("F", 12), ("G", 18), ("H", 30)):
+        ws.column_dimensions[col].width = width
+    print(f"  Parties: {n_party_rows} rows, "
+          f"{n_named_once} single-mention names not listed")
 
     # ---- Capacity claims ----------------------------------------------------
     # Site-level external figures, the other permitted form beside the
