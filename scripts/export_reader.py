@@ -346,6 +346,7 @@ button.who{font:inherit;font-size:12.5px;padding:2px 7px;text-align:left;
   border:1px solid var(--line);border-radius:3px;background:var(--bg);
   color:var(--fg);cursor:pointer;line-height:1.3;max-width:100%}
 button.who:hover{border-color:var(--accent)}
+span.who.multi{font-size:12.5px;font-weight:600;display:block}
 button.who.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 /* No overflow wrapper around these tables, deliberately. An ancestor with
    overflow-x:auto becomes the containing scroll box for position:sticky,
@@ -1277,7 +1278,7 @@ function apply(){
   const s=q.value.toLowerCase().trim(), mode=f.value, org=o.value; let shown=0;
   for(const r of rows){
     let ok=(!s||r.dataset.hay.includes(s));
-    if(ok&&who)              ok=r.dataset.who===who;
+    if(ok&&who)              ok=r.dataset.who.split('|').includes(who);
     if(ok&&cohort)           ok=('|'+r.dataset.cohorts+'|').indexOf('|'+cohort+'|')>=0;
     if(ok&&mode==='known')   ok=r.dataset.known==='1';
     if(ok&&mode==='unknown') ok=r.dataset.known!=='1';
@@ -1767,21 +1768,41 @@ def main() -> int:
         source = ("a confirmed alias group" if group else
                   "Barbour's end user" if end_user else
                   "Barbour's client")
-        others = prof.get("operator_others") or 0
+        # Every operator Barbour states for the site, so that a chip for
+        # any of them finds the site. A site record that covers an estate
+        # holds several — the Slough Trading Estate record carries
+        # Equinix, VIRTUS, Zenium and Iron Mountain — and a row that wore
+        # one of those names, and answered only that one chip, would be
+        # the site-fragmentation hazard HISTORY records, as a badge.
+        operators = [n.strip() for n in (end_user or applicant).split(",") if n.strip()]
+        if badge not in operators:
+            operators.insert(0, badge)
+        keys = [entities.canonical_key(n) for n in operators]
+        for n in operators:
+            who_counts[n] += 1
+        others = len(operators) - 1
+        if others >= 2:
+            # An estate record: say so and name them all. No single
+            # button, because no single organisation is behind it.
+            names = ", ".join(operators)
+            return {
+                "filter_key": "|".join(keys), "sort": badge,
+                "cell": (f'<span class="who multi" title="{esc(names)} — from {source}. '
+                         f'This site record covers several operators’ premises; '
+                         f'each one’s chip finds it.">{len(operators)} operators</span>'
+                         f'<span class="q">{esc(trim(names, 60))}</span>')}
         via_bits = []
-        if applicant and applicant != badge:
+        if applicant and applicant != badge and not end_user.startswith(applicant):
             via_bits.append(f"via {trim(applicant, 34)}")
         if others:
-            via_bits.append(f"and {others} more")
+            via_bits.append(f"and {trim(operators[1], 24)}")
         via = (f'<span class="q">{esc(" · ".join(via_bits))}</span>'
                if via_bits else "")
-        key = entities.canonical_key(badge)
-        who_counts[badge] += 1
         return {
-            "filter_key": key, "sort": badge,
-            "cell": (f'<button type="button" class="who" data-who="{esc(key)}" '
+            "filter_key": "|".join(keys), "sort": badge,
+            "cell": (f'<button type="button" class="who" data-who="{esc(keys[0])}" '
                      f'title="{esc(badge)} — from {source}. '
-                     f'Click to show only this organisation\u2019s sites." '
+                     f'Click to show only this organisation’s sites." '
                      f'onclick="event.stopPropagation();'
                      f'setWho(this.dataset.who)">{esc(trim(badge, 30))}</button>'
                      + via)}
