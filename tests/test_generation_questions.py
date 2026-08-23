@@ -243,14 +243,14 @@ def _write_hand_sheet(path: Path, rows: list[dict]) -> None:
 def test_a_blank_row_is_unchecked_not_agreement(tmp_path):
     path = tmp_path / "hand.csv"
     _write_hand_sheet(path, [
-        {"row": 1, "finding_id": 11, "figure_basis": "per_unit",
+        {"row": 1, "finding_id": 11, "figure_basis": "per_generator",
          "plant_type": "standby_combustion"},
         {"row": 2, "finding_id": 22},
     ])
     hand = ag.read_hand_sheet(path)
     rows = [_row("S", 11, 3.2, "q"), _row("S", 22, 50.0, "q")]
     run = {"answers": {
-        "11": {"figure_basis": "per_unit", "plant_type": "standby_combustion",
+        "11": {"figure_basis": "per_generator", "plant_type": "standby_combustion",
                "span_verified": True, "reasoning": ""},
         "22": {"figure_basis": "site_total", "plant_type": "unclear",
                "span_verified": True, "reasoning": ""}}}
@@ -271,20 +271,20 @@ def test_a_value_outside_the_vocabulary_stops_the_scoring(tmp_path):
 def test_a_disagreement_is_reported_with_the_model_s_reason(tmp_path):
     path = tmp_path / "hand.csv"
     _write_hand_sheet(path, [
-        {"row": 1, "finding_id": 11, "figure_basis": "site_fleet_total",
+        {"row": 1, "finding_id": 11, "figure_basis": "stated_group_total",
          "plant_type": "prime_combustion"}])
     hand = ag.read_hand_sheet(path)
     run = {"answers": {"11": {
-        "figure_basis": "per_unit", "plant_type": "prime_combustion",
+        "figure_basis": "per_generator", "plant_type": "prime_combustion",
         "span_verified": True, "reasoning": "the quote says each"}}}
     report = "\n".join(ag.score([_row("S", 11, 50.0, "q")], hand, run))
-    assert "basis per_unit vs site_fleet_total" in report
+    assert "basis per_generator vs stated_group_total" in report
     assert "the quote says each" in report
 
 
 def test_an_unverified_span_is_counted(tmp_path):
     run = {"answers": {"11": {
-        "figure_basis": "per_unit", "plant_type": "unclear",
+        "figure_basis": "per_generator", "plant_type": "unclear",
         "span_verified": False, "reasoning": ""}}}
     report = "\n".join(ag.score([_row("S", 11, 50.0, "q")], {}, run))
     assert "did not verify against their quote: 1" in report

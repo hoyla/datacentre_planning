@@ -228,23 +228,26 @@ SCHEMA = {
 # Nothing is multiplied. The model reports the count and the rating the
 # quote states; whether a fleet total belongs in a headline is a
 # question for the rollup and for a human, not for the adjudicator.
-# Two revisions before a person was asked to check anything, each from
-# reading the previous version's forty answers, each kept in
-# data/generation_sample/ so the progression is evidence rather than
-# recollection. 1.0 answered about the PASSAGE rather than the figure on
-# the row: Amazon Didcot's 300 MW came back as "per unit, 2 MW" from the
-# words "150 x 2MW units". 1.1 fixed that and overshot — told that a
-# count times a rating makes a fleet total, it read "standby power (50 x
-# 3.3 MWt Generators)" as 165 MW of generation, when MWt is heat and the
-# figure is not a generating capacity at all. 1.2 puts the questions in
-# the order they have to be asked: is this electricity, and only then,
-# whose electricity.
-# 1.3 changes one word: "fleet_total" became "site_fleet_total", because
-# in this project "fleet" can read as an operator's estate of sites, and
-# Luke read it that way. The question is unchanged; the vocabulary a
-# person is asked to write is not, and the sheet has to match the
-# schema, so the version moves.
-GENERATION_PROMPT_VERSION = "generation-1.3"
+# The prompt's history, each version kept in data/generation_sample/ as
+# evidence. 1.0 answered about the passage rather than the figure on the
+# row; 1.1 over-corrected into reading "50 x 3.3 MWt" as 165 MW of
+# generation; 1.2 asked the questions in order — is this electricity,
+# then whose; 1.3 renamed a value Luke had read as an operator's estate.
+#
+# 2.0 changes the INPUT, after Luke hand-checked the 1.2 sample and
+# scored the model 13/40 on figure basis: "I'm required to judge based
+# on the quote alone, but most of those quotes don't provide any context
+# — a number sitting below 'site total' and a number below 'plant C
+# total' mean different things. So for the most part my answers were,
+# correctly, 'unclear'." The model had said site_total or per_unit on
+# nearly every one of those; a careful reader could not, and the
+# adjudicator must not. So each figure now arrives with the passage
+# around it on its page — the paragraph before and after the quote —
+# and the person checking the sheet sees the same passage. And the
+# vocabulary that misled is renamed: "per_unit" read as a building
+# ("at Unit 1"), "fleet_total" read as the whole site's fleet when it
+# meant a stated group of engines.
+GENERATION_PROMPT_VERSION = "generation-2.0"
 
 GENERATION_PROMPT = """\
 You are auditing extracted figures from UK planning documents for an
@@ -254,66 +257,67 @@ Every figure below has already been adjudicated as describing THIS
 development's own on-site electricity generation. That question is
 settled; do not revisit it.
 
-Answer two questions about each figure, from its quote alone.
+Each figure comes with the QUOTE it was extracted from and the PASSAGE
+around that quote on the same page of the same document — the text
+before and after, as the page has it. Read the passage. A heading above
+a table, the sentence before a number, the unit on a column: that is
+where a figure's meaning is, and the quote alone rarely carries it.
+
+Answer two questions about each figure. **Where the passage does not
+settle a question, the answer is "unclear".** A person who hand-checked
+an earlier version of this task answered "unclear" on most rows given
+the quote alone, and was right to; the model that answered "site total"
+from the words "Total Installed Capacity" beside a number was not. Do
+not infer what a figure is from its size, from the site's name, or from
+what data centres usually install.
 
 **You are describing the FIGURE on the row, not the passage.** One
 passage often states several figures, and they are not the same kind of
-thing. Given the quote "emergency generator sets (currently estimated as
-150 x 2MW units)":
+thing. Given "emergency generator sets (currently estimated as 150 x
+2MW units)": asked about the figure 300 MW, the answer is
+"stated_group_total"; asked about 2 MW, it is "per_generator".
 
-  - asked about the figure 300 MW, the answer is "site_fleet_total": 150
-    units of 2 MW is what makes 300;
-  - asked about the figure 2 MW, the answer is "per_unit".
+**Ask "is this electricity?" first.** A thermal or fuel input, an annual
+energy total, or a battery's discharge rating is "not_generation"
+whatever else the passage says about counts and units. "MWt", "thermal
+output", "thermal input" and "energy input" are heat; "MWe",
+"electrical output" and a bare "MW" beside a generator are electricity.
 
-The words are identical; the answer follows the number on the row.
-
-**Ask "is this electricity?" first.** A figure that is a thermal or fuel
-input, an annual energy total, or a battery's discharge rating is
-"not_generation" whatever else the sentence says about counts and units.
-"MWt", "thermal output", "thermal input" and "energy input" are heat;
-"MWe", "electrical output" and a bare "MW" beside a generator are
-electricity. Only once a figure is an electrical generating capacity
-does the first question have an answer other than "not_generation".
-
-**Then arithmetic settles it before vocabulary does.** Where the quote
-states a count and a per-unit rating whose product is the figure on the
-row — within rounding — the figure is "site_fleet_total", however the
-sentence phrases it. "26 generator systems each system providing 104
-megawatts" sits beside "26 4 MW generators" in the same application, and
-104 is the combined rating of twenty-six machines, not one machine's
-rating.
+**Then arithmetic settles it before vocabulary does.** Where the passage
+states a count and a per-generator rating whose product is the figure
+on the row — within rounding — the figure is "stated_group_total",
+however the sentence phrases it.
 
 **The figures listed below are all from one application, and you may
-read them together.** Where one row's quote settles what another row's
-figure is — a count in one sentence, a rating in another — say so in the
-reasoning. The evidence_span must still come from the quote of the row
-it belongs to.
+read them together.** Where one row's passage settles another row's
+figure, say so in the reasoning. The evidence_span must still come from
+the passage of the row it belongs to.
 
-**1. Is this figure one machine, the site's fleet of generators, or the site?**
+**1. What is this figure a figure of?**
 
-  "per_unit"      the rating of a SINGLE generating unit. Signalled by
-                  "each", "per unit", "no. 2,480 kW generators", or a
-                  count stated beside this rating.
-  "site_fleet_total" the combined rating of a STATED number of units
-                  on THIS site — "20 no. 2,499 kW natural gas engines
-                  with a combined capacity of just under 50 MW electrical
-                  power" is the site's fleet total when the figure is the
-                  50 MW. "Fleet" means the generators on this site, never
-                  an operator's estate of sites.
-  "site_total"    the total generating capacity of the development,
-                  which may cover more than one kind of plant or not say
-                  how it is made up — "the capacity to generate 49.9 MW
-                  on-site", "a total site capacity of just below 50 MWe".
-  "not_generation" the quote does not state an electrical generating
-                  capacity at all: a thermal or fuel INPUT ("an energy
-                  input of 5,678 kW", "a Thermal Input of around 1.2GW"),
-                  an annual energy figure in kWh or MWh, a battery or UPS
-                  discharge rating, a consumption or demand figure.
-  "unclear"       the quote does not settle it.
-
-  A figure can be BOTH a fleet total and the site total; where the quote
-  says the fleet is the whole of the site's generation, answer
-  "site_fleet_total" and say so in the reasoning.
+  "per_generator"       the rating of ONE generating machine — an
+                        engine, a turbine, a generator set. Signalled by
+                        "each", "per generator", "no. 2,480 kW
+                        generators", or a count stated beside this
+                        rating. NOT "per unit" where unit means a
+                        building ("at Unit 1", "Units 2-8").
+  "stated_group_total"  the combined rating of a STATED number of
+                        machines — "20 no. 2,499 kW natural gas engines
+                        with a combined capacity of just under 50 MW" is
+                        the group total when the figure is the 50 MW.
+                        The group may or may not be all the generation
+                        on the site; that is not this question.
+  "site_total"          the total generating capacity of the whole
+                        development, all plant — only where the passage
+                        says so: "total site capacity", "total on-site
+                        generation", "the capacity to generate 49.9 MW
+                        on-site". A total for one building, one phase or
+                        one kind of plant is not the site's.
+  "not_generation"      not an electrical generating capacity at all: a
+                        thermal or fuel input, an annual energy figure in
+                        kWh or MWh, a battery or UPS rating, a
+                        consumption or demand figure.
+  "unclear"             the passage does not settle it.
 
 **2. What kind of plant is it?**
 
@@ -328,31 +332,26 @@ it belongs to.
   "storage"             battery, UPS, flywheel. Storage is not
                         generation; it stores what something else made.
   "mixed"               this one figure covers more than one of the
-                        above and the quote does not separate them.
-  "unclear"             the quote does not say.
+                        above and the passage does not separate them.
+  "unclear"             the passage does not say.
 
-  Do not infer the kind from the size, the site, or what data centres
-  usually install. A 50 MW figure is not "prime" because it is large; a
-  2.5 MW figure is not "standby" because it is small. Only the words in
-  the quote decide it.
-
-Also return, when and only when the quote states them:
-  "unit_count"      how many units the quote names (an integer). Where
-                    the quote says "up to 650", that is 650.
-  "unit_rating_mw"  the rating of one unit, in MW, converting from kW
-                    where the quote is in kW.
+Also return, when and only when the passage states them:
+  "unit_count"      how many machines the passage names (an integer).
+                    "up to 650" is 650.
+  "unit_rating_mw"  the rating of one machine, in MW, converting from kW
+                    where the passage is in kW.
   Never multiply them, and never compute one from the other. If the
-  quote gives one and not the other, return null for the other.
+  passage gives one and not the other, return null for the other.
 
 And for every figure:
   "evidence_span"   the shortest VERBATIM run of characters from the
-                    quote that decides question 1 and question 2 —
+                    PASSAGE that decides question 1 and question 2 —
                     copied exactly, not paraphrased, not re-punctuated.
-                    A span that does not appear in the quote character
+                    A span that does not appear in the passage character
                     for character is treated as a failure and the answer
                     is not stored.
-  "reasoning"       one short sentence naming what in the quote decided
-                    it.
+  "reasoning"       one short sentence naming what in the passage
+                    decided it — or, for "unclear", what is missing.
 
 Return strict JSON: {"generation": [...]}. No prose outside the JSON.
 
@@ -373,7 +372,7 @@ GENERATION_SCHEMA = {
                 "properties": {
                     "finding_id": {"type": "integer"},
                     "figure_basis": {"type": "string", "enum": [
-                        "per_unit", "site_fleet_total", "site_total",
+                        "per_generator", "stated_group_total", "site_total",
                         "not_generation", "unclear"]},
                     "plant_type": {"type": "string", "enum": [
                         "standby_combustion", "prime_combustion",
@@ -407,10 +406,12 @@ WITH adj AS (
 SELECT s.site_key, s.display_name, adj.application_id, a.application_ref,
        coalesce(a.description, ''), adj.finding_id, f.document_id,
        f.signal_type, adj.value_mw, f.value_number, f.value_unit,
-       coalesce(f.value_text, ''), coalesce(f.evidence_text, '')
+       coalesce(f.value_text, ''), coalesce(f.evidence_text, ''),
+       f.evidence_page, d.content_sha256
 FROM adj
 JOIN findings f ON f.id = adj.finding_id
 JOIN applications a ON a.id = adj.application_id
+LEFT JOIN documents d ON d.id = f.document_id
 JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id
@@ -422,24 +423,59 @@ ORDER BY s.site_key, adj.value_mw DESC, adj.finding_id
 """
 
 
-def render_generation_figures(figures: list[dict]) -> str:
-    """The figures block of GENERATION_PROMPT.
+# How much of the page to show around a quote. A paragraph either side:
+# enough for a table's heading and a sentence's subject, not so much
+# that a page of forty figures is sent forty times.
+PASSAGE_BEFORE = 700
+PASSAGE_AFTER = 500
 
-    The whole quote goes in, untruncated. power-1.0 caps its quotes at
-    300 characters because it is deciding attribution, which the opening
-    of a sentence usually settles; these two questions turn on clauses
-    that arrive late — "resulting in a total site capacity of just below
-    50 MWe" is the last nine words of its passage — and a span the model
-    must copy verbatim cannot be asked for from text it was not shown.
+
+def passage_for(quote: str, page_text: str,
+                before: int = PASSAGE_BEFORE, after: int = PASSAGE_AFTER) -> str:
+    """The quote with the page around it, or the quote alone when the
+    quote cannot be found on the page (an OCR difference, a page that
+    was never cached). Whitespace normalised, nothing else."""
+    page = " ".join((page_text or "").split())
+    q = " ".join((quote or "").split())
+    if not page or not q:
+        return q
+    i = page.lower().find(q.lower())
+    if i < 0:
+        # Try the first half of the quote: extraction sometimes trims
+        # the end of a sentence differently from the page.
+        head = q[: max(30, len(q) // 2)]
+        i = page.lower().find(head.lower())
+        if i < 0:
+            return q
+    start, end = max(0, i - before), min(len(page), i + len(q) + after)
+    out = page[start:end]
+    if start > 0:
+        out = "…" + out
+    if end < len(page):
+        out = out + "…"
+    return out
+
+
+def render_generation_figures(figures: list[dict]) -> str:
+    """The figures block of GENERATION_PROMPT: each figure, its quote,
+    and the passage around the quote on its page.
+
+    `figures` carry `passage` where the route could find the page; the
+    quote alone otherwise, and the block says which. A span the model
+    must copy verbatim cannot be asked for from text it was not shown,
+    so the whole passage goes in untruncated.
     """
     out = []
     for f in figures:
         quote = " ".join((f["evidence_text"] or "").split())
+        passage = f.get("passage") or quote
         out.append(
             f'- finding_id {f["finding_id"]}: {float(f["value_mw"]):g} MW '
             f'(as extracted: {f["value_number"]:g} {f["value_unit"]}; '
             f'label: {f["signal_type"]})\n'
-            f'  quote: "{quote}"')
+            f'  quote: "{quote}"\n'
+            + (f'  passage: "{passage}"' if passage != quote else
+               '  passage: (the page could not be read; the quote is all there is)'))
     return "\n".join(out)
 
 
