@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Iterator
 
 import psycopg2
 from psycopg2.extensions import connection as PgConnection
@@ -37,10 +37,35 @@ def database_url() -> str:
 # reader can act on instead of a wait it cannot see the end of.
 CONNECT_TIMEOUT = int(os.environ.get("DCP_CONNECT_TIMEOUT", "10"))
 
+# A build is supposed to be a function of its inputs, and the check for
+# that builds twice and diffs. But the corpus moves: the corroboration
+# read writes a row every few seconds, so two builds started ten seconds
+# apart are two snapshots of different inputs, and the diff proves
+# nothing either way. Postgres can hand out one snapshot to many
+# connections (`pg_export_snapshot()` in a transaction that stays open;
+# `SET TRANSACTION SNAPSHOT` in the others), which is exactly the fix:
+# every connection a build opens sees the corpus as it was at one
+# instant, whatever is being written meanwhile.
+#
+# Set this to an exported snapshot id and every connection opened here
+# imports it, read-only, at REPEATABLE READ. Nothing else changes. It is
+# for builds and checks; a process that needs to write must not set it.
+SNAPSHOT_ENV = "DCP_PG_SNAPSHOT"
+
 
 @contextmanager
 def connect() -> Iterator[PgConnection]:
     conn = psycopg2.connect(database_url(), connect_timeout=CONNECT_TIMEOUT)
+    snapshot = os.environ.get(SNAPSHOT_ENV)
+    if snapshot:
+        # Must precede the transaction's first query, and the isolation
+        # level must be set before the transaction opens; psycopg2 sends
+        # BEGIN with the first execute, so this is that execute.
+        conn.set_session(
+            isolation_level=psycopg2.extensions.ISOLATION_LEVEL_REPEATABLE_READ,
+            readonly=True)
+        with conn.cursor() as cur:
+            cur.execute("SET TRANSACTION SNAPSHOT %s", (snapshot,))
     try:
         yield conn
         conn.commit()
