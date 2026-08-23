@@ -82,10 +82,13 @@ CANDIDATES_SQL = _ap.GENERATION_CANDIDATES_SQL
 
 OUT_DIR = ROOT / "data" / "generation_sample"
 SAMPLE_SIZE = 40
-MAX_COMPLETION_TOKENS = 16000
+# Reasoning tokens are output tokens. Elsham's fifty-eight figures with
+# their passages overran 16,000 and the JSON came back cut off, twice;
+# the chunk is now twenty figures and the ceiling 32,000.
+MAX_COMPLETION_TOKENS = 32000
 # The batch's chunk size, mirrored here so the sample measures the
 # request the batch will actually send.
-FIGURES_PER_REQUEST = 60
+FIGURES_PER_REQUEST = 20
 
 # The named cases, with how many rows each is worth and why. Order is the
 # sheet's order, so the reasons a person is being asked about arrive
@@ -113,8 +116,8 @@ PER_UNIT_SITES: tuple[tuple[str, int, str], ...] = (
      "headline labelled per unit (Woodlands Park)"),
 )
 
-BASIS_VALUES = ("per_generator", "stated_group_total", "site_total",
-                "not_generation", "unclear")
+BASIS_VALUES = ("per_generator", "stated_group_total", "installation_total",
+                "site_total", "not_generation", "unclear")
 PLANT_VALUES = ("standby_combustion", "prime_combustion", "renewable",
                 "storage", "mixed", "unclear")
 
@@ -295,6 +298,11 @@ exactly as written:
   machines ("20 no. 2,499 kW engines with a combined capacity of just
   under 50 MW"). The group may or may not be all the site's generation;
   that is not this question.
+- `installation_total` — the rated total of one named installation or
+  kind of plant, with no count of machines and no statement that it is
+  the whole site's generation ("219kW of PV panels", "an energy centre
+  with the capacity to generate 49.9 MW"). A solar array does not
+  preclude a diesel fleet.
 - `site_total` — the whole development's total generating capacity, all
   plant — only where the passage says so. A total for one building, one
   phase or one kind of plant is not the site's.
@@ -423,13 +431,17 @@ def run_model(rows: list[dict], all_rows: list[dict], model: str,
                 "schema": SCHEMA}},
             messages=[{"role": "user", "content": content}])
         text = resp.choices[0].message.content or ""
+        finish = resp.choices[0].finish_reason
         try:
             parsed = json.loads(text).get("generation", [])
         except json.JSONDecodeError:
             failures.append({"application_id": app_id,
-                             "reason": "response was not JSON"})
+                             "reason": f"response was not JSON "
+                                       f"(finish_reason={finish})"})
             continue
-        quotes = {r["finding_id"]: r["evidence_text"] for r in chunk}
+        # The span is asked for from the passage, and checked against it.
+        quotes = {r["finding_id"]: (r.get("passage") or r["evidence_text"])
+                  for r in chunk}
         for a in parsed:
             fid = a.get("finding_id")
             if fid not in quotes:
