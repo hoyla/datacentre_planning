@@ -248,8 +248,17 @@ class TestMentionCountsAreNotPlant:
         # The plant count says what it is a count of.
         assert "generator_count')) + ' units'" in src
         # Every ranked label goes through the formatter, not bare esc().
+        #
+        # The party fields on this list were `applicants`, `advisers` and
+        # `authorities` until the second version of the parties rules
+        # (READER_REDESIGN_PLAN §5c). Those three were all mention-count
+        # rankings; now only one field is. End user, applicant of record
+        # and advisers come from Barbour's role blocks, which state a
+        # relationship and carry no count to subdue, and the authority
+        # comes from the register — so passing any of them through
+        # `counted` would be dressing a stated fact as a tally.
         for field in ("generator_fuel", "cooling_method",
-                      "applicants", "advisers", "authorities"):
+                      "named_in_documents"):
             assert f"counted(prof.get('{field}'))" in src, (
                 f"{field} is rendered without subduing its mention counts")
         assert ".mcount{" in src

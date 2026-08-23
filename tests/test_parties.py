@@ -1,0 +1,205 @@
+"""Who is behind it: what may become the operator, and what may not.
+
+The first version of this ranked the organisations a site's documents
+name and called the top one "Applicant / operator". That made Savills
+the applicant on seventeen sites, because Savills writes the planning
+statements, and CityFibre a party on seventy-three, because a utilities
+section lists whose ducts are in the road. These tests are the rules
+that replaced it, written as the cases that went wrong.
+
+Unit tests: `site_parties` takes no connection, so every case here is
+the arrangement of sources it is about rather than whatever the corpus
+holds today.
+"""
+
+from __future__ import annotations
+
+import pytest
+
+from dcp import organisations, site_profile
+from dcp.site_profile import site_parties
+
+# A confirmed group, built here rather than read from the priors file:
+# the file's contents are a person's decisions and will change, and a
+# test that fails when Luke confirms a group is a test about the wrong
+# thing.
+ARK = organisations.Group("Ark Data Centres", "", (
+    organisations.Member(
+        "Ark Estates 5 Ltd", "spv_of", "confirmed",
+        (organisations.Evidence("reporter", ref="test"),)),
+    organisations.Member(
+        "Ark Data Centres Ltd", "same_organisation", "confirmed",
+        (organisations.Evidence("reporter", ref="test"),)),
+))
+ARK_INDEX = organisations.alias_index([ARK])
+NO_ALIASES: dict = {}
+
+
+def _p(result, role):
+    return [p for p in result["parties"] if p.role == role]
+
+
+# ---------------------------------------------------------------------------
+# What the documents alone cannot do
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("name,mentions", [
+    ("Savills", 214),          # writes the planning statement
+    ("Barton Willmore", 96),   # ditto
+    ("CityFibre", 73),         # named in a utilities section
+])
+def test_a_much_mentioned_name_does_not_become_the_operator(name, mentions):
+    out = site_parties((), [("party_applicant", name, mentions)],
+                       ["Slough Borough Council"], NO_ALIASES)
+    assert out["operator_group"] == ""
+    assert out["end_user"] == ""
+    assert out["applicant_of_record"] == ""
+    assert name in out["named_in_documents"]
+    assert f"{mentions} mentions" in out["named_in_documents"]
+
+
+def test_a_document_name_reaches_the_operator_only_through_a_confirmed_alias():
+    findings = [("party_applicant", "Ark Estates 5 Ltd", 100),
+                ("party_adviser", "Savills", 214)]
+    without = site_parties((), findings, (), NO_ALIASES)
+    assert without["operator_group"] == ""
+    assert "Ark Estates 5 Ltd" in without["named_in_documents"]
+
+    withalias = site_parties((), findings, (), ARK_INDEX)
+    assert withalias["operator_group"] == "Ark Data Centres"
+    # The raw name is not rewritten: it is a row of its own, beside the
+    # group, with the mention count that found it.
+    row = [p for p in withalias["parties"] if p.name == "Ark Estates 5 Ltd"]
+    assert row and row[0].group == "Ark Data Centres"
+    assert row[0].source == "documents"
+    # And Savills is still only a name the documents use often.
+    assert "Savills" in withalias["named_in_documents"]
+
+
+def test_a_name_below_the_floor_is_dropped_and_counted():
+    findings = [("party_applicant", "Applicant", 1),
+                ("party_adviser", "Applicants' transport consultants", 1),
+                ("party_adviser", "Pegasus Group", 4)]
+    out = site_parties((), findings, (), NO_ALIASES)
+    assert out["named_in_documents"] == "Pegasus Group (4 mentions)"
+    assert out["parties_named_once"] == 2
+    assert all(p.name != "Applicant" for p in out["parties"])
+
+
+def test_a_confirmed_alias_is_exempt_from_the_floor():
+    """A person has already decided who this is; one mention is enough."""
+    out = site_parties((), [("party_applicant", "Ark Data Centres Ltd", 1)],
+                       (), ARK_INDEX)
+    assert out["operator_group"] == "Ark Data Centres"
+    assert out["parties_named_once"] == 0
+
+
+# ---------------------------------------------------------------------------
+# What Barbour states
+# ---------------------------------------------------------------------------
+
+DIDCOT = (
+    ("12890752", "End user", "Amazon UK Services Limited"),
+    ("12890752", "Planner", "Lichfields"),
+    ("12660337", "Bidder", "Laing O'Rourke Delivery Limited Head Office"),
+)
+
+
+def test_a_stated_end_user_outranks_a_much_mentioned_applicant():
+    out = site_parties(DIDCOT,
+                       [("party_applicant", "RWE Generation UK PLC", 271)],
+                       ["South Oxfordshire District Council"], NO_ALIASES)
+    assert out["end_user"] == "Amazon UK Services Limited"
+    assert "RWE" in out["named_in_documents"]
+    assert out["parties_source"] == "Barbour project record and documents"
+
+
+def test_an_adviser_role_is_an_adviser_and_the_rest_are_kept_apart():
+    out = site_parties(DIDCOT, (), (), NO_ALIASES)
+    assert out["advisers"] == "Lichfields"
+    assert [p.barbour_role for p in _p(out, "other")] == ["Bidder"]
+    # Every Barbour party reaches the long-format rows, whatever its
+    # role: the sheet is what the site row is a summary of.
+    assert len(out["parties"]) == len(DIDCOT)
+
+
+def test_the_barbour_reference_travels_with_the_name():
+    out = site_parties(DIDCOT, (), (), NO_ALIASES)
+    assert {p.source_ref for p in out["parties"]} == {"12890752", "12660337"}
+    assert all(p.source == "barbour" for p in out["parties"])
+
+
+def test_contact_details_never_leave_raw_metadata():
+    """The role blocks carry people; only the organisations come out."""
+    meta = {"Role_4": "Client", "CyName_4": "Ark Estates 5 Ltd",
+            "Fname_4": "A", "Lname_4": "Person", "Title_4": "Director",
+            "CyAddr1_4": "1 Somewhere", "CyURL_4": "www.example.com",
+            "CyFax_4": "01234 567890"}
+    assert site_profile.barbour_parties(meta, "12879308") == [
+        ("12879308", "Client", "Ark Estates 5 Ltd")]
+
+
+def test_a_role_without_a_company_is_not_a_party():
+    assert site_profile.barbour_parties(
+        {"Role_4": "Client", "Fname_4": "A"}, "x") == []
+
+
+# ---------------------------------------------------------------------------
+# The authority, and absence
+# ---------------------------------------------------------------------------
+
+def test_the_authority_is_the_register_not_a_finding():
+    out = site_parties((), [("party_adviser", "Slough Borough Council", 40)],
+                       ["Hertsmere Borough Council"], NO_ALIASES)
+    assert out["authority"] == "Hertsmere Borough Council"
+    # A council named in the documents is not demoted to an adviser
+    # either; it is simply not a party to the scheme.
+    assert "Slough" not in out["named_in_documents"]
+
+
+def test_a_site_spanning_two_registers_names_both():
+    out = site_parties((), (), ["Vale of White Horse District Council",
+                                "South Oxfordshire District Council"],
+                       NO_ALIASES)
+    assert out["authority"] == ("Vale of White Horse District Council, "
+                                "South Oxfordshire District Council")
+
+
+def test_absence_says_so():
+    out = site_parties((), (), (), NO_ALIASES)
+    assert out["parties_source"] == site_profile.PARTIES_ABSENT
+    assert out["operator_group"] == out["end_user"] == ""
+    assert out["parties"] == ()
+
+
+# ---------------------------------------------------------------------------
+# Order
+# ---------------------------------------------------------------------------
+
+def _rotations(seq):
+    return [list(seq[i:]) + list(seq[:i]) for i in range(len(seq))]
+
+
+def test_the_result_does_not_depend_on_the_order_rows_arrive_in():
+    """`array_agg` is unordered, and a release is checked by diffing."""
+    barbour = list(DIDCOT)
+    findings = [("party_adviser", "Ethos Engineering", 12),
+                ("party_adviser", "Tetra Tech Limited", 12),
+                ("party_applicant", "RWE Generation UK PLC", 12)]
+    seen = set()
+    for b in _rotations(barbour):
+        for f in _rotations(findings):
+            out = site_parties(b, f, ["Cherwell District Council"], NO_ALIASES)
+            seen.add((out["end_user"], out["advisers"],
+                      out["named_in_documents"],
+                      tuple((p.role, p.name) for p in out["parties"])))
+    assert len(seen) == 1, seen
+
+
+def test_one_organisation_in_two_roles_is_two_rows_not_one_merged():
+    """The long format keeps roles apart; §3.2 forbids combining them."""
+    rows = (("1", "Mech.& Elec Engineer", "Black & White Engineering Ltd."),
+            ("1", "Energy Consultant", "Black & White Engineering Ltd."))
+    out = site_parties(rows, (), (), NO_ALIASES)
+    assert len(out["parties"]) == 2
+    assert {p.role for p in out["parties"]} == {"adviser", "other"}

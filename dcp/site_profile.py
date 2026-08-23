@@ -874,51 +874,365 @@ WHERE s.retired_at IS NULL
   AND f.value_text IS NOT NULL
 """
 
+# Barbour role blocks reach a site two ways — a project materialised as
+# a site member in its own right, and a project matched to one of the
+# site's applications — and a site can hold both. UNION rather than
+# UNION ALL so a project reached both ways is one project.
+BARBOUR_ROLES_SQL = """
+SELECT s.site_key, p.external_ref, p.raw_metadata
+FROM sites s
+JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
+JOIN projects p ON p.id = sm.project_id
+WHERE s.retired_at IS NULL AND p.raw_metadata IS NOT NULL
+UNION
+SELECT s.site_key, p.external_ref, p.raw_metadata
+FROM sites s
+JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
+JOIN project_applications pa ON pa.application_id = sm.application_id
+JOIN projects p ON p.id = pa.project_id
+WHERE s.retired_at IS NULL AND p.raw_metadata IS NOT NULL
+"""
+
+# The authority is the register the application sits in, so it comes
+# from the council the application is filed with — not from a party
+# finding that happened to name a council. Barbour's authority is the
+# fallback for the pre-planning rows, which have no application and so
+# no register.
+SITE_AUTHORITY_SQL = """
+SELECT s.site_key,
+       array_agg(DISTINCT c.name)
+           FILTER (WHERE c.name IS NOT NULL)              AS councils,
+       array_agg(DISTINCT p.authority_name)
+           FILTER (WHERE p.authority_name IS NOT NULL)    AS barbour_authorities
+FROM sites s
+LEFT JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
+LEFT JOIN applications a ON a.id = sm.application_id
+LEFT JOIN councils c ON c.gss_code = a.council_gss
+LEFT JOIN projects p ON p.id = sm.project_id
+WHERE s.retired_at IS NULL
+GROUP BY s.site_key
+"""
+
+# Barbour writes an authority as "Name (Phone: 0300 500 8080)".
+_AUTHORITY_PHONE_RE = re.compile(r"\s*\(Phone:[^)]*\)\s*$", re.I)
+
+# Role blocks are numbered columns: Role_4/CyName_4 … Role_13/CyName_13
+# in the records seen so far. The range is generous on purpose — a
+# record with more parties should widen the sheet, not silently drop
+# the tail.
+BARBOUR_ROLE_SLOTS = range(1, 40)
+
+
+def barbour_parties(raw_metadata: dict, ref: str = "") -> list[tuple[str, str, str]]:
+    """(project ref, role, organisation) from one Barbour record.
+
+    Names only. The same blocks carry a named individual, their job
+    title and their direct line for each party; those stay in
+    raw_metadata, where they are already, and never reach an export.
+    """
+    out: list[tuple[str, str, str]] = []
+    for n in BARBOUR_ROLE_SLOTS:
+        role = (raw_metadata or {}).get(f"Role_{n}")
+        name = (raw_metadata or {}).get(f"CyName_{n}")
+        if role and name:
+            out.append((ref, str(role).strip(), str(name).strip()))
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Who is behind it, second version (READER_REDESIGN_PLAN §5c)
+# ---------------------------------------------------------------------------
+#
+# The first version counted names in findings and ranked them. It is a
+# fair description of what a site's documents talk about and a poor
+# description of who is behind the site: Savills is the most-named
+# organisation on seventeen sites because Savills writes the planning
+# statements, and CityFibre appears on seventy-three because a utilities
+# section lists whose ducts are in the road. Ranked as "Applicant /
+# operator", both read as the developer.
+#
+# So this version prefers a source that states the relationship rather
+# than one that can only count it. Barbour ABI's project records carry
+# role blocks — Client, End user, Planner, Agent, Architect, M&E engineer
+# — written by a construction-intelligence firm whose business is knowing
+# who is building what. Those are used as stated, names only: the same
+# blocks carry named individuals, their job titles and their direct
+# lines, and none of that leaves raw_metadata.
+#
+# A name from the documents may still reach the operator field, but only
+# through data/priors/organisation_aliases.yaml, where a person has
+# confirmed that this name belongs to a known group with evidence
+# attached. Everything else the documents name stays in the advisers
+# line with its mention count showing, which is the honest description
+# of what that number is.
+#
+# The planning authority comes from the site's councils — the register
+# the application actually sits in — and never from a party finding. The
+# family put 1,536 councils and development corporations among the
+# advisers, and re-routing them by name was always a patch over reading
+# the wrong source.
+
+# Barbour's own role vocabulary, mapped onto the three things a reader
+# is asking about. Sixty-three distinct roles appear in the corpus;
+# these are the ones that answer "who is behind it", and the rest reach
+# the workbook's long-format Parties sheet rather than the site row.
+BARBOUR_END_USER_ROLES = ("End user",)
+BARBOUR_APPLICANT_ROLES = ("Client",)
+BARBOUR_ADVISER_ROLES = ("Planner", "Agent", "Architect", "Mech.& Elec Engineer")
+
+PARTIES_ABSENT = "Not established from the sources held"
+
+# How many times the documents must name an organisation before it is
+# reported as named at all.
+#
+# The party findings hold 36,245 site-and-name pairs and 30,092 of them
+# are a single mention. At that level the extraction is not naming a
+# party: "Applicant", "Applicants' transport consultants", "Agent
+# contact Mr Rhoades, Lucion Delta Simons" and a hundred other fragments
+# are what a one-mention row looks like. Reporting them would put four
+# times more noise than signal into a sheet whose whole purpose is to be
+# scanned, and would attach a number — 1 — to names that a reader would
+# reasonably read as a finding.
+#
+# Twice is not a claim that a name is right; it is the point below which
+# the count says nothing. The excluded rows are neither destroyed nor
+# hidden: every one is a findings row in the database and in the
+# per-site findings CSV, and the number dropped is reported per site so
+# the cap is visible rather than silent. Names carried by a confirmed
+# alias are exempt — a person has already decided who they are.
+DOCUMENT_NAME_FLOOR = 2
+
+
+@dataclass(frozen=True)
+class Party:
+    """One organisation, one role, one source — a row of the Parties sheet.
+
+    `name` is the raw string as its source writes it and is never
+    rewritten; `group` is the alias group beside it, empty until a
+    person has confirmed one.
+    """
+    role: str            # 'end_user' | 'applicant' | 'adviser' | 'other'
+    name: str
+    group: str
+    source: str          # 'barbour' | 'documents'
+    source_ref: str      # Barbour project ref, or the mention count
+    barbour_role: str = ""   # exactly as Barbour writes it
+
+
+def _dedupe(names):
+    """Raw names, first spelling kept, one per canonical key."""
+    from dcp import entities
+    seen, out = set(), []
+    for n in names:
+        n = (n or "").strip()
+        if not n:
+            continue
+        key = entities.canonical_key(n)
+        if len(key) < 3 or key in seen:
+            continue
+        seen.add(key)
+        out.append(n)
+    return out
+
+
+def site_parties(barbour_rows, findings_counts, councils, alias_index) -> dict:
+    """Who is behind one site, and where each name came from.
+
+    `barbour_rows` are (project_ref, barbour_role, name) as Barbour
+    writes them; `findings_counts` are (family, name, mentions) already
+    counted; `councils` are the names of the registers the site's
+    applications sit in; `alias_index` is dcp.organisations.alias_index
+    over confirmed members.
+
+    Pure: no database, so the rules can be tested against the cases they
+    were written for rather than against whatever the corpus holds
+    today.
+    """
+    from dcp import entities, organisations
+
+    def group_of(name: str) -> str:
+        g = organisations.group_for(name, alias_index)
+        return g.group if g else ""
+
+    by_role: dict[str, list[str]] = {"end_user": [], "applicant": [],
+                                     "adviser": []}
+    refs: dict[str, str] = {}
+    barbour_role_of: dict[str, str] = {}
+    other: list[tuple[str, str, str]] = []   # (ref, barbour_role, name)
+    for ref, brole, name in barbour_rows:
+        brole = (brole or "").strip()
+        name = (name or "").strip()
+        if not name:
+            continue
+        if brole in BARBOUR_END_USER_ROLES:
+            role = "end_user"
+        elif brole in BARBOUR_APPLICANT_ROLES:
+            role = "applicant"
+        elif brole in BARBOUR_ADVISER_ROLES:
+            role = "adviser"
+        else:
+            other.append((str(ref or ""), brole, name))
+            continue
+        by_role[role].append(name)
+        refs.setdefault(name, str(ref or ""))
+        barbour_role_of.setdefault(name, brole)
+
+    end_users = _dedupe(by_role["end_user"])
+    applicants = _dedupe(by_role["applicant"])
+    b_advisers = _dedupe(by_role["adviser"])
+
+    # Findings, ranked the way the panel has always ranked them, and
+    # kept in that lane. The only route out of it is a confirmed alias.
+    ranked_advisers: list[tuple[str, int]] = []
+    admitted: list[str] = []
+    admitted_counts: dict[str, int] = {}
+    named_once = 0
+    # A name the documents call the applicant outranks one they merely
+    # name often — but only among names a person has already confirmed
+    # belong to a group. Nothing here promotes a name on its count.
+    for family, name, mentions in sorted(
+            findings_counts,
+            key=lambda r: (r[0] != "party_applicant", -r[2], r[1])):
+        name = (name or "").strip()
+        if not name:
+            continue
+        e = entities.parse_entity(name)
+        if e is not None and e.is_authority:
+            # The register the application sits in says this, and says it
+            # without a mention count.
+            continue
+        if group_of(name):
+            admitted.append(name)
+            admitted_counts[name] = mentions
+            continue
+        if mentions < DOCUMENT_NAME_FLOOR:
+            named_once += 1
+            continue
+        ranked_advisers.append((name, mentions))
+
+    # The operator: what Barbour states, else a document name a person
+    # has already confirmed belongs to a group. Never a name whose only
+    # claim is being mentioned often.
+    operator_name = (end_users[0] if end_users else
+                     applicants[0] if applicants else
+                     admitted[0] if admitted else "")
+    operator_group = group_of(operator_name)
+
+    parties: list[Party] = []
+    for name in end_users:
+        parties.append(Party("end_user", name, group_of(name), "barbour",
+                             refs.get(name, ""), barbour_role_of.get(name, "")))
+    for name in applicants:
+        parties.append(Party("applicant", name, group_of(name), "barbour",
+                             refs.get(name, ""), barbour_role_of.get(name, "")))
+    for name in b_advisers:
+        parties.append(Party("adviser", name, group_of(name), "barbour",
+                             refs.get(name, ""), barbour_role_of.get(name, "")))
+    for ref, brole, name in other:
+        parties.append(Party("other", name, group_of(name), "barbour",
+                             ref, brole))
+    for name in admitted:
+        if any(p.name == name for p in parties):
+            continue
+        parties.append(Party(
+            # Not "end_user": Barbour states an end user, while this is a
+            # name from the documents that a person has tied to a group.
+            "operator" if name == operator_name else "named_in_documents",
+            name, group_of(name), "documents",
+            f"{admitted_counts[name]} mentions"))
+    for name, mentions in ranked_advisers:
+        if any(p.name == name for p in parties):
+            continue
+        parties.append(Party("named_in_documents", name, "", "documents",
+                             f"{mentions} mentions"))
+
+    from_barbour = bool(end_users or applicants or b_advisers or other)
+    from_docs = bool(ranked_advisers or admitted)
+    source = ("Barbour project record and documents" if from_barbour and from_docs
+              else "Barbour project record" if from_barbour
+              else "Documents, by mention count" if from_docs
+              else PARTIES_ABSENT)
+
+    # Two lines, not one. Barbour's advisers are stated and carry no
+    # count; the organisations the documents name are a different claim
+    # and get a line that says so, with the count showing. Putting them
+    # together under "advisers" would tell a reader that Ark Estates 5
+    # Ltd advises on the Watford Bypass scheme, when it is the developer
+    # — and putting them under "applicant" is the error this version
+    # exists to undo.
+    return {
+        "operator_group": operator_group,
+        # The one name the badge and its filter key are built from.
+        # Not a column: `end_user` names every end user Barbour records
+        # for the site, and a badge that read "Global Switch, Telehouse
+        # Europe" would filter on a key belonging to neither company.
+        "operator_primary": operator_name,
+        "operator_others": max(0, len(end_users or applicants) - 1),
+        "end_user": ", ".join(end_users),
+        "applicant_of_record": ", ".join(applicants),
+        "advisers": ", ".join(b_advisers),
+        "named_in_documents": ranked_label(ranked_advisers[:3], 0),
+        "authority": ", ".join(_dedupe(councils or ())),
+        "parties_source": source,
+        "parties_named_once": named_once,
+        "parties": tuple(parties),
+    }
+
 
 def _parties_for_sites(conn) -> dict[str, dict]:
-    """Applicant and adviser names per site, ranked by how often named.
+    """Who is behind every site, from Barbour first and documents second.
 
-    Ranked rather than listed for the same reason as the finding families:
-    a site's documents mention many organisations, and the one named forty
-    times is the developer while the one named twice is a consultee's
-    consultant. The count travels with the name so a reader can see which
-    is which.
-
-    Authorities are re-routed here rather than trusted from the family:
-    the family came from the model's signal_type label, which put 1,536
-    councils and development corporations among the advisers.
+    The rules are in `site_parties`, which takes no connection; this
+    function is the three queries that feed it. The alias index is read
+    once and covers confirmed members only, so a proposal sitting in the
+    YAML changes nothing about a build.
     """
     from collections import defaultdict
-    from dcp import entities
+    from dcp import entities, organisations
 
-    per_site: dict[str, dict[str, dict[str, int]]] = defaultdict(
-        lambda: defaultdict(lambda: defaultdict(int)))
+    index = organisations.alias_index(organisations.load_groups())
+
+    barbour: dict[str, list[tuple[str, str, str]]] = defaultdict(list)
+    counts: dict[str, dict[tuple[str, str], int]] = defaultdict(
+        lambda: defaultdict(int))
     display: dict[str, str] = {}
+    authority: dict[str, list[str]] = {}
 
     with conn.cursor() as cur:
+        cur.execute(BARBOUR_ROLES_SQL)
+        for site_key, ref, meta in cur.fetchall():
+            barbour[site_key].extend(barbour_parties(meta, str(ref or "")))
+
         cur.execute(PARTIES_SQL)
         for site_key, family, value_text in cur.fetchall():
             e = entities.parse_entity(value_text)
             if e is None:
                 continue
             display.setdefault(e.key, e.display)
-            bucket = "authority" if e.is_authority else (
-                "applicant" if family == "party_applicant" else
-                "adviser" if family == "party_adviser" else "other")
-            per_site[site_key][bucket][e.key] += 1
+            counts[site_key][(family, e.key)] += 1
 
-    def render(counts: dict[str, int], top: int = 3) -> str:
-        # Floor 0 keeps every one of the top few named — an adviser is not
-        # demoted to 'also referenced' for being named less often than the
-        # developer, which is the normal case rather than a weak signal.
-        ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:top]
-        return ranked_label([(display[k], n) for k, n in ranked], 0)
+        cur.execute(SITE_AUTHORITY_SQL)
+        for site_key, councils, barbour_authorities in cur.fetchall():
+            names = list(councils or [])
+            if not names:
+                names = [_AUTHORITY_PHONE_RE.sub("", a)
+                         for a in (barbour_authorities or [])]
+            authority[site_key] = sorted(n for n in names if n)
 
-    return {site_key: {
-        "applicants": render(b.get("applicant", {})),
-        "advisers": render(b.get("adviser", {})),
-        "authorities": render(b.get("authority", {}), top=2),
-    } for site_key, b in per_site.items()}
+    out: dict[str, dict] = {}
+    for site_key in set(barbour) | set(counts) | set(authority):
+        findings_counts = [(family, display[key], n)
+                           for (family, key), n
+                           in counts.get(site_key, {}).items()]
+        p = site_parties(barbour.get(site_key, ()), findings_counts,
+                         authority.get(site_key, ()), index)
+        # `parties` travels in the profile but is not a column: it is
+        # the long-format rows the workbook's Parties sheet and the
+        # DuckDB's parties table are built from, one row per
+        # organisation per role, which is what §3.2 asks for instead of
+        # a column per role on the site.
+        out[site_key] = p
+    return out
 
 
 def load_site_profiles(conn) -> dict[str, dict]:

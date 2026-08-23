@@ -74,6 +74,14 @@ NOT_YET_KNOWN = ("not_yet_analysed", "partially_analysed", "no_documents",
 # characterise the evidence, not so many that the page becomes the corpus.
 FINDINGS_PER_SITE = 14
 
+# How many sites an organisation must be behind before it gets a chip.
+# Two, so the strip is the organisations with more than one site in the
+# dataset — which is what a filter on the strip is for. An organisation
+# behind one site is still on that site's row, still searchable, and
+# still filterable by clicking its badge; it simply does not need a
+# permanent control of its own.
+WHO_CHIP_FLOOR = 2
+
 # Hoisted out of the builder so a test can run it twice against one
 # database snapshot and compare. Every ordering in it is total —
 # `f.id` in the window, `id DESC` in the CTE, `site_key, rn` on the
@@ -244,6 +252,33 @@ button.toggle[aria-pressed=true]{background:var(--accent);border-color:var(--acc
   color:#fff;font-weight:600}
 label.chk{font-size:12.5px;display:flex;align-items:center;gap:5px;cursor:pointer}
 label.chk.off{opacity:.45;cursor:default}
+/* The organisation chips. Square rather than the prototype's pills, and
+   one neutral colour rather than a palette: colour on this page means
+   verification state (.tag.known, .tag.unknown), and a coloured pill for
+   an organisation would read as a judgement about it. The strip sits
+   under the filter bar rather than inside it, because it is a long line
+   that wraps and the filter bar is sticky. */
+.chips{display:flex;gap:7px;flex-wrap:wrap;align-items:baseline;
+  padding:9px 22px;border-bottom:1px solid var(--line)}
+.chiplabel{font-size:12.5px;font-weight:600;color:var(--mut);
+  margin-right:3px}
+.chips .help{font-size:12px;flex-basis:100%;margin:3px 0 0}
+button.chip{font:inherit;font-size:12.5px;padding:4px 10px;
+  border:1px solid var(--line);border-radius:3px;background:var(--bg);
+  color:var(--fg);cursor:pointer;line-height:1.3}
+button.chip:hover{border-color:var(--accent)}
+button.chip.on{background:var(--fg);border-color:var(--fg);color:var(--bg);
+  font-weight:600}
+button.chip .n{color:var(--mut);font-size:11px;margin-left:3px}
+button.chip.on .n{color:var(--bg);opacity:.75}
+/* The badge in the table cell is the same control in a smaller frame:
+   it filters, so it looks pressable, but it must not out-shout the site
+   name beside it. */
+button.who{font:inherit;font-size:12.5px;padding:2px 7px;text-align:left;
+  border:1px solid var(--line);border-radius:3px;background:var(--bg);
+  color:var(--fg);cursor:pointer;line-height:1.3;max-width:100%}
+button.who:hover{border-color:var(--accent)}
+button.who.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 /* No overflow wrapper around these tables, deliberately. An ancestor with
    overflow-x:auto becomes the containing scroll box for position:sticky,
    so the column headers anchored to it scrolled off the top of the page
@@ -254,18 +289,24 @@ label.chk.off{opacity:.45;cursor:default}
    away — and that is what put the column headings below the first row of
    data. Only bottom borders are drawn on cells, so separate borders look
    identical here. */
-table{border-collapse:separate;border-spacing:0;width:100%;min-width:1230px;
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
   font-size:13px}
-#tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){min-width:210px}
-#tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){min-width:260px}
-#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){width:104px}
-#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:108px}
-#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){width:150px}
+/* Counted from the left, so inserting a column shifts every rule after
+   it — which is what happened when Who's behind it went in at 2 and
+   Proposal inherited a 104px allowance meant for the MW figure. The
+   heading each rule is for is named, so the next insertion is a
+   re-reading rather than a guess. */
+#tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){min-width:210px}   /* Site */
+#tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){width:168px}       /* Who's behind it */
+#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){min-width:260px}   /* Proposal */
+#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:104px}       /* Power MW */
+#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){width:108px}       /* Power indicators */
+#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){width:150px}       /* Status */
 /* Narrowed to make room for the indicators column: of the "top level"
    cells this one has the most spare width, an address rarely needing
    its full former allowance. */
-#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){min-width:190px}
-#tbl-sites th:nth-child(7),#tbl-sites td:nth-child(7){width:112px}
+#tbl-sites th:nth-child(7),#tbl-sites td:nth-child(7){min-width:190px}   /* Location */
+#tbl-sites th:nth-child(8),#tbl-sites td:nth-child(8){width:112px}       /* Read */
 /* A date is one word or it is nothing: 2024-04-15 broken across two lines
    reads as two half-dates. The width comes out of Proposal, which is the
    one column here that can lose a few pixels without cost. */
@@ -976,6 +1017,9 @@ function goSite(key){
   document.getElementById('unk').checked=false;
   document.getElementById('unk').disabled=true;
   document.getElementById('unklab').classList.add('off');
+  // The organisation filter is a filter like any other: a link to one
+  // site has to work for someone whose filters are not the sender's.
+  if(who) setWho(who);
   apply();
   const r=document.querySelector('tr.site[data-key="'+CSS.escape(key)+'"]');
   if(r){
@@ -1081,6 +1125,12 @@ function fromHash(){
     // filters are not the sender's — and the default filter hides
     // sites under 100 MW.
     goSite(h.slice(5));
+  } else if(h.startsWith('who:')){
+    // A filtered table, sent as a link. The tab comes first so the
+    // rows exist to be filtered.
+    show('sites', true);
+    const k=h.slice(4);
+    if(who!==k){ who=''; setWho(k); }
   } else if(TABS.includes(h)){
     show(h, true);
   }
@@ -1133,6 +1183,7 @@ function apply(){
   const s=q.value.toLowerCase().trim(), mode=f.value, org=o.value; let shown=0;
   for(const r of rows){
     let ok=(!s||r.dataset.hay.includes(s));
+    if(ok&&who)              ok=r.dataset.who===who;
     if(ok&&mode==='known')   ok=r.dataset.known==='1';
     if(ok&&mode==='unknown') ok=r.dataset.known!=='1';
     if(ok&&mode==='energy')  ok=r.dataset.near!=='';
@@ -1153,6 +1204,22 @@ function apply(){
   n.textContent=shown+' of '+rows.length+' sites';
   // Nothing to project is not a map worth opening.
   document.getElementById('seemap').disabled = shown===0;
+}
+// Who's behind it. One organisation at a time — the chips answer "show
+// me this operator's sites", and a multi-select would answer a question
+// nobody asked while making the URL ambiguous. The state is in the hash
+// so a filtered table is a link somebody can send.
+let who='';
+function setWho(k){
+  who = (who===k) ? '' : k;
+  document.querySelectorAll('#whochips .chip').forEach(c=>{
+    const on = (c.dataset.who||'')===who;
+    c.classList.toggle('on', on); c.setAttribute('aria-pressed', on);});
+  document.querySelectorAll('button.who').forEach(b=>
+    b.classList.toggle('on', b.dataset.who===who));
+  apply(); sticky();
+  history.replaceState(null,'', who ? '#who:'+encodeURIComponent(who) : '#sites');
+  return false;
 }
 const big=document.getElementById('big'), unk=document.getElementById('unk'),
       unklab=document.getElementById('unklab');
@@ -1224,8 +1291,10 @@ def main() -> int:
     hv = _handover()
     from dcp import capacity_claims as ccl
     from dcp import consumption_context as cc
+    from dcp import entities
     from dcp import external_aggregates as extagg
     from dcp import operator_disclosure as odis
+    from dcp import organisations
     from dcp import origin as origin_mod
     from dcp import proposal as prop
     from dcp import signals as sig
@@ -1376,6 +1445,9 @@ def main() -> int:
         for k, st, vt, vn, vu, verdict in cur.fetchall():
             findings[k].append((st, vt, vn, vu, verdict))
 
+    # Confirmed alias members only, so a proposal in the priors file
+    # changes nothing that a reader sees until a person has confirmed it.
+    alias_index = organisations.alias_index(organisations.load_groups())
     with db.connect() as conn:
         profiles = site_profile.load_site_profiles(conn)
         coverage = site_profile.load_coverage(conn)
@@ -1469,6 +1541,49 @@ def main() -> int:
     # DESNZ consumption context, loaded once so every panel compares
     # against the same national change; coverage counted and printed so
     # unmapped sites are a number, never a silent gap.
+    # The who's-behind-it cell, and the key it filters on.
+    #
+    # What the badge shows is the most-stated thing known about the site,
+    # in that order: the group a person has confirmed, else the end user
+    # Barbour records, else Barbour's client. A name the documents merely
+    # use often never reaches this column — that was the first version's
+    # error, and it put Savills on seventeen rows. Where a site's badge
+    # and its applicant of record are different organisations, both are
+    # shown, because "Amazon, via Colliers International" is the fact and
+    # either half alone is misleading.
+    who_counts: dict[str, int] = defaultdict(int)
+
+    def who_cell(prof):
+        group = (prof.get("operator_group") or "").strip()
+        primary = (prof.get("operator_primary") or "").strip()
+        end_user = (prof.get("end_user") or "").strip()
+        applicant = (prof.get("applicant_of_record") or "").strip()
+        badge = group or primary
+        if not badge:
+            return {"filter_key": "", "sort": "zzz",
+                    "cell": '<span class="q">not established</span>'}
+        source = ("a confirmed alias group" if group else
+                  "Barbour's end user" if end_user else
+                  "Barbour's client")
+        others = prof.get("operator_others") or 0
+        via_bits = []
+        if applicant and applicant != badge:
+            via_bits.append(f"via {trim(applicant, 34)}")
+        if others:
+            via_bits.append(f"and {others} more")
+        via = (f'<span class="q">{esc(" · ".join(via_bits))}</span>'
+               if via_bits else "")
+        key = entities.canonical_key(badge)
+        who_counts[badge] += 1
+        return {
+            "filter_key": key, "sort": badge,
+            "cell": (f'<button type="button" class="who" data-who="{esc(key)}" '
+                     f'title="{esc(badge)} — from {source}. '
+                     f'Click to show only this organisation\u2019s sites." '
+                     f'onclick="event.stopPropagation();'
+                     f'setWho(this.dataset.who)">{esc(trim(badge, 30))}</button>'
+                     + via)}
+
     desnz = cc.load_series()
     ctx_mapped = ctx_unmapped = 0
     ctx_unrecognised: set[str] = set()
@@ -1772,9 +1887,12 @@ def main() -> int:
                           'different applications at this site, so they describe '
                           'different buildings rather than contradicting each other.</dd>')
 
+        who = who_cell(prof)
         hay = " ".join(str(x or "").lower() for x in
                        (name, key, addr, ", ".join(councils or []), full_desc,
-                        prof.get("applicants"), prof.get("advisers"),
+                        prof.get("operator_group"), prof.get("end_user"),
+                        prof.get("applicant_of_record"), prof.get("advisers"),
+                        prof.get("named_in_documents"),
                         prof.get("cooling_method"), btitle,
                         near[0]["name"] if near else "", " ".join(refs or []),
                         " ".join(c["claim_name"] for c in site_claims)))
@@ -1808,9 +1926,11 @@ def main() -> int:
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="{1 if known else 0}"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="{est.value_mw or ''}"
- data-prov="{1 if is_prov else 0}" data-origin="{esc('|'.join(org))}">
+ data-prov="{1 if is_prov else 0}" data-origin="{esc('|'.join(org))}"
+ data-who="{esc(who['filter_key'])}">
 <td data-v="{esc(name or key)}"><strong>{esc(trim(name or key, 58))}</strong>
  <span class="q">{esc(', '.join(councils or []))}</span></td>
+<td data-v="{esc(who['sort'])}">{who['cell']}</td>
 <td data-v="{esc(trim(summary,80))}">{esc(trim(summary, 118)) or '—'}
  {'' if descriptive else '<span class="q">the register holds no description of the development itself, only procedural applications</span>'}</td>
 <td class="mw" data-v="{est.value_mw or ''}">{mw_cell}</td>
@@ -1822,7 +1942,7 @@ def main() -> int:
  f'onclick="event.stopPropagation()">Drive</a>' if _durl and held else ''
 }</span></td>
 </tr>
-<tr class="detail"><td colspan="7">
+<tr class="detail"><td colspan="8">
  {site_banner}
  <div class="grid">
   <div class="col-record">
@@ -1858,15 +1978,23 @@ def main() -> int:
 
    <div class="box parties"><h4>Who is behind it</h4>
     <dl class="kv">
-     <dt>Applicant / operator</dt><dd>{counted(prof.get('applicants'))}</dd>
-     <dt>Advisers</dt><dd>{counted(prof.get('advisers'))}</dd>
-     <dt>Planning authority</dt><dd>{counted(prof.get('authorities'))}</dd>
+     <dt>End user</dt><dd>{esc(prof.get('end_user') or '—')}
+      {f'<span class="help">group: {esc(prof["operator_group"])}</span>'
+        if prof.get('operator_group') else ''}</dd>
+     <dt>Applicant of record</dt><dd>{esc(prof.get('applicant_of_record') or '—')}</dd>
+     <dt>Advisers</dt><dd>{esc(prof.get('advisers') or '—')}</dd>
+     <dt>Also named in the documents</dt><dd>{counted(prof.get('named_in_documents'))}</dd>
+     <dt>Planning authority</dt><dd>{esc(prof.get('authority') or '—')}</dd>
      <dt>Barbour project</dt><dd>{esc(btitle or '—')}
       {f'<span class="help">{esc(bstage or "")}</span>' if bstage else ''}</dd>
      <dt>Nearest energy project</dt><dd>{near_html}</dd>
     </dl>
-    <p class="help">Names are counted: the organisation named forty times is the developer,
-     the one named twice is usually a consultee's consultant.</p></div>
+    <p class="help">{esc(prof.get('parties_source') or site_profile.PARTIES_ABSENT)}.
+     End user, applicant and advisers are as Barbour ABI's project record states them.
+     The last line is different: those organisations are named in the site's own
+     documents, and the number is how often — the firm that wrote the planning statement
+     is named more often than the developer, and a utilities section names whoever has
+     ducts in the road.</p></div>
   </div>
 
   <div class="box"><h4>Declared power</h4>
@@ -1918,7 +2046,8 @@ def main() -> int:
     existing = {r[0].upper() for r in site_rows}
     n_barbour = 0
     for (pref, title, pstage, dev_type, authority, address, description,
-         plat, plon, pvalue, pfloor, psite, pplan, pdecision) in barbour_rows:
+         plat, plon, pvalue, pfloor, psite, pplan, pdecision,
+         praw) in barbour_rows:
         key = f"PTNO-{pref}"
         if key.upper() in existing:
             continue
@@ -1931,6 +2060,14 @@ def main() -> int:
                    f' title="Show this site on the map">map</a>') if plat and plon else ""
         env = sorted(sig.environmental_signals(description or "").keys())
         summary = prop.tidy(prop.summarise([description, title])[0])
+        # A pre-planning row has no documents, so Barbour's role blocks
+        # are the whole of what is known about who is behind it — which
+        # makes this the one place the column is the row's main content.
+        bprof = site_profile.site_parties(
+            site_profile.barbour_parties(praw or {}, str(pref or "")),
+            (), [site_profile._AUTHORITY_PHONE_RE.sub("", authority or "")],
+            alias_index)
+        who = who_cell(bprof)
         if plat is not None and plon is not None:
             map_points.append({
                 "k": "s", "id": key, "lat": plat, "lon": plon, "mw": None,
@@ -1944,7 +2081,9 @@ def main() -> int:
                         f'<a href="#sites" onclick="return goSite(\'{esc(key)}\')">'
                         f'Open this site</a>')})
         hay = " ".join(str(x or "").lower() for x in
-                       (title, key, address, authority, description, dev_type))
+                       (title, key, address, authority, description, dev_type,
+                        bprof["end_user"], bprof["applicant_of_record"],
+                        bprof["advisers"]))
         near_html = (f'{esc(near[0]["name"])} — {near[1]} km'
                      f' <a href="{esc(near[0]["url"])}" target="_blank" '
                      f'rel="noopener">PINS</a>') if near else "—"
@@ -1962,9 +2101,10 @@ def main() -> int:
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="0"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
- data-origin="Barbour ABI">
+ data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}">
 <td data-v="{esc(title or key)}"><strong>{esc(trim(title or key, 58))}</strong>
  <span class="q">{esc(authority or '')}</span></td>
+<td data-v="{esc(who['sort'])}">{who['cell']}</td>
 <td data-v="{esc(trim(summary,80))}">{esc(trim(summary, 118)) or '—'}</td>
 <td class="mw" data-v="">—<span class="q">no application yet</span></td>
 <td data-v="0">—</td>
@@ -1972,7 +2112,7 @@ def main() -> int:
 <td data-v="{esc(address or '')}">{esc(trim(address, 105)) or '—'} {maplink}</td>
 <td data-v="-1">—<span class="q">nothing published</span></td>
 </tr>
-<tr class="detail"><td colspan="7">
+<tr class="detail"><td colspan="8">
  <div class="banner" style="margin-top:0"><b>No application submitted yet.</b>
   {esc(site_profile.NO_DOCUMENT_REASONS['pre_application'])}</div>
  <div class="grid">
@@ -2015,6 +2155,18 @@ def main() -> int:
  </div></td></tr>""")
 
     n_sites = len(site_rows) + n_barbour
+    # The chips, from the counts the rows themselves produced — a group
+    # that is on the strip is a group that is on a row, and the number
+    # beside it is the number of rows a click will leave. Ranked by
+    # sites, then by name so two builds of one database agree.
+    n_who_named = sum(who_counts.values())
+    who_chips = "".join(
+        f'<button type="button" class="chip" '
+        f'data-who="{esc(entities.canonical_key(nm))}" '
+        f'onclick="setWho(this.dataset.who)" aria-pressed="false">'
+        f'{esc(trim(nm, 26))} <span class="n">{c}</span></button>'
+        for nm, c in sorted(who_counts.items(), key=lambda kv: (-kv[1], kv[0]))
+        if c >= WHO_CHIP_FLOOR)
     # Sites in the table that can never be a pin. Derived from the points
     # actually built rather than counted separately, so the tooltip cannot
     # disagree with the map it is explaining.
@@ -2341,7 +2493,7 @@ def main() -> int:
         f'<td class="n">{len(r.sites) or "—"}</td>'
         + "".join(_aud_cell(r, k) for k, _ in _AUD)
         + f'<td class="help">{esc("; ".join(sorted(t for t in r.terms if t)) or "—")}</td>'
-          f'</tr><tr class="detail"><td colspan="8">{_op_detail(r)}</td></tr>'
+          f'</tr><tr class="detail"><td colspan="7">{_op_detail(r)}</td></tr>'
         for r in op_rows)
 
     # Same quantity, two audiences: the only comparison where a gap is
@@ -2948,8 +3100,18 @@ def main() -> int:
  table but never appear as a pin. The link says how many of the sites you have filtered
  to can be shown, and how many cannot.</span></span>
 </div>
+<div class="chips" id="whochips" role="group" aria-label="Filter by who is behind the site">
+ <span class="chiplabel">Who's behind it</span>
+ <button type="button" class="chip on" data-who="" onclick="setWho('')"
+  aria-pressed="true">Any</button>
+ {who_chips}
+ <span class="help">{n_who_named} of {n_sites} sites name an end user or a client;
+  the rest say so. A chip filters the table and the map together.</span>
+</div>
 <table id="tbl-sites"><thead><tr>
  <th>{dl("Sites","Site name","Site")}</th>
+ <th>{dl("Sites","End user (Barbour); Applicant of record (Barbour); "
+          "Advisers (Barbour)","Who's behind it")}</th>
  <th>{dl("Sites","Proposal","Proposal")}</th>
  <th data-num="1">{dl("Sites","Power MW (best available)","Power MW")}</th>
  <th data-num="1">{dl("Sites","External power indicators","Power indicators")}</th>
