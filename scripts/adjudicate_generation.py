@@ -3,7 +3,8 @@
 
 READER_REDESIGN_PLAN §4.1e asks every adjudicated on-site generation
 figure two things the original adjudication never asked: is this one
-machine, a stated fleet, or the site; and is the plant standby
+machine, the site's stated fleet of generators, or the site; and is the
+plant standby
 combustion, prime combustion, renewable or storage. The prompt lives in
 scripts/adjudicate_power.py with the others, under its own prompt
 version; this script is the route that runs it.
@@ -112,7 +113,7 @@ PER_UNIT_SITES: tuple[tuple[str, int, str], ...] = (
      "headline labelled per unit (Woodlands Park)"),
 )
 
-BASIS_VALUES = ("per_unit", "fleet_total", "site_total",
+BASIS_VALUES = ("per_unit", "site_fleet_total", "site_total",
                 "not_generation", "unclear")
 PLANT_VALUES = ("standby_combustion", "prime_combustion", "renewable",
                 "storage", "mixed", "unclear")
@@ -255,10 +256,13 @@ that question is settled and is not what is being asked.
 Two questions per row, from the quote alone. Fill the two columns in
 `{csv}` — one value from each list, exactly as written:
 
-**figure_basis** — is the figure one machine, a fleet, or the site?
+**figure_basis** — is the figure one machine, the site's fleet of
+generators, or the site? ("Fleet" throughout means the generators on
+this one site, never an operator's estate of sites.)
 
 - `per_unit` — the rating of a single generating unit
-- `fleet_total` — the combined rating of a stated number of units
+- `site_fleet_total` — the combined rating of a stated number of units
+  on this site (never an operator's estate of sites)
 - `site_total` — the development's total generating capacity
 - `not_generation` — not an electrical generating capacity at all: a
   thermal or fuel input, an annual energy figure, a battery rating, a

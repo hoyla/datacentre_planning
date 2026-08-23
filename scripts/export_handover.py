@@ -571,8 +571,9 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "A per-row adjudication of every generation figure is planned and "
      "will supersede this label."),
     ("Sites", "Generator units disclosed (count) / Generator unit rating MW (disclosed)",
-     "The largest fleet the documents disclose as a count and a rating in "
-     "one passage (\"up to 650 no. 2,480 kW back-up diesel generators\"), "
+     "The largest fleet of generators on this site that the documents "
+     "disclose as a count and a rating in one passage (\"up to 650 no. "
+     "2,480 kW back-up diesel generators\"), "
      "reported beside the generation figure and never multiplied into it. "
      "Where the generation figure is itself a per-unit rating, these are "
      "that rating and its count. A count here is what one passage says; "

@@ -239,7 +239,12 @@ SCHEMA = {
 # figure is not a generating capacity at all. 1.2 puts the questions in
 # the order they have to be asked: is this electricity, and only then,
 # whose electricity.
-GENERATION_PROMPT_VERSION = "generation-1.2"
+# 1.3 changes one word: "fleet_total" became "site_fleet_total", because
+# in this project "fleet" can read as an operator's estate of sites, and
+# Luke read it that way. The question is unchanged; the vocabulary a
+# person is asked to write is not, and the sheet has to match the
+# schema, so the version moves.
+GENERATION_PROMPT_VERSION = "generation-1.3"
 
 GENERATION_PROMPT = """\
 You are auditing extracted figures from UK planning documents for an
@@ -256,7 +261,7 @@ passage often states several figures, and they are not the same kind of
 thing. Given the quote "emergency generator sets (currently estimated as
 150 x 2MW units)":
 
-  - asked about the figure 300 MW, the answer is "fleet_total": 150
+  - asked about the figure 300 MW, the answer is "site_fleet_total": 150
     units of 2 MW is what makes 300;
   - asked about the figure 2 MW, the answer is "per_unit".
 
@@ -272,7 +277,7 @@ does the first question have an answer other than "not_generation".
 
 **Then arithmetic settles it before vocabulary does.** Where the quote
 states a count and a per-unit rating whose product is the figure on the
-row — within rounding — the figure is "fleet_total", however the
+row — within rounding — the figure is "site_fleet_total", however the
 sentence phrases it. "26 generator systems each system providing 104
 megawatts" sits beside "26 4 MW generators" in the same application, and
 104 is the combined rating of twenty-six machines, not one machine's
@@ -284,15 +289,17 @@ figure is — a count in one sentence, a rating in another — say so in the
 reasoning. The evidence_span must still come from the quote of the row
 it belongs to.
 
-**1. Is this figure one machine, a fleet, or the site?**
+**1. Is this figure one machine, the site's fleet of generators, or the site?**
 
   "per_unit"      the rating of a SINGLE generating unit. Signalled by
                   "each", "per unit", "no. 2,480 kW generators", or a
                   count stated beside this rating.
-  "fleet_total"   the combined rating of a STATED number of units —
-                  "20 no. 2,499 kW natural gas engines with a combined
-                  capacity of just under 50 MW electrical power" is the
-                  fleet total when the figure is the 50 MW.
+  "site_fleet_total" the combined rating of a STATED number of units
+                  on THIS site — "20 no. 2,499 kW natural gas engines
+                  with a combined capacity of just under 50 MW electrical
+                  power" is the site's fleet total when the figure is the
+                  50 MW. "Fleet" means the generators on this site, never
+                  an operator's estate of sites.
   "site_total"    the total generating capacity of the development,
                   which may cover more than one kind of plant or not say
                   how it is made up — "the capacity to generate 49.9 MW
@@ -306,7 +313,7 @@ it belongs to.
 
   A figure can be BOTH a fleet total and the site total; where the quote
   says the fleet is the whole of the site's generation, answer
-  "fleet_total" and say so in the reasoning.
+  "site_fleet_total" and say so in the reasoning.
 
 **2. What kind of plant is it?**
 
@@ -366,7 +373,7 @@ GENERATION_SCHEMA = {
                 "properties": {
                     "finding_id": {"type": "integer"},
                     "figure_basis": {"type": "string", "enum": [
-                        "per_unit", "fleet_total", "site_total",
+                        "per_unit", "site_fleet_total", "site_total",
                         "not_generation", "unclear"]},
                     "plant_type": {"type": "string", "enum": [
                         "standby_combustion", "prime_combustion",
