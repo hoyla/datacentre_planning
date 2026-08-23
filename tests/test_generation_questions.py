@@ -271,14 +271,14 @@ def test_a_value_outside_the_vocabulary_stops_the_scoring(tmp_path):
 def test_a_disagreement_is_reported_with_the_model_s_reason(tmp_path):
     path = tmp_path / "hand.csv"
     _write_hand_sheet(path, [
-        {"row": 1, "finding_id": 11, "figure_basis": "fleet_total",
+        {"row": 1, "finding_id": 11, "figure_basis": "site_fleet_total",
          "plant_type": "prime_combustion"}])
     hand = ag.read_hand_sheet(path)
     run = {"answers": {"11": {
         "figure_basis": "per_unit", "plant_type": "prime_combustion",
         "span_verified": True, "reasoning": "the quote says each"}}}
     report = "\n".join(ag.score([_row("S", 11, 50.0, "q")], hand, run))
-    assert "basis per_unit vs fleet_total" in report
+    assert "basis per_unit vs site_fleet_total" in report
     assert "the quote says each" in report
 
 
