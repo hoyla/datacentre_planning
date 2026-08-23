@@ -18,10 +18,14 @@
 -- refusal is a row a person can read rather than a silence.
 --
 -- Append-only and idempotent: (site_key, model, prompt_version,
--- input_hash) is unique, and input_hash is over everything the model was
--- shown, so a site whose inputs have not changed is not re-read, and a
--- site whose inputs have changed gets a new row beside the old one. A
--- build takes the latest non-withheld row per site.
+-- input_hash, gate_version) is unique. input_hash is over everything the
+-- model was shown, so a site whose inputs have not changed is not
+-- re-read, and a site whose inputs have changed gets a new row beside
+-- the old one. gate_version is in the key because the gate is a
+-- judgement too: a reading refused under one gate and accepted under a
+-- stricter or a fairer one is two rows, not an overwrite, and the model's
+-- answer is kept on disk so re-gating never costs a second call. A build
+-- takes the latest non-withheld row per site.
 
 CREATE TABLE site_machine_readings (
     id               BIGSERIAL PRIMARY KEY,
@@ -29,6 +33,7 @@ CREATE TABLE site_machine_readings (
     model            TEXT NOT NULL,
     prompt_version   TEXT NOT NULL,
     input_hash       TEXT NOT NULL,     -- sha256 over the rendered input
+    gate_version     TEXT NOT NULL,     -- dcp.machine_reading.GATE_VERSION
     -- What the model was shown, summarised so a reader of the row can
     -- see the reading's footing without re-deriving it.
     documents_read   INT NOT NULL,      -- documents whose pages were sent
@@ -41,7 +46,7 @@ CREATE TABLE site_machine_readings (
     -- refusal can be examined; it is never rendered.
     withheld_reason  TEXT,
     inserted_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
-    UNIQUE (site_key, model, prompt_version, input_hash)
+    UNIQUE (site_key, model, prompt_version, input_hash, gate_version)
 );
 
 CREATE INDEX idx_site_machine_readings_site

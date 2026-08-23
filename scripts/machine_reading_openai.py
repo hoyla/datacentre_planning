@@ -95,8 +95,10 @@ def _already(conn, site_key: str, model: str, input_hash: str) -> bool:
     with conn.cursor() as cur:
         cur.execute("""SELECT 1 FROM site_machine_readings
                        WHERE site_key = %s AND model = %s
-                         AND prompt_version = %s AND input_hash = %s""",
-                    (site_key, model, mr.PROMPT_VERSION, input_hash))
+                         AND prompt_version = %s AND input_hash = %s
+                         AND gate_version = %s""",
+                    (site_key, model, mr.PROMPT_VERSION, input_hash,
+                     mr.GATE_VERSION))
         return cur.fetchone() is not None
 
 
@@ -105,12 +107,14 @@ def _store(conn, inp: mr.SiteInput, model: str, reading: dict | None,
     with conn.cursor() as cur:
         cur.execute("""
             INSERT INTO site_machine_readings
-                (site_key, model, prompt_version, input_hash, documents_read,
-                 pages_read, input_chars, reading, withheld_reason)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            ON CONFLICT (site_key, model, prompt_version, input_hash) DO NOTHING""",
+                (site_key, model, prompt_version, input_hash, gate_version,
+                 documents_read, pages_read, input_chars, reading,
+                 withheld_reason)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            ON CONFLICT (site_key, model, prompt_version, input_hash, gate_version)
+            DO NOTHING""",
             (inp.site_key, model, mr.PROMPT_VERSION, inp.input_hash,
-             inp.documents_read, len(inp.pages),
+             mr.GATE_VERSION, inp.documents_read, len(inp.pages),
              sum(len(p.text) for p in inp.pages),
              json.dumps(reading) if reading is not None else None,
              None if verdict.ok else verdict.reason))
@@ -120,7 +124,7 @@ def _store(conn, inp: mr.SiteInput, model: str, reading: dict | None,
 def _markdown(inp: mr.SiteInput, reading: dict, verdict: mr.GateResult,
               model: str) -> str:
     lines = [f"# {inp.name}", "",
-             f"`{inp.site_key}` · {model} · {mr.PROMPT_VERSION} · "
+             f"`{inp.site_key}` · {model} · {mr.PROMPT_VERSION} · {mr.GATE_VERSION} · "
              f"{inp.documents_read} documents, {len(inp.pages)} pages, "
              f"{sum(len(p.text) for p in inp.pages):,} characters read", ""]
     if not verdict.ok:
@@ -157,9 +161,10 @@ def _sample_one(client, conn, key, why, inp, model, effort) -> str:
     raw_path = SAMPLE_DIR / f"{key.replace('/', '_')}.raw.json"
     # The raw answer is written before the gate runs: a gate bug must
     # never cost a second call for the same reading.
-    if raw_path.exists() and json.loads(raw_path.read_text()).get(
-            "input_hash") == inp.input_hash:
-        reading = json.loads(raw_path.read_text())["reading"]
+    cached = json.loads(raw_path.read_text()) if raw_path.exists() else {}
+    if (cached.get("input_hash") == inp.input_hash
+            and cached.get("prompt_version") == mr.PROMPT_VERSION):
+        reading = cached["reading"]
         how = "from disk"
     else:
         t0 = time.time()
@@ -167,8 +172,16 @@ def _sample_one(client, conn, key, why, inp, model, effort) -> str:
             reading = read_one(client, inp, model, effort)
         except Exception as e:   # noqa: BLE001
             return f"{key}: request failed: {e}"
+        # The previous prompt's answer is kept beside the new one: the
+        # progression is evidence, and a re-gate of an old answer is
+        # still possible from its own file.
+        if cached and cached.get("prompt_version") != mr.PROMPT_VERSION:
+            raw_path.with_name(raw_path.name.replace(
+                ".raw.json", f".{cached.get('prompt_version', 'old')}.raw.json")
+            ).write_text(json.dumps(cached))
         raw_path.write_text(json.dumps(
-            {"input_hash": inp.input_hash, "model": model, "reading": reading}))
+            {"input_hash": inp.input_hash, "model": model,
+             "prompt_version": mr.PROMPT_VERSION, "reading": reading}))
         how = f"{time.time() - t0:.0f}s"
     verdict = mr.gate(reading, inp)
     _store(conn, inp, model, reading, verdict)
@@ -187,34 +200,39 @@ def do_sample(model: str, effort: str, only: list[str] | None,
               workers: int = 6) -> None:
     """The twenty, read concurrently: one site at this text budget takes
     the model a quarter of an hour, and twenty in a row is an afternoon
-    a person would otherwise spend waiting to read them."""
+    a person would otherwise spend waiting to read them.
+
+    Each worker builds its own site's input and drops it when done. The
+    first version built all twenty up front and held them — and a
+    site's input carries every cached page of every document it holds,
+    for the gate, which for Interxion is 2,340 documents; the process
+    was killed before the first reading came back.
+    """
     from concurrent.futures import ThreadPoolExecutor, as_completed
     client = _client()
     SAMPLE_DIR.mkdir(parents=True, exist_ok=True)
     with db.connect() as conn:
         profiles, coverage, cohorts = _context(conn)
-        targets = [(k, why) for k, why in SAMPLE_SITES if not only or k in only]
-        inputs = []
-        for key, why in targets:
-            inp = mr.load_site_input(conn, key, profile=profiles.get(key, {}),
-                                     coverage=coverage.get(key, {}),
-                                     cohorts=cohorts)
-            chars = sum(len(p.text) for p in inp.pages)
-            print(f"{key}: {why}\n   {inp.documents_read} of "
-                  f"{inp.documents_considered} documents, {len(inp.pages)} pages, "
-                  f"{chars:,} chars", flush=True)
-            if _already(conn, key, model, inp.input_hash):
-                print("   already read under this input; skipped", flush=True)
-                continue
-            inputs.append((key, why, inp))
+    targets = [(k, why) for k, why in SAMPLE_SITES if not only or k in only]
+
     # One connection per worker: psycopg2 connections are not shared
     # across threads, and each store is its own short transaction.
     def run(item):
-        key, why, inp = item
+        key, why = item
         with db.connect() as c2:
-            return _sample_one(client, c2, key, why, inp, model, effort)
+            inp = mr.load_site_input(c2, key, profile=profiles.get(key, {}),
+                                     coverage=coverage.get(key, {}),
+                                     cohorts=cohorts)
+            chars = sum(len(p.text) for p in inp.pages)
+            head = (f"{key}: {why}\n   {inp.documents_read} of "
+                    f"{inp.documents_considered} documents, {len(inp.pages)} "
+                    f"pages, {chars:,} chars")
+            if _already(c2, key, model, inp.input_hash):
+                return head + "\n   already read under this input; skipped"
+            return head + "\n   " + _sample_one(client, c2, key, why, inp,
+                                                  model, effort)
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        for fut in as_completed([pool.submit(run, it) for it in inputs]):
+        for fut in as_completed([pool.submit(run, it) for it in targets]):
             print(fut.result(), flush=True)
 
 
@@ -314,6 +332,35 @@ def do_collect() -> None:
               f"{withheld} withheld, {failed} unparseable")
 
 
+def do_regate() -> None:
+    """Re-judge every cached answer under the current gate, storing a
+    new row per site under this gate version. No model call."""
+    with db.connect() as conn:
+        profiles, coverage, cohorts = _context(conn)
+        for raw_path in sorted(SAMPLE_DIR.glob("*.raw.json")):
+            raw = json.loads(raw_path.read_text())
+            key = raw_path.name[:-len(".raw.json")]
+            key = next((k for k, _ in SAMPLE_SITES if k.replace("/", "_") == key), key)
+            inp = mr.load_site_input(conn, key, profile=profiles.get(key, {}),
+                                     coverage=coverage.get(key, {}),
+                                     cohorts=cohorts)
+            if inp.input_hash != raw.get("input_hash"):
+                print(f"{key}: input changed since the answer on disk; skipped")
+                continue
+            if raw.get("prompt_version", mr.PROMPT_VERSION) != mr.PROMPT_VERSION:
+                print(f"{key}: answer on disk is {raw['prompt_version']}; skipped")
+                continue
+            if _already(conn, key, raw["model"], inp.input_hash):
+                print(f"{key}: already gated under {mr.GATE_VERSION}")
+                continue
+            verdict = mr.gate(raw["reading"], inp)
+            _store(conn, inp, raw["model"], raw["reading"], verdict)
+            slug = key.replace("/", "_")
+            (SAMPLE_DIR / f"{slug}.md").write_text(
+                _markdown(inp, raw["reading"], verdict, raw["model"]))
+            print(f"{key}: {'OK' if verdict.ok else 'WITHHELD — ' + verdict.reason}")
+
+
 def do_report() -> None:
     with db.connect() as conn:
         latest = mr.load_latest(conn)
@@ -332,6 +379,8 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--collect", action="store_true")
     ap.add_argument("--report", action="store_true")
+    ap.add_argument("--regate", action="store_true",
+                    help="re-judge the cached sample answers under the current gate")
     ap.add_argument("--model", default="gpt-5")
     ap.add_argument("--reasoning-effort", default="medium",
                     choices=["minimal", "low", "medium", "high"])
@@ -342,6 +391,8 @@ def main() -> int:
         do_submit(args.model, args.reasoning_effort, dry_run=not args.submit)
     elif args.collect:
         do_collect()
+    elif args.regate:
+        do_regate()
     elif args.report:
         do_report()
     else:

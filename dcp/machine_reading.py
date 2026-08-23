@@ -46,8 +46,22 @@ ROOT = Path(__file__).resolve().parent.parent
 # 1.0 was run on Watford Bypass and read well, but named its sources by
 # the council's filing label — "Supporting Documents" — and so called the
 # Energy and Sustainability Statement the Environmental Statement. 1.1
-# labels every page with the document's register filename instead.
-PROMPT_VERSION = "reading-1.1"
+# labels every page with the document's register filename instead. Under
+# 1.1 the gate passed eleven of the twenty sample sites and refused nine,
+# every refusal a real breach: a figure with no quote ("1 generator",
+# "250MW"), a quote copied from memory rather than the page, "plans to".
+# 1.2 tells the model each of those in the words the gate uses.
+PROMPT_VERSION = "reading-1.2"
+
+# The gate has a version of its own, in the table's key, because it is
+# a judgement too. gate-1.0 refused Watford for a dropped comma and
+# Didcot for the word "should" in a question about which figure governs;
+# gate-1.1 lets punctuation differ between a quote and its page, searches
+# every document the site holds when the cited one does not contain a
+# quote (recording the correction), and forbids advice by its phrases
+# rather than by the word "should". Every word and figure in a quote
+# must still match, in order.
+GATE_VERSION = "gate-1.1"
 
 # The text budget per site, in characters. ~120k tokens: enough for a
 # planning statement, an energy statement, an officer report and the
@@ -345,22 +359,30 @@ Write three sections.
    held, things the structured facts mark as unread or provisional.
 
 RULES. These are not style preferences; a reading that breaks one is
-discarded.
+discarded — the whole reading, for this site, not the sentence.
 
 - Every number with a unit that you write — MW, MVA, kW, GW, MWh, m2,
-  sqm, hectares, £, a count of generators — must appear verbatim in a
-  quote you attach to the same paragraph, and the quote must be copied
-  EXACTLY from the page or the structured fact it came from: the same
-  characters, the same punctuation, the same line of figures. Cite the
+  sqm, hectares, £, and every COUNT of plant ("112 generators", "1
+  generator", "two engines" written as a numeral) — must appear in a
+  quote attached to the SAME paragraph. Write the number the way the
+  quote writes it: if the quote says "49.9MW", do not write "50 MW" or
+  "sub-50MW"; if it says "5MW", do not write "5,000 kW". A paragraph
+  that states a figure the quotes beside it do not contain discards the
+  reading.
+- Every quote must be copied EXACTLY from the PAGES shown below, or
+  from a structured fact above — never from memory of the document,
+  never tidied. The same characters, the same line of figures. Copy
+  from the passage in front of you and check it is there. Cite the
   document id and page for a page quote; cite the application reference
-  for a structured-fact quote. A figure with no quote, or a quote that
-  does not contain the figure, discards the reading.
+  for a structured-fact quote. A quote that is not on the page it cites
+  discards the reading.
 - Describe this site only. Do not compare it with any other site, do
   not rank it, do not say it is large or small for its kind, do not
   refer to "other sites" or "most data centres".
 - Do not infer intent. Say what the documents state a plant is for when
-  they state it; never say what the applicant "wants", "plans to",
-  "intends" or "is really" doing.
+  they state it; never write that the applicant "wants", "plans to",
+  "intends", "proposes to" in your own voice, or "is really" doing
+  anything. Write "the planning statement states that" and quote it.
 - Do not advise. No "reporters should", "worth investigating", "the
   story here", "a red flag". State; do not recommend.
 - Do not add knowledge from outside the documents and facts given. If
@@ -522,13 +544,33 @@ def _verify_helpers():
 _VF = None
 
 
+# Punctuation that may differ between a model's copy and the page: the
+# marks between words, and a full stop that is not a decimal point.
+_PUNCT_RE = re.compile(r"[,;:()\[\]\"'’‘“”]|(?<!\d)\.(?!\d)")
+
+
 def quote_in_text(quote: str, text: str) -> bool:
-    """The findings gate's fragment match: normalised, ellipsis-aware."""
+    """The findings gate's fragment match: normalised, ellipsis-aware.
+
+    With one relaxation the findings gate does not have. Watford's 1.1
+    reading was refused for "Affinity Water is still to confirm the
+    amount of water" against a page that reads "Affinity Water, is still
+    to confirm" — a dropped comma. Every word and every figure must
+    still match, in order; punctuation between them need not. A quote
+    that verifies only this way is still a verbatim run of the words on
+    the page, and it is the words and the figures that a reader checks.
+    """
     global _VF
     if _VF is None:
         _VF = _verify_helpers()
     frags = [_VF._normalise(f) for f in _VF._quote_fragments(quote)]
-    return bool(frags) and _VF._all_fragments_in_order(_VF._normalise(text), frags)
+    if not frags:
+        return False
+    page = _VF._normalise(text)
+    if _VF._all_fragments_in_order(page, frags):
+        return True
+    strip = lambda t: " ".join(_PUNCT_RE.sub(" ", t).split())   # noqa: E731
+    return _VF._all_fragments_in_order(strip(page), [strip(f) for f in frags])
 
 
 # A number with a unit, as the rules define it. Thousands separators and
@@ -543,16 +585,21 @@ FIGURE_RE = re.compile(
     re.I)
 
 FORBIDDEN = (
-    # cross-site comparison and ranking
-    r"\bother sites?\b", r"\bmost data cent(re|er)s\b", r"\blargest\b", r"\bsmallest\b",
-    r"\bbigger than\b", r"\bsmaller than\b", r"\bcompared (to|with)\b",
-    r"\branks?\b", r"\bamong the\b",
+    # cross-site comparison and ranking. "largest" is not here: "the
+    # largest figure in the file" is a statement about this site's
+    # documents, and the rule is about other sites.
+    r"\bother (data centre )?sites?\b", r"\bmost data cent(re|er)s\b",
+    r"\bcompared (to|with) other\b", r"\branks?\b", r"\bamong the (largest|biggest|smallest)\b",
+    r"\b(one of the|the) (largest|biggest|smallest)( \w+)? (in|of) (the|its)\b",
+    r"\b(typical|unusual|unusually) (for|of) (a|the) (data centre|scheme|site)",
     # intent
     r"\bintends?\b", r"\bintention\b", r"\bwants?\b", r"\bplans? to\b",
     r"\breally\b", r"\bsecretly\b",
-    # advice
-    r"\bshould\b", r"\bworth (investigating|asking|looking)\b", r"\bred flag\b",
-    r"\bthe story\b", r"\breporters?\b", r"\bjournalists?\b",
+    # advice, by its phrases. A question may say "which figure should
+    # govern"; a reading may not say what anyone should do about it.
+    r"\b(reporters?|journalists?|readers?|you) (should|could|might|need)\b",
+    r"\bworth (investigating|asking|looking|pursuing|checking)\b", r"\bred flag\b",
+    r"\bthe story\b", r"\breporters?\b", r"\bjournalists?\b", r"\bwe recommend\b",
 )
 _FORBIDDEN_RES = tuple(re.compile(p, re.I) for p in FORBIDDEN)
 
@@ -607,9 +654,29 @@ def gate(reading: dict, inp: SiteInput) -> GateResult:
                     ok = (" ".join(quote.split()) in panel_quotes
                           or quote_in_text(quote, facts_text))
                 if not ok:
+                    # A real quote under the wrong citation is still a
+                    # verbatim run of the site's own documents. Search
+                    # every cached document; where it is found, the
+                    # citation is corrected IN the reading and the
+                    # correction is recorded beside it, so the panel
+                    # links the document the words are actually in and
+                    # the model's error stays visible.
+                    for other_id, pages in inp.cache.items():
+                        if other_id == doc_id:
+                            continue
+                        for pno, ptext in enumerate(pages, 1):
+                            if quote_in_text(quote, ptext):
+                                q["cited_document_id"] = doc_id
+                                q["document_id"], q["page"] = other_id, pno
+                                ok = True
+                                break
+                        if ok:
+                            break
+                if not ok:
                     return GateResult(
                         False, f"{sec} paragraph {i + 1}: quote not found in "
-                               f"document {doc_id or '—'}: \"{quote[:80]}\"")
+                               f"document {doc_id or '—'} or any other the site "
+                               f"holds: \"{quote[:80]}\"")
                 verified.append(quote)
             joined = " ".join(verified)
             for m in FIGURE_RE.finditer(text):
@@ -631,7 +698,7 @@ def gate(reading: dict, inp: SiteInput) -> GateResult:
 
 LATEST_SQL = """
 SELECT DISTINCT ON (site_key) site_key, model, prompt_version, reading,
-       documents_read, pages_read, inserted_at
+       documents_read, pages_read, inserted_at, gate_version
 FROM site_machine_readings
 WHERE withheld_reason IS NULL AND reading IS NOT NULL
 ORDER BY site_key, inserted_at DESC, id DESC
@@ -651,10 +718,11 @@ def load_latest(conn) -> dict[str, dict]:
     out: dict[str, dict] = {}
     with conn.cursor() as cur:
         cur.execute(LATEST_SQL)
-        for key, model, pv, reading, nd, npg, at in cur.fetchall():
+        for key, model, pv, reading, nd, npg, at, gv in cur.fetchall():
             out[key] = {"model": model, "prompt_version": pv,
                         "reading": reading, "documents_read": nd,
-                        "pages_read": npg, "inserted_at": at}
+                        "pages_read": npg, "inserted_at": at,
+                        "gate_version": gv}
     return out
 
 

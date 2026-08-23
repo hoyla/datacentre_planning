@@ -96,6 +96,31 @@ def test_a_quote_of_an_adjudicated_figure_passes_by_application_ref():
     assert mr.gate(r, _inp()).ok
 
 
+def test_a_dropped_comma_does_not_refuse_a_quote():
+    """Every word and figure in order; punctuation between them is free."""
+    r = _reading("The IT load is 168 MW.",
+                 [_q("housed in acoustic enclosures The total IT load is 168 MW")])
+    assert mr.gate(r, _inp()).ok
+
+
+def test_a_changed_word_still_refuses():
+    r = _reading("The IT load is 168 MW.",
+                 [_q("housed in quiet enclosures. The total IT load is 168 MW")])
+    assert not mr.gate(r, _inp()).ok
+
+
+def test_a_quote_under_the_wrong_citation_is_re_attributed_and_recorded():
+    q = _q("a 120 MW grid connection", doc=41, page=7)
+    r = _reading("A 120 MW grid connection is stated.", [q])
+    inp = _inp()
+    inp.cache[77] = ["unrelated", "The site benefits from a 120 MW grid connection."]
+    del inp.cache[41][7]          # not in the cited document any more
+    v = mr.gate(r, inp)
+    assert v.ok, v.reason
+    assert q["document_id"] == 77 and q["page"] == 2
+    assert q["cited_document_id"] == 41
+
+
 def test_a_paragraph_with_no_figures_needs_no_quote():
     r = _reading("The officer report recommends approval subject to conditions.",
                  [])
@@ -120,9 +145,9 @@ def test_a_figure_not_in_its_own_paragraph_s_quotes_is_refused():
     assert not v.ok and "120 MW" in v.reason
 
 
-def test_a_quote_not_in_the_document_is_refused():
-    r = _reading("The IT load is 168 MW.", [_q("The total IT load is 168 MW",
-                                               doc=99)])
+def test_a_quote_in_none_of_the_site_s_documents_is_refused():
+    r = _reading("The IT load is 168 MW.", [_q("The IT load is 168 MW, said nobody",
+                                               doc=41)])
     v = mr.gate(r, _inp())
     assert not v.ok and "quote not found" in v.reason
 
