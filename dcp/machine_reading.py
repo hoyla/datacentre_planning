@@ -696,41 +696,40 @@ def gate(reading: dict, inp: SiteInput) -> GateResult:
 # Storage helpers shared by the route and the build
 # ---------------------------------------------------------------------------
 
+# The latest judgement of each site, whatever version made it — not the
+# latest that passed. A site read again under a newer prompt and refused
+# by the gate must show as withheld, not fall back to the reading the
+# newer one replaced: the earlier reading passed an earlier gate, and
+# rendering it would mean a refusal quietly restored the thing it
+# refused. Measured when this was the other way round: 18 sites
+# rendered where 15 had passed.
 LATEST_SQL = """
 SELECT DISTINCT ON (site_key) site_key, model, prompt_version, reading,
-       documents_read, pages_read, inserted_at, gate_version
+       documents_read, pages_read, inserted_at, gate_version, withheld_reason
 FROM site_machine_readings
-WHERE withheld_reason IS NULL AND reading IS NOT NULL
 ORDER BY site_key, inserted_at DESC, id DESC
 """
 
-WITHHELD_SQL = """
-SELECT site_key, withheld_reason FROM (
-  SELECT DISTINCT ON (site_key) site_key, withheld_reason
-  FROM site_machine_readings
-  ORDER BY site_key, inserted_at DESC, id DESC) t
-WHERE withheld_reason IS NOT NULL
-"""
 
+def load_latest(conn) -> tuple[dict[str, dict], dict[str, str]]:
+    """(readings that passed, reasons for those that did not).
 
-def load_latest(conn) -> dict[str, dict]:
-    """site_key -> the latest reading that passed the gate."""
-    out: dict[str, dict] = {}
+    One query, split here: both halves are the same "latest row per
+    site", so a site cannot appear in both.
+    """
+    passed: dict[str, dict] = {}
+    withheld: dict[str, str] = {}
     with conn.cursor() as cur:
         cur.execute(LATEST_SQL)
-        for key, model, pv, reading, nd, npg, at, gv in cur.fetchall():
-            out[key] = {"model": model, "prompt_version": pv,
-                        "reading": reading, "documents_read": nd,
-                        "pages_read": npg, "inserted_at": at,
-                        "gate_version": gv}
-    return out
-
-
-def load_withheld(conn) -> dict[str, str]:
-    """site_key -> reason, for sites whose LATEST reading was refused."""
-    with conn.cursor() as cur:
-        cur.execute(WITHHELD_SQL)
-        return dict(cur.fetchall())
+        for key, model, pv, reading, nd, npg, at, gv, why in cur.fetchall():
+            if why:
+                withheld[key] = why
+            elif reading:
+                passed[key] = {"model": model, "prompt_version": pv,
+                               "reading": reading, "documents_read": nd,
+                               "pages_read": npg, "inserted_at": at,
+                               "gate_version": gv}
+    return passed, withheld
 
 
 CITED_DOCS_SQL = """

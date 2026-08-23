@@ -363,8 +363,7 @@ def do_regate() -> None:
 
 def do_report() -> None:
     with db.connect() as conn:
-        latest = mr.load_latest(conn)
-        withheld = mr.load_withheld(conn)
+        latest, withheld = mr.load_latest(conn)
     print(f"{len(latest)} sites with a reading that passed the gate; "
           f"{len(withheld)} whose latest reading was withheld")
     for key, why in sorted(withheld.items()):
