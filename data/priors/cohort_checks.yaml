@@ -1,0 +1,49 @@
+# Hand-checks of cohort memberships. Read by dcp/site_cohorts.py.
+#
+# A cohort is a rule (dcp/site_cohorts.REGISTRY) and its members are
+# computed at build time, never stored. What a person has looked at and
+# decided is stored here, keyed by site, beside the rule and never
+# inside it: the rule does not read this file, so a check cannot make
+# a site appear in or vanish from a cohort. It can only say, on the
+# card and in the Cohorts sheet, that a membership holds or does not.
+#
+# A check on a site the rule does NOT select is reported as a
+# disagreement rather than hidden — that is the case that says the rule
+# is wrong, and it is the one a file like this is most likely to catch.
+#
+# Schema
+#   checks:
+#     - site_key: <a live site key>
+#       cohort: <a key from dcp/site_cohorts.REGISTRY>
+#       verdict: holds | does_not_hold
+#       checked_by: <name>
+#       date: <YYYY-MM-DD>
+#       note: <what was looked at, and what it said>
+#
+# Append-only; either lane may add to it (READER_REDESIGN_PLAN §1). The
+# two entries below are from HISTORY's 2026-08-10 substation pass, which
+# hand-read the seven sites then reporting demand above connection and
+# left two standing and one as a clustering artefact.
+
+checks:
+  - site_key: PTNO-12879308
+    cohort: demand_exceeds_connection
+    verdict: holds
+    checked_by: HISTORY 2026-08-10 (substations recorded as grid connections)
+    date: 2026-08-10
+    note: >
+      A41 Watford Bypass states 218 MW of demand against a connection
+      designed for 120 MW; both figures are the scheme's own and the
+      comparison stood after the substation pass removed four false
+      connections elsewhere.
+  - site_key: PTNO-12880751
+    cohort: demand_exceeds_connection
+    verdict: does_not_hold
+    checked_by: HISTORY 2026-08-10 (substations recorded as grid connections)
+    date: 2026-08-10
+    note: >
+      Ocean Estates is a clustering artefact: the site merges a Salford
+      scheme with a Trafford one 960 m away, so the 36 MW load and the
+      5 MW connection are two schemes' figures, not one scheme's
+      shortfall. The site is awaiting a partition split; until then the
+      rule selects it and this says why it should not count.

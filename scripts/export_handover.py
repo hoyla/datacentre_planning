@@ -68,6 +68,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
 from dcp import db  # noqa: E402
+from dcp import site_cohorts  # noqa: E402
 
 
 SITE_SQL = """
@@ -675,6 +676,26 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "'source' is barbour or documents; 'source ref' is the Barbour "
      "project number or the mention count. 'organisation' is the raw "
      "name as its source writes it and is never rewritten."),
+    ("Cohorts", "site_key; cohort; rule_version; hand_checked; checked_by; date",
+     "One row per site per cohort a rule selects it into, plus one row "
+     "per hand-check. A cohort is a named query over the adjudicated "
+     "figures (dcp/site_cohorts.py): its members are computed when the "
+     "workbook is built and never stored, so a count on the reader's "
+     "Signals tab is the number of rows here. 'rule_version' says which "
+     "version of the rule produced the row. 'hand_checked' is 'holds', "
+     "'does_not_hold' or empty: a person's verdict on the membership, "
+     "from data/priors/cohort_checks.yaml, which the rule itself never "
+     "reads. A hand-check on a site the rule does not select appears as "
+     "a row with the membership column empty — reported, not hidden."),
+    ("Cohorts", "member; evidence",
+     "'member' is yes where the rule selects the site. 'evidence' is the "
+     "figures the rule used, as it used them — the stated load, the "
+     "connection and the ratio; the prose documents read and held — so "
+     "the membership can be checked from the Sites sheet without "
+     "re-running anything."),
+    ("Cohorts", "(the cohorts)",
+     "; ".join(f"{c.title}: {c.definition} Rule: {c.rule} Limits: {c.limits}"
+               for c in site_cohorts.REGISTRY)),
     ("Parties", "group; Barbour role",
      "The confirmed alias group beside the raw name, empty where there "
      "is none; and, for a Barbour row, the role exactly as Barbour "
@@ -1656,6 +1677,58 @@ def main() -> None:
         ws.column_dimensions[col].width = width
     print(f"  Parties: {n_party_rows} rows, "
           f"{n_named_once} single-mention names not listed")
+
+    # ---- Cohorts -------------------------------------------------------
+    # Long format, one row per site per cohort, and the hand-checks in
+    # the same rows. No cohort columns on Sites (§3.2): a cohort is a
+    # claim made by a rule with a version, and a column per cohort would
+    # detach the membership from the rule that made it. The cohorts'
+    # definitions, rules and limits are in the Read me sheet, generated
+    # from the same registry the reader's Signals tab renders.
+    ws = _sheet("Cohorts", [
+        "Site key", "Site name", "Cohort", "Cohort title", "Member",
+        "Rule version", "Hand checked", "Checked by", "Date", "Check note",
+        "Evidence"])
+    site_names = {r[0]: r[2] for r in site_rows}
+    with db.connect() as conn:
+        computed = site_cohorts.compute_all(conn)
+    n_cohort_rows = 0
+    for c in computed:
+        checks_by_site = {k.site_key: k for k in c.checks}
+        for m in c.result.members:
+            k = checks_by_site.get(m.site_key)
+            ws.append([m.site_key, site_names.get(m.site_key, m.site_key),
+                       c.cohort.key, c.cohort.title, "yes",
+                       c.cohort.rule_version,
+                       k.verdict if k else "", k.checked_by if k else "",
+                       k.date if k else "", k.note.strip() if k else "",
+                       "; ".join(f"{a}={b}" for a, b in m.evidence.items())])
+            n_cohort_rows += 1
+        for k in c.outside:
+            ws.append([k.site_key, site_names.get(k.site_key, k.site_key),
+                       c.cohort.key, c.cohort.title, "",
+                       c.cohort.rule_version, k.verdict, k.checked_by,
+                       k.date, k.note.strip(), "not selected by the rule"])
+            n_cohort_rows += 1
+        if c.result.withheld:
+            ws.append(["", "", c.cohort.key, c.cohort.title, "withheld",
+                       c.cohort.rule_version, "", "", "", "",
+                       c.result.withheld])
+            n_cohort_rows += 1
+    for col, width in (("A", 34), ("B", 44), ("C", 26), ("D", 40), ("E", 9),
+                       ("F", 14), ("G", 14), ("H", 30), ("I", 12), ("J", 60),
+                       ("K", 70)):
+        ws.column_dimensions[col].width = width
+    for row in ws.iter_rows(min_row=2):
+        for cell in (row[9], row[10]):
+            if cell.value:
+                cell.alignment = Alignment(wrap_text=True, vertical="top")
+    print("  Cohorts: " + ", ".join(
+        f"{c.cohort.key} {len(c.result.members)}"
+        + (" (withheld)" if c.result.withheld else "")
+        + (f" [{c.confirmed} confirmed, {len(c.disputed)} disputed]"
+           if c.checks else "")
+        for c in computed) + f"; {n_cohort_rows} rows")
 
     # ---- Capacity claims ----------------------------------------------------
     # Site-level external figures, the other permitted form beside the

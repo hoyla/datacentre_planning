@@ -270,6 +270,24 @@ button.chip:hover{border-color:var(--accent)}
 button.chip.on{background:var(--fg);border-color:var(--fg);color:var(--bg);
   font-weight:600}
 button.chip .n{color:var(--mut);font-size:11px;margin-left:3px}
+button.chip:disabled{opacity:.5;cursor:not-allowed;border-style:dashed}
+/* Signals cards. Square, ruled, no shadow; the count is the one large
+   thing on the card because it is the one thing that was computed. */
+.signals{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+.box.signal{border-radius:3px;padding:14px 16px}
+.box.signal h3{margin:4px 0 8px;font-size:17px}
+.sighead{display:flex;justify-content:space-between;align-items:baseline}
+.sigfam{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+  color:var(--mut)}
+.sigcount{font-size:30px;font-weight:700;line-height:1.1;margin:2px 0 8px}
+.sigcount.withheld{font-size:17px;color:var(--mut)}
+.sigchecks{font-size:12.5px}
+.sigdef dt{color:var(--mut)}
+.sigdef code{font-size:12px;white-space:normal}
+.sigactions{font-size:13px;margin:8px 0 4px}
+.siglist{margin:6px 0 0;padding-left:18px;font-size:12.5px;columns:2;column-gap:24px}
+.siglist li{break-inside:avoid;margin-bottom:3px}
+@media (max-width:700px){.siglist{columns:1}}
 button.chip.on .n{color:var(--bg);opacity:.75}
 /* The badge in the table cell is the same control in a smaller frame:
    it filters, so it looks pressable, but it must not out-shout the site
@@ -1019,7 +1037,7 @@ function goSite(key){
   document.getElementById('unklab').classList.add('off');
   // The organisation filter is a filter like any other: a link to one
   // site has to work for someone whose filters are not the sender's.
-  if(who) setWho(who);
+  if(who||cohort){ who=''; cohort=''; paintChips(); }
   apply();
   const r=document.querySelector('tr.site[data-key="'+CSS.escape(key)+'"]');
   if(r){
@@ -1125,12 +1143,16 @@ function fromHash(){
     // filters are not the sender's — and the default filter hides
     // sites under 100 MW.
     goSite(h.slice(5));
-  } else if(h.startsWith('who:')){
+  } else if(h.startsWith('who:')||h.startsWith('cohort:')){
     // A filtered table, sent as a link. The tab comes first so the
     // rows exist to be filtered.
     show('sites', true);
-    const k=h.slice(4);
-    if(who!==k){ who=''; setWho(k); }
+    who=''; cohort='';
+    for(const part of h.split(';')){
+      if(part.startsWith('who:')) who=part.slice(4);
+      else if(part.startsWith('cohort:')) cohort=part.slice(7);
+    }
+    paintChips(); apply(); sticky(); filterHash();
   } else if(TABS.includes(h)){
     show(h, true);
   }
@@ -1184,6 +1206,7 @@ function apply(){
   for(const r of rows){
     let ok=(!s||r.dataset.hay.includes(s));
     if(ok&&who)              ok=r.dataset.who===who;
+    if(ok&&cohort)           ok=('|'+r.dataset.cohorts+'|').indexOf('|'+cohort+'|')>=0;
     if(ok&&mode==='known')   ok=r.dataset.known==='1';
     if(ok&&mode==='unknown') ok=r.dataset.known!=='1';
     if(ok&&mode==='energy')  ok=r.dataset.near!=='';
@@ -1209,16 +1232,42 @@ function apply(){
 // me this operator's sites", and a multi-select would answer a question
 // nobody asked while making the URL ambiguous. The state is in the hash
 // so a filtered table is a link somebody can send.
-let who='';
-function setWho(k){
-  who = (who===k) ? '' : k;
+let who='', cohort='';
+// The two chip groups compose (an operator's sites that are also silent
+// on capacity) and the hash carries both, so the URL always says what
+// the table shows: #who:virtus;cohort:read_in_full_silent.
+function filterHash(){
+  const parts=[];
+  if(who) parts.push('who:'+encodeURIComponent(who));
+  if(cohort) parts.push('cohort:'+encodeURIComponent(cohort));
+  history.replaceState(null,'', parts.length ? '#'+parts.join(';') : '#sites');
+}
+function paintChips(){
   document.querySelectorAll('#whochips .chip').forEach(c=>{
     const on = (c.dataset.who||'')===who;
     c.classList.toggle('on', on); c.setAttribute('aria-pressed', on);});
   document.querySelectorAll('button.who').forEach(b=>
     b.classList.toggle('on', b.dataset.who===who));
-  apply(); sticky();
-  history.replaceState(null,'', who ? '#who:'+encodeURIComponent(who) : '#sites');
+  document.querySelectorAll('#cohortchips .chip').forEach(c=>{
+    const on = (c.dataset.cohort||'')===cohort;
+    c.classList.toggle('on', on); c.setAttribute('aria-pressed', on);});
+}
+function setWho(k){
+  who = (who===k) ? '' : k;
+  paintChips(); apply(); sticky(); filterHash();
+  return false;
+}
+function setCohort(k){
+  cohort = (cohort===k) ? '' : k;
+  paintChips(); apply(); sticky(); filterHash();
+  return false;
+}
+// A Signals card's "open in table": the cohort on, nothing else.
+function openCohort(k){
+  show('sites', true);
+  who=''; cohort=k;
+  paintChips(); apply(); sticky(); filterHash();
+  window.scrollTo(0,0);
   return false;
 }
 const big=document.getElementById('big'), unk=document.getElementById('unk'),
@@ -1295,6 +1344,7 @@ def main() -> int:
     from dcp import external_aggregates as extagg
     from dcp import operator_disclosure as odis
     from dcp import organisations
+    from dcp import site_cohorts
     from dcp import origin as origin_mod
     from dcp import proposal as prop
     from dcp import signals as sig
@@ -1451,6 +1501,11 @@ def main() -> int:
     with db.connect() as conn:
         profiles = site_profile.load_site_profiles(conn)
         coverage = site_profile.load_coverage(conn)
+        # The cohorts, computed here and nowhere else on this page: the
+        # Signals cards, the chips and each row's memberships all read
+        # this one list, so a count on a card is the number of rows the
+        # chip leaves.
+        cohorts = site_cohorts.compute_all(conn)
         # `held`/`read` are every document; `prose_*` are the ones the
         # deep-read is for. The caveats run off prose, the counts shown
         # to a reporter run off both, and they are different numbers on
@@ -1461,6 +1516,11 @@ def main() -> int:
         # carried a floor-area estimate in the workbook — one dataset
         # answering "how big is this?" two ways.
         site_floorspace = scale.load_site_floorspace(conn)
+    site_names = {r[0]: r[2] for r in site_rows}
+    cohorts_of_site: dict[str, list[str]] = defaultdict(list)
+    for _c in cohorts:
+        for _m in _c.result.members:
+            cohorts_of_site[_m.site_key].append(_c.cohort.key)
 
     apps_by_site = defaultdict(list)
     for r in app_rows:
@@ -1927,7 +1987,7 @@ def main() -> int:
  data-known="{1 if known else 0}"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="{est.value_mw or ''}"
  data-prov="{1 if is_prov else 0}" data-origin="{esc('|'.join(org))}"
- data-who="{esc(who['filter_key'])}">
+ data-who="{esc(who['filter_key'])}" data-cohorts="{esc('|'.join(cohorts_of_site.get(key, ())))}">
 <td data-v="{esc(name or key)}"><strong>{esc(trim(name or key, 58))}</strong>
  <span class="q">{esc(', '.join(councils or []))}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
@@ -2101,7 +2161,7 @@ def main() -> int:
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="0"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
- data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}">
+ data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts="">
 <td data-v="{esc(title or key)}"><strong>{esc(trim(title or key, 58))}</strong>
  <span class="q">{esc(authority or '')}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
@@ -2159,6 +2219,103 @@ def main() -> int:
     # that is on the strip is a group that is on a row, and the number
     # beside it is the number of rows a click will leave. Ranked by
     # sites, then by name so two builds of one database agree.
+    # The Signals tab: one card per registry entry, registry order, no
+    # ranking of sites anywhere. Every number on a card is the length
+    # of a list that was computed on this build; the definition, rule
+    # and limits are the registry's own text, and the same text goes to
+    # the workbook's Read me sheet from the same source.
+    def _signal_card(c):
+        r = c.result
+        key = c.cohort.key
+        n = len(r.members)
+        if r.withheld:
+            count_html = ('<div class="sigcount withheld">Withheld</div>'
+                          f'<p class="help">{esc(r.withheld)}</p>')
+            actions = ""
+        else:
+            count_html = (f'<div class="sigcount">{n:,}<span class="q"> site'
+                          f'{"" if n == 1 else "s"}</span></div>')
+            site_list = "".join(
+                f'<li><a href="#site-{esc(quote(m.site_key, safe=""))}" '
+                f'onclick="return goSite(this.dataset.key)" '
+                f'data-key="{esc(m.site_key)}">'
+                f'{esc(site_names.get(m.site_key) or m.site_key)}</a>'
+                f'<span class="q"> {esc("; ".join(f"{a} {b}" for a, b in m.evidence.items() if b not in (None, "")))}</span></li>'
+                for m in r.members)
+            csv_lines = ["site_key,site_name," + ",".join(
+                sorted({a for m in r.members for a in m.evidence}))]
+            cols = sorted({a for m in r.members for a in m.evidence})
+            for m in r.members:
+                csv_lines.append(",".join(
+                    '"' + str(v).replace('"', '""') + '"' for v in
+                    [m.site_key, site_names.get(m.site_key) or m.site_key]
+                    + [m.evidence.get(a, "") for a in cols]))
+            csv_data = quote("\n".join(csv_lines), safe="")
+            actions = (
+                f'<p class="sigactions">'
+                f'<a href="#cohort:{esc(key)}" onclick="return openCohort(this.dataset.k)" '
+                f'data-k="{esc(key)}">Open in the table</a> · '
+                f'<a href="data:text/csv;charset=utf-8,{csv_data}" '
+                f'download="{esc(key)}.csv">CSV</a> · '
+                f'<a href="#cohort:{esc(key)}">Link to this filter</a></p>'
+                f'<details><summary>The {n:,} site{"" if n == 1 else "s"}</summary>'
+                f'<ul class="siglist">{site_list}</ul></details>')
+        checks_html = ""
+        if c.checks:
+            bits = []
+            if c.confirmed:
+                bits.append(f"{c.confirmed} hand-checked and holding")
+            if c.disputed:
+                bits.append(f"{len(c.disputed)} hand-checked and rejected: "
+                            + ", ".join(esc(site_names.get(k.site_key) or k.site_key)
+                                        + f" ({esc(k.note.strip())})" for k in c.disputed))
+            if c.outside:
+                bits.append(f"{len(c.outside)} checked on sites the rule does not select: "
+                            + ", ".join(esc(site_names.get(k.site_key) or k.site_key)
+                                        for k in c.outside))
+            checks_html = '<p class="sigchecks">' + "; ".join(bits) + ".</p>"
+        notes_html = "".join(f'<p class="help">{esc(x)}</p>' for x in r.notes)
+        return f"""
+ <div class="box signal" id="signal-{esc(key)}">
+  <div class="sighead"><span class="sigfam">{esc(c.cohort.family)}</span>
+   <span class="q">rule {esc(c.cohort.rule_version)}</span></div>
+  <h3>{esc(c.cohort.title)}</h3>
+  {count_html}
+  <p>{esc(c.cohort.definition)}</p>
+  {checks_html}{notes_html}
+  <dl class="kv sigdef">
+   <dt>Rule</dt><dd><code>{esc(c.cohort.rule)}</code></dd>
+   <dt>Limits</dt><dd>{esc(c.cohort.limits)}</dd>
+  </dl>
+  {actions}
+ </div>"""
+
+    n_signals = sum(1 for c in cohorts if not c.result.withheld)
+    signals_html = f"""
+ <p class="lede">Named queries over the adjudicated findings: cohorts of sites that share a
+ measurable property. Each card states its definition, the rule that computes it and the
+ rule's limits, in that order, and the count is the number of rows the rule selected when
+ this page was built. No model chose what appears here, no cohort asserts a cause, and
+ nothing on this page ranks one site above another — the lists are in site-key order.</p>
+ <p class="help">A hand-check is a person's verdict on one membership, recorded beside the
+ rule in <code>data/priors/cohort_checks.yaml</code>; the rule does not read it. Where a
+ check rejects a site the rule selected, or accepts one it did not, both are printed. A
+ cohort marked <em>withheld</em> was not computed in this release, for the reason given.
+ The same cohorts, with the same rule versions, are the <code>Cohorts</code> sheet of the
+ workbook and the <code>cohorts</code> table of the database.</p>
+ <div class="signals">{"".join(_signal_card(c) for c in cohorts)}</div>
+"""
+
+    cohort_chips = "".join(
+        (f'<button type="button" class="chip" data-cohort="{esc(c.cohort.key)}" '
+         f'onclick="setCohort(this.dataset.cohort)" aria-pressed="false" '
+         f'title="{esc(c.cohort.definition)}">'
+         f'{esc(c.cohort.title)} <span class="n">{len(c.result.members)}</span></button>')
+        if not c.result.withheld else
+        (f'<button type="button" class="chip" disabled '
+         f'title="{esc(c.result.withheld)}">{esc(c.cohort.title)} '
+         f'<span class="n">withheld</span></button>')
+        for c in cohorts)
     n_who_named = sum(who_counts.values())
     who_chips = "".join(
         f'<button type="button" class="chip" '
@@ -2890,6 +3047,7 @@ def main() -> int:
  pipeline {esc(hv._git_commit())}</div></header>
 <nav class="top">
  <button id="tab-start" aria-selected="true" onclick="show('start')">Start here</button>
+ <button id="tab-signals" aria-selected="false" onclick="show('signals')">Signals<span class="pill">{n_signals}</span></button>
  <button id="tab-sites" aria-selected="false" onclick="show('sites')">Sites<span class="pill">{n_sites}</span></button>
  <button id="tab-apps" aria-selected="false" onclick="show('apps')">Applications<span class="pill">{len(app_rows):,}</span></button>
  <button id="tab-energy" aria-selected="false" onclick="show('energy')">Energy projects<span class="pill">{len(nsip)}</span></button>
@@ -3075,6 +3233,8 @@ def main() -> int:
  contain — and that silence is itself worth reporting.</p>
 </div></section>
 
+<section id="view-signals" class="view"><div class="wrap">{signals_html}</div></section>
+
 <section id="view-sites" class="view">
 <div class="controls">
  <input type="search" id="q" placeholder="Search site, council, address, applicant, proposal…">
@@ -3107,6 +3267,15 @@ def main() -> int:
  {who_chips}
  <span class="help">{n_who_named} of {n_sites} sites name an end user or a client;
   the rest say so. A chip filters the table and the map together.</span>
+</div>
+<div class="chips" id="cohortchips" role="group" aria-label="Filter by what the documents say">
+ <span class="chiplabel">What the documents say</span>
+ <button type="button" class="chip on" data-cohort="" onclick="setCohort('')"
+  aria-pressed="true">Any</button>
+ {cohort_chips}
+ <span class="help">Each chip is a named rule over the adjudicated figures, with its
+  definition and limits on the <a href="#signals" onclick="show('signals');return false">Signals</a>
+  tab. The count is the number of rows the chip leaves.</span>
 </div>
 <table id="tbl-sites"><thead><tr>
  <th>{dl("Sites","Site name","Site")}</th>
