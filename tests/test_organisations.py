@@ -315,7 +315,9 @@ def test_a_document_may_evidence_a_number_in_any_register(tmp_path):
 def test_an_overseas_entity_id_is_its_own_register(tmp_path):
     """Found on VDC LHR11 Limited, 2026-08-24. An OE id comes from the
     Register of Overseas Entities — the post-2022 regime for foreign
-    entities owning UK land — and will not join to a company number."""
+    entities owning UK land — and `register: roe` records that fact.
+    It joins like a company number, because it is one; what the register
+    value carries is that the holder is foreign."""
     path = _write(tmp_path, {"groups": [{
         "group": "Vantage Data Centers",
         "members": [dict(_member("VDC LHR11 Limited"),

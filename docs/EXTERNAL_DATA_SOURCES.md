@@ -631,9 +631,53 @@ and a network operator's meters, entirely independent of each other, land
 in the same band — which is the empirical answer to treating contracted
 or built capacity as demand.
 
+**Corrected again, 2026-08-24: the SPVs are where the capacity is.**
+Every company in the survey above is an operator, or an operator's
+property company. Neither is where a single scheme lives. **UK Court
+Lane DC Ltd** (14045228) holds one asset — a freehold at Court Lane
+Industrial Estate, Iver — and its FRS 102 accounts to 30 April 2026
+state, in the critical judgements note, that the £205,000,000 valuation
+assumes "successful delivery of a 103.3 MW hyperscale data centre".
+
+That is a different KIND of disclosure from Ark's. Ark's per-campus
+megawatts are a narrative choice in a business review, which is why they
+generalise to nobody. A single-asset SPV's investment property IS the
+scheme, so the assumptions the valuation rests on are a disclosure
+requirement — the capacity is in the accounts by construction. And the
+figure is motivated to be accurate in a way marketing is not: it is what
+an external valuer priced and an auditor signed.
+
+It also disagrees with the commercial record. Barbour carries this
+project at 140 MW; the audited accounts assume 103.3 MW. Neither is
+necessarily wrong — they may be measuring different things, at different
+dates — but a discrepancy of that size between the two is exactly the
+kind of thing a reporter should be told about rather than have averaged
+away.
+
+Two further things the same filing carries, both invisible to the
+planning record. The auditors flag **a material uncertainty over going
+concern**: the funding plan "is dependent on a new investor commitment
+which had not been concluded", against £125.6m of net current
+liabilities and £33m of deferred consideration due December 2026. And
+the ownership is disclosed as far as an LP and no further — "UK Court
+Lane DC Holding LP is the immediate parent … UK Court Lane DC Ltd does
+not have an ultimate controlling party" — which is why its PSC register
+reads "no registrable person". A US LP parent is not a registrable
+relevant legal entity, so the chain above it is never recorded. Expect
+that pattern on any US-parented scheme; the charges register and the
+related-party notes (here, an "NFO Holdings, LLC" facility refinanced in
+May 2026) carry more than the PSC page does.
+
+Not every scheme is held this way, and an SPV that has not yet filed
+accounts discloses nothing. But where the structure exists, this is the
+only source found in this entire survey that states a per-scheme
+capacity as a matter of course.
+
 Acquisition notes: the API needs a key (`CH_API_KEY`), and the document
 endpoint 302s to S3, which rejects a request still carrying the
-Authorization header — follow the redirect unauthenticated. Everything
+Authorization header — follow the redirect unauthenticated. The S3 URL
+it hands back is signed and expires in 60 seconds, so fetch it
+immediately rather than passing it around. Everything
 Companies House publishes is scanned, so figures are transcribed from
 rendered pages by eye and re-checked against committed OCR of the cited
 page; see `data/external_sources/README.md`.
