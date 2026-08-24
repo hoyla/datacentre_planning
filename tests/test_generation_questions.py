@@ -288,3 +288,42 @@ def test_an_unverified_span_is_counted(tmp_path):
         "span_verified": False, "reasoning": ""}}}
     report = "\n".join(ag.score([_row("S", 11, 50.0, "q")], {}, run))
     assert "did not verify against their quote: 1" in report
+
+
+# ---------------------------------------------------------------------------
+# The batch, over every figure rather than the forty
+# ---------------------------------------------------------------------------
+
+def test_the_batch_skips_a_chunk_whose_figures_are_all_answered():
+    """The resume contract: a run stopped half way costs nothing to
+    finish, and a run repeated in full sends nothing."""
+    rows = [_row("S", fid, 50.0 - fid, "q", app=1) for fid in range(1, 5)]
+    assert ag.batch_chunks(rows, done=set()) != []
+    assert ag.batch_chunks(rows, done={1, 2, 3, 4}) == []
+
+
+def test_the_batch_sends_a_part_answered_chunk_whole():
+    """One unanswered figure pulls its whole chunk, because the other
+    figures are the context that lets the model see that two rows are
+    the same machines."""
+    rows = [_row("S", fid, 50.0 - fid, "q", app=1) for fid in range(1, 5)]
+    chunks = ag.batch_chunks(rows, done={1, 2, 3})
+    assert len(chunks) == 1
+    assert [r["finding_id"] for r in chunks[0]] == [1, 2, 3, 4]
+
+
+def test_the_batch_chunks_one_application_at_a_time():
+    """A request carries one application's figures and never two: the
+    prompt tells the model it may read the figures together."""
+    rows = ([_row("S", fid, 50.0, "q", app=1) for fid in range(1, 4)]
+            + [_row("T", fid, 50.0, "q", app=2) for fid in range(4, 7)])
+    chunks = ag.batch_chunks(rows, done=set())
+    assert len(chunks) == 2
+    assert all(len({r["application_id"] for r in c}) == 1 for c in chunks)
+
+
+def test_a_batch_chunk_is_the_size_the_sample_measured():
+    rows = [_row("S", fid, 100.0 - fid, "q", app=1)
+            for fid in range(1, ag.FIGURES_PER_REQUEST + 2)]
+    chunks = ag.batch_chunks(rows, done=set())
+    assert [len(c) for c in chunks] == [ag.FIGURES_PER_REQUEST, 1]

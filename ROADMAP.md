@@ -222,13 +222,16 @@ build lane does not have to remember them.
   every adjudicated on-site generation figure whether it is one machine,
   a stated fleet or the site, and whether the plant is standby
   combustion, prime combustion, renewable or storage
-  (READER_REDESIGN_PLAN §4.1e, prompt version `generation-1.2` in the
-  shared prompt file). The forty-row sample is built and the model has
-  answered it; what is outstanding is the hand-check —
-  `data/generation_sample/generation-1.2_sheet.csv`, then `--score`.
-  After that: a migration for the verdicts, the batch over 1,667 figures
-  across 145 applications, and the rollup, workbook columns and cohorts
-  that consume them. Until then nothing is stored and
+  (READER_REDESIGN_PLAN §4.1e, in the shared prompt file). The
+  hand-check is DONE — Luke's forty rows are in
+  `data/generation_sample/generation-2.1_hand.csv`, and every later
+  prompt version is scored against that same sheet rather than
+  re-checked. Scores on it: 2.1, 33/40 basis and 30/40 plant; 2.2, with
+  the fragment and duty-word rules, 36/40 (90%) and 32/40 (80%).
+  Outstanding: a plant-type score at the same ~90% bar, then migration
+  024 (written, not yet applied), then `--batch --submit` over 1,667
+  figures across 145 applications, then the rollup, workbook columns
+  and cohorts that consume them. Until then nothing is stored and
   `dcp.site_profile.generation_figure` remains the only labelling, which
   it does from the passages alone.
 - **Confirming the seed alias groups.** `dcp/organisations.py` builds
@@ -241,6 +244,17 @@ build lane does not have to remember them.
 
 ## Smaller things
 
+- **The deep-read's evidence quotes are snippets, not sentences.**
+  Found by Luke while hand-checking the generation sample: row after row
+  arrived as a fragment — "Total Installed Capacity (Megawatts) 0.21",
+  "and 42.56kW (delivering c.46.1MWh/yr) at Units 2-8" — where the
+  sentence around it was what settled the question. §4.1e worked around
+  it by sending the passage as well as the quote, and the sample's
+  hand-checker had to read the passage to answer at all. The fix belongs
+  upstream, in the deep-read prompt: ask for the whole sentence a figure
+  sits in, so a quote that reaches a reader carries its own meaning.
+  Nothing already stored changes; the passage stays the belt to the
+  sentence's braces.
 - **Re-measure the 1.71 kW/m² floor-area factor.** It drives the
   published power estimate for every site with no disclosed capacity. An
   ad-hoc query on 2026-08-11 suggested it may have moved — 88 sites now

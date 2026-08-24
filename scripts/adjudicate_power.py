@@ -256,7 +256,49 @@ SCHEMA = {
 # aren't others". Also: smaller requests, because Elsham's fifty-eight
 # figures with their passages overran the output budget and the answer
 # came back cut off, twice.
-GENERATION_PROMPT_VERSION = "generation-2.1"
+#
+# 2.2: the two rules Luke's hand-check of the 2.1 sample asked for
+# (82% on figure basis, 75% on plant type, and the residue was one
+# pattern in two halves). The model drew conclusions from text that is
+# not prose — a plant schedule's row of column headings, a generator
+# manufacturer's datasheet, the annotations on a general-arrangement
+# drawing — where Luke wrote "it's not safe to draw conclusions from
+# this raw text, which makes little sense without formatting". And it
+# named a duty the passage never stated, reading "prime" from the words
+# "energy centre" and "incinerator", and "standby" from a diesel tank
+# and from a datasheet's "maximum stand-by power at rated RPM", which
+# is a rating class of the product and not this development's duty.
+# So: a figure whose support is a fragment is "unclear" unless the
+# fragment states the figure itself ("11 x 3.9MW generators" does); and
+# plant type comes from duty words attached to the machines this figure
+# counts, not from what kind of installation they sit in.
+# 2.3: scored 2.2 at 36/40 on figure basis (90%) and 32/40 on plant
+# type (80%), and the plant residue was two patterns. A figure that is
+# not itself an electrical output — Reading Quarry's 28 MW of heat,
+# Elsham's 5,678 kW energy input — had its plant read from the kind of
+# installation behind it, where Luke wrote "it's likely that the output
+# will be used continuously ... but this isn't made explicit in the
+# passage so it should not be trusted". And a figure covering machines
+# of two duties at once — Didcot's "30 running, 4 standby" — came back
+# "unclear" where the sheet says "mixed", which is the value that
+# exists for exactly that case.
+# 2.4: two corrections to 2.3, which scored 35/40 basis and 36/40
+# plant. The mixed rule's carve-out said the standby-headed group "has
+# one duty and the passage contradicts itself about it: that is
+# unclear", and the model read the first half and answered
+# standby_combustion — the instruction now ends with the answer. And
+# the two rules needed an order: a fragment stops at "unclear", but
+# prose does not, and "the 50MW of energy produced by the Incinerator"
+# is an energy figure the electricity test already settles.
+# 2.5: 2.4 fixed KAO and lost Didcot. The carve-out was written to be
+# emphatic — "not mixed, and not standby_combustion" — and the model
+# applied it to any group with a split inside it, including "IT — 34
+# Generators (30 running, 4 standby)", which is the case "mixed" exists
+# for. The tell that separates them is the WORD: KAO's passage says
+# "standby" twice, as the fleet's duty and again as the spare machines
+# within it, and cannot mean both; Didcot's says "running" and
+# "standby", which are two duties and no contradiction at all.
+GENERATION_PROMPT_VERSION = "generation-2.5"
 
 GENERATION_PROMPT = """\
 You are auditing extracted figures from UK planning documents for an
@@ -296,6 +338,33 @@ output", "thermal input" and "energy input" are heat; "MWe",
 states a count and a per-generator rating whose product is the figure
 on the row — within rounding — the figure is "stated_group_total",
 however the sentence phrases it.
+
+**A figure whose passage never says what it is a figure of is
+"unclear".** Many pages are not prose: a plant schedule's column
+headings, a generator manufacturer's datasheet, the annotations on a
+drawing, the fields of an application form. Such a fragment settles a
+figure only where its OWN labels name what the figure is a figure of —
+"11 x 3.9MW generators" gives a count beside a rating; a form's "Solar
+energy … Total Installed Capacity (Megawatts) 0.21" names the
+installation and gives its total. Where the labels do not, the answer
+to BOTH questions is "unclear", however suggestive they are: "GEN
+1500kW" on a drawing carrying several differently rated generators,
+"Total: 46.9 MW" at the foot of a schedule whose columns mix input
+rating, output power and thermal input, "Gross Engine Power Standby kW
+(hp) 136.9" in a datasheet of a product, "Energy capacity: 1000
+Megawatts" in a form against "battery storage". A passage that is
+prose says what it means in a sentence; a passage that is not must be
+read for what its labels state and never for what they suggest.
+
+**That rule stops at fragments, and prose goes on to the next test.**
+Where the support is a fragment whose labels do not name the figure,
+"unclear" is the answer and the reasoning ends. Where it is prose, ask
+"is this electricity?" as above and answer accordingly: a sentence that
+names the plant and what it produces — "the 50MW of energy produced by
+the Incinerator", "generating a thermal output of 28MW" — settles
+question 1 as "not_generation", because the sentence never calls the
+figure an electrical output. "Unclear" is for a passage that does not
+say, not for a sentence that says something other than electricity.
 
 **The figures listed below are all from one application, and you may
 read them together.** Where one row's passage settles another row's
@@ -351,6 +420,43 @@ the passage of the row it belongs to.
   "mixed"               this one figure covers more than one of the
                         above and the passage does not separate them.
   "unclear"             the passage does not say.
+
+**Plant type is about the machines THIS figure counts, and only where
+the passage says what they do.** Duty is stated in words — "standby",
+"back-up", "emergency", "operate continuously", "supply the site",
+"export to the grid". Where the passage names more than one kind of
+plant and does not attach its duty words to the machines this figure
+counts — twenty gas engines and 650 back-up diesels in one paragraph,
+an incinerator and a rooftop array in another — the answer is
+"unclear", even where one reading is the likelier. Do not read duty
+from the fuel or its tank, from a rating class in a manufacturer's
+datasheet ("maximum stand-by power at rated RPM" describes the
+product, not this development's duty), or from what kind of
+installation the machines sit in. Where the passage's own duty words
+disagree — "standby generators", of which "nine serve the load and two
+are standby" — that is "unclear" too.
+
+**Where question 1 is "not_generation", plant type is "unclear" unless
+the passage says in duty words what the machines do.** A thermal
+output, an energy or fuel input, an annual total: the machines behind
+such a figure have a kind, but the figure is not their electrical
+rating and the passage rarely stops to say how they run. "will provide
+standby power ... in the case of an emergency power outage" states the
+duty and settles it; "the electrical output from the ERC will be used
+to supply the proposed data centre" says where the electricity goes,
+which is not the same statement, and the answer stays "unclear".
+
+**A figure covering machines of two duties at once is "mixed".** Where
+the passage states that the machines this figure counts include both
+machines that run and machines held in reserve — "IT — 34 Generators
+(30 running, 4 standby)" — the one figure covers more than one duty,
+and "mixed" is the value for that. Two different duty words are two duties; the
+SAME word twice is a contradiction. "IT — 34 Generators (30 running, 4
+standby)" names running machines and reserve machines, and the figure
+covering both is "mixed". "11 standby generator sets", of which "nine
+serve the load and two are standby", uses "standby" once for the
+fleet and again for the spares inside it, so the passage cannot be
+read either way: that one is "unclear".
 
 Also return, when and only when the passage states them:
   "unit_count"      how many machines the passage names (an integer).
