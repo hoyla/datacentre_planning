@@ -15,10 +15,12 @@
 #   groups:
 #     - group: <display label>
 #       note: <optional>
+#       company_number: <the parent's Companies House number, optional>
 #       members:
 #         - name: <exactly as a source writes it>
 #           relation: same_organisation | subsidiary_of | trading_name_of | spv_of
 #           status: proposed | confirmed
+#           company_number: <this entity's own, optional>
 #           evidence:            # at least one; each needs a ref or a quote
 #             - source: barbour | companies_house | document | operator_website | register | reporter
 #               ref: <Barbour project ref, company number, document id, URL>
@@ -27,9 +29,19 @@
 #               date: <YYYY-MM-DD>
 #               site_key: <optional, when the evidence is about one site>
 #
+# `company_number` is a first-class field rather than a line of evidence
+# because it is a JOIN KEY: the newsroom ties many datasets together on
+# Companies House numbers, and a number buried in an evidence `ref`
+# cannot be selected, exported or joined. The loader checks the FORMAT
+# (eight digits, or two letters and six) and refuses anything else,
+# because a mistyped number does not fail loudly — it silently attaches
+# a site to the wrong company. That the number is the right company is
+# what the evidence beside it is for: cite the filing, with a date.
+#
 # Rules the loader enforces: every member has evidence; a canonical name
 # sits in one group only; relation and status are from the closed sets
-# above. Builds use CONFIRMED members only. Anyone — a session, a batch,
+# above; a company number, where given, is well formed. Builds use
+# CONFIRMED members only. Anyone — a session, a batch,
 # a research note — may add a proposed member; confirming one is a
 # person's decision at the release checkpoint (READER_REDESIGN_PLAN §10).
 #

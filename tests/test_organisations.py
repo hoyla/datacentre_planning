@@ -104,3 +104,51 @@ def test_the_seed_changes_nothing_until_confirmed():
     groups = org.load_groups()
     assert org.alias_index(groups) == {}
     assert "0 confirmed" in org.summary(groups)
+
+
+# ---------------------------------------------------------------------------
+# Companies House numbers, because they are a join key
+# ---------------------------------------------------------------------------
+# Luke, 2026-08-24: the newsroom's data journalists tie many datasets
+# together on the CH company ID. A number buried in an evidence `ref`
+# cannot be selected, exported or joined, so it is a field; and a
+# mistyped one attaches a site to the wrong company without complaining,
+# so its format is checked.
+
+def test_a_company_number_is_read_onto_the_group_and_the_member(tmp_path):
+    path = _write(tmp_path, {"groups": [{
+        "group": "Microsoft", "company_number": "01624297",
+        "members": [dict(_member("Microsoft MSFT MCIO Limited",
+                                 status="proposed"),
+                         company_number="09788396")]}]})
+    g = org.load_groups(path)[0]
+    assert g.company_number == "01624297"
+    assert g.members[0].company_number == "09788396"
+
+
+def test_a_scottish_number_is_accepted_and_upper_cased(tmp_path):
+    path = _write(tmp_path, {"groups": [{
+        "group": "A Group",
+        "members": [dict(_member("Some Scottish Company Limited"),
+                         company_number="sc123456")]}]})
+    assert org.load_groups(path)[0].members[0].company_number == "SC123456"
+
+
+@pytest.mark.parametrize("bad", ["1234567", "123456789", "ABC12345",
+                                 "12 345 678"])
+def test_a_malformed_company_number_is_refused(tmp_path, bad):
+    path = _write(tmp_path, {"groups": [{
+        "group": "A Group",
+        "members": [dict(_member("Ark Data Centres Limited"),
+                         company_number=bad)]}]})
+    with pytest.raises(org.AliasError) as exc:
+        org.load_groups(path)
+    assert "Companies House number" in str(exc.value)
+
+
+def test_a_member_without_a_number_is_still_valid(tmp_path):
+    """Most names in the documents are not companies at all, and a
+    number nobody has looked up yet is no reason to refuse a group."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "A Group", "members": [_member("Ark Data Centres Limited")]}]})
+    assert org.load_groups(path)[0].members[0].company_number == ""

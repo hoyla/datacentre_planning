@@ -392,7 +392,14 @@ SITE_HEADERS = [
     # including the roles too specific for a site row, is a row of the
     # Parties sheet.
     "End user (Barbour)", "Applicant of record (Barbour)",
-    "Operator group (confirmed alias)", "Advisers (Barbour)",
+    "Operator group (confirmed alias)",
+    # A join key, not a label: the newsroom ties its other datasets
+    # together on Companies House numbers, so the number travels as its
+    # own column rather than sitting inside an evidence note where
+    # nothing can select it. Present only where a person has confirmed
+    # the group and recorded a number (data/priors/organisation_aliases.yaml).
+    "Operator company number (Companies House)",
+    "Advisers (Barbour)",
     "Also named in documents (mention counts)",
     "Planning authority (register)", "Parties source",
     # --- findings coverage -------------------------------------------------
@@ -1382,6 +1389,7 @@ def main() -> None:
             prof.get("end_user") or "",
             prof.get("applicant_of_record") or "",
             prof.get("operator_group") or "",
+            prof.get("operator_company_number") or "",
             prof.get("advisers") or "",
             prof.get("named_in_documents") or "",
             prof.get("authority") or "",
@@ -1461,7 +1469,9 @@ def main() -> None:
             "", "", "", "", "", "", "", "",
             ", ".join(sorted(env.keys())),
             bparties["end_user"], bparties["applicant_of_record"],
-            bparties["operator_group"], bparties["advisers"],
+            bparties["operator_group"],
+            bparties.get("operator_company_number", ""),
+            bparties["advisers"],
             bparties["named_in_documents"], bparties["authority"],
             bparties["parties_source"],
             "", 0, 0, 0, "",
