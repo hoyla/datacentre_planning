@@ -20,6 +20,8 @@ only then the batch.
     scripts/adjudicate_generation.py --sample     # the sheet, blank
     scripts/adjudicate_generation.py --run        # the model, same rows
     scripts/adjudicate_generation.py --score      # the two, compared
+    scripts/adjudicate_generation.py --batch      # what the full run costs
+    scripts/adjudicate_generation.py --batch --submit   # and run it
 
 The sample is forty rows and is chosen, not sampled at random, because
 the cases that matter are known by name (§4.1e and the review of
@@ -383,8 +385,56 @@ def _client():
     return OpenAI()
 
 
+def ask_chunk(client, chunk: list[dict], model: str,
+              effort: str) -> tuple[dict[int, dict], list[dict]]:
+    """One request: this chunk of one application's figures, answered.
+
+    Returns the answers by finding_id and the failures. Both routes go
+    through here, so the sample measures the request the batch sends —
+    the same prompt, the same chunk size, the same span check — and a
+    prompt that scored well on forty rows cannot be quietly different
+    over 1,667.
+    """
+    app_id = chunk[0]["application_id"]
+    content = PROMPT % {
+        "ref": chunk[0]["application_ref"],
+        "desc": chunk[0]["description"],
+        "figures": _ap.render_generation_figures(chunk)}
+    resp = client.chat.completions.create(
+        model=model, max_completion_tokens=MAX_COMPLETION_TOKENS,
+        reasoning_effort=effort,
+        response_format={"type": "json_schema", "json_schema": {
+            "name": "generation_adjudication", "strict": True,
+            "schema": SCHEMA}},
+        messages=[{"role": "user", "content": content}])
+    text = resp.choices[0].message.content or ""
+    finish = resp.choices[0].finish_reason
+    try:
+        parsed = json.loads(text).get("generation", [])
+    except json.JSONDecodeError:
+        return {}, [{"application_id": app_id,
+                     "reason": f"response was not JSON "
+                               f"(finish_reason={finish})"}]
+    # The span is asked for from the passage, and checked against it.
+    passages = {r["finding_id"]: (r.get("passage") or r["evidence_text"])
+                for r in chunk}
+    got: dict[int, dict] = {}
+    failures: list[dict] = []
+    for a in parsed:
+        fid = a.get("finding_id")
+        if fid not in passages:
+            failures.append({"application_id": app_id, "finding_id": fid,
+                             "reason": "answer names a figure that was "
+                                       "not asked about"})
+            continue
+        a["span_verified"] = _ap.verify_span(a.get("evidence_span", ""),
+                                             passages[fid])
+        got[fid] = a
+    return got, failures
+
+
 def run_model(rows: list[dict], all_rows: list[dict], model: str,
-              effort: str) -> dict:
+              effort: str, workers: int = 6) -> dict:
     """The sampled rows, asked the way the batch will ask them.
 
     A request carries one application's generation figures, and the
@@ -398,8 +448,13 @@ def run_model(rows: list[dict], all_rows: list[dict], model: str,
 
     Synchronous rather than batched: forty rows is a couple of dozen
     requests, and the batch API's twenty-four-hour window would put a
-    day between a prompt edit and knowing whether it helped.
+    day between a prompt edit and knowing whether it helped. Concurrent
+    rather than one after another: at `--reasoning-effort high` a single
+    request takes the model five or six minutes, and two dozen in a row
+    is two hours between a prompt edit and its score — which is the same
+    reason the batch API was rejected, arriving by a slower road.
     """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
     client = _client()
     wanted = {r["finding_id"] for r in rows}
     by_app: dict[int, list[dict]] = defaultdict(list)
@@ -417,52 +472,138 @@ def run_model(rows: list[dict], all_rows: list[dict], model: str,
 
     answers: dict[str, dict] = {}
     failures: list[dict] = []
-    for chunk in chunks:
-        app_id = chunk[0]["application_id"]
-        content = PROMPT % {
-            "ref": chunk[0]["application_ref"],
-            "desc": chunk[0]["description"],
-            "figures": _ap.render_generation_figures(chunk)}
-        resp = client.chat.completions.create(
-            model=model, max_completion_tokens=MAX_COMPLETION_TOKENS,
-            reasoning_effort=effort,
-            response_format={"type": "json_schema", "json_schema": {
-                "name": "generation_adjudication", "strict": True,
-                "schema": SCHEMA}},
-            messages=[{"role": "user", "content": content}])
-        text = resp.choices[0].message.content or ""
-        finish = resp.choices[0].finish_reason
-        try:
-            parsed = json.loads(text).get("generation", [])
-        except json.JSONDecodeError:
-            failures.append({"application_id": app_id,
-                             "reason": f"response was not JSON "
-                                       f"(finish_reason={finish})"})
-            continue
-        # The span is asked for from the passage, and checked against it.
-        quotes = {r["finding_id"]: (r.get("passage") or r["evidence_text"])
-                  for r in chunk}
-        for a in parsed:
-            fid = a.get("finding_id")
-            if fid not in quotes:
-                failures.append({"application_id": app_id,
-                                 "finding_id": fid,
-                                 "reason": "answer names a figure "
-                                           "that was not asked about"})
-                continue
-            if fid not in wanted:
-                # Asked so the model could read it as context; not part
-                # of what a person is being asked to check.
-                continue
-            a["span_verified"] = _ap.verify_span(
-                a.get("evidence_span", ""), quotes[fid])
-            answers[str(fid)] = a
-        kept = sum(1 for a in parsed if a.get("finding_id") in wanted)
-        print(f"  application {app_id}: {len(parsed)} answers, "
-              f"{kept} in the sample")
+
+    def ask(chunk: list[dict]) -> str:
+        """One request, its answers merged into `answers`. Each worker
+        touches only its own findings' keys, so the dict needs no lock."""
+        got, bad = ask_chunk(client, chunk, model, effort)
+        failures.extend(bad)
+        for fid, a in got.items():
+            if fid in wanted:
+                answers[str(fid)] = a
+            # Figures outside the sample were asked so the model could
+            # read them as context; they are not what a person checks.
+        kept = sum(1 for fid in got if fid in wanted)
+        return (f"  application {chunk[0]['application_id']}: {len(got)} "
+                f"answers, {kept} in the sample")
+
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for fut in as_completed([pool.submit(ask, c) for c in chunks]):
+            print(fut.result(), flush=True)
     return {"prompt_version": PROMPT_VERSION, "model": model,
             "reasoning_effort": effort, "answers": answers,
             "failures": failures}
+
+
+# ---------------------------------------------------------------------------
+# The batch: every adjudicated generation figure, stored
+# ---------------------------------------------------------------------------
+
+STORE_SQL = """
+INSERT INTO generation_adjudication
+    (application_id, finding_id, document_id, figure_basis, plant_type,
+     unit_count, unit_rating_mw, evidence_span, span_verified, reasoning,
+     model, prompt_version)
+VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+ON CONFLICT (finding_id, model, prompt_version) DO NOTHING
+"""
+
+
+def _already_adjudicated(conn, model: str) -> set[int]:
+    """Findings this model has already answered under this prompt.
+
+    The resume contract: a run that stops half way costs nothing to
+    finish, and a run repeated in full is a no-op.
+    """
+    with conn.cursor() as cur:
+        cur.execute("SELECT finding_id FROM generation_adjudication "
+                    "WHERE model = %s AND prompt_version = %s",
+                    (model, PROMPT_VERSION))
+        return {r[0] for r in cur.fetchall()}
+
+
+def batch_chunks(all_rows: list[dict], done: set[int]) -> list[list[dict]]:
+    """Every application's figures, chunked as the sample chunks them.
+
+    A chunk whose figures are all answered already is dropped; a chunk
+    with one unanswered figure is sent whole, because the context the
+    other figures give is what lets the model see that "26 generator
+    systems" and "26 4 MW generators" are the same machines.
+    """
+    by_app: dict[int, list[dict]] = defaultdict(list)
+    for r in all_rows:
+        by_app[r["application_id"]].append(r)
+    chunks = []
+    for app_id in sorted(by_app):
+        figs = sorted(by_app[app_id],
+                      key=lambda r: (-r["value_mw"], r["finding_id"]))
+        for i in range(0, len(figs), FIGURES_PER_REQUEST):
+            chunk = figs[i:i + FIGURES_PER_REQUEST]
+            if any(f["finding_id"] not in done for f in chunk):
+                chunks.append(chunk)
+    return chunks
+
+
+def do_batch(all_rows: list[dict], model: str, effort: str,
+             workers: int, submit: bool) -> None:
+    """Ask the two questions of every adjudicated generation figure.
+
+    Nothing is written unless --submit is passed: the count of requests
+    and figures is printed first, because the lesson of the bulk pass
+    was that an unmeasured batch costs $150 more than the estimate.
+
+    Each worker holds its own database connection and commits its own
+    chunk, so a run interrupted half way keeps what it had answered and
+    the next run picks up the rest.
+    """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    with db.connect() as conn:
+        done = _already_adjudicated(conn, model)
+    chunks = batch_chunks(all_rows, done)
+    n_new = sum(1 for r in all_rows if r["finding_id"] not in done)
+    print(f"{len(all_rows):,} figures, {len(done):,} already answered under "
+          f"{model}/{PROMPT_VERSION}; {n_new:,} to ask across "
+          f"{len(chunks)} requests")
+    if not submit:
+        print("(measurement only — nothing sent, nothing stored; "
+              "re-run with --submit)")
+        return
+
+    client = _client()
+    stored = unverified = 0
+
+    def run(chunk: list[dict]) -> str:
+        nonlocal stored, unverified
+        got, failures = ask_chunk(client, chunk, model, effort)
+        by_finding = {r["finding_id"]: r for r in chunk}
+        rows = []
+        for fid, a in got.items():
+            r = by_finding[fid]
+            rows.append((r["application_id"], fid, r.get("document_id"),
+                         a.get("figure_basis"), a.get("plant_type"),
+                         a.get("unit_count"), a.get("unit_rating_mw"),
+                         (a.get("evidence_span") or "")[:2000],
+                         bool(a.get("span_verified")),
+                         (a.get("reasoning") or "")[:600],
+                         model, PROMPT_VERSION))
+        written = 0
+        with db.connect() as c2, c2.cursor() as cur:
+            for row in rows:
+                cur.execute(STORE_SQL, row)
+                written += cur.rowcount     # 0 where the row already existed
+            c2.commit()
+        stored += written
+        unverified += sum(1 for fid, a in got.items()
+                          if fid not in done and not a["span_verified"])
+        return (f"  application {chunk[0]['application_id']}: "
+                f"{written} stored of {len(rows)} answered"
+                + (f", {len(failures)} failures" if failures else ""))
+
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for fut in as_completed([pool.submit(run, c) for c in chunks]):
+            print(fut.result(), flush=True)
+    print(f"stored {stored:,} adjudications under {model}/{PROMPT_VERSION}; "
+          f"{unverified:,} rest on a span that did not verify")
 
 
 # ---------------------------------------------------------------------------
@@ -571,6 +712,11 @@ def main() -> int:
                     help="answer the same rows with the model")
     ap.add_argument("--score", action="store_true",
                     help="compare a filled sheet with the model's answers")
+    ap.add_argument("--batch", action="store_true",
+                    help="count the requests the full run would send")
+    ap.add_argument("--submit", action="store_true",
+                    help="with --batch: send them, and store the answers")
+    ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--hand", type=Path,
                     help="the filled sheet (default: <version>_hand.csv)")
     ap.add_argument("--out-dir", type=Path, default=OUT_DIR)
@@ -578,8 +724,8 @@ def main() -> int:
     ap.add_argument("--reasoning-effort", default="medium",
                     choices=["minimal", "low", "medium", "high"])
     args = ap.parse_args()
-    if not (args.sample or args.run or args.score):
-        ap.error("pass --sample, --run or --score")
+    if not (args.sample or args.run or args.score or args.batch):
+        ap.error("pass --sample, --run, --score or --batch")
 
     with db.connect() as conn:
         by_site, _ = load_candidates(conn)
@@ -593,9 +739,13 @@ def main() -> int:
     if args.sample:
         csv_path, md_path = write_sheet(rows, args.out_dir)
         print(f"wrote {csv_path}\n      {md_path}")
+    if args.batch:
+        do_batch(all_rows, args.model, args.reasoning_effort,
+                 args.workers, submit=args.submit)
     if args.run:
         args.out_dir.mkdir(parents=True, exist_ok=True)
-        run = run_model(rows, all_rows, args.model, args.reasoning_effort)
+        run = run_model(rows, all_rows, args.model, args.reasoning_effort,
+                        args.workers)
         run_path.write_text(json.dumps(run, indent=1), encoding="utf-8")
         bad = sum(1 for a in run["answers"].values()
                   if not a["span_verified"])
