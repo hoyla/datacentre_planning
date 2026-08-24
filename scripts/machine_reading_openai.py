@@ -21,6 +21,7 @@ and is never rendered. Nothing is exported to the workbook or the
 DuckDB (§3.2).
 
     scripts/machine_reading_openai.py --sample [--site KEY ...]
+    scripts/machine_reading_openai.py --sample-markdown
     scripts/machine_reading_openai.py --submit [--dry-run]
     scripts/machine_reading_openai.py --collect
     scripts/machine_reading_openai.py --report
@@ -137,9 +138,24 @@ def _markdown(inp: mr.SiteInput, reading: dict, verdict: mr.GateResult,
                   + (f"; {verdict.paragraphs_withheld} paragraph"
                      f"{'s' if verdict.paragraphs_withheld != 1 else ''} withheld"
                      if verdict.paragraphs_withheld else "") + ".", ""]
+    return "\n".join(lines + _reading_body(reading))
+
+
+def _reading_body(reading: dict) -> list[str]:
+    """The sections, as the reader renders them.
+
+    A withheld paragraph is its reason standing where the paragraph
+    would have been, and its quotes go with it — the same rule the
+    reader's panel applies, so the person checking the sample checks
+    the pages a reader will get.
+    """
+    lines: list[str] = []
     for sec, title in mr.SECTION_TITLES.items():
         lines += [f"## {title}", ""]
         for para in (reading.get("sections") or {}).get(sec) or []:
+            if para.get("withheld"):
+                lines += [f"*One paragraph withheld: {para['withheld']}.*", ""]
+                continue
             lines += [para.get("text", ""), ""]
             for q in para.get("quotes") or []:
                 where = (f"document {q.get('document_id')}"
@@ -147,7 +163,52 @@ def _markdown(inp: mr.SiteInput, reading: dict, verdict: mr.GateResult,
                          if q.get("document_id") else
                          f"application {q.get('application_ref') or '?'}")
                 lines += [f"> {' '.join((q.get('quote') or '').split())} — *{where}*", ""]
-    return "\n".join(lines)
+    return lines
+
+
+def do_sample_markdown() -> None:
+    """Rewrite the sample markdown from the STORED readings (§7d).
+
+    The checkpoint is read on these files, and what a reader will see is
+    the stored row — the reading as the gate judged it, withheld
+    paragraphs and all. Re-gating the cached answer instead would
+    re-judge it against today's input, and a site whose documents,
+    figures or cohorts have moved since the reading was made is skipped
+    there and would keep a stale file. No model call, no gate run.
+    """
+    with db.connect() as conn:
+        latest, withheld = mr.load_latest(conn)
+        with conn.cursor() as cur:
+            cur.execute("SELECT site_key, display_name FROM sites "
+                        "WHERE retired_at IS NULL")
+            names = dict(cur.fetchall())
+    SAMPLE_DIR.mkdir(parents=True, exist_ok=True)
+    for key, why_sampled in SAMPLE_SITES:
+        row, refusal = latest.get(key), withheld.get(key)
+        if not row and not refusal:
+            print(f"{key}: no stored reading")
+            continue
+        head = [f"# {names.get(key, key)}", "",
+                f"`{key}` · {why_sampled}", ""]
+        if refusal:
+            body = [f"**WITHHELD: {refusal}**", ""]
+            note = "WITHHELD"
+        else:
+            when = (row["inserted_at"].strftime("%-d %B %Y")
+                    if row.get("inserted_at") else "")
+            n_withheld = sum(
+                1 for paras in ((row["reading"] or {}).get("sections") or {}).values()
+                for para in paras if para.get("withheld"))
+            head[2] += (f" · {row['model']} · {row['prompt_version']} · "
+                        f"{row['gate_version']} · {row['documents_read']} documents, "
+                        f"{row['pages_read']} pages, read {when}")
+            body = ([f"**{n_withheld} paragraph"
+                     f"{'s' if n_withheld != 1 else ''} withheld by the gate.**", ""]
+                    if n_withheld else []) + _reading_body(row["reading"])
+            note = f"OK ({n_withheld} paragraphs withheld)" if n_withheld else "OK"
+        (SAMPLE_DIR / f"{key.replace('/', '_')}.md").write_text(
+            "\n".join(head + body))
+        print(f"{key}: {note}")
 
 
 def read_one(client, inp: mr.SiteInput, model: str, effort: str) -> dict:
@@ -344,6 +405,11 @@ def do_regate() -> None:
     with db.connect() as conn:
         profiles, coverage, cohorts = _context(conn)
         for raw_path in sorted(SAMPLE_DIR.glob("*.raw.json")):
+            # Answers from an earlier prompt are kept beside the current
+            # one as <key>.<prompt_version>.raw.json; they are evidence,
+            # not input, and their names are not site keys.
+            if raw_path.name.count(".") > 2:
+                continue
             raw = json.loads(raw_path.read_text())
             key = raw_path.name[:-len(".raw.json")]
             key = next((k for k, _ in SAMPLE_SITES if k.replace("/", "_") == key), key)
@@ -356,15 +422,21 @@ def do_regate() -> None:
             if raw.get("prompt_version", mr.PROMPT_VERSION) != mr.PROMPT_VERSION:
                 print(f"{key}: answer on disk is {raw['prompt_version']}; skipped")
                 continue
-            if _already(conn, key, raw["model"], inp.input_hash):
-                print(f"{key}: already gated under {mr.GATE_VERSION}")
-                continue
+            # The gate marks each withheld paragraph in the reading it
+            # is given, so the markdown is written from the judged copy
+            # whether or not this gate version already has its row.
             verdict = mr.gate(raw["reading"], inp)
-            _store(conn, inp, raw["model"], raw["reading"], verdict)
+            stored = _already(conn, key, raw["model"], inp.input_hash)
+            if not stored:
+                _store(conn, inp, raw["model"], raw["reading"], verdict)
             slug = key.replace("/", "_")
             (SAMPLE_DIR / f"{slug}.md").write_text(
                 _markdown(inp, raw["reading"], verdict, raw["model"]))
-            print(f"{key}: {'OK' if verdict.ok else 'WITHHELD — ' + verdict.reason}")
+            print(f"{key}: {'OK' if verdict.ok else 'WITHHELD — ' + verdict.reason}"
+                  + (f" ({verdict.paragraphs_withheld} paragraphs withheld)"
+                     if verdict.ok and verdict.paragraphs_withheld else "")
+                  + ("; already stored under " + mr.GATE_VERSION
+                     if stored else ""))
 
 
 def do_report() -> None:
@@ -384,6 +456,9 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--collect", action="store_true")
     ap.add_argument("--report", action="store_true")
+    ap.add_argument("--sample-markdown", action="store_true",
+                    help="rewrite the sample markdown from the stored "
+                         "readings, as the reader renders them")
     ap.add_argument("--regate", action="store_true",
                     help="re-judge the cached sample answers under the current gate")
     ap.add_argument("--model", default="gpt-5")
@@ -396,12 +471,15 @@ def main() -> int:
         do_submit(args.model, args.reasoning_effort, dry_run=not args.submit)
     elif args.collect:
         do_collect()
+    elif args.sample_markdown:
+        do_sample_markdown()
     elif args.regate:
         do_regate()
     elif args.report:
         do_report()
     else:
-        ap.error("pass --sample, --submit, --collect or --report")
+        ap.error("pass --sample, --sample-markdown, --submit, --collect, "
+                 "--regate or --report")
     return 0
 
 
