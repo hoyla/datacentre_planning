@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import pytest
 
+from pathlib import Path
+
 from dcp import machine_reading as mr
 
 PAGE_7 = ("The proposed development comprises 112 No. standby generators "
@@ -329,3 +331,34 @@ def test_the_prompt_carries_the_rules_the_gate_enforces():
     for phrase in ("verbatim", "Do not compare", "Do not infer intent",
                    "Do not advise", "Do not add knowledge"):
         assert phrase in mr.PROMPT, phrase
+
+
+def test_the_sample_markdown_shows_a_withheld_paragraph_as_its_reason():
+    """The checkpoint is read on the markdown, so the markdown has to
+    show what the reader will show: a withheld paragraph's reason
+    standing where the paragraph would have been, and not its text."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "machine_reading_openai",
+        Path(__file__).resolve().parent.parent / "scripts"
+        / "machine_reading_openai.py")
+    mro = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mro)
+
+    inp = _inp()
+    r = {"sections": {"what_the_documents_say": [
+            {"text": "The IT load is 168 MW.",
+             "quotes": [_q("The total IT load is 168 MW")]},
+            {"text": "The connection is 120 MW.",
+             "quotes": [_q("a connection of one hundred and twenty megawatts, "
+                           "words the page does not contain")]},
+         ], "questions": [], "not_determined": []}}
+    verdict = mr.gate(r, inp)
+    md = mro._markdown(inp, r, verdict, "gpt-5")
+
+    assert "The IT load is 168 MW." in md
+    assert "The connection is 120 MW." not in md
+    assert "One paragraph withheld:" in md
+    # The reason names the quote that failed, as the reader's does; what
+    # must not survive is the paragraph's own assertion.
+    assert "> The total IT load is 168 MW" in md   # the passing quote stands

@@ -1409,6 +1409,13 @@ def main() -> int:
     ap.add_argument("--publish", type=Path, default=None,
                     help="also write here — index.html at the repository root, "
                          "which is what the EdgeOne deployment serves")
+    # §7d: the readings are rendered only once a person has read the
+    # twenty-site sample. A release that has to go out before that
+    # checkpoint builds without them rather than waiting or shipping
+    # unreviewed ones; nothing else on the page changes.
+    ap.add_argument("--no-readings", action="store_true",
+                    help="build without the machine readings, for a release "
+                         "made before the sample has been reviewed")
     args = ap.parse_args()
 
     hv = _handover()
@@ -1590,6 +1597,8 @@ def main() -> int:
         # Rendered collapsed on the site page, labelled as what they are;
         # never exported.
         readings, readings_withheld = mreading.load_latest(conn)
+        if args.no_readings:
+            readings, readings_withheld = {}, {}
         cited_docs = mreading.cited_documents(conn, readings)
         # `held`/`read` are every document; `prose_*` are the ones the
         # deep-read is for. The caveats run off prose, the counts shown
@@ -3608,10 +3617,14 @@ def main() -> int:
     # site rows — retired, or filtered upstream — and its claim would
     # otherwise vanish without a trace.
     _claims_live = sum(len(v) for v in claims_by_site.values())
-    print(f"  Machine readings: {n_readings_rendered} rendered "
-          f"({n_paragraphs_withheld} paragraphs withheld within them), "
-          f"{n_readings_withheld} withheld with a reason, "
-          f"{n_sites - n_readings_rendered - n_readings_withheld} sites with none")
+    if args.no_readings:
+        print("  Machine readings: none built — --no-readings was passed, so "
+              "no site page carries one and no reading is counted below")
+    else:
+        print(f"  Machine readings: {n_readings_rendered} rendered "
+              f"({n_paragraphs_withheld} paragraphs withheld within them), "
+              f"{n_readings_withheld} withheld with a reason, "
+              f"{n_sites - n_readings_rendered - n_readings_withheld} sites with none")
     print(f"  Capacity claims: {n_claims_total} claims held, {_claims_live} "
           f"matched to sites, rendered on {claims_sites_rendered} site "
           f"panels ({claims_rows_rendered} claim rows)")
