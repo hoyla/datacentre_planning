@@ -1744,8 +1744,12 @@ def main() -> int:
                 # do not render, and the refusal is not hidden either.
                 if para.get("withheld"):
                     n_paragraphs_withheld += 1
+                    # The reason as a reader may have it: the failure and
+                    # the document, never the model's unverified words.
+                    # The full reason is in the stored row and in the
+                    # sample markdown a person checks (mreading.public_reason).
                     body.append(f'<p class="help rwithheld">One paragraph withheld: '
-                                f'{esc(para["withheld"])}.</p>')
+                                f'{esc(mreading.public_reason(para["withheld"]))}.</p>')
                     continue
                 quotes = "".join(
                     f'<li>\u201c{esc(" ".join((q.get("quote") or "").split()))}\u201d '

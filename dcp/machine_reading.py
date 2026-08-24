@@ -750,6 +750,50 @@ def _paragraph_problem(sec: str, para: dict, inp: SiteInput, flows: dict,
     return None
 
 
+# What a refusal may say on a page, as opposed to what it records.
+#
+# Luke, 2026-08-24, on the withheld line: the reason the gate writes
+# names the model's own words, and for the commonest failure — a quote
+# that is in none of the site's documents — those words are a misquote
+# or an invention. One of the eight withheld paragraphs in the sample
+# put "29.9 L/s" in front of a reporter inside the sentence explaining
+# that it could not be verified, and two more printed "3.3 MWt" while
+# saying no quote contains it. The gate's own rule is that every
+# number-with-unit must appear in a verified quote; the refusal message
+# was the one place that rule did not hold.
+#
+# So the stored reason keeps everything — it is the audit trail, and the
+# sample markdown a person checks against still shows it in full — and
+# the reader is given the failure and the document, never the words.
+_QUOTE_NOT_FOUND = re.compile(
+    r'^quote not found in document (.+?) or any other the site holds: ".*"$',
+    re.S)
+_FIGURE_UNQUOTED = re.compile(r"^the figure '.*' is not in any quote "
+                              r"attached to it$", re.S)
+
+
+def public_reason(reason: str) -> str:
+    """The refusal, with the model's unverified words taken out.
+
+    Every branch names what went wrong and where to look. What none of
+    them do is repeat a quote that verified against nothing, or a figure
+    no quote contains — a reader scanning the page takes away a number,
+    not a caveat.
+    """
+    reason = (reason or "").strip()
+    m = _QUOTE_NOT_FOUND.match(reason)
+    if m:
+        doc = m.group(1)
+        where = (f"document {doc}" if doc != "—" else "the document it cites")
+        return (f"it rests on a quote that is not in {where}, nor in any "
+                f"other document this site holds")
+    if _FIGURE_UNQUOTED.match(reason):
+        return "it states a figure that none of its own quotes contains"
+    # 'uses X, which the rules forbid' and 'names another site (KEY)' say
+    # nothing the documents did not; they stand as written.
+    return reason
+
+
 def gate(reading: dict, inp: SiteInput) -> GateResult:
     """Judge each paragraph alone; refuse the reading only when nothing stands.
 
