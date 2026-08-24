@@ -394,11 +394,14 @@ SITE_HEADERS = [
     "End user (Barbour)", "Applicant of record (Barbour)",
     "Operator group (confirmed alias)",
     # A join key, not a label: the newsroom ties its other datasets
-    # together on Companies House numbers, so the number travels as its
-    # own column rather than sitting inside an evidence note where
-    # nothing can select it. Present only where a person has confirmed
-    # the group and recorded a number (data/priors/organisation_aliases.yaml).
-    "Operator company number (Companies House)",
+    # together on company numbers, so the number travels as its own
+    # column rather than sitting inside an evidence note where nothing
+    # can select it. Two columns, not one, because Companies House and
+    # the Irish CRO overlap in shape and not in meaning — filter on the
+    # register before joining on the number. Present only where a person
+    # has confirmed the group and recorded a number
+    # (data/priors/organisation_aliases.yaml).
+    "Operator company number", "Operator company register",
     "Advisers (Barbour)",
     "Also named in documents (mention counts)",
     "Planning authority (register)", "Parties source",
@@ -1390,6 +1393,7 @@ def main() -> None:
             prof.get("applicant_of_record") or "",
             prof.get("operator_group") or "",
             prof.get("operator_company_number") or "",
+            prof.get("operator_company_register") or "",
             prof.get("advisers") or "",
             prof.get("named_in_documents") or "",
             prof.get("authority") or "",
@@ -1471,6 +1475,7 @@ def main() -> None:
             bparties["end_user"], bparties["applicant_of_record"],
             bparties["operator_group"],
             bparties.get("operator_company_number", ""),
+            bparties.get("operator_company_register", ""),
             bparties["advisers"],
             bparties["named_in_documents"], bparties["authority"],
             bparties["parties_source"],

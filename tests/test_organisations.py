@@ -99,11 +99,40 @@ def test_matching_goes_through_the_canonical_key_and_no_further(tmp_path):
     assert org.group_for("VDC LHR11 Limited", index) is None
 
 
-def test_the_seed_changes_nothing_until_confirmed():
-    """Every seeded member is proposed, so today's builds see an empty index."""
+def test_only_confirmed_members_reach_a_build():
+    """The invariant, over whatever the file happens to hold.
+
+    This replaced a test asserting the seed index was EMPTY, which was
+    true only while nobody had confirmed anything: it failed the moment
+    Luke confirmed his first member on 2026-08-24, which is a test
+    pinning a date rather than a rule. What must hold is that a proposed
+    member never reaches a build and a confirmed one always does.
+    """
     groups = org.load_groups()
-    assert org.alias_index(groups) == {}
-    assert "0 confirmed" in org.summary(groups)
+    index = org.alias_index(groups)
+    for g in groups:
+        for m in g.members:
+            if m.status == "confirmed":
+                assert index.get(m.key) is not None, \
+                    f"{m.name} is confirmed and absent from the index"
+            else:
+                assert m.key not in index, \
+                    f"{m.name} is {m.status} and reached the index"
+
+
+def test_a_confirmed_member_carries_its_evidence_and_number():
+    """Whatever is confirmed in the file is checkable: a person can open
+    what it cites, and a join key names the register it belongs to."""
+    for g in org.load_groups():
+        for m in g.members:
+            if m.status != "confirmed":
+                continue
+            assert m.evidence, f"{m.name} is confirmed with no evidence"
+            assert any(e.ref or e.quote for e in m.evidence), \
+                f"{m.name} cites nothing a person can open"
+            if m.company_number:
+                assert m.register in org.REGISTERS, \
+                    f"{m.name} has a number in no named register"
 
 
 # ---------------------------------------------------------------------------
@@ -143,7 +172,7 @@ def test_a_malformed_company_number_is_refused(tmp_path, bad):
                          company_number=bad)]}]})
     with pytest.raises(org.AliasError) as exc:
         org.load_groups(path)
-    assert "Companies House number" in str(exc.value)
+    assert "is not a companies_house number" in str(exc.value)
 
 
 def test_a_member_without_a_number_is_still_valid(tmp_path):
@@ -152,3 +181,132 @@ def test_a_member_without_a_number_is_still_valid(tmp_path):
     path = _write(tmp_path, {"groups": [{
         "group": "A Group", "members": [_member("Ark Data Centres Limited")]}]})
     assert org.load_groups(path)[0].members[0].company_number == ""
+
+
+def test_a_repeated_key_is_refused_rather_than_silently_dropped(tmp_path):
+    """Found 2026-08-24, when Luke added a Companies House lookup beside
+    a Barbour reference by writing a second `evidence:` block. PyYAML
+    keeps the last of two identical keys and says nothing, so the
+    Barbour reference stopped existing while the file still showed it.
+    An append-only record cannot be one where appending deletes."""
+    path = tmp_path / "aliases.yaml"
+    path.write_text("""
+groups:
+  - group: Amazon
+    members:
+      - name: Amazon UK Services Limited
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12549436"
+        evidence:
+          - source: companies_house
+            ref: "03223028"
+""", encoding="utf-8")
+    with pytest.raises(org.AliasError) as exc:
+        org.load_groups(path)
+    assert "given twice" in str(exc.value)
+    assert "another item to the existing list" in str(exc.value)
+
+
+def test_two_sources_on_one_member_both_survive(tmp_path):
+    """The shape that edit should have taken."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Amazon",
+        "members": [dict(_member("Amazon UK Services Limited", status="proposed"),
+                         company_number="03223028",
+                         evidence=[
+                             {"source": "barbour", "ref": "12549436",
+                              "note": "Client on Amazon Data Centre Didcot."},
+                             {"source": "companies_house", "ref": "03223028",
+                              "note": "Looked up on Lurch (Guardian company "
+                                      "and land-ownership tool)."}])]}]})
+    m = org.load_groups(path)[0].members[0]
+    assert [e.source for e in m.evidence] == ["barbour", "companies_house"]
+    assert m.company_number == "03223028"
+
+
+def test_an_irish_cro_number_is_accepted_with_its_register(tmp_path):
+    """Luke, 2026-08-24: "Irish companies; CRO names are 6 digits."
+    Amazon Data Services Ireland is in this file, and a six-digit CRO
+    number is a well-formed nothing in Companies House."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Amazon",
+        "members": [dict(_member("Amazon Data Services Ireland Ltd"),
+                         company_number="561234", register="cro")]}]})
+    m = org.load_groups(path)[0].members[0]
+    assert m.company_number == "561234" and m.register == "cro"
+
+
+def test_a_cro_number_filed_as_companies_house_is_refused(tmp_path):
+    """The collision this guards: six digits is valid at the CRO and
+    malformed at Companies House, and a consumer joining on Companies
+    House IDs must never be handed one silently."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Amazon",
+        "members": [dict(_member("Amazon Data Services Ireland Ltd"),
+                         company_number="561234")]}]})
+    with pytest.raises(org.AliasError) as exc:
+        org.load_groups(path)
+    assert "is not a companies_house number" in str(exc.value)
+
+
+def test_a_number_with_no_register_named_is_companies_house(tmp_path):
+    """Every entry in the file predates the register field, and they are
+    all Companies House numbers."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Ark",
+        "members": [dict(_member("Ark Data Centres Limited"),
+                         company_number="04958786")]}]})
+    m = org.load_groups(path)[0].members[0]
+    assert m.register == "companies_house"
+
+
+def test_an_unknown_register_is_refused(tmp_path):
+    path = _write(tmp_path, {"groups": [{
+        "group": "Ark",
+        "members": [dict(_member("Ark Data Centres Limited"),
+                         company_number="04958786", register="delaware")]}]})
+    with pytest.raises(org.AliasError) as exc:
+        org.load_groups(path)
+    assert "register 'delaware' is not one of" in str(exc.value)
+
+
+def test_evidence_must_name_the_register_the_number_is_in(tmp_path):
+    """Luke, 2026-08-24, on a worked example for an Irish company: "in
+    your example 'source: companies_house' is not true — the source is
+    the cro". A provenance line that misnames its own source sends a
+    reader to a register that has never heard of the company."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Amazon",
+        "members": [dict(_member("Amazon Data Services Ireland Ltd",
+                                 evidence=[{"source": "companies_house",
+                                            "ref": "561234"}]),
+                         company_number="561234", register="cro")]}]})
+    with pytest.raises(org.AliasError) as exc:
+        org.load_groups(path)
+    assert "cites 'companies_house'" in str(exc.value)
+
+
+def test_the_cro_is_its_own_source(tmp_path):
+    path = _write(tmp_path, {"groups": [{
+        "group": "Amazon",
+        "members": [dict(_member("Amazon Data Services Ireland Ltd",
+                                 evidence=[{"source": "cro", "ref": "561234",
+                                            "note": "Looked up on Lurch."}]),
+                         company_number="561234", register="cro")]}]})
+    m = org.load_groups(path)[0].members[0]
+    assert m.evidence[0].source == "cro" and m.register == "cro"
+
+
+def test_a_document_may_evidence_a_number_in_any_register(tmp_path):
+    """Only a source that speaks for a company register is checked; a
+    planning document quoting the company number is fine either way."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Amazon",
+        "members": [dict(_member("Amazon Data Services Ireland Ltd",
+                                 evidence=[{"source": "document", "ref": "14235",
+                                            "quote": "company number 561234"}]),
+                         company_number="561234", register="cro")]}]})
+    assert org.load_groups(path)[0].members[0].register == "cro"
