@@ -2283,7 +2283,7 @@ def main() -> int:
     <dt>Grid connection</dt><dd>{_q(grid, 'grid_connection')}</dd>
     <dt>On-site generation</dt><dd>{_q(gen, 'onsite_generation')}{
       f' <span class="help">{esc(prof.get("gen_figure_note"))}</span>'
-      if gen and prof.get("gen_figure_note") else ''}</dd>
+      if prof.get("gen_figure_note") else ''}</dd>
     {mixed_note}
     <dt>Excluded figures</dt><dd>{nexc or 0}
      <span class="help">market context, not this site</span></dd>
@@ -3031,6 +3031,16 @@ def main() -> int:
    generator units per building" — about 100&nbsp;MW. Sites where this pattern is detected
    are flagged rather than multiplied, because "26 no. 28000&nbsp;kW generators" is genuinely
    ambiguous about whether the rating is per unit or the total.</li>
+  <li><b>Not every power figure in a generation column is generation.</b> Every one of the
+   1,667 adjudicated on-site generation figures was read again against the passage around its
+   quote and asked what it is a figure of. Seventeen sites' largest — 1,696&nbsp;MW between
+   them — turned out to be something else: a battery's rating filed as "energy capacity", a
+   screening threshold for "a collective combustion installation of more than 300&nbsp;MW of
+   <em>heat</em> output", a thermal output stated beside the electrical one, a generator
+   manufacturer's datasheet. Those figures are kept off the generation line and counted in
+   its place, with the reason, so a number that disappears can still be found. Where the
+   passage does not settle whether a figure describes one machine, a stated group or the
+   whole site, the panel says that rather than choosing.</li>
  </ul>
  <p class="m">Nothing was deleted in correcting these. The findings, their quotes and their
  original values are untouched; what was withdrawn is only the claim that a number is a

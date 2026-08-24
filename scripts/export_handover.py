@@ -98,6 +98,18 @@ app_findings AS (
              WHERE signal_family IS NOT NULL
                AND signal_family <> 'unclassified')            AS signal_families
   FROM findings GROUP BY application_id),
+gen_adj AS (
+  -- The latest generation verdict per finding (§4.1e). A figure the
+  -- adjudication read as thermal, fuel, stored or consumed energy is not
+  -- this site's generation, however the earlier pass labelled it: Rover
+  -- Way's 1,000 MW is a battery, North Hyde Gardens' 300 MW is an EIA
+  -- threshold for "more than 300mw of HEAT output". Keeping them in the
+  -- generation column put 1,696 MW of not-generation across 17 sites in
+  -- front of a reporter. They are excluded here and counted in the next
+  -- CTE, never dropped in silence.
+  SELECT DISTINCT ON (finding_id) finding_id, figure_basis, plant_type
+  FROM generation_adjudication
+  ORDER BY finding_id, inserted_at DESC, id DESC),
 app_power AS (
   -- Adjudicated capacity ONLY. The previous version of this query took
   -- max(value_number) over every finding carrying a 'MW' unit, which is
@@ -119,11 +131,13 @@ app_power AS (
          max(value_mw) FILTER (WHERE quantity_type = 'total_site')  AS total_site_mw,
          max(value_mw) FILTER (WHERE quantity_type = 'grid_connection')
                                                                     AS grid_mw,
-         max(value_mw) FILTER (WHERE quantity_type = 'onsite_generation')
-                                                                    AS gen_mw,
+         max(value_mw) FILTER (
+             WHERE quantity_type = 'onsite_generation'
+               AND coalesce(g.figure_basis, '') <> 'not_generation')  AS gen_mw,
          count(*)                                                   AS n_capacity,
          count(*) FILTER (WHERE is_maximum)                         AS n_ultimate
   FROM power_adjudication
+  LEFT JOIN gen_adj g ON g.finding_id = power_adjudication.finding_id
   WHERE verdict = 'site_capacity' AND value_mw IS NOT NULL
   GROUP BY application_id),
 app_power_excluded AS (
@@ -348,6 +362,13 @@ SITE_HEADERS = [
     # columns because they are three different things (dcp/site_profile).
     "On-site generation figure basis", "Generator units disclosed (count)",
     "Generator unit rating MW (disclosed)",
+    # §4.1e. The basis and the plant are adjudicated per figure against
+    # the passage around its quote, not inferred from the quote. The
+    # excluded count is here because 17 sites' largest generation figure
+    # turned out to be heat, fuel, storage or a datasheet row, and a
+    # figure that leaves the column silently is a figure nobody can
+    # question.
+    "On-site generation plant type", "Generation figures set aside (not generation)",
     "Capacity figures attributed to site", "Power figures excluded (context)",
     # --- environment ----------------------------------------------------
     "Facility character", "Scale band", "Scale basis",
@@ -1345,6 +1366,8 @@ def main() -> None:
             prof.get("gen_figure_basis") or "",
             prof.get("gen_unit_count") if prof.get("gen_unit_count") else "",
             prof.get("gen_unit_mw") if prof.get("gen_unit_mw") else "",
+            prof.get("gen_plant_type") or "",
+            prof.get("gen_excluded_n") or "",
             n_capacity or "", n_excluded or "",
             scale.CHARACTERS[character].label, band_label,
             scale.BASIS_NOTE[basis],
@@ -1431,7 +1454,9 @@ def main() -> None:
             "",                       # no public register entry exists
             0, "", 0, "", "", "",
             None, cap_label, "", "", "n/a — no documents",
-            None, None, None, None, "", "", "", "", "",
+            None, None, None, None, "", "", "",
+            "", "",                   # no adjudicated generation to set aside
+            "", "",
             "", "", "",               # character/scale unknowable pre-application
             "", "", "", "", "", "", "", "",
             ", ".join(sorted(env.keys())),

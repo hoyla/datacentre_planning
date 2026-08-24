@@ -201,8 +201,9 @@ def load_inputs(conn) -> Inputs:
             generators[key] = site_profile.generator_profile(
                 counts or (), texts or ())
         cur.execute(site_profile.GENERATION_FIGURE_SQL)
-        for key, mw, quote in cur.fetchall():
-            gen_rows[key].append((mw, quote))
+        for key, mw, quote, basis, plant, count, rating in cur.fetchall():
+            gen_rows[key].append((mw, quote, basis, plant, count,
+                                  float(rating) if rating else None))
     generation = {k: site_profile.generation_figure(v)
                   for k, v in gen_rows.items()}
     return Inputs(sites, figures, site_profile.load_coverage_detail(conn),
