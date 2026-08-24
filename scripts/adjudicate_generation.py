@@ -627,9 +627,45 @@ def _basis_agrees(hand_value: str, model_value: str | None) -> bool:
     return hand_value in _SUBTOTAL and (model_value or "") in _SUBTOTAL
 
 
+# Luke, 2026-08-24, on a rule that fixed one row and broke another:
+# "I think it's better to be 'unclear' than wrong, so something that
+# improves one thing from unclear but gets another thing wrong is worse
+# than unclear plus correct or even unclear plus unclear." So the two
+# ways of disagreeing are not one number. A model that answers "unclear"
+# where the sheet has a value has declined to guess, and the figure
+# simply carries no label; a model that answers something else has put a
+# wrong label on a reader's page. Worst of all is a confident answer
+# where the SHEET says unclear, because there the person reading the
+# passage could not tell and the model claimed it could.
+# And the wrong answers divide again, by what they do to a reader.
+# Downstream, a figure whose basis is `not_generation` never becomes a
+# headline, and one whose plant is `storage` leaves the generation
+# cohorts: those two answers, when wrong, WITHHOLD a real figure, which
+# is the same shape of loss as an abstention — the reader sees nothing
+# and is told why. Every other wrong answer ASSERTS: it puts a label on
+# a figure a reporter will read, and nothing downstream can tell it from
+# a right one. On the 2.5 sample, three of four basis errors were the
+# withholding kind and one — Langley's 104 MW, one machine called a
+# fleet — was the asserting kind. Ranking versions on the total would
+# have hidden that.
+_SUPPRESSING = {"figure_basis": {"not_generation"}, "plant_type": {"storage"}}
+
+
+def _outcome(hand_value: str, model_value: str | None, *,
+             field: str = "figure_basis") -> str:
+    basis = field == "figure_basis"
+    if (_basis_agrees(hand_value, model_value) if basis
+            else hand_value == (model_value or "")):
+        return "right"
+    if model_value == "unclear":
+        return "abstained"
+    return ("wrong_withholding" if model_value in _SUPPRESSING[field]
+            else "wrong_asserting")
+
+
 def score(rows: list[dict], hand: dict[str, dict],
           model_run: dict) -> list[str]:
-    """Agreement, per question and per row, printed as lines.
+    """Right, abstained and wrong, per question and per row.
 
     Rows the person left blank are reported as unchecked rather than
     scored: a blank is not a verdict, and counting it as one would make
@@ -637,6 +673,9 @@ def score(rows: list[dict], hand: dict[str, dict],
     """
     answers = model_run.get("answers", {})
     out, basis_hit, plant_hit, checked, unverified = [], 0, 0, 0, 0
+    blank = {"abstained": 0, "wrong_withholding": 0, "wrong_asserting": 0,
+             "over": 0}
+    tally = {"figure_basis": dict(blank), "plant_type": dict(blank)}
     disagreements: list[str] = []
 
     for i, r in enumerate(rows, 1):
@@ -651,6 +690,13 @@ def score(rows: list[dict], hand: dict[str, dict],
             disagreements.append(f"  {i:>2}. {r['site'][:34]:34} "
                                  f"finding {fid}: no model answer")
             continue
+        for field in ("figure_basis", "plant_type"):
+            hv = h.get(field) or ""
+            outcome = _outcome(hv, m.get(field), field=field)
+            if outcome != "right":
+                tally[field][outcome] += 1
+                if outcome == "wrong_asserting" and hv == "unclear":
+                    tally[field]["over"] += 1
         b_ok = _basis_agrees(h["figure_basis"], m.get("figure_basis"))
         p_ok = (h.get("plant_type") or "") == m.get("plant_type")
         basis_hit += b_ok
@@ -670,10 +716,21 @@ def score(rows: list[dict], hand: dict[str, dict],
 
     out.append(f"{checked} of {len(rows)} rows hand-checked")
     if checked:
-        out.append(f"  figure_basis  {basis_hit}/{checked} "
-                   f"({basis_hit / checked:.0%})")
-        out.append(f"  plant_type    {plant_hit}/{checked} "
-                   f"({plant_hit / checked:.0%})")
+        for field, hit in (("figure_basis", basis_hit), ("plant_type", plant_hit)):
+            t = tally[field]
+            out.append(f"  {field:<13} {hit}/{checked} ({hit / checked:.0%}) — "
+                       f"{t['abstained']} abstained, "
+                       f"{t['wrong_withholding']} wrong but withholding, "
+                       f"{t['wrong_asserting']} WRONG AND ASSERTED"
+                       + (f" ({t['over']} of them where the sheet says "
+                          f"unclear)" if t["over"] else ""))
+        asserted = sum(tally[f]["wrong_asserting"] for f in tally)
+        held = sum(tally[f]["wrong_withholding"] for f in tally)
+        skipped = sum(tally[f]["abstained"] for f in tally)
+        out.append(f"  ASSERTED WRONG, both questions: {asserted} — the number "
+                   f"to compare versions on. The {held} withholding errors and "
+                   f"{skipped} abstentions cost a reader a figure and say so; "
+                   f"an asserted one puts a wrong label on a page.")
     out.append(f"  spans that did not verify against their quote: "
                f"{unverified}")
     if disagreements:
