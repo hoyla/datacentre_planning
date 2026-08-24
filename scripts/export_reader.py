@@ -212,14 +212,31 @@ def trim(text, n: int) -> str:
 # "B8Show the 45 planning applications". The same trap as HTML
 # entities in esc() — write the character.
 CSS = """
-:root{--bg:#fff;--fg:#16171b;--mut:#63666e;--line:#e4e5e9;--soft:#f7f8fa;
-  --accent:#0b5fff;--warn:#8a5a00;--warnbg:#fff8e6;--ok:#0a6b3d;--okbg:#edfaf3}
-@media (prefers-color-scheme:dark){:root{--bg:#131419;--fg:#e9eaee;--mut:#989aa4;
-  --line:#282a33;--soft:#1a1c22;--accent:#7ea6ff;--warn:#ffcf70;--warnbg:#2a2410;
-  --ok:#7fe0ac;--okbg:#102319}}
+/* Colour means one thing here: the state of the evidence.
+   READER_REDESIGN_PLAN §8b — "one neutral colour for cohort and
+   organisation pills, colour reserved for verification state".
+   So --brand is structure (masthead, headings, site names, links) and
+   also the SETTLED state, --warn is attention (a floor, a provisional
+   row, something withheld), --active is the reader's own filter, and
+   everything categorical — cohorts, organisations — is neutral. The
+   values are the Guardian's, which Luke asked for where they do not
+   undermine that rule; what they are NOT used for is section identity,
+   because red marking a section and red marking an unverified figure
+   cannot both be read. */
+:root{--bg:#fff;--fg:#121212;--mut:#6b6b6b;--line:#dcdcdc;--soft:#f6f6f6;
+  --brand:#052962;--accent:#052962;--active:#ffe500;
+  --warn:#c74600;--warnbg:#fff4ec;--ok:#052962;--okbg:#eef2f8}
+@media (prefers-color-scheme:dark){:root{--bg:#131419;--fg:#e9eaee;--mut:#a2a4ad;
+  --line:#2e313b;--soft:#1a1c22;--brand:#8ab0e8;--accent:#8ab0e8;
+  --active:#ffe500;--warn:#ff9b5c;--warnbg:#2a1a10;--ok:#8ab0e8;--okbg:#111a26}}
 *{box-sizing:border-box}
-body{margin:0;font:16px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:var(--bg);color:var(--fg)}
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap');
+body{margin:0;font:16px/1.62 "Source Sans 3",-apple-system,BlinkMacSystemFont,
+  "Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg)}
+/* The serif carries what a reader is looking FOR — a site's name and a
+   figure — and nothing else. The handoff uses it the same way. */
+.sitecell .sname,.mw .fig,h1,h2{font-family:"Source Serif 4",Georgia,
+  "Times New Roman",serif}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 header{padding:16px 22px 12px}
 h1{margin:0 0 3px;font-size:19px}
@@ -290,7 +307,12 @@ button.chip{font:inherit;font-size:14px;padding:4px 10px;
   border:1px solid var(--line);border-radius:3px;background:var(--bg);
   color:var(--fg);cursor:pointer;line-height:1.3}
 button.chip:hover{border-color:var(--accent)}
-button.chip.on{background:var(--fg);border-color:var(--fg);color:var(--bg);
+/* The reader's own filter, in the Guardian's yellow: it marks what the
+   PERSON has done to the page, which is a third thing from structure
+   (brand) and from the state of a figure (warn). Black text on it
+   because the yellow is bright enough to carry it and nothing else on
+   the page is that colour. */
+button.chip.on{background:var(--active);border-color:var(--active);color:#121212;
   font-weight:600}
 button.chip .n{color:var(--mut);font-size:13px;margin-left:3px}
 button.chip:disabled{opacity:.5;cursor:not-allowed;border-style:dashed}
@@ -339,7 +361,7 @@ ul.rq li{margin-bottom:2px}
 .siglist{margin:6px 0 0;padding-left:18px;font-size:14px;columns:2;column-gap:24px}
 .siglist li{break-inside:avoid;margin-bottom:3px}
 @media (max-width:700px){.siglist{columns:1}}
-button.chip.on .n{color:var(--bg);opacity:.75}
+button.chip.on .n{color:#121212;opacity:.7}
 /* The badge in the table cell is the same control in a smaller frame:
    it filters, so it looks pressable, but it must not out-shout the site
    name beside it. */
@@ -391,6 +413,22 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
   background:var(--soft);color:var(--fg);font-size:13px;line-height:1.35}
 /* The figure carries the weight; what kind of figure it is sits under it
    in the muted line the rest of the page uses for evidence-about-evidence. */
+/* The reading bar, from the handoff's fourth column — and the one place
+   its colour spec and §8b's rule agree, because how much of a site has
+   been read IS the state of its evidence rather than a category. Blue
+   where the reading is done, the warning colour where a figure can only
+   be a floor, grey where nothing was published to read. The words are
+   there too: a bar alone says "some" to a person who cannot see the
+   difference between the two fills. */
+.rbar{display:block;height:6px;background:var(--line);margin:0 0 5px;
+  border-radius:0;overflow:hidden;max-width:150px}
+.rbar-fill{display:block;height:100%}
+.rbar-fill.r-done{background:var(--ok)}
+.rbar-fill.r-part{background:var(--warn)}
+.rbar-fill.r-none{background:var(--line)}
+.rstate.r-done{color:var(--ok)}
+.rstate.r-part{color:var(--warn)}
+.rstate.r-none{color:var(--mut)}
 .mw{font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap}
 .mw .fig{font-size:21px;line-height:1.15}
 .mw .w-stated{font-weight:700}                       /* disclosed by the applicant */
@@ -625,6 +663,19 @@ figure.chart .xl,figure.chart .yl{fill:var(--mut);font-size:12px}
 a.dlink{margin-left:5px;font-weight:400;color:var(--mut);text-decoration:none;
   font-size:13px;border:1px solid var(--line);border-radius:50%;padding:0 4px}
 a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
+/* §8a's two-ways-in card. Square, ruled at the top, no shadow, per
+   §8b — and the two halves equal, because neither is the recommended
+   way in. */
+.twoways{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:22px 0 10px;
+  border-top:4px solid var(--brand);padding-top:18px}
+@media (max-width:760px){.twoways{grid-template-columns:1fr;gap:18px}}
+.twoways .way h3{margin:0 0 6px;font-size:19px;font-family:"Source Serif 4",Georgia,serif;
+  color:var(--brand)}
+.twoways .way p{margin:0 0 10px;max-width:52ch}
+.pill{font:inherit;font-size:15px;font-weight:600;padding:9px 18px;border-radius:999px;
+  border:1px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer}
+.pill.secondary{background:var(--bg);color:var(--brand)}
+.pill:hover{text-decoration:underline}
 .entry{padding:9px 0;border-bottom:1px solid var(--line);scroll-margin-top:70px}
 .entry h3{margin:0 0 3px;font-size:15px}
 .entry p{margin:0;color:var(--mut);font-size:14.5px}
@@ -665,8 +716,16 @@ img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-
 .pin{position:absolute;width:11px;height:11px;margin:-6px 0 0 -6px;border-radius:50%;
   border:1.5px solid #fff;padding:0;cursor:pointer;pointer-events:auto;
   box-shadow:0 0 0 1px rgba(0,0,0,.35)}
-.pin.s{background:#d1341f}
-.pin.e{background:#0b5fff}
+.pin.s{background:var(--warn)}
+.pin.e{background:var(--brand)}
+/* §8c: the chips colour the map. Not a hue per cohort — §8b keeps
+   colour for the state of a figure, and a dozen cohort colours would
+   spend it on categories — but the reader's own selection, in the same
+   yellow their chips use, with everything outside it stepped back so
+   the shape of the cohort is what the eye finds. */
+.pin.inco{background:var(--active);border-color:#121212;
+  box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+.pin.outco{opacity:.28}
 .pin.sel{width:19px;height:19px;margin:-10px 0 0 -10px;border-width:3px;z-index:5}
 #mapzoom{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:3px}
 #mapzoom button{width:31px;height:31px;font-size:21px;border:1px solid var(--line);
@@ -684,6 +743,11 @@ img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-
    inline-block already, but in the key it is a <span> — inline, so width
    and height were ignored and the swatch collapsed to a sliver. */
 #mapkey div{display:flex;align-items:center;gap:7px}
+/* [hidden] is display:none by UA default, and the rule above overrides
+   it — so the cohort key sat in the legend whether or not a cohort was
+   marked. Explicit, because a key that names a colour nothing on the
+   map is using is worse than no key. */
+#mapkey div[hidden]{display:none}
 #mapkey .pin{position:static;pointer-events:none;display:inline-block;
   flex:0 0 11px;width:11px;height:11px;margin:0}
 footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px solid var(--line)}
@@ -810,7 +874,9 @@ function drawMap(){
     const dx=x-ox, dy=y-oy;
     if(dx<-40||dy<-40||dx>w+40||dy>h+40) { shown++; continue; }
     shown++;
-    pins+='<button class="pin '+p.k+(p.sel?' sel':'')+'" style="left:'+dx+'px;top:'+dy
+    pins+='<button class="pin '+p.k+(p.sel?' sel':'')
+      +(map.cohort ? (p.c&&p.c.includes(map.cohort) ? ' inco' : ' outco') : '')
+      +'" style="left:'+dx+'px;top:'+dy
       +'px" data-i="'+p.i+'" title="'+p.t+'"></button>';
   }
   map.pins.innerHTML=pins;
@@ -823,6 +889,9 @@ function drawMap(){
    silently discarding it the moment one is touched. */
 function clearSubset(){
   map.subset=null;
+  map.cohort='';
+  document.getElementById('mcohort').value='';
+  document.getElementById('mapcohortkey').hidden=true;
   document.getElementById('mapsubset').hidden=true;
   mapFilter();
 }
@@ -996,6 +1065,16 @@ function initMap(){
   });
   document.getElementById('munk').addEventListener('change', mapFilter);
   document.getElementById('mapsubsetclear').addEventListener('click', clearSubset);
+  document.getElementById('mcohort').addEventListener('change', e=>{
+    map.cohort = e.target.value || '';
+    const k=document.getElementById('mapcohortkey');
+    k.hidden = !map.cohort;
+    if(map.cohort){
+      document.getElementById('mapcohortname').textContent =
+        e.target.options[e.target.selectedIndex].text;
+    }
+    drawMap();
+  });
   document.getElementById('mzin').addEventListener('click',()=>zoomAround(map.z+1));
   document.getElementById('mzout').addEventListener('click',()=>zoomAround(map.z-1));
   document.getElementById('mreset').addEventListener('click',()=>{
@@ -1048,6 +1127,12 @@ function seeAllOnMap(){
   document.getElementById('mq').value=document.getElementById('q').value;
   MAPPTS.forEach(p=>{p.sel=false;});
   plotted.forEach(p=>{p.sel=true;});
+  /* §8c: the chips colour the markers. The map takes the cohort from
+     the Sites tab rather than keeping its own, so the two views cannot
+     disagree about which cohort is on. */
+  const sel=document.getElementById('mcohort');
+  sel.value = cohort || '';
+  sel.dispatchEvent(new Event('change'));
   mapFilter();
   const missing = keys.length - plotted.length;
   document.getElementById('mapsubsettext').textContent =
@@ -1946,6 +2031,8 @@ def main() -> int:
         if lat is not None and lon is not None:
             map_points.append({
                 "k": "s", "id": key, "lat": lat, "lon": lon,
+                # §8c: the map answers the active cohort chip.
+                "c": list(cohorts_of_site.get(key, ())),
                 "mw": est.value_mw, "t": (name or key)[:80],
                 "h": " ".join(x.lower() for x in
                               (name or key, ", ".join(councils or []), addr) if x),
@@ -2313,9 +2400,13 @@ def main() -> int:
 <td data-v="{ind_sort}">{ind_cell}</td>
 <td data-v="{esc(cap_label)}"><span class="tag {'known' if known else 'unknown'}">{esc(cap_label)}</span></td>
 <td data-v="{esc(addr)}">{esc(trim(addr, 105)) or '—'} {maplink}</td>
-<td data-v="{read}">{read}/{held}<span class="q">documents read{
+<td data-v="{read}"><span class="rbar" title="{read} of {held} documents read"><span
+ class="rbar-fill {'r-done' if held and read >= held * 0.94 else ('r-part' if read else 'r-none')}"
+ style="width:{(100 * read / held) if held else 0:.0f}%"></span></span>{read:,}/{held:,}<span class="q">documents read{
  f' · <a href="{esc(_durl)}" target="_blank" rel="noopener" '
  f'onclick="event.stopPropagation()">Drive</a>' if _durl and held else ''
+}</span><span class="q rstate {'r-done' if held and read >= held * 0.94 else ('r-part' if read else 'r-none')}">{
+ 'Complete' if held and read >= held * 0.94 else ('Figures are floors' if read else 'Nothing published')
 }</span></td>
 </tr>
 <tr class="detail"><td colspan="8">
@@ -2448,6 +2539,7 @@ def main() -> int:
         if plat is not None and plon is not None:
             map_points.append({
                 "k": "s", "id": key, "lat": plat, "lon": plon, "mw": None,
+                "c": [],
                 "t": (title or key)[:80],
                 "h": " ".join(x.lower() for x in
                               (title or key, authority or "", address or "") if x),
@@ -2782,7 +2874,7 @@ def main() -> int:
 
     for pr in nsip:
         map_points.append({
-            "k": "e", "id": pr["ref"], "lat": pr["lat"], "lon": pr["lon"],
+            "k": "e", "id": pr["ref"], "lat": pr["lat"], "lon": pr["lon"], "c": [],
             "mw": None, "t": pr["name"][:80],
             "h": " ".join(x.lower() for x in
                           (pr["name"], pr["applicant"], pr["region"], pr["ref"]) if x),
@@ -2796,6 +2888,13 @@ def main() -> int:
         mp["vis"] = True
         mp["sel"] = False
     map_payload = json.dumps(map_points, separators=(",", ":"))
+    # §8c. The map marks a cohort rather than filtering to one: the point
+    # is to see where its sites sit among the rest, which a subset
+    # cannot show. Registry order, like the chips.
+    cohort_options = "".join(
+        ['<option value="">— none —</option>']
+        + [f'<option value="{esc(c.cohort.key)}">{esc(c.cohort.title)}</option>'
+           for c in cohorts if not c.result.withheld])
 
     origin_opts = sorted({o for v in origins.values() for o in v})
     n_prov = sum(1 for r in site_rows
@@ -3243,6 +3342,24 @@ def main() -> int:
     # site, a column or a document the reader can open. The value is in
     # the failure modes — a reporter who knows how this data can mislead
     # is better armed than one handed a clean-looking number.
+    # §8a wants the pitfalls on the Start page "verbatim" from the notes.
+    # Lifted from the rendered notes rather than written twice: a
+    # restatement is a second copy that drifts, and this list is the
+    # project's own account of how it got numbers wrong.
+    def _pitfalls_from_notes(html: str) -> str:
+        import re as _re
+        m = _re.search(r'<h2 class="sec">Where this data can mislead.*?</h2>'
+                       r'\s*<p class="m">(.*?)</p>\s*<ul class="m">(.*?)</ul>',
+                       html, _re.S)
+        if not m:
+            return ""
+        intro, items = m.group(1), m.group(2)
+        return (f'<h3 class="sec">Where this data can mislead</h3>'
+                f'<p class="m">{intro}</p><ul class="m">{items}</ul>'
+                f'<p class="help">Verbatim from the assistant\u2019s notes, which '
+                f'carry the rest of them. <button type="button" class="linkish" '
+                f'onclick="show(\'notes\')">Read the notes</button></p>')
+
     assistant_notes_html = f"""
  <p class="lede">Working notes from the AI assistant that built this pipeline. <b>This is not
  editorial content and nothing here is a finding.</b> It is a record of what the data looks
@@ -3392,6 +3509,31 @@ def main() -> int:
  documents say. Assembled from council planning registers, the Planning Inspectorate's
  national infrastructure register, and Barbour ABI project intelligence.</p>
 
+ <!-- §8a. Two ways in, and the reason for saying so: the Signals page
+      answers "where might a story be", the tables answer "what does the
+      record hold about this site". A reporter who starts in the wrong
+      one spends an hour finding that out. -->
+ <div class="twoways">
+  <div class="way">
+   <h3>Start from a signal</h3>
+   <p>Named groups of sites that share a property the documents state — generation larger
+    than the computing load, demand above the connection, read in full and silent. Each
+    says what it counts, what it cannot count, and how many sites it holds.</p>
+   <p><button type="button" class="pill" onclick="show('signals')">Open the signals</button></p>
+  </div>
+  <div class="way">
+   <h3>Start from a site</h3>
+   <p>Every site, with what its documents were found to say: the power figures and what
+    each one is a figure of, who is behind it, the generation and cooling evidence, and its
+    applications with links to the council's own register.</p>
+   <p><button type="button" class="pill secondary" onclick="show('sites')">Open the sites</button></p>
+  </div>
+ </div>
+ <p class="help">They are not the same thing. A signal is a question worth asking of several
+  sites at once; a site page is the record of one. Neither ranks anything, and neither drops
+  a row — a site with no figure appears with its reason, and an unread site appears as
+  unread rather than as zero.</p>
+
  <div class="stat">
   <button onclick="show('sites')"><span>{n_sites}</span><small>sites</small></button>
   <button onclick="show('apps')"><span>{n_apps_total:,}</span><small>applications</small></button>
@@ -3417,7 +3559,14 @@ def main() -> int:
  here simply because the document stating the larger figure has not been analysed yet. Those
  rows are marked <em>(prior to complete deep read)</em> and can be isolated with the Sites
  filter. A small tail of applications is also still being retrieved. Both are completed in
- the next release.</div></details>
+ the next release.
+ <p class="m"><b>Read twice: not yet done.</b> Every document here has been read once. A
+ second reading, by a different model against the same pages, is what would turn "no
+ capacity disclosed" from an absence of evidence into evidence of absence — and it has not
+ been carried out. Where this release says a site discloses nothing, it means nothing was
+ found on one pass, which is the weaker claim.</p></div></details>
+
+ {_pitfalls_from_notes(assistant_notes_html)}
 
  <h2 class="sec">The shape of it</h2>
  <p class="help">Both charts read the dataset as it stands today. Neither depends on the
@@ -3655,6 +3804,10 @@ def main() -> int:
    <label class="chk"><input type="checkbox" id="me" checked> Energy projects</label>
   </div>
   <div class="mgroup">
+   <label class="chk" for="mcohort">Mark the sites in a signal</label>
+   <select id="mcohort">{cohort_options}</select>
+  </div>
+  <div class="mgroup">
    <button type="button" id="mbig" class="toggle" aria-pressed="false">100 MW or greater</button>
    <label class="chk off" id="munklab"><input type="checkbox" id="munk" disabled>
     Exclude unknown MW consumption</label>
@@ -3664,6 +3817,8 @@ def main() -> int:
   <div id="mapkey">
    <div><span class="pin s"></span> data-centre site</div>
    <div><span class="pin e"></span> energy project</div>
+   <div id="mapcohortkey" hidden><span class="pin s inco"></span>
+    in <span id="mapcohortname"></span></div>
   </div>
   <p class="help">Click a marker for its details. Double-click the map to zoom in
    where you click.</p>

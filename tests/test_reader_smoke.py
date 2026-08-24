@@ -426,6 +426,33 @@ def test_deep_links_land(page):
 
 
 @pytest.mark.integration
+def test_a_cohort_chip_colours_the_map(page):
+    """§8c: "chips colour the map's markers by the active cohort". Not a
+    hue per cohort — §8b keeps colour for the state of a figure — but
+    the reader's own selection in the same yellow the chips use, with
+    everything outside it stepped back. The map takes the cohort from
+    the Sites tab, so the two views cannot disagree about which is on.
+    """
+    page.click("#tab-map")
+    sel = page.locator("#mcohort")
+    values = [v for v in sel.locator("option").all_inner_texts()]
+    if len(values) < 2:
+        pytest.skip("no cohorts in this build")
+    sel.select_option(index=1)
+    inside = page.locator("#mappins .pin.inco").count()
+    outside = page.locator("#mappins .pin.outco").count()
+    assert inside > 0, "no marker is marked as in the active cohort"
+    assert outside > 0, "every marker is in the cohort — the chip did nothing"
+    key = page.locator("#mapcohortkey")
+    assert key.is_visible(), "the key does not say what the colour means"
+    assert page.locator("#mapcohortname").inner_text().strip()
+    # Choosing none puts the map back.
+    sel.select_option(index=0)
+    assert page.locator("#mappins .pin.inco").count() == 0
+    assert not key.is_visible()
+    page.click("#tab-sites")
+
+
 def test_a_map_card_link_survives_a_real_mouse(page):
     """The 2.1 regression, re-enacted.
 
