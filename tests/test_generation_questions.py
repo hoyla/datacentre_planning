@@ -327,3 +327,63 @@ def test_a_batch_chunk_is_the_size_the_sample_measured():
             for fid in range(1, ag.FIGURES_PER_REQUEST + 2)]
     chunks = ag.batch_chunks(rows, done=set())
     assert [len(c) for c in chunks] == [ag.FIGURES_PER_REQUEST, 1]
+
+
+# ---------------------------------------------------------------------------
+# Scoring by what a wrong answer does to a reader
+# ---------------------------------------------------------------------------
+# Luke, 2026-08-24: "I think it's better to be 'unclear' than wrong, so
+# something that improves one thing from unclear but gets another thing
+# wrong is worse than unclear plus correct or even unclear plus unclear."
+
+def test_an_abstention_is_not_an_error():
+    assert ag._outcome("per_generator", "unclear",
+                       field="figure_basis") == "abstained"
+    assert ag._outcome("standby_combustion", "unclear",
+                       field="plant_type") == "abstained"
+
+
+def test_a_wrong_answer_that_withholds_is_told_apart_from_one_that_asserts():
+    """`not_generation` keeps a figure off the page and says why, which is
+    the shape of an abstention; calling one machine's rating a fleet
+    total puts a number in front of a reporter."""
+    assert ag._outcome("per_generator", "not_generation",
+                       field="figure_basis") == "wrong_withholding"
+    assert ag._outcome("per_generator", "stated_group_total",
+                       field="figure_basis") == "wrong_asserting"
+    assert ag._outcome("prime_combustion", "storage",
+                       field="plant_type") == "wrong_withholding"
+    assert ag._outcome("prime_combustion", "standby_combustion",
+                       field="plant_type") == "wrong_asserting"
+
+
+def test_asserting_where_the_sheet_says_unclear_is_the_worst_kind():
+    """The person who read the passage could not tell; a model that
+    answers anyway has claimed to know better than the evidence."""
+    assert ag._outcome("unclear", "site_total",
+                       field="figure_basis") == "wrong_asserting"
+
+
+def test_the_subtotal_family_is_still_one_answer():
+    assert ag._outcome("installation_total", "stated_group_total",
+                       field="figure_basis") == "right"
+
+
+def test_the_score_names_the_number_to_compare_versions_on(tmp_path):
+    path = tmp_path / "hand.csv"
+    _write_hand_sheet(path, [
+        {"row": 1, "finding_id": 11, "figure_basis": "per_generator",
+         "plant_type": "standby_combustion"},
+        {"row": 2, "finding_id": 12, "figure_basis": "per_generator",
+         "plant_type": "standby_combustion"}])
+    run = {"answers": {
+        # one asserted error, one that only withholds
+        "11": {"figure_basis": "stated_group_total", "plant_type": "unclear",
+               "span_verified": True, "reasoning": ""},
+        "12": {"figure_basis": "not_generation", "plant_type": "storage",
+               "span_verified": True, "reasoning": ""}}}
+    report = "\n".join(ag.score(
+        [_row("S", 11, 50.0, "q"), _row("S", 12, 50.0, "q")],
+        ag.read_hand_sheet(path), run))
+    assert "ASSERTED WRONG, both questions: 1" in report
+    assert "2 wrong but withholding" in report or "1 wrong but withholding" in report
