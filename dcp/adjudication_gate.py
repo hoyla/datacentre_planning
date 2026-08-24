@@ -54,6 +54,10 @@ WHERE pa.verdict = 'site_capacity'
      AND f.evidence_text ~* '[0-9][0-9.,]*\s*MWe'
      AND pa.value_mw > substring(f.evidence_text
                                  from '([0-9][0-9.,]*)\s*MWe')::numeric)
+ OR (coalesce(pa.unit_note,'') NOT LIKE '%[thermal_output_with_no_electrical_figure]%'
+     AND pa.quantity_type IN ('onsite_generation','it_load','total_site')
+     AND f.evidence_text ~* 'thermal output|heat output'
+     AND f.evidence_text !~* '[0-9][0-9.,]*\s*(MWe|kWe)|electrical (output|power|capacity)|electricity generat')
  OR (coalesce(pa.unit_note,'') NOT LIKE '%[headerless_table_row]%'
      AND length(f.evidence_text) > 0
      AND (length(regexp_replace(f.evidence_text,'[^0-9]','','g'))::float

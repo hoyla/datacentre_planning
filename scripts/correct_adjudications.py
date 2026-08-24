@@ -122,6 +122,45 @@ RULES = [
                                      from '([0-9][0-9.,]*)\s*MWe')::numeric""",
      "thermal output; the same sentence gives the electrical figure in MWe"),
 
+    # The premise, because a rule is a claim about the world: **a figure
+    # the document itself calls a thermal or heat output is not this
+    # site's electrical generation, and where the quote never names an
+    # electrical quantity there is nothing to weigh it against.**
+    #
+    # Agreed with Luke 2026-08-24, after §4.1e read all 1,667 generation
+    # figures against their passages.
+    #
+    # The sibling rule above cannot see these: it needs an MWe figure in
+    # the same quote to weigh against, which is what makes it safe on the
+    # 68 rows that say "thermal output" while correctly storing the
+    # electrical number. This rule takes the complement — a thermal or
+    # heat output with NO electrical quantity anywhere in the quote — and
+    # is safe for the opposite reason: there is no electrical figure in
+    # the sentence because the sentence is not about electricity.
+    #
+    # North Hyde Gardens holds both kinds and is the reason the guard is
+    # written this way. One quote there is an EIA screening threshold —
+    # "a collective combustion installation of more than 300mw of heat
+    # output" — and moves. Another says "100 generators across the site
+    # giving a thermal output of over 800mw and nearly 300MWe", where the
+    # stored 300 is the electrical figure and must stay. A rule matching
+    # "thermal output" alone would have taken the site's real generation
+    # figure with the threshold.
+    #
+    # Measured before filing, 2026-08-24: 25 rows, hand-read, no false
+    # positives. They are EIA screening thresholds ("a collective
+    # combustion installation of more than 300mw of heat output"), a
+    # consenting threshold ("the proposed energy centre has a thermal
+    # output greater than 50MW"), an incinerator's heat beside an
+    # electrical figure that lives in a different quote, and a CHP unit's
+    # 308 kW of heat.
+    ("thermal_output_with_no_electrical_figure",
+     "quantity_type='thermal_input'",
+     r"""pa.quantity_type IN ('onsite_generation','it_load','total_site')
+         AND f.evidence_text ~* 'thermal output|heat output'
+         AND f.evidence_text !~* '[0-9][0-9.,]*\s*(MWe|kWe)|electrical (output|power|capacity)|electricity generat'""",
+     "thermal or heat output; the quote names no electrical quantity"),
+
     ("headerless_table_row",
      "verdict='unclear', quantity_type=NULL, value_mw=NULL, is_maximum=NULL",
      r"""length(f.evidence_text) > 0
