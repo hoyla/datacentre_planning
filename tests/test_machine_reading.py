@@ -362,3 +362,54 @@ def test_the_sample_markdown_shows_a_withheld_paragraph_as_its_reason():
     # The reason names the quote that failed, as the reader's does; what
     # must not survive is the paragraph's own assertion.
     assert "> The total IT load is 168 MW" in md   # the passing quote stands
+
+
+# ---------------------------------------------------------------------------
+# What a refusal may say on a page
+# ---------------------------------------------------------------------------
+# Luke, 2026-08-24, reading the withheld line in the built page: the
+# commonest failure is a quote that is in none of the site's documents,
+# so the model's words are a misquote or an invention — and the reason
+# was printing them. One of the eight withheld paragraphs in the sample
+# rendered "29.9 L/s" inside the sentence saying it could not be
+# verified. A reader scanning that takes away a number, not a caveat.
+
+def test_a_quote_that_verified_against_nothing_is_not_repeated():
+    full = ('quote not found in document 5294 or any other the site holds: '
+            '"The total surface water discharge of 29.9 L/s from the site '
+            'will be controlled u"')
+    public = mr.public_reason(full)
+    assert "29.9" not in public and "surface water" not in public
+    assert "document 5294" in public          # still checkable
+    assert "not in" in public
+
+
+def test_an_unevidenced_figure_is_not_reprinted():
+    public = mr.public_reason("the figure '3.3 MWt' is not in any quote "
+                              "attached to it")
+    assert "3.3" not in public and "MWt" not in public
+    assert "figure" in public and "quotes" in public
+
+
+@pytest.mark.parametrize("reason", [
+    "uses 'plans to', which the rules forbid",
+    "names another site (SITE-Slough/P/00437/093)",
+])
+def test_a_reason_that_repeats_nothing_unverified_stands(reason):
+    """These two quote the model's own vocabulary or a site key, neither
+    of which is a claim about the world."""
+    assert mr.public_reason(reason) == reason
+
+
+def test_the_stored_reason_keeps_everything():
+    """The redaction is for the page. The row is the audit trail, and the
+    markdown a person checks against shows the quote that failed."""
+    r = {"sections": {"what_the_documents_say": [
+            {"text": "The connection is 120 MW.",
+             "quotes": [_q("a connection of one hundred and twenty megawatts, "
+                           "words the page does not contain")]},
+         ], "questions": [], "not_determined": []}}
+    mr.gate(r, _inp())
+    stored = r["sections"]["what_the_documents_say"][0]["withheld"]
+    assert "one hundred and twenty megawatts" in stored
+    assert "one hundred and twenty megawatts" not in mr.public_reason(stored)
