@@ -218,15 +218,15 @@ CSS = """
   --line:#282a33;--soft:#1a1c22;--accent:#7ea6ff;--warn:#ffcf70;--warnbg:#2a2410;
   --ok:#7fe0ac;--okbg:#102319}}
 *{box-sizing:border-box}
-body{margin:0;font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+body{margin:0;font:16px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   background:var(--bg);color:var(--fg)}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 header{padding:16px 22px 12px}
 h1{margin:0 0 3px;font-size:19px}
-.sub{color:var(--mut);font-size:12.5px}
+.sub{color:var(--mut);font-size:14px}
 nav.top{display:flex;gap:2px;padding:0 22px;border-bottom:1px solid var(--line);
   background:var(--bg);position:sticky;top:0;z-index:9;overflow-x:auto}
-nav.top button{font:inherit;font-size:13.5px;padding:10px 15px;border:0;background:none;
+nav.top button{font:inherit;font-size:15px;padding:10px 15px;border:0;background:none;
   color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
 nav.top button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--accent);font-weight:600}
 .view{display:none}.view.on{display:block}
@@ -234,10 +234,10 @@ nav.top button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--acc
 .lede{font-size:15.5px;line-height:1.62}
 .parts{display:grid;gap:11px;margin:20px 0}
 .part{border:1px solid var(--line);border-radius:7px;padding:13px 15px;background:var(--soft)}
-.part h3{margin:0 0 3px;font-size:14.5px}
-.part .what{color:var(--mut);font-size:13px;margin:0 0 6px}
-.part .when{font-size:12.5px;margin:0}
-.pill{display:inline-block;font-size:11px;padding:1px 8px;border-radius:9px;
+.part h3{margin:0 0 3px;font-size:16.5px}
+.part .what{color:var(--mut);font-size:14.5px;margin:0 0 6px}
+.part .when{font-size:14px;margin:0}
+.pill{display:inline-block;font-size:13px;padding:1px 8px;border-radius:9px;
   background:rgba(127,127,127,.15);color:var(--mut);margin-left:6px;vertical-align:1px}
 .stat{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0 4px;padding:13px 15px;
   border:1px solid var(--line);border-radius:7px}
@@ -247,9 +247,9 @@ nav.top button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--acc
    display, rendering as a tiny run-together "455sites" beside the
    full-size figures. */
 .stat span{display:block;font-size:21px;font-weight:650;font-variant-numeric:tabular-nums}
-.stat small{display:block;color:var(--mut);font-size:12px}
+.stat small{display:block;color:var(--mut);font-size:13.5px}
 .banner{margin:16px 0;padding:12px 14px;border-left:3px solid var(--warn);
-  background:var(--warnbg);color:var(--warn);border-radius:0 5px 5px 0;font-size:13px}
+  background:var(--warnbg);color:var(--warn);border-radius:0 5px 5px 0;font-size:14.5px}
 /* The coverage caveats only need reading once, but the panel sat between the
    stat tiles and the charts on every visit — so it folds shut by default. */
 details.banner-d>summary{cursor:pointer;font-weight:650;list-style:none;
@@ -267,13 +267,13 @@ h2.sec{font-size:15px;margin:24px 0 8px}
 input,select{font:inherit;padding:6px 9px;border:1px solid var(--line);border-radius:5px;
   background:var(--bg);color:var(--fg)}
 input[type=search]{min-width:250px}
-.count{color:var(--mut);font-size:12.5px;margin-left:auto}
-button.toggle{font:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--line);
+.count{color:var(--mut);font-size:14px;margin-left:auto}
+button.toggle{font:inherit;font-size:14.5px;padding:6px 12px;border:1px solid var(--line);
   border-radius:5px;background:var(--bg);color:var(--fg);cursor:pointer}
 button.toggle:hover{border-color:var(--accent)}
 button.toggle[aria-pressed=true]{background:var(--accent);border-color:var(--accent);
   color:#fff;font-weight:600}
-label.chk{font-size:12.5px;display:flex;align-items:center;gap:5px;cursor:pointer}
+label.chk{font-size:14px;display:flex;align-items:center;gap:5px;cursor:pointer}
 label.chk.off{opacity:.45;cursor:default}
 /* The organisation chips. Square rather than the prototype's pills, and
    one neutral colour rather than a palette: colour on this page means
@@ -283,16 +283,16 @@ label.chk.off{opacity:.45;cursor:default}
    that wraps and the filter bar is sticky. */
 .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:baseline;
   padding:9px 22px;border-bottom:1px solid var(--line)}
-.chiplabel{font-size:12.5px;font-weight:600;color:var(--mut);
+.chiplabel{font-size:14px;font-weight:600;color:var(--mut);
   margin-right:3px}
-.chips .help{font-size:12px;flex-basis:100%;margin:3px 0 0}
-button.chip{font:inherit;font-size:12.5px;padding:4px 10px;
+.chips .help{font-size:13.5px;flex-basis:100%;margin:3px 0 0}
+button.chip{font:inherit;font-size:14px;padding:4px 10px;
   border:1px solid var(--line);border-radius:3px;background:var(--bg);
   color:var(--fg);cursor:pointer;line-height:1.3}
 button.chip:hover{border-color:var(--accent)}
 button.chip.on{background:var(--fg);border-color:var(--fg);color:var(--bg);
   font-weight:600}
-button.chip .n{color:var(--mut);font-size:11px;margin-left:3px}
+button.chip .n{color:var(--mut);font-size:13px;margin-left:3px}
 button.chip:disabled{opacity:.5;cursor:not-allowed;border-style:dashed}
 /* The machine reading: a collapsed box, one neutral rule, no colour —
    colour on this page means verification state and this is not one.
@@ -302,52 +302,52 @@ details.reading{border:1px solid var(--line);border-radius:3px;padding:10px 13px
   margin:14px 0 4px}
 details.reading summary{cursor:pointer;list-style:none}
 details.reading summary::-webkit-details-marker{display:none}
-details.reading summary h4{display:inline;margin:0 8px 0 0;font-size:11.5px;
+details.reading summary h4{display:inline;margin:0 8px 0 0;font-size:13px;
   text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
-details.reading summary h4:before{content:"▸  ";font-size:10px}
+details.reading summary h4:before{content:"▸  ";font-size:12px}
 details[open].reading summary h4:before{content:"▾  "}
 details.reading summary .help{display:inline}
 .rbody{margin-top:10px;max-width:880px}
-.rbody h5{margin:12px 0 4px;font-size:12px;text-transform:uppercase;
+.rbody h5{margin:12px 0 4px;font-size:13.5px;text-transform:uppercase;
   letter-spacing:.5px;color:var(--mut)}
-.rbody p{margin:0 0 4px;font-size:13.5px;line-height:1.5}
-ul.rq{margin:0 0 10px;padding-left:18px;font-size:12px;color:var(--mut)}
+.rbody p{margin:0 0 4px;font-size:15px;line-height:1.5}
+ul.rq{margin:0 0 10px;padding-left:18px;font-size:13.5px;color:var(--mut)}
 ul.rq li{margin-bottom:2px}
 .box.reading.withheld{margin:14px 0 4px;border-radius:3px}
 .rwithheld{font-style:italic}
 /* The site page. Full width like the table it came from, since the
    panel's four-column grid was laid out for that width. */
 .sitepage{padding:14px 22px 30px}
-.sitenav{margin:0 0 10px;font-size:13px}
+.sitenav{margin:0 0 10px;font-size:14.5px}
 .sitepage h2{margin:4px 0 2px;font-size:22px;line-height:1.2}
-.sitewhere{margin:0 0 14px;color:var(--mut);font-size:13px}
+.sitewhere{margin:0 0 14px;color:var(--mut);font-size:14.5px}
 #sitehost .grid{margin-top:0}
 /* Signals cards. Square, ruled, no shadow; the count is the one large
    thing on the card because it is the one thing that was computed. */
 .signals{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
 .box.signal{border-radius:3px;padding:14px 16px}
-.box.signal h3{margin:4px 0 8px;font-size:17px}
+.box.signal h3{margin:4px 0 8px;font-size:21px}
 .sighead{display:flex;justify-content:space-between;align-items:baseline}
-.sigfam{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+.sigfam{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
   color:var(--mut)}
 .sigcount{font-size:30px;font-weight:700;line-height:1.1;margin:2px 0 8px}
-.sigcount.withheld{font-size:17px;color:var(--mut)}
-.sigchecks{font-size:12.5px}
+.sigcount.withheld{font-size:21px;color:var(--mut)}
+.sigchecks{font-size:14px}
 .sigdef dt{color:var(--mut)}
-.sigdef code{font-size:12px;white-space:normal}
-.sigactions{font-size:13px;margin:8px 0 4px}
-.siglist{margin:6px 0 0;padding-left:18px;font-size:12.5px;columns:2;column-gap:24px}
+.sigdef code{font-size:13.5px;white-space:normal}
+.sigactions{font-size:14.5px;margin:8px 0 4px}
+.siglist{margin:6px 0 0;padding-left:18px;font-size:14px;columns:2;column-gap:24px}
 .siglist li{break-inside:avoid;margin-bottom:3px}
 @media (max-width:700px){.siglist{columns:1}}
 button.chip.on .n{color:var(--bg);opacity:.75}
 /* The badge in the table cell is the same control in a smaller frame:
    it filters, so it looks pressable, but it must not out-shout the site
    name beside it. */
-button.who{font:inherit;font-size:12.5px;padding:2px 7px;text-align:left;
+button.who{font:inherit;font-size:14px;padding:2px 7px;text-align:left;
   border:1px solid var(--line);border-radius:3px;background:var(--bg);
   color:var(--fg);cursor:pointer;line-height:1.3;max-width:100%}
 button.who:hover{border-color:var(--accent)}
-span.who.multi{font-size:12.5px;font-weight:600;display:block}
+span.who.multi{font-size:14px;font-weight:600;display:block}
 button.who.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 /* No overflow wrapper around these tables, deliberately. An ancestor with
    overflow-x:auto becomes the containing scroll box for position:sticky,
@@ -360,16 +360,43 @@ button.who.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
    data. Only bottom borders are drawn on cells, so separate borders look
    identical here. */
 table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
-  font-size:13px}
+  font-size:14.5px}
 /* Counted from the left, so inserting a column shifts every rule after
    it — which is what happened when Who's behind it went in at 2 and
    Proposal inherited a 104px allowance meant for the MW figure. The
    heading each rule is for is named, so the next insertion is a
    re-reading rather than a guess. */
-#tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){min-width:210px}   /* Site */
+#tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){min-width:330px}   /* Site */
 #tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){width:168px}       /* Who's behind it */
-#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){min-width:260px}   /* Proposal */
-#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:104px}       /* Power MW */
+#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){width:210px}       /* Signals */
+#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:132px}       /* Power on record */
+
+/* The site cell answers "what is this" on its own: the name, then where
+   it is and what it is called in this dataset, then what the applicant
+   said they were building. It was three columns — name, councils, and a
+   Proposal column of its own — which put the answer to one question in
+   three places and made the table read as a spreadsheet rather than a
+   list of sites (Luke, 2026-08-24, against the design proposal). */
+.sitecell .sname{display:block;font-weight:700;font-size:18px;line-height:1.25;
+  color:var(--accent)}
+.sitecell .skey{display:block;color:var(--mut);font-size:13px;margin:2px 0 4px}
+.sitecell .sprop{display:block;font-size:14.5px;line-height:1.4;max-width:60ch}
+/* Signals stacked, not wrapped across the row: at one per line the eye
+   reads a list, and the column stays narrow enough to leave the site
+   cell its width. One neutral fill — colour on this page means the state
+   of a figure, not the identity of a cohort. */
+.sigcell{white-space:normal}
+.sigpill{display:block;width:fit-content;max-width:100%;margin:0 0 4px;
+  padding:2px 9px;border:1px solid var(--line);border-radius:999px;
+  background:var(--soft);color:var(--fg);font-size:13px;line-height:1.35}
+/* The figure carries the weight; what kind of figure it is sits under it
+   in the muted line the rest of the page uses for evidence-about-evidence. */
+.mw{font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap}
+.mw .fig{font-size:21px;line-height:1.15}
+.mw .w-stated{font-weight:700}                       /* disclosed by the applicant */
+.mw .w-implied{font-weight:500;color:var(--mut)}     /* a connection, or standby-implied */
+.mw .w-modelled{font-weight:400;color:var(--mut)}    /* arithmetic on floorspace */
+.mw .w-none{font-weight:400;color:var(--mut)}
 #tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){width:108px}       /* Power indicators */
 #tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){width:150px}       /* Status */
 /* Narrowed to make room for the indicators column: of the "top level"
@@ -392,7 +419,7 @@ th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);verti
   top:var(--th-top,82px);z-index:7}
 th{background:var(--bg);cursor:pointer;white-space:nowrap;font-weight:600;
   border-bottom:2px solid var(--line);vertical-align:bottom}
-th:after{content:" ↕";color:var(--mut);font-size:10px;opacity:.55}
+th:after{content:" ↕";color:var(--mut);font-size:12px;opacity:.55}
 tr.site{cursor:pointer}
 tr.site:hover{background:rgba(127,127,127,.06)}
 /* An open row and its panel share a background and a left edge, so it is
@@ -407,18 +434,17 @@ tr.site.open td:first-child:before{transform:rotate(90deg)}
 tr.detail{display:none;background:var(--soft)}
 tr.detail.on{display:table-row}
 tr.detail td{padding:14px 18px 18px 30px}
-.mw{font-variant-numeric:tabular-nums;font-weight:650;white-space:nowrap}
 /* The qualifier under a figure wraps; only the figure itself must not.
    Inheriting nowrap from .mw made "Disclosed total site demand · may
    rise" set the width of the whole column. */
 .mw .q{white-space:normal}
 .prov{color:var(--warn);font-weight:400}
-.q{display:block;color:var(--mut);font-size:11.5px;font-weight:400;line-height:1.35}
+.q{display:block;color:var(--mut);font-size:13px;font-weight:400;line-height:1.35}
 /* Status labels wrap. They are occasionally a full sentence — "No figure
    found so far — 56 of 69 documents analysed" — and holding those on one
    line gave the column more width than any other, on rows that are
    several lines deep anyway. */
-.tag{display:inline-block;padding:2px 7px;border-radius:9px;font-size:11px;
+.tag{display:inline-block;padding:2px 7px;border-radius:9px;font-size:13px;
   white-space:normal;line-height:1.35}
 .tag.known{background:var(--okbg);color:var(--ok)}
 .tag.unknown{background:var(--warnbg);color:var(--warn)}
@@ -433,19 +459,26 @@ tr.detail td{padding:14px 18px 18px 30px}
    while the first column ran long — the same imbalance as before it,
    reversed. Stacking the two record boxes in one column puts the tall
    subject boxes and the tall proposal side by side instead. */
-.grid{display:grid;grid-template-columns:minmax(250px,1.15fr) repeat(3,1fr);
-  gap:12px;align-items:start}
-.box{border:1px solid var(--line);border-radius:8px;padding:11px 13px;min-width:0}
+/* One column, read top to bottom. The four-column grid put seven
+   bordered cards of unequal height beside each other, and a reader had
+   to work out whether to go across or down before they could read
+   anything — Luke, 2026-08-24: "the jigsaw puzzle of blocks". The
+   sections keep their order and lose their frames: a rule above each
+   one, no radius, no shadow, and prose held to a measure rather than
+   run to the window's width. */
+.grid{display:flex;flex-direction:column;gap:0;align-items:stretch}
+.box{border:0;border-top:4px solid var(--line);border-radius:0;
+  padding:18px 0 10px;min-width:0}
+.box > p,.box > .help,.box > dl{max-width:74ch}
 /* A flex column rather than two grid rows: grid rows are shared across
    the whole panel, so an identity box placed in row 2 hangs below the
    tallest subject box in row 1 — a void under the proposal exactly as
    tall as whichever box happens to be longest. */
-.col-record{grid-column:1;grid-row:1 / span 2;display:flex;flex-direction:column;
-  gap:12px;min-width:0}
+.col-record{display:contents}
 /* One sentence and its caveats: a wide, short band under the subject
    boxes. Left in the grid's auto-flow it landed in the first column,
    stranding the documents section below an empty row. */
-.box.ctx{grid-column:2 / -1}
+.box.ctx{}
 /* box.claims takes no explicit placement — it sits in row 1 between
    Declared power and Generation, an ordinary third box. It used to
    claim the full width like .ctx, but a full-width item mid-sequence
@@ -461,7 +494,7 @@ tr.detail td{padding:14px 18px 18px 30px}
 .help.provenance{border-left:2px solid var(--line);padding-left:9px;
   margin-bottom:9px}
 .box.claims .claim{margin-bottom:10px}
-.box.claims details>summary{cursor:pointer;font-size:12px;color:var(--accent);
+.box.claims details>summary{cursor:pointer;font-size:13.5px;color:var(--accent);
   list-style:none}
 .box.claims details>summary::-webkit-details-marker{display:none}
 .box.claims details>summary:before{content:"▸ ";display:inline-block;
@@ -493,29 +526,29 @@ tr.detail td{padding:14px 18px 18px 30px}
 .fields .wide{grid-column:1 / -1}
 @media (max-width:1100px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:560px){.fields{grid-template-columns:1fr}}
-.fields .lbl{display:block;color:var(--mut);font-size:11.5px;margin-bottom:1px}
-.fields .val{display:block;font-size:12.5px;line-height:1.45}
-.box h4{margin:0 0 7px;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.fields .lbl{display:block;color:var(--mut);font-size:13px;margin-bottom:1px}
+.fields .val{display:block;font-size:14px;line-height:1.45}
+.box h4{margin:0 0 7px;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
 .box p{margin:0 0 8px}
-.kv{display:grid;grid-template-columns:148px 1fr;gap:2px 12px;font-size:12.5px;margin:0}
+.kv{display:grid;grid-template-columns:148px 1fr;gap:2px 12px;font-size:14px;margin:0}
 .kv dt{color:var(--mut)}.kv dd{margin:0}
 .fams{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:6px 22px}
 .fam{border-top:1px solid var(--line);padding:6px 0 4px;min-width:0}
-.famhead{font-size:12px;margin-bottom:3px}
+.famhead{font-size:13.5px;margin-bottom:3px}
 .famname{font-weight:600;text-transform:capitalize}
-details.famrest summary{font-size:12px;color:var(--mut);cursor:pointer;margin:2px 0 0 16px}
-ul.find{margin:0;padding-left:16px;font-size:12.5px}
+details.famrest summary{font-size:13.5px;color:var(--mut);cursor:pointer;margin:2px 0 0 16px}
+ul.find{margin:0;padding-left:16px;font-size:14px}
 ul.find li{margin-bottom:3px}
 ul.find .st{color:var(--mut)}
-table.apps{font-size:12.5px;margin-top:4px}
-table.apps th{position:static;font-size:11px;text-transform:uppercase;letter-spacing:.4px;
+table.apps{font-size:14px;margin-top:4px}
+table.apps th{position:static;font-size:13px;text-transform:uppercase;letter-spacing:.4px;
   color:var(--mut);cursor:default;z-index:auto}
 table.apps th:after{content:""}
 table.apps td{padding:5px 9px 5px 0}
-h4.sub-head{margin:18px 0 4px;font-size:11.5px;text-transform:uppercase;
+h4.sub-head{margin:18px 0 4px;font-size:13px;text-transform:uppercase;
   letter-spacing:.5px;color:var(--mut)}
 details.apps-d{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
-details.apps-d>summary{cursor:pointer;font-size:12.5px;color:var(--accent);
+details.apps-d>summary{cursor:pointer;font-size:14px;color:var(--accent);
   list-style:none;display:inline-block;padding:3px 0}
 details.apps-d>summary::-webkit-details-marker{display:none}
 details.apps-d>summary:before{content:"▸ ";display:inline-block;
@@ -527,7 +560,7 @@ details.apps-d>summary:hover{text-decoration:underline}
 .stat button span{color:var(--accent)}
 .stat button:hover span,.stat button:focus-visible span{text-decoration:underline}
 .stat button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-table.stats{width:100%;margin:6px 0 18px;font-size:13px;min-width:0;
+table.stats{width:100%;margin:6px 0 18px;font-size:14.5px;min-width:0;
   border-collapse:separate;border-spacing:0}
 table.stats th[scope=row]{position:static;font-weight:500;white-space:normal;
   border-bottom:1px solid var(--line);z-index:auto;cursor:default}
@@ -562,14 +595,14 @@ table.stats tr.op.open>td{background:var(--soft);
 table.stats tr.op td:first-child:before{content:"▸";color:var(--mut);
   margin-right:7px;display:inline-block;transition:transform .12s}
 table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
-.opdetail h5{margin:14px 0 6px;font-size:11.5px;font-weight:650;
+.opdetail h5{margin:14px 0 6px;font-size:13px;font-weight:650;
   text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
 .opdetail h5:first-child{margin-top:0}
 .opdetail .claim{margin:0 0 9px}
 .opdetail .claim p{margin:0 0 2px}
 .opdetail .sitelist{margin:0}
 .opdetail details>summary,.opsite details>summary{cursor:pointer;
-  font-size:12px;color:var(--accent);list-style:none}
+  font-size:13.5px;color:var(--accent);list-style:none}
 .opdetail details>summary::-webkit-details-marker,
 .opsite details>summary::-webkit-details-marker{display:none}
 .opdetail details>summary:before,.opsite details>summary:before{
@@ -582,21 +615,21 @@ table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
 .charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;
   margin:12px 0 6px}
 figure.chart{margin:0}
-figure.chart figcaption{font-size:12.5px;font-weight:650;margin-bottom:6px}
+figure.chart figcaption{font-size:14px;font-weight:650;margin-bottom:6px}
 figure.chart svg{width:100%;height:auto}
 figure.chart rect{fill:var(--accent);opacity:.78}
 figure.chart rect:hover{opacity:1}
 figure.chart rect.hl{opacity:.42}
 figure.chart .ax{stroke:var(--line)}
-figure.chart .xl,figure.chart .yl{fill:var(--mut);font-size:9.5px}
+figure.chart .xl,figure.chart .yl{fill:var(--mut);font-size:12px}
 a.dlink{margin-left:5px;font-weight:400;color:var(--mut);text-decoration:none;
-  font-size:11px;border:1px solid var(--line);border-radius:50%;padding:0 4px}
+  font-size:13px;border:1px solid var(--line);border-radius:50%;padding:0 4px}
 a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
 .entry{padding:9px 0;border-bottom:1px solid var(--line);scroll-margin-top:70px}
-.entry h3{margin:0 0 3px;font-size:13.5px}
-.entry p{margin:0;color:var(--mut);font-size:13px}
+.entry h3{margin:0 0 3px;font-size:15px}
+.entry p{margin:0;color:var(--mut);font-size:14.5px}
 .entry.flash{background:var(--warnbg);border-radius:5px;padding-left:9px;padding-right:9px}
-.wrap h3.m{font-size:14.5px;margin:20px 0 4px}
+.wrap h3.m{font-size:16.5px;margin:20px 0 4px}
 .wrap p.m{margin:0 0 9px}
 .wrap ul.m{margin:0 0 9px;padding-left:19px}
 .wrap ul.m li{margin-bottom:4px}
@@ -614,7 +647,7 @@ a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:non
   flex-direction:column;gap:13px;border-right:1px solid var(--line)}
 #mapside input[type=search]{min-width:0;width:100%}
 #mapside .mgroup{display:flex;flex-direction:column;gap:7px}
-#mapside .count{margin:0;font-size:12.5px}
+#mapside .count{margin:0;font-size:14px}
 #mapside .help{margin:0}
 #mapside .attrib{margin-top:auto;padding-top:10px;border-top:1px solid var(--line)}
 @media (max-width:760px){
@@ -636,25 +669,25 @@ img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-
 .pin.e{background:#0b5fff}
 .pin.sel{width:19px;height:19px;margin:-10px 0 0 -10px;border-width:3px;z-index:5}
 #mapzoom{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:3px}
-#mapzoom button{width:31px;height:31px;font-size:17px;border:1px solid var(--line);
+#mapzoom button{width:31px;height:31px;font-size:21px;border:1px solid var(--line);
   background:var(--bg);color:var(--fg);cursor:pointer;border-radius:5px}
 #mapinfo{position:absolute;top:12px;left:12px;width:300px;background:var(--bg);
-  border:1px solid var(--line);border-radius:7px;padding:11px 13px;font-size:13px;
+  border:1px solid var(--line);border-radius:7px;padding:11px 13px;font-size:14.5px;
   box-shadow:0 2px 14px rgba(0,0,0,.16);z-index:6}
 #mapinfo .cardx{position:absolute;top:4px;right:6px;border:0;background:none;
-  color:var(--mut);font-size:17px;line-height:1;cursor:pointer;padding:2px 4px}
+  color:var(--mut);font-size:21px;line-height:1;cursor:pointer;padding:2px 4px}
 #mapinfo .cardx:hover{color:var(--fg)}
 #mapinfo .cardlinks{display:block;margin-top:7px;padding-top:7px;
-  border-top:1px solid var(--line);font-size:12.5px}
-#mapkey{font-size:12px;color:var(--mut);display:flex;flex-direction:column;gap:5px}
+  border-top:1px solid var(--line);font-size:14px}
+#mapkey{font-size:13.5px;color:var(--mut);display:flex;flex-direction:column;gap:5px}
 /* Explicit inline-block: on the map a .pin is a <button>, which is
    inline-block already, but in the key it is a <span> — inline, so width
    and height were ignored and the swatch collapsed to a sliver. */
 #mapkey div{display:flex;align-items:center;gap:7px}
 #mapkey .pin{position:static;pointer-events:none;display:inline-block;
   flex:0 0 11px;width:11px;height:11px;margin:0}
-footer{padding:20px 22px 34px;color:var(--mut);font-size:12px;border-top:1px solid var(--line)}
-.help{font-size:11.5px;color:var(--mut)}
+footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px solid var(--line)}
+.help{font-size:13px;color:var(--mut)}
 /* A button that reads as a link: it navigates rather than submits, but it
    is a button because it acts on the page's current state rather than
    going to an address. */
@@ -666,7 +699,7 @@ footer{padding:20px 22px 34px;color:var(--mut);font-size:12px;border-top:1px sol
   color:var(--mut);font-size:10.5px;cursor:help;position:relative;vertical-align:1px}
 .tip .tiptext{display:none;position:absolute;bottom:20px;left:-8px;width:290px;
   background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;
-  font-size:12px;line-height:1.45;color:var(--fg);box-shadow:0 2px 14px rgba(0,0,0,.16);
+  font-size:13.5px;line-height:1.45;color:var(--fg);box-shadow:0 2px 14px rgba(0,0,0,.16);
   z-index:8;text-align:left;cursor:auto}
 /* focus-within as well as focus: a tap on a touch device, where there
    is no hover at all, lands focus on the span or on something inside
@@ -678,7 +711,7 @@ footer{padding:20px 22px 34px;color:var(--mut);font-size:12px;border-top:1px sol
    429 sites is indistinguishable from a map that is simply wrong. */
 #mapsubset{position:absolute;top:10px;left:10px;right:58px;z-index:7;
   display:flex;gap:8px;align-items:baseline;padding:7px 10px;border:1px solid var(--line);
-  border-radius:6px;background:var(--bg);font-size:12px;
+  border-radius:6px;background:var(--bg);font-size:13.5px;
   box-shadow:0 2px 10px rgba(0,0,0,.12)}
 #mapsubset[hidden]{display:none}
 /* Bracketed mention counts. Subdued because they qualify the label they
@@ -1612,7 +1645,9 @@ def main() -> int:
         site_floorspace = scale.load_site_floorspace(conn)
     site_names = {r[0]: r[2] for r in site_rows}
     cohorts_of_site: dict[str, list[str]] = defaultdict(list)
+    cohort_title: dict[str, str] = {}
     for _c in cohorts:
+        cohort_title[_c.cohort.key] = _c.cohort.title
         for _m in _c.result.members:
             cohorts_of_site[_m.site_key].append(_c.cohort.key)
 
@@ -2186,9 +2221,24 @@ def main() -> int:
                         near[0]["name"] if near else "", " ".join(refs or []),
                         " ".join(c["claim_name"] for c in site_claims)))
         mw = "" if est.value_mw is None else f"{est.value_mw:,.0f}"
-        mw_cell = (f"{mw}<span class='q'>{esc(est.basis)}"
-                   + (" <span class='prov'>· may rise</span>" if is_prov and mw else "")
-                   + "</span>") if mw else f"—<span class='q'>{esc(est.basis)}</span>"
+        # Luke, 2026-08-20 and again on 2026-08-24: the basis has to be
+        # legible ON the figure, and "I'd do it with weight and a mark
+        # rather than colour alone (colour vanishes the moment someone
+        # sorts)". So the ladder in site_scale.power_estimate reads as
+        # three weights and one glyph: a disclosed figure is stated in
+        # full, a connection or standby-implied figure is lighter, and a
+        # floorspace estimate carries "≈" because it is arithmetic on an
+        # area rather than anything anyone published.
+        _wclass = {"High": "w-stated", "Medium": "w-implied",
+                   "Low": "w-implied", "Indicative": "w-modelled"}.get(
+                       est.confidence or "", "w-implied")
+        _mark = "≈" if est.confidence == "Indicative" else ""
+        mw_cell = ((f"<span class='fig {_wclass}'>{_mark}{mw}</span>"
+                    f"<span class='q'>{esc(est.basis)}"
+                    + (" <span class='prov'>· may rise</span>" if is_prov and mw else "")
+                    + "</span>") if mw
+                   else f"<span class='fig w-none'>—</span>"
+                        f"<span class='q'>{esc(est.basis)}</span>")
 
         # A confidence tier and a count, never a megawatt figure: the main
         # row is scanned and sorted, and a number here beside Declared
@@ -2217,11 +2267,14 @@ def main() -> int:
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="{est.value_mw or ''}"
  data-prov="{1 if is_prov else 0}" data-origin="{esc('|'.join(org))}"
  data-who="{esc(who['filter_key'])}" data-cohorts="{esc('|'.join(cohorts_of_site.get(key, ())))}">
-<td data-v="{esc(name or key)}"><strong>{esc(trim(name or key, 58))}</strong>
- <span class="q">{esc(', '.join(councils or []))}</span></td>
+<td class="sitecell" data-v="{esc(name or key)}"><span class="sname">{esc(trim(name or key, 58))}</span>
+ <span class="skey">{esc(' · '.join([x for x in [', '.join(councils or []), key] if x]))}</span>
+ <span class="sprop">{esc(trim(summary, 118)) or '—'}{
+ '' if descriptive else ' — the register holds no description of the development itself, only procedural applications'}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
-<td data-v="{esc(trim(summary,80))}">{esc(trim(summary, 118)) or '—'}
- {'' if descriptive else '<span class="q">the register holds no description of the development itself, only procedural applications</span>'}</td>
+<td class="sigcell" data-v="{len(cohorts_of_site.get(key, ()))}">{
+ ''.join(f'<span class="sigpill">{esc(cohort_title.get(_k, _k))}</span>'
+         for _k in cohorts_of_site.get(key, ())) or '<span class="q">—</span>'}</td>
 <td class="mw" data-v="{est.value_mw or ''}">{mw_cell}</td>
 <td data-v="{ind_sort}">{ind_cell}</td>
 <td data-v="{esc(cap_label)}"><span class="tag {'known' if known else 'unknown'}">{esc(cap_label)}</span></td>
@@ -2392,10 +2445,11 @@ def main() -> int:
  data-known="0"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
  data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts="">
-<td data-v="{esc(title or key)}"><strong>{esc(trim(title or key, 58))}</strong>
- <span class="q">{esc(authority or '')}</span></td>
+<td class="sitecell" data-v="{esc(title or key)}"><span class="sname">{esc(trim(title or key, 58))}</span>
+ <span class="skey">{esc(' · '.join([x for x in [authority or '', key] if x]))}</span>
+ <span class="sprop">{esc(trim(summary, 118)) or '—'}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
-<td data-v="{esc(trim(summary,80))}">{esc(trim(summary, 118)) or '—'}</td>
+<td class="sigcell" data-v="0"><span class="q">—</span></td>
 <td class="mw" data-v="">—<span class="q">no application yet</span></td>
 <td data-v="0">—</td>
 <td data-v="{esc(cap_label)}"><span class="tag unknown">{esc(cap_label)}</span></td>
@@ -3531,7 +3585,7 @@ def main() -> int:
  <th>{dl("Sites","Site name","Site")}</th>
  <th>{dl("Sites","End user (Barbour); Applicant of record (Barbour); "
           "Advisers (Barbour)","Who's behind it")}</th>
- <th>{dl("Sites","Proposal","Proposal")}</th>
+ <th data-num="1">{dl("Signals","Cohort","Signals it matches")}</th>
  <th data-num="1">{dl("Sites","Power MW (best available)","Power MW")}</th>
  <th data-num="1">{dl("Sites","External power indicators","Power indicators")}</th>
  <th>{dl("Sites","Capacity status","Status")}</th>
