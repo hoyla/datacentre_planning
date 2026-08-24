@@ -1,0 +1,51 @@
+UK COURT LANE DC LTD
+
+NOTES TO THE FINANCIAL STATEMENTS (CONTINUED)
+
+FOR THE YEAR ENDED 30 APRIL 2026
+
+2 Judgements and key sources of estimation uncertainty
+
+In the application of the company’s accounting policies, the directors are required to make judgements, estimates and
+assumptions about the carrying amount of assets and liabilities that are not readily apparent from other sources. The estimates
+and associated assumptions are based on historical experience anc other factors that are considered to be relevant. Actual
+results may differ “rom these estimates.
+
+The estimates and underlying assumptions are reviewed on an ongoing basis. Revisions to accounting estimates are recognised in
+the period in which the estimate is revised where the revision affects only that period, or in the period of the revision and future
+periods where the revision affects both current and future periods.
+
+Critical judgements
+The following judgement has the most significant effect on amounts recognised in the financial statements.
+
+investment property fair value
+
+Invest nent property is valued annually at fair value. The external valuer adopted a residual land valuation approach, supported
+by a discounted cash flow ("DCF") model and market transaction evidence. The residual valuation estimates the gross
+development value of the completed scheme and deducts estimated development costs, finance costs, professional fees,
+contingencies and an appropriate developer's profit allowance to derive the current land value. The DCF model was used to
+determine the gross development value of the completed development.
+
+The valuation is subject to a number of assumptions, including:
+® planning permission and power infrastructure being available as assumed by the valuer;
+® successful delivery of ¢ 103.3 MW hyperscale data centre development;
+* stabilised occupancy being achieved following development completion; and
+* future market conditions consistent with current expectations.
+
+The fair value is perticularly sensitive to changes in future rental assumptions, capitalisation yields, discount rates, construction
+casts, power delivery timelines and development risk assumptions. An increase in yields or development costs, or a reduction in
+forecast rents or occupancy levels, would result in a lower fair value. Conversely, a reduction in yields, lower development costs
+or stronger than anticipated rental growth would increase the fair value. The residual valuation methodology is inherently
+sensitive to relatively small changes in these assumptions.
+
+Classification of the property as investment property
+
+During the year the Company acquired a freehold site which it intends to redevelop into a data centre. The directors have
+considered whether the property should be classified as investment property under FRS 102 Section 16, as property under
+development under Section 17, or as inventory under Section 13. The directors have concluded that the property is held for
+capital appreciation and/or to earn rentals following completion of the develapment, rather than for sale in the ordinary course
+of business or for use in the Company's own operations, and that it therefore meets the definition of investment property.
+
+As the property is in the course of construction, it is classified as investment property under construction and measured at fair
+value in accordance with the policy set out above.
+

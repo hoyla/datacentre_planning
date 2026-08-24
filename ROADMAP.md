@@ -70,6 +70,46 @@ up the new CSV adjudication columns.
   apart — measure it at the time rather than quoting any of them, and
   see the note below about making it computed.
 
+## The scheme SPVs at Companies House
+
+Found 2026-08-24 while checking whether "UK Court Lane DC Limited"
+belongs in the Corscale alias group. It does not — but its accounts
+state that the £205m valuation of its one asset assumes "successful
+delivery of a 103.3 MW hyperscale data centre", against Barbour's 140 MW
+for the same project. See EXTERNAL_DATA_SOURCES §6, corrected twice
+before and now a third time: **operators disclose capacity by choice,
+single-asset SPVs disclose it by construction**, because the scheme is
+the investment property and FRS 102 makes the directors state what the
+valuation assumes.
+
+Worth building, in rising order of effort:
+
+1. **Name the SPVs we already hold.** Barbour's client-of-record slot is
+   full of them — `UK Court Lane DC Limited`, `VDC LHR11 Limited` — and
+   `data/priors/organisation_aliases.yaml` is already the place a person
+   records what a name turned out to be. A list of scheme SPVs with
+   company numbers is the input to everything below and costs a query
+   plus a person's judgement.
+2. **Pull their filing history** (`CH_API_KEY` is in `.env`; the sweep
+   is small — tens of companies, not thousands). Accounts for the
+   capacity assumption and the going-concern position; the charges
+   register for who lends, which is the most honest statement of who
+   owns; the confirmation statement for shareholders.
+3. **Load what they say as claims, never as columns.** The precedent is
+   settled (§7.1): an external figure goes in beside the planning data
+   with its own quantity type and its provenance, never into a site
+   column that implies it measures the same thing. `scheme_capacity` is
+   a new type and needs one.
+4. **Report the disagreements.** Where an SPV's audited assumption
+   differs from the planning record or from Barbour — 103.3 against 140
+   here — that gap is a finding, and averaging or preferring one silently
+   would destroy it.
+
+The class is bounded and the reward is high: a per-scheme capacity that
+an external valuer priced and an auditor signed, a solvency signal the
+planning file never carries, and an ownership chain that the PSC
+register is structurally unable to show.
+
 ## Coverage gaps worth closing
 
 Prompted by the **Devon Data Campus** (Xlinks, North Devon), a scheme

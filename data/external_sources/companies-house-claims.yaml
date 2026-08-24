@@ -67,6 +67,26 @@ sources:
     scanned: true
 
 
+  # A single-asset SPV, and the third correction to what generalises here
+  # (2026-08-24). Every company surveyed on 2026-08-20 and 2026-08-21 was
+  # an operator or an operator's property company. This one is neither: it
+  # exists to hold one scheme, so its investment property IS the scheme,
+  # and FRS 102 makes the directors state the assumptions the valuation
+  # rests on. The capacity is therefore in the accounts by construction
+  # rather than by narrative choice.
+  #
+  - key: uk_court_lane_fy2026
+    company_name: UK COURT LANE DC LTD
+    company_number: "14045228"
+    filing: Accounts for a small company made up to 30 April 2026
+    filed: 2026-07-31
+    ch_document_id: MzUzNjMxOTQxMmFkaXF6a2N4
+    url: https://find-and-update.company-information.service.gov.uk/company/14045228/filing-history/MzUzNjMxOTQxMmFkaXF6a2N4/document?format=pdf
+    local_pdf: uk-court-lane-accounts-fy2026.pdf
+    sha256: 1a948e8ff1e80548338c0ee482ef72a766a34744c82c26e17640b56cca1a9679
+    pages: 12
+    scanned: true
+
 claims:
   # --- Ark, per-campus built capacity (strategic report, page 4) ---------
   - source: ark_fy2025
@@ -278,6 +298,47 @@ claims:
       site; VIRTUS reports Scope 2 as nil on a 100% renewable
       procurement basis, so the megawatt-hours are the useful figure
       here rather than the emissions.
+
+  # --- UK Court Lane DC Ltd, the scheme its valuation assumes ------------
+  - source: uk_court_lane_fy2026
+    claim_name: Court Lane Industrial Estate, Iver
+    quantity_type: scheme_capacity
+    value: 103.3
+    unit: MW
+    stage: consented or in permitting
+    as_at: 2026-04-30
+    locator: page 5
+    holder: UK Court Lane DC Ltd
+    note: Note 2, critical judgements — investment property fair value.
+    quote: >-
+      The valuation is subject to a number of assumptions, including:
+      planning permission and power infrastructure being available as
+      assumed by the valuer; successful delivery of a 103.3 MW hyperscale
+      data centre; stabilised occupancy being achieved following
+      development completion; and future market conditions consistent
+      with current expectations.
+
+  - source: uk_court_lane_fy2026
+    claim_name: Court Lane Industrial Estate, Iver (site value)
+    quantity_type: investment_property_fair_value
+    value: 205000000
+    unit: GBP
+    stage: under development
+    as_at: 2026-04-30
+    locator: page 6
+    holder: UK Court Lane DC Ltd
+    # The figure is in note 5's table on page 6; the sentence naming the
+    # property and its valuer runs over onto page 7.
+    quote: >-
+      Fair value At 1 May 2025 - Additions 201,118,046 Revaluations
+      3,881,954 At 30 April 2026 205,000,000
+    note: >-
+      Note 5 continues on page 7: "Investment property comprises a
+      freehold property at Court Lane Industrial Estate, Iver. The fair
+      value of the investment property has been arrived at on the basis
+      of a valuation carried out at 30 April 2026 by Colliers
+      International Property Consultants Limited Chartered Surveyors,
+      who are not connected with the company."
 
 matches:
   - claim_name: Cody Park
