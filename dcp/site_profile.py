@@ -1370,7 +1370,7 @@ def _parties_for_sites(conn) -> dict[str, dict]:
     once and covers confirmed members only, so a proposal sitting in the
     YAML changes nothing about a build.
     """
-    from collections import defaultdict
+    from collections import Counter, defaultdict
     from dcp import entities, organisations
 
     index = organisations.alias_index(organisations.load_groups())
@@ -1378,7 +1378,14 @@ def _parties_for_sites(conn) -> dict[str, dict]:
     barbour: dict[str, list[tuple[str, str, str]]] = defaultdict(list)
     counts: dict[str, dict[tuple[str, str], int]] = defaultdict(
         lambda: defaultdict(int))
-    display: dict[str, str] = {}
+    # Every spelling of each canonical name, counted — not the first one
+    # seen. `setdefault` on first sight made the display name depend on
+    # the order Postgres happened to return rows in, and PARTIES_SQL has
+    # no ORDER BY, so two builds of one snapshot could disagree:
+    # "VIRTUS Data Centres" against "Virtus Data Centres", 44 lines apart
+    # (caught by test_build_determinism, 2026-08-24). 1,839 names of
+    # 37,135 are written more than one way in the corpus.
+    spellings: dict[str, Counter] = defaultdict(Counter)
     authority: dict[str, list[str]] = {}
 
     with conn.cursor() as cur:
@@ -1391,8 +1398,16 @@ def _parties_for_sites(conn) -> dict[str, dict]:
             e = entities.parse_entity(value_text)
             if e is None:
                 continue
-            display.setdefault(e.key, e.display)
+            spellings[e.key][e.display] += 1
             counts[site_key][(family, e.key)] += 1
+
+        # The spelling the documents use most, ties broken lexicographically
+        # so the choice cannot depend on anything but the corpus. 616 of
+        # the contested names ARE tied, so the tie-break is not decoration.
+        # It reads better as well as being stable: "Ramboll" (1,136) over
+        # "Ramboll UK Limited" (293), "AECOM" (1,126) over "Aecom" (12).
+        display = {key: max(counter.items(), key=lambda kv: (kv[1], kv[0]))[0]
+                   for key, counter in spellings.items()}
 
         cur.execute(SITE_AUTHORITY_SQL)
         for site_key, councils, barbour_authorities in cur.fetchall():

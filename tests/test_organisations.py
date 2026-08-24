@@ -310,3 +310,64 @@ def test_a_document_may_evidence_a_number_in_any_register(tmp_path):
                                             "quote": "company number 561234"}]),
                          company_number="561234", register="cro")]}]})
     assert org.load_groups(path)[0].members[0].register == "cro"
+
+
+def test_an_overseas_entity_id_is_its_own_register(tmp_path):
+    """Found on VDC LHR11 Limited, 2026-08-24. An OE id comes from the
+    Register of Overseas Entities — the post-2022 regime for foreign
+    entities owning UK land — and will not join to a company number."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Vantage Data Centers",
+        "members": [dict(_member("VDC LHR11 Limited"),
+                         company_number="OE003126", register="roe")]}]})
+    m = org.load_groups(path)[0].members[0]
+    assert m.company_number == "OE003126" and m.register == "roe"
+
+
+def test_companies_house_evidences_the_overseas_register_too(tmp_path):
+    """Companies House maintains the ROE as well as its own register, so
+    a Companies House lookup is honest evidence for either."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Vantage Data Centers",
+        "members": [dict(_member("VDC LHR11 Limited",
+                                 evidence=[{"source": "companies_house",
+                                            "ref": "OE003126"}]),
+                         company_number="OE003126", register="roe")]}]})
+    assert org.load_groups(path)[0].members[0].register == "roe"
+
+
+def test_an_oe_id_also_validates_as_a_companies_house_number(tmp_path):
+    """Unlike a CRO number, an OE id is a Companies House identifier: it
+    resolves at /company/OE003126 and shares the shape of SC, NI and OC
+    numbers. `register: roe` records that the holder is a foreign entity;
+    it is not there to stop a bad join, because the join is fine."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Vantage Data Centers",
+        "members": [dict(_member("VDC LHR11 Limited"),
+                         company_number="OE003126")]}]})
+    m = org.load_groups(path)[0].members[0]
+    assert m.company_number == "OE003126"
+    assert m.register == "companies_house"      # the namespace it is in
+
+
+def test_a_member_may_carry_a_note(tmp_path):
+    path = _write(tmp_path, {"groups": [{
+        "group": "Amazon",
+        "members": [dict(_member("Amazon UK (Head Office)"),
+                         note="A Barbour label rather than a company.")]}]})
+    assert "Barbour label" in org.load_groups(path)[0].members[0].note
+
+
+@pytest.mark.parametrize("bad_key", ["compnay_number", "evidance", "status_"])
+def test_an_unknown_key_is_refused_rather_than_ignored(tmp_path, bad_key):
+    """A key this loader does not read is a key whose content does not
+    exist. `note:` was dropped that way before it was a field, and a
+    typo is dropped the same way — leaving a file that looks right and a
+    build that behaves as though the line were never written."""
+    path = _write(tmp_path, {"groups": [{
+        "group": "Amazon",
+        "members": [dict(_member("Amazon UK Services Limited"),
+                         **{bad_key: "x"})]}]})
+    with pytest.raises(org.AliasError) as exc:
+        org.load_groups(path)
+    assert bad_key in str(exc.value) and "ignore" in str(exc.value)
