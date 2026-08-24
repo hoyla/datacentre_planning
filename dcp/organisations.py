@@ -50,8 +50,19 @@ ALIASES_PATH = ROOT / "data" / "priors" / "organisation_aliases.yaml"
 
 RELATIONS = frozenset({"same_organisation", "subsidiary_of", "trading_name_of", "spv_of"})
 STATUSES = frozenset({"proposed", "confirmed"})
-SOURCES = frozenset({"barbour", "companies_house", "document", "operator_website",
-                     "register", "reporter"})
+# `register` here means the COUNCIL PLANNING register, which is what the
+# word means everywhere else in this project. A company register is
+# named for itself — `companies_house`, or `cro` for the Irish Companies
+# Registration Office — because "the source is the CRO, not Companies
+# House" (Luke, 2026-08-24) and a provenance line that misnames its own
+# source is worse than a vague one: someone will follow it.
+SOURCES = frozenset({"barbour", "companies_house", "cro", "document",
+                     "operator_website", "register", "reporter"})
+
+# Which company register a `source` value speaks for, where it speaks
+# for one. Used to check that evidence cited for a number comes from the
+# register that number belongs to.
+SOURCE_REGISTER = {"companies_house": "companies_house", "cro": "cro"}
 
 
 class AliasError(ValueError):
@@ -68,14 +79,30 @@ class Evidence:
     site_key: str = ""     # when the evidence is about one site
 
 
-# A Companies House number: eight digits (England and Wales), or two
-# letters and six digits (SC, NI, OC, SO, LP and the rest). Validated
-# because this is a JOIN KEY — the newsroom's other datasets are tied
-# together on it, so a malformed or mistyped number does not fail
-# loudly, it silently attaches a site to the wrong company. Format is
-# all that can be checked here; that the number is the RIGHT company is
-# what the evidence beside it is for.
-COMPANY_NUMBER_RE = re.compile(r"^(?:[A-Z]{2}\d{6}|\d{8})$")
+# A company number, and the register it belongs to. Validated because
+# this is a JOIN KEY — the newsroom's other datasets are tied together
+# on it, so a malformed or mistyped number does not fail loudly, it
+# silently attaches a site to the wrong company. Format is all that can
+# be checked here; that the number is the RIGHT company is what the
+# evidence beside it is for.
+#
+# The register travels WITH the number because the two registers
+# overlap in shape and not in meaning (Luke, 2026-08-24, on Amazon Data
+# Services Ireland): a Companies House number is eight digits, or two
+# letters and six; an Irish CRO number is up to six digits, so CRO
+# 123456 is a perfectly well-formed nothing in Companies House. A
+# consumer joining on Companies House IDs must be able to filter the
+# CRO rows out rather than half-match them, so the join key is the
+# PAIR, and a bare number is never enough.
+REGISTERS = {
+    "companies_house": re.compile(r"^(?:[A-Z]{2}\d{6}|\d{8})$"),
+    "cro": re.compile(r"^\d{1,6}$"),          # Ireland
+}
+DEFAULT_REGISTER = "companies_house"
+
+# Kept: the Companies House pattern under its old name, for anything
+# that imported it before the register existed.
+COMPANY_NUMBER_RE = REGISTERS["companies_house"]
 
 
 @dataclass(frozen=True)
@@ -85,6 +112,7 @@ class Member:
     status: str
     evidence: tuple[Evidence, ...]
     company_number: str = ""   # this entity's own, where it is known
+    register: str = ""         # which register that number is in
 
     @property
     def key(self) -> str:
@@ -97,6 +125,7 @@ class Group:
     note: str = ""
     members: tuple[Member, ...] = field(default_factory=tuple)
     company_number: str = ""   # the parent's, where the group has one
+    register: str = ""
 
     def member_for(self, key: str) -> Member | None:
         for m in self.members:
@@ -110,9 +139,81 @@ def _require(cond: bool, where: str, what: str) -> None:
         raise AliasError(f"{where}: {what}")
 
 
+class _StrictLoader(yaml.SafeLoader):
+    """A YAML loader that refuses a repeated key.
+
+    PyYAML keeps the LAST of two identical keys and says nothing, which
+    in this file destroys evidence: a member given a second `evidence:`
+    block — the natural way to write "and here is another source" —
+    silently loses the first, and the file still shows both. Found
+    2026-08-24 when Luke added a Companies House lookup beside a Barbour
+    reference and the Barbour reference stopped existing.
+
+    An append-only record cannot be one where appending deletes.
+    """
+
+
+def _no_duplicate_keys(loader, node, deep=False):
+    seen = set()
+    for key_node, _ in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        if key in seen:
+            raise AliasError(
+                f"line {key_node.start_mark.line + 1}: '{key}' is given twice "
+                f"in the same block. YAML keeps only the last one, so the "
+                f"first would be lost — if you are adding evidence, add "
+                f"another item to the existing list instead of a second "
+                f"'{key}:' key")
+        seen.add(key)
+    return yaml.SafeLoader.construct_mapping(loader, node, deep=deep)
+
+
+_StrictLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _no_duplicate_keys)
+
+
+def _company_number(raw: dict, where: str) -> tuple[str, str]:
+    """The number and its register, checked against that register's shape.
+
+    A number with no register named is a Companies House number, which
+    is what the file held before Ireland appeared in it and what most
+    entries will always be.
+    """
+    number = str(raw.get("company_number") or "").strip().upper()
+    register = str(raw.get("register") or "").strip().lower()
+    _require(not register or register in REGISTERS, where,
+             f"register {register!r} is not one of {sorted(REGISTERS)}")
+    if not number:
+        return "", register
+    register = register or DEFAULT_REGISTER
+    shapes = {"companies_house": "eight digits, or two letters and six",
+              "cro": "up to six digits"}
+    _require(bool(REGISTERS[register].match(number)), where,
+             f"company_number {number!r} is not a {register} number "
+             f"({shapes[register]})")
+    # Evidence that names a company register must name the one the
+    # number is in. Luke, 2026-08-24, reading a worked example for an
+    # Irish company: "in your example 'source: companies_house' is not
+    # true — the source is the cro". A provenance line that misnames its
+    # own source is worse than a vague one, because someone will follow
+    # it to a register that has never heard of the company.
+    for e in raw.get("evidence") or []:
+        if not isinstance(e, dict):
+            continue
+        src = str(e.get("source") or "").strip().lower()
+        cited = SOURCE_REGISTER.get(src)
+        _require(cited is None or cited == register, where,
+                 f"the number is in the {register} register but evidence "
+                 f"cites {src!r}. Cite the register the number is in — or, "
+                 f"if the company really has a record in both, give each "
+                 f"its own member")
+    return number, register
+
+
 def load_groups(path: Path = ALIASES_PATH) -> list[Group]:
     """Read and validate the file. Raises AliasError on the first problem."""
-    doc = yaml.safe_load(path.read_text(encoding="utf-8")) if path.exists() else None
+    doc = (yaml.load(path.read_text(encoding="utf-8"), Loader=_StrictLoader)
+           if path.exists() else None)
     groups_raw = (doc or {}).get("groups") or []
     groups: list[Group] = []
     seen_labels: set[str] = set()
@@ -151,22 +252,17 @@ def load_groups(path: Path = ALIASES_PATH) -> list[Group]:
                     source=source, ref=str(e.get("ref") or ""),
                     quote=str(e.get("quote") or ""), note=str(e.get("note") or ""),
                     date=str(e.get("date") or ""), site_key=str(e.get("site_key") or "")))
-            number = str(m.get("company_number") or "").strip().upper()
-            _require(not number or bool(COMPANY_NUMBER_RE.match(number)), mwhere,
-                     f"company_number {number!r} is not a Companies House "
-                     f"number (eight digits, or two letters and six)")
-            member = Member(name, relation, status, tuple(evidence), number)
+            number, register = _company_number(m, mwhere)
+            member = Member(name, relation, status, tuple(evidence), number,
+                            register)
             _require(len(member.key) >= 3, mwhere, "name is too short to key")
             _require(member.key not in seen_keys, mwhere,
                      f"also listed under '{seen_keys.get(member.key)}' — one name, one group")
             seen_keys[member.key] = label
             members.append(member)
-        gnumber = str(g.get("company_number") or "").strip().upper()
-        _require(not gnumber or bool(COMPANY_NUMBER_RE.match(gnumber)), where,
-                 f"company_number {gnumber!r} is not a Companies House number "
-                 f"(eight digits, or two letters and six)")
+        gnumber, gregister = _company_number(g, where)
         groups.append(Group(label, str(g.get("note") or ""), tuple(members),
-                            gnumber))
+                            gnumber, gregister))
     return groups
 
 
