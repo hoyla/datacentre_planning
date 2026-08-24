@@ -59,10 +59,12 @@ STATUSES = frozenset({"proposed", "confirmed"})
 SOURCES = frozenset({"barbour", "companies_house", "cro", "document",
                      "operator_website", "register", "reporter"})
 
-# Which company register a `source` value speaks for, where it speaks
-# for one. Used to check that evidence cited for a number comes from the
-# register that number belongs to.
-SOURCE_REGISTER = {"companies_house": "companies_house", "cro": "cro"}
+# Which registers a `source` value can speak for. Companies House
+# maintains the Register of Overseas Entities as well as its own, so a
+# Companies House lookup is honest evidence for either; the Irish CRO
+# speaks only for itself.
+SOURCE_REGISTER = {"companies_house": {"companies_house", "roe"},
+                   "cro": {"cro"}}
 
 
 class AliasError(ValueError):
@@ -97,6 +99,16 @@ class Evidence:
 REGISTERS = {
     "companies_house": re.compile(r"^(?:[A-Z]{2}\d{6}|\d{8})$"),
     "cro": re.compile(r"^\d{1,6}$"),          # Ireland
+    # The Register of Overseas Entities: the post-2022 regime for foreign
+    # entities that own UK land. Companies House maintains it, and an OE
+    # id lives in the SAME namespace as a company number — OE003126
+    # resolves at /company/OE003126 and matches the companies_house
+    # pattern, since two letters and six digits is also the shape of SC,
+    # NI and OC numbers. So this value does not exist to keep a join
+    # honest, the way `cro` does; it exists to record that the holder is
+    # a foreign entity, which is a fact about the site and not about the
+    # number. VDC LHR11 Limited is registered in Jersey (2026-08-24).
+    "roe": re.compile(r"^OE\d{6}$"),
 }
 DEFAULT_REGISTER = "companies_house"
 
@@ -113,6 +125,7 @@ class Member:
     evidence: tuple[Evidence, ...]
     company_number: str = ""   # this entity's own, where it is known
     register: str = ""         # which register that number is in
+    note: str = ""             # why this member reads as it does
 
     @property
     def key(self) -> str:
@@ -172,6 +185,27 @@ _StrictLoader.add_constructor(
     yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _no_duplicate_keys)
 
 
+# A key this loader does not read is a key whose content does not exist.
+# `note:` on a member was silently dropped before it was a field, and a
+# typo — `compnay_number`, `evidance` — is dropped the same way, leaving
+# a file that looks right and a build that behaves as though the line
+# were never written. So the accepted keys are named and anything else
+# is refused.
+GROUP_KEYS = {"group", "note", "company_number", "register", "members"}
+MEMBER_KEYS = {"name", "relation", "status", "company_number", "register",
+               "note", "evidence"}
+EVIDENCE_KEYS = {"source", "ref", "quote", "note", "date", "site_key"}
+
+
+def _only_known_keys(raw: dict, allowed: set[str], where: str) -> None:
+    unknown = sorted(set(raw) - allowed)
+    _require(not unknown, where,
+             f"unknown key{'s' if len(unknown) != 1 else ''} "
+             f"{', '.join(repr(k) for k in unknown)} — this loader would "
+             f"ignore {'them' if len(unknown) != 1 else 'it'} silently. "
+             f"Accepted here: {', '.join(sorted(allowed))}")
+
+
 def _company_number(raw: dict, where: str) -> tuple[str, str]:
     """The number and its register, checked against that register's shape.
 
@@ -187,7 +221,8 @@ def _company_number(raw: dict, where: str) -> tuple[str, str]:
         return "", register
     register = register or DEFAULT_REGISTER
     shapes = {"companies_house": "eight digits, or two letters and six",
-              "cro": "up to six digits"}
+              "cro": "up to six digits",
+              "roe": "OE followed by six digits"}
     _require(bool(REGISTERS[register].match(number)), where,
              f"company_number {number!r} is not a {register} number "
              f"({shapes[register]})")
@@ -202,11 +237,11 @@ def _company_number(raw: dict, where: str) -> tuple[str, str]:
             continue
         src = str(e.get("source") or "").strip().lower()
         cited = SOURCE_REGISTER.get(src)
-        _require(cited is None or cited == register, where,
+        _require(cited is None or register in cited, where,
                  f"the number is in the {register} register but evidence "
-                 f"cites {src!r}. Cite the register the number is in — or, "
-                 f"if the company really has a record in both, give each "
-                 f"its own member")
+                 f"cites {src!r}. Cite a source that speaks for that "
+                 f"register — or, if the company really has a record in "
+                 f"more than one, give each its own member")
     return number, register
 
 
@@ -221,6 +256,7 @@ def load_groups(path: Path = ALIASES_PATH) -> list[Group]:
     for gi, g in enumerate(groups_raw):
         where = f"group {gi + 1}"
         _require(isinstance(g, dict) and g.get("group"), where, "needs a 'group' label")
+        _only_known_keys(g, GROUP_KEYS, f"group {gi + 1}")
         label = str(g["group"]).strip()
         where = f"group '{label}'"
         _require(label not in seen_labels, where, "label appears twice")
@@ -229,6 +265,7 @@ def load_groups(path: Path = ALIASES_PATH) -> list[Group]:
         for mi, m in enumerate(g.get("members") or []):
             mwhere = f"{where} member {mi + 1}"
             _require(isinstance(m, dict) and m.get("name"), mwhere, "needs a 'name'")
+            _only_known_keys(m, MEMBER_KEYS, mwhere)
             name = str(m["name"]).strip()
             mwhere = f"{where} member '{name}'"
             relation = str(m.get("relation") or "").strip()
@@ -243,6 +280,7 @@ def load_groups(path: Path = ALIASES_PATH) -> list[Group]:
             for ei, e in enumerate(ev_raw):
                 ewhere = f"{mwhere} evidence {ei + 1}"
                 _require(isinstance(e, dict), ewhere, "must be a mapping")
+                _only_known_keys(e, EVIDENCE_KEYS, ewhere)
                 source = str(e.get("source") or "").strip()
                 _require(source in SOURCES, ewhere,
                          f"source must be one of {sorted(SOURCES)}, got {source!r}")
@@ -254,7 +292,7 @@ def load_groups(path: Path = ALIASES_PATH) -> list[Group]:
                     date=str(e.get("date") or ""), site_key=str(e.get("site_key") or "")))
             number, register = _company_number(m, mwhere)
             member = Member(name, relation, status, tuple(evidence), number,
-                            register)
+                            register, str(m.get("note") or "").strip())
             _require(len(member.key) >= 3, mwhere, "name is too short to key")
             _require(member.key not in seen_keys, mwhere,
                      f"also listed under '{seen_keys.get(member.key)}' — one name, one group")
