@@ -1215,6 +1215,19 @@ def site_parties(barbour_rows, findings_counts, councils, alias_index) -> dict:
         g = organisations.group_for(name, alias_index)
         return g.group if g else ""
 
+    def company_number_of(name: str) -> str:
+        """The Companies House number for a name, where a person has
+        confirmed one: the member's own if it has one, else the group's
+        parent number. It travels to the workbook because the newsroom
+        joins datasets on it (Luke, 2026-08-24), and a join key that
+        stops at the reader is no use to anyone."""
+        g = organisations.group_for(name, alias_index)
+        if not g:
+            return ""
+        m = g.member_for(entities.canonical_key(name))
+        return (m.company_number if m and m.company_number
+                else g.company_number)
+
     by_role: dict[str, list[str]] = {"end_user": [], "applicant": [],
                                      "adviser": []}
     refs: dict[str, str] = {}
@@ -1323,6 +1336,7 @@ def site_parties(barbour_rows, findings_counts, councils, alias_index) -> dict:
     # exists to undo.
     return {
         "operator_group": operator_group,
+        "operator_company_number": company_number_of(operator_name),
         # The one name the badge and its filter key are built from.
         # Not a column: `end_user` names every end user Barbour records
         # for the site, and a badge that read "Global Switch, Telehouse

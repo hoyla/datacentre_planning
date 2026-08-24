@@ -37,6 +37,7 @@ the group "is behind" the site.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -67,12 +68,23 @@ class Evidence:
     site_key: str = ""     # when the evidence is about one site
 
 
+# A Companies House number: eight digits (England and Wales), or two
+# letters and six digits (SC, NI, OC, SO, LP and the rest). Validated
+# because this is a JOIN KEY — the newsroom's other datasets are tied
+# together on it, so a malformed or mistyped number does not fail
+# loudly, it silently attaches a site to the wrong company. Format is
+# all that can be checked here; that the number is the RIGHT company is
+# what the evidence beside it is for.
+COMPANY_NUMBER_RE = re.compile(r"^(?:[A-Z]{2}\d{6}|\d{8})$")
+
+
 @dataclass(frozen=True)
 class Member:
     name: str              # as the documents or Barbour write it — never rewritten
     relation: str
     status: str
     evidence: tuple[Evidence, ...]
+    company_number: str = ""   # this entity's own, where it is known
 
     @property
     def key(self) -> str:
@@ -84,6 +96,7 @@ class Group:
     group: str             # the display label
     note: str = ""
     members: tuple[Member, ...] = field(default_factory=tuple)
+    company_number: str = ""   # the parent's, where the group has one
 
     def member_for(self, key: str) -> Member | None:
         for m in self.members:
@@ -138,13 +151,22 @@ def load_groups(path: Path = ALIASES_PATH) -> list[Group]:
                     source=source, ref=str(e.get("ref") or ""),
                     quote=str(e.get("quote") or ""), note=str(e.get("note") or ""),
                     date=str(e.get("date") or ""), site_key=str(e.get("site_key") or "")))
-            member = Member(name, relation, status, tuple(evidence))
+            number = str(m.get("company_number") or "").strip().upper()
+            _require(not number or bool(COMPANY_NUMBER_RE.match(number)), mwhere,
+                     f"company_number {number!r} is not a Companies House "
+                     f"number (eight digits, or two letters and six)")
+            member = Member(name, relation, status, tuple(evidence), number)
             _require(len(member.key) >= 3, mwhere, "name is too short to key")
             _require(member.key not in seen_keys, mwhere,
                      f"also listed under '{seen_keys.get(member.key)}' — one name, one group")
             seen_keys[member.key] = label
             members.append(member)
-        groups.append(Group(label, str(g.get("note") or ""), tuple(members)))
+        gnumber = str(g.get("company_number") or "").strip().upper()
+        _require(not gnumber or bool(COMPANY_NUMBER_RE.match(gnumber)), where,
+                 f"company_number {gnumber!r} is not a Companies House number "
+                 f"(eight digits, or two letters and six)")
+        groups.append(Group(label, str(g.get("note") or ""), tuple(members),
+                            gnumber))
     return groups
 
 
