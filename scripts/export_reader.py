@@ -1732,6 +1732,12 @@ def main() -> int:
             return ""
         n_readings_rendered += 1
         sections = (r["reading"] or {}).get("sections") or {}
+        # Counted before the summary is written, because an omission a
+        # reader cannot see is one they will assume did not happen: the
+        # withheld line sits inside a panel that opens closed, so a
+        # reader who never expands it learns nothing at all.
+        held = sum(1 for paras in sections.values()
+                   for para in (paras or []) if para.get("withheld"))
         body = []
         for sec, title in mreading.SECTION_TITLES.items():
             paras = sections.get(sec) or []
@@ -1763,7 +1769,12 @@ def main() -> int:
                 f'{esc(r["model"])} on {esc(when)} from {r["documents_read"]} documents '
                 f'({r["pages_read"]} pages); prompt {esc(r["prompt_version"])}. '
                 f'Not a finding. Every rendered figure carries a verbatim quote that was '
-                f'verified against the documents before it was stored.</span></summary>'
+                f'verified against the documents before it was stored.'
+                + ((f' {held} paragraphs are withheld, each with its reason '
+                    f'where it would have stood.' if held != 1 else
+                    ' One paragraph is withheld, with its reason where it '
+                    'would have stood.') if held else '')
+                + f'</span></summary>'
                 f'<div class="rbody">{"".join(body)}</div></details>')
 
     # The who's-behind-it cell, and the key it filters on.
