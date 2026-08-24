@@ -136,7 +136,7 @@ FINDINGS_SQL = """
               WHERE s.retired_at IS NULL AND f.value_text IS NOT NULL
                 AND f.signal_family <> 'unclassified')
             SELECT site_key, signal_type, value_text, value_number, value_unit,
-                   verdict, signal_family FROM (
+                   verdict, signal_family, id FROM (
               -- Round-robin across families: the first of every family
               -- before the second of any. Each round leads with figures
               -- adjudicated as this site's, then the power families, then
@@ -144,7 +144,7 @@ FINDINGS_SQL = """
               -- length alone put a landscape paragraph labelled it_load at
               -- the top of a site's evidence, four times over.
               SELECT f.site_key, f.signal_type, f.value_text, f.value_number,
-                     f.value_unit, f.verdict, f.signal_family,
+                     f.value_unit, f.verdict, f.signal_family, f.id,
                      row_number() OVER (PARTITION BY f.site_key
                        ORDER BY f.rf,
                                 coalesce(f.verdict = 'site_capacity', false) DESC,
@@ -1607,8 +1607,36 @@ def main() -> int:
         # is the point -- but each is labelled with whose it is.
         cur.execute(FINDINGS_SQL, (FINDINGS_PER_SITE,))
         findings = defaultdict(list)
-        for k, st, vt, vn, vu, verdict, fam in cur.fetchall():
-            findings[k].append((st, vt, vn, vu, verdict, fam))
+        _raw_findings = cur.fetchall()
+
+        # The label audit (§4.1e): where it says a row's family does not
+        # fit its text, the row is DEMOTED to the family it belongs
+        # under, not dropped. Luke, 2026-08-24: the quote is real and
+        # verified — only the filing is wrong — so removing it costs a
+        # reporter a true quote, while moving it stops the false
+        # impression and keeps the evidence. The row says where it was
+        # filed, because a silent move is a second unrecorded judgement.
+        #
+        # Guarded on the table existing: a build against a database
+        # without migration 025 shows exactly what it showed before.
+        label_verdicts: dict[int, tuple[str, str]] = {}
+        cur.execute("SELECT to_regclass('public.finding_label_audit')")
+        if cur.fetchone()[0]:
+            cur.execute("""
+                SELECT DISTINCT ON (finding_id) finding_id, verdict,
+                       coalesce(suggested_family, '')
+                FROM finding_label_audit
+                ORDER BY finding_id, inserted_at DESC, id DESC""")
+            label_verdicts = {fid: (v, fam) for fid, v, fam in cur.fetchall()
+                              if v == "does_not_fit"}
+        n_demoted = 0
+        for k, st, vt, vn, vu, verdict, fam, fid in _raw_findings:
+            filed_as = ""
+            moved = label_verdicts.get(fid)
+            if moved and moved[1] and moved[1] != fam:
+                filed_as, fam = fam, moved[1]
+                n_demoted += 1
+            findings[k].append((st, vt, vn, vu, verdict, fam, filed_as))
         cur.execute(FAMILY_COUNTS_SQL)
         family_counts: dict[str, dict[str, int]] = defaultdict(dict)
         for k, fam, n in cur.fetchall():
@@ -1988,13 +2016,14 @@ def main() -> int:
         # exist yet, so nothing is excluded on that ground; the family a
         # row sits under is the extractor's label, as ever.
         grouped: dict[str, list] = {}
-        for st, vt, vn, vu, verdict, fam in findings.get(key, []):
-            grouped.setdefault(fam or "other", []).append((st, vt, vn, vu, verdict))
+        for st, vt, vn, vu, verdict, fam, filed_as in findings.get(key, []):
+            grouped.setdefault(fam or "other", []).append(
+                (st, vt, vn, vu, verdict, filed_as))
         fl = []
         n_shown = 0
         for fam, rows_ in grouped.items():
             items = []
-            for st, vt, vn, vu, verdict in rows_:
+            for st, vt, vn, vu, verdict, filed_as in rows_:
                 num = f" <strong>{vn:g} {esc(vu or '')}</strong>" if vn is not None else ""
                 # Adjudicated as describing something other than this site.
                 not_ours = {
@@ -2004,7 +2033,12 @@ def main() -> int:
                 }.get(verdict)
                 tag = (f" <span class='q' style='color:#b3261e'>[{esc(not_ours)}]</span>"
                        if not_ours else "")
-                items.append(f"<li><span class='st'>{esc(st)}</span>{num}{tag} — "
+                # A moved row says where it was moved from. The
+                # extractor's label is still on the row; what changed is
+                # only which heading a reader finds it under.
+                moved = (f" <span class='q'>[filed as {esc(filed_as)}]</span>"
+                         if filed_as else "")
+                items.append(f"<li><span class='st'>{esc(st)}</span>{num}{tag}{moved} — "
                              f"{esc(trim(vt,190))}</li>")
             n_shown += len(items)
             total = family_counts.get(key, {}).get(fam, len(items))
@@ -3696,6 +3730,10 @@ def main() -> int:
     # site rows — retired, or filtered upstream — and its claim would
     # otherwise vanish without a trace.
     _claims_live = sum(len(v) for v in claims_by_site.values())
+    print(f"  Label audit: {n_demoted:,} rendered findings moved to the family "
+          f"the audit says fits, each marked with where it was filed"
+          if n_demoted else
+          "  Label audit: no verdicts stored, so nothing moved")
     if args.no_readings:
         print("  Machine readings: none built — --no-readings was passed, so "
               "no site page carries one and no reading is counted below")
