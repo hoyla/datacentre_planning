@@ -348,6 +348,32 @@ def test_a_machine_reading_is_collapsed_labelled_and_quoted(page):
     d.locator("summary").click()
     assert d.evaluate("el => el.open")
     assert d.locator(".rbody p").count() >= 1
+
+
+def test_a_withheld_paragraph_is_declared_before_it_is_found(page):
+    """A panel opens closed, so a withheld paragraph sitting inside it is
+    invisible to a reader who never expands — and an omission a reader
+    cannot see is one they will assume did not happen. Every panel
+    holding one says so in its summary, and the count matches what is
+    inside (Luke, 2026-08-24)."""
+    panels = page.locator("details.reading")
+    if panels.count() == 0:
+        pytest.skip("no machine reading in this build")
+    checked = 0
+    for i in range(panels.count()):
+        d = panels.nth(i)
+        held = d.locator("p.rwithheld").count()
+        summary = d.locator("summary").inner_text()
+        if held:
+            checked += 1
+            assert "withheld" in summary, \
+                "a panel holding a withheld paragraph does not say so"
+            assert str(held) in summary or (held == 1 and "One" in summary), \
+                f"summary does not name the count ({held}): {summary[-120:]}"
+        else:
+            assert "withheld" not in summary
+    if not checked:
+        pytest.skip("no withheld paragraph in this build")
     # Every quote names its source, and cited documents link out.
     assert d.locator("ul.rq li .q").count() == d.locator("ul.rq li").count()
     page.click("#view-site .sitenav a")
