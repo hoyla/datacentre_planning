@@ -15,14 +15,20 @@
 #   groups:
 #     - group: <display label>
 #       note: <optional>
-#       company_number: <the parent's Companies House number, optional>
+#       company_number: <the parent's, optional>
+#       register: companies_house | cro    # default companies_house
 #       members:
 #         - name: <exactly as a source writes it>
 #           relation: same_organisation | subsidiary_of | trading_name_of | spv_of
 #           status: proposed | confirmed
 #           company_number: <this entity's own, optional>
+#           register: companies_house | cro
 #           evidence:            # at least one; each needs a ref or a quote
-#             - source: barbour | companies_house | document | operator_website | register | reporter
+#             - source: barbour | companies_house | cro | document
+#                       | operator_website | register | reporter
+#               # `register` is the COUNCIL PLANNING register. A company
+#               # register is named for itself: companies_house, or cro
+#               # for the Irish Companies Registration Office.
 #               ref: <Barbour project ref, company number, document id, URL>
 #               quote: <verbatim, where the source is a document>
 #               note: <optional>
@@ -31,12 +37,20 @@
 #
 # `company_number` is a first-class field rather than a line of evidence
 # because it is a JOIN KEY: the newsroom ties many datasets together on
-# Companies House numbers, and a number buried in an evidence `ref`
-# cannot be selected, exported or joined. The loader checks the FORMAT
-# (eight digits, or two letters and six) and refuses anything else,
-# because a mistyped number does not fail loudly — it silently attaches
-# a site to the wrong company. That the number is the right company is
-# what the evidence beside it is for: cite the filing, with a date.
+# company numbers, and a number buried in an evidence `ref` cannot be
+# selected, exported or joined. The loader checks the FORMAT and refuses
+# anything else, because a mistyped number does not fail loudly — it
+# silently attaches a site to the wrong company. That the number is the
+# right company is what the evidence beside it is for: cite the filing,
+# with a date.
+#
+# `register` travels with it, because the two registers overlap in shape
+# and not in meaning: Companies House is eight digits or two letters and
+# six; an Irish CRO number is up to six digits, so a CRO number is a
+# well-formed nothing at Companies House. Amazon Data Services Ireland
+# is in this file. Omit `register` and the number is read as Companies
+# House, which is what every entry here was before Ireland appeared.
+# Anything joining on these must filter on the register first.
 #
 # Rules the loader enforces: every member has evidence; a canonical name
 # sits in one group only; relation and status are from the closed sets
@@ -56,43 +70,76 @@ groups:
     members:
       - name: Vantage Data Centres Limited
         relation: same_organisation
-        status: proposed
+        status: confirmed
+        company_number: "06132144"
         evidence:
           - source: barbour
             ref: "12536509"
             note: Named as end user on North Acton Road (LHR21); the centres/centers spelling is merged by canonical_key.
             date: 2026-08-23
+          - source: companies_house
+            ref: "06132144"
+            note: Luke looked up on Lurch (the Guardian's land and property research tool).
+            date: 2026-08-24
       - name: VDC LHR11 Limited
         relation: spv_of
-        status: proposed
+        status: confirmed
+        company_number: "OE003126"
+        register: roe
+        note: >-
+          A JERSEY company holding UK land, on the Register of Overseas
+          Entities since 4 November 2022 (registered office 44 Esplanade,
+          St Helier). Companies House maintains that register, so
+          OE003126 is a Companies House identifier and joins like one.
+          The link to Vantage rests on Barbour naming it client of record
+          with Vantage as end user; the ROE's own beneficial-ownership
+          disclosure would put that beyond doubt.
         evidence:
           - source: barbour
             ref: "12536509"
             note: Client of record on North Acton Road (LHR21) with Vantage Data Centres Limited as end user; "VDC" and the LHR numbering are Vantage's.
             date: 2026-08-23
+          - source: companies_house
+            ref: "OE003126"
+            note: Luke looked up on Lurch (the Guardian's land and property research tool). Parent company D17285487 (Digitalbridge Group) is in partnership with VDC. 
+            date: 2026-08-24  
 
   - group: Amazon
     note: Amazon Web Services / Amazon Data Services; several legal entities.
     members:
       - name: Amazon UK Services Limited
         relation: same_organisation
-        status: proposed
+        status: confirmed
+        company_number: "03223028"
         evidence:
           - source: barbour
             ref: "12549436"
             note: Client on Amazon Data Centre Didcot.
             date: 2026-08-23
+          - source: companies_house
+            ref: "03223028"
+            note: Luke looked up on Lurch (the Guardian's land and property research tool).
+            date: 2026-08-24
       - name: Amazon Data Services Ireland Ltd
         relation: same_organisation
-        status: proposed
+        status: confirmed
+        company_number: "390566"
+        register: cro
         evidence:
           - source: barbour
             ref: "12818648"
             note: End user on Linmere Island, Houghton Regis (client of record Colliers International — representation, not identity).
             date: 2026-08-23
+          - source: cro
+            ref: "390566"
+            note: Looked up by Luke on Companies Registration Office Ireland.
+            date: 2026-08-24
       - name: Amazon UK (Head Office)
         relation: same_organisation
-        status: proposed
+        status: confirmed
+        note: >-
+          A Barbour label rather than a registered company, so there is no
+          number to record. Confirmed as meaning Amazon, not as an entity.
         evidence:
           - source: barbour
             ref: "12549436"
@@ -102,13 +149,18 @@ groups:
   - group: Microsoft
     members:
       - name: Microsoft MSFT MCIO Limited
-        relation: same_organisation
-        status: proposed
+        relation: subsidiary_of
+        status: confirmed
+        company_number: "09616816"
         evidence:
           - source: barbour
             ref: "client role block"
             note: Barbour client on two projects; MCIO is Microsoft's cloud infrastructure arm. A Companies House check would confirm.
             date: 2026-08-23
+          - source: companies_house
+            ref: "09616816"
+            note: Luke looked up on Lurch (the Guardian's land and property research tool). Subsidiary of Microsoft devoted to datacentres.
+            date: 2026-08-24
       - name: Microsoft UK Limited
         relation: same_organisation
         status: proposed
@@ -118,25 +170,37 @@ groups:
             date: 2026-08-23
 
   - group: Colt
+    note: CH 03232904 Colt Technology Services Group Limited aka Colt Telecom. https://en.wikipedia.org/wiki/Colt_Technology_Services . Ultimately owned by Fidelity Investments
     members:
       - name: COLT Technology Services
-        relation: same_organisation
-        status: proposed
+        relation: subsidiary_of
+        status: confirmed
+        company_number: "02452736"
         evidence:
           - source: barbour
             ref: "client role block"
             note: Client on three Barbour projects.
             date: 2026-08-23
+          - source: companies_house
+            ref: "02452736"
+            note: Luke looked up on Lurch (the Guardian's land and property research tool). Subsidiary of 03265299 Colt Telecom Ltd (aka Colt Technology Services Group Limited).
+            date: 2026-08-24
       - name: Colt Data Centre Services
-        relation: same_organisation
-        status: proposed
+        relation: subsidiary_of
+        status: confirmed
+        company_number: "07306352"
         evidence:
           - source: barbour
             ref: "client role block"
             note: Client on four Barbour projects; also the operator name in data/external_sources/operator-claims.yaml.
             date: 2026-08-23
+          - source: companies_house
+            ref: "07306352"
+            note: Luke looked up on Lurch (the Guardian's land and property research tool). Subsidiary of Colt Technology Services Group Limited 
+            date: 2026-08-24
 
   - group: Corscale Data Centers
+    note: part of Patrinely and Affinius Capital (US).
     members:
       - name: UK Court Lane DC Limited
         relation: spv_of
@@ -146,3 +210,4 @@ groups:
             ref: "12684006"
             note: Client of record on Court Lane 140 MW with Corscale Data Centers as end user; whether the client is Corscale's vehicle or a developer acting for it is the judgement to confirm.
             date: 2026-08-23
+            
