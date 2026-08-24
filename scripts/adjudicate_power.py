@@ -517,6 +517,118 @@ GENERATION_SCHEMA = {
     "additionalProperties": False,
 }
 
+# ---------------------------------------------------------------------------
+# The label audit (§4.1e): does a finding's family match what it says?
+# ---------------------------------------------------------------------------
+#
+# Here rather than in its own file because of the standing rule in §3:
+# any new adjudication question extends the one prompt file every route
+# imports, under its own version, never a second copy.
+#
+# The question is narrow on purpose. It is NOT "what is this finding
+# about" — re-extracting 10,605 rows would invite a second opinion on
+# work that is already stored with its quote. It is "does the family
+# this row is filed under fit its text", which has a defensible default:
+# leave it alone.
+#
+# Which is the whole shape of the loss here. A flag REMOVES a row from
+# the evidence a reader sees under a family. A row wrongly flagged costs
+# a reporter a real quote they would have read; a row wrongly left costs
+# them a moment working out why landscape prose is filed under IT load.
+# The first is worse, so `unclear` is a first-class answer and the
+# prompt says to reach for it (Luke, 2026-08-24: better unclear than
+# wrong).
+LABEL_AUDIT_PROMPT_VERSION = "label-1.0"
+
+LABEL_AUDIT_PROMPT = """\
+You are auditing how extracted findings from UK planning documents have
+been filed, for an investigative journalism project on data centres.
+
+Each finding below was extracted by another model, which named what it
+had found in its own words (the LABEL) and quoted the text it found it
+in (the TEXT). Those free-text labels were then mapped into a fixed set
+of families, and the FAMILY on each row is the result.
+
+Your question is only this: **does the family fit the text?**
+
+You are not asked what the finding is about, and you are not asked
+whether the label is the best one. A row is filed correctly if a
+reporter looking under that family would expect to find this text
+there.
+
+%(vocabulary)s
+
+Answer for each finding:
+
+  "verdict"
+    "fits"          the text belongs under this family.
+    "does_not_fit"  the text plainly belongs under a different family —
+                    it is about another subject entirely, not merely a
+                    less good match. Name that family.
+    "unclear"       the text does not settle it: it is too short, too
+                    generic, spans several subjects, or is a fragment
+                    that could sit under more than one family.
+
+**Reach for "unclear" rather than "does_not_fit" whenever you hesitate.**
+A "does_not_fit" verdict removes this text from what a reporter reads
+under that family, and a quote wrongly removed is worse than a quote
+filed under an imperfect heading. A text that mentions several subjects
+FITS the family of any of them.
+
+  "suggested_family"  only for "does_not_fit": the family it belongs
+                      under, from the list above. Null otherwise.
+  "evidence_span"     the shortest VERBATIM run of characters from the
+                      finding's own TEXT that decides it — copied
+                      exactly. A span that does not appear in the text
+                      character for character is treated as a failure.
+  "reasoning"         one short sentence naming what in the text decided
+                      it.
+
+Return strict JSON: {"labels": [...]}. No prose outside the JSON.
+
+FINDINGS:
+%(findings)s
+"""
+
+LABEL_AUDIT_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "labels": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "finding_id": {"type": "integer"},
+                    "verdict": {"type": "string",
+                                "enum": ["fits", "does_not_fit", "unclear"]},
+                    "suggested_family": {"type": ["string", "null"]},
+                    "evidence_span": {"type": "string"},
+                    "reasoning": {"type": "string"},
+                },
+                "required": ["finding_id", "verdict", "suggested_family",
+                             "evidence_span", "reasoning"],
+                "additionalProperties": False,
+            },
+        }
+    },
+    "required": ["labels"],
+    "additionalProperties": False,
+}
+
+
+def render_label_findings(rows: list[dict]) -> str:
+    """The findings block of LABEL_AUDIT_PROMPT: the family on trial, the
+    extractor's own label, and the text it is filed against."""
+    out = []
+    for r in rows:
+        text = " ".join((r["value_text"] or "").split())
+        out.append(f'- finding_id {r["finding_id"]}\n'
+                   f'  family: {r["signal_family"]}\n'
+                   f'  label: {r["signal_type"]}\n'
+                   f'  text: "{text}"')
+    return "\n".join(out)
+
+
 # The universe of the generation questions: every finding some route has
 # adjudicated as this development's own on-site generation. DISTINCT ON
 # picks one verdict per finding the way the reader's rollup does, so the
