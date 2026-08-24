@@ -139,3 +139,70 @@ def test_order_of_rows_does_not_matter():
         rotations = [rows[i:] + rows[:i] for i in range(len(rows))]
         results = {generation_figure(r) for r in rotations}
         assert len(results) == 1, results
+
+
+# ---------------------------------------------------------------------------
+# §4.1e: where the adjudication has answered, it decides
+# ---------------------------------------------------------------------------
+# Each row is (value_mw, quote, figure_basis, plant_type, unit_count,
+# unit_rating_mw). The pattern rules above read only the quote; these
+# read the passage, and 17 of 72 sites' headline figure changed meaning
+# when they did.
+
+def test_a_battery_filed_as_energy_capacity_is_not_the_site_s_generation():
+    """Rover Way: 1,000 MW against 'battery storage' on a planning form."""
+    g = generation_figure([
+        (1000.0, "Energy capacity:1000 Megawatts", "not_generation",
+         "storage", None, None)])
+    assert g.value_mw is None and g.basis == ""
+    assert g.excluded_n == 1 and g.excluded_mw == 1000.0
+    assert "1000 MW" in g.note and "not generation" not in g.note.lower()[:20]
+    assert "no generation figure is shown" in g.note
+
+
+def test_a_withheld_figure_is_counted_beside_the_one_that_stands():
+    g = generation_figure([
+        (300.0, "a collective combustion installation of more than 300mw of "
+                "heat output", "not_generation", "unclear", None, None),
+        (50.0, "20 no. 2,499 kW natural gas engines with a combined capacity "
+               "of just under 50 MW", "stated_group_total", "prime_combustion",
+         20, 2.499)])
+    assert g.value_mw == 50.0 and g.basis == "as stated"
+    assert g.excluded_n == 1 and g.excluded_mw == 300.0
+    assert "1 further figure" in g.note and "300 MW" in g.note
+    assert "plant intended to run" in g.note
+
+
+def test_the_adjudicated_per_unit_rating_carries_its_count():
+    g = generation_figure([
+        (3.2, "112 No. standby generators (likely to be 3.2MWe)",
+         "per_generator", "standby_combustion", 112, 3.2)])
+    assert g.basis == "per unit" and g.unit_count == 112
+    assert g.plant_type == "standby_combustion"
+    assert "Not multiplied" in g.note and "standby combustion" in g.note
+
+
+def test_an_unsettled_figure_says_so_rather_than_as_stated():
+    g = generation_figure([
+        (46.9, "Total: 46.9 MW", "unclear", "unclear", None, None)])
+    assert g.basis == "not settled"
+    assert "does not settle" in g.note
+    assert "do not say how the plant is intended to run" in g.note
+
+
+def test_an_unadjudicated_row_still_gets_the_pattern_label():
+    """The corpus grows daily, so a figure adjudicated since the last
+    batch must not lose its label."""
+    g = generation_figure(WATFORD)
+    assert g.basis == "per unit" and g.unit_count == 112
+
+
+def test_the_adjudication_outranks_the_pattern_rules():
+    """Watford's quote states a count and a rating, which the pattern
+    rules read as per-unit; an adjudication that read the passage and
+    said otherwise wins."""
+    g = generation_figure([
+        (3.2, "112 No.  standby generators (likely to be 3.2MWe Rolls Royce "
+              "MTU DS4000 20V4000 G94LF )", "stated_group_total",
+         "standby_combustion", None, None)])
+    assert g.basis == "as stated"

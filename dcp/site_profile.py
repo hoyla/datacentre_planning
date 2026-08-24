@@ -272,25 +272,56 @@ def generator_profile(counts, fuel_texts) -> GeneratorProfile:
 #
 # Nothing here multiplies. A count and a rating from the documents are
 # reported beside each other, and the figure is labelled for what the
-# passage that states it says it is: a per-unit rating, or the figure as
-# stated. A proper answer — per unit, fleet total or site total, for
-# every generation row — is a batch adjudication question and is planned
-# as one (docs/READER_REDESIGN_PLAN.md §4.1e); this is the deterministic
-# label that stops the number being read as the site's generation until
-# then. It only fires when a passage states a count or "each" *and* the
-# rating it gives matches the stored figure, so it cannot promote a total
-# to a unit rating: "1.5–3 MW per unit (7.5–15 MW total)" stored as 15
-# stays "as stated".
+# passage that states it says it is.
+#
+# **Since 2026-08-24 that label is adjudicated, not inferred** (§4.1e).
+# Every one of the 1,667 figures was asked two questions against the
+# PASSAGE around its quote — is this one machine, a stated group, one
+# installation or the site; and is the plant standby, prime, renewable or
+# storage — and the answers are in `generation_adjudication`. Where a
+# figure has one, it decides; the pattern rules below stay as the
+# fallback for a figure adjudicated since (the corpus grows daily) and as
+# the source of a unit count where the model reported none.
+#
+# The batch changed what the page says. 17 of 72 sites' headline
+# generation figure turned out not to be a generation figure at all —
+# 1,696 MW of it — including Rover Way's 1,000 MW ("Energy
+# capacity:1000 Megawatts" against "battery storage" on a planning form),
+# North Hyde Gardens' 300 MW (an EIA threshold: "a collective combustion
+# installation of more than 300mw of HEAT output") and Reading Quarry's
+# 28 MW (a thermal output beside an 11 MWe electrical one). A figure
+# whose basis is `not_generation` is kept off this line and COUNTED in
+# its place, because a number that vanishes without explanation is worse
+# than the wrong number it replaced.
+#
+# The pattern rules only fire when a passage states a count or "each"
+# *and* the rating it gives matches the stored figure, so they cannot
+# promote a total to a unit rating: "1.5–3 MW per unit (7.5–15 MW total)"
+# stored as 15 stays "as stated".
+
+# The latest generation verdict per finding. Latest, not best: a re-run
+# under a better prompt supersedes its predecessor the same way the
+# reading gate's rows do, and both stay on the record.
+GENERATION_VERDICT_CTE = """
+gen_adj AS (
+  SELECT DISTINCT ON (finding_id) finding_id, figure_basis, plant_type,
+         unit_count, unit_rating_mw, span_verified
+  FROM generation_adjudication
+  ORDER BY finding_id, inserted_at DESC, id DESC)
+"""
 
 GENERATION_FIGURE_SQL = """
 WITH adj AS (
   SELECT DISTINCT ON (finding_id) finding_id, verdict, quantity_type, value_mw,
          application_id
   FROM power_adjudication
-  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC)
-SELECT s.site_key, adj.value_mw, f.evidence_text
+  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC),
+""" + GENERATION_VERDICT_CTE + """
+SELECT s.site_key, adj.value_mw, f.evidence_text,
+       g.figure_basis, g.plant_type, g.unit_count, g.unit_rating_mw
 FROM adj
 JOIN findings f ON f.id = adj.finding_id
+LEFT JOIN gen_adj g ON g.finding_id = adj.finding_id
 JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id
@@ -374,24 +405,125 @@ def _fleets_disclosed(quote: str) -> list[tuple[int, float]]:
 @dataclass(frozen=True)
 class GenerationFigure:
     value_mw: float | None      # the headline figure: the largest adjudicated
-    basis: str                  # "per unit", "as stated", or "" with no figure
+    basis: str                  # "per unit", "as stated", "not settled", or ""
     unit_mw: float | None       # a per-unit rating the documents state
     unit_count: int | None      # units disclosed at that rating, if stated
     note: str                   # reader-facing qualification, or ""
+    plant_type: str = ""        # adjudicated duty: standby, prime, renewable…
+    excluded_n: int = 0         # figures kept off this line as not generation
+    excluded_mw: float | None = None    # the largest of them
+
+
+# What the adjudicated basis means on a reader's row. `not_generation`
+# has no label because such a figure never becomes a headline; it is
+# counted instead.
+_BASIS_LABEL = {
+    "per_generator": "per unit",
+    "stated_group_total": "as stated",
+    "installation_total": "as stated",
+    "site_total": "as stated",
+    "unclear": "not settled",
+}
+_PLANT_WORDS = {
+    "standby_combustion": "standby combustion plant",
+    "prime_combustion": "plant intended to run",
+    "renewable": "renewable generation",
+    "storage": "storage, which is not generation",
+    "mixed": "plant of more than one kind",
+}
+
+
+def _adjudicated(rows):
+    """The headline from the adjudicated rows, or None if none carries a
+    verdict. Figures the adjudication calls `not_generation` are removed
+    from candidacy and reported as a count.
+
+    A verdict resting on a span that did not verify is still used: the
+    span is the model's citation, and where it failed the answer is
+    almost always `unclear` anyway (14 of the 42 had no cached page to
+    quote at all). What must not happen is a figure quietly changing
+    meaning, so the count of what was set aside travels with the figure.
+    """
+    judged = [r for r in rows if r[2]]
+    if not judged:
+        return None
+    excluded = [r for r in judged if r[2] == "not_generation"]
+    standing = [r for r in judged if r[2] != "not_generation"]
+    n_ex, mw_ex = len(excluded), (max(r[0] for r in excluded) if excluded else None)
+    if not standing:
+        # Every figure on the site is heat, fuel, an annual total or a
+        # battery. The line says so rather than showing the largest.
+        return GenerationFigure(
+            None, "", None, None,
+            f"{n_ex} figure{'s' if n_ex != 1 else ''} on this site "
+            f"{'were' if n_ex != 1 else 'was'} read as thermal, fuel, "
+            f"stored or consumed energy rather than generation — the "
+            f"largest of them {mw_ex:g} MW — so no generation figure is "
+            f"shown.", "", n_ex, mw_ex)
+    headline, quote, basis, plant, count, rating = standing[0]
+    label = _BASIS_LABEL.get(basis, "")
+    duty = _PLANT_WORDS.get(plant or "", "")
+    bits = []
+    if basis == "per_generator":
+        how_many = (f"the documents disclose {count:,} units of {headline:g} MW"
+                    if count else
+                    f"the documents describe units of {headline:g} MW each and "
+                    "do not say how many in the same passage")
+        bits.append(f"A per-unit rating, not the site's generation: {how_many}. "
+                    "Not multiplied — a count and a rating are reported beside "
+                    "each other, never combined into a total.")
+    elif basis == "unclear":
+        bits.append("The passage that states this figure does not settle "
+                    "whether it describes one machine, a group of them or the "
+                    "whole site, so it is shown without a claim about which.")
+    else:
+        bits.append("As stated in the documents.")
+    if duty:
+        bits.append(f"The documents describe it as {duty}.")
+    elif plant == "unclear":
+        bits.append("The documents do not say how the plant is intended to "
+                    "run.")
+    if n_ex:
+        bits.append(f"{n_ex} further figure{'s' if n_ex != 1 else ''} on this "
+                    f"site {'were' if n_ex != 1 else 'was'} read as thermal, "
+                    f"fuel, stored or consumed energy rather than generation "
+                    f"(largest {mw_ex:g} MW) and {'are' if n_ex != 1 else 'is'} "
+                    f"not counted here.")
+    return GenerationFigure(headline, label,
+                            rating if rating else (headline if basis == "per_generator" else None),
+                            count, " ".join(bits), plant or "", n_ex, mw_ex)
 
 
 def generation_figure(rows) -> GenerationFigure:
     """Label the site's generation figure by what its own passages say.
 
-    `rows` are (value_mw, evidence_text) pairs for every adjudicated
-    on-site generation figure on the site, in any order; the result does
-    not depend on the order (see test_reproducible_ordering for why that
+    `rows` are (value_mw, evidence_text) pairs — optionally followed by
+    the adjudicated (figure_basis, plant_type, unit_count,
+    unit_rating_mw) for that figure — for every adjudicated on-site
+    generation figure on the site, in any order; the result does not
+    depend on the order (see test_reproducible_ordering for why that
     matters here).
+
+    Where the adjudication has answered, it decides: it read the passage
+    around the quote, and the pattern rules below read only the quote.
+    They remain for figures adjudicated since the last batch — the corpus
+    grows daily — and are what a test written against a bare quote
+    exercises.
     """
-    rows = sorted(((float(v), q or "") for v, q in rows if v),
-                  key=lambda r: (-r[0], r[1]))
+    widened = []
+    for r in rows:
+        v, q = r[0], r[1]
+        if not v:
+            continue
+        rest = tuple(r[2:]) + (None,) * (4 - len(r[2:]))
+        widened.append((float(v), q or "") + rest)
+    rows = sorted(widened, key=lambda r: (-r[0], r[1]))
     if not rows:
         return GenerationFigure(None, "", None, None, "")
+    judged = _adjudicated(rows)
+    if judged is not None:
+        return judged
+    rows = [(r[0], r[1]) for r in rows]
     headline = rows[0][0]
     fleets = sorted({f for _, q in rows for f in _fleets_disclosed(q)},
                     key=lambda f: (-(f[0] * f[1]), -f[0], -f[1]))
@@ -1308,8 +1440,10 @@ def load_site_profiles(conn) -> dict[str, dict]:
     gen_rows: dict[str, list] = defaultdict(list)
     with conn.cursor() as cur:
         cur.execute(GENERATION_FIGURE_SQL)
-        for site_key, value_mw, quote in cur.fetchall():
-            gen_rows[site_key].append((value_mw, quote))
+        for (site_key, value_mw, quote, basis, plant,
+             count, rating) in cur.fetchall():
+            gen_rows[site_key].append((value_mw, quote, basis, plant, count,
+                                       float(rating) if rating else None))
     for site_key, rows in gen_rows.items():
         g = generation_figure(rows)
         p = profiles.setdefault(site_key, {})
@@ -1317,6 +1451,12 @@ def load_site_profiles(conn) -> dict[str, dict]:
         p["gen_unit_mw"] = g.unit_mw
         p["gen_unit_count"] = g.unit_count
         p["gen_figure_note"] = g.note
+        p["gen_plant_type"] = g.plant_type
+        # No silent gaps: a figure kept off the generation line is
+        # counted where it stood, and the reader says why.
+        p["gen_excluded_n"] = g.excluded_n
+        p["gen_excluded_mw"] = g.excluded_mw
+        p["gen_headline_mw"] = g.value_mw
 
     for site_key, parties in _parties_for_sites(conn).items():
         profiles.setdefault(site_key, {}).update(parties)
