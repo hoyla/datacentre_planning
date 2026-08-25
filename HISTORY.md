@@ -968,6 +968,56 @@ existence. Barbour's own Wapseys record (Ptno 12913776, address
 phantom "no application submitted yet" site beside the real one it
 could not name.
 
+### Carrying the stubs into sites, and what that turned up (2026-08-25)
+
+Everything the stubs needed to cluster is now in place: dc_build
+verdicts (all three `pre_application`, so all three are in-universe),
+coordinate priors for each — the Dartford one converted from the
+applicant's own grid reference, `E 561948 N 171563`, cross-checked
+two ways — and a new kind of prior for a problem the corpus had not
+hit before.
+
+**A provider pin can be wrong in a way that merges campuses.** Barbour
+places the Wapseys Wood scheme at 51.5105, -0.5950 — Slough, 8.5 km
+south of the address on its own record, and inside the former Akzo
+Nobel cluster's radius. The pin created a spatial edge, and the
+scheme's Barbour record joined a campus it has nothing to do with.
+(The same record's authority field says "Cherwell", which is wrong the
+same way; the Guardian question is what made anyone look.) So
+`inferred_coords.yaml` now takes `ptno:` entries beside its `ref:`
+ones, overriding a project's coordinates at clustering time while the
+provider's row stays verbatim in the database — principle 3, the same
+shape as every other prior here. An entry naming a Ptno the corpus
+does not hold fails the run, as `site_partitions.yaml` does, because a
+typo would silently leave the false edges standing.
+
+With that in, the dry run clusters all three correctly. The run itself
+**refuses**, on two things the stubs did not cause:
+
+- **Four hand-adjudicated capacity claims would silently empty.**
+  Their sites retire into merged clusters, and a match to a retired
+  site does not error — it renders through a `retired_at IS NULL` join
+  and stops appearing. That is the one consequence here a re-run
+  cannot undo by itself, because re-pointing a match needs the
+  judgement that made it. `sites.preflight()` now names each such
+  claim and where its members went, and `materialise_sites.py` refuses
+  rather than proceeding.
+- **A 63-application, 16-project cluster spanning 9 km of east
+  London** — Interxion, G Park Docklands, Telehouse, Global Switch,
+  Republic — chained by spatial edges through a dense corridor. Site
+  61 again, needing the same remedy of adjudicated partitions. Worth
+  being clear that this is **latent in main already**: the clustering
+  code produces it today, and only the sites table being stale since
+  2026-08-20 has kept it out of sight. Materialising was going to
+  surface it whenever it next ran; the stubs just made someone run it.
+
+The lesson is the one the refusal encodes: a materialise had been
+described as safe because it is idempotent and retires rather than
+deletes, and that is true of everything it owns. It is not true of what
+other people adjudicated *against* its keys. Anything hand-made that
+points at a generated identifier needs the generator to say out loud
+what it is about to invalidate.
+
 ---
 
 ## How this project is worked on

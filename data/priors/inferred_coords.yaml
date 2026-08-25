@@ -115,3 +115,51 @@ entries:
       Bidder Street, Canning Town") is identical to
       TowerHamlets/PA/24/01150/NC (rank 46) which has PlanIt coords
       (51.51779, 0.00377). Coords cloned from sibling on 2026-05-17.
+
+  # The three Section 35 Direction stubs (dcp/sources/s35.py). A gov.uk
+  # publication carries no coordinates, so each stub takes the best
+  # primary-source anchor for the land it describes.
+  - ref: data-centre-campus-wapseys-wood-buckinghamshire-section-35-direction-planning-act-2008
+    lat: 51.58726
+    lon: -0.59455
+    source: |
+      Same scheme as NSIP register row EN0110030 (SDC M40 Campus) —
+      the direction the register entry followed from. Coords are the
+      register's own GPS for EN0110030 (51.58726008957555,
+      -0.5945505216141749). Cloned 2026-08-25.
+  - ref: data-centre-campus-ampthill-road-bedford-in-central-bedfordshire-section-35-direction-planning-act-2008
+    lat: 52.072922
+    lon: -0.489092
+    source: |
+      Same land as Barbour Ptno 12669230 ("Home of Production", Quest
+      Pit, Ampthill Road, Houghton Conquest) — the direction is for
+      QuestPit Limited's campus on the same pit; the applicant's request
+      statement gives the site as Ampthill Road, Stewartby (MK45 3JP,
+      matching Barbour's postcode). Coords are Barbour's for 12669230.
+      Cloned 2026-08-25.
+  - ref: data-centre-campus-new-barn-road-dartford-section-35-direction-planning-act-2008
+    lat: 51.41995
+    lon: 0.32772
+    source: |
+      The applicant's supporting statement (cached at
+      data/seed_cases/dartford_ebbsfleet/Supporting_Statement_for_S35.pdf)
+      states "National Grid Reference: Easting 561948, Northing 171563"
+      for the 58.5 ha site adjacent to New Barn Road. Converted
+      OSGB36 -> WGS84 2026-08-25 (OS transverse-Mercator + Helmert
+      formulae, verified against the OS guide's worked example; ~5 m).
+
+  # Barbour project pins. A `ptno:` entry overrides the provider's own
+  # coordinates at clustering time, for records that contradict
+  # themselves; the raw Barbour row is untouched (dcp/sites.py).
+  - ptno: "12913776"
+    lat: 51.58726
+    lon: -0.59455
+    source: |
+      Barbour's pin (51.510536, -0.595041) sits in Slough, 8.5 km south
+      of the address on the same record ("Wapseys Wood Landfill, S/O
+      A40 Oxford Road, Hedgerley Green", SL9 8TD) — and inside the
+      former Akzo Nobel campus cluster's 1 km radius, which it falsely
+      bridged. The record's authority field is wrong the same way
+      ("Cherwell"). Corrected to the NSIP register's GPS for the same
+      scheme (EN0110030: 51.58726008957555, -0.5945505216141749).
+      2026-08-25.
