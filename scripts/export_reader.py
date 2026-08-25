@@ -1194,7 +1194,15 @@ tr.breakdown>td{color:var(--mut)}
    cannot fork. Everything that sat in a row sits in a column, and the
    two rules that made a horizontal bar work (the sticky offset and the
    count pushed right by an auto margin) are undone. */
-#filterbar.down-the-side{position:static;margin:0 -16px;
+/* display:contents above the table, so the bar is a wrapper for moving
+   the controls about and not a box they live inside. `.controls` is
+   position:sticky, and a sticky element sticks within its PARENT's box —
+   so once the bar became that parent the filter bar scrolled away at
+   177px and left the table's header row pinned on its own with a gap
+   above it (Luke, 2026-08-25). Down the side of the map it is a real
+   box again, because there it is the thing being laid out. */
+#filterbar{display:contents}
+#filterbar.down-the-side{display:block;position:static;margin:0 -16px;
   border-bottom:1px solid var(--line)}
 #filterbar.down-the-side .controls{position:static;flex-direction:column;
   align-items:stretch;gap:9px;padding:0 16px 12px}
@@ -1698,11 +1706,14 @@ JS = """
 function sticky(){
   const nav=document.querySelector('nav.top');
   const navH=nav?nav.getBoundingClientRect().height:41;
-  // Only when the bar is the one across the top. Standing down the side
-  // of the map it is 700px tall and offsets nothing.
+  // The pinned strip is `.controls`, not the whole bar: the chips scroll
+  // away under it and the table's header row pins directly beneath it.
+  // Measuring the bar put the header 104px lower than the thing it is
+  // supposed to sit against. Nothing to offset when the bar is standing
+  // down the side of the map.
   const fb=document.getElementById('filterbar');
-  const bar=(fb && !fb.hidden && !fb.classList.contains('down-the-side'))
-    ? fb : null;
+  const on=fb && !fb.hidden && !fb.classList.contains('down-the-side');
+  const bar=on ? fb.querySelector('.controls') : null;
   const barH=bar?bar.getBoundingClientRect().height:0;
   const r=document.documentElement.style;
   r.setProperty('--nav-h', navH+'px');
