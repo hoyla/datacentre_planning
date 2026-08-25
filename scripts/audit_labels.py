@@ -38,6 +38,7 @@ import csv
 import importlib.util
 import json
 import os
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -68,6 +69,9 @@ SAMPLE_SIZE = 60
 FINDINGS_PER_REQUEST = 40
 MAX_COMPLETION_TOKENS = 32000
 VERDICTS = ("fits", "does_not_fit", "unclear")
+# The 25, from the same source the prompt shows the model, so the sheet
+# and the question cannot offer different sets.
+FAMILIES = frozenset(signal_families.PROMPT_FAMILY_ENUM)
 
 # The reader's own selection, so the audit covers exactly the rows a
 # reader can see. Read out of export_reader rather than copied, because
@@ -227,6 +231,72 @@ def run_model(rows: list[dict], model: str, effort: str,
 # are the ones that ACT: a flag the person did not agree with is the
 # expensive error, and a flag missed is the status quo.
 
+# A note is prose, so a family is looked for in it rather than parsed
+# out of it: "may also need to be findable under development scale" and
+# "also: development_scale" both name the same family. Underscores,
+# spaces and hyphens are the same character for this purpose.
+def _families_named(note: str) -> list[str]:
+    flat = re.sub(r"[\s\-]+", "_", (note or "").lower())
+    return [f for f in sorted(FAMILIES) if f in flat]
+
+
+COVERAGE_SQL = """
+SELECT count(*) FILTER (WHERE f.document_id = %(doc)s)          AS in_doc,
+       count(*)                                                  AS in_site
+FROM findings f
+JOIN site_members m ON m.application_id = f.application_id
+     AND m.retired_at IS NULL
+JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+WHERE s.site_key = %(site)s AND f.signal_family = %(family)s
+  AND f.id <> %(fid)s
+"""
+
+
+def notes_coverage(conn, rows: list[dict], hand: dict[str, dict]) -> list[str]:
+    """For every note naming another family, whether the corpus holds it.
+
+    A person marking the sheet can see that a passage carries a second
+    subject; they cannot see whether anything else on the site already
+    carries that subject, which is a question for the database (Luke,
+    2026-08-25). So the note says what they saw and this answers the
+    part they could not.
+
+    Nothing here changes a verdict. A row whose second subject is
+    already covered elsewhere is not a better-filed row; it is the same
+    row on a site that loses nothing by it.
+    """
+    by_id = {str(r["finding_id"]): r for r in rows}
+    out, asked = [], 0
+    with conn.cursor() as cur:
+        for fid, h in hand.items():
+            named = _families_named(h.get("note", ""))
+            r = by_id.get(fid)
+            if not named or not r:
+                continue
+            cur.execute("SELECT document_id FROM findings WHERE id = %s", (int(fid),))
+            got = cur.fetchone()
+            doc = got[0] if got else None
+            for family in named:
+                if family == r["signal_family"]:
+                    continue
+                asked += 1
+                cur.execute(COVERAGE_SQL, {"doc": doc, "site": r["site_key"],
+                                           "family": family, "fid": int(fid)})
+                in_doc, in_site = cur.fetchone()
+                where = ("also in this document" if in_doc else
+                         f"elsewhere on this site ({in_site})" if in_site else
+                         "NOWHERE on this site")
+                out.append(f"  finding {fid} · filed {r['signal_family']} · "
+                           f"note names {family}: {where}")
+    if not asked:
+        return []
+    covered = sum(1 for line in out if "NOWHERE" not in line)
+    return ([f"\n{asked} note{'' if asked == 1 else 's'} name a second family; "
+             f"{covered} already covered, {asked - covered} not"] + out
+            + ["  A row is not misfiled for carrying two subjects — mark those "
+               "`fits`. This says which second subjects the corpus loses."])
+
+
 def score(rows: list[dict], hand: dict[str, dict], run: dict) -> list[str]:
     answers = run.get("answers", {})
     out, checked = [], 0
@@ -274,16 +344,44 @@ def score(rows: list[dict], hand: dict[str, dict], run: dict) -> list[str]:
     return out
 
 
-def read_hand_sheet(path: Path) -> dict[str, dict]:
+def _sheet_rows(path: Path) -> list[dict]:
+    """The hand sheet, from the CSV or from the workbook it was saved as.
+
+    The sheet goes out as CSV and comes back however the person marking
+    it up saved it. Excel's default is .xlsx, and asking for a round trip
+    back to CSV is a step that will be forgotten once and lose an
+    afternoon's marking.
+    """
+    if path.suffix.lower() in (".xlsx", ".xlsm"):
+        from openpyxl import load_workbook
+        ws = load_workbook(path, read_only=True, data_only=True).active
+        rows = ws.iter_rows(values_only=True)
+        head = [str(c or "").strip() for c in next(rows)]
+        return [{h: ("" if v is None else str(v)) for h, v in zip(head, r)}
+                for r in rows]
     with path.open(encoding="utf-8-sig", newline="") as fh:
-        rows = list(csv.DictReader(fh))
+        return list(csv.DictReader(fh))
+
+
+def read_hand_sheet(path: Path) -> dict[str, dict]:
+    rows = _sheet_rows(path)
     hand = {}
     for r in rows:
         fid = (r.get("finding_id") or "").strip()
-        v = (r.get("verdict") or "").strip()
+        v = (r.get("verdict") or "").strip().lower()
         if v and v not in VERDICTS:
             sys.exit(f"row {r.get('row')}: verdict {v!r} is not one of "
                      f"{', '.join(VERDICTS)}")
+        # A suggested family is what a `does_not_fit` is FOR — the row is
+        # demoted to it — so one that is not a family would move a real
+        # quote somewhere that does not exist.
+        sug = (r.get("suggested_family") or "").strip()
+        if v == "does_not_fit" and sug not in FAMILIES:
+            sys.exit(f"row {r.get('row')}: does_not_fit needs a suggested_family "
+                     f"from the 25; {sug!r} is not one of them")
+        if v != "does_not_fit" and sug:
+            sys.exit(f"row {r.get('row')}: suggested_family {sug!r} on a "
+                     f"{v or 'blank'} verdict — it applies only to does_not_fit")
         if fid:
             hand[fid] = {"verdict": v,
                          "suggested_family": (r.get("suggested_family") or "").strip(),
@@ -390,8 +488,10 @@ def main() -> int:
             sys.exit(f"no filled sheet at {hand_path}")
         if not run_path.exists():
             sys.exit(f"no model answers at {run_path} — run --run first")
-        print("\n".join(score(sample, read_hand_sheet(hand_path),
-                              json.loads(run_path.read_text()))))
+        hand = read_hand_sheet(hand_path)
+        print("\n".join(score(sample, hand, json.loads(run_path.read_text()))))
+        with db.connect() as conn:
+            print("\n".join(notes_coverage(conn, sample, hand)))
     if args.batch:
         do_batch(rendered, args.model, args.reasoning_effort, args.workers,
                  submit=args.submit)
