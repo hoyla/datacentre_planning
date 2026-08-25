@@ -57,6 +57,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
 from dcp import release  # noqa: E402
+from dcp import spans  # noqa: E402
 from dcp import db  # noqa: E402
 from dcp import deepread_select  # noqa: E402
 
@@ -2253,10 +2254,11 @@ def main() -> int:
         if cur.fetchone()[0]:
             cur.execute("""
                 SELECT DISTINCT ON (finding_id) finding_id, verdict,
-                       coalesce(suggested_family, '')
+                       coalesce(suggested_family, ''), coalesce(evidence_span, '')
                 FROM finding_label_audit
                 ORDER BY finding_id, inserted_at DESC, id DESC""")
-            label_verdicts = {fid: (v, fam) for fid, v, fam in cur.fetchall()
+            label_verdicts = {fid: (v, fam, span)
+                              for fid, v, fam, span in cur.fetchall()
                               if v in ("does_not_fit", "not_a_finding")}
         # `not_a_finding` is the one verdict that takes a row off this
         # list rather than moving it, because there is nowhere to move it
@@ -2266,10 +2268,21 @@ def main() -> int:
         # workbook, and the count of what was withheld is printed at the
         # end of the build. What changes is that a reporter reading a
         # site's evidence is not handed text that states nothing.
-        n_demoted = n_not_findings = 0
+        # A verdict acts only if its citation still stands. The stored
+        # `span_verified` is what the gate said when the row was written,
+        # and the gate has changed since — it could not see a citation
+        # written with an ellipsis, which is what all four unverified
+        # flags turned out to be. So the check is made here, against the
+        # finding's own text, by the same function that guarded storage.
+        # A flag that cannot show its words in the text does not move a
+        # reader's quote; it is counted instead.
+        n_demoted = n_not_findings = n_unsupported = 0
         for k, st, vt, vn, vu, verdict, fam, fid in _raw_findings:
             filed_as = ""
             moved = label_verdicts.get(fid)
+            if moved and not spans.verify_span(moved[2], vt or ""):
+                n_unsupported += 1
+                moved = None
             if moved and moved[0] == "not_a_finding":
                 n_not_findings += 1
                 continue
@@ -5026,7 +5039,9 @@ def main() -> int:
         print(f"  Label audit: {n_demoted:,} rendered findings moved to the "
               f"family the audit says fits, each marked with where it was "
               f"filed; {n_not_findings:,} withheld as not findings at all "
-              f"(still in the database, the CSVs and the workbook)")
+              f"(still in the database, the CSVs and the workbook); "
+              f"{n_unsupported:,} verdicts ignored because their citation "
+              f"is not in the finding's text")
     else:
         print("  Label audit: no verdicts stored, so nothing moved")
     if args.no_readings:
