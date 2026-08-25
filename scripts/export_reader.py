@@ -159,6 +159,89 @@ FINDINGS_SQL = """
             ORDER BY site_key, rn"""
 
 
+# §5's "Adjudicated power figures": the figure, and everything a reporter
+# needs to check it — the extractor's own words for the quantity, the
+# quote, the page, the model that read it, the date the document was
+# fetched. The site page has been showing the value and an application
+# reference, which names where to look but not what was found there.
+#
+# One row per (site, quantity): the largest figure adjudicated as this
+# site's own, which is the figure the sites table and the estimate both
+# take. `DISTINCT ON` picks it, so the provenance cannot describe a
+# different finding from the one the number came from.
+SITE_FIGURE_SQL = """
+            WITH latest AS (
+              SELECT DISTINCT ON (finding_id) *
+              FROM power_adjudication
+              ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC,
+                       id DESC)
+            SELECT DISTINCT ON (s.site_key, pa.quantity_type)
+                   s.site_key, pa.quantity_type, pa.value_mw, pa.model,
+                   f.signal_type, f.evidence_text, f.evidence_page,
+                   d.url, d.kind, d.fetched_at, a.application_ref
+            FROM latest pa
+            JOIN findings f ON f.id = pa.finding_id
+            JOIN applications a ON a.id = pa.application_id
+            LEFT JOIN documents d ON d.id = pa.document_id
+            JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
+            JOIN sites s ON s.id = m.site_id
+            WHERE s.retired_at IS NULL AND pa.verdict = 'site_capacity'
+              AND pa.value_mw IS NOT NULL
+            ORDER BY s.site_key, pa.quantity_type, pa.value_mw DESC, pa.id DESC"""
+
+# Editorial rule 4: "highlights never replace data, and a row excluded
+# from a headline is shown with its reason". The panel above shows the
+# figure that won; this shows every figure the adjudicator saw for the
+# site, including the ones it ruled out, with the verdict and the
+# reasoning that ruled them out. Without it the page asserts that its
+# four numbers are the only four numbers in the documents, which for
+# some sites is untrue by two orders of magnitude.
+#
+# Capped per site, because one site carries 3,151 of these. What was
+# cut is stated on the page and the full set is in the site's findings
+# CSV — a silent truncation would read as completeness.
+SITE_ALL_FIGURES_SQL = """
+            WITH latest AS (
+              SELECT DISTINCT ON (finding_id) *
+              FROM power_adjudication
+              ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC,
+                       id DESC),
+            joined AS (
+              SELECT s.site_key, pa.verdict, pa.quantity_type, pa.value_mw,
+                     pa.value_original, pa.unit_original, pa.reasoning,
+                     pa.model, f.signal_type, f.evidence_page, d.url, d.kind,
+                     a.application_ref, pa.id
+              FROM latest pa
+              JOIN findings f ON f.id = pa.finding_id
+              JOIN applications a ON a.id = pa.application_id
+              LEFT JOIN documents d ON d.id = pa.document_id
+              JOIN site_members m ON m.application_id = a.id
+                   AND m.retired_at IS NULL
+              JOIN sites s ON s.id = m.site_id
+              WHERE s.retired_at IS NULL)
+            SELECT * FROM (
+              SELECT j.*, count(*) OVER (PARTITION BY site_key) AS cnt,
+                     row_number() OVER (PARTITION BY site_key
+                       ORDER BY (verdict = 'site_capacity') DESC,
+                                value_mw DESC NULLS LAST, id) AS rn
+              FROM joined j) t
+            WHERE rn <= %s ORDER BY site_key, rn"""
+
+ALL_FIGURES_CAP = 60
+
+# The adjudicator's five answers, in the words the handoff's table uses,
+# with the tone each carries. Green is the only one that feeds a number
+# on this page; the rest are why a figure in the documents is not the
+# site's.
+VERDICT_LABEL = {
+    "site_capacity": ("this site", "v-yes"),
+    "market_context": ("excluded \u2014 market context", "v-out"),
+    "comparator": ("excluded \u2014 another scheme", "v-out"),
+    "policy_target": ("excluded \u2014 policy target", "v-out"),
+    "unclear": ("not settled", "v-maybe"),
+}
+
+
 def _handover():
     spec = importlib.util.spec_from_file_location(
         "export_handover", Path(__file__).parent / "export_handover.py")
@@ -181,13 +264,27 @@ _TENS = ("", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy",
 _ACRONYMS = {"eia": "EIA", "pue": "PUE", "wue": "WUE", "chp": "CHP",
              "hgv": "HGV", "ev": "EV", "suds": "SuDS", "bng": "BNG",
              "sssi": "SSSI", "sac": "SAC", "spa": "SPA", "aonb": "AONB",
-             "ups": "UPS", "hv": "HV", "lv": "LV", "mw": "MW", "uk": "UK"}
+             "ups": "UPS", "hv": "HV", "lv": "LV", "mw": "MW", "uk": "UK",
+             "it": "IT", "pv": "PV", "kw": "kW", "mwh": "MWh", "kwh": "kWh",
+             "bess": "BESS", "co2": "CO\u2082", "hvac": "HVAC",
+             "mva": "MVA", "kva": "kVA", "mwe": "MWe", "dno": "DNO"}
 
 
-def humanise(token: str) -> str:
-    """A snake_case key as a label, with initialisms left as initialisms."""
+def humanise(token: str, *, sentence: bool = False) -> str:
+    """A snake_case key as a label, with initialisms left as initialisms.
+
+    `sentence` capitalises only the first word, for keys quoted inside a
+    sentence: the extractor's `it_load_mw` is "IT load MW" where it is
+    being quoted as its own words, not "It Load MW", which capitalises
+    a pronoun that is not there and title-cases prose that is not a
+    title.
+    """
     words = (token or "").replace("_", " ").split()
-    return " ".join(_ACRONYMS.get(w.lower(), w.capitalize()) for w in words)
+    out = [_ACRONYMS.get(w.lower(), w if sentence else w.capitalize())
+           for w in words]
+    if sentence and out and out[0] not in _ACRONYMS.values():
+        out[0] = out[0][:1].upper() + out[0][1:]
+    return " ".join(out)
 
 
 def mw_text(v: float) -> str:
@@ -478,7 +575,6 @@ ul.rq li{margin-bottom:2px}
 .sitepage{padding:14px 22px 30px}
 .sitenav{margin:0 0 10px;font-size:14.5px}
 .sitepage h2{margin:4px 0 2px;font-size:22px;line-height:1.2}
-.sitewhere{margin:0 0 14px;color:var(--mut);font-size:14.5px}
 #sitehost .grid{margin-top:0}
 /* Signals cards. Square, ruled, no shadow; the count is the one large
    thing on the card because it is the one thing that was computed. */
@@ -687,6 +783,54 @@ tr.detail td{padding:14px 18px 18px 30px}
 .sitename{margin:0 0 6px;font-family:"Source Serif 4",Georgia,serif;
   font-size:32px;line-height:1.15;font-weight:700}
 .siteident{margin:0 0 12px;font-size:15px;color:var(--mut)}
+/* §5's adjudicated power figures. The measurements are the handoff's:
+   a 132px value column, the value in Source Serif at 23px, the quote in
+   serif italic behind a 3px rule. A figure and its evidence read as one
+   object here rather than as a number in one place and a citation in
+   another. */
+.figures .figrow{display:grid;grid-template-columns:132px minmax(0,1fr);
+  gap:18px;align-items:baseline;border-top:1px solid var(--line);
+  padding:13px 0 12px}
+.figval{font-family:"Source Serif 4",Georgia,serif;font-size:23px;
+  font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.figval .figunit{font-size:15px;font-weight:600}
+.figq{font-size:13px;color:var(--mut);margin-top:3px;line-height:1.35}
+.figtold{margin:0;font-size:14px;line-height:1.45;color:var(--ink)}
+.figmeta{margin:4px 0 0;font-size:14px;line-height:1.45}
+.figquote{font-family:"Source Serif 4",Georgia,serif;font-style:italic;
+  font-size:15px;color:var(--ink);border-left:3px solid var(--line);
+  padding-left:12px;margin:7px 0 0;line-height:1.45}
+.figgate{margin:5px 0 0;font-size:13px;color:var(--mut)}
+.figabsent{margin:13px 0 0;font-size:14px;color:var(--mut);line-height:1.5;
+  border-top:1px solid var(--line);padding-top:12px}
+.figsum{margin-top:14px}
+/* Editorial rule 4. The working under the four figures above: every
+   figure the adjudicator saw, the ruled-out ones included, each with
+   the verdict and the reason it was ruled out. */
+.allfigs{margin-top:14px}
+.allfigs>summary{display:inline-block;font-size:14px;font-weight:600;
+  color:var(--brand);background:#fff;border:1px solid var(--brand);
+  border-radius:999px;padding:8px 16px;cursor:pointer;list-style:none;
+  transition:background .13s,color .13s}
+.allfigs>summary:hover{background:var(--brand);color:#fff}
+.allfigs>summary::-webkit-details-marker{display:none}
+.allfigs .scroll{overflow-x:auto;margin-top:14px}
+table.afig{width:100%;border-collapse:collapse;font-size:13px;min-width:900px}
+table.afig th{padding:8px 10px;font-size:11px;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--mut);font-weight:700;
+  border-bottom:1px solid var(--ink);white-space:nowrap}
+table.afig td{padding:8px 10px;border-bottom:1px solid var(--line);
+  vertical-align:top;line-height:1.4}
+table.afig td.n{font-weight:600;white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+table.afig td .q{display:block;margin-top:3px}
+/* The handoff's four pill sets, used here for the adjudicator's answer.
+   Green is the only verdict that feeds a number on the page. */
+.vpill{display:inline-block;font-size:11.5px;font-weight:600;
+  border-radius:999px;padding:1px 8px;white-space:nowrap;border:1px solid}
+.vpill.v-yes{background:#e9f3ec;color:#1d6b38;border-color:#c7e0d0}
+.vpill.v-out{background:#eef1f6;color:#3f5570;border-color:#d6dde8}
+.vpill.v-maybe{background:#fdf0e6;color:#a13a00;border-color:#f2d6bd}
 .sitestate{margin:0 0 12px;display:flex;align-items:center;gap:14px;
   flex-wrap:wrap;font-size:14px;color:var(--mut)}
 .sitestate .rbar{margin:0;flex:0 0 150px}
@@ -1563,10 +1707,6 @@ function openSite(tr){
   while(cell.firstChild) host.appendChild(cell.firstChild);
   openKey=key; openTr=tr; openCell=cell;
   tr.classList.add('open');
-  const name=tr.querySelector('td strong'), where=tr.querySelector('td .q');
-  document.getElementById('sitetitle').textContent=name?name.textContent:key;
-  document.getElementById('sitewhere').textContent=where?where.textContent:'';
-  document.getElementById('sitekey').textContent=key;
   show('site', true);
   siteHash(key);
   window.scrollTo(0,0);
@@ -1901,6 +2041,31 @@ def main() -> int:
                 AND pa.value_mw IS NOT NULL) t
             WHERE rn = 1""")
         power_src = {(k, q): r for k, q, r in cur.fetchall()}
+
+        # §5's figures, with the provenance the handoff asks for.
+        cur.execute(SITE_FIGURE_SQL)
+        fig_prov = {}
+        for (k, qt, v, model, as_written, quote_text, page, url, kind,
+             fetched, ref) in cur.fetchall():
+            fig_prov[(k, qt)] = {
+                "mw": float(v), "model": model, "as_written": as_written,
+                "quote": quote_text or "", "page": page, "url": url or "",
+                "title": mreading.document_title(url, kind) if url else "",
+                "fetched": fetched, "ref": ref}
+
+        # Editorial rule 4's table.
+        cur.execute(SITE_ALL_FIGURES_SQL, (ALL_FIGURES_CAP,))
+        all_figs, all_figs_total = defaultdict(list), {}
+        for (k, verdict, qt, v, v_orig, u_orig, reasoning, model, as_written,
+             page, url, kind, ref, _id, cnt, _rn) in cur.fetchall():
+            all_figs_total[k] = cnt
+            all_figs[k].append({
+                "verdict": verdict, "quantity": qt, "mw": v,
+                "value": v_orig, "unit": u_orig, "reason": reasoning or "",
+                "model": model, "as_written": as_written, "page": page,
+                "url": url or "",
+                "title": mreading.document_title(url, kind) if url else "",
+                "ref": ref})
 
         # External capacity claims: grid-register figures attached to
         # sites by hand-adjudicated inference (dcp/capacity_claims). They
@@ -2445,6 +2610,14 @@ def main() -> int:
         else:
             findings_html = "<p class='help'>No documents held.</p>"
 
+        # §5's caveat banner: one sentence in bold saying what state
+        # this site is in, then what follows from it. The handoff names
+        # five states and the build carried two, so a fully-read site
+        # with no capacity in it looked identical to one nobody had got
+        # to yet.
+        def _banner(head, rest):
+            return f'<div class="banner" style="margin-top:0"><b>{head}</b> {rest}</div>'
+
         # The signals this site matches, as pills on its own page — the
         # same neutral pill the table row uses, because a cohort is a
         # category and colour on this page means the state of a figure.
@@ -2456,19 +2629,6 @@ def main() -> int:
 
         # One banner, stating the plain fact about this site: either its
         # documents are unread, or it has none and here is why.
-        site_banner = ""
-        if not held:
-            lbl, why = site_profile.no_documents_reason(
-                ["pre_application"] if not (n_apps or 0)
-                else site_outcomes.get(key, ()))
-            site_banner = ('<div class="banner" style="margin-top:0"><b>'
-                           + esc(lbl) + '.</b> ' + esc(why) + '</div>')
-        elif is_prov:
-            site_banner = ('<div class="banner" style="margin-top:0"><b>'
-                           'Reading is incomplete.</b> '
-                           + esc(site_profile.provisional_statement(p_held, p_read))
-                           + '</div>')
-
         # Every site gets a Drive folder, including those with nothing in
         # them but a site report — so the label has to say which it is,
         # or "Source documents" sends a reporter to an empty folder.
@@ -2547,6 +2707,72 @@ def main() -> int:
         # the adjudication evidence travels with every row — the match is
         # our inference, so the reasoning has to be one click away.
         site_claims = claims_by_site.get(key, [])
+
+        # Two register rows for one site that do not agree. Only counted
+        # where they measure the same quantity: a grid connection and a
+        # metered consumption differing is not a disagreement.
+        _by_q = defaultdict(set)
+        for _c in site_claims:
+            if _c.get("value_mw") is not None:
+                _by_q[_c["quantity_type"]].add(round(float(_c["value_mw"]), 1))
+        _claim_conflict = any(len(v) > 1 for v in _by_q.values())
+
+        # The state is `cap_key`, not a threshold reinvented here:
+        # site_profile.capacity_status already decides what a site's
+        # emptiness or figure means, and a banner reaching its own
+        # verdict could contradict the status tag two lines above it.
+        # The handoff names five states and the build carried two, so a
+        # fully-read site with no capacity in it looked identical to one
+        # nobody had got to yet.
+        # p_held/p_read, not held/read: cap_key is computed from the
+        # prose pool, and a drawing with no extractable text cannot
+        # state a capacity. The word "readable" carries the denominator
+        # so this and the coverage bar are not two versions of one
+        # number.
+        site_banner = ""
+        if cap_key in ("pre_application", "no_documents"):
+            lbl, why = site_profile.no_documents_reason(
+                ["pre_application"] if not (n_apps or 0)
+                else site_outcomes.get(key, ()))
+            site_banner = _banner(esc(lbl) + ".", esc(why))
+        elif cap_key == "inferred_floor_area":
+            # The weakest class in the release, and the one most likely
+            # to be quoted as though it were disclosed.
+            site_banner = _banner(
+                "The figure for this site is not stated anywhere.",
+                "It is inferred from floorspace using the density "
+                "assumption set out in the methodology, and it is the "
+                "weakest class of figure in this release: usable as a "
+                "sense of scale, never as a quoted number.")
+        elif cap_key == "read_none_disclosed":
+            # A finished check, not a missing value. Without this the
+            # page reads as a gap in the project rather than a silence
+            # in the record.
+            site_banner = _banner(
+                f"All {p_held:,} readable document"
+                f"{'' if p_held == 1 else 's'} for this site "
+                f"{'has' if p_held == 1 else 'have'} been analysed and "
+                f"none states a capacity.",
+                "This is recorded as a finished check, not as a missing "
+                "value: the absence is the record\u2019s, not this "
+                "project\u2019s.")
+        elif cap_key == "not_yet_analysed":
+            site_banner = _banner(
+                f"None of this site\u2019s {p_held:,} readable document"
+                f"{'' if p_held == 1 else 's'} has been analysed yet.",
+                "Nothing below is a statement about what they contain.")
+        elif is_prov or cap_key == "partially_analysed":
+            site_banner = _banner(
+                "Reading is incomplete.",
+                esc(site_profile.provisional_statement(p_held, p_read)))
+        elif _claim_conflict:
+            site_banner = _banner(
+                "Register rows that plausibly describe this site disagree "
+                "with each other.",
+                "A tentative match is not evidence; both are shown so "
+                "that a reporter can resolve the disagreement rather "
+                "than inherit it.")
+
         if site_claims:
             claims_sites_rendered += 1
             claims_rows_rendered += len(site_claims)
@@ -2645,6 +2871,152 @@ def main() -> int:
             mixed_note = ('<dt>Note</dt><dd class="help">These two figures come from '
                           'different applications at this site, so they describe '
                           'different buildings rather than contradicting each other.</dd>')
+
+
+        # §5's "Adjudicated power figures", in the form the handoff
+        # specifies: the value in serif at 23px, the quantity under it,
+        # who it was told to and the words it was published in, then the
+        # document, the page, the model and the fetch date, then the
+        # quote itself.
+        #
+        # Provenance is attached only where it describes the number
+        # beside it. The generation figure is the power adjudication
+        # filtered again by generation-2.5 — which rules some of those
+        # rows out as storage or as not generation at all — so its
+        # maximum can be lower than the power adjudication's, and
+        # pinning the larger row's quote to the smaller number would
+        # source a figure to a document that does not state it.
+        _fig_order = [("it_load", it), ("total_site", tot),
+                      ("grid_connection", grid), ("onsite_generation", gen)]
+        _fig_rows, _absent = [], []
+        for _qt, _val in _fig_order:
+            _label = ccl.QUANTITY_LABELS.get(_qt, _qt.replace("_", " "))
+            if not _val:
+                _absent.append(_label)
+                continue
+            pv = fig_prov.get((key, _qt))
+            if pv and abs(pv["mw"] - float(_val)) > 0.001:
+                pv = None
+            _doc = (f'<a href="{esc(pv["url"])}" target="_blank" rel="noopener">'
+                    f'{esc(pv["title"])}</a>' if pv and pv["url"]
+                    else (esc(pv["title"]) if pv and pv["title"] else ""))
+            _meta = []
+            if pv:
+                if pv["page"]:
+                    _meta.append(f'page&nbsp;{pv["page"]}')
+                _meta.append(f'{esc(pv["ref"])}')
+                if pv["model"]:
+                    _meta.append(f'read by {esc(pv["model"])}')
+                if pv["fetched"]:
+                    _meta.append(f'fetched {pv["fetched"]:%-d %b %Y}')
+            else:
+                _src = power_src.get((key, _qt))
+                if _src:
+                    _meta.append(f'adjudicated in {esc(_src)}')
+            _quote = ""
+            if pv and pv["quote"]:
+                _quote = (f'<p class="figquote">\u201c'
+                          f'{esc(trim(" ".join(pv["quote"].split()), 460))}'
+                          f'\u201d</p>'
+                          f'<p class="figgate">Quote verified verbatim against '
+                          f'the document text before storage \u00b7 '
+                          f'<a href="#methodology">how the gate works</a></p>')
+            _told = ('Told to <b>the planning authority</b>'
+                     + (f' \u00b7 published as \u201c'
+                        f'{esc(humanise(pv["as_written"], sentence=True))}\u201d' if pv else ''))
+            _fig_rows.append(
+                f'<div class="figrow"><div><div class="figval">{mw_text(_val)}'
+                f'<span class="figunit"> MW</span></div>'
+                f'<div class="figq">{esc(_label)}</div></div><div>'
+                f'<p class="figtold">{_told}</p>'
+                + (f'<p class="figmeta">{_doc}'
+                   + (f' <span class="q">\u00b7 ' + " \u00b7 ".join(_meta)
+                      + '</span>' if _meta else '') + '</p>'
+                   if (_doc or _meta) else '')
+                + _quote + '</div></div>')
+
+        # Editorial rule 4: every figure the adjudicator saw for this
+        # site, the ruled-out ones included, each with the verdict and
+        # the reason. Collapsed, because it is the working underneath a
+        # number rather than the number.
+        _af = all_figs.get(key) or []
+        allfigs_html = ""
+        if _af:
+            _total = all_figs_total.get(key, len(_af))
+            _kept = sum(1 for r in _af if r["verdict"] == "site_capacity")
+            _rows = "".join(
+                # The figure as its source printed it: a 3,900 kVA
+                # switchboard is not "0 MW", and kVA is not megawatts at
+                # all. The normalised value appears beside it only where
+                # the adjudicator produced one and the units differ.
+                '<tr><td class="n">'
+                + (f'{r["value"]:,g}' if r["value"] is not None
+                   else (f'{r["mw"]:g}' if r["mw"] is not None else "\u2014"))
+                + '</td><td class="q">'
+                + esc(r["unit"] or ("MW" if r["mw"] is not None else ""))
+                + (f'<span class="q">= {r["mw"]:g} MW</span>'
+                   if r["mw"] is not None and r["unit"] not in (None, "MW")
+                   else "") + '</td>'
+                + f'<td>{esc(humanise(r["as_written"] or "", sentence=True))}</td>'
+                + '<td>' + (f'<a href="{esc(r["url"])}" target="_blank" '
+                            f'rel="noopener">{esc(r["title"])}</a>'
+                            if r["url"] else esc(r["title"] or r["ref"])) + '</td>'
+                + '<td class="q">' + (f'page {r["page"]}' if r["page"] else "—")
+                + f' \u00b7 {esc(r["ref"])}</td>'
+                + f'<td class="q">{esc(r["model"] or "")}</td>'
+                + '<td><span class="vpill {1}">{0}</span>'.format(
+                    esc(VERDICT_LABEL.get(r["verdict"], (r["verdict"], "v-maybe"))[0]),
+                    VERDICT_LABEL.get(r["verdict"], (r["verdict"], "v-maybe"))[1])
+                + (f'<span class="q">{esc(trim(r["reason"], 260))}</span>'
+                   if r["reason"] else "") + '</td></tr>'
+                for r in _af)
+            _cut = ("" if _total <= len(_af) else
+                    f' The {_total - len(_af):,} not shown are the lowest-valued '
+                    f'of the {_total:,}; the full set is in this site\u2019s '
+                    f'findings CSV.')
+            allfigs_html = (
+                f'<details class="allfigs"><summary>Show every figure found in '
+                f'this site\u2019s documents, including the '
+                f'{_total - _kept:,} excluded from the figures above'
+                f'</summary>'
+                f'<div class="scroll"><table class="afig"><thead><tr>'
+                f'<th>Value</th><th>Unit</th><th>Quantity as written</th>'
+                f'<th>Document</th><th>Locator</th><th>Read by</th>'
+                f'<th>Adjudication</th></tr></thead><tbody>{_rows}</tbody>'
+                f'</table></div>'
+                f'<p class="help">{len(_af):,} of {_total:,} adjudicated '
+                f'figures.{_cut} Rows marked excluded are kept, not deleted: '
+                f'a maximum taken over this table will be wrong, which is why '
+                f'the reason travels with the row.'
+                + (f' Full set in <a href="{esc(_csv)}" target="_blank" '
+                   f'rel="noopener">this site\u2019s findings CSV</a>'
+                   if _csv else '')
+                + ' and the <a href="#package">DuckDB file</a>.</p></details>')
+
+        figures_html = (
+            '<div class="box figures"><h4>Adjudicated power figures</h4>'
+            '<p class="help">The figures adjudicated as describing <em>this '
+            'site</em>. Different quantities are not contradictions; the '
+            'comparison that matters is one quantity told twice. Every row '
+            'below is also a row in the findings CSV.</p>'
+            + ("".join(_fig_rows) if _fig_rows else
+               '<p class="help">No figure in this site\u2019s documents was '
+               'adjudicated as its capacity.</p>')
+            + (f'<p class="figabsent">Not stated in any document read: '
+               f'{esc(", ".join(_absent))}.</p>' if _absent else '')
+            + f'<dl class="kv figsum"><dt>Best available</dt><dd>'
+            + (f'<b>{mw_text(est.value_mw)} MW</b>' if est.value_mw
+               else '\u2014')
+            + ('<span class="prov"> ' + esc(site_profile.PROVISIONAL_MARK)
+               + '</span>' if is_prov and est.value_mw else '')
+            + f'</dd><dt>Basis</dt><dd>{esc(est.basis)}</dd>'
+            + f'<dt>Confidence</dt><dd>{esc(est.confidence or "\u2014")}</dd>'
+            + f'<dt>Caveat</dt><dd>{esc(est.caveat or "\u2014")}</dd>'
+            + mixed_note
+            + '</dl>'
+            + allfigs_html
+            + f'<p class="help provenance">{esc(ccl.DECLARED_POWER_NOTE)}</p>'
+            + '</div>')
 
         who = who_cell(prof)
         reading_html = reading_panel(key)
@@ -2752,24 +3124,7 @@ def main() -> int:
     <p><strong>{esc(summary) or '—'}</strong></p>
     <p class="help">Lifted verbatim from an application below, which the council published
      as:</p><p>{esc(trim(full_desc, 640)) or '—'}</p></div>
-<div class="box"><h4>Declared power</h4>
-   <dl class="kv">
-    <dt>Best available</dt><dd>{('<strong>'+mw+' MW</strong>') if mw else '—'}
-     {'<span class="prov"> ' + esc(site_profile.PROVISIONAL_MARK) + '</span>' if is_prov and mw else ''}</dd>
-    <dt>Basis</dt><dd>{esc(est.basis)}</dd>
-    <dt>Confidence</dt><dd>{esc(est.confidence or '—')}</dd>
-    <dt>Caveat</dt><dd>{esc(est.caveat or '—')}</dd>
-    <dt>IT load</dt><dd>{_q(it, 'it_load')}</dd>
-    <dt>Total site</dt><dd>{_q(tot, 'total_site')}</dd>
-    <dt>Grid connection</dt><dd>{_q(grid, 'grid_connection')}</dd>
-    <dt>On-site generation</dt><dd>{_q(gen, 'onsite_generation')}{
-      f' <span class="help">{esc(prof.get("gen_figure_note"))}</span>'
-      if prof.get("gen_figure_note") else ''}</dd>
-    {mixed_note}
-    <dt>Excluded figures</dt><dd>{nexc or 0}
-     <span class="help">market context, not this site</span></dd>
-   </dl>
-   <p class="help provenance">{esc(ccl.DECLARED_POWER_NOTE)}</p></div>
+{figures_html}
   {claims_html}
   <div class="box"><h4>What the documents say</h4>
    {findings_html}</div>
@@ -4133,8 +4488,6 @@ def main() -> int:
 <div class="sitepage">
  <p class="sitenav"><a href="#sites" onclick="return backToSites()">← Back to the sites
   table</a> <span class="help">Filters, chips and sort are as you left them.</span></p>
- <h2 id="sitetitle"></h2>
- <p class="sitewhere"><span id="sitewhere"></span> <span class="q" id="sitekey"></span></p>
  <div id="sitehost"></div>
 </div>
 </section>

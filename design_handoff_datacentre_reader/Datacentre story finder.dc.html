@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+  body { margin: 0; background: #f6f6f6; -webkit-font-smoothing: antialiased; }
+  a { color: #052962; text-decoration: none; }
+  a:hover { color: #234b8a; text-decoration: underline; }
+</style>
+</helmet>
+<div style="min-height: 100vh; font-family: 'Source Sans 3', system-ui, sans-serif; color: #121212; background: #f6f6f6;">
+
+  <header style="background: #052962; color: #fff; padding: 0 32px;">
+    <div style="max-width: 1560px; margin: 0 auto; display: flex; flex-direction: column; gap: 4px; padding: 18px 0 0;">
+      <div style="display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;">
+        <h1 style="font-family: 'Source Serif 4', Georgia, serif; font-size: 30px; font-weight: 700; line-height: 1.1; margin: 0; letter-spacing: -0.2px;">UK datacentre plans</h1>
+        <span style="font-size: 14px; color: #a8bad6;">456 sites · 48,191 documents · v2, phase 2.2 · generated 21 Aug 2026</span>
+      </div>
+      <nav style="display: flex; gap: 4px; margin-top: 14px; flex-wrap: wrap;">
+        <button onClick="{{ goLeads }}" style="{{ tabLeadsStyle }}">What&#8217;s worth a look</button>
+        <button onClick="{{ goSites }}" style="{{ tabSitesStyle }}">Sites <span style="opacity: .65;">456</span></button>
+        <button onClick="{{ goApps }}" style="{{ tabAppsStyle }}">Applications <span style="opacity: .65;">1,709</span></button>
+        <button onClick="{{ goMap }}" style="{{ tabMapStyle }}">Map</button>
+        <button onClick="{{ goMethod }}" style="{{ tabMethodStyle }}">How it was built</button>
+      </nav>
+    </div>
+  </header>
+
+  <sc-if value="{{ isLeads }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width: 1560px; margin: 0 auto; padding: 32px; display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; align-items: start;">
+    <section>
+      <p style="font-family: 'Source Serif 4', Georgia, serif; font-size: 20px; line-height: 1.45; margin: 0 0 4px; max-width: 44em; text-wrap: pretty;">Every planning application we can find for a UK data centre, and what its documents say. The patterns below are the ones the dataset can prove — each is a query, not a conclusion.</p>
+      <p style="font-size: 14px; color: #6b6b6b; margin: 0 0 28px;">Ranked by how far the anomaly is from ordinary practice, then by how much of the site has been read. Nothing here has been checked by a human unless it says so.</p>
+
+      <sc-for list="{{ leads }}" as="lead" hint-placeholder-count="4">
+        <article style="border-top: 4px solid #c70000; background: #fff; padding: 20px 24px 22px; margin-bottom: 16px; display: grid; grid-template-columns: minmax(0, 1fr) 148px; gap: 32px; align-items: start;">
+          <div>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 13px; font-weight: 700; color: #c70000; text-transform: uppercase; letter-spacing: .6px;">{{ lead.kicker }}</span>
+              <span style="font-size: 13px; color: #767676;">{{ lead.checked }}</span>
+            </div>
+            <h2 style="font-family: 'Source Serif 4', Georgia, serif; font-size: 27px; line-height: 1.16; font-weight: 700; margin: 0 0 10px; max-width: 30em; text-wrap: pretty;">{{ lead.headline }}</h2>
+            <p style="font-family: 'Source Serif 4', Georgia, serif; font-size: 17px; line-height: 1.45; color: #333; margin: 0 0 14px; max-width: 46em; text-wrap: pretty;">{{ lead.standfirst }}</p>
+            <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+              <button onClick="{{ lead.open }}" style="font-family: inherit; font-size: 15px; font-weight: 600; color: #fff; background: #052962; border: 0; border-radius: 999px; padding: 9px 18px; cursor: pointer;">{{ lead.cta }}</button>
+              <span style="font-size: 14px; color: #052962; border-bottom: 1px solid #a8bad6; cursor: pointer;">How this was measured</span>
+              <span style="font-size: 14px; color: #767676;">{{ lead.caveat }}</span>
+            </div>
+          </div>
+          <div style="text-align: right; border-left: 1px solid #dcdcdc; padding-left: 20px;">
+            <div style="font-family: 'Source Serif 4', Georgia, serif; font-size: 44px; font-weight: 700; line-height: 1;">{{ lead.count }}</div>
+            <div style="font-size: 13px; color: #6b6b6b; margin-top: 2px;">{{ lead.unit }}</div>
+          </div>
+        </article>
+      </sc-for>
+    </section>
+
+    <aside style="display: flex; flex-direction: column; gap: 24px; position: sticky; top: 24px;">
+      <div style="background: #fff; border-top: 4px solid #052962; padding: 18px 20px 20px;">
+        <h3 style="font-family: 'Source Sans 3', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #052962; margin: 0 0 12px;">How much has been read</h3>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px;"><span>Documents analysed</span><strong>99%</strong></div>
+            <div style="height: 6px; background: #ececec;"><div style="height: 6px; width: 99%; background: #052962;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px;"><span>Sites disclosing a power figure</span><strong>109 of 456</strong></div>
+            <div style="height: 6px; background: #ececec;"><div style="height: 6px; width: 24%; background: #c74600;"></div></div>
+          </div>
+          <p style="font-size: 13px; line-height: 1.45; color: #6b6b6b; margin: 0;">A blank is never a zero. Sites that disclose nothing and sites not yet read are counted apart, everywhere in this reader.</p>
+        </div>
+      </div>
+
+      <div style="background: #fff; border-top: 4px solid #c74600; padding: 18px 20px 20px;">
+        <h3 style="font-family: 'Source Sans 3', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #c74600; margin: 0 0 12px;">Before you publish</h3>
+        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px;">
+          <li style="font-size: 14px; line-height: 1.45; color: #333;"><strong>The biggest number in a document is almost never the site&#8217;s.</strong> All twenty-two of the largest MW figures in the corpus describe a national target, a rival or a forecast.</li>
+          <li style="font-size: 14px; line-height: 1.45; color: #333;"><strong>Not everything in megawatts is power.</strong> Annual energy, thermal input and battery ratings are separated here; they will not be in a raw extract.</li>
+          <li style="font-size: 14px; line-height: 1.45; color: #333;"><strong>Per building, per hall or per phase.</strong> Where the documents are ambiguous, this release flags rather than multiplies.</li>
+        </ul>
+      </div>
+
+      <div style="background: #fff; border-top: 4px solid #333; padding: 18px 20px 20px;">
+        <h3 style="font-family: 'Source Sans 3', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #333; margin: 0 0 10px;">Also in the package</h3>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px;">
+          <a href="#">The workbook (xlsx)</a>
+          <a href="#">The database (DuckDB)</a>
+          <a href="#">Source documents on Drive</a>
+          <a href="#">Findings CSV, per site</a>
+        </div>
+        <p style="font-size: 13px; color: #6b6b6b; margin: 12px 0 0; line-height: 1.45;">Contains Barbour ABI project intelligence — credit required in published output.</p>
+      </div>
+    </aside>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isSites }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width: 1560px; margin: 0 auto; padding: 24px 32px 48px;">
+    <div style="background: #fff; padding: 16px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #dcdcdc;">
+      <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Search site, council, operator, application" style="font-family: inherit; font-size: 15px; padding: 9px 12px; border: 1px solid #999; border-radius: 4px; width: 320px;">
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <sc-for list="{{ chips }}" as="chip" hint-placeholder-count="5">
+          <button onClick="{{ chip.pick }}" style="{{ chip.style }}">{{ chip.label }}</button>
+        </sc-for>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 14px; color: #6b6b6b;">
+        <span><strong style="color: #121212;">{{ shownCount }}</strong></span>
+        <button onClick="{{ toggleSort }}" style="font-family: inherit; font-size: 14px; background: none; border: 1px solid #999; border-radius: 999px; padding: 7px 14px; cursor: pointer; color: #052962;">{{ sortLabel }}</button>
+      </div>
+    </div>
+
+    <div style="background: #fff;">
+      <div style="display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.9fr) 190px 170px; gap: 24px; padding: 12px 20px; border-bottom: 1px solid #121212; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: #6b6b6b;">
+        <span>Site</span><span>What stands out</span><span>Power on record</span><span>Reading</span>
+      </div>
+      <sc-for list="{{ rows }}" as="row" hint-placeholder-count="8">
+        <div onClick="{{ row.open }}" style="{{ row.rowStyle }}">
+          <div>
+            <div style="font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; font-weight: 700; line-height: 1.2; color: #052962;">{{ row.name }}</div>
+            <div style="font-size: 13px; color: #6b6b6b; margin-top: 3px;">{{ row.councils }}</div>
+            <div style="font-size: 14px; color: #333; margin-top: 6px; line-height: 1.4;">{{ row.proposal }}</div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; align-content: start;">
+            <sc-for list="{{ row.signals }}" as="sig" hint-placeholder-count="2">
+              <span style="{{ sig.style }}">{{ sig.label }}</span>
+            </sc-for>
+          </div>
+          <div>
+            <div style="font-family: 'Source Serif 4', Georgia, serif; font-size: 22px; font-weight: 700; line-height: 1;">{{ row.mw }}</div>
+            <div style="font-size: 13px; color: #6b6b6b; margin-top: 4px; line-height: 1.35;">{{ row.basis }}</div>
+          </div>
+          <div>
+            <div style="height: 6px; background: #ececec; margin-bottom: 6px;"><div style="{{ row.readBarStyle }}"></div></div>
+            <div style="font-size: 13px; color: #6b6b6b;">{{ row.read }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="font-size: 13px; color: #6b6b6b; margin: 14px 0 0;">Rows are ordered by how far each site departs from ordinary practice, not by size. Click a site to open it; every figure inside carries the document it came from.</p>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isSite }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width: 1560px; margin: 0 auto; padding: 24px 32px 48px;">
+    <button onClick="{{ goSites }}" style="font-family: inherit; font-size: 14px; background: none; border: 0; color: #052962; cursor: pointer; padding: 0 0 14px;">&#8592; All sites</button>
+
+    <div style="background: #fff; border-top: 4px solid #c70000; padding: 24px 28px 26px;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+        <sc-for list="{{ site.signals }}" as="sig" hint-placeholder-count="2">
+          <span style="{{ sig.style }}">{{ sig.label }}</span>
+        </sc-for>
+      </div>
+      <h2 style="font-family: 'Source Serif 4', Georgia, serif; font-size: 34px; line-height: 1.15; font-weight: 700; margin: 0 0 6px; max-width: 28em;">{{ site.name }}</h2>
+      <div style="font-size: 15px; color: #6b6b6b;">{{ site.councils }} · {{ site.address }}</div>
+      <p style="font-family: 'Source Serif 4', Georgia, serif; font-size: 19px; line-height: 1.45; margin: 16px 0 0; max-width: 44em; text-wrap: pretty;">{{ site.summary }}</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px; margin-top: 24px; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <section style="background: #fff; padding: 20px 24px 24px; border-top: 4px solid #052962;">
+          <h3 style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #052962; margin: 0 0 4px;">Every power figure on record</h3>
+          <p style="font-size: 14px; color: #6b6b6b; margin: 0 0 18px; line-height: 1.45;">Grouped by who was told. Different quantities are not contradictions — the comparison that matters is one quantity told twice.</p>
+          <sc-for list="{{ site.figures }}" as="fig" hint-placeholder-count="3">
+            <div style="border-top: 1px solid #dcdcdc; padding: 14px 0 12px; display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 20px; align-items: baseline;">
+              <div>
+                <div style="font-family: 'Source Serif 4', Georgia, serif; font-size: 24px; font-weight: 700; line-height: 1;">{{ fig.value }}</div>
+                <div style="font-size: 13px; color: #6b6b6b; margin-top: 3px;">{{ fig.quantity }}</div>
+              </div>
+              <div>
+                <div style="font-size: 14px; color: #333; line-height: 1.45;">Told to <strong>{{ fig.audience }}</strong>, published as &#8220;{{ fig.publishedAs }}&#8221;</div>
+                <div style="font-size: 14px; margin-top: 5px;"><a href="#">{{ fig.source }}</a> <span style="color: #6b6b6b;">· {{ fig.locator }} · {{ fig.confidence }}</span></div>
+                <sc-if value="{{ showProvenance }}" hint-placeholder-val="{{ true }}">
+                <div style="font-family: 'Source Serif 4', Georgia, serif; font-style: italic; font-size: 15px; color: #333; border-left: 3px solid #dcdcdc; padding-left: 12px; margin-top: 8px; line-height: 1.45;">{{ fig.quote }}</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <div style="border-top: 1px solid #121212; margin-top: 6px; padding-top: 12px; font-size: 14px; color: #6b6b6b; line-height: 1.45;">{{ site.excluded }}</div>
+        </section>
+
+        <section style="background: #fff; padding: 20px 24px 24px; border-top: 4px solid #c74600;">
+          <h3 style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #c74600; margin: 0 0 14px;">What to ask, and who to ask</h3>
+          <sc-for list="{{ site.questions }}" as="q" hint-placeholder-count="3">
+            <div style="border-top: 1px solid #dcdcdc; padding: 13px 0;">
+              <div style="font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; font-weight: 600; line-height: 1.3;">{{ q.ask }}</div>
+              <div style="font-size: 14px; color: #6b6b6b; margin-top: 5px; line-height: 1.45;">{{ q.who }}</div>
+            </div>
+          </sc-for>
+        </section>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <section style="background: #fff; padding: 18px 20px 20px; border-top: 4px solid #333;">
+          <h3 style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #333; margin: 0 0 12px;">Who is behind it</h3>
+          <sc-for list="{{ site.people }}" as="p" hint-placeholder-count="4">
+            <div style="display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; padding: 8px 0; border-top: 1px solid #ececec; font-size: 14px;">
+              <span style="color: #6b6b6b;">{{ p.role }}</span>
+              <span>{{ p.name }} <span style="color: #6b6b6b;">{{ p.mentions }}</span></span>
+            </div>
+          </sc-for>
+          <p style="font-size: 13px; color: #6b6b6b; margin: 12px 0 0; line-height: 1.45;">Names are counted: the organisation named 500 times is the developer, the one named twice is usually a consultee&#8217;s consultant.</p>
+        </section>
+
+        <section style="background: #fff; padding: 18px 20px 20px; border-top: 4px solid #052962;">
+          <h3 style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #052962; margin: 0 0 12px;">Check it yourself</h3>
+          <div style="display: flex; flex-direction: column; gap: 9px; font-size: 14px;">
+            <a href="#">Open the council&#8217;s own register</a>
+            <a href="#">2,626 documents on Drive</a>
+            <a href="#">This site&#8217;s findings, as CSV</a>
+            <a href="#">Copy a link to this panel</a>
+          </div>
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #ececec; font-size: 14px; color: #333; line-height: 1.5;">
+            <strong>Reading is incomplete.</strong> {{ site.read }} of this site&#8217;s documents have been analysed. Every figure here is the largest found so far; further reading can raise it and cannot lower it.
+          </div>
+        </section>
+
+        <section style="background: #fff; padding: 18px 20px 20px; border-top: 4px solid #333;">
+          <h3 style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #333; margin: 0 0 10px;">Generation, cooling and water</h3>
+          <sc-for list="{{ site.plant }}" as="pl" hint-placeholder-count="4">
+            <div style="display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; padding: 8px 0; border-top: 1px solid #ececec; font-size: 14px;">
+              <span style="color: #6b6b6b;">{{ pl.label }}</span>
+              <span>{{ pl.value }}</span>
+            </div>
+          </sc-for>
+        </section>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isStub }}" hint-placeholder-val="{{ false }}">
+  <main style="max-width: 1560px; margin: 0 auto; padding: 48px 32px;">
+    <div style="background: #fff; padding: 32px; border-top: 4px solid #dcdcdc; max-width: 46em;">
+      <h2 style="font-family: 'Source Serif 4', Georgia, serif; font-size: 26px; font-weight: 700; margin: 0 0 10px;">{{ stubTitle }}</h2>
+      <p style="font-family: 'Source Serif 4', Georgia, serif; font-size: 17px; line-height: 1.5; color: #333; margin: 0;">{{ stubBody }}</p>
+    </div>
+  </main>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;comfortable&quot;,&quot;compact&quot;],&quot;default&quot;:&quot;comfortable&quot;,&quot;tsType&quot;:&quot;'comfortable' | 'compact'&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showProvenance&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Evidence&quot;},&quot;sortByInterest&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Sites list&quot;}}">
+const TONES = {
+  red:   { bg: '#fdecec', fg: '#a51818', bd: '#f3c9c9' },
+  amber: { bg: '#fdf0e6', fg: '#a13a00', bd: '#f2d6bd' },
+  slate: { bg: '#eef1f6', fg: '#3f5570', bd: '#d6dde8' }
+};
+const SIGNALS = {
+  no_capacity:    { label: 'No capacity disclosed', tone: 'red' },
+  two_audiences:  { label: 'Two audiences, two figures', tone: 'red' },
+  grid_gap:       { label: 'Demand exceeds its connection', tone: 'red' },
+  energy_park:    { label: 'Power project dominates', tone: 'amber' },
+  unnamed_fuel:   { label: 'Generation, fuel unnamed', tone: 'amber' },
+  grid_dependent: { label: 'Grid-dependent by design', tone: 'amber' },
+  inferred:       { label: 'Figure inferred, not stated', tone: 'slate' },
+  unread:         { label: 'Nothing published yet', tone: 'slate' }
+};
+
+const SITES = [
+  { key: 'watford', name: 'A41 Watford Bypass — data centre', councils: 'Hertsmere', address: 'Former Mercure Hotel, Hilfield Park',
+    proposal: 'Data centre with substation, standby generation and associated works.',
+    mw: '168', basis: 'Disclosed IT load · may rise', read: '303 of 336', readPct: 90, interest: 98,
+    signals: ['two_audiences', 'grid_gap'],
+    summary: 'The developer told Hertsmere the site would take a 120 MW grid connection. It told the grid operator 435 MW, and its own website advertises 200 MW of capacity. One quantity, one site, three audiences — and the planning file cannot say where the difference comes from.',
+    excluded: '274 further figures in these documents describe the market, a competitor or another scheme, and are excluded from this panel rather than averaged into it.',
+    figures: [
+      { value: '435 MW', quantity: 'contracted grid connection', audience: 'the grid operator', publishedAs: 'Total Capacity', source: 'NESO Existing Agreements Register', locator: 'row 723', confidence: 'strong match', quote: 'Connection agreement recorded against Mecure Data Centre, 435 MW.' },
+      { value: '200 MW', quantity: 'announced capacity', audience: 'customers', publishedAs: 'Total Capacity', source: 'Operator’s own website', locator: 'ark-elstree', confidence: 'strong match', quote: 'A 200 MW campus serving the London availability zone.' },
+      { value: '168 MW', quantity: 'IT load', audience: 'the planning authority', publishedAs: 'IT load', source: 'Hertsmere/25/1781/FUL', locator: 'page 1', confidence: 'high', quote: 'The development provides for an ultimate IT load of 168 MW across both buildings.' },
+      { value: '120 MW', quantity: 'contracted grid connection', audience: 'the planning authority', publishedAs: 'grid connection', source: 'Hertsmere/25/1781/FUL', locator: 'page 7', confidence: 'high', quote: 'A 120 MW connection has been contracted with the distribution network operator.' }
+    ],
+    questions: [
+      { ask: 'Where does the remaining 315 MW come from, and when?', who: 'Ark Data Centres (developer) and NESO, whose register carries the larger figure.' },
+      { ask: 'Did Hertsmere assess the scheme on the smaller connection figure?', who: 'Hertsmere planning officers — the committee report cites 120 MW.' },
+      { ask: 'Is the 200 MW on the website the same building?', who: 'Operator press office; the site has two phases described separately.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Ark Data Centres', mentions: '(412 mentions)' },
+      { role: 'Advisers', name: 'AECOM, Arup International Projects', mentions: '(528, 192)' },
+      { role: 'Authority', name: 'Hertsmere Borough Council', mentions: '(100)' },
+      { role: 'Nearest energy project', name: 'London Strategic Heat Main — 6.7 km', mentions: 'PINS' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: '48 units, diesel (297 mentions); HVO and gas also referenced' },
+      { label: 'Cooling', value: 'Water-cooled / chilled water (878), adiabatic (368), air-cooled (200)' },
+      { label: 'Water evidence', value: '814 consumption or abstraction findings' },
+      { label: 'EIA status', value: 'Required — environmental statement submitted' }
+    ] },
+  { key: 'humber', name: 'The Humber Tech Park data centre', councils: 'North Lincolnshire', address: 'Humber Tech Park, North Lincolnshire',
+    proposal: 'Data centre campus alongside a generating station and battery storage.',
+    mw: '384', basis: 'Disclosed IT load', read: '1,204 of 1,240', readPct: 97, interest: 94,
+    signals: ['two_audiences', 'energy_park'],
+    summary: 'A 384 MW computing load sits inside a scheme whose generation and storage are several times larger. The centre of gravity here is arguably the power project, not the building — and which story is being told is a decision, not a fact.',
+    excluded: '96 further figures describe the wider market or the applicant’s other schemes and are excluded from this panel.',
+    figures: [
+      { value: '576 MW', quantity: 'total site power', audience: 'the planning authority', publishedAs: 'total site power', source: 'NorthLincs/PA/2024/584', locator: 'page 5', confidence: 'high', quote: 'Total site power demand at full build-out is 576 MW.' },
+      { value: '384 MW', quantity: 'IT load', audience: 'the planning authority', publishedAs: 'IT load', source: 'NorthLincs/PA/2024/584', locator: 'page 4', confidence: 'high', quote: 'The proposed IT load is 384 MW.' },
+      { value: '384 MW', quantity: 'announced capacity', audience: 'customers', publishedAs: 'IT load', source: 'Operator’s own website', locator: 'greystoke-home', confidence: 'strong match', quote: 'Humber Tech Park: 384 MW of IT load.' }
+    ],
+    questions: [
+      { ask: 'Is this a data centre with a power station, or a power station with tenants?', who: 'Greystoke Land, and the Planning Inspectorate for the generating consent.' },
+      { ask: 'What fuel does the on-site generation burn?', who: 'The documents name plant but not fuel — put it to the applicant directly.' },
+      { ask: 'Who takes the surplus generation?', who: 'NESO and the applicant’s offtake counterparties.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Greystoke Land', mentions: '(233 mentions)' },
+      { role: 'Advisers', name: 'RPS, Arup', mentions: '(133, 88)' },
+      { role: 'Authority', name: 'North Lincolnshire Council', mentions: '(74)' },
+      { role: 'Nearest energy project', name: 'Immingham Green Energy — 4.1 km', mentions: 'PINS' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: '24 units; fuel not stated in any document' },
+      { label: 'Generation', value: 'On-site generating station, capacity stated separately' },
+      { label: 'Cooling', value: 'Adiabatic (211), closed loop (64)' },
+      { label: 'EIA status', value: 'Required — environmental statement submitted' }
+    ] },
+  { key: 'saunderton', name: 'Saunderton data centre — 4 Virtus data centres', councils: 'Bucks, Chiltern South Bucks, Wycombe', address: 'Former Molins Site, Haw Lane, Saunderton',
+    proposal: 'Four data centre buildings with groundworks, plant and an electricity substation.',
+    mw: '—', basis: 'No capacity disclosed', read: '278 of 289', readPct: 96, interest: 91,
+    signals: ['no_capacity'],
+    summary: 'Every readable document for this consented scheme has been analysed and not one states a power figure. That is not a gap in this dataset — it is a finding about disclosure, and it is measurable rather than anecdotal.',
+    excluded: '31 figures in these documents describe the national market or other operators and are excluded here.',
+    figures: [
+      { value: '—', quantity: 'IT load', audience: 'the planning authority', publishedAs: 'not stated', source: 'Wycombe/19/07542/FUL', locator: '289 documents read', confidence: 'no figure found', quote: 'No passage in the application, its environmental statement or supporting reports states a capacity for this development.' }
+    ],
+    questions: [
+      { ask: 'How large is this site, and why was that never on the public record?', who: 'Virtus Data Centres; Buckinghamshire Council’s case officer.' },
+      { ask: 'Did the council ask for a load figure during determination?', who: 'Officer report and consultee responses — both are in the Drive folder.' },
+      { ask: 'Does the substation capacity imply a figure?', who: 'The DNO’s connection register, not the planning file.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Virtus Data Centres', mentions: '(188 mentions)' },
+      { role: 'Advisers', name: 'Turley, WSP', mentions: '(96, 61)' },
+      { role: 'Authority', name: 'Buckinghamshire Council', mentions: '(120)' },
+      { role: 'Nearest energy project', name: 'None within 25 km', mentions: '' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: '16 units, diesel (74 mentions)' },
+      { label: 'Cooling', value: 'Air-cooled (52); free cooling referenced' },
+      { label: 'Water evidence', value: '38 consumption findings' },
+      { label: 'EIA status', value: 'Screening opinion — EIA not required' }
+    ] },
+  { key: 'interxion', name: 'Interxion — data centre', councils: 'City, Greenwich, Islington, Newham, Tower Hamlets', address: 'Buxton Street, Spital Street, Brick Lane and Woodseer Street',
+    proposal: 'Erection of a data centre (Use Class B8) of approximately 72.3m AOD, 60,510 sqm GEA.',
+    mw: '80', basis: 'Disclosed IT load · may rise', read: '2,388 of 2,626', readPct: 91, interest: 74,
+    signals: ['two_audiences', 'unnamed_fuel'],
+    summary: 'Eighty megawatts is stated in the application as this development’s IT load; three further 16 MW figures reach customers through the operator’s own site under a different label. Forty-eight standby generators are disclosed, and the documents name six fuels without saying which is installed.',
+    excluded: '274 further figures describe the market rather than this site and are excluded from this panel.',
+    figures: [
+      { value: '80 MW', quantity: 'IT load', audience: 'the planning authority', publishedAs: 'IT load', source: 'TowerHamlets/PA/24/01932/A1', locator: 'page 12', confidence: 'high', quote: 'The development’s ultimate IT load is 80 MW, excluding cooling and other overhead.' },
+      { value: '45 MW', quantity: 'total site power', audience: 'the planning authority', publishedAs: 'total site', source: 'TowerHamlets/PA/21/02182/A1', locator: 'page 4', confidence: 'high', quote: 'Total site demand of 45 MW for the earlier building.' },
+      { value: '16 MW', quantity: 'utility power capacity', audience: 'customers', publishedAs: 'field_utility_power_capacity', source: 'Operator’s own website', locator: 'digitalrealty-lon1', confidence: 'probable match', quote: 'LON1, Hanbury Street: 16,000 kW utility power capacity.' }
+    ],
+    questions: [
+      { ask: 'Do the 45 MW and 80 MW figures describe different buildings, or a revision?', who: 'Applicant and Tower Hamlets — the figures come from separate applications.' },
+      { ask: 'What do the 48 generators burn?', who: 'The documents name diesel, gas, HVO, hydrogen and biomass without choosing.' },
+      { ask: 'Which of the three campus entries is this consent?', who: 'Operator press office; the postcode is shared across LON1, LON2 and LON3.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'EID (General Partner) LLP; Global Switch', mentions: '(547, 217)' },
+      { role: 'Advisers', name: 'AECOM, Arup, RPS', mentions: '(528, 192, 133)' },
+      { role: 'Authority', name: 'London Borough of Tower Hamlets', mentions: '(100)' },
+      { role: 'Barbour project', name: 'Telehouse West 2 — under construction', mentions: '' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: '48 units; diesel (297), gas, HVO, hydrogen, biomass also named' },
+      { label: 'Cooling', value: 'Water-cooled / chilled water (878), adiabatic (368), air-cooled (200)' },
+      { label: 'Water evidence', value: '814 consumption or abstraction findings' },
+      { label: 'EIA status', value: 'Required — environmental statement submitted' }
+    ] },
+  { key: 'kingsnorth', name: 'Kingsnorth Power Station — data centre', councils: 'Medway', address: 'Kingsnorth Power Station, Hoo Peninsula',
+    proposal: 'Data centre within the former power station site, with grid connection works.',
+    mw: '340', basis: 'Contracted grid connection', read: '412 of 431', readPct: 96, interest: 88,
+    signals: ['grid_gap', 'two_audiences', 'energy_park'],
+    summary: 'The grid register carries 340 MW against this site. The planning file describes 49.9 MW — a figure that sits just under the threshold at which a scheme becomes nationally significant and leaves the council’s hands.',
+    excluded: '58 figures describe the former station’s historic output and are excluded from this panel.',
+    figures: [
+      { value: '340 MW', quantity: 'contracted grid connection', audience: 'the grid operator', publishedAs: 'Total Capacity', source: 'NESO Existing Agreements Register', locator: 'row 1127', confidence: 'probable match', quote: 'Connection agreement, 340 MW, Kingsnorth.' },
+      { value: '49.9 MW', quantity: 'contracted grid connection', audience: 'the planning authority', publishedAs: 'grid connection', source: 'Medway/MC/21/0979', locator: 'page 8', confidence: 'high', quote: 'The development requires a grid connection of 49.9 MW.' }
+    ],
+    questions: [
+      { ask: 'Why is the planning figure 49.9 MW when the register says 340?', who: 'The applicant, and Medway Council’s case officer.' },
+      { ask: 'Does 50 MW matter here?', who: 'Above it, generating schemes are determined nationally rather than locally.' },
+      { ask: 'Is the register entry for the data centre or the old station?', who: 'NESO — the match is probable, not strong.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Not named in the register entry', mentions: '' },
+      { role: 'Advisers', name: 'Savills, Ramboll', mentions: '(74, 41)' },
+      { role: 'Authority', name: 'Medway Council', mentions: '(88)' },
+      { role: 'Nearest energy project', name: 'Medway Hub Capital Wharf — 1.2 km', mentions: 'PINS' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: '8 units; fuel not stated' },
+      { label: 'Cooling', value: 'Air-cooled (44)' },
+      { label: 'Water evidence', value: '112 abstraction findings' },
+      { label: 'EIA status', value: 'Required — environmental statement submitted' }
+    ] },
+  { key: 'eurohub', name: 'Eurohub data centre — The Point, Greenwich View Place', councils: 'Tower Hamlets', address: 'Archway House, 1 Muirfield Crescent, E14',
+    proposal: 'Demolition of offices and erection of a three-storey data centre building.',
+    mw: '12', basis: 'Disclosed IT load', read: '303 of 336', readPct: 90, interest: 61,
+    signals: ['grid_dependent'],
+    summary: 'Standby generation here is a small fraction of stated load, which means the plant is life-safety only and the building relies wholly on the grid. That is an operational fact with public-interest consequences, readable straight off the capacity components.',
+    excluded: '22 figures describe other schemes in the same estate and are excluded here.',
+    figures: [
+      { value: '12 MW', quantity: 'IT load', audience: 'the planning authority', publishedAs: 'IT load', source: 'TowerHamlets/PA/22/00841/A1', locator: 'page 3', confidence: 'high', quote: 'Design IT load of 12 MW.' },
+      { value: '1.6 MW', quantity: 'standby generation', audience: 'the planning authority', publishedAs: 'standby capacity', source: 'TowerHamlets/PA/22/00841/A1', locator: 'page 9', confidence: 'high', quote: 'Two standby generators providing 1.6 MW for life-safety systems.' }
+    ],
+    questions: [
+      { ask: 'What happens to the racks in a grid outage?', who: 'Operator; the standby plant covers life safety, not load.' },
+      { ask: 'Was that dependency assessed?', who: 'Tower Hamlets officer report and the DNO’s consultation response.' },
+      { ask: 'Is the connection firm or interruptible?', who: 'UK Power Networks.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Eurohub', mentions: '(96 mentions)' },
+      { role: 'Advisers', name: 'Hoare Lea', mentions: '(52)' },
+      { role: 'Authority', name: 'London Borough of Tower Hamlets', mentions: '(64)' },
+      { role: 'Nearest energy project', name: 'London Strategic Heat Main — 5.4 km', mentions: 'PINS' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: '2 units, diesel (18 mentions)' },
+      { label: 'Cooling', value: 'Chilled water (66), free cooling referenced' },
+      { label: 'Water evidence', value: '24 consumption findings' },
+      { label: 'EIA status', value: 'Screening opinion — EIA not required' }
+    ] },
+  { key: 'datavault', name: 'Project MK Datavault — Enigma data centre', councils: 'Milton Keynes', address: 'BT Telephone Exchange, Tavistock Street, Bletchley',
+    proposal: 'Redevelopment to provide up to 25,020 sqm of data centre floorspace.',
+    mw: '30', basis: 'Estimated from floorspace', read: '151 of 173', readPct: 87, interest: 44,
+    signals: ['inferred'],
+    summary: 'No capacity is stated anywhere in this file. The 30 MW shown is inferred from floor area and is the weakest class of figure in this release — usable as a sense of scale, never as a quoted number.',
+    excluded: '14 figures describe the national market and are excluded here.',
+    figures: [
+      { value: '30 MW', quantity: 'inferred from floorspace', audience: 'nobody — this reader’s own estimate', publishedAs: 'not published', source: 'Derived, 25,020 sqm', locator: 'method in the dictionary', confidence: 'inferred, low', quote: 'No document states a load; the figure is floor area times a density assumption stated in the methodology.' }
+    ],
+    questions: [
+      { ask: 'What load is designed for?', who: 'Applicant; the council never asked on the record.' },
+      { ask: 'Is the exchange’s existing connection being reused?', who: 'BT and the DNO.' },
+      { ask: 'Would a figure change the EIA screening?', who: 'Milton Keynes City Council.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Enigma Data Centres', mentions: '(78 mentions)' },
+      { role: 'Advisers', name: 'Savills', mentions: '(44)' },
+      { role: 'Authority', name: 'Milton Keynes City Council', mentions: '(61)' },
+      { role: 'Nearest energy project', name: 'None within 25 km', mentions: '' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: 'Not described' },
+      { label: 'Cooling', value: 'Air-cooled (31)' },
+      { label: 'Water evidence', value: '9 consumption findings' },
+      { label: 'EIA status', value: 'Screening opinion — EIA not required' }
+    ] },
+  { key: 'garrison', name: 'Garrison data centre', councils: 'Birmingham', address: 'Palmer Street / Little Edward Street, Birmingham',
+    proposal: 'Outline application for a two-storey data centre building and parking.',
+    mw: '—', basis: 'No documents held', read: '0 of 0', readPct: 0, interest: 30,
+    signals: ['unread'],
+    summary: 'Birmingham’s register publishes nothing for this application. That has been checked by hand: the absence is the council’s, not ours, and it is recorded as a finished check rather than left looking like a gap.',
+    excluded: 'No documents, so no figures to exclude.',
+    figures: [],
+    questions: [
+      { ask: 'Will the council release the documents on request?', who: 'Birmingham City Council planning support.' },
+      { ask: 'Is the application still live?', who: 'The register’s status field says outline, undetermined.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Not published', mentions: '' },
+      { role: 'Authority', name: 'Birmingham City Council', mentions: '' },
+      { role: 'Nearest energy project', name: 'Tyseley Energy Park — 4.8 km', mentions: 'PINS' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: 'No documents held' },
+      { label: 'Cooling', value: 'No documents held' },
+      { label: 'Water evidence', value: 'No documents held' },
+      { label: 'EIA status', value: 'Not stated' }
+    ] },
+  { key: 'camro', name: 'Camro data centre — masterplan', councils: 'East Cambridgeshire', address: 'Land west of Machinery Sales Ground, Elean Business Park, Sutton',
+    proposal: 'Outline permission for data centre buildings up to 65,000 sqm with associated services.',
+    mw: '54', basis: 'Disclosed IT load · may rise', read: '186 of 197', readPct: 94, interest: 57,
+    signals: ['unnamed_fuel'],
+    summary: 'Fifty-four megawatts is disclosed, and the on-site generation is described without naming a fuel or a plant type — the pattern that runs through most generation figures in this release.',
+    excluded: '19 figures describe the wider market and are excluded here.',
+    figures: [
+      { value: '54 MW', quantity: 'IT load', audience: 'the planning authority', publishedAs: 'IT load', source: 'EastCambs/22/01310/OUM', locator: 'page 6', confidence: 'high', quote: 'An ultimate IT load of 54 MW across the masterplan.' }
+    ],
+    questions: [
+      { ask: 'What will the on-site generation burn?', who: 'Applicant — the documents name neither fuel nor plant type.' },
+      { ask: 'How does 54 MW sit against the local network’s headroom?', who: 'UK Power Networks.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Camro', mentions: '(112 mentions)' },
+      { role: 'Advisers', name: 'Bidwells', mentions: '(58)' },
+      { role: 'Authority', name: 'East Cambridgeshire District Council', mentions: '(70)' },
+      { role: 'Nearest energy project', name: 'Sunnica Energy Farm — 11.3 km', mentions: 'PINS' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: '12 units; fuel not stated' },
+      { label: 'Cooling', value: 'Adiabatic (88), air-cooled (40)' },
+      { label: 'Water evidence', value: '61 consumption findings' },
+      { label: 'EIA status', value: 'Required — environmental statement submitted' }
+    ] },
+  { key: 'ferrybridge', name: 'Ferrybridge C Power Station — data centre', councils: 'Wakefield', address: 'Ferrybridge C, Knottingley',
+    proposal: 'Data centre alongside a proposed 1.2 GW hydrogen-capable generating station.',
+    mw: '—', basis: 'No capacity disclosed', read: '94 of 101', readPct: 93, interest: 79,
+    signals: ['energy_park', 'no_capacity'],
+    summary: 'A nationally significant 1.2 GW generating station sits 300 metres away and shares the site’s history. The data centre itself discloses no load at all, so the only capacity figure available describes the power plant.',
+    excluded: '41 figures belong to the generating station’s own consent and are held in the energy layer, not merged in here.',
+    figures: [
+      { value: '1.2 GW', quantity: 'generating capacity (the energy project, not the data centre)', audience: 'the Planning Inspectorate', publishedAs: 'output capacity', source: 'EN0110011', locator: 'PINS register', confidence: 'metadata only', quote: 'A generating station of up to 1.2 GW designed to run on 100% hydrogen and able to run on natural gas.' }
+    ],
+    questions: [
+      { ask: 'Is the data centre the reason for the power station, or the other way round?', who: 'SSE Hydrogen Developments; Wakefield Council.' },
+      { ask: 'Why does the data centre disclose no load?', who: 'The applicant — 101 documents state none.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'SSE Hydrogen Developments Limited', mentions: '(64 mentions)' },
+      { role: 'Advisers', name: 'AECOM', mentions: '(38)' },
+      { role: 'Authority', name: 'Wakefield Council; PINS for the energy consent', mentions: '' },
+      { role: 'Nearest energy project', name: 'Ferrybridge Next Generation — 0.3 km', mentions: 'PINS' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: 'Not described' },
+      { label: 'Generation', value: 'Adjacent 1.2 GW station, hydrogen or natural gas' },
+      { label: 'Cooling', value: 'Not described' },
+      { label: 'EIA status', value: 'Required for the energy project' }
+    ] },
+  { key: 'southmimms', name: 'South Mimms Service Station — 250 MW data centre', councils: 'Hertsmere', address: 'South Mimms Service Station, Hertfordshire',
+    proposal: 'Outline application for a data centre campus with substation and grid works.',
+    mw: '400', basis: 'Contracted grid connection', read: '221 of 240', readPct: 92, interest: 66,
+    signals: ['two_audiences'],
+    summary: 'Both the council and the grid operator were told 400 MW. A ratio of one is corroboration, not coincidence: two audiences given the same number by the same developer, arrived at independently here.',
+    excluded: '33 figures describe the market and are excluded here.',
+    figures: [
+      { value: '400 MW', quantity: 'contracted grid connection', audience: 'the planning authority', publishedAs: 'grid connection', source: 'Hertsmere/24/1152/OUTEI', locator: 'page 2', confidence: 'high', quote: 'A 400 MW connection is sought for the campus.' },
+      { value: '400 MW', quantity: 'contracted grid connection', audience: 'the grid operator', publishedAs: 'Total Capacity', source: 'NESO Existing Agreements Register', locator: 'row 541', confidence: 'probable match', quote: 'Connection agreement, 400 MW.' }
+    ],
+    questions: [
+      { ask: 'Why is the scheme titled 250 MW when the connection is 400?', who: 'Applicant — the title and the file disagree.' },
+      { ask: 'Where does 400 MW come from on this part of the network?', who: 'NESO and the DNO.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Not named in the outline application', mentions: '' },
+      { role: 'Advisers', name: 'Turley, WSP', mentions: '(84, 52)' },
+      { role: 'Authority', name: 'Hertsmere Borough Council', mentions: '(77)' },
+      { role: 'Nearest energy project', name: 'London Strategic Heat Main — 14 km', mentions: 'PINS' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: '32 units; fuel not stated' },
+      { label: 'Cooling', value: 'Adiabatic (120), chilled water (77)' },
+      { label: 'Water evidence', value: '96 consumption findings' },
+      { label: 'EIA status', value: 'Required — environmental statement submitted' }
+    ] },
+  { key: 'cody', name: 'Cody Technology Park — two data centres, south site', councils: 'Hart', address: 'Business Park, Ively Road, Farnborough',
+    proposal: 'Hybrid application for the development of two data centres.',
+    mw: '—', basis: 'No capacity disclosed', read: '4 of 4', readPct: 100, interest: 84,
+    signals: ['no_capacity'],
+    summary: 'All four documents the council published have been read, and none states a capacity. A hybrid application of this size with a four-document register is itself worth a question.',
+    excluded: 'No excluded figures — the file is four documents long.',
+    figures: [
+      { value: '—', quantity: 'IT load', audience: 'the planning authority', publishedAs: 'not stated', source: 'Hart/23/00921/HYB', locator: '4 documents read', confidence: 'no figure found', quote: 'No passage in the published file states a capacity for either building.' }
+    ],
+    questions: [
+      { ask: 'Where is the rest of the file?', who: 'Hart District Council — four documents is unusually thin for a hybrid application.' },
+      { ask: 'How large are the two buildings intended to be?', who: 'Applicant.' }
+    ],
+    people: [
+      { role: 'Applicant', name: 'Not published', mentions: '' },
+      { role: 'Authority', name: 'Hart District Council', mentions: '(4)' },
+      { role: 'Nearest energy project', name: 'None within 25 km', mentions: '' }
+    ],
+    plant: [
+      { label: 'Standby plant', value: 'Not described' },
+      { label: 'Cooling', value: 'Not described' },
+      { label: 'Water evidence', value: 'None' },
+      { label: 'EIA status', value: 'Not stated' }
+    ] }
+];
+
+const LEADS = [
+  { kicker: 'Disclosure', filter: 'no_capacity', count: '22', unit: 'consented sites', checked: 'Rebuilt from reading coverage · re-verified',
+    headline: 'Twenty-two consented data centres state no power figure at all',
+    standfirst: 'Every readable document for these sites has been analysed and none names a capacity. Sites merely unread are counted separately, so this is a finding about disclosure rather than a gap in the corpus.',
+    caveat: 'Cite a fresh run, not this number.', cta: 'Open the 22 sites' },
+  { kicker: 'Grid', filter: 'grid_gap', count: '2', unit: 'sites, checked by hand', checked: 'Both checked by hand',
+    headline: 'Two sites tell the planner one connection figure and the grid operator another',
+    standfirst: 'Each states it will draw materially more than the connection its own documents describe. Neither is an extraction error — and the planning file cannot answer where the rest comes from, or when.',
+    caveat: 'Ratios of 3.6× and 6.8×.', cta: 'Open both sites' },
+  { kicker: 'Generation', filter: 'unnamed_fuel', count: '61', unit: 'sites', checked: 'Machine-read, unverified',
+    headline: 'Most on-site generation plans name neither a fuel nor a plant type',
+    standfirst: 'For an investigation that began by asking whether operators disclose generation contradicting their renewable positioning, “most of them do not say what it burns” is the measurable answer.',
+    caveat: 'Counts passages, not plant.', cta: 'Open the 61 sites' },
+  { kicker: 'Energy parks', filter: 'energy_park', count: '9', unit: 'schemes', checked: 'Machine-read, unverified',
+    headline: 'Nine schemes pair a data centre with generation far larger than the computing load',
+    standfirst: 'The centre of gravity is arguably the power project, not the building. Worth deciding, per site, which story is being told before either is written.',
+    caveat: 'Adjacency, not ownership.', cta: 'Open the 9 schemes' },
+  { kicker: 'Two audiences', filter: 'two_audiences', count: '18', unit: 'sites', checked: 'Machine-matched · match strength shown per figure',
+    headline: 'Eighteen sites gave one quantity to more than one audience',
+    standfirst: 'IT load is meant to be smaller than total site power, and a contracted connection is a different thing again. These are the narrow cases where the same quantity reached the planner, the grid operator, the auditors or the customers with different numbers attached.',
+    caveat: 'A ratio of 1.00× is corroboration.', cta: 'Open the 18 sites' },
+  { kicker: 'Dependency', filter: 'grid_dependent', count: '14', unit: 'sites', checked: 'Read off capacity components',
+    headline: 'Fourteen sites carry standby plant too small to run the building',
+    standfirst: 'Where standby generation is a small fraction of stated load, the plant is life-safety only and the site relies wholly on the grid — an operational fact with public-interest consequences.',
+    caveat: 'Read from stated components.', cta: 'Open the 14 sites' }
+];
+
+const COUNTS = { no_capacity: 22, grid_gap: 2, unnamed_fuel: 61, energy_park: 9, two_audiences: 18, grid_dependent: 14, inferred: 7, unread: 80 };
+
+class Component extends DCLogic {
+  state = { tab: 'leads', filter: null, query: '', sortInterest: this.props.sortByInterest ?? true, selected: 'watford' };
+
+  chipStyle(active) {
+    return 'font-family: inherit; font-size: 14px; padding: 7px 14px; border-radius: 999px; cursor: pointer; border: 1px solid ' +
+      (active ? '#052962' : '#c7c7c7') + '; background: ' + (active ? '#052962' : '#fff') + '; color: ' + (active ? '#fff' : '#052962') + ';';
+  }
+  tabStyle(active) {
+    return 'font-family: inherit; font-size: 16px; font-weight: 600; background: none; border: 0; color: #fff; padding: 10px 14px 12px; cursor: pointer; border-bottom: 4px solid ' +
+      (active ? '#ffe500' : 'transparent') + '; opacity: ' + (active ? '1' : '.78') + ';';
+  }
+  sigStyle(tone) {
+    const t = TONES[tone];
+    return 'font-size: 13px; font-weight: 600; padding: 4px 11px; border-radius: 999px; background: ' + t.bg + '; color: ' + t.fg + '; border: 1px solid ' + t.bd + '; white-space: nowrap;';
+  }
+  decorate(keys) {
+    return keys.map(k => ({ label: SIGNALS[k].label, style: this.sigStyle(SIGNALS[k].tone) }));
+  }
+
+  renderVals() {
+    const { tab, filter, query, sortInterest, selected } = this.state;
+    const set = t => this.setState({ tab: t });
+    const q = query.trim().toLowerCase();
+
+    let rows = SITES.filter(s => (!filter || s.signals.includes(filter)) &&
+      (!q || (s.name + ' ' + s.councils + ' ' + s.proposal).toLowerCase().includes(q)));
+    rows = rows.slice().sort((a, b) => sortInterest ? b.interest - a.interest : b.readPct - a.readPct);
+
+    const site = SITES.find(s => s.key === selected) || SITES[0];
+
+    const stubs = {
+      apps: ['Applications — 1,709 rows', 'In the redesign this stays a working table, but it is reached from a site rather than presented as a front door: a reference layer, not a starting point. Sorting, the register link and the document count all behave as they do today.'],
+      map: ['Map — 573 locations', 'The map keeps its filters and marker detail, and gains the signal colours used elsewhere, so an anomaly is visible geographically rather than only in a list. Not rebuilt in this prototype.'],
+      method: ['How it was built', 'Methodology and the data dictionary merge into one reference screen, generated from the same queries as the data. The assistant’s working notes fold into the leads screen above, where each pattern carries its own measurement note, rather than sitting in a tab of their own.']
+    };
+    const stub = stubs[tab];
+    const pad = (this.props.density ?? 'comfortable') === 'compact' ? '10px 20px' : '18px 20px';
+
+    return {
+      showProvenance: this.props.showProvenance ?? true,
+      isLeads: tab === 'leads', isSites: tab === 'sites', isSite: tab === 'site', isStub: !!stub,
+      stubTitle: stub ? stub[0] : '', stubBody: stub ? stub[1] : '',
+      goLeads: () => set('leads'), goSites: () => set('sites'), goApps: () => set('apps'),
+      goMap: () => set('map'), goMethod: () => set('method'),
+      tabLeadsStyle: this.tabStyle(tab === 'leads'),
+      tabSitesStyle: this.tabStyle(tab === 'sites' || tab === 'site'),
+      tabAppsStyle: this.tabStyle(tab === 'apps'),
+      tabMapStyle: this.tabStyle(tab === 'map'),
+      tabMethodStyle: this.tabStyle(tab === 'method'),
+
+      leads: LEADS.map(l => ({ ...l, open: () => this.setState({ tab: 'sites', filter: l.filter, query: '' }) })),
+
+      query,
+      onQuery: e => this.setState({ query: e.target.value }),
+      chips: [{ label: 'All 456 sites', key: null }].concat(
+        Object.keys(SIGNALS).map(k => ({ label: SIGNALS[k].label, key: k }))
+      ).map(c => ({
+        label: c.label,
+        style: this.chipStyle(filter === c.key),
+        pick: () => this.setState({ filter: c.key })
+      })),
+      shownCount: filter
+        ? rows.length + ' of ' + (COUNTS[filter] || rows.length) + ' matching sites shown in this sample'
+        : rows.length + ' of 456 sites',
+      toggleSort: () => this.setState({ sortInterest: !sortInterest }),
+      sortLabel: sortInterest ? 'Sorted by editorial interest' : 'Sorted by reading coverage',
+      rows: rows.map(s => ({
+        name: s.name, councils: s.councils, proposal: s.proposal, mw: s.mw, basis: s.basis, read: s.read + ' documents read',
+        signals: this.decorate(s.signals),
+        readBarStyle: 'height: 6px; width: ' + s.readPct + '%; background: ' + (s.readPct > 94 ? '#052962' : s.readPct > 0 ? '#c74600' : '#c7c7c7') + ';',
+        rowStyle: 'display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.9fr) 190px 170px; gap: 24px; padding: ' + pad + '; border-bottom: 1px solid #dcdcdc; cursor: pointer; align-items: start;',
+        open: () => this.setState({ tab: 'site', selected: s.key })
+      })),
+
+      site: { ...site, signals: this.decorate(site.signals) }
+    };
+  }
+}
+</script>
+</body>
+</html>
