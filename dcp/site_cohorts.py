@@ -107,6 +107,12 @@ class Cohort:
     # property of the cohort, not of the page, so every surface that
     # draws it draws the same one.
     tone: str                       # red | amber | slate
+    # The card's headline, as the handoff writes it: a sentence stating
+    # the count and the property. "{n} sites " + the title read as
+    # "Four sites demand stated above the grid connection", because a
+    # title is a noun phrase and a headline is a sentence. The template
+    # carries the count where it belongs; nothing else substitutes.
+    headline: str                   # must contain "{n}"
     order: int
     rule_version: str
     compute: Callable = field(repr=False)
@@ -118,6 +124,9 @@ class Cohort:
             raise CohortError(f"cohort {self.key!r} is missing its text")
         if self.tone not in ("red", "amber", "slate"):
             raise CohortError(f"cohort {self.key!r} has tone {self.tone!r}")
+        if "{n}" not in (self.headline or ""):
+            raise CohortError(
+                f"cohort {self.key!r} has no count slot in its headline")
 
 
 @dataclass(frozen=True)
@@ -347,6 +356,9 @@ def generation_exceeds_load(inputs: Inputs) -> CohortResult:
 REGISTRY: tuple[Cohort, ...] = (
     Cohort(
         key="read_in_full_silent",
+        headline=(
+            "{n} sites whose files were read in full state no capacity "
+            "at all"),
         tone="red",
         title="Read in full, and silent on capacity",
         family="coverage",
@@ -372,6 +384,9 @@ REGISTRY: tuple[Cohort, ...] = (
         compute=read_in_full_silent),
     Cohort(
         key="demand_exceeds_connection",
+        headline=(
+            "{n} sites state a demand materially above the connection "
+            "their own documents describe"),
         tone="red",
         title="Demand stated above the grid connection",
         family="power",
@@ -397,6 +412,9 @@ REGISTRY: tuple[Cohort, ...] = (
         compute=demand_exceeds_connection),
     Cohort(
         key="generation_no_fuel",
+        headline=(
+            "{n} sites describe on-site generation without naming a "
+            "fuel or a plant type"),
         tone="amber",
         title="Generation disclosed, fuel not named",
         family="generation",
@@ -421,6 +439,9 @@ REGISTRY: tuple[Cohort, ...] = (
         compute=generation_no_fuel),
     Cohort(
         key="generation_exceeds_load",
+        headline=(
+            "{n} schemes sit beside generation or storage larger than "
+            "the computing load"),
         tone="amber",
         title="On-site generation stated above stated load",
         family="generation",

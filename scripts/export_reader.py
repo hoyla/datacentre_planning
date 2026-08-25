@@ -315,7 +315,7 @@ def mw_text(v: float) -> str:
     return out.rstrip("0").rstrip(".")
 
 
-def _count_in_words(n: int) -> str:
+def _count_in_words(n: int, unit: str = "site") -> str:
     """"Twenty-two sites", for the Signals headline.
 
     The handoff asks the headline to state the count in words and the
@@ -323,9 +323,14 @@ def _count_in_words(n: int) -> str:
     measurement of something, and this number is a count of rows a rule
     selected. Above 999 it stays a numeral: "one thousand and forty-one
     sites" is not a sentence anybody wants to read.
+
+    `unit` is the noun the count is of, pluralised here. Pass "" where
+    the caller supplies its own: a cohort headline may name schemes
+    rather than sites, and that word belongs in the registry's sentence
+    rather than in this function's assumption.
     """
     if n < 0 or n > 999:
-        return f"{n:,} sites"
+        return f"{n:,}" + (f" {unit}s" if unit else "")
     if n < 20:
         word = _ONES[n]
     elif n < 100:
@@ -333,9 +338,10 @@ def _count_in_words(n: int) -> str:
     else:
         rest = n % 100
         word = _ONES[n // 100] + " hundred" + (
-            f" and {_count_in_words(rest).removesuffix(' sites').removesuffix(' site')}"
-            if rest else "")
-    return f"{word.capitalize()} site" + ("" if n == 1 else "s")
+            f" and {_count_in_words(rest, '')}" if rest else "")
+    if not unit:
+        return word.capitalize()
+    return f"{word.capitalize()} {unit}" + ("" if n == 1 else "s")
 
 
 def esc(v) -> str:
@@ -594,7 +600,7 @@ ul.rq li{margin-bottom:2px}
    orange elsewhere, and the two are different jobs. */
 .signals{display:block;margin-top:14px}
 .sigexplain{max-width:62em}
-.sigcard{border-top-color:#c70000;display:grid;
+.card.sigcard{border-top-color:#c70000;display:grid;
   grid-template-columns:minmax(0,1fr) 300px;gap:36px;margin-bottom:16px}
 @media (max-width:900px){.sigcard{grid-template-columns:1fr;gap:20px}}
 .sigtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
@@ -624,17 +630,8 @@ ul.rq li{margin-bottom:2px}
   font-size:13px;line-height:1.5;color:var(--mut)}
 .sigsrc{font-size:13px;color:var(--mut);background:#f2f2f2;padding:1px 5px}
 .sigactions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 0}
-.box.signal{border-radius:3px;padding:14px 16px}
-.box.signal h3{margin:4px 0 8px;font-size:21px}
-.sighead{display:flex;justify-content:space-between;align-items:baseline}
-.sigfam{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
-  color:var(--mut)}
-.sigcount{font-size:30px;font-weight:700;line-height:1.1;margin:2px 0 8px}
-.sigcount.withheld{font-size:21px;color:var(--mut)}
-.sigchecks{font-size:14px}
-.sigdef dt{color:var(--mut)}
-.sigdef code{font-size:13.5px;white-space:normal}
-.sigactions{font-size:14.5px;margin:8px 0 4px}
+.sigchecks{font-size:14px;line-height:1.5;color:var(--body)}
+.sigwithheld{margin:0;font-size:15px;font-weight:600;color:var(--warn)}
 .siglist{margin:6px 0 0;padding-left:18px;font-size:14px;columns:2;column-gap:24px}
 .siglist li{break-inside:avoid;margin-bottom:3px}
 @media (max-width:700px){.siglist{columns:1}}
@@ -825,7 +822,7 @@ tr.detail td{padding:14px 18px 18px 30px}
 .sitebody .col-record,.sitebody .col-computed{display:flex;flex-direction:column;
   gap:0;min-width:0}
 /* §5's header card, and the identifiers under the name. */
-.sitehead{border-top-color:var(--brand);padding:22px 26px 24px;margin-bottom:0}
+.card.sitehead{border-top-color:var(--brand);padding:22px 26px 24px;margin-bottom:0}
 .sitepills{margin:0 0 10px;display:flex;gap:6px;flex-wrap:wrap}
 /* No max-width. The handoff's 28em measured a name inside a column;
    this card is the full width of the page, and "SAUNDERTON DATA CENTRE
@@ -877,11 +874,11 @@ table.afig td.n{font-weight:600;white-space:nowrap;
 table.afig td .q{display:block;margin-top:3px}
 /* The handoff's four pill sets, used here for the adjudicator's answer.
    Green is the only verdict that feeds a number on the page. */
-.vpill{display:inline-block;font-size:11.5px;font-weight:600;
+.adjpill{display:inline-block;font-size:11.5px;font-weight:600;
   border-radius:999px;padding:1px 8px;white-space:nowrap;border:1px solid}
-.vpill.v-yes{background:#e9f3ec;color:#1d6b38;border-color:#c7e0d0}
-.vpill.v-out{background:#eef1f6;color:#3f5570;border-color:#d6dde8}
-.vpill.v-maybe{background:#fdf0e6;color:#a13a00;border-color:#f2d6bd}
+.adjpill.v-yes{background:#e9f3ec;color:#1d6b38;border-color:#c7e0d0}
+.adjpill.v-out{background:#eef1f6;color:#3f5570;border-color:#d6dde8}
+.adjpill.v-maybe{background:#fdf0e6;color:#a13a00;border-color:#f2d6bd}
 .sitestate{margin:0 0 12px;display:flex;align-items:center;gap:14px;
   flex-wrap:wrap;font-size:14px;color:var(--mut)}
 .sitestate .rbar{margin:0;flex:0 0 150px}
@@ -3026,7 +3023,7 @@ def main() -> int:
                 + '<td class="q">' + (f'page {r["page"]}' if r["page"] else "—")
                 + f' \u00b7 {esc(r["ref"])}</td>'
                 + f'<td class="q">{esc(r["model"] or "")}</td>'
-                + '<td><span class="vpill {1}">{0}</span>'.format(
+                + '<td><span class="adjpill {1}">{0}</span>'.format(
                     esc(VERDICT_LABEL.get(r["verdict"], (r["verdict"], "v-maybe"))[0]),
                     VERDICT_LABEL.get(r["verdict"], (r["verdict"], "v-maybe"))[1])
                 + (f'<span class="q">{esc(trim(r["reason"], 260))}</span>'
@@ -3385,12 +3382,14 @@ def main() -> int:
         key = c.cohort.key
         n = len(r.members)
         if r.withheld:
-            count_html = ('<div class="sigcount withheld">Withheld</div>'
-                          f'<p class="help">{esc(r.withheld)}</p>')
+            count_html = ('<p class="sigwithheld">Not computed for this '
+                          'release.</p>'
+                          f'<p class="sigfloor">{esc(r.withheld)}</p>')
             actions = ""
         else:
-            count_html = (f'<div class="sigcount">{n:,}<span class="q"> site'
-                          f'{"" if n == 1 else "s"}</span></div>')
+            count_html = (f'<div class="signum">{n:,}</div>'
+                          f'<div class="sigunit">site{"" if n == 1 else "s"}, '
+                          f'when this page was built</div>')
             site_list = "".join(
                 f'<li><a href="#site-{esc(quote(m.site_key, safe=""))}" '
                 f'onclick="return goSite(this.dataset.key)" '
@@ -3441,13 +3440,20 @@ def main() -> int:
                             + ", ".join(esc(site_names.get(k.site_key) or k.site_key)
                                         for k in c.outside))
             checks_html = '<p class="sigchecks">' + "; ".join(bits) + ".</p>"
-        notes_html = "".join(f'<p class="help">{esc(x)}</p>' for x in r.notes)
         # The design handoff's §3 card: family label, verification pill,
         # a headline stating the count in words and the property, the
         # rule itself in a monospace block, what it does not tell you,
         # the actions row, and a right-hand column carrying the count
         # and what cannot enter the cohort.
         n_members = len(c.result.members)
+        # A withheld cohort has no count, and "no sites match this" is
+        # the one thing it must not say: the rule was not run, which is a
+        # different claim from a result of zero. Its headline is the
+        # property alone.
+        _words = _count_in_words(n_members, "")
+        headline = (esc(c.cohort.title) if r.withheld else
+                    esc(c.cohort.headline.format(
+                        n=_words[:1].upper() + _words[1:])))
         pill = ('<span class="vpill vpill-hand">Hand-checked</span>'
                 if c.confirmed else
                 '<span class="vpill vpill-machine">Computed, not hand-checked</span>')
@@ -3462,16 +3468,15 @@ def main() -> int:
   <div class="sigmain">
    <div class="sigtop"><span class="sigfam">{esc(humanise(c.cohort.family))}</span>{pill}
     <span class="sigrule">rule {esc(c.cohort.rule_version)}</span></div>
-   <h3 class="sigheadline">{esc(_count_in_words(n_members))} {esc(c.cohort.title.lower())}</h3>
+   <h3 class="sigheadline">{headline}</h3>
    <p class="sigprose">{esc(c.cohort.definition)}</p>
    <div class="sigquery">{esc(c.cohort.rule)}</div>
    <p class="siglimits"><b>What it does not tell you.</b> {esc(c.cohort.limits)}</p>
-   {checks_html}{notes_html}
+   {checks_html}
    {actions}
   </div>
   <div class="sigside">
-   <div class="signum">{n_members:,}</div>
-   <div class="sigunit">sites{"" if c.result.withheld else ", when this page was built"}</div>
+   {count_html}
    {floor}
   </div>
  </div>"""
