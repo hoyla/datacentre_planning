@@ -89,6 +89,16 @@ class CohortResult:
     # how many candidates were excluded and why.
     notes: tuple[str, ...] = ()
 
+    def __post_init__(self):
+        # A refusal that also returns members is two answers to one
+        # question, and the page would print the count beside the reason.
+        # No cohort is withheld today, which is why this is asserted here
+        # rather than left to a browser test that can only run when one
+        # is.
+        if self.withheld and self.members:
+            raise CohortError(
+                f"a withheld result carries {len(self.members)} members")
+
     @property
     def site_keys(self) -> set[str]:
         return {m.site_key for m in self.members}
@@ -334,27 +344,71 @@ def generation_no_fuel(inputs: Inputs) -> CohortResult:
     return CohortResult(tuple(members))
 
 
-def generation_exceeds_load(inputs: Inputs) -> CohortResult:
-    """Withheld until the generation batch has run.
+# A generation figure is comparable with a load only where the
+# adjudication says it describes a total. A per-unit rating is one
+# machine — JVC discloses sixteen units of 3.2 MW, and multiplying is
+# the mistake this cohort was withheld to avoid — and `unclear` is the
+# adjudicator saying the passage does not settle which.
+_TOTAL_BASES = {"installation_total", "site_total", "stated_group_total"}
+# The margin. Not "larger than": a site whose generation matches its load
+# to within a third is a site with standby cover for what it draws, which
+# is ordinary. This asks for generation half again as large.
+_GENERATION_MARGIN = 1.5
 
-    The rule is on-site generation above 1.5 times stated load, from
-    the site's own adjudicated figures. Computed today it selects nine
-    sites, and at least two of them are wrong for reasons the batch
-    exists to settle: JVC Business Park's 165 MW is "50 x 3.3 MWt
-    Generators" — heat, not electricity — and Rover Way's 1,000 MW is
-    an "energy capacity" the quote does not attribute to any plant.
-    Until each figure carries a basis (one machine, a fleet, the site)
-    and a plant type (standby, prime, renewable, storage), a cohort on
-    this rule would be the design handoff's standby cohort with the
-    sign flipped.
+
+def generation_exceeds_load(inputs: Inputs) -> CohortResult:
+    """On-site generation half again as large as the load the site states.
+
+    Withheld from 2026-08-23 until the generation batch had run, because
+    the rule computed on raw figures selected nine sites and at least two
+    of them wrongly: JVC Business Park's 165 MW was "50 x 3.3 MWt
+    Generators", which is heat, and Rover Way's 1,000 MW was an "energy
+    capacity" the quote attributed to no plant at all.
+
+    `gpt-5/generation-2.5` has since adjudicated 1,667 figures for what
+    each one describes, and it settles both — JVC's headline is now a
+    per-unit 3.2 MW with the 165 set aside as not generation, and every
+    one of Rover Way's seven figures is set aside the same way, so
+    neither site can enter. The rule reads that adjudication rather than
+    the quotes, which is what it was waiting for.
+
+    A figure's plant type does not decide membership: standby plant
+    larger than the load is the finding, not a disqualification. It
+    travels with each member so a reader can see which kind it is.
     """
-    return CohortResult((), withheld=(
-        "Not computed: the figures this rule compares have not yet been "
-        "adjudicated for what they are — one machine or a fleet, standby "
-        "or prime, electrical or thermal. The generation batch "
-        "(scripts/adjudicate_generation.py) is waiting on its hand-checked "
-        "sample. Computed without it the rule selects nine sites, and at "
-        "least two of them on a thermal figure."))
+    members, skipped = [], 0
+    for key in inputs.sites:
+        gen = inputs.generation.get(key)
+        if not gen or not gen.value_mw:
+            continue
+        if gen.basis_key not in _TOTAL_BASES:
+            skipped += 1
+            continue
+        f = inputs.figures.get(key, {})
+        loads = [(v, q) for q, v in
+                 (("it_load", f.get("it_load_mw")),
+                  ("total_site", f.get("total_site_mw"))) if v]
+        if not loads:
+            continue
+        # The larger of the two, which is the conservative one: a bigger
+        # load makes membership harder to reach, never easier.
+        load, quantity = max(loads)
+        if gen.value_mw < _GENERATION_MARGIN * load:
+            continue
+        members.append(Member(key, {
+            "generation_mw": round(gen.value_mw, 1),
+            "load_mw": round(load, 1),
+            "load_quantity": quantity,
+            "ratio": round(gen.value_mw / load, 2),
+            "generation_basis": gen.basis_key,
+            "plant_type": gen.plant_type or "not settled"}))
+    notes = ()
+    if skipped:
+        notes = (f"{skipped} further sites disclose a generation figure that "
+                 f"the adjudication reads as one machine's rating, or does "
+                 f"not settle. Those are not comparable with a load and are "
+                 f"excluded rather than multiplied.",)
+    return CohortResult(tuple(members), notes=notes)
 
 
 # ---------------------------------------------------------------------------
@@ -492,28 +546,32 @@ REGISTRY: tuple[Cohort, ...] = (
     Cohort(
         key="generation_exceeds_load",
         headline=(
-            "{n} schemes sit beside generation or storage larger than "
-            "the computing load"),
+            "{n} sites disclose on-site generation half again as large as "
+            "the load they state"),
         tone="amber",
-        title="On-site generation stated above stated load",
+        title="Generation larger than the load",
         family="generation",
         definition=(
             "The site's own adjudicated on-site generation figure is more than "
             "one and a half times its stated load."),
         rule=(
-            f"generation_mw > {RATIO} × max(it_load_mw, total_site_mw), using "
-            "only fleet-total and site-total figures of combustion plant once "
-            "the generation batch has labelled them; withheld until then."),
+            f"generation_mw >= {_GENERATION_MARGIN} \u00d7 max(it_load_mw, "
+            "total_site_mw), over generation figures the adjudication reads "
+            "as a total for an installation, a stated group or the site — "
+            "never a per-unit rating, and never one it could not settle."),
         limits=(
-            "Withheld in this release. The headline generation figure can be "
-            "one machine's rating, a fleet's, the site's, or a thermal input "
-            "rather than an electrical output, and it can be rooftop PV; the "
-            "adjudication that separates those has a prompt but no verdicts "
-            "yet. When it runs, the rule uses combustion plant only, and a "
-            "standby fleet sized to carry the whole load will qualify — "
-            "which is a property of the documents, not a finding about "
-            "intent."),
-        order=4, rule_version="2026-08-23.0",
+            "Nothing here is a finding about intent. A standby fleet sized to "
+            "carry the whole load qualifies, and so it should — that is a "
+            "property of the documents — but it is not evidence that anyone "
+            "means to run it. The plant type travels with each site for that "
+            "reason, and where the documents do not say how the plant is "
+            "meant to run it says so rather than guessing. Sites whose "
+            "generation figure is one machine's rating are excluded, not "
+            "multiplied by a count found elsewhere; the number excluded that "
+            "way is printed beside this rule. And a site absent from here may "
+            "still hold generation larger than its load: it may state no load "
+            "at all, which most of the corpus does not."),
+        order=4, rule_version="2026-08-25.1",
         compute=generation_exceeds_load),
     Cohort(
         key="at_least_100mw",

@@ -194,15 +194,112 @@ def test_no_generation_at_all_is_not_in_the_cohort():
 
 
 # ---------------------------------------------------------------------------
-# Withholding
+# generation_exceeds_load
+#
+# Withheld from 2026-08-23 until gpt-5/generation-2.5 had adjudicated what
+# each generation figure describes. The two sites named in that
+# withholding are the cases these assertions are built from.
 # ---------------------------------------------------------------------------
 
-def test_generation_exceeds_load_withholds_itself_with_a_reason():
-    r = sc.generation_exceeds_load(_inputs(["S"], figures={"S": {
-        "it_load_mw": 10.0, "generation_mw": 1000.0}}))
-    assert r.members == ()
-    assert "Not computed" in r.withheld
-    assert "adjudicate_generation" in r.withheld
+def _gen(mw, basis, plant="standby_combustion"):
+    return GenerationFigure(mw, "as stated", None, None, "", plant,
+                            basis_key=basis)
+
+
+def test_a_withheld_result_cannot_also_carry_members():
+    """The contract behind the Signals card's refusal.
+
+    Nothing is withheld today — generation_exceeds_load was, and is not
+    since 2026-08-25 — so the browser test that renders a withheld card
+    skips. This holds the shape of the thing whether or not any rule is
+    currently using it.
+    """
+    with pytest.raises(sc.CohortError):
+        sc.CohortResult((sc.Member("S", {}),), withheld="not computed")
+    r = sc.CohortResult((), withheld="not computed")
+    assert r.site_keys == set() and r.withheld
+
+
+def test_generation_half_again_the_load_qualifies():
+    r = sc.generation_exceeds_load(_inputs(
+        ["S"], figures={"S": {"it_load_mw": 100.0}},
+        generation={"S": _gen(228.0, "stated_group_total")}))
+    assert r.site_keys == {"S"}
+    ev = r.members[0].evidence
+    assert ev["ratio"] == 2.28
+    assert ev["load_quantity"] == "it_load"
+    assert ev["plant_type"] == "standby_combustion"
+
+
+def test_generation_merely_matching_the_load_does_not():
+    """Standby cover for what a site draws is ordinary, not a signal."""
+    r = sc.generation_exceeds_load(_inputs(
+        ["S"], figures={"S": {"it_load_mw": 100.0}},
+        generation={"S": _gen(140.0, "site_total")}))
+    assert r.site_keys == set()
+
+
+def test_a_per_unit_rating_is_never_multiplied_into_a_total():
+    """JVC Business Park: sixteen units of 3.2 MW against a 75 MW load.
+
+    The withheld rule multiplied a count by a rating and selected it on
+    165 MW, which is the thermal figure the same documents give. A
+    per-unit figure is not comparable with a load at all.
+    """
+    r = sc.generation_exceeds_load(_inputs(
+        ["JVC"], figures={"JVC": {"it_load_mw": 75.0}},
+        generation={"JVC": _gen(3.2, "per_generator")}))
+    assert r.site_keys == set()
+    assert r.notes and "one machine's rating" in r.notes[0]
+
+
+def test_a_figure_the_adjudicator_could_not_settle_is_excluded():
+    r = sc.generation_exceeds_load(_inputs(
+        ["S"], figures={"S": {"it_load_mw": 10.0}},
+        generation={"S": _gen(1000.0, "unclear")}))
+    assert r.site_keys == set()
+
+
+def test_a_site_with_no_generation_figure_left_cannot_qualify():
+    """Rover Way: seven figures, every one read as not generation.
+
+    site_profile.generation_figure returns no value at all in that case,
+    and a site with none is not in the cohort — the withheld rule had it
+    on 1,000 MW of "energy capacity" attributed to no plant.
+    """
+    r = sc.generation_exceeds_load(_inputs(
+        ["ROVER"], figures={"ROVER": {"it_load_mw": 10.0}},
+        generation={"ROVER": GenerationFigure(None, "", None, None, "")}))
+    assert r.site_keys == set()
+
+
+def test_the_larger_of_the_two_loads_is_the_one_compared():
+    """The conservative choice: a bigger load makes membership harder."""
+    r = sc.generation_exceeds_load(_inputs(
+        ["S"], figures={"S": {"it_load_mw": 6.0, "total_site_mw": 27.16}},
+        generation={"S": _gen(50.0, "site_total", "unclear")}))
+    assert r.site_keys == {"S"}
+    assert r.members[0].evidence["load_quantity"] == "total_site"
+    assert r.members[0].evidence["load_mw"] == 27.2
+
+
+def test_a_site_stating_no_load_is_not_in_the_cohort():
+    """Nothing to exceed. Most of the corpus states no load at all."""
+    r = sc.generation_exceeds_load(_inputs(
+        ["S"], figures={"S": {"grid_mw": 40.0}},
+        generation={"S": _gen(500.0, "site_total")}))
+    assert r.site_keys == set()
+
+
+def test_plant_type_does_not_decide_membership():
+    """Standby plant larger than the load is the finding, not a reason to
+    drop the site — but which kind it is travels with it."""
+    for plant in ("standby_combustion", "prime_combustion", "renewable"):
+        r = sc.generation_exceeds_load(_inputs(
+            ["S"], figures={"S": {"it_load_mw": 50.0}},
+            generation={"S": _gen(346.0, "installation_total", plant)}))
+        assert r.site_keys == {"S"}, plant
+        assert r.members[0].evidence["plant_type"] == plant
 
 
 # ---------------------------------------------------------------------------
