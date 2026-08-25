@@ -518,7 +518,7 @@ REGISTRY: tuple[Cohort, ...] = (
     Cohort(
         key="at_least_100mw",
         tone="slate",
-        title="One hundred megawatts or more",
+        title="100 MW or more",
         headline=("{n} sites are at one hundred megawatts or more on the "
                   "best figure available for them"),
         family="power",
