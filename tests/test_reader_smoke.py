@@ -212,29 +212,39 @@ def test_filters_change_the_count_and_the_count_is_true(page):
 
 
 @pytest.mark.integration
-def test_an_organisation_chip_filters_and_is_a_link(page):
-    """The who's-behind-it chips (READER_REDESIGN_PLAN §5e).
+def test_the_organisation_filter_states_itself_and_can_be_left(page):
+    """The who's-behind-it filter (READER_REDESIGN_PLAN §5e, amended by
+    Luke 2026-08-25: the badge in the row is the control, and there is no
+    button per organisation above the table).
 
-    Three things at once, because they are one behaviour: the chip
-    filters the table, the count it leaves is the number of rows a
-    reader can see, and the URL says which chip is on — a filtered table
-    has to be sendable.
+    Four things at once, because they are one behaviour: the badge
+    filters, the count it leaves is the number of rows a reader can see,
+    the URL says which filter is on — a filtered table has to be
+    sendable — and the page SAYS it is filtered, because a reader who
+    cannot see what is filtering a table reads a subset as the whole.
     """
     page.click("#tab-sites")
     page.fill("#q", "")
     page.select_option("#f", "all")
     _, total = _count_text(page)
+    assert not page.locator("#whobar").is_visible(), \
+        "the filter bar shows with no filter on"
 
-    chip = page.locator("#whochips .chip").nth(1)   # 0 is "Any"
-    key = chip.get_attribute("data-who")
-    assert key, "a chip with no organisation behind it"
-    chip.click()
+    badge = page.locator("#tbl-sites tr.site button.who").first
+    key = badge.get_attribute("data-who")
+    name = badge.get_attribute("data-whoname")
+    assert key and name
+    badge.click()
     shown, total_now = _count_text(page)
     assert total_now == total
-    assert 0 < shown < total, "the chip filtered nothing"
-    assert shown == _visible_site_rows(page), "the chip's count lies"
+    assert 0 < shown < total, "the badge filtered nothing"
+    assert shown == _visible_site_rows(page), "the count lies"
     assert page.evaluate("() => decodeURIComponent(location.hash)") == "#who:" + key
-    assert chip.get_attribute("aria-pressed") == "true"
+
+    bar = page.locator("#whobar")
+    assert bar.is_visible(), "the table is filtered and does not say so"
+    assert name[:18] in bar.inner_text(), \
+        f"the bar does not name what it filtered to: {bar.inner_text()!r}"
 
     # Every row left is that organisation's — alone, or as one of the
     # operators an estate record holds.
@@ -243,17 +253,14 @@ def test_an_organisation_chip_filters_and_is_a_link(page):
         "  .filter(r => r.style.display !== 'none')"
         "  .every(r => r.dataset.who.split('|').includes(k))", key)
 
-    # Clicking it again is the way back, and so is Any.
-    chip.click()
+    page.locator("#whobar .chip").click()          # Clear
     assert _count_text(page)[0] == total
-    chip.click()
-    page.locator("#whochips .chip").first.click()
-    assert _count_text(page)[0] == total
+    assert not bar.is_visible()
 
 
 @pytest.mark.integration
 def test_a_badge_in_the_table_filters_to_its_organisation(page):
-    """The badge is the same control as the chip, on the row itself."""
+    """The badge is the control, and it lives on the row."""
     page.click("#tab-sites")
     page.fill("#q", "")
     page.select_option("#f", "all")
@@ -267,7 +274,7 @@ def test_a_badge_in_the_table_filters_to_its_organisation(page):
     assert page.evaluate("() => decodeURIComponent(location.hash)") == "#who:" + key
     # Clicking a badge must not open the row underneath it.
     assert page.locator("#tbl-sites tr.site.open").count() == 0
-    page.locator("#whochips .chip").first.click()
+    page.locator("#whobar .chip").click()
 
 
 @pytest.mark.integration
@@ -280,14 +287,27 @@ def test_signals_cards_count_what_their_chips_leave(page):
     """
     page.click("#tab-signals")
     assert _views_on(page) == ["signals"]
-    cards = page.locator(".box.signal")
+    cards = page.locator(".sigcard")
     assert cards.count() >= 3
+    # The count moved into the card's right-hand column with the design
+    # handoff's §3 layout; a withheld cohort has no .signum at all.
     counts = page.evaluate(
-        "() => [...document.querySelectorAll('.box.signal')].map(b => ({"
+        "() => [...document.querySelectorAll('.sigcard')].map(b => ({"
         "  key: b.id.replace(/^signal-/, ''),"
-        "  n: (b.querySelector('.sigcount:not(.withheld)')||{}).textContent||null}))")
+        "  n: (b.querySelector('.signum')||{}).textContent||null}))")
+    # A cohort the rule selected nothing for has no chip to click: its
+    # card states the zero, which is a result, and offers nothing to
+    # open. Those are checked by the assertion below rather than here.
     computed = [(c["key"], int(c["n"].split()[0].replace(",", "")))
-                for c in counts if c["n"]]
+                for c in counts if c["n"]
+                and int(c["n"].split()[0].replace(",", "")) > 0]
+    empty = [c["key"] for c in counts if c["n"]
+             and int(c["n"].split()[0].replace(",", "")) == 0]
+    for key in empty:
+        card = page.locator(f"#signal-{key}")
+        assert card.locator(".signum").inner_text().strip() == "0"
+        assert card.locator(".cta").count() == 0, \
+            f"{key} selected no sites and still offers to open them"
     assert computed, "no computed cohort on the page"
     withheld = [c["key"] for c in counts if not c["n"]]
     page.click("#tab-sites")
@@ -306,11 +326,13 @@ def test_signals_cards_count_what_their_chips_leave(page):
 
 
 @pytest.mark.integration
-def test_the_two_chip_groups_compose_and_both_sit_in_the_url(page):
+def test_an_organisation_and_a_signal_compose_and_both_sit_in_the_url(page):
+    """A badge filter and a cohort chip are different questions and both
+    apply. The badge is the row's; the chip is the table's."""
     page.click("#tab-sites")
     page.fill("#q", "")
     page.select_option("#f", "all")
-    who = page.locator("#whochips .chip").nth(1)
+    who = page.locator("#tbl-sites tr.site button.who").first
     coh = page.locator("#cohortchips .chip:not([disabled])").nth(1)
     who.click(); coh.click()
     h = page.evaluate("() => decodeURIComponent(location.hash)")
@@ -322,7 +344,7 @@ def test_the_two_chip_groups_compose_and_both_sit_in_the_url(page):
     page.wait_for_function("() => document.querySelectorAll('tr.site').length > 0")
     assert page.evaluate("() => decodeURIComponent(location.hash)") == h
     assert _count_text(page)[0] == shown
-    page.locator("#whochips .chip").first.click()
+    page.locator("#whobar .chip").click()
     page.locator("#cohortchips .chip").first.click()
 
 
