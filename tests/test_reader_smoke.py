@@ -9,9 +9,9 @@ one on screen. Four hundred tests passed throughout, because nothing
 drove the artefact. ROADMAP asked for a build-and-drive test; this is
 it.
 
-It builds the reader from the live database into a temporary file (nine
-seconds), opens it headless in Chromium through Playwright, and asserts
-the behaviours, not the pixels:
+It takes the session-wide reader build (conftest's `built_reader`),
+opens it headless in Chromium through Playwright, and asserts the
+behaviours, not the pixels:
 
 - every tab button shows its view and hides the others;
 - a site row opens, its panel shows, and the address bar names it;
@@ -33,41 +33,18 @@ fixture would not exercise the real markup.
 
 from __future__ import annotations
 
-import os
 import re
-import subprocess
-import sys
-from pathlib import Path
 
 import pytest
-
-ROOT = Path(__file__).resolve().parent.parent
-EXPORT = ROOT / "scripts" / "export_reader.py"
 
 playwright = pytest.importorskip("playwright.sync_api", reason="playwright not installed")
 
 
-def _build(out: Path) -> None:
-    if not os.environ.get("DATABASE_URL"):
-        pytest.skip("DATABASE_URL not set")
-    proc = subprocess.run(
-        [sys.executable, str(EXPORT), "--out", str(out), "--phase", "test"],
-        cwd=ROOT, capture_output=True, text=True, timeout=300, check=False)
-    if proc.returncode != 0:
-        combined = proc.stdout + proc.stderr
-        tail = combined.strip().splitlines()[-8:]
-        if "uncorrected" in combined:
-            pytest.skip("adjudication gate refused the build: " + " / ".join(tail))
-        if "could not connect" in combined or "OperationalError" in combined:
-            pytest.skip("live database unreachable: " + " / ".join(tail))
-        pytest.fail("build failed:\n" + "\n".join(tail))
-
-
 @pytest.fixture(scope="module")
-def reader_url(tmp_path_factory) -> str:
-    out = tmp_path_factory.mktemp("reader") / "reader.html"
-    _build(out)
-    return out.as_uri()
+def reader_url(built_reader) -> str:
+    """The session-wide build in conftest, so this suite and the
+    design-conformance suite do not build the reader twice."""
+    return built_reader
 
 
 @pytest.fixture(scope="module")
