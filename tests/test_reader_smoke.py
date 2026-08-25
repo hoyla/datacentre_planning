@@ -146,7 +146,10 @@ def test_a_site_row_opens_its_page_and_back_returns_the_table(page):
     row.click()
     assert _views_on(page) == ["site"]
     assert page.evaluate("() => decodeURIComponent(location.hash)") == f"#site-{key}"
-    assert page.locator("#sitetitle").inner_text().strip()
+    assert page.locator("#sitehost .sitename").inner_text().strip()
+    assert page.locator("#view-site h2#sitetitle").count() == 0, (
+        "the name belongs to the header card, not to a page-level "
+        "heading scraped out of the row")
     assert page.locator("#sitehost a[href]").count() == links_before
     assert detail.locator("a[href]").count() == 0, "the panel must move, not copy"
     # The Sites tab stays lit: the page is a place inside Sites.
