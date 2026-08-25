@@ -565,6 +565,13 @@ Answer for each finding:
     "does_not_fit"  the text plainly belongs under a different family —
                     it is about another subject entirely, not merely a
                     less good match. Name that family.
+    "not_a_finding" the text is not a fact about the development at all,
+                    so no family would hold it: the extractor's own
+                    reasoning caught in the quote, a form field with
+                    nothing in it, a job description, a map legend, a
+                    fragment that states nothing. Do not name a family;
+                    there is not one. Use this only where filing the
+                    row better is impossible, not where it is hard.
     "unclear"       the text does not settle it: it is too short, too
                     generic, spans several subjects, or is a fragment
                     that could sit under more than one family.
@@ -600,7 +607,8 @@ LABEL_AUDIT_SCHEMA = {
                 "properties": {
                     "finding_id": {"type": "integer"},
                     "verdict": {"type": "string",
-                                "enum": ["fits", "does_not_fit", "unclear"]},
+                                "enum": ["fits", "does_not_fit", "unclear",
+                                         "not_a_finding"]},
                     "suggested_family": {"type": ["string", "null"]},
                     "evidence_span": {"type": "string"},
                     "reasoning": {"type": "string"},

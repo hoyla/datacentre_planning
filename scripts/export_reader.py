@@ -2257,11 +2257,22 @@ def main() -> int:
                 FROM finding_label_audit
                 ORDER BY finding_id, inserted_at DESC, id DESC""")
             label_verdicts = {fid: (v, fam) for fid, v, fam in cur.fetchall()
-                              if v == "does_not_fit"}
-        n_demoted = 0
+                              if v in ("does_not_fit", "not_a_finding")}
+        # `not_a_finding` is the one verdict that takes a row off this
+        # list rather than moving it, because there is nowhere to move it
+        # to: the row is the extractor's own reasoning caught in a quote,
+        # an empty form field, a job description. Nothing is deleted —
+        # the finding is still in the database, the findings CSV and the
+        # workbook, and the count of what was withheld is printed at the
+        # end of the build. What changes is that a reporter reading a
+        # site's evidence is not handed text that states nothing.
+        n_demoted = n_not_findings = 0
         for k, st, vt, vn, vu, verdict, fam, fid in _raw_findings:
             filed_as = ""
             moved = label_verdicts.get(fid)
+            if moved and moved[0] == "not_a_finding":
+                n_not_findings += 1
+                continue
             if moved and moved[1] and moved[1] != fam:
                 filed_as, fam = fam, moved[1]
                 n_demoted += 1
@@ -5011,10 +5022,13 @@ def main() -> int:
     # site rows — retired, or filtered upstream — and its claim would
     # otherwise vanish without a trace.
     _claims_live = sum(len(v) for v in claims_by_site.values())
-    print(f"  Label audit: {n_demoted:,} rendered findings moved to the family "
-          f"the audit says fits, each marked with where it was filed"
-          if n_demoted else
-          "  Label audit: no verdicts stored, so nothing moved")
+    if n_demoted or n_not_findings:
+        print(f"  Label audit: {n_demoted:,} rendered findings moved to the "
+              f"family the audit says fits, each marked with where it was "
+              f"filed; {n_not_findings:,} withheld as not findings at all "
+              f"(still in the database, the CSVs and the workbook)")
+    else:
+        print("  Label audit: no verdicts stored, so nothing moved")
     if args.no_readings:
         print("  Machine readings: none built — --no-readings was passed, so "
               "no site page carries one and no reading is counted below")

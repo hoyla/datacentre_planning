@@ -40,9 +40,15 @@ CREATE TABLE finding_label_audit (
         -- 'fits'          — the text belongs under this family
         -- 'does_not_fit'  — it belongs under `suggested_family`
         -- 'unclear'       — the text does not settle it; the row stands
+        -- 'not_a_finding' — no family would hold it: the extractor's own
+        --                   reasoning caught in the quote, an empty form
+        --                   field, a job description. Added 2026-08-25,
+        --                   from marking the sample: the other three
+        --                   assume every row belongs somewhere.
 
     -- Populated only when verdict = 'does_not_fit'. One of the 25
-    -- families, or 'unclassified' where none of them fits.
+    -- families. NULL for the other three, including 'not_a_finding',
+    -- where the whole point is that no family would hold the row.
     suggested_family TEXT,
 
     -- The shortest run of the finding's own text that decides it, and
