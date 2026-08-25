@@ -445,7 +445,13 @@ table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
    nobody had applied. Both were caught by a browser test rather than by
    reading. Stated once, at the top, for every [hidden] on the page. */
 [hidden]{display:none !important}
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+/* The families are loaded by a <link> in the head, not by an @import
+   here. An @import is only honoured as the first rule of a stylesheet
+   and this one sat several hundred rules down, so every browser dropped
+   it: nothing on this page has ever rendered in Source Serif, Source
+   Sans or IBM Plex Mono — it has all been Georgia and the system sans,
+   which is why the masthead measured to the handoff and did not look
+   like it. */
 /* Page #f6f6f6, paper #fff — the token table's two greys, used the way
    it uses them. Everything was white on white, so the filter bar, the
    table and the page behind them were one undifferentiated surface and
@@ -457,7 +463,8 @@ body{margin:0;font:16px/1.62 "Source Sans 3",-apple-system,BlinkMacSystemFont,
    figure — and nothing else. The handoff uses it the same way. */
 .sitecell .sname,.mw .fig,h1,h2{font-family:"Source Serif 4",Georgia,
   "Times New Roman",serif}
-a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+a{color:var(--brand);text-decoration:none;transition:color .13s}
+a:hover{color:#234b8a;text-decoration:underline}
 /* The masthead, from the design proposal: one full-bleed band carrying
    the title, the release stamp and the tabs, where there were three
    stacked strips in two colours. It is about a third of the height and
@@ -493,11 +500,17 @@ nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
 .wrap.wide{max-width:1620px;padding:24px 32px 10px;margin:0 auto}
 .lede{font-family:"Source Serif 4",Georgia,serif;font-size:20px;line-height:1.45;
   max-width:46em}
-.parts{display:grid;gap:11px;margin:20px 0}
-.part{border:1px solid var(--line);border-radius:7px;padding:13px 15px;background:var(--soft)}
-.part h3{margin:0 0 3px;font-size:16.5px}
-.part .what{color:var(--mut);font-size:14.5px;margin:0 0 6px}
-.part .when{font-size:14px;margin:0}
+.parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+  gap:18px;margin:20px 0}
+.part{background:var(--bg);border:1px solid var(--line-lt);
+  border-top:4px solid var(--brand);border-radius:0;padding:18px 20px 20px}
+.part .kind{margin:0 0 6px;font-size:13px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--mut)}
+.part h3{margin:0 0 8px;font-family:"Source Serif 4",Georgia,serif;
+  font-size:21px;font-weight:700;line-height:1.2}
+.part .what{color:var(--body);font-size:14px;line-height:1.5;margin:0 0 10px}
+.part .when{font-size:14px;line-height:1.5;color:var(--mut);margin:0}
+.part .when b{color:var(--fg)}
 .pill{display:inline-block;font-size:13px;padding:1px 8px;border-radius:9px;
   background:rgba(127,127,127,.15);color:var(--mut);margin-left:6px;vertical-align:1px}
 .stat{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0 4px;padding:13px 15px;
@@ -518,7 +531,8 @@ details.banner-d>summary{cursor:pointer;font-weight:650;list-style:none;
 details.banner-d>summary::-webkit-details-marker{display:none}
 details.banner-d>summary:hover{text-decoration:underline}
 details.banner-d>div{margin-top:9px}
-h2.sec{font-size:15px;margin:24px 0 8px}
+h2.sec{font-size:23px;line-height:1.18;font-weight:700;margin:36px 0 10px}
+h2.sec:first-child{margin-top:0}
 .controls{display:flex;gap:14px;flex-wrap:wrap;padding:14px 20px;align-items:center;
   border-bottom:1px solid var(--line);position:sticky;top:var(--nav-h,41px);
   background:var(--bg);z-index:8}
@@ -1137,11 +1151,10 @@ img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-
 .pin.outco{opacity:.28}
 .pin.sel{width:19px;height:19px;margin:-10px 0 0 -10px;border-width:3px;z-index:5}
 #mapzoom{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:3px}
-#mapzoom button{width:31px;height:31px;font-size:21px;border:1px solid var(--line);
-  background:var(--bg);color:var(--fg);cursor:pointer;border-radius:5px}
+#mapzoom button{width:31px;height:31px;font-size:21px;border:1px solid #999;
+  background:var(--bg);color:var(--fg);cursor:pointer;border-radius:4px}
 #mapinfo{position:absolute;top:12px;left:12px;width:300px;background:var(--bg);
-  border:1px solid var(--line);border-radius:7px;padding:11px 13px;font-size:14.5px;
-  box-shadow:0 2px 14px rgba(0,0,0,.16);z-index:6}
+  border:1px solid #999;border-radius:0;padding:11px 13px;font-size:14.5px;z-index:6}
 #mapinfo .cardx{position:absolute;top:4px;right:6px;border:0;background:none;
   color:var(--mut);font-size:21px;line-height:1;cursor:pointer;padding:2px 4px}
 #mapinfo .cardx:hover{color:var(--fg)}
@@ -1166,8 +1179,8 @@ footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px s
   height:15px;margin-left:5px;border-radius:50%;border:1px solid var(--line);
   color:var(--mut);font-size:10.5px;cursor:help;position:relative;vertical-align:1px}
 .tip .tiptext{display:none;position:absolute;bottom:20px;left:-8px;width:290px;
-  background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;
-  font-size:13.5px;line-height:1.45;color:var(--fg);box-shadow:0 2px 14px rgba(0,0,0,.16);
+  background:var(--bg);border:1px solid #999;border-radius:0;padding:8px 10px;
+  font-size:13.5px;line-height:1.45;color:var(--fg);
   z-index:8;text-align:left;cursor:auto}
 /* focus-within as well as focus: a tap on a touch device, where there
    is no hover at all, lands focus on the span or on something inside
@@ -1178,9 +1191,8 @@ footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px s
    loud, with the way out attached, because a map silently showing 190 of
    429 sites is indistinguishable from a map that is simply wrong. */
 #mapsubset{position:absolute;top:10px;left:10px;right:58px;z-index:7;
-  display:flex;gap:8px;align-items:baseline;padding:7px 10px;border:1px solid var(--line);
-  border-radius:6px;background:var(--bg);font-size:13.5px;
-  box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  display:flex;gap:8px;align-items:baseline;padding:7px 10px;border:1px solid #999;
+  border-radius:0;background:var(--bg);font-size:13.5px}
 #mapsubset[hidden]{display:none}
 /* Bracketed mention counts. Subdued because they qualify the label they
    follow rather than stating a quantity of anything on the site — the
@@ -4283,6 +4295,15 @@ def main() -> int:
 <!-- The gate is there to stop the link being passed around, so the page
      should not turn up in a search either. -->
 <meta name="robots" content="noindex, nofollow, noarchive">
+<!-- The handoff's three families, requested the way its own prototype
+     does. Source Serif is asked for at 400 and in italic as well as at
+     600/700, because verbatim quotes are set in serif italic and a
+     synthesised oblique of a bold weight is not that. `display=swap` so
+     a slow font never blanks the page, and the fallbacks in every stack
+     are real faces rather than `serif`/`sans-serif`. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap">
 <style>{CSS}</style></head><body>
 <header class="masthead"><div class="mhead">
  <h1>UK datacentre plans</h1>
@@ -4412,17 +4433,18 @@ def main() -> int:
 
  <h2 class="sec" id="package">What the package contains</h2>
  <div class="parts">
-  <div class="part"><h3><a href="#sites" onclick="show('sites');return false">Sites</a>,
+  <div class="part"><p class="kind">this web portal</p>
+   <h3><a href="#sites" onclick="show('sites');return false">Sites</a>,
     <a href="#apps" onclick="show('apps');return false">Applications</a>,
     <a href="#energy" onclick="show('energy');return false">Energy projects</a>,
-    <a href="#map" onclick="show('map');return false">Map</a><span class="pill">this web
-    portal</span></h3>
+    <a href="#map" onclick="show('map');return false">Map</a></h3>
    <p class="what">Each site expands to its full proposal text, power breakdown, generation
     and cooling evidence, who is behind it, its planning applications with links to the
     council's own register, and what the documents were found to say.</p>
    <p class="when"><b>Reach for it when</b> you want to read a site and follow it outward.</p></div>
-  <div class="part"><h3><a href="#notes" onclick="show('notes');return false">Assistant's
-    notes</a><span class="pill">this web portal</span></h3>
+  <div class="part"><p class="kind">this web portal</p>
+   <h3><a href="#notes" onclick="show('notes');return false">Assistant's
+    notes</a></h3>
    <p class="what">A record of what this data looks like from the inside, written by the AI
     assistant that built the pipeline: which silences look like the strongest material, where
     the figures can mislead, what to check before publishing, and where to look next.
@@ -4430,14 +4452,15 @@ def main() -> int:
     you can open, and anything that cannot be traced that way is an opinion to discard.</p>
    <p class="when"><b>Reach for it when</b> you want the failure modes before the numbers —
     or a shortlist of what to pull on first.</p></div>
-  <div class="part"><h3><a href="#method" onclick="show('method');return false">Methodology</a>
-    · <a href="#dict" onclick="show('dict');return false">Data dictionary</a><span
-    class="pill">this web portal</span></h3>
+  <div class="part"><p class="kind">this web portal</p>
+   <h3><a href="#method" onclick="show('method');return false">Methodology</a>
+    · <a href="#dict" onclick="show('dict');return false">Data dictionary</a></h3>
    <p class="what">How sites were identified, how documents were retrieved and read, how
     power figures were adjudicated — and what every column in the workbook means.</p>
    <p class="when"><b>Reach for it when</b> an editor or a subject asks how a number was
     arrived at. The <b>?</b> beside any column heading jumps straight to its definition.</p></div>
-  <div class="part"><h3>Workbook<span class="pill">spreadsheet</span></h3>
+  <div class="part"><p class="kind">spreadsheet</p>
+   <h3>Workbook</h3>
    <p class="what">The same rows with all {len(hv.SITE_HEADERS)} columns, filterable and
     pivotable, with a provenance sheet — and the sheets behind the Operators view:
     every capacity claim, what each operator tells which audience, and the figures
@@ -4446,7 +4469,8 @@ def main() -> int:
     &nbsp;<a href="{WORKBOOK_SHEET_URL}" target="_blank" rel="noopener">Open the
     spreadsheet</a> <span class="help">· or the .xlsx
     <a href="{DRIVE_ROOT}" target="_blank" rel="noopener">on Drive</a></span></p></div>
-  <div class="part"><h3>Source documents<span class="pill">Drive</span></h3>
+  <div class="part"><p class="kind">Drive</p>
+   <h3>Source documents</h3>
    <p class="what">The council documents themselves, filed by site and by application. Every
     Drive link in these tables lands in the right folder. Each site's folder also carries a
     <b>site report</b> (the applications, parties and Barbour record, in prose) and a
@@ -4460,8 +4484,8 @@ def main() -> int:
     everything extracted from one site in a single file.
     &nbsp;<a href="{SITES_URL}" target="_blank" rel="noopener">Open the site
     folders</a></p></div>
-  <div class="part"><h3>Interrogate planning summaries on Notebook<span class="pill">Gemini
-    Notebook</span></h3>
+  <div class="part"><p class="kind">Gemini Notebook</p>
+   <h3>Interrogate planning summaries on Notebook</h3>
    <p class="what">Every site's report and its full findings table, one document per site,
     loaded into a notebook you can question in plain language — "which sites mention gas
     turbines?", "who is the agent on the Slough applications?". It answers from these
@@ -4471,8 +4495,8 @@ def main() -> int:
     be opening folders one at a time. Check anything you intend to publish against the site
     row or the document itself — the notebook is a way in, not a source.
     &nbsp;<a href="{NOTEBOOK_URL}" target="_blank" rel="noopener">Open the notebook</a></p></div>
-  <div class="part"><h3>Interrogate all planning documents on Pinpoint<span
-    class="pill">Pinpoint</span></h3>
+  <div class="part"><p class="kind">Pinpoint</p>
+   <h3>Interrogate all planning documents on Pinpoint</h3>
    <p class="what">The council documents themselves — every planning application document
     holding prose — as one full-text searchable collection. Where the notebook above holds
     this project's summaries, this holds the source material, so a phrase that no one
@@ -4486,7 +4510,8 @@ def main() -> int:
     quote from the Drive original when the passage spans a table or a multi-column page.
     &nbsp;<a href="{PINPOINT_URL}" target="_blank" rel="noopener">Open the
     collection</a></p></div>
-  <div class="part"><h3>Query database<span class="pill">DuckDB</span></h3>
+  <div class="part"><p class="kind">DuckDB</p>
+   <h3>Query database</h3>
    <p class="what">Every site, application, document and finding in one file
     (<code>dc_phase{args.phase}.duckdb</code>, ~106 MB). Opens in DuckDB CLI, Python, R or
     the DuckDB web shell.</p>
