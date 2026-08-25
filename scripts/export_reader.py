@@ -663,7 +663,7 @@ ul.rq li{margin-bottom:2px}
    metrics, same shape — because it is the same control. Only the colour
    differs, and only because a chip up there also shows whether it is the
    filter that is on (Luke, 2026-08-25). */
-button.who{font:inherit;font-size:13px;padding:6px 13px;text-align:left;
+button.who{font:inherit;font-size:13px;padding:6px 13px;text-align:center;
   border:1px solid #c7c7c7;border-radius:999px;background:var(--bg);
   color:var(--brand);cursor:pointer;line-height:1.3;max-width:100%}
 button.who:hover{border-color:var(--accent)}
@@ -693,9 +693,13 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
    to make room for it. */
 #tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){width:100%;min-width:420px}
                                                                         /* Site */
-#tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){width:190px}       /* Who's behind it */
-#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){width:230px}       /* Signals */
-#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:180px}       /* Power on record */
+/* min-width, not width. Column 1 takes width:100% so that it absorbs
+   whatever the others leave — and under auto layout that made `width` on
+   the rest a suggestion the browser ignored, squeezing every one of them
+   to its minimum content and breaking the headings onto three lines. */
+#tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){min-width:180px}   /* Who's behind it */
+#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){min-width:200px}   /* Signals */
+#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){min-width:172px}   /* Power on record */
 
 /* The site cell answers "what is this" on its own: the name, then where
    it is and what it is called in this dataset, then what the applicant
@@ -756,8 +760,11 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
 .mw .w-implied{font-weight:500;color:var(--mut)}     /* a connection, or standby-implied */
 .mw .w-modelled{font-weight:400;color:var(--mut)}    /* arithmetic on floorspace */
 .mw .w-none{font-weight:400;color:var(--mut)}
-#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){width:130px}       /* Power indicators */
-#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){width:170px}       /* Reading */
+#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){min-width:152px}
+                                                        /* External power indicators */
+/* Narrowed with the header two lines deep: "Reading, and its floor" no
+   longer has to fit on one. */
+#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){min-width:158px}  /* Reading */
 /* Narrowed to make room for the indicators column: of the "top level"
    cells this one has the most spare width, an address rarely needing
    its full former allowance. */
@@ -775,9 +782,15 @@ th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);verti
    rule. It is still a <table> because sorting is this reader's and the
    handoff never asked for it to go. */
 #tbl-sites td{padding:16px 20px;border-bottom:1px solid var(--line)}
+/* The headings wrap. "External power indicators" has to say "external"
+   — beside Power MW, "Power indicators" reads as indicators about that
+   figure, which is exactly what they are not (Luke, 2026-08-25) — and
+   that costs a second line. All-caps has no descenders to clear, so the
+   leading closes to 1.15 and the row grows by about twelve pixels. */
 #tbl-sites th{padding:11px 20px;font-size:12px;font-weight:700;
   text-transform:uppercase;letter-spacing:.6px;color:var(--mut);
-  border-bottom:1px solid var(--fg);vertical-align:bottom}
+  border-bottom:1px solid var(--fg);vertical-align:bottom;
+  white-space:normal;line-height:1.15}
 /* Sticky on the <thead>, not on each <th>. On a 910-row table the
    per-cell version silently stopped pinning — the headings scrolled away
    and ended up sitting below the first rows of data — while the same rule
@@ -1909,7 +1922,8 @@ function paintChips(){
   document.querySelectorAll('button.who').forEach(b=>
     b.classList.toggle('on', b.dataset.who===who));
   document.querySelectorAll('#cohortchips .chip').forEach(c=>{
-    const on = (c.dataset.cohort||'')===cohort;
+    const k=c.dataset.cohort;
+    const on = k!==undefined && k!=='' && k===cohort;
     c.classList.toggle('on', on); c.setAttribute('aria-pressed', on);});
 }
 function setWho(k){
@@ -4699,7 +4713,8 @@ def main() -> int:
           "Advisers (Barbour)","Who's behind it")}</th>
  <th data-num="1">{dl("Signals","Cohort","Signals it matches")}</th>
  <th data-num="1">{dl("Sites","Power MW (best available)","Power MW")}</th>
- <th data-num="1">{dl("Sites","External power indicators","Power indicators")}</th>
+ <th data-num="1">{dl("Sites","External power indicators",
+                       "External power indicators")}</th>
  <th data-num="1">{dl("Sites","Documents held / Documents analysed",
                       "Reading, and its floor")}</th>
 </tr></thead><tbody>{''.join(body)}</tbody></table>
