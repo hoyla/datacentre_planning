@@ -12,7 +12,12 @@ those two, which were the documents it kept duplicating.)
 
 ---
 
-## State — 2.2 shipped 2026-08-21; the table below is the 2.1 boundary
+## State — 2.2 shipped 2026-08-21, 2.7 in preparation; the table below is the 2.1 boundary
+
+Since 2.2 the chain has grown two interpretive passes, **2a** and **2b**
+below, both of which change what a reader sees and neither of which
+existed when this was written. Neither is gated in code the way step 2
+is, for the reason given under each.
 
 **The corpus moves under the artefacts, so every figure in a build is a
 snapshot.** The Phase 3 corroboration read writes to the database
@@ -201,6 +206,55 @@ for any of them.
 stops with a wall of text about a 251,859 MW site, this is the step you
 skipped. There is an override flag; it is deliberately tedious to type
 and you should not need it.
+
+### 2a. Adjudicate the generation figures
+
+```sh
+scripts/adjudicate_generation.py --batch --submit
+```
+
+Resumable on `(finding_id, model, prompt_version)`, so a re-run asks
+only for what is missing and a failed chunk costs one request rather
+than the pass.
+
+This answers what each on-site generation figure *describes* — one
+machine or a fleet, standby or prime, electrical or thermal — and
+without it three things downstream are wrong rather than merely absent.
+`dcp.site_profile.generation_figure` falls back to reading the quote,
+which is what put "50 x 3.3 MWt Generators" on a site as 165 MW of
+electricity; the `generation_exceeds_load` cohort refuses to compute at
+all; and the site page's generation line cannot say whether a number is
+a per-unit rating.
+
+The current pass is `gpt-5/generation-2.5`, 1,667 figures. A new prompt
+version re-adjudicates the whole corpus by construction — no figure
+carries the new version — so bumping it is a deliberate spend, not a
+side effect of an edit.
+
+### 2b. Audit how findings are filed
+
+```sh
+psql "$DATABASE_URL" -f migrations/025_finding_label_audit.sql   # once
+scripts/audit_labels.py --batch            # measure, spends nothing
+scripts/audit_labels.py --batch --submit
+```
+
+Asks a second model one question about every finding a reader will see:
+does the family fit the text? 18.2% of the 10,605 rendered findings do
+not, which is why a site's evidence could lead with landscape prose
+filed under a power family.
+
+Also resumable. A flagged row is **moved** on the page, marked with
+where it was filed, and a `not_a_finding` row is withheld — neither is
+deleted, and both counts print at the end of the export. The reader
+re-checks every verdict's citation against the finding's own text
+before acting on it (`dcp/spans.py`), so a verdict whose span is not
+in the text moves nothing.
+
+The exports run without this: no verdicts stored means nothing moves,
+and the build says so. It is not gated like step 2 because a missing
+audit leaves the page as it was, where a missing correction puts wrong
+numbers on it.
 
 ### 3. Look at what moved
 
@@ -391,6 +445,32 @@ phase 1 workbook now lives on Drive.
 
 Each of these calls the adjudication gate first, so if step 2 was
 skipped they stop rather than shipping.
+
+### 7b. Diff against the last release — BEFORE anything is deployed
+
+```sh
+scripts/release_diff.py data/exports/<new_build> --against data/exports/phase2.2_build
+```
+
+It counts what a reader can reach — links per site panel, rows per view,
+tabs, section and box headings, the filter controls, the header stamp's
+own numbers, plus sheets and columns in the workbook and tables and rows
+in the database file — and prints anything that **fell**. Nothing else
+in the chain notices a regression of that shape, because none of it
+changes a figure: a panel that lost its Drive links, a view that lost a
+column, a heading that stopped rendering all leave every number correct.
+
+This found four regressions in 2.2 that review had not, and it has cried
+wolf twice since — once when a heading gained an `id` its pattern did
+not allow for, once when a panel boundary moved. **Fix the detector when
+that happens rather than reading past it.** A guard nobody trusts is
+worse than none: it went blind to the whole filter bar for a build after
+the bar moved out of the sites view, and would have reported nothing at
+all if a control really had gone.
+
+A FELL line is not automatically a fault. Deliberate removals show up
+here too — the "Exclude unknown MW consumption" control went on purpose
+in 2.7 — so read each one and be able to say which it is.
 
 ### 7a. The notebook bundle — optional, local, off the chain
 
