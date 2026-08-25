@@ -314,6 +314,27 @@ CSS = """
    four to keep true, and the one that was here had already drifted
    (brand went to a pale blue, which is the colour of nothing in
    particular). One palette, verified once. */
+/* Disclosure triangles, the way meridian/report_render_html.py draws
+   them: CSS borders on a zero-size box, not a glyph. Its comment has the
+   reason — a glyph "renders sub-cap-height and looks like a stray dot",
+   which is what Luke saw here, and a zero-size box means the triangle
+   never grows the line it sits on. Slightly larger than Meridian's 5/8
+   because this page's body is 16px against its 12px. currentColor, so
+   each one takes the colour of the thing it opens. */
+.tri:before,table.stats tr.op td:first-child:before,
+details.reading summary h4:before,details.banner-d>summary:before,
+.box.claims details>summary:before,details.apps-d>summary:before,
+.opdetail details>summary:before,.opsite details>summary:before,
+tr.site td:first-child:before{
+  content:"";display:inline-block;width:0;height:0;margin-right:8px;
+  border-top:6px solid transparent;border-bottom:6px solid transparent;
+  border-left:9px solid currentColor;vertical-align:middle;position:relative;
+  bottom:1px;transition:transform .12s}
+details[open].reading summary h4:before,details.banner-d[open]>summary:before,
+.box.claims details[open]>summary:before,details.apps-d[open]>summary:before,
+.opdetail details[open]>summary:before,.opsite details[open]>summary:before,
+tr.site.open td:first-child:before,
+table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
 *{box-sizing:border-box}
 /* [hidden] is display:none only by UA default, and any rule setting
    display on the same element wins. That has now hidden nothing twice —
@@ -388,10 +409,6 @@ nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
 details.banner-d>summary{cursor:pointer;font-weight:650;list-style:none;
   display:inline-block;padding:0}
 details.banner-d>summary::-webkit-details-marker{display:none}
-details.banner-d>summary:before{content:"▸";font-size:19px;line-height:1;
-  width:20px;vertical-align:-1px;display:inline-block;
-  transition:transform .12s;width:12px}
-details.banner-d[open]>summary:before{transform:rotate(90deg)}
 details.banner-d>summary:hover{text-decoration:underline}
 details.banner-d>div{margin-top:9px}
 h2.sec{font-size:15px;margin:24px 0 8px}
@@ -443,10 +460,6 @@ details.reading summary{cursor:pointer;list-style:none}
 details.reading summary::-webkit-details-marker{display:none}
 details.reading summary h4{display:inline;margin:0 8px 0 0;font-size:13px;
   text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
-details.reading summary h4:before{content:"▸";font-size:19px;line-height:1;
-  display:inline-block;width:20px;color:var(--machine);vertical-align:-1px;
-  transition:transform .12s}
-details[open].reading summary h4:before{content:"▾"}
 details.reading summary .help{display:inline}
 .rbody{margin-top:10px;max-width:880px}
 .rbody h5{margin:12px 0 4px;font-size:13.5px;text-transform:uppercase;
@@ -624,10 +637,6 @@ tr.site.open>td{background:var(--soft);box-shadow:inset 0 1px 0 var(--accent)}
 tr.site.open>td:first-child{box-shadow:inset 3px 1px 0 -1px var(--accent),
   inset 0 1px 0 var(--accent)}
 tr.detail.on>td{box-shadow:inset 3px 0 0 -1px var(--accent)}
-tr.site td:first-child:before{content:"▸";color:var(--mut);margin-right:7px;
-  font-size:19px;line-height:1;vertical-align:-2px;
-  display:inline-block;transition:transform .12s}
-tr.site.open td:first-child:before{transform:rotate(90deg)}
 tr.detail{display:none;background:var(--soft)}
 tr.detail.on{display:table-row}
 tr.detail td{padding:14px 18px 18px 30px}
@@ -712,10 +721,6 @@ tr.detail td{padding:14px 18px 18px 30px}
 .box.claims details>summary{cursor:pointer;font-size:13.5px;color:var(--accent);
   list-style:none}
 .box.claims details>summary::-webkit-details-marker{display:none}
-.box.claims details>summary:before{content:"▸";font-size:19px;line-height:1;
-  width:20px;vertical-align:-1px;display:inline-block;
-  transition:transform .12s}
-.box.claims details[open]>summary:before{transform:rotate(90deg)}
 .box.claims details>p{margin-top:6px}
 @media (max-width:1100px){
   .grid{grid-template-columns:1fr 1fr}
@@ -769,9 +774,6 @@ details.apps-d{margin-top:16px;border-top:1px solid var(--line);padding-top:10px
 details.apps-d>summary{cursor:pointer;font-size:14px;color:var(--accent);
   list-style:none;display:inline-block;padding:3px 0}
 details.apps-d>summary::-webkit-details-marker{display:none}
-details.apps-d>summary:before{content:"▸";font-size:19px;line-height:1;
-  display:inline-block;transition:transform .12s;width:20px;vertical-align:-1px}
-details.apps-d[open]>summary:before{transform:rotate(90deg)}
 details.apps-d>summary:hover{text-decoration:underline}
 .stat button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;
   padding:0;text-align:left;border-radius:5px}
@@ -810,9 +812,6 @@ table.stats tr.op{cursor:pointer}
 table.stats tr.op:hover>td{background:rgba(127,127,127,.06)}
 table.stats tr.op.open>td{background:var(--soft);
   box-shadow:inset 0 1px 0 var(--accent)}
-table.stats tr.op td:first-child:before{content:"▸";color:var(--mut);
-  margin-right:7px;display:inline-block;transition:transform .12s}
-table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
 .opdetail h5{margin:14px 0 6px;font-size:13px;font-weight:650;
   text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
 .opdetail h5:first-child{margin-top:0}
@@ -823,11 +822,6 @@ table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
   font-size:13.5px;color:var(--accent);list-style:none}
 .opdetail details>summary::-webkit-details-marker,
 .opsite details>summary::-webkit-details-marker{display:none}
-.opdetail details>summary:before,.opsite details>summary:before{
-  content:"▸";font-size:19px;line-height:1;width:20px;vertical-align:-1px;
-  display:inline-block;transition:transform .12s}
-.opdetail details[open]>summary:before,
-.opsite details[open]>summary:before{transform:rotate(90deg)}
 .opsite{margin-bottom:12px}
 .opsite .claim{margin:0 0 9px}
 .opsite .claim p{margin:0 0 2px}
