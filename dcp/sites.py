@@ -62,15 +62,27 @@ class _UF:
             self.parent[ra] = rb
 
 
-def _load_inferred_coords(data_dir: Path) -> dict[str, tuple[float, float]]:
+def _load_inferred_coords(
+    data_dir: Path,
+) -> tuple[dict[str, tuple[float, float]], dict[str, tuple[float, float]]]:
+    """Coordinate priors, two kinds in one file: `ref:` entries backfill
+    applications whose raw record carries no coordinates; `ptno:` entries
+    override a Barbour project's own pin where the record contradicts
+    itself (its address names one place, its coordinates another). The
+    provider's figures stay untouched in projects/raw_metadata per the
+    never-mutate principle — the prior applies at clustering time."""
     import yaml
-    out: dict[str, tuple[float, float]] = {}
+    by_ref: dict[str, tuple[float, float]] = {}
+    by_ptno: dict[str, tuple[float, float]] = {}
     prior_path = data_dir / "priors" / "inferred_coords.yaml"
     if prior_path.exists():
         payload = yaml.safe_load(prior_path.read_text()) or {}
         for e in payload.get("entries") or []:
-            out[e["ref"]] = (float(e["lat"]), float(e["lon"]))
-    return out
+            if e.get("ref"):
+                by_ref[e["ref"]] = (float(e["lat"]), float(e["lon"]))
+            elif e.get("ptno"):
+                by_ptno[str(e["ptno"])] = (float(e["lat"]), float(e["lon"]))
+    return by_ref, by_ptno
 
 
 def _load_site_partitions(data_dir: Path) -> tuple[dict[str, str], dict[str, str]]:
@@ -105,7 +117,7 @@ def build_clusters(conn, *, radius_km: float = 1.0,
     """
     from dcp.sources.planit import _extract_candidate_refs
 
-    inferred = _load_inferred_coords(data_dir)
+    inferred, inferred_proj = _load_inferred_coords(data_dir)
 
     # Universe membership is **rubric-aware**. Verdicts are append-only and
     # multi-generational: an application classified `DC` under v1 may later
@@ -171,6 +183,22 @@ def build_clusters(conn, *, radius_km: float = 1.0,
 
         cur.execute("SELECT project_id, application_id FROM project_applications")
         links = cur.fetchall()
+
+    # Project pin overrides, before any spatial reasoning: a wrong
+    # provider pin creates spatial edges into whatever campus it lands
+    # inside (Barbour placed the Wapseys Wood scheme 8.5 km south of its
+    # own address line, within the former Akzo Nobel cluster's radius).
+    # An unknown Ptno is a typo, and a typo silently leaves the false
+    # edges standing — so it fails the run, as site_partitions.yaml does.
+    unknown_pins = set(inferred_proj) - {str(p["ptno"]) for p in projects}
+    if unknown_pins:
+        raise ValueError(
+            "inferred_coords.yaml names Barbour projects not in the corpus: "
+            + ", ".join(sorted(unknown_pins)))
+    for p in projects:
+        if str(p["ptno"]) in inferred_proj:
+            p["lat"], p["lon"] = inferred_proj[str(p["ptno"])]
+            p["coord_inferred"] = True
 
     by_id = {a["id"]: a for a in apps}
     by_ref = {a["ref"].upper(): a for a in apps}
@@ -368,7 +396,9 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             key = f"PTNO-{real_projects[0]['ptno']}"
             display = real_projects[0]["title"]
             lat, lon, src = (real_projects[0]["lat"], real_projects[0]["lon"],
-                             "barbour")
+                             "inferred_prior"
+                             if real_projects[0].get("coord_inferred")
+                             else "barbour")
         else:
             lead = c["apps"][0]
             key = f"SITE-{lead['ref']}"
@@ -384,6 +414,69 @@ def build_clusters(conn, *, radius_km: float = 1.0,
                          "coord_source": src})
     clusters.sort(key=lambda c: c["site_key"])
     return clusters
+
+
+def preflight(conn, clusters: list[dict]) -> dict:
+    """What a materialise() of these clusters would change, before it
+    changes it.
+
+    Retiring a site is not the destructive part — the row survives and
+    the clustering is reproducible. What does not survive is anything
+    hand-adjudicated *against* a site id: a capacity claim matched to a
+    site by a person, with written evidence, renders through a join on
+    `retired_at IS NULL` and so vanishes from the reader without failing
+    anything. That is the one outcome here a re-run cannot undo by
+    itself, because re-pointing the match needs the same human judgement
+    that made it.
+
+    Returns {"new": [...], "retiring": [...], "orphaned_claims": [...]},
+    where an orphaned claim carries the site it would lose, the cluster
+    its members move to, and enough of the claim to identify it.
+    """
+    keys = {c["site_key"] for c in clusters}
+    app_to_key, proj_to_key = {}, {}
+    for c in clusters:
+        for a in c["apps"]:
+            app_to_key[a["id"]] = c["site_key"]
+        for p in c["projects"]:
+            proj_to_key[p["id"]] = c["site_key"]
+
+    with conn.cursor() as cur:
+        cur.execute("SELECT site_key FROM sites")
+        known = {r[0] for r in cur.fetchall()}
+        cur.execute("""
+            SELECT s.id, s.site_key FROM sites s
+            WHERE s.retired_at IS NULL ORDER BY s.site_key""")
+        live = cur.fetchall()
+        retiring = [(sid, key) for sid, key in live if key not in keys]
+
+        orphaned = []
+        for site_id, site_key in retiring:
+            cur.execute("""
+                SELECT cl.claim_name, m.confidence, m.method
+                FROM capacity_claim_matches m
+                JOIN capacity_claims cl ON cl.id = m.claim_id
+                WHERE m.site_id = %s AND m.retired_at IS NULL
+                ORDER BY cl.claim_name""", (site_id,))
+            claims = cur.fetchall()
+            if not claims:
+                continue
+            cur.execute("""
+                SELECT application_id, project_id FROM site_members
+                WHERE site_id = %s AND retired_at IS NULL""", (site_id,))
+            dests = sorted({(app_to_key.get(a) if a else proj_to_key.get(p))
+                            or "(leaves the universe)"
+                            for a, p in cur.fetchall()})
+            for claim_name, confidence, method in claims:
+                orphaned.append({
+                    "site_id": site_id, "site_key": site_key,
+                    "claim_name": claim_name, "confidence": confidence,
+                    "method": method, "members_move_to": dests,
+                })
+
+    return {"new": sorted(keys - known),
+            "retiring": [k for _sid, k in retiring],
+            "orphaned_claims": orphaned}
 
 
 def materialise(conn, clusters: list[dict], *, radius_km: float = 1.0) -> dict:

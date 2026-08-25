@@ -55,20 +55,52 @@ up the new CSV adjudication columns.
   stored and not what was offered. Re-listing the document pages of the
   applications that hold documents would settle it. **Do this before
   anyone quotes per-site document counts.**
-- **Carry the Section 35 stubs through to sites.** The watcher
-  (HISTORY 2026-08-25) holds stub applications for the three DC
-  directions, but a stub carries no coordinates, so the next
-  materialisation will not cluster it: the Wapseys stub belongs with
-  `SITE-EN0110030`, the Ampthill Road stub with the Quest Pit site
-  (`PTNO-12669230` — the film-studio incarnation of the same land),
-  and Dartford is a new site. Needs geocoding or curated coordinates.
-  In the same pass, `SITE-EN0110030` needs a display name that says
-  "SDC M40 Campus (Wapseys Wood)" rather than the register's location
-  narrative — the reason the story team searched for Wapseys and
-  concluded it was missing. Both wait behind the partitions-branch
-  materialisation freeze; until then, re-run `dcp index --source s35`
-  weekly (idempotent, free on no-change) so a fourth direction is
-  noticed the week it is published rather than the day a story runs.
+- **Materialising sites is ready except for two adjudications.** The
+  partitions freeze that held it since 2026-08-06 has lifted — the
+  partition support is in main — and everything the three Section 35
+  stubs needed is now in place: dc_build verdicts (all three
+  `pre_application`), coordinate priors for each, and a project-pin
+  prior that moves Barbour's Wapseys record off the false Slough pin
+  it carried. A dry run clusters them correctly: Wapseys joins
+  `PTNO-12913776` with `EN0110030`, Ampthill Road joins the Quest Pit
+  site `PTNO-12669230`, Dartford stands alone. **But the run refuses,
+  correctly**, on two things that are nobody's stub and everybody's
+  problem:
+
+  1. **Four adjudicated capacity claims would silently empty.** Their
+     sites retire into merged clusters — Ada Docklands ×2 into
+     `PTNO-11891737`, West Burton into
+     `SITE-Bassetlaw/22/01713/FUL`, Romford North into
+     `SITE-Havering/P0614.20`. The match survives in the table but
+     renders through a `retired_at IS NULL` join, so it stops
+     appearing without failing anything. `scripts/materialise_sites.py`
+     now names each one and refuses; re-pointing them is a person's
+     judgement, then `scripts/load_capacity_claims.py`.
+  2. **A new east-London mega-cluster.** `PTNO-11891737` comes out
+     holding **63 applications and 16 projects** spanning Islington to
+     Silvertown, roughly 9 km — Interxion, the G Park Docklands
+     masterplan, Telehouse, Global Switch and Republic in one "site",
+     chained by spatial edges through a dense corridor. This is the
+     site-61 failure exactly, and it needs the same remedy: entries in
+     `site_partitions.yaml` with written evidence. Note it is *already*
+     latent in main — the clustering produces it today; the stale
+     sites table is the only reason nobody has seen it.
+
+  Until both are settled, the reader's site universe stays as
+  materialised on 2026-08-20 and the three directions are visible only
+  as applications. Re-run `dcp index --source s35` weekly meanwhile
+  (idempotent, free on no-change) so a fourth direction is noticed the
+  week it is published rather than the day a story runs.
+
+- **`SITE-EN0110030` still shows the register's location narrative.**
+  It should read "SDC M40 Campus (Wapseys Wood)" — the reason the story
+  team searched for Wapseys and concluded the corpus was missing it.
+  The materialisation above dissolves this particular key into
+  `PTNO-12913776` (display name "SDC M40 CAMPUS - 300MW DATA CENTRE
+  CAMPUS", which is most of the way there), so fix it in the same pass
+  rather than separately — but the general defect stands: a site whose
+  display name is a paragraph of location prose cannot be found by the
+  name everyone calls it.
 
 ## Phase 3 — the second opinion
 
