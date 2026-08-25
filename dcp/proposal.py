@@ -223,3 +223,94 @@ def tidy(clause: str) -> str:
     if c.count("(") > c.count(")"):
         c += ")"
     return c
+
+
+# ---------------------------------------------------------------------------
+# Site names, as a reader should see them
+# ---------------------------------------------------------------------------
+
+# Registers and Barbour disagree about case: 178 of the 430 named sites
+# arrive shouting ("SAUNDERTON DATA CENTRE - 4 VIRTUS DATA CENTRES") and
+# the rest do not, so a list of them reads as two datasets stapled
+# together. The design handoff sets every headline in sentence case.
+#
+# This changes nothing in the database. The register's own spelling is
+# what is stored, exported and cited; this is the display rule the
+# reader applies on the way out, the same way `tidy` is.
+
+# Kept as they are, because lower-casing them would be a mistake rather
+# than a style: an initialism, a compass point in a postcode, or a unit.
+_KEEP_CAPS = {
+    "DC", "UK", "US", "EU", "GB", "IT", "AI", "HQ", "PLC", "LLP", "NHS",
+    "BBC", "EE", "AWS", "IBM", "BT", "GW", "MW", "KW", "MVA", "KVA",
+    "PV", "EV", "HGV", "CHP", "UPS", "HV", "LV", "EIA", "SUDS", "AONB",
+    "SSSI", "SAC", "SPA", "M25", "II", "III", "IV",
+    # Company and place initialisms that occur in this corpus's names.
+    # Checked against the all-caps tokens the corpus actually contains,
+    # not guessed: NTT and JVC are companies, MK is Milton Keynes, ONS
+    # and AOC are the bodies of those names, RAF and MOD are estates.
+    "NTT", "JVC", "MK", "ONS", "AOC", "RAF", "MOD", "EDF", "SSE", "RWE",
+    "UKPN", "SSEN", "CBRE", "VDC", "GLP", "DP",
+}
+# Deliberately not here: the single letters N, S, E and W. As a
+# compass point one is worth keeping, but as the tail of an apostrophe
+# it is not — "KING'S" came back "King'S" — and a postcode half that
+# needs them carries a digit, which is kept anyway.
+# Lower-cased inside a name, never at its start.
+_SMALL = {"a", "an", "and", "at", "by", "for", "in", "of", "on", "or",
+          "the", "to", "with", "from", "into", "per", "via"}
+
+
+def _cap_word(word: str) -> str:
+    """One whitespace-delimited token, title-cased through its punctuation.
+
+    Split on the marks that join two words into one — hyphen, slash,
+    apostrophe, full stop — so "KING'S" becomes "King's" rather than
+    "King'S", and "DATA-CENTRE" becomes "Data-Centre".
+    """
+    out, part, sep = [], "", ""
+    for ch in word:
+        if ch in "-/.'’":
+            out.append((part, sep)); part, sep = "", ch
+        else:
+            part += ch
+    out.append((part, sep))
+    built = ""
+    for piece, mark in out:
+        built += mark
+        if not piece:
+            continue
+        if piece in _KEEP_CAPS or any(c.isdigit() for c in piece):
+            built += piece
+        elif mark and mark in "'\u2019" and len(piece) <= 2:
+            # The tail of a possessive or a contraction: "KING'S" is
+            # "King's", never "King'S". Two characters covers "'ll" and
+            # "'re"; O'BRIEN is longer and capitalises normally.
+            built += piece.lower()
+        else:
+            built += piece[:1].upper() + piece[1:].lower()
+    return built
+
+
+def title_case(name: str) -> str:
+    """A site name in title case, leaving the parts already cased alone.
+
+    Only tokens that arrive entirely in capitals are changed, so a name
+    the register already cased keeps its own spelling — including the
+    capitals inside it that a blanket `.title()` would destroy
+    ("Land East Of South Mimms" stays; "NEWCASTLE UPON TYNE" in the
+    middle of it does not). A token carrying a digit is left alone, which
+    covers postcodes, plot numbers and "1GW".
+    """
+    words = (name or "").split()
+    out = []
+    for i, w in enumerate(words):
+        if not w.isupper() or not any(c.isalpha() for c in w):
+            out.append(w)
+            continue
+        cased = _cap_word(w)
+        low = cased.lower().strip(",.")
+        if i and low in _SMALL and w.strip(",.") not in _KEEP_CAPS:
+            cased = cased.lower()
+        out.append(cased)
+    return " ".join(out)
