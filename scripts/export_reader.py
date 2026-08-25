@@ -1183,8 +1183,31 @@ tr.breakdown>td{color:var(--mut)}
    fixed height. */
 #mapwrap{display:flex;height:calc(100vh - var(--map-top,150px));min-height:440px;
   border-top:1px solid var(--line)}
-#mapside{flex:0 0 250px;overflow-y:auto;padding:14px 16px;display:flex;
+/* Wider than it was, because the filter bar lives here on this tab and
+   a cohort chip is a sentence. Still a quarter of a 1500px window, so
+   the map keeps a portrait viewport — which is the shape of the UK, and
+   the reason the controls are down the side at all. */
+#mapside{flex:0 0 322px;overflow-y:auto;padding:14px 16px;display:flex;
   flex-direction:column;gap:13px;border-right:1px solid var(--line)}
+/* The same bar, stood on its end. Not a second set of controls with the
+   same names — the element itself is moved here by show(), so the state
+   cannot fork. Everything that sat in a row sits in a column, and the
+   two rules that made a horizontal bar work (the sticky offset and the
+   count pushed right by an auto margin) are undone. */
+#filterbar.down-the-side{position:static;margin:0 -16px;
+  border-bottom:1px solid var(--line)}
+#filterbar.down-the-side .controls{position:static;flex-direction:column;
+  align-items:stretch;gap:9px;padding:0 16px 12px}
+#filterbar.down-the-side .controls input[type=search],
+#filterbar.down-the-side .controls select{width:100%;min-width:0}
+#filterbar.down-the-side .count{margin-left:0;order:-1;font-weight:600;
+  color:var(--fg)}
+#filterbar.down-the-side .chips{flex-direction:column;align-items:stretch;
+  gap:6px;padding:12px 16px}
+#filterbar.down-the-side .chips .chip{width:100%;text-align:center}
+#filterbar.down-the-side .chips .help{flex-basis:auto;font-size:12.5px;
+  margin-top:6px}
+#filterbar.down-the-side .chk{font-size:13.5px}
 #mapside input[type=search]{min-width:0;width:100%}
 #mapside .mgroup{display:flex;flex-direction:column;gap:7px}
 #mapside .count{margin:0;font-size:14px}
@@ -1675,8 +1698,11 @@ JS = """
 function sticky(){
   const nav=document.querySelector('nav.top');
   const navH=nav?nav.getBoundingClientRect().height:41;
+  // Only when the bar is the one across the top. Standing down the side
+  // of the map it is 700px tall and offsets nothing.
   const fb=document.getElementById('filterbar');
-  const bar=(fb && !fb.hidden) ? fb : null;
+  const bar=(fb && !fb.hidden && !fb.classList.contains('down-the-side'))
+    ? fb : null;
   const barH=bar?bar.getBoundingClientRect().height:0;
   const r=document.documentElement.style;
   r.setProperty('--nav-h', navH+'px');
@@ -1709,7 +1735,29 @@ function show(v, quiet){
   // The filter bar belongs to the two views it filters, and is the same
   // bar in both — so a reader who filters the table and switches to the
   // map finds the controls where they left them, still set.
-  document.getElementById('filterbar').hidden = !(v==='sites' || v==='map');
+  //
+  // On the map it runs down the side rather than across the top: the UK
+  // is tall and narrow, so a portrait viewport fits it and a landscape
+  // one wastes the width on sea (Luke, 2026-08-25). The element MOVES —
+  // it is re-parented, not duplicated — so there is still one set of
+  // controls, one set of ids and one state, whichever shape it is in.
+  const fb=document.getElementById('filterbar');
+  fb.hidden = !(v==='sites' || v==='map');
+  const side=document.getElementById('mapside');
+  if(v==='map'){
+    if(fb.parentElement!==side) side.insertBefore(fb, side.firstChild);
+    fb.classList.add('down-the-side');
+    // Nothing to offer a reader already looking at it; the sidebar's
+    // "Fit the map to these sites" frames the set from here.
+    document.getElementById('seemap').hidden = true;
+    document.querySelector('.controls .tip').hidden = true;
+  }else{
+    const home=document.getElementById('filterbar-home');
+    if(fb.parentElement!==home.parentElement) home.after(fb);
+    fb.classList.remove('down-the-side');
+    document.getElementById('seemap').hidden = false;
+    document.querySelector('.controls .tip').hidden = false;
+  }
   window.scrollTo(0,0);
   sticky();
   // The map sizes itself from its container, which has no dimensions
@@ -1849,11 +1897,6 @@ function apply(){
   // is on screen, so while anything is filtered it is not all of them.
   const seemap=document.getElementById('seemap');
   seemap.disabled = shown===0;
-  // Nothing to offer a reader already looking at it. The map's own
-  // "Fit the map to these sites" frames the set from there.
-  const onMap=document.getElementById('view-map').classList.contains('on');
-  seemap.hidden = onMap;
-  document.querySelector('.controls .tip').hidden = onMap;
   seemap.textContent = (shown===rows.length) ? 'See all on map' : 'See on map';
   // The map is the same set, drawn differently. It is told here rather
   // than deciding for itself, so the two views cannot disagree about
@@ -4527,6 +4570,7 @@ def main() -> int:
      those has drifted at least once. The map now shows the set the table
      shows because it is told by the same code, from the same controls
      (Luke, 2026-08-25). -->
+<span id="filterbar-home" hidden></span>
 <div id="filterbar" hidden>
 <div class="controls">
  <input type="search" id="q" placeholder="Search site, council, address, applicant, proposal…">
