@@ -58,6 +58,33 @@ up the new CSV adjudication columns.
 
 ## Phase 3 — the second opinion
 
+- **Re-extract what the local model read.** The label audit
+  (`gpt-5/label-1.0`, 10,602 rendered findings, 2026-08-25) settles a
+  question the hand sample could not: holding the family constant, the
+  local `mlx` extractor misfiles far more often than `claude-sonnet-5`,
+  and worst in the families this release is about.
+
+  | family | claude-sonnet-5 | mlx |
+  |---|---|---|
+  | `power_demand` | 9% | **68%** |
+  | `power_generation` | 9% | **34%** |
+  | `power_grid` | 12% | **25%** |
+  | `cooling` | 2% | **19%** |
+  | *all audited* | 11.3% | 28.4% |
+
+  Seventeen of twenty families are worse on `mlx`; three
+  (`application_admin`, `land_quality`, `site_identity`) are not. It is
+  25.4% of the corpus — 307,432 findings.
+
+  **This does not touch any megawatt figure.** A capacity reaches a
+  site's power panel through `power_adjudication`, keyed on the finding
+  rather than on its family, so a misfiled row still carries its figure
+  to the right place: 81 of the 1,928 flagged rows hold an adjudicated
+  site capacity and every one keeps it. The cost is to browsing a site's
+  evidence, and the audit already moves those rows on the page. What
+  re-extraction would buy is the material that was never extracted well
+  enough to be filed at all, which the audit cannot see.
+
 - **Second-model comparison across the corpus.** A subset is dual-read
   already. Where two models disagree, both readings are kept and the
   disagreement is the finding; the comparison is the deliverable.
