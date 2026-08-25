@@ -1018,6 +1018,73 @@ other people adjudicated *against* its keys. Anything hand-made that
 points at a generated identifier needs the generator to say out loud
 what it is about to invalidate.
 
+### The sites are materialised, and most of it was not adjudication (2026-08-25)
+
+Investigating the two blockers changed what they were. The east London
+"mega-cluster" turned out to be two data errors wearing a boundary
+problem's clothes:
+
+- **A wrong coordinate.** Two Tower Hamlets records for "Mulberry Place
+  Town Hall, 5 Clove Crescent" are geocoded 4.1 km west of the five
+  other records carrying that identical address, landing in Limehouse.
+  The pair welded Shoreditch to Docklands. Correcting them split 63
+  applications into 16 and 46. Priors now win over a portal coordinate
+  rather than only filling in for a missing one — all fourteen existing
+  entries were for records with no coordinates, so the change is a
+  no-op for every one of them.
+- **One stray record.** `TowerHamlets/PA/18/00418/S` is a non-material
+  amendment relocating a substation at the Castle Wharf petrol station
+  on the Leamouth peninsula. Enumerating every cross-campus pair showed
+  it was the *only* node joining Blackwall to Thameside West — two
+  edges, both at 0.94 km. One petrol-station amendment was holding a
+  9 km site together.
+
+What remained was genuinely adjudication, and Luke settled it: Bidder
+Street is not one campus with Telehouse and Global Switch, and
+Silvertown Quays is not one with G Park — separate developments that
+happen to share a dense quarter, on opposite banks of the Lea in the
+first case. Both are now partitions with the evidence written down.
+The 63-application, 16-project blob is five campuses of 0.8–1.8 km:
+Interxion, Telehouse/Global Switch/Republic, G Park Docklands, Bidder
+Street, Olympus Silvertown.
+
+**Tried and rejected: making spatial edges skip `not_dc` applications.**
+Family edges have refused to traverse `not_dc` since 2026-08-06, and
+the Silvertown seam runs through one, so the symmetry was tempting.
+Measured before adopting, as the family-edge rule had been: it moves
+**208 of 2,278 members**, disappears 18 site keys and creates 21, and
+orphans three adjudicated capacity claims — including West Burton,
+which this same session had just re-pointed. A 9% corpus churn to fix
+one seam that a three-line partition fixes exactly. Luke's instinct
+that the two were "just close to each other" was the right reading, and
+the number is here so nobody re-runs the experiment.
+
+With that, the materialise ran: 73 sites new, 420 updated, 10 retired,
+2,278 members. The two surviving orphaned claims were re-pointed in the
+same sitting — West Burton to `SITE-Bassetlaw/22/01713/FUL`, which
+still holds the West Burton Power Station application its evidence
+names, and Romford North to `SITE-Havering/P0614.20`, which holds 3
+*and* 5 King George Close under the one postcode the permit cites. The
+old matches carry retirement reasons naming their successors; live
+matches went 49 → 49 with none dangling.
+
+Two things surfaced that are somebody's next job rather than this one:
+
+- **`scripts/load_capacity_claims.py` has been broken since the SPV
+  work.** `companies-house-claims.yaml` gained two `scheme_capacity`
+  claims, and no migration ever added that value to
+  `capacity_claims_quantity_known`, so the whole loader aborts on a
+  check violation and rolls back. The ROADMAP already says the type
+  "needs one"; until it gets one, nothing can be loaded through the
+  script. The two re-points here went in through the same YAML via the
+  project's own loaders, so a future run is a no-op on them.
+- **The display name of a site is the address of whichever application
+  sorts first**, which has no relationship to what anyone calls the
+  place. West Burton Power Station is now "Land East Of Gainsborough
+  Road Bole"; `SITE-EN0110030` was a paragraph of location prose. The
+  second of those is what made the Guardian's story team conclude the
+  corpus was missing Wapseys Wood.
+
 ---
 
 ## How this project is worked on

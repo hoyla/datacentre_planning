@@ -134,18 +134,26 @@ matches:
       quantities, and the fleet is sized for redundancy.
 
   - claim_name: Romford North Data Centre (EPR/FP3630EU)
-    site_id: 408
+    site_id: 476
     method: address_identity
     confidence: strong
-    matched_by: hand:claude-opus-5:2026-08-22
+    matched_by: hand:claude-opus-5:2026-08-22; re-pointed hand:claude-fable-5:2026-08-25
     evidence: >-
       Green Mountain DC UK Limited holds a permit at RM7 7PN, and site
-      408 is "3 King George Close Romford RM7 7PN" — the same postcode,
-      the only site record within 2 km, and its applications describe the
-      installation the permit describes: "Erection of a rear extension to
-      the existing data centre" and a change of use "to plant and
-      machinery facility ancillary to the" data centre. 113 MWth read
-      from the variation notice, which supersedes the original permit.
+      476 holds 3 and 5 King George Close, Romford RM7 7PN — the same
+      postcode, the only site record within 2 km, and its applications
+      describe the installation the permit describes: "Erection of a rear
+      extension to the existing data centre" and a change of use "to
+      plant and machinery facility ancillary to the" data centre. 113
+      MWth read from the variation notice, which supersedes the original
+      permit.
+      Re-pointed 2026-08-25 from site 408 to site 476: the
+      materialisation merged 408 ("3 King George Close") into
+      SITE-Havering/P0614.20 ("5 King George Close"), which holds both
+      unit numbers at identical coordinates under the one postcode. The
+      match is now to the whole campus rather than one unit of it —
+      strictly better for a permit that names only the postcode. Match
+      649 carries the retirement.
 
   - claim_name: KAO Data Harlow Campus (EPR/WE4588AB)
     site_id: 117

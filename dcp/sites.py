@@ -161,10 +161,22 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             ORDER BY a.application_ref""")
         apps = []
         for aid, ref, desc, addr, lx, ly, verdict, assoc, in_universe in cur.fetchall():
-            if lx and ly:
-                lat, lon, src = float(ly), float(lx), "application"
-            elif ref in inferred:
+            # The prior wins where one exists. It was written as a
+            # fallback for records that carry no coordinates, and every
+            # entry is still one of those — but a portal can also publish
+            # a coordinate that is simply wrong, and a wrong coordinate
+            # does more damage than a missing one: it invents spatial
+            # edges into whatever it lands on. Two Tower Hamlets records
+            # for "Mulberry Place Town Hall, 5 Clove Crescent" are
+            # geocoded 4.1 km west of the five other records carrying
+            # that same address, and the pair welded the Shoreditch
+            # cluster to the Docklands one. A prior is hand-written with
+            # its derivation recorded, so where the two disagree the
+            # prior is the better evidence.
+            if ref in inferred:
                 (lat, lon), src = inferred[ref], "inferred_prior"
+            elif lx and ly:
+                lat, lon, src = float(ly), float(lx), "application"
             else:
                 lat = lon = src = None
             apps.append({"id": aid, "ref": ref, "desc": desc, "addr": addr,

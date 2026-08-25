@@ -95,6 +95,40 @@ def test_unknown_ptno_fails_the_run(db_conn, tmp_path):
 
 
 @pytest.mark.integration
+def test_ref_prior_overrides_a_wrong_application_coordinate(db_conn, tmp_path):
+    # The Mulberry Place case: the record carries coordinates, and they
+    # are wrong. A prior with a written derivation beats a portal pin,
+    # so it wins rather than being ignored as it would be if priors were
+    # only a fallback for absent coordinates.
+    source_id = repo.ensure_source(
+        db_conn, name="planit", kind="aggregator", base_url="https://x")
+    app_id = repo.upsert_application(
+        db_conn, source_id=source_id,
+        app={"name": A1, "description": "data centre",
+             "location_y": 51.5152, "location_x": -0.0658},   # 4 km out
+        discovered_via=["test"])
+    with db_conn.cursor() as cur:
+        cur.execute(
+            "INSERT INTO triage (application_id, model, verdict, raw_response) "
+            "VALUES (%s, 'fake', 'new_build', '{\"rubric\": \"dc_build\"}')",
+            (app_id,))
+    db_conn.commit()
+    priors = tmp_path / "priors"
+    priors.mkdir()
+    (priors / "inferred_coords.yaml").write_text(
+        "entries:\n"
+        f"  - ref: {A1}\n"
+        "    lat: 51.509868\n"
+        "    lon: -0.005808\n"
+        "    source: five sibling records carry this address\n")
+    clusters = sites.build_clusters(db_conn, data_dir=tmp_path)
+    assert len(clusters) == 1
+    assert clusters[0]["coord_source"] == "inferred_prior"
+    assert clusters[0]["lat"] == pytest.approx(51.509868)
+    assert clusters[0]["lon"] == pytest.approx(-0.005808)
+
+
+@pytest.mark.integration
 def test_ref_entries_still_backfill_applications(db_conn, tmp_path):
     # The pre-existing entry kind: an application with no source coords
     # takes its pin from a `ref:` entry and reports inferred_prior.

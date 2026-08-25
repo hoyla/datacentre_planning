@@ -55,42 +55,32 @@ up the new CSV adjudication columns.
   stored and not what was offered. Re-listing the document pages of the
   applications that hold documents would settle it. **Do this before
   anyone quotes per-site document counts.**
-- **Materialising sites is ready except for two adjudications.** The
-  partitions freeze that held it since 2026-08-06 has lifted — the
-  partition support is in main — and everything the three Section 35
-  stubs needed is now in place: dc_build verdicts (all three
-  `pre_application`), coordinate priors for each, and a project-pin
-  prior that moves Barbour's Wapseys record off the false Slough pin
-  it carried. A dry run clusters them correctly: Wapseys joins
-  `PTNO-12913776` with `EN0110030`, Ampthill Road joins the Quest Pit
-  site `PTNO-12669230`, Dartford stands alone. **But the run refuses,
-  correctly**, on two things that are nobody's stub and everybody's
-  problem:
+- **Site 61 is now the only campus conflation left, and the evidence
+  for splitting it is in hand.** `PTNO-12511337` holds 301 members
+  across the Hayes/Southall corridor. Two independent signals agree on
+  the boundaries, and neither is spatial: **Hillingdon's own reference
+  stem** groups applications by site, and **the applicant of record**
+  says who is building. They align exactly —
 
-  1. **Four adjudicated capacity claims would silently empty.** Their
-     sites retire into merged clusters — Ada Docklands ×2 into
-     `PTNO-11891737`, West Burton into
-     `SITE-Bassetlaw/22/01713/FUL`, Romford North into
-     `SITE-Havering/P0614.20`. The match survives in the table but
-     renders through a `retired_at IS NULL` join, so it stops
-     appearing without failing anything. `scripts/materialise_sites.py`
-     now names each one and refuses; re-pointing them is a person's
-     judgement, then `scripts/load_capacity_claims.py`.
-  2. **A new east-London mega-cluster.** `PTNO-11891737` comes out
-     holding **63 applications and 16 projects** spanning Islington to
-     Silvertown, roughly 9 km — Interxion, the G Park Docklands
-     masterplan, Telehouse, Global Switch and Republic in one "site",
-     chained by spatial edges through a dense corridor. This is the
-     site-61 failure exactly, and it needs the same remedy: entries in
-     `site_partitions.yaml` with written evidence. Note it is *already*
-     latent in main — the clustering produces it today; the stale
-     sites table is the only reason nobody has seen it.
+  | stem | apps | applicant of record | campus |
+  |---|---|---|---|
+  | 1331 | 186 | Barratt London / SEGRO | Former Nestlé factory — **housing, not a data centre** |
+  | 75111 | 57 | Ark Estates 2 / Ark UP4 / Ark Data Centres | Union Park, North Hyde Gardens |
+  | 38421 | 24 | Colt Data Centre Services / HDCI Hayes London | Hayes Bridge Retail Park, Tudor Works |
+  | 49261 | 5 | Marvell Developments LLC | Silverdale Industrial Estate |
 
-  Until both are settled, the reader's site universe stays as
-  materialised on 2026-08-20 and the three directions are visible only
-  as applications. Re-run `dcp index --source s35` weekly meanwhile
-  (idempotent, free on no-change) so a fourth direction is noticed the
-  week it is published rather than the day a story runs.
+  Colt and Ark do not build as a joint venture (Luke, 2026-08-25), so
+  proximity is the only thing that ever joined them. Writing these as
+  partitions is mechanical from the stems. **The prior question is
+  stem 1331**: 186 Barratt/SEGRO housing applications are site members
+  at all only through family and spatial chaining, and the honest fix
+  there may be triage rather than a boundary — a partition would make
+  site 61 tidy while leaving a housing estate inside the datacentre
+  universe. Settle that before writing any of it.
+
+  Retiring alongside it: the Ark "99 MW for Union Park" claim, retired
+  2026-08-21 because site 61 was mostly somewhere else, becomes
+  matchable again the moment 75111 is its own site.
 
 - **`SITE-EN0110030` still shows the register's location narrative.**
   It should read "SDC M40 Campus (Wapseys Wood)" — the reason the story
