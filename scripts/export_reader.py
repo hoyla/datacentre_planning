@@ -249,14 +249,30 @@ body{margin:0;font:16px/1.62 "Source Sans 3",-apple-system,BlinkMacSystemFont,
 .sitecell .sname,.mw .fig,h1,h2{font-family:"Source Serif 4",Georgia,
   "Times New Roman",serif}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-header{padding:16px 22px 12px}
-h1{margin:0 0 3px;font-size:19px}
-.sub{color:var(--mut);font-size:14px}
-nav.top{display:flex;gap:2px;padding:0 22px;border-bottom:1px solid var(--line);
-  background:var(--bg);position:sticky;top:0;z-index:9;overflow-x:auto}
-nav.top button{font:inherit;font-size:15px;padding:10px 15px;border:0;background:none;
-  color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
-nav.top button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--accent);font-weight:600}
+/* The masthead, from the design proposal: one full-bleed band carrying
+   the title, the release stamp and the tabs, where there were three
+   stacked strips in two colours. It is about a third of the height and
+   says more — the stamp gains the findings count — and it puts the
+   product's name and what the reader is looking at in one glance.
+   The tab row stays sticky; the title scrolls away with the page. */
+header.masthead{background:var(--brand);color:#fff;padding:14px 32px 0}
+header.masthead .mhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  max-width:1620px;margin:0 auto}
+header.masthead h1{margin:0;font-size:28px;line-height:1.1;font-weight:700;
+  font-family:"Source Serif 4",Georgia,serif;color:#fff}
+header.masthead .sub{color:#a8bad6;font-size:14px;line-height:1.4}
+nav.top{display:flex;gap:2px;padding:0 32px;background:var(--brand);
+  position:sticky;top:0;z-index:9;overflow-x:auto;max-width:none}
+nav.top .navinner{display:flex;gap:2px;max-width:1620px;margin:0 auto;width:100%}
+nav.top button{font:inherit;font-size:15px;font-weight:600;padding:9px 12px 11px;
+  border:0;background:none;color:#fff;cursor:pointer;opacity:.75;
+  border-bottom:4px solid transparent;white-space:nowrap}
+nav.top button:hover{opacity:1}
+nav.top button[aria-selected=true]{opacity:1;border-bottom-color:var(--active)}
+/* The count belongs to the tab, so it is the same word at a lower
+   volume rather than a badge of its own. */
+nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
+  border-radius:0;font-size:inherit}
 .view{display:none}.view.on{display:block}
 .wrap{max-width:920px;padding:24px 22px 10px}
 .lede{font-size:15.5px;line-height:1.62}
@@ -687,10 +703,10 @@ a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:non
 .twoways .way h3{margin:0 0 6px;font-size:19px;font-family:"Source Serif 4",Georgia,serif;
   color:var(--brand)}
 .twoways .way p{margin:0 0 10px;max-width:52ch}
-.pill{font:inherit;font-size:15px;font-weight:600;padding:9px 18px;border-radius:999px;
+.cta{font:inherit;font-size:15px;font-weight:600;padding:9px 18px;border-radius:999px;
   border:1px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer}
-.pill.secondary{background:var(--bg);color:var(--brand)}
-.pill:hover{text-decoration:underline}
+.cta.secondary{background:var(--bg);color:var(--brand)}
+.cta:hover{text-decoration:underline}
 .entry{padding:9px 0;border-bottom:1px solid var(--line);scroll-margin-top:70px}
 .entry h3{margin:0 0 3px;font-size:15px}
 .entry p{margin:0;color:var(--mut);font-size:14.5px}
@@ -1773,6 +1789,24 @@ def main() -> int:
         # carried a floor-area estimate in the workbook — one dataset
         # answering "how big is this?" two ways.
         site_floorspace = scale.load_site_floorspace(conn)
+        # The stamp's findings count, counted the way a site panel counts
+        # it: distinct passages rather than rows, because several models
+        # reading one sentence is corroboration, not volume.
+        with conn.cursor() as _cur:
+            # Scoped to live sites, like every other number in the stamp:
+            # the corpus also holds findings for applications that were
+            # reviewed and not clustered into a data-centre site, and a
+            # stamp that counted those beside "456 sites · 1,709
+            # applications" would be describing a different thing in the
+            # same breath. 1,009,220 against 1,002,774 today.
+            _cur.execute("""
+                SELECT count(DISTINCT (f.document_id, md5(f.evidence_text),
+                                       f.evidence_page))
+                FROM findings f
+                JOIN site_members m ON m.application_id = f.application_id
+                     AND m.retired_at IS NULL
+                JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL""")
+            n_findings_total = _cur.fetchone()[0]
     site_names = {r[0]: r[2] for r in site_rows}
     cohorts_of_site: dict[str, list[str]] = defaultdict(list)
     cohort_title: dict[str, str] = {}
@@ -3503,11 +3537,14 @@ def main() -> int:
      should not turn up in a search either. -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <style>{CSS}</style></head><body>
-<header><h1>UK datacentre plans v2, phase {args.phase} release</h1>
- <div class="sub">{n_sites} sites · {n_docs:,} documents ·
- generated {dt.datetime.now(dt.timezone.utc):%Y-%m-%d %H:%M} UTC ·
- pipeline {esc(hv._git_commit())}</div></header>
-<nav class="top">
+<header class="masthead"><div class="mhead">
+ <h1>UK datacentre plans</h1>
+ <div class="sub">v2, phase {args.phase} · {n_sites} sites ·
+ {len(app_rows):,} applications · {n_docs:,} documents ·
+ {n_findings_total:,} verified findings ·
+ generated {dt.datetime.now(dt.timezone.utc):%-d %b %Y %H:%M} UTC ·
+ pipeline {esc(hv._git_commit())}</div></div></header>
+<nav class="top"><div class="navinner">
  <button id="tab-start" aria-selected="true" onclick="show('start')">Start here</button>
  <button id="tab-signals" aria-selected="false" onclick="show('signals')">Signals<span class="pill">{n_signals}</span></button>
  <button id="tab-sites" aria-selected="false" onclick="show('sites')">Sites<span class="pill">{n_sites}</span></button>
@@ -3518,7 +3555,7 @@ def main() -> int:
  <button id="tab-method" aria-selected="false" onclick="show('method')">Methodology</button>
  <button id="tab-dict" aria-selected="false" onclick="show('dict')">Data dictionary</button>
  <button id="tab-notes" aria-selected="false" onclick="show('notes')">Assistant's notes</button>
-</nav>
+</div></nav>
 
 <section id="view-start" class="view on"><div class="wrap">
  <p class="lede">Every planning application we can find for a UK data centre or its
@@ -3536,14 +3573,14 @@ def main() -> int:
    <p>Named groups of sites that share a property the documents state — generation larger
     than the computing load, demand above the connection, read in full and silent. Each
     says what it counts, what it cannot count, and how many sites it holds.</p>
-   <p><button type="button" class="pill" onclick="show('signals')">Open the signals</button></p>
+   <p><button type="button" class="cta" onclick="show('signals')">Open the signals</button></p>
   </div>
   <div class="way">
    <h3>Start from a site</h3>
    <p>Every site, with what its documents were found to say: the power figures and what
     each one is a figure of, who is behind it, the generation and cooling evidence, and its
     applications with links to the council's own register.</p>
-   <p><button type="button" class="pill secondary" onclick="show('sites')">Open the sites</button></p>
+   <p><button type="button" class="cta secondary" onclick="show('sites')">Open the sites</button></p>
   </div>
  </div>
  <p class="help">They are not the same thing. A signal is a question worth asking of several
