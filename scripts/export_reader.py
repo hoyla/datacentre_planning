@@ -43,6 +43,7 @@ import datetime as dt
 import html
 import importlib.util
 import json
+import math
 import re
 import sys
 from collections import defaultdict
@@ -313,6 +314,12 @@ def mw_text(v: float) -> str:
     else:
         return f"{v:,.0f}"
     return out.rstrip("0").rstrip(".")
+
+
+def _polar(cx: float, cy: float, r: float, deg: float) -> tuple[float, float]:
+    """A point on a circle, degrees clockwise from twelve o'clock."""
+    rad = math.radians(deg)
+    return cx + r * math.cos(rad), cy + r * math.sin(rad)
 
 
 def _count_in_words(n: int, unit: str = "site") -> str:
@@ -1059,8 +1066,8 @@ table.stats tr.op.open>td{background:var(--soft);
 .opsite{margin-bottom:12px}
 .opsite .claim{margin:0 0 9px}
 .opsite .claim p{margin:0 0 2px}
-.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;
-  margin:12px 0 6px}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));
+  gap:20px 28px;margin:12px 0 6px;align-items:start}
 figure.chart{margin:0}
 figure.chart figcaption{font-size:14px;font-weight:650;margin-bottom:6px}
 figure.chart svg{width:100%;height:auto}
@@ -1069,6 +1076,32 @@ figure.chart rect:hover{opacity:1}
 figure.chart rect.hl{opacity:.42}
 figure.chart .ax{stroke:var(--line)}
 figure.chart .xl,figure.chart .yl{fill:var(--mut);font-size:12px}
+/* A stack of two parts, and the pies, in one palette: brand for what an
+   applicant stated, slate for what this project worked out, and the
+   external tiers in the same green/amber/slate the row pills use, so a
+   colour means the same thing in a chart as it does in the table. */
+figure.chart rect.s-stated,figure.chart .s-stated{fill:var(--brand)}
+figure.chart rect.s-est,figure.chart .s-est{fill:var(--machine)}
+figure.chart .s-none{fill:#dcdcdc}
+figure.chart .s-strong{fill:#1d6b38}
+figure.chart .s-prob{fill:#c74600}
+figure.chart .s-tent{fill:var(--machine)}
+figure.chart path,figure.chart circle{opacity:.85}
+figure.chart path:hover,figure.chart circle:hover{opacity:1}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0 0 8px;
+  font-size:13px;color:var(--body);line-height:1.4}
+.legend .key{display:flex;align-items:baseline;gap:6px}
+.legend i{display:inline-block;width:10px;height:10px;flex:0 0 10px;
+  position:relative;top:1px}
+.legend .s-stated{background:var(--brand)}
+.legend .s-est,.legend .s-tent{background:var(--machine)}
+.legend .s-none{background:#dcdcdc}
+.legend .s-strong{background:#1d6b38}
+.legend .s-prob{background:#c74600}
+.legend .q{display:inline;color:var(--mut)}
+figure.pie .piebody{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+figure.pie svg{width:140px;flex:0 0 140px}
+figure.pie .legend{flex-direction:column;gap:5px;margin:0;min-width:180px}
 a.dlink{margin-left:5px;font-weight:400;color:var(--mut);text-decoration:none;
   font-size:13px;border:1px solid var(--line);border-radius:50%;padding:0 4px}
 a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
@@ -2316,6 +2349,11 @@ def main() -> int:
         return best, round(hv._haversine_km(lat, lon, best["lat"], best["lon"]), 1)
 
     site_mw_values: list[float] = []
+    # One row per site: the figure, whether anybody stated it, and the
+    # strongest external claim matched to the site. Three charts read it
+    # and none of them recomputes the ladder, so they cannot disagree
+    # with each other or with the table.
+    capacity_shape: list[dict] = []
     power_basis_counts: dict[str, int] = {}
     map_points: list[dict] = []
     drive = hv._drive_folder_map()
@@ -2585,6 +2623,13 @@ def main() -> int:
                 site_mw_values.append(est.value_mw)
             power_basis_counts[est.basis] = \
                 power_basis_counts.get(est.basis, 0) + 1
+        _tiers = [c["confidence"] for c in claims_by_site.get(key, [])]
+        capacity_shape.append({
+            "mw": est.value_mw,
+            "stated": bool(est.value_mw) and est.basis in scale.DISCLOSED_BASES,
+            "claim": ("strong" if "strong" in _tiers else
+                      "probable" if "probable" in _tiers else
+                      "tentative" if "tentative" in _tiers else "")})
         addr = max((a[15] or "" for a in apps), key=len, default="") or \
             ", ".join(councils or [])
         _reg = next((a[12] for a in sorted(
@@ -3648,6 +3693,88 @@ def main() -> int:
     # train. Both charts are drawn from fields that do not depend on the
     # deep read, so neither moves as analysis continues — the caveat that
     # matters here is acquisition, not reading.
+
+    def stacked_bars(items, title, note, series, unit=""):
+        """Bars split into named parts, bottom part first.
+
+        `items` is [(label, {series_key: count})]; `series` is
+        [(key, human label, css class)] in stacking order. The parts are
+        distinguished by fill and named in a legend, because a stack read
+        by colour alone is unreadable to anyone who cannot separate the
+        two — and these two parts are not interchangeable: one is what an
+        applicant stated, the other is arithmetic on a floor area.
+        """
+        if not items:
+            return ""
+        w, h, pad, gap = 520, 168, 26, 3
+        top = max(sum(v.values()) for _, v in items) or 1
+        bw = (w - pad) / len(items)
+        rects, labels = [], []
+        for i, (lab, parts) in enumerate(items):
+            x, y = pad + i * bw, h - 20
+            for key, human, cls in series:
+                v = parts.get(key, 0)
+                if not v:
+                    continue
+                bh = (h - 34) * v / top
+                y -= bh
+                rects.append(
+                    f'<rect class="{cls}" x="{x:.1f}" y="{y:.1f}" '
+                    f'width="{bw - gap:.1f}" height="{bh:.1f}">'
+                    f'<title>{esc(lab)}: {v:,} {esc(human)}</title></rect>')
+            if len(items) <= 9 or i % 2 == 0 or i == len(items) - 1:
+                labels.append(f'<text class="xl" x="{x + (bw - gap) / 2:.1f}" '
+                              f'y="{h - 7}" text-anchor="middle">{esc(lab)}</text>')
+        legend = "".join(
+            f'<span class="key"><i class="{cls}"></i>{esc(human)} '
+            f'<b>{sum(v.get(key, 0) for _, v in items):,}</b></span>'
+            for key, human, cls in series)
+        return (f'<figure class="chart"><figcaption>{esc(title)}</figcaption>'
+                f'<p class="legend">{legend}</p>'
+                f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{esc(title)}">'
+                f'<text class="yl" x="0" y="12">{top:,}</text>'
+                f'<line class="ax" x1="{pad}" y1="{h - 20}" x2="{w}" y2="{h - 20}"/>'
+                + "".join(rects) + "".join(labels)
+                + f'</svg><p class="help">{esc(note)}</p></figure>')
+
+    def pie(slices, title, note):
+        """Proportions, with every slice named and counted in the legend.
+
+        A pie is only honest where the parts are one whole and the whole
+        is stated, so the total goes in the middle and each slice carries
+        its own count — nobody has to estimate an angle.
+        """
+        slices = [(lab, v, cls) for lab, v, cls in slices if v]
+        total = sum(v for _, v, _ in slices)
+        if not total:
+            return ""
+        r, cx, cy = 62, 70, 74
+        arcs, a0 = [], -90.0
+        for lab, v, cls in slices:
+            a1 = a0 + 360.0 * v / total
+            if len(slices) == 1:
+                arcs.append(f'<circle class="{cls}" cx="{cx}" cy="{cy}" r="{r}">'
+                            f'<title>{esc(lab)}: {v:,}</title></circle>')
+                break
+            x0, y0 = _polar(cx, cy, r, a0)
+            x1, y1 = _polar(cx, cy, r, a1)
+            big = 1 if a1 - a0 > 180 else 0
+            arcs.append(
+                f'<path class="{cls}" d="M{cx} {cy} L{x0:.2f} {y0:.2f} '
+                f'A{r} {r} 0 {big} 1 {x1:.2f} {y1:.2f} Z">'
+                f'<title>{esc(lab)}: {v:,} of {total:,}</title></path>')
+            a0 = a1
+        legend = "".join(
+            f'<span class="key"><i class="{cls}"></i>{esc(lab)} '
+            f'<b>{v:,}</b> <span class="q">{100 * v / total:.0f}%</span></span>'
+            for lab, v, cls in slices)
+        return (f'<figure class="chart pie"><figcaption>{esc(title)}</figcaption>'
+                f'<div class="piebody">'
+                f'<svg viewBox="0 0 140 148" role="img" aria-label="{esc(title)}">'
+                + "".join(arcs) +
+                f'</svg><p class="legend">{legend}</p></div>'
+                f'<p class="help">{esc(note)}</p></figure>')
+
     def bars(items, title, note, unit="", highlight=None):
         if not items:
             return ""
@@ -3693,13 +3820,62 @@ def main() -> int:
             if lo <= v < hi:
                 band_counts[lab] += 1
                 break
-    chart_bands = bars(
-        [(b[0], band_counts[b[0]]) for b in BANDS],
-        "Sites by disclosed capacity (MW)",
-        f"Only the {len(site_mw_values)} sites that disclose a figure appear. Sites whose "
-        f"documents are unread, or which disclose nothing, are absent — not zero. Partly-read "
+    # The same bands, but the estimated figures are no longer missing
+    # from the picture — they are stacked on top of the stated ones and
+    # named, so the shape of the corpus is visible without the weakest
+    # class of figure being mistaken for a disclosure (Luke, 2026-08-25).
+    band_split = {b[0]: {"stated": 0, "estimated": 0} for b in BANDS}
+    for row in capacity_shape:
+        v = row["mw"]
+        if not v:
+            continue
+        for lab, lo, hi in BANDS:
+            if lo <= v < hi:
+                band_split[lab]["stated" if row["stated"] else "estimated"] += 1
+                break
+    _n_stated = sum(b["stated"] for b in band_split.values())
+    _n_est = sum(b["estimated"] for b in band_split.values())
+    chart_bands = stacked_bars(
+        [(b[0], band_split[b[0]]) for b in BANDS],
+        "Sites by capacity (MW)",
+        f"Sites whose documents are unread, or which disclose nothing and cannot be "
+        f"estimated, are absent — not zero. An estimate is this project's arithmetic on "
+        f"a floor area, never a figure anybody published, and it is the weakest class in "
+        f"the release: usable as a sense of scale, never as a quoted number. Partly-read "
         f"sites can move up a band as reading continues.",
-        unit=" sites")
+        [("stated", "Stated in the application", "s-stated"),
+         ("estimated", "Estimated from floorspace", "s-est")])
+
+    # Of the sites that have a figure at all, how many of them are
+    # somebody's disclosure.
+    chart_basis = pie(
+        [("Stated in the application", _n_stated, "s-stated"),
+         ("Estimated from floorspace", _n_est, "s-est")],
+        "Where a site's own figure comes from",
+        f"The {_n_stated + _n_est} sites carrying any capacity figure. The other "
+        f"{n_sites - _n_stated - _n_est} carry none — their documents are unread, or "
+        f"disclose nothing and give no floor area to work from.")
+
+    # And of the sites whose applications say nothing, how many are
+    # described by something outside the planning system.
+    _silent = [r for r in capacity_shape if not r["stated"]]
+    _by_tier = {t: sum(1 for r in _silent if r["claim"] == t)
+                for t in ("strong", "probable", "tentative")}
+    _silent_est = sum(1 for r in _silent if r["mw"])
+    chart_elsewhere = pie(
+        [("Nothing from outside either",
+          sum(1 for r in _silent if not r["claim"]), "s-none"),
+         ("Strong external match", _by_tier["strong"], "s-strong"),
+         ("Probable external match", _by_tier["probable"], "s-prob"),
+         ("Tentative external match", _by_tier["tentative"], "s-tent")],
+        "Sites whose applications state no capacity",
+        f"{len(_silent)} sites, of which {_silent_est} carry a floorspace estimate "
+        f"from this project even though the application itself states nothing. An "
+        f"external match is a grid-register row, a filed account or an operator's own "
+        f"page that this project judged to describe the site — a different quantity, "
+        f"from a different authority, and not the figure the applicant gave the "
+        f"council. A tentative match is a lead to resolve, not evidence. Every match, "
+        f"with its reasoning, is on the site's own page.")
 
     # ---- Data dictionary ---------------------------------------------
     # One definition, used by both artefacts. The workbook's dictionary
@@ -4442,7 +4618,6 @@ def main() -> int:
 
 
 
- {_pitfalls_from_notes(assistant_notes_html)}
  </div>
 
  <aside class="startside">
@@ -4492,7 +4667,7 @@ def main() -> int:
  <p class="help">Both charts read the dataset as it stands today. Neither depends on the
  deep read, so neither changes as the remaining documents are analysed — but both will move
  as the tail of applications is retrieved.</p>
- <div class="charts">{chart_years}{chart_bands}</div>
+ <div class="charts">{chart_years}{chart_bands}{chart_basis}{chart_elsewhere}</div>
  </div>
 
  <h2 class="sec" id="package">What the package contains</h2>
@@ -4640,6 +4815,10 @@ def main() -> int:
  by drainage and flood engineering every development produces; only 93 sites disclose
  anything about consumption. A volume would imply a precision the applications do not
  contain — and that silence is itself worth reporting.</p>
+ <!-- Luke, 2026-08-25: both blocks are cautionary, so they read as one
+      warning rather than two, at the end where a reader has seen what
+      the numbers are before being told how they mislead. -->
+ {_pitfalls_from_notes(assistant_notes_html)}
  </div>
 </div></section>
 
