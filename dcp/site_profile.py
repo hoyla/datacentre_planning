@@ -412,6 +412,12 @@ class GenerationFigure:
     plant_type: str = ""        # adjudicated duty: standby, prime, renewable…
     excluded_n: int = 0         # figures kept off this line as not generation
     excluded_mw: float | None = None    # the largest of them
+    # The adjudicated basis as the adjudicator wrote it, beside the
+    # reader-facing `basis` above. Three raw values collapse into "as
+    # stated" on the page, which is right for a reader and wrong for a
+    # rule: only a figure describing a total is comparable with a load,
+    # and "as stated" cannot say whether this one does.
+    basis_key: str = ""
 
 
 # What the adjudicated basis means on a reader's row. `not_generation`
@@ -462,6 +468,7 @@ def _adjudicated(rows):
             f"shown.", "", n_ex, mw_ex)
     headline, quote, basis, plant, count, rating = standing[0]
     label = _BASIS_LABEL.get(basis, "")
+    basis_key = basis or ""
     duty = _PLANT_WORDS.get(plant or "", "")
     bits = []
     if basis == "per_generator":
@@ -491,7 +498,8 @@ def _adjudicated(rows):
                     f"not counted here.")
     return GenerationFigure(headline, label,
                             rating if rating else (headline if basis == "per_generator" else None),
-                            count, " ".join(bits), plant or "", n_ex, mw_ex)
+                            count, " ".join(bits), plant or "", n_ex, mw_ex,
+                            basis_key)
 
 
 def generation_figure(rows) -> GenerationFigure:
