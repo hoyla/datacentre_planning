@@ -193,8 +193,16 @@ PREFIX_NOT_MAPPABLE: frozenset[str] = frozenset({
     "LondonLegacy", "OldOakParkRoyal",   # Mayoral Development Corporations
 })
 
-# NSIP references ("EN010030/...") name a project, not a council.
-_NSIP_PREFIX_RE = re.compile(r"^EN\d")
+# References from the routes that bypass the local planning authority,
+# which therefore name a project rather than a council: NSIP register
+# refs ("EN010030/...") and the gov.uk publication slugs the Section 35
+# watcher uses as its application_ref
+# ("data-centre-campus-wapseys-wood-buckinghamshire-section-35-direction-
+# planning-act-2008"). A slug carries no "/", so the camel-case split
+# hands the whole of it over as a prefix, and the build then asks for it
+# to be added to this table — which would be the wrong fix twice over:
+# it is not a council, and a direction has no council by construction.
+_NO_LPA_REF_RE = re.compile(r"^EN\d|section-35-direction")
 
 # Barbour authority names that need more than normalisation. Legacy
 # districts fold to their current authority, exactly as the prefixes do.
@@ -246,7 +254,7 @@ def _prefix_candidates(prefix: str, path_str: str) -> tuple[tuple[str, ...], boo
     empty-and-unrecognised means a prefix this table has never seen,
     which the exporters print rather than swallow.
     """
-    if prefix in PREFIX_NOT_MAPPABLE or _NSIP_PREFIX_RE.match(prefix):
+    if prefix in PREFIX_NOT_MAPPABLE or _NO_LPA_REF_RE.search(prefix):
         return (), True
     if prefix in PREFIX_SHARED:
         return PREFIX_SHARED[prefix], True
