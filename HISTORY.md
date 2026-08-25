@@ -915,6 +915,61 @@ now small enough to read.
 
 ---
 
+## The Section 35 watcher, built the day journalism warranted it (2026-08-25)
+
+The Guardian's 25 August story on two gas-supplied NSIP data centres —
+Wapseys Wood and "Quest Park", 1.3GW between them — arrived with a
+question from the story team: why are these two not in the corpus?
+Wapseys Wood was — application `EN0110030`, all six PINS documents
+read, 2,815 findings — but under the NSIP register's own name for it,
+"SDC M40 Campus", with a site display name taken from the register's
+location narrative; the words "Wapseys Wood" appear in neither. Quest
+Park (QuestPit Limited, Ampthill Road, Stewartby — the same Quest Pit
+whose film-and-TV-studio incarnation the corpus already holds as
+`CB/22/03616/FULL`) was genuinely absent: its Section 35 Direction of
+15 June, with no DCO yet filed, appears nowhere the adapters look —
+not the LPA portal it bypasses, not PlanIt, not the NSIP register.
+
+That gap was designed for in May
+([data/nsip_research/findings.md](data/nsip_research/findings.md)):
+Adapter 2, the Section 35 watcher, deferred until "there's a *second*
+DC S35 direction to test against". The trigger then fired twice —
+Quest Park in June, and a third direction on 1 July for a campus at
+New Barn Road, Dartford (CSE52 Limited; reported nowhere, including
+the Guardian piece) — and nothing noticed, because the watcher that
+would notice was the thing not built. A trigger condition only an
+unbuilt component was polling for is the pattern worth remembering.
+
+`dcp/sources/s35.py` now does what the May design sketched: poll the
+gov.uk Search API, screen hits with the register adapter's DC keyword
+union, snapshot each publication's Content API page, and upsert a stub
+application per direction with `discovered_via=['s35_direction']`. One
+correction to the sketch mattered — the proposed
+`filter_format=publication` would have excluded all three directions,
+which gov.uk files as format `decision`. Three stubs landed, the
+Wapseys direction included: it is a distinct record of a distinct
+event from the register row, and clustering unifies them later rather
+than ingest silently deduplicating them. Re-runs are free and no-ops
+(`pages_from_cache: 3, snapshots_new: 0`).
+
+The three publication bundles are cached under
+`data/seed_cases/{wapseys_wood,quest_park,dartford_ebbsfleet}/`, and
+the headline figures were read from the primary documents before being
+quoted anywhere: QuestPit's request statement states a 1GW campus,
+720MW IT load across four buildings, powered by its on-site gas
+generating station until a grid connection it does not expect before
+2034; Dartford's supporting statement states 300MW power and 240MW IT
+load with a firm Gate 2 NGET allocation — grid-led, not gas-led, so
+Foxglove's "two gas-fired" framing survives the third project's
+existence. Barbour's own Wapseys record (Ptno 12913776, address
+"Wapseys Wood Landfill", authority wrongly Cherwell) is now linked to
+`EN0110030` by the manual pass in
+`scripts/link_barbour_families.py`, so the reader stops rendering a
+phantom "no application submitted yet" site beside the real one it
+could not name.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across

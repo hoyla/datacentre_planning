@@ -44,6 +44,14 @@ MANUAL_LINKS = {
     # project's own planning_link URL carries applicationNumber=P/2023/0642
     # (Feltham DC, £570M). Verified 2026-08-02.
     "12697612": "Hounslow/P/2023/0642",
+    # Barbour's "SDC M40 CAMPUS - 300MW DATA CENTRE CAMPUS" (address
+    # "Wapseys Wood Landfill") is the NSIP-route project EN0110030 — same
+    # name, same scheme, same landfill site. Barbour carries no
+    # planning_ref (pre-planning lead) and its authority field says
+    # Cherwell (wrong; the site is Buckinghamshire), so no automatic pass
+    # can bridge it. Verified 2026-08-25 against the NSIP register row and
+    # the Wapseys Wood Section 35 Direction.
+    "12913776": "EN0110030",
 }
 
 

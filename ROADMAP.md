@@ -55,6 +55,20 @@ up the new CSV adjudication columns.
   stored and not what was offered. Re-listing the document pages of the
   applications that hold documents would settle it. **Do this before
   anyone quotes per-site document counts.**
+- **Carry the Section 35 stubs through to sites.** The watcher
+  (HISTORY 2026-08-25) holds stub applications for the three DC
+  directions, but a stub carries no coordinates, so the next
+  materialisation will not cluster it: the Wapseys stub belongs with
+  `SITE-EN0110030`, the Ampthill Road stub with the Quest Pit site
+  (`PTNO-12669230` — the film-studio incarnation of the same land),
+  and Dartford is a new site. Needs geocoding or curated coordinates.
+  In the same pass, `SITE-EN0110030` needs a display name that says
+  "SDC M40 Campus (Wapseys Wood)" rather than the register's location
+  narrative — the reason the story team searched for Wapseys and
+  concluded it was missing. Both wait behind the partitions-branch
+  materialisation freeze; until then, re-run `dcp index --source s35`
+  weekly (idempotent, free on no-change) so a fourth direction is
+  noticed the week it is published rather than the day a story runs.
 
 ## Phase 3 — the second opinion
 
