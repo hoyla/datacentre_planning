@@ -100,17 +100,50 @@ class Sync:
             STATE_PATH.write_text(json.dumps(self.state))
             self._dirty = 0
 
-    def _retry(self, fn, tries: int = 5):
-        for attempt in range(tries):
+    # Server-side pushback: the API is reachable and saying "not now".
+    _API_TRANSIENT = ("429", "500", "502", "503", "rateLimit",
+                      "userRateLimit", "timed out", "Broken pipe")
+
+    # The network went away underneath us — DNS failure, dropped route, a
+    # laptop that slept. Worth separating from the above because the
+    # right patience is different: an outage lasts minutes, not seconds,
+    # and treating it as fatal is what ended the 2026-08-25 overnight run
+    # after 2,800 of 54,293 files. httplib2 raises ServerNotFoundError,
+    # whose text matched none of the API signatures, so every file failed
+    # instantly and the first folder creation to hit it killed the run —
+    # folder creation being the one call not inside the loop's own
+    # try/except.
+    _NET_TRANSIENT = ("Unable to find the server", "ServerNotFoundError",
+                      "nodename nor servname", "Name or service not known",
+                      "Temporary failure in name resolution",
+                      "Connection reset", "Connection aborted",
+                      "Connection refused", "Network is unreachable",
+                      "EOF occurred in violation of protocol")
+
+    def _retry(self, fn, tries: int = 5, net_tries: int = 9):
+        """Retry transient failures. Network outages get their own, more
+        patient schedule — roughly 20 minutes of waiting rather than 75
+        seconds — because the alternative is losing a whole overnight
+        pass to a blip. A genuinely permanent failure still raises, and
+        the run is resumable either way: the ledger is written as it
+        goes, so a re-run skips everything already uploaded."""
+        attempt = 0
+        while True:
             try:
                 return fn()
             except Exception as exc:
-                transient = any(t in str(exc) for t in
-                                ("429", "500", "502", "503", "rateLimit",
-                                 "userRateLimit", "timed out", "Broken pipe"))
-                if attempt == tries - 1 or not transient:
+                text = str(exc)
+                is_net = any(t in text for t in self._NET_TRANSIENT)
+                is_api = any(t in text for t in self._API_TRANSIENT)
+                limit = net_tries if is_net else tries
+                if not (is_net or is_api) or attempt >= limit - 1:
                     raise
-                time.sleep(min(2 ** attempt * 5, 120))
+                delay = min(2 ** attempt * 5, 300 if is_net else 120)
+                if is_net and attempt == 0:
+                    print(f"  network unreachable — retrying for up to "
+                          f"~20 min: {text[:80]}")
+                time.sleep(delay)
+                attempt += 1
 
     def folder(self, name: str, parent: str | None) -> str:
         key = f"{parent or 'root'}/{name}"
@@ -389,13 +422,16 @@ def main() -> None:
     folder_ids: dict[Path, str] = {args.sync: root}
     for i, f in enumerate(files, 1):
         parent_path = f.parent
-        if parent_path not in folder_ids:
-            fid = root
-            for part in parent_path.relative_to(args.sync).parts:
-                sub = Path(fid) / part  # key only
-                fid = sync.folder(part, fid)
-            folder_ids[parent_path] = fid
         try:
+            # Inside the try deliberately: resolving the folder chain
+            # calls the API too, and when it sat outside, one failure
+            # there ended the whole pass rather than one file. That is
+            # how the 2026-08-25 overnight run died at 2,800 of 54,293.
+            if parent_path not in folder_ids:
+                fid = root
+                for part in parent_path.relative_to(args.sync).parts:
+                    fid = sync.folder(part, fid)
+                folder_ids[parent_path] = fid
             outcome = sync.upload(f, folder_ids[parent_path])
             counts[outcome] += 1
         except Exception as exc:

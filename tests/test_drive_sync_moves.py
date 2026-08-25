@@ -149,3 +149,56 @@ def test_a_trashed_original_is_not_resurrected(tmp_path, monkeypatch):
         # path raises — which is the assertion: it did not return "moved".
         s.upload(new, "new-parent")
     assert s.svc.files().updates == []
+
+
+# ---------------------------------------------------------------------------
+# Retry classification. The overnight run of 2026-08-25 died at 2,800 of
+# 54,293 files because httplib2's ServerNotFoundError matched none of the
+# API signatures, so a dropped network read as permanent.
+
+class _Boom:
+    """Fails with `text` for the first `n` calls, then succeeds."""
+    def __init__(self, text, n):
+        self.text, self.n, self.calls = text, n, 0
+
+    def __call__(self):
+        self.calls += 1
+        if self.calls <= self.n:
+            raise RuntimeError(self.text)
+        return "ok"
+
+
+@pytest.mark.parametrize("text", [
+    "Unable to find the server at www.googleapis.com",
+    "[Errno 8] nodename nor servname provided, or not known",
+    "Temporary failure in name resolution",
+    "Connection reset by peer",
+])
+def test_network_outages_are_retried_not_fatal(text, monkeypatch):
+    monkeypatch.setattr(drive_sync.time, "sleep", lambda *_: None)
+    s = _sync({"folders": {}, "files": {}})
+    assert s._retry(_Boom(text, 3)) == "ok"
+
+
+def test_api_pushback_still_retried(monkeypatch):
+    monkeypatch.setattr(drive_sync.time, "sleep", lambda *_: None)
+    s = _sync({"folders": {}, "files": {}})
+    assert s._retry(_Boom("429 rateLimitExceeded", 2)) == "ok"
+
+
+def test_a_permanent_error_still_raises_at_once(monkeypatch):
+    monkeypatch.setattr(drive_sync.time, "sleep", lambda *_: None)
+    s = _sync({"folders": {}, "files": {}})
+    boom = _Boom("404 File not found", 5)
+    with pytest.raises(RuntimeError):
+        s._retry(boom)
+    assert boom.calls == 1, "a permanent error must not be retried"
+
+
+def test_network_gets_more_attempts_than_api_pushback(monkeypatch):
+    monkeypatch.setattr(drive_sync.time, "sleep", lambda *_: None)
+    s = _sync({"folders": {}, "files": {}})
+    # Six consecutive failures: beyond the API budget, inside the network one.
+    with pytest.raises(RuntimeError):
+        s._retry(_Boom("503 backend error", 6))
+    assert s._retry(_Boom("Unable to find the server at x", 6)) == "ok"
