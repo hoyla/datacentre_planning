@@ -421,8 +421,7 @@ CSS = """
 .tri:before,table.stats tr.op td:first-child:before,
 details.reading summary h4:before,details.banner-d>summary:before,
 .box.claims details>summary:before,details.apps-d>summary:before,
-.opdetail details>summary:before,.opsite details>summary:before,
-tr.site td:first-child:before{
+.opdetail details>summary:before,.opsite details>summary:before{
   content:"";display:inline-block;width:0;height:0;margin-right:8px;
   border-top:6px solid transparent;border-bottom:6px solid transparent;
   border-left:9px solid currentColor;vertical-align:middle;position:relative;
@@ -441,8 +440,13 @@ table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
    reading. Stated once, at the top, for every [hidden] on the page. */
 [hidden]{display:none !important}
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+/* Page #f6f6f6, paper #fff — the token table's two greys, used the way
+   it uses them. Everything was white on white, so the filter bar, the
+   table and the page behind them were one undifferentiated surface and
+   the 4px card rules had nothing to sit on. */
 body{margin:0;font:16px/1.62 "Source Sans 3",-apple-system,BlinkMacSystemFont,
-  "Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg)}
+  "Segoe UI",Roboto,sans-serif;background:var(--page);color:var(--fg)}
+#tbl-sites,#tbl-apps,#tbl-energy,.controls,.chips{background:var(--bg)}
 /* The serif carries what a reader is looking FOR — a site's name and a
    figure — and nothing else. The handoff uses it the same way. */
 .sitecell .sname,.mw .fig,h1,h2{font-family:"Source Serif 4",Georgia,
@@ -509,42 +513,48 @@ details.banner-d>summary::-webkit-details-marker{display:none}
 details.banner-d>summary:hover{text-decoration:underline}
 details.banner-d>div{margin-top:9px}
 h2.sec{font-size:15px;margin:24px 0 8px}
-.controls{display:flex;gap:9px;flex-wrap:wrap;padding:11px 22px;align-items:center;
+.controls{display:flex;gap:14px;flex-wrap:wrap;padding:14px 20px;align-items:center;
   border-bottom:1px solid var(--line);position:sticky;top:var(--nav-h,41px);
   background:var(--bg);z-index:8}
-input,select{font:inherit;padding:6px 9px;border:1px solid var(--line);border-radius:5px;
-  background:var(--bg);color:var(--fg)}
-input[type=search]{min-width:250px}
+input,select{font:inherit;font-size:15px;padding:9px 12px;border:1px solid #999;
+  border-radius:4px;background:var(--bg);color:var(--fg)}
+input[type=search]{width:300px;min-width:0}
+select{width:auto}
 .count{color:var(--mut);font-size:14px;margin-left:auto}
-button.toggle{font:inherit;font-size:14.5px;padding:6px 12px;border:1px solid var(--line);
-  border-radius:5px;background:var(--bg);color:var(--fg);cursor:pointer}
-button.toggle:hover{border-color:var(--accent)}
-button.toggle[aria-pressed=true]{background:var(--accent);border-color:var(--accent);
+button.toggle{font:inherit;font-size:14px;padding:7px 14px;border:1px solid #999;
+  border-radius:999px;background:var(--bg);color:var(--brand);cursor:pointer;
+  transition:background .13s,border-color .13s,color .13s}
+button.toggle:hover{border-color:var(--brand)}
+button.toggle[aria-pressed=true]{background:var(--brand);border-color:var(--brand);
   color:#fff;font-weight:600}
 label.chk{font-size:14px;display:flex;align-items:center;gap:5px;cursor:pointer}
 label.chk.off{opacity:.45;cursor:default}
-/* The organisation chips. Square rather than the prototype's pills, and
-   one neutral colour rather than a palette: colour on this page means
-   verification state (.tag.known, .tag.unknown), and a coloured pill for
-   an organisation would read as a judgement about it. The strip sits
-   under the filter bar rather than inside it, because it is a long line
-   that wraps and the filter bar is sticky. */
+/* The handoff's chips: 13px, 6px 13px, radius 999px, active in the
+   brand fill and inactive white with a #c7c7c7 border. They were square
+   and the active one was the Guardian yellow, on a rule I made up — that
+   yellow "marks what the PERSON has done to the page". The handoff
+   reserves yellow for the active tab underline and nothing else, and
+   says what an active chip looks like, so there was no gap to fill.
+   The strip sits under the filter bar rather than inside it, because it
+   is a long line that wraps and the filter bar is sticky. */
 .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:baseline;
   padding:9px 22px;border-bottom:1px solid var(--line)}
 .chiplabel{font-size:14px;font-weight:600;color:var(--mut);
   margin-right:3px}
 .chips .help{font-size:13.5px;flex-basis:100%;margin:3px 0 0}
-button.chip{font:inherit;font-size:14px;padding:4px 10px;
-  border:1px solid var(--line);border-radius:3px;background:var(--bg);
-  color:var(--fg);cursor:pointer;line-height:1.3}
-button.chip:hover{border-color:var(--accent)}
+button.chip{font:inherit;font-size:13px;padding:6px 13px;
+  border:1px solid #c7c7c7;border-radius:999px;background:var(--bg);
+  color:var(--brand);cursor:pointer;line-height:1.3;
+  transition:background .13s,border-color .13s,color .13s}
+button.chip:hover{border-color:var(--brand)}
 /* The reader's own filter, in the Guardian's yellow: it marks what the
    PERSON has done to the page, which is a third thing from structure
    (brand) and from the state of a figure (warn). Black text on it
    because the yellow is bright enough to carry it and nothing else on
    the page is that colour. */
-button.chip.on{background:var(--active);border-color:var(--active);color:#121212;
+button.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;
   font-weight:600}
+button.chip.on .n{color:rgba(255,255,255,.65)}
 button.chip .n{color:var(--mut);font-size:13px;margin-left:3px}
 button.chip:disabled{opacity:.5;cursor:not-allowed;border-style:dashed}
 /* The machine reading: a collapsed box, one neutral rule, no colour —
@@ -628,12 +638,11 @@ ul.rq li{margin-bottom:2px}
 .siglist{margin:6px 0 0;padding-left:18px;font-size:14px;columns:2;column-gap:24px}
 .siglist li{break-inside:avoid;margin-bottom:3px}
 @media (max-width:700px){.siglist{columns:1}}
-button.chip.on .n{color:#121212;opacity:.7}
 /* The badge in the table cell is the same control in a smaller frame:
    it filters, so it looks pressable, but it must not out-shout the site
    name beside it. */
-button.who{font:inherit;font-size:14px;padding:2px 7px;text-align:left;
-  border:1px solid var(--line);border-radius:3px;background:var(--bg);
+button.who{font:inherit;font-size:14px;padding:3px 10px;text-align:left;
+  border:1px solid var(--line);border-radius:999px;background:var(--bg);
   color:var(--fg);cursor:pointer;line-height:1.3;max-width:100%}
 button.who:hover{border-color:var(--accent)}
 span.who.multi{font-size:14px;font-weight:600;display:block}
@@ -650,15 +659,21 @@ button.who.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
    identical here. */
 table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
   font-size:14.5px}
+#tbl-sites{min-width:1080px}
 /* Counted from the left, so inserting a column shifts every rule after
    it — which is what happened when Who's behind it went in at 2 and
    Proposal inherited a 104px allowance meant for the MW figure. The
    heading each rule is for is named, so the next insertion is a
    re-reading rather than a guess. */
-#tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){min-width:330px}   /* Site */
-#tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){width:168px}       /* Who's behind it */
-#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){width:210px}       /* Signals */
-#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:132px}       /* Power on record */
+/* The handoff's signal-view proportions — site 2fr, signals 1.7fr, then
+   two fixed columns — redistributed for the two columns Luke added on
+   2026-08-24: participants of its own, and signals narrower and stacked
+   to make room for it. */
+#tbl-sites th:nth-child(1),#tbl-sites td:nth-child(1){width:100%;min-width:420px}
+                                                                        /* Site */
+#tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){width:190px}       /* Who's behind it */
+#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){width:230px}       /* Signals */
+#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){width:180px}       /* Power on record */
 
 /* The site cell answers "what is this" on its own: the name, then where
    it is and what it is called in this dataset, then what the applicant
@@ -669,15 +684,22 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
 .sitecell .sname{display:block;font-weight:700;font-size:18px;line-height:1.25;
   color:var(--accent)}
 .sitecell .skey{display:block;color:var(--mut);font-size:13px;margin:2px 0 4px}
-.sitecell .sprop{display:block;font-size:14.5px;line-height:1.4;max-width:60ch}
+.sitecell .sprop{display:block;font-size:14px;line-height:1.4;max-width:66ch}
 /* Signals stacked, not wrapped across the row: at one per line the eye
    reads a list, and the column stays narrow enough to leave the site
-   cell its width. One neutral fill — colour on this page means the state
-   of a figure, not the identity of a cohort. */
+   cell its width (Luke, 2026-08-24). The tone is the handoff's, carried
+   on the cohort in dcp/site_cohorts.py — red where a figure is absent or
+   contradicted, amber where one exists but is incomplete. They were one
+   neutral grey on a rule I wrote here, that colour on this page means
+   the state of a figure; the handoff assigns these tones itself and a
+   signal IS a statement about the state of a figure. */
 .sigcell{white-space:normal}
 .sigpill{display:block;width:fit-content;max-width:100%;margin:0 0 4px;
-  padding:2px 9px;border:1px solid var(--line);border-radius:999px;
-  background:var(--soft);color:var(--fg);font-size:13px;line-height:1.35}
+  padding:2px 9px;border:1px solid;border-radius:999px;
+  font-size:13px;line-height:1.35}
+.sigpill.t-red{background:#fdecec;color:#a51818;border-color:#f3c9c9}
+.sigpill.t-amber{background:#fdf0e6;color:#a13a00;border-color:#f2d6bd}
+.sigpill.t-slate{background:#eef1f6;color:#3f5570;border-color:#d6dde8}
 /* The figure carries the weight; what kind of figure it is sits under it
    in the muted line the rest of the page uses for evidence-about-evidence. */
 /* The reading bar, from the handoff's fourth column — and the one place
@@ -702,19 +724,27 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
 .mw .w-implied{font-weight:500;color:var(--mut)}     /* a connection, or standby-implied */
 .mw .w-modelled{font-weight:400;color:var(--mut)}    /* arithmetic on floorspace */
 .mw .w-none{font-weight:400;color:var(--mut)}
-#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){width:108px}       /* Power indicators */
-#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){width:150px}       /* Status */
+#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){width:130px}       /* Power indicators */
 /* Narrowed to make room for the indicators column: of the "top level"
    cells this one has the most spare width, an address rarely needing
    its full former allowance. */
-#tbl-sites th:nth-child(7),#tbl-sites td:nth-child(7){min-width:190px}   /* Location */
-#tbl-sites th:nth-child(8),#tbl-sites td:nth-child(8){width:112px}       /* Read */
+.tablenote{margin:14px 20px 0;font-size:13px;color:var(--mut);
+  line-height:1.5;max-width:70em}
 /* A date is one word or it is nothing: 2024-04-15 broken across two lines
    reads as two half-dates. The width comes out of Proposal, which is the
    one column here that can lose a few pixels without cost. */
 #tbl-apps th:nth-child(4),#tbl-apps td:nth-child(4){white-space:nowrap;width:98px}
 tr.detail td{min-width:0}
 th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+/* The sites list is the handoff's signal view, which is a grid of rows
+   rather than a spreadsheet: 16px 20px of padding, a 1px #dcdcdc rule
+   between rows, and a 12px uppercase header sitting on a 1px #121212
+   rule. It is still a <table> because sorting is this reader's and the
+   handoff never asked for it to go. */
+#tbl-sites td{padding:16px 20px;border-bottom:1px solid var(--line)}
+#tbl-sites th{padding:11px 20px;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--mut);
+  border-bottom:1px solid var(--fg);vertical-align:bottom}
 /* Sticky on the <thead>, not on each <th>. On a 910-row table the
    per-cell version silently stopped pinning — the headings scrolled away
    and ended up sitting below the first rows of data — while the same rule
@@ -746,10 +776,16 @@ tr.detail td{padding:14px 18px 18px 30px}
    found so far — 56 of 69 documents analysed" — and holding those on one
    line gave the column more width than any other, on rows that are
    several lines deep anyway. */
-.tag{display:inline-block;padding:2px 7px;border-radius:9px;font-size:13px;
-  white-space:normal;line-height:1.35}
-.tag.known{background:var(--okbg);color:var(--ok)}
-.tag.unknown{background:var(--warnbg);color:var(--warn)}
+/* The handoff's pill sets — background, text and border — used for the
+   three strengths an external claim can have. Slate is the token table's
+   "this is a note about method": a tentative match is a lead to resolve,
+   not a measurement, so it must not wear the same colour as one that
+   was checked. */
+.tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:13px;
+  white-space:normal;line-height:1.35;border:1px solid}
+.tag.known{background:#e9f3ec;color:#1d6b38;border-color:#c7e0d0}
+.tag.unknown{background:#fdf0e6;color:#a13a00;border-color:#f2d6bd}
+.tag.tentative{background:#eef1f6;color:#3f5570;border-color:#d6dde8}
 /* The panel is a four-column grid, split by what the boxes are about
    rather than by their size. Column 1 describes the record — what is
    proposed, and the identifiers and provenance of the row itself.
@@ -1768,7 +1804,15 @@ function apply(){
     r.nextElementSibling.style.display=ok?'':'none';
     if(ok)shown++;
   }
-  n.textContent=shown+' of '+rows.length+' sites';
+  // The handoff's count-string honesty rule: a filtered count is never
+  // shown against the total, because "31 of 456" reads as a claim about
+  // the release rather than about the chip that is on.
+  const inCohort = cohort
+    ? rows.filter(r=>('|'+r.dataset.cohorts+'|').indexOf('|'+cohort+'|')>=0).length
+    : rows.length;
+  n.textContent = cohort
+    ? shown.toLocaleString()+' of '+inCohort.toLocaleString()+' sites in this cohort'
+    : shown.toLocaleString()+' of '+rows.length.toLocaleString()+' sites';
   // Nothing to project is not a map worth opening.
   document.getElementById('seemap').disabled = shown===0;
 }
@@ -2168,8 +2212,10 @@ def main() -> int:
     site_names = {r[0]: r[2] for r in site_rows}
     cohorts_of_site: dict[str, list[str]] = defaultdict(list)
     cohort_title: dict[str, str] = {}
+    cohort_tone: dict[str, str] = {}
     for _c in cohorts:
         cohort_title[_c.cohort.key] = _c.cohort.title
+        cohort_tone[_c.cohort.key] = _c.cohort.tone
         for _m in _c.result.members:
             cohorts_of_site[_m.site_key].append(_c.cohort.key)
 
@@ -2622,7 +2668,8 @@ def main() -> int:
         # same neutral pill the table row uses, because a cohort is a
         # category and colour on this page means the state of a figure.
         sig_pills = "".join(
-            f'<span class="sigpill">{esc(cohort_title.get(_k, _k))}</span>'
+            f'<span class="sigpill t-{cohort_tone.get(_k, "slate")}">'
+            f'{esc(cohort_title.get(_k, _k))}</span>'
             for _k in cohorts_of_site.get(key, ()))
         if sig_pills:
             sig_pills = f'<p class="sitepills">{sig_pills}</p>'
@@ -3062,7 +3109,8 @@ def main() -> int:
             ind_label = best["confidence"] + (f" ×{_n}" if _n > 1 else "")
             ind_title = "; ".join(f"{c['claim_name']} ({c['confidence']})"
                                   for c in site_claims)
-            ind_class = "known" if best["confidence"] == "strong" else "unknown"
+            ind_class = {"strong": "known", "probable": "unknown",
+                         "tentative": "tentative"}[best["confidence"]]
             ind_cell = (f'<span class="tag {ind_class}" title="{esc(ind_title)}">'
                        f'{esc(ind_label)}</span>')
             ind_sort = _tier_rank[best["confidence"]] * 100 + _n
@@ -3081,22 +3129,13 @@ def main() -> int:
  '' if descriptive else ' — the register holds no description of the development itself, only procedural applications'}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
 <td class="sigcell" data-v="{len(cohorts_of_site.get(key, ()))}">{
- ''.join(f'<span class="sigpill">{esc(cohort_title.get(_k, _k))}</span>'
+ ''.join(f'<span class="sigpill t-{cohort_tone.get(_k, "slate")}">'
+         f'{esc(cohort_title.get(_k, _k))}</span>'
          for _k in cohorts_of_site.get(key, ())) or '<span class="q">—</span>'}</td>
 <td class="mw" data-v="{est.value_mw or ''}">{mw_cell}</td>
 <td data-v="{ind_sort}">{ind_cell}</td>
-<td data-v="{esc(cap_label)}"><span class="tag {'known' if known else 'unknown'}">{esc(cap_label)}</span></td>
-<td data-v="{esc(addr)}">{esc(trim(addr, 105)) or '—'} {maplink}</td>
-<td data-v="{read}"><span class="rbar" title="{read} of {held} documents read"><span
- class="rbar-fill {'r-done' if held and read >= held * 0.94 else ('r-part' if read else 'r-none')}"
- style="width:{(100 * read / held) if held else 0:.0f}%"></span></span>{read:,}/{held:,}<span class="q">documents read{
- f' · <a href="{esc(_durl)}" target="_blank" rel="noopener" '
- f'onclick="event.stopPropagation()">Drive</a>' if _durl and held else ''
-}</span><span class="q rstate {'r-done' if held and read >= held * 0.94 else ('r-part' if read else 'r-none')}">{
- 'Complete' if held and read >= held * 0.94 else ('Figures are floors' if read else 'Nothing published')
-}</span></td>
 </tr>
-<tr class="detail"><td colspan="8">
+<tr class="detail"><td colspan="5">
  <!-- §5 of the design handoff. The header card carries the name and the
       identifiers, which the page used to scrape out of the row with
       `tr.querySelector('td strong')` — and after the table's site cell
@@ -3265,19 +3304,34 @@ def main() -> int:
 <td class="sigcell" data-v="0"><span class="q">—</span></td>
 <td class="mw" data-v="">—<span class="q">no application yet</span></td>
 <td data-v="0">—</td>
-<td data-v="{esc(cap_label)}"><span class="tag unknown">{esc(cap_label)}</span></td>
-<td data-v="{esc(address or '')}">{esc(trim(address, 105)) or '—'} {maplink}</td>
-<td data-v="-1">—<span class="q">nothing published</span></td>
 </tr>
-<tr class="detail"><td colspan="8">
+<tr class="detail"><td colspan="5">
+ <div class="card sitehead">
+  <h2 class="sitename">{esc(title or key)}</h2>
+  <p class="siteident">{esc(authority or '')}{" · " if address else ""}{esc(trim(address, 90))}
+   · <code>{esc(key)}</code> · Barbour ABI project, no application yet</p>
+  <p class="sitelinks"><span><a href="#site-{esc(key)}">Link to this site</a></span></p>
+ </div>
  <div class="banner" style="margin-top:0"><b>No application submitted yet.</b>
   {esc(site_profile.NO_DOCUMENT_REASONS['pre_application'])}</div>
- <div class="grid">
+ <div class="sitebody">
   <div class="col-record">
    <div class="box proposal"><h4>Proposal</h4>
     <p><strong>{esc(summary) or '—'}</strong></p>
     <p class="help">Barbour ABI records it as:</p><p>{esc(description) or '—'}</p></div>
-
+  <div class="box"><h4>Scheme</h4>
+   <dl class="kv">
+    <dt>Planning authority</dt><dd>{esc(authority or '—')}</dd>
+    <dt>Contract value</dt><dd>{f'£{pvalue:,.0f}' if pvalue else '—'}</dd>
+    <dt>Floor area</dt><dd>{f'{pfloor:,.0f} m²' if pfloor else '—'}</dd>
+    <dt>Site area</dt><dd>{f'{psite:,.2f} ha' if psite else '—'}</dd>
+    <dt>Plan date</dt><dd>{esc(str(pplan or '—'))}</dd>
+    <dt>Decision date</dt><dd>{esc(str(pdecision or '—'))}</dd>
+   </dl>
+   <p class="help provenance">Barbour ABI data is licensed and must be credited
+    in published output.</p></div>
+  </div>
+  <div class="col-computed">
    <div class="box identity"><h4>Site details</h4>
     <div class="fields">
      <div class="stack">
@@ -3289,26 +3343,11 @@ def main() -> int:
       {f'{plat:.5f}, {plon:.5f}' if plat and plon else '—'} {maplink}</span></div>
      <div><span class="lbl">Environmental subjects</span>
       <span class="val">{esc(', '.join(env)) or '—'}</span></div>
+     <div><span class="lbl">Nearest energy project</span>
+      <span class="val">{near_html}</span></div>
     </div></div>
+   {ctx_html}
   </div>
-
-  <div class="box"><h4>Scheme</h4>
-   <dl class="kv">
-    <dt>Planning authority</dt><dd>{esc(authority or '—')}</dd>
-    <dt>Contract value</dt><dd>{f'£{pvalue:,.0f}' if pvalue else '—'}</dd>
-    <dt>Floor area</dt><dd>{f'{pfloor:,.0f} m²' if pfloor else '—'}</dd>
-    <dt>Site area</dt><dd>{f'{psite:,.2f} ha' if psite else '—'}</dd>
-   </dl></div>
-  <div class="box"><h4>Dates</h4>
-   <dl class="kv">
-    <dt>Plan date</dt><dd>{esc(str(pplan or '—'))}</dd>
-    <dt>Decision date</dt><dd>{esc(str(pdecision or '—'))}</dd>
-   </dl></div>
-  <div class="box"><h4>Nearby</h4>
-   <dl class="kv"><dt>Nearest energy project</dt><dd>{near_html}</dd></dl>
-   <p class="help">Barbour ABI data is licensed and must be credited in published output.</p>
-  </div>
-  {ctx_html}
  </div></td></tr>""")
 
     n_sites = len(site_rows) + n_barbour
@@ -3442,11 +3481,11 @@ def main() -> int:
         (f'<button type="button" class="chip" data-cohort="{esc(c.cohort.key)}" '
          f'onclick="setCohort(this.dataset.cohort)" aria-pressed="false" '
          f'title="{esc(c.cohort.definition)}">'
-         f'{esc(c.cohort.title)} <span class="n">{len(c.result.members)}</span></button>')
+         f'{esc(c.cohort.title)} <span class="n">({len(c.result.members)})</span></button>')
         if not c.result.withheld else
         (f'<button type="button" class="chip" disabled '
          f'title="{esc(c.result.withheld)}">{esc(c.cohort.title)} '
-         f'<span class="n">withheld</span></button>')
+         f'<span class="n">(withheld)</span></button>')
         for c in cohorts)
     n_who_named = sum(who_counts.values())
     who_chips = "".join(
@@ -4532,9 +4571,8 @@ def main() -> int:
   the rest say so. Clicking a name in the table filters the table and the map together.</span>
 </div>
 <div class="chips" id="cohortchips" role="group" aria-label="Filter by what the documents say">
- <span class="chiplabel">What the documents say</span>
  <button type="button" class="chip on" data-cohort="" onclick="setCohort('')"
-  aria-pressed="true">Any</button>
+  aria-pressed="true">All {n_sites:,} sites</button>
  {cohort_chips}
  <span class="help">Each chip is a named rule over the adjudicated figures, with its
   definition and limits on the <a href="#signals" onclick="show('signals');return false">Signals</a>
@@ -4547,10 +4585,16 @@ def main() -> int:
  <th data-num="1">{dl("Signals","Cohort","Signals it matches")}</th>
  <th data-num="1">{dl("Sites","Power MW (best available)","Power MW")}</th>
  <th data-num="1">{dl("Sites","External power indicators","Power indicators")}</th>
- <th>{dl("Sites","Capacity status","Status")}</th>
- <th>{dl("Sites","Latitude / Longitude / Coordinate source","Location")}</th>
- <th data-num="1">{dl("Sites","Documents held / Documents analysed","Read")}</th>
-</tr></thead><tbody>{''.join(body)}</tbody></table></section>
+</tr></thead><tbody>{''.join(body)}</tbody></table>
+<!-- The handoff's footnote, kept although the view it distinguished is
+     gone: with one table it is no longer "neither view drops a row" but
+     the load-bearing half — that nothing is filtered out for being
+     empty — is still what a reader needs told. -->
+<p class="tablenote">No row is dropped for being empty. A site with no figure
+ appears with the reason it has none, and a site whose documents have not been
+ read appears as unread rather than as zero. Status, location and reading
+ coverage are on each site's own page.</p>
+</section>
 
 <section id="view-apps" class="view">
 <div class="controls"><span class="count">{len(app_rows):,} applications. The document count

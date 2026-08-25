@@ -43,8 +43,23 @@ def test_every_cohort_has_limits_and_a_property_title():
 def test_a_cohort_without_limits_cannot_be_built():
     with pytest.raises(sc.CohortError):
         sc.Cohort(key="x", title="t", family="power", definition="d",
-                  rule="r", limits="   ", order=9, rule_version="0",
-                  compute=lambda i: sc.CohortResult(()))
+                  rule="r", limits="   ", tone="red", order=9,
+                  rule_version="0", compute=lambda i: sc.CohortResult(()))
+
+
+def test_a_cohort_must_carry_one_of_the_handoff_tones():
+    """The tone is a property of the signal, not of the page drawing it.
+
+    The design handoff assigns each signal red, amber or slate, and both
+    the table and the site page read it off the registry — so an invented
+    fourth tone, or a missing one, has to fail at import rather than
+    render as an unstyled pill somewhere.
+    """
+    with pytest.raises(sc.CohortError):
+        sc.Cohort(key="x", title="t", family="power", definition="d",
+                  rule="r", limits="l", tone="purple", order=9,
+                  rule_version="0", compute=lambda i: sc.CohortResult(()))
+    assert {c.tone for c in sc.REGISTRY} <= {"red", "amber", "slate"}
 
 
 def test_registry_order_is_explicit_and_ascending():
