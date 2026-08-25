@@ -86,7 +86,11 @@ _SITE_WITH_DETAIL_RE = re.compile(
     r'<tr class="site" data-key="([^"]+)".*?</tr>\s*<tr class="detail">(.*?)</tr>', re.DOTALL)
 _LINK_RE = re.compile(r'<a\s[^>]*href=')
 _ROW_RE = re.compile(r'<tr[\s>]')
-_SECTION_RE = re.compile(r'<h2 class="sec">')
+# Attributes, not a literal tag. Adding id="package" to one heading
+# made this count fall by one and reported a section as lost when
+# nothing had moved — a detector that a formatting change can trip
+# spends the reviewer's attention on itself (2026-08-25).
+_SECTION_RE = re.compile(r'<h2\b[^>]*\bclass="sec"')
 _BOX_RE = re.compile(r'<h4>')
 _OPTION_RE = re.compile(r'<option[^>]*>([^<]*)')
 _CHECKBOX_RE = re.compile(r'<label[^>]*><input type="checkbox"[^>]*>\s*([^<]+)')
