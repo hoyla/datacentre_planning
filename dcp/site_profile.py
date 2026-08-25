@@ -418,6 +418,24 @@ class GenerationFigure:
     # rule: only a figure describing a total is comparable with a load,
     # and "as stated" cannot say whether this one does.
     basis_key: str = ""
+    # The quote states a ceiling rather than a capacity: "generation
+    # totalling less than 50 MW", "capped at 50 MW". Fifty is not an
+    # arbitrary number — above it a generating station in England needs
+    # a DCO rather than local permission — so an applicant saying it
+    # eleven times is declaring where they sit relative to a threshold,
+    # not measuring their plant. A bound cannot be compared with a load:
+    # "less than 50" is consistent with 13.5, which is what Yorkshire
+    # Energy Park's own energy centre is.
+    bounded: bool = False
+
+
+# "less than 50 MW", "capped at 50 MW", "not exceeding 50MW". Deliberately
+# NOT "up to": in planning "up to 79,025sqm" is the maximum being
+# consented, which is the figure, whereas these say only that the true
+# number is somewhere below a threshold.
+_BOUND_RE = re.compile(
+    r"\b(?:less than|below|under|capped at|cap of|no more than|"
+    r"not (?:to )?exceed(?:ing)?|maximum of no more than)\b", re.I)
 
 
 # What the adjudicated basis means on a reader's row. `not_generation`
@@ -496,10 +514,17 @@ def _adjudicated(rows):
                     f"fuel, stored or consumed energy rather than generation "
                     f"(largest {mw_ex:g} MW) and {'are' if n_ex != 1 else 'is'} "
                     f"not counted here.")
+    # Every quote that states this headline, not just the first: the
+    # figure is bounded if any passage the site gives for it says so.
+    bounded = any(bool(_BOUND_RE.search(q or ""))
+                  for v, q, *_ in standing if _same(v, headline))
+    if bounded:
+        bits.append("The documents give this as a ceiling rather than a "
+                    "capacity, so the plant may be smaller.")
     return GenerationFigure(headline, label,
                             rating if rating else (headline if basis == "per_generator" else None),
                             count, " ".join(bits), plant or "", n_ex, mw_ex,
-                            basis_key)
+                            basis_key, bounded)
 
 
 def generation_figure(rows) -> GenerationFigure:

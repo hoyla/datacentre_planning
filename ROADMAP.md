@@ -85,6 +85,20 @@ up the new CSV adjudication columns.
   re-extraction would buy is the material that was never extracted well
   enough to be filed at all, which the audit cannot see.
 
+- **A signal for the 50 MW consenting threshold.** Above 50 MW a
+  generating station in England needs a DCO rather than local planning
+  permission, and **855 findings across 51 sites** state a sub-50 bound —
+  "generation totalling less than 50 MW", "capped at 50 MW", "49.9".
+  Yorkshire Energy Park says it in every passage it gives. That is a
+  behaviour, not noise, and it is the same shape as Kingsnorth's 49.9.
+
+  `generation_exceeds_load` now excludes those figures, because a ceiling
+  cannot be compared with a load. Turning them into a signal of their own
+  is the more interesting move, and it needs the bound adjudicated as a
+  property of the figure rather than matched on the quote — the pattern
+  in `dcp/site_profile._BOUND_RE` is good enough to exclude a figure from
+  a comparison and not good enough to build a cohort on.
+
 - **Second-model comparison across the corpus.** A subset is dual-read
   already. Where two models disagree, both readings are kept and the
   disagreement is the finding; the comparison is the deliverable.

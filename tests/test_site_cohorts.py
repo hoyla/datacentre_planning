@@ -201,9 +201,9 @@ def test_no_generation_at_all_is_not_in_the_cohort():
 # withholding are the cases these assertions are built from.
 # ---------------------------------------------------------------------------
 
-def _gen(mw, basis, plant="standby_combustion"):
+def _gen(mw, basis, plant="standby_combustion", bounded=False):
     return GenerationFigure(mw, "as stated", None, None, "", plant,
-                            basis_key=basis)
+                            basis_key=basis, bounded=bounded)
 
 
 def test_a_withheld_result_cannot_also_carry_members():
@@ -281,6 +281,22 @@ def test_the_larger_of_the_two_loads_is_the_one_compared():
     assert r.site_keys == {"S"}
     assert r.members[0].evidence["load_quantity"] == "total_site"
     assert r.members[0].evidence["load_mw"] == 27.2
+
+
+def test_a_ceiling_is_not_a_capacity():
+    """Yorkshire Energy Park, and 50 MW is not an arbitrary number.
+
+    Every passage it gives says "generation totalling less than 50 MW",
+    on-site and off-site together, because above 50 MW a generating
+    station in England needs a DCO rather than local permission. Its own
+    energy centre is 13.5 MW against a 27 MW load — so on the unbounded
+    rule the site entered the cohort backwards.
+    """
+    r = sc.generation_exceeds_load(_inputs(
+        ["YEP"], figures={"YEP": {"total_site_mw": 27.16}},
+        generation={"YEP": _gen(50.0, "site_total", bounded=True)}))
+    assert r.site_keys == set()
+    assert r.notes and "ceiling" in r.notes[-1]
 
 
 def test_a_site_stating_no_load_is_not_in_the_cohort():

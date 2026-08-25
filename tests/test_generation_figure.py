@@ -206,3 +206,37 @@ def test_the_adjudication_outranks_the_pattern_rules():
               "MTU DS4000 20V4000 G94LF )", "stated_group_total",
          "standby_combustion", None, None)])
     assert g.basis == "as stated"
+
+
+# ---------------------------------------------------------------------------
+# A ceiling is not a capacity
+# ---------------------------------------------------------------------------
+
+def test_a_figure_given_as_a_ceiling_is_marked_bounded():
+    """"less than 50 MW" says where a scheme sits relative to the 50 MW
+    consenting threshold, not how large its plant is."""
+    for quote in ("generation totalling less than 50 MW",
+                  "Energy generation capped at 50 MW across on-site and "
+                  "off-site elements",
+                  "total generation not exceeding 50MW",
+                  "on-site generation below 50 MW"):
+        g = generation_figure([(50.0, quote, "site_total",
+                                   "prime_combustion", None, None)])
+        assert g.bounded, quote
+        assert "ceiling" in g.note
+
+
+def test_up_to_is_not_a_ceiling_in_this_sense():
+    """In planning "up to X" is the maximum being consented, which is the
+    figure — unlike "less than X", which says only that the true number
+    is somewhere below a threshold."""
+    g = generation_figure([(50.0, "up to 50 MW of on-site generation",
+                               "site_total", "prime_combustion", None, None)])
+    assert not g.bounded
+
+
+def test_an_ordinary_figure_is_not_bounded():
+    g = generation_figure([(228.0, "In total, 76 of these generators would "
+                               "be required", "stated_group_total",
+                               "standby_combustion", None, None)])
+    assert not g.bounded
