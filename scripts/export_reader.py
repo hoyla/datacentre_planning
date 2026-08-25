@@ -4618,6 +4618,17 @@ def main() -> int:
 
 
 
+
+ <!-- In the reading column, not below the grid. With the pitfalls card
+      moved to the foot of the page the left column held one card against
+      a 900px sidebar, which left 600px of nothing between them and the
+      section underneath. The charts fill the column they belong to. -->
+ <h2 class="sec">The shape of it</h2>
+ <p class="help">The first chart counts applications and does not depend on the reading;
+ it moves only as the tail of applications is retrieved. The three capacity charts do depend
+ on it, and every figure in them is a floor — further reading can raise a site's capacity,
+ and can move a site into a chart it is not in yet, but cannot do the reverse.</p>
+ <div class="charts">{chart_years}{chart_bands}{chart_basis}{chart_elsewhere}</div>
  </div>
 
  <aside class="startside">
@@ -4657,17 +4668,6 @@ def main() -> int:
     Drive, Pinpoint, notebook</button>
   </div>
  </aside>
- </div>
-
- <!-- Luke, 2026-08-25: prose at 1620px is a bad measure. These three run
-      to the width of the column above them; the package grid below keeps
-      the full width, because its cards subdivide the line themselves. -->
- <div class="startcol">
- <h2 class="sec">The shape of it</h2>
- <p class="help">Both charts read the dataset as it stands today. Neither depends on the
- deep read, so neither changes as the remaining documents are analysed — but both will move
- as the tail of applications is retrieved.</p>
- <div class="charts">{chart_years}{chart_bands}{chart_basis}{chart_elsewhere}</div>
  </div>
 
  <h2 class="sec" id="package">What the package contains</h2>
