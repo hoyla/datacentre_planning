@@ -680,9 +680,17 @@ tr.detail td{padding:14px 18px 18px 30px}
 /* §5's header card, and the identifiers under the name. */
 .sitehead{border-top-color:var(--brand);padding:22px 26px 24px;margin-bottom:0}
 .sitepills{margin:0 0 10px;display:flex;gap:6px;flex-wrap:wrap}
+/* No max-width. The handoff's 28em measured a name inside a column;
+   this card is the full width of the page, and "SAUNDERTON DATA CENTRE
+   - 4 VIRTUS DATA CENTRES" was wrapping across two lines in the middle
+   of a line of empty space (Luke, 2026-08-25). */
 .sitename{margin:0 0 6px;font-family:"Source Serif 4",Georgia,serif;
-  font-size:32px;line-height:1.15;font-weight:700;max-width:28em}
+  font-size:32px;line-height:1.15;font-weight:700}
 .siteident{margin:0 0 12px;font-size:15px;color:var(--mut)}
+.sitestate{margin:0 0 12px;display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;font-size:14px;color:var(--mut)}
+.sitestate .rbar{margin:0;flex:0 0 150px}
+.statebit{display:inline-flex;align-items:center;gap:8px}
 .sitelinks{margin:0;display:flex;gap:24px;flex-wrap:wrap;font-size:14px}
 /* The caveat banner the handoff puts directly beneath the header, in
    its own colours: this is the sentence that stops a floor being read
@@ -2475,6 +2483,25 @@ def main() -> int:
             drive_html = (f'<a href="{_durl}" target="_blank" rel="noopener">'
                           f'Site folder</a> <span class="help">summary only — no '
                           f'documents held</span>')
+        # A site page no longer sits under the table's header row, so
+        # the two facts that row carried have to be on the page itself
+        # (Luke, 2026-08-25): how much of the site has been read, and
+        # what the reading leaves its capacity figure meaning. The bar
+        # is the table's, so the two views say the same thing the same
+        # way; the right column's coverage panel carries the detail.
+        _done = held and read >= held * 0.94
+        _rstate = "r-done" if _done else ("r-part" if read else "r-none")
+        _rword = ("Complete" if _done else
+                  "Figures are floors" if read else "Nothing published")
+        state_html = (
+            f'<span class="rbar" title="{read} of {held} documents read">'
+            f'<span class="rbar-fill {_rstate}" '
+            f'style="width:{(100 * read / held) if held else 0:.0f}%"></span></span>'
+            f'<span class="statebit">{read:,} of {held:,} documents read '
+            f'<span class="rstate {_rstate}">{_rword}</span></span>'
+            f'<span class="statebit"><span class="tag '
+            f'{"known" if known else "unknown"}">{esc(cap_label)}</span></span>')
+
         # §5's links row, built where the Drive URL is known. No council
         # register link: this reader holds register URLs per application,
         # not per site, and the applications table below carries every
@@ -2709,6 +2736,7 @@ def main() -> int:
   <h2 class="sitename">{esc(name or key)}</h2>
   <p class="siteident">{esc(", ".join(councils or []))}{" · " if addr else ""}{esc(trim(addr, 90))}
    · <code>{esc(key)}</code> · {esc(cls)}</p>
+  <p class="sitestate">{state_html}</p>
   <p class="sitelinks">{site_links}</p>
  </div>
  {site_banner}
