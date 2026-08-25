@@ -82,8 +82,14 @@ _SITE_RE = re.compile(r'<tr class="site" data-key="([^"]+)"')
 # are counted there, not in the row, because the row's links are the
 # same four on every site and the panel is where a reporter follows the
 # evidence outward.
-_SITE_WITH_DETAIL_RE = re.compile(
-    r'<tr class="site" data-key="([^"]+)".*?</tr>\s*<tr class="detail">(.*?)</tr>', re.DOTALL)
+# The detail cell holds an applications TABLE, so `(.*?)</tr>` stops at
+# that table's first row and counts only the links above it. It read as
+# a third of every panel's links vanishing when the site page moved the
+# applications into the left column (2026-08-25) — 2,287 to 1,526, while
+# the panels had in fact gained links, 11,469 to 12,497. A panel now runs
+# to the next site row, which is the only boundary that nests nothing.
+_SITE_ROW_RE = re.compile(r'<tr class="site" data-key="([^"]+)"')
+_DETAIL_START_RE = re.compile(r'<tr class="detail">')
 _LINK_RE = re.compile(r'<a\s[^>]*href=')
 _ROW_RE = re.compile(r'<tr[\s>]')
 # Attributes, not a literal tag. Adding id="package" to one heading
@@ -113,8 +119,13 @@ def reader_shape(path: Path) -> ReaderShape:
         if view == "dict":
             shape.dictionary_entries = len(_DICT_ENTRY_RE.findall(body))
     shape.site_keys = set(_SITE_RE.findall(src))
-    for key, detail in _SITE_WITH_DETAIL_RE.findall(src):
-        shape.links_per_site[key] = len(_LINK_RE.findall(detail))
+    rows = [(m.group(1), m.end()) for m in _SITE_ROW_RE.finditer(src)]
+    for i, (key, pos) in enumerate(rows):
+        d = _DETAIL_START_RE.search(src, pos)
+        if not d:
+            continue
+        end = rows[i + 1][1] if i + 1 < len(rows) else len(src)
+        shape.links_per_site[key] = len(_LINK_RE.findall(src[d.start():end]))
     shape.sections = len(_SECTION_RE.findall(src))
     shape.boxes = len(_BOX_RE.findall(src))
     m = _STAMP_RE.search(src)
