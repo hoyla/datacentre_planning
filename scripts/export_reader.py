@@ -223,12 +223,23 @@ CSS = """
    undermine that rule; what they are NOT used for is section identity,
    because red marking a section and red marking an unverified figure
    cannot both be read. */
-:root{--bg:#fff;--fg:#121212;--mut:#6b6b6b;--line:#dcdcdc;--soft:#f6f6f6;
+:root{--bg:#fff;--fg:#121212;--body:#333;--mut:#6b6b6b;--line:#dcdcdc;
+  --line-lt:#ececec;--page:#f6f6f6;--soft:#f6f6f6;
   --brand:#052962;--accent:#052962;--active:#ffe500;
-  --warn:#c74600;--warnbg:#fff4ec;--ok:#052962;--okbg:#eef2f8}
-@media (prefers-color-scheme:dark){:root{--bg:#131419;--fg:#e9eaee;--mut:#a2a4ad;
-  --line:#2e313b;--soft:#1a1c22;--brand:#8ab0e8;--accent:#8ab0e8;
-  --active:#ffe500;--warn:#ff9b5c;--warnbg:#2a1a10;--ok:#8ab0e8;--okbg:#111a26}}
+  --warn:#c74600;--warnbg:#fdf0e6;--ok:#1d6b38;--okbg:#e9f3ec;
+  /* The design brief's slate, for machine-generated content. It earns a
+     colour of its own under the same rule as the rest: what a model
+     wrote is a different KIND of thing from what a document says, and
+     that difference is exactly what a reader has to keep hold of. */
+  --machine:#3f5570;--machinebg:#eef1f6;--machineline:#d6dde8}
+
+/* No dark scheme. Luke asked for the brief's white page, and the brief
+   has none — but the reason to drop it rather than tune it is that
+   colour here carries meaning: settled, attention, the reader's own
+   filter, machine-written. A second palette is a second set of those
+   four to keep true, and the one that was here had already drifted
+   (brand went to a pale blue, which is the colour of nothing in
+   particular). One palette, verified once. */
 *{box-sizing:border-box}
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap');
 body{margin:0;font:16px/1.62 "Source Sans 3",-apple-system,BlinkMacSystemFont,
@@ -335,8 +346,12 @@ details.reading summary .help{display:inline}
 .rbody p{margin:0 0 4px;font-size:15px;line-height:1.5}
 ul.rq{margin:0 0 10px;padding-left:18px;font-size:13.5px;color:var(--mut)}
 ul.rq li{margin-bottom:2px}
-.box.reading.withheld{margin:14px 0 4px;border-radius:3px}
-.rwithheld{font-style:italic}
+.box.reading{border-top-color:var(--machineline);background:var(--machinebg);
+  padding-left:14px;padding-right:14px}
+.box.reading h4{color:var(--machine)}
+.box.reading .rbody{color:var(--body)}
+.box.reading.withheld{margin:14px 0 4px;border-radius:0}
+.rwithheld{font-style:italic;color:var(--warn)}
 /* The site page. Full width like the table it came from, since the
    panel's four-column grid was laid out for that width. */
 .sitepage{padding:14px 22px 30px}
@@ -712,7 +727,9 @@ a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:non
 #maptiles,#mappins{position:absolute;inset:0}
 #mappins{pointer-events:none}
 img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-drag:none}
-@media (prefers-color-scheme:dark){img.tl{filter:invert(1) hue-rotate(180deg) brightness(.86)}}
+/* The tile inversion went with the dark scheme: OpenStreetMap's own
+   tiles are a light map, and inverting them was only ever to stop a
+   white rectangle glaring out of a dark page. */
 .pin{position:absolute;width:11px;height:11px;margin:-6px 0 0 -6px;border-radius:50%;
   border:1.5px solid #fff;padding:0;cursor:pointer;pointer-events:auto;
   box-shadow:0 0 0 1px rgba(0,0,0,.35)}
