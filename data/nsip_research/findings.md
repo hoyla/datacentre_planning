@@ -177,3 +177,37 @@ Wapseys Wood remains a manual-only case for now; cache its existing documents in
 - [Wapseys Wood Section 35 Direction publication page](https://www.gov.uk/government/publications/data-centre-campus-wapseys-wood-buckinghamshire-section-35-direction-planning-act-2008)
 - [Infrastructure Planning Regulations 2026 (data centres into NSIP)](https://www.legislation.gov.uk/ukdsi/2025/9780348275438)
 - [Gov.uk Search API](https://www.gov.uk/api/search.json) (undocumented but public)
+
+---
+
+## Addendum (2026-08-25) — Adapter 2 built; one design correction
+
+Adapter 2 exists as `dcp/sources/s35.py` (`dcp index --source s35`).
+It was built the day the Guardian reported on two of the three DC
+directions it would have caught: the "second DC S35 direction to test
+against" that this document said to wait for had arrived on 15 June
+(Ampthill Road, Bedford in Central Bedfordshire — QuestPit Limited),
+and a third on 1 July (New Barn Road, Dartford — CSE52 Limited), and
+nothing here noticed until the story ran. The deferral's trigger was a
+condition only the unbuilt watcher was polling for.
+
+Corrections and confirmations from the live APIs:
+
+- **Do not pass `filter_format=publication`** — the directions are
+  published as format `decision`, so the filter recommended above
+  excludes all three. Discovery instead screens the quoted-phrase
+  search's results with the DC keyword union over title + description,
+  which also drops the guidance pages and non-DC directions the query
+  matches.
+- The Content API (`/api/content/<base_path>`) carries everything the
+  stub needs — title, description, body, `first_published_at`, and the
+  attachment manifest with stable asset URLs and byte sizes — so no
+  HTML parsing is involved. Attachment PDFs are not fetched by the
+  watcher; their manifest lands in `raw_metadata.other_fields` and the
+  three current bundles are cached by hand under
+  `data/seed_cases/{wapseys_wood,quest_park,dartford_ebbsfleet}/`.
+- The register CSV, re-fetched 2026-08-25, still lists exactly one DC
+  project (EN0110030). Both other directions remain pre-DCO — the
+  "pre-application limbo" bridge problem described above is now live
+  twice, and the composite-key reconciliation it proposes is still
+  unbuilt (tracked in ROADMAP).

@@ -13,7 +13,7 @@ def main() -> None:
 
 
 @main.command()
-@click.option("--source", required=True, help="Source name (planit, nsip, idox:<council>, ...).")
+@click.option("--source", required=True, help="Source name (planit, nsip, s35, idox:<council>, ...).")
 @click.option("--mode", type=click.Choice(["full", "incremental", "auto"]), default="auto")
 @click.option("--since", default="2018-01-01", help="Earliest application start_date (YYYY-MM-DD).")
 @click.option("--until", default=None, help="Latest application start_date (YYYY-MM-DD).")
@@ -44,6 +44,14 @@ def index(
     elif source == "nsip":
         from dcp.sources import nsip
         summary = nsip.index(limit=limit)
+        for k, v in summary.items():
+            click.echo(f"  {k}: {v}")
+    elif source == "s35":
+        from dotenv import load_dotenv
+        load_dotenv(Path(__file__).parent.parent / ".env")
+        from dcp.sources import s35
+        summary = s35.index(limit=limit, resume=resume,
+                            delay_seconds=delay_seconds)
         for k, v in summary.items():
             click.echo(f"  {k}: {v}")
     elif source == "barbour":
