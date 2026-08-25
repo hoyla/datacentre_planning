@@ -167,6 +167,36 @@ def _handover():
     return mod
 
 
+_ONES = ("no", "one", "two", "three", "four", "five", "six", "seven", "eight",
+         "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+         "sixteen", "seventeen", "eighteen", "nineteen")
+_TENS = ("", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy",
+         "eighty", "ninety")
+
+
+def _count_in_words(n: int) -> str:
+    """"Twenty-two sites", for the Signals headline.
+
+    The handoff asks the headline to state the count in words and the
+    property — words because a numeral in a headline reads as a
+    measurement of something, and this number is a count of rows a rule
+    selected. Above 999 it stays a numeral: "one thousand and forty-one
+    sites" is not a sentence anybody wants to read.
+    """
+    if n < 0 or n > 999:
+        return f"{n:,} sites"
+    if n < 20:
+        word = _ONES[n]
+    elif n < 100:
+        word = _TENS[n // 10] + (f"-{_ONES[n % 10]}" if n % 10 else "")
+    else:
+        rest = n % 100
+        word = _ONES[n // 100] + " hundred" + (
+            f" and {_count_in_words(rest).removesuffix(' sites').removesuffix(' site')}"
+            if rest else "")
+    return f"{word.capitalize()} site" + ("" if n == 1 else "s")
+
+
 def esc(v) -> str:
     """Escape a value for HTML.
 
@@ -241,7 +271,14 @@ CSS = """
    (brand went to a pale blue, which is the colour of nothing in
    particular). One palette, verified once. */
 *{box-sizing:border-box}
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap');
+/* [hidden] is display:none only by UA default, and any rule setting
+   display on the same element wins. That has now hidden nothing twice —
+   the map's cohort key, which sat in the legend whether or not a cohort
+   was marked, and the organisation filter bar, which announced a filter
+   nobody had applied. Both were caught by a browser test rather than by
+   reading. Stated once, at the top, for every [hidden] on the page. */
+[hidden]{display:none !important}
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;600&display=swap');
 body{margin:0;font:16px/1.62 "Source Sans 3",-apple-system,BlinkMacSystemFont,
   "Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg)}
 /* The serif carries what a reader is looking FOR — a site's name and a
@@ -378,7 +415,42 @@ ul.rq li{margin-bottom:2px}
 #sitehost .grid{margin-top:0}
 /* Signals cards. Square, ruled, no shadow; the count is the one large
    thing on the card because it is the one thing that was computed. */
-.signals{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+/* §3 of the design handoff. One card per signal: 4px news red rule,
+   the main column and a 300px column carrying the count and what
+   cannot enter the cohort. Red belongs to signals here; caution is the
+   orange elsewhere, and the two are different jobs. */
+.signals{display:block;margin-top:14px}
+.sigexplain{max-width:62em}
+.sigcard{border-top-color:#c70000;display:grid;
+  grid-template-columns:minmax(0,1fr) 300px;gap:36px;margin-bottom:16px}
+@media (max-width:900px){.sigcard{grid-template-columns:1fr;gap:20px}}
+.sigtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.sigfam{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+  color:#c70000}
+.sigrule{font-size:13px;color:var(--mut)}
+/* Verification, as a pill: green where a person has checked a
+   membership, amber where the rule alone selected it. */
+.vpill{font-size:13px;padding:2px 10px;border-radius:999px;border:1px solid}
+.vpill-hand{background:#e9f3ec;color:#1d6b38;border-color:#c7e0d0}
+.vpill-machine{background:#fdf0e6;color:#a13a00;border-color:#f2d6bd}
+.sigheadline{margin:0 0 10px;font-size:25px;line-height:1.18;font-weight:700;
+  font-family:"Source Serif 4",Georgia,serif;max-width:30em}
+.sigprose{margin:0 0 12px;font-size:15px;line-height:1.5;color:var(--body)}
+/* The rule itself, not a description of it. */
+.sigquery{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:13px;line-height:1.55;color:#22303f;background:#f2f4f7;
+  border-left:3px solid #a8bad6;padding:10px 12px;white-space:pre-wrap;margin:0 0 12px}
+.siglimits{margin:0 0 12px;font-size:14px;line-height:1.5}
+.sigside{border-left:1px solid var(--line);padding-left:22px}
+@media (max-width:900px){.sigside{border-left:0;border-top:1px solid var(--line);
+  padding-left:0;padding-top:14px}}
+.signum{font-family:"Source Serif 4",Georgia,serif;font-size:42px;line-height:1.05;
+  font-weight:700}
+.sigunit{font-size:13px;color:var(--mut);margin-bottom:10px}
+.sigfloor{margin:0 0 8px;padding-top:10px;border-top:1px solid var(--line-lt);
+  font-size:13px;line-height:1.5;color:var(--mut)}
+.sigsrc{font-size:13px;color:var(--mut);background:#f2f2f2;padding:1px 5px}
+.sigactions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 0}
 .box.signal{border-radius:3px;padding:14px 16px}
 .box.signal h3{margin:4px 0 8px;font-size:21px}
 .sighead{display:flex;justify-content:space-between;align-items:baseline}
@@ -809,11 +881,6 @@ img.tl{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-
    inline-block already, but in the key it is a <span> — inline, so width
    and height were ignored and the swatch collapsed to a sliver. */
 #mapkey div{display:flex;align-items:center;gap:7px}
-/* [hidden] is display:none by UA default, and the rule above overrides
-   it — so the cohort key sat in the legend whether or not a cohort was
-   marked. Explicit, because a key that names a colour nothing on the
-   map is using is worse than no key. */
-#mapkey div[hidden]{display:none}
 #mapkey .pin{position:static;pointer-events:none;display:inline-block;
   flex:0 0 11px;width:11px;height:11px;margin:0}
 footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px solid var(--line)}
@@ -1396,7 +1463,7 @@ function fromHash(){
     show(h, true);
   }
 }
-addEventListener('hashchange', fromHash);
+addEventListener('hashchange', ()=>{fromHash(); paintWhoBar();});
 // One row open at a time, so that the address bar always names exactly
 // what is on screen and a copied URL means what the sender saw. Rows
 // used to expand independently; Luke traded that for an unambiguous
@@ -1512,8 +1579,22 @@ function paintChips(){
 }
 function setWho(k){
   who = (who===k) ? '' : k;
-  paintChips(); apply(); sticky(); filterHash();
+  paintWhoBar(); paintChips(); apply(); sticky(); filterHash();
   return false;
+}
+/* The active organisation filter, said out loud. A badge click is
+   invisible once the rows move, and a reader who cannot see what is
+   filtering the table reads a subset as the whole. */
+function paintWhoBar(){
+  const bar=document.getElementById('whobar');
+  if(!bar) return;
+  bar.hidden = !who;
+  if(who){
+    const b=document.querySelector('tr.site[data-who~="'+who+'"] .who')
+         || document.querySelector('[data-whoname="'+who+'"]');
+    document.getElementById('whonow').textContent =
+      (b ? b.getAttribute('data-whoname') || b.textContent.trim() : who);
+  }
 }
 function setCohort(k){
   cohort = (cohort===k) ? '' : k;
@@ -1560,7 +1641,7 @@ function wire(sel){
   }));
 }
 wire('#tbl-sites'); wire('#tbl-apps'); wire('#tbl-energy');
-apply(); sticky(); fromHash(); addEventListener('load', ()=>{sticky(); fromHash();});
+apply(); sticky(); fromHash(); paintWhoBar(); addEventListener('load', ()=>{sticky(); fromHash();});
 
 // A column heading explains itself: jump to its dictionary entry.
 function goDict(id){
@@ -2054,7 +2135,17 @@ def main() -> int:
         operators = [n.strip() for n in (end_user or applicant).split(",") if n.strip()]
         if badge not in operators:
             operators.insert(0, badge)
-        keys = [entities.canonical_key(n) for n in operators]
+        # The key a badge filters on is the alias GROUP where one is
+        # confirmed, and the raw name otherwise. Luke, 2026-08-25: "no
+        # one will want to filter to different names of the same group —
+        # they want to see the group." Clicking Vantage Data Centres
+        # Limited therefore finds VDC LHR11 Limited's rows too, which
+        # is the whole point of confirming a group.
+        def _fkey(name: str) -> str:
+            g = organisations.group_for(name, alias_index)
+            return entities.canonical_key(g.group if g else name)
+
+        keys = [_fkey(n) for n in operators]
         for n in operators:
             who_counts[n] += 1
         others = len(operators) - 1
@@ -2064,7 +2155,10 @@ def main() -> int:
             names = ", ".join(operators)
             return {
                 "filter_key": "|".join(keys), "sort": badge,
-                "cell": (f'<span class="who multi" title="{esc(names)} — from {source}. '
+                # Each operator's own key, so the bar can name whichever
+                # one a reader arrived by.
+                "cell": (f'<span class="who multi" data-whoname="{esc(names)}" '
+                         f'title="{esc(names)} — from {source}. '
                          f'This site record covers several operators’ premises; '
                          f'each one’s chip finds it.">{len(operators)} operators</span>'
                          f'<span class="q">{esc(trim(names, 60))}</span>')}
@@ -2078,6 +2172,7 @@ def main() -> int:
         return {
             "filter_key": "|".join(keys), "sort": badge,
             "cell": (f'<button type="button" class="who" data-who="{esc(keys[0])}" '
+                     f'data-whoname="{esc(badge)}" '
                      f'title="{esc(badge)} — from {source}. '
                      f'Click to show only this organisation’s sites." '
                      f'onclick="event.stopPropagation();'
@@ -2757,12 +2852,23 @@ def main() -> int:
                     [m.site_key, site_names.get(m.site_key) or m.site_key]
                     + [m.evidence.get(a, "") for a in cols]))
             csv_data = quote("\n".join(csv_lines), safe="")
-            actions = (
+            # The handoff's actions row: a primary pill that opens the
+            # cohort in the table, then the script that produces it and
+            # the cohort as CSV — the two things a reader needs to check
+            # the count without taking the page's word for it.
+            # A cohort the rule selected nothing for has nothing to open
+            # and nothing to export. It still renders — an empty cohort
+            # is a result, and hiding it would make the registry look
+            # like whatever happened to match today.
+            actions = "" if not n else (
                 f'<p class="sigactions">'
-                f'<a href="#cohort:{esc(key)}" onclick="return openCohort(this.dataset.k)" '
-                f'data-k="{esc(key)}">Open in the table</a> · '
+                f'<button type="button" class="cta" data-k="{esc(key)}" '
+                f'onclick="return openCohort(this.dataset.k)">'
+                f'Open these {n:,} sites in the table</button> '
+                f'<code class="sigsrc">{esc(c.cohort.compute.__module__.replace(".", "/"))}'
+                f'.py · {esc(c.cohort.compute.__qualname__)}</code> '
                 f'<a href="data:text/csv;charset=utf-8,{csv_data}" '
-                f'download="{esc(key)}.csv">CSV</a> · '
+                f'download="{esc(key)}.csv">Cohort as CSV</a> · '
                 f'<a href="#cohort:{esc(key)}">Link to this filter</a></p>'
                 f'<details><summary>The {n:,} site{"" if n == 1 else "s"}</summary>'
                 f'<ul class="siglist">{site_list}</ul></details>')
@@ -2781,34 +2887,58 @@ def main() -> int:
                                         for k in c.outside))
             checks_html = '<p class="sigchecks">' + "; ".join(bits) + ".</p>"
         notes_html = "".join(f'<p class="help">{esc(x)}</p>' for x in r.notes)
+        # The design handoff's §3 card: family label, verification pill,
+        # a headline stating the count in words and the property, the
+        # rule itself in a monospace block, what it does not tell you,
+        # the actions row, and a right-hand column carrying the count
+        # and what cannot enter the cohort.
+        n_members = len(c.result.members)
+        pill = ('<span class="vpill vpill-hand">Hand-checked</span>'
+                if c.confirmed else
+                '<span class="vpill vpill-machine">Computed, not hand-checked</span>')
+        # "who cannot enter this cohort, and which way further reading
+        # moves it" — from the rule's own notes where it has them. Where
+        # it has none, nothing is written: a floor statement invented for
+        # the shape of the card would be the one thing on this screen no
+        # query produced.
+        floor = "".join(f'<p class="sigfloor">{esc(x)}</p>' for x in r.notes)
         return f"""
- <div class="box signal" id="signal-{esc(key)}">
-  <div class="sighead"><span class="sigfam">{esc(c.cohort.family)}</span>
-   <span class="q">rule {esc(c.cohort.rule_version)}</span></div>
-  <h3>{esc(c.cohort.title)}</h3>
-  {count_html}
-  <p>{esc(c.cohort.definition)}</p>
-  {checks_html}{notes_html}
-  <dl class="kv sigdef">
-   <dt>Rule</dt><dd><code>{esc(c.cohort.rule)}</code></dd>
-   <dt>Limits</dt><dd>{esc(c.cohort.limits)}</dd>
-  </dl>
-  {actions}
+ <div class="card sigcard" id="signal-{esc(key)}">
+  <div class="sigmain">
+   <div class="sigtop"><span class="sigfam">{esc(c.cohort.family)}</span>{pill}
+    <span class="sigrule">rule {esc(c.cohort.rule_version)}</span></div>
+   <h3 class="sigheadline">{esc(_count_in_words(n_members))} {esc(c.cohort.title.lower())}</h3>
+   <p class="sigprose">{esc(c.cohort.definition)}</p>
+   <div class="sigquery">{esc(c.cohort.rule)}</div>
+   <p class="siglimits"><b>What it does not tell you.</b> {esc(c.cohort.limits)}</p>
+   {checks_html}{notes_html}
+   {actions}
+  </div>
+  <div class="sigside">
+   <div class="signum">{n_members:,}</div>
+   <div class="sigunit">sites{"" if c.result.withheld else ", when this page was built"}</div>
+   {floor}
+  </div>
  </div>"""
 
     n_signals = sum(1 for c in cohorts if not c.result.withheld)
     signals_html = f"""
- <p class="lede">Named queries over the adjudicated findings: cohorts of sites that share a
- measurable property. Each card states its definition, the rule that computes it and the
- rule's limits, in that order, and the count is the number of rows the rule selected when
- this page was built. No model chose what appears here, no cohort asserts a cause, and
- nothing on this page ranks one site above another — the lists are in site-key order.</p>
- <p class="help">A hand-check is a person's verdict on one membership, recorded beside the
- rule in <code>data/priors/cohort_checks.yaml</code>; the rule does not read it. Where a
- check rejects a site the rule selected, or accepts one it did not, both are printed. A
- cohort marked <em>withheld</em> was not computed in this release, for the reason given.
- The same cohorts, with the same rule versions, are the <code>Cohorts</code> sheet of the
- workbook and the <code>cohorts</code> table of the database.</p>
+ <div class="card card-ink sigexplain">
+  <h2 class="cardh">What these are, and who wrote them</h2>
+  <p>Each signal is a deterministic query over the adjudicated findings, defined in
+  <code>dcp/site_cohorts.py</code> and re-run when this page is generated. The wording is
+  a fixed template with the count substituted in; the order is the registry's, and nothing
+  on this page ranks one site above another — the lists are in site-key order.
+  <b>No language model selected, ranked or described anything on this screen</b>, and no
+  cohort asserts a cause. A signal says only: these sites share this property, measured
+  this way.</p>
+  <p>A hand-check is a person's verdict on one membership, recorded beside the rule in
+  <code>data/priors/cohort_checks.yaml</code>; the rule does not read it. Where a check
+  rejects a site the rule selected, or accepts one it did not, both are printed. A cohort
+  marked <em>withheld</em> was not computed in this release, for the reason given. The
+  same cohorts, with the same rule versions, are the <code>Cohorts</code> sheet of the
+  workbook and the <code>cohorts</code> table of the database.</p>
+ </div>
  <div class="signals">{"".join(_signal_card(c) for c in cohorts)}</div>
 """
 
@@ -3893,13 +4023,19 @@ def main() -> int:
  table but never appear as a pin. The link says how many of the sites you have filtered
  to can be shown, and how many cannot.</span></span>
 </div>
-<div class="chips" id="whochips" role="group" aria-label="Filter by who is behind the site">
+<!-- No chip per organisation. Luke, 2026-08-25: "I don't really think we
+     need a button at the top of the page for each participant" — a badge
+     in the row is where a reader meets the name, and clicking it there
+     is the filter. 164 names would otherwise be 164 buttons above a
+     table nobody has looked at yet. What a chip row did carry, and a
+     badge cannot, is the fact that a filter is ON and how to leave: that
+     is this bar, which appears only when one is. -->
+<div class="chips" id="whobar" hidden role="status">
  <span class="chiplabel">Who's behind it</span>
- <button type="button" class="chip on" data-who="" onclick="setWho('')"
-  aria-pressed="true">Any</button>
- {who_chips}
+ <span id="whonow"></span>
+ <button type="button" class="chip" onclick="setWho('')">Clear</button>
  <span class="help">{n_who_named} of {n_sites} sites name an end user or a client;
-  the rest say so. A chip filters the table and the map together.</span>
+  the rest say so. Clicking a name in the table filters the table and the map together.</span>
 </div>
 <div class="chips" id="cohortchips" role="group" aria-label="Filter by what the documents say">
  <span class="chiplabel">What the documents say</span>
