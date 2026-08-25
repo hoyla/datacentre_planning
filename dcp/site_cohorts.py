@@ -101,6 +101,12 @@ class Cohort:
     definition: str                 # prose a reader can follow
     rule: str                       # the computation, in one sentence
     limits: str                     # required; see __post_init__
+    # The handoff's tone for this signal: red where a figure is absent or
+    # contradicted, amber where one exists but is incomplete, slate where
+    # the row is a note about method rather than about the site. A
+    # property of the cohort, not of the page, so every surface that
+    # draws it draws the same one.
+    tone: str                       # red | amber | slate
     order: int
     rule_version: str
     compute: Callable = field(repr=False)
@@ -110,6 +116,8 @@ class Cohort:
             raise CohortError(f"cohort {self.key!r} has no limits text")
         if not self.title or not self.definition or not self.rule:
             raise CohortError(f"cohort {self.key!r} is missing its text")
+        if self.tone not in ("red", "amber", "slate"):
+            raise CohortError(f"cohort {self.key!r} has tone {self.tone!r}")
 
 
 @dataclass(frozen=True)
@@ -339,6 +347,7 @@ def generation_exceeds_load(inputs: Inputs) -> CohortResult:
 REGISTRY: tuple[Cohort, ...] = (
     Cohort(
         key="read_in_full_silent",
+        tone="red",
         title="Read in full, and silent on capacity",
         family="coverage",
         definition=(
@@ -363,6 +372,7 @@ REGISTRY: tuple[Cohort, ...] = (
         compute=read_in_full_silent),
     Cohort(
         key="demand_exceeds_connection",
+        tone="red",
         title="Demand stated above the grid connection",
         family="power",
         definition=(
@@ -387,6 +397,7 @@ REGISTRY: tuple[Cohort, ...] = (
         compute=demand_exceeds_connection),
     Cohort(
         key="generation_no_fuel",
+        tone="amber",
         title="Generation disclosed, fuel not named",
         family="generation",
         definition=(
@@ -410,6 +421,7 @@ REGISTRY: tuple[Cohort, ...] = (
         compute=generation_no_fuel),
     Cohort(
         key="generation_exceeds_load",
+        tone="amber",
         title="On-site generation stated above stated load",
         family="generation",
         definition=(
