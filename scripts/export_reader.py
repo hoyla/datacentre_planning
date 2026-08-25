@@ -311,9 +311,16 @@ nav.top button[aria-selected=true]{opacity:1;border-bottom-color:var(--active)}
 nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
   border-radius:0;font-size:inherit}
 .view{display:none}.view.on{display:block}
+/* 920px is a measure for prose, and the methodology, dictionary and
+   notes tabs keep it. Start here and Signals are layouts, not prose:
+   the brief gives them 32px page padding and a content column beside a
+   380px sidebar, and inside 920px that column came out 492px — near
+   enough the same width as the sidebar, which is what Luke saw. The
+   masthead's 1620px is the page's width; these use it. */
 .wrap{max-width:920px;padding:24px 22px 10px}
+.wrap.wide{max-width:1620px;padding:24px 32px 10px;margin:0 auto}
 .lede{font-family:"Source Serif 4",Georgia,serif;font-size:20px;line-height:1.45;
-  max-width:46em;font-size:15.5px;line-height:1.62}
+  max-width:46em}
 .parts{display:grid;gap:11px;margin:20px 0}
 .part{border:1px solid var(--line);border-radius:7px;padding:13px 15px;background:var(--soft)}
 .part h3{margin:0 0 3px;font-size:16.5px}
@@ -3744,7 +3751,7 @@ def main() -> int:
  <button id="tab-notes" aria-selected="false" onclick="show('notes')">Assistant's notes</button>
 </div></nav>
 
-<section id="view-start" class="view on"><div class="wrap">
+<section id="view-start" class="view on"><div class="wrap wide">
  <p class="lede">Every planning application we can find for a UK data centre or its
  supporting power infrastructure, the documents councils published with them, and what those
  documents say. Assembled from council planning registers, the Planning Inspectorate's
@@ -3986,7 +3993,7 @@ def main() -> int:
  contain — and that silence is itself worth reporting.</p>
 </div></section>
 
-<section id="view-signals" class="view"><div class="wrap">{signals_html}</div></section>
+<section id="view-signals" class="view"><div class="wrap wide">{signals_html}</div></section>
 
 <section id="view-site" class="view">
 <div class="sitepage">
