@@ -275,7 +275,8 @@ nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
   border-radius:0;font-size:inherit}
 .view{display:none}.view.on{display:block}
 .wrap{max-width:920px;padding:24px 22px 10px}
-.lede{font-size:15.5px;line-height:1.62}
+.lede{font-family:"Source Serif 4",Georgia,serif;font-size:20px;line-height:1.45;
+  max-width:46em;font-size:15.5px;line-height:1.62}
 .parts{display:grid;gap:11px;margin:20px 0}
 .part{border:1px solid var(--line);border-radius:7px;padding:13px 15px;background:var(--soft)}
 .part h3{margin:0 0 3px;font-size:16.5px}
@@ -694,15 +695,47 @@ figure.chart .xl,figure.chart .yl{fill:var(--mut);font-size:12px}
 a.dlink{margin-left:5px;font-weight:400;color:var(--mut);text-decoration:none;
   font-size:13px;border:1px solid var(--line);border-radius:50%;padding:0 4px}
 a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
-/* §8a's two-ways-in card. Square, ruled at the top, no shadow, per
-   §8b — and the two halves equal, because neither is the recommended
-   way in. */
-.twoways{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:22px 0 10px;
-  border-top:4px solid var(--brand);padding-top:18px}
-@media (max-width:760px){.twoways{grid-template-columns:1fr;gap:18px}}
-.twoways .way h3{margin:0 0 6px;font-size:19px;font-family:"Source Serif 4",Georgia,serif;
-  color:var(--brand)}
-.twoways .way p{margin:0 0 10px;max-width:52ch}
+/* Start here, from §2 of the design brief rather than from my own head:
+   content and a 380px sidebar, 48px apart; cards are white with a 4px
+   top rule in the colour of what they are about — brand for structure,
+   caution orange for the pitfalls, ink for the package. */
+.startgrid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:48px;
+  align-items:start;margin-top:20px}
+@media (max-width:1100px){.startgrid{grid-template-columns:1fr;gap:28px}}
+.card{background:var(--bg);border:1px solid var(--line-lt);border-top:4px solid var(--line);
+  padding:20px 24px 22px;margin:0 0 16px}
+.card-brand{border-top-color:var(--brand)}
+.card-warn{border-top-color:var(--warn)}
+.card-ink{border-top-color:#333}
+.cardh{margin:0 0 12px;font-size:23px;line-height:1.18;font-weight:700;
+  font-family:"Source Serif 4",Georgia,serif}
+.cardintro{margin:0 0 14px;font-size:15px;line-height:1.5;color:var(--body)}
+.twoways{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+@media (max-width:760px){.twoways{grid-template-columns:1fr;gap:22px}}
+/* The rule and the label share a colour, and the colour says which of
+   the two things this is: news red for signals, brand for the data. */
+.twoways .way{border-left:3px solid var(--line);padding-left:16px}
+.twoways .way-signals{border-left-color:#c70000}
+.twoways .way-data{border-left-color:var(--brand)}
+.waylab{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;
+  margin-bottom:7px}
+.way-signals .waylab{color:#c70000}
+.way-data .waylab{color:var(--brand)}
+.twoways .way p{margin:0 0 14px;font-size:15px;line-height:1.5;color:var(--body)}
+/* Five pitfalls, hairline between each, lead in 600 above its body. */
+.pit{border-top:1px solid var(--line);padding:12px 0 2px}
+.pit:first-of-type{border-top:0;padding-top:0}
+.pith{font-size:15px;font-weight:600;margin-bottom:3px}
+.pit p{margin:0 0 10px;font-size:15px;line-height:1.5;color:var(--body)}
+/* The sidebar states a boundary: a number, and what it excludes. */
+.sideh{margin:0 0 12px;font-size:13px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--brand)}
+.card-ink .sideh{color:#333}
+.crow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-size:14px;padding-top:12px;border-top:1px solid var(--line-lt)}
+.crow:first-of-type{border-top:0;padding-top:0}
+.crow b{font-weight:600}
+.cnote{margin:2px 0 12px;font-size:13px;line-height:1.45;color:var(--mut)}
 .cta{font:inherit;font-size:15px;font-weight:600;padding:9px 18px;border-radius:999px;
   border:1px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer}
 .cta.secondary{background:var(--bg);color:var(--brand)}
@@ -1839,6 +1872,18 @@ def main() -> int:
     drive_csv = hv._drive_findings_map()
     n_apps_total = len(cover)
     n_docs = sum(c[0] for c in cover)
+    # For the coverage sidebar (§2): how the applications divide on
+    # whether a register published anything, which is the boundary the
+    # card exists to state.
+    n_apps_with_docs = sum(1 for c in cover if c[0])
+    n_apps_no_docs = n_apps_total - n_apps_with_docs
+    # 'none_published' is the outcome vocabulary's own word for
+    # "checked, and the council has published nothing" — completed work
+    # rather than a gap, which is exactly the distinction this row of
+    # the sidebar exists to draw. I guessed 'empty' first and the card
+    # said nought had been checked.
+    n_apps_checked_empty = sum(1 for c in cover
+                               if not c[0] and (c[2] or "") == "none_published")
     n_read = sum(c[1] for c in cover)
     pct = 100 * n_read // n_docs if n_docs else 0
     # The same corpus, split by what the methodology does with it. The
@@ -3397,19 +3442,31 @@ def main() -> int:
     # Lifted from the rendered notes rather than written twice: a
     # restatement is a second copy that drifts, and this list is the
     # project's own account of how it got numbers wrong.
-    def _pitfalls_from_notes(html: str) -> str:
+    def _pitfalls_from_notes(html: str, limit: int = 5) -> str:
+        """The brief's second card, built from the notes rather than
+        written twice: 4px caution rule, five items, each separated by a
+        hairline with its lead in 600 and its body under it."""
         import re as _re
         m = _re.search(r'<h2 class="sec">Where this data can mislead.*?</h2>'
                        r'\s*<p class="m">(.*?)</p>\s*<ul class="m">(.*?)</ul>',
                        html, _re.S)
         if not m:
             return ""
-        intro, items = m.group(1), m.group(2)
-        return (f'<h3 class="sec">Where this data can mislead</h3>'
-                f'<p class="m">{intro}</p><ul class="m">{items}</ul>'
-                f'<p class="help">Verbatim from the assistant\u2019s notes, which '
-                f'carry the rest of them. <button type="button" class="linkish" '
-                f'onclick="show(\'notes\')">Read the notes</button></p>')
+        intro, items_html = m.group(1), m.group(2)
+        out = []
+        for li in _re.findall(r"<li>(.*?)</li>", items_html, _re.S)[:limit]:
+            lead = _re.match(r"\s*<b>(.*?)</b>(.*)", li, _re.S)
+            if lead:
+                out.append(f'<div class="pit"><div class="pith">{lead.group(1)}</div>'
+                           f'<p>{lead.group(2).strip()}</p></div>')
+            else:
+                out.append(f'<div class="pit"><p>{li.strip()}</p></div>')
+        return (f'<div class="card card-warn">'
+                f'<h2 class="cardh">Where this data can mislead</h2>'
+                f'<p class="cardintro">{intro}</p>{"".join(out)}'
+                f'<p class="help">Verbatim from the assistant\u2019s notes, which carry '
+                f'the rest of them. <button type="button" class="linkish" '
+                f'onclick="show(\'notes\')">Read the notes</button></p></div>')
 
     assistant_notes_html = f"""
  <p class="lede">Working notes from the AI assistant that built this pipeline. <b>This is not
@@ -3563,30 +3620,33 @@ def main() -> int:
  documents say. Assembled from council planning registers, the Planning Inspectorate's
  national infrastructure register, and Barbour ABI project intelligence.</p>
 
- <!-- §8a. Two ways in, and the reason for saying so: the Signals page
-      answers "where might a story be", the tables answer "what does the
-      record hold about this site". A reporter who starts in the wrong
-      one spends an hour finding that out. -->
- <div class="twoways">
-  <div class="way">
-   <h3>Start from a signal</h3>
-   <p>Named groups of sites that share a property the documents state — generation larger
-    than the computing load, demand above the connection, read in full and silent. Each
-    says what it counts, what it cannot count, and how many sites it holds.</p>
-   <p><button type="button" class="cta" onclick="show('signals')">Open the signals</button></p>
-  </div>
-  <div class="way">
-   <h3>Start from a site</h3>
-   <p>Every site, with what its documents were found to say: the power figures and what
-    each one is a figure of, who is behind it, the generation and cooling evidence, and its
-    applications with links to the council's own register.</p>
-   <p><button type="button" class="cta secondary" onclick="show('sites')">Open the sites</button></p>
+ <div class="startgrid">
+ <div class="startmain">
+
+ <!-- §2 of the design brief, as written: white card, 4px brand top rule,
+      two equal columns each with a 3px left rule and an uppercase label
+      in the rule's colour. The red is the brief's news red and belongs
+      to signals; caution is the orange below. They were never competing
+      for the same job — collapsing them was my error, not the brief's. -->
+ <div class="card card-brand">
+  <h2 class="cardh">Two ways in, and they are not the same thing</h2>
+  <div class="twoways">
+   <div class="way way-signals">
+    <div class="waylab">Signals</div>
+    <p>Named queries over the adjudicated findings — cohorts of sites that share a
+     measurable property. Each one shows its own definition and the script that produces
+     it. No model chooses what appears, and no cohort is a conclusion.</p>
+    <button type="button" class="cta" onclick="show('signals')">Open the signal list</button>
+   </div>
+   <div class="way way-data">
+    <div class="waylab">The data</div>
+    <p>The full tables, unchanged: every site, application, energy project and operator,
+     with every column, every caveat and every figure traceable to a document, a page and
+     the model that read it.</p>
+    <button type="button" class="cta secondary" onclick="show('sites')">Open the sites table</button>
+   </div>
   </div>
  </div>
- <p class="help">They are not the same thing. A signal is a question worth asking of several
-  sites at once; a site page is the record of one. Neither ranks anything, and neither drops
-  a row — a site with no figure appears with its reason, and an unread site appears as
-  unread rather than as zero.</p>
 
  <div class="stat">
   <button onclick="show('sites')"><span>{n_sites}</span><small>sites</small></button>
@@ -3621,6 +3681,38 @@ def main() -> int:
  found on one pass, which is the weaker claim.</p></div></details>
 
  {_pitfalls_from_notes(assistant_notes_html)}
+ </div>
+
+ <aside class="startside">
+  <div class="card card-brand">
+   <h2 class="sideh">Coverage, stated as a boundary</h2>
+   <div class="crow"><span>Documents held</span><b>{n_docs:,}</b></div>
+   <p class="cnote">Across {n_apps_with_docs:,} of {n_apps_total:,} applications. Of the
+    {n_apps_no_docs:,} holding none, {n_apps_checked_empty:,} have been checked and the
+    register genuinely publishes nothing.</p>
+   <div class="crow"><span>Prose analysed</span><b>{n_prose_read:,} ({pct_prose}%)</b></div>
+   <p class="cnote">The remainder is in the deep-read queue or awaiting OCR. Every figure
+    in this release is a floor.</p>
+   <div class="crow"><span>Sites disclosing a capacity</span><b>{len(site_mw_values)} of {n_sites}</b></div>
+   <p class="cnote">The other {n_sites - len(site_mw_values)} split into sites read in full
+    that state nothing, sites partly read, and sites with no documents. Never combined into
+    one number.</p>
+   <div class="crow"><span>Verified findings</span><b>{n_findings_total:,}</b></div>
+   <p class="cnote">Each checked verbatim against its source text before storage. Quotes
+    that failed the check were rejected, not corrected.</p>
+   <div class="crow"><span>Read twice</span><b>Not yet done</b></div>
+   <p class="cnote">Reading the corpus a second time, so a silence can be evidence of
+    absence rather than an absence of evidence. Not carried out for this release.</p>
+  </div>
+  <div class="card card-ink">
+   <h2 class="sideh">The rest of the package</h2>
+   <p class="cnote">This reader is one artefact in the release, not the whole of it.</p>
+   <button type="button" class="cta secondary"
+    onclick="document.getElementById('package').scrollIntoView()">Workbook, database,
+    Drive, Pinpoint, notebook</button>
+  </div>
+ </aside>
+ </div>
 
  <h2 class="sec">The shape of it</h2>
  <p class="help">Both charts read the dataset as it stands today. Neither depends on the
@@ -3628,7 +3720,7 @@ def main() -> int:
  as the tail of applications is retrieved.</p>
  <div class="charts">{chart_years}{chart_bands}</div>
 
- <h2 class="sec">What the package contains</h2>
+ <h2 class="sec" id="package">What the package contains</h2>
  <div class="parts">
   <div class="part"><h3><a href="#sites" onclick="show('sites');return false">Sites</a>,
     <a href="#apps" onclick="show('apps');return false">Applications</a>,
