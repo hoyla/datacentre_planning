@@ -1,5 +1,24 @@
 # Reader redesign — sequencing plan
 
+> **Built, 2026-08-25.** All five increments shipped in one run rather
+> than five releases, as 2.7. This document is kept as the record of what
+> was planned and why, not as a description of the reader — for that read
+> the handoff it diffs against, `docs/DESIGN_CONFORMANCE.md` for the
+> places the build departs from it and who decided each, and
+> `tests/test_design_conformance.py`, which asserts the handoff's numbers
+> against a rendered page.
+>
+> Where the plan and the build differ, three things are worth naming
+> because a later reader will otherwise take this document for the
+> outcome. §6 planned four cohorts; there are five, `at_least_100mw`
+> having been a filter-bar toggle that became a signal. §7's machine
+> reading shipped, but the twenty-site sample it lists as a checkpoint
+> was never separately signed off. And §4.1e's label audit grew a fourth
+> verdict, `not_a_finding`, which the plan does not anticipate — for rows
+> that are neither filed correctly nor filed wrongly.
+>
+> The checkpoints in §10 all happened except the machine-reading sample.
+
 Written 2026-08-23 after reviewing the design handoff in
 `design_handoff_datacentre_reader/` (the "story finder" prototype, v2),
 Luke's follow-up on a who's-behind-it column, and three constraints he
