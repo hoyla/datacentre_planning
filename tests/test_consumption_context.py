@@ -115,6 +115,20 @@ def test_mdc_crown_dependency_and_nsip_refs_return_none():
     assert cc.unrecognised(["OldOakParkRoyal", "EN0110030"]) == ()
 
 
+def test_section_35_slugs_are_not_councils():
+    # The watcher uses the gov.uk publication slug as the application_ref,
+    # and a slug has no "/" — so the whole of it arrives here as a prefix.
+    # A direction bypasses the local planning authority by construction,
+    # so it is recognised-and-unmapped, never a name to add to the table.
+    for slug in (
+        "data-centre-campus-wapseys-wood-buckinghamshire-section-35-direction-planning-act-2008",
+        "data-centre-campus-ampthill-road-bedford-in-central-bedfordshire-section-35-direction-planning-act-2008",
+        "data-centre-campus-new-barn-road-dartford-section-35-direction-planning-act-2008",
+    ):
+        assert cc.authority_for([slug]) is None
+        assert cc.unrecognised([slug]) == ()
+
+
 def test_multi_council_site_needs_barbour_to_break_the_tie():
     councils = ["Slough", "Bucks"]
     assert cc.authority_for(councils) is None
