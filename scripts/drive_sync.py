@@ -134,6 +134,39 @@ class Sync:
         self.save()
         return fid
 
+    def _moved_source(self, local_md5: str, name: str) -> tuple[str, str] | None:
+        """A ledger entry for the same bytes under the same filename whose
+        local path has since gone — i.e. this file was re-filed, not
+        created. Returns (old_rel, file_id), or None.
+
+        Re-partitioning a site moves whole application folders between
+        site folders, and the ledger is keyed on local path, so every
+        moved document reads as brand new. Uploading it again would send
+        bytes Drive already holds and leave the original orphaned in a
+        folder nobody links to. Drive can reparent instead, which costs
+        one API call and no bandwidth.
+
+        Deliberately strict. The match needs identical bytes AND an
+        identical filename, and it needs the old path to be *gone* — a
+        file still present locally is a genuine second copy, not a move.
+        Ambiguity is declined: two candidates mean the tree holds the
+        same document in two places and there is no way to say which one
+        this is, so it uploads rather than guess and strand the other.
+        """
+        index = self._md5_index()
+        candidates = [(rel, meta["id"]) for rel, meta in index.get(local_md5, [])
+                      if Path(rel).name == name and not Path(rel).exists()]
+        return candidates[0] if len(candidates) == 1 else None
+
+    def _md5_index(self) -> dict[str, list]:
+        if getattr(self, "_md5_cache", None) is None:
+            idx: dict[str, list] = {}
+            for rel, meta in self.state["files"].items():
+                if meta.get("md5") and meta.get("id"):
+                    idx.setdefault(meta["md5"], []).append((rel, meta))
+            self._md5_cache = idx
+        return self._md5_cache
+
     def upload(self, local: Path, parent: str) -> str:
         from googleapiclient.http import MediaFileUpload
 
@@ -143,6 +176,23 @@ class Sync:
         if cached and cached.get("md5") == local_md5:
             return "cached"
         name = local.name
+
+        moved = self._moved_source(local_md5, name)
+        if moved:
+            old_rel, fid = moved
+            meta = self._retry(lambda: self.svc.files().get(
+                fileId=fid, fields="parents, trashed").execute())
+            if not meta.get("trashed"):
+                old_parents = ",".join(meta.get("parents") or [])
+                if parent not in (meta.get("parents") or []):
+                    self._retry(lambda: self.svc.files().update(
+                        fileId=fid, addParents=parent,
+                        removeParents=old_parents, fields="id").execute())
+                self.state["files"][rel] = {"md5": local_md5, "id": fid}
+                self.state["files"].pop(old_rel, None)
+                self._md5_cache = None
+                self.save()
+                return "moved"
         q = (f"name = '{name.replace(chr(39), chr(92)+chr(39))}' and "
              f"'{parent}' in parents and trashed = false")
         res = self._retry(lambda: self.svc.files().list(
@@ -330,7 +380,8 @@ def main() -> None:
             ap.error("--dry-run only describes --prune; pass both")
         sync.prune(args.sync, dry_run=True, force=args.prune_anyway)
         return
-    counts = {"uploaded": 0, "updated": 0, "skipped": 0, "cached": 0, "failed": 0}
+    counts = {"uploaded": 0, "updated": 0, "moved": 0, "skipped": 0,
+              "cached": 0, "failed": 0}
     t0 = time.time()
     files = sorted(p for p in args.sync.rglob("*")
                    if p.is_file() and not p.name.startswith("."))
