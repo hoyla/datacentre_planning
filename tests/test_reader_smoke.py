@@ -400,22 +400,36 @@ def test_a_withheld_paragraph_is_declared_before_it_is_found(page):
 
 
 @pytest.mark.integration
-def test_see_all_on_map_describes_the_same_set(page):
+def test_the_map_shows_the_set_the_table_shows(page):
+    """One filter bar, two views (Luke, 2026-08-25).
+
+    The map used to be handed a copy of the table's result and to keep
+    its own search box, 100 MW toggle and cohort select alongside it, so
+    the two could report different totals for one filter. It reads the
+    same decision now, and its count has to reconcile with the table's.
+    """
     _reset(page)
     page.select_option("#f", "power")
     shown, _ = _count_text(page)
     page.click("#seemap")
     assert _views_on(page) == ["map"]
-    text = page.locator("#mapsubsettext").inner_text()
-    m = re.match(r"([\d,]+) of ([\d,]+) filtered sites? shown", text)
+    text = page.locator("#mapcount").inner_text()
+    m = re.match(r"([\d,]+) of ([\d,]+) sites? on the map", text)
     assert m, text
     plotted, filtered = int(m.group(1).replace(",", "")), int(m.group(2).replace(",", ""))
-    assert filtered == shown, "the map's sidebar describes a different set from the table"
+    assert filtered == shown, "the map describes a different set from the table"
     assert plotted <= filtered
     if plotted < filtered:
         assert "no recorded location" in text
-    page.click("#tab-sites")
+
+    # And filtering from the map moves both: the bar is the same bar.
+    assert page.is_visible("#filterbar")
     page.select_option("#f", "all")
+    after = page.locator("#mapcount").inner_text()
+    assert after != text, "changing a filter on the map changed nothing"
+    page.click("#tab-sites")
+    assert _count_text(page)[0] == int(
+        re.match(r"([\d,]+) of ([\d,]+) sites?", after).group(2).replace(",", ""))
 
 
 @pytest.mark.integration
@@ -452,21 +466,27 @@ def test_a_cohort_chip_colours_the_map(page):
     everything outside it stepped back. The map takes the cohort from
     the Sites tab, so the two views cannot disagree about which is on.
     """
+    _reset(page)
     page.click("#tab-map")
-    sel = page.locator("#mcohort")
-    values = [v for v in sel.locator("option").all_inner_texts()]
-    if len(values) < 2:
-        pytest.skip("no cohorts in this build")
-    sel.select_option(index=1)
+    # The chip itself, in the bar the map shares with the table. The map
+    # used to carry a select of its own that a handover wrote into.
+    chip = page.locator(
+        "#cohortchips .chip[data-cohort]:not([disabled])").first
+    if not chip.count():
+        pytest.skip("no cohort has members in this build")
+    chip.click()
+    page.wait_for_timeout(250)
     inside = page.locator("#mappins .pin.inco").count()
     outside = page.locator("#mappins .pin.outco").count()
     assert inside > 0, "no marker is marked as in the active cohort"
     assert outside > 0, "every marker is in the cohort — the chip did nothing"
     key = page.locator("#mapcohortkey")
     assert key.is_visible(), "the key does not say what the colour means"
-    assert page.locator("#mapcohortname").inner_text().strip()
-    # Choosing none puts the map back.
-    sel.select_option(index=0)
+    name = page.locator("#mapcohortname").inner_text().strip()
+    assert name and "(" not in name, f"the key names the chip, not its count: {name!r}"
+    # Clearing puts the map back.
+    page.click("#clearcohort")
+    page.wait_for_timeout(250)
     assert page.locator("#mappins .pin.inco").count() == 0
     assert not key.is_visible()
     page.click("#tab-sites")

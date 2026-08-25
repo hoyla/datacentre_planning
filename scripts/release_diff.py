@@ -105,15 +105,29 @@ _STAMP_NUM_RE = re.compile(r'([\d,]+)\s+([a-z][a-z ]+?)(?:\s*·|\s*$)')
 _DICT_ENTRY_RE = re.compile(r'<div class="entry"')
 
 
+_FILTERBAR_RE = re.compile(
+    r'<div id="filterbar"[^>]*>(.*?)\n</div>', re.S)
+
+
 def reader_shape(path: Path) -> ReaderShape:
     src = path.read_text(encoding="utf-8")
     shape = ReaderShape()
     shape.tabs = _TAB_RE.findall(src)
     views = _VIEW_RE.findall(src)
     shape.views = [v for v, _ in views]
+    # The filter bar moved out of the sites view and above both the table
+    # and the map, which they now share (2026-08-25). Scraped from
+    # wherever it is rather than from inside a view: reading it out of
+    # #view-sites reported every control as removed, and would have gone
+    # on reporting nothing at all if one really were.
+    bar = _FILTERBAR_RE.search(src)
+    if bar:
+        body = bar.group(1)
+        shape.controls = ([html.unescape(o).strip() for o in _OPTION_RE.findall(body)]
+                          + [html.unescape(c).strip() for c in _CHECKBOX_RE.findall(body)])
     for view, body in views:
         shape.rows_per_view[view] = len(_ROW_RE.findall(body))
-        if view == "sites":
+        if view == "sites" and not bar:
             shape.controls = ([html.unescape(o).strip() for o in _OPTION_RE.findall(body)]
                               + [html.unescape(c).strip() for c in _CHECKBOX_RE.findall(body)])
         if view == "dict":
@@ -217,8 +231,8 @@ def compare_readers(rep: Report, before: ReaderShape, after: ReaderShape) -> Non
     rep.row("section headings (h2.sec)", before.sections, after.sections)
     rep.row("box headings (h4)", before.boxes, after.boxes)
     rep.row("data dictionary entries", before.dictionary_entries, after.dictionary_entries)
-    rep.missing("sites filter controls", set(before.controls) - set(after.controls))
-    rep.added("sites filter controls", set(after.controls) - set(before.controls))
+    rep.missing("filter controls", set(before.controls) - set(after.controls))
+    rep.added("filter controls", set(after.controls) - set(before.controls))
     for label in sorted(set(before.stamp) | set(after.stamp)):
         # The stamp's own numbers move with the corpus and are reported,
         # never judged: fewer documents held is a corpus fact, not a

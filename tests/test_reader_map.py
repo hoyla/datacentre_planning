@@ -46,7 +46,7 @@ def test_every_overlay_carries_the_class_the_guard_looks_for():
     overlay is labelled. These are the elements sitting inside the map."""
     inner = SRC[SRC.index('<div id="mapview">'):]
     inner = inner[:inner.index("</div>\n</div>")]
-    for el in ("mapsubset", "mapinfo", "mapzoom"):
+    for el in ("mapinfo", "mapzoom"):
         block = inner[inner.index(f'id="{el}"'):][:120]
         assert "mapoverlay" in block, f"#{el} is inside the map but not a .mapoverlay"
 

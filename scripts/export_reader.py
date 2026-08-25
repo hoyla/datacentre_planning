@@ -1258,10 +1258,6 @@ footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px s
 /* The map is showing a subset someone chose on another tab. Said out
    loud, with the way out attached, because a map silently showing 190 of
    429 sites is indistinguishable from a map that is simply wrong. */
-#mapsubset{position:absolute;top:10px;left:10px;right:58px;z-index:7;
-  display:flex;gap:8px;align-items:baseline;padding:7px 10px;border:1px solid #999;
-  border-radius:0;background:var(--bg);font-size:13.5px}
-#mapsubset[hidden]{display:none}
 /* Bracketed mention counts. Subdued because they qualify the label they
    follow rather than stating a quantity of anything on the site — the
    same grey as .help and the field keys, which is already the page's
@@ -1364,53 +1360,51 @@ function drawMap(){
       +'px" data-i="'+p.i+'" title="'+p.t+'"></button>';
   }
   map.pins.innerHTML=pins;
-  document.getElementById('mapcount').textContent =
-    shown+' of '+MAPPTS.length+' locations';
-}
-/* A set of site keys projected from the Sites tab, or null for "no
-   subset". mapFilter INTERSECTS with it rather than replacing it, so the
-   map's own controls keep working inside the projection instead of
-   silently discarding it the moment one is touched. */
-function clearSubset(){
-  map.subset=null;
-  map.cohort='';
-  document.getElementById('mcohort').value='';
-  document.getElementById('mapcohortkey').hidden=true;
-  document.getElementById('mapsubset').hidden=true;
-  mapFilter();
-}
-/* The map's search box searches exactly what the Sites tab's box
-   searches, by reading the row's own haystack out of the table instead
-   of keeping a second, thinner copy in MAPPTS. Two reasons: a term that
-   matched an applicant or a proposal on the Sites tab used to find
-   nothing on the map, and — since seeAllOnMap now mirrors the term
-   across — a narrower haystack here would quietly drop sites the
-   projection contains and make the overlay's count wrong.
-   Built on first use: this script is defined before the table is
-   parsed. */
-let SITEHAY=null;
-function siteHay(id){
-  if(SITEHAY===null){
-    SITEHAY=new Map();
-    for(const r of document.querySelectorAll('#tbl-sites tr.site'))
-      SITEHAY.set(r.dataset.key, r.dataset.hay);
+  // What is on the map against what the filter left, and how many of
+  // that the map cannot show. A map quietly holding fewer sites than the
+  // table is indistinguishable from a map that is simply wrong.
+  const wantS = VISIBLE_SITES ? VISIBLE_SITES.size
+                              : MAPPTS.filter(p=>p.k==='s').length;
+  const gotS = MAPPTS.filter(p=>p.k==='s'&&p.vis).length;
+  const gotE = MAPPTS.filter(p=>p.k==='e'&&p.vis).length;
+  const missing = wantS - gotS;
+  const bits=[];
+  if(document.getElementById('ms').checked){
+    bits.push(gotS.toLocaleString()+' of '+wantS.toLocaleString()+' site'
+              +(wantS===1?'':'s')+' on the map');
+    if(missing>0) bits.push(missing.toLocaleString()+' with no recorded location');
   }
-  const h=SITEHAY.get(id);
-  return h===undefined ? null : h;
+  if(gotE) bits.push(gotE.toLocaleString()+' energy project'+(gotE===1?'':'s'));
+  document.getElementById('mapcount').textContent =
+    bits.join(' \u00b7 ') || 'Nothing to show';
 }
+/* Which sites the filter bar leaves, decided once in apply(). A site is
+   on the map because it is in the table, never because the map tested
+   it again: the two used to hold the same rules twice and could report
+   different totals for one filter. */
+let VISIBLE_SITES=null;
 function mapFilter(){
-  const s=(document.getElementById('mq').value||'').toLowerCase().trim();
+  const s=(document.getElementById('q').value||'').toLowerCase().trim();
   const showE=document.getElementById('me').checked;
   const showS=document.getElementById('ms').checked;
-  const big=document.getElementById('mbig').getAttribute('aria-pressed')==='true';
   for(const p of MAPPTS){
     let ok = p.k==='e' ? showE : showS;
-    if(ok&&map.subset&&p.k==='s') ok = map.subset.has(p.id);
-    if(ok&&s) ok=(p.k==='s' ? (siteHay(p.id) || p.h) : p.h).includes(s);
-    if(ok&&big&&p.k!=='e'){
-      ok = p.mw===null ? !document.getElementById('munk').checked : p.mw>=100;
-    }
+    // An energy project is not a site: no filter in the bar describes
+    // one, so the layer switch and the search are all that reach it.
+    if(ok && p.k==='e' && s) ok = p.h.includes(s);
+    if(ok && p.k==='s' && VISIBLE_SITES) ok = VISIBLE_SITES.has(p.id);
     p.vis=ok;
+  }
+  /* §8c: the chips colour the markers, and the chip row above is the
+     only place a cohort is chosen — the map used to carry a select of
+     its own that a handover wrote into. */
+  map.cohort = cohort || '';
+  const key=document.getElementById('mapcohortkey');
+  key.hidden = !map.cohort;
+  if(map.cohort){
+    const c=document.querySelector('#cohortchips .chip[data-cohort="'+map.cohort+'"]');
+    document.getElementById('mapcohortname').textContent =
+      c ? c.textContent.replace(/\\s*\\([^)]*\\)\\s*$/,'').trim() : map.cohort;
   }
   drawMap();
 }
@@ -1433,21 +1427,18 @@ function fitTo(pts){
 }
 function showMap(siteKey, energyRef){
   show('map', true);
-  // Jumping to one site leaves any projection behind, or the site would
-  // be filtered out of the very view that was opened to show it.
-  map.subset=null;
-  document.getElementById('mapsubset').hidden=true;
   MAPPTS.forEach(p=>{p.sel=false;});
   const want=[];
   if(siteKey||energyRef){
+    // Jumping to one site clears the filters, or the site would be
+    // filtered out of the very view that was opened to show it.
     document.getElementById('me').checked=true;
     document.getElementById('ms').checked=true;
-    document.getElementById('mq').value='';
-    document.getElementById('mbig').setAttribute('aria-pressed','false');
-    document.getElementById('munk').checked=false;
-    document.getElementById('munk').disabled=true;
-    document.getElementById('munklab').classList.add('off');
-    mapFilter();
+    setWho(''); setCohort('');
+    document.getElementById('q').value='';
+    document.getElementById('f').value='all';
+    document.getElementById('o').value='';
+    apply();
     for(const p of MAPPTS){
       if((siteKey&&p.k==='s'&&p.id===siteKey)||(energyRef&&p.k==='e'&&p.id===energyRef)){
         p.sel=true; want.push(p);
@@ -1537,37 +1528,14 @@ function initMap(){
     map.cy=p.lat; map.cx=p.lon; map.z=Math.min(MAXZ, Math.max(map.z+2, 14));
     drawMap();
   });
-  ['mq'].forEach(id=>document.getElementById(id).addEventListener('input',mapFilter));
   ['me','ms'].forEach(id=>document.getElementById(id).addEventListener('change',mapFilter));
-  document.getElementById('mbig').addEventListener('click',function(){
-    const on=this.getAttribute('aria-pressed')!=='true';
-    this.setAttribute('aria-pressed', on);
-    const unk=document.getElementById('munk');
-    unk.disabled=!on;
-    document.getElementById('munklab').classList.toggle('off', !on);
-    mapFilter();
-  });
-  document.getElementById('munk').addEventListener('change', mapFilter);
-  document.getElementById('mapsubsetclear').addEventListener('click', clearSubset);
-  document.getElementById('mcohort').addEventListener('change', e=>{
-    map.cohort = e.target.value || '';
-    const k=document.getElementById('mapcohortkey');
-    k.hidden = !map.cohort;
-    if(map.cohort){
-      document.getElementById('mapcohortname').textContent =
-        e.target.options[e.target.selectedIndex].text;
-    }
-    drawMap();
-  });
   document.getElementById('mzin').addEventListener('click',()=>zoomAround(map.z+1));
   document.getElementById('mzout').addEventListener('click',()=>zoomAround(map.z-1));
+  // The view, not the filters: those are the bar above, shared with the
+  // table, and a button down here that silently cleared them would be a
+  // second place the two views can come apart.
   document.getElementById('mreset').addEventListener('click',()=>{
     map.fitted=false; map.userMoved=false;  // refit to the current window
-    document.getElementById('mq').value='';
-    document.getElementById('mbig').setAttribute('aria-pressed','false');
-    const unk=document.getElementById('munk');
-    unk.checked=false; unk.disabled=true;
-    document.getElementById('munklab').classList.add('off');
     document.getElementById('me').checked=true; document.getElementById('ms').checked=true;
     MAPPTS.forEach(p=>p.sel=false); mapFilter();});
   addEventListener('resize',()=>{ if(document.getElementById('view-map').classList.contains('on')) drawMap(); });
@@ -1582,51 +1550,10 @@ function initMap(){
    visible is what goes on the map, including any future filter nobody
    has thought of yet. */
 function seeAllOnMap(){
-  const keys=[];
-  for(const r of document.querySelectorAll('#tbl-sites tr.site')){
-    if(r.style.display!=='none') keys.push(r.dataset.key);
-  }
-  const want=new Set(keys);
-  const plotted=MAPPTS.filter(p=>p.k==='s'&&want.has(p.id));
+  // Nothing to hand over: the map is already showing the filter, because
+  // apply() told it. This frames the view around what is on it.
   show('map', true);
-  map.subset=want;
-  document.getElementById('me').checked=false;
-  document.getElementById('ms').checked=true;
-  // The two power controls and the search term are mirrored from the
-  // Sites tab rather than reset. They were reset, so that a control
-  // left over from an earlier visit could not filter the projection a
-  // second time and make the count lie — but that left the sidebar
-  // reporting "100 MW or greater: off" while the reader was looking at
-  // exactly the >=100 MW set, which is the same lie told the other way
-  // round. Copying is safe where clearing was: both tabs test the same
-  // figure with the same rule (est.value_mw, blank meaning undisclosed)
-  // and, since siteHay() below, search the same string — so re-applying
-  // any of them to a subset they already produced changes nothing.
-  // The Sites tab has no 100 MW control of its own any more — it is a
-  // cohort, and the cohort travels below with `mcohort`. The map's own
-  // toggle is cleared rather than copied, because a control left on from
-  // an earlier visit would filter a projection that is already exact.
-  document.getElementById('mbig').setAttribute('aria-pressed', 'false');
-  document.getElementById('munk').checked=false;
-  document.getElementById('munk').disabled=true;
-  document.getElementById('munklab').classList.add('off');
-  document.getElementById('mq').value=document.getElementById('q').value;
-  MAPPTS.forEach(p=>{p.sel=false;});
-  plotted.forEach(p=>{p.sel=true;});
-  /* §8c: the chips colour the markers. The map takes the cohort from
-     the Sites tab rather than keeping its own, so the two views cannot
-     disagree about which cohort is on. */
-  const sel=document.getElementById('mcohort');
-  sel.value = cohort || '';
-  sel.dispatchEvent(new Event('change'));
-  mapFilter();
-  const missing = keys.length - plotted.length;
-  document.getElementById('mapsubsettext').textContent =
-    plotted.length.toLocaleString()+' of '+keys.length.toLocaleString()
-    +' filtered site'+(keys.length===1?'':'s')+' shown'
-    + (missing ? ' — '+missing.toLocaleString()+' ha'+(missing===1?'s':'ve')
-                 +' no recorded location' : '');
-  document.getElementById('mapsubset').hidden=false;
+  const plotted=MAPPTS.filter(p=>p.k==='s'&&p.vis);
   soon(()=>{ if(plotted.length){ map.userMoved=true; fitTo(plotted); } else drawMap(); });
 }
 
@@ -1748,7 +1675,8 @@ JS = """
 function sticky(){
   const nav=document.querySelector('nav.top');
   const navH=nav?nav.getBoundingClientRect().height:41;
-  const bar=document.querySelector('.view.on .controls');
+  const fb=document.getElementById('filterbar');
+  const bar=(fb && !fb.hidden) ? fb : null;
   const barH=bar?bar.getBoundingClientRect().height:0;
   const r=document.documentElement.style;
   r.setProperty('--nav-h', navH+'px');
@@ -1778,6 +1706,10 @@ function show(v, quiet){
     // and the Sites tab stays lit while a reader is on it.
     if(tb) tb.setAttribute('aria-selected', k===v || (v==='site' && k==='sites'));
   }
+  // The filter bar belongs to the two views it filters, and is the same
+  // bar in both — so a reader who filters the table and switches to the
+  // map finds the controls where they left them, still set.
+  document.getElementById('filterbar').hidden = !(v==='sites' || v==='map');
   window.scrollTo(0,0);
   sticky();
   // The map sizes itself from its container, which has no dimensions
@@ -1886,7 +1818,7 @@ function apply(){
   // text under them has always claimed (Luke, 2026-08-25). Counting
   // against the whole corpus made the claim false the moment any other
   // filter was on.
-  const base=[];
+  const base=[], visible=new Set();
   for(const r of rows){
     let ok=(!s||r.dataset.hay.includes(s));
     if(ok&&who)              ok=r.dataset.who.split('|').includes(who);
@@ -1900,7 +1832,7 @@ function apply(){
     if(ok&&cohort)           ok=('|'+r.dataset.cohorts+'|').indexOf('|'+cohort+'|')>=0;
     r.style.display=ok?'':'none';
     r.nextElementSibling.style.display=ok?'':'none';
-    if(ok)shown++;
+    if(ok){shown++; visible.add(r.dataset.key);}
   }
   // The handoff's count-string honesty rule: a filtered count is never
   // shown against the total, because "31 of 456" reads as a claim about
@@ -1917,7 +1849,17 @@ function apply(){
   // is on screen, so while anything is filtered it is not all of them.
   const seemap=document.getElementById('seemap');
   seemap.disabled = shown===0;
+  // Nothing to offer a reader already looking at it. The map's own
+  // "Fit the map to these sites" frames the set from there.
+  const onMap=document.getElementById('view-map').classList.contains('on');
+  seemap.hidden = onMap;
+  document.querySelector('.controls .tip').hidden = onMap;
   seemap.textContent = (shown===rows.length) ? 'See all on map' : 'See on map';
+  // The map is the same set, drawn differently. It is told here rather
+  // than deciding for itself, so the two views cannot disagree about
+  // what is filtered.
+  VISIBLE_SITES = visible;
+  if(typeof mapFilter==='function' && map.el) mapFilter();
 }
 // Who's behind it. One organisation at a time — the chips answer "show
 // me this operator's sites", and a multi-select would answer a question
@@ -3922,10 +3864,6 @@ def main() -> int:
     # §8c. The map marks a cohort rather than filtering to one: the point
     # is to see where its sites sit among the rest, which a subset
     # cannot show. Registry order, like the chips.
-    cohort_options = "".join(
-        ['<option value="">— none —</option>']
-        + [f'<option value="{esc(c.cohort.key)}">{esc(c.cohort.title)}</option>'
-           for c in cohorts if not c.result.withheld])
 
     origin_opts = sorted({o for v in origins.values() for o in v})
     n_prov = sum(1 for r in site_rows
@@ -4582,6 +4520,70 @@ def main() -> int:
  <button id="tab-notes" aria-selected="false" onclick="show('notes')">Assistant's notes</button>
 </div></nav>
 
+<!-- One filter bar, above both the table and the map. Not two bars kept
+     in step: the map used to carry its own search box, its own 100 MW
+     toggle and its own cohort select, and a handover copied the Sites
+     tab's state into them — which is a synchronisation, and every one of
+     those has drifted at least once. The map now shows the set the table
+     shows because it is told by the same code, from the same controls
+     (Luke, 2026-08-25). -->
+<div id="filterbar" hidden>
+<div class="controls">
+ <input type="search" id="q" placeholder="Search site, council, address, applicant, proposal…">
+ <select id="f">
+  <option value="all">All sites</option>
+  <option value="power">Only sites with a power figure</option>
+  <option value="known">Only fully-read sites</option>
+  <option value="unknown">Only where reading or acquisition is incomplete</option>
+  <option value="prov">Only sites whose figures may rise</option>
+  <option value="energy">Only sites near a national energy project</option>
+ </select>
+ <select id="o"><option value="">Any origin</option>
+  {''.join(f'<option value="{esc(o)}">{esc(o)}</option>' for o in origin_opts)}</select>
+ <span class="count" id="n"></span>
+ <button type="button" id="seemap" class="linkish">See all on map</button><!--
+ label set by apply(): "all" only while nothing is filtered --><span
+  class="tip" tabindex="0" role="note" aria-label="Why the map may show fewer sites
+ than the table">?<span class="tiptext">The map can only show sites with a recorded
+ location. {n_no_coords} of {n_sites} sites have none — usually because the council
+ published no grid reference and the address could not be resolved — so they stay in the
+ table but never appear as a pin. The link says how many of the sites you have filtered
+ to can be shown, and how many cannot.</span></span>
+</div>
+<!-- No chip per organisation. Luke, 2026-08-25: "I don't really think we
+     need a button at the top of the page for each participant" — a badge
+     in the row is where a reader meets the name, and clicking it there
+     is the filter. 164 names would otherwise be 164 buttons above a
+     table nobody has looked at yet. What a chip row did carry, and a
+     badge cannot, is the fact that a filter is ON and how to leave: that
+     is this bar, which appears only when one is. -->
+<div class="chips" id="whobar" hidden role="status">
+ <span class="chiplabel">Who's behind it</span>
+ <span id="whonow"></span>
+ <button type="button" class="chip" onclick="setWho('')">Clear</button>
+ <span class="help">{n_who_named} of {n_sites} sites name an end user or a client;
+  the rest say so. Clicking a name in the table filters the table and the map together.</span>
+</div>
+<div class="chips" id="cohortchips" role="group" aria-label="Filter by what the documents say">
+ <!-- No "All N sites" chip. Luke, 2026-08-25: once the counts answer to
+      the filters above, it says what the count string on the right
+      already says, and it said it wrongly whenever a filter was on. The
+      clearing job it also did belongs to a Clear that appears only when
+      there is something to clear — the pattern the organisation bar
+      above already uses. Clicking the active chip clears it too, and
+      always did. -->
+ <button type="button" class="chip clearchip" id="clearcohort" hidden
+  onclick="setCohort('')">Clear</button>
+ {cohort_chips}
+ <span class="help">Each chip is a named rule over the adjudicated figures, with its
+  definition and limits on the <a href="#signals" onclick="show('signals');return false">Signals</a>
+  tab. The count is the number of sites the chip would leave <em>from what is on
+  screen now</em>, so it falls as the filters above narrow the set; the cohort's
+  own size is the one on the Signals tab. The table and the map show the same
+  filtered set — these controls belong to both.</span>
+</div>
+</div>
+
 <section id="view-start" class="view on"><div class="wrap wide">
  <p class="lede">Every planning application we can find for a UK data centre or its
  supporting power infrastructure, the documents councils published with them, and what those
@@ -4833,59 +4835,6 @@ def main() -> int:
 </section>
 
 <section id="view-sites" class="view">
-<div class="controls">
- <input type="search" id="q" placeholder="Search site, council, address, applicant, proposal…">
- <select id="f">
-  <option value="all">All sites</option>
-  <option value="power">Only sites with a power figure</option>
-  <option value="known">Only fully-read sites</option>
-  <option value="unknown">Only where reading or acquisition is incomplete</option>
-  <option value="prov">Only sites whose figures may rise</option>
-  <option value="energy">Only sites near a national energy project</option>
- </select>
- <select id="o"><option value="">Any origin</option>
-  {''.join(f'<option value="{esc(o)}">{esc(o)}</option>' for o in origin_opts)}</select>
- <span class="count" id="n"></span>
- <button type="button" id="seemap" class="linkish">See all on map</button><!--
- label set by apply(): "all" only while nothing is filtered --><span
-  class="tip" tabindex="0" role="note" aria-label="Why the map may show fewer sites
- than the table">?<span class="tiptext">The map can only show sites with a recorded
- location. {n_no_coords} of {n_sites} sites have none — usually because the council
- published no grid reference and the address could not be resolved — so they stay in the
- table but never appear as a pin. The link says how many of the sites you have filtered
- to can be shown, and how many cannot.</span></span>
-</div>
-<!-- No chip per organisation. Luke, 2026-08-25: "I don't really think we
-     need a button at the top of the page for each participant" — a badge
-     in the row is where a reader meets the name, and clicking it there
-     is the filter. 164 names would otherwise be 164 buttons above a
-     table nobody has looked at yet. What a chip row did carry, and a
-     badge cannot, is the fact that a filter is ON and how to leave: that
-     is this bar, which appears only when one is. -->
-<div class="chips" id="whobar" hidden role="status">
- <span class="chiplabel">Who's behind it</span>
- <span id="whonow"></span>
- <button type="button" class="chip" onclick="setWho('')">Clear</button>
- <span class="help">{n_who_named} of {n_sites} sites name an end user or a client;
-  the rest say so. Clicking a name in the table filters the table and the map together.</span>
-</div>
-<div class="chips" id="cohortchips" role="group" aria-label="Filter by what the documents say">
- <!-- No "All N sites" chip. Luke, 2026-08-25: once the counts answer to
-      the filters above, it says what the count string on the right
-      already says, and it said it wrongly whenever a filter was on. The
-      clearing job it also did belongs to a Clear that appears only when
-      there is something to clear — the pattern the organisation bar
-      above already uses. Clicking the active chip clears it too, and
-      always did. -->
- <button type="button" class="chip clearchip" id="clearcohort" hidden
-  onclick="setCohort('')">Clear</button>
- {cohort_chips}
- <span class="help">Each chip is a named rule over the adjudicated figures, with its
-  definition and limits on the <a href="#signals" onclick="show('signals');return false">Signals</a>
-  tab. The count is the number of rows the chip would leave <em>from what is on
-  screen now</em>, so it falls as the filters above narrow the table; the cohort's
-  own size is the one on the Signals tab.</span>
-</div>
 <table id="tbl-sites"><thead><tr>
  <th>{dl("Sites","Site name","Site")}</th>
  <th>{dl("Sites","End user (Barbour); Applicant of record (Barbour); "
@@ -4929,21 +4878,14 @@ def main() -> int:
 <section id="view-map" class="view">
 <div id="mapwrap">
  <aside id="mapside">
-  <input type="search" id="mq" placeholder="Search site, council, applicant…">
+  <!-- Layers, not filters. Energy projects are not in the sites table
+       and no filter above applies to them, so which layers are drawn is
+       the one question this map answers on its own. -->
   <div class="mgroup">
    <label class="chk"><input type="checkbox" id="ms" checked> Data-centre sites</label>
    <label class="chk"><input type="checkbox" id="me" checked> Energy projects</label>
   </div>
-  <div class="mgroup">
-   <label class="chk" for="mcohort">Mark the sites in a signal</label>
-   <select id="mcohort">{cohort_options}</select>
-  </div>
-  <div class="mgroup">
-   <button type="button" id="mbig" class="toggle" aria-pressed="false">100 MW or greater</button>
-   <label class="chk off" id="munklab"><input type="checkbox" id="munk" disabled>
-    Exclude unknown MW consumption</label>
-  </div>
-  <button type="button" id="mreset" class="toggle">Reset view and filters</button>
+  <button type="button" id="mreset" class="toggle">Fit the map to these sites</button>
   <p class="count" id="mapcount"></p>
   <div id="mapkey">
    <div><span class="pin s"></span> data-centre site</div>
@@ -4959,8 +4901,6 @@ def main() -> int:
  </aside>
  <div id="mapview">
   <div id="maptiles"></div><div id="mappins"></div>
-  <div id="mapsubset" class="mapoverlay" hidden><span id="mapsubsettext"></span><button
-   type="button" id="mapsubsetclear" class="linkish">Clear this selection</button></div>
   <div id="mapinfo" class="mapoverlay" hidden></div>
   <div id="mapzoom" class="mapoverlay"><button id="mzin" title="Zoom in">+</button>
    <button id="mzout" title="Zoom out">−</button></div>
