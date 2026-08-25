@@ -148,6 +148,31 @@ entries:
       OSGB36 -> WGS84 2026-08-25 (OS transverse-Mercator + Helmert
       formulae, verified against the OS guide's worked example; ~5 m).
 
+  # Mulberry Place Town Hall, 5 Clove Crescent — the two records where
+  # the Tower Hamlets portal is wrong rather than absent. Corrected
+  # 2026-08-25 after the pair was found welding the Shoreditch cluster
+  # to the Docklands one; see HISTORY.
+  - ref: TowerHamlets/PA/21/02182
+    lat: 51.509868
+    lon: -0.005808
+    source: |
+      The portal gives (51.515198, -0.065805), which is 4.1 km west of
+      the address on the record and lands in Limehouse. Five other
+      records carrying the identical address string — Greenwich/21/3671/K,
+      Greenwich/21/4570/K, TowerHamlets/PA/25/01998/S,
+      TowerHamlets/PA/21/01304/NC (3-7 Clove Crescent) and
+      TowerHamlets/PA/15/01005/R (East India Dock, Clove Crescent) —
+      agree on ~(51.5099, -0.0058). Coords taken from
+      TowerHamlets/PA/25/01998/S, the same authority and the same
+      address line.
+  - ref: TowerHamlets/PA/21/02182/A1
+    lat: 51.509868
+    lon: -0.005808
+    source: |
+      The advertisement-consent sibling of TowerHamlets/PA/21/02182,
+      carrying the same wrong portal coordinate and the same address.
+      See that entry for the derivation.
+
   # Barbour project pins. A `ptno:` entry overrides the provider's own
   # coordinates at clustering time, for records that contradict
   # themselves; the raw Barbour row is untouched (dcp/sites.py).

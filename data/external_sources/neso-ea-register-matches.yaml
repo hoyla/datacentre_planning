@@ -51,17 +51,23 @@ matches:
 
   - row: 752
     claim_name: West Burton Data Centre
-    site_id: 175
+    site_id: 451
     method: name_identity
     confidence: strong
-    matched_by: hand:claude-fable-5:2026-08-20
+    matched_by: hand:claude-fable-5:2026-08-20; re-pointed hand:claude-fable-5:2026-08-25
     evidence: >-
       Register row "West Burton Data Centre", 500 MW at West Burton
-      400kV; the site is "West Burton Power Station, South Road, West
-      Burton, Nottinghamshire" (Bassetlaw). The register also carries
-      "West Burton Giga" at 1,000 MW on the same substation — left
-      unmatched (see considered); this match covers only the row that
-      names a data centre.
+      400kV; the site holds Bassetlaw/26/00034/FUL, "West Burton Power
+      Station, South Road, West Burton, Nottinghamshire". The register
+      also carries "West Burton Giga" at 1,000 MW on the same
+      substation — left unmatched (see considered); this match covers
+      only the row that names a data centre.
+      Re-pointed 2026-08-25 from site 175 to site 451: the
+      materialisation merged 175 into SITE-Bassetlaw/22/01713/FUL,
+      which still holds the West Burton Power Station application this
+      match names, 0.27 km from the land east of Gainsborough Road that
+      now supplies the site's display name. Same physical place, same
+      evidence; only the key changed. Match 3 carries the retirement.
 
   - row: 723
     claim_name: Mecure Data Centre

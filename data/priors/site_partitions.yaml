@@ -66,6 +66,73 @@ partitions:
     projects:
       - "12842719"
 
+  - name: leamouth-castle-wharf
+    reason: |
+      Not a campus but a single stray record, partitioned because of
+      where it sits rather than what it is.
+      TowerHamlets/PA/18/00418/S is "Castle Wharf Esso Petrol Station,
+      Leamouth Road" — a non-material amendment to PA/16/01763 for the
+      "Relocation of a substation at ground floor level", classified
+      `unknown` (the disguise-suspect class, which the universe keeps
+      deliberately). It sits on the Leamouth peninsula between the
+      Blackwall datacentre quarter and Thameside West, and it is the
+      ONLY node joining them: every other cross-campus pair is over the
+      radius, and this one makes exactly two edges, both at 0.94 km, to
+      Newham/18/03557/OUT and Newham/26/00566/AOD. Enumerated across
+      the whole cluster on 2026-08-25 — one record was holding a
+      63-application, 9 km "site" together at that seam.
+      A substation amendment at a petrol station is not evidence that
+      Global Switch and G Park Docklands are one campus, so it takes no
+      spatial edge to either.
+    applications:
+      - TowerHamlets/PA/18/00418/S
+
+  - name: canning-town-bidder-street
+    reason: |
+      The EMR site at Bidder Street and the North Crescent / Galaxy
+      Business Centre records, Canning Town — separated from the
+      Blackwall quarter (Telehouse, Global Switch, Republic) across
+      the River Lea. Unlike the Leamouth seam above, this join is real
+      proximity and not an artefact: dozens of pairs fall between 0.61
+      and 1.00 km, so no radius short of atomising real campuses
+      elsewhere would separate them. Adjudicated by Luke on 2026-08-25
+      as separate developments that happen to share a dense quarter —
+      different sites, different applicants, opposite banks of the Lea,
+      and nothing in either record describing the other as one scheme.
+    applications:
+      - Newham/17/03755/FUL
+      - Newham/20/01187/CLP
+      - Newham/21/00374/VAR
+      - Newham/22/01862/SCREEN
+      - Newham/22/02442/SCOPE
+      - Newham/24/00088/FUL
+      - Newham/26/01192/AOD
+      - TowerHamlets/PA/24/00091/NC
+      - TowerHamlets/PA/24/01150/NC
+    projects:
+      - "12760878"
+
+  - name: silvertown-quays
+    reason: |
+      Silvertown Quays and the Olympus Silvertown civil works, east of
+      the Royal Docks — separated from the Thameside West / G Park
+      Docklands campus at the former Paint Factory. Joined to it only
+      through Newham/23/02294/REM (Silvertown Quays, classified
+      `not_dc`) at 0.58-0.74 km. Adjudicated 2026-08-25 on the same
+      reading as Canning Town: adjacent riverside regeneration plots
+      that happen to be within a kilometre, with no record describing
+      them as one development. Note the general question this raised
+      and which was deliberately NOT answered by a rule: family edges
+      already refuse to traverse a `not_dc` application, spatial edges
+      still do, and changing that globally was judged too broad a
+      change to make on the strength of one seam.
+    applications:
+      - Newham/23/02294/REM
+      - Newham/24/00964/AOD
+      - Newham/24/00995/AOD
+    projects:
+      - "12851883"
+
 # Known boundaries still to adjudicate, recorded so the next person
 # starts from the list rather than rediscovering it.
 #
