@@ -680,6 +680,77 @@ Island is a "48MW data centre" in the planning record with a 324.6 MWth
 permitted fleet — different quantities, and worth reading rather than
 reconciling.
 
+### The reader redesign, 2.3 to 2.7 (Aug 23–25)
+
+A design handoff arrived for a redesigned reader —
+`design_handoff_datacentre_reader/` — with a plan in
+`docs/READER_REDESIGN_PLAN.md` that was a diff against it. The plan
+scheduled five releases; they were built in one run.
+
+**What the reader gained.** A Signals screen, where a named query over
+the adjudicated figures is stated with its definition, the script that
+produces it and what it does not tell you. Five cohorts. Sites became a
+page rather than an expanding row, with the figure and its evidence read
+as one object: the value, who it was told to, the document and page, the
+model that read it, and the quote. Editorial rule 4 — every figure the
+adjudicator saw, the ruled-out ones with their reasons — exists for the
+first time. One filter bar serves the table and the map, which had kept
+its own search box, its own 100 MW toggle and its own cohort select.
+
+**And the thing that took longest to see.** The masthead measured to the
+handoff on all seventeen of its specified properties and still did not
+look like it, because the `@import` that loads the fonts sat several
+hundred rules down a stylesheet and an `@import` is honoured only as the
+first rule. No page had ever rendered in Source Serif. Checking that each
+declared property matches is not checking that the design arrived.
+
+Four more of the same shape followed: `.card`'s `border-top` shorthand
+overriding two earlier `border-top-color` rules so the signal cards drew
+grey; two different pills both called `.vpill`; a dead `.sigfam` from a
+superseded card re-declaring the family label grey; and `.sitepage h2`,
+left over from a heading that had been deleted, holding the site name at
+22px where §5 asks for 32. None is visible by reading the CSS near where
+the rule is written, and none changes a count, so `release_diff` sees
+nothing. `docs/DESIGN_CONFORMANCE.md` had asserted conformance in a table
+and been wrong three times; it is now
+[tests/test_design_conformance.py](../tests/test_design_conformance.py),
+which asserts the handoff's numbers against a rendered page and which
+found the fifth on its first run.
+
+**The label audit.** §4.1e of the plan asked whether a finding's family
+matches its text. It does not for 18.2% of the 10,605 findings a reader
+sees — which is why a site's evidence could lead with landscape prose
+filed under a power family. A flagged row is moved and marked with where
+it was filed; nothing is deleted. Marking the hand sample produced a
+fourth verdict the design had not anticipated, `not_a_finding`, for rows
+that are neither filed correctly nor filed wrongly: an extractor's own
+reasoning caught inside the quote, an empty form field, a job
+description.
+
+Auditing all of them settled a question the sample could not. The sample
+put 57 of its 60 rows on the local `mlx` extractor while that extractor
+is a quarter of the corpus, so its flag rate there confounded "worse
+extractor" with "harder families" — and was withdrawn rather than
+reported. Across everything, holding the family constant, the local model
+misfiles 9% against 68% on `power_demand` and 9% against 34% on
+`power_generation`. **No megawatt figure is affected**: a capacity reaches
+a site's power panel through `power_adjudication`, keyed on the finding
+rather than on its family.
+
+**Two cohorts that would have asserted something false.**
+`generation_exceeds_load` was withheld in August because the rule
+selected nine sites on raw figures and at least two wrongly — JVC's
+165 MW was "50 x 3.3 MWt Generators", which is heat. The generation batch
+that would settle it ran, and nobody lifted the withholding; it now
+computes five members from adjudicated totals only. And one of those five
+entered on "generation totalling less than 50 MW", stated in every
+passage the site gives, because above 50 MW a generating station in
+England needs a DCO rather than local permission. A ceiling is not a
+capacity, it counted off-site plant, and the site's own energy centre is
+13.5 MW against a 27 MW load — it was in the cohort backwards. 855
+findings across 51 sites state a sub-50 bound, which is a behaviour and
+the same shape as Kingsnorth's 49.9.
+
 ---
 
 ## Lessons that changed how the code is written
@@ -775,6 +846,33 @@ needs saying about a contracted grid ceiling is not what needs saying
 about a marketing figure or a thermal rating. A test asserts every
 quantity type that can reach the indicators panel carries a caveat, so a
 new source cannot arrive unlabelled.
+
+**Asserting the specification is not asserting the artefact.** The
+masthead was measured against all seventeen properties §1 of the design
+handoff specifies — background, size, weight, line height, colour,
+padding, opacity, the yellow underline — and every one matched while no
+webfont had ever loaded, because the `@import` that fetches them sat
+several hundred rules down a stylesheet and an `@import` is honoured only
+as a stylesheet's first rule. The whole reader had been rendering in
+Georgia. Four more rules were written correctly and then quietly stopped
+applying, each invisible from where it was written and none changing a
+count, so nothing downstream noticed. `docs/DESIGN_CONFORMANCE.md` had
+been asserting conformance in a table and was wrong three times; the
+numbers now live in a test that reads them out of a rendered page, and it
+found a fifth on its first run.
+
+**A guard that stops guarding is worse than none.** Three in one week.
+The determinism test normalised the generation stamp with a pattern
+written for an ISO timestamp, and had matched nothing since the masthead
+changed format — so the line it existed to normalise was not being
+normalised, and it failed only when two builds straddled a minute.
+`release_diff` read the filter controls out of the sites view, and when
+the bar moved above both the table and the map it reported every control
+as removed — and would then have gone on reporting nothing if one really
+had gone. And the label audit's span gate could not read a citation
+written with an ellipsis, so it marked as unverified the four flags that
+were correctly cited. In each case the fix is the detector, not the
+reading past it.
 
 **A build has to be a function of its inputs.** Diffing a build against
 the last release is how regressions are caught here, and until
