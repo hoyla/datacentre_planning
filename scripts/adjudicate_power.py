@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -723,18 +724,11 @@ def render_generation_figures(figures: list[dict]) -> str:
     return "\n".join(out)
 
 
-def verify_span(span: str, quote: str) -> bool:
-    """Is `span` a verbatim run of `quote`, ignoring how it was wrapped?
-
-    The findings gate's rule, applied to a classification rather than a
-    figure: whitespace differs between a PDF's line breaks and a model's
-    copy of them, so it is normalised on both sides; nothing else is.
-    An empty span verifies against nothing.
-    """
-    if not span or not span.strip():
-        return False
-    return " ".join(span.split()) in " ".join((quote or "").split())
-
+# Moved to dcp.spans so the reader can apply the SAME gate that stored a
+# verdict, rather than trusting a boolean written by an older version of
+# it. Re-exported because this module's callers and its tests know it by
+# this name.
+from dcp.spans import verify_span  # noqa: E402,F401
 
 
 def load_candidates(conn) -> dict[int, dict]:
