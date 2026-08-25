@@ -68,7 +68,12 @@ SAMPLE_SIZE = 60
 # twenty a generation figure needs, because there is no passage to send.
 FINDINGS_PER_REQUEST = 40
 MAX_COMPLETION_TOKENS = 32000
-VERDICTS = ("fits", "does_not_fit", "unclear")
+# `not_a_finding` is the fourth because the other three assume every row
+# belongs somewhere. Luke, marking the sample on 2026-08-25, wrote "none"
+# four times against an extractor's reasoning caught in a quote, an empty
+# "Consultant:" form field and two job descriptions — rows that are not
+# misfiled but are not findings.
+VERDICTS = ("fits", "does_not_fit", "unclear", "not_a_finding")
 # The 25, from the same source the prompt shows the model, so the sheet
 # and the question cannot offer different sets.
 FAMILIES = frozenset(signal_families.PROMPT_FAMILY_ENUM)
@@ -314,10 +319,22 @@ def score(rows: list[dict], hand: dict[str, dict], run: dict) -> list[str]:
         if hv == mv:
             agreed += 1
             continue
-        if mv == "does_not_fit":
+        # What the page does is what is being scored, and two verdicts
+        # take a row off its family: `does_not_fit` moves it and
+        # `not_a_finding` withholds it. Counting them as disagreement
+        # scored three rows as the model flagging wrongly when the
+        # person had said the same thing about the same row in a word
+        # this scorer did not know yet.
+        acts = {"does_not_fit", "not_a_finding"}
+        if hv in acts and mv in acts:
+            agreed += 1
+            lines.append(f"  {i:>2}. finding {fid} [{r['signal_family']}]: both "
+                         f"take it off this family — {mv} vs {hv}")
+            continue
+        if mv in acts:
             wrong_flag += 1
             what = "FLAGGED, and the person did not"
-        elif hv == "does_not_fit":
+        elif hv in acts:
             missed_flag += 1
             what = "left it, the person flagged it"
         else:
@@ -363,29 +380,39 @@ def _sheet_rows(path: Path) -> list[dict]:
         return list(csv.DictReader(fh))
 
 
-def read_hand_sheet(path: Path) -> dict[str, dict]:
-    rows = _sheet_rows(path)
-    hand = {}
+def _validate_rows(rows: list[dict]) -> None:
+    """Stop on a sheet that cannot be acted on, naming the row.
+
+    Only `does_not_fit` names a family, because it is the only verdict
+    that moves a row. `not_a_finding` says no family would hold it, so
+    naming one contradicts the verdict; `fits` and `unclear` leave the
+    row where it is, so a family beside them would be read and ignored.
+    """
     for r in rows:
-        fid = (r.get("finding_id") or "").strip()
         v = (r.get("verdict") or "").strip().lower()
+        sug = (r.get("suggested_family") or "").strip()
         if v and v not in VERDICTS:
             sys.exit(f"row {r.get('row')}: verdict {v!r} is not one of "
                      f"{', '.join(VERDICTS)}")
-        # A suggested family is what a `does_not_fit` is FOR — the row is
-        # demoted to it — so one that is not a family would move a real
-        # quote somewhere that does not exist.
-        sug = (r.get("suggested_family") or "").strip()
         if v == "does_not_fit" and sug not in FAMILIES:
             sys.exit(f"row {r.get('row')}: does_not_fit needs a suggested_family "
                      f"from the 25; {sug!r} is not one of them")
         if v != "does_not_fit" and sug:
             sys.exit(f"row {r.get('row')}: suggested_family {sug!r} on a "
-                     f"{v or 'blank'} verdict — it applies only to does_not_fit")
+                     f"{v or 'blank'} verdict — only does_not_fit moves a row")
+
+
+def read_hand_sheet(path: Path) -> dict[str, dict]:
+    rows = _sheet_rows(path)
+    _validate_rows(rows)
+    hand = {}
+    for r in rows:
+        fid = (r.get("finding_id") or "").strip()
         if fid:
-            hand[fid] = {"verdict": v,
-                         "suggested_family": (r.get("suggested_family") or "").strip(),
-                         "note": (r.get("note") or "").strip()}
+            hand[fid] = {
+                "verdict": (r.get("verdict") or "").strip().lower(),
+                "suggested_family": (r.get("suggested_family") or "").strip(),
+                "note": (r.get("note") or "").strip()}
     return hand
 
 

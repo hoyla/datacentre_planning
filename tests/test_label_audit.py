@@ -52,10 +52,39 @@ def test_the_audit_answers_in_the_families_the_extractor_used():
         assert family in block, family
 
 
-def test_the_verdicts_are_the_three_the_sheet_accepts():
+def test_the_verdicts_are_the_four_the_sheet_accepts():
+    """The schema, the sheet's validator and the prompt offer one set.
+
+    `not_a_finding` joined the three on 2026-08-25: marking the sample
+    turned up rows that are not misfiled and are not findings — an
+    extractor's own reasoning caught in a quote, an empty form field,
+    two job descriptions — and the other three verdicts all assume the
+    row belongs somewhere.
+    """
     enum = ap.LABEL_AUDIT_SCHEMA["properties"]["labels"]["items"] \
              ["properties"]["verdict"]["enum"]
-    assert set(enum) == set(al.VERDICTS) == {"fits", "does_not_fit", "unclear"}
+    assert set(enum) == set(al.VERDICTS) == {
+        "fits", "does_not_fit", "unclear", "not_a_finding"}
+    for verdict in al.VERDICTS:
+        assert verdict in ap.LABEL_AUDIT_PROMPT, verdict
+
+
+def test_only_does_not_fit_names_a_family():
+    """`not_a_finding` means no family would hold the row, so naming one
+    contradicts the verdict; the sheet's validator refuses both ways."""
+    for verdict, sug in (("not_a_finding", "cooling"), ("fits", "cooling"),
+                         ("unclear", "cooling"), ("does_not_fit", ""),
+                         ("does_not_fit", "safety")):
+        with pytest.raises(SystemExit):
+            al._validate_rows([{"row": "1", "finding_id": "1",
+                                "verdict": verdict, "suggested_family": sug}])
+    # And the shapes that are fine.
+    al._validate_rows([
+        {"row": "1", "finding_id": "1", "verdict": "not_a_finding"},
+        {"row": "2", "finding_id": "2", "verdict": "fits"},
+        {"row": "3", "finding_id": "3", "verdict": "does_not_fit",
+         "suggested_family": "cooling"},
+        {"row": "4", "finding_id": "4", "verdict": ""}])
 
 
 def test_the_prompt_tells_the_model_to_prefer_unclear_to_a_flag():
