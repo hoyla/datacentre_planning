@@ -83,6 +83,17 @@ def _count_text(page) -> tuple[int, int]:
     return int(m.group(1).replace(",", "")), int(m.group(2).replace(",", ""))
 
 
+def _reset(page) -> None:
+    """Every control off. The page is module-scoped, so a filter one test
+    leaves on is a filter the next one inherits — which used to be
+    harmless and is not now that a cohort chip can empty the table."""
+    page.click("#tab-sites")
+    page.evaluate("() => { setWho(''); setCohort(''); }")
+    page.fill("#q", "")
+    page.select_option("#f", "all")
+    page.select_option("#o", "")
+
+
 def _views_on(page) -> list[str]:
     return page.evaluate(
         "() => [...document.querySelectorAll('section.view.on')].map(s => s.id.slice(5))")
@@ -156,9 +167,7 @@ def test_back_from_a_site_keeps_the_filters(page):
 
 @pytest.mark.integration
 def test_filters_change_the_count_and_the_count_is_true(page):
-    page.click("#tab-sites")
-    page.fill("#q", "")
-    page.select_option("#f", "all")
+    _reset(page)
     shown, total = _count_text(page)
     assert shown == total == _visible_site_rows(page)
 
@@ -179,15 +188,15 @@ def test_filters_change_the_count_and_the_count_is_true(page):
     assert shown == _visible_site_rows(page)
     page.fill("#q", "")
 
-    page.click("#big")
-    shown_big, _ = _count_text(page)
-    assert shown_big < total
-    assert not page.is_disabled("#unk"), "exclude-unknown must enable with the 100 MW toggle"
-    page.check("#unk")
-    shown_known_big, _ = _count_text(page)
-    assert shown_known_big < shown_big
-    page.uncheck("#unk")
-    page.click("#big")
+    # 100 MW is a cohort chip, not a toggle in the bar (Luke,
+    # 2026-08-25). A site with no figure is not a member, and the cohort
+    # says on the Signals tab that this is not a claim it is smaller.
+    big = page.locator("#cohortchips .chip[data-cohort=at_least_100mw]")
+    big.click()
+    shown_big, in_cohort = _count_text(page)
+    assert 0 < shown_big < total
+    assert shown_big == in_cohort == _visible_site_rows(page)
+    page.click("#clearcohort")
     assert _count_text(page)[0] == total
 
 
@@ -309,12 +318,21 @@ def test_signals_cards_count_what_their_chips_leave(page):
 def test_an_organisation_and_a_signal_compose_and_both_sit_in_the_url(page):
     """A badge filter and a cohort chip are different questions and both
     apply. The badge is the row's; the chip is the table's."""
-    page.click("#tab-sites")
-    page.fill("#q", "")
-    page.select_option("#f", "all")
-    who = page.locator("#tbl-sites tr.site button.who").first
-    coh = page.locator("#cohortchips .chip:not([disabled])").nth(1)
-    who.click(); coh.click()
+    _reset(page)
+    # The chip counts answer to the filters above them now, so most
+    # organisations' sites match no cohort at all and every chip is
+    # disabled. Find one that does compose rather than taking the first
+    # badge on the page and skipping when it does not.
+    whos = page.locator("#tbl-sites tr.site button.who")
+    coh = page.locator("#cohortchips .chip[data-cohort]:not([disabled])")
+    for i in range(min(whos.count(), 40)):
+        page.evaluate("() => setWho('')")
+        whos.nth(i).click()
+        if coh.count():
+            break
+    else:
+        pytest.skip("no organisation in this build composes with a cohort")
+    coh.first.click()
     h = page.evaluate("() => decodeURIComponent(location.hash)")
     assert h.startswith("#who:") and ";cohort:" in h
     shown, _ = _count_text(page)
@@ -325,7 +343,7 @@ def test_an_organisation_and_a_signal_compose_and_both_sit_in_the_url(page):
     assert page.evaluate("() => decodeURIComponent(location.hash)") == h
     assert _count_text(page)[0] == shown
     page.locator("#whobar .chip").click()
-    page.locator("#cohortchips .chip").first.click()
+    page.click("#clearcohort")
 
 
 @pytest.mark.integration
@@ -383,8 +401,7 @@ def test_a_withheld_paragraph_is_declared_before_it_is_found(page):
 
 @pytest.mark.integration
 def test_see_all_on_map_describes_the_same_set(page):
-    page.click("#tab-sites")
-    page.fill("#q", "")
+    _reset(page)
     page.select_option("#f", "power")
     shown, _ = _count_text(page)
     page.click("#seemap")

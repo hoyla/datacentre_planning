@@ -569,6 +569,7 @@ label.chk.off{opacity:.45;cursor:default}
 .chiplabel{font-size:14px;font-weight:600;color:var(--mut);
   margin-right:3px}
 .chips .help{font-size:13.5px;flex-basis:100%;margin:3px 0 0}
+button.chip.clearchip{border-style:dashed}
 button.chip{font:inherit;font-size:13px;padding:6px 13px;
   border:1px solid #c7c7c7;border-radius:999px;background:var(--bg);
   color:var(--brand);cursor:pointer;line-height:1.3;
@@ -1555,12 +1556,14 @@ function seeAllOnMap(){
   // figure with the same rule (est.value_mw, blank meaning undisclosed)
   // and, since siteHay() below, search the same string — so re-applying
   // any of them to a subset they already produced changes nothing.
-  const _big=document.getElementById('big').getAttribute('aria-pressed')==='true';
-  document.getElementById('mbig').setAttribute('aria-pressed', _big);
-  document.getElementById('munk').checked=
-    _big && document.getElementById('unk').checked;
-  document.getElementById('munk').disabled=!_big;
-  document.getElementById('munklab').classList.toggle('off', !_big);
+  // The Sites tab has no 100 MW control of its own any more — it is a
+  // cohort, and the cohort travels below with `mcohort`. The map's own
+  // toggle is cleared rather than copied, because a control left on from
+  // an earlier visit would filter a projection that is already exact.
+  document.getElementById('mbig').setAttribute('aria-pressed', 'false');
+  document.getElementById('munk').checked=false;
+  document.getElementById('munk').disabled=true;
+  document.getElementById('munklab').classList.add('off');
   document.getElementById('mq').value=document.getElementById('q').value;
   MAPPTS.forEach(p=>{p.sel=false;});
   plotted.forEach(p=>{p.sel=true;});
@@ -1661,7 +1664,7 @@ function goSite(key){
 // decodes. replaceState rather than push, to match how the tabs behave:
 // the back button steps between views, not between rows.
 function siteHash(key){
-  history.replaceState(null,'','#site-'+encodeURIComponent(key));
+  history.pushState(null,'','#site-'+encodeURIComponent(key));
 }
 function copySiteLink(key, el){
   const url=location.href.split('#')[0]+'#site-'+encodeURIComponent(key);
@@ -1736,7 +1739,7 @@ function show(v, quiet){
   if(v==='map' && typeof drawMap==='function' && map.el) soon(drawMap);
   // The tab lives in the URL so a refresh returns to where you were, the
   // back button steps between tabs, and a dictionary entry can be linked.
-  if(!quiet) history.replaceState(null,'','#'+v);
+  if(!quiet && location.hash !== '#'+v) history.pushState(null,'','#'+v);
 }
 // Same source as show(): a view is linkable because it exists, not
 // because someone remembered to add it here.
@@ -1768,6 +1771,9 @@ function fromHash(){
   }
 }
 addEventListener('hashchange', ()=>{fromHash(); paintWhoBar();});
+// pushState does not fire hashchange, so back and forward over the
+// entries it writes arrive here instead.
+addEventListener('popstate', ()=>{fromHash(); paintWhoBar();});
 // One row open at a time, so that the address bar always names exactly
 // what is on screen and a copied URL means what the sender saw. Rows
 // used to expand independently; Luke traded that for an unambiguous
@@ -1828,23 +1834,24 @@ const q=document.getElementById('q'),f=document.getElementById('f'),
       o=document.getElementById('o'),n=document.getElementById('n');
 function apply(){
   const s=q.value.toLowerCase().trim(), mode=f.value, org=o.value; let shown=0;
+  // Rows that pass everything EXCEPT the cohort chip. The chips count
+  // against this, so the number beside each one is what that chip would
+  // leave from where the reader is standing — which is what the help
+  // text under them has always claimed (Luke, 2026-08-25). Counting
+  // against the whole corpus made the claim false the moment any other
+  // filter was on.
+  const base=[];
   for(const r of rows){
     let ok=(!s||r.dataset.hay.includes(s));
     if(ok&&who)              ok=r.dataset.who.split('|').includes(who);
-    if(ok&&cohort)           ok=('|'+r.dataset.cohorts+'|').indexOf('|'+cohort+'|')>=0;
     if(ok&&mode==='known')   ok=r.dataset.known==='1';
     if(ok&&mode==='unknown') ok=r.dataset.known!=='1';
     if(ok&&mode==='energy')  ok=r.dataset.near!=='';
     if(ok&&mode==='power')   ok=r.dataset.mw!=='';
     if(ok&&mode==='prov')    ok=r.dataset.prov==='1';
     if(ok&&org)              ok=r.dataset.origin.indexOf(org)>=0;
-    // Default is to remove only what is *known* to be small. A site with
-    // no disclosed figure has not been shown to be under 100 MW, and
-    // dropping it silently would turn an unread document into a fact.
-    if(ok&&big.getAttribute('aria-pressed')==='true'){
-      const v=r.dataset.mw;
-      ok = v==='' ? !unk.checked : parseFloat(v)>=100;
-    }
+    if(ok) base.push(r);
+    if(ok&&cohort)           ok=('|'+r.dataset.cohorts+'|').indexOf('|'+cohort+'|')>=0;
     r.style.display=ok?'':'none';
     r.nextElementSibling.style.display=ok?'':'none';
     if(ok)shown++;
@@ -1858,8 +1865,13 @@ function apply(){
   n.textContent = cohort
     ? shown.toLocaleString()+' of '+inCohort.toLocaleString()+' sites in this cohort'
     : shown.toLocaleString()+' of '+rows.length.toLocaleString()+' sites';
-  // Nothing to project is not a map worth opening.
-  document.getElementById('seemap').disabled = shown===0;
+  paintChipCounts(base);
+  // Nothing to project is not a map worth opening. And the label says
+  // "all" only when it means it (Luke, 2026-08-25): the link opens what
+  // is on screen, so while anything is filtered it is not all of them.
+  const seemap=document.getElementById('seemap');
+  seemap.disabled = shown===0;
+  seemap.textContent = (shown===rows.length) ? 'See all on map' : 'See on map';
 }
 // Who's behind it. One organisation at a time — the chips answer "show
 // me this operator's sites", and a multi-select would answer a question
@@ -1874,6 +1886,21 @@ function filterHash(){
   if(who) parts.push('who:'+encodeURIComponent(who));
   if(cohort) parts.push('cohort:'+encodeURIComponent(cohort));
   history.replaceState(null,'', parts.length ? '#'+parts.join(';') : '#sites');
+}
+// The number beside each chip, recomputed against the rows that pass
+// every other control. A chip that would leave nothing is disabled
+// rather than left clickable: an empty table is a worse answer than a
+// chip that says it has none here.
+function paintChipCounts(base){
+  document.querySelectorAll('#cohortchips .chip[data-cohort]').forEach(c=>{
+    const k=c.dataset.cohort, span=c.querySelector('.n');
+    if(!k||!span||c.dataset.withheld) return;
+    const live=base.filter(r=>
+      ('|'+r.dataset.cohorts+'|').indexOf('|'+k+'|')>=0).length;
+    span.textContent='('+live.toLocaleString()+')';
+    c.disabled = live===0 && cohort!==k;
+  });
+  document.getElementById('clearcohort').hidden = !cohort;
 }
 function paintChips(){
   document.querySelectorAll('#whochips .chip').forEach(c=>{
@@ -1917,17 +1944,7 @@ function openCohort(k){
   window.scrollTo(0,0);
   return false;
 }
-const big=document.getElementById('big'), unk=document.getElementById('unk'),
-      unklab=document.getElementById('unklab');
-big.addEventListener('click',()=>{
-  const on=big.getAttribute('aria-pressed')!=='true';
-  big.setAttribute('aria-pressed', on);
-  unklab.classList.toggle('off', !on);
-  unk.disabled=!on;
-  apply(); sticky();
-});
-unk.addEventListener('change',apply);
-unk.disabled=true; unklab.classList.add('off');
+
 [q,f,o].forEach(el=>el.addEventListener('input',apply));
 document.getElementById('seemap').addEventListener('click', seeAllOnMap);
 function wire(sel){
@@ -1954,7 +1971,11 @@ apply(); sticky(); fromHash(); paintWhoBar(); addEventListener('load', ()=>{stic
 // A column heading explains itself: jump to its dictionary entry.
 function goDict(id){
   show('dict', true);
-  history.replaceState(null,'','#'+id);
+  // pushState, not replaceState: a jump from a column heading to its
+  // definition is somewhere the reader went, and Back was leaving the
+  // reader altogether because nothing here ever wrote a history entry
+  // (Luke, 2026-08-25).
+  history.pushState(null,'','#'+id);
   const el=document.getElementById(id);
   if(el){el.scrollIntoView({block:'center'}); el.classList.add('flash');
          setTimeout(()=>el.classList.remove('flash'), 1600);}
@@ -3543,8 +3564,8 @@ def main() -> int:
          f'{esc(c.cohort.title)} <span class="n">({len(c.result.members)})</span></button>')
         if not c.result.withheld else
         (f'<button type="button" class="chip" disabled '
-         f'title="{esc(c.result.withheld)}">{esc(c.cohort.title)} '
-         f'<span class="n">(withheld)</span></button>')
+         f'title="{esc(c.result.withheld)}" data-withheld="1">'
+         f'{esc(c.cohort.title)} <span class="n">(withheld)</span></button>')
         for c in cohorts)
     n_who_named = sum(who_counts.values())
     who_chips = "".join(
@@ -4631,11 +4652,9 @@ def main() -> int:
  </select>
  <select id="o"><option value="">Any origin</option>
   {''.join(f'<option value="{esc(o)}">{esc(o)}</option>' for o in origin_opts)}</select>
- <button type="button" id="big" class="toggle" aria-pressed="false">100 MW or greater</button>
- <label class="chk" id="unklab"><input type="checkbox" id="unk"> Exclude unknown MW
-  consumption</label>
  <span class="count" id="n"></span>
- <button type="button" id="seemap" class="linkish">See all on map</button><span
+ <button type="button" id="seemap" class="linkish">See all on map</button><!--
+ label set by apply(): "all" only while nothing is filtered --><span
   class="tip" tabindex="0" role="note" aria-label="Why the map may show fewer sites
  than the table">?<span class="tiptext">The map can only show sites with a recorded
  location. {n_no_coords} of {n_sites} sites have none — usually because the council
@@ -4658,12 +4677,21 @@ def main() -> int:
   the rest say so. Clicking a name in the table filters the table and the map together.</span>
 </div>
 <div class="chips" id="cohortchips" role="group" aria-label="Filter by what the documents say">
- <button type="button" class="chip on" data-cohort="" onclick="setCohort('')"
-  aria-pressed="true">All {n_sites:,} sites</button>
+ <!-- No "All N sites" chip. Luke, 2026-08-25: once the counts answer to
+      the filters above, it says what the count string on the right
+      already says, and it said it wrongly whenever a filter was on. The
+      clearing job it also did belongs to a Clear that appears only when
+      there is something to clear — the pattern the organisation bar
+      above already uses. Clicking the active chip clears it too, and
+      always did. -->
+ <button type="button" class="chip clearchip" id="clearcohort" hidden
+  onclick="setCohort('')">Clear</button>
  {cohort_chips}
  <span class="help">Each chip is a named rule over the adjudicated figures, with its
   definition and limits on the <a href="#signals" onclick="show('signals');return false">Signals</a>
-  tab. The count is the number of rows the chip leaves.</span>
+  tab. The count is the number of rows the chip would leave <em>from what is on
+  screen now</em>, so it falls as the filters above narrow the table; the cohort's
+  own size is the one on the Signals tab.</span>
 </div>
 <table id="tbl-sites"><thead><tr>
  <th>{dl("Sites","Site name","Site")}</th>

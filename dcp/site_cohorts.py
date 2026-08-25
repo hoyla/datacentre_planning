@@ -53,6 +53,7 @@ from typing import Callable
 import yaml
 
 from dcp import site_profile
+from dcp import site_scale
 
 ROOT = Path(__file__).resolve().parent.parent
 CHECKS_PATH = ROOT / "data" / "priors" / "cohort_checks.yaml"
@@ -195,6 +196,12 @@ class Inputs:
     pending: dict[str, int]                  # site_key -> unadjudicated figures
     generators: dict[str, site_profile.GeneratorProfile]
     generation: dict[str, site_profile.GenerationFigure]
+    # Only the scale cohort reads this, and only to reach
+    # site_scale.power_estimate — the same ladder the sites table ranks
+    # on, so a site is above the threshold here exactly when the table
+    # shows it above the threshold. Defaulted so the rules that do not
+    # need it can still be exercised with hand-built inputs.
+    floorspace: dict[str, float] = field(default_factory=dict)
 
 
 def load_inputs(conn) -> Inputs:
@@ -224,7 +231,8 @@ def load_inputs(conn) -> Inputs:
     generation = {k: site_profile.generation_figure(v)
                   for k, v in gen_rows.items()}
     return Inputs(sites, figures, site_profile.load_coverage_detail(conn),
-                  pending, generators, generation)
+                  pending, generators, generation,
+                  site_scale.load_site_floorspace(conn))
 
 
 # ---------------------------------------------------------------------------
@@ -353,6 +361,50 @@ def generation_exceeds_load(inputs: Inputs) -> CohortResult:
 # The registry
 # ---------------------------------------------------------------------------
 
+def at_least_100mw(inp: Inputs) -> CohortResult:
+    """Sites whose best available figure reaches 100 MW.
+
+    Not like the other four. They ask what the documents do or do not
+    say; this asks how big the thing is, and its answer can rest on a
+    floorspace estimate — arithmetic this project performed, not a
+    number anybody disclosed. That is worth having (Luke, 2026-08-25:
+    "no reader will care that it's derived using a slightly different
+    mechanism") but it must not be invisible, so every member records
+    the basis and the confidence that put it here, and the notes say how
+    many are here on an estimate.
+
+    A site with no figure is not a member. That is not a claim it is
+    smaller than 100 MW — see `limits`.
+    """
+    members, inferred = [], 0
+    for key in inp.sites:
+        f = inp.figures.get(key, {})
+        cov = inp.coverage.get(key, {})
+        est = site_scale.power_estimate(
+            it_load_mw=f.get("it_load_mw"),
+            total_site_mw=f.get("total_site_mw"),
+            grid_mw=f.get("grid_mw"),
+            generation_mw=f.get("generation_mw"),
+            floorspace_sqm=inp.floorspace.get(key),
+            has_documents=bool(cov.get("held")),
+            prose_held=cov.get("prose_held"),
+            prose_read=cov.get("prose_read"))
+        if est.value_mw is None or est.value_mw < 100:
+            continue
+        if est.confidence == "Indicative":
+            inferred += 1
+        members.append(Member(key, {
+            "power_mw": round(est.value_mw, 1),
+            "basis": est.basis,
+            "confidence": est.confidence or ""}))
+    notes = ()
+    if inferred:
+        notes = (f"{inferred} of these {len(members)} are here on a figure "
+                 f"inferred from floorspace rather than disclosed. Each row "
+                 f"carries its basis and confidence.",)
+    return CohortResult(tuple(members), notes=notes)
+
+
 REGISTRY: tuple[Cohort, ...] = (
     Cohort(
         key="read_in_full_silent",
@@ -463,6 +515,34 @@ REGISTRY: tuple[Cohort, ...] = (
             "intent."),
         order=4, rule_version="2026-08-23.0",
         compute=generation_exceeds_load),
+    Cohort(
+        key="at_least_100mw",
+        tone="slate",
+        title="One hundred megawatts or more",
+        headline=("{n} sites are at one hundred megawatts or more on the "
+                  "best figure available for them"),
+        family="power",
+        definition=(
+            "The best available capacity for the site reaches 100 MW. Best "
+            "available is the same ladder the sites table ranks on: a "
+            "disclosed IT load or total site demand first, then a contracted "
+            "grid connection or a standby-implied figure, and last a figure "
+            "inferred from floorspace."),
+        rule=(
+            "site_scale.power_estimate(...).value_mw >= 100, over the "
+            "adjudicated figures for the site plus its floorspace."),
+        limits=(
+            "A site that is not here has not been shown to be smaller than "
+            "100 MW. Most of the corpus discloses no capacity at all, and an "
+            "undisclosed figure is an absence in the record rather than a "
+            "small number. This is also the one cohort whose membership can "
+            "rest on arithmetic — a floorspace estimate is this project's "
+            "inference, not an applicant's disclosure, and it is the weakest "
+            "class of figure in the release; the count of members standing "
+            "on one is printed beside this rule, and every row says which "
+            "basis put it there."),
+        order=5, rule_version="2026-08-25.1",
+        compute=at_least_100mw),
 )
 
 FAMILIES = ("coverage", "power", "generation")

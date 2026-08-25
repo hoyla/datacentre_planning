@@ -321,21 +321,64 @@ def test_filter_bar_and_chips_match_section_four(page):
     assert search["borderRadius"] == "4px"
     assert search["width"] == "300px"
 
-    on = css_of(page, "#cohortchips .chip.on", "backgroundColor", "color",
-                "borderRadius", "fontSize", "padding")
-    assert on["backgroundColor"] == BRAND
-    assert on["color"] == PAPER
-    assert on["borderRadius"] == "999px"
-    assert (on["fontSize"], on["padding"]) == ("13px", "6px 13px")
-
-    off = css_of(page, "#cohortchips .chip:not(.on)", "backgroundColor",
-                 "color", "borderTopColor")
+    off = css_of(page, "#cohortchips .chip[data-cohort]", "backgroundColor",
+                 "color", "borderTopColor", "fontSize", "padding",
+                 "borderRadius")
     assert off["backgroundColor"] == PAPER
     assert off["color"] == BRAND
     assert off["borderTopColor"] == "rgb(199, 199, 199)"
+    assert (off["fontSize"], off["padding"]) == ("13px", "6px 13px")
+    assert off["borderRadius"] == "999px"
 
-    first = page.inner_text("#cohortchips .chip")
-    assert re.match(r"^All [\d,]+ sites$", first), first
+    # No chip is active until one is clicked, so the brand fill has to be
+    # provoked rather than found — and then waited for. The handoff asks
+    # for a 120-150ms colour transition, so a computed style read the
+    # instant after the click is a colour part-way between the two.
+    page.click("#cohortchips .chip[data-cohort]:not([disabled])")
+    page.wait_for_timeout(250)
+    on = css_of(page, "#cohortchips .chip.on", "backgroundColor", "color")
+    assert on["backgroundColor"] == BRAND
+    assert on["color"] == PAPER
+    # Luke, 2026-08-25: the handoff's first chip, "All 456 sites", is gone
+    # — once the counts answer to the filters above them it duplicated the
+    # count string and was wrong whenever a filter was on. Clearing is a
+    # Clear that appears only when there is something to clear.
+    assert not page.locator(
+        "#cohortchips .chip[data-cohort]").filter(has_text=re.compile(
+            r"^All [\d,]+ sites$")).count()
+    assert page.is_visible("#clearcohort")
+    page.click("#clearcohort")
+    assert page.is_hidden("#clearcohort")
+
+
+@pytest.mark.integration
+def test_the_chip_counts_answer_to_the_filters_above_them(page):
+    """Luke, 2026-08-25. The help text under the chips has always said the
+    count is what the chip leaves; counting against the whole corpus made
+    that false the moment any other filter was on. A chip that would
+    leave nothing is disabled rather than left to empty the table.
+    """
+    page.click("#tab-sites")
+    page.evaluate("() => { setWho(''); setCohort(''); }")
+    page.select_option("#f", "all")
+    wide = page.evaluate(
+        """() => Object.fromEntries([...document.querySelectorAll(
+             '#cohortchips .chip[data-cohort]:not([data-withheld])')]
+             .map(c => [c.dataset.cohort, c.querySelector('.n').textContent]))""")
+    page.select_option("#f", "unknown")
+    page.wait_for_timeout(150)
+    narrow = page.evaluate(
+        """() => Object.fromEntries([...document.querySelectorAll(
+             '#cohortchips .chip[data-cohort]:not([data-withheld])')]
+             .map(c => [c.dataset.cohort,
+                        [c.querySelector('.n').textContent, c.disabled]]))""")
+    page.select_option("#f", "all")
+    assert wide and set(wide) == set(narrow)
+    moved = [k for k in wide if narrow[k][0] != wide[k]]
+    assert moved, f"no chip count moved when a filter was applied: {wide}"
+    for k, (count, off) in narrow.items():
+        n_live = int(count.strip("()").replace(",", ""))
+        assert off == (n_live == 0), f"{k}: count {n_live}, disabled {off}"
 
 
 @pytest.mark.integration
