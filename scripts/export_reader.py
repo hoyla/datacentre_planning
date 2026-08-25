@@ -408,7 +408,8 @@ CSS = """
      colour of its own under the same rule as the rest: what a model
      wrote is a different KIND of thing from what a document says, and
      that difference is exactly what a reader has to keep hold of. */
-  --machine:#3f5570;--machinebg:#eef1f6;--machineline:#d6dde8}
+  --machine:#3f5570;--machinebg:#eef1f6;--machineline:#d6dde8;
+  --side-w:380px;--side-gap:48px}
 
 /* No dark scheme. Luke asked for the brief's white page, and the brief
    has none — but the reason to drop it rather than tune it is that
@@ -513,6 +514,12 @@ nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
 .part .when b{color:var(--fg)}
 .pill{display:inline-block;font-size:13px;padding:1px 8px;border-radius:9px;
   background:rgba(127,127,127,.15);color:var(--mut);margin-left:6px;vertical-align:1px}
+/* The sidebar's width and the gap beside it, as tokens rather than as
+   two numbers in two rules: the sections under the grid are held to the
+   same measure as the column above them, and a change to one that did
+   not reach the other would put prose at 1620px again. */
+.startcol{max-width:calc(100% - var(--side-w) - var(--side-gap))}
+@media (max-width:1100px){.startcol{max-width:none}}
 .stat{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0 4px;padding:13px 15px;
   border:1px solid var(--line);border-radius:7px}
 /* Selectors reach the children of any tile, not just the div ones. The
@@ -1055,7 +1062,8 @@ a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:non
    content and a 380px sidebar, 48px apart; cards are white with a 4px
    top rule in the colour of what they are about — brand for structure,
    caution orange for the pitfalls, ink for the package. */
-.startgrid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:48px;
+.startgrid{display:grid;grid-template-columns:minmax(0,1fr) var(--side-w);
+  gap:var(--side-gap);
   align-items:start;margin-top:20px}
 @media (max-width:1100px){.startgrid{grid-template-columns:1fr;gap:28px}}
 .card{background:var(--bg);border:1px solid var(--line-lt);border-top:4px solid var(--line);
@@ -1087,6 +1095,20 @@ a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:non
 .sideh{margin:0 0 12px;font-size:13px;font-weight:700;text-transform:uppercase;
   letter-spacing:.6px;color:var(--brand)}
 .card-ink .sideh{color:#333}
+.card .banner-d{margin:14px 0 0;font-size:13.5px;line-height:1.5}
+.card .banner-d>summary{font-size:14px}
+.card .banner-d .m{margin-top:9px}
+/* §6's link, on a line of its own: it was the tail of the "Reach for it
+   when" sentence, which buried the one thing on the card that goes
+   somewhere (Luke, 2026-08-25). */
+.part .golink{margin:10px 0 0;font-size:15px;font-weight:600}
+/* A breakdown, not five more totals. The label is indented behind a rule
+   that runs down the group, so the sum and its parts are distinguishable
+   without reading the numbers. */
+tr.breakdown>th{padding-left:26px;font-weight:400;position:relative}
+tr.breakdown>th:before{content:"";position:absolute;left:12px;top:0;bottom:0;
+  border-left:2px solid var(--line)}
+tr.breakdown>td{color:var(--mut)}
 .crow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
   font-size:14px;padding-top:12px;border-top:1px solid var(--line-lt)}
 .crow:first-of-type{border-top:0;padding-top:0}
@@ -2325,7 +2347,8 @@ def main() -> int:
     un_read = sum(1 for c in have_prose if c[1] == 0)
 
     app_stats_rows = "".join(
-        f"<tr><th scope='row'>{esc(lbl)}</th><td class='n'>{by_outcome[k]:,}</td>"
+        f"<tr class='breakdown'><th scope='row'>{esc(lbl)}</th>"
+        f"<td class='n'>{by_outcome[k]:,}</td>"
         f"<td class='n'>{_pc(by_outcome[k])}</td><td class='help'>{esc(note)}</td></tr>"
         for k, lbl, note in OUTCOMES if by_outcome[k])
     body = []
@@ -4288,6 +4311,30 @@ def main() -> int:
 """
 
 
+    about_numbers = f"""<details class="banner banner-d"><summary>About these numbers</summary>
+ <div><b>Nearly all of the readable material has been read.</b>
+ {n_prose_read:,} of {n_prose:,} prose documents ({pct_prose}%) have been analysed — the
+ planning and energy statements, officer reports, consultee responses and screening
+ opinions, which is where disclosures live. Two classes are excluded on purpose and are not
+ a gap: {n_graphical:,} drawings, elevations and location plans carry no extractable prose,
+ and {n_sampled_rd:,} of {n_sampled:,} near-identical objection letters were sampled rather
+ than read exhaustively, because their value is aggregate sentiment rather than unique fact.
+ Counting all three together gives {n_read:,} of {n_docs:,} ({pct}%), which understates the
+ reading rather than describing it.<br><br>
+ <b>{n_prov} of {n_sites} sites still have prose outstanding.</b> On those rows every
+ findings-derived value — capacity, generator counts, cooling method, the names involved —
+ is a <em>floor</em>: the largest or fullest we have seen so far. Further reading can raise
+ these figures and cannot lower them, so a campus promoted as 1GW may show a smaller number
+ here simply because the document stating the larger figure has not been analysed yet. Those
+ rows are marked <em>(prior to complete deep read)</em> and can be isolated with the Sites
+ filter. A small tail of applications is also still being retrieved. Both are completed in
+ the next release.
+ <p class="m"><b>Read twice: not yet done.</b> Every document here has been read once. A
+ second reading, by a different model against the same pages, is what would turn "no
+ capacity disclosed" from an absence of evidence into evidence of absence — and it has not
+ been carried out. Where this release says a site discloses nothing, it means nothing was
+ found on one pass, which is the weaker claim.</p></div></details>"""
+
     out = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>UK datacentre plans v2, phase {args.phase} release</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -4358,37 +4405,7 @@ def main() -> int:
   </div>
  </div>
 
- <div class="stat">
-  <button onclick="show('sites')"><span>{n_sites}</span><small>sites</small></button>
-  <button onclick="show('apps')"><span>{n_apps_total:,}</span><small>applications</small></button>
-  <button onclick="show('energy')"><span>{len(nsip)}</span><small>energy projects</small></button>
-  <div><span>{n_docs:,}</span><small>documents held</small></div>
-  <div><span>{n_prose_read:,}</span><small>prose analysed ({pct_prose}%)</small></div>
- </div>
 
- <details class="banner banner-d"><summary>About these numbers</summary>
- <div><b>Nearly all of the readable material has been read.</b>
- {n_prose_read:,} of {n_prose:,} prose documents ({pct_prose}%) have been analysed — the
- planning and energy statements, officer reports, consultee responses and screening
- opinions, which is where disclosures live. Two classes are excluded on purpose and are not
- a gap: {n_graphical:,} drawings, elevations and location plans carry no extractable prose,
- and {n_sampled_rd:,} of {n_sampled:,} near-identical objection letters were sampled rather
- than read exhaustively, because their value is aggregate sentiment rather than unique fact.
- Counting all three together gives {n_read:,} of {n_docs:,} ({pct}%), which understates the
- reading rather than describing it.<br><br>
- <b>{n_prov} of {n_sites} sites still have prose outstanding.</b> On those rows every
- findings-derived value — capacity, generator counts, cooling method, the names involved —
- is a <em>floor</em>: the largest or fullest we have seen so far. Further reading can raise
- these figures and cannot lower them, so a campus promoted as 1GW may show a smaller number
- here simply because the document stating the larger figure has not been analysed yet. Those
- rows are marked <em>(prior to complete deep read)</em> and can be isolated with the Sites
- filter. A small tail of applications is also still being retrieved. Both are completed in
- the next release.
- <p class="m"><b>Read twice: not yet done.</b> Every document here has been read once. A
- second reading, by a different model against the same pages, is what would turn "no
- capacity disclosed" from an absence of evidence into evidence of absence — and it has not
- been carried out. Where this release says a site discloses nothing, it means nothing was
- found on one pass, which is the weaker claim.</p></div></details>
 
  {_pitfalls_from_notes(assistant_notes_html)}
  </div>
@@ -4396,6 +4413,13 @@ def main() -> int:
  <aside class="startside">
   <div class="card card-brand">
    <h2 class="sideh">Coverage, stated as a boundary</h2>
+   <!-- The scope row. It was a strip of five stat tiles above the fold,
+        four of whose numbers this card or the masthead already carried
+        (Luke, 2026-08-25: "almost redundant"). What only the tiles had
+        was the size of the corpus itself, so that is what moved. -->
+   <div class="crow"><span>Sites</span><b>{n_sites}</b></div>
+   <p class="cnote">Assembled from {n_apps_total:,} planning applications and
+    {len(nsip)} national energy projects, each reachable from its own tab.</p>
    <div class="crow"><span>Documents held</span><b>{n_docs:,}</b></div>
    <p class="cnote">Across {n_apps_with_docs:,} of {n_apps_total:,} applications. Of the
     {n_apps_no_docs:,} holding none, {n_apps_checked_empty:,} have been checked and the
@@ -4413,6 +4437,7 @@ def main() -> int:
    <div class="crow"><span>Read twice</span><b>Not yet done</b></div>
    <p class="cnote">Reading the corpus a second time, so a silence can be evidence of
     absence rather than an absence of evidence. Not carried out for this release.</p>
+   {about_numbers}
   </div>
   <div class="card card-ink">
    <h2 class="sideh">The rest of the package</h2>
@@ -4424,11 +4449,16 @@ def main() -> int:
  </aside>
  </div>
 
+ <!-- Luke, 2026-08-25: prose at 1620px is a bad measure. These three run
+      to the width of the column above them; the package grid below keeps
+      the full width, because its cards subdivide the line themselves. -->
+ <div class="startcol">
  <h2 class="sec">The shape of it</h2>
  <p class="help">Both charts read the dataset as it stands today. Neither depends on the
  deep read, so neither changes as the remaining documents are analysed — but both will move
  as the tail of applications is retrieved.</p>
  <div class="charts">{chart_years}{chart_bands}</div>
+ </div>
 
  <h2 class="sec" id="package">What the package contains</h2>
  <div class="parts">
@@ -4465,8 +4495,9 @@ def main() -> int:
     every capacity claim, what each operator tells which audience, and the figures
     for sites told more than one thing.</p>
    <p class="when"><b>Reach for it when</b> you want to slice the data yourself.
-    &nbsp;<a href="{WORKBOOK_SHEET_URL}" target="_blank" rel="noopener">Open the
-    spreadsheet</a> <span class="help">· or the .xlsx
+    </p>
+   <p class="golink"><a href="{WORKBOOK_SHEET_URL}" target="_blank"
+    rel="noopener">Open the spreadsheet</a> <span class="help">· or the .xlsx
     <a href="{DRIVE_ROOT}" target="_blank" rel="noopener">on Drive</a></span></p></div>
   <div class="part"><p class="kind">Drive</p>
    <h3>Source documents</h3>
@@ -4481,7 +4512,8 @@ def main() -> int:
     Both are named after the site, so they stay identifiable outside their folders.</p>
    <p class="when"><b>Reach for it when</b> you need the original to quote or verify — or
     everything extracted from one site in a single file.
-    &nbsp;<a href="{SITES_URL}" target="_blank" rel="noopener">Open the site
+    </p>
+   <p class="golink"><a href="{SITES_URL}" target="_blank" rel="noopener">Open the site
     folders</a></p></div>
   <div class="part"><p class="kind">Gemini Notebook</p>
    <h3>Interrogate planning summaries on Notebook</h3>
@@ -4493,7 +4525,8 @@ def main() -> int:
    <p class="when"><b>Reach for it when</b> the question spans sites and you would otherwise
     be opening folders one at a time. Check anything you intend to publish against the site
     row or the document itself — the notebook is a way in, not a source.
-    &nbsp;<a href="{NOTEBOOK_URL}" target="_blank" rel="noopener">Open the notebook</a></p></div>
+    </p>
+   <p class="golink"><a href="{NOTEBOOK_URL}" target="_blank" rel="noopener">Open the notebook</a></p></div>
   <div class="part"><p class="kind">Pinpoint</p>
    <h3>Interrogate all planning documents on Pinpoint</h3>
    <p class="what">The council documents themselves — every planning application document
@@ -4507,7 +4540,8 @@ def main() -> int:
     corpus rather than read a site — a phrase, a company name, a consultant. It is a search
     index, not the archive of record: the PDFs are recompressed to fit Pinpoint's quota, so
     quote from the Drive original when the passage spans a table or a multi-column page.
-    &nbsp;<a href="{PINPOINT_URL}" target="_blank" rel="noopener">Open the
+    </p>
+   <p class="golink"><a href="{PINPOINT_URL}" target="_blank" rel="noopener">Open the
     collection</a></p></div>
   <div class="part"><p class="kind">DuckDB</p>
    <h3>Query database</h3>
@@ -4515,9 +4549,11 @@ def main() -> int:
     (<code>dc_phase{args.phase}.duckdb</code>, ~106 MB). Opens in DuckDB CLI, Python, R or
     the DuckDB web shell.</p>
    <p class="when"><b>Reach for it when</b> the question is not in a column.
-    &nbsp;<a href="{DRIVE_ROOT}" target="_blank" rel="noopener">Open it on Drive</a></p></div>
+    </p>
+   <p class="golink"><a href="{DRIVE_ROOT}" target="_blank" rel="noopener">Open it on Drive</a></p></div>
  </div>
 
+ <div class="startcol">
  <h2 class="sec">Where the applications stand</h2>
  <table class="stats"><tbody>
   <tr><th scope="row">Applications in the dataset</th><td class="n">{n_apps_total:,}</td>
@@ -4528,7 +4564,8 @@ def main() -> int:
        across these {len(have):,}.</td></tr>
   <tr class="lead"><th scope="row">No documents held</th><td class="n">{len(none_held):,}</td>
       <td class="n">{_pc(len(none_held))}</td>
-      <td class="help">Broken down below — most of it is finished work, not a gap.</td></tr>
+      <td class="help">Broken down beneath it — most of it is finished work,
+       not a gap.</td></tr>
   {app_stats_rows}
  </tbody></table>
 
@@ -4568,6 +4605,7 @@ def main() -> int:
  by drainage and flood engineering every development produces; only 93 sites disclose
  anything about consumption. A volume would imply a precision the applications do not
  contain — and that silence is itself worth reporting.</p>
+ </div>
 </div></section>
 
 <section id="view-signals" class="view"><div class="wrap wide">{signals_html}</div></section>
