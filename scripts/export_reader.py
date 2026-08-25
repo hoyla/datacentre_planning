@@ -641,11 +641,15 @@ ul.rq li{margin-bottom:2px}
 /* The badge in the table cell is the same control in a smaller frame:
    it filters, so it looks pressable, but it must not out-shout the site
    name beside it. */
-button.who{font:inherit;font-size:14px;padding:3px 10px;text-align:left;
-  border:1px solid var(--line);border-radius:999px;background:var(--bg);
-  color:var(--fg);cursor:pointer;line-height:1.3;max-width:100%}
+/* The same object as the chips above the table — same type, same
+   metrics, same shape — because it is the same control. Only the colour
+   differs, and only because a chip up there also shows whether it is the
+   filter that is on (Luke, 2026-08-25). */
+button.who{font:inherit;font-size:13px;padding:6px 13px;text-align:left;
+  border:1px solid #c7c7c7;border-radius:999px;background:var(--bg);
+  color:var(--brand);cursor:pointer;line-height:1.3;max-width:100%}
 button.who:hover{border-color:var(--accent)}
-span.who.multi{font-size:14px;font-weight:600;display:block}
+span.who.multi{font-size:13px;font-weight:600;display:block}
 button.who.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 /* No overflow wrapper around these tables, deliberately. An ancestor with
    overflow-x:auto becomes the containing scroll box for position:sticky,
@@ -684,7 +688,11 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
 .sitecell .sname{display:block;font-weight:700;font-size:18px;line-height:1.25;
   color:var(--accent)}
 .sitecell .skey{display:block;color:var(--mut);font-size:13px;margin:2px 0 4px}
-.sitecell .sprop{display:block;font-size:14px;line-height:1.4;max-width:66ch}
+/* No measure on the proposal. It had one — 60ch, then 66ch — which held
+   it to about half the width of a column that is now 759px, so the cell
+   wrapped early into whitespace (Luke, 2026-08-25). The column is the
+   measure. */
+.sitecell .sprop{display:block;font-size:14px;line-height:1.4}
 /* Signals stacked, not wrapped across the row: at one per line the eye
    reads a list, and the column stays narrow enough to leave the site
    cell its width (Luke, 2026-08-24). The tone is the handoff's, carried
@@ -694,9 +702,9 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
    the state of a figure; the handoff assigns these tones itself and a
    signal IS a statement about the state of a figure. */
 .sigcell{white-space:normal}
-.sigpill{display:block;width:fit-content;max-width:100%;margin:0 0 4px;
-  padding:2px 9px;border:1px solid;border-radius:999px;
-  font-size:13px;line-height:1.35}
+.sigpill{display:block;width:fit-content;max-width:100%;margin:0 0 5px;
+  padding:6px 13px;border:1px solid;border-radius:999px;
+  font-size:13px;line-height:1.3}
 .sigpill.t-red{background:#fdecec;color:#a51818;border-color:#f3c9c9}
 .sigpill.t-amber{background:#fdf0e6;color:#a13a00;border-color:#f2d6bd}
 .sigpill.t-slate{background:#eef1f6;color:#3f5570;border-color:#d6dde8}
@@ -725,6 +733,7 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
 .mw .w-modelled{font-weight:400;color:var(--mut)}    /* arithmetic on floorspace */
 .mw .w-none{font-weight:400;color:var(--mut)}
 #tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){width:130px}       /* Power indicators */
+#tbl-sites th:nth-child(6),#tbl-sites td:nth-child(6){width:170px}       /* Reading */
 /* Narrowed to make room for the indicators column: of the "top level"
    cells this one has the most spare width, an address rarely needing
    its full former allowance. */
@@ -3123,9 +3132,9 @@ def main() -> int:
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="{est.value_mw or ''}"
  data-prov="{1 if is_prov else 0}" data-origin="{esc('|'.join(org))}"
  data-who="{esc(who['filter_key'])}" data-cohorts="{esc('|'.join(cohorts_of_site.get(key, ())))}">
-<td class="sitecell" data-v="{esc(name or key)}"><span class="sname">{esc(trim(name or key, 58))}</span>
- <span class="skey">{esc(' · '.join([x for x in [', '.join(councils or []), key] if x]))}</span>
- <span class="sprop">{esc(trim(summary, 118)) or '—'}{
+<td class="sitecell" data-v="{esc(prop.title_case(name or key))}"><span class="sname">{esc(trim(prop.title_case(name or key), 84))}</span>
+ <span class="skey">{esc(' · '.join([x for x in [key, trim(addr, 74), ', '.join(councils or [])] if x]))}</span>
+ <span class="sprop">{esc(trim(summary, 230)) or '—'}{
  '' if descriptive else ' — the register holds no description of the development itself, only procedural applications'}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
 <td class="sigcell" data-v="{len(cohorts_of_site.get(key, ()))}">{
@@ -3134,8 +3143,12 @@ def main() -> int:
          for _k in cohorts_of_site.get(key, ())) or '<span class="q">—</span>'}</td>
 <td class="mw" data-v="{est.value_mw or ''}">{mw_cell}</td>
 <td data-v="{ind_sort}">{ind_cell}</td>
+<td data-v="{read}"><span class="rbar" title="{read} of {held} documents read"><span
+ class="rbar-fill {_rstate}"
+ style="width:{(100 * read / held) if held else 0:.0f}%"></span></span>{read:,}/{held:,}<span
+ class="q">documents read</span><span class="q rstate {_rstate}">{_rword}</span></td>
 </tr>
-<tr class="detail"><td colspan="5">
+<tr class="detail"><td colspan="6">
  <!-- §5 of the design handoff. The header card carries the name and the
       identifiers, which the page used to scrape out of the row with
       `tr.querySelector('td strong')` — and after the table's site cell
@@ -3144,7 +3157,7 @@ def main() -> int:
       themselves, it cannot drift from the row again. -->
  <div class="card sitehead">
   {sig_pills}
-  <h2 class="sitename">{esc(name or key)}</h2>
+  <h2 class="sitename">{esc(prop.title_case(name or key))}</h2>
   <p class="siteident">{esc(", ".join(councils or []))}{" · " if addr else ""}{esc(trim(addr, 90))}
    · <code>{esc(key)}</code> · {esc(cls)}</p>
   <p class="sitestate">{state_html}</p>
@@ -3297,17 +3310,18 @@ def main() -> int:
  data-known="0"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
  data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts="">
-<td class="sitecell" data-v="{esc(title or key)}"><span class="sname">{esc(trim(title or key, 58))}</span>
- <span class="skey">{esc(' · '.join([x for x in [authority or '', key] if x]))}</span>
- <span class="sprop">{esc(trim(summary, 118)) or '—'}</span></td>
+<td class="sitecell" data-v="{esc(prop.title_case(title or key))}"><span class="sname">{esc(trim(prop.title_case(title or key), 84))}</span>
+ <span class="skey">{esc(' · '.join([x for x in [key, trim(address or '', 74), authority or ''] if x]))}</span>
+ <span class="sprop">{esc(trim(summary, 230)) or '—'}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
 <td class="sigcell" data-v="0"><span class="q">—</span></td>
 <td class="mw" data-v="">—<span class="q">no application yet</span></td>
 <td data-v="0">—</td>
+<td data-v="-1">—<span class="q rstate r-none">Nothing published</span></td>
 </tr>
-<tr class="detail"><td colspan="5">
+<tr class="detail"><td colspan="6">
  <div class="card sitehead">
-  <h2 class="sitename">{esc(title or key)}</h2>
+  <h2 class="sitename">{esc(prop.title_case(title or key))}</h2>
   <p class="siteident">{esc(authority or '')}{" · " if address else ""}{esc(trim(address, 90))}
    · <code>{esc(key)}</code> · Barbour ABI project, no application yet</p>
   <p class="sitelinks"><span><a href="#site-{esc(key)}">Link to this site</a></span></p>
@@ -4585,6 +4599,8 @@ def main() -> int:
  <th data-num="1">{dl("Signals","Cohort","Signals it matches")}</th>
  <th data-num="1">{dl("Sites","Power MW (best available)","Power MW")}</th>
  <th data-num="1">{dl("Sites","External power indicators","Power indicators")}</th>
+ <th data-num="1">{dl("Sites","Documents held / Documents analysed",
+                      "Reading, and its floor")}</th>
 </tr></thead><tbody>{''.join(body)}</tbody></table>
 <!-- The handoff's footnote, kept although the view it distinguished is
      gone: with one table it is no longer "neither view drops a row" but
@@ -4592,8 +4608,8 @@ def main() -> int:
      empty — is still what a reader needs told. -->
 <p class="tablenote">No row is dropped for being empty. A site with no figure
  appears with the reason it has none, and a site whose documents have not been
- read appears as unread rather than as zero. Status, location and reading
- coverage are on each site's own page.</p>
+ read appears as unread rather than as zero. Capacity status and coordinates are
+ on each site's own page.</p>
 </section>
 
 <section id="view-apps" class="view">

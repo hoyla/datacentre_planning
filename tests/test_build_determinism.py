@@ -49,7 +49,16 @@ ROOT = Path(__file__).resolve().parent.parent
 EXPORT = ROOT / "scripts" / "export_reader.py"
 
 # The one line that is allowed to differ between two builds of one corpus.
-_STAMP_RE = re.compile(r"generated \d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC")
+#
+# The pattern has to track the masthead. It was written for an ISO stamp,
+# the redesign moved the masthead to the handoff's "generated 21 Aug 2026
+# 18:32 UTC", and from then on the regex matched nothing — so the line it
+# exists to normalise stopped being normalised, and the test failed only
+# when two builds happened to straddle a minute. A guard that fails on
+# the clock is a guard nobody trusts.
+_STAMP_RE = re.compile(
+    r"generated (?:\d{4}-\d{2}-\d{2}|\d{1,2} [A-Z][a-z]{2} \d{4}) "
+    r"\d{2}:\d{2} UTC")
 
 # Tables the reader reads. Under the snapshot these cannot move between
 # the two builds; if they do, the snapshot was not honoured and the
