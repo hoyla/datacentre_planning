@@ -114,6 +114,36 @@ def _ensure_test_database() -> None:
 
 
 @pytest.fixture(scope="session")
+def built_reader(tmp_path_factory) -> str:
+    """One reader, built from the live database once, as a file:// URI.
+
+    Both suites that drive the artefact — the behaviour smoke test and
+    the design-conformance test — need a real build, and a build is
+    fifty seconds. Session-scoped so it happens once.
+    """
+    import subprocess
+    import sys
+    root = Path(__file__).resolve().parent.parent
+    out = tmp_path_factory.mktemp("reader") / "reader.html"
+    if not os.environ.get("DATABASE_URL"):
+        pytest.skip("DATABASE_URL not set")
+    proc = subprocess.run(
+        [sys.executable, str(root / "scripts" / "export_reader.py"),
+         "--out", str(out), "--phase", "test"],
+        cwd=root, capture_output=True, text=True, timeout=600, check=False)
+    if proc.returncode != 0:
+        combined = proc.stdout + proc.stderr
+        tail = combined.strip().splitlines()[-8:]
+        if "uncorrected" in combined:
+            pytest.skip("adjudication gate refused the build: " + " / ".join(tail))
+        if "could not connect" in combined or "OperationalError" in combined:
+            pytest.skip("live database unreachable: " + " / ".join(tail))
+        pytest.fail("build failed:\n" + "\n".join(tail))
+    assert out.exists() and out.stat().st_size > 1_000_000, "build wrote no reader"
+    return out.as_uri()
+
+
+@pytest.fixture(scope="session")
 def integration_db() -> str:
     """Ensure dcp_test exists and is migrated. Skip the test if Postgres is unreachable."""
     try:

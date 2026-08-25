@@ -604,7 +604,6 @@ ul.rq li{margin-bottom:2px}
    panel's four-column grid was laid out for that width. */
 .sitepage{padding:14px 22px 30px}
 .sitenav{margin:0 0 10px;font-size:14.5px}
-.sitepage h2{margin:4px 0 2px;font-size:22px;line-height:1.2}
 #sitehost .grid{margin-top:0}
 /* Signals cards. Square, ruled, no shadow; the count is the one large
    thing on the card because it is the one thing that was computed. */
