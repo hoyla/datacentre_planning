@@ -64,22 +64,35 @@ up the new CSV adjudication columns.
 
   | stem | apps | applicant of record | campus |
   |---|---|---|---|
-  | 1331 | 186 | Barratt London / SEGRO | Former Nestlé factory — **housing, not a data centre** |
+  | 1331 | 186 | Barratt London / SEGRO | Former Nestlé factory, Hayes — mixed use, data centre included |
   | 75111 | 57 | Ark Estates 2 / Ark UP4 / Ark Data Centres | Union Park, North Hyde Gardens |
   | 38421 | 24 | Colt Data Centre Services / HDCI Hayes London | Hayes Bridge Retail Park, Tudor Works |
   | 49261 | 5 | Marvell Developments LLC | Silverdale Industrial Estate |
 
   Colt and Ark do not build as a joint venture (Luke, 2026-08-25), so
-  proximity is the only thing that ever joined them. Writing these as
-  partitions is mechanical from the stems. **The prior question is
-  stem 1331**: 186 Barratt/SEGRO housing applications are site members
-  at all only through family and spatial chaining, and the honest fix
-  there may be triage rather than a boundary — a partition would make
-  site 61 tidy while leaving a housing estate inside the datacentre
-  universe. Settle that before writing any of it.
+  proximity is the only thing that ever joined them. All four are
+  partitions, and writing them is mechanical from the stems.
 
-  Retiring alongside it: the Ark "99 MW for Union Park" claim, retired
-  2026-08-21 because site 61 was mostly somewhere else, becomes
+  **Stem 1331 stays in the universe.** It was briefly characterised
+  here as housing that did not belong — from its applicant, Barratt
+  London, without reading a description. All 186 of its applications
+  name the use in full: "22,663sq.m (GEA) of commercial floorspace (Use
+  Classes B1c/B2/B8 and Data Centre (sui generis))", and one record
+  puts it at "approximately 28,700m2 (GFA) ... and ancillary office and
+  sui generis for a data centre". The stem carries 2,069
+  `power_generation` findings, 294 `power_grid`, 279 `power_demand` and
+  50 `cooling`. The `new_build` verdict on
+  `Hillingdon/1331/APP/2017/1883` is right; the 1,386 dwellings sit
+  beside a consented data centre rather than instead of one. Ejecting
+  the stem would have deleted that data centre from the corpus.
+
+  The lesson is worth more than the correction: **applicant identity
+  separates campuses and must never decide universe membership.** A
+  housebuilder's hybrid permission can contain a data centre, and this
+  one does.
+
+  Retiring alongside the split: the Ark "99 MW for Union Park" claim,
+  retired 2026-08-21 because site 61 was mostly somewhere else, becomes
   matchable again the moment 75111 is its own site.
 
 - **`SITE-EN0110030` still shows the register's location narrative.**
