@@ -174,6 +174,50 @@ _TENS = ("", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy",
          "eighty", "ninety")
 
 
+# Words this project spells in capitals. CSS `text-transform:capitalize`
+# has no idea that EIA is an initialism and rendered the findings family
+# `eia_process` as "Eia Process" (Luke, 2026-08-25). The list is short
+# on purpose: only what actually appears in a family or a signal label.
+_ACRONYMS = {"eia": "EIA", "pue": "PUE", "wue": "WUE", "chp": "CHP",
+             "hgv": "HGV", "ev": "EV", "suds": "SuDS", "bng": "BNG",
+             "sssi": "SSSI", "sac": "SAC", "spa": "SPA", "aonb": "AONB",
+             "ups": "UPS", "hv": "HV", "lv": "LV", "mw": "MW", "uk": "UK"}
+
+
+def humanise(token: str) -> str:
+    """A snake_case key as a label, with initialisms left as initialisms."""
+    words = (token or "").replace("_", " ").split()
+    return " ".join(_ACRONYMS.get(w.lower(), w.capitalize()) for w in words)
+
+
+def mw_text(v: float) -> str:
+    """A megawatt figure as a reader should see it.
+
+    Rounding to whole megawatts turned Plymouth's 0.2 MW standby set into
+    "0 Standby generation capacity" — a figure that says the opposite of
+    what the document says (Luke, 2026-08-25). Small figures are real
+    here: a hospital's standby engine, a rooftop array, one generator's
+    rating. Below 10 MW the figure keeps up to two decimals, trailing
+    zeros trimmed so 3.00 does not appear where the documents say 3; at
+    and above 10 the decimals are noise against the uncertainty in the
+    number itself.
+    """
+    if v is None:
+        return ""
+    if abs(v) < 10:
+        out = f"{v:.2f}"
+    elif abs(v) < 1000:
+        # One decimal survives here because it carries meaning: 49.9 MW
+        # is the consenting threshold this corpus is full of, and a
+        # reader shown "50" has been told the opposite of what the
+        # application says. 218.4 is likewise a stated figure, not a
+        # rounding of 218.
+        out = f"{v:.1f}"
+    else:
+        return f"{v:,.0f}"
+    return out.rstrip("0").rstrip(".")
+
+
 def _count_in_words(n: int) -> str:
     """"Twenty-two sites", for the Signals headline.
 
@@ -344,7 +388,8 @@ nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
 details.banner-d>summary{cursor:pointer;font-weight:650;list-style:none;
   display:inline-block;padding:0}
 details.banner-d>summary::-webkit-details-marker{display:none}
-details.banner-d>summary:before{content:"▸ ";display:inline-block;
+details.banner-d>summary:before{content:"▸";font-size:19px;line-height:1;
+  width:20px;vertical-align:-1px;display:inline-block;
   transition:transform .12s;width:12px}
 details.banner-d[open]>summary:before{transform:rotate(90deg)}
 details.banner-d>summary:hover{text-decoration:underline}
@@ -398,8 +443,10 @@ details.reading summary{cursor:pointer;list-style:none}
 details.reading summary::-webkit-details-marker{display:none}
 details.reading summary h4{display:inline;margin:0 8px 0 0;font-size:13px;
   text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
-details.reading summary h4:before{content:"▸  ";font-size:12px}
-details[open].reading summary h4:before{content:"▾  "}
+details.reading summary h4:before{content:"▸";font-size:19px;line-height:1;
+  display:inline-block;width:20px;color:var(--machine);vertical-align:-1px;
+  transition:transform .12s}
+details[open].reading summary h4:before{content:"▾"}
 details.reading summary .help{display:inline}
 .rbody{margin-top:10px;max-width:880px}
 .rbody h5{margin:12px 0 4px;font-size:13.5px;text-transform:uppercase;
@@ -578,6 +625,7 @@ tr.site.open>td:first-child{box-shadow:inset 3px 1px 0 -1px var(--accent),
   inset 0 1px 0 var(--accent)}
 tr.detail.on>td{box-shadow:inset 3px 0 0 -1px var(--accent)}
 tr.site td:first-child:before{content:"▸";color:var(--mut);margin-right:7px;
+  font-size:19px;line-height:1;vertical-align:-2px;
   display:inline-block;transition:transform .12s}
 tr.site.open td:first-child:before{transform:rotate(90deg)}
 tr.detail{display:none;background:var(--soft)}
@@ -608,13 +656,31 @@ tr.detail td{padding:14px 18px 18px 30px}
    while the first column ran long — the same imbalance as before it,
    reversed. Stacking the two record boxes in one column puts the tall
    subject boxes and the tall proposal side by side instead. */
-/* One column, read top to bottom. The four-column grid put seven
-   bordered cards of unequal height beside each other, and a reader had
-   to work out whether to go across or down before they could read
-   anything — Luke, 2026-08-24: "the jigsaw puzzle of blocks". The
-   sections keep their order and lose their frames: a rule above each
-   one, no radius, no shadow, and prose held to a measure rather than
-   run to the window's width. */
+/* §5 of the handoff: the body is two columns, 1.55fr and 1fr.
+   The four-column grid of seven equal cards was the jigsaw Luke
+   objected to; one column was my over-correction, and he said so —
+   "the 'jigsaw' comment wasn't an appeal to go to one column; it was an
+   appeal to use the proposed new design". Left: what the documents say
+   about this site. Right: what was computed from them, and the
+   coverage that qualifies it. */
+.sitebody{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
+  gap:22px;align-items:start}
+@media (max-width:1100px){.sitebody{grid-template-columns:1fr}}
+.sitebody .col-record,.sitebody .col-computed{display:flex;flex-direction:column;
+  gap:0;min-width:0}
+/* §5's header card, and the identifiers under the name. */
+.sitehead{border-top-color:var(--brand);padding:22px 26px 24px;margin-bottom:0}
+.sitepills{margin:0 0 10px;display:flex;gap:6px;flex-wrap:wrap}
+.sitename{margin:0 0 6px;font-family:"Source Serif 4",Georgia,serif;
+  font-size:32px;line-height:1.15;font-weight:700;max-width:28em}
+.siteident{margin:0 0 12px;font-size:15px;color:var(--mut)}
+.sitelinks{margin:0;display:flex;gap:24px;flex-wrap:wrap;font-size:14px}
+/* The caveat banner the handoff puts directly beneath the header, in
+   its own colours: this is the sentence that stops a floor being read
+   as a total. */
+.sitehead + .banner{background:#fdf6e3;border:0;border-left:4px solid var(--warn);
+  color:#3d2b00;padding:14px 18px;font-size:15px;line-height:1.55;
+  border-radius:0;margin:0 0 18px}
 .grid{display:flex;flex-direction:column;gap:0;align-items:stretch}
 .box{border:0;border-top:4px solid var(--line);border-radius:0;
   padding:18px 0 10px;min-width:0}
@@ -646,7 +712,8 @@ tr.detail td{padding:14px 18px 18px 30px}
 .box.claims details>summary{cursor:pointer;font-size:13.5px;color:var(--accent);
   list-style:none}
 .box.claims details>summary::-webkit-details-marker{display:none}
-.box.claims details>summary:before{content:"▸ ";display:inline-block;
+.box.claims details>summary:before{content:"▸";font-size:19px;line-height:1;
+  width:20px;vertical-align:-1px;display:inline-block;
   transition:transform .12s}
 .box.claims details[open]>summary:before{transform:rotate(90deg)}
 .box.claims details>p{margin-top:6px}
@@ -684,7 +751,9 @@ tr.detail td{padding:14px 18px 18px 30px}
 .fams{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:6px 22px}
 .fam{border-top:1px solid var(--line);padding:6px 0 4px;min-width:0}
 .famhead{font-size:13.5px;margin-bottom:3px}
-.famname{font-weight:600;text-transform:capitalize}
+/* No text-transform: the label is capitalised where it is built,
+   because CSS cannot tell EIA from Eia. */
+.famname{font-weight:600}
 details.famrest summary{font-size:13.5px;color:var(--mut);cursor:pointer;margin:2px 0 0 16px}
 ul.find{margin:0;padding-left:16px;font-size:14px}
 ul.find li{margin-bottom:3px}
@@ -700,8 +769,8 @@ details.apps-d{margin-top:16px;border-top:1px solid var(--line);padding-top:10px
 details.apps-d>summary{cursor:pointer;font-size:14px;color:var(--accent);
   list-style:none;display:inline-block;padding:3px 0}
 details.apps-d>summary::-webkit-details-marker{display:none}
-details.apps-d>summary:before{content:"▸ ";display:inline-block;
-  transition:transform .12s;width:12px}
+details.apps-d>summary:before{content:"▸";font-size:19px;line-height:1;
+  display:inline-block;transition:transform .12s;width:20px;vertical-align:-1px}
 details.apps-d[open]>summary:before{transform:rotate(90deg)}
 details.apps-d>summary:hover{text-decoration:underline}
 .stat button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;
@@ -755,7 +824,8 @@ table.stats tr.op.open td:first-child:before{transform:rotate(90deg)}
 .opdetail details>summary::-webkit-details-marker,
 .opsite details>summary::-webkit-details-marker{display:none}
 .opdetail details>summary:before,.opsite details>summary:before{
-  content:"▸ ";display:inline-block;transition:transform .12s}
+  content:"▸";font-size:19px;line-height:1;width:20px;vertical-align:-1px;
+  display:inline-block;transition:transform .12s}
 .opdetail details[open]>summary:before,
 .opsite details[open]>summary:before{transform:rotate(90deg)}
 .opsite{margin-bottom:12px}
@@ -2237,7 +2307,7 @@ def main() -> int:
                 "pop": (
                     f'<b>{esc(name or key)}</b><br><span class="help">'
                     f'{esc(", ".join(councils or []))}</span><br>'
-                    + (f'<b>{est.value_mw:,.0f} MW</b> '
+                    + (f'<b>{mw_text(est.value_mw)} MW</b> '
                        f'<span class="help">{esc(est.basis)}</span><br>'
                        if est.value_mw else
                        f'<span class="help">{esc(est.basis)}</span><br>')
@@ -2327,10 +2397,10 @@ def main() -> int:
                              f"{esc(trim(vt,190))}</li>")
             n_shown += len(items)
             total = family_counts.get(key, {}).get(fam, len(items))
-            head = (f"<span class='famname'>{esc(fam.replace('_', ' '))}</span> "
+            head = (f"<span class='famname'>{esc(humanise(fam))}</span> "
                     f"<span class='q'>{len(items)} of {total:,} shown</span>"
                     if total > len(items) else
-                    f"<span class='famname'>{esc(fam.replace('_', ' '))}</span> "
+                    f"<span class='famname'>{esc(humanise(fam))}</span> "
                     f"<span class='q'>{total:,}</span>")
             first, rest = items[:2], items[2:]
             fl.append(
@@ -2373,6 +2443,15 @@ def main() -> int:
         else:
             findings_html = "<p class='help'>No documents held.</p>"
 
+        # The signals this site matches, as pills on its own page — the
+        # same neutral pill the table row uses, because a cohort is a
+        # category and colour on this page means the state of a figure.
+        sig_pills = "".join(
+            f'<span class="sigpill">{esc(cohort_title.get(_k, _k))}</span>'
+            for _k in cohorts_of_site.get(key, ()))
+        if sig_pills:
+            sig_pills = f'<p class="sitepills">{sig_pills}</p>'
+
         # One banner, stating the plain fact about this site: either its
         # documents are unread, or it has none and here is why.
         site_banner = ""
@@ -2402,6 +2481,23 @@ def main() -> int:
             drive_html = (f'<a href="{_durl}" target="_blank" rel="noopener">'
                           f'Site folder</a> <span class="help">summary only — no '
                           f'documents held</span>')
+        # §5's links row, built where the Drive URL is known. No council
+        # register link: this reader holds register URLs per application,
+        # not per site, and the applications table below carries every
+        # one of them — a single "register" link would have to pick one
+        # and would be wrong on any site that spans councils.
+        _csv = drive_csv.get(hv._norm_key(key), "")
+        _bits = []
+        if _durl and held:
+            _bits.append(f'<a href="{esc(_durl)}" target="_blank" rel="noopener">'
+                         f'{held:,} documents on Drive</a>')
+        if _csv:
+            _bits.append(f'<a href="{esc(_csv)}" target="_blank" rel="noopener">'
+                         f'Findings CSV'
+                         + (f' ({findings_n:,})' if findings_n else '') + '</a>')
+        _bits.append(f'<a href="#site-{esc(key)}">Link to this site</a>')
+        site_links = "".join(f'<span>{b}</span>' for b in _bits)
+
         near_html = (f'{esc(near[0]["name"])} — {near[1]} km'
                      + (f', {esc(near[0]["cap"])}' if near[0]["cap"] else "")
                      + f' <a href="{esc(near[0]["url"])}" target="_blank" '
@@ -2539,7 +2635,7 @@ def main() -> int:
                         prof.get("cooling_method"), btitle,
                         near[0]["name"] if near else "", " ".join(refs or []),
                         " ".join(c["claim_name"] for c in site_claims)))
-        mw = "" if est.value_mw is None else f"{est.value_mw:,.0f}"
+        mw = mw_text(est.value_mw)
         # Luke, 2026-08-20 and again on 2026-08-24: the basis has to be
         # legible ON the figure, and "I'd do it with weight and a mark
         # rather than colour alone (colour vanishes the moment someone
@@ -2608,15 +2704,58 @@ def main() -> int:
 }</span></td>
 </tr>
 <tr class="detail"><td colspan="8">
+ <!-- §5 of the design handoff. The header card carries the name and the
+      identifiers, which the page used to scrape out of the row with
+      `tr.querySelector('td strong')` — and after the table's site cell
+      became a multi-row cell there was no <strong> to find, so every
+      site page was titled with its key. Built here, from the values
+      themselves, it cannot drift from the row again. -->
+ <div class="card sitehead">
+  {sig_pills}
+  <h2 class="sitename">{esc(name or key)}</h2>
+  <p class="siteident">{esc(", ".join(councils or []))}{" · " if addr else ""}{esc(trim(addr, 90))}
+   · <code>{esc(key)}</code> · {esc(cls)}</p>
+  <p class="sitelinks">{site_links}</p>
+ </div>
  {site_banner}
- <div class="grid">
-  <div class="col-record">
-   <div class="box proposal"><h4>Proposal</h4>
+ <div class="sitebody">
+ <!-- §5's two columns. Left is the record — what this site's own
+      documents say, in the order a reporter reads it. Right is what
+      was computed from them and the coverage that qualifies it. The
+      handoff's left column 1 (a signed reporter's note) and right
+      column 1 (a template digest) were rejected in the plan's §2; the
+      machine reading stands where the digest would have. -->
+ <div class="col-record">
+  <div class="box proposal"><h4>Proposal</h4>
     <p><strong>{esc(summary) or '—'}</strong></p>
     <p class="help">Lifted verbatim from an application below, which the council published
      as:</p><p>{esc(trim(full_desc, 640)) or '—'}</p></div>
-
-   <div class="box identity"><h4>Site details</h4>
+<div class="box"><h4>Declared power</h4>
+   <dl class="kv">
+    <dt>Best available</dt><dd>{('<strong>'+mw+' MW</strong>') if mw else '—'}
+     {'<span class="prov"> ' + esc(site_profile.PROVISIONAL_MARK) + '</span>' if is_prov and mw else ''}</dd>
+    <dt>Basis</dt><dd>{esc(est.basis)}</dd>
+    <dt>Confidence</dt><dd>{esc(est.confidence or '—')}</dd>
+    <dt>Caveat</dt><dd>{esc(est.caveat or '—')}</dd>
+    <dt>IT load</dt><dd>{_q(it, 'it_load')}</dd>
+    <dt>Total site</dt><dd>{_q(tot, 'total_site')}</dd>
+    <dt>Grid connection</dt><dd>{_q(grid, 'grid_connection')}</dd>
+    <dt>On-site generation</dt><dd>{_q(gen, 'onsite_generation')}{
+      f' <span class="help">{esc(prof.get("gen_figure_note"))}</span>'
+      if prof.get("gen_figure_note") else ''}</dd>
+    {mixed_note}
+    <dt>Excluded figures</dt><dd>{nexc or 0}
+     <span class="help">market context, not this site</span></dd>
+   </dl>
+   <p class="help provenance">{esc(ccl.DECLARED_POWER_NOTE)}</p></div>
+  {claims_html}
+  <div class="box"><h4>What the documents say</h4>
+   {findings_html}</div>
+  {f'''<details class="apps-d"><summary>Show the {len(apps)} planning application{'' if len(apps)==1 else 's'} for this site</summary>{apps_html}</details>''' if apps else apps_html}
+ </div>
+ <div class="col-computed">
+  {reading_html}
+  <div class="box identity"><h4>Site details</h4>
     <div class="fields">
      <div class="stack">
       <div><span class="lbl">Site key</span><span class="val">{esc(key)}</span></div>
@@ -2640,8 +2779,7 @@ def main() -> int:
       <span class="help">Opens straight to this site's page, whatever
        the table is filtered to.</span></span></div>
     </div></div>
-
-   <div class="box parties"><h4>Who is behind it</h4>
+  <div class="box parties"><h4>Who is behind it</h4>
     <dl class="kv">
      <dt>End user</dt><dd>{esc(prof.get('end_user') or '—')}
       {f'<span class="help">group: {esc(prof["operator_group"])}</span>'
@@ -2660,29 +2798,7 @@ def main() -> int:
      documents, and the number is how often — the firm that wrote the planning statement
      is named more often than the developer, and a utilities section names whoever has
      ducts in the road.</p></div>
-  </div>
-
-  <div class="box"><h4>Declared power</h4>
-   <dl class="kv">
-    <dt>Best available</dt><dd>{('<strong>'+mw+' MW</strong>') if mw else '—'}
-     {'<span class="prov"> ' + esc(site_profile.PROVISIONAL_MARK) + '</span>' if is_prov and mw else ''}</dd>
-    <dt>Basis</dt><dd>{esc(est.basis)}</dd>
-    <dt>Confidence</dt><dd>{esc(est.confidence or '—')}</dd>
-    <dt>Caveat</dt><dd>{esc(est.caveat or '—')}</dd>
-    <dt>IT load</dt><dd>{_q(it, 'it_load')}</dd>
-    <dt>Total site</dt><dd>{_q(tot, 'total_site')}</dd>
-    <dt>Grid connection</dt><dd>{_q(grid, 'grid_connection')}</dd>
-    <dt>On-site generation</dt><dd>{_q(gen, 'onsite_generation')}{
-      f' <span class="help">{esc(prof.get("gen_figure_note"))}</span>'
-      if prof.get("gen_figure_note") else ''}</dd>
-    {mixed_note}
-    <dt>Excluded figures</dt><dd>{nexc or 0}
-     <span class="help">market context, not this site</span></dd>
-   </dl>
-   <p class="help provenance">{esc(ccl.DECLARED_POWER_NOTE)}</p></div>
-  {claims_html}
-
-  <div class="box"><h4>Generation, cooling and water</h4>
+   <div class="box"><h4>Generation, cooling and water</h4>
    <dl class="kv">
     <dt>Standby generators</dt><dd>{
       (esc(prof.get('generator_count')) + ' units') if prof.get('generator_count') else '—'}</dd>
@@ -2697,11 +2813,7 @@ def main() -> int:
    <p class="help">{esc(prof.get('cooling_caveat') or '')}</p></div>
   {ctx_html}
  </div>
-
- {reading_html}
- <h4 class="sub-head">What the documents say</h4>
- {findings_html}
- {f'''<details class="apps-d"><summary>Show the {len(apps)} planning application{'' if len(apps)==1 else 's'} for this site</summary>{apps_html}</details>''' if apps else apps_html}
+</div>
 </td></tr>""")
 
     # Barbour-recorded projects with no planning application yet. They are
@@ -2912,7 +3024,7 @@ def main() -> int:
         return f"""
  <div class="card sigcard" id="signal-{esc(key)}">
   <div class="sigmain">
-   <div class="sigtop"><span class="sigfam">{esc(c.cohort.family)}</span>{pill}
+   <div class="sigtop"><span class="sigfam">{esc(humanise(c.cohort.family))}</span>{pill}
     <span class="sigrule">rule {esc(c.cohort.rule_version)}</span></div>
    <h3 class="sigheadline">{esc(_count_in_words(n_members))} {esc(c.cohort.title.lower())}</h3>
    <p class="sigprose">{esc(c.cohort.definition)}</p>
