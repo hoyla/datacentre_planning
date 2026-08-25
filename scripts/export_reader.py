@@ -701,7 +701,13 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
    neutral grey on a rule I wrote here, that colour on this page means
    the state of a figure; the handoff assigns these tones itself and a
    signal IS a statement about the state of a figure. */
-.sigcell{white-space:normal}
+/* Centred in the column, and centred inside the pill where the label
+   wraps to two lines (Luke, 2026-08-25). Scoped to the table cell: on
+   the site page the same pills sit in a flex row at the top of the
+   header card, where an auto margin would push them apart instead of
+   centring them. */
+.sigcell{white-space:normal;text-align:center}
+.sigcell .sigpill{margin-left:auto;margin-right:auto;text-align:center}
 .sigpill{display:block;width:fit-content;max-width:100%;margin:0 0 5px;
   padding:6px 13px;border:1px solid;border-radius:999px;
   font-size:13px;line-height:1.3}
