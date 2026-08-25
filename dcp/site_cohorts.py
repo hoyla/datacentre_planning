@@ -376,13 +376,24 @@ def generation_exceeds_load(inputs: Inputs) -> CohortResult:
     larger than the load is the finding, not a disqualification. It
     travels with each member so a reader can see which kind it is.
     """
-    members, skipped = [], 0
+    members, skipped, bounded = [], 0, 0
     for key in inputs.sites:
         gen = inputs.generation.get(key)
         if not gen or not gen.value_mw:
             continue
         if gen.basis_key not in _TOTAL_BASES:
             skipped += 1
+            continue
+        # A ceiling is not a measurement. Yorkshire Energy Park states
+        # "generation totalling less than 50 MW" in every passage it
+        # gives, on-site and off-site together, because above 50 MW a
+        # generating station in England needs a DCO rather than local
+        # permission. Its own energy centre is 13.5 MW against a 27 MW
+        # load, so on this rule the site was in the cohort backwards
+        # (Luke, 2026-08-25: drop it). 855 findings across 51 sites state
+        # a sub-50 bound, so this is a behaviour rather than one row.
+        if gen.bounded:
+            bounded += 1
             continue
         f = inputs.figures.get(key, {})
         loads = [(v, q) for q, v in
@@ -402,13 +413,20 @@ def generation_exceeds_load(inputs: Inputs) -> CohortResult:
             "ratio": round(gen.value_mw / load, 2),
             "generation_basis": gen.basis_key,
             "plant_type": gen.plant_type or "not settled"}))
-    notes = ()
+    notes = []
     if skipped:
-        notes = (f"{skipped} further sites disclose a generation figure that "
-                 f"the adjudication reads as one machine's rating, or does "
-                 f"not settle. Those are not comparable with a load and are "
-                 f"excluded rather than multiplied.",)
-    return CohortResult(tuple(members), notes=notes)
+        notes.append(
+            f"{skipped} further sites disclose a generation figure that the "
+            f"adjudication reads as one machine's rating, or does not settle. "
+            f"Those are not comparable with a load and are excluded rather "
+            f"than multiplied.")
+    if bounded:
+        notes.append(
+            f"{bounded} more give their generation as a ceiling — \u201cless "
+            f"than 50 MW\u201d, \u201ccapped at 50 MW\u201d — which says "
+            f"where a scheme sits relative to the consenting threshold rather "
+            f"than how large its plant is, and cannot be compared with a load.")
+    return CohortResult(tuple(members), notes=tuple(notes))
 
 
 # ---------------------------------------------------------------------------
@@ -568,9 +586,13 @@ REGISTRY: tuple[Cohort, ...] = (
             "meant to run it says so rather than guessing. Sites whose "
             "generation figure is one machine's rating are excluded, not "
             "multiplied by a count found elsewhere; the number excluded that "
-            "way is printed beside this rule. And a site absent from here may "
-            "still hold generation larger than its load: it may state no load "
-            "at all, which most of the corpus does not."),
+            "way is printed beside this rule. So are the sites whose figure "
+            "is a ceiling — \u201cgeneration totalling less than 50 MW\u201d "
+            "— which says where a scheme sits relative to the consenting "
+            "threshold above which a generating station needs a DCO, not how "
+            "large its plant is. And a site absent from here may still hold "
+            "generation larger than its load: it may state no load at all, "
+            "which most of the corpus does not."),
         order=4, rule_version="2026-08-25.1",
         compute=generation_exceeds_load),
     Cohort(
