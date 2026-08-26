@@ -49,13 +49,70 @@ def _p(result, role):
     ("CityFibre", 73),         # named in a utilities section
 ])
 def test_a_much_mentioned_name_does_not_become_the_operator(name, mentions):
+    """The operator is an identity claim, and mentions cannot make one.
+
+    Unchanged since 2.4 and the reason this file exists: `end_user` and
+    `operator_group` say a company runs this site, which is an assertion
+    across documents, and the only route to it is a confirmed alias.
+    """
     out = site_parties((), [("party_applicant", name, mentions)],
                        ["Slough Borough Council"], NO_ALIASES)
     assert out["operator_group"] == ""
     assert out["end_user"] == ""
-    assert out["applicant_of_record"] == ""
     assert name in out["named_in_documents"]
     assert f"{mentions} mentions" in out["named_in_documents"]
+
+
+@pytest.mark.parametrize("name,mentions", [
+    ("CityFibre", 73),
+    ("CSE52 Limited", 8),
+])
+def test_a_document_stated_applicant_may_fill_the_applicant_field(name, mentions):
+    """...but the applicant is a different claim, and weaker.
+
+    Luke, 2026-08-26, relaxing the rule for this field only. Barbour
+    states a role for 164 of 494 sites, so reading it from Barbour alone
+    printed a dash — meaning "unknown" in this reader — on 330 sites,
+    179 of which had an applicant stated in their own documents.
+
+    The distinction: `end_user` asserts who runs a site across every
+    document. `applicant_of_record` repeats what one application's own
+    form says about itself, so no cross-document identity resolution is
+    involved and no alias is needed to license it. CityFibre is the test
+    of that rather than a counter-example — it holds 65 singleton sites
+    of its own works, "external alterations to install generator and
+    fresh air vents" at telephone exchanges, and its evidence reads
+    "Applicant: CityFibre", a form field.
+
+    The value must name its source, because the panel mixes registers.
+    """
+    out = site_parties((), [("party_applicant", name, mentions)],
+                       ["Slough Borough Council"], NO_ALIASES)
+    assert out["applicant_of_record"] == f"{name} (documents)"
+    assert out["operator_group"] == ""
+    assert out["end_user"] == ""
+
+
+def test_barbour_still_wins_the_applicant_field_when_it_states_one():
+    """The documents fill the field; they do not overrule the register."""
+    barbour = (("PTNO-1", "Client", "Ark Data Centres Ltd"),)
+    out = site_parties(barbour, [("party_applicant", "Savills", 214)],
+                       (), NO_ALIASES)
+    assert out["applicant_of_record"].endswith("(Barbour)")
+    assert "Savills" not in out["applicant_of_record"]
+
+
+def test_a_name_mentioned_once_does_not_reach_the_applicant_field():
+    """The extractor returns phrases as well as names.
+
+    "Applicant CSE52 Limited" and "Burges Salmon LLP representing the
+    applicant" each parse as their own organisation and arrive once,
+    where the real name arrives repeatedly. Without the floor the field
+    reads as three companies where the documents name one.
+    """
+    out = site_parties((), [("party_applicant", "Applicant CSE52 Limited", 1)],
+                       (), NO_ALIASES)
+    assert out["applicant_of_record"] == ""
 
 
 def test_a_document_name_reaches_the_operator_only_through_a_confirmed_alias():
@@ -109,14 +166,17 @@ def test_a_stated_end_user_outranks_a_much_mentioned_applicant():
     out = site_parties(DIDCOT,
                        [("party_applicant", "RWE Generation UK PLC", 271)],
                        ["South Oxfordshire District Council"], NO_ALIASES)
-    assert out["end_user"] == "Amazon UK Services Limited"
+    # The name, and the register that states it: every value in this
+    # panel names its source, because the panel mixes registers and a
+    # reader cannot otherwise tell Barbour's word from the documents'.
+    assert out["end_user"] == "Amazon UK Services Limited (Barbour)"
     assert "RWE" in out["named_in_documents"]
     assert out["parties_source"] == "Barbour project record and documents"
 
 
 def test_an_adviser_role_is_an_adviser_and_the_rest_are_kept_apart():
     out = site_parties(DIDCOT, (), (), NO_ALIASES)
-    assert out["advisers"] == "Lichfields"
+    assert out["advisers"] == "Lichfields (Barbour)"
     assert [p.barbour_role for p in _p(out, "other")] == ["Bidder"]
     # Every Barbour party reaches the long-format rows, whatever its
     # role: the sheet is what the site row is a summary of.

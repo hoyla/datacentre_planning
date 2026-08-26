@@ -259,7 +259,13 @@ class TestMentionCountsAreNotPlant:
         # `counted` would be dressing a stated fact as a tally.
         for field in ("generator_fuel", "cooling_method",
                       "named_in_documents"):
-            assert f"counted(prof.get('{field}'))" in src, (
+            # Matched on the call rather than its exact arguments: this
+            # pinned `counted(prof.get('X'))` and broke on 2026-08-26
+            # when a second argument was added to say WHY a field is
+            # empty. The rule is that the field goes through the
+            # formatter, not that the call has one argument.
+            assert re.search(rf"counted\(\s*prof\.get\(\s*'{field}'\s*\)",
+                             src), (
                 f"{field} is rendered without subduing its mention counts")
         assert ".mcount{" in src
 
