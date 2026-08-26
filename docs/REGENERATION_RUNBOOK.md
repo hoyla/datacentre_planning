@@ -42,7 +42,7 @@ without a reader having to be killed for it.
 steps below.** Step 1 is not optional bookkeeping: the corroboration
 read had left 4,117 figures unadjudicated, nothing downstream can see a
 figure nobody has asked about, and only the step order caught it. And
-step 3's contradicted-sites count is worth reading rather than
+step 5's contradicted-sites count is worth reading rather than
 counting — the third one it reported was a 2013 offshore-wind
 substation's 99.9 MW rendering as a data centre's grid connection on the
 largest site in the corpus, which no gate would ever have flagged.
@@ -52,8 +52,8 @@ largest site in the corpus, which no gate would ever have flagged.
 branch merges** — EdgeOne builds from git, so writing `index.html` is not
 publishing it. The gate probe is only meaningful after that merge.
 
-The next regeneration starts at step 0 again; read the steps for the
-order, which is 0, 1–4, then 7, then 5, then 6, 8, 9.
+The next regeneration starts at step 0 again, and the steps now run in
+the order they are written in: 0 to 14, top to bottom.
 
 **Step 0 is new on 2026-08-26.** The materialise was never in this
 document — `grep -n materialise` returned nothing — and it is the step
@@ -62,7 +62,7 @@ is concerned. That omission is the process half of the incomplete Drive
 archive; the code half is now two guards inside
 `build_drive_staging.py`.
 
-Step 7 comes before step 5 deliberately: `build_drive_staging.py` copies
+Step 7 comes before step 9 deliberately: `build_drive_staging.py` copies
 the release artefacts into the Drive root, so building the tree before
 the exports stages the *previous* release's workbook and database.
 
@@ -109,7 +109,7 @@ electrical capacity".** It means the figure is about this development;
 `energy_storage` are both in there. Filter on both, always. The three
 exports do; a `max(value_mw)` typed at a psql prompt does not.
 
-What happened in steps 1–4:
+What happened in the adjudication and audit steps (2 to 4 in today's numbering, 1 to 2b in the numbering this was written under):
 
 - **Adjudication is complete.** The final batch ran at `medium` effort
   with a 16,000-token ceiling: 158 of 158 finished cleanly, no
@@ -171,7 +171,7 @@ different scopes, and all four flagged sites are cross-application.
 `components-differ` and says so; only the magnitude of the West London
 gap made it worth reading.
 
-Everything else from step 3, for reference: 2 contradicted sites (both
+Everything else from step 5, for reference: 2 contradicted sites (both
 known and genuine), 5 generation-understated, 2 clustering artefacts,
 21 corroborated, 37 uncorroborated. Generation: 1,846 verdicts across 99
 sites, **71% naming no fuel**, 61 of 99 sites disclosing none at all.
@@ -185,7 +185,12 @@ them with no power-unit text anywhere.
 The order is not cosmetic. Two steps must precede the artefacts or the
 handover ships wrong numbers, and one of them is enforced in code.
 
-The numbered order is 0, 1–4, then 7, then 5, 6, 8, 9.
+The numbers now run in the order the steps run in: 0 to 14, top to
+bottom. They did not until 2026-08-26, when the chain read 0, 1–4, 7, 5,
+6, 8, 9 and a reader had to hold the map in their head — which HISTORY
+records catching a bug for exactly once, and is not a system. Only 0, 1,
+2 and 7 kept their old numbers; anything citing another number from
+before that date is citing the old scheme.
 
 ### 0. Materialise the sites — before anything reads the universe
 
@@ -267,7 +272,7 @@ stops with a wall of text about a 251,859 MW site, this is the step you
 skipped. There is an override flag; it is deliberately tedious to type
 and you should not need it.
 
-### 2a. Adjudicate the generation figures
+### 3. Adjudicate the generation figures
 
 ```sh
 scripts/adjudicate_generation.py --batch --submit
@@ -291,7 +296,7 @@ version re-adjudicates the whole corpus by construction — no figure
 carries the new version — so bumping it is a deliberate spend, not a
 side effect of an edit.
 
-### 2b. Audit how findings are filed
+### 4. Audit how findings are filed
 
 ```sh
 psql "$DATABASE_URL" -f migrations/025_finding_label_audit.sql   # once
@@ -316,7 +321,7 @@ and the build says so. It is not gated like step 2 because a missing
 audit leaves the page as it was, where a missing correction puts wrong
 numbers on it.
 
-### 3. Look at what moved
+### 5. Look at what moved
 
 ```sh
 scripts/consumption_integrity.py
@@ -337,7 +342,7 @@ documents). You are looking for:
   quotable number while any candidate figure is unadjudicated. If it
   still says that after step 2, step 1 did not finish.
 
-### 4. Back up before rebuilding
+### 6. Back up before rebuilding
 
 ```sh
 scripts/backup_db.py
@@ -349,7 +354,102 @@ re-fetchable, the interpretive layer is not. This machinery was used in
 anger once already today, to recover 248 rows from a migration that
 demoted more than it should have.
 
-### 5. Rebuild the Drive staging tree — AFTER steps 0, 2 and 7, never before
+### 7. Rebuild the artefacts — BEFORE step 9 stages them
+
+**Check the sync ledger is populated first.** Both the reader and the
+workbook read their Drive links out of
+`data/exports/.drive_sync_state.json`, and a site missing from it gets no
+link and the words *"not yet synced to Drive"*. Building before the
+first-ever sync is fine, because there is nothing to link to yet.
+Building against an *absent* ledger is not: it produces artefacts that
+tell every reader their documents are missing, and nothing about them
+looks broken.
+
+That happened on 2026-08-21. `data/exports/` had been cleaned between
+releases, taking the staging tree and the ledger with it, and the 2.2
+reader shipped saying "not yet synced to Drive" on 416 of 430 sites —
+all of which were on Drive. The order in this heading is still right;
+the assumption underneath it is that a previous sync's ledger survives.
+Check it does:
+
+```sh
+python -c "import json;d=json.load(open('data/exports/.drive_sync_state.json'));\
+r=[v for k,v in d['folders'].items() if k.endswith('/sites')][0];\
+print(sum(1 for k in d['folders'] if k.startswith(r+'/')),'site folders')"
+```
+
+If that is far below the site count, run steps 9 and 10 first to rebuild
+the ledger, then come back and build the artefacts. Rebuilding a lost
+ledger costs about an hour of API calls and no upload bandwidth — the
+md5s all match, so nothing is re-sent.
+
+First carry the pagination into the database, or every citation from a
+Word file, a workbook or a deck goes out calling its section a page:
+
+```sh
+scripts/backfill_pagination.py --dry-run   # then without, to write
+```
+
+Idempotent, reads the text caches, and only matters after new documents
+have been extracted — but it is cheap and running it out of order is the
+kind of mistake that ships. 1,470 documents in the corpus divide
+themselves into something other than pages, and 17,724 findings cite one
+of those divisions.
+
+```sh
+scripts/export_handover.py --out data/exports/phase2.1_build/dc_handover_phase2.1.xlsx
+scripts/export_duckdb.py   --out data/exports/phase2.1_build/dc_phase2.1.duckdb
+scripts/export_reader.py   --out data/exports/phase2.1_build/reader.html \
+                           --phase 2.1 --publish index.html
+```
+
+**Pass `--phase 2`.** The title, header, stamp and the database's own
+filename in the reader all read from it; the default is still 1.
+
+**Name the artefacts for the phase that produced them.** Phase 1
+published `dc_handover_phase1.xlsx` and `dc_phase1.duckdb` into this same
+Drive folder. Rebuilding under those names replaces a published artefact
+with different numbers behind an unchanged name, which is the one thing
+an append-only record is supposed to prevent. Luke chose on 2026-08-11 to
+ship phase 2 alongside and leave phase 1 in place.
+
+A trap worth knowing, because it cost the local phase 1 workbook: the
+workbook writer **truncates the existing inode**, so a rebuild over the
+old name is seen instantly by every hard link in the staging tree. The
+DuckDB writer replaces the file instead, which is why the phase 1
+database survived and the phase 1 workbook did not. The only genuine
+phase 1 workbook now lives on Drive.
+
+Each of these calls the adjudication gate first, so if step 2 was
+skipped they stop rather than shipping.
+
+### 8. Diff against the last release — BEFORE anything is deployed
+
+```sh
+scripts/release_diff.py data/exports/<new_build> --against data/exports/phase2.2_build
+```
+
+It counts what a reader can reach — links per site panel, rows per view,
+tabs, section and box headings, the filter controls, the header stamp's
+own numbers, plus sheets and columns in the workbook and tables and rows
+in the database file — and prints anything that **fell**. Nothing else
+in the chain notices a regression of that shape, because none of it
+changes a figure: a panel that lost its Drive links, a view that lost a
+column, a heading that stopped rendering all leave every number correct.
+
+This found four regressions in 2.2 that review had not, and it has cried
+wolf twice since — once when a heading gained an `id` its pattern did
+not allow for, once when a panel boundary moved. **Fix the detector when
+that happens rather than reading past it.** A guard nobody trusts is
+worse than none: it went blind to the whole filter bar for a build after
+the bar moved out of the sites view, and would have reported nothing at
+all if a control really had gone.
+
+A FELL line is not automatically a fault. Deliberate removals show up
+here too — the "Exclude unknown MW consumption" control went on purpose
+in 2.7 — so read each one and be able to say which it is.
+
+### 9. Rebuild the Drive staging tree — AFTER steps 0, 2 and 7, never before
 
 ```sh
 scripts/build_drive_staging.py
@@ -423,7 +523,7 @@ The matching **prune step in the sync is also built** (`--prune`, step
 6). Renaming without it leaves 692 stale twins beside their successors.
 Do both together or neither.
 
-### 6. Sync to Drive, then verify at the far side
+### 10. Sync to Drive, then verify at the far side
 
 ```sh
 scripts/drive_sync.py --sync data/exports/drive_staging --prune --dry-run
@@ -497,132 +597,40 @@ a duplicate archive. There is a worked example of the far-side check in
 the session transcript; the principle is that the ledger is the near
 side and the API is the far side.
 
-### 7. Rebuild the artefacts — BEFORE step 5 stages them
-
-**Check the sync ledger is populated first.** Both the reader and the
-workbook read their Drive links out of
-`data/exports/.drive_sync_state.json`, and a site missing from it gets no
-link and the words *"not yet synced to Drive"*. Building before the
-first-ever sync is fine, because there is nothing to link to yet.
-Building against an *absent* ledger is not: it produces artefacts that
-tell every reader their documents are missing, and nothing about them
-looks broken.
-
-That happened on 2026-08-21. `data/exports/` had been cleaned between
-releases, taking the staging tree and the ledger with it, and the 2.2
-reader shipped saying "not yet synced to Drive" on 416 of 430 sites —
-all of which were on Drive. The order in this heading is still right;
-the assumption underneath it is that a previous sync's ledger survives.
-Check it does:
+### 11. Rebuild the artefacts against the new ledger, and re-sync them
 
 ```sh
-python -c "import json;d=json.load(open('data/exports/.drive_sync_state.json'));\
-r=[v for k,v in d['folders'].items() if k.endswith('/sites')][0];\
-print(sum(1 for k in d['folders'] if k.startswith(r+'/')),'site folders')"
+scripts/export_reader.py   --out data/exports/<build>/reader.html --phase <N> --publish index.html
+scripts/export_handover.py --out data/exports/<build>/dc_handover_phase<N>.xlsx
+scripts/drive_sync.py --sync data/exports/drive_staging
 ```
 
-If that is far below the site count, run steps 5 and 6 first to rebuild
-the ledger, then come back and build the artefacts. Rebuilding a lost
-ledger costs about an hour of API calls and no upload bandwidth — the
-md5s all match, so nothing is re-sent.
+**One extra pass, and it converges.** The reader and the workbook read
+their Drive links out of `.drive_sync_state.json`, so an artefact built
+at step 7 carries the ledger as it stood *before* step 10 — and any
+folder or findings CSV that step 10 created for the first time has no id
+in it. Those render as "not yet synced to Drive" while sitting on Drive,
+which is the failure mode of 2.2 in miniature: a link a reporter can see
+is missing, about a file that is there.
 
-First carry the pagination into the database, or every citation from a
-Word file, a workbook or a deck goes out calling its section a page:
+The ordering is not a mistake to be fixed by moving step 7 later: step 9
+has to copy the artefacts into the tree in order to upload them, so they
+must exist first. The resolution is to build twice. It terminates
+because re-uploading three files creates no new folders, so the second
+sync finds everything else cached and the ledger does not move again.
 
-```sh
-scripts/backfill_pagination.py --dry-run   # then without, to write
-```
+Measured on 2026-08-26: five sites said "not yet synced to Drive" after
+the first pass, against 4,357 site-folder links and 768 findings-CSV
+links that resolved from ids earlier syncs had already established. So
+the cost of skipping this step is small and silent, which is exactly why
+it belongs in the chain rather than in a docstring — where it lived
+until today, in `export_handover._drive_findings_map`.
 
-Idempotent, reads the text caches, and only matters after new documents
-have been extracted — but it is cheap and running it out of order is the
-kind of mistake that ships. 1,470 documents in the corpus divide
-themselves into something other than pages, and 17,724 findings cite one
-of those divisions.
+No `--prune` on the second sync: nothing has left the tree since step
+10 pruned it, and a prune set computed against a tree nobody rebuilt is
+a prune set nobody checked.
 
-```sh
-scripts/export_handover.py --out data/exports/phase2.1_build/dc_handover_phase2.1.xlsx
-scripts/export_duckdb.py   --out data/exports/phase2.1_build/dc_phase2.1.duckdb
-scripts/export_reader.py   --out data/exports/phase2.1_build/reader.html \
-                           --phase 2.1 --publish index.html
-```
-
-**Pass `--phase 2`.** The title, header, stamp and the database's own
-filename in the reader all read from it; the default is still 1.
-
-**Name the artefacts for the phase that produced them.** Phase 1
-published `dc_handover_phase1.xlsx` and `dc_phase1.duckdb` into this same
-Drive folder. Rebuilding under those names replaces a published artefact
-with different numbers behind an unchanged name, which is the one thing
-an append-only record is supposed to prevent. Luke chose on 2026-08-11 to
-ship phase 2 alongside and leave phase 1 in place.
-
-A trap worth knowing, because it cost the local phase 1 workbook: the
-workbook writer **truncates the existing inode**, so a rebuild over the
-old name is seen instantly by every hard link in the staging tree. The
-DuckDB writer replaces the file instead, which is why the phase 1
-database survived and the phase 1 workbook did not. The only genuine
-phase 1 workbook now lives on Drive.
-
-Each of these calls the adjudication gate first, so if step 2 was
-skipped they stop rather than shipping.
-
-### 7b. Diff against the last release — BEFORE anything is deployed
-
-```sh
-scripts/release_diff.py data/exports/<new_build> --against data/exports/phase2.2_build
-```
-
-It counts what a reader can reach — links per site panel, rows per view,
-tabs, section and box headings, the filter controls, the header stamp's
-own numbers, plus sheets and columns in the workbook and tables and rows
-in the database file — and prints anything that **fell**. Nothing else
-in the chain notices a regression of that shape, because none of it
-changes a figure: a panel that lost its Drive links, a view that lost a
-column, a heading that stopped rendering all leave every number correct.
-
-This found four regressions in 2.2 that review had not, and it has cried
-wolf twice since — once when a heading gained an `id` its pattern did
-not allow for, once when a panel boundary moved. **Fix the detector when
-that happens rather than reading past it.** A guard nobody trusts is
-worse than none: it went blind to the whole filter bar for a build after
-the bar moved out of the sites view, and would have reported nothing at
-all if a control really had gone.
-
-A FELL line is not automatically a fault. Deliberate removals show up
-here too — the "Exclude unknown MW consumption" control went on purpose
-in 2.7 — so read each one and be able to say which it is.
-
-### 7a. The notebook bundle — optional, local, off the chain
-
-```sh
-scripts/export_notebook_bundle.py            # -> data/exports/notebook_bundle/
-```
-
-Not part of the release. It writes a local folder for hand-uploading to
-a Gemini Notebook and touches nothing else — not Drive, not the
-database, not the staging tree it reads.
-
-One document per site: the site report as written, then that site's
-findings as a markdown table beneath it. The Drive tree keeps them
-apart, which is right for a folder and wrong for a notebook — 429 sites
-would arrive as 726 sources against a 600 limit, and a CSV uploaded as a
-source reads poorly.
-
-It reads the staging tree rather than the database on purpose, so the
-report prose has exactly one implementation and the notebook cannot
-drift from the Drive folder. Run it after step 5.
-
-Big sites are **split, never truncated**: a source is capped near
-500,000 words and one site holds 130,092 findings. Parts are budgeted by
-word count rather than row count — a row-based cap set from an estimated
-40 words per row put 49 documents over the limit, because the real
-average is ~52 and varies with quote length. 429 sites become 506
-documents. Every part repeats the site name, the key, its part number
-and a line saying every row belongs to that site: one document is always
-one site, but a model retrieving a row from the middle of a
-400,000-word table has only what is on the page.
-
-### 8. The Google Sheet
+### 12. The Google Sheet
 
 ```sh
 scripts/sheet_sync.py --dry-run     # what would change; writes nothing
@@ -651,7 +659,7 @@ different site slides underneath it. Luke confirmed on 2026-08-10 that
 nobody has annotated the Sheet yet, so this cycle is safe; that will not
 be true forever.
 
-### 9. Deploy and probe
+### 13. Deploy and probe
 
 Merging the PR is what deploys `index.html` via EdgeOne. Then:
 
@@ -672,7 +680,7 @@ one.
 Ran clean for phase 2 on 2026-08-10: 22 paths, all 303, forged cookie
 rejected.
 
-### 10. Tell the reporting team
+### 14. Tell the reporting team
 
 Say what moved, what is still a floor, and that disagreements between
 readers are kept rather than resolved. The reader's front page carries
@@ -775,3 +783,33 @@ For this release specifically, three things belong in that note:
 - **`git add` failing with "did not match any files" means the file is on
   another branch.** Do not drop it from the commit; go and find it. That
   is how `sweep_null_capacity.py` went missing for six hours.
+### Off the chain: the notebook bundle — optional, local
+
+```sh
+scripts/export_notebook_bundle.py            # -> data/exports/notebook_bundle/
+```
+
+Not part of the release. It writes a local folder for hand-uploading to
+a Gemini Notebook and touches nothing else — not Drive, not the
+database, not the staging tree it reads.
+
+One document per site: the site report as written, then that site's
+findings as a markdown table beneath it. The Drive tree keeps them
+apart, which is right for a folder and wrong for a notebook — 429 sites
+would arrive as 726 sources against a 600 limit, and a CSV uploaded as a
+source reads poorly.
+
+It reads the staging tree rather than the database on purpose, so the
+report prose has exactly one implementation and the notebook cannot
+drift from the Drive folder. Run it after step 5.
+
+Big sites are **split, never truncated**: a source is capped near
+500,000 words and one site holds 130,092 findings. Parts are budgeted by
+word count rather than row count — a row-based cap set from an estimated
+40 words per row put 49 documents over the limit, because the real
+average is ~52 and varies with quote length. 429 sites become 506
+documents. Every part repeats the site name, the key, its part number
+and a line saying every row belongs to that site: one document is always
+one site, but a model retrieving a row from the middle of a
+400,000-word table has only what is on the page.
+
