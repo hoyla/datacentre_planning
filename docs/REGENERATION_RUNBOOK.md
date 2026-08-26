@@ -52,8 +52,15 @@ largest site in the corpus, which no gate would ever have flagged.
 branch merges** — EdgeOne builds from git, so writing `index.html` is not
 publishing it. The gate probe is only meaningful after that merge.
 
-The next regeneration starts at step 1 again; read the steps for the
-order, which is 1–4, then 7, then 5, then 6, 8, 9.
+The next regeneration starts at step 0 again; read the steps for the
+order, which is 0, 1–4, then 7, then 5, then 6, 8, 9.
+
+**Step 0 is new on 2026-08-26.** The materialise was never in this
+document — `grep -n materialise` returned nothing — and it is the step
+that decides which applications exist at all as far as every later step
+is concerned. That omission is the process half of the incomplete Drive
+archive; the code half is now two guards inside
+`build_drive_staging.py`.
 
 Step 7 comes before step 5 deliberately: `build_drive_staging.py` copies
 the release artefacts into the Drive root, so building the tree before
@@ -177,6 +184,46 @@ them with no power-unit text anywhere.
 
 The order is not cosmetic. Two steps must precede the artefacts or the
 handover ships wrong numbers, and one of them is enforced in code.
+
+The numbered order is 0, 1–4, then 7, then 5, 6, 8, 9.
+
+### 0. Materialise the sites — before anything reads the universe
+
+```sh
+scripts/materialise_sites.py --dry-run    # look at what would move
+scripts/materialise_sites.py
+```
+
+**This step was missing from this document until 2026-08-26, and its
+absence is half of why the Drive archive was incomplete.** Nothing else
+in the chain puts an application into a site, and *everything*
+downstream reads the universe through `site_members`: the workbook, the
+reader, the DuckDB file, and `build_drive_staging.py`, which stages a
+document if and only if its application has a live membership row.
+
+An application with no membership is not a slightly-wrong row. It is
+absent — from the tree, therefore from the sync's candidate set,
+therefore from both the sync's `skipped` and its `failed` counters. On
+2026-08-21 that was 3,679 documents held for 143 applications discovered
+on 2026-08-07, and the sync that day reported 50,406 candidates, 0
+failed, 0 skipped. Every number was true. None of them could see the
+gap.
+
+Run it after anything that changes the universe — a discovery sweep, new
+triage verdicts, new project links, an edit to
+`data/priors/site_partitions.yaml` — and before the exports. It is
+idempotent, prints what it would change before changing it, and stops
+rather than orphaning a hand-adjudicated capacity claim (re-point the
+claim in `data/external_sources/*.yaml`, run
+`scripts/load_capacity_claims.py`, then re-run this).
+
+`build_drive_staging.py` now refuses to build when this step is
+outstanding — it compares `max(sites.materialised_at)` against the
+newest `applications.first_seen_at` and `projects.first_seen_at` — so
+skipping it is an error rather than a silent omission. It deliberately
+does **not** look at `documents.fetched_at`: a refetch rewrites that on
+applications mapped weeks ago, and a guard that fails on every refetch
+gets passed rather than read.
 
 ### 1. Collect the adjudication batch
 
@@ -302,11 +349,48 @@ re-fetchable, the interpretive layer is not. This machinery was used in
 anger once already today, to recover 248 rows from a migration that
 demoted more than it should have.
 
-### 5. Rebuild the Drive staging tree — AFTER steps 2 and 7, never before
+### 5. Rebuild the Drive staging tree — AFTER steps 0, 2 and 7, never before
 
 ```sh
 scripts/build_drive_staging.py
 ```
+
+**It now rebuilds clean rather than updating in place**, so the move-aside
+that used to be folklore is gone: the tree is written to
+`data/exports/drive_staging.building` and swapped in, and anything that
+has left a site leaves the tree with it. That matters beyond tidiness —
+`drive_sync.py` can only recognise a re-filed document as a *move* when
+its old path has gone, and until 2026-08-26 the old path never went. The
+Interxion folder held 45 application directories for a site with 16.
+
+A full clean rebuild takes about a minute and costs nothing on disk: the
+documents are hard links into `data/raw`, so both trees exist at once for
+the price of directory entries. The one thing carried across the swap is
+a *published* artefact at the tree root — phase 2.2's workbook and
+database stay beside 2.7's, because a citation of them has to keep
+resolving, and `drive_sync.py --prune` already declines to touch the root
+for the same reason.
+
+**It also states its own shortfall and exits non-zero on it.** Every run
+prints the documents it did **not** stage, grouped by the application's
+latest triage verdict, and fails unless every one of them is triaged
+`not_dc`. That is the only verdict that means "out of the handover on
+purpose"; an untriaged application is named individually rather than
+tolerated. A pass looks like
+
+```
+   documents held but not staged, by latest triage verdict:
+     ok not_dc             3,808 documents across   70 application(s)
+```
+
+and a failure names what is missing and how much of it. Replayed against
+the 2026-08-21 state it reports *3,584 documents held for 139 in-universe
+applications are not in this tree*. Nothing in the sync could have said
+that, then or now: the sync can only describe the tree it was handed.
+
+If it fails, the fix is upstream — step 0, or a triage verdict — not a
+flag. `--allow-stale-site-map` exists for the map guard and takes a
+reason you can state out loud.
 
 The per-site findings CSV carries four adjudication columns (*whose
 figure is this?*, quantity type, adjudicated MW, quantity note). Built
@@ -318,9 +402,11 @@ to be opened in Excel and sorted by the biggest number.
 database and reader into the Drive root. Run before them and the root
 gets the previous release's artefacts beside the current release's
 per-site files, which is how a reader ends up with a workbook and a
-reader that disagree. The dependency is on `--release-dir`, which
-defaults to `data/exports/phase2_build` and must be bumped with the
-phase.
+reader that disagree. The dependency is on `--release-dir`, which no
+longer names a phase: it defaults to the most recently written
+`data/exports/*_build` and prints which one it chose. (It did default to
+a hardcoded `phase2_build`; `tests/test_release_defaults.py` now forbids
+that shape anywhere.)
 
 The rename **is now built**: the two per-site files carry the site in
 their own filenames —
@@ -361,17 +447,38 @@ never deleted, so a wrong prune is a restore from the bin rather than a
 re-upload of 70GB.
 
 ```sh
-scripts/verify_drive_sample.py --sample 30 --phase 2.1
+scripts/verify_drive_sample.py --sample 30 --phase 2.7
 ```
 
-That is the check, now a script rather than a described intention. It
-fetches each file by id from the upload ledger and compares name, size
-and md5 against the local copy, then walks the parent chain to confirm
-it reaches the handover root. Release artefacts are always included on
-top of the random sample, because checking only random files would pass
-while the one thing everybody opens sat in the wrong folder. `--phase`
-tells it which release is yours, so an older release's artefacts are
-reported without failing the run.
+That is the check, now a script rather than a described intention.
+**Its sample frame is the universe, not the ledger** — changed
+2026-08-26, and the change is the point. It used to draw its sample from
+`.drive_sync_state.json`, which is written from the staging tree, so its
+frame was the tree and no sample it could ever draw contained a document
+that never reached the tree. It now samples rows from `documents` whose
+application has a live site, derives the path the builder would give
+each one (through the builder's own naming function, so the check cannot
+disagree with the build), and follows the whole chain:
+
+    the database says we hold it
+      → is it in the staging tree, at that path?
+        → is it in the upload ledger?
+          → does Drive have it, those bytes, under the handover root?
+
+Any link that breaks is a failure named as the link that broke, so
+"never staged" and "staged but never uploaded" and "uploaded to the
+wrong parent" are three different sentences.
+
+Release artefacts are still checked from the ledger — they have no row
+in `documents` to sample — and always, because checking only random
+files would pass while the one thing everybody opens sat in the wrong
+folder. `--phase` tells it which release is yours, so an older release's
+artefacts are reported without failing the run.
+
+Expect failures if the corpus has moved since step 5. A document fetched
+after the tree was built, or one whose `kind` a re-list changed, is
+genuinely not at its expected path — which is the check working. Rebuild
+and re-sync rather than reading past it.
 
 It found on 2026-08-11 that **phase 1's and phase 2's workbooks and
 databases sit outside the handover root**, in
@@ -518,8 +625,23 @@ one site, but a model retrieving a row from the middle of a
 ### 8. The Google Sheet
 
 ```sh
+scripts/sheet_sync.py --dry-run     # what would change; writes nothing
 scripts/sheet_sync.py
 ```
+
+The Sheet is updated in place, never replaced: added and removed columns
+are reconciled first, so the widths and wrapping somebody set by hand
+carry across with them. Two shapes it cannot carry, and now **refuses**
+on (exit 1, `--allow-drift` to override) rather than warning and
+continuing:
+
+- **A tab in the workbook that the Sheet does not have.** It is skipped,
+  because a tab created by the API arrives unformatted; create it by
+  hand once, format it, and it is then kept.
+- **Reordered columns.** A move is a delete plus an insert, which
+  discards the formatting of the column moved, so the reconciliation
+  declines it and names the columns instead. The values would still be
+  internally consistent, which is exactly why nothing would look wrong.
 
 **Diff the site-key column against the Sheet before running this.** The
 sync writes positionally — row N of the export lands on row N of the

@@ -132,6 +132,7 @@ branches without one are unaffected.
 ## Building the handover
 
 ```bash
+scripts/materialise_sites.py          # first: nothing else sees an unmapped application
 scripts/export_handover.py --out data/exports/phase2_build/dc_handover_phase2.xlsx
 scripts/export_duckdb.py   --out data/exports/phase2_build/dc_phase2.duckdb
 scripts/export_reader.py   --out data/exports/phase2_build/reader.html \
@@ -151,6 +152,16 @@ reader all read from it, and it still defaults to 1.
 the release into the Drive root. Built the other way round, the tree
 carries the previous release's workbook and database beside the current
 release's per-site files.
+
+**And the materialise must run before all of them.** A document is
+staged if and only if its application has a live `site_members` row, so
+an application the site map has not seen is not a stale row in the
+handover — it is absent from it, and absent from the sync's candidate
+set, and therefore invisible to the sync's `skipped` and `failed`
+counters alike. `build_drive_staging.py` refuses to build against a site
+map older than the universe, and prints the documents it did not stage
+whether or not it refuses. See step 0 of
+[docs/REGENERATION_RUNBOOK.md](docs/REGENERATION_RUNBOOK.md).
 
 `--prune` is needed whenever staged files have been renamed: the sync
 uploads by path and never deletes, so a rename otherwise leaves the old
