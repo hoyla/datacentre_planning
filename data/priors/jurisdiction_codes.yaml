@@ -1,0 +1,623 @@
+# Jurisdiction strings as Companies House writes them → ISO codes.
+#
+# What this file is for. Companies House stores the jurisdiction of a
+# corporate PSC or a registered-overseas-entity beneficial owner as a
+# FREE-TEXT string typed by the filer. It is not validated, and one
+# registry accordingly appears here under four spellings: "United
+# States", "Maryland Corporation Registry", "United States - Maryland
+# Corporation Registry" and "State Of Maryland Register Of Companies"
+# are all the same place. One filer typed "New York Stock Exchange
+# (Nyse)", which is a listing venue and not a jurisdiction at all;
+# another typed "Britain"; another "Engalnd And Wales". This file is the
+# recorded mapping from each raw string to an ISO 3166 code, so that a
+# count of foreign-owned schemes can be computed the same way twice.
+#
+# It is the gate PLAN_OWNERSHIP.md sets on increment 2 (a world map, and
+# an ownership-concentration view): "the jurisdiction field is
+# normalised to ISO country codes with a recorded mapping".
+#
+# What it is NOT for.
+#
+#   * It never rewrites the source. The raw string stays in
+#     `data/external_sources/companies-house-ownership.yaml` exactly as
+#     the register holds it; this file sits alongside it, per the
+#     project's never-mutate-originals principle. Anything reading a
+#     code from here must be able to show the raw string beside it.
+#   * It does not decide who controls a company. A jurisdiction string
+#     says where ONE named entity is registered. Whether that makes the
+#     scheme UK-controlled or overseas-controlled is a separate
+#     judgement over the whole PSC / beneficial-owner / shareholder
+#     record — see PLAN_OWNERSHIP.md increment 1a.
+#   * It has no default bucket. A string that cannot be mapped
+#     confidently goes under `unmapped:` with the reason. Guessing a
+#     country for an unmappable string would put a flag on a map that no
+#     filing supports, which is the specific failure the increment-2
+#     gate exists to prevent.
+#
+# Three separate vocabularies, in three blocks, because they answer
+# three different questions and merging them would assert things no
+# filing says:
+#
+#   `jurisdictions:`     the PSC / beneficial-owner `registered_in`
+#                        field — where a COMPANY is registered.
+#   `nationalities:`     the PSC `nationality` field — a PERSON's
+#                        nationality, which is not a place of
+#                        registration and not evidence about one.
+#   `registry_countries:` the `foreign_registry.originating_registry.
+#                        country` field on a registered overseas entity
+#                        — where the FILING COMPANY itself is
+#                        incorporated, not where its owner is.
+#
+# Schema, per entry in `jurisdictions:` and `unmapped:`
+#
+#   raw:          the string verbatim, including case and any typo.
+#                 This is the key. Match on it exactly.
+#   occurrences:  how many PSC / beneficial-owner records carried this
+#                 string in the pull dated `as_at`. Recorded for a
+#                 coverage audit; it is a snapshot, not a key, and goes
+#                 stale the moment the register changes.
+#   names:        what the string actually names, from the closed set
+#                 country | country_informal | subdivision |
+#                 legal_jurisdiction | registry | country_and_registry |
+#                 listing_venue
+#   country:      ISO 3166-1 alpha-2. Absent on an `unmapped:` entry.
+#   subdivision:  ISO 3166-2, where the string names one that exists.
+#                 Absent where it does not — "England And Wales" is a
+#                 legal jurisdiction spanning GB-ENG and GB-WLS and has
+#                 no single ISO subdivision code.
+#   legal_jurisdiction: free text, for the England-and-Wales case above.
+#   confidence:   exact | probable. `probable` where the code is a
+#                 reasonable reading of the string but the string does
+#                 not state it — see "England" below.
+#   reasoning:    why this code, in one line.
+#   evidence:     at least one, each naming the company whose register
+#                 carried the string and quoting it verbatim.
+#                 source | ref (company number) | quote | note | date
+#
+# The counting rule this file makes possible, stated for the record: a
+# jurisdiction is UK when `country` is GB, and overseas when `country`
+# is anything else. JE (Jersey) is NOT GB — it is a Crown Dependency
+# with its own company register, and eleven Vantage vehicles in this
+# corpus are Jersey companies. A rule that folded Jersey into the UK
+# would report those as domestic.
+
+as_at: '2026-08-26'
+normalises: >-
+  data/external_sources/companies-house-ownership.yaml — the
+  `registered_in` and `nationality` fields on `psc.persons`, and
+  `foreign_registry.originating_registry.country`.
+coverage:
+  distinct_strings_seen: 20
+  distinct_strings_mapped: 19
+  occurrences_seen: 122
+  occurrences_mapped: 120
+  note: >-
+    Every distinct string in the pull is accounted for: 19 mapped below,
+    1 under `unmapped:`. Re-run the coverage check after any re-pull —
+    a new string must fail loudly rather than fall into a default.
+
+# ---------------------------------------------------------------------
+# The `registered_in` field: where a corporate PSC or a registered-
+# overseas-entity beneficial owner is registered.
+# ---------------------------------------------------------------------
+
+jurisdictions:
+
+  # --- The United Kingdom, in seven spellings -------------------------
+
+  - raw: 'United Kingdom'
+    occurrences: 49
+    names: country
+    country: GB
+    confidence: exact
+    reasoning: Names the country.
+    evidence:
+      - source: companies_house
+        ref: '14299844'
+        quote: 'United Kingdom'
+        note: >-
+          ANGLESEY LAND HOLDINGS LIMITED, PSC "Stena Line (Uk) Limited"
+          (company 2454575).
+        date: '2026-08-26'
+
+  - raw: 'England'
+    occurrences: 30
+    names: subdivision
+    country: GB
+    subdivision: GB-ENG
+    confidence: probable
+    reasoning: >-
+      Country GB is exact. The subdivision is the filer's wording rather
+      than a register: Companies House operates no England-only
+      jurisdiction — a company registered "in England" is on the England
+      and Wales register. Read GB-ENG as what the filer typed, not as a
+      distinct registry, and do not report it as different from
+      "England And Wales" below.
+    evidence:
+      - source: companies_house
+        ref: '05656968'
+        quote: 'England'
+        note: >-
+          ARK DATA CENTRES LIMITED, PSC "Revcap Properties 25 Limited".
+        date: '2026-08-26'
+
+  - raw: 'England And Wales'
+    occurrences: 16
+    names: legal_jurisdiction
+    country: GB
+    legal_jurisdiction: England and Wales
+    confidence: exact
+    reasoning: >-
+      The legal jurisdiction of the main Companies House register. It
+      spans GB-ENG and GB-WLS, so it has no single ISO 3166-2 code and
+      none is asserted.
+    evidence:
+      - source: companies_house
+        ref: '16470100'
+        quote: 'England And Wales'
+        note: >-
+          APATURA DC PROJECT 11 LTD, PSC "Apatura Dc Ltd"
+          (company 16041291).
+        date: '2026-08-26'
+
+  - raw: 'Engalnd And Wales'
+    occurrences: 1
+    names: legal_jurisdiction
+    country: GB
+    legal_jurisdiction: England and Wales
+    confidence: exact
+    reasoning: >-
+      Filer's misspelling of "England And Wales". Transposition of the
+      l and n; no other reading. The typo is preserved as the key
+      because it is what the register holds.
+    evidence:
+      - source: companies_house
+        ref: 'OC402087'
+        quote: 'Engalnd And Wales'
+        note: >-
+          FLEXSPACE NO 2 LLP, PSC "Bridges Ventures Llp".
+        date: '2026-08-26'
+
+  - raw: 'Britain'
+    occurrences: 1
+    names: country_informal
+    country: GB
+    confidence: exact
+    reasoning: >-
+      Colloquial name for the United Kingdom. The entity it describes is
+      a UK-registered company, which settles it independently of the
+      wording.
+    evidence:
+      - source: companies_house
+        ref: '11756346'
+        quote: 'Britain'
+        note: >-
+          KAO DATA LIMITED, PSC "Legal And General Capital Investment
+          Limited" — a company on the England and Wales register.
+        date: '2026-08-26'
+
+  - raw: 'Uk Companies Registry'
+    occurrences: 1
+    names: registry
+    country: GB
+    confidence: exact
+    reasoning: >-
+      Names the register rather than the place, but only one country
+      operates it.
+    evidence:
+      - source: companies_house
+        ref: 'OE033537'
+        quote: 'Uk Companies Registry'
+        note: >-
+          MANOR FARM PROPCO LIMITED, beneficial owner "Tritax Big Box
+          Reit Plc". The SAME beneficial owner is recorded as "Companies
+          House - United Kingdom" on OE033661 — one entity, two
+          spellings, which is why this file exists.
+        date: '2026-08-26'
+
+  - raw: 'Companies House - United Kingdom'
+    occurrences: 1
+    names: country_and_registry
+    country: GB
+    confidence: exact
+    reasoning: Names both the register and the country.
+    evidence:
+      - source: companies_house
+        ref: 'OE033661'
+        quote: 'Companies House - United Kingdom'
+        note: >-
+          TRITAX CHELMSFORD PROPCO LTD, beneficial owner "Tritax Big Box
+          Reit Plc".
+        date: '2026-08-26'
+
+  - raw: 'Scotland'
+    occurrences: 2
+    names: subdivision
+    country: GB
+    subdivision: GB-SCT
+    confidence: exact
+    reasoning: >-
+      Scotland is both an ISO 3166-2 subdivision of GB and a real
+      Companies House jurisdiction — Scottish companies carry an SC
+      prefix. Unlike "England", this one is a register.
+    evidence:
+      - source: companies_house
+        ref: 'SC467509'
+        quote: 'Scotland'
+        note: >-
+          HFD DATAVITA LIMITED, PSCs "Hfd Technology Group Limited" and
+          "Hfd Managements Ltd".
+        date: '2026-08-26'
+
+  - raw: 'Edinburgh, Scotland'
+    occurrences: 1
+    names: subdivision
+    country: GB
+    subdivision: GB-SCT
+    confidence: exact
+    reasoning: >-
+      City plus country. The city is discarded: the field is a
+      jurisdiction, and Edinburgh is not one.
+    evidence:
+      - source: companies_house
+        ref: 'SC467509'
+        quote: 'Edinburgh, Scotland'
+        note: >-
+          HFD DATAVITA LIMITED, PSC "Hfd Group Limited" — the same
+          company's register spells the same jurisdiction two ways on
+          two of its three PSC entries.
+        date: '2026-08-26'
+
+  # --- The United States, in four spellings ---------------------------
+
+  - raw: 'United States'
+    occurrences: 2
+    names: country
+    country: US
+    confidence: exact
+    reasoning: >-
+      Names the country and no state, so no subdivision is asserted.
+      Both entities are Delaware-incorporated in fact, but the field
+      does not say so and this file records what the field says.
+    evidence:
+      - source: companies_house
+        ref: '04201938'
+        quote: 'United States'
+        note: >-
+          BRE-BMR CITP (CAMBRIDGE) LIMITED, PSC "Blackstone Inc.".
+        date: '2026-08-26'
+      - source: companies_house
+        ref: '12590238'
+        quote: 'United States'
+        note: 'CYRUSONE UK6 LIMITED, PSC "Cyrusone Inc.".'
+        date: '2026-08-26'
+
+  - raw: 'Delaware'
+    occurrences: 1
+    names: subdivision
+    country: US
+    subdivision: US-DE
+    confidence: exact
+    reasoning: >-
+      Names the state and not the country. Delaware is unambiguous — no
+      other country has one.
+    evidence:
+      - source: companies_house
+        ref: '10031299'
+        quote: 'Delaware'
+        note: >-
+          GLOBAL INFRASTRUCTURE UK LIMITED, PSC "Alphabet, Inc." — the
+          Google land vehicle whose charges run to the same group.
+        date: '2026-08-26'
+
+  - raw: 'United States - Maryland Corporation Registry'
+    occurrences: 3
+    names: country_and_registry
+    country: US
+    subdivision: US-MD
+    confidence: exact
+    reasoning: Names the country and the state register.
+    evidence:
+      - source: companies_house
+        ref: 'OE006962'
+        quote: 'United States - Maryland Corporation Registry'
+        note: >-
+          VDC CWL21 LANDCO LIMITED, beneficial owner "Digital Bridge
+          Group, Inc.".
+        date: '2026-08-26'
+
+  - raw: 'Maryland Corporation Registry'
+    occurrences: 3
+    names: registry
+    country: US
+    subdivision: US-MD
+    confidence: exact
+    reasoning: >-
+      Names the state register rather than the country. Only one
+      Maryland operates a corporation registry.
+    evidence:
+      - source: companies_house
+        ref: 'OE033265'
+        quote: 'Maryland Corporation Registry'
+        note: >-
+          VDC CWL21 PROPCO 1 LIMITED, beneficial owner "Digital Bridge
+          Group, Inc." — the same owner as OE006962 above, spelled
+          differently on a filing three months apart.
+        date: '2026-08-26'
+
+  - raw: 'State Of Maryland Register Of Companies'
+    occurrences: 2
+    names: registry
+    country: US
+    subdivision: US-MD
+    confidence: exact
+    reasoning: Third spelling of the Maryland state register.
+    evidence:
+      - source: companies_house
+        ref: 'OE003126'
+        quote: 'State Of Maryland Register Of Companies'
+        note: >-
+          VDC LHR11 LIMITED, beneficial owner "Digitalbridge Group,
+          Inc.".
+        date: '2026-08-26'
+
+  # --- Jersey, in two spellings ---------------------------------------
+
+  - raw: 'Jersey Financial Services Commission'
+    occurrences: 1
+    names: registry
+    country: JE
+    confidence: exact
+    reasoning: >-
+      Names the Jersey company register. JE is a separate ISO country
+      code from GB and this project treats it as overseas: Jersey is a
+      Crown Dependency with its own register, its own company law and no
+      requirement to file UK accounts.
+    evidence:
+      - source: companies_house
+        ref: 'OE004608'
+        quote: 'Jersey Financial Services Commission'
+        note: >-
+          KWERE II UK 5 TRUSTEE 1 LIMITED, beneficial owner "Mourant
+          Corporate Trustee (Jersey) Limited".
+        date: '2026-08-26'
+
+  - raw: 'Jersey - Jersey Financial Services Commission'
+    occurrences: 1
+    names: country_and_registry
+    country: JE
+    confidence: exact
+    reasoning: Names the country and its register.
+    evidence:
+      - source: companies_house
+        ref: 'OE004608'
+        quote: 'Jersey - Jersey Financial Services Commission'
+        note: >-
+          KWERE II UK 5 TRUSTEE 1 LIMITED, beneficial owner "Crestbridge
+          Corporate Trustees Limited" — the same company's register
+          spells the same jurisdiction two ways on its two beneficial
+          owners.
+        date: '2026-08-26'
+
+  # --- Elsewhere ------------------------------------------------------
+
+  - raw: 'Luxembourg'
+    occurrences: 3
+    names: country
+    country: LU
+    confidence: exact
+    reasoning: Names the country.
+    evidence:
+      - source: companies_house
+        ref: '12915900'
+        quote: 'Luxembourg'
+        note: >-
+          BUCKS DC LIMITED, PSC "Sof-12 Starlight 4 Gbp S.A R.L." — the
+          Starwood Opportunity Fund XII vehicle.
+        date: '2026-08-26'
+
+  - raw: 'Bermuda'
+    occurrences: 1
+    names: country
+    country: BM
+    confidence: exact
+    reasoning: Names the territory, which has its own ISO code.
+    evidence:
+      - source: companies_house
+        ref: '08787339'
+        quote: 'Bermuda'
+        note: >-
+          ELITE GEMSTONES PROPERTIES LIMITED, PSC "The Bank Of N T
+          Butterfield & Son Limited".
+        date: '2026-08-26'
+
+  - raw: 'New Zealand'
+    occurrences: 1
+    names: country
+    country: NZ
+    confidence: exact
+    reasoning: Names the country.
+    evidence:
+      - source: companies_house
+        ref: '11756346'
+        quote: 'New Zealand'
+        note: >-
+          KAO DATA LIMITED, PSC "Infratil Hpc Limited" — the NZX-listed
+          infrastructure investor. The same company's other PSC records
+          "Britain", so one register writes two countries two ways.
+        date: '2026-08-26'
+
+# ---------------------------------------------------------------------
+# Strings that are NOT jurisdictions, or that cannot be mapped to one
+# with confidence. These get no country code. They are listed so a
+# coverage check can prove they were seen and refused, rather than
+# silently defaulted.
+# ---------------------------------------------------------------------
+
+unmapped:
+
+  - raw: 'New York Stock Exchange (Nyse)'
+    occurrences: 2
+    names: listing_venue
+    reason: >-
+      A stock exchange is not a jurisdiction. A company listed on the
+      NYSE may be incorporated anywhere; the field has been filled in
+      with where the entity's shares TRADE, not where it is registered.
+      Mapping it to US would be a guess dressed as a reading — plenty of
+      NYSE-listed companies are incorporated outside the United States.
+    evidence:
+      - source: companies_house
+        ref: 'OE034587'
+        quote: 'New York Stock Exchange (Nyse)'
+        note: >-
+          VDC CWL41 LIMITED, beneficial owner "Digitalbridge Group,
+          Inc.".
+        date: '2026-08-26'
+      - source: companies_house
+        ref: 'OE034586'
+        quote: 'New York Stock Exchange (Nyse)'
+        note: 'VDC CWL42 LIMITED, same beneficial owner.'
+        date: '2026-08-26'
+    entity_resolved_elsewhere:
+      entity: 'DigitalBridge Group, Inc.'
+      country: US
+      subdivision: US-MD
+      basis: >-
+        The SAME beneficial owner is recorded with a Maryland
+        jurisdiction on eight other filings in this pull (OE006962,
+        OE020694, OE032420, OE033263, OE033264, OE033265, OE003126,
+        OE003138). That is an inference about the ENTITY, from other
+        filings, and it deliberately does not map the STRING: a reader
+        drilling into VDC CWL41's own register must see that its filing
+        says "New York Stock Exchange (Nyse)" and nothing about a
+        country. Any code shown for these two companies has to be
+        sourced to the other filings, not to this one.
+
+# ---------------------------------------------------------------------
+# The `nationality` field: a PERSON's nationality, on an individual PSC.
+#
+# Read with care, and never merged into the block above. A nationality
+# is not a place of registration; it describes a human being, it is
+# self-declared, a dual national declares one of them, and it says
+# nothing about where that person's money is or where a scheme's profit
+# goes. PLAN_OWNERSHIP increment 1a uses it for one narrow purpose — "a
+# controlling individual of UK nationality" as a UK-controlled signal —
+# and that is the only use this file supports.
+# ---------------------------------------------------------------------
+
+nationalities:
+
+  - raw: 'British'
+    occurrences: 44
+    country: GB
+    confidence: exact
+    evidence:
+      - source: companies_house
+        ref: '09796278'
+        quote: 'British'
+        note: '5NINES GLOBAL LTD., PSC "Mr Justin Adam Gilbert".'
+        date: '2026-08-26'
+
+  - raw: 'American'
+    occurrences: 12
+    country: US
+    confidence: exact
+    evidence:
+      - source: companies_house
+        ref: '12113969'
+        quote: 'American'
+        note: >-
+          ARK ESTATES 2 LIMITED, PSC "Mr Paul Elliott Singer" — a live
+          individual PSC, and the reason Ark's estate companies do not
+          read as wholly UK-controlled.
+        date: '2026-08-26'
+
+  - raw: 'Irish'
+    occurrences: 8
+    country: IE
+    confidence: exact
+    evidence:
+      - source: companies_house
+        ref: '11103278'
+        quote: 'Irish'
+        note: 'CTW NORTHERN LIMITED, PSC "Mr Stephen Vincent Timmons".'
+        date: '2026-08-26'
+
+  - raw: 'French'
+    occurrences: 2
+    country: FR
+    confidence: exact
+    evidence:
+      - source: companies_house
+        ref: '10229638'
+        quote: 'French'
+        note: >-
+          DATA CENTER ERITH LTD, PSCs "Octave Klaba" and "Miroslaw Piotr
+          Klaba" — both ceased 2017-05-05, so historical only.
+        date: '2026-08-26'
+
+  - raw: 'South African'
+    occurrences: 1
+    country: ZA
+    confidence: exact
+    evidence:
+      - source: companies_house
+        ref: '15361974'
+        quote: 'South African'
+        note: >-
+          JIGSAW UK DEVELOPMENT LIMITED, PSC "Mr Robert Patrick Bath",
+          ceased 2024-07-29.
+        date: '2026-08-26'
+
+  - raw: 'Swiss'
+    occurrences: 1
+    country: CH
+    confidence: exact
+    evidence:
+      - source: companies_house
+        ref: '05325950'
+        quote: 'Swiss'
+        note: >-
+          LINRAY LIMITED, PSC "Mrs Esther Grosskopf", ceased 2020-05-14.
+        date: '2026-08-26'
+
+  - raw: 'Israeli'
+    occurrences: 1
+    country: IL
+    confidence: exact
+    evidence:
+      - source: companies_house
+        ref: '07981598'
+        quote: 'Israeli'
+        note: 'TRUMAN ESTATES LIMITED, PSC "Mr Ofer Zeloof".'
+        date: '2026-08-26'
+
+# ---------------------------------------------------------------------
+# The `foreign_registry.originating_registry.country` field: where a
+# registered overseas entity is itself incorporated. Companies House
+# supplies this one from its own overseas-entity record rather than from
+# free text, so it is clean — but the registry NAME beside it is not,
+# and carries a truncation ("Jersey Financial Services Commissio") and a
+# stray space in this pull. The country is what should be read.
+# ---------------------------------------------------------------------
+
+registry_countries:
+
+  - raw: 'JERSEY'
+    occurrences: 14
+    country: JE
+    confidence: exact
+    reasoning: >-
+      All 14 registered overseas entities in this pull are Jersey
+      companies — eleven Vantage vehicles, two Tritax propcos and one
+      trustee company. Their own incorporation being overseas is a
+      different fact from their beneficial owner being overseas, and the
+      two must not be counted as one.
+    evidence:
+      - source: companies_house
+        ref: 'OE003126'
+        quote: 'JERSEY'
+        note: >-
+          VDC LHR11 LIMITED, originating registry "Jersey Financial
+          Services Commission,Jersey", registration 136359.
+        date: '2026-08-26'
