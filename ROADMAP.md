@@ -542,6 +542,18 @@ an external valuer priced and an auditor signed, a solvency signal the
 planning file never carries, and an ownership chain that the PSC
 register is structurally unable to show.
 
+**Surfacing it in the reader is specced in
+[docs/PLAN_OWNERSHIP.md](docs/PLAN_OWNERSHIP.md)** (agreed with Luke,
+2026-08-26). Increment 1 is a three-state tier — UK-controlled /
+overseas-controlled / not disclosed — on the site page's existing "Who
+is behind it" rows, with the chain as drillable text beneath it and the
+dark link named rather than blank. Flags, logos and a start-page world
+map are sketched there as increment 2, each behind a stated gate: the
+first of them is normalising `registered_in`, which today spells one US
+registry four ways and records a listing venue as a jurisdiction. The
+43% non-UK figure is a session-old measurement over that un-normalised
+field and is not publishable as it stands.
+
 ## Coverage gaps worth closing
 
 Prompted by the **Devon Data Campus** (Xlinks, North Devon), a scheme
