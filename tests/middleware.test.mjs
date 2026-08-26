@@ -1,161 +1,105 @@
 /**
- * Tests for the edge password gate.
+ * The EdgeOne deployment is a signpost now, and these are the rules a
+ * signpost has to keep.
  *
- * Security code, so the tests are about what must never happen: serving
- * the dataset without a session, accepting a forged or expired cookie,
- * and failing open when the environment is misconfigured.
- *
- *   node --test tests/middleware.test.mjs
+ * It replaced a password gate on 2026-08-26, when the reader moved
+ * behind Guardian sign-in. The tests that stood here checked the gate:
+ * timing-safe comparison, cookie signing, the double-slash bypass that
+ * once served 7.4 MB to anyone who typed an extra character. None of
+ * that applies to a page that serves nothing — but the failure it was
+ * guarding against does, in a new form. A redirect that drops a path,
+ * loses a query string or answers some routes and not others sends a
+ * reporter somewhere other than the link they saved, and looks like it
+ * worked.
  */
 
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { webcrypto } from 'node:crypto';
 
-// EdgeOne's runtime exposes WebCrypto as a global, as do browsers and
-// Node 19 and later. Node 18 keeps it behind an import, so the harness
-// supplies it here rather than the middleware reaching for a Node-only
-// API it would never use in production.
-if (!globalThis.crypto) globalThis.crypto = webcrypto;
+import { middleware } from '../middleware.js';
 
-import { config, middleware } from '../middleware.js';
+const CLOUD_RUN = 'https://dc-reader-406994886626.europe-west2.run.app';
 
-const env = {
-  DC_READER_PASSWORD: 'a long test password',
-  DC_READER_SESSION_SECRET: 'test-session-secret-with-plenty-of-length',
-};
+const context = (url, method = 'GET') => ({
+  request: new Request(url, { method }),
+  next: async () => new Response('the reader', { status: 200 }),
+  env: {},
+});
 
-const SERVED = 'the handover reader';
+const PATHS = [
+  '/',
+  '/index.html',
+  '//index.html',            // the bypass that defeated the old gate
+  '/%2e%2e/index.html',
+  '/robots.txt',
+  '/data/priors/salesforce_documents.json',
+  '/login',                  // nothing to log in to any more
+  '/logout',
+  '/anything/at/all',
+];
 
-function context(request, overrides = {}) {
-  return {
-    request,
-    env,
-    next: () => new Response(SERVED, { status: 200 }),
-    ...overrides,
-  };
-}
-
-function post(password, next = '/') {
-  const body = new URLSearchParams({ password, next });
-  return new Request('https://dc.example/login', {
-    method: 'POST',
-    body,
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+for (const path of PATHS) {
+  test(`redirects ${path}`, async () => {
+    const response = await middleware(context(`https://example.test${path}`));
+    assert.equal(response.status, 302, `${path} did not redirect`);
+    assert.ok(
+      response.headers.get('Location').startsWith(CLOUD_RUN),
+      `${path} redirected somewhere other than Cloud Run`);
   });
 }
 
-async function sessionCookie() {
-  const response = await middleware(context(post(env.DC_READER_PASSWORD)));
-  const setCookie = response.headers.get('set-cookie');
-  return setCookie.split(';')[0];
-}
-
-test('the matcher is a catch-all, including paths with empty segments', () => {
-  // '/:path*' left '//index.html' unmatched, and EdgeOne served the
-  // reader unauthenticated. Assert the pattern, and that it really does
-  // match the shapes that got through.
-  assert.deepEqual(config.matcher, ['/(.*)']);
-  const re = new RegExp('^' + config.matcher[0] + '$');
-  for (const path of ['/', '/index.html', '//index.html', '///index.html',
-                      '/data/priors/salesforce_documents.json',
-                      '/%2findex.html', '/a/b/c']) {
-    assert.ok(re.test(path), `${path} must be matched by the middleware`);
+test('serves no body, on any path', async () => {
+  for (const path of PATHS) {
+    const response = await middleware(context(`https://example.test${path}`));
+    assert.equal(await response.text(), '',
+      `${path} returned a body; this deployment must serve nothing at all`);
   }
 });
 
-test('fails closed when the environment is not configured', async () => {
+test('never calls next(), so no asset is ever served', async () => {
+  let called = false;
+  const ctx = context('https://example.test/index.html');
+  ctx.next = async () => { called = true; return new Response('leak'); };
+  await middleware(ctx);
+  assert.equal(called, false,
+    'middleware fell through to the origin, which still holds the reader');
+});
+
+test('carries the path, so a deep link lands where it was pointing', async () => {
   const response = await middleware(
-    context(new Request('https://dc.example/'), { env: {} }));
-  assert.equal(response.status, 503);
+    context('https://example.test/some/deep/path.html'));
+  assert.equal(response.headers.get('Location'),
+    `${CLOUD_RUN}/some/deep/path.html`);
 });
 
-test('fails closed on a weak password or short signing secret', async () => {
-  for (const bad of [
-    { DC_READER_PASSWORD: 'short', DC_READER_SESSION_SECRET: env.DC_READER_SESSION_SECRET },
-    { DC_READER_PASSWORD: env.DC_READER_PASSWORD, DC_READER_SESSION_SECRET: 'tiny' },
-  ]) {
-    const response = await middleware(
-      context(new Request('https://dc.example/'), { env: bad }));
-    assert.equal(response.status, 503);
-  }
+test('carries the query string, which does reach a server', async () => {
+  const response = await middleware(
+    context('https://example.test/index.html?view=sites&q=slough'));
+  assert.equal(response.headers.get('Location'),
+    `${CLOUD_RUN}/index.html?view=sites&q=slough`);
 });
 
-test('an anonymous request is redirected, never served', async () => {
-  const response = await middleware(context(new Request('https://dc.example/')));
-  assert.equal(response.status, 303);
-  assert.match(response.headers.get('location'), /^\/login/);
+test('redirects POST as well as GET', async () => {
+  const response = await middleware(
+    context('https://example.test/login', 'POST'));
+  assert.equal(response.status, 302);
 });
 
-test('a wrong password does not issue a session', async () => {
-  const response = await middleware(context(post('not the password')));
-  assert.equal(response.status, 401);
-  assert.equal(response.headers.get('set-cookie'), null);
+test('is 302, not 301: this URL may change again before retirement', async () => {
+  const response = await middleware(context('https://example.test/'));
+  assert.equal(response.status, 302);
 });
 
-test('the right password issues a hardened session cookie', async () => {
-  const response = await middleware(context(post(env.DC_READER_PASSWORD)));
-  assert.equal(response.status, 303);
-  const cookie = response.headers.get('set-cookie');
-  assert.match(cookie, /HttpOnly/);
-  assert.match(cookie, /Secure/);
-  assert.match(cookie, /SameSite=Strict/);
+test('is not cached, so a later change is not stuck in a browser', async () => {
+  const response = await middleware(context('https://example.test/'));
+  assert.equal(response.headers.get('Cache-Control'), 'no-store');
 });
 
-test('a valid session reaches the reader', async () => {
-  const cookie = await sessionCookie();
-  const response = await middleware(context(
-    new Request('https://dc.example/', { headers: { cookie } })));
-  assert.equal(await response.text(), SERVED);
-});
-
-test('a tampered signature is rejected', async () => {
-  const cookie = await sessionCookie();
-  const [name, value] = cookie.split('=');
-  const parts = value.split('.');
-  parts[2] = parts[2].slice(0, -2) + (parts[2].endsWith('AA') ? 'BB' : 'AA');
-  const response = await middleware(context(new Request('https://dc.example/', {
-    headers: { cookie: `${name}=${parts.join('.')}` },
-  })));
-  assert.equal(response.status, 303, 'a forged cookie must not be honoured');
-});
-
-test('an extended expiry is rejected, because the expiry is signed', async () => {
-  const cookie = await sessionCookie();
-  const [name, value] = cookie.split('=');
-  const parts = value.split('.');
-  parts[1] = String(Number(parts[1]) + 60 * 60 * 24 * 365);
-  const response = await middleware(context(new Request('https://dc.example/', {
-    headers: { cookie: `${name}=${parts.join('.')}` },
-  })));
-  assert.equal(response.status, 303);
-});
-
-test('a session signed with a different secret is rejected', async () => {
-  const cookie = await sessionCookie();
-  const response = await middleware(context(
-    new Request('https://dc.example/', { headers: { cookie } }),
-    { env: { ...env, DC_READER_SESSION_SECRET: 'a-completely-different-secret-value!!' } }));
-  assert.equal(response.status, 303);
-});
-
-test('the return path cannot be turned into an open redirect', async () => {
-  for (const hostile of ['//evil.example/', 'https://evil.example/', 'javascript:alert(1)']) {
-    const response = await middleware(context(post(env.DC_READER_PASSWORD, hostile)));
-    assert.equal(response.headers.get('location'), '/',
-      `${hostile} should collapse to the site root`);
-  }
-});
-
-test('logout clears the cookie', async () => {
-  const response = await middleware(context(new Request('https://dc.example/logout')));
-  assert.match(response.headers.get('set-cookie'), /Max-Age=0/);
-});
-
-test('the login page is not indexable and allows its own map tiles', async () => {
-  const response = await middleware(context(new Request('https://dc.example/login')));
-  const html = await response.text();
-  assert.match(html, /noindex/);
-  assert.match(response.headers.get('content-security-policy'),
-    /img-src[^;]*tile\.openstreetmap\.org/);
+test('points at the project-number hostname, not the legacy one', async () => {
+  const response = await middleware(context('https://example.test/'));
+  const location = response.headers.get('Location');
+  assert.ok(!location.includes('.a.run.app'),
+    'redirects to the legacy Cloud Run hostname, which is the form Google '
+    + 'is moving away from — a bookmark gets one second chance, not two');
+  assert.ok(location.includes('.europe-west2.run.app'));
 });
