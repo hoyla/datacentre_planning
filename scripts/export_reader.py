@@ -2873,9 +2873,9 @@ def main() -> int:
                     + '<span class="cardlinks">'
                     + f'<a href="#sites" onclick="return goSite(\'{esc(key)}\')">'
                       f'Open this site</a>'
-                    + (f' · <a href="{esc(drive[hv._norm_key(key)])}" target="_blank" '
+                    + (f' · <a href="{esc(drive[hv._folder_key(key)])}" target="_blank" '
                        f'rel="noopener">Drive</a>'
-                       if held and hv._norm_key(key) in drive else '')
+                       if held and hv._folder_key(key) in drive else '')
                     + (f' · <a href="{esc(_reg)}" target="_blank" rel="noopener">'
                        f'Register</a>' if _reg else '')
                     + '</span>')})
@@ -2979,7 +2979,7 @@ def main() -> int:
                 # documents the rows cite) and in the DuckDB findings table.
                 # Named by role rather than by filename: the CSV carries the
                 # site's own name now, so there is no one string to quote.
-                csv_url = drive_csv.get(hv._norm_key(key), "")
+                csv_url = drive_csv.get(hv._folder_key(key), "")
                 where = (f"<a href='{esc(csv_url)}' target='_blank' rel='noopener'>"
                          f"this site's findings CSV</a>" if csv_url else
                          "the findings CSV in this site's Drive folder")
@@ -3026,7 +3026,7 @@ def main() -> int:
         # Every site gets a Drive folder, including those with nothing in
         # them but a site report — so the label has to say which it is,
         # or "Source documents" sends a reporter to an empty folder.
-        _durl = drive.get(hv._norm_key(key))
+        _durl = drive.get(hv._folder_key(key))
         if not _durl:
             drive_html = "<span class='help'>not yet synced to Drive</span>"
         elif held:
@@ -3107,7 +3107,7 @@ def main() -> int:
         # not per site, and the applications table below carries every
         # one of them — a single "register" link would have to pick one
         # and would be wrong on any site that spans councils.
-        _csv = drive_csv.get(hv._norm_key(key), "")
+        _csv = drive_csv.get(hv._folder_key(key), "")
         _bits = []
         if _durl and held:
             _bits.append(f'<a href="{esc(_durl)}" target="_blank" rel="noopener">'

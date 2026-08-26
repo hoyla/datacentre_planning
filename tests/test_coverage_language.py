@@ -522,3 +522,43 @@ class TestInternalVocabularyDoesNotReachTheReader:
         assert not unworded, (
             f"discovery routes {sorted(unworded)} would render as the raw "
             f"stored value. Add them to DISCOVERY_ROUTES.")
+
+    def test_a_drive_folder_lookup_truncates_as_the_builder_does(self):
+        """The two sides of a comparison have to be made the same way.
+
+        `build_drive_staging.site_stem` sanitises a site key and THEN
+        cuts it to 40 characters, so the ledger holds the truncated
+        form. Normalising the whole key and comparing against that
+        silently fails for any key over the limit — five sites on
+        2026-08-26 said "not yet synced to Drive" about folders that
+        were on Drive, and one of them differed by a single letter:
+        `…02573FULL` against `…02573 FUL`.
+
+        Asserted as the rule — sanitise, truncate, normalise, in that
+        order — rather than against those five keys, because the next
+        long key will be someone else's.
+        """
+        import importlib.util
+        import pathlib
+        import sys
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+        spec = importlib.util.spec_from_file_location(
+            "hv_t", "scripts/export_handover.py")
+        hv = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(hv)
+        spec2 = importlib.util.spec_from_file_location(
+            "bds_t", "scripts/build_drive_staging.py")
+        bds = importlib.util.module_from_spec(spec2)
+        spec2.loader.exec_module(bds)
+
+        for key in ("SITE-CentralBedfordshire/CB/22/02573/FULL",
+                    "SITE-data-centre-campus-new-barn-road-dartford-"
+                    "section-35-direction-planning-act-2008",
+                    "PTNO-12135970",
+                    "SITE-Barrow/B14/2018/0568"):
+            # What the builder actually writes into the folder name.
+            stem = bds.site_stem(key, "Some Site Name").split(" — ")[0]
+            assert hv._folder_key(key) == hv._norm_key(stem), (
+                f"{key!r} normalises to {hv._folder_key(key)!r} but its "
+                f"folder is named {stem!r}, which normalises to "
+                f"{hv._norm_key(stem)!r} — the lookup cannot match it")
