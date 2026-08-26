@@ -71,6 +71,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from dcp import db, repo  # noqa: E402
+from dcp.acquisition_outcome import classify_outcome  # noqa: E402
 from dcp.sources import agile, aifusion, arcus, idox, ocella, salesforce_pr  # noqa: E402
 
 log = logging.getLogger("relist_refetch")
@@ -294,32 +295,19 @@ def _run_shard(host: str, targets: list[Target], *, args, state: dict,
                 held = got + (s.get("skipped_existing") or 0)
                 strikes = strikes + 1 if (errs and not got) else 0
 
-                # `none_published` is a SETTLED verdict: it takes the
-                # application out of the outstanding queue for good. It
-                # must therefore mean "the register was reached and holds
-                # nothing", never "every document failed to download".
-                # An application whose register listed five documents and
-                # served none of them is a failure, and recording it as
-                # published-nothing is the same silent loss the audit
-                # went looking for.
-                if held < listed and (got or errs):
-                    outcome = "partial"
-                    record(conn, t.app_id, "partial", t.adapter,
-                           f"{held} of {listed} listed documents retrieved "
-                           f"({errs} failed)", got)
-                elif got or (listed and held >= listed):
-                    outcome = "fetched"
-                    record(conn, t.app_id, "fetched", t.adapter, None, got)
-                elif listed == 0 and errs == 0 and s.get("error_class") in (
-                        None, "no_documents", "no_documents_in_store"):
-                    outcome = "none_published"
-                    record(conn, t.app_id, "none_published", t.adapter,
-                           s.get("error_class"))
-                else:
-                    outcome = "error"
-                    record(conn, t.app_id, "error", t.adapter,
-                           s.get("error_class") or f"{errs} document failures, "
-                           f"{listed} listed, none retrieved")
+                # `none_published` is a SETTLED verdict, and the rule for
+                # awarding one lives in dcp/acquisition_outcome.py — not
+                # here. This file used to carry its own copy, and the copy
+                # had already drifted: it also accepted
+                # `no_documents_in_store`, which is the Newport docstore's
+                # own empty answer, on the one host where an unparseable
+                # page used to return an empty list. That is the same
+                # mistake in an eighth costume, on the exact site that
+                # produced all 17 wrongly-settled applications found on
+                # 2026-08-26 — Uskmouth Power Station, 350 documents
+                # offered and none held. One rule, one place.
+                outcome, detail = classify_outcome(s)
+                record(conn, t.app_id, outcome, t.adapter, detail, got)
 
                 with lock:
                     totals[outcome] = totals.get(outcome, 0) + 1

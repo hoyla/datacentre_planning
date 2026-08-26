@@ -58,6 +58,17 @@ def classify_outcome(summary: dict) -> tuple[str, str | None]:
         return "fetched", None
     # The only route to a settled negative: nothing was listed, and
     # nothing failed on the way to finding that out.
+    #
+    # `no_documents_in_store` is deliberately NOT on this list, though
+    # `scripts/relist_refetch.py` once accepted it. Newport publishes
+    # from a separate docstore, and `fetch_newport_docstore.fetch_doc_list`
+    # still ends `return parse_doc_list(r.text) or []` — so a page it
+    # could not parse and a store that is genuinely empty arrive here as
+    # the same empty list. Until that `or []` is removed and an
+    # unparseable page carries its own error class, the signal cannot
+    # earn a settled verdict. It cost 17 applications: every Newport
+    # entry in the settled population offered documents and held none,
+    # 350 of them at Uskmouth Power Station alone.
     if listed == 0 and errs == 0 and error_class in (None, "no_documents"):
         return "none_published", error_class
     return "error", (error_class
