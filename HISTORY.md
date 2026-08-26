@@ -1212,3 +1212,113 @@ unattributed and every restatement launders it further.
 test, a shared function — rather than resolving to remember. Most of the
 lessons above exist as one of those three.
 
+
+### Phase 2.8 — the gaps in the corpus (2026-08-26)
+
+A day spent on what the corpus did not hold rather than on what it did.
+The releases before this one improved how the material was presented;
+this one went after the material that was missing, and most of what it
+found was a check that could not see what it claimed to check.
+
+**The Section 35 campuses had no documents.** Quest Park and Dartford
+were named sites carrying nothing — the eleven PDFs had been cached by
+hand into `data/seed_cases/` weeks earlier and acquisition never
+followed up. Ingesting and reading them gave Dartford 300 MW total load
+with 240 MW IT and a transitional NGET offer against a firm Gate 2
+allocation, and Quest Park 1 GW with a 720 MW IT load powered by an
+on-site gas station that would be an NSIP in its own right. Wapseys was
+checked and left alone: its direction letter is already in the corpus
+under `EN0110030`, textually identical.
+
+**A Section 35 direction was classified as a drawing.** `DRAWING_KINDS`
+contains `section\b` and is tested before `TIER_A_KINDS`, so a document
+whose kind names the statute skipped the read entirely. The premise —
+a named statutory instrument is never a drawing — now sits beside the
+s106 rule it belongs with.
+
+**2,260 documents the registers offered were not held.** The re-list
+audit measured it without downloading anything, by re-reading the
+documents-tab HTML each short fetch had already snapshotted. Refetching
+recovered 249 of the 291 reports and statements, the class where power
+disclosures live, and Northumberland Energy Park went from 177 absent
+to one. It also corrected its own headline: of 3,083 documents fetched,
+1,910 were byte-identical to a document already held under a different
+URL on the same application, so 2,260 is an upper bound on URLs and not
+a count of missing content.
+
+**The incomplete Drive archive was explained, and the suspect was
+innocent.** 143 applications discovered on 2026-08-07 had no site
+membership until the materialise of the 25th, so their documents were
+never *candidates* for the sync — invisible to both `skipped` and
+`failed`. The 2026-08-21 ledger loss, the obvious culprit, is exonerated
+by its own log: 50,406 tracked, 0 failed, and the arithmetic closes
+exactly against the later runs. The staging build now states its own
+shortfall and refuses; replayed against that cohort it reports 3,584
+documents across 139 applications, so it would have stopped both the
+08-09 and 08-21 builds. `materialise_sites.py` joined the runbook as
+step 0, its absence having been half the defect.
+
+**Half a million findings were invisible to two reader panels.** The
+OpenAI insert path omitted `signal_family` from its column list, so all
+557,747 of its findings carried NULL — and the EIA-process and parties
+panels select on family alone. Separately, `\b` is a word boundary and
+`_` is a word character, so `eia\b` could never match `eia_status` and
+`family_for('eia_process')` returned `unclassified`. And `author` in
+`party_adviser`, undelimited and declared first, matched inside
+"authority" and made `party_authority`'s own `local_planning_authority`
+token unreachable: 11,706 findings filed the decision-maker among the
+consultants acting for the applicant. Fixing the three took the EIA
+panel from 190 sites to 242 and the parties panel from 97,088 rows to
+208,476.
+
+**`none_published` is a settled verdict and was being awarded to
+failures.** The mapping consulted `error_class`, which describes the
+listing fetch, and never the per-document error count beside it. A live
+sweep over the 128 settled applications found 17 wrong — every one
+Newport, which serves an error page on its Idox documents tab and
+publishes from a separate docstore. 413 documents offered and none
+held, 350 of them at Uskmouth Power Station: 25 applications, no
+documents, no findings. 52 more cannot be settled by script at all,
+being Idox "Permission Denied" pages served with HTTP 200 and full
+council chrome.
+
+**Drawings are worth reading, but only some of them.** The v1 rejection
+was right about a blanket pass and wrong about the premise: the sheets
+are text-layered, and the text emerges in drawing order, so a
+transformer sheet yields characters interleaved from adjacent tables.
+The discriminator is authorship. A manufacturer's or DNO engineer's
+drawing carries ratings; an architect's drawing of the building
+containing the same equipment is dry. Two prompt rules earned their
+place — a cell carries its column header or it is not a transcription,
+and a symbol count may only be made on the overview image, never a
+crop.
+
+**The scheme SPVs disclose capacity by construction.** Operator accounts
+were a null; a single-asset SPV's scheme *is* its investment property,
+so FRS 102 makes the directors state what the valuation assumes. 111
+companies resolved, 90 mapped to a site. The `has_charges` flag lies —
+false for 44 of the 49 companies that carry charges — which is how
+STX-A10 was found: no PSC, no parent disclosed, two charges to a company
+whose own PSC is Alphabet, Inc. Court Lane's apparent 26% discrepancy
+dissolved on reading the site's own environmental statement, which gives
+"Total IT Load - 103.32 MW" and "Total Data Centre Load – 139.5 MW" in
+one table.
+
+#### What the day was actually about
+
+Six checks returned confident answers to questions they were not asking.
+A `pgrep` whose pattern matched its own command line, so the wait could
+never end. A cross-check for wrongly-settled applications that queried a
+population structurally excluding them, and returned zero. A Drive
+verifier sampling the ledger it was auditing, unable by construction to
+witness a document that never reached the tree. A word boundary that
+could not see an underscore. A test that pinned a literal guard string
+and reported a correct change as a regression. And, at the last gate
+before publication, a release diff that phrased "panels that lost links"
+so the bad direction was up, marked fifteen losses `+`, and exited 0.
+
+The pattern is not carelessness in any single case. It is that a probe
+returning a plausible number looks identical to a probe that works, and
+nothing downstream distinguishes them. Where a guard exists, the useful
+question is not "does it pass" but "could it fail, and has anyone
+watched it do so".
