@@ -601,3 +601,54 @@ class TestInternalVocabularyDoesNotReachTheReader:
             out = er.doc_link(url, "Energy Statement")
             assert out.startswith("<a href="), f"{url!r} should still link"
             assert url in out
+
+    def test_a_document_we_hold_links_to_our_copy_and_to_the_register(self):
+        """Suppressing a dead link hid a document a reporter wanted.
+
+        Every document behind a site in this dataset is on Drive, so
+        there was never a need to choose between a dead link and no
+        link (Luke, 2026-08-26: "I don't want to just suppress links to
+        documents that people will want to see"). Our copy is the title
+        link, because a register can withdraw, renumber or gate a
+        document and all of those have happened here.
+
+        The register keeps a link of its own: a figure that reaches
+        print has to be attributable to the public source, not to a
+        Drive folder the reader cannot open.
+        """
+        import importlib.util
+        import pathlib
+        spec = importlib.util.spec_from_file_location(
+            "er_link2", pathlib.Path("scripts/export_reader.py"))
+        er = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(er)
+        except SystemExit:
+            pass
+
+        drive = "https://drive.google.com/file/d/abc123/view"
+        portal = "https://planning.example.gov.uk/doc.pdf"
+
+        # Held and on the register: both, our copy first.
+        out = er.doc_link(portal, "Energy Statement", drive)
+        assert out.startswith(f'<a href="{drive}"'), \
+            "the title must link to our copy, not the register's"
+        assert portal in out and ">register</a>" in out, \
+            "the citable public source must stay reachable"
+        assert out.index(drive) < out.index(portal), \
+            "our copy comes first"
+
+        # Held, but the URL resolves on nobody's machine: still a link.
+        out = er.doc_link("file:///Users/someone/Code/x.pdf",
+                          "Energy Statement", drive)
+        assert drive in out, "a document we hold must never render as text"
+        assert "file://" not in out, "the dead path must not survive"
+        assert ">register</a>" not in out, \
+            "there is no register copy to offer"
+
+        # Not staged, but on the register: the register alone.
+        out = er.doc_link(portal, "Energy Statement", "")
+        assert out.startswith(f'<a href="{portal}"')
+
+        # Neither: the title, as text.
+        assert "<a" not in er.doc_link("", "Energy Statement", "")
