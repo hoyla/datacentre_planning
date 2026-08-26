@@ -1001,6 +1001,42 @@ def _drive_folder_map() -> dict[str, str]:
     return out
 
 
+def _drive_document_map(conn) -> dict[int, str]:
+    """document id -> a Drive link to our copy of that exact file.
+
+    Read out of `document_drive_files`, which `record_drive_ids.py`
+    writes after each sync. Nothing here derives a location.
+
+    That is the whole design. The link was always an id —
+    `/file/d/{id}/view` keeps resolving after the file is moved or
+    renamed on Drive — but *finding* the id used to mean rebuilding the
+    document's expected staging path from the site stem, the application
+    reference and a number counting the application's documents in
+    `fetched_at, id` order, then looking the path up in the sync ledger.
+    Every input to that can change, and when one does the lookup either
+    finds nothing, silently dropping a document's link, or finds the
+    neighbouring file — a live link to the wrong document under a
+    citation naming a different one. The second failure is invisible,
+    and putting a real quote against a real but different source is
+    precisely what principle 7 exists to stop.
+
+    So the id is captured once, at the moment the sync knows it, checked
+    against the ledger's md5 of the uploaded bytes before it is stored,
+    and read back by primary key thereafter.
+
+    The most recent row wins where a document has been re-uploaded. The
+    older row is kept rather than replaced: a Drive id survives a move,
+    so a link published in an earlier release goes on working.
+    """
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT DISTINCT ON (document_id) document_id, file_id
+            FROM document_drive_files
+            ORDER BY document_id, recorded_at DESC, id DESC""")
+        return {doc_id: f"https://drive.google.com/file/d/{fid}/view"
+                for doc_id, fid in cur.fetchall()}
+
+
 def _drive_application_map() -> dict[tuple[str, str], str]:
     """(normalised site key, folder-name form of the ref) -> Drive URL.
 
@@ -1867,8 +1903,12 @@ def main() -> None:
         "Which sites", *_aud_cols,
         "Terms the figures are published under"])
     with db.connect() as conn, conn.cursor() as cur:
-        op_rows = od.load_rows(cur)
-        op_divs = od.load_divergences(cur)
+        # So the 'Source' column on Figures by audience points at our
+        # copy of the document rather than at the register's, or at the
+        # application page when the document link was unusable.
+        _doc_links = _drive_document_map(conn)
+        op_rows = od.load_rows(cur, _doc_links)
+        op_divs = od.load_divergences(cur, _doc_links)
 
     def _cell(row, key):
         got = row.by_audience.get(key) or []

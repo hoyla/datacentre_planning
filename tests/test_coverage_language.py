@@ -8,6 +8,8 @@ quietly, so the tests assert the distinctions rather than the wording.
 
 from __future__ import annotations
 
+import pathlib
+
 from dcp import origin, site_profile, site_scale
 
 
@@ -562,3 +564,171 @@ class TestInternalVocabularyDoesNotReachTheReader:
                 f"{key!r} normalises to {hv._folder_key(key)!r} but its "
                 f"folder is named {stem!r}, which normalises to "
                 f"{hv._norm_key(stem)!r} — the lookup cannot match it")
+
+    def test_no_document_link_can_point_at_a_filesystem(self):
+        """A link that resolves on nobody's machine is worse than none.
+
+        512 documents carry a `file://` URL — 503 into a checkout that
+        no longer exists, 9 from the manual-ingest path. Rendered as
+        anchors they put 401 dead links into the published 2.8 reader,
+        pointing at `/Users/luke_hoyland/Code/Other_GitHub/...`. The
+        applications table had guarded against this since it was
+        written; the document links had not.
+
+        Asserted over the rendering helper rather than over a built
+        page, so it holds without a database.
+        """
+        import importlib.util
+        import pathlib
+        spec = importlib.util.spec_from_file_location(
+            "er_link", pathlib.Path("scripts/export_reader.py"))
+        er = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(er)
+        except SystemExit:
+            pass
+
+        for url in ("file:///Users/someone/Code/x.pdf",
+                    "file://localhost/x.pdf",
+                    "/data/raw/x.pdf",
+                    "", None):
+            out = er.doc_link(url, "Energy Statement")
+            assert "<a" not in out, (
+                f"{url!r} was rendered as a link; it resolves on nobody's "
+                f"machine but a reader's browser will still try")
+            assert "Energy Statement" in out, "the title must survive"
+
+        for url in ("https://planning.example.gov.uk/doc.pdf",
+                    "http://planning.example.gov.uk/doc.pdf"):
+            out = er.doc_link(url, "Energy Statement")
+            assert out.startswith("<a href="), f"{url!r} should still link"
+            assert url in out
+
+    def test_a_document_we_hold_links_to_our_copy_and_to_the_register(self):
+        """Suppressing a dead link hid a document a reporter wanted.
+
+        Every document behind a site in this dataset is on Drive, so
+        there was never a need to choose between a dead link and no
+        link (Luke, 2026-08-26: "I don't want to just suppress links to
+        documents that people will want to see"). Our copy is the title
+        link, because a register can withdraw, renumber or gate a
+        document and all of those have happened here.
+
+        The register keeps a link of its own: a figure that reaches
+        print has to be attributable to the public source, not to a
+        Drive folder the reader cannot open.
+        """
+        import importlib.util
+        import pathlib
+        spec = importlib.util.spec_from_file_location(
+            "er_link2", pathlib.Path("scripts/export_reader.py"))
+        er = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(er)
+        except SystemExit:
+            pass
+
+        drive = "https://drive.google.com/file/d/abc123/view"
+        portal = "https://planning.example.gov.uk/doc.pdf"
+
+        # Held and on the register: both, our copy first.
+        out = er.doc_link(portal, "Energy Statement", drive)
+        assert out.startswith(f'<a href="{drive}"'), \
+            "the title must link to our copy, not the register's"
+        assert portal in out and ">register</a>" in out, \
+            "the citable public source must stay reachable"
+        assert out.index(drive) < out.index(portal), \
+            "our copy comes first"
+
+        # Held, but the URL resolves on nobody's machine: still a link.
+        out = er.doc_link("file:///Users/someone/Code/x.pdf",
+                          "Energy Statement", drive)
+        assert drive in out, "a document we hold must never render as text"
+        assert "file://" not in out, "the dead path must not survive"
+        assert ">register</a>" not in out, \
+            "there is no register copy to offer"
+
+        # Not staged, but on the register: the register alone.
+        out = er.doc_link(portal, "Energy Statement", "")
+        assert out.startswith(f'<a href="{portal}"')
+
+        # Neither: the title, as text.
+        assert "<a" not in er.doc_link("", "Energy Statement", "")
+
+
+class TestDriveFilesAreFoundById:
+    """A Drive file id survives a move; a derived path survives nothing.
+
+    The link was always an id. Finding the id was not: the export
+    rebuilt each document's expected staging path from the site stem,
+    the application reference and a number counting the application's
+    documents in `fetched_at, id` order, then looked that path up in
+    the sync ledger. Correct when measured — 120 of 120 sampled links
+    verified content-addressed — and correct only until something is
+    renamed, at which point the lookup finds the neighbouring file and
+    publishes a working link to the wrong document (Luke, 2026-08-26:
+    "I thought we were identifying Drive files by ID, not name").
+    """
+
+    def test_the_document_map_reads_ids_and_derives_nothing(self):
+        """No filename, path or stem may appear in the read path."""
+        import inspect
+        import importlib.util
+        import pathlib
+        spec = importlib.util.spec_from_file_location(
+            "hv_ids", pathlib.Path("scripts/export_handover.py"))
+        hv = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(hv)
+        except SystemExit:
+            pass
+
+        # The docstring explains what the function no longer does, so
+        # it names every derivation this test forbids. Strip it with
+        # ast rather than by splitting on quotes: the body's own SQL is
+        # triple-quoted too, and splitting kept only the last fragment.
+        import ast
+        tree = ast.parse(inspect.getsource(hv._drive_document_map).lstrip())
+        fn = tree.body[0]
+        if (fn.body and isinstance(fn.body[0], ast.Expr)
+                and isinstance(fn.body[0].value, ast.Constant)
+                and isinstance(fn.body[0].value.value, str)):
+            fn.body = fn.body[1:]
+        body = ast.unparse(fn)
+        assert "document_drive_files" in body, \
+            "the map must read the recorded ids"
+        for derived in ("site_stem", "document_filenames", "DRIVE_LEDGER",
+                        "by_tail", "relpath"):
+            assert derived not in body, (
+                f"{derived} is back in the document link path; a location "
+                f"that is computed is a location that can be computed wrong")
+
+    def test_the_recorder_is_append_only_and_idempotent(self):
+        """Re-running over an unchanged ledger must insert nothing."""
+        sql = pathlib.Path(
+            "migrations/031_a_drive_file_is_an_id_not_a_path.sql").read_text()
+        assert "CREATE UNIQUE INDEX" in sql and \
+            "(document_id, file_id)" in sql, \
+            "without the unique index a re-run duplicates every row"
+        rec = pathlib.Path("scripts/record_drive_ids.py").read_text()
+        assert "ON CONFLICT (document_id, file_id) DO NOTHING" in rec
+        assert "UPDATE document_drive_files" not in rec and \
+            "DELETE FROM document_drive_files" not in rec, \
+            "append-only: a re-upload adds a row, it does not replace one"
+
+    def test_an_id_is_checked_against_the_bytes_before_it_is_stored(self):
+        """A link to the wrong document is worse than no link."""
+        rec = pathlib.Path("scripts/record_drive_ids.py").read_text()
+        assert "--verify-bytes" in rec and "hashlib.md5" in rec, \
+            "there must be a way to check an id against the local file"
+        assert "found.pop(doc_id, None)" in rec, \
+            "a document whose bytes disagree must be dropped, not stored"
+
+    def test_the_release_chain_records_ids_after_the_sync(self):
+        """Order matters: the recorder reads the ledger the sync writes."""
+        sh = pathlib.Path("scripts/phase1_finalise.sh").read_text()
+        assert "record_drive_ids.py" in sh, \
+            "a sync with no recorder leaves new documents linking to a " \
+            "register that can withdraw them"
+        assert sh.index("drive_sync.py") < sh.index("record_drive_ids.py"), \
+            "the recorder reads the ledger the sync writes, so it follows it"

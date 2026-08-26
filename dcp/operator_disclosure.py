@@ -99,7 +99,7 @@ class OperatorRow:
         return sum(1 for a in self.by_audience.values() if a)
 
 
-def load_rows(cur) -> list[OperatorRow]:
+def load_rows(cur, doc_links: dict[int, str] | None = None) -> list[OperatorRow]:
     """One row per operator, with the claims it makes to each audience."""
     cur.execute("""
         SELECT cl.source_key,
@@ -157,7 +157,7 @@ def load_rows(cur) -> list[OperatorRow]:
     # documents — the fourth column, and the only one none of these
     # companies chose to fill.
     all_sites = {s for r in rows.values() for s in r.sites}
-    planning = load_planning_figures(cur, list(all_sites))
+    planning = load_planning_figures(cur, list(all_sites), doc_links)
     for row in rows.values():
         told = [p for s in row.sites for p in planning.get(s, [])]
         if told:
@@ -173,7 +173,8 @@ def load_rows(cur) -> list[OperatorRow]:
                   key=lambda r: (-r.audiences, -len(r.sites), r.operator))
 
 
-def load_planning_figures(cur, site_ids) -> dict[int, list[dict]]:
+def load_planning_figures(cur, site_ids,
+                          doc_links: dict[int, str] | None = None) -> dict[int, list[dict]]:
     """What each site told its planning authority.
 
     These do not live in capacity_claims and must not: they are the
@@ -188,7 +189,7 @@ def load_planning_figures(cur, site_ids) -> dict[int, list[dict]]:
         SELECT DISTINCT ON (sm.site_id, pa.quantity_type)
                sm.site_id, pa.quantity_type, pa.value_mw, a.application_ref,
                s.site_key, s.display_name, a.url,
-               d.url, f.evidence_text, f.evidence_page
+               d.url, f.evidence_text, f.evidence_page, pa.document_id
         FROM power_adjudication pa
         JOIN applications a ON a.id = pa.application_id
         LEFT JOIN findings f ON f.id = pa.finding_id
@@ -203,19 +204,25 @@ def load_planning_figures(cur, site_ids) -> dict[int, list[dict]]:
         ORDER BY sm.site_id, pa.quantity_type, pa.value_mw DESC, pa.id DESC""",
                 (list(site_ids),))
     out: dict[int, list[dict]] = {}
+    links = doc_links or {}
     for (site_id, qty, mw, ref, site_key, site_name, url,
-         doc_url, quote, page) in cur.fetchall():
+         doc_url, quote, page, doc_id) in cur.fetchall():
         out.setdefault(site_id, []).append({
             "audience": "planning", "source_key": "planning_documents",
             "claim_name": ref, "value": mw, "unit": "MW",
             "quantity_type": qty, "term": None, "confidence": None,
             "site_id": site_id, "site_key": site_key, "site_name": site_name,
-            # The document the figure was read out of, falling back to the
-            # application on the portal when the adjudication carries no
-            # document — a link to the file itself beats a link to the
-            # folder it is in, but either beats an assertion.
-            "source_url": (doc_url if (doc_url or "").startswith("http")
-                           else url),
+            # The document the figure was read out of. Our copy first:
+            # a register can withdraw, move or gate a document and all
+            # three have happened here, and 512 documents carry a
+            # `file://` URI naming a path on the machine that ingested
+            # them, which is no link at all. The portal document, then
+            # the application page, are the fallbacks — a link to the
+            # file beats a link to the folder it is in, but either beats
+            # an assertion.
+            "source_url": (links.get(doc_id)
+                           or (doc_url if (doc_url or "").startswith("http")
+                               else url)),
             "application_url": url,
             "locator": f"page {page}" if page else None,
             "quote": quote, "stage": None,
@@ -223,7 +230,7 @@ def load_planning_figures(cur, site_ids) -> dict[int, list[dict]]:
     return out
 
 
-def load_divergences(cur) -> list[dict]:
+def load_divergences(cur, doc_links: dict[int, str] | None = None) -> list[dict]:
     """Sites where more than one audience was given a figure.
 
     The point of the whole store, reduced to a list: one site, several
@@ -255,7 +262,7 @@ def load_divergences(cur) -> list[dict]:
             "confidence": conf, "source_url": source_url,
             "locator": locator, "quote": quote,
         })
-    planning = load_planning_figures(cur, list(by_site))
+    planning = load_planning_figures(cur, list(by_site), doc_links)
     for sid, d in by_site.items():
         d["claims"] = planning.get(sid, []) + d["claims"]
     out = []

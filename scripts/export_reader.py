@@ -180,7 +180,7 @@ SITE_FIGURE_SQL = """
             SELECT DISTINCT ON (s.site_key, pa.quantity_type)
                    s.site_key, pa.quantity_type, pa.value_mw, pa.model,
                    f.signal_type, f.evidence_text, f.evidence_page,
-                   d.url, d.kind, d.fetched_at, a.application_ref
+                   d.url, d.kind, d.fetched_at, a.application_ref, d.id
             FROM latest pa
             JOIN findings f ON f.id = pa.finding_id
             JOIN applications a ON a.id = pa.application_id
@@ -212,6 +212,7 @@ SITE_ALL_FIGURES_SQL = """
               SELECT s.site_key, pa.verdict, pa.quantity_type, pa.value_mw,
                      pa.value_original, pa.unit_original, pa.reasoning,
                      pa.model, f.signal_type, f.evidence_page, d.url, d.kind,
+                     d.id AS document_id,
                      a.application_ref, pa.id
               FROM latest pa
               JOIN findings f ON f.id = pa.finding_id
@@ -497,6 +498,47 @@ def why_empty(held: int = 0, read: int = 0) -> str:
     if not read:
         return '<span class="q">documents not yet read</span>'
     return '<span class="q">not in the documents</span>'
+
+
+def doc_link(url, label: str, drive_url: str = "") -> str:
+    """A document's title, linked to our copy, and to the register too.
+
+    Two links, because they answer two different questions and neither
+    substitutes for the other.
+
+    **Our copy is the title link.** Every document behind a site in this
+    dataset is on Drive — 52,908 of them — and that copy is the one that
+    keeps working. A council can withdraw a document from its register,
+    renumber it, move the portal, or put it behind a session, and all
+    four have happened during this investigation. 512 documents carry a
+    `file://` URL besides: 503 into a checkout that exists on no machine
+    and 9 written by the manual-ingest path. Rendered as anchors those
+    became 401 links in the published 2.8 reader that resolve to a
+    stranger's filesystem — dead for every reader, and worse than dead
+    because they look live.
+
+    **The register is a second, quieter link.** A figure that goes into
+    published reporting has to be attributable to the public source, not
+    to a Drive folder the reader cannot open, so the citable URL has to
+    stay visible. It is the fallback for the title as well, for the
+    handful of documents held but not staged.
+
+    Where neither exists the title is plain text; the document is still
+    reachable through the site's Drive folder, which the panel links.
+    """
+    u = str(url or "")
+    fetchable = u.startswith("http://") or u.startswith("https://")
+    if drive_url:
+        out = (f'<a href="{esc(drive_url)}" target="_blank" rel="noopener">'
+               f'{esc(label)}</a>')
+        if fetchable:
+            out += (f'<span class="q"> · <a href="{esc(u)}" target="_blank" '
+                    f'rel="noopener">register</a></span>')
+        return out
+    if fetchable:
+        return (f'<a href="{esc(u)}" target="_blank" rel="noopener">'
+                f'{esc(label)}</a>')
+    return esc(label)
 
 
 def trim(text, n: int) -> str:
@@ -2369,24 +2411,24 @@ def main() -> int:
         cur.execute(SITE_FIGURE_SQL)
         fig_prov = {}
         for (k, qt, v, model, as_written, quote_text, page, url, kind,
-             fetched, ref) in cur.fetchall():
+             fetched, ref, doc_id) in cur.fetchall():
             fig_prov[(k, qt)] = {
                 "mw": float(v), "model": model, "as_written": as_written,
                 "quote": quote_text or "", "page": page, "url": url or "",
                 "title": mreading.document_title(url, kind) if url else "",
-                "fetched": fetched, "ref": ref}
+                "fetched": fetched, "ref": ref, "document_id": doc_id}
 
         # Editorial rule 4's table.
         cur.execute(SITE_ALL_FIGURES_SQL, (ALL_FIGURES_CAP,))
         all_figs, all_figs_total = defaultdict(list), {}
         for (k, verdict, qt, v, v_orig, u_orig, reasoning, model, as_written,
-             page, url, kind, ref, _id, cnt, _rn) in cur.fetchall():
+             page, url, kind, doc_id, ref, _id, cnt, _rn) in cur.fetchall():
             all_figs_total[k] = cnt
             all_figs[k].append({
                 "verdict": verdict, "quantity": qt, "mw": v,
                 "value": v_orig, "unit": u_orig, "reason": reasoning or "",
                 "model": model, "as_written": as_written, "page": page,
-                "url": url or "",
+                "url": url or "", "document_id": doc_id,
                 "title": mreading.document_title(url, kind) if url else "",
                 "ref": ref})
 
@@ -2493,6 +2535,27 @@ def main() -> int:
         # carried a floor-area estimate in the workbook — one dataset
         # answering "how big is this?" two ways.
         site_floorspace = scale.load_site_floorspace(conn)
+        # Built here rather than beside the other Drive maps below,
+        # which read the sync ledger alone: this one reads
+        # `document_drive_files` and so needs the connection, which is
+        # closed by then.
+        drive_docs = hv._drive_document_map(conn)
+        # A cited document with no recorded Drive id falls back to the
+        # register, which is a link that can rot. That is a acceptable
+        # outcome and a silent one, so it is counted out loud: the usual
+        # cause is a sync that ran without `record_drive_ids.py` after
+        # it, and the number says how much of the corpus is affected.
+        with conn.cursor() as _dcur:
+            _dcur.execute("""
+                SELECT count(DISTINCT d.id)
+                FROM documents d
+                JOIN findings f ON f.document_id = d.id
+                JOIN site_members m ON m.application_id = f.application_id
+                     AND m.retired_at IS NULL
+                JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+                WHERE NOT EXISTS (SELECT 1 FROM document_drive_files x
+                                  WHERE x.document_id = d.id)""")
+            n_no_drive = _dcur.fetchone()[0]
         # The stamp's findings count, counted the way a site panel counts
         # it: distinct passages rather than rows, because several models
         # reading one sentence is corroboration, not volume.
@@ -2633,11 +2696,9 @@ def main() -> int:
         if doc_id:
             d = cited_docs.get(int(doc_id))
             page = f', p.{q["page"]}' if q.get("page") else ""
-            if d and d["url"]:
-                return (f'<a href="{esc(d["url"])}" target="_blank" rel="noopener">'
-                        f'{esc(d["title"])}</a>{page} · {esc(d["application_ref"])}')
             if d:
-                return f'{esc(d["title"])}{page} · {esc(d["application_ref"])}'
+                return (f'{doc_link(d["url"], d["title"], drive_docs.get(int(doc_id), ""))}'
+                        f'{page} · {esc(d["application_ref"])}')
             return f'document {doc_id}{page}'
         return f'application {esc(q.get("application_ref") or "")}, adjudicated figure'
 
@@ -3337,9 +3398,9 @@ def main() -> int:
             pv = fig_prov.get((key, _qt))
             if pv and abs(pv["mw"] - float(_val)) > 0.001:
                 pv = None
-            _doc = (f'<a href="{esc(pv["url"])}" target="_blank" rel="noopener">'
-                    f'{esc(pv["title"])}</a>' if pv and pv["url"]
-                    else (esc(pv["title"]) if pv and pv["title"] else ""))
+            _doc = (doc_link(pv["url"], pv["title"],
+                             drive_docs.get(pv.get("document_id") or -1, ""))
+                    if pv and pv["title"] else "")
             _meta = []
             if pv:
                 if pv["page"]:
@@ -3398,9 +3459,8 @@ def main() -> int:
                    if r["mw"] is not None and r["unit"] not in (None, "MW")
                    else "") + '</td>'
                 + f'<td>{esc(humanise(r["as_written"] or "", sentence=True))}</td>'
-                + '<td>' + (f'<a href="{esc(r["url"])}" target="_blank" '
-                            f'rel="noopener">{esc(r["title"])}</a>'
-                            if r["url"] else esc(r["title"] or r["ref"])) + '</td>'
+                + '<td>' + doc_link(r["url"], r["title"] or r["ref"],
+                                     drive_docs.get(r.get("document_id") or -1, "")) + '</td>'
                 + '<td class="q">' + (f'page {r["page"]}' if r["page"] else "—")
                 + f' \u00b7 {esc(r["ref"])}</td>'
                 + f'<td class="q">{esc(r["model"] or "")}</td>'
@@ -4250,8 +4310,8 @@ def main() -> int:
 
     # ---- Operators: the same companies, told to five audiences ----------
     with db.cursor(dict_rows=False) as _cur:
-        op_rows = odis.load_rows(_cur)
-        op_divs = odis.load_divergences(_cur)
+        op_rows = odis.load_rows(_cur, drive_docs)
+        op_divs = odis.load_divergences(_cur, drive_docs)
     _AUD = [(k, lbl) for k, lbl, _ in odis.AUDIENCES]
 
     def _aud_cell(row, key):
@@ -5323,6 +5383,11 @@ def main() -> int:
     print(f"  Capacity claims: {n_claims_total} claims held, {_claims_live} "
           f"matched to sites, rendered on {claims_sites_rendered} site "
           f"panels ({claims_rows_rendered} claim rows)")
+    print(f"  Our copy on Drive: {len(drive_docs):,} documents have a "
+          f"recorded Drive file id" +
+          (f"; {n_no_drive:,} cited documents have none and fall back to "
+           f"the register — run scripts/record_drive_ids.py"
+           if n_no_drive else ", covering every cited document"))
     if claims_rows_rendered != _claims_live:
         _missing = sorted(set(claims_by_site) -
                           {r[0] for r in site_rows})

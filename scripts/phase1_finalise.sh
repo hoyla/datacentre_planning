@@ -87,6 +87,11 @@ step "reader"    $PY scripts/export_reader.py --out "$RELEASE/reader.html" \
 # exports above and never precedes them.
 step "drive staging" $PY scripts/build_drive_staging.py --release-dir "$RELEASE"
 step "drive sync"    $PY -u scripts/drive_sync.py --sync data/exports/drive_staging --prune
+# Where each document landed, by Drive file id. Must follow the sync --
+# it reads the ledger the sync just wrote -- and must precede any rebuild
+# that links documents, or everything uploaded for the first time falls
+# back to a register link.
+step "drive ids"     $PY scripts/record_drive_ids.py --verify-bytes
 step "google sheet"  $PY scripts/sheet_sync.py
 
 say "done — index.html has changed and needs a PR to deploy"

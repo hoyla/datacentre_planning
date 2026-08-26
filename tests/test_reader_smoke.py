@@ -33,6 +33,7 @@ fixture would not exercise the real markup.
 
 from __future__ import annotations
 
+import pathlib
 import re
 
 import pytest
@@ -395,7 +396,11 @@ def test_a_withheld_paragraph_is_declared_before_it_is_found(page):
     if not checked:
         pytest.skip("no withheld paragraph in this build")
     # Every quote names its source, and cited documents link out.
-    assert d.locator("ul.rq li .q").count() == d.locator("ul.rq li").count()
+    # Asserted per item rather than by counting `.q` elements: a cited
+    # document now carries two, the page-and-reference span and the
+    # register link beside the link to our own copy, so one-span-per-item
+    # stopped being the same claim as every-item-has-a-span.
+    assert d.locator("ul.rq li:has(.q)").count() == d.locator("ul.rq li").count()
     page.click("#view-site .sitenav a")
 
 
@@ -588,3 +593,33 @@ def test_next_and_previous_walk_the_filtered_set(page):
     page.wait_for_timeout(200)
     assert page.evaluate("openKey") == first_key
     assert page.locator("#siteprev").is_disabled()
+
+
+@pytest.mark.integration
+def test_no_link_in_the_built_page_points_at_a_filesystem(built_reader):
+    """The check that was missing when 401 dead links shipped in 2.8.
+
+    Every other assertion here drives behaviour through a browser; this
+    one reads the bytes, because the failure was not behavioural. The
+    anchors worked perfectly — they resolved to a path on the machine
+    that built the page, and to nothing at all anywhere else, and no
+    test looked at where a link went.
+
+    Held as a property of the artefact rather than of `doc_link`, which
+    is asserted separately: the unit test cannot see a call site that
+    forgot to use it.
+    """
+    import urllib.parse
+    html = pathlib.Path(urllib.parse.urlparse(built_reader).path).read_text()
+    bad = re.findall(r'href=["\']([^"\']*file://[^"\']*)["\']', html)
+    assert not bad, (
+        f"{len(bad)} links resolve on nobody's machine, e.g. {bad[:3]} — "
+        f"a document we hold should link to our copy on Drive")
+
+    # And the positive half: the documents we hold are actually offered.
+    ours = html.count("drive.google.com/file/d/")
+    assert ours > 1000, (
+        f"only {ours} document links point at our Drive copies; the "
+        f"corpus holds 52,908 documents and the reader cites thousands, "
+        f"so this looks like the map failed to build rather than a page "
+        f"that genuinely cites nothing")
