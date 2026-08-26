@@ -562,3 +562,42 @@ class TestInternalVocabularyDoesNotReachTheReader:
                 f"{key!r} normalises to {hv._folder_key(key)!r} but its "
                 f"folder is named {stem!r}, which normalises to "
                 f"{hv._norm_key(stem)!r} — the lookup cannot match it")
+
+    def test_no_document_link_can_point_at_a_filesystem(self):
+        """A link that resolves on nobody's machine is worse than none.
+
+        512 documents carry a `file://` URL — 503 into a checkout that
+        no longer exists, 9 from the manual-ingest path. Rendered as
+        anchors they put 401 dead links into the published 2.8 reader,
+        pointing at `/Users/luke_hoyland/Code/Other_GitHub/...`. The
+        applications table had guarded against this since it was
+        written; the document links had not.
+
+        Asserted over the rendering helper rather than over a built
+        page, so it holds without a database.
+        """
+        import importlib.util
+        import pathlib
+        spec = importlib.util.spec_from_file_location(
+            "er_link", pathlib.Path("scripts/export_reader.py"))
+        er = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(er)
+        except SystemExit:
+            pass
+
+        for url in ("file:///Users/someone/Code/x.pdf",
+                    "file://localhost/x.pdf",
+                    "/data/raw/x.pdf",
+                    "", None):
+            out = er.doc_link(url, "Energy Statement")
+            assert "<a" not in out, (
+                f"{url!r} was rendered as a link; it resolves on nobody's "
+                f"machine but a reader's browser will still try")
+            assert "Energy Statement" in out, "the title must survive"
+
+        for url in ("https://planning.example.gov.uk/doc.pdf",
+                    "http://planning.example.gov.uk/doc.pdf"):
+            out = er.doc_link(url, "Energy Statement")
+            assert out.startswith("<a href="), f"{url!r} should still link"
+            assert url in out

@@ -499,6 +499,30 @@ def why_empty(held: int = 0, read: int = 0) -> str:
     return '<span class="q">not in the documents</span>'
 
 
+def doc_link(url, label: str) -> str:
+    """A document's title, linked only where the link goes somewhere.
+
+    512 documents carry a `file://` URL — 503 pointing into a checkout
+    that no longer exists on any machine, 9 written by the manual-ingest
+    path on 2026-08-26. Rendered as anchors they became 401 links in the
+    published reader that resolve to a stranger's filesystem: dead for
+    every reader, and worse than dead because they look live.
+
+    The register link in the applications table has guarded against
+    exactly this since it was written; the document links did not, which
+    is the same rule applied in one place and not the other.
+
+    Where the URL is not fetchable the title is rendered as plain text.
+    The document itself is still reachable: it is in the site's Drive
+    folder, which the panel links, and the coverage note says so.
+    """
+    u = str(url or "")
+    if u.startswith("http://") or u.startswith("https://"):
+        return (f'<a href="{esc(u)}" target="_blank" rel="noopener">'
+                f'{esc(label)}</a>')
+    return esc(label)
+
+
 def trim(text, n: int) -> str:
     t = (text or "").strip().replace("\n", " ")
     return t if len(t) <= n else t[: n - 1].rsplit(" ", 1)[0] + "…"
@@ -2633,11 +2657,9 @@ def main() -> int:
         if doc_id:
             d = cited_docs.get(int(doc_id))
             page = f', p.{q["page"]}' if q.get("page") else ""
-            if d and d["url"]:
-                return (f'<a href="{esc(d["url"])}" target="_blank" rel="noopener">'
-                        f'{esc(d["title"])}</a>{page} · {esc(d["application_ref"])}')
             if d:
-                return f'{esc(d["title"])}{page} · {esc(d["application_ref"])}'
+                return (f'{doc_link(d["url"], d["title"])}{page} · '
+                        f'{esc(d["application_ref"])}')
             return f'document {doc_id}{page}'
         return f'application {esc(q.get("application_ref") or "")}, adjudicated figure'
 
@@ -3337,9 +3359,7 @@ def main() -> int:
             pv = fig_prov.get((key, _qt))
             if pv and abs(pv["mw"] - float(_val)) > 0.001:
                 pv = None
-            _doc = (f'<a href="{esc(pv["url"])}" target="_blank" rel="noopener">'
-                    f'{esc(pv["title"])}</a>' if pv and pv["url"]
-                    else (esc(pv["title"]) if pv and pv["title"] else ""))
+            _doc = doc_link(pv["url"], pv["title"]) if pv and pv["title"] else ""
             _meta = []
             if pv:
                 if pv["page"]:
@@ -3398,9 +3418,7 @@ def main() -> int:
                    if r["mw"] is not None and r["unit"] not in (None, "MW")
                    else "") + '</td>'
                 + f'<td>{esc(humanise(r["as_written"] or "", sentence=True))}</td>'
-                + '<td>' + (f'<a href="{esc(r["url"])}" target="_blank" '
-                            f'rel="noopener">{esc(r["title"])}</a>'
-                            if r["url"] else esc(r["title"] or r["ref"])) + '</td>'
+                + '<td>' + doc_link(r["url"], r["title"] or r["ref"]) + '</td>'
                 + '<td class="q">' + (f'page {r["page"]}' if r["page"] else "—")
                 + f' \u00b7 {esc(r["ref"])}</td>'
                 + f'<td class="q">{esc(r["model"] or "")}</td>'
