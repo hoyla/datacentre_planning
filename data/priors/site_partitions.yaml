@@ -87,6 +87,41 @@ partitions:
     applications:
       - TowerHamlets/PA/18/00418/S
 
+  - name: blyth-offshore-wind-onshore-substation
+    reason: |
+      The onshore grid connection for the Blyth Offshore Wind Farm, on
+      the former Blyth power station land that the Northumberland Energy
+      Park schemes also occupy. A different scheme, a decade earlier,
+      and the reason it matters is what its figure was doing: its
+      substation is described as having "the capacity to accommodate up
+      to 99.9MW of offshore wind power", and that 99.9 MW was rendering
+      as the *data centre's* grid connection on
+      PTNO-12785975 (NORTHUMBERLAND ENERGY PARK - NEW CAMBOIS AI),
+      whose own stated demand is 1,100 MW — the largest in the corpus.
+      `consumption_integrity.py` reported the pair as contradicted, and
+      they are not: they are two schemes' figures in one site record.
+      A reporter reading 1,100 MW of demand against a 99.9 MW connection
+      would have drawn exactly the wrong conclusion about the most
+      prominent site we hold.
+
+      The figure itself is correctly adjudicated for its own
+      application, so nothing here corrects an adjudication — the
+      boundary is what was wrong. Adjudicated by Luke, 2026-08-26.
+
+      Scope is the 2013 permission and its documentary children:
+      15/03850/DISCON and 15/04021/FUL both carry `associated_id`
+      13/01352/FUL, and 15/04021/FUL names the scheme in full
+      ("construction of the Blyth Offshore Wind Farm onshore
+      substation"). 15/03832/NONMAT names 13/01352/FUL in its
+      description. Northumberland/16/03239/SCREEN is deliberately NOT
+      included: a 2016 screening for a new 400kV substation at Blyth is
+      a separate question and no evidence ties it to this scheme.
+    applications:
+      - Northumberland/13/01352/FUL
+      - Northumberland/15/03832/NONMAT
+      - Northumberland/15/03850/DISCON
+      - Northumberland/15/04021/FUL
+
   - name: canning-town-bidder-street
     reason: |
       The EMR site at Bidder Street and the North Crescent / Galaxy

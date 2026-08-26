@@ -1087,6 +1087,84 @@ Two things surfaced that are somebody's next job rather than this one:
 
 ---
 
+## v2.7 — the release the redesign was for (2026-08-26)
+
+The first release since 2.2 on 2026-08-21, carrying five merged
+increments (2.3–2.7), the site materialisation, the Section 35 watcher
+and this morning's adjudication of the corroboration read. Built as
+`data/exports/phase2.7_build/`: **494 sites** (519 in the reader, with
+pre-planning), 2,032 applications, 51,870 documents.
+
+**What the chain turned up, in the order it turned up.**
+
+*The corroboration read had never been adjudicated.* The Phase 3 read
+ran 17–24 August and left **4,117 power figures** across 266
+applications with no adjudication — invisible to the mandatory
+corrections gate, which only checks adjudications that exist. Luke chose
+to run the batch before building rather than ship without it. It
+returned 4,115, and the gate then found **52** of the same six
+quantity-kind errors it always finds, because the prompt that produces
+them is unchanged. Sites awaiting adjudication went 5 → 0.
+
+Worth recording how close this came to being missed: the artefacts do
+not refuse to build over it, `sweep_null_capacity.py` did not print
+PROVISIONAL, and the only reason anyone looked was that the runbook
+lists step 1 before step 7. **A gate that checks the quality of what
+exists cannot see what was never created.**
+
+*A number that was actively misleading on the biggest site we hold.*
+`consumption_integrity.py` reported **three** contradicted sites where
+the runbook records two as known and says a third "means something new
+to read". The third was Northumberland Energy Park (New Cambois): a
+99.9 MW grid connection against 1,100 MW of stated demand, the largest
+in the corpus. The two figures were not in conflict — they belonged to
+different schemes. The 99.9 MW came from a **2013** application for a
+substation "with the capacity to accommodate up to 99.9MW of offshore
+wind power", which had clustered into the data centre's site because
+both sit on the former Blyth power station land.
+
+The adjudication was correct for its own application; the *boundary* was
+wrong. Partitioned out as `blyth-offshore-wind-onshore-substation`
+(the 2013 permission and its three documentary children), which returned
+the contradicted count to two and left Cambois with no grid connection
+figure at all — the honest position. A reporter reading 1,100 MW of
+demand against a 99.9 MW connection would have drawn precisely the wrong
+conclusion about the most prominent site in the dataset.
+
+That site still holds 35 applications spanning four unrelated schemes —
+the wind connection, Britishvolt's battery plant, JDR's subsea cable
+factory and the data centre. Only the figure that was misleading has
+been separated; the rest is on the roadmap.
+
+**The release diff, which is the part that has to be read rather than
+skimmed.** Three groups fell, all deliberate, and two of them are
+citation breakage that belongs in the release notes:
+
+- **Ten site keys retired**, each merged into exactly one live site.
+  The mapping is in the release notes; a citation of any of them stops
+  resolving.
+- **Three workbook columns removed** — *Advisers and consultants*,
+  *Applicant / operator*, *Planning authority (from documents)* — not
+  dropped but split by the 2.4 parties work into more precise
+  successors, which is why Sites columns went 64 → 75. Any script
+  reading the old names breaks.
+- **The "Exclude unknown MW consumption" filter control**, which the
+  runbook already records as removed on purpose.
+
+Everything else rose, and one figure is a useful check on the whole
+morning: `power_adjudication` went 14,780 → 18,895, exactly the 4,115
+the batch returned.
+
+**A correction to the record.** The estimate that persuaded us to run
+the batch — "69 sites would be understated" — was wrong. It came from a
+query filtering `value_unit ILIKE '%W%'`, which also matches MWh and
+kWp: energy and peak-PV figures that were never adjudication
+candidates. The decision was right on the script's own authoritative
+count, and the outcome bore it out, but the number was not evidence and
+should not have been quoted as though it were.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across
