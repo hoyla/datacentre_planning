@@ -124,9 +124,28 @@ def built_reader(tmp_path_factory) -> str:
     import subprocess
     import sys
     root = Path(__file__).resolve().parent.parent
+
+    # A reader that already exists, driven as-is. Without this the suite
+    # can only test a page it built itself from the live database, so in
+    # any environment without one — CI, most obviously — all seventeen
+    # tests skip and report green while asserting nothing. Pointed at
+    # the committed index.html it drives the exact bytes about to be
+    # served, which is the only version whose behaviour anybody cares
+    # about at the moment of deploying it.
+    prebuilt = os.environ.get("READER_HTML")
+    if prebuilt:
+        path = Path(prebuilt)
+        if not path.exists():
+            pytest.fail(f"READER_HTML is set to {prebuilt}, which does not exist")
+        if path.stat().st_size < 1_000_000:
+            pytest.fail(f"READER_HTML at {prebuilt} is {path.stat().st_size} bytes; "
+                        f"a reader is tens of megabytes, so this is a stub or a "
+                        f"truncated write")
+        return path.resolve().as_uri()
+
     out = tmp_path_factory.mktemp("reader") / "reader.html"
     if not os.environ.get("DATABASE_URL"):
-        pytest.skip("DATABASE_URL not set")
+        pytest.skip("DATABASE_URL not set and READER_HTML not given")
     proc = subprocess.run(
         [sys.executable, str(root / "scripts" / "export_reader.py"),
          "--out", str(out), "--phase", "test"],
