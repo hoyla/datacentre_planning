@@ -1,0 +1,46 @@
+Docusign Envelope ID: 24864B2F-D684-8560-8223-5F63E0497 152
+
+10.
+
+Segro Pure Premier Park Data Centre Limited
+
+Notes to the Financial Statements
+For the Period Ended 31 December 2025
+
+Investment property
+2025
+£
+Valuation
+Additions 146,724,887
+Fair value gain on investment property 1,075,113
+At 31 December 2025 147,800,000
+
+The investment property was valued at 31 December 2025 by an independent external valuer. All
+properties are classified as Level 3 in the fair value hierarchy as defined by IFRS 13 Fair Value
+Measurement.
+
+The valuation was performed by CBRE Limited using recognised valuation techniques consistent with
+IFRS 13 Fair Value Measurement.
+
+The valuation incorporates a number of assumptions including market yields, development assumptions
+and comparable market transactions.
+
+A change in the key assumptions used in the valuation, including yields or development assumptions,
+could result in a material change in the fair value of the investment property.
+
+Trade and other receivables
+
+2025
+£
+Prepayments 385,467
+VAT receivable 25,821
+Amounts owed from related parties 75
+——411,363
+
+Trade and other payables
+2025
+£
+Trade payables 572,913
+Accruals 157,407
+
+22

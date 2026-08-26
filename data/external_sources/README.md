@@ -176,6 +176,17 @@ snapshot can never diverge from its source.
 |---|---|---|---|---|
 | `ark-accounts-fy2025.pdf` | Ark Data Centres Limited (05656968) | Full accounts to 30 June 2025 | 2025-12-17 | `63caea3de3f43f4a18b86efa6f7146f2e1e8b7e96973311eb637dc186eaa1a50` |
 | `kao-accounts-fy2025.pdf` | Kao Data Limited (11756346) | Full accounts to 31 March 2025 | 2025-12-18 | `275f71fd02d9f1aafa51a51e43a7242bd9118bd81ccfc4205e1325c2517a99b8` |
+| `ark-estates-2-accounts-fy2025.pdf` | Ark Estates 2 Limited (12113969) | Group accounts to 30 June 2025 | 2025-12-12 | `6ad20b01d684e88dbcae770e051c2218072a5c575facbf04b034ccb0f1b9d6a9` |
+| `hfd-datavita-accounts-fy2025.pdf` | HFD DataVita Limited (SC467509) | Full accounts to 30 June 2025 | 2026-03-07 | `ca2d02cde86cef01911126635429adf4364782ac59b21f45b6cd07f4a841e9b2` |
+| `vantage-uk-accounts-fy2025.pdf` | Vantage Data Centers UK Limited (06132144) | Full accounts to 31 December 2025 | 2026-08-07 | `472d515155b2ae0832131d07f5b43f2c13f0fd59a37219d70438dd518406ebc6` |
+| `segro-pure-premier-park-accounts-fy2025.pdf` | Segro Pure Premier Park Data Centre Limited (16311501) | Small-company accounts to 31 December 2025 | 2026-07-21 | `d4c4a217a81688dd58565691cbb03c5fdfcfc58c07f4bd8d4dbf603aa3d4bbf2` |
+
+**`locator` is the page number PRINTED ON THE PAGE**, not the PDF's page
+index — these filings begin with unnumbered cover pages, so the Court
+Lane critical-judgements note is "page 5" and the seventh page of the
+PDF. The OCR files are named for the printed number, which is what
+`dcp.capacity_claims.verify_ch_quotes` looks up, and every claim's `note`
+gives both.
 
 **Companies House scans what it publishes.** Neither PDF has a text
 layer — every page is an image. Figures were therefore transcribed by eye
@@ -202,6 +213,70 @@ Figures, quotes, locators and hand-adjudicated site matches live in
 `scripts/load_capacity_claims.py`. Two of the six Ark capacity figures
 match no site: Meridian Park (an operating Enfield data centre absent
 from this corpus entirely) and the A9 building (no location stated).
+
+## companies-house-spvs.yaml, companies-house-ownership.yaml
+
+The scheme-SPV sweep of 2026-08-26. 111 companies named in Barbour's
+owner-role slots, in `party_applicant`/`party_other` findings and in
+`data/priors/organisation_aliases.yaml` were resolved at Companies House
+and their filings pulled. **The first file is hand-written and the second
+is generated** — do not hand-edit `companies-house-ownership.yaml`;
+regenerate it with `scripts/ch_write_ownership.py --filings …`.
+
+`companies-house-spvs.yaml` holds the judgements: that a name in the
+corpus IS a particular company, and that that company's scheme IS a
+particular site, each with its evidence and a confidence from
+`confirmed` / `probable` / `tentative`. A mapping onto site 5, 59, 61 or
+444 can never be `confirmed`, because those site records are over-merged
+clusters — site 61 alone carries 308 applications across about six
+campuses — and a test enforces it. Eleven names that resolve to no
+company at all are listed under `unresolved:` rather than dropped.
+
+`companies-house-ownership.yaml` holds what four registers say, because
+no one of them is sufficient. The PSC register reads "no registrable
+person" for 13 of the 111: an overseas limited partnership is not a
+registrable relevant legal entity, so a US- or Jersey-parented scheme's
+page says nothing. **The charges register is asked for every company
+rather than gated on the profile's `has_charges` flag**, which read false
+for 44 of the 49 companies that do carry charges — and the charges are
+where the chain is. STX-A10 Limited (Waltham Cross) names no PSC and no
+parent; its two charges were to Global Infrastructure UK Limited, whose
+PSC is Alphabet, Inc.
+
+The Register of Overseas Entities is a better ownership source than the
+domestic register here: an overseas entity files no accounts, so it
+discloses no capacity and no solvency position, but it must name a
+beneficial owner. Eleven Jersey Vantage vehicles all name DigitalBridge
+Group, Inc.; Manor Farm Propco Limited, which holds the 147 MW Slough
+scheme, names Tritax Big Box REIT plc; and Manton Park Limited states
+"no beneficial owner identified", which is a stronger negative than the
+PSC register's because the question was asked in the register designed
+to answer it.
+
+Shareholders come from the confirmation statement, which is the cheapest
+document in this survey: alone among the Companies House filings read
+here it is filed **electronically and carries a text layer**, so names
+are extracted rather than transcribed by eye. 57 of the 111 yielded a
+list, 178 shareholdings in all. Two things about the field. The most
+recent statement is usually the wrong one to read — a
+"confirmation-statement-with-no-updates" carries no shareholder block by
+definition, and 48 companies filed one most recently — so the history is
+walked back to the last filing that names holders, and
+`confirmation_statement.date` says which filing that was. And the block
+is a two-column table: extracting it without `pdftotext -layout`
+recovered two of Sequence (Iver) UK Limited's ten shareholders and
+truncated "THE INVESTMENT AND DEVELOPMENT OFFICE OF THE GOVERNMENT OF
+RAS AL KHAIMAH" at its line break.
+
+Reproduce with `scripts/ch_resolve_spvs.py` (names to numbers),
+`scripts/ch_pull_filings.py` (profile, filing history, charges, PSC,
+officers), `scripts/ch_fetch_confirmations.py` (shareholders) and
+`scripts/ch_fetch_accounts.py` (the PDFs). Raw responses
+are snapshotted, append-only, under `data/raw/companies_house/<date>/`
+and are not committed; `CH_API_KEY` is in `.env`, the limit is 600
+requests per five minutes, and the document endpoint 302s to a signed S3
+URL that expires in 60 seconds and rejects a request still carrying the
+Authorization header.
 
 ## operator_snapshots/ and operator-claims.yaml
 

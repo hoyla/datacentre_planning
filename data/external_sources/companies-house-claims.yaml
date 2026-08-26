@@ -87,6 +87,91 @@ sources:
     pages: 12
     scanned: true
 
+  # --- Added 2026-08-26, from the scheme-SPV sweep ----------------------
+  #
+  # 111 companies named in Barbour's owner-role slots, in applicant
+  # findings and in organisation_aliases.yaml were resolved at Companies
+  # House and their filings pulled (see companies-house-spvs.yaml for
+  # which company is which scheme, and companies-house-ownership.yaml for
+  # who lends to and owns each). 52 had filed accounts of a category that
+  # could carry an investment-property note; every page of all 52 was
+  # OCR'd and searched for "MW", "MWh", "MVA" and "megawatt". Ten
+  # documents mention megawatts at all, and four of them state something
+  # this store did not already hold. Those four are added below.
+  #
+  # **`locator` is the page number PRINTED ON THE PAGE**, which is what a
+  # reader opening the PDF sees, and it is not the PDF's own page index —
+  # Companies House filings begin with unnumbered cover pages. Each claim
+  # says both.
+  #
+  # Two corrections to what this file said before.
+  #
+  # First, **Vantage UK does state a capacity figure.** The 2026-08-20
+  # survey recorded Vantage as one of five operators disclosing none.
+  # That was read from an earlier filing; the accounts to 31 December
+  # 2025, filed on 7 August 2026, carry a SECR table with a "Total IT
+  # load (MW)" line. It is a company total, not a site figure, and it is
+  # loaded as company_level accordingly.
+  #
+  # Second, **a single-asset SPV does not always name a capacity.** SEGRO
+  # Pure Premier Park Data Centre Limited is exactly the shape Court Lane
+  # is — one scheme, one investment property, an external valuation by
+  # CBRE, an IFRS 13 fair-value note — and its note says the valuation
+  # "incorporates a number of assumptions including market yields,
+  # development assumptions and comparable market transactions" without
+  # saying what the development assumptions are. So the requirement is to
+  # state that assumptions exist; naming a megawatt figure among them is
+  # still a choice. Court Lane made it and SEGRO Pure did not. The
+  # valuation is loaded and the absence is recorded, because "we looked
+  # and it is not there" is a different fact from "we did not look".
+  - key: ark_estates_2_fy2025
+    company_name: ARK ESTATES 2 LIMITED
+    company_number: "12113969"
+    filing: Group accounts made up to 30 June 2025
+    filed: 2025-12-12
+    ch_document_id: Ln80J_tBhym3JkVONO3ezvA9KELV9l41j4JiH4znJbY
+    url: https://find-and-update.company-information.service.gov.uk/company/12113969/filing-history/MzQ5Mzc5MzI3MGFkaXF6a2N4/document?format=pdf
+    local_pdf: ark-estates-2-accounts-fy2025.pdf
+    sha256: 6ad20b01d684e88dbcae770e051c2218072a5c575facbf04b034ccb0f1b9d6a9
+    pages: 34
+    scanned: true
+
+  - key: hfd_datavita_fy2025
+    company_name: HFD DATAVITA LIMITED
+    company_number: "SC467509"
+    filing: Full accounts made up to 30 June 2025
+    filed: 2026-03-07
+    ch_document_id: beeN-chEQgnIWSTQXevoDd7uv1sUU9s_8okWAi8ksIU
+    url: https://find-and-update.company-information.service.gov.uk/company/SC467509/filing-history/MzUwODk1MjEwMGFkaXF6a2N4/document?format=pdf
+    local_pdf: hfd-datavita-accounts-fy2025.pdf
+    sha256: ca2d02cde86cef01911126635429adf4364782ac59b21f45b6cd07f4a841e9b2
+    pages: 30
+    scanned: true
+
+  - key: vantage_uk_fy2025
+    company_name: VANTAGE DATA CENTERS UK LIMITED
+    company_number: "06132144"
+    filing: Full accounts made up to 31 December 2025
+    filed: 2026-08-07
+    ch_document_id: CdofZXXudZ9nV_xTUIluaq_knRX9iBxYxwnr84nntRs
+    url: https://find-and-update.company-information.service.gov.uk/company/06132144/filing-history/MzUzNzUyNTY1OGFkaXF6a2N4/document?format=pdf
+    local_pdf: vantage-uk-accounts-fy2025.pdf
+    sha256: 472d515155b2ae0832131d07f5b43f2c13f0fd59a37219d70438dd518406ebc6
+    pages: 49
+    scanned: true
+
+  - key: segro_pure_premier_park_fy2025
+    company_name: SEGRO PURE PREMIER PARK DATA CENTRE LIMITED
+    company_number: "16311501"
+    filing: Accounts for a small company made up to 31 December 2025
+    filed: 2026-07-21
+    ch_document_id: CmvtR15l8l0bH0y64_dF0zJAFQOaDeXWgSVO4yDKp5o
+    url: https://find-and-update.company-information.service.gov.uk/company/16311501/filing-history/MzUzMjI0NTI2M2FkaXF6a2N4/document?format=pdf
+    local_pdf: segro-pure-premier-park-accounts-fy2025.pdf
+    sha256: d4c4a217a81688dd58565691cbb03c5fdfcfc58c07f4bd8d4dbf603aa3d4bbf2
+    pages: 25
+    scanned: true
+
 claims:
   # --- Ark, per-campus built capacity (strategic report, page 4) ---------
   - source: ark_fy2025
@@ -309,7 +394,22 @@ claims:
     as_at: 2026-04-30
     locator: page 5
     holder: UK Court Lane DC Ltd
-    note: Note 2, critical judgements — investment property fair value.
+    note: >-
+      Note 2, critical judgements — investment property fair value.
+      Printed page 5, the seventh page of the PDF.
+      **What this figure is, established 2026-08-26.** It was first read
+      as disagreeing with Barbour, which titles the project "COURT LANE -
+      140MW DATA CENTRE". It does not. The scheme is site 81 and its own
+      environmental statement (ChilternSouthBucks/PL/22/4145/OA) states
+      "Total IT Load - 103.32 MW" and "Total Data Centre Load – 139.5 MW"
+      in one table on page 10, and "The proposed development has a 140MW
+      grid connection reserved" on page 27. The audited assumption is the
+      **IT load**, rounded from the planning record's own 103.32; the 140
+      is the whole-site load and the connection sized for it. Three
+      consistent figures for three quantities, not a discrepancy —
+      recorded here because the earlier reading is the mistake this store
+      exists to prevent, and because it says which quantity an SPV's
+      valuation assumption actually is.
     quote: >-
       The valuation is subject to a number of assumptions, including:
       planning permission and power infrastructure being available as
@@ -340,7 +440,220 @@ claims:
       International Property Consultants Limited Chartered Surveyors,
       who are not connected with the company."
 
+  # --- Ark Estates 2: the campus the group accounts do not size ---------
+  #
+  # Ark Data Centres Limited's own FY2025 accounts name Union Park only in
+  # a forward-looking sentence — "additional sites in and around London –
+  # Union Park, Longcross Park and Alliance Park" — with no figure. The
+  # subsidiary that holds it states the figure in its own strategic
+  # report, which is the argument for reading the estate companies and not
+  # only the group: three of Ark's six campus figures are in the group
+  # accounts and this one is not.
+  #
+  # Ark Estates Cody Park Limited (08630640) and Ark Estates Spring Park
+  # Limited (10009711) also repeat their own campus figures — 48.78 MW and
+  # 41.68 MW — identically to the group accounts already loaded here. They
+  # are corroboration, not new claims, and are deliberately NOT loaded a
+  # second time: two rows carrying the same megawatts would double in any
+  # sum that reached them.
+  - source: ark_estates_2_fy2025
+    claim_name: Union Park
+    quantity_type: built_capacity
+    value: 24
+    unit: MW
+    stage: built
+    as_at: 2025-06-30
+    locator: page 1
+    holder: Ark Estates 2 Limited and its subsidiaries
+    note: >-
+      Strategic report; printed page 1, the fourth page of the PDF. The
+      2024 comparative in the same sentence is 12 MW, so built capacity
+      at Union Park doubled in the year.
+    quote: >-
+      Ark Estates 2 Limited and its subsidiaries own the Union Park site,
+      which consists of 4 blocks, and had 24 MW (2024: 12 MW) of built
+      capacity as of 30 June 2025. In addition, 48 MW of further capacity
+      is under construction, with a further 24 MW to be built subject to
+      planning permission.
+
+  - source: ark_estates_2_fy2025
+    claim_name: Union Park (under construction)
+    quantity_type: built_capacity
+    value: 48
+    unit: MW
+    stage: under construction
+    as_at: 2025-06-30
+    locator: page 1
+    holder: Ark Estates 2 Limited and its subsidiaries
+    note: >-
+      Same sentence as the 24 MW built figure, kept separate for the same
+      reason Cody Park's 800 kW is: under construction is not built, and
+      adding them would state a total the company did not state.
+    quote: >-
+      In addition, 48 MW of further capacity is under construction, with a
+      further 24 MW to be built subject to planning permission.
+
+  - source: ark_estates_2_fy2025
+    claim_name: Union Park (subject to planning permission)
+    quantity_type: built_capacity
+    value: 24
+    unit: MW
+    stage: to be built subject to planning permission
+    as_at: 2025-06-30
+    locator: page 1
+    holder: Ark Estates 2 Limited and its subsidiaries
+    note: >-
+      A third tranche in the same sentence, and the one a planning
+      reporter should care about most: the company is telling its
+      auditors that 24 MW of its pipeline depends on a consent it does
+      not yet have. Carried as built_capacity with the stage saying it is
+      not built, which is the convention this file already uses for
+      capacity under construction.
+    quote: >-
+      with a further 24 MW to be built subject to planning permission.
+
+  - source: ark_estates_2_fy2025
+    claim_name: Union Park (site value)
+    quantity_type: investment_property_fair_value
+    value: 839790000
+    unit: GBP
+    stage: part built, part under construction
+    as_at: 2025-06-30
+    locator: page 1
+    holder: Ark Estates 2 Limited and its subsidiaries
+    note: >-
+      From the financial-indicators table on the same page — investment
+      property 839,790,000 against 612,500,000 in 2024, +37.11% as the
+      table itself states. It is the group's figure and the group's
+      stated holding is the Union Park site.
+    quote: >-
+      Investment property 839,790,000 612,500,000 227,290,000 +37.11%
+
+  # --- DataVita: a designated AI Growth Zone, and what is committed -----
+  - source: hfd_datavita_fy2025
+    claim_name: DataVita Tier III data centre — first phase AI capacity
+    quantity_type: built_capacity
+    value: 16
+    unit: MW
+    stage: committed, first phase of AI Growth Zone build-out
+    as_at: 2025-06-30
+    locator: page 1
+    holder: HFD DataVita Limited
+    note: >-
+      Strategic report; printed page 1, the fourth page of the PDF. The
+      figure is tied to a stated capital commitment of £112 million and
+      to a named partner, CoreWeave Inc., which is what separates it from
+      an aspiration. The much larger 500 MW figure in the same paragraph
+      is deliberately not loaded — see `noted` at the end of this file.
+    quote: >-
+      As part of this initiative, the first phase of build out represents
+      a capital commitment of £112 million, which will fully enable 16 MW
+      of AI grade capacity at DataVita's existing Tier III data centre.
+
+  # --- Vantage UK: the correction to "no operator but Ark" --------------
+  - source: vantage_uk_fy2025
+    claim_name: Vantage Data Centers UK Limited — total IT load
+    quantity_type: it_load
+    value: 41.19
+    unit: MW
+    stage: company total
+    as_at: 2025-12-31
+    company_level: true
+    locator: page 7
+    holder: Vantage Data Centers UK Limited
+    note: >-
+      SECR table in the directors' report; printed page 7, the tenth page
+      of the PDF. 2024 comparative 35.28 MW. **What this measures is not
+      stated.** It sits in the table as the denominator of an emissions
+      intensity ratio, and 505,866,500 kWh over the year averages about
+      57.7 MW of total draw, which against 41.19 MW of IT gives an
+      implied PUE of 1.40 — consistent with 41.19 being an average IT
+      draw rather than an installed or contracted rating. Consistent is
+      not the same as stated, and the company's own words are kept.
+    quote: >-
+      Total IT load (MW) 41.19 35.28
+
+  - source: vantage_uk_fy2025
+    claim_name: Vantage Data Centers UK Limited — UK energy consumption
+    quantity_type: metered_consumption
+    value: 505866500
+    unit: kWh
+    stage: company total
+    as_at: 2025-12-31
+    company_level: true
+    locator: page 7
+    holder: Vantage Data Centers UK Limited
+    note: >-
+      Same SECR table; 2024 comparative 408,199,609 kWh, a rise of 24%.
+      Stated in kWh and transcribed in the unit printed rather than
+      converted to the MWh the Ark and Kao consumption claims use.
+      Methodology is stated on the same page: "Electricity usage is based
+      on billed consumption from suppliers using actual meter readings."
+    quote: >-
+      UK Energy Consumption (kWh) 505,866,500 408,199,609
+
+  # --- SEGRO Pure Premier Park: the valuation without a capacity --------
+  - source: segro_pure_premier_park_fy2025
+    claim_name: Premier Park, Park Royal (site value)
+    quantity_type: investment_property_fair_value
+    value: 147800000
+    unit: GBP
+    stage: under development
+    as_at: 2025-12-31
+    locator: page 22
+    holder: Segro Pure Premier Park Data Centre Limited
+    note: >-
+      Note 8, investment property. Valued by CBRE Limited as independent
+      external valuer, Level 3 in the IFRS 13 hierarchy. The company was
+      incorporated on 12 March 2025 and this is its first period, so the
+      whole 147,800,000 is 146,724,887 of additions plus a 1,075,113 fair
+      value gain. **No capacity figure appears anywhere in the 25 pages**
+      — the note says the valuation "incorporates a number of assumptions
+      including market yields, development assumptions and comparable
+      market transactions" and stops there.
+    quote: >-
+      Additions 146,724,887 Fair value gain on investment property
+      1,075,113 At 31 December 2025 147,800,000
+
 matches:
+  - claim_name: Court Lane Industrial Estate, Iver
+    site_id: 81
+    method: applicant_and_figure
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-26
+    evidence: >-
+      Three things line up. The accounts name one asset, "a freehold
+      property at Court Lane Industrial Estate, Iver". Site 81 carries 42
+      applicant findings naming UK Court Lane DC Ltd, several in the
+      compound form "USAARE/CORSCALE UK Court Lane DC LTD", across
+      ChilternSouthBucks/PL/22/4145/OA, PL/22/3221/EIASR and
+      Bucks/PL/26/02874/DE. And the figure itself corroborates: the
+      accounts assume 103.3 MW, and page 10 of PL/22/4145/OA states
+      "Total IT Load - 103.32 MW" — an audited valuation assumption and
+      a planning submission agreeing to two decimal places, which is
+      identity rather than coincidence.
+      Recorded as probable rather than strong because the doubt is about
+      the site record, not the attribution: site 81's display name is
+      "SEGRO PARK THORNEY BUSINESS PARK - PHASE 1 - DATA CENTRE" and
+      SEGRO (Iver 1) Limited and Thorney Lane LLP resolve to it too, so
+      the record may be carrying two adjacent Iver schemes. Whose scheme
+      Court Lane is, is not in doubt.
+
+  - claim_name: Court Lane Industrial Estate, Iver (site value)
+    site_id: 81
+    method: applicant_and_figure
+    confidence: probable
+    matched_by: hand:claude-opus-5:2026-08-26
+    evidence: >-
+      The same note in the same filing as the capacity assumption above,
+      and the £205,000,000 is what that assumption underpins — remove
+      the valuation and the sentence has no reason to state a megawatt
+      figure at all. Matched on the same evidence and carrying the same
+      caveat about site 81's boundaries. Worth reading against Barbour's
+      £1bn for the project, which is a construction value rather than the
+      fair value of an asset under construction: two different quantities
+      again, not two answers to one question.
+
   - claim_name: Cody Park
     site_id: 14
     method: name_and_applicant
@@ -422,3 +735,85 @@ considered:
       exists, so there is no honest way to attach them to one site.
       They are loaded as unmatched claims and belong in an operator-level
       view rather than a site panel.
+
+  - claim_name: Union Park
+    reason: >-
+      The corpus's Union Park record is site 61, which carries 308
+      applications across roughly six separate Hayes and Southall
+      campuses — Ark's, Colt's, CyrusOne's and SEGRO's among them. A
+      24 MW figure for one campus rendered against that record would read
+      as a figure for all of them. Left unmatched until the site
+      partitioning work splits 61; the company identity is not in doubt
+      (Ark Estates 2 Limited, 12113969, see companies-house-spvs.yaml)
+      and the match is a site-record question, not an evidence question.
+
+  - claim_name: Union Park (under construction)
+    reason: Same site-61 cluster as the built figure above.
+
+  - claim_name: Union Park (subject to planning permission)
+    reason: Same site-61 cluster as the built figure above.
+
+  - claim_name: Union Park (site value)
+    reason: Same site-61 cluster as the built figure above.
+
+  - claim_name: DataVita Tier III data centre — first phase AI capacity
+    reason: >-
+      The accounts locate the 16 MW at "DataVita's existing Tier III data
+      centre". The corpus's DataVita record is site 146, "YORK ROAD
+      CHAPELHALL - DV3 DATA CENTRE", which is a **new build** on the same
+      campus. Existing and new are not the same building, and attaching a
+      figure for the operating facility to the consent for its successor
+      is precisely the error a match is supposed to prevent. Needs a
+      person to establish whether DV3 is the Tier III facility or its
+      neighbour.
+
+  - claim_name: Premier Park, Park Royal (site value)
+    reason: >-
+      Findings place SEGRO Pure Premier Park Data Centre Limited at site
+      59, a 106-application cluster whose display name is "MICROSOFT DATA
+      CENTRE BASHLEY ROAD" and which also carries the Vantage LHR11 and
+      LHR21 findings. Premier Park is in Park Royal and Bashley Road is
+      in Park Royal, so the campus is probably right and the site record
+      is doing too much work. Left unmatched pending the same
+      partitioning.
+
+# Figures read and deliberately not loaded, with the reason. Recorded
+# rather than dropped, because a number a company published is a finding
+# even when it cannot honestly become a row.
+noted:
+  - subject: >-
+      HFD DataVita Limited: "The AI Growth Zone will enable up to 500 MW
+      of AI ready data centre capacity, with the potential to attract
+      approximately £8.2 billion of private investment into North
+      Lanarkshire and the wider region."
+    source: hfd_datavita_fy2025
+    locator: page 1
+    reason: >-
+      A ceiling for a **designated zone**, not for a site. The zone is
+      "the company's existing Tier III data centre and surrounding
+      development land", formally designated by DSIT, so 500 MW covers
+      land beyond anything this corpus holds an application for. Every
+      quantity type in this store would misdescribe it: it is not built,
+      not let, not contracted with a network, and not a valuation
+      assumption. Loading it and matching it would put 500 MW on a site
+      page; loading it unmatched would put it in any total that summed
+      the store. Quoted here so that a reporter can use it with the
+      caveat attached, which is the only way it is safe to use.
+    date: 2026-08-26
+
+  - subject: >-
+      Segro Pure Premier Park Data Centre Limited states no capacity
+      figure of any kind in its first accounts, to 31 December 2025.
+    source: segro_pure_premier_park_fy2025
+    locator: whole document, 25 pages
+    reason: >-
+      A measured null rather than an omission, and the qualification the
+      Court Lane finding needed. This company is the same shape as UK
+      Court Lane DC Ltd — one scheme, one investment property, an
+      external valuation by CBRE, a fair-value note that says the
+      valuation rests on assumptions — and it does not name a megawatt
+      figure among them. Every page was rendered and OCR'd and searched
+      for "MW", "MWh", "MVA" and "megawatt"; there are no matches. So a
+      single-asset SPV's accounts are where a per-scheme capacity CAN
+      appear, and not where one always does.
+    date: 2026-08-26

@@ -76,6 +76,8 @@ QUANTITY_LABELS = {
     "metered_consumption": "metered consumption",
     "announced_capacity": "announced capacity",
     "let_capacity": "capacity let to customers",
+    "scheme_capacity": "capacity the valuation assumes",
+    "investment_property_fair_value": "valuation of the scheme",
 }
 
 # Where each panel's numbers come from, said in the artefacts rather than
@@ -124,6 +126,21 @@ QUANTITY_CAVEATS = {
         "How much of the estate has been contracted or billed to "
         "customers — not what is built, and not what those customers "
         "then draw."),
+    "scheme_capacity": (
+        "The capacity a single-asset company's audited accounts say its "
+        "valuation of this scheme assumes it will deliver. Not a "
+        "contracted grid connection, which is headroom the network "
+        "agreed to supply, and not built capacity, because nothing is "
+        "built yet: it is what an external valuer priced and an auditor "
+        "signed off on. Where it disagrees with the planning record the "
+        "two are measuring different things at different dates, and both "
+        "figures are shown."),
+    "investment_property_fair_value": (
+        "What the scheme was valued at, in pounds, in the same note that "
+        "states the capacity assumption. It is here because the "
+        "megawatts are stated in order to support it — the valuation is "
+        "what the assumption is holding up. Not a power figure, so it "
+        "has no megawatt equivalent."),
     "thermal_input": (
         "The rated thermal input of the site's standby generators, from "
         "its environmental permit. It is fuel burned, not electricity "

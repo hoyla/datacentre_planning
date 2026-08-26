@@ -1,0 +1,52 @@
+VANTAGE DATA CENTERS UK LIMITED
+
+DIRECTORS' REPORT (CONTINUED)
+FOR THE YEAR ENDED 31 DECEMBER 2025
+
+Streamlined energy and carbon reporting (SECR)
+
+The Company has presented below its carbon footprint together with an appropriate intensity metric for the year to 31 December 2025,
+
+as required to comply with SECR.
+
+2025
+UK Energy Consumption (kWh) 505,866,500
+CO2 emissions (tonnes}
+Electricity 89,333
+Diesel fuel 116
+Total CO2 emissions 89,449
+Total IT load (MW) 41.19
+Intensity ratio - total CO2 emissions/ MW IT loan 2.172
+
+2024
+408,199,609
+
+84,236
+115
+84,351
+35.28
+2.394
+
+Consumption has increased over the year to 31 December 2025 as customers have continued to increase their IT loads across
+existing data halls, alongside ‘urther capacity coming online. Despite this growth, emissions intensity per MW of IT load has decreased
+to 2,198.55 (2024: 2,393.67}, reflecting impraved operational efficiency and optimisation of energy usage across the portfolio.
+
+Energy saving opportunities continue to be identified and implemented where feasible, both at site level and across the wider estate,
+
+supporting ongeing improvements in performance against energy and carbon metrics.
+
+Disclosure of methodology - Electricity usage is based on billed consumption from suppliers using actual meter readings. IT electricity
+usage s based on metered UPS output supplies. Diesel usage for backup generators is calculated based on fuel consumption on site.
+
+Total emissions have been calculated using UK Government published carbon emission factors for 2025.
+
+Energy actions - Work is ongoing to transition backup generation from traditional red diesel to Hydrotreated Vegetable Oil (HVO), with
+deployment naw active across multiple sites during 2025. This has contributed to reduced Scope 1 emissions intensity despite
+
+increased operational activity.
+
+In addition, initiatives continue to progress to source renewable energy directly from developers, supporting long-term decarbonisation
+
+of electricity supply and alignment with corporate sustainability objectives.
+
+Page 7
