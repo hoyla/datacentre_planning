@@ -258,7 +258,10 @@ SELECT s.site_key, a.application_ref, m.joined_via,
        l.verdict, l.confidence, l.model, l.why,
        array_to_string(l.signals, ', ') AS signals,
        a.url, coalesce(ad.n,0) AS docs_held, coalesce(af.n,0) AS findings_n,
-       a.address, a.description
+       a.address, a.description,
+       -- Why this application is in the dataset at all. Appended rather
+       -- than inserted: every consumer of this row indexes positionally.
+       array_to_string(a.discovered_via, ', ') AS discovered_via
 FROM sites s
 JOIN site_members m ON m.site_id = s.id AND m.retired_at IS NULL
 JOIN applications a ON a.id = m.application_id
