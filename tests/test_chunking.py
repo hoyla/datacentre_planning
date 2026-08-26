@@ -83,9 +83,36 @@ class TestParseFailedIsNotAReading:
         assert "FROM findings f" in block
 
     def test_it_is_gated_like_the_bulk_cohort(self):
-        """It spends money, so it waits for a validated model too."""
+        """Every cohort that spends money waits for a validated model.
+
+        Asserted as a rule over the cohort list rather than as the
+        literal guard line: this test used to pin the exact string
+        `cohort in ("remaining", "parse_failed")`, and it failed the day
+        `first_read` was added to that same guard — a correct change,
+        reported as a regression. A new spending cohort must now either
+        appear in the guard or be named here as deliberately free.
+        """
         import pathlib
         import re
-        src = re.sub(r"\s+", " ", pathlib.Path(
-            "scripts/deepread_escalate_openai.py").read_text())
-        assert 'cohort in ("remaining", "parse_failed") and not dry_run' in src
+        src = pathlib.Path("scripts/deepread_escalate_openai.py").read_text()
+        flat = re.sub(r"\s+", " ", src)
+
+        # `validation` is the cohort that establishes a model IS valid, so
+        # gating it on a validated model would deadlock. `power` reuses
+        # already-paid-for extractions rather than reading documents.
+        FREE = {"validation", "power"}
+
+        choices = re.search(r'"--cohort",\s*choices=\[([^\]]+)\]', src)
+        assert choices, "cannot find the --cohort choices list"
+        cohorts = set(re.findall(r'"([a-z_]+)"', choices.group(1)))
+        assert cohorts, "no cohorts parsed"
+
+        guard = re.search(r"if cohort in \(([^)]*)\) and not dry_run", flat)
+        assert guard, "the validation guard is gone, not merely changed"
+        gated = set(re.findall(r'"([a-z_]+)"', guard.group(1)))
+
+        ungated = cohorts - gated - FREE
+        assert not ungated, (
+            f"cohorts {sorted(ungated)} spend money but do not wait for a "
+            f"validated model. Add them to the guard, or to FREE here with "
+            f"the reason they cost nothing.")

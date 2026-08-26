@@ -134,7 +134,17 @@ def built_reader(tmp_path_factory) -> str:
     if proc.returncode != 0:
         combined = proc.stdout + proc.stderr
         tail = combined.strip().splitlines()[-8:]
-        if "uncorrected" in combined:
+        # The gate's own refusal, matched on the words it actually
+        # prints. This looked for "uncorrected" alone, which is the word
+        # in the *override flag* rather than in the message — so on
+        # 2026-08-26 a correctly-refused build was reported to a reader
+        # as "build failed", and the tail shown was the tail of the
+        # remedy instructions rather than the reason. A test that cannot
+        # recognise a guard doing its job will be silenced the first
+        # time the guard fires.
+        if ("uncorrected" in combined
+                or "Refusing to build" in combined
+                or "quantity-type corrections" in combined):
             pytest.skip("adjudication gate refused the build: " + " / ".join(tail))
         if "could not connect" in combined or "OperationalError" in combined:
             pytest.skip("live database unreachable: " + " / ".join(tail))
