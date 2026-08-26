@@ -112,7 +112,29 @@ and is not a publishable figure yet. See the gate below.
 Each of these is worth attempting. None should be attempted before its
 gate passes, and the gates are cheap.
 
-**A world map on the start page.** *Gate: the jurisdiction field is
+**A world map on the start page. GATE PASSED 2026-08-26 — AND IT STILL
+SHOULD NOT SHIP.** The normalisation landed
+(`data/priors/jurisdiction_codes.yaml`) and "not disclosed" is a
+well-defined category of 19 companies, 15 site-mapped, covering 11
+sites. Both conditions below are met. But the gate was written against
+the wrong risk. It assumed a map would draw the 19 countries the raw
+strings appeared to hold; those were 20 *spellings*, and normalised the
+live jurisdiction field yields **GB 63, US 9, NZ 1, JE 1** and 2
+unmapped. Four non-UK pins, three of them singletons.
+
+The disqualifying fault is what the map cannot see. **Five schemes have
+Luxembourg shareholders** — Watt EquityCo S.à r.l., Neon Sequence
+(Iver) SCSp, ICG-Longbow No. 5 S.à r.l., Invesco Real Estate Value-Add
+II Holdco S.à r.l., Guardian Energy Holding 1 SCSp — and the
+shareholder register carries **no jurisdiction field at all**, only a
+name. A map keyed on the normalised field draws no Luxembourg while the
+data holds five. It would not merely be thin; it would be confidently
+wrong in the direction of "less foreign than it is". A histogram or a
+tier bar does not lie that way. Revisit only with a jurisdiction
+derived from shareholder and accounts evidence too, not from the PSC
+field alone.
+
+*Original gate, kept for the record: the jurisdiction field is
 normalised to ISO country codes with a recorded mapping, and the
 "not disclosed" population is renderable as a category rather than
 omitted.* A map that draws 19 countries and silently drops the 13
@@ -148,6 +170,70 @@ to DigitalBridge; Blackstone, Alphabet, CyrusOne, Invesco, Tritax). A
 cannot currently ask of any public source. *Gate: the same
 normalisation, plus a decision on how to treat a `tentative` mapping in
 an aggregate — one wrong link makes a wrong cluster.*
+
+## Measured 2026-08-26 — what the four registers actually say
+
+The tier was computed twice by different means (an imperative
+per-company walk, and set algebra over a flattened signal table) with
+**zero disagreements**: **UK 62 / overseas 30 / not disclosed 19** of
+111, so 49 (44.1%) are non-UK or undisclosed. The earlier 43% differed
+by exactly one company — folding Jersey into the UK gives 48, and the
+company that flips is a Jersey-trustee case.
+
+**The headline is stable; the split inside it is not.** Across six
+counting variants the non-UK-or-undisclosed total stays at 48–50, but
+overseas ranges **11 to 40** depending which registers are read. Quote
+the total if you must quote anything, and never the split without its
+rule.
+
+**The three overseas populations barely overlap, and that is the
+finding.** Overseas-owned ∩ overseas-lent is **2 companies**;
+overseas-owned ∩ foreign-parent-in-accounts is 6; overseas-lent ∩
+foreign-parent is 2. Any overseas signal at all — owner, lender or
+accounts parent — is **46 of 111 (41%)**. Nationality of the parent is
+not a proxy for the lending, and the lending is not a proxy for the
+parent.
+
+**Five companies read UK on the PSC register and are not**, which is
+precisely the case a nationality-keyed map or flag would render
+British:
+
+| company | PSC says | accounts say |
+|---|---|---|
+| CyrusOne UK6 (12590238) | UK holdco | Cavalry Parent LP, Delaware, consolidated via CyrusOne Dutch Holdings B.V. — **and an outstanding charge to that same Dutch sister** |
+| CyrusOne UK 8 (15420773) | UK holdco | same shape |
+| SOF-11 Docklands DC UK Bidco (12281214) | UK holdco (the Luxembourg S.à r.l. ceased 2019) | SOF-11 International SCSp, Luxembourg |
+| GLP Lutterworth MPS 9 (12068999) | UK midco | a Luxembourg SCSp |
+| Vantage Data Centers UK (06132144) | DigitalBridge Group, Inc. with a **null** jurisdiction | a Luxembourg BidCo; sole shareholder a Jersey SPV |
+
+Reading all four registers together gives UK 58 / overseas 35 / not
+disclosed 18 — but the accounts route covers only 52 of 111, so the
+other 59 are *unmeasured* on it, not negative on it. Say which.
+
+**Confidence is the load-bearing caveat.** 19 of the 30
+overseas-controlled companies rest on a `probable` or `tentative`
+company→scheme link. Any "N schemes are foreign-owned" is 63% built on
+unconfirmed mappings. Site coverage is 63 of 494 sites (12.8%), and **8
+of those 63 hold companies that disagree with each other** — three are
+the known over-merged clusters, and site 61 alone carries 8 companies,
+all tentative, split 3 overseas / 5 UK. A site-level tier must not
+render there.
+
+**Two things no register supports.** A security agent's UK registration
+says nothing about where the lenders are — 19 companies have
+outstanding charges naming only an agent (CBRE Loan Services, GLAS,
+Solutus, U.S. Bank Trustees, Situs, Apex, Trimont), a "cannot see"
+population larger than the overseas-lender one. And an LP is not
+evidence of anything: Scottish and English LPs exist, so "UK Court Lane
+DC Holdings, LP" is overseas only because the accounts say so.
+
+**The mechanism, fully evidenced in one company.** UK Court Lane DC
+Ltd's accounts disclose "an outstanding loan balance including fees and
+interest of £87,872,697 (2025: £nil) due to a related party" at 9.75%
+per annum, secured by a first legal charge over the freehold, refinanced
+28 May 2026 with an £84m facility at SONIA+5.50% applied in refinancing
+the existing NFO Holdings, LLC facility. That is how value leaves a
+scheme that is UK-registered on its face.
 
 ## Order of work
 
