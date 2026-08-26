@@ -125,6 +125,29 @@ def read_workbook(path: Path) -> dict[str, list[list]]:
     return out
 
 
+def named_prefix(want: list[str]) -> list[str]:
+    """The generated header ends where its names do — see reconcile_columns."""
+    return list(want[:next((i for i, n in enumerate(want)
+                            if not n.strip()), len(want))])
+
+
+def reordered_columns(have: list[str], want: list[str]) -> list[str]:
+    """Columns present in both headers but in a different relative order.
+
+    reconcile_columns never moves a column, deliberately. The cost of
+    that choice is that a reordered export writes its values under
+    columns formatted for something else, and the data is internally
+    consistent so nothing looks wrong. Naming the columns here is what
+    turns that into something a person can see.
+    """
+    if not any(h.strip() for h in have):
+        return []
+    want = named_prefix(want)
+    common = [c for c in have if c in want]
+    target = [c for c in want if c in common]
+    return [c for c, t in zip(common, target) if c != t]
+
+
 def reconcile_columns(have: list[str], want: list[str]) -> list[dict]:
     """Column edits that turn `have` into `want`, formatting carried along.
 
@@ -147,8 +170,7 @@ def reconcile_columns(have: list[str], want: list[str]) -> list[dict]:
     # tab five columns to the right and left the formatting describing
     # empty space. A column with no name cannot be matched by name, so
     # the header ends where the names do.
-    want = list(want[:next((i for i, n in enumerate(want)
-                            if not n.strip()), len(want))])
+    want = named_prefix(want)
     edits: list[dict] = []
     cur = list(have)
     # Remove what the export no longer produces, right to left so the
@@ -178,6 +200,10 @@ def main() -> int:
     ap.add_argument("--auth", action="store_true",
                     help="run the consent flow and exit")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--allow-drift", action="store_true",
+                    help="write anyway when the Sheet's shape no longer "
+                         "matches the workbook's (missing tabs, reordered "
+                         "columns) instead of refusing")
     args = ap.parse_args()
 
     if args.auth:
@@ -214,11 +240,19 @@ def main() -> int:
     theirs = [t for t in tabs if t not in data]
     if theirs:
         print(f"  leaving alone (not generated): {', '.join(sorted(theirs))}")
+
+    # Drift is anything the reconciliation cannot carry across on its own.
+    # It used to be printed and then ignored, which in an automated chain
+    # is a warning nobody reads and a run that reports success — so it is
+    # collected and refused instead.
+    drift: list[str] = []
     missing = [t for t in data if t not in tabs]
     if missing:
         print(f"  NOT in the Sheet, skipped: {', '.join(missing)}")
         print("   create these tabs by hand first if they are wanted, so they "
               "can be formatted once and kept")
+        drift += [f"tab {t!r} is in the workbook but not in the Sheet"
+                  for t in missing]
 
     requests: list[dict] = []
     value_ranges: list[dict] = []
@@ -236,6 +270,12 @@ def main() -> int:
             spreadsheetId=sid,
             range=f"{a1(title)}!1:1").execute().get("values", [[]])
         have = [str(h) for h in (head[0] if head else [])]
+
+        moved = reordered_columns(have, want)
+        if moved:
+            print(f"  {title:18} REORDERED: {', '.join(moved)}")
+            drift.append(f"{title}: columns reordered ({', '.join(moved)}) — "
+                         "the widths would describe the wrong data")
 
         edits = reconcile_columns(have, want)
         for e in edits:
@@ -271,6 +311,16 @@ def main() -> int:
         print(f"  {title:18} {len(rows):>5} rows x {need_cols:>3} cols   {note}")
         for e in edits:
             print(f"      {'insert ' + e['name'] if 'insert' in e else 'delete column ' + str(e['delete'] + 1)}")
+
+    if drift:
+        print("\nthe Sheet's shape no longer matches the workbook's:")
+        for d in drift:
+            print(f"  !! {d}")
+        if not args.allow_drift:
+            print("REFUSING — fix the Sheet by hand (create the tab, or put "
+                  "the columns back in the exporter's order), or re-run with "
+                  "--allow-drift to write the rest anyway.")
+            return 1
 
     if args.dry_run:
         print("\ndry run — nothing written")

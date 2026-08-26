@@ -84,6 +84,44 @@ class TestReconcileColumns:
         assert sheet_sync.reconcile_columns([], ["A", "B"]) == []
 
 
+class TestReorderIsReported:
+    """The rule: whatever reconcile_columns declines to move, it names.
+
+    A reorder is the one shape that leaves a successful run with the
+    widths describing the wrong data, so silence is the failure — not
+    the refusal to move the column.
+    """
+
+    @pytest.mark.parametrize("have, want", [
+        (["A", "B", "C"], ["A", "C", "B"]),
+        (["A", "B", "C"], ["C", "B", "A"]),
+        (["A", "B", "C", "D"], ["B", "A", "D", "C"]),
+        (["Site key", "Capacity", "Site name"],
+         ["Site key", "Site name", "Capacity"]),
+    ])
+    def test_every_reorder_reconcile_wont_perform_is_named(self, have, want):
+        edits = sheet_sync.reconcile_columns(have, want)
+        assert apply(have, edits) != want, "moved after all; rule has changed"
+        assert sheet_sync.reordered_columns(have, want)
+
+    @pytest.mark.parametrize("have, want", [
+        (["A", "B", "C"], ["A", "B", "C"]),
+        (["A", "B"], ["A", "B", "new"]),
+        (["A", "gone", "B"], ["A", "B"]),
+        (["A", "gone", "B"], ["A", "B", "new"]),
+        ([], ["A", "B"]),
+    ])
+    def test_what_reconcile_can_carry_is_not_flagged(self, have, want):
+        """Insert and delete are handled, so they must not raise an alarm."""
+        assert sheet_sync.reordered_columns(have, want) == []
+
+    def test_a_report_tab_with_unnamed_columns_is_not_a_reorder(self):
+        """External aggregates pads its header with blanks — see
+        reconcile_columns; the header ends where the names do."""
+        assert sheet_sync.reordered_columns(
+            ["Heading"], ["Heading", "", "", ""]) == []
+
+
 class TestCellCoercion:
     def test_deliberate_hyperlinks_stay_live(self):
         v = sheet_sync.cell('=HYPERLINK("https://example.org", "Open")')
