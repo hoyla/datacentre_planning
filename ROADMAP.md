@@ -381,18 +381,38 @@ alongside it.
   how large it is" — belongs in `dcp/adjudication_gate.py` beside the
   corrections check.
 
-  **Measured on 2026-08-26, the tail is 15,026, not 4,117** — findings
-  carrying a value and a power unit with no `power_adjudication` row
-  under `claude-sonnet-5`/`power-1.0`. By model: `mlx` 6,739,
-  `openai:gpt-5:minimal` 4,341, `openai:gpt-5:low` 2,783,
-  `claude-sonnet-5` 1,129. So the figure this item was written around
-  understates it by more than three times, and 4,117 was one read's
-  contribution rather than the standing total. Not every row is a
-  site capacity waiting to be claimed — several are plainly
-  not-this-site and will be rejected, such as an operator describing
-  "over two gigawatts of critical power capacity under customer
-  contract in Europe and North America" — which is exactly why the
-  assertion should report the size rather than demand a zero.
+  **The number to assert on is 299, and "15,220" is the wrong one.**
+  Both were measured on 2026-08-26 and they answer different questions.
+  `adjudicate_power.load_candidates` excludes only what
+  `claude-sonnet-5`/`power-1.0` has already done, because that script
+  *is* the Sonnet route and the exclusion is its resume contract —
+  "what have I not done", not "what has nobody done". Read as a measure
+  of corpus completeness it is misleading by fifty times:
+
+  | | |
+  |---|---|
+  | power-unit findings in the corpus | 19,194 |
+  | with no adjudication from **claude-sonnet-5** | 15,220 |
+  | with no adjudication from **any model** | **299** |
+
+  Adjudications on record: `openai:gpt-5:medium` 11,870,
+  `claude-sonnet-5` 3,974, `openai:gpt-5:high` 1,937,
+  `claude-sonnet-5+subagent` 1,114. The corpus is adjudicated; it is
+  mostly adjudicated by a model other than the one whose resume query
+  gets quoted. A pre-build assertion must count rows with no verdict
+  from **any** model, or it will report a five-figure backlog before
+  every release and be ignored within two.
+
+  Of the real 299: 205 sit on sites that already carry an adjudicated
+  capacity (the cheap OpenAI batch route, measured at $0.05 input and
+  $3.25 worst case), and 61 are consequential — on sites with no
+  capacity at all, where a verdict moves a headline rather than
+  refining it, which is the subagent route's stated scope. Not every
+  row is a site capacity waiting to be claimed: several are plainly
+  not-this-site, such as an operator describing "over two gigawatts of
+  critical power capacity under customer contract in Europe and North
+  America". That is why the assertion should report the size rather
+  than demand a zero.
 
 ## Phase 3 — the second opinion
 
