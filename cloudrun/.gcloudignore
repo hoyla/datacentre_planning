@@ -1,0 +1,9 @@
+# Upload manifest for `gcloud run deploy --source cloudrun/`.
+#
+# This file existing is LOAD-BEARING: without it gcloud inherits the repo
+# .gitignore, which ignores the copied index.html/robots.txt — the build
+# would then fail (or worse, quietly bake an image without the page).
+# Exclude only what the image build doesn't need.
+.gcloudignore
+CLOUDRUN.md
+deploy.sh

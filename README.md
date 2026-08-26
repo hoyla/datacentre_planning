@@ -201,12 +201,23 @@ no human-verification challenge is answered.
 ## The published reader
 
 `scripts/export_reader.py --publish index.html` writes the page to the
-repository root, which is what the EdgeOne deployment serves. The
+repository root, which is what both deployments below serve. The
 methodology and data dictionary are generated *inside* it from the same
 queries as the data, so there are deliberately no markdown copies
 alongside to fall out of step.
 
-`middleware.js` is EdgeOne edge middleware matching every route, so the
+**Cloud Run (primary): Guardian Google sign-in.** The reader is served
+from a private Cloud Run service behind Identity-Aware Proxy, so any
+`@guardian.co.uk` account signs in with its normal Google login — no
+shared password to distribute. Deploys are manual — no CI touches it:
+after each export, `./cloudrun/deploy.sh`. The step-by-step runbook, the
+one-time IAP wiring, the gotchas inherited from the meridian and tribunal
+deployments, and the anonymous-access probes are all in
+[cloudrun/CLOUDRUN.md](cloudrun/CLOUDRUN.md).
+
+**EdgeOne (legacy): shared password.** Retained in parallel until the
+Cloud Run deployment has bedded in. `middleware.js` is EdgeOne edge
+middleware matching every route, so the
 page and its embedded dataset need a session before anything is served —
 unlike a password prompt written into the page, where the data has
 already reached the browser by the time it asks. Two variables are set in
