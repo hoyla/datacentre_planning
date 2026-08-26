@@ -203,13 +203,40 @@ def test_the_unit_error_is_documented_but_not_loaded():
 # vocabulary has to cover everything the schema admits.
 
 def test_every_schema_quantity_has_a_label():
-    # Migration 021's CHECK constraint vocabulary, verbatim.
+    # Migration 030's CHECK constraint vocabulary, verbatim (021 as
+    # widened by 022 and 030).
     schema_vocab = {
         "it_load", "grid_connection", "total_site", "onsite_generation",
         "cooling", "energy_storage", "thermal_input",
         "built_capacity", "metered_consumption", "announced_capacity",
-        "let_capacity"}
+        "let_capacity", "scheme_capacity", "investment_property_fair_value"}
     assert set(cc.QUANTITY_LABELS) == schema_vocab
+
+
+def test_scheme_capacity_is_not_a_grid_connection():
+    """The premise migration 030 asserts, in a place a reader meets it.
+
+    A reserved grid connection is headroom the network agreed to supply;
+    a valuation assumption is what an external valuer priced and an
+    auditor signed. Court Lane states 140 MW of reserved connection in
+    its planning documents and 103.3 MW in its accounts, and the two do
+    not contradict each other — they measure different things. The
+    caveat has to say so, because the panel puts them side by side.
+    """
+    caveat = cc.QUANTITY_CAVEATS["scheme_capacity"]
+    assert "grid connection" in caveat
+    assert "built capacity" in caveat
+
+
+def test_a_valuation_is_money_and_never_becomes_megawatts():
+    """Pounds have no megawatt equivalent, and the derivation must not
+    invent one — the same rule that keeps MWh out of value_mw."""
+    assert cc.mw_of(205_000_000, "GBP") is None
+    gbp = [c for c in cc.load_ch_claims() if c.unit == "GBP"]
+    assert gbp, "expected at least one valuation claim"
+    for c in gbp:
+        assert c.quantity_type == "investment_property_fair_value"
+        assert cc.mw_of(c.value, c.unit) is None, c.claim_name
 
 
 def test_contracted_capacity_caveat_names_what_it_is_not():
@@ -230,7 +257,8 @@ def test_every_external_quantity_has_a_caveat():
     """Any quantity that can reach the indicators panel must carry a line
     saying what it is — a new source type must not arrive silently."""
     external = {"grid_connection", "built_capacity", "announced_capacity",
-                "metered_consumption", "let_capacity", "thermal_input"}
+                "metered_consumption", "let_capacity", "thermal_input",
+                "scheme_capacity", "investment_property_fair_value"}
     assert external <= set(cc.QUANTITY_CAVEATS)
     assert set(cc.QUANTITY_CAVEATS) <= set(cc.QUANTITY_LABELS)
 

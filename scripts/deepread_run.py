@@ -312,7 +312,8 @@ def coerce_page(value) -> int | None:
 
 
 def load_cohort(conn, *, tiers: list[str] | None, ref: str | None,
-                site: str | None, shard: tuple[int, int] | None = None) -> list[dict]:
+                site: str | None, shard: tuple[int, int] | None = None,
+                fetched_since: str | None = None) -> list[dict]:
     """Documents of applications on live sites, minus those already read
     under this (model, prompt_version)."""
     q = """
@@ -341,6 +342,13 @@ def load_cohort(conn, *, tiers: list[str] | None, ref: str | None,
     if site:
         q += " AND s.site_key = %s"
         params.append(site)
+    if fetched_since:
+        # Documents that arrived after a given moment, so a refetch pass
+        # can read what it just recovered without joining the back of a
+        # 21,000-document queue. The corpus backlog is a separate
+        # decision from "read what we have just gone and got".
+        q += " AND d.fetched_at >= %s"
+        params.append(fetched_since)
     if shard:
         # Two-device orchestration without coordination: shard k of n
         # takes documents with id % n = k. Disjoint by construction, so
@@ -1026,6 +1034,12 @@ def build_parser() -> argparse.ArgumentParser:
                          "included.")
     ap.add_argument("--ref", default=None, help="Single application_ref")
     ap.add_argument("--site", default=None, help="Single site_key")
+    ap.add_argument("--fetched-since", default=None, metavar="TIMESTAMP",
+                    help="Only documents fetched at or after this "
+                         "timestamp (any Postgres-parseable form, e.g. "
+                         "'2026-08-26 09:50Z'). For reading what a "
+                         "refetch pass has just recovered without "
+                         "draining the whole corpus backlog first.")
     ap.add_argument("--max-chars", type=int, default=16000,
                     help="Chunk budget in characters of marked-up text.")
     # A cap, not a target: sparse documents stop early regardless, so a
@@ -1083,6 +1097,7 @@ def main() -> None:
             print(f"drained {docs} spooled documents from a previous run "
                   f"({found} findings) before selecting the cohort")
         rows = load_cohort(conn, tiers=tiers, ref=args.ref, site=args.site,
+                           fetched_since=args.fetched_since,
                            shard=shard)
         rows.sort(key=cohort_sort_key)
         if args.limit:

@@ -1,0 +1,1855 @@
+# Scheme SPVs: which company is which scheme, and how that was decided.
+#
+# Hand-written. The machine half — charges, PSC, beneficial owners,
+# officers, the list of accounts filed — is regenerated into
+# companies-house-ownership.yaml beside this file and must not be
+# hand-edited. This file holds the judgements: that a name in Barbour's
+# client-of-record slot or in an applicant finding IS a particular
+# Companies House record, and that that company's one scheme IS a
+# particular site in this corpus.
+#
+# Why this class of company matters, and how it differs from the
+# operators surveyed on 2026-08-20 (docs/EXTERNAL_DATA_SOURCES.md §6):
+# an operator discloses capacity by choice, and mostly does not. A
+# **single-asset scheme SPV discloses it by construction**, because the
+# scheme is its investment property and FRS 102 makes the directors
+# state what the fair value assumes. UK Court Lane DC Ltd is the worked
+# example — a £205m valuation assuming "successful delivery of a 103.3
+# MW hyperscale data centre" — and its 103.3 MW disagrees with the 140
+# MW grid connection its own planning documents state four times over.
+#
+# ## What a `site` line here is, and is not
+#
+# It is an assertion that this company's scheme is that site record. It
+# is NOT an assertion that the company's figures may be written into
+# that site's capacity fields; nothing here goes into a site column
+# (§7.1). Claims go through capacity_claims with their own quantity
+# type, and the match through capacity_claim_matches with its own
+# evidence.
+#
+# Three site records in this corpus are known over-merged clusters and a
+# mapping through one of them is weaker than a mapping to a tight site,
+# whatever the company evidence says. Site 61 carries 308 applications
+# across roughly six separate Hayes/Southall campuses; site 59 carries
+# 106; site 5 carries 46 in east London. Entries touching them say so
+# and take `tentative`, because naming the campus is not the same as
+# naming the site record.
+#
+# ## Confidence
+#
+#   confirmed  — the name matches a Companies House record exactly and
+#                something beyond the name ties it to the scheme: the
+#                registered office, a PSC chain to the named operator, a
+#                lender, or the scheme's own name inside the company's.
+#   probable   — an exact or near-exact name match with a single
+#                plausible candidate on the register, but the only tie to
+#                the scheme is that the corpus names it there.
+#   tentative  — a lead. The site record is a cluster, or the name
+#                resolves to more than one plausible company, or the
+#                spelling in the corpus is not the registered one.
+#
+# Seeded 2026-08-26 from Barbour's owner-role blocks, the
+# party_applicant and party_other finding families, and
+# data/priors/organisation_aliases.yaml, resolved through the Companies
+# House search API by scripts/ch_resolve_spvs.py.
+
+as_at: 2026-08-26
+
+companies:
+
+  # --- The worked example, and the reason for the class ----------------
+  - company_number: "14045228"
+    register: companies_house
+    registered_name: UK COURT LANE DC LTD
+    corpus_names: [UK Court Lane DC Limited, UK Court Lane DC Ltd,
+                   USAARE/CORSCALE UK Court Lane DC LTD]
+    scheme: Court Lane Industrial Estate, Iver
+    site_id: 81
+    confidence: confirmed
+    group: Corscale Data Centers (Patrinely / Affinius Capital)
+    evidence: >-
+      Barbour names it client of record on project 12684006 "Court Lane
+      140 MW" with Corscale Data Centers as end user, and the corpus
+      carries 42 applicant findings naming it — several in the form
+      "USAARE/CORSCALE UK Court Lane DC LTD", which is the tie to the
+      group rather than to the name alone. Its accounts name one asset,
+      "a freehold property at Court Lane Industrial Estate, Iver".
+      Site 81 carries the Court Lane applications
+      (ChilternSouthBucks/PL/22/4145/OA, PL/22/3221/EIASR,
+      Bucks/PL/26/02874/DE).
+    caution: >-
+      Site 81's display name is "SEGRO PARK THORNEY BUSINESS PARK -
+      PHASE 1 - DATA CENTRE", and SEGRO (Iver 1) Limited and Thorney
+      Lane LLP also resolve to it. Iver holds more than one data-centre
+      scheme within a kilometre and the site record may be carrying two;
+      that is a partitioning question for the site work, not a reason to
+      doubt which company holds Court Lane.
+    shareholder: >-
+      **UK COURT LANE DC HOLDINGS, LP** holds all seven ordinary shares
+      (confirmation statement of 21 June 2026). The PSC register says
+      "no registrable person" — the LP is not a registrable relevant
+      legal entity — so the confirmation statement is where the immediate
+      parent is actually named, and it agrees with the accounts' own
+      parent-undertaking note.
+    finding: >-
+      **The 103.3 MW in the accounts is the IT load, and it agrees with
+      the planning record.** Site 81's environmental statement states
+      "Total IT Load - 103.32 MW" and "Total Data Centre Load – 139.5 MW"
+      in one table on page 10 of PL/22/4145/OA, and "The proposed
+      development has a 140MW grid connection reserved" on page 27 (and
+      four times over across the file). Barbour's 140 MW headline is the
+      whole-site load; the audited assumption is the IT load. The three
+      numbers are consistent and the apparent 26% discrepancy was an
+      artefact of comparing quantities of different kinds. A second
+      proposed data centre at the same location is separately described
+      as taking "approximately 160MW".
+
+  # --- Vantage: eleven Jersey vehicles, one declared owner --------------
+  #
+  # Every one is a Registered Overseas Entity, so none files accounts and
+  # none discloses capacity or a solvency position. What they do file is
+  # the thing a UK company with an overseas parent need not: a named
+  # beneficial owner. All eleven name DigitalBridge Group, Inc.
+  # (Maryland D17285487) and state "all-beneficial-owners-identified".
+  - company_number: "OE003126"
+    register: companies_house
+    roe: true
+    registered_name: VDC LHR11 LIMITED
+    corpus_names: [VDC LHR11 Limited, VDC LHR11 Ltd,
+                   Vantage Data Centres LHR11 Ltd]
+    scheme: Vantage LHR11
+    site_id: 59
+    confidence: tentative
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      Already confirmed as a Vantage vehicle in
+      data/priors/organisation_aliases.yaml on Barbour's client-of-record
+      evidence for North Acton Road; the ROE filing now adds the parent
+      directly, naming DigitalBridge Group, Inc. as beneficial owner.
+    caution: >-
+      Site 59 is a 106-application cluster whose display name is
+      "MICROSOFT DATA CENTRE BASHLEY ROAD" and which also carries the
+      SEGRO Pure Premier Park and VDC LHR21 findings. The company is
+      Vantage's; which site record its scheme is remains a cluster
+      question.
+
+  - company_number: "OE003138"
+    register: companies_house
+    roe: true
+    registered_name: VDC LHR21 LIMITED
+    corpus_names: [VDC LHR21 Ltd, Vantage Data Centres LHR21 Ltd]
+    scheme: Vantage LHR21, North Acton Road
+    site_id: 59
+    confidence: tentative
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      Barbour project 12536509 names Vantage Data Centres Limited as end
+      user on North Acton Road (LHR21); the findings carry "Applicant is
+      Vantage Data Centres LHR21 Ltd" and "VDC LHR21 Ltd". Beneficial
+      owner DigitalBridge Group, Inc.
+    caution: Same 106-application cluster as LHR11; see above.
+
+  - company_number: "OE032420"
+    register: companies_house
+    roe: true
+    registered_name: VDC CWL4 LIMITED
+    corpus_names: [VDC CWL4 Limited, VDC CWL4 Ltd, CWL4 VDC Limited,
+                   Vantage CWL4 Limited]
+    scheme: Former Ford engine plant, Bridgend (CWL4)
+    site_id: 110
+    confidence: confirmed
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      218 findings across sites 110 ("FORMER FORD ENGINE PLANT - 2MW
+      DATA CENTRE - BUILDING 1") and 233 (the same plant in Waterton
+      Industrial Estate). CWL is Vantage's Cardiff campus code and the
+      registered office, 44 Esplanade St Helier, is shared with every
+      other VDC vehicle. Beneficial owner DigitalBridge Group, Inc.
+
+  - company_number: "OE034587"
+    register: companies_house
+    roe: true
+    registered_name: VDC CWL41 LIMITED
+    corpus_names: []
+    scheme: Vantage Cardiff CWL41
+    site_id: null
+    confidence: confirmed
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      Not named anywhere in the corpus. Found by searching the register
+      for the CWL series after CWL4 resolved, and kept because a vehicle
+      the planning record has never seen is itself a finding: it is a
+      Cardiff scheme with a registered vehicle and no application this
+      project holds.
+
+  - company_number: "OE034586"
+    register: companies_house
+    roe: true
+    registered_name: VDC CWL42 LIMITED
+    corpus_names: []
+    scheme: Vantage Cardiff CWL42
+    site_id: null
+    confidence: confirmed
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      Same as CWL41: found register-side by searching the CWL series, not
+      named anywhere in the corpus. Registered at 44 Esplanade, St
+      Helier, with DigitalBridge Group, Inc. declared as beneficial
+      owner, and no accounts filed because an overseas entity does not
+      file them.
+
+  - company_number: "OE006962"
+    register: companies_house
+    roe: true
+    registered_name: VDC CWL21 LANDCO LIMITED
+    corpus_names: [VDC CWL21 Limited, VDC CWL21 Ltd, CWL21 Limited]
+    scheme: CWL2 data centre campus, Cardiff
+    site_id: 93
+    confidence: probable
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      Barbour and 64 findings name "VDC CWL21 Limited"; the register
+      holds no company of exactly that name but four at the same Jersey
+      address — a LANDCO and three PROPCOs. The land-holding vehicle is
+      the one a planning applicant would be, so LANDCO is recorded as
+      the probable referent and the three PROPCOs below as the rest of
+      the structure. Beneficial owner DigitalBridge Group, Inc.
+    caution: >-
+      "VDC CWL21 Limited" as written matches none of the four exactly.
+      Which of them filed the application is a document question this
+      resolution has not answered.
+
+  - company_number: "OE033265"
+    register: companies_house
+    roe: true
+    registered_name: VDC CWL21 PROPCO 1 LIMITED
+    corpus_names: []
+    scheme: CWL2 data centre campus, Cardiff
+    site_id: 93
+    confidence: probable
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      One of three property vehicles beneath the CWL21 landco, all
+      registered 2025 at 44 Esplanade, St Helier, all naming
+      DigitalBridge Group, Inc. as beneficial owner. Recorded because a
+      campus split three ways is a structure a reporter should see.
+
+  - company_number: "OE033263"
+    register: companies_house
+    roe: true
+    registered_name: VDC CWL21 PROPCO 2 LIMITED
+    corpus_names: []
+    scheme: CWL2 data centre campus, Cardiff
+    site_id: 93
+    confidence: probable
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      See PROPCO 1 — one of three property vehicles beneath the CWL21
+      landco, registered the same week at the same Jersey address, all
+      naming DigitalBridge Group, Inc. as beneficial owner.
+
+  - company_number: "OE033264"
+    register: companies_house
+    roe: true
+    registered_name: VDC CWL21 PROPCO 3 LIMITED
+    corpus_names: []
+    scheme: CWL2 data centre campus, Cardiff
+    site_id: 93
+    confidence: probable
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      See PROPCO 1 — one of three property vehicles beneath the CWL21
+      landco, registered the same week at the same Jersey address, all
+      naming DigitalBridge Group, Inc. as beneficial owner.
+
+  - company_number: "OE020694"
+    register: companies_house
+    roe: true
+    registered_name: VDC CWL31 LIMITED
+    corpus_names: [VDC CWL31 Limited]
+    scheme: Mwyndy Cross, Rhondda Cynon Taf
+    site_id: 115
+    confidence: confirmed
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      28 findings name it at site 115, "MWYNDY CROSS - 2.4MW DATA
+      CENTRE". Same Jersey address and same declared beneficial owner as
+      the rest of the CWL series.
+
+  - company_number: "06132144"
+    register: companies_house
+    registered_name: VANTAGE DATA CENTERS UK LIMITED
+    corpus_names: [Vantage Data Centres Limited, Vantage Data Centers Ltd]
+    scheme: null
+    site_id: null
+    confidence: confirmed
+    group: Vantage Data Centers / DigitalBridge
+    evidence: >-
+      The operating company, already confirmed in
+      organisation_aliases.yaml. Not a scheme SPV — it is here because
+      its 36 charges, six of them outstanding to U.S. Bank Trustees
+      Limited as security trustee, are the financing layer the Jersey
+      vehicles sit under.
+
+  # --- Ark: the operator's own single-asset estates companies ----------
+  #
+  # Ark is the one operator whose accounts state per-campus megawatts, so
+  # its estate companies are worth naming: each holds one campus, and
+  # each is a filer of full accounts. All of them run up through Revcap
+  # Properties 25 Limited (05395063) to Paul Elliott Singer.
+  - company_number: "08630640"
+    register: companies_house
+    registered_name: ARK ESTATES CODY PARK LIMITED
+    corpus_names: []
+    scheme: Cody Park, Farnborough
+    site_id: 14
+    confidence: confirmed
+    group: Ark Data Centres
+    evidence: >-
+      Named in Ark Data Centres Limited's own FY2025 accounts as the
+      owner of the Cody Park site — the sentence the 48.78 MW built
+      capacity in companies-house-claims.yaml is transcribed from. Site
+      14 is Cody Technology Park with 64 Ark applicant findings.
+
+  - company_number: "10009711"
+    register: companies_house
+    registered_name: ARK ESTATES SPRING PARK LIMITED
+    corpus_names: [Ark Estates Spring Park Limited]
+    scheme: Spring Park, Corsham
+    site_id: 33
+    confidence: confirmed
+    group: Ark Data Centres
+    evidence: >-
+      Named in Ark's FY2025 accounts as the owner of the Spring Park
+      site (41.68 MW built, 13.5 MW under construction). Site 33 is
+      "SPRING PARK - TWO DATA CENTRES P3 & P4" with 142 Ark findings.
+
+  - company_number: "12113969"
+    register: companies_house
+    registered_name: ARK ESTATES 2 LIMITED
+    corpus_names: [Ark Estates 2 Limited, Ark Estates 2 Ltd]
+    scheme: Union Park / North Hyde Gardens, Hayes
+    site_id: 61
+    confidence: tentative
+    group: Ark Data Centres
+    evidence: >-
+      276 findings name it, all at site 61. Charges outstanding to ING
+      Bank N.V. as security agent from 2023 and 2024.
+    caution: >-
+      Site 61 carries 308 applications across about six separate
+      campuses. The company is Ark's beyond doubt; that its scheme is
+      the whole of site 61 is not something site 61 can currently say.
+
+  - company_number: "12777470"
+    register: companies_house
+    registered_name: ARK ESTATES 3 LIMITED
+    corpus_names: [Ark Estates 3 Ltd, Arc Estates 3 Ltd]
+    scheme: Alliance Park, Western Avenue
+    site_id: 67
+    confidence: probable
+    group: Ark Data Centres
+    evidence: >-
+      186 findings, mostly at site 67 "PROJECT ALLIANCE PARK WESTERN
+      AVENUE - DATA CENTRE", several in the form "Ark Estates 3 Ltd /
+      ARK Data Centres Ltd." "Arc Estates 3 Ltd" is an OCR variant of
+      the same name, kept as evidence rather than corrected.
+
+  - company_number: "13626341"
+    register: companies_house
+    registered_name: ARK ESTATES 4 LIMITED
+    corpus_names: [Ark Estates 4 Limited, Ark Estates 4 Ltd]
+    scheme: Spring Park P3/P4, Corsham
+    site_id: 33
+    confidence: probable
+    group: Ark Data Centres
+    evidence: 12 findings at site 33, the Spring Park campus.
+
+  - company_number: "15253589"
+    register: companies_house
+    registered_name: ARK ESTATES 5 LIMITED
+    corpus_names: [Ark Estates 5 Limited, Ark Estates 5 Ltd]
+    scheme: A41 Watford Bypass
+    site_id: 139
+    confidence: confirmed
+    group: Ark Data Centres
+    evidence: >-
+      113 findings at site 139, "A41 WATFORD BYPASS - DATA CENTRE",
+      several as "Client Ark Estates 5 Ltd". Incorporated 2023-11-01 at
+      Spring Park, Corsham — Ark's own registered office.
+
+  - company_number: "14585794"
+    register: companies_house
+    registered_name: ARK UP4 LIMITED
+    corpus_names: [Ark UP4 Ltd]
+    scheme: Union Park 4, Hayes
+    site_id: 61
+    confidence: tentative
+    group: Ark Data Centres
+    evidence: >-
+      65 findings at site 61. "UP4" is Union Park phase 4 and its PSC is
+      Up4 Holdings Limited (14919643) — a holding company named for the
+      scheme, which is the pattern this whole file is about.
+    caution: Site 61 cluster; see Ark Estates 2.
+
+  - company_number: "10500200"
+    register: companies_house
+    registered_name: ARK ESTATES DEVELOPMENT LIMITED
+    corpus_names: [Ark Estates Development Limited]
+    scheme: Cody Technology Park western catchment
+    site_id: 14
+    confidence: probable
+    group: Ark Data Centres
+    evidence: >-
+      Four findings at site 14. Carries a **super-secure PSC** alongside
+      Revcap Properties 25 Limited — a protected individual whose
+      details Companies House withholds, which is a disclosure in
+      itself: the register is stating that someone is being shielded.
+
+  # --- SEGRO: the estate landlord and one scheme joint venture ---------
+  - company_number: "16311501"
+    register: companies_house
+    registered_name: SEGRO PURE PREMIER PARK DATA CENTRE LIMITED
+    corpus_names: [SEGRO Pure Premier Park Data Centre Limited,
+                   SEGRO Pure Data Centres Limited]
+    scheme: Premier Park, Park Royal
+    site_id: 59
+    confidence: tentative
+    group: SEGRO / Pure Data Centres
+    evidence: >-
+      177 findings name it as applicant or client. Its PSC is SEGRO Pure
+      Premier Park Data Centre Holdings Limited (16311594), whose own
+      PSCs are Pure Dc Holdco 6 Limited (14293692) and SEGRO Properties
+      Limited (00448911) — a two-parent joint venture disclosed in one
+      step of the register, which is unusually legible for this class.
+      Incorporated 2025-03-12.
+    caution: >-
+      Site 59 is a 106-application cluster. "SEGRO Pure Data Centres
+      Limited" appears in 17 findings and matches no register entry: it
+      is read as a loose reference to the same JV, not a separate
+      company.
+
+  - company_number: "16311594"
+    register: companies_house
+    registered_name: SEGRO PURE PREMIER PARK DATA CENTRE HOLDINGS LIMITED
+    corpus_names: []
+    scheme: Premier Park, Park Royal (holding company)
+    site_id: null
+    confidence: confirmed
+    group: SEGRO / Pure Data Centres
+    evidence: >-
+      Sole PSC of 16311501 and the level at which the joint venture is
+      visible. Not named in the corpus.
+    note: >-
+      Follow the Pure half of the joint venture up and it leaves the
+      country. Pure Data Centres Group Limited (08413665) reads "no
+      registrable person" on its PSC page; its confirmation statement of
+      20 February 2026 names fourteen shareholdings, the largest held by
+      **WATT EQUITYCO S.À R.L.** (Luxembourg), alongside AHL Investments
+      1 Limited, three named individuals, and **THE INVESTMENT AND
+      DEVELOPMENT OFFICE OF THE GOVERNMENT OF RAS AL KHAIMAH** — a
+      sovereign investment office of a UAE emirate, holding deferred A
+      shares. None of that is visible on the PSC register.
+
+  - company_number: "13695830"
+    register: companies_house
+    registered_name: SEGRO (IVER 1) LIMITED
+    corpus_names: [SEGRO (Iver 1) Limited]
+    scheme: SEGRO Park, Thorney Business Park, Iver
+    site_id: 81
+    confidence: probable
+    group: SEGRO
+    evidence: >-
+      23 findings at site 81, whose display name is the SEGRO Park
+      Thorney scheme. PSC SEGRO Properties Limited. Recorded beside UK
+      Court Lane DC Ltd deliberately: both resolve to site 81 and they
+      are different schemes.
+
+  - company_number: "09732093"
+    register: companies_house
+    registered_name: SEGRO (HAYES) LIMITED
+    corpus_names: [SEGRO (Hayes) Limited]
+    scheme: Hayes
+    site_id: 61
+    confidence: tentative
+    group: SEGRO
+    evidence: 40 findings at site 61. PSC SEGRO Properties Limited.
+    caution: Site 61 cluster.
+
+  - company_number: "13770151"
+    register: companies_house
+    registered_name: SEGRO STE LIMITED
+    corpus_names: [SEGRO STE Limited]
+    scheme: Slough Trading Estate
+    site_id: 23
+    confidence: probable
+    group: SEGRO
+    evidence: >-
+      15 findings at site 23. PSC Slough Trading Estate Limited
+      (01184323). STE is the Slough Trading Estate, which
+      environment-agency-permit-matches.yaml already treats as a single
+      site record covering many operators.
+
+  # --- Tritax: two Jersey propcos and a grid-connection joint venture ---
+  - company_number: "OE033537"
+    register: companies_house
+    roe: true
+    registered_name: MANOR FARM PROPCO LIMITED
+    corpus_names: [Manor Farm Propco Limited, Manors Farm Propco Limited]
+    scheme: Manor Farm, Slough — 147 MW data centre and battery storage
+    site_id: 104
+    confidence: confirmed
+    group: Tritax Big Box REIT
+    evidence: >-
+      120 findings name it as applicant or client at site 104, "MANOR
+      FARM - 147MW DATA CENTRE & BATTERY ENERGY STORAGE". A Jersey
+      company on the Register of Overseas Entities since 2025-01-10,
+      declaring **Tritax Big Box REIT plc (08215888)** as beneficial
+      owner — the parent named outright, which a UK company with an
+      overseas parent would not have had to do.
+
+  - company_number: "OE033661"
+    register: companies_house
+    roe: true
+    registered_name: TRITAX CHELMSFORD PROPCO LTD
+    corpus_names: [Tritax Chelmsford Propco Limited]
+    scheme: Blackwater, Beaulieu Parkway, Chelmsford — two data centres
+    site_id: 153
+    confidence: confirmed
+    group: Tritax Big Box REIT
+    evidence: >-
+      Barbour client of record at site 153. Same Jersey office (26 New
+      Street, St Helier) and the same declared beneficial owner as Manor
+      Farm Propco.
+
+  - company_number: "15825395"
+    register: companies_house
+    registered_name: JUNIPER ENERGY LIMITED
+    corpus_names: [Juniper Energy Limited, Juniper Energy Ltd]
+    scheme: Manor Farm grid connection cables
+    site_id: 154
+    confidence: confirmed
+    group: Tritax Powerbox / EDF Energy Renewables joint venture
+    evidence: >-
+      96 findings across sites 154 ("MANOR FARM - GRID CONNECTION
+      CABLES") and 433 (the cable route itself, from National Grid
+      Laleham substation to Manor Farm, Poyle Road). Two PSCs — Tritax
+      Powerbox Limited (13996590) and EDF Energy Renewables Limited
+      (06456689) — which makes the connection a declared joint venture
+      between the developer and a generator, and ties site 154 to site
+      104 through ownership rather than through proximity.
+
+  # --- Starwood: two vehicles, one individual --------------------------
+  - company_number: "12915900"
+    register: companies_house
+    registered_name: BUCKS DC LIMITED
+    corpus_names: [Bucks DC Limited]
+    scheme: LCY20
+    site_id: 87
+    confidence: probable
+    group: Starwood Capital
+    evidence: >-
+      Nine findings at site 87, "LCY20 - DATA CENTRE". Its PSC is
+      **Barry Sternlicht** as an individual — Starwood's founder — and
+      it shares a registered office (One, Berkeley Street) with SOF-11
+      Docklands DC UK Bidco Limited below. A named individual on a
+      scheme SPV is rare in this set and is what makes the group
+      attribution safe.
+    shareholder: >-
+      SOF-12 BUCKS DC UK HOLDCO LIMITED (confirmation statement of 24
+      October 2022). SOF-12 is Starwood Opportunity Fund XII, one fund
+      later than the SOF-11 vehicle that holds Greenwich — so the two
+      London schemes sit in different vintages of the same manager's
+      funds, which the PSC register alone would not have shown.
+
+  - company_number: "12281214"
+    register: companies_house
+    registered_name: SOF-11 DOCKLANDS DC UK BIDCO LIMITED
+    corpus_names: [SOF-11 Docklands DC UK Bidco Limited,
+                   "SOF – 11 DOCKLANDS DC UK BIDCO LIMITED"]
+    scheme: EuroHub / The Point, Greenwich View Place
+    site_id: 6
+    confidence: confirmed
+    group: Starwood Capital (Starwood Opportunity Fund XI)
+    evidence: >-
+      Six findings at site 6. "SOF-11" is Starwood Opportunity Fund XI
+      and the PSC is SOF-11 Docklands DC UK Holdco Limited (12282374).
+      Financing ran through United Overseas Bank's London branch from
+      2022 until 2025-08-04, then to Situs Asset Management Limited.
+
+  # --- Google, twice, once by lending -----------------------------------
+  - company_number: "10031299"
+    register: companies_house
+    registered_name: GLOBAL INFRASTRUCTURE UK LIMITED
+    corpus_names: [Global Infrastructure UK Limited,
+                   Thurrock Data Centre Global Infrastructure UK Ltd]
+    scheme: Thurrock, and North Weald Airfield
+    site_id: 130
+    confidence: confirmed
+    group: Alphabet / Google
+    evidence: >-
+      168 findings across site 130 ("THURROCK DATA CENTRE - 4 DATA
+      CENTRE BUILDINGS") and site 121 ("GOOGLE DATA CENTRE NORTH WEALD
+      AIRFIELD"), several in the compound form "Thurrock Data Centre
+      Global Infrastructure UK Ltd". Its PSC is **Alphabet, Inc.**
+      (Delaware 5786925) — the ownership stated in one hop, which is
+      unusual and unambiguous.
+    shareholder: >-
+      RAIDEN UNLIMITED COMPANY (confirmation statement of 3 March 2026) —
+      an unlimited company, a form that is exempt from filing accounts,
+      sitting between the UK land vehicle and Alphabet.
+    note: >-
+      One company holds two schemes here, so it is not a single-asset
+      SPV and its accounts should not be expected to state a per-scheme
+      capacity.
+
+  - company_number: "10875400"
+    register: companies_house
+    registered_name: STX-A10 LIMITED
+    corpus_names: [STX-A10 Ltd, "STX - A10 Ltd", STX-10 Ltd]
+    scheme: Waltham Cross / Cheshunt
+    site_id: 49
+    confidence: probable
+    group: (lender was Alphabet / Google)
+    evidence: >-
+      24 findings at site 49, "GOOGLE DATA CENTRE - WALTHAM CROSS
+      CHESHUNT". In liquidation. Its PSC register reads "no registrable
+      person", so the only public statement of who stood behind it is
+      the **charges register**: two charges created 2020-09-01 and
+      2021-05-13 in favour of Global Infrastructure UK Limited — the
+      Alphabet subsidiary above — both satisfied 2024-05-22. That is the
+      case for the charges register being the honest ownership source,
+      in one company.
+
+  # --- Blackstone, twice ------------------------------------------------
+  - company_number: "14433976"
+    register: companies_house
+    registered_name: RENAISSANCE LAND LIMITED
+    corpus_names: [Renaissance Land Limited]
+    scheme: Cambois / Northumberland Energy Park
+    site_id: 99
+    confidence: confirmed
+    group: Blackstone
+    evidence: >-
+      54 findings across site 99 ("NORTHUMBERLAND ENERGY PARK - NEW
+      CAMBOIS AI DATA CENTRE") and site 291 (the former power station
+      site at Cambois). PSC **Stephen Schwarzman**, Blackstone's
+      chairman, as an individual.
+    shareholder: >-
+      WIND BIDCO S.À R.L., a Luxembourg company (confirmation statement
+      of 18 March 2026) — the corporate step the PSC register skips
+      over on its way to naming an individual.
+
+  - company_number: "04201938"
+    register: companies_house
+    registered_name: BRE-BMR CITP (CAMBRIDGE) LIMITED
+    corpus_names: [Abstract (Cambridge) Limited, Abstract (Cambridge) Ltd,
+                   Abstract (Cambridge) LLP, BRE-BMR CITP Limited]
+    scheme: Cambridge Innovation / Technology Park, Fulbourn Road
+    site_id: 191
+    confidence: probable
+    group: Blackstone (BRE = Blackstone Real Estate)
+    evidence: >-
+      The corpus knows it as Abstract (Cambridge) Limited, and one
+      finding records the change outright — "Appellant is BRE-BMR CITP
+      (Cambridge) Limited, formerly Abstract (Cambridge) Limited". PSC
+      Stephen Allen Schwarzman. A renamed company is exactly the case a
+      name-only resolution gets wrong, and the finding is what caught it.
+
+  # --- Colt, Latos, Apatura, Greystoke and the rest ---------------------
+  - company_number: "13085639"
+    register: companies_house
+    registered_name: HDCI HAYES LONDON LIMITED
+    corpus_names: [HDCI Hayes London Limited]
+    scheme: Hayes (Colt)
+    site_id: 61
+    confidence: tentative
+    group: Colt Data Centre Services
+    evidence: >-
+      102 findings at site 61. PSC Colt Data Centre Services UK Limited
+      (07306352), which organisation_aliases.yaml already carries as
+      Colt. Registered at Colt House, 20 Great Eastern Street.
+    caution: Site 61 cluster.
+
+  - company_number: "15330854"
+    register: companies_house
+    registered_name: HDCI HAYES BRIDGE LIMITED
+    corpus_names: [HDCI Hayes Bridge Limited]
+    scheme: Hayes Bridge (Colt)
+    site_id: 61
+    confidence: tentative
+    group: Colt Data Centre Services
+    evidence: >-
+      48 findings at site 61. Same PSC, Colt Data Centre Services UK
+      Limited (07306352), and the same registered office at Colt House,
+      20 Great Eastern Street, as HDCI Hayes London Limited.
+    caution: Site 61 cluster.
+
+  - company_number: "13813501"
+    register: companies_house
+    registered_name: LATOS DATA CENTRE LTD
+    corpus_names: [Latos Data Centre Ltd, Latos Data Centres Ltd,
+                   Latos Data Centre Limited]
+    scheme: Rover Way, Splott, Cardiff — energy park and data centre
+    site_id: 96
+    confidence: confirmed
+    group: Latos / Greens Valley Investments
+    evidence: >-
+      Named as joint applicant in dozens of findings alongside Tremorfa
+      Energy Park Ltd and PCG Ltd at site 96. PSC Greens Valley
+      Investments Ltd (12815526). "Latos Data Centres Ltd" (plural) is a
+      corpus variant with no register entry of its own.
+
+  - company_number: "15135574"
+    register: companies_house
+    registered_name: LATOS CARDIFF LTD
+    corpus_names: [Latos Cardiff Limited, Latos Cardiff Ltd.]
+    scheme: Cardiff / Preston Farm
+    site_id: 96
+    confidence: probable
+    group: Latos
+    evidence: >-
+      18 findings across sites 96 and 125 ("LATOS PRESTON FARM - DATA
+      CENTRE"). PSC is Latos Data Centre Ltd — a scheme vehicle beneath a
+      scheme vehicle.
+
+  - company_number: "16314429"
+    register: companies_house
+    registered_name: LATOS STOCKTON LTD
+    corpus_names: [Latos Stockton Ltd]
+    scheme: Stockton-on-Tees
+    site_id: null
+    confidence: probable
+    group: Latos
+    evidence: >-
+      Nine findings, no site attached. Incorporated 2025-03-13 and has
+      filed no accounts, so it discloses nothing yet — a measured null,
+      not a gap.
+
+  - company_number: "14766079"
+    register: companies_house
+    registered_name: TREMORFA ENERGY PARK LIMITED
+    corpus_names: [Tremorfa Energy Park Limited, Tremorfa Energy Park Ltd,
+                   "7remorfa Energy Park Ltd."]
+    scheme: Rover Way, Splott — energy park
+    site_id: 96
+    confidence: confirmed
+    group: (Matthew Ian Wise)
+    evidence: >-
+      Joint applicant with Latos at site 96 in more than 80 findings.
+      **In liquidation**, which the planning record does not say: a
+      solvency fact about a live application's applicant.
+      "7remorfa" is an OCR misread of the same name, kept as evidence.
+    shareholder: >-
+      GUARDIAN ENERGY HOLDING 1 SCSP, a Luxembourg special limited
+      partnership (confirmation statement of 16 January 2025), against a
+      PSC register naming a British individual. The two registers
+      describe different layers and neither is the whole answer.
+
+  - company_number: "08831482"
+    register: companies_house
+    registered_name: PCG LTD
+    corpus_names: [PCG Limited, PCG Ltd]
+    scheme: Rover Way, Splott — third joint applicant
+    site_id: 96
+    confidence: tentative
+    group: Product Care Group
+    evidence: >-
+      Named as the third applicant at site 96 in the Tremorfa/Latos
+      compound findings. The register's PCG Ltd is a Wigan company whose
+      PSC is Product Care Group Limited and which files dormant
+      accounts; whether that is the same PCG is not established by the
+      name alone.
+    caution: >-
+      A three-letter name is the weakest kind of resolution in this
+      file. Treated as a lead.
+
+  - company_number: "16043950"
+    register: companies_house
+    registered_name: APATURA DC PROJECT 2 LTD
+    corpus_names: [Apatura DC Project 2 Ltd]
+    scheme: Apatura project 2 (Scotland)
+    site_id: null
+    confidence: confirmed
+    group: Apatura DC Ltd
+    evidence: >-
+      Seven findings. One of five numbered vehicles all incorporated at
+      3rd Floor 1 Ashley Road, Altrincham, all with the same two PSCs —
+      Apatura DC Ltd (16041291) and Adrian Ashley Hill — and all five
+      carrying **two charges each created on the same day, 2026-07-16,
+      to GLAS Trust Corporation Limited as security agent**. A single
+      financing across five vehicles is a portfolio, and the charges
+      register is the only place it is visible.
+
+  - company_number: "16044798"
+    register: companies_house
+    registered_name: APATURA DC PROJECT 8 LTD
+    corpus_names: [Apatura DC Project 8 Ltd]
+    scheme: Apatura project 8
+    site_id: null
+    confidence: confirmed
+    group: Apatura DC Ltd
+    evidence: >-
+      Two findings. Same structure as Apatura DC Project 2 — the same two
+      PSCs, the same Altrincham office, and the same pair of charges to
+      GLAS Trust Corporation Limited created on 2026-07-16.
+
+  - company_number: "16044719"
+    register: companies_house
+    registered_name: APATURA DC PROJECT 9 LTD
+    corpus_names: [Apatura DC Project 9 Ltd]
+    scheme: Apatura project 9
+    site_id: null
+    confidence: confirmed
+    group: Apatura DC Ltd
+    evidence: >-
+      One finding. Same structure as Apatura DC Project 2 — the same two
+      PSCs, the same Altrincham office, and the same pair of charges to
+      GLAS Trust Corporation Limited created on 2026-07-16.
+
+  - company_number: "16470100"
+    register: companies_house
+    registered_name: APATURA DC PROJECT 11 LTD
+    corpus_names: [Apatura Dc Project 11 Limited, Apatura DC Project 11 Ltd]
+    scheme: North of Heriot-Watt University — 200 MW AI data centre campus
+    site_id: 132
+    confidence: confirmed
+    group: Apatura DC Ltd
+    evidence: >-
+      Barbour names it client of record on the Heriot-Watt campus, and
+      11 findings carry it at site 132. Same structure and charges.
+
+  - company_number: "16470093"
+    register: companies_house
+    registered_name: APATURA DC PROJECT 12 LTD
+    corpus_names: [Apatura DC Project 12 Ltd, Appatura DC Project 12 Ltd,
+                   APATURA OC PROJECT 114 LTD]
+    scheme: Apatura project 12
+    site_id: null
+    confidence: confirmed
+    group: Apatura DC Ltd
+    evidence: >-
+      Five findings. "APATURA OC PROJECT 114 LTD" is an OCR misread of
+      the same name — "OC" for "DC" and "114" for "11" or "12" — kept
+      because it is what a document scan produced.
+
+  - company_number: "16462312"
+    register: companies_house
+    registered_name: ELSHAM TECH PARK LIMITED
+    corpus_names: [Elsham Tech Park Limited, Elsham Tech Park Ltd]
+    scheme: Elsham Wolds — 1 GW data centre campus
+    site_id: 122
+    confidence: confirmed
+    group: Greystoke Land
+    evidence: >-
+      129 findings at site 122. PSC Greystoke Land Limited. Incorporated
+      2025-05-20 and has **filed no accounts** — it discloses nothing,
+      which for a 1 GW scheme is the measured answer rather than a gap.
+
+  - company_number: "15528913"
+    register: companies_house
+    registered_name: HUMBER TECH PARK LIMITED
+    corpus_names: [Humber Tech Park Limited, Humber Tech Park Ltd]
+    scheme: Humber Tech Park
+    site_id: 95
+    confidence: confirmed
+    group: Greystoke Land
+    evidence: >-
+      103 findings at site 95. PSC Greystoke Land Limited (05047975).
+      Files total-exemption-full accounts, which carry no
+      investment-property note. This is the scheme whose own marketing
+      page states "384 GW" against 384 MW elsewhere — see
+      operator-claims.yaml `noted:`.
+
+  - company_number: "08516732"
+    register: companies_house
+    registered_name: HULL ECO PARK LTD
+    corpus_names: [Hull Eco Park Limited, Hull Eco Park Ltd, Hull Eco-Park Limited]
+    scheme: Yorkshire Energy Park phase 1
+    site_id: 79
+    confidence: confirmed
+    group: Sewell Investments / Eco Park Developments
+    evidence: >-
+      235 findings at site 79. Three corporate PSCs, and a single
+      outstanding charge to Sewell Investments Limited from 2016 — the
+      shareholder is also the lender, which is the structure rather than
+      an arm's-length financing.
+
+  - company_number: "14262393"
+    register: companies_house
+    registered_name: DC01 UK LIMITED
+    corpus_names: [DC01 UK Limited, DC01 UK Ltd, DCo1 Uk Limited]
+    scheme: South Mimms service station — 250 MW data centre
+    site_id: 102
+    confidence: confirmed
+    group: DC01 Holdings
+    evidence: >-
+      65 findings at site 102. Two PSCs, DC01 JC Limited (16040833) and
+      DC01 Holdings Limited (15927172). "DCo1" is an OCR misread of
+      "DC01" and is kept.
+
+  - company_number: "12590238"
+    register: companies_house
+    registered_name: CYRUSONE UK6 LIMITED
+    corpus_names: [CyrusOne UK6 Limited, CyrusOne UK6 Ltd]
+    scheme: Iver Heath data park / West London Technology Park
+    site_id: 84
+    confidence: probable
+    group: CyrusOne
+    evidence: >-
+      43 findings across sites 84 ("IVER HEATH DATA PARK - 90MW DATA
+      CENTRE") and 77. PSC Cyrus One UK Limited (07745598), and the sole
+      charge is to **CyrusOne Dutch Holdings B.V.** — the parent lending
+      to its own vehicle, which is the group structure showing through
+      the charges register.
+
+  - company_number: "15420773"
+    register: companies_house
+    registered_name: CYRUSONE UK 8 LIMITED
+    corpus_names: [Cyrusone UK 8 Limited, CyrusOne UK8 Ltd, CyrusOne UK8 Limited]
+    scheme: Hayes (CyrusOne UK8)
+    site_id: 61
+    confidence: tentative
+    group: CyrusOne
+    evidence: >-
+      Barbour client of record; 44 findings at site 61. PSC CyrusOne UK
+      7&8 Topco Limited (15420526) — a topco named for two schemes, so
+      this vehicle is one of a pair.
+    caution: Site 61 cluster.
+
+  - company_number: "16122721"
+    register: companies_house
+    registered_name: NTT GLOBAL DATA CENTERS LON2-A LTD
+    corpus_names: [NTT Global Data Centers Lon2-A Limited]
+    scheme: NTT LON2-A — 56 MW data centre
+    site_id: 160
+    confidence: confirmed
+    group: NTT
+    evidence: >-
+      Barbour client of record at site 160. PSC NTT Global Data Centers
+      Asset Management Limited (14112272). Incorporated 2024-12-09.
+
+  - company_number: "13618549"
+    register: companies_house
+    registered_name: VIRTUS SAUNDERTON LIMITED
+    corpus_names: [Avalon DC Limited, Saunderton Data Centre Gp Limited]
+    scheme: Saunderton — four VIRTUS data centres
+    site_id: 1
+    confidence: probable
+    group: VIRTUS Data Centres
+    evidence: >-
+      Site 1 is the Saunderton scheme; Barbour's client of record there
+      is "Avalon DC Limited" and a finding names "Saunderton Data Centre
+      Gp Limited", **neither of which exists on the register**. The
+      company that does exist, is registered at VIRTUS's own office and
+      is named for the scheme is Virtus Saunderton Limited. Financing
+      moved from ICG-Longbow Investment No. 5 S.à r.l. to CIMB Bank
+      Berhad, Singapore Branch on 2025-08-06.
+    caution: >-
+      This is a resolution by scheme and office, not by name — the two
+      names the corpus carries resolve to nothing. Recorded as probable
+      and the unresolved names are listed below as well, so the failure
+      stays visible.
+
+  - company_number: "12698361"
+    register: companies_house
+    registered_name: VIRTUS LONDON 14 LIMITED
+    corpus_names: [Virtus London 14 Limited]
+    scheme: VIRTUS LONDON5 / London 14
+    site_id: 37
+    confidence: probable
+    group: VIRTUS Data Centres
+    evidence: >-
+      32 findings at site 37. PSC Virtus Data Centres Properties Limited
+      (09840065) — the company whose FY2024 accounts already supply the
+      let-capacity claims in companies-house-claims.yaml.
+
+  - company_number: "07670473"
+    register: companies_house
+    registered_name: VIRTUS HOLDCO LIMITED
+    corpus_names: [Virtus Holdco Ltd, Virtus Holdco Limited]
+    scheme: null
+    site_id: 37
+    confidence: probable
+    group: VIRTUS Data Centres
+    evidence: >-
+      87 findings name it as applicant, which makes it the applicant of
+      record on schemes it does not itself hold — a group holding
+      company, not a scheme SPV. Its PSC register reads "no registrable
+      person"; the chain that is visible is 12 charges to **Standard
+      Chartered Bank (Hong Kong) Limited** as security agent, four still
+      outstanding.
+
+  - company_number: "SC473089"
+    register: companies_house
+    registered_name: QUEENSWAY PARK DATA CENTRES LIMITED
+    corpus_names: [Queensway Park Data Centres Limited,
+                   AOC Queensway Data Centres Limited]
+    scheme: AOC Queensway data centre DC3, Edinburgh
+    site_id: 19
+    confidence: probable
+    group: County Properties
+    evidence: >-
+      Barbour names "AOC Queensway Data Centres Limited" as end user at
+      site 19 and 11 findings name "Queensway Park Data Centres
+      Limited". Only the second exists on the register; its PSC is
+      County Properties Limited, which Barbour separately names as
+      client and associated developer.
+    caution: >-
+      Two names, one company. The register also holds a dissolved
+      "Queensway Etix Datacentres Limited", so the Queensway name has
+      been used by more than one vehicle over time.
+
+  - company_number: "13128906"
+    register: companies_house
+    registered_name: GRAVEN HILL PURCHASER LTD
+    corpus_names: [Graven Hill Purchaser Limited, Graven Hill Purchaser Ltd,
+                   Graven Hill Purchaser LLC]
+    scheme: Graven Hill D1 — 435 MW data centre campus
+    site_id: 82
+    confidence: confirmed
+    group: (Alan Howard / Adam Fisher)
+    evidence: >-
+      192 findings at site 82. Two individual PSCs, one British and one
+      American, and a single outstanding charge to West One Loan Limited
+      from 2024-07-31. "Graven Hill Purchaser LLC" is a corpus variant
+      with no register entry — a UK company written as an American one.
+    shareholder: >-
+      BGP BRIDGECO LLC (confirmation statement of 19 February 2026) — so
+      the corpus's "LLC" was not simply a mistake; there is an LLC in
+      this structure, one level up.
+
+  - company_number: "09533916"
+    register: companies_house
+    registered_name: QUESTPIT LIMITED
+    corpus_names: [Questpit Limited, Quest Pit Limited]
+    scheme: Home of Production phase 2 — film/TV campus and data centre
+    site_id: 83
+    confidence: confirmed
+    group: (William Bruce Harrison)
+    evidence: >-
+      22 findings at site 83, registered at Penniwells, Edgwarebury
+      Lane, Elstree — the scheme's own address. PSC an American
+      individual. This is the Quest Park scheme the roadmap carries.
+    shareholder: >-
+      FAN PALM (BVI) HOLDINGS LTD (confirmation statement of 12 April
+      2022) — a British Virgin Islands company, and the only BVI holder
+      in this sweep.
+
+  - company_number: "SC192142"
+    register: companies_house
+    registered_name: RAVENSCRAIG LIMITED
+    corpus_names: [Ravenscraig Limited]
+    scheme: Former Ravenscraig steelworks — 550 MW AI data centre
+    site_id: 126
+    confidence: confirmed
+    group: Scottish Enterprise / Tata Steel UK / Wilson Bowden
+    evidence: >-
+      Barbour client of record at site 126. Three PSCs — **Scottish
+      Enterprise**, Tata Steel UK Limited and Wilson Bowden
+      (Ravenscraig) Limited — so a 550 MW scheme is part-owned by a
+      public body, which the planning record does not say. Charges
+      outstanding to North Lanarkshire Council, BDW Trading and Taylor
+      Wimpey.
+
+  - company_number: "OE031832"
+    register: companies_house
+    roe: true
+    registered_name: MANTON PARK LIMITED
+    corpus_names: [Manton Park Limited]
+    scheme: Manton Park
+    site_id: 158
+    confidence: probable
+    group: null
+    evidence: >-
+      Barbour client of record at site 158. A Jersey company at 44
+      Esplanade, St Helier — the same building as every Vantage vehicle,
+      which is a service address rather than a relationship.
+    note: >-
+      Its overseas-entity filing states **"no-beneficial-owner-
+      identified"**. That is the Register of Overseas Entities' version
+      of going dark, and it is a stronger negative than the PSC
+      register's: the question was asked in the register designed to
+      answer it, and the answer was nobody.
+
+  - company_number: "15557847"
+    register: companies_house
+    registered_name: SUB1 (HODDESDON 1) LIMITED
+    corpus_names: [Sub 1 Hoddesdon Limited]
+    scheme: Xylem Industrial Estate, Bingley Road
+    site_id: 97
+    confidence: probable
+    group: Boultbee Brooks
+    evidence: >-
+      Barbour client of record at site 97; the register name has a
+      bracketed "1" the corpus drops. PSC Clive Ensor Boultbee Brooks,
+      the same individual as SUB1 (Birmingham 1), and both are
+      registered at the Shell Store, Rotherwas, Hereford.
+
+  - company_number: "16070838"
+    register: companies_house
+    registered_name: SUB1 (BIRMINGHAM 1) LIMITED
+    corpus_names: [SUB1 (Birmingham 1) Limited]
+    scheme: 35 Rocky Lane, Nechells
+    site_id: 124
+    confidence: confirmed
+    group: Boultbee Brooks
+    evidence: >-
+      Barbour client of record at site 124, "35 ROCKY LANE NECHELLS -
+      DATA CENTRE". Same PSC (Clive Ensor Boultbee Brooks) and the same
+      registered office, the Shell Store at Rotherwas, as SUB1
+      (Hoddesdon 1).
+
+  - company_number: "14299844"
+    register: companies_house
+    registered_name: ANGLESEY LAND HOLDINGS LIMITED
+    corpus_names: [Anglesey Land Holdings Limited]
+    scheme: Prosperity Parc, Anglesey
+    site_id: 111
+    confidence: confirmed
+    group: Stena Line
+    evidence: >-
+      Barbour client of record at site 111. PSC **Stena Line (UK)
+      Limited** (2454575) — a ferry operator as the landowner behind a
+      data-centre scheme, which is not something the planning record
+      would tell you.
+
+  - company_number: "15361974"
+    register: companies_house
+    registered_name: JIGSAW UK DEVELOPMENT LIMITED
+    corpus_names: [Jigsaw UK Development Limited, Jigsaw UK Development Ltd]
+    scheme: Ferrybridge C power station — data centre
+    site_id: 107
+    confidence: confirmed
+    group: Ferrybridge DC Holdco Limited
+    evidence: >-
+      33 findings at site 107, several as a joint applicant with
+      Mountpark Logistics EU 2020 28 Sàrl. PSC Ferrybridge DC Holdco
+      Limited — a holding company named for the scheme.
+
+  - company_number: "SC825081"
+    register: companies_house
+    registered_name: ILI CATO LIMITED
+    corpus_names: [ILI Cato Limited, ILI Cato Ltd]
+    scheme: Camilla Road, Auchtertool
+    site_id: 161
+    confidence: confirmed
+    group: Intelligent Land Investments Group plc
+    evidence: >-
+      14 findings at site 161. PSC Intelligent Land Investments Group
+      plc (SC564296), which Barbour also names as a client in its own
+      right.
+
+  - company_number: "12885989"
+    register: companies_house
+    registered_name: NLIGHTEN LIVERPOOL LIMITED
+    corpus_names: [nLighten Liverpool Limited]
+    scheme: Liverpool
+    site_id: null
+    confidence: probable
+    group: nLighten
+    evidence: >-
+      Barbour client of record; no site attached in the corpus. PSC
+      Nlighten Uk Opco Limited. Financing moved from ICG-Longbow
+      Investment No. 5 S.à r.l. — the same lender as Virtus Saunderton —
+      to Apex Group Hold Co (UK) Limited in March 2026.
+
+  - company_number: "14008572"
+    register: companies_house
+    registered_name: KD 5 LIMITED
+    corpus_names: [KD 5 Limited]
+    scheme: Kenwood Point, Reddish — 40 MW data centre
+    site_id: 89
+    confidence: probable
+    group: Kao Data
+    evidence: >-
+      22 findings at site 89. Registered at **Kao Data Campus, London
+      Road, Harlow** and its PSC is KD Opco Limited (15109506): "KD" is
+      Kao Data, and the registered office is the tie. Charges to GLAS
+      Trust Corporation and Apex Group Hold Co (UK) Limited.
+
+  - company_number: "12945867"
+    register: companies_house
+    registered_name: WYCOMBE PARK LTD
+    corpus_names: [Wycombe Park Limited]
+    scheme: South corner, Wycombe Air Park, Booker
+    site_id: 113
+    confidence: probable
+    group: null
+    evidence: >-
+      Barbour client of record at site 113. PSC register reads "no
+      registrable person"; three charges outstanding to **Scio-Fund
+      SICAV-FIS**, a Luxembourg fund, from 2021, 2022 and 2025. The
+      lender is the only party named.
+
+  - company_number: "OC338779"
+    register: companies_house
+    registered_name: THORNEY LANE LLP
+    corpus_names: [Thorney Lane LLP]
+    scheme: Thorney Business Park, Iver
+    site_id: 81
+    confidence: probable
+    group: null
+    evidence: >-
+      73 findings at site 81, one as a joint applicant with SEGRO (Iver
+      1) Limited. Three PSCs and three charges to National Westminster
+      Bank from 2009, all still outstanding — a 2009 security on a
+      scheme now being developed for data centres.
+
+  - company_number: "OC404614"
+    register: companies_house
+    registered_name: LINK PARK HEATHROW LLP
+    corpus_names: [Link Park Heathrow LLP, Link park LLP]
+    scheme: Link Park Heathrow, Thorney Mill Road — two data centres
+    site_id: 66
+    confidence: confirmed
+    group: null
+    evidence: >-
+      57 findings across sites 66, 77, 255 and 256, all the same Thorney
+      Mill Road address. **In liquidation.** PSC register reads "no
+      registrable person"; the lender history runs from two named
+      individuals to Rothschild & Co Wealth Management UK Limited,
+      satisfied 2024-12-18.
+
+  - company_number: "OC401393"
+    register: companies_house
+    registered_name: EID (GENERAL PARTNER) LLP
+    corpus_names: [EID (General Partner) LLP, EID General Partner Llp,
+                   "EID (General Partners) Ltd", "EID (General Partners) LLP"]
+    scheme: Republic masterplan plot 03 / east London
+    site_id: 5
+    confidence: tentative
+    group: LaSalle Investment Management
+    evidence: >-
+      The single most-mentioned company name in the corpus — 1,036
+      findings — at sites 5 and 444. PSCs LaSalle Investment Management
+      and LaSalle Funds General Partner Limited. Files **dormant**
+      accounts, so it discloses nothing: a general partner is a
+      management vehicle and the assets sit in the limited partnership
+      it acts for, which does not file here at all.
+    caution: >-
+      Site 5 carries 46 applications and site 444 another 21, in the
+      east London cluster the materialisation work has flagged. The
+      company is real and the LaSalle chain is clear; the site
+      attribution is not.
+
+  - company_number: "13493266"
+    register: companies_house
+    registered_name: IRE EVAF II THE FORT PROPCO LIMITED
+    corpus_names: [IRE EVAF II THE FORT PROPCO LIMITED]
+    scheme: CWL2 data centre campus, Cardiff
+    site_id: 93
+    confidence: probable
+    group: null
+    evidence: >-
+      Findings place it at site 93, the same campus as the VDC CWL21
+      vehicles. PSC register reads "no registrable person". Financing
+      moved from CBRE Loan Services to National Westminster Bank as
+      security agent in 2024.
+    shareholder: >-
+      INVESCO REAL ESTATE - VALUE ADD II HOLDCO S.À R.L. (confirmation
+      statement of 17 July 2025), which is what "IRE EVAF II" stands
+      for: **Invesco** Real Estate European Value-Add Fund II. The
+      opaque name is the fund's own abbreviation, and the confirmation
+      statement expands it where the PSC register says nothing.
+
+  - company_number: "12068999"
+    register: companies_house
+    registered_name: GLP LUTTERWORTH MPS 9 LIMITED
+    corpus_names: [GLP Lutterworth MPS 9 Limited ADA]
+    scheme: Magna Park Lutterworth plot 9
+    site_id: null
+    confidence: probable
+    group: GLP
+    evidence: >-
+      Barbour client of record, written with a trailing "ADA" that is
+      not part of the registered name. PSC GLP EDP I UK Midco 1 Limited.
+      Charge outstanding to Situs Asset Management Limited.
+
+  - company_number: "05025036"
+    register: companies_house
+    registered_name: LEA VALLEY LIMITED
+    corpus_names: [Lea Valley Limited]
+    scheme: Catalyst Business Park, Widnes Waterfront
+    site_id: 159
+    confidence: tentative
+    group: Chapelmount Properties
+    evidence: >-
+      Barbour client of record at site 159. Fifteen charges, thirteen of
+      them to Solutus Advisors Limited between 2024 and 2026 — a
+      company refinancing repeatedly and quickly.
+    caution: >-
+      "Lea Valley Limited" is a generic name and the site is in Widnes,
+      not the Lea Valley. The resolution rests on Barbour's client slot
+      alone.
+
+  - company_number: "SC467509"
+    register: companies_house
+    registered_name: HFD DATAVITA LIMITED
+    corpus_names: [HFD DataVita Limited]
+    scheme: York Road, Chapelhall — DV3 data centre
+    site_id: 146
+    confidence: confirmed
+    group: HFD Technology Group
+    evidence: >-
+      Barbour client of record at site 146. PSC HFD Technology Group
+      Limited (SC806309). Fifteen charges, five outstanding to Santander
+      UK plc as security agent created within a week in July 2026.
+
+  - company_number: "10229638"
+    register: companies_house
+    registered_name: DATA CENTER ERITH LTD
+    corpus_names: [Data Centre Erith Ltd, "Data Centre Erith Ltd."]
+    scheme: Erith
+    site_id: null
+    confidence: probable
+    group: null
+    evidence: >-
+      Twelve findings write it with the British spelling "Centre"; the
+      register spells it the American way, "Data Center Erith Ltd". No
+      site attached. PSC register reads "no registrable person".
+    caution: >-
+      A one-letter spelling difference is exactly what a strict name
+      match would have dropped.
+
+  - company_number: "16140892"
+    register: companies_house
+    registered_name: SLOUGH HOLDINGS UK LIMITED
+    corpus_names: [Slough Holdings UK Limited]
+    scheme: SDC M40 campus — 300 MW data centre campus
+    site_id: 446
+    confidence: probable
+    group: null
+    evidence: >-
+      36 findings across sites 446 and 277 (Green Belt land north of the
+      M40 at Hedgerley Green). Incorporated 2024-12-17, has **filed no
+      accounts**, and its PSC register reads "no registrable person" —
+      a 300 MW scheme whose vehicle discloses neither ownership nor
+      finances.
+
+  - company_number: "15923951"
+    register: companies_house
+    registered_name: SEQUENCE (IVER) UK LIMITED
+    corpus_names: [Sequence (Iver) UK Limited, Sequence (Iver) UK Ltd]
+    scheme: West London Technology Park, Iver
+    site_id: 77
+    confidence: probable
+    group: null
+    evidence: >-
+      22 findings at site 77. Incorporated 2024-08-29, no accounts
+      filed, PSC register reads "no registrable person". The third Iver
+      vehicle in this file, after UK Court Lane and SEGRO (Iver 1).
+    shareholder: >-
+      Eleven shareholdings across two classes (confirmation statement of
+      3 November 2025): **NEON SEQUENCE (IVER) SCSP**, a Luxembourg
+      special limited partnership, holds the largest A-ordinary block at
+      39,951 shares, with four named individuals — Benjamin Anthony
+      Nicholas, Biren Yogesh Patel, William John Forster and Tobias
+      Cooper — and IVER BBB LIMITED. A company whose PSC page names
+      nobody, whose confirmation statement names eleven.
+
+  - company_number: "16741328"
+    register: companies_house
+    registered_name: PLATFORM DATA CENTRES UK LIMITED
+    corpus_names: [Platform Data Centres UK Limited]
+    scheme: null
+    site_id: null
+    confidence: probable
+    group: Platform Group UK Holdings
+    evidence: >-
+      Barbour client of record with no site attached. Incorporated
+      2025-09-24; no accounts filed, so it discloses nothing.
+
+  - company_number: "15833606"
+    register: companies_house
+    registered_name: GWELYFENAI LIMITED
+    corpus_names: [Gwelyfenai Limited]
+    scheme: Former Ferodo site, Caernarfon Road — data centre campus
+    site_id: 142
+    confidence: confirmed
+    group: Pnod Holdings
+    evidence: >-
+      Barbour client of record at site 142. Files **dormant** accounts
+      while holding a campus scheme, which is the pattern that makes a
+      dormant filing informative rather than empty: the vehicle exists
+      and the asset has not moved into it.
+
+  - company_number: "11103278"
+    register: companies_house
+    registered_name: CTW NORTHERN LIMITED
+    corpus_names: [CTW Northern Limited]
+    scheme: Wilton International — 48 MW data centre
+    site_id: 90
+    confidence: confirmed
+    group: Start Eight15 Limited
+    evidence: >-
+      Barbour client of record at site 90, "WILTON INTERNATIONAL - 48MW
+      DATA CENTRE". Files micro-entity accounts, which carry no
+      investment-property note, so it discloses no capacity by the form
+      of filing it chooses.
+
+  - company_number: "12654261"
+    register: companies_house
+    registered_name: L51 DEVELOPMENTS LIMITED
+    corpus_names: [L51 Developments Limited]
+    scheme: Bootle (L51)
+    site_id: null
+    confidence: probable
+    group: Strategic Resources Limited
+    evidence: >-
+      Barbour client of record, no site attached. Registered at 51
+      Bridle Road, Bootle — the postcode L30 is the scheme, and "L51" is
+      the address rather than a portfolio number.
+
+  - company_number: "08787339"
+    register: companies_house
+    registered_name: ELITE GEMSTONES PROPERTIES LIMITED
+    corpus_names: [Elite Gemstones Properties Limited]
+    scheme: Project Edison
+    site_id: 101
+    confidence: probable
+    group: Elite UK Commercial
+    evidence: >-
+      Barbour client of record at site 101. **100 charges, 24
+      outstanding**, most to CBRE Loan Services as security agent — a
+      multi-asset property company rather than a single-scheme vehicle,
+      so its accounts will not carry a per-scheme capacity.
+
+  - company_number: "12807544"
+    register: companies_house
+    registered_name: LIBERTY PLACE LIMITED
+    corpus_names: [Liberty Place Limited]
+    scheme: east London (Interxion cluster)
+    site_id: 5
+    confidence: tentative
+    group: Indigo Invest UK Holding
+    evidence: >-
+      Findings place it at site 5, the Interxion/east London record. PSC
+      Indigo Invest UK Holding Limited (12432557); files small-company
+      accounts to 31 March 2025 and carries no charges.
+    caution: Site 5 is the 46-application east London cluster.
+
+  - company_number: "07981598"
+    register: companies_house
+    registered_name: TRUMAN ESTATES LIMITED
+    corpus_names: [Truman Estates Limited, Truman Estates Ltd,
+                   Truman Estates Ltd and Zeloof LLP]
+    scheme: east London (Interxion cluster)
+    site_id: 5
+    confidence: tentative
+    group: Zeloof
+    evidence: >-
+      100 findings, many as a joint party with Zeloof LLP. PSC Ofer
+      Zeloof; Zeloof LLP's PSCs are Oren and Jason Zeloof. Files
+      **dormant** accounts.
+    caution: Site 5 cluster.
+
+  - company_number: "OC352852"
+    register: companies_house
+    registered_name: ZELOOF LLP
+    corpus_names: [Zeloof LLP]
+    scheme: east London (Interxion cluster)
+    site_id: 5
+    confidence: tentative
+    group: Zeloof
+    evidence: >-
+      20 findings at site 5, jointly with Truman Estates. One charge to
+      Bank of Scotland from 2012, still outstanding.
+    caution: Site 5 cluster.
+
+  - company_number: "06252482"
+    register: companies_house
+    registered_name: LASERCHARM LIMITED
+    corpus_names: [Lasercharm Limited, Lasercharm Ltd]
+    scheme: Camro data centre masterplan
+    site_id: 2
+    confidence: probable
+    group: Topaz Midco Limited
+    evidence: >-
+      39 findings at site 2. Eight charges, all satisfied; the last two
+      to Topland Jupiter Limited and then **Cambridge Innovation Campus
+      Limited**, satisfied 2025-07-22 — which is a sale, dated.
+
+  - company_number: "05325950"
+    register: companies_house
+    registered_name: LINRAY LIMITED
+    corpus_names: [Linray Limited]
+    scheme: EuroHub / The Point, Greenwich View Place
+    site_id: 6
+    confidence: probable
+    group: null
+    evidence: >-
+      39 findings at site 6, the same scheme as SOF-11 Docklands DC UK
+      Bidco. Five PSCs including Ync Holdings Ltd and Gross Holdings Ltd.
+
+  - company_number: "10734726"
+    register: companies_house
+    registered_name: C CAPITAL (LONDON) LIMITED
+    corpus_names: [C Capital (London) Limited]
+    scheme: M74 Central Eco Park
+    site_id: 47
+    confidence: probable
+    group: (Simon Edward Coakley)
+    evidence: >-
+      Barbour client of record at site 47, "M74 CENTRAL ECO PARK - DATA
+      CENTRE & INDUSTRIAL PARK". PSC a named individual, Simon Edward
+      Coakley, with charges to Together Commercial Finance and then AGG
+      Booth Title Limited.
+
+  - company_number: "OC439678"
+    register: companies_house
+    registered_name: CAINEAL LLP
+    corpus_names: [Caineal Llp]
+    scheme: Nevendon Road — data centre building
+    site_id: 120
+    confidence: probable
+    group: null
+    evidence: >-
+      Barbour client of record at site 120. PSC register reads "no
+      registrable person"; no charges. Nothing above it is public.
+
+  - company_number: "SC358148"
+    register: companies_house
+    registered_name: AXIOM PROJECT SERVICES LIMITED
+    corpus_names: [Axiom Project Services Limited]
+    scheme: null
+    site_id: null
+    confidence: tentative
+    group: Bellrock Consulting UK
+    evidence: >-
+      Barbour client of record with no site attached. A charge to GLAS
+      Trust Corporation created 2026-03-26 — the same security agent as
+      the five Apatura vehicles, three months earlier.
+    caution: A generic name; the resolution rests on Barbour alone.
+
+  - company_number: "08545038"
+    register: companies_house
+    registered_name: CURTIS HALL LIMITED
+    corpus_names: [Curtis Hall Limited, Curtis Hall Ltd]
+    scheme: Cardiff East park and ride, Old St Mellons
+    site_id: 86
+    confidence: probable
+    group: (Curtis and Hall families)
+    evidence: >-
+      27 findings at site 86. Four individual PSCs, two named Curtis and
+      two named Hall — the company name is the two families.
+
+  - company_number: "15386535"
+    register: companies_house
+    registered_name: SWEET PROJECT HOLDINGS LIMITED
+    corpus_names: [Sweet Project Holdings Limited, Sweet Project Holdings Ltd]
+    scheme: Hayes / Alliance Park
+    site_id: 61
+    confidence: tentative
+    group: (Sweet family)
+    evidence: >-
+      37 findings across sites 61 and 67. Shares 30 Old Bailey with
+      Sweet Project Construction Limited (12459287), which the corpus
+      also names; the register's search ranks the construction company
+      first, so a top-hit resolution would have taken the wrong one.
+    caution: Site 61 cluster, and a two-company name collision.
+
+  - company_number: "07301086"
+    register: companies_house
+    registered_name: REDSTART NORTHWEST LIMITED
+    corpus_names: [Redstart Northwest Limited]
+    scheme: Bidder Street / east London
+    site_id: 445
+    confidence: tentative
+    group: Redstart Northwest Holdings
+    evidence: >-
+      42 findings across sites 5 and 445 ("BIDDER STREET - DATA CENTRE").
+      PSC Redstart Northwest Holdings Limited; one charge, to the Royal
+      Bank of Scotland, satisfied in 2022.
+    caution: Site 5 cluster.
+
+  - company_number: "OC402087"
+    register: companies_house
+    registered_name: FLEXSPACE NO 2 LLP
+    corpus_names: [Flexspace No.2 LLP, FlexSpace No 2 LLP]
+    scheme: Park House, Greenhill Crescent, Watford
+    site_id: 436
+    confidence: probable
+    group: Bridges Fund Management
+    evidence: >-
+      11 findings at site 436. PSCs Bridges Fund Management Limited and
+      Bridges Property Alternatives Fund III. Six outstanding charges to
+      Lloyds Bank as security trustee.
+
+  - company_number: "OC426781"
+    register: companies_house
+    registered_name: NORTHERN GATEWAY DEVELOPMENT VEHICLE LLP
+    corpus_names: [Northern Gateway Development Vehicle LLP]
+    scheme: Northern Gateway, Bury/Heywood (M62 corridor)
+    site_id: 428
+    confidence: confirmed
+    group: Harworth Group / Russell Homes
+    evidence: >-
+      15 findings at site 428. PSCs Harworth Estates Investments Limited
+      and Russell Homes (UK) Limited — a joint venture named in the
+      register, and Harworth Group plc is separately a Barbour client.
+
+  - company_number: "01496218"
+    register: companies_house
+    registered_name: GETJAR LIMITED
+    corpus_names: [Getjar Ltd, Getjar Limited]
+    scheme: Hayes
+    site_id: 61
+    confidence: tentative
+    group: Masterson Holdings
+    evidence: >-
+      56 findings at site 61. Incorporated in 1980, PSC Masterson
+      Holdings Ltd, and its four charges all pre-date 1994 and were
+      satisfied by 2012.
+    caution: >-
+      Site 61 cluster, and a company older than the data-centre industry
+      — more likely the landowner than the scheme vehicle.
+
+  - company_number: "05656736"
+    register: companies_house
+    registered_name: TELEDATA UK LIMITED
+    corpus_names: [Teledata UK Limited]
+    scheme: Simon House, Manchester
+    site_id: 92
+    confidence: confirmed
+    group: Loxworth Investments
+    evidence: >-
+      Barbour client of record at site 92. An operator rather than a
+      scheme SPV; recorded because its financing moved from Barclays to
+      HSBC UK Bank as security agent in April 2026.
+
+  - company_number: "04729732"
+    register: companies_house
+    registered_name: GLOBAL SWITCH ESTATES 1 LIMITED
+    corpus_names: [Global Switch Estates 1 Limited]
+    scheme: east London (Global Switch estate)
+    site_id: 5
+    confidence: tentative
+    group: Global Switch
+    evidence: >-
+      Six findings across sites 5 and 444. PSC Global Switch UK Holdings
+      Limited (15870899). Recorded because the 2026-08-20 survey read
+      the Global Switch operating company and found no capacity; the
+      estates companies are the property layer it did not read.
+    caution: Site 5 / 444 cluster.
+
+  - company_number: "04729738"
+    register: companies_house
+    registered_name: GLOBAL SWITCH ESTATES 2 LIMITED
+    corpus_names: [Global Switch Estates 2 Limited]
+    scheme: east London (Global Switch estate)
+    site_id: 5
+    confidence: tentative
+    group: Global Switch
+    evidence: >-
+      Twelve findings across sites 5 and 444. Same PSC as Estates 1,
+      Global Switch UK Holdings Limited (15870899), and the same three
+      historic charges to Anglo Irish Bank and Barclays, all satisfied
+      by 2013.
+    caution: Site 5 / 444 cluster.
+
+  - company_number: "14203484"
+    register: companies_house
+    registered_name: HM DEVCO LIMITED
+    corpus_names: [HM DevCo Limited, HM Devco Ltd]
+    scheme: null
+    site_id: null
+    confidence: probable
+    group: Honey Monster Limited
+    evidence: >-
+      Two findings naming it as the applicant for a 2023 hybrid
+      application. PSC Honey Monster Limited (14078507) — "HM" is Honey
+      Monster, which is what makes the resolution safe on a name this
+      generic.
+
+  - company_number: "12702016"
+    register: companies_house
+    registered_name: MOUNT ELBERT EDGECORE SERVICES (EUROPE) LTD.
+    corpus_names: [Mount Elbert Edgecore Services (Europe) Limited]
+    scheme: SEGRO Park sites 3 & 4
+    site_id: 40
+    confidence: probable
+    group: Edgecore / Mount Elbert
+    evidence: >-
+      Barbour client of record at site 40. **Dissolved**, with its last
+      accounts dormant to 2021-12-31 — a scheme vehicle that was wound
+      up, which the planning record will not say.
+
+  - company_number: "16003149"
+    register: companies_house
+    registered_name: DLD (SALFORD) LIMITED
+    corpus_names: [DLD (Salford) Limited]
+    scheme: Former Whites site — data centre and office
+    site_id: 112
+    confidence: confirmed
+    group: null
+    evidence: >-
+      Barbour client of record at site 112. Incorporated 2024-10-07,
+      files dormant accounts, PSC register reads "no registrable
+      person" — a vehicle that discloses neither ownership nor
+      finances.
+
+  - company_number: "05978133"
+    register: companies_house
+    registered_name: ENDLESS ENERGY LIMITED
+    corpus_names: [Endless Energy Limited, Endless Energy Ltd]
+    scheme: Dalton Lane — data centre
+    site_id: 32
+    confidence: probable
+    group: (Neenan family)
+    evidence: >-
+      Barbour client of record at site 32, "DALTON LANE - DATA CENTRE".
+      Files dormant accounts while named as the client on a data-centre
+      scheme, so the vehicle exists and the asset has not moved into
+      it.
+
+  - company_number: "09796278"
+    register: companies_house
+    registered_name: 5NINES GLOBAL LTD.
+    corpus_names: [5Nines Global Limited]
+    scheme: University of Hull data centre
+    site_id: 39
+    confidence: tentative
+    group: (Gilbert family)
+    evidence: >-
+      Barbour client of record at site 39. The register also holds a
+      **dissolved** 5NINES GLOBAL LLP (OC377649) and a dissolved
+      5NINES GLOBAL (NI) LIMITED, and the search ranks the LLP first.
+      The active limited company is the more likely referent for a
+      current scheme, but the name has been used by three entities.
+    caution: Three same-named entities, two dissolved.
+
+  - company_number: "11756346"
+    register: companies_house
+    registered_name: KAO DATA LIMITED
+    corpus_names: [Kao Data Campus]
+    scheme: null
+    site_id: null
+    confidence: confirmed
+    group: Legal & General / Infratil
+    evidence: >-
+      Already a source in companies-house-claims.yaml for its SECR
+      consumption figures. Recorded here for the ownership: PSCs L&G Kao
+      Holdco Ltd (16482453) and **Infratil HPC Limited, a New Zealand
+      company** (8198444), and a January 2026 charge to GLAS Trust
+      Corporation replacing SMBC and Downing.
+
+
+# Names the corpus carries that could not be resolved to a company.
+# Listed rather than dropped: an unresolvable applicant name is a
+# finding about the record, and the next person to look should not have
+# to rediscover that the search was already run.
+unresolved:
+  - name: Avalon DC Limited
+    where: Barbour client of record, site 1 (Saunderton)
+    searched: 2026-08-26
+    result: >-
+      No company of this name on the register, live or dissolved. Site 1
+      is VIRTUS's Saunderton scheme and Virtus Saunderton Limited
+      (13618549) is recorded above as the probable vehicle, but the
+      Barbour name resolves to nothing and may be a project codename
+      rather than a company.
+
+  - name: Saunderton Data Centre Gp Limited
+    where: findings, site 1
+    searched: 2026-08-26
+    result: >-
+      No such company. The register does hold ANDOVER DATA CENTRE GP
+      LIMITED (09880212, dissolved), which is the same naming pattern
+      for a different place — so "… Data Centre GP Limited" is a form
+      somebody uses, and this instance either never existed or was
+      renamed before it was filed.
+
+  - name: BGO Code Propco Limited
+    where: findings, site 4 (Project MK DataVault / Enigma)
+    searched: 2026-08-26
+    result: >-
+      32 findings name it. BGO is BentallGreenOak and the register holds
+      a dozen "BGO … PROPCO LIMITED" companies at 7 Albemarle Street —
+      including BGO ARK PROPCO LIMITED — but none containing "Code".
+      Either the scheme codename is not in the registered name, or the
+      vehicle is an overseas entity filed under another name.
+
+  - name: VDC LHR12 Limited
+    where: findings ("LHR12 Ltd", "VDC LHR12 Ltd"), 37 mentions
+    searched: 2026-08-26
+    result: >-
+      No LHR12 company on the register, although LHR11 and LHR21 both
+      exist as Jersey overseas entities. A Vantage scheme numbered
+      between two that are registered, and not registered itself.
+
+  - name: Greenwich (The Point) Limited
+    where: Barbour client of record, site 6
+    searched: 2026-08-26
+    result: >-
+      No company of this name. THE GREENWICH POINT DEVELOPMENT COMPANY
+      LIMITED (05739235) is dissolved. Site 6's live vehicles are
+      SOF-11 Docklands DC UK Bidco Limited and Linray Limited, both
+      recorded above.
+
+  - name: Palmer Street LLP
+    where: findings, site 9 (Garrison data centre)
+    searched: 2026-08-26
+    result: >-
+      No LLP of this name. Several unrelated "Palmer Street" companies
+      exist. Unresolved.
+
+  - name: Springbridge Direct Limited
+    where: findings, 37 mentions
+    searched: 2026-08-26
+    result: >-
+      The register holds SPRINGBRIDGE DIRECT HOLDINGS LIMITED
+      (07574675) and SPRINGBRIDGE GROUP LIMITED (06887696) at the same
+      Denham address, but no "Springbridge Direct Limited". The
+      holdings company is the likeliest referent and is deliberately
+      NOT recorded as one, because "Direct" and "Direct Holdings" are
+      different companies and guessing between them is the error this
+      file exists to avoid.
+
+  - name: Springfield ES Landfill Limited
+    where: findings, site 61
+    searched: 2026-08-26
+    result: >-
+      No company of this name on the register, live or dissolved. The
+      nearest matches are Veolia ES Landfill Limited and several
+      unrelated "Springfield Estates" companies, none of which is a
+      plausible referent. Unresolved.
+
+  - name: Marvell Developments Llc
+    where: Barbour client of record
+    searched: 2026-08-26
+    result: >-
+      A US limited liability company. Not on the UK register and out of
+      scope for Companies House. Recorded so that the absence is not
+      re-searched, and because a US LLC as client of record is the
+      structure that makes the PSC register go quiet further down.
+
+  - name: Willow Developments Llc
+    where: Barbour client of record (Amazon Data Centre Didcot)
+    searched: 2026-08-26
+    result: >-
+      Same as Marvell Developments — a US limited liability company, not
+      a Companies House filer. Barbour names it client of record on the
+      Amazon Data Centre Didcot project with Amazon UK (Head Office) as
+      end user.
+
+  - name: F55 G Chateau SARL
+    where: Barbour client of record
+    searched: 2026-08-26
+    result: >-
+      A Luxembourg société à responsabilité limitée. Not a Companies
+      House filer; the Luxembourg RCS would be the register to ask.
+
+  - name: GTR London 2 SARL
+    where: Barbour client of record
+    searched: 2026-08-26
+    result: >-
+      A Luxembourg société à responsabilité limitée, as above. Not a
+      Companies House filer; the Luxembourg RCS is the register that
+      would answer it.
+
+  - name: Mountpark Logistics EU 2020 28 Sarl
+    where: findings, site 107 (Ferrybridge), joint applicant
+    searched: 2026-08-26
+    result: >-
+      Luxembourg. Its UK joint applicant, Jigsaw UK Development Limited,
+      is recorded above.

@@ -647,12 +647,39 @@ requirement — the capacity is in the accounts by construction. And the
 figure is motivated to be accurate in a way marketing is not: it is what
 an external valuer priced and an auditor signed.
 
-It also disagrees with the commercial record. Barbour carries this
-project at 140 MW; the audited accounts assume 103.3 MW. Neither is
-necessarily wrong — they may be measuring different things, at different
-dates — but a discrepancy of that size between the two is exactly the
-kind of thing a reporter should be told about rather than have averaged
-away.
+It also appears to disagree with the commercial record. Barbour titles
+this project "COURT LANE - 140MW DATA CENTRE"; the audited accounts
+assume 103.3 MW.
+
+**Resolved, 2026-08-26: it is not a disagreement, and the planning
+documents settle it.** The corpus holds this scheme as site 81, and its
+own environmental statement states three different figures on three
+pages of the same application, ChilternSouthBucks/PL/22/4145/OA:
+
+| Figure | Where | Quantity |
+|---|---|---|
+| **Total IT Load – 103.32 MW** | p10 | what the servers draw |
+| **Total Data Centre Load – 139.5 MW** | p10, same table | IT plus cooling and losses |
+| "The proposed development has a **140MW grid connection reserved**" | p27, and p48 of the 2024 application, four occurrences | what the network agreed to supply |
+
+The accounts' 103.3 MW is the **IT load**, rounded from the planning
+record's own 103.32. Barbour's 140 is the total data centre load
+rounded up, and the grid connection is 140 because the connection was
+sized for the total load. The three numbers are consistent, and the
+apparent 26% "discrepancy" was an artefact of comparing an IT figure
+with a whole-site figure.
+
+Which is the more useful finding, because it says what the SPV figure
+*is*: a company's audited valuation assumption can be matched to a
+specific quantity in its own planning submission, and doing that
+identifies which quantity it is. The general rule stands and gets
+sharper — **never compare an external megawatt to a planning megawatt
+without establishing that they measure the same thing**; here that took
+one join and overturned the headline.
+
+A second scheme at the same location is separately described in the 2024
+application as taking "approximately 160MW", so the site record carries
+two proposals, not one.
 
 Two further things the same filing carries, both invisible to the
 planning record. The auditors flag **a material uncertainty over going
@@ -672,6 +699,123 @@ Not every scheme is held this way, and an SPV that has not yet filed
 accounts discloses nothing. But where the structure exists, this is the
 only source found in this entire survey that states a per-scheme
 capacity as a matter of course.
+
+**Swept, 2026-08-26 — and "as a matter of course" is too strong.** The
+class was enumerated: 111 companies named in Barbour's owner-role slots,
+in `party_applicant` and `party_other` findings, and in
+`data/priors/organisation_aliases.yaml` were resolved at Companies House
+(`scripts/ch_resolve_spvs.py`), their profiles, filing histories,
+charges, PSC registers and officers pulled
+(`scripts/ch_pull_filings.py`), and the latest accounts of all 52 that
+had filed accounts of a category which *could* carry an
+investment-property note were downloaded, rendered and OCR'd page by
+page. Every page of all 52 was searched for "MW", "MWh", "MVA" and
+"megawatt".
+
+**Ten of the 52 mention megawatts at all.** Four state something the
+claims store did not already hold, and they are now in it. The other
+six repeat figures already held, or state an emissions intensity.
+
+The decisive negative is **Segro Pure Premier Park Data Centre Limited**
+(16311501). It is the same shape as Court Lane — one scheme, one
+investment property, an independent external valuation by CBRE, an
+IFRS 13 fair-value note — and across 25 pages it states **no capacity
+figure of any kind**. Its note says the valuation "incorporates a number
+of assumptions including market yields, development assumptions and
+comparable market transactions" and does not say what the development
+assumptions are. So the disclosure requirement is that assumptions
+exist and are material; naming a megawatt figure among them remains the
+directors' choice. A single-asset SPV's accounts are where a per-scheme
+capacity **can** appear, not where one always does.
+
+**Vantage UK does state a capacity figure, correcting §6's opening.**
+Vantage Data Centers UK Limited (06132144) was listed above among the
+five operators disclosing none. Its accounts to 31 December 2025, filed
+7 August 2026, carry a SECR table with "Total IT load (MW) 41.19"
+(2024: 35.28) alongside 505,866,500 kWh of UK energy consumption. It is
+a company total, not a site split, and what it measures is not stated —
+505,866,500 kWh over the year averages about 57.7 MW of total draw,
+which against 41.19 MW of IT implies a PUE of 1.40 and is consistent
+with an average IT draw rather than an installed rating. It is loaded as
+`company_level`, in the company's own words.
+
+**The one new per-campus figure came from a subsidiary, not a group.**
+Ark Data Centres Limited's group accounts name Union Park only in a
+forward-looking sentence with no number. **Ark Estates 2 Limited**
+(12113969), which holds it, states in its own strategic report that the
+site "had 24 MW (2024: 12 MW) of built capacity as of 30 June 2025. In
+addition, 48 MW of further capacity is under construction, with a
+further 24 MW to be built subject to planning permission." That last
+clause is a company telling its auditors how much of its pipeline
+depends on a consent it does not have. Reading the estate companies as
+well as the group is what found it.
+
+**HFD DataVita Limited** (SC467509) states that its site's designation
+as Scotland's first AI Growth Zone "will enable up to 500 MW of AI ready
+data centre capacity", and that a committed £112m first phase "will
+fully enable 16 MW of AI grade capacity at DataVita's existing Tier III
+data centre", with CoreWeave Inc. named as partner. The 16 MW is loaded;
+the 500 MW is a zone-level ceiling covering land beyond any application
+this corpus holds, and is recorded under `noted:` rather than loaded,
+because every quantity type in the store would misdescribe it.
+
+**Nineteen of the 111 have filed no accounts at all** — including
+Elsham Tech Park Limited, which holds a 1 GW campus, and Slough Holdings
+UK Limited, which holds a 300 MW one. That is a measured null with a
+date attached, not a gap in the sweep.
+
+**Ownership is where the class pays.** Details in
+`data/external_sources/companies-house-ownership.yaml`; the short
+version is that the PSC register alone would have been misleading. It
+reads "no registrable person" for 13 of the 111. Probing the charges
+endpoint for every company rather than trusting the profile's
+`has_charges` flag found charges on **49**, where the flag claimed
+five — and the charges are what carry the chain. STX-A10 Limited
+(Waltham Cross) discloses no PSC and no parent; its two charges were to
+Global Infrastructure UK Limited, whose PSC is **Alphabet, Inc.** The
+Register of Overseas Entities turns out to be a *better* ownership
+source than the domestic one: it files no accounts, but it compels a
+named beneficial owner, so eleven Jersey Vantage vehicles all name
+DigitalBridge Group, Inc., and Manor Farm Propco Limited — the 147 MW
+Slough scheme — names Tritax Big Box REIT plc.
+
+**And the confirmation statement is the cheapest thing in this survey.**
+It answers a narrower question than the PSC register — who holds the
+shares, not who has significant control — and it answers it for
+companies where the PSC register is silent. It is also, uniquely among
+the Companies House documents read for this project, **filed
+electronically with a text layer**, so shareholders are extracted rather
+than transcribed: no OCR, no risk of a silently misread character. 57 of
+the 111 yielded a list, 178 shareholdings in all; the 21 that yielded
+nothing are all overseas entities or LLPs, neither of which files a
+CS01.
+
+Two traps, both of which cost real names before they were fixed. The
+most recent statement is usually the wrong one — a
+"confirmation-statement-with-no-updates" carries no shareholder block by
+definition, and 48 of the 111 filed one most recently — so the history
+has to be walked back to the last filing that names holders. And the
+block is a two-column table that `pdftotext` scrambles without
+`-layout`: reading it naively recovered two of Sequence (Iver) UK
+Limited's ten shareholders, and truncated one name to "THE INVESTMENT
+AND DEVELOPMENT OFFICE OF THE", which in full is "…OF THE GOVERNMENT OF
+RAS AL KHAIMAH" — a UAE sovereign investment office holding shares in
+Pure Data Centres Group, SEGRO's joint-venture partner at Premier Park,
+and invisible on that company's PSC page.
+
+Some of what it named. UK Court Lane DC Ltd's seven ordinary shares are
+held by **UK Court Lane DC Holdings, LP**, the immediate parent its PSC
+page cannot record. Bucks DC Limited is held by **SOF-12 Bucks DC UK
+Holdco Limited** — Starwood Opportunity Fund XII, one vintage later than
+the SOF-11 vehicle holding Greenwich, so two London schemes sit in
+different funds of the same manager. "IRE EVAF II The Fort Propco
+Limited" turns out to stand for **Invesco** Real Estate European
+Value-Add Fund II, which the confirmation statement spells out and the
+PSC register does not. Sequence (Iver) UK Limited, whose PSC page names
+nobody, has eleven shareholdings across two classes led by a Luxembourg
+SCSp. And Google's Global Infrastructure UK Limited is held by **Raiden
+Unlimited Company** — an unlimited company, a form exempt from filing
+accounts, sitting between the UK land vehicle and Alphabet.
 
 Acquisition notes: the API needs a key (`CH_API_KEY`), and the document
 endpoint 302s to S3, which rejects a request still carrying the
