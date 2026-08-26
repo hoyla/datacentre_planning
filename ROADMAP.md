@@ -4,7 +4,7 @@ What is still to do. Everything already built and decided — including
 the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
-Current state: **430 sites** (plus 26 pre-planning), **1,709
+Current state: **494 sites** (plus 25 pre-planning), **2,032
 applications** in the site universe, **55,678 documents**. Findings and
 adjudication counts move while the corroboration pass runs and are
 deliberately not restated here — `scripts/corpus_stats.py` prints them,
@@ -95,15 +95,36 @@ up the new CSV adjudication columns.
   retired 2026-08-21 because site 61 was mostly somewhere else, becomes
   matchable again the moment 75111 is its own site.
 
-- **`SITE-EN0110030` still shows the register's location narrative.**
-  It should read "SDC M40 Campus (Wapseys Wood)" — the reason the story
-  team searched for Wapseys and concluded the corpus was missing it.
-  The materialisation above dissolves this particular key into
-  `PTNO-12913776` (display name "SDC M40 CAMPUS - 300MW DATA CENTRE
-  CAMPUS", which is most of the way there), so fix it in the same pass
-  rather than separately — but the general defect stands: a site whose
-  display name is a paragraph of location prose cannot be found by the
-  name everyone calls it.
+- **A site's display name is the address of whichever application sorts
+  first**, which bears no relation to what anyone calls the place. The
+  Wapseys case is fixed by accident rather than design — the key
+  dissolved into `PTNO-12913776`, "SDC M40 CAMPUS - 300MW DATA CENTRE
+  CAMPUS" — but the defect stands and has now bitten twice more: West
+  Burton Power Station renders as "Land East Of Gainsborough Road
+  Bole", and the Blyth offshore-wind site as "Land North Of Blyth
+  Powerstation Cambois". A site nobody can find by its own name is a
+  site a reporter concludes is missing, which is exactly what happened
+  when the Guardian asked about Wapseys Wood.
+
+- **Northumberland Energy Park holds four unrelated schemes.**
+  `PTNO-12785975` clusters 35 applications spanning the Blyth offshore
+  wind connection, Britishvolt's battery plant, JDR's subsea cable
+  factory and the data centre. 2.7 partitioned out only the 2013 wind
+  substation, because only its figure was actively misleading (see
+  HISTORY). The rest is the site-61 problem in a second location, and
+  the same remedy applies: adjudicated boundaries with written
+  evidence. The applicant of record separates these cleanly — but read
+  the descriptions before ejecting anything, per the stem-1331 lesson
+  above.
+
+- **Nothing checks for figures that were never adjudicated.** The
+  corrections gate examines adjudications that exist and cannot see a
+  figure nobody has asked about; `sweep_null_capacity.py` only reports
+  sites with no capacity at all. 2.7 came within one runbook step of
+  shipping 4,117 unadjudicated figures from the corroboration read. A
+  cheap pre-build assertion — "the adjudication tail is empty, or say
+  how large it is" — belongs in `dcp/adjudication_gate.py` beside the
+  corrections check.
 
 ## Phase 3 — the second opinion
 
