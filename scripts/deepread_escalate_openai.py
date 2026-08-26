@@ -15,6 +15,16 @@ row said `not_extracted`; and collect never opened the batch error
 file, so an API-level failure produced no log row, stayed in the
 cohort, and was resubmitted and recharged on every later run.
 
+It is also the PRIMARY reader for new content. Standing policy from
+2026-08-26: the local mlx/Qwen reader is a phase 3 second opinion and
+must never be the first read of anything — new documents are read by
+GPT-5 here, or by Sonnet. The label audit (gpt-5/label-1.0, 2026-08-25)
+is why: the local extractor misfiles `power_demand` 68% of the time
+against claude-sonnet-5's 9%, and `power_generation` 34% against 9%,
+which are precisely the families this investigation turns on. `--cohort
+first_read --since DATE` is the cohort for that, and it deliberately
+does not treat an mlx log row as an exclusion.
+
 Exists because the organisation holds OpenAI API credits, and the pipeline
 was deliberately built model-agnostic: the verbatim-quote gate (not the
 model) is the hallucination protection, findings carry their model tag in
@@ -38,6 +48,10 @@ Usage:
         [--reasoning-effort minimal] [--max-spend-usd N --rate-in N --rate-out N]
     scripts/deepread_escalate_openai.py --dry-run --cohort parse_failed \
         --model <id>        # documents whose JSON came back truncated
+    scripts/deepread_escalate_openai.py --submit --cohort first_read \
+        --since 2026-08-26 --model gpt-5 --reasoning-effort minimal \
+        --rate-in 1.25 --rate-out 10 --max-spend-usd 150
+                            # the primary read of newly arrived documents
     scripts/deepread_escalate_openai.py --collect [--batch-id ...]
     scripts/compare_readers.py --models openai:<id> claude-sonnet-5 mlx:<id>
 """
@@ -60,6 +74,7 @@ load_dotenv(ROOT / ".env")
 
 from dcp import db, extract  # noqa: E402
 from dcp import deepread_select as sel  # noqa: E402
+from dcp import signal_families  # noqa: E402
 
 import importlib.util as _ilu  # noqa: E402
 
@@ -247,7 +262,8 @@ def load_cohort(conn, which: str, sample: int = 0,
                 model_tag: str | None = None,
                 tiers: tuple[str, ...] = (),
                 limit: int = 0,
-                unread_only: bool = False) -> list[dict]:
+                unread_only: bool = False,
+                since: str | None = None) -> list[dict]:
     """'validation' = a small sample of documents already read by BOTH
     other models, for a three-way comparison; 'remaining' = documents
     this model has not read.
@@ -298,6 +314,50 @@ def load_cohort(conn, which: str, sample: int = 0,
                               WHERE f.document_id = d.id)
             ORDER BY a.application_ref, d.id"""
         params = []
+    elif which == "first_read":
+        # New content that has never had a PRIMARY read.
+        #
+        # The local mlx/Qwen reader is a phase-3 second opinion and must
+        # never be the first read of new content: the label audit
+        # (gpt-5/label-1.0, 2026-08-25) measured it misfiling
+        # `power_demand` 68% of the time against claude-sonnet-5's 9%,
+        # and `power_generation` 34% against 9% — the two families this
+        # investigation turns on. So an mlx log row is deliberately NOT
+        # an exclusion here. Saying that out loud matters, because the
+        # mirror-image mistake is already in this file's history: the
+        # bulk cohort once excluded any document any model had merely
+        # *logged*, and silently dropped 5,694 readable ones. Treating a
+        # second opinion as a first read is the same error pointed the
+        # other way, and it would leave new documents permanently
+        # unread by anything trustworthy.
+        #
+        # Two arms, because "today's new content" has two shapes:
+        #   1. documents fetched since `since` — the refetch's haul;
+        #   2. documents whose only reading is an mlx read logged since
+        #      `since` — older documents that a mistaken local pass was
+        #      the first to touch.
+        # The exclusion is scoped to the readers that count as primary
+        # (Sonnet and any openai: tag) and, as elsewhere, ignores
+        # `not_extracted`, which records an absence of processing rather
+        # than a reading.
+        q = """
+            SELECT d.id, a.id, a.application_ref, d.content_sha256,
+                   d.kind, NULL
+            FROM documents d
+            JOIN applications a ON a.id = d.application_id
+            WHERE d.content_sha256 IS NOT NULL AND d.bytes_path IS NOT NULL
+              AND (d.fetched_at >= %s::date
+                   OR EXISTS (SELECT 1 FROM deepread_log l
+                              WHERE l.document_id = d.id
+                                AND l.model LIKE 'mlx%%'
+                                AND l.completed_at >= %s::date))
+              AND NOT EXISTS (SELECT 1 FROM deepread_log l2
+                              WHERE l2.document_id = d.id
+                                AND (l2.model = 'claude-sonnet-5'
+                                     OR l2.model LIKE 'openai:%%')
+                                AND l2.read_state <> 'not_extracted')
+            ORDER BY a.application_ref, d.id"""
+        params = [since, since]
     elif which == "power":
         # A validation cohort weighted to the documents the investigation
         # actually turns on.
@@ -414,6 +474,22 @@ def load_cohort(conn, which: str, sample: int = 0,
     # policy had set aside, and the reader would still call them unread.
     # See sel.universe_plan.
     plan_by_id = sel.universe_plan(conn)
+    # `universe_plan` covers documents attached to a LIVE site. New
+    # content routinely is not yet: a section 35 direction arrives as a
+    # stub application, and the refetch pulls documents for context
+    # applications that no site claims. Dropping those would silently
+    # exclude exactly the leads this cohort exists for — Dartford and
+    # Quest Park among them — so they are planned on their own rows.
+    # That is a weaker guarantee than the global plan and is only used
+    # where no global plan exists: `plan_documents` samples every Nth
+    # tier-C document *of what it is handed*, so a locally planned set
+    # may keep a different fifth of a repetitive class than the corpus
+    # policy would. It cannot disagree with the corpus about a document
+    # the corpus has never planned.
+    if which == "first_read":
+        outside = [r for r in rows if r["document_id"] not in plan_by_id]
+        for r, p in zip(outside, sel.plan_documents(outside)):
+            plan_by_id[r["document_id"]] = p
     kept = []
     for row in rows:
         plan = plan_by_id.get(row["document_id"])
@@ -557,7 +633,7 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
               rate_out: float = 0.0, max_spend: float = 0.0,
               reasoning_effort: str | None = None,
               tiers: tuple[str, ...] = (), limit: int = 0,
-              unread_only: bool = False) -> None:
+              unread_only: bool = False, since: str | None = None) -> None:
     tag = model_tag_for(model, reasoning_effort)
 
     # The validation interlock runs FIRST, before a single cache file is
@@ -565,12 +641,13 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
     # a 26,000-document bulk run took ten minutes of reading documents
     # it was about to decline to submit. A refusal should be instant, or
     # people learn to skip the step that produces it.
-    if cohort in ("remaining", "parse_failed") and not dry_run:
+    if cohort in ("remaining", "parse_failed", "first_read") and not dry_run:
         _require_validation(model)
 
     with db.connect() as conn:
         rows = load_cohort(conn, cohort, sample=sample, model_tag=tag,
-                           tiers=tiers, limit=limit, unread_only=unread_only)
+                           tiers=tiers, limit=limit, unread_only=unread_only,
+                           since=since)
 
     # A dry run over the whole corpus does not need to build the whole
     # corpus: read a sample and scale. Exact for anything small, and for
@@ -595,9 +672,17 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
         rows = rows[::step][:SAMPLE_THRESHOLD]
 
     dropped: dict[str, int] = {}
+    # Timed, and the figure kept in the batch state file. Choosing
+    # between this path and the local reader is a timing question, and
+    # the only numbers the repo held were a ceiling (`completion_window`
+    # is OpenAI's 24h SLA, not an expectation) and one anecdote about
+    # the build. Both halves are measured here: the local build, and —
+    # in do_collect — submission to completion.
+    _build_t0 = time.time()
     lines, meta = build_jsonl(rows, model, max_chars,
                               reasoning_effort=reasoning_effort,
                               dropped=dropped)
+    build_seconds = time.time() - _build_t0
     size_mb = sum(len(l) for l in lines) / 1e6 * scale_factor
 
     # A spend estimate before the spend. ~4 characters per token is the
@@ -612,6 +697,8 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
     approx = "≈" if scale_factor > 1 else ""
     print(f"cohort '{cohort}': {approx}{n_docs:,} documents, "
           f"{approx}{n_reqs:,} requests, {approx}{size_mb:.0f}MB of JSONL")
+    print(f"  JSONL built locally in {build_seconds:.1f}s "
+          f"({len(meta) / max(build_seconds, 1e-9):.1f} documents/s)")
     if dropped:
         # Said out loud, because the difference between the cohort and
         # the batch is a coverage claim. These documents are selected,
@@ -721,6 +808,7 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
                  "prompt_version": PROMPT_VERSION, "cohort": cohort,
                  "slice": n, "n_slices": len(slices),
                  "submitted_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                 "build_seconds": round(build_seconds, 1),
                  "documents": meta}
         (BATCH_DIR / f"{batch.id}.json").write_text(json.dumps(state))
         print(f"submitted slice {n + 1}/{len(slices)}: {batch.id} "
@@ -750,6 +838,25 @@ def do_collect(batch_id: str | None) -> None:
             # not, and the documents it never reached must stay in the
             # cohort rather than be logged as read.
             print(f"{state['batch_id']}: EXPIRED — collecting partial results")
+
+        # What the batch actually took, from OpenAI's own timestamps
+        # rather than from when anyone happened to poll. `completion_window`
+        # is a 24h ceiling and was being quoted as an expectation; a
+        # measured figure belongs in the record instead.
+        turnaround = {}
+        for field in ("created_at", "in_progress_at", "finalizing_at",
+                      "completed_at", "expired_at", "failed_at"):
+            v = getattr(batch, field, None)
+            if v:
+                turnaround[field] = int(v)
+        if turnaround.get("created_at") and turnaround.get("completed_at"):
+            secs = turnaround["completed_at"] - turnaround["created_at"]
+            turnaround["seconds"] = secs
+            ndocs = len(state.get("documents") or {})
+            rate = ndocs / (secs / 60) if secs else 0
+            print(f"  turnaround: {secs / 60:.1f} min from submission to "
+                  f"completed ({ndocs:,} documents, {rate:.1f} documents/min)")
+        state["turnaround"] = turnaround
 
         by_doc: dict[str, list] = {}
         errored: dict[str, int] = {}
@@ -900,18 +1007,53 @@ def _insert(conn, row, findings, pages, sent, model_tag) -> tuple[int, int]:
                 continue
             num = f.get("value_number")
             num = num if isinstance(num, (int, float)) else None
+            # The family index, which this path omitted from its INSERT
+            # column list from the day it was written. Every one of the
+            # 557,747 findings the three OpenAI runs produced therefore
+            # carries signal_family NULL, and two reader panels select on
+            # that column alone — site_profile.EIA_TEXTS_SQL
+            # (`signal_family = 'eia_process'`) and PARTIES_SQL
+            # (`signal_family LIKE 'party_%'`) — so no OpenAI finding has
+            # ever reached either. NULL matches nothing, silently, which
+            # is why a missing column looked like a corpus with nothing
+            # to say rather than like a bug.
+            #
+            # Derived, not model-stated, and `family_source` says so:
+            # FINDINGS_SCHEMA is strict with additionalProperties false
+            # and does not carry signal_family, so nothing on this path
+            # can supply one. The validate_family() call is not
+            # decoration — it is what makes adding the field to the
+            # schema a one-line change rather than a second silent
+            # divergence — but today it always takes the fallback branch.
+            # Derived from the STORED label, not the raw one: the column
+            # holds signal_type truncated to 80 characters, and the
+            # backfill can only ever see that. Deriving from the untruncated
+            # label here would make a re-derivation disagree with the
+            # insert on a handful of very long labels, for no gain.
+            label = _no_nul(str(f["signal_type"])[:80])
+            supplied = f.get("signal_family")
+            if supplied:
+                family = signal_families.validate_family(supplied, label)
+                source = "model" if family == supplied else "derived_fallback"
+            else:
+                family = signal_families.family_for(label)
+                source = "derived"
             cur.execute("""
                 INSERT INTO findings (application_id, document_id,
-                    signal_type, value_text, value_number, value_unit,
-                    evidence_text, evidence_page, model, prompt_version)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    signal_type, signal_family, family_source, value_text,
+                    value_number, value_unit, evidence_text, evidence_page,
+                    model, prompt_version)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                -- Unchanged: the content key does not include family or
+                -- family_source, because both are derived and two rows
+                -- differing only there are the same finding.
                 ON CONFLICT (application_id, document_id, model,
                     prompt_version, signal_type, md5(value_text),
                     value_number, value_unit, md5(evidence_text),
                     evidence_page)
                 DO NOTHING""",
                 (row["application_id"], row["document_id"],
-                 _no_nul(str(f["signal_type"])[:80]),
+                 label, family, source,
                  _no_nul(f.get("value_text")), num,
                  _no_nul(f.get("value_unit")), _no_nul(quote), verified,
                  model_tag, PROMPT_VERSION))
@@ -927,11 +1069,20 @@ def main() -> None:
     ap.add_argument("--collect", action="store_true")
     ap.add_argument("--cohort",
                     choices=["validation", "power", "remaining",
-                             "parse_failed"],
+                             "parse_failed", "first_read"],
                     default="validation",
                     help="'validation' samples documents already read by "
                          "both other models, for a three-way comparison; "
-                         "'remaining' is everything this model has not read.")
+                         "'remaining' is everything this model has not read; "
+                         "'first_read' is new content (see --since) that no "
+                         "PRIMARY reader has read — an mlx row does not "
+                         "count, because the local model is a second "
+                         "opinion, not a first read.")
+    ap.add_argument("--since", default=None, metavar="YYYY-MM-DD",
+                    help="Boundary for --cohort first_read: documents "
+                         "fetched at or after this date, plus documents "
+                         "whose only reading is a local (mlx) read logged "
+                         "at or after it. Required for that cohort.")
     ap.add_argument("--sample", type=int, default=60,
                     help="Validation cohort size (default 60). Ignored for "
                          "--cohort remaining.")
@@ -1005,13 +1156,19 @@ def main() -> None:
     if args.submit or args.dry_run:
         if args.submit and not args.model:
             ap.error("--submit requires --model (see --list-models)")
+        if args.cohort == "first_read" and not args.since:
+            # No default. A silent "today" would make the same command
+            # mean different things on different days, and this cohort's
+            # whole job is to be able to say exactly which documents it
+            # covered.
+            ap.error("--cohort first_read requires --since YYYY-MM-DD")
         do_submit(args.cohort, args.model or "<unset>", args.max_chars,
                   dry_run=not args.submit, sample=args.sample,
                   rate_in=args.rate_in, rate_out=args.rate_out,
                   max_spend=args.max_spend_usd,
                   reasoning_effort=args.reasoning_effort,
                   tiers=tuple(args.tier or ()), limit=args.limit,
-                  unread_only=args.unread_only)
+                  unread_only=args.unread_only, since=args.since)
     elif args.collect:
         do_collect(args.batch_id)
     else:
