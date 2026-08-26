@@ -216,6 +216,44 @@ def backfill_council_gss(conn: PgConnection) -> dict[str, int]:
     return out
 
 
+#: sha256 of zero bytes. A body that hashes to this is not a document.
+EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
+
+
+class EmptyDocumentBody(ValueError):
+    """A source served a zero-length body where a document was expected.
+
+    Three of these reached the corpus before anyone noticed (a Wakefield
+    s106, a Warwick consultation response, a Medway supporting-documents
+    bundle). All three came back HTTP 200 with `Content-Type:
+    application/pdf` and no bytes, from the councils' own servers, and
+    were faithfully stored: an empty file passed the fetcher, was counted
+    in the corpus totals, was hard-linked into the Pinpoint staging, and
+    reached the deep read as a document held and readable — where it
+    yielded nothing, indistinguishable from a document that genuinely
+    says nothing. Two of the three were consultee responses and one an
+    s106: on kind alone, exactly the material the investigation is
+    looking for.
+
+    So emptiness is a *failed fetch*, not a document. The caller records
+    the failure against the application (which keeps it out of any
+    completed set, so a re-run retries) and stores no file.
+    """
+
+
+def check_document_body(body: bytes | None, *, url: str) -> None:
+    """Raise `EmptyDocumentBody` when a portal served nothing.
+
+    Called by every adapter before it computes a hash or writes a file,
+    so no empty file is ever created. `record_document` repeats the check
+    as a backstop for any path that forgets.
+    """
+    if not body:
+        raise EmptyDocumentBody(
+            f"portal served a zero-length body for {url}"
+        )
+
+
 def record_document(
     conn: PgConnection,
     *,
@@ -230,7 +268,18 @@ def record_document(
 ) -> int:
     """Idempotent upsert of a fetched document. The `(application_id,
     content_sha256)` UNIQUE constraint means re-fetching the same bytes is a
-    no-op. Returns the row id."""
+    no-op. Returns the row id.
+
+    Every fetch and ingest path in the project passes through here, which
+    is why the zero-byte guard lives here as well as in the adapters: a
+    body of no bytes is a failed fetch and raises `EmptyDocumentBody`
+    rather than being recorded as a document. See that class for why.
+    """
+    if content_sha256 == EMPTY_SHA256:
+        raise EmptyDocumentBody(
+            f"refusing to record a zero-byte document for {url} "
+            f"(application {application_id})"
+        )
     with conn.cursor() as cur:
         cur.execute(
             """
