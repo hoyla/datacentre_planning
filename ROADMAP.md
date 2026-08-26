@@ -37,6 +37,52 @@ must precede the artefacts: adjudication corrections (enforced in code
 by `dcp/adjudication_gate.py`) and the Drive staging rebuild that picks
 up the new CSV adjudication columns.
 
+## Deferred to 2.9
+
+Decided on 2026-08-26, while 2.8 was being assembled. Each is scoped
+and none is blocked on anything but sequencing — they are held back so
+2.8 ships the corpus work rather than growing to hold everything found
+alongside it.
+
+- **Re-fetch the 52 applications whose `none_published` was awarded on a
+  page that refused.** Established 2026-08-26 without touching a portal,
+  by re-reading the documents-tab HTML the original fetch had already
+  snapshotted: 49 are Idox serving *"Permission Denied — You do not have
+  permission to view the page"* with **HTTP 200** and full site chrome,
+  so a scraper sees an ordinary page with no document links; 3 are
+  Brighton returning 212-byte bodies, also with a 200. Selby alone is 18,
+  then Exeter, Derby and Doncaster at 5 each. 106 of the 128 settled
+  verdicts carry the detail `no_documents_or_unparseable` and every one
+  was written on **2026-08-08**, before the mapping was tightened on the
+  9th — after which the same condition produced `error` instead. So the
+  population is bounded and historical, not a live leak. The verdicts
+  are settled, so re-fetching means writing new outcome rows over them:
+  a decision about the acquisition record, which is why nothing has
+  touched them. `no_documents_or_unparseable` is itself a conflated
+  name — the adapter sets it whenever `len(links) == 0`, whether the
+  page was a register or a refusal.
+
+- **The 31 browser-routed applications.** The largest and cheapest bloc
+  of the acquisition tail, using tooling that already works: 15 behind
+  AWS WAF (the Coventry signature), 8 on LPAssure serving
+  `UnsupportedWebBrowser`, 8 Salesforce needing a harvested document
+  listing. Needs a human at the keyboard, so it is scheduled rather than
+  queued. See the acquisition tail below for the rest of that class.
+
+- **`relist_refetch.py` has no per-application deadline.** Unlike
+  `fetch_outstanding.py`, which wraps every application in
+  `deadline(args.app_timeout)`, the re-fetch runner has no timeout of
+  its own — the only protection is whatever each adapter client sets
+  (Idox has 90s and classifies a timeout properly; the others are
+  unchecked). Found 2026-08-26 while the refetch sat twenty minutes on
+  one application with two established HTTPS connections, no CPU and no
+  bytes written, which is the signature of a stalled read rather than a
+  slow download. The run is resumable, so the cost is wall-clock rather
+  than data — but a sweep that can block indefinitely on one host is a
+  sweep that cannot be left unattended. Give it the same deadline
+  `fetch_outstanding.py` has, and record a timed-out application as
+  retryable rather than settled.
+
 ## Phase 2 — the tail of the collecting
 
 - **The acquisition tail.** 108 applications are being worked now. Of
@@ -49,12 +95,79 @@ up the new CSV adjudication columns.
   harvested document listing. Needs a human at the keyboard.
   Genuinely hard: 5 behind CAPTCHA, 7 refusing with 403/500/503
   regardless of user-agent, 1 Incapsula.
-- **Re-list the corpus to find historical partial fetches.** A short
-  fetch used to be recorded as complete. New ones are caught, but past
-  ones are not measurable from the manifests, which record what was
-  stored and not what was offered. Re-listing the document pages of the
-  applications that hold documents would settle it. **Do this before
-  anyone quotes per-site document counts.**
+- **Historical partial fetches are now measured. The refetch is not
+  done.** A short fetch used to be recorded as complete, and the
+  manifests could not show it because they record what was stored and
+  not what was offered. `scripts/relist_audit.py` settles the question by
+  re-listing and comparing; the comparison lands in
+  `document_listing_audit` (migration 026), append-only and idempotent on
+  the listing's own content hash, with the full offered set kept beside
+  every count. It obtains listings and never downloads a document: the
+  deliverable is a measurement and a prioritised list, and which of it is
+  worth the portal traffic is an editorial decision.
+
+  Three passes, cheapest first. `--pass snapshot` parses the
+  documents-tab HTML already in `source_snapshots` — the very page each
+  short fetch was working from — at no portal cost, and covered 1,166
+  applications on its own. `--pass harvest` does the same for the
+  browser-harvested Salesforce listings (64). `--pass live` re-lists the
+  rest through the project's own adapters at 10s spacing, one client per
+  host, round-robin so a slow council costs only its own queue.
+
+  **As measured on 2026-08-26: 1,554 of 1,696 applications that hold
+  documents, and 2,260 documents the registers offered that the corpus
+  does not hold, across 219 applications.** The raw offered-minus-stored
+  difference is 2,846, and two structural over-counts are subtracted from
+  it: 74 documents held under a twin application (seventeen portal URLs
+  each serve two application references for the same case —
+  Cambridge/SouthCambs, a Reading reference in two spellings — so one
+  listing describes both and the fetch filed each document under
+  whichever row it reached first), and 512
+  where the register listed one file under two URLs and `documents`,
+  unique on `(application_id, content_sha256)`, stored it once. The
+  shortfall is concentrated — 3 applications lose more than 100
+  documents, 28 lose 21–100, and 99 lose exactly one — and it is not
+  only drawings: 175 of the absent documents are filed
+  `Report/ Statement`, the class where power disclosures live.
+
+  Worst affected, which is the reporter-facing number at risk — and the
+  document type matters as much as the count, because a site short of
+  drawings has lost far less than a site short of statements:
+
+  | site | absent / offered | mostly |
+  |---|---|---|
+  | Northumberland Energy Park (`PTNO-12785975`) | 177 / 552 | **161 reports and statements** |
+  | Green Tech Business Park (`PTNO-12578951`) | 179 / 500 | 158 drawings |
+  | Catalyst Business Park, Widnes (`PTNO-12906175`) | 136 / 382 | 133 plans |
+  | Telehouse North Two (`PTNO-12058499`) | 104 / 1,030 | **50 reports**, 23 plans |
+  | Union Park / North Hyde Gardens (`PTNO-12511337`) | 160 / 3,062 | mixed, across 34 applications |
+  | Gilmorehill campus (`PTNO-12104907`) | 491 / 1,565 | drawings; a university masterplan, not the investigation |
+
+  The full list is `data/reports/relist_refetch_list.csv`, one row per
+  absent document, ordered by site.
+
+  What is left:
+
+  - **The refetch pass itself.** Nothing has been re-downloaded. The
+    obvious first cut is the reports and statements, not the drawings.
+  - **142 applications are still unmeasured**, holding 3,381 documents:
+    107 on portals with no listing-only path (44 bespoke, 35 Northgate,
+    28 NEC), 26 on Coventry, skipped by name because it is AWS
+    WAF-protected, 7 Wychavon applications whose host reset the
+    connection three times and was abandoned, 1 Manchester timeout, and
+    1 Salesforce register with no harvested listing. Errors are
+    retryable — re-running `--pass live` picks them up. The rest need
+    either an adapter or a browser, and the adapter only has to produce
+    a listing, which is a much smaller job than a fetcher.
+  - **29 applications hold documents against an empty listing.** Newport
+    was the bulk of these until its separate docstore was wired into the
+    audit; what remains is mostly manual harvests, whose documents carry
+    `file://` URLs no listing can match.
+
+  **Still true: do not quote a per-site document count without checking
+  this table.** A count of held documents is a floor until the site's
+  applications are measured and their shortfall is either refetched or
+  stated.
 - **Site 61 is now the only campus conflation left, and the evidence
   for splitting it is in hand.** `PTNO-12511337` holds 301 members
   across the Hayes/Southall corridor. Two independent signals agree on
@@ -171,27 +284,59 @@ up the new CSV adjudication columns.
   project's own loaders, so a future run is a no-op on them. A Monday
   09:00 reminder exists.
 
-- **The Drive archive was incomplete and nobody knows why.** The
-  2026-08-26 sync uploaded 3,890 files with `skipped: 0` — that counter
-  catches a file already on Drive but missing from the ledger, and not
-  one of them was. So roughly 10 GB of documents held since 2026-08-09
-  had never reached Drive, despite a sync on 2026-08-21, and no document
-  has been fetched since. **A sync that reports success while leaving
-  material behind is invisible until a reporter clicks a link.** Find
-  the cause before the next release; the ledger-loss episode of
-  2026-08-21 is the obvious suspect but has not been shown to be it.
+- **The incomplete Drive archive is explained, and the fix is in.**
+  The cause, established 2026-08-26: `build_drive_staging.py` stages a
+  document only if its application has a live `site_members` row. 143
+  applications discovered 2026-08-07 (`discovered_via: energy_national`),
+  whose 3,679 documents were fetched on 08-08/09, had no site membership
+  until the materialise of 2026-08-25. Their files were therefore never
+  in the staging tree, never in the 2026-08-21 sync's candidate set, and
+  invisible to that sync's `skipped` and `failed` alike. **The 08-21 sync
+  was complete and correct over the tree it was given** — 50,406
+  candidates, 0 failed, 0 skipped in `data/drive_sync.log`, and the
+  arithmetic closes exactly against the later runs. The ledger-loss
+  episode of 2026-08-21 is **exonerated**; it was the obvious suspect and
+  it was not this.
 
-- **`build_drive_staging.py` never removes what has left a site.** It
-  is additive: after a re-partition the old site folder keeps the
-  application directories that moved away, so the same document exists
-  under two site folders and the tree drifts from the universe. Found
-  2026-08-25 when the Interxion folder held 45 application directories
-  for a site with 16. The workaround is a clean rebuild — move the tree
-  aside and regenerate, which is cheap because it is hard-linked to
-  `raw` — and it is a **required** step before a sync, because
-  `drive_sync.py` can only recognise a move when the old path is gone.
-  Either teach the script to prune stale directories, or make the clean
-  rebuild the documented default rather than folklore.
+  What is now in code: `build_drive_staging.py` prints the documents it
+  did not stage, grouped by the application's latest triage verdict, and
+  exits non-zero unless every one of them is triaged `not_dc`. Replayed
+  against the 08-21 state it reports *3,584 documents held for 139
+  in-universe applications are not in this tree*. It also refuses to
+  build when `max(sites.materialised_at)` predates the newest
+  `applications.first_seen_at` or `projects.first_seen_at`, and
+  `verify_drive_sample.py` now samples the universe rather than the
+  ledger — its old frame was derived from the tree and so was
+  structurally incapable of finding a document that never reached it.
+
+  What is left. **The materialise had never been in the runbook** and now
+  is (step 0) — the process half of the same defect. Nothing reconciles
+  tree against ledger against Drive at the end of a sync, and that is a
+  deliberate omission rather than an oversight: on 08-21 all three
+  agreed, so such a check would have passed. The only place this class
+  of failure is visible is between the *universe* and the tree, which is
+  where the guard now sits. And the first real run of the new guards
+  will fail until the corpus stops moving — the refetch pass has already
+  added documents and changed document kinds since the tree was built,
+  which is the guards working, not crying wolf.
+  `data/exports/drive_staging.pre-clean` is the primary evidence and
+  stays until this closes.
+
+- **`build_drive_staging.py` now removes what has left a site.** Closed
+  2026-08-26 as part of the above. It was additive: after a re-partition
+  the old site folder kept the application directories that had moved
+  away, so the same document existed under two site folders and
+  `drive_sync.py` could not read the move as a move, because it only
+  recognises one when the old path has gone. Found 2026-08-25 when the
+  Interxion folder held 45 application directories for a site with 16.
+  The tree is now written to a `.building` sibling and swapped in, so the
+  clean rebuild is what the script does rather than something you had to
+  know to do by hand; measured at 65 seconds for 494 sites and 52,000
+  documents, and free on disk because the documents are hard links into
+  `data/raw`. The tree root is deliberately still additive — a published
+  workbook or database from an earlier phase is carried across the swap,
+  because a citation of it has to keep resolving, which is the same rule
+  `drive_sync.py --prune` already follows.
 
 - **Nothing checks for figures that were never adjudicated.** The
   corrections gate examines adjudications that exist and cannot see a
@@ -475,6 +620,81 @@ HISTORY.)
   could not.
 
 ## Smaller things
+
+- **Every OpenAI finding was missing its family, and two panels select on
+  nothing else.** Found 2026-08-26. The INSERT in
+  `scripts/deepread_escalate_openai.py` omitted `signal_family` and
+  `family_source` from its column list, so all **557,747** findings from
+  the three OpenAI runs carried `signal_family` NULL — 46% of the corpus.
+  `claude-sonnet-5` had 0 NULL of 346,647, which is why nothing looked
+  wrong. `site_profile.EIA_TEXTS_SQL` (`signal_family = 'eia_process'`)
+  and `PARTIES_SQL` (`signal_family LIKE 'party_%'`) filter on that
+  column alone, and NULL matches neither — silently — so no OpenAI
+  finding had ever reached either panel. The water/cooling query has an
+  `OR value_text ~*` arm and was only partly affected. Fixed at source
+  and backfilled the same day (`scripts/backfill_signal_family.py`,
+  derived from `signal_type`, `family_source = 'derived'`, originals
+  untouched). The EIA-process panel went **190 → 234 sites**, parties
+  **296 → 304 sites** and 97,088 → 202,223 rows.
+
+  The two things left after that were both done on 2026-08-26:
+
+  - **The 49,039 local-model findings from 2026-08-07/09 are
+    backfilled.** NULL for a different reason — written before migration
+    009 added the column — and cured by the same command,
+    `--model-like 'mlx:%'`. 3.9% landed in `unclassified`. No finding in
+    the corpus now carries a NULL `signal_family`, on any model.
+  - **`\b` cannot end a snake_case token, and the family patterns were
+    full of it.** `_` is a word character, so `eia\b` never matched
+    `eia_status` and the family `eia_process` did not classify as
+    `eia_process`. Corrected for `eia`, `suds`, `chp`, `ups`, `hvo`,
+    `dno`, `kv`, `mva`, `pue`, `mw`, `crac`, `crah`, `sac`, `spa`,
+    `bng`, `scr`, `cemp`, `lpa`, `gia` and `gea` by writing the boundary
+    over the characters a label token is actually made of
+    (`signal_families.TOK_END` / `TOK_START`) — a change to how a token
+    is delimited, not to which tokens a family claims. The derivation
+    was then re-run over the rows it had left `unclassified`, under a
+    new `--rederive-unclassified` scoped to `family_source = 'derived'`
+    so that a model's own answer can never be overruled by a regex.
+    **13,991 rows left `unclassified`**: +5,292 `eia_process`, +3,845
+    `flood_drainage`, +1,466 `power_generation`, +1,023 `power_demand`,
+    +997 `ecology_biodiversity`, +546 `party_authority`. In the
+    artefacts, the EIA panel went **234 → 239 sites** and the parties
+    panel **202,223 → 209,875 rows** (304 sites, unchanged). The rule is
+    asserted over the whole vocabulary in `tests/test_signal_families.py`
+    — including that the boundary was corrected rather than deleted,
+    which is the easier and more damaging repair.
+
+  Four editorial questions came out of the measurement. All are left for
+  the data and visuals teams, because each changes what a family means
+  rather than how a token is delimited:
+
+  - **`author` in `party_adviser` captures "authority".** party_adviser
+    is declared first, so `party_authority`'s own
+    `local_planning_authority` token can never win: **11,706 rows
+    carrying "authorit" are filed as `party_adviser`**,
+    `local_planning_authority` (2,980 rows) among them. The largest
+    single misfile in the vocabulary, and nothing to do with the
+    boundary.
+  - **`ward` is the one token deliberately left broken.** Correcting it
+    recruits 41 rows of `upward_light_ratio`,
+    `seaward_boundary_distance` and `outward_hdv_peak` against 21 rows
+    of electoral wards — the only token where the correction takes in
+    more labels it was not written for than labels it was. Doing it
+    properly needs a *leading* boundary as well, which would also stop
+    it matching today's `upward`: a change of scope.
+  - **2,183 rows sit in a family the mapper no longer derives.** The
+    re-derivation was scoped to `unclassified`, so rows the broken
+    boundary had filed elsewhere stayed where they were —
+    `chp_emissions_standard` in `air_quality_emissions` rather than
+    `power_generation`, `eia_document_reference` in `application_admin`
+    rather than `eia_process`. Re-deriving all `derived` rows would move
+    a net +501 into the two panel families and 56 out; the script has no
+    flag for that scope yet, deliberately, because it overwrites
+    families that are currently visible to readers.
+  - **`land_quality` and `application_admin` do not classify as their
+    own names.** Neither claims a token containing "land" or "admin".
+    Recorded in the test as known gaps rather than papered over.
 
 - **The deep-read's evidence quotes are snippets, not sentences.**
   Found by Luke while hand-checking the generation sample: row after row
