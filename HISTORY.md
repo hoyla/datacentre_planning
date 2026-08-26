@@ -1322,3 +1322,83 @@ returning a plausible number looks identical to a probe that works, and
 nothing downstream distinguishes them. Where a guard exists, the useful
 question is not "does it pass" but "could it fail, and has anyone
 watched it do so".
+
+#### What the reader gained, after the entry above was written
+
+The half of 2.8 that came from reporters rather than from the corpus,
+and every item is the same shape: the reader held the answer and did
+not show it.
+
+**A dash meant four different things.** The convention is that a dash
+means *unknown*, and it was carrying "no documents held", "documents
+not yet read", "held, read, and the fact is not in them", and "the
+field does not apply". Only the third is a finding. 5,589 dashes became
+153, each replaced with two or three words in the muted style the
+operator column had used since 2.4. The wording is derived from each
+site's own coverage rather than chosen, because writing "none found"
+everywhere asserts a null result on sites nobody has read.
+
+**The party fields read from Barbour alone**, which covers 164 of 494
+sites — so 330 showed a dash for the applicant and 179 of those had one
+stated in their own documents. "Barbour unless otherwise stated" is not
+a defensible default for a field Barbour fills a third of the time.
+They now fall back to the documents and every value names its register.
+The operator field did not change: `end_user` asserts who runs a site
+across every document, which is an identity claim and still needs a
+confirmed alias, where `applicant_of_record` repeats what one
+application's own form says about itself.
+
+**The reading bar had two states**, so 90% read looked like 5% read.
+Three now — and measured against documents that *can* be read, which is
+the question a reporter is really asking of it: is the tool finished
+with this site, or should I wait? Drawings and the sampled classes are
+not a backlog, and a document tried and found unreadable can never be
+read, so leaving either in the denominator reports unfinished work for
+ever. 93 sites that showed red were complete; six more once the
+unreadable left. Both subtractions are stated on the page, because
+taking something out of a denominator without saying so is the quiet
+kind of dishonesty this reader refuses everywhere else.
+
+**Two internal vocabularies were being printed at reporters.**
+"Classification: both" was our clustering shorthand; `discovered_via`
+recorded why an application was in the dataset at all and was never
+selected in the query, so a row with no documents and no register link
+showed no reason for being there.
+
+**And one more check that could not see.** Five sites said "not yet
+synced to Drive" about folders that were on Drive — Dartford among
+them, the site a reporter brief had been written about that afternoon.
+The diagnosis was ledger lag, a runbook step was written around it, and
+rebuilding against the new ledger changed the count by zero. The real
+cause: `site_stem` truncates a site key to 40 characters *after*
+sanitising it, and every lookup normalised the whole key, so a long key
+could never match its own folder. Central Bedfordshire missed by one
+letter, `FULL` against `FUL`. The runbook step stayed, because the
+ordering does make it necessary, with a note saying it was justified by
+evidence for a different bug — a step defended by the wrong number is
+one somebody drops when the number stops appearing.
+
+#### The release
+
+Synced 1,344 uploaded, 477 updated, 53,522 cached, **0 skipped, 0
+failed**, and 335 renamed twins pruned with none missing. That closing
+arithmetic is the same shape as the 2026-08-21 run that looked perfect
+while 10 GB was missing; what differs is that this candidate set came
+from a staging build whose shortfall guard confirmed it covers the
+universe minus the deliberately excluded. The counters were honest last
+time too — about a set that was itself wrong.
+
+The Google Sheet was replaced rather than refreshed, for the second
+time and for two reasons. 2.8 introduces Parties and Cohorts, and
+`sheet_sync` cannot add tabs. But the live Sheet was also still 2.2 —
+five releases stale — so a refresh meant 17 column edits on Sites in
+one batch, three of them deletions, against a 75-column tab. A
+misplaced insert leaves formatting describing the wrong data, which is
+the failure that script exists to prevent. Nothing was annotated, so
+the refresh's only advantage did not apply.
+
+EdgeOne carries it, gate proven by 22 refused paths including the
+encoding and traversal variants that once bypassed the middleware
+entirely. Cloud Run, added the same day, serves the same page behind
+Guardian sign-in and changes only when its script is run — the first
+release where publishing and merging are two separate acts.
