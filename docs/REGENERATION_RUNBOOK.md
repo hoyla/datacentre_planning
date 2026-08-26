@@ -619,12 +619,22 @@ must exist first. The resolution is to build twice. It terminates
 because re-uploading three files creates no new folders, so the second
 sync finds everything else cached and the ledger does not move again.
 
-Measured on 2026-08-26: five sites said "not yet synced to Drive" after
-the first pass, against 4,357 site-folder links and 768 findings-CSV
-links that resolved from ids earlier syncs had already established. So
-the cost of skipping this step is small and silent, which is exactly why
-it belongs in the chain rather than in a docstring — where it lived
-until today, in `export_handover._drive_findings_map`.
+**On the day this step was written, it fixed nothing** — and that is
+worth keeping, because the reasoning looked sound. Five sites said "not
+yet synced to Drive" after the first pass, the ledger lag explained it
+neatly, and rebuilding against the new ledger changed the count by
+zero. The cause was elsewhere: `site_stem` truncates a site key to 40
+characters *after* sanitising it, and every lookup normalised the whole
+key, so a long key could never match its own folder. That is fixed in
+`export_handover._folder_key`.
+
+The step still belongs here — an artefact built at step 7 genuinely
+does carry the older ledger, and a folder created for the first time by
+step 10 genuinely has no id in it. But the measurement that motivated
+it was evidence for a different bug, and a step justified by the wrong
+number is one somebody will quietly drop when the number stops
+appearing. Run it because the ordering makes it necessary, not because
+of five sites.
 
 No `--prune` on the second sync: nothing has left the tree since step
 10 pruned it, and a prune set computed against a tree nobody rebuilt is
