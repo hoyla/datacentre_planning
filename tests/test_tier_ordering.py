@@ -142,3 +142,44 @@ def test_a_statutory_instrument_is_read_however_it_is_abbreviated():
                  "Section 106", "Unilateral Undertaking",
                  "Planning Obligation", "Section 73 Application"):
         assert sel.classify_kind(kind)[0] == "A", kind
+
+
+def test_a_section_35_direction_is_a_legal_instrument_not_a_drawing():
+    """The same defect, found on the Section 35 bundles (2026-08-26).
+
+    These are the kinds the manual ingest actually produced from the
+    cached gov.uk filenames. Both came back `skip` — a drawing —
+    because DRAWING_KINDS tests `section\\b` first, so the request
+    document stating a 300MW campus was classified graphical while
+    "260615 Questpit ... s35 Direction" was read.
+    """
+    for kind in ("Section 35 Direction",
+                 "Request Document - Sdc M40 Campus - Section 35 Direction",
+                 "S35 Decision Letter New Barn Rd",
+                 "s.35 Direction", "s 35 Direction", "Section35 Direction",
+                 "Data Centre Campus Section 35 Direction Planning Act 2008"):
+        assert sel.classify_kind(kind)[0] == "A", kind
+
+
+def test_the_instrument_name_wins_even_when_the_title_says_plan():
+    """The accepted cost, stated as a test rather than left implicit.
+
+    "Appendix 1 Ebbsfleet DCC Section 35 Plan" is genuinely a location
+    plan and will now be read. That is the rule working, not failing: a
+    named statutory instrument is never a drawing whatever else its
+    title says, and one wasted page beats a 54-page prose skip.
+    """
+    assert sel.classify_kind("Appendix 1 Ebbsfleet Dcc Section 35 Plan") == (
+        "A", "statutory instrument")
+
+
+def test_a_numbered_architectural_section_near_35_is_still_a_drawing():
+    """The new alternatives must not eat the drawing sheets around them.
+
+    `Section 35` is an instrument; `Section 3`, `Section 5` and
+    `Section 350` are sheet numbers, and `Drawings 35` is not an
+    abbreviation of anything.
+    """
+    for kind in ("Section 3", "Section 5", "Section 350", "Section 35A Plan",
+                 "Cross Section 35B", "Drawings 35 Elevation"):
+        assert sel.classify_kind(kind)[0] == "skip", kind

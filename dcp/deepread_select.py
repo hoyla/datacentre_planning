@@ -70,8 +70,30 @@ DRAWING_KINDS = re.compile(
 # What is true is narrower than either: a named statutory instrument is
 # never a drawing, whatever else its title says. That is this pattern,
 # and it moves 60 documents, 58 of them the s106 agreements.
+#
+# Section 35 of the Planning Act 2008 is the same instrument, the same
+# defect and the same premise, found the same way on 2026-08-26. A
+# section 35 direction is the Secretary of State's decision that a
+# project is nationally significant, and the applicant's request behind
+# it is where the capacity that makes it so is stated. Ingesting the
+# three cached direction bundles produced kinds "Section 35 Direction"
+# and "Request Document - SDC M40 Campus - Section 35 Direction", both
+# of which `section\b` classified as drawings — so a 54-page prose
+# request document behind a 300MW campus was graphical and unread,
+# while "s35 Direction" from another council's file naming took the
+# intended path. The abbreviation decided it, again.
+#
+# `s35` ≡ `s.35` ≡ `s 35` ≡ `section 35` ≡ `section35`: typographical
+# variants of one signal, so the pattern takes all of them.
+#
+# The accepted cost, adjudicated rather than assumed: "Appendix 1
+# Ebbsfleet DCC Section 35 Plan" is a genuine location plan and now
+# reads as a legal instrument. A wasted one-page read is cheaper than a
+# 54-page prose skip, and the rule is that the instrument's name wins
+# whatever else the title says — including "Plan".
 LEGAL_INSTRUMENT_KINDS = re.compile(
     r"\bs\.?10[68]\b|\bsection 10[68]\b|\bsection 73\b|"
+    r"\bs\.?\s?35\b|\bsection\s*35\b|"
     r"unilateral undertaking|planning obligation", re.I)
 
 # Read in full: where power, environmental and consenting facts are stated.
