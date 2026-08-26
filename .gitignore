@@ -40,6 +40,12 @@ htmlcov/
 *.log
 logs/
 
+# Cloud Run build-context copies (deploy.sh copies these in from the repo
+# root; cloudrun/.gcloudignore keeps them in the Cloud Build upload anyway)
+cloudrun/index.html
+cloudrun/robots.txt
+cloudrun/config.env
+
 # ---------------------------------------------------------------------------
 # Editorial / in-flight content
 # ---------------------------------------------------------------------------
