@@ -1155,6 +1155,19 @@ Everything else rose, and one figure is a useful check on the whole
 morning: `power_adjudication` went 14,780 → 18,895, exactly the 4,115
 the batch returned.
 
+**The generation batch, finished quietly along the way.** It had sat on
+the roadmap since 2.4 waiting on a hand-check bar. `gpt-5/generation-2.5`
+has now answered all **1,667** figures — what each on-site generation
+number describes (one machine, a stated fleet, or the site) and what the
+plant is (standby combustion, prime, renewable, storage) — migration 024
+is applied, and the workbook columns and cohorts that consume it ship in
+2.7. Worth keeping the scoring method rather than the scores: every
+prompt version was graded against the *same* forty hand-checked rows in
+`data/generation_sample/generation-2.1_hand.csv` rather than
+re-inspected, which is why 2.1's 33/40 basis and 2.2's 36/40 are
+comparable at all. Re-checking a fresh sample per version would have
+measured the sample as much as the prompt.
+
 **A correction to the record.** The estimate that persuaded us to run
 the batch — "69 sites would be understated" — was wrong. It came from a
 query filtering `value_unit ILIKE '%W%'`, which also matches MWh and

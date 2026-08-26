@@ -117,6 +117,41 @@ up the new CSV adjudication columns.
   the descriptions before ejecting anything, per the stem-1331 lesson
   above.
 
+- **`scripts/load_capacity_claims.py` is broken and has been since the
+  SPV work.** `companies-house-claims.yaml` gained two claims with
+  `quantity_type: scheme_capacity`, and no migration ever added that
+  value to the `capacity_claims_quantity_known` CHECK constraint — so
+  the loader aborts on a check violation and rolls the whole batch back.
+  **No claim of any source can be loaded until this is fixed.** The
+  one-line migration is the easy half; the reason it was left is that
+  applying it also loads the two pending SPV figures, and whether those
+  are adjudicated is a person's call (see the SPV section below). The
+  two re-points made on 2026-08-25 went in through the same YAML via the
+  project's own loaders, so a future run is a no-op on them. A Monday
+  09:00 reminder exists.
+
+- **The Drive archive was incomplete and nobody knows why.** The
+  2026-08-26 sync uploaded 3,890 files with `skipped: 0` — that counter
+  catches a file already on Drive but missing from the ledger, and not
+  one of them was. So roughly 10 GB of documents held since 2026-08-09
+  had never reached Drive, despite a sync on 2026-08-21, and no document
+  has been fetched since. **A sync that reports success while leaving
+  material behind is invisible until a reporter clicks a link.** Find
+  the cause before the next release; the ledger-loss episode of
+  2026-08-21 is the obvious suspect but has not been shown to be it.
+
+- **`build_drive_staging.py` never removes what has left a site.** It
+  is additive: after a re-partition the old site folder keeps the
+  application directories that moved away, so the same document exists
+  under two site folders and the tree drifts from the universe. Found
+  2026-08-25 when the Interxion folder held 45 application directories
+  for a site with 16. The workaround is a clean rebuild — move the tree
+  aside and regenerate, which is cheap because it is hard-linked to
+  `raw` — and it is a **required** step before a sync, because
+  `drive_sync.py` can only recognise a move when the old path is gone.
+  Either teach the script to prune stale directories, or make the clean
+  rebuild the documented default rather than folklore.
+
 - **Nothing checks for figures that were never adjudicated.** The
   corrections gate examines adjudications that exist and cannot see a
   figure nobody has asked about; `sweep_null_capacity.py` only reports
@@ -154,6 +189,11 @@ up the new CSV adjudication columns.
   evidence, and the audit already moves those rows on the page. What
   re-extraction would buy is the material that was never extracted well
   enough to be filed at all, which the audit cannot see.
+
+  *Percentages and counts here are as measured on 2026-08-25 against
+  10,605 verdicts; what a given build renders moves with the corpus —
+  2.7 moved 1,862 rows and withheld 187. Compare shapes, not digits,
+  and see "make the corpus statistics computed" under Smaller things.*
 
 - **A signal for the 50 MW consenting threshold.** Above 50 MW a
   generating station in England needs a DCO rather than local planning
@@ -210,7 +250,11 @@ Worth building, in rising order of effort:
    settled (§7.1): an external figure goes in beside the planning data
    with its own quantity type and its provenance, never into a site
    column that implies it measures the same thing. `scheme_capacity` is
-   a new type and needs one.
+   a new type and needs one — and **the two claims are already in the
+   YAML without it**, which is what has been breaking
+   `scripts/load_capacity_claims.py` outright since the SPV work. See
+   the Phase 2 item above; that migration unblocks every source, not
+   just this one.
 4. **Report the disagreements.** Where an SPV's audited assumption
    differs from the planning record or from Barbour — 103.3 against 140
    here — that gap is a finding, and averaging or preferring one silently
@@ -224,9 +268,14 @@ register is structurally unable to show.
 ## Coverage gaps worth closing
 
 Prompted by the **Devon Data Campus** (Xlinks, North Devon), a scheme
-with an active public campaign of which the corpus holds *nothing*: zero
-matches for Xlinks, Valeon, Alverdiscott or Devon Data Campus. Three
-gaps, in rising order of effort:
+with an active public campaign of which the corpus holds almost nothing:
+zero matches for Xlinks, Valeon or Devon Data Campus. The single
+Alverdiscott match is `EN010164`, carried by the NSIP **energy layer**
+(`discovered_via={nsip_energy}`) — the withdrawn 3.6GW interconnector,
+context rather than the campus. That is the adjacency layer doing its
+job and it is also the measure of the gap: the grid connection is
+visible and the data centre proposed at it is not. Three gaps, in rising
+order of effort:
 
 1. **Operator watch-list sweep** (cheap). Add Xlinks and Valeon, review
    the list generally, run a name-based PlanIt sweep. Catches an
@@ -366,32 +415,23 @@ here rather than applied from the build lane.
 
 ## From the reader redesign — waiting on a checkpoint
 
-Both are 2.4 work whose next step is a person's, recorded here so the
-build lane does not have to remember them.
+2.4 work whose next step is a person's, recorded here so the build lane
+does not have to remember it. (The generation batch that sat here has
+run — 1,667 figures under `gpt-5/generation-2.5`, migration 024 applied,
+and the workbook columns and cohorts that consume it are in 2.7. See
+HISTORY.)
 
-- **The generation batch.** `scripts/adjudicate_generation.py` asks
-  every adjudicated on-site generation figure whether it is one machine,
-  a stated fleet or the site, and whether the plant is standby
-  combustion, prime combustion, renewable or storage
-  (READER_REDESIGN_PLAN §4.1e, in the shared prompt file). The
-  hand-check is DONE — Luke's forty rows are in
-  `data/generation_sample/generation-2.1_hand.csv`, and every later
-  prompt version is scored against that same sheet rather than
-  re-checked. Scores on it: 2.1, 33/40 basis and 30/40 plant; 2.2, with
-  the fragment and duty-word rules, 36/40 (90%) and 32/40 (80%).
-  Outstanding: a plant-type score at the same ~90% bar, then migration
-  024 (written, not yet applied), then `--batch --submit` over 1,667
-  figures across 145 applications, then the rollup, workbook columns
-  and cohorts that consume them. Until then nothing is stored and
-  `dcp.site_profile.generation_figure` remains the only labelling, which
-  it does from the passages alone.
-- **Confirming the seed alias groups.** `dcp/organisations.py` builds
-  its index from confirmed members only, and all ten seeded members are
-  proposed, so `operator_group` is empty on all 456 rows and the reader's
-  badge falls back to Barbour's end user or client. Confirming a group
-  is what makes "Ark Estates 5 Ltd" and "Ark Data Centres Ltd" one
-  filter, and what lets a document-named organisation reach the operator
-  field at all.
+- **Confirming the rest of the alias groups.** Eight of the ten seeded
+  members are confirmed and one is still `proposed`, which is enough for
+  `operator_group` to reach **15 sites** — Vantage, Colt, Amazon,
+  Microsoft. It is not enough to be a filter anyone would trust: 305
+  sites appear in `parties` and 290 of them still fall back to Barbour's
+  end user or client. Confirming a group is what makes "Ark Estates 5
+  Ltd" and "Ark Data Centres Ltd" one name, and what lets an
+  organisation named only in a document reach the operator field at all.
+  The Hayes work (site 61, above) shows what a confirmed group is worth:
+  applicant of record separated four campuses cleanly where coordinates
+  could not.
 
 ## Smaller things
 
@@ -532,12 +572,17 @@ None is abandoned; each is a known, scoped piece of work.
   there is nothing for a better OCR pass to find. Reopen only with a
   document that demonstrably has readable text nobody is reading.
 - **Coverage gaps** — Northern Ireland (whole nation, one adapter),
-  pre-application/screening entries, Section 35 / NSIP, the operator
-  watch-list.
-- **Phase 3, the second opinion.** `scripts/compare_readers.py` exists
-  and the Studio has been building the dual-read tier-A corpus; it was
-  stopped for the 2.1 boundary and needs restarting. The corpus-wide
-  comparison and water adjudication are the next release's deliverable.
+  pre-application/screening entries, the operator watch-list. (Section
+  35 / NSIP is no longer on this list: the watcher is built and running,
+  see HISTORY 2026-08-25.)
+- **Phase 3, the second opinion.** `scripts/compare_readers.py` exists.
+  The dual-read ran 17–24 August and has stopped again on its own — the
+  last finding written was 2026-08-24, which is what gave 2.7 a clean
+  boundary without killing anything. Its 4,117 power figures are
+  adjudicated as of 2026-08-26. What it has *not* produced is the
+  deliverable: the corpus-wide comparison, where two models disagree and
+  the disagreement is the finding. That and water adjudication remain
+  the next release's work.
 
 ### Longer-standing
 
