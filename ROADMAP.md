@@ -912,10 +912,61 @@ HISTORY.)
   gate agree, and nothing asserts either is right, which is how the
   thermal-output hole survived.
 
-- **CI on GitHub Actions.** `pytest -m "not integration"` on every push,
-  plus `node --test` for the edge middleware. Feasible now the repo is
-  public and Apache 2.0. Pairs with the item above: the tests only stop
-  a regression if something runs them.
+- **CI on GitHub Actions, then a publish button.** Two workflows, and
+  the order between them matters: the first automation in a repo with
+  none should be one that checks, not one that publishes. Sketched with
+  Luke on 2026-08-26, when Cloud Run arrived and made the second
+  possible.
+
+  **Workflow 1 — checks, on every push.** `pytest -m "not integration"`
+  and `node --test tests/middleware.test.mjs`. Measured on 2026-08-26:
+  **978 unit tests pass with no database at all, in 23 seconds** — so
+  this needs no Postgres, no secrets and no credentials, which is why
+  it can go first and go now.
+
+  Add the browser suites through the fixture built the same day:
+  `READER_HTML=index.html pytest tests/test_reader_smoke.py
+  tests/test_design_conformance.py` drives the committed reader instead
+  of building one — 36 tests in 24 seconds, again with no database.
+  Before that fixture existed they skipped without a `DATABASE_URL`:
+  seventeen green ticks meaning *nothing was tested*, which is worse
+  than no ticks at all.
+
+  One thing to fix first.
+  `test_a_withheld_paragraph_is_declared_before_it_is_found` fails
+  intermittently under load — always a Playwright 30-second click
+  timeout, and it passes when its own file runs alone. A flaky test
+  gating a deploy is worse than no gate, because people learn to
+  re-run it.
+
+  **Workflow 2 — build, verify, then wait for a click.** On a push to
+  `main` touching `index.html`: build the Cloud Run image, run
+  `deploy.sh`'s anonymous-access probe, and stop at a **GitHub
+  Environment with Luke as a required reviewer**. Approving deploys.
+
+  Gate the *deploy job only*, not the whole workflow, so that by the
+  time the click is asked for the image exists and the gate has been
+  proven fail-closed. That is approving a verified release rather than
+  authorising work that has not happened yet.
+
+  Four details decide whether it is safe:
+
+  - **Workload Identity Federation, never a service-account key.** The
+    repo is public and the GCP project is Luke's personal one. Pin the
+    trust policy to this repository *and* to `refs/heads/main`.
+  - **`on: push` with `paths: [index.html]`, never `pull_request`.** A
+    fork PR able to run this workflow would hand strangers a deploy.
+    The path filter also means an unchanged `index.html` carried along
+    by a code merge triggers nothing at all.
+  - **It gets safer once EdgeOne retires.** Today merging *is*
+    publishing, because EdgeOne builds from git. After PR #135 and the
+    deployment's deletion, a merge is only a commit and the single
+    route to readers is the approved click. `index.html` can then live
+    in the repo like any other file rather than staying uncommitted in
+    order to stay unpublished — which is how a `reset --hard` silently
+    discarded a built payload on 2026-08-26.
+  - **The probe must fail the job.** `deploy.sh` already exits non-zero
+    when the live service answers anonymously, so this costs nothing.
 - **Four sites report a total site demand below their IT load.** All four
   are correct — the figures come from different applications at
   multi-building sites, and each figure names its source application in
