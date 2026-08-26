@@ -1,6 +1,7 @@
 #!/bin/sh
 # Push safety, by the state of the branch's pull request.
 #
+#   main       never — main moves by merging a PR, nothing else
 #   no PR      safe to push
 #   draft PR   safe to push
 #   ready PR   do not push without asking first
@@ -18,6 +19,31 @@
 #     ALLOW_MERGED_PUSH=1 git push …
 
 branch=$(git rev-parse --abbrev-ref HEAD)
+
+# The default branch, first, and without asking gh anything. This hook
+# reasoned only about pull request states, so a push straight to main
+# sailed past it — twice on 2026-08-26, the second time an hour after
+# the rule was restated and written down. GitHub's own "changes must be
+# made through a pull request" rule does not stop it either: an admin
+# push is recorded as "Bypassed rule violations" and goes through. A
+# rule nothing enforces is a rule that gets broken by whoever is moving
+# fastest.
+if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+  cat >&2 <<EOF
+
+  Refusing to push $branch directly.
+
+  main moves by merging a pull request, never by a push. Put the work on
+  a branch and open one:
+
+      git branch <name>            # keep the commits
+      git reset --hard origin/main # rewind main to the remote
+      git checkout <name>
+      git push -u origin <name>
+
+EOF
+  exit 1
+fi
 
 [ "$ALLOW_MERGED_PUSH" = "1" ] && exit 0
 command -v gh >/dev/null 2>&1 || exit 0     # no gh, no opinion
