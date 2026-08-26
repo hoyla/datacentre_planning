@@ -661,7 +661,25 @@ be true forever.
 
 ### 13. Deploy and probe
 
-Merging the PR is what deploys `index.html` via EdgeOne. Then:
+**Two surfaces now, and only one of them is automatic.** Merging the PR
+deploys `index.html` via EdgeOne, which builds from git. The Cloud Run
+copy — the same page behind Guardian sign-in, added 2026-08-26 — changes
+only when someone runs its script, and it serves whatever `index.html`
+sits at the root of the checkout it is run from, committed or not. So a
+merged release reaches EdgeOne on its own and reaches colleagues only
+when you say so:
+
+```sh
+./cloudrun/deploy.sh          # see cloudrun/CLOUDRUN.md
+```
+
+Run it from a checkout whose root `index.html` is the release you mean.
+That is the whole coupling: no branch, no tag, no commit is consulted.
+The script verifies the live deployment refuses anonymous access before
+declaring success, so a failure there is the gate holding rather than
+the deploy failing.
+
+Then the EdgeOne gate:
 
 ```sh
 scripts/probe_gate.sh https://dc-review-gdn-hoyla.edgeone.app
