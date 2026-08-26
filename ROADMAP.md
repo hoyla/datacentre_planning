@@ -130,6 +130,39 @@ alongside it.
   only drawings: 175 of the absent documents are filed
   `Report/ Statement`, the class where power disclosures live.
 
+  **2,260 is an upper bound on URLs, not a count of missing content, and
+  the refetch proved it.** Fetching 3,083 of those documents produced
+  only 1,173 new rows: **1,910, or 62%, were byte-identical to a
+  document already held under the same application at a different URL.**
+  The audit subtracted 512 such cases; the real number is more than
+  three times that, because a register that lists one file under two
+  URLs is far commoner than the sample suggested. Buckinghamshire
+  `PL/24/0754/OA` downloaded 170 documents and created no rows at all;
+  Hillingdon `78343/APP/2025/719` downloaded 219 and created none.
+  Quote "2,260 URLs the registers offered that we had not fetched",
+  never "2,260 documents missing" — and note the recovery rates below
+  are against URLs for the same reason.
+
+  **1,380 of the 2,260 are now held (61%), and 249 of the 291
+  reports/statements (86%)** — the class that mattered. Northumberland
+  Energy Park recovered 176 of 177, Green Tech 171 of 179, Catalyst 135
+  of 136, Telehouse North Two 93 of 104. What is left is deliberate:
+  Union Park keeps 157 unfetched because that tranche was cut in favour
+  of the Northumberland reports (30 Hillingdon applications at 25–35
+  minutes each, on one host, with Union Park behind the partition
+  blocker anyway), and Gilmorehill's 491 were never attempted — a
+  university masterplan's drawings. Resuming is one command and costs
+  nothing already done: `scripts/relist_refetch.py --tranche rest`, then
+  `--tranche glasgow`.
+
+  229 per-document failures, each with a reason: 158 HTTP 403 from
+  Greater Cambridge (a blanket refusal on file downloads), 85 server
+  disconnects from Northumberland that all recovered on the retry pass,
+  39 404s for documents withdrawn since the May listing, and 18
+  persistent 504s from Tower Hamlets — including two energy strategy
+  reports that failed identically an hour apart, which is a genuine
+  portal failure on exactly the class we want.
+
   Worst affected, which is the reporter-facing number at risk — and the
   document type matters as much as the count, because a site short of
   drawings has lost far less than a site short of statements:
@@ -271,18 +304,19 @@ alongside it.
   the Guardian piece that prompted the watcher. Journalism, not
   engineering, and it decays.
 
-- **`scripts/load_capacity_claims.py` is broken and has been since the
-  SPV work.** `companies-house-claims.yaml` gained two claims with
-  `quantity_type: scheme_capacity`, and no migration ever added that
-  value to the `capacity_claims_quantity_known` CHECK constraint — so
-  the loader aborts on a check violation and rolls the whole batch back.
-  **No claim of any source can be loaded until this is fixed.** The
-  one-line migration is the easy half; the reason it was left is that
-  applying it also loads the two pending SPV figures, and whether those
-  are adjudicated is a person's call (see the SPV section below). The
-  two re-points made on 2026-08-25 went in through the same YAML via the
-  project's own loaders, so a future run is a no-op on them. A Monday
-  09:00 reminder exists.
+- **`scripts/load_capacity_claims.py` was broken from the SPV work until
+  2026-08-26; fixed.** `companies-house-claims.yaml` gained claims with
+  `quantity_type: scheme_capacity` and `investment_property_fair_value`,
+  and no migration had added either value to the
+  `capacity_claims_quantity_known` CHECK constraint — so the loader
+  aborted on a check violation and rolled the whole batch back, taking
+  **every source** with it, NESO and the Environment Agency permits
+  included. Migration 030 adds both types with the reasoning for each,
+  and the loader now runs: 10 claims inserted, 234 → 242 in the store.
+  The reason it had been left was that applying the migration also loads
+  the pending SPV figures; those are now loaded, with the Court Lane
+  matches already adjudicated and six new ones held back under
+  `considered:` because their site records are over-merged clusters.
 
 - **The incomplete Drive archive is explained, and the fix is in.**
   The cause, established 2026-08-26: `build_drive_staging.py` stages a
@@ -346,6 +380,19 @@ alongside it.
   cheap pre-build assertion — "the adjudication tail is empty, or say
   how large it is" — belongs in `dcp/adjudication_gate.py` beside the
   corrections check.
+
+  **Measured on 2026-08-26, the tail is 15,026, not 4,117** — findings
+  carrying a value and a power unit with no `power_adjudication` row
+  under `claude-sonnet-5`/`power-1.0`. By model: `mlx` 6,739,
+  `openai:gpt-5:minimal` 4,341, `openai:gpt-5:low` 2,783,
+  `claude-sonnet-5` 1,129. So the figure this item was written around
+  understates it by more than three times, and 4,117 was one read's
+  contribution rather than the standing total. Not every row is a
+  site capacity waiting to be claimed — several are plainly
+  not-this-site and will be rejected, such as an operator describing
+  "over two gigawatts of critical power capacity under customer
+  contract in Europe and North America" — which is exactly why the
+  assertion should report the size rather than demand a zero.
 
 ## Phase 3 — the second opinion
 
@@ -419,7 +466,51 @@ single-asset SPVs disclose it by construction**, because the scheme is
 the investment property and FRS 102 makes the directors state what the
 valuation assumes.
 
-Worth building, in rising order of effort:
+**Built 2026-08-26.** Items 1–4 below are done; what they produced, and
+what they overturned, is recorded in EXTERNAL_DATA_SOURCES §6 and in
+`data/external_sources/companies-house-spvs.yaml` (which company is
+which scheme) and `companies-house-ownership.yaml` (who lends and who
+owns). Migration 030 added `scheme_capacity` and
+`investment_property_fair_value`, and `scripts/load_capacity_claims.py`
+runs again — it had been rolling back **every batch from every source**,
+not just this one. Three results worth carrying forward:
+
+- **The 103.3-against-140 gap was not a gap.** Site 81's own
+  environmental statement states "Total IT Load - 103.32 MW" and "Total
+  Data Centre Load – 139.5 MW" in one table on page 10, and a reserved
+  140 MW grid connection on page 27. The accounts quote the IT load. The
+  rule survives in a sharper form: never compare an external megawatt to
+  a planning megawatt without first establishing that they measure the
+  same thing — here that took one join and overturned the headline.
+- **A single-asset SPV does not always name a capacity.** Segro Pure
+  Premier Park Data Centre Limited is the same shape as Court Lane and
+  states none across 25 pages. Of 52 filers whose accounts category
+  could carry an investment-property note, ten mention megawatts at all
+  and four said something new.
+- **The ownership half is the durable half.** The charges register had
+  to be *probed* rather than inferred from the profile's `has_charges`
+  flag, which read false for 44 of the 49 companies that carry charges.
+
+Still open, and now better specified:
+
+5. **Site 61, 59 and 5 block six otherwise-good matches.** Union Park's
+   24/48/24 MW, Premier Park's £147.8m and the DataVita figures are
+   loaded as claims and deliberately left unmatched, because their site
+   records are over-merged clusters (site 61 holds 308 applications
+   across about six campuses). They are listed under `considered:` in
+   `companies-house-claims.yaml` with the reason; the partitions work is
+   what unblocks them.
+6. **Eleven names could not be resolved to a company**, listed under
+   `unresolved:` in `companies-house-spvs.yaml` — including "Avalon DC
+   Limited" and "BGO Code Propco Limited", both of which are somebody's
+   applicant of record and neither of which exists on the register.
+   Worth a person's eye rather than another search.
+7. **Confirm the proposed alias-group members.** The sweep resolved
+   names to numbers with evidence; folding the confirmed ones into
+   `data/priors/organisation_aliases.yaml` is a person's decision at a
+   release checkpoint, not a session's.
+
+The original four, for the record:
 
 1. **Name the SPVs we already hold.** Barbour's client-of-record slot is
    full of them — `UK Court Lane DC Limited`, `VDC LHR11 Limited` — and
