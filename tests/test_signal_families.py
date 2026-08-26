@@ -55,19 +55,26 @@ BOUNDARY_LEFT_FOR_A_PERSON = {("site_identity", "ward")}
 # reason, not a boundary one. Recorded rather than fixed: adding a token
 # to a family, or reordering two families, changes what the teams see.
 #
-#   party_authority  -> party_adviser. `author` in party_adviser matches
-#       inside "authority", and party_adviser is declared first, so
-#       party_authority's own explicit `local_planning_authority` token
-#       can never win. 11,706 rows carrying "authorit" are filed as
-#       party_adviser today, `local_planning_authority` (2,980) among
-#       them. The largest single misfile in the vocabulary.
+#   party_authority  -> party_other. It *was* party_adviser, because
+#       `author` had no delimiter and matched inside "authority" while
+#       party_adviser is declared first — so party_authority's own
+#       explicit `local_planning_authority` token could never win, and
+#       11,706 rows filed the decision-maker among the consultants
+#       acting for the applicant. Delimiting `author` fixed that
+#       (2026-08-26; party_authority 10,812 -> 19,526 rows). What is
+#       left is a genuine vocabulary gap and not a boundary one: the
+#       family claims `local_planning_authority`, `planning_authority`,
+#       `local_authority` and `authority_name`, none of which is a
+#       substring of the bare label "party_authority", so it falls
+#       through to party_other. Closing it means adding a token, which
+#       changes what the teams see.
 #   land_quality     -> unclassified. The family is spelled out as
 #       contamination, geology and remediation; it claims no token
 #       containing the word "land".
 #   application_admin-> unclassified. It claims `application_(reference|
 #       type|number|date|status)`, and "admin" is not in that list.
 SELF_CLASSIFICATION_EXCEPTIONS = {
-    "party_authority": "party_adviser",
+    "party_authority": "party_other",
     "land_quality": sf.UNCLASSIFIED,
     "application_admin": sf.UNCLASSIFIED,
 }
