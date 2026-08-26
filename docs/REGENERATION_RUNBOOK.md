@@ -597,13 +597,61 @@ a duplicate archive. There is a worked example of the far-side check in
 the session transcript; the principle is that the ledger is the near
 side and the API is the far side.
 
-### 11. Rebuild the artefacts against the new ledger, and re-sync them
+### 11. Record where each document landed — AFTER step 10, before rebuilding
+
+```sh
+scripts/record_drive_ids.py --dry-run          # what would be recorded
+scripts/record_drive_ids.py --verify-bytes     # ~3 min, reads 138 GB
+```
+
+Writes the Drive file id of every uploaded document into
+`document_drive_files`, which is where the reader and the workbook read
+document links from. Skip it and every document synced for the first
+time falls back to a register link — a link that rots, on the documents
+most likely to matter, because they are the new ones.
+
+`--verify-bytes` hashes each local file and refuses any id whose md5
+disagrees with what the ledger says it uploaded. It costs three minutes
+and it is the difference between a link that is probably right and one
+that is checked. Run it.
+
+The step is append-only and idempotent: re-running over an unchanged
+ledger inserts nothing, and a document re-uploaded elsewhere gains a row
+rather than losing the one that already resolves.
+
+**Why this is not just a lookup at export time.** It used to be. The
+export rebuilt each document's expected staging path — site stem,
+application reference, and a number counting the application's documents
+in `fetched_at, id` order — and looked that path up in the ledger. It
+was correct, and 120 of 120 sampled links verified content-addressed
+against the local bytes. But every input to that derivation can move,
+and when one does the lookup either finds nothing, silently dropping a
+link, or finds the neighbouring file: a working link to the wrong
+document, under a citation naming a different one. The first is
+annoying. The second puts a real quote against a real but different
+source, which is the failure principle 7 exists to prevent, and it is
+invisible from the outside.
+
+A Drive id survives the file being moved or renamed on Drive. A derived
+path does not survive anything being renamed here. So the id is captured
+once, checked, and read back by key.
+
+### 12. Rebuild the artefacts against the new ledger, and re-sync them
 
 ```sh
 scripts/export_reader.py   --out data/exports/<build>/reader.html --phase <N> --publish index.html
 scripts/export_handover.py --out data/exports/<build>/dc_handover_phase<N>.xlsx
 scripts/drive_sync.py --sync data/exports/drive_staging
 ```
+
+The reader prints what it found on the way past:
+
+```
+Our copy on Drive: 52,908 documents have a recorded Drive file id, covering every cited document
+```
+
+If that line names a number of cited documents with no id, step 11 did
+not run or did not finish.
 
 **One extra pass, and it converges.** The reader and the workbook read
 their Drive links out of `.drive_sync_state.json`, so an artefact built
@@ -640,7 +688,7 @@ No `--prune` on the second sync: nothing has left the tree since step
 10 pruned it, and a prune set computed against a tree nobody rebuilt is
 a prune set nobody checked.
 
-### 12. The Google Sheet
+### 13. The Google Sheet
 
 ```sh
 scripts/sheet_sync.py --dry-run     # what would change; writes nothing
@@ -669,7 +717,7 @@ different site slides underneath it. Luke confirmed on 2026-08-10 that
 nobody has annotated the Sheet yet, so this cycle is safe; that will not
 be true forever.
 
-### 13. Deploy and probe
+### 14. Deploy and probe
 
 **Two surfaces now, and only one of them is automatic.** Merging the PR
 deploys `index.html` via EdgeOne, which builds from git. The Cloud Run
@@ -708,7 +756,7 @@ one.
 Ran clean for phase 2 on 2026-08-10: 22 paths, all 303, forged cookie
 rejected.
 
-### 14. Tell the reporting team
+### 15. Tell the reporting team
 
 Say what moved, what is still a floor, and that disagreements between
 readers are kept rather than resolved. The reader's front page carries

@@ -139,6 +139,7 @@ scripts/export_reader.py   --out data/exports/phase2_build/reader.html \
                            --phase 2 --publish index.html
 scripts/build_drive_staging.py        # assemble the Drive tree
 scripts/drive_sync.py --sync data/exports/drive_staging --prune
+scripts/record_drive_ids.py --verify-bytes   # where each document landed, by id
 scripts/sheet_sync.py                 # refresh the Sheet, keeping its formatting
 ```
 
@@ -171,11 +172,36 @@ released artefacts accumulate on purpose. Dry-run it first.
 `scripts/phase1_finalise.sh` runs that chain in dependency order once
 acquisition and the Drive sync have finished.
 
-**Drive is addressed by folder ID, never by name.** The OAuth scope is
+**Drive is addressed by ID, never by name.** The OAuth scope is
 `drive.file`, so the tool can only see files it created — a name lookup
-finds nothing and silently creates a second archive. The ID lives once,
-in [dcp/drive.py](dcp/drive.py), imported by both the sync and the
-reader's links.
+finds nothing and silently creates a second archive. The root folder ID
+lives once, in [dcp/drive.py](dcp/drive.py), imported by both the sync
+and the reader's links.
+
+The same rule reaches down to individual documents.
+`scripts/record_drive_ids.py` writes the Drive file ID of every uploaded
+document into `document_drive_files` after each sync, and the reader and
+workbook read document links from there. Nothing derives a location.
+The export used to rebuild a document's expected staging path — site
+stem, application reference, and a number counting the application's
+documents in `fetched_at, id` order — and look that path up in the sync
+ledger. It was correct, and verified content-addressed against the local
+bytes. But rename a site or renumber an application's documents and the
+lookup either finds nothing, silently dropping a link, or finds the
+neighbouring file: a working link to the wrong document, under a
+citation naming a different one. A Drive ID survives a file being moved
+or renamed; a derived path survives nothing being renamed here.
+
+**Documents link to our copy first, with the register beside it.** A
+council can withdraw a document from its register, renumber it, move the
+portal or gate it, and all four have happened here — so the copy this
+project holds is what the document title links to. The register keeps a
+link of its own, because a figure that reaches print has to be
+attributable to the public source. 512 documents also carry a `file://`
+URL naming a path on the machine that ingested them; 401 of those
+shipped as anchors in the 2.8 reader, and
+`tests/test_reader_smoke.py::test_no_link_in_the_built_page_points_at_a_filesystem`
+now reads the built bytes so that cannot recur.
 
 ## Collecting
 

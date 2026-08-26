@@ -753,6 +753,27 @@ HISTORY.)
 
 ## Smaller things
 
+- **`test_two_builds_of_one_snapshot_are_identical` failed once and has
+  not since.** Seen 2026-08-26 during a full-suite run, immediately
+  after the Drive-id work; the failure was the two-builds comparison,
+  not the snapshot assertion above it. Nine subsequent runs — three
+  full-suite, six of the test alone — all passed, so the detail of
+  *which* lines differed was never captured, and that is the thing to
+  fix first: the failure message names the first differing line, but
+  only in the run that fails.
+
+  Not dismissed as noise. A build that is deterministic 90% of the time
+  is a build whose diff against the previous release cannot be trusted,
+  and that diff is the check standing between a regression and a
+  published one. Two candidate causes worth eliminating before looking
+  further afield: the `DISTINCT ON (document_id) … ORDER BY document_id,
+  recorded_at DESC, id DESC` in `_drive_document_map`, where every row
+  from a single recorder run shares one `recorded_at` and the tiebreak
+  falls to `id` — deterministic on inspection, but it is new; and
+  anything in the reader iterating a `set` or a `dict` built from one.
+  Cheapest next step is to have the test keep both builds on failure
+  rather than only naming a line, so a single reproduction is enough.
+
 - **Every OpenAI finding was missing its family, and two panels select on
   nothing else.** Found 2026-08-26. The INSERT in
   `scripts/deepread_escalate_openai.py` omitted `signal_family` and

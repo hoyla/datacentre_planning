@@ -8,6 +8,8 @@ quietly, so the tests assert the distinctions rather than the wording.
 
 from __future__ import annotations
 
+import pathlib
+
 from dcp import origin, site_profile, site_scale
 
 
@@ -652,3 +654,81 @@ class TestInternalVocabularyDoesNotReachTheReader:
 
         # Neither: the title, as text.
         assert "<a" not in er.doc_link("", "Energy Statement", "")
+
+
+class TestDriveFilesAreFoundById:
+    """A Drive file id survives a move; a derived path survives nothing.
+
+    The link was always an id. Finding the id was not: the export
+    rebuilt each document's expected staging path from the site stem,
+    the application reference and a number counting the application's
+    documents in `fetched_at, id` order, then looked that path up in
+    the sync ledger. Correct when measured — 120 of 120 sampled links
+    verified content-addressed — and correct only until something is
+    renamed, at which point the lookup finds the neighbouring file and
+    publishes a working link to the wrong document (Luke, 2026-08-26:
+    "I thought we were identifying Drive files by ID, not name").
+    """
+
+    def test_the_document_map_reads_ids_and_derives_nothing(self):
+        """No filename, path or stem may appear in the read path."""
+        import inspect
+        import importlib.util
+        import pathlib
+        spec = importlib.util.spec_from_file_location(
+            "hv_ids", pathlib.Path("scripts/export_handover.py"))
+        hv = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(hv)
+        except SystemExit:
+            pass
+
+        # The docstring explains what the function no longer does, so
+        # it names every derivation this test forbids. Strip it with
+        # ast rather than by splitting on quotes: the body's own SQL is
+        # triple-quoted too, and splitting kept only the last fragment.
+        import ast
+        tree = ast.parse(inspect.getsource(hv._drive_document_map).lstrip())
+        fn = tree.body[0]
+        if (fn.body and isinstance(fn.body[0], ast.Expr)
+                and isinstance(fn.body[0].value, ast.Constant)
+                and isinstance(fn.body[0].value.value, str)):
+            fn.body = fn.body[1:]
+        body = ast.unparse(fn)
+        assert "document_drive_files" in body, \
+            "the map must read the recorded ids"
+        for derived in ("site_stem", "document_filenames", "DRIVE_LEDGER",
+                        "by_tail", "relpath"):
+            assert derived not in body, (
+                f"{derived} is back in the document link path; a location "
+                f"that is computed is a location that can be computed wrong")
+
+    def test_the_recorder_is_append_only_and_idempotent(self):
+        """Re-running over an unchanged ledger must insert nothing."""
+        sql = pathlib.Path(
+            "migrations/031_a_drive_file_is_an_id_not_a_path.sql").read_text()
+        assert "CREATE UNIQUE INDEX" in sql and \
+            "(document_id, file_id)" in sql, \
+            "without the unique index a re-run duplicates every row"
+        rec = pathlib.Path("scripts/record_drive_ids.py").read_text()
+        assert "ON CONFLICT (document_id, file_id) DO NOTHING" in rec
+        assert "UPDATE document_drive_files" not in rec and \
+            "DELETE FROM document_drive_files" not in rec, \
+            "append-only: a re-upload adds a row, it does not replace one"
+
+    def test_an_id_is_checked_against_the_bytes_before_it_is_stored(self):
+        """A link to the wrong document is worse than no link."""
+        rec = pathlib.Path("scripts/record_drive_ids.py").read_text()
+        assert "--verify-bytes" in rec and "hashlib.md5" in rec, \
+            "there must be a way to check an id against the local file"
+        assert "found.pop(doc_id, None)" in rec, \
+            "a document whose bytes disagree must be dropped, not stored"
+
+    def test_the_release_chain_records_ids_after_the_sync(self):
+        """Order matters: the recorder reads the ledger the sync writes."""
+        sh = pathlib.Path("scripts/phase1_finalise.sh").read_text()
+        assert "record_drive_ids.py" in sh, \
+            "a sync with no recorder leaves new documents linking to a " \
+            "register that can withdraw them"
+        assert sh.index("drive_sync.py") < sh.index("record_drive_ids.py"), \
+            "the recorder reads the ledger the sync writes, so it follows it"

@@ -1001,102 +1001,40 @@ def _drive_folder_map() -> dict[str, str]:
     return out
 
 
-DOCUMENT_PATHS_SQL = """
-    SELECT a.id, a.application_ref, s.site_key, s.display_name,
-           d.id, d.url, d.kind, d.content_sha256, d.bytes_path, d.fetched_at
-      FROM applications a
-      JOIN documents d ON d.application_id = a.id AND d.bytes_path IS NOT NULL
-      JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
-      JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
-     ORDER BY a.id, d.fetched_at, d.id
-"""
-
-
 def _drive_document_map(conn) -> dict[int, str]:
-    """document id -> a Drive link to that exact file.
+    """document id -> a Drive link to our copy of that exact file.
 
-    Cited documents used to be a link only where a portal URL existed,
-    and 512 of them carry a `file://` URI instead — a path on whichever
-    machine ingested them. Rendering those as anchors put 401 dead links
-    in the 2.8 reader; rendering them as plain text would have hidden a
-    document the reader holds and a reporter wants.
+    Read out of `document_drive_files`, which `record_drive_ids.py`
+    writes after each sync. Nothing here derives a location.
 
-    Neither is necessary. The sync ledger records an id for every file
-    it uploaded, so the copy on Drive is linkable — and it is a better
-    citation than the portal in one respect: a council can withdraw a
-    document from its register, and this copy stays.
+    That is the whole design. The link was always an id —
+    `/file/d/{id}/view` keeps resolving after the file is moved or
+    renamed on Drive — but *finding* the id used to mean rebuilding the
+    document's expected staging path from the site stem, the application
+    reference and a number counting the application's documents in
+    `fetched_at, id` order, then looking the path up in the sync ledger.
+    Every input to that can change, and when one does the lookup either
+    finds nothing, silently dropping a document's link, or finds the
+    neighbouring file — a live link to the wrong document under a
+    citation naming a different one. The second failure is invisible,
+    and putting a real quote against a real but different source is
+    precisely what principle 7 exists to stop.
 
-    The path is derived through `build_drive_staging.document_filenames`
-    rather than recomputed, because the numeric prefix counts an
-    application's documents in `fetched_at, id` order and a second
-    implementation would drift the moment that changed. Same reason
-    `verify_drive_sample` calls it.
+    So the id is captured once, at the moment the sync knows it, checked
+    against the ledger's md5 of the uploaded bytes before it is stored,
+    and read back by primary key thereafter.
 
-    An application belonging to two sites is staged under both, so a
-    document has two paths. The first by site key wins, deterministically
-    — the file is identical, and a link that changed between builds for
-    no reason would show up as a diff nobody could explain.
+    The most recent row wins where a document has been re-uploaded. The
+    older row is kept rather than replaced: a Drive id survives a move,
+    so a link published in an earlier release goes on working.
     """
-    if not DRIVE_LEDGER.exists():
-        return {}
-    try:
-        files = json.loads(DRIVE_LEDGER.read_text()).get("files", {})
-    except Exception:
-        return {}
-    # The ledger keys on the local staging path; index by its tail so the
-    # lookup does not depend on where the tree sits on disk.
-    by_tail: dict[str, str] = {}
-    for path, meta in files.items():
-        fid = (meta or {}).get("id")
-        if not fid:
-            continue
-        parts = PurePosixPath(path).parts
-        if len(parts) >= 3:
-            by_tail.setdefault("/".join(parts[-3:]), fid)
-
-    bds = _load_module("build_drive_staging")
-    out: dict[int, str] = {}
     with conn.cursor() as cur:
-        cur.execute(DOCUMENT_PATHS_SQL)
-        rows = cur.fetchall()
-    by_app: dict[int, list] = {}
-    meta_by_app: dict[int, tuple] = {}
-    for (app_id, ref, site_key, site_name, doc_id, url, kind, sha, bp,
-         ft) in rows:
-        # One (application, site) pair at a time: the same application
-        # under a second site repeats every document, and the numbering
-        # is per application within a site folder.
-        k = (app_id, site_key)
-        by_app.setdefault(k, []).append((doc_id, (url, kind, sha, bp, ft)))
-        meta_by_app[k] = (ref, site_key, site_name)
-    for k in sorted(by_app, key=lambda t: (t[0], t[1])):
-        ref, site_key, site_name = meta_by_app[k]
-        stem = bds.site_stem(site_key, site_name)
-        named = bds.document_filenames(ref, [r[1] for r in by_app[k]])
-        for (doc_id, _row), (_sha, _src, relpath, _u, _kind, exists) in zip(
-                by_app[k], named):
-            if not exists or not relpath or doc_id in out:
-                continue
-            fid = by_tail.get(f"{stem}/{relpath}")
-            if fid:
-                out[doc_id] = f"https://drive.google.com/file/d/{fid}/view"
-    return out
-
-
-def _load_module(name: str):
-    """Import a sibling script by path, once."""
-    import importlib.util
-    cached = getattr(_load_module, "_cache", None)
-    if cached is None:
-        cached = {}
-        _load_module._cache = cached
-    if name not in cached:
-        spec = importlib.util.spec_from_file_location(
-            name, Path(__file__).resolve().parent / f"{name}.py")
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        cached[name] = mod
-    return cached[name]
+        cur.execute("""
+            SELECT DISTINCT ON (document_id) document_id, file_id
+            FROM document_drive_files
+            ORDER BY document_id, recorded_at DESC, id DESC""")
+        return {doc_id: f"https://drive.google.com/file/d/{fid}/view"
+                for doc_id, fid in cur.fetchall()}
 
 
 def _drive_application_map() -> dict[tuple[str, str], str]:

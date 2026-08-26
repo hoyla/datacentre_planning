@@ -2536,10 +2536,26 @@ def main() -> int:
         # answering "how big is this?" two ways.
         site_floorspace = scale.load_site_floorspace(conn)
         # Built here rather than beside the other Drive maps below,
-        # which read the sync ledger alone: this one joins the ledger to
-        # `documents` and so needs the connection, which is closed by
-        # then.
+        # which read the sync ledger alone: this one reads
+        # `document_drive_files` and so needs the connection, which is
+        # closed by then.
         drive_docs = hv._drive_document_map(conn)
+        # A cited document with no recorded Drive id falls back to the
+        # register, which is a link that can rot. That is a acceptable
+        # outcome and a silent one, so it is counted out loud: the usual
+        # cause is a sync that ran without `record_drive_ids.py` after
+        # it, and the number says how much of the corpus is affected.
+        with conn.cursor() as _dcur:
+            _dcur.execute("""
+                SELECT count(DISTINCT d.id)
+                FROM documents d
+                JOIN findings f ON f.document_id = d.id
+                JOIN site_members m ON m.application_id = f.application_id
+                     AND m.retired_at IS NULL
+                JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+                WHERE NOT EXISTS (SELECT 1 FROM document_drive_files x
+                                  WHERE x.document_id = d.id)""")
+            n_no_drive = _dcur.fetchone()[0]
         # The stamp's findings count, counted the way a site panel counts
         # it: distinct passages rather than rows, because several models
         # reading one sentence is corroboration, not volume.
@@ -5367,6 +5383,11 @@ def main() -> int:
     print(f"  Capacity claims: {n_claims_total} claims held, {_claims_live} "
           f"matched to sites, rendered on {claims_sites_rendered} site "
           f"panels ({claims_rows_rendered} claim rows)")
+    print(f"  Our copy on Drive: {len(drive_docs):,} documents have a "
+          f"recorded Drive file id" +
+          (f"; {n_no_drive:,} cited documents have none and fall back to "
+           f"the register — run scripts/record_drive_ids.py"
+           if n_no_drive else ", covering every cited document"))
     if claims_rows_rendered != _claims_live:
         _missing = sorted(set(claims_by_site) -
                           {r[0] for r in site_rows})
