@@ -582,6 +582,16 @@ def fetch_documents_for_application(
             continue
         ladder_failures_in_row = 0
         body = blob.content
+        # A zero-length body is a failed fetch, not a document — see
+        # `repo.EmptyDocumentBody`. Counted as an error so the
+        # application never lands in a completed set and a re-run
+        # retries it, and no empty file is written.
+        if not body:
+            log.warning("zero-byte body (%s, %s) — recorded as a failed "
+                        "fetch, nothing stored", application_ref, link.href)
+            summary["errors"] += 1
+            summary["zero_byte"] = summary.get("zero_byte", 0) + 1
+            continue
         sha = hashlib.sha256(body).hexdigest()
         ext = _ext_from_url(link.href)
         target = _bytes_path(data_dir, application_ref, sha, ext)

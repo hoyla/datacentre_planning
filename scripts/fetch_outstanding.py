@@ -44,13 +44,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from dcp import db, repo  # noqa: E402
+from dcp.acquisition_outcome import SETTLED, classify_outcome  # noqa: E402
 from dcp.sources import agile, arcus, idox, ocella, salesforce_pr  # noqa: E402
 
 log = logging.getLogger("fetch_outstanding")
 
-# Verdicts that mean the work is finished. Re-running should not disturb
-# them; `--recheck` names one explicitly when a revisit is intended.
-SETTLED = ("none_published", "portal_blocked", "login_required", "no_adapter")
+# Verdicts that mean the work is finished — imported rather than restated,
+# so what settles an application and what awards a settled verdict cannot
+# drift apart. `--recheck` names one explicitly when a revisit is intended.
 
 OUTSTANDING_SQL = """
 SELECT a.id, a.application_ref, a.url
@@ -280,22 +281,14 @@ def main() -> int:
                 # mid-application is exactly how this happens.
                 listed = s.get("links_found") or 0
                 held = got + (s.get("skipped_existing") or 0)
-                if got and listed and held < listed:
-                    record(conn, app_id, "partial", fam,
-                           f"{held} of {listed} listed documents retrieved", got)
-                    totals["partial"] += 1; totals["documents"] += got
+                outcome, detail = classify_outcome(s)
+                record(conn, app_id, outcome, fam, detail, got)
+                totals[outcome] = totals.get(outcome, 0) + 1
+                if outcome in ("fetched", "partial"):
+                    totals["documents"] += got
+                if outcome == "partial":
                     log.warning("[%d/%d] %-28s PARTIAL %d of %d listed",
                                 i, len(todo), ref, held, listed)
-                elif got:
-                    record(conn, app_id, "fetched", fam, None, got)
-                    totals["fetched"] += 1; totals["documents"] += got
-                elif s.get("error_class") in (None, "no_documents"):
-                    record(conn, app_id, "none_published", fam,
-                           s.get("error_class"))
-                    totals["none_published"] += 1
-                else:
-                    record(conn, app_id, "error", fam, s.get("error_class"))
-                    totals["error"] += 1
                 log.info("[%d/%d] %-28s %-10s found=%d new=%d | docs %d in %.0fm",
                          i, len(todo), ref, fam, s.get("links_found", 0), got,
                          totals["documents"], (time.monotonic() - started) / 60)

@@ -426,6 +426,13 @@ def fetch_documents_for_application(
             summary["errors"] += 1
             continue
         body = blob.content
+        # See `repo.EmptyDocumentBody`: no bytes is a failed fetch.
+        if not body:
+            log.warning("zero-byte body (%s, %s) — recorded as a failed "
+                        "fetch, nothing stored", application_ref, link.href)
+            summary["errors"] += 1
+            summary["zero_byte"] = summary.get("zero_byte", 0) + 1
+            continue
         sha = hashlib.sha256(body).hexdigest()
         ext = _ext_from_filename(link.filename)
         target = _bytes_path(data_dir, application_ref, sha, ext)

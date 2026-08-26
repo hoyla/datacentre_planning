@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "reader-preview",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["-m", "http.server", "8791", "--directory", "data/exports/phase2.2_build"],
+      "port": 8791
+    }
+  ]
+}
