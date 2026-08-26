@@ -4,18 +4,27 @@ What is still to do. Everything already built and decided — including
 the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
-Current state: **494 sites** (plus 25 pre-planning), **2,032
-applications** in the site universe, **55,678 documents**. Findings and
+Current state: **494 sites** (plus 25 pre-planning), **2,034
+applications** in the site universe, **56,860 documents**. Findings and
 adjudication counts move while the corroboration pass runs and are
 deliberately not restated here — `scripts/corpus_stats.py` prints them,
 and each release states the boundary it was stamped at.
 
-**Releases 2.1 and 2.2 have both shipped** — 2.2 on 2026-08-21, the
-release that put four external audiences beside the planning record; the
-Environment Agency permits made a fifth on 2026-08-22. What each one
-contains and why is in HISTORY. No release is in flight, and there is no
-session handover: what was outstanding at the end of 2026-08-22 is on
-this page, and everything settled is in HISTORY.
+**2.8 shipped on 2026-08-26** and is live on both surfaces: EdgeOne,
+which builds from git, and a new Cloud Run deployment behind Guardian
+sign-in, which changes only when `cloudrun/deploy.sh` is run. What it
+contains is in HISTORY. No release is in flight.
+
+**Three things are waiting on a person, not on work.** The 2.8 Google
+Sheet (`DC_handover_v2_phase2.8`) is created and populated but not yet
+formatted — a one-time job, after which `sheet_sync` refreshes it in
+place and the formatting survives. PR #135 turns the EdgeOne deployment
+into a redirect to Cloud Run so saved bookmarks drain, and is a draft
+because merging it stops EdgeOne serving the reader and retires the
+shared password with it. And **Dartford is still unreported** — a
+300 MW campus with a firm Gate 2 connection, directed on 2026-07-01,
+briefed at [docs/briefs/dartford_ebbsfleet.md](docs/briefs/dartford_ebbsfleet.md),
+and it decays.
 
 **Reading is complete for phase 2.1**, stamped 2026-08-11 with the
 Studio reader stopped so the boundary is clean: 37,992 of 38,005 prose
