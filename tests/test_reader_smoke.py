@@ -543,3 +543,48 @@ def test_nothing_threw(page):
              if "tile" in e.lower() or "net::" in e or "Failed to load resource" in e]
     real = [e for e in page.console_errors if e not in tiles]
     assert real == [], real
+
+
+def test_next_and_previous_walk_the_filtered_set(page):
+    """A reporter's own set, stepped through without going back.
+
+    Asked for by a reader on 2026-08-26, and cheap for a reason worth
+    recording: the filter hides rows with `display:none` rather than
+    removing them, so the DOM already holds the reader's set in their
+    chosen order. Nothing has to be remembered between the table and the
+    site page — which is the same reason Back returns to the right place.
+
+    The failure this guards against is the sequence quietly walking the
+    WHOLE table while the reader believes they are inside their filter.
+    """
+    page.click("#tab-sites")
+    page.fill("#q", "data centre")
+    page.wait_for_timeout(250)
+
+    rows = page.locator("tr.site:visible")
+    n = rows.count()
+    assert n > 2, f"filter left {n} rows; this test needs a few to step through"
+
+    first_key = rows.nth(0).get_attribute("data-key")
+    second_key = rows.nth(1).get_attribute("data-key")
+    rows.nth(0).click()
+    page.wait_for_selector("#view-site", state="visible")
+
+    seq = page.locator("#siteseqn")
+    assert seq.inner_text().strip() == f"1 of {n}", (
+        f"position reads {seq.inner_text()!r}, so the sequence is not the "
+        f"filtered set of {n}")
+    assert page.locator("#siteprev").is_disabled(), \
+        "there is nothing before the first site, so Previous must be dead"
+
+    page.click("#sitenext")
+    page.wait_for_timeout(200)
+    assert page.locator("#view-site").is_visible()
+    assert seq.inner_text().strip() == f"2 of {n}"
+    # The site it moved to is the table's own next row, not the corpus's.
+    assert page.evaluate("openKey") == second_key
+
+    page.click("#siteprev")
+    page.wait_for_timeout(200)
+    assert page.evaluate("openKey") == first_key
+    assert page.locator("#siteprev").is_disabled()

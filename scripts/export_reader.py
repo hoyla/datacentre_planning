@@ -407,6 +407,70 @@ NO_DESCRIPTION = '<span class="q">no description given</span>'
 # "not stated", which says a source was silent about something real.
 NOT_APPLICABLE = '<span class="q">not applicable</span>'
 
+# `sites.classification` records which source produced the record, and
+# the column held the vocabulary `dcp/sites.py` uses to build it —
+# "both", "ours_only", "barbour_covered". A reporter asked what
+# "Classification: both" meant, which is the fair question: it is our
+# word for our own bookkeeping, printed at a reader without a key.
+# The label is the answer to "where did this site record come from",
+# because that is what the field has always held.
+# How an application entered the dataset, in a few words. The stored
+# values are the sweep's own vocabulary and several carry a parameter —
+# `spatial:Ealing/250949FUL`, `operator:Savills`, `energy_national:PTNO-…`
+# — so the prefix is translated and the parameter dropped: a table cell
+# has room for the route, not the seed.
+#
+# A reporter asked of Barrow/B14/2018/0568, which shows no documents and
+# no register link, why it was in the dataset at all. The answer was
+# recorded — `dc_keyword` — and simply never rendered.
+DISCOVERY_ROUTES = {
+    "dc_keyword": "found by keyword sweep",
+    "spatial": "found near a known site",
+    "operator": "found by operator-name sweep",
+    "nsip_energy": "from the NSIP energy layer",
+    "nsip_register": "from the NSIP register",
+    "energy_national": "found near an energy project",
+    "parent_backfill": "parent of an application we held",
+    "cohort": "added with a cohort",
+    "barbour": "from Barbour's project record",
+    "foxglove_top10": "from the Foxglove list",
+    "s35_direction": "a Section 35 direction",
+    "seed_accretion": "seeded by hand",
+    "duplicate_of": "duplicate of another record",
+    "exclude": "excluded by hand",
+}
+
+
+def discovery(value: str) -> str:
+    """The routes that found an application, deduplicated, in order."""
+    seen, out = set(), []
+    for part in (value or "").split(", "):
+        route = DISCOVERY_ROUTES.get(part.split(":")[0].strip())
+        if route and route not in seen:
+            seen.add(route)
+            out.append(route)
+    return " · ".join(out)
+
+
+SITE_ORIGIN = {
+    "both": ("The planning sweep and Barbour",
+             "found independently in both, and merged"),
+    "ours_only": ("The planning sweep",
+                  "one or more applications we triaged as a data centre; "
+                  "Barbour has no project here"),
+    "unlocatable": ("The planning sweep, without coordinates",
+                    "triaged as a data centre, but no application in it "
+                    "carries a map position, so it cannot be clustered "
+                    "by proximity or drawn on the map"),
+    "barbour_only": ("Barbour only",
+                     "a Barbour project with no planning application "
+                     "matched to it — the application may exist and not "
+                     "have been found"),
+    "barbour_covered": ("Barbour, with applications alongside",
+                        "a Barbour project whose nearby applications were "
+                        "not themselves triaged as data centres"),
+}
+
 
 def why_empty(held: int = 0, read: int = 0) -> str:
     """Why a field is empty, in the muted style, in two or three words.
@@ -461,6 +525,12 @@ CSS = """
   --line-lt:#ececec;--page:#f6f6f6;--soft:#f6f6f6;
   --brand:#052962;--accent:#052962;--active:#ffe500;
   --warn:#c74600;--warnbg:#fdf0e6;--ok:#1d6b38;--okbg:#e9f3ec;
+  /* A middle step for the reading bar. --warn had been carrying
+     everything from 1% to 93%, so a site 90% read looked like one 5%
+     read (a reader, 2026-08-26). Amber sits between them and is dark
+     enough to pass AA on white as text, which it also has to be: the
+     same class colours the word beside the bar. */
+  --mid:#8a5a00;
   /* The design brief's slate, for machine-generated content. It earns a
      colour of its own under the same rule as the rest: what a model
      wrote is a different KIND of thing from what a document says, and
@@ -669,6 +739,18 @@ ul.rq li{margin-bottom:2px}
    panel's four-column grid was laid out for that width. */
 .sitepage{padding:14px 22px 30px}
 .sitenav{margin:0 0 10px;font-size:14.5px}
+/* Floated rather than flexed. Making .sitenav a flex container turned
+   the back link into a flex item and Playwright could no longer click
+   it — the element resolved and the click timed out, which is a real
+   reader's problem as much as a test's. A float right-aligns the
+   sequence on the same line without touching how the link lays out. */
+.siteseq{float:right;margin-left:14px;white-space:nowrap}
+.sitenav::after{content:"";display:block;clear:both}
+.seqbtn{font:inherit;font-size:14px;color:var(--link);background:none;
+  border:0;padding:2px 4px;cursor:pointer;border-radius:3px}
+.seqbtn:hover:not(:disabled){background:var(--chip)}
+.seqbtn:disabled{color:var(--mut);cursor:default}
+#siteseqn{font-size:13px;color:var(--mut)}
 #sitehost .grid{margin-top:0}
 /* Signals cards. Square, ruled, no shadow; the count is the one large
    thing on the card because it is the one thing that was computed. */
@@ -806,9 +888,11 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
   border-radius:0;overflow:hidden;max-width:150px}
 .rbar-fill{display:block;height:100%}
 .rbar-fill.r-done{background:var(--ok)}
+.rbar-fill.r-most{background:var(--mid)}
 .rbar-fill.r-part{background:var(--warn)}
 .rbar-fill.r-none{background:var(--line)}
 .rstate.r-done{color:var(--ok)}
+.rstate.r-most{color:var(--mid)}
 .rstate.r-part{color:var(--warn)}
 .rstate.r-none{color:var(--mut)}
 .mw{font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap}
@@ -1873,6 +1957,41 @@ addEventListener('popstate', ()=>{fromHash(); paintWhoBar();});
    on the way out, so the page and the row can never show two versions
    of one site. One site at a time, by construction. */
 let openKey=null, openTr=null, openCell=null;
+// The sites either side of this one, in the table as it is filtered
+// and sorted right now. Nothing has to be remembered to do this: the
+// filter hides rows with display:none rather than removing them, so the
+// DOM still holds the reader's set in their order, and openSite already
+// takes a row. This is the same reason Back returns to the right place.
+function visibleSiteRows(){
+  return Array.prototype.filter.call(
+    document.querySelectorAll('tr.site'),
+    r => r.style.display !== 'none');
+}
+function siteStep(delta){
+  if(!openTr) return false;
+  const rows=visibleSiteRows(), i=rows.indexOf(openTr);
+  const next=rows[i+delta];
+  if(next) openSite(next);
+  return false;
+}
+// Where the reader is in their own set, and whether there is anywhere
+// left to go. Called on open, because the set can only change while the
+// table is on screen.
+function paintSiteSeq(){
+  const rows=visibleSiteRows(), i=rows.indexOf(openTr);
+  const prev=document.getElementById('siteprev');
+  const next=document.getElementById('sitenext');
+  const num=document.getElementById('siteseqn');
+  if(!prev||!next||!num) return;
+  const known = i >= 0 && rows.length > 1;
+  prev.disabled = !known || i === 0;
+  next.disabled = !known || i === rows.length - 1;
+  // A position is only meaningful inside a set the reader chose. One
+  // site on its own is not a sequence, and saying "1 of 1" invites the
+  // question of what the other one is.
+  num.textContent = known ? (i + 1) + ' of ' + rows.length : '';
+  document.querySelector('.siteseq').hidden = !known;
+}
 function openSite(tr){
   if(openKey) closeSite(false);
   const key=tr.dataset.key;
@@ -1883,6 +2002,7 @@ function openSite(tr){
   tr.classList.add('open');
   show('site', true);
   siteHash(key);
+  paintSiteSeq();
   window.scrollTo(0,0);
 }
 function closeSite(navigate){
@@ -2594,9 +2714,17 @@ def main() -> int:
 
     def who_cell(prof):
         group = (prof.get("operator_group") or "").strip()
-        primary = (prof.get("operator_primary") or "").strip()
-        end_user = (prof.get("end_user") or "").strip()
-        applicant = (prof.get("applicant_of_record") or "").strip()
+        # The panel says where each name came from; this column has no
+        # room and no category distinction, so the source is stripped
+        # here. Leaving it on also broke the de-duplication below, which
+        # compares an applicant against an end user by string.
+        def _bare(v: str) -> str:
+            return re.sub(r"\s*\((?:Barbour|documents)\)\s*$", "",
+                          (v or "").strip())
+
+        primary = _bare(prof.get("operator_primary"))
+        end_user = _bare(prof.get("end_user"))
+        applicant = _bare(prof.get("applicant_of_record"))
         badge = group or primary
         if not badge:
             return {"filter_key": "", "sort": "zzz",
@@ -2610,8 +2738,21 @@ def main() -> int:
         # Equinix, VIRTUS, Zenium and Iron Mountain — and a row that wore
         # one of those names, and answered only that one chip, would be
         # the site-fragmentation hazard HISTORY records, as a badge.
-        operators = [n.strip() for n in (end_user or applicant).split(",") if n.strip()]
-        if badge not in operators:
+        # One organisation, once. These were compared by string, so the
+        # same company under two spellings — or under one spelling and
+        # again as the badge — printed twice: "Frimley Health NHS… and
+        # Frimley Health NHS…". The panel can afford to show a name in
+        # two roles because it labels the roles; this column names no
+        # category, so a repeat is only noise. Luke, 2026-08-26.
+        operators, _seen = [], set()
+        for n in (end_user or applicant).split(","):
+            n = n.strip()
+            k = entities.canonical_key(n)
+            if n and k not in _seen:
+                _seen.add(k)
+                operators.append(n)
+        if entities.canonical_key(badge) not in _seen:
+            _seen.add(entities.canonical_key(badge))
             operators.insert(0, badge)
         # The key a badge filters on is the alias GROUP where one is
         # confirmed, and the raw name otherwise. Luke, 2026-08-25: "no
@@ -2641,9 +2782,13 @@ def main() -> int:
                          f'each one’s chip finds it.">{len(operators)} operators</span>'
                          f'<span class="q">{esc(trim(names, 60))}</span>')}
         via_bits = []
-        if applicant and applicant != badge and not end_user.startswith(applicant):
-            via_bits.append(f"via {trim(applicant, 34)}")
-        if others:
+        _badge_key = entities.canonical_key(badge)
+        _applicant_first = applicant.split(",")[0].strip()
+        if (_applicant_first
+                and entities.canonical_key(_applicant_first) != _badge_key
+                and entities.canonical_key(_applicant_first) not in _seen):
+            via_bits.append(f"via {trim(_applicant_first, 34)}")
+        if others and entities.canonical_key(operators[1]) != _badge_key:
             via_bits.append(f"and {trim(operators[1], 24)}")
         via = (f'<span class="q">{esc(" · ".join(via_bits))}</span>'
                if via_bits else "")
@@ -2898,18 +3043,64 @@ def main() -> int:
         # what the reading leaves its capacity figure meaning. The bar
         # is the table's, so the two views say the same thing the same
         # way; the right column's coverage panel carries the detail.
-        _done = held and read >= held * 0.94
-        _rstate = "r-done" if _done else ("r-part" if read else "r-none")
+        # Three steps, not two. A bar that is red at 90% and green at
+        # 95% tells a reader those are opposite states; they are the
+        # same state a few documents apart. Asked for by a reader on
+        # 2026-08-26: red under 75%, amber to 95%, green above.
+        # Measured against the documents that CAN be read, not every
+        # document held. A site with four documents, one of them a
+        # drawing, is as read as it will ever be, and showing that as
+        # 75% in red told a reporter it was barely looked at (a reader,
+        # 2026-08-26). `prose_held` is tiers A and B — drawings and the
+        # deliberately-sampled repetitive classes are excluded, because
+        # neither is a backlog. 93 sites that read as red are in fact
+        # complete on everything readable.
+        #
+        # Still unfixed, and visible here: a corrupt or zero-byte
+        # document counts in prose_held and can never be read, so its
+        # site cannot reach green. That wants the held-but-unreadable
+        # state the ROADMAP describes, and is not this change.
+        _pct = (p_read / p_held) if p_held else 0
+        _done = bool(p_held) and _pct >= 0.95
+        _rstate = ("r-done" if _done else
+                   "r-most" if _pct >= 0.75 else
+                   "r-part" if p_read else "r-none")
+        # The word still says what the READING means for the figures,
+        # which does not change at 75%: a floor is a floor whether one
+        # document is unread or four hundred. Only the colour grades.
         _rword = ("Complete" if _done else
-                  "Figures are floors" if read else "Nothing published")
+                  "Figures are floors" if p_read else "Nothing published")
+        _unread_able = _cd.get("prose_unreadable", 0)
+        _skipped = held - p_held - _unread_able
+        _bartitle = (f"{p_read} of {p_held} readable documents read"
+                     + (f"; {_skipped} of the {held} held are drawings or "
+                        f"sampled by design" if _skipped else "")
+                     # Never silently dropped from the denominator: a
+                     # document we hold and cannot read is a fact about
+                     # the source, and a reporter may want to chase it.
+                     + (f"; {_unread_able} yielded no readable text and "
+                        f"cannot be analysed" if _unread_able else ""))
         state_html = (
-            f'<span class="rbar" title="{read} of {held} documents read">'
+            f'<span class="rbar" title="{esc(_bartitle)}">'
             f'<span class="rbar-fill {_rstate}" '
-            f'style="width:{(100 * read / held) if held else 0:.0f}%"></span></span>'
-            f'<span class="statebit">{read:,} of {held:,} documents read '
+            f'style="width:{(100 * p_read / p_held) if p_held else 0:.0f}%"></span></span>'
+            f'<span class="statebit">{p_read:,} of {p_held:,} readable '
+            f'documents read '
             f'<span class="rstate {_rstate}">{_rword}</span></span>'
-            f'<span class="statebit"><span class="tag '
-            f'{"known" if known else "unknown"}">{esc(cap_label)}</span></span>')
+            # On the page, not only in the bar's tooltip (Luke,
+            # 2026-08-26): a document we hold and cannot read is a fact
+            # about the source that a reporter may want to chase, and
+            # taking it out of the denominator without saying so would
+            # be the kind of quiet subtraction this reader refuses
+            # everywhere else. The table row has no room; this page has.
+            + (f'<span class="statebit"><span class="q">'
+               f'{_unread_able:,} more held, and unreadable</span></span>'
+               if _unread_able else '')
+            + (f'<span class="statebit"><span class="q">'
+               f'{_skipped:,} drawings or sampled by design</span></span>'
+               if _skipped else '')
+            + f'<span class="statebit"><span class="tag '
+              f'{"known" if known else "unknown"}">{esc(cap_label)}</span></span>')
 
         # §5's links row, built where the Drive URL is known. No council
         # register link: this reader holds register URLs per application,
@@ -3341,10 +3532,10 @@ def main() -> int:
          for _k in cohorts_of_site.get(key, ())) or '<span class="q">no cohorts</span>'}</td>
 <td class="mw" data-v="{est.value_mw or ''}">{mw_cell}</td>
 <td data-v="{ind_sort}">{ind_cell}</td>
-<td data-v="{read}"><span class="rbar" title="{read} of {held} documents read"><span
+<td data-v="{p_read}"><span class="rbar" title="{esc(_bartitle)}"><span
  class="rbar-fill {_rstate}"
- style="width:{(100 * read / held) if held else 0:.0f}%"></span></span>{read:,}/{held:,}<span
- class="q">documents read</span><span class="q rstate {_rstate}">{_rword}</span></td>
+ style="width:{(100 * p_read / p_held) if p_held else 0:.0f}%"></span></span>{p_read:,}/{p_held:,}<span
+ class="q">readable documents read</span><span class="q rstate {_rstate}">{_rword}</span></td>
 </tr>
 <tr class="detail"><td colspan="6">
  <!-- §5 of the design handoff. The header card carries the name and the
@@ -3357,7 +3548,7 @@ def main() -> int:
   {sig_pills}
   <h2 class="sitename">{esc(prop.title_case(name or key))}</h2>
   <p class="siteident">{esc(", ".join(councils or []))}{" · " if addr else ""}{esc(trim(addr, 90))}
-   · <code>{esc(key)}</code> · {esc(cls)}</p>
+   · <code>{esc(key)}</code> · {esc(SITE_ORIGIN.get(cls, (cls, ""))[0])}</p>
   <p class="sitestate">{state_html}</p>
   <p class="sitelinks">{site_links}</p>
  </div>
@@ -3386,7 +3577,9 @@ def main() -> int:
     <div class="fields">
      <div class="stack">
       <div><span class="lbl">Site key</span><span class="val">{esc(key)}</span></div>
-      <div><span class="lbl">Classification</span><span class="val">{esc(cls)}</span></div>
+      <div><span class="lbl">Record built from</span><span class="val">{
+        esc(SITE_ORIGIN.get(cls, (cls, ""))[0])}
+       <span class="help">{esc(SITE_ORIGIN.get(cls, ("", ""))[1])}</span></span></div>
      </div>
      <div><span class="lbl">Coordinates</span><span class="val">
       {f'{lat:.5f}, {lon:.5f}' if lat and lon else '—'}
@@ -3735,7 +3928,13 @@ def main() -> int:
         approws_all.append(
             f'<tr data-hay="{esc(hay)}">'
             f"<td data-v='{esc(r[1])}'><strong>{esc(r[1])}</strong>"
-            f"<span class='q'>{esc(r[0])}</span></td>"
+            f"<span class='q'>{esc(r[0])}</span>"
+            # Why this application is in the dataset. A reporter asked
+            # of Barrow/B14/2018/0568, which has no documents and no
+            # register link, why it was there at all -- and the answer
+            # was recorded and simply not shown: our keyword sweep found
+            # it, and its description names a data centre in terms.
+            f"<span class='q'>{esc(discovery(r[17]))}</span></td>"
             f"<td>{esc(r[3])}</td><td>{esc(r[4]) or NOT_STATED}</td>"
             f"<td data-v='{esc(str(r[5] or ''))}'>{esc(str(r[5] or '')) or NOT_STATED}</td>"
             f"<td>{esc(r[7]) or '<span class=\"q\">not triaged</span>'}</td>"
@@ -4972,7 +5171,12 @@ def main() -> int:
 <section id="view-site" class="view">
 <div class="sitepage">
  <p class="sitenav"><a href="#sites" onclick="return backToSites()">← Back to the sites
-  table</a> <span class="help">Filters, chips and sort are as you left them.</span></p>
+  table</a> <span class="help">Filters, chips and sort are as you left them.</span>
+  <span class="siteseq"><button type="button" id="siteprev" class="seqbtn"
+   onclick="return siteStep(-1)" title="Previous site in the filtered table">←
+   Previous</button><span id="siteseqn" class="help"></span><button type="button"
+   id="sitenext" class="seqbtn" onclick="return siteStep(1)"
+   title="Next site in the filtered table">Next →</button></span></p>
  <div id="sitehost"></div>
 </div>
 </section>

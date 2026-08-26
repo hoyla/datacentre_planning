@@ -461,3 +461,64 @@ class TestOnlyAPdfHasPages:
                      "scripts/export_duckdb.py"):
             src = pathlib.Path(name).read_text()
             assert "pagination" in src, name
+
+
+class TestInternalVocabularyDoesNotReachTheReader:
+    """A column's own enum is our bookkeeping, not a reader's language.
+
+    `sites.classification` was printed raw — a reporter asked what
+    "Classification: both" meant, which is the fair question. Its values
+    are the words `dcp/sites.py` uses to decide which source produced a
+    site record, and they were shown with no key.
+    """
+
+    def test_every_classification_a_site_can_have_is_worded(self):
+        import pathlib
+        import re
+        sites = pathlib.Path("dcp/sites.py").read_text()
+        reader = pathlib.Path("scripts/export_reader.py").read_text()
+
+        # The values the clusterer can assign, read from the assignments
+        # themselves rather than from a list someone maintains beside
+        # them: `cls = "both"`, `cls = ("unlocatable" if … else "…")`.
+        block = sites[sites.index('has_dc = any('):]
+        block = block[:block.index("if real_projects:")]
+        # Only what is assigned to `cls`, which spans a line or a
+        # conditional: cls = "both" / cls = ("unlocatable" if … else "…").
+        assigned = set()
+        for m in re.finditer(r"cls = (\(?[^\n]*(?:\n[^\n]*)?)", block):
+            # Not a dict subscript: the conditional form reads
+            # `if all(a["lat"] is None for a in c["apps"])`.
+            assigned.update(re.findall(r'(?<!\[)"([a-z_]+)"', m.group(1)))
+
+        worded = set(re.findall(r'^    "(\w+)": \(', reader, re.M))
+        missing = assigned - worded
+        assert not missing, (
+            f"dcp/sites.py can assign {sorted(missing)}, which the reader "
+            f"would print as the raw value. Add wording to SITE_ORIGIN.")
+
+    def test_every_discovery_route_the_corpus_uses_is_worded(self):
+        """The sweep's vocabulary is not a reader's either.
+
+        `discovered_via` answers "why is this application here at all",
+        which is the question a reporter asked of a row with no
+        documents and no register link. Its values carry a parameter —
+        `spatial:Ealing/250949FUL` — so only the prefix is translated.
+        """
+        import importlib.util
+        import pathlib
+        import re
+        src = pathlib.Path("scripts/export_reader.py").read_text()
+        worded = set(re.findall(r'^    "([a-z0-9_]+)": "', src, re.M))
+
+        # Every prefix any writer in the project can store, read from the
+        # writers rather than from a list kept beside them.
+        prefixes = set()
+        for path in pathlib.Path("dcp").rglob("*.py"):
+            for m in re.finditer(r'discovered_via[^\n]{0,80}?["\']([a-z0-9_]+)[:"\']',
+                                 path.read_text()):
+                prefixes.add(m.group(1))
+        unworded = {p for p in prefixes if p not in worded and len(p) > 3}
+        assert not unworded, (
+            f"discovery routes {sorted(unworded)} would render as the raw "
+            f"stored value. Add them to DISCOVERY_ROUTES.")

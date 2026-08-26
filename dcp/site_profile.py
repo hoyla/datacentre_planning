@@ -934,12 +934,26 @@ def load_coverage(conn) -> dict[str, tuple[int, int]]:
 
 
 COVERAGE_DETAIL_SQL = """
-SELECT s.site_key, d.id, d.kind, (r.document_id IS NOT NULL) AS was_read
+SELECT s.site_key, d.id, d.kind, (r.document_id IS NOT NULL) AS was_read,
+       (u.document_id IS NOT NULL) AS unreadable
 FROM sites s
 JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
 JOIN documents d ON d.application_id = sm.application_id
 LEFT JOIN (SELECT DISTINCT document_id FROM deepread_log
            WHERE read_state = 'read') r ON r.document_id = d.id
+-- Tried and cannot be read: the extractor got no text out of it, or the
+-- model could not parse what there was. Distinct from "not read yet",
+-- and the distinction is the whole point — a reporter uses the progress
+-- bar to ask whether the tool has finished with a site, and a corrupt
+-- PDF that will never be read answers that question wrongly for ever.
+-- A document that was read on ANY attempt is read: this only counts the
+-- ones where every attempt failed.
+LEFT JOIN (SELECT document_id FROM deepread_log
+           GROUP BY document_id
+           HAVING count(*) FILTER (WHERE read_state = 'read') = 0
+              AND count(*) FILTER (WHERE read_state IN
+                    ('parse_failed', 'no_text', 'not_extracted')) > 0
+          ) u ON u.document_id = d.id
 WHERE s.retired_at IS NULL
 """
 
@@ -964,7 +978,7 @@ def load_coverage_detail(conn) -> dict[str, dict[str, int]]:
     deep-read is actually for.
 
     Keys per site: `held`, `read`, `prose_held`, `prose_read`,
-    `graphical`, `sampled_held`, `sampled_read`.
+    `graphical`, `sampled_held`, `sampled_read`, `prose_unreadable`.
     """
     from dcp.deepread_select import classify_kind
 
@@ -972,7 +986,7 @@ def load_coverage_detail(conn) -> dict[str, dict[str, int]]:
     seen: set[tuple[str, int]] = set()
     with conn.cursor() as cur:
         cur.execute(COVERAGE_DETAIL_SQL)
-        for key, doc_id, kind, was_read in cur.fetchall():
+        for key, doc_id, kind, was_read, unreadable in cur.fetchall():
             # One application can belong to more than one site; a document
             # counts once per site, never twice within one.
             if (key, doc_id) in seen:
@@ -980,7 +994,8 @@ def load_coverage_detail(conn) -> dict[str, dict[str, int]]:
             seen.add((key, doc_id))
             c = out.setdefault(key, {"held": 0, "read": 0, "prose_held": 0,
                                      "prose_read": 0, "graphical": 0,
-                                     "sampled_held": 0, "sampled_read": 0})
+                                     "sampled_held": 0, "sampled_read": 0,
+                                     "prose_unreadable": 0})
             tier, _ = classify_kind(kind)
             c["held"] += 1
             c["read"] += bool(was_read)
@@ -989,6 +1004,11 @@ def load_coverage_detail(conn) -> dict[str, dict[str, int]]:
             elif tier == "C":
                 c["sampled_held"] += 1
                 c["sampled_read"] += bool(was_read)
+            elif unreadable:
+                # Held, tried, and it yields nothing. Counted so a site
+                # page can say so, and kept OUT of prose_held so it
+                # cannot hold a finished site below 100% for ever.
+                c["prose_unreadable"] += 1
             else:
                 c["prose_held"] += 1
                 c["prose_read"] += bool(was_read)
