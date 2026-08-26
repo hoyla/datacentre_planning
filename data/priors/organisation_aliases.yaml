@@ -65,6 +65,110 @@
 # for it, is the judgement a confirmation makes.
 
 groups:
+  - group: Apatura
+    note: >-
+      Five numbered vehicles, and a group visible only on the charges
+      register. All five are incorporated at 3rd Floor 1 Ashley Road,
+      Altrincham, all carry the same two PSCs — Apatura DC Ltd
+      (16041291) and Adrian Ashley Hill — and all five carry two charges
+      each created on ONE day, 2026-07-16, to GLAS Trust Corporation
+      Limited as security agent. A single financing across five
+      companies is a portfolio, and neither the PSC page nor the
+      planning record shows it: only the charges do.
+    company_number: "16041291"
+    members:
+      - name: Apatura DC Project 2 Ltd
+        relation: spv_of
+        status: confirmed
+        company_number: "16043950"
+        evidence:
+          - source: companies_house
+            ref: "16043950"
+            note: >-
+              PSCs Apatura DC Ltd (16041291) and Adrian Ashley Hill; registered
+              office 3rd Floor 1 Ashley Road, Altrincham; two charges created
+              2026-07-16 to GLAS Trust Corporation Limited.
+            date: 2026-08-26
+      - name: Apatura DC Project 8 Ltd
+        relation: spv_of
+        status: confirmed
+        company_number: "16044798"
+        evidence:
+          - source: companies_house
+            ref: "16044798"
+            note: >-
+              Same two PSCs, same registered office, same 2026-07-16
+              charges to GLAS Trust Corporation Limited.
+            date: 2026-08-26
+      - name: Apatura DC Project 9 Ltd
+        relation: spv_of
+        status: confirmed
+        company_number: "16044719"
+        evidence:
+          - source: companies_house
+            ref: "16044719"
+            note: >-
+              Same two PSCs, same registered office, same 2026-07-16
+              charges to GLAS Trust Corporation Limited.
+            date: 2026-08-26
+      - name: Apatura DC Project 11 Ltd
+        relation: spv_of
+        status: confirmed
+        company_number: "16470100"
+        evidence:
+          - source: companies_house
+            ref: "16470100"
+            note: >-
+              Same two PSCs, same registered office, same 2026-07-16
+              charges to GLAS Trust Corporation Limited.
+            date: 2026-08-26
+      - name: Apatura DC Project 12 Ltd
+        relation: spv_of
+        status: confirmed
+        company_number: "16470093"
+        evidence:
+          - source: companies_house
+            ref: "16470093"
+            note: >-
+              Same two PSCs, same registered office, same 2026-07-16
+              charges to GLAS Trust Corporation Limited.
+            date: 2026-08-26
+      # Two spellings a scan produced. They are members of the GROUP on
+      # the evidence of the name, and carry no company number: "114" is
+      # 11 or 12 and the corpus cannot say which, so attributing either
+      # string to one of those companies would assert more than is known.
+      # The group is the same either way, which is why this file works at
+      # group level.
+      - name: Appatura DC Project 12 Ltd
+        relation: spv_of
+        status: proposed
+        company_number: "16470093"
+        evidence:
+          - source: document
+            ref: "13054"
+            quote: "FOR: APATURA DC PROJECT 12 LTD"
+            note: >-
+              EastAyrshire/25/0003/EIASCR p1. The document spells the name
+              correctly; the doubled A is the EXTRACTOR's misreading, not
+              the scan's — which is why this one can carry a company
+              number where the next cannot.
+            date: 2026-08-26
+      - name: APATURA OC PROJECT 114 LTD
+        relation: spv_of
+        status: proposed
+        evidence:
+          - source: document
+            ref: "14289"
+            quote: "APPLICANT Full name APATURA OC PROJECT 114 LTD"
+            note: >-
+              Edinburgh/25/03978/PAN p1, and this is what the page itself
+              says: "OC" for "DC", and "114" where the register has 11 and
+              12. No company number, because 114 could be either and
+              attributing it to one would assert more than is known. The
+              group is the same on both readings, which is why it can sit
+              here at all.
+            date: 2026-08-26
+
   - group: Vantage Data Centers
     note: Vantage's UK sites are developed through numbered SPVs (VDC LHR…).
     members:
