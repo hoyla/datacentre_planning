@@ -117,6 +117,47 @@ up the new CSV adjudication columns.
   the descriptions before ejecting anything, per the stem-1331 lesson
   above.
 
+- **The three Section 35 campuses are sites with nothing in them.**
+  Quest Park, Dartford and the Wapseys stub carry **0 documents and 0
+  findings** each. The watcher (HISTORY 2026-08-25) makes the *fact* of
+  a direction visible and deliberately does not fetch its attachments;
+  the eleven PDFs were cached by hand into
+  `data/seed_cases/{wapseys_wood,quest_park,dartford_ebbsfleet}/` so
+  acquisition could follow up, and acquisition never did. **So the
+  figures those documents contain are not in the corpus**: QuestPit's
+  1GW campus / 720MW IT load, powered by on-site gas until a grid
+  connection it does not expect before 2034, and Dartford's 300MW /
+  240MW IT with a firm Gate 2 NGET allocation, exist only as loose files
+  and prose in a pull request. A reporter searching the reader for
+  either finds a named site and no evidence — which is the same failure,
+  in a new form, as the one that made the Guardian's team conclude we
+  were missing Wapseys Wood.
+
+  The path exists and is short: copy each bundle into the application's
+  `Manual/` folder and run `scripts/ingest_manual_docs.py`, then the
+  normal read. Wapseys is the exception that proves it matters — its
+  register sibling `EN0110030` sits in the same site with 6 documents
+  and 2,815 findings, which is why that site reads properly and the
+  other two do not.
+
+- **A Section 35 direction has no project ref until its DCO is filed.**
+  The bridge problem from `data/nsip_research/findings.md`: the watcher
+  keys a stub on the gov.uk publication slug, the register keys on
+  `EN0110030`-style refs, and nothing reconciles them when the DCO
+  finally arrives months later. Today it is handled by one curated
+  Barbour link and the fact that a human noticed. A composite key —
+  applicant, location, capacity — was the proposed answer and is
+  unbuilt. Until then, **re-run `dcp index --source s35` weekly**
+  (idempotent, free on no change) so a fourth direction is noticed the
+  week it publishes rather than the day a story runs.
+
+- **The Dartford direction is an unreported lead.** New Barn Road,
+  Dartford — CSE52 Limited, "Ebbsfleet DCC", directed 2026-07-01, 300MW
+  power and 240MW IT load, Clearstone-linked, grid-led rather than
+  gas-led. As at 2026-08-25 it had been reported nowhere, including in
+  the Guardian piece that prompted the watcher. Journalism, not
+  engineering, and it decays.
+
 - **`scripts/load_capacity_claims.py` is broken and has been since the
   SPV work.** `companies-house-claims.yaml` gained two claims with
   `quantity_type: scheme_capacity`, and no migration ever added that
