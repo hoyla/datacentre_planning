@@ -39,22 +39,41 @@ VIEW_URL = f"{STORE}/PublicAccess_Live/Document/ViewDocument"
 SEARCH_URL = f"{STORE}/PublicAccess_LIVE/SearchResult/RunThirdPartySearch"
 
 
-def fetch_doc_list(client: idox.IdoxClient, folder_ref: str) -> list[tuple[str, str]]:
-    """Return [(guid, doc_type)] from the embedded page model."""
-    r = client.get(f"{SEARCH_URL}?FileSystemId=PL&FOLDER1_REF={folder_ref}")
+def search_url(folder_ref: str) -> str:
+    return f"{SEARCH_URL}?FileSystemId=PL&FOLDER1_REF={folder_ref}"
+
+
+def parse_doc_list(text: str) -> list[tuple[str, str]] | None:
+    """[(guid, doc_type)] from the embedded page model.
+
+    **None means the page did not parse**, and an empty list means the
+    store holds nothing for this folder. Collapsing the two is how "we
+    could not read the page" becomes "the applicant published nothing":
+    the docstore answers a session timeout or a refusal with a 200 and no
+    model, which is indistinguishable from an empty result once both have
+    become `[]`. `fetch_doc_list` keeps the old shape for the download
+    path, which treats either as nothing to fetch; the listing audit
+    needs them apart, because only one of them is a measurement.
+    """
     marker = "var model ="
-    i = r.text.find(marker)
+    i = text.find(marker)
     if i < 0:
-        return []
-    obj, _end = json.JSONDecoder().raw_decode(r.text[i + len(marker):].lstrip())
-    rows = None
+        return None
+    try:
+        obj, _end = json.JSONDecoder().raw_decode(text[i + len(marker):].lstrip())
+    except ValueError:
+        return None
     for v in obj.values():
         if isinstance(v, list) and v and isinstance(v[0], dict) and "Guid" in v[0]:
-            rows = v
-            break
-    if rows is None:
-        return []
-    return [(row["Guid"], row.get("Doc_Type") or None) for row in rows]
+            return [(row["Guid"], row.get("Doc_Type") or None) for row in v]
+    # A model with no document array is a genuinely empty folder.
+    return []
+
+
+def fetch_doc_list(client: idox.IdoxClient, folder_ref: str) -> list[tuple[str, str]]:
+    """Return [(guid, doc_type)] from the embedded page model."""
+    r = client.get(search_url(folder_ref))
+    return parse_doc_list(r.text) or []
 
 
 def fetch_one(conn, client: idox.IdoxClient, *, ref: str) -> dict:
@@ -85,6 +104,12 @@ def fetch_one(conn, client: idox.IdoxClient, *, ref: str) -> dict:
             summary["errors"] += 1
             continue
         body = r.content
+        # See `repo.EmptyDocumentBody`: no bytes is a failed fetch.
+        if not body:
+            print(f"  ZERO-BYTE {guid}: nothing stored, counted as a failure")
+            summary["errors"] += 1
+            summary["zero_byte"] = summary.get("zero_byte", 0) + 1
+            continue
         sha = hashlib.sha256(body).hexdigest()
         ext = "pdf" if "pdf" in (r.headers.get("content-type") or "") else "bin"
         target = idox._bytes_path(data_dir, ref, sha, ext)
