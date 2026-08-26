@@ -12,7 +12,7 @@ those two, which were the documents it kept duplicating.)
 
 ---
 
-## State — 2.2 shipped 2026-08-21, 2.7 in preparation; the table below is the 2.1 boundary
+## State — 2.7 built and verified 2026-08-26, deploys on merge; the table below is still the 2.1 boundary
 
 Since 2.2 the chain has grown two interpretive passes, **2a** and **2b**
 below, both of which change what a reader sees and neither of which
@@ -32,7 +32,20 @@ reader first, as the 2.1 run did.
 
 The table below is the 2.1 boundary, kept because it is the last one
 taken with reading stopped. 2.2 was a source release — external capacity
-claims, no new reading — so it did not move these.
+claims, no new reading — so it did not move these. **2.7 does move
+them**: 494 sites, 2,032 applications, 18,895 power adjudications, built
+2026-08-26 against a corpus that had stopped moving on its own (last
+finding 2026-08-24, last document 2026-08-09), so its boundary is clean
+without a reader having to be killed for it.
+
+**Two things the 2.7 run learned that change how you should read the
+steps below.** Step 1 is not optional bookkeeping: the corroboration
+read had left 4,117 figures unadjudicated, nothing downstream can see a
+figure nobody has asked about, and only the step order caught it. And
+step 3's contradicted-sites count is worth reading rather than
+counting — the third one it reported was a 2013 offshore-wind
+substation's 99.9 MW rendering as a data centre's grid connection on the
+largest site in the corpus, which no gate would ever have flagged.
 
 
 **Every step is done except the deploy, which happens when the release
