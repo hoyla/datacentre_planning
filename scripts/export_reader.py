@@ -4678,7 +4678,7 @@ def main() -> int:
       to signals; caution is the orange below. They were never competing
       for the same job — collapsing them was my error, not the brief's. -->
  <div class="card card-brand">
-  <h2 class="cardh">Two ways in, and they are not the same thing</h2>
+  <h2 class="cardh">Two ways in</h2>
   <div class="twoways">
    <div class="way way-signals">
     <div class="waylab">Signals</div>

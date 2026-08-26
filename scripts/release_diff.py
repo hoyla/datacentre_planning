@@ -222,10 +222,18 @@ def compare_readers(rep: Report, before: ReaderShape, after: ReaderShape) -> Non
     common = before.site_keys & after.site_keys
     lost = [k for k in common
             if after.links_per_site.get(k, 0) < before.links_per_site.get(k, 0)]
-    rep.row("sites whose panel lost links", 0, len(lost))
+    # Counted as "kept", not "lost", so the number FALLS when panels lose
+    # links. Written the other way round it read `0 -> 15`, which rep.row
+    # scores as a rise and marks `+` — so on 2026-08-26 fifteen panels
+    # each lost a link, the report said "nothing fell", and the exit code
+    # was 0. The one check written to catch this could not catch it,
+    # because the metric was phrased so that the bad direction was up.
+    rep.row("site panels keeping every link they had", len(common),
+            len(common) - len(lost))
     if lost:
-        rep.lines.append("    e.g. " + ", ".join(
-            f"{k} {before.links_per_site[k]}->{after.links_per_site[k]}" for k in lost[:6]))
+        rep.lines.append("    lost a link: " + ", ".join(
+            f"{k} {before.links_per_site[k]}->{after.links_per_site[k]}" for k in lost[:6])
+            + (f" … and {len(lost) - 6} more" if len(lost) > 6 else ""))
     rep.row("links across all site panels",
             sum(before.links_per_site.values()), sum(after.links_per_site.values()))
     rep.row("section headings (h2.sec)", before.sections, after.sections)
