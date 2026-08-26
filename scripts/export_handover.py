@@ -926,11 +926,50 @@ def _hyperlink(url: str | None, label: str) -> str:
     return f'=HYPERLINK("{url}", "{label}")'
 
 
+#: The staging builder truncates a site key at this many characters when
+#: it composes a folder name (`build_drive_staging.site_stem`). A key
+#: longer than this reaches the ledger with its tail cut off, so a
+#: lookup made with the whole key can never match it.
+SITE_KEY_IN_FOLDER = 40
+
+#: Characters the builder replaces with a space before truncating. Kept
+#: identical to `build_drive_staging.BAD` deliberately: the truncation
+#: happens on the SANITISED string, so normalising and then cutting to
+#: length gives a different answer from cutting and then normalising —
+#: which is how "…02573full" and "…02573ful" came to be compared.
+_BAD_IN_NAME = re.compile(r'[<>:"/\\|?*\x00-\x1f]+')
+
+
+def _folder_key(site_key: str) -> str:
+    """A site key as the folder name carries it, then normalised.
+
+    The builder sanitises and truncates in that order; so must this, or
+    the two strings are not comparable. See `_norm_key`.
+    """
+    out = _BAD_IN_NAME.sub(" ", site_key or "").strip(" .")
+    out = re.sub(r"\s+", " ", out)[:SITE_KEY_IN_FOLDER].strip(" .")
+    return _norm_key(out)
+
+
 def _norm_key(s: str) -> str:
-    """Alphanumerics only, lowercased. Folder names carry a
-    filesystem-sanitised site key (slashes become spaces), so exact
-    comparison fails on every key containing an application-style ref;
-    stripping punctuation from both sides is what actually matches."""
+    """Alphanumerics only, lowercased, truncated as the folder name is.
+
+    Folder names carry a filesystem-sanitised site key (slashes become
+    spaces), so exact comparison fails on every key containing an
+    application-style ref; stripping punctuation from both sides is what
+    actually matches.
+
+    And the same truncation, because the builder applies one. Five sites
+    on 2026-08-26 said "not yet synced to Drive" about folders that were
+    on Drive: `SITE-data-centre-campus-new-barn-road-dartford-section-35
+    -direction-planning-act-2008` reaches the ledger as
+    `SITE-data-centre-campus-new-barn-road-da`, and
+    `SITE-CentralBedfordshire/CB/22/02573/FULL` as
+    `...02573 FUL` — one character short, which is enough. Normalising
+    both sides the same way is the only thing that makes the two
+    comparable; it was read as a lag in the sync ledger until the
+    folders turned out to be there all along.
+    """
     return re.sub(r"[^a-z0-9]+", "", s.lower())
 
 
@@ -1366,7 +1405,7 @@ def main() -> None:
             key, cls, name, proposal_cell, proposal_flag,
             lat, lon, csrc,
             ", ".join(councils or []),
-            _hyperlink(drive_urls.get(_norm_key(key)), "Open Drive folder"),
+            _hyperlink(drive_urls.get(_folder_key(key)), "Open Drive folder"),
             _hyperlink(portal[1] if portal else None, portal_label),
             n_apps, "\n".join(refs or []),
             site_live.get(key, 0),
