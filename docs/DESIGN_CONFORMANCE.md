@@ -45,6 +45,9 @@ file is the decisions.
 | **Type scale** | Sans 15/14/13/12 | A 13px floor and a 16px body | Luke, 2026-08-24 asked for larger average sizes. The serif scale is unchanged. |
 | **Dark scheme** | (none in the handoff) | None | Luke, 2026-08-24: colour here carries meaning, and a second palette is a second set of meanings to keep true |
 
+| **Empty values** | A dash | A two-or-three-word reason in the muted style | Luke, 2026-08-26: "a dash for unknown is not doing its job". The convention is that a dash means *unknown*, and it was carrying at least four meanings — no documents held, documents not yet read, held and read and the fact is not there, and the field not applying. Only the third is a finding. 5,589 dashes became 153. Where the code cannot tell which silence applies it says "not established", which says nothing about why; the alternative — writing "none found" everywhere — asserts a null result on sites nobody read. |
+| **Provenance on party fields** | (not addressed) | Every value names its register: "CSE52 Limited (documents)" | Luke, 2026-08-26. End user, applicant and advisers had read from Barbour alone, so 330 of 494 sites showed a dash and 179 of those had a document-stated applicant. "Barbour unless otherwise stated" is not defensible for a field Barbour fills a third of the time. `end_user` still comes from Barbour or a confirmed alias group only, per the 2.4 decision — it is an identity claim across documents, where the applicant is stated per application. |
+
 ## Still not built
 
 - **Editorial rule 1's build-time guard.** "A cohort with no limits text

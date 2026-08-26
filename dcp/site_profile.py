@@ -1213,6 +1213,41 @@ class Party:
     barbour_role: str = ""   # exactly as Barbour writes it
 
 
+def _merge_mentions(ranked):
+    """One row per organisation, mention counts added together.
+
+    The party counter is keyed on `(signal_family, entity key)`, so an
+    organisation the documents call both an adviser and an applicant is
+    counted twice and rendered twice with its mentions split — Dartford
+    showed "Burges Salmon LLP (2), Burges Salmon LLP (4)" for one firm
+    named six times. Which family a mention arrived under is a fact
+    about the extractor; the reader is answering "who do the documents
+    name, and how often".
+    """
+    from dcp import entities
+    totals: dict[str, int] = {}
+    first: dict[str, str] = {}
+    for name, mentions in ranked:
+        key = entities.canonical_key(name)
+        if not key:
+            continue
+        totals[key] = totals.get(key, 0) + mentions
+        first.setdefault(key, name)
+    return sorted(((first[k], n) for k, n in totals.items()),
+                  key=lambda r: (-r[1], r[0]))
+
+
+def _sourced(names, source: str) -> str:
+    """Names with the register that states them, or "" for none.
+
+    Every value in this panel says where it came from, because the panel
+    mixes registers and a reader cannot otherwise tell Barbour's word
+    from the documents'. See the note in `site_parties`.
+    """
+    joined = ", ".join(n for n in names if n)
+    return f"{joined} ({source})" if joined else ""
+
+
 def _dedupe(names):
     """Raw names, first spelling kept, one per canonical key."""
     from dcp import entities
@@ -1295,6 +1330,44 @@ def site_parties(barbour_rows, findings_counts, councils, alias_index) -> dict:
     applicants = _dedupe(by_role["applicant"])
     b_advisers = _dedupe(by_role["adviser"])
 
+    # The document-named organisations, kept by the family that named
+    # them, so "who the documents call the applicant" is answerable
+    # separately from "who they mention". Ranked by mentions, ties
+    # broken by name so the order cannot depend on row order.
+    from collections import defaultdict
+    from dcp import entities
+    doc_by_family: dict[str, list[tuple[str, int]]] = defaultdict(list)
+    for family, name, mentions in findings_counts:
+        name = (name or "").strip()
+        if not name:
+            continue
+        e = entities.parse_entity(name)
+        if e is None or e.is_authority:
+            continue
+        doc_by_family[family].append((name, mentions))
+    for family in doc_by_family:
+        doc_by_family[family] = _merge_mentions(
+            sorted(doc_by_family[family], key=lambda r: (-r[1], r[0])))
+
+    # One organisation, one role. The extractor files a name under
+    # whichever family the sentence it read suggested, so a firm named
+    # as the agent in four passages and misread as the applicant in two
+    # appears under both — Dartford showed Burges Salmon LLP as
+    # applicant AND adviser when it is CSE52's solicitor. The family
+    # that names it most often wins; ties go to the family declared
+    # first, which is applicant. This decides where a name is SHOWN and
+    # changes no stored row.
+    best: dict[str, tuple[int, str]] = {}
+    for family, rows in doc_by_family.items():
+        for name, mentions in rows:
+            key = entities.canonical_key(name)
+            if key and mentions > best.get(key, (0, ""))[0]:
+                best[key] = (mentions, family)
+    for family in list(doc_by_family):
+        doc_by_family[family] = [
+            (n, m) for n, m in doc_by_family[family]
+            if best.get(entities.canonical_key(n), (0, family))[1] == family]
+
     # Findings, ranked the way the panel has always ranked them, and
     # kept in that lane. The only route out of it is a confirmed alias.
     ranked_advisers: list[tuple[str, int]] = []
@@ -1374,6 +1447,40 @@ def site_parties(barbour_rows, findings_counts, councils, alias_index) -> dict:
     # Ltd advises on the Watford Bypass scheme, when it is the developer
     # — and putting them under "applicant" is the error this version
     # exists to undo.
+    # Barbour states a role for 164 of 494 sites. Reading these fields
+    # from Barbour alone therefore printed "—" on 330 sites, and on 179
+    # of those the site's own documents name an applicant in terms
+    # ("CSE52 Limited is the Applicant"). A dash means unknown in this
+    # reader, so that was a false statement about what the corpus holds,
+    # and the panel's footnote — "as Barbour ABI's project record states
+    # them" — could not undo it: a reader meets the dash, not the
+    # footnote. "Barbour unless otherwise stated" is not a defensible
+    # default for a field Barbour fills a third of the time.
+    #
+    # So the documents fill these two when Barbour is silent, and every
+    # value says where it came from. NOT end_user: that is an identity
+    # claim across documents, and promoting a name on mention count is
+    # how a consultancy becomes the operator — it keeps the confirmed
+    # alias map as its only route, per the 2.4 decision.
+    #
+    # `applicant_of_record` is a different kind of claim: the document
+    # states it about its own application, so repeating it needs no
+    # cross-document identity resolution.
+    # DOCUMENT_NAME_FLOOR, for the same reason the ranked list applies
+    # it: the extractor sometimes returns a phrase rather than a name —
+    # "Applicant CSE52 Limited", "Burges Salmon LLP representing the
+    # applicant" — and each parses as its own organisation. Those arrive
+    # once; the real name arrives repeatedly. Without the floor the field
+    # reads as three companies where the documents name one.
+    def _named(family):
+        return [n for n, m in doc_by_family.get(family, ())
+                if m >= DOCUMENT_NAME_FLOOR][:2]
+
+    applicant_field = (_sourced(applicants, "Barbour")
+                       or _sourced(_named("party_applicant"), "documents"))
+    advisers_field = (_sourced(b_advisers, "Barbour")
+                      or _sourced(_named("party_adviser"), "documents"))
+
     return {
         "operator_group": operator_group,
         "operator_company_number": company_number_of(operator_name)[0],
@@ -1384,10 +1491,10 @@ def site_parties(barbour_rows, findings_counts, councils, alias_index) -> dict:
         # Europe" would filter on a key belonging to neither company.
         "operator_primary": operator_name,
         "operator_others": max(0, len(end_users or applicants) - 1),
-        "end_user": ", ".join(end_users),
-        "applicant_of_record": ", ".join(applicants),
-        "advisers": ", ".join(b_advisers),
-        "named_in_documents": ranked_label(ranked_advisers[:3], 0),
+        "end_user": _sourced(end_users, "Barbour"),
+        "applicant_of_record": applicant_field,
+        "advisers": advisers_field,
+        "named_in_documents": ranked_label(_merge_mentions(ranked_advisers)[:3], 0),
         "authority": ", ".join(_dedupe(councils or ())),
         "parties_source": source,
         "parties_named_once": named_once,

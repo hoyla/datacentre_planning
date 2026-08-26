@@ -379,11 +379,60 @@ def esc(v) -> str:
 _MENTION_COUNT_RE = re.compile(r"\((\d[\d,]*(?: [a-z]+)?)\)")
 
 
-def counted(v) -> str:
-    """Escape a ranked label, subduing its bracketed mention counts."""
+def counted(v, empty: str = "") -> str:
+    """Escape a ranked label, subduing its bracketed mention counts.
+
+    `empty` is what to say when there is nothing — a dash meant four
+    different silences here too, and these three fields are exactly
+    where the difference matters: a site with no documents has not
+    declined to name a cooling method.
+    """
     if not v:
-        return "—"
+        return empty or NOT_STATED
     return _MENTION_COUNT_RE.sub(r'<span class="mcount">(\1)</span>', esc(v))
+
+
+# Two or three words, in the muted style, for a table cell — the site
+# pages can afford a phrase, a dense table cannot and scanning is what
+# a table is for. "The register does not publish this", not a judgement
+# about the scheme.
+NOT_STATED = '<span class="q">not stated</span>'
+
+# A description is different from a missing value: the record exists and
+# carries no prose, which is a fact about the register's own entry.
+NO_DESCRIPTION = '<span class="q">no description given</span>'
+
+# There is no value because the field does not apply — a confidence tier
+# for a figure that does not exist, a caveat on nothing. Distinct from
+# "not stated", which says a source was silent about something real.
+NOT_APPLICABLE = '<span class="q">not applicable</span>'
+
+
+def why_empty(held: int = 0, read: int = 0) -> str:
+    """Why a field is empty, in the muted style, in two or three words.
+
+    A dash means "unknown" in this reader, and it was being used for at
+    least four different things: we hold documents and none says this;
+    we hold nothing so cannot know; we hold documents nobody has read
+    yet; and we looked and there is genuinely none. Only the last is a
+    finding, and a reader could not tell which they were looking at.
+
+    The wording is derived from the site's own coverage rather than
+    chosen, because the alternative — writing "none found" everywhere —
+    asserts a null result on sites where nothing was ever read. That is
+    the same error as a negative result reported without checking the
+    probe could see it.
+
+    Deliberately not exhaustive: where the code cannot tell which
+    negative applies, "not established" says nothing about why, which is
+    honest. Precedent is the operator column, which has read
+    "not established" since 2.4.
+    """
+    if not held:
+        return '<span class="q">no documents held</span>'
+    if not read:
+        return '<span class="q">documents not yet read</span>'
+    return '<span class="q">not in the documents</span>'
 
 
 def trim(text, n: int) -> str:
@@ -2699,14 +2748,21 @@ def main() -> int:
         approws = []
         for a in sorted(apps, key=lambda x: str(x[5] or ""), reverse=True):
             portal = (f'<a href="{esc(a[12])}" target="_blank" rel="noopener">register</a>'
-                      if a[12] and not str(a[12]).startswith("file://") else "—")
+                      if a[12] and not str(a[12]).startswith("file://")
+                      else '<span class="q">no register link</span>')
             durl = hv._drive_application_url(drive_apps, key, a[1])
             docs_cell = (f'<a href="{esc(durl)}" target="_blank" rel="noopener">'
                          f'{a[13] or 0}</a>' if durl else str(a[13] or 0))
             approws.append(
                 f"<tr><td><strong>{esc(a[1])}</strong></td><td>{esc(a[3])}</td>"
-                f"<td>{esc(a[4] or '—')}</td><td>{esc(str(a[5] or '—'))}</td>"
-                f"<td>{esc(str(a[6] or '—'))}</td><td>{esc(a[7] or '—')}</td>"
+                # Four different silences. The register not publishing a
+                # status or a date is not the same as us not having
+                # triaged the application, and "not triaged" is a fact
+                # about this project rather than about the council.
+                f"<td>{esc(a[4]) or NOT_STATED}</td>"
+                f"<td>{esc(str(a[5] or '')) or NOT_STATED}</td>"
+                f"<td>{esc(str(a[6] or '')) or NOT_STATED}</td>"
+                f"<td>{esc(a[7]) or '<span class=\"q\">not triaged</span>'}</td>"
                 f"<td>{docs_cell}</td><td>{portal}</td></tr>"
                 f"<tr><td colspan='8' class='help' style='padding-bottom:9px'>"
                 f"{esc(trim(a[16], 320))}</td></tr>")
@@ -3199,12 +3255,12 @@ def main() -> int:
                f'{esc(", ".join(_absent))}.</p>' if _absent else '')
             + f'<dl class="kv figsum"><dt>Best available</dt><dd>'
             + (f'<b>{mw_text(est.value_mw)} MW</b>' if est.value_mw
-               else '\u2014')
+               else '<span class="q">no figure</span>')
             + ('<span class="prov"> ' + esc(site_profile.PROVISIONAL_MARK)
                + '</span>' if is_prov and est.value_mw else '')
             + f'</dd><dt>Basis</dt><dd>{esc(est.basis)}</dd>'
-            + f'<dt>Confidence</dt><dd>{esc(est.confidence or "\u2014")}</dd>'
-            + f'<dt>Caveat</dt><dd>{esc(est.caveat or "\u2014")}</dd>'
+            + f'<dt>Confidence</dt><dd>{esc(est.confidence) or NOT_APPLICABLE}</dd>'
+            + f'<dt>Caveat</dt><dd>{esc(est.caveat) or NOT_APPLICABLE}</dd>'
             + mixed_note
             + '</dl>'
             + allfigs_html
@@ -3238,8 +3294,7 @@ def main() -> int:
                     f"<span class='q'>{esc(est.basis)}"
                     + (" <span class='prov'>· may rise</span>" if is_prov and mw else "")
                     + "</span>") if mw
-                   else f"<span class='fig w-none'>—</span>"
-                        f"<span class='q'>{esc(est.basis)}</span>")
+                   else f"<span class='q'>{esc(est.basis)}</span>")
 
         # A confidence tier and a count, never a megawatt figure: the main
         # row is scanned and sorted, and a number here beside Declared
@@ -3261,7 +3316,13 @@ def main() -> int:
                        f'{esc(ind_label)}</span>')
             ind_sort = _tier_rank[best["confidence"]] * 100 + _n
         else:
-            ind_cell = "—"
+            # No external claim is MATCHED to this site — which is not
+            # the same as no external source naming it. `load_site_claims`
+            # returns only live matches, and claims go unmatched because a
+            # site record covers a whole estate as often as because no
+            # register mentions the scheme. Saying "none in external
+            # sources" would assert a search nobody ran.
+            ind_cell = '<span class="q">no external match</span>'
             ind_sort = 0
 
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
@@ -3271,13 +3332,13 @@ def main() -> int:
  data-who="{esc(who['filter_key'])}" data-cohorts="{esc('|'.join(cohorts_of_site.get(key, ())))}">
 <td class="sitecell" data-v="{esc(prop.title_case(name or key))}"><span class="sname">{esc(trim(prop.title_case(name or key), 84))}</span>
  <span class="skey">{esc(' · '.join([x for x in [key, trim(addr, 74), ', '.join(councils or [])] if x]))}</span>
- <span class="sprop">{esc(trim(summary, 230)) or '—'}{
+ <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}{
  '' if descriptive else ' — the register holds no description of the development itself, only procedural applications'}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
 <td class="sigcell" data-v="{len(cohorts_of_site.get(key, ()))}">{
  ''.join(f'<span class="sigpill t-{cohort_tone.get(_k, "slate")}">'
          f'{esc(cohort_title.get(_k, _k))}</span>'
-         for _k in cohorts_of_site.get(key, ())) or '<span class="q">—</span>'}</td>
+         for _k in cohorts_of_site.get(key, ())) or '<span class="q">no cohorts</span>'}</td>
 <td class="mw" data-v="{est.value_mw or ''}">{mw_cell}</td>
 <td data-v="{ind_sort}">{ind_cell}</td>
 <td data-v="{read}"><span class="rbar" title="{read} of {held} documents read"><span
@@ -3310,9 +3371,9 @@ def main() -> int:
       machine reading stands where the digest would have. -->
  <div class="col-record">
   <div class="box proposal"><h4>Proposal</h4>
-    <p><strong>{esc(summary) or '—'}</strong></p>
+    <p><strong>{esc(summary) or NO_DESCRIPTION}</strong></p>
     <p class="help">Lifted verbatim from an application below, which the council published
-     as:</p><p>{esc(trim(full_desc, 640)) or '—'}</p></div>
+     as:</p><p>{esc(trim(full_desc, 640)) or NO_DESCRIPTION}</p></div>
 {figures_html}
   {claims_html}
   <div class="box"><h4>What the documents say</h4>
@@ -3332,7 +3393,7 @@ def main() -> int:
       {maplink}{' · ' + gmaps if gmaps else ''}
       <span class="help">{esc(csrc or 'source unknown')}</span></span></div>
      <div><span class="lbl">How we found it</span><span class="val">
-      {esc(', '.join(org)) or '—'}
+      {esc(', '.join(org)) or NOT_STATED}
       {f'<span class="help">{esc(origin_mod.explain(org))}</span>' if len(org) < 3 else
        '<span class="help">Several independent routes reached this site, which is a '
        'stronger signal than any one of them.</span>'}</span></div>
@@ -3347,14 +3408,16 @@ def main() -> int:
     </div></div>
   <div class="box parties"><h4>Who is behind it</h4>
     <dl class="kv">
-     <dt>End user</dt><dd>{esc(prof.get('end_user') or '—')}
+     <dt>End user</dt><dd>{esc(prof.get('end_user')) or why_empty(held, read)}
       {f'<span class="help">group: {esc(prof["operator_group"])}</span>'
         if prof.get('operator_group') else ''}</dd>
-     <dt>Applicant of record</dt><dd>{esc(prof.get('applicant_of_record') or '—')}</dd>
-     <dt>Advisers</dt><dd>{esc(prof.get('advisers') or '—')}</dd>
-     <dt>Also named in the documents</dt><dd>{counted(prof.get('named_in_documents'))}</dd>
-     <dt>Planning authority</dt><dd>{esc(prof.get('authority') or '—')}</dd>
-     <dt>Barbour project</dt><dd>{esc(btitle or '—')}
+     <dt>Applicant of record</dt><dd>{esc(prof.get('applicant_of_record')) or why_empty(held, read)}</dd>
+     <dt>Advisers</dt><dd>{esc(prof.get('advisers')) or why_empty(held, read)}</dd>
+     <dt>Also named in the documents</dt><dd>{counted(prof.get('named_in_documents'), why_empty(held, read))}</dd>
+     <dt>Planning authority</dt><dd>{esc(prof.get('authority'))
+        or '<span class="q">not recorded</span>'}</dd>
+     <dt>Barbour project</dt><dd>{esc(btitle)
+        or '<span class="q">no Barbour match</span>'}
       {f'<span class="help">{esc(bstage or "")}</span>' if bstage else ''}</dd>
      <dt>Nearest energy project</dt><dd>{near_html}</dd>
     </dl>
@@ -3367,13 +3430,14 @@ def main() -> int:
    <div class="box"><h4>Generation, cooling and water</h4>
    <dl class="kv">
     <dt>Standby generators</dt><dd>{
-      (esc(prof.get('generator_count')) + ' units') if prof.get('generator_count') else '—'}</dd>
-    <dt>Generation type</dt><dd>{counted(prof.get('generator_fuel'))}</dd>
-    <dt>Cooling method</dt><dd>{counted(prof.get('cooling_method'))}</dd>
-    <dt>Water evidence</dt><dd>{esc(prof.get('water_evidence') or '—')}</dd>
-    <dt>EIA status</dt><dd>{esc(prof.get('eia_status_label') or '—')}</dd>
-    <dt>Environmental subjects</dt><dd>{esc(', '.join(env)) or '—'}</dd>
-    <dt>Finding subjects</dt><dd>{esc(', '.join((families or [])[:6])) or '—'}</dd>
+      (esc(prof.get('generator_count')) + ' units') if prof.get('generator_count')
+      else why_empty(held, read)}</dd>
+    <dt>Generation type</dt><dd>{counted(prof.get('generator_fuel'), why_empty(held, read))}</dd>
+    <dt>Cooling method</dt><dd>{counted(prof.get('cooling_method'), why_empty(held, read))}</dd>
+    <dt>Water evidence</dt><dd>{esc(prof.get('water_evidence')) or why_empty(held, read)}</dd>
+    <dt>EIA status</dt><dd>{esc(prof.get('eia_status_label')) or why_empty(held, read)}</dd>
+    <dt>Environmental subjects</dt><dd>{esc(', '.join(env)) or why_empty(held, read)}</dd>
+    <dt>Finding subjects</dt><dd>{esc(', '.join((families or [])[:6])) or why_empty(held, read)}</dd>
    </dl>
    <p class="help">{esc(prof.get('generator_caveat') or '')}</p>
    <p class="help">{esc(prof.get('cooling_caveat') or '')}</p></div>
@@ -3449,12 +3513,12 @@ def main() -> int:
  data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts="">
 <td class="sitecell" data-v="{esc(prop.title_case(title or key))}"><span class="sname">{esc(trim(prop.title_case(title or key), 84))}</span>
  <span class="skey">{esc(' · '.join([x for x in [key, trim(address or '', 74), authority or ''] if x]))}</span>
- <span class="sprop">{esc(trim(summary, 230)) or '—'}</span></td>
+ <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
-<td class="sigcell" data-v="0"><span class="q">—</span></td>
-<td class="mw" data-v="">—<span class="q">no application yet</span></td>
-<td data-v="0">—</td>
-<td data-v="-1">—<span class="q rstate r-none">Nothing published</span></td>
+<td class="sigcell" data-v="0"><span class="q">no signals</span></td>
+<td class="mw" data-v=""><span class="q">no application yet</span></td>
+<td data-v="0"><span class="q">no documents</span></td>
+<td data-v="-1"><span class="q rstate r-none">Nothing published</span></td>
 </tr>
 <tr class="detail"><td colspan="6">
  <div class="card sitehead">
@@ -3468,16 +3532,16 @@ def main() -> int:
  <div class="sitebody">
   <div class="col-record">
    <div class="box proposal"><h4>Proposal</h4>
-    <p><strong>{esc(summary) or '—'}</strong></p>
-    <p class="help">Barbour ABI records it as:</p><p>{esc(description) or '—'}</p></div>
+    <p><strong>{esc(summary) or NO_DESCRIPTION}</strong></p>
+    <p class="help">Barbour ABI records it as:</p><p>{esc(description) or NO_DESCRIPTION}</p></div>
   <div class="box"><h4>Scheme</h4>
    <dl class="kv">
-    <dt>Planning authority</dt><dd>{esc(authority or '—')}</dd>
+    <dt>Planning authority</dt><dd>{esc(authority) or NOT_STATED}</dd>
     <dt>Contract value</dt><dd>{f'£{pvalue:,.0f}' if pvalue else '—'}</dd>
     <dt>Floor area</dt><dd>{f'{pfloor:,.0f} m²' if pfloor else '—'}</dd>
     <dt>Site area</dt><dd>{f'{psite:,.2f} ha' if psite else '—'}</dd>
-    <dt>Plan date</dt><dd>{esc(str(pplan or '—'))}</dd>
-    <dt>Decision date</dt><dd>{esc(str(pdecision or '—'))}</dd>
+    <dt>Plan date</dt><dd>{esc(str(pplan or '')) or NOT_STATED}</dd>
+    <dt>Decision date</dt><dd>{esc(str(pdecision or '')) or NOT_STATED}</dd>
    </dl>
    <p class="help provenance">Barbour ABI data is licensed and must be credited
     in published output.</p></div>
@@ -3487,13 +3551,13 @@ def main() -> int:
     <div class="fields">
      <div class="stack">
       <div><span class="lbl">Barbour reference</span><span class="val">{esc(pref)}</span></div>
-      <div><span class="lbl">Stage</span><span class="val">{esc(pstage or '—')}</span></div>
+      <div><span class="lbl">Stage</span><span class="val">{esc(pstage) or NOT_STATED}</span></div>
      </div>
-     <div><span class="lbl">Development type</span><span class="val">{esc(dev_type or '—')}</span></div>
+     <div><span class="lbl">Development type</span><span class="val">{esc(dev_type) or NOT_STATED}</span></div>
      <div><span class="lbl">Coordinates</span><span class="val">
       {f'{plat:.5f}, {plon:.5f}' if plat and plon else '—'} {maplink}</span></div>
      <div><span class="lbl">Environmental subjects</span>
-      <span class="val">{esc(', '.join(env)) or '—'}</span></div>
+      <span class="val">{esc(', '.join(env)) or NOT_STATED}</span></div>
      <div><span class="lbl">Nearest energy project</span>
       <span class="val">{near_html}</span></div>
     </div></div>
@@ -3672,9 +3736,9 @@ def main() -> int:
             f'<tr data-hay="{esc(hay)}">'
             f"<td data-v='{esc(r[1])}'><strong>{esc(r[1])}</strong>"
             f"<span class='q'>{esc(r[0])}</span></td>"
-            f"<td>{esc(r[3])}</td><td>{esc(r[4] or '—')}</td>"
-            f"<td data-v='{esc(str(r[5] or ''))}'>{esc(str(r[5] or '—'))}</td>"
-            f"<td>{esc(r[7] or '—')}</td>"
+            f"<td>{esc(r[3])}</td><td>{esc(r[4]) or NOT_STATED}</td>"
+            f"<td data-v='{esc(str(r[5] or ''))}'>{esc(str(r[5] or '')) or NOT_STATED}</td>"
+            f"<td>{esc(r[7]) or '<span class=\"q\">not triaged</span>'}</td>"
             f"<td data-num='1' data-v='{r[13] or 0}'>{docs_cell}</td>"
             f"<td>{r[14] or 0}</td><td>{portal}</td>"
             f"<td>{esc(trim(r[16], 150))}</td></tr>")
@@ -3694,8 +3758,8 @@ def main() -> int:
         energyrows.append((d if d is not None else 1e9,
             f'<tr data-hay="{esc(hay)}">'
             f"<td><strong>{esc(p['name'])}</strong><span class='q'>{esc(p['ref'])}</span></td>"
-            f"<td class='mw'>{esc(p['cap']) or '—'}</td><td>{esc(p['type'])}</td>"
-            f"<td>{esc(p['stage'] or p['status'] or '—')}</td><td>{esc(p['applicant'])}</td>"
+            f"<td class='mw'>{esc(p['cap']) or NOT_STATED}</td><td>{esc(p['type'])}</td>"
+            f"<td>{esc(p['stage'] or p['status']) or NOT_STATED}</td><td>{esc(p['applicant'])}</td>"
             f"<td>{esc(p['region'])}</td>"
             f"<td data-v='{d if d is not None else ''}'>"
             + (f"<a href='#sites' onclick=\"return goSite('{esc(skey)}')\">"
@@ -3994,7 +4058,7 @@ def main() -> int:
     def _aud_cell(row, key):
         got = row.by_audience.get(key) or []
         if not got:
-            return '<td class="none">—</td>'
+            return '<td class="none"><span class="q">no figure</span></td>'
         return (f'<td class="yes">{len(got)}'
                 f'<span class="q">figure{"" if len(got) == 1 else "s"}</span></td>')
 
