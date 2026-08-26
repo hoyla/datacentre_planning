@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a sample of synced files at the far side, by file id.
+"""Check a sample of the universe reached Drive — end to end, by file id.
 
 The sync's own counters say what it believes it did. They are not
 evidence. On 2026-08-09 they read perfectly while half a sample of ten
@@ -7,25 +7,49 @@ files had gone into a *second* archive at My Drive root, created because
 a name lookup found nothing under the `drive.file` scope — the counters
 cannot see a wrong parent, only a successful upload.
 
-So this asks Drive, per file id from the upload ledger: what is your
-name, who is your parent, how big are you, and what is your md5. Then it
-compares each against the local file the ledger says it came from, and
-walks the parent chain to confirm it ends at the handover root rather
-than somewhere else that looks the same.
+**The sample frame is the universe, not the ledger.** Until 2026-08-26
+this drew its sample from `data/exports/.drive_sync_state.json`, which is
+a record of what was uploaded from the staging tree — so its frame was
+the tree, and a document that never reached the tree could not be
+sampled. That is precisely the failure it was asked to catch: 3,679
+documents held for 143 applications discovered on 2026-08-07 had no site
+membership until 2026-08-25, so `build_drive_staging.py` never staged
+them, the 2026-08-21 sync never saw them, and a ledger-framed check would
+have passed on every sample it could ever have drawn. A check whose frame
+is derived from the thing it is checking cannot find an omission.
+
+So the frame is now `documents`: every document we hold whose application
+belongs to a live site. For each one sampled the check follows the whole
+chain —
+
+    the database says we hold it
+      → is it in the staging tree, at the path the builder would give it?
+        → is it in the upload ledger?
+          → does Drive have it, with those bytes, under the handover root?
+
+— and any link that breaks is a failure, named as the link that broke.
+The expected path is computed by `build_drive_staging.document_filenames`,
+the same function the build uses, so the check cannot disagree with the
+build about what a document is called.
+
+The release artefacts are checked as before, from the ledger: they are
+not documents and have no row to sample.
 
 Read-only. It creates nothing and changes nothing.
 
-    scripts/verify_drive_sample.py                 # 12 random + the root artefacts
-    scripts/verify_drive_sample.py --sample 40
+    scripts/verify_drive_sample.py                 # 12 documents + the root artefacts
+    scripts/verify_drive_sample.py --sample 40 --phase 2.7
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import random
 import sys
+from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -35,9 +59,20 @@ from dotenv import load_dotenv  # noqa: E402
 
 load_dotenv(ROOT / ".env")
 
+from dcp import db  # noqa: E402
 from dcp.drive import FOLDER_ID  # noqa: E402
 
 STATE_PATH = Path("data/exports/.drive_sync_state.json")
+DEFAULT_STAGING = Path("data/exports/drive_staging")
+
+
+def _load_script(name: str):
+    spec = importlib.util.spec_from_file_location(
+        name, ROOT / "scripts" / f"{name}.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def md5_of(path: Path) -> str:
@@ -74,78 +109,148 @@ def parent_chain(svc, file_id: str, stop_at: str, limit: int = 8) -> list[str]:
     return chain
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--sample", type=int, default=12)
-    ap.add_argument("--seed", type=int, default=None,
-                    help="fix the sample for a repeatable check")
-    ap.add_argument("--phase", default=None,
-                    help="which release is being verified, e.g. 2.1. Older "
-                         "releases' artefacts are then reported but do not "
-                         "fail the check.")
-    args = ap.parse_args()
+# Every document we hold that the builder is supposed to stage: one whose
+# application has a live site membership. The complement of this set —
+# documents held for an application with no site — is what
+# `build_drive_staging.py` counts and refuses on; between them the two
+# cover every document with bytes on disk.
+IN_UNIVERSE_SQL = """
+    SELECT d.id
+      FROM documents d
+      JOIN site_members m ON m.application_id = d.application_id
+                         AND m.retired_at IS NULL
+      JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+     WHERE d.bytes_path IS NOT NULL
+"""
 
-    import importlib.util
-    spec = importlib.util.spec_from_file_location(
-        "drive_sync", ROOT / "scripts" / "drive_sync.py")
-    ds = importlib.util.module_from_spec(spec)
-    sys.modules["drive_sync"] = ds
-    spec.loader.exec_module(ds)
-    svc = ds.get_service()
+# The sampled documents, plus every sibling in the same application:
+# the staged filename carries a numeric prefix counted over the
+# application's whole document list, so a document's expected path cannot
+# be derived without its siblings.
+DETAIL_SQL = """
+    WITH picked AS (
+      SELECT DISTINCT d.application_id
+        FROM documents d WHERE d.id = ANY(%s))
+    SELECT a.id, a.application_ref, s.site_key, s.display_name,
+           d.id, d.url, d.kind, d.content_sha256, d.bytes_path, d.fetched_at
+      FROM picked p
+      JOIN applications a ON a.id = p.application_id
+      JOIN documents d ON d.application_id = a.id AND d.bytes_path IS NOT NULL
+      JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
+      JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+     ORDER BY a.id, d.fetched_at, d.id
+"""
 
-    ledger = json.loads(STATE_PATH.read_text())["files"]
 
-    # The release artefacts always, then a random sample of the rest.
-    # Checking only random files would pass while the one thing everybody
-    # opens sat in the wrong folder.
-    always = [k for k in ledger
-              if Path(k).parent.name == "drive_staging"
-              and Path(k).suffix.lower() in (".xlsx", ".duckdb", ".html")]
-    rest = [k for k in ledger if k not in always]
-    if args.seed is not None:
-        random.seed(args.seed)
-    picked = always + random.sample(rest, min(args.sample, len(rest)))
+def sample_universe(cur, n: int,
+                    rng: random.Random) -> tuple[list[int], int]:
+    cur.execute(IN_UNIVERSE_SQL)
+    ids = [r[0] for r in cur.fetchall()]
+    return sorted(rng.sample(ids, min(n, len(ids)))), len(ids)
 
-    print(f"handover root: {FOLDER_ID}")
-    print(f"checking {len(picked)} files by id "
-          f"({len(always)} release artefacts + {len(picked) - len(always)} sampled)\n")
 
+def expected_paths(cur, doc_ids: list[int], staging: Path,
+                   bds) -> list[dict]:
+    """Where each sampled document should be sitting, per the builder."""
+    cur.execute(DETAIL_SQL, (doc_ids,))
+    by_app: dict[int, list] = defaultdict(list)
+    meta: dict[int, tuple] = {}
+    for (app_id, ref, site_key, site_name, doc_id, url, kind, sha, bp,
+         ft) in cur.fetchall():
+        meta[app_id] = (ref, site_key, site_name)
+        by_app[app_id].append((doc_id, (url, kind, sha, bp, ft)))
+
+    wanted = set(doc_ids)
+    out = []
+    for app_id, rows in by_app.items():
+        ref, site_key, site_name = meta[app_id]
+        stem = bds.site_stem(site_key, site_name)
+        named = bds.document_filenames(ref, [r[1] for r in rows])
+        for (doc_id, row), (sha, src, relpath, _url, kind, exists) in zip(
+                rows, named):
+            if doc_id not in wanted:
+                continue
+            out.append({
+                "doc_id": doc_id, "ref": ref, "site_key": site_key,
+                "sha": sha, "kind": kind, "source": src, "exists": exists,
+                "path": (staging / "sites" / stem / relpath) if relpath else None,
+            })
+    return out
+
+
+def check_document(item: dict, ledger: dict, svc) -> list[str]:
+    """Every link in the chain from `documents` row to bytes on Drive."""
+    if not item["exists"]:
+        return [f"canonical store has no bytes at {item['source']}"]
+    local = item["path"]
+    if not local.exists():
+        return ["NOT IN THE STAGING TREE — the builder did not put it at "
+                f"{local}"]
+    entry = ledger.get(str(local))
+    if entry is None:
+        return ["NOT IN THE UPLOAD LEDGER — it is in the tree and no sync "
+                "has ever sent it"]
+    problems = []
+    try:
+        meta = svc.files().get(
+            fileId=entry["id"],
+            fields="name, size, md5Checksum, trashed, parents").execute()
+    except Exception as exc:
+        return [f"MISSING ON DRIVE: {str(exc)[:90]}"]
+    if meta.get("trashed"):
+        problems.append("in the bin")
+    if meta.get("md5Checksum") and meta["md5Checksum"] != md5_of(local):
+        problems.append("md5 differs from local")
+    if meta.get("size") and int(meta["size"]) != local.stat().st_size:
+        problems.append(f"size {meta['size']} vs local {local.stat().st_size}")
+    chain = parent_chain(svc, entry["id"], FOLDER_ID)
+    if FOLDER_ID not in chain:
+        problems.append(f"parent chain does not reach the handover root "
+                        f"({' -> '.join(chain[:3]) or 'none'})")
+    return problems
+
+
+def check_artefacts(ledger: dict, svc, phase: str | None) -> tuple[int, int]:
+    """The release artefacts at the tree root, from the ledger.
+
+    They are the one thing here with no row in `documents` to sample, and
+    the one thing everybody opens.
+    """
+    keys = [k for k in ledger
+            if Path(k).parent.name == "drive_staging"
+            and Path(k).suffix.lower() in (".xlsx", ".duckdb", ".html")]
     bad = legacy = 0
-    for key in picked:
-        entry = ledger[key]
+    for key in sorted(keys):
         local = Path(key)
+        entry = ledger[key]
+        problems = []
         try:
             meta = svc.files().get(
                 fileId=entry["id"],
                 fields="name, size, md5Checksum, trashed, parents").execute()
         except Exception as exc:
-            print(f"  MISSING  {local.name}: {str(exc)[:90]}")
-            bad += 1
-            continue
-
-        problems = []
+            meta = {}
+            problems.append(f"MISSING: {str(exc)[:80]}")
         if meta.get("trashed"):
             problems.append("in the bin")
-        if local.exists():
+        if local.exists() and meta:
             if meta.get("md5Checksum") and meta["md5Checksum"] != md5_of(local):
                 problems.append("md5 differs from local")
             if meta.get("size") and int(meta["size"]) != local.stat().st_size:
                 problems.append(f"size {meta['size']} vs local "
                                 f"{local.stat().st_size}")
-        else:
+        elif not local.exists():
             problems.append("no local file to compare")
-
-        chain = parent_chain(svc, entry["id"], FOLDER_ID)
-        if FOLDER_ID not in chain:
-            problems.append(f"parent chain does not reach the handover root "
-                            f"({' -> '.join(chain[:3]) or 'none'})")
-
+        if meta:
+            chain = parent_chain(svc, entry["id"], FOLDER_ID)
+            if FOLDER_ID not in chain:
+                problems.append("parent chain does not reach the handover root")
         # A previous release's artefact is not this release's problem.
         # Phase 1's workbook and database have sat outside the handover
         # root since before this check existed, and phase 2's joined
         # them; that is worth reporting and is not a reason to hold a
         # release that put its own files in the right place.
-        current = args.phase is None or f"phase{args.phase}" in local.name \
+        current = phase is None or f"phase{phase}" in local.name \
             or local.name == "reader.html"
         mark = ("FAIL" if problems and current
                 else "note" if problems else "ok  ")
@@ -153,20 +258,64 @@ def main() -> int:
             bad += 1
         else:
             legacy += bool(problems)
-        depth = len(chain)
-        print(f"  {mark} {meta.get('name', '?')[:58]:60} depth {depth}"
+        print(f"  {mark} {local.name[:58]:60}"
               + ("  " + "; ".join(problems) if problems else ""))
+    return bad, legacy
 
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--sample", type=int, default=12)
+    ap.add_argument("--seed", type=int, default=None,
+                    help="fix the sample for a repeatable check")
+    ap.add_argument("--staging", type=Path, default=DEFAULT_STAGING,
+                    help="the staging tree the ledger was built from")
+    ap.add_argument("--phase", default=None,
+                    help="which release is being verified, e.g. 2.7. Older "
+                         "releases' artefacts are then reported but do not "
+                         "fail the check.")
+    args = ap.parse_args()
+
+    ds = _load_script("drive_sync")
+    bds = _load_script("build_drive_staging")
+    svc = ds.get_service()
+
+    ledger = json.loads(STATE_PATH.read_text())["files"]
+    rng = random.Random(args.seed)
+
+    with db.connect() as conn, conn.cursor() as cur:
+        doc_ids, universe = sample_universe(cur, args.sample, rng)
+        items = expected_paths(cur, doc_ids, args.staging, bds)
+
+    print(f"handover root: {FOLDER_ID}")
+    print(f"frame: {universe:,} documents held for applications with a live "
+          f"site — the universe, not the ledger")
+    print(f"checking {len(items)} sampled documents plus the release "
+          f"artefacts\n")
+
+    bad = 0
+    for item in sorted(items, key=lambda i: (i["ref"], i["doc_id"])):
+        problems = check_document(item, ledger, svc)
+        shown = item["path"].name if item["path"] else f"document {item['doc_id']}"
+        print(f"  {'FAIL' if problems else 'ok  '} {item['ref'][:28]:30} "
+              f"{shown[:44]:46}"
+              + ("  " + "; ".join(problems) if problems else ""))
+        bad += bool(problems)
+
+    print()
+    art_bad, legacy = check_artefacts(ledger, svc, args.phase)
     print()
     if legacy:
         print(f"{legacy} older artefact(s) flagged — pre-existing, not from "
               f"this run; see the note in the runbook about the phase 1 and "
               f"phase 2 files sitting outside the handover root")
-    if bad:
-        print(f"{bad} of {len(picked)} failed for THIS release — "
-              f"do not announce it")
+    if bad or art_bad:
+        print(f"{bad} of {len(items)} sampled documents and {art_bad} release "
+              f"artefact(s) failed for THIS release — do not announce it")
         return 1
-    print(f"this release verified: right bytes, right folder, not binned")
+    print(f"this release verified: {len(items)} documents drawn from the "
+          f"universe are in the tree, in the ledger, and on Drive with the "
+          f"right bytes under the right parent")
     return 0
 
 

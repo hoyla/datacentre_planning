@@ -44,8 +44,50 @@ Renaming these files leaves their old names behind on Drive, because
 `--prune` after any rename here, or the collection gains a stale twin of
 every file it already had.
 
+**The tree is rebuilt, not updated.** Everything under `sites/` is
+written into a sibling `.building` directory and swapped in, so a folder
+that has left the universe leaves the tree with it. It used to be purely
+additive, which is how the Interxion folder came to hold 45 application
+directories for a site with 16 (2026-08-25): after a re-partition the old
+site folder kept the directories that had moved away, the same document
+existed under two sites, and `drive_sync.py` could not recognise the move
+because the old path was still there. The clean rebuild was folklore — a
+step you had to know to take by hand — and is now what the script does.
+The root is deliberately NOT swept: a released workbook or database from
+an earlier phase is carried forward, because a citation of it has to keep
+resolving. Additive at the root, exact under `sites/`.
+
+**The script states its own shortfall and fails on it.** Two guards, both
+of which would have fired on 2026-08-09 and 2026-08-21 and neither of
+which existed then:
+
+- *Before* building, it refuses when the site map is older than the
+  universe it maps — a materialise that has not seen applications or
+  Barbour projects discovered since. Membership is what decides whether a
+  document is staged at all, so a stale map does not produce a slightly
+  old tree, it produces a tree with holes in it that nothing downstream
+  can see.
+- *After* building, it counts the documents it did not stage, grouped by
+  the application's latest triage verdict, and exits non-zero unless every
+  one of them is triaged `not_dc`. `not_dc` is the only verdict that means
+  "deliberately out of the handover"; anything else — including an
+  application nobody has triaged yet — is material we hold and did not
+  hand over.
+
+That second guard is the one that matters, and it is stated as a count
+rather than a boolean on purpose. On 2026-08-21 the sync was complete and
+correct over the tree it was given (50,406 candidates, 0 failed, 0
+skipped) and 3,679 documents held for 143 in-universe applications were
+not in that tree, because those applications had been discovered on
+2026-08-07 and had no site membership until the materialise of
+2026-08-25. Nothing in the sync could see them: they were never in its
+candidate set, so they could be neither `failed` nor `skipped`. A sync's
+counters can only describe the tree it was handed. Only the builder knows
+what the tree should have contained.
+
 Usage:
     .venv/bin/python scripts/build_drive_staging.py [--out DIR] [--limit N]
+    .venv/bin/python scripts/build_drive_staging.py --allow-stale-site-map
 """
 
 from __future__ import annotations
@@ -88,6 +130,50 @@ def site_stem(key: str, name: str | None) -> str:
     return f"{clean(key, 40)} — {clean(name or 'unnamed', 60)}"
 
 
+def app_dir_name(ref: str) -> str:
+    """The application's directory name inside its site folder."""
+    return clean(ref.replace("/", "_"), 60)
+
+
+def document_filenames(ref: str, app_docs) -> list[tuple]:
+    """Where each of an application's documents belongs in the tree.
+
+    Returns `(sha, source path, path relative to the site folder, url,
+    kind, source exists)` in the order the rows arrive, which is the
+    order the numeric prefix counts in — so the caller must pass the
+    documents exactly as the build query returns them (`fetched_at, id`).
+
+    Extracted so there is one implementation of the derived name.
+    `verify_drive_sample.py` computes the expected path from the same
+    rows through this function; a second implementation would drift the
+    moment the numbering changed, and the check would then disagree with
+    the build while both looked right.
+
+    A document whose bytes have gone from the canonical store still gets
+    a name and still consumes its number — the prefix counts documents,
+    not files present — and is reported rather than silently closing the
+    gap in the sequence.
+    """
+    folder = app_dir_name(ref)
+    used: set[str] = set()
+    out: list[tuple] = []
+    for i, (durl, kind, sha, bp, _ft) in enumerate(app_docs, 1):
+        src = Path(bp)
+        if not src.is_absolute():
+            src = Path.cwd() / bp
+        exists = src.exists()
+        if not exists:
+            out.append((sha, src, None, durl, kind, False))
+            continue
+        base = clean(kind or "document")
+        fname = f"{i:03d} - {base}{src.suffix}"
+        if fname.lower() in used:
+            fname = f"{i:03d} - {base} [{sha[:8]}]{src.suffix}"
+        used.add(fname.lower())
+        out.append((sha, src, f"{folder}/{fname}", durl, kind, True))
+    return out
+
+
 def link_or_copy(src: Path, dst: Path) -> None:
     dst.parent.mkdir(parents=True, exist_ok=True)
     if dst.exists():
@@ -96,6 +182,232 @@ def link_or_copy(src: Path, dst: Path) -> None:
         os.link(src, dst)
     except OSError:
         shutil.copyfile(src, dst)
+
+
+# ---------------------------------------------------------------------------
+# The clean rebuild
+# ---------------------------------------------------------------------------
+
+# Suffixes of a published artefact. The root accumulates these on purpose
+# and `drive_sync.py --prune` already declines to touch the tree root for
+# the same reason: phase 1's workbook has to keep resolving after phase 2
+# ships beside it. Everything else at the root is regenerated or dropped.
+RELEASED_SUFFIXES = (".xlsx", ".duckdb")
+
+
+def carry_forward_released(old_root: Path, new_root: Path,
+                           staged: list[str]) -> list[str]:
+    """Move an earlier release's artefacts into the tree being built.
+
+    The rebuild is exact under `sites/` and additive at the root, and the
+    difference is the whole point. A folder that has left the universe
+    must leave the tree, or the same document sits under two sites and
+    `drive_sync.py` reads a move as a second upload. A *published*
+    workbook or database is the opposite case: it left the release folder
+    when the next release was built, and dropping it from the tree would
+    retract an artefact somebody may have cited.
+    """
+    if not old_root.is_dir():
+        return []
+    carried = []
+    for f in sorted(old_root.iterdir()):
+        if not f.is_file() or f.name in staged:
+            continue
+        if f.suffix.lower() not in RELEASED_SUFFIXES:
+            continue
+        if f.name.startswith("dc_build_handover_"):
+            continue          # the superseded naming, dropped on sight
+        link_or_copy(f, new_root / f.name)
+        carried.append(f.name)
+    return carried
+
+
+def swap_in(built: Path, final: Path, keep_superseded: bool = False) -> None:
+    """Put the freshly built tree where the live one was.
+
+    Two renames rather than a copy: the tree is 137 GB of hard links into
+    `data/raw`, so both trees can exist at once for nothing, and the
+    window in which neither is at the final path is the time between two
+    `rename(2)` calls. If the second one fails, the previous tree is at
+    `<final>.superseded` and this says so rather than leaving a hole.
+    """
+    superseded = final.with_name(final.name + ".superseded")
+    shutil.rmtree(superseded, ignore_errors=True)
+    had_previous = final.exists()
+    if had_previous:
+        final.rename(superseded)
+    try:
+        built.rename(final)
+    except OSError:
+        if had_previous:
+            superseded.rename(final)
+        raise
+    if not had_previous:
+        return
+    if keep_superseded:
+        print(f"   previous tree kept at {superseded}")
+    else:
+        shutil.rmtree(superseded, ignore_errors=True)
+        print(f"   rebuilt clean: the previous tree was replaced, not "
+              f"updated, so anything that left a site left the tree")
+
+
+# ---------------------------------------------------------------------------
+# Guard 1 — is the site map older than the universe it maps?
+# ---------------------------------------------------------------------------
+
+# Membership is a property of applications and Barbour projects, not of
+# documents: `site_members` joins a site to one of those two, and nothing
+# else decides whether this script stages a document. So the corpus this
+# map has to be newer than is the set of *nodes*, and the test is whether
+# any node entered the universe after the last materialise.
+#
+# `documents.fetched_at` is deliberately NOT part of it, though it is the
+# obvious candidate. A refetch pass rewrites `fetched_at` on documents
+# whose applications were mapped weeks ago, so a guard reading it would
+# fail on every refetch while nothing was wrong — and a guard that cries
+# wolf is worse than no guard, which the runbook already says once about
+# `release_diff.py`. The case it would appear to cover, a document held
+# for an application with no membership, is exactly what guard 2 counts,
+# and counts by name rather than by timestamp.
+STALE_MAP_SQL = """
+    SELECT (SELECT max(materialised_at) FROM sites)                  AS materialised,
+           (SELECT count(*) FROM applications
+             WHERE first_seen_at > (SELECT max(materialised_at) FROM sites)),
+           (SELECT count(*) FROM projects
+             WHERE first_seen_at > (SELECT max(materialised_at) FROM sites))
+"""
+
+STALE_MAP_EXAMPLES_SQL = """
+    SELECT application_ref, first_seen_at FROM applications
+     WHERE first_seen_at > (SELECT max(materialised_at) FROM sites)
+     ORDER BY first_seen_at DESC LIMIT 10
+"""
+
+
+def site_map_staleness(cur) -> dict:
+    """How far behind the universe the last materialise is."""
+    cur.execute(STALE_MAP_SQL)
+    materialised, n_apps, n_projects = cur.fetchone()
+    cur.execute(STALE_MAP_EXAMPLES_SQL)
+    return {"materialised_at": materialised,
+            "applications": n_apps or 0,
+            "projects": n_projects or 0,
+            "examples": cur.fetchall()}
+
+
+def stale_map_lines(state: dict) -> tuple[list[str], bool]:
+    """The always-printed block, and whether it is a refusal.
+
+    Pure, so the rule can be tested without a database.
+    """
+    when = state["materialised_at"]
+    stamp = when.isoformat(timespec="seconds") if when else "never"
+    n_apps, n_proj = state["applications"], state["projects"]
+    lines = [f"   site map: materialised {stamp}; "
+             f"{n_apps} application(s) and {n_proj} Barbour project(s) "
+             f"have entered the universe since"]
+    if when is None:
+        lines.append("   REFUSING: nothing has ever been materialised, so no "
+                     "application has a site and the tree would be empty. "
+                     "Run scripts/materialise_sites.py.")
+        return lines, True
+    if not (n_apps or n_proj):
+        return lines, False
+    for ref, seen in state["examples"]:
+        lines.append(f"       {ref}  first seen {seen.isoformat(timespec='seconds')}")
+    if n_apps > len(state["examples"]):
+        lines.append(f"       ... and {n_apps - len(state['examples'])} more")
+    lines.append(
+        "   REFUSING: the site map is older than the universe it maps. An "
+        "application with no site membership has no folder to be staged "
+        "into, so its documents would be left out of the tree and out of "
+        "the sync's candidate set — invisible to both its skipped and its "
+        "failed counters. Run scripts/materialise_sites.py, then this. "
+        "Pass --allow-stale-site-map only with a reason you can state.")
+    return lines, True
+
+
+# ---------------------------------------------------------------------------
+# Guard 2 — what did the tree not contain, and was that on purpose?
+# ---------------------------------------------------------------------------
+
+# `not_dc` is the one verdict that means a document is out of the handover
+# by decision. Every other value — and the absence of a verdict most of
+# all — means we hold material the reader was not given and nobody chose
+# that.
+TOLERATED_VERDICT = "not_dc"
+UNTRIAGED = "(not triaged)"
+
+UNSTAGED_SQL = f"""
+    WITH latest AS (
+      SELECT DISTINCT ON (application_id) application_id, verdict
+        FROM triage ORDER BY application_id, inserted_at DESC)
+    SELECT coalesce(l.verdict, '{UNTRIAGED}') AS verdict,
+           a.application_ref,
+           count(d.id) AS n_docs
+      FROM documents d
+      JOIN applications a ON a.id = d.application_id
+      LEFT JOIN latest l ON l.application_id = a.id
+     WHERE d.bytes_path IS NOT NULL
+       AND NOT EXISTS (SELECT 1 FROM site_members m
+                        WHERE m.application_id = a.id
+                          AND m.retired_at IS NULL)
+     GROUP BY 1, 2
+     ORDER BY 1, 3 DESC, 2
+"""
+
+
+def unstaged_documents(cur) -> list[tuple[str, str, int]]:
+    """`(verdict, application_ref, document count)` for everything left out.
+
+    A document is staged if and only if its application has a live
+    `site_members` row — that is the join at the top of this script and
+    it is the whole mechanism. So this is the complement of the tree,
+    computed from the universe rather than from the tree, which is the
+    only way to see a document that never reached it.
+    """
+    cur.execute(UNSTAGED_SQL)
+    return [(v, ref, n) for v, ref, n in cur.fetchall()]
+
+
+def shortfall_lines(rows: list[tuple[str, str, int]],
+                    show: int = 12) -> tuple[list[str], bool]:
+    """The always-printed shortfall block, and whether it is a failure.
+
+    Pure, so the rule can be exercised without a database.
+    """
+    if not rows:
+        return ["   shortfall: none — every document held is in this tree"], False
+    by_verdict: dict[str, list[tuple[str, int]]] = defaultdict(list)
+    for verdict, ref, n in rows:
+        by_verdict[verdict].append((ref, n))
+    lines = ["   documents held but not staged, by latest triage verdict:"]
+    for verdict in sorted(by_verdict, key=lambda v: (v == TOLERATED_VERDICT, v)):
+        apps = by_verdict[verdict]
+        ndocs = sum(n for _, n in apps)
+        mark = "ok " if verdict == TOLERATED_VERDICT else "!! "
+        lines.append(f"     {mark}{verdict:16} {ndocs:>7,} documents "
+                     f"across {len(apps):>4} application(s)")
+    held = [(v, r, n) for v, r, n in rows if v != TOLERATED_VERDICT]
+    if not held:
+        return lines, False
+    ndocs = sum(n for _, _, n in held)
+    apps = {r for _, r, _ in held}
+    lines.append("")
+    lines.append(f"   {ndocs:,} documents held for {len(apps):,} in-universe "
+                 f"application{'' if len(apps) == 1 else 's'} "
+                 f"are not in this tree")
+    for verdict, ref, n in sorted(held, key=lambda r: (-r[2], r[1]))[:show]:
+        lines.append(f"       {ref:44} {n:>6,} documents   [{verdict}]")
+    if len(held) > show:
+        lines.append(f"       ... and {len(held) - show} more application(s)")
+    lines.append(
+        "   A sync cannot see these. They were never in its candidate set, "
+        "so they are neither its skipped nor its failed. Give each one a "
+        "site (scripts/materialise_sites.py) or a triage verdict that says "
+        "it is out of scope, and rebuild.")
+    return lines, True
 
 
 def main() -> None:
@@ -113,12 +425,45 @@ def main() -> None:
                          "which generated artefacts belong together. Defaults "
                          "to the most recently written data/exports/*_build.")
     ap.add_argument("--limit", type=int, default=None,
-                    help="Only the first N sites (for a dry look).")
+                    help="Only the first N sites (for a dry look). Writes to "
+                         "a `.partial` sibling and never swaps: a subset of "
+                         "the tree must not replace the tree.")
+    ap.add_argument("--allow-stale-site-map", action="store_true",
+                    help="Build even though applications or projects have "
+                         "entered the universe since the last materialise. "
+                         "The tree will be missing their documents.")
+    ap.add_argument("--keep-superseded", action="store_true",
+                    help="Leave the replaced tree at `<out>.superseded` "
+                         "instead of removing it after the swap.")
     args = ap.parse_args()
 
-    out = args.out
+    final = args.out
+    # Build beside the live tree and swap, rather than writing into it.
+    # See the module docstring: the additive build left application
+    # directories behind after a re-partition, and a move drive_sync.py
+    # cannot see is a document that exists twice on Drive.
+    if args.limit:
+        out = final.with_name(final.name + ".partial")
+    else:
+        out = final.with_name(final.name + ".building")
     sites_dir = out / "sites"
     generated = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+
+    # Before anything is written: is the map we are about to stage from
+    # older than the universe it maps? A stale map does not make an
+    # out-of-date tree, it makes a tree with holes nothing downstream can
+    # see, because a document with no site has no folder to be missing
+    # from.
+    with db.connect() as conn, conn.cursor() as cur:
+        state = site_map_staleness(cur)
+    lines, refuse = stale_map_lines(state)
+    print("\n".join(lines))
+    if refuse:
+        if not args.allow_stale_site_map:
+            raise SystemExit(1)
+        print("   --allow-stale-site-map: building anyway")
+
+    shutil.rmtree(out, ignore_errors=True)   # a previous run that died
 
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute("""
@@ -302,29 +647,22 @@ def main() -> None:
 
             sha_to_fname: dict[str, str] = {}
             if app_docs:
-                app_folder = folder / clean(ref.replace("/", "_"), 60)
+                app_folder = folder / app_dir_name(ref)
                 index = [f"# Documents — {ref}", "",
                          f"Source: {url or 'obtained by hand'}", "",
                          "| file | document | source |", "|---|---|---|"]
-                used: set[str] = set()
-                for i, (durl, kind, sha, bp, _ft) in enumerate(app_docs, 1):
-                    src = Path(bp)
-                    if not src.is_absolute():
-                        src = Path.cwd() / bp
-                    if not src.exists():
+                # The CSV and `_index.md` reference documents by these exact
+                # names, and so does verify_drive_sample.py. All three read
+                # them off `document_filenames`, which is the only place the
+                # numbering is decided.
+                for sha, src, relpath, durl, kind, exists in document_filenames(
+                        ref, app_docs):
+                    if not exists:
                         continue
-                    base = clean(kind or "document")
-                    fname = f"{i:03d} - {base}{src.suffix}"
-                    if fname.lower() in used:
-                        fname = f"{i:03d} - {base} [{sha[:8]}]{src.suffix}"
-                    used.add(fname.lower())
+                    fname = relpath.split("/", 1)[1]
                     link_or_copy(src, app_folder / fname)
                     n_docs += 1
-                    # The CSV references documents by these exact names, so
-                    # the mapping is captured here, in the loop that assigns
-                    # them — a second script recomputing the numbering would
-                    # drift the moment this one changed.
-                    sha_to_fname[sha] = f"{clean(ref.replace('/', '_'), 60)}/{fname}"
+                    sha_to_fname[sha] = relpath
                     shown_url = durl if not durl.startswith("file://") else "obtained by hand"
                     index.append(f"| {fname} | {kind or '—'} | {shown_url} |")
                 (app_folder / "_index.md").write_text("\n".join(index) + "\n")
@@ -445,10 +783,31 @@ def main() -> None:
         if workbooks:
             shutil.copyfile(workbooks[-1], out / workbooks[-1].name)
             staged_root.append(workbooks[-1].name)
-    print("   root artefacts: " + (", ".join(staged_root) or "none"))
+    carried = carry_forward_released(final, out, staged_root)
+    print("   root artefacts: " + (", ".join(staged_root) or "none")
+          + (f"  (carried forward: {', '.join(carried)})" if carried else ""))
+
+    if args.limit:
+        print(f"--limit {args.limit}: left at {out}, NOT swapped in — a "
+              f"subset of the tree must not replace the tree")
+    else:
+        swap_in(out, final, keep_superseded=args.keep_superseded)
     print(f"staged {len(site_keys)} sites, {n_apps} applications, "
           f"{n_docs} documents, {n_findings_csv:,} findings rows in "
-          f"per-site CSVs -> {out}")
+          f"per-site CSVs -> {final if not args.limit else out}")
+
+    # What is NOT in the tree, said out loud, every run. The 2026-08-21
+    # sync reported 50,406 candidates, 0 failed and 0 skipped over a tree
+    # that was missing 3,679 documents; nothing in the sync could have
+    # said so, because a document with no site membership never became a
+    # candidate. Only the builder knows the difference between the tree
+    # and the universe.
+    with db.connect() as conn, conn.cursor() as cur:
+        rows = unstaged_documents(cur)
+    lines, failed = shortfall_lines(rows)
+    print("\n".join(lines))
+    if failed:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
