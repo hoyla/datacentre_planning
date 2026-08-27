@@ -38,6 +38,7 @@ rather than an assertion. Principle 7: provenance is non-negotiable.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 # The two triage vocabularies, as the corpus actually holds them
@@ -58,6 +59,25 @@ V1_VERDICTS = frozenset({"DC", "adjacent", "unknown", "unrelated"})
 DC_POSITIVE = frozenset({
     "new_build", "expansion_refurb", "pre_application", "enabling_works"})
 
+# A Barbour project record whose own title names a data centre. This is
+# the catalogue's categorisation, not ours, and it is admitted as
+# DC-positive evidence for one reason: without it the classes assert
+# things that are plainly false on the page. "John Innes — Norwich
+# Bioscience Institutes DATA CENTRE" was badged a disguise suspect,
+# whose definition begins "no application here is stated as a
+# datacentre" — and the site's own record states it. Six sites showed
+# that contradiction at the first build; 21 change class under this rule
+# (measured 2026-08-27), and the four that do not are the genuinely
+# ambiguous ones the title never claims: an office refurbishment, a
+# facilities-management contract, an alterations job, a school project.
+#
+# Deliberately a title test and not a membership test: Barbour's harvest
+# is a sector sweep, so "has a Barbour project" is not the same claim as
+# "Barbour calls it a data centre". The quoted title travels with the
+# class as its provenance.
+CATALOGUE_DC = re.compile(
+    r"DATA\s?CENTRE|DATA\s?CENTER|DATACENTRE|DATACENTER", re.I)
+
 DATACENTRE = "datacentre"
 DISGUISE_SUSPECT = "disguise_suspect"
 ADJACENT_POWER = "adjacent_power"
@@ -71,7 +91,7 @@ PROCEDURAL_ONLY = "procedural_only"
 # categorisation as ours. The class says what is true: the corpus knows
 # this site from the project catalogue and has no planning record to
 # read.
-BARBOUR_ONLY = "barbour_only"
+BARBOUR_ONLY = "no_planning_record"
 
 # Registry order is precedence order, and precedence is what makes the
 # classification assert the least. A site holding both a disguise
@@ -117,6 +137,17 @@ CLASS_DESCRIPTIONS = {
         "reached either way."),
 }
 
+# The same classes as the object of a "show me only…" control. Kept
+# beside the labels so the reader cannot drift into its own vocabulary
+# for classes defined here.
+CLASS_FILTER_LABELS = {
+    DATACENTRE: "Only datacentres",
+    DISGUISE_SUSPECT: "Only disguise suspects",
+    ADJACENT_POWER: "Only adjacent power",
+    PROCEDURAL_ONLY: "Only procedural-only sites",
+    BARBOUR_ONLY: "Only sites with no planning record",
+}
+
 CLASS_ERROR_HINT = (
     "add it to DC_BUILD_VERDICTS/V1_VERDICTS and decide its class "
     "deliberately; falling through to procedural_only would hide a new "
@@ -150,6 +181,10 @@ class SiteClass:
     # application, and so that a datacentre site can still show what
     # catalogue record it is joined to.
     project_refs: tuple[str, ...] = ()
+    # (ref, title) for each Barbour project whose title names a data
+    # centre — the catalogue evidence, quoted, where it is what decided
+    # the class.
+    catalogue_dc: tuple[tuple[str, str], ...] = ()
 
     @property
     def label(self) -> str:
@@ -162,6 +197,31 @@ class SiteClass:
     @property
     def is_datacentre(self) -> bool:
         return self.key == DATACENTRE
+
+    @property
+    def decided_by_catalogue(self) -> bool:
+        """True where no application verdict is DC-positive and the
+        Barbour title is what makes this a datacentre."""
+        return bool(self.catalogue_dc) and self.key == DATACENTRE and not any(
+            _member_class(m) == DATACENTRE for m in self.members)
+
+    @property
+    def provenance(self) -> str:
+        """The evidence for the class, in one sentence a reader can
+        check. Names the catalogue record where that is what decided
+        it, and the applications otherwise."""
+        if self.decided_by_catalogue:
+            ref, title = self.catalogue_dc[0]
+            return (f"Barbour project {ref} names it: \u201c{title}\u201d. "
+                    "No planning application here states a datacentre.")
+        shown = self.deciding[:4]
+        if not shown:
+            return ""
+        rest = len(self.deciding) - len(shown)
+        refs = ", ".join(f"{m.application_ref} ({m.folded or 'not yet triaged'})"
+                         for m in shown)
+        return ("Decided by " + refs
+                + (f", and {rest} more." if rest > 0 else "."))
 
     @property
     def deciding(self) -> tuple[Member, ...]:
@@ -205,9 +265,20 @@ def _member_class(m: Member) -> str:
 
 
 def classify(site_key: str, members: list[Member] | tuple[Member, ...],
-             project_refs: tuple[str, ...] = ()) -> SiteClass:
-    """A site's class from its live members, strongest class winning."""
+             project_refs: tuple[str, ...] = (),
+             projects: tuple[tuple[str, str], ...] = ()) -> SiteClass:
+    """A site's class from its live members, strongest class winning.
+
+    `projects` is (ref, title) for the site's Barbour records; a title
+    naming a data centre is DC-positive evidence in its own right (see
+    CATALOGUE_DC).
+    """
     members, project_refs = tuple(members), tuple(project_refs)
+    catalogue = tuple((r, t) for r, t in projects if t and CATALOGUE_DC.search(t))
+    if catalogue:
+        # The catalogue names it, so no class whose definition begins
+        # "nothing here is stated as a datacentre" can be true of it.
+        return SiteClass(site_key, DATACENTRE, members, project_refs, catalogue)
     if not members:
         # Nothing to fold. With a Barbour record behind it the site is
         # BARBOUR_ONLY; without one it should not exist, and saying so
@@ -215,12 +286,13 @@ def classify(site_key: str, members: list[Member] | tuple[Member, ...],
         # finding.
         return SiteClass(site_key,
                          BARBOUR_ONLY if project_refs else PROCEDURAL_ONLY,
-                         members, project_refs)
+                         members, project_refs, catalogue)
     seen = {_member_class(m) for m in members}
     for key in CLASS_ORDER:
         if key in seen:
-            return SiteClass(site_key, key, members, project_refs)
-    return SiteClass(site_key, PROCEDURAL_ONLY, members, project_refs)
+            return SiteClass(site_key, key, members, project_refs, catalogue)
+    return SiteClass(site_key, PROCEDURAL_ONLY, members, project_refs,
+                     catalogue)
 
 
 MEMBERS_SQL = """
@@ -252,7 +324,8 @@ MEMBERS_SQL = """
 # exist.
 SITES_SQL = """
     SELECT s.site_key,
-           array_remove(array_agg(DISTINCT p.external_ref), NULL)
+           array_remove(array_agg(DISTINCT p.external_ref), NULL),
+           array_remove(array_agg(DISTINCT p.external_ref || '\u001f' || p.title), NULL)
     FROM sites s
     LEFT JOIN site_members m ON m.site_id = s.id AND m.retired_at IS NULL
     LEFT JOIN projects p ON p.id = m.project_id
@@ -276,9 +349,13 @@ def compute_all(conn) -> dict[str, SiteClass]:
         for site_key, ref, dc, v1 in cur.fetchall():
             by_site.setdefault(site_key, []).append(Member(ref, dc, v1))
         cur.execute(SITES_SQL)
-        sites = {k: tuple(refs or ()) for k, refs in cur.fetchall()}
-    return {k: classify(k, by_site.get(k, ()), projects)
-            for k, projects in sites.items()}
+        sites = {}
+        for k, refs, pairs in cur.fetchall():
+            sites[k] = (tuple(refs or ()),
+                        tuple(tuple(p.split("\u001f", 1)) for p in (pairs or ())
+                              if "\u001f" in p))
+    return {k: classify(k, by_site.get(k, ()), refs, projects)
+            for k, (refs, projects) in sites.items()}
 
 
 def counts(classes: dict[str, SiteClass]) -> dict[str, int]:

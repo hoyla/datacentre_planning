@@ -335,7 +335,8 @@ DRIVE_LEDGER = Path("data/exports/.drive_sync_state.json")
 
 SITE_HEADERS = [
     # --- identity & links -------------------------------------------------
-    "Site key", "Classification", "Site name", "Site name alias", "Proposal",
+    "Site key", "Classification", "Site class", "Site name",
+    "Site name alias", "Proposal",
     "Proposal describes a development?",
     "Latitude", "Longitude", "Coordinate source", "Councils",
     # The workbook is the interface to the Drive-by-site archive and to
@@ -475,6 +476,16 @@ DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Site name",
      "Display name assembled at site materialisation; for pre-planning "
      "rows, the Barbour project title."),
+    ("Sites", "Site class",
+     "What kind of site this row is, derived from the triage verdicts of "
+     "its applications across both rubrics: Datacentre; Disguise suspect "
+     "(nothing here is stated as a datacentre and at least one "
+     "application could not be ruled out); Adjacent power (energy "
+     "infrastructure near a datacentre, kept because the energy story "
+     "needs it); Procedural only; No planning record (known from the "
+     "Barbour catalogue alone). Never an ejection — every site keeps its "
+     "row. The deciding applications are in the DuckDB's "
+     "site_class_members."),
     ("Sites", "Site name alias",
      "Curated name for the place, present only where the derived Site "
      "name misleads — e.g. a site named by its lead application's "
@@ -1184,6 +1195,12 @@ def main() -> None:
         from dcp import site_aliases as _sal
         _site_aliases = _sal.load_aliases()
         _sal.require_live(_site_aliases, {r[0] for r in site_rows})
+        # What kind of site each row is (issue #159), derived from both
+        # generations of triage verdict. Never an ejection: every site
+        # keeps its row, and the column is what lets a reporter filter
+        # the adjacency and disguise-suspect layers in or out.
+        from dcp import site_class as _scl
+        _site_classes = _scl.compute_all(conn)
         cur.execute(APP_SQL)
         app_rows = cur.fetchall()
         cur.execute(BARBOUR_ONLY_SQL)
@@ -1451,7 +1468,9 @@ def main() -> None:
                         else f"Open portal (1 of {n_hosts} registers)")
 
         row = [
-            key, cls, name, _site_aliases.get(key, ""), proposal_cell,
+            key, cls,
+            _site_classes[key].label if key in _site_classes else "",
+            name, _site_aliases.get(key, ""), proposal_cell,
             proposal_flag,
             lat, lon, csrc,
             ", ".join(councils or []),
@@ -1550,7 +1569,11 @@ def main() -> None:
             ctx_unmapped += 1
             ctx_cells = ["", "", ""]
         row = [
-            pseudo_key, "barbour_only", title, "",
+            # Pre-planning rows are Barbour records with no planning
+            # application by definition, so the class is the same one
+            # site_class gives a live site in that position.
+            pseudo_key, "barbour_only",
+            _scl.CLASS_LABELS[_scl.BARBOUR_ONLY], title, "",
             proposal.tidy(bsummary),
             "Yes" if bdescriptive else "No — Barbour intelligence only",
             plat, plon, "barbour", authority or "",

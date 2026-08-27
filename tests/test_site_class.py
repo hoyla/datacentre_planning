@@ -167,3 +167,57 @@ def test_counts_covers_every_class_even_at_zero():
     out = sc.counts({"S": sc.classify("S", [_m("a/1", "new_build")])})
     assert set(out) == set(sc.CLASS_ORDER)
     assert out[sc.DATACENTRE] == 1 and out[sc.ADJACENT_POWER] == 0
+
+
+# --- the catalogue as evidence ---------------------------------------
+
+def test_a_barbour_title_naming_a_datacentre_settles_the_class():
+    """A disguise suspect's definition begins 'no application here is
+    stated as a datacentre'. When the site's own catalogue record says
+    DATA CENTRE that precondition is false, and the first build showed
+    the contradiction on the page: 'John Innes — Norwich Bioscience
+    Institutes DATA CENTRE', badged Disguise suspect."""
+    site = sc.classify("S", [_m("a/1", "unknown")],
+                       ("12761990",),
+                       (("12761990", "JOHN INNES - NORWICH BIOSCIENCE "
+                                     "INSTITUTES DATA CENTRE"),))
+    assert site.key == sc.DATACENTRE
+    assert site.decided_by_catalogue
+    assert "12761990" in site.provenance and "DATA CENTRE" in site.provenance
+
+
+@pytest.mark.parametrize("title", [
+    "NEXT GENERATION DATA - DATA CENTRE EXTENSION",
+    "KAO PARK  HARLOW - PROJECT NOBEL DATACENTRE CAMPUS",
+    "SOMEWHERE - DATA CENTER",
+])
+def test_the_catalogue_test_reads_the_variant_spellings(title):
+    assert sc.classify("S", [], ("1",), (("1", title),)).key == sc.DATACENTRE
+
+
+@pytest.mark.parametrize("title", [
+    "STUDENT LOANS COMPANY - OFFICE REFURBISHMENT",
+    "ALLEYNS SCHOOL - PROJECT CRUCIBLE",
+])
+def test_a_barbour_record_that_claims_nothing_stays_unclaimed(title):
+    """Barbour's harvest is a sector sweep, so having a project record
+    is not the same claim as being called a data centre. These keep the
+    honest class rather than inheriting an assertion."""
+    site = sc.classify("S", [], ("1",), (("1", title),))
+    assert site.key == sc.BARBOUR_ONLY
+    assert not site.catalogue_dc
+
+
+def test_a_dc_positive_application_is_not_credited_to_the_catalogue():
+    """`decided_by_catalogue` marks the sites that need the catalogue to
+    be datacentres, so the reader can say which evidence carried it."""
+    site = sc.classify("S", [_m("a/1", "new_build")], ("1",),
+                       (("1", "SOMEWHERE - DATA CENTRE"),))
+    assert site.key == sc.DATACENTRE
+    assert not site.decided_by_catalogue
+    assert "a/1" in site.provenance
+
+
+def test_provenance_names_the_applications_and_counts_the_rest():
+    site = sc.classify("S", [_m(f"a/{i}", "procedural") for i in range(7)])
+    assert "a/0" in site.provenance and "and 3 more" in site.provenance
