@@ -69,19 +69,17 @@ alongside it.
   listing. Needs a human at the keyboard, so it is scheduled rather than
   queued. See the acquisition tail below for the rest of that class.
 
-- **`relist_refetch.py` has no per-application deadline.** Unlike
-  `fetch_outstanding.py`, which wraps every application in
-  `deadline(args.app_timeout)`, the re-fetch runner has no timeout of
-  its own — the only protection is whatever each adapter client sets
-  (Idox has 90s and classifies a timeout properly; the others are
-  unchecked). Found 2026-08-26 while the refetch sat twenty minutes on
-  one application with two established HTTPS connections, no CPU and no
-  bytes written, which is the signature of a stalled read rather than a
-  slow download. The run is resumable, so the cost is wall-clock rather
-  than data — but a sweep that can block indefinitely on one host is a
-  sweep that cannot be left unattended. Give it the same deadline
-  `fetch_outstanding.py` has, and record a timed-out application as
-  retryable rather than settled.
+- **`relist_refetch.py` now has a per-application deadline**
+  (2026-08-27). Not `fetch_outstanding.py`'s SIGALRM — that only works
+  in the main thread and the refetch runs worker shards — but a
+  `threading.Timer` that closes the shard's clients at the ceiling
+  (900s, the same default), so the stalled read that sat twenty
+  minutes on an open idle connection on 2026-08-26 raises into the
+  error path instead. A timed-out application is recorded as a
+  retryable `error`, never settled, and the next application builds
+  fresh clients. Resuming the outstanding tranches
+  (`--tranche rest`, then `--tranche glasgow`) can now be left
+  unattended.
 
 ## Phase 2 — the tail of the collecting
 

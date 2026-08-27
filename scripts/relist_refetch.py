@@ -51,6 +51,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import contextlib
 import csv
 import datetime as dt
 import importlib.util
@@ -246,6 +247,27 @@ def _run_shard(host: str, targets: list[Target], *, args, state: dict,
                 kw = dict(conn=conn, application_id=t.app_id,
                           application_ref=t.ref, application_url=t.url,
                           source_id=src[t.adapter], data_dir=args.data_dir)
+                # The per-application ceiling fetch_outstanding.py has,
+                # by a different mechanism: its SIGALRM only works in
+                # the main thread and this loop is a worker. A timer
+                # closes this shard's clients instead, which makes a
+                # stalled read — the twenty-minute open-idle-connection
+                # signature of 2026-08-26 — raise into the except arm
+                # below, where the application is recorded `error` and
+                # so stays retryable. The cleared dict means the next
+                # application builds fresh clients.
+                timed_out = threading.Event()
+
+                def _cut_off():
+                    timed_out.set()
+                    for c in list(clients.values()):
+                        with contextlib.suppress(Exception):
+                            c.close()
+                    clients.clear()
+
+                watchdog = threading.Timer(args.app_timeout, _cut_off)
+                watchdog.daemon = True
+                watchdog.start()
                 try:
                     if t.adapter == "idox":
                         s = idox.fetch_documents_for_application(
@@ -277,16 +299,26 @@ def _run_shard(host: str, targets: list[Target], *, args, state: dict,
                              "downloaded": 0, "skipped_existing": 0,
                              "errors": 0}
                 except Exception as exc:
-                    record(conn, t.app_id, "error", t.adapter, str(exc)[:180])
+                    detail = (f"timeout: exceeded {args.app_timeout}s "
+                              f"wall-clock; recorded retryable"
+                              if timed_out.is_set() else str(exc)[:180])
+                    record(conn, t.app_id, "error", t.adapter, detail)
                     with lock:
-                        totals["error"] += 1
+                        totals["timeout" if timed_out.is_set()
+                               else "error"] += 1
                         results.append({"ref": t.ref, "host": host,
-                                        "outcome": "exception",
-                                        "detail": str(exc)[:180],
+                                        "outcome": ("timeout"
+                                                    if timed_out.is_set()
+                                                    else "exception"),
+                                        "detail": detail,
                                         "absent": t.absent})
-                    log.error("%-40s EXCEPTION %s", t.ref, str(exc)[:90])
+                    log.error("%-40s %s %s", t.ref,
+                              "TIMEOUT" if timed_out.is_set() else "EXCEPTION",
+                              detail[:90])
                     strikes += 1
                     continue
+                finally:
+                    watchdog.cancel()
 
                 got = s.get("downloaded", 0)
                 errs = s.get("errors", 0)
@@ -354,6 +386,11 @@ def main() -> int:
     p.add_argument("--max-retries", type=int, default=2)
     p.add_argument("--workers", type=int, default=6)
     p.add_argument("--host-strikes", type=int, default=3)
+    p.add_argument("--app-timeout", type=int, default=900,
+                   help="wall-clock ceiling per application, seconds — "
+                        "the same 900 fetch_outstanding.py uses; a "
+                        "timed-out application is recorded as a "
+                        "retryable error, never settled")
     p.add_argument("--min-free-gb", type=float, default=15.0)
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--dry-run", action="store_true")
@@ -424,8 +461,8 @@ def main() -> int:
         return 0
 
     totals = {"fetched": 0, "partial": 0, "none_published": 0, "error": 0,
-              "host_dropped": 0, "documents": 0, "doc_errors": 0,
-              "zero_byte": 0}
+              "timeout": 0, "host_dropped": 0, "documents": 0,
+              "doc_errors": 0, "zero_byte": 0}
     results: list[dict] = []
     lock = threading.Lock()
     started = time.monotonic()
