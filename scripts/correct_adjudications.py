@@ -182,6 +182,56 @@ RULES = [
          AND f.evidence_text ~* 'floor plan|sections drawing|figure\s+[0-9]|substation\s+[0-9.]+\s*m²|legacy'""",
      "equipment label or another scheme's plant, not this connection"),
 
+    # The premise: **an export limit is not a grid connection.** A grid
+    # connection on a site panel answers "how much can this site draw";
+    # an export figure answers how much its generation may send the
+    # other way, and the two can differ by an order of magnitude on one
+    # offer letter — Kingsnorth's gives the site "an import capacity of
+    # 5,000 kVA and a maximum export capacity of 49,900 kVA", and the
+    # 49.9 reached a 2.2 headline as the import side of a like-for-like
+    # (ROADMAP, reader-redesign review 2026-08-23).
+    #
+    # The predicate is value-adjacency, not vocabulary: a quote that
+    # merely mentions export must not demote an import figure it also
+    # states. Measured 2026-08-27 over the 40 candidate rows carrying
+    # export language: Home of Production's "18 MW of import capacity
+    # as well as 10.5MW of export capacity" holds a correct 18 MW
+    # connection within 80 characters of the word "export", which is
+    # why the value itself must sit against the export language and an
+    # import-adjacent value is excluded. Kingsnorth's "47,405 kW at
+    # 0.95 leading p.f. (import) / lagging p.f. (export)" rows state
+    # the same figure in both directions and are deliberately not
+    # matched (the value appears only comma-grouped); they need a
+    # person, not a predicate.
+    ("export_limit_not_connection",
+     "verdict='unclear', quantity_type=NULL, value_mw=NULL, is_maximum=NULL",
+     r"""pa.quantity_type='grid_connection' AND pa.value_mw IS NOT NULL
+         AND (f.evidence_text ~* ('\y(export|exporting|exported)\y[^.;]{0,80}\y'
+                || replace(trim(trailing '.' from trim(trailing '0'
+                     from pa.value_mw::text)), '.', '\.') || '\s*MWe?\y')
+              OR f.evidence_text ~* ('\y'
+                || replace(trim(trailing '.' from trim(trailing '0'
+                     from pa.value_mw::text)), '.', '\.')
+                || '\s*MWe?\y[^.;]{0,80}\y(export|exporting|exported)\y'))
+         AND NOT f.evidence_text ~* ('\y'
+                || replace(trim(trailing '.' from trim(trailing '0'
+                     from pa.value_mw::text)), '.', '\.')
+                || '\s*MWe?\y[^.;]{0,25}\yimport')""",
+     "an export limit, not the site's import connection"),
+
+    # A pinned instance of the rule above, for the one row its predicate
+    # cannot see: Kingsnorth finding 1025555's quote is the chunk-cut
+    # tail "limited to 49,900 kW at unity p.f." — no export word, and
+    # the value comma-grouped — but its sibling rows carry the full
+    # sentence, "Maximum Permitted Export Capacity 49,900 kVA limited to
+    # 49,900 kW at unity p.f.", which names what the fragment is. The
+    # same offer letter gives the site's import capacity as 5,000 kVA.
+    ("export_limit_not_connection_chunkcut",
+     "verdict='unclear', quantity_type=NULL, value_mw=NULL, is_maximum=NULL",
+     r"""pa.quantity_type='grid_connection' AND pa.value_mw = 49.9
+         AND f.evidence_text ~* 'limited to\s+49,900\s+kW at unity p\.f\.'""",
+     "the export limit's own sentence, chunk-cut past the word export"),
+
     # The premise, because a rule is a claim about the world: **a figure
     # is not this development's capacity when the same document states
     # the development's capacity as something else, three times, in the
