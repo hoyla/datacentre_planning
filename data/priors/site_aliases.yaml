@@ -60,3 +60,62 @@ aliases:
     source: |
       Reporter reference (LH): adds Bletchley, the place the Barbour
       title omits.
+ 
+  - site_key: PTNO-11891737
+    alias: Interxion (Digital Realty) - Data Centre
+    source: |
+      Digital Realty acquired Interxion and the LON datacentres
+      are now trading under the Digital Realty brand.     
+      
+  - site_key: PTNO-12511337
+    alias: Hillingdon North Hyde Gardens Union Park (Ark Data Centres)
+    source: |
+      Reporter reference (LH): add Hillingdon and Ark            
+           
+  - site_key: PTNO-12608189 
+    alias: Edinburgh Redheghs Avenue - 213MW Green Data Centre
+    source: |
+      Reporter reference (LH): add Edinburgh    
+       
+  - site_key: PTNO-12651066 
+    alias: Bicester Graven Hill D1 Site - 435MW Data Centre Campus
+    source: |
+      Reporter reference (LH): add Bicester  
+
+  - site_key: PTNO-12669230 
+    alias: Quest Pit Phase 2 Film & TV Studio Campus and Data Centre
+    source: |
+      Reporter reference (LH): add Quest Pit  
+
+  - site_key: PTNO-12671637 
+    alias: Iver Heath Data Park - 90MW Data Centre (CyrusOne)
+    source: |
+      Reporter reference (LH): add CyrusOne  
+
+  - site_key: PTNO-12675606 
+    alias: Cardiff East Park and Ride - Data Centre (Curtis Hall Limited)
+    source: |
+      Reporter reference (LH): add Curtis Hall  
+
+  - site_key: PTNO-12717884 
+    alias: Abbots Langley Data Centre (Greystoke)
+    source: |
+      Reporter reference (LH): add Greystoke  
+
+  - site_key: PTNO-12610936 
+    alias: West London Technology Park - Iver (Greystoke)
+    source: |
+      Reporter reference (LH): add Greystoke  
+
+  - site_key: SITE-Hillingdon/39707/APP/2021/4456
+    alias: West London Technology Park - Woodlands Park, near Iver (Greystoke)
+    source: |
+      Reporter reference (LH): add Greystoke, Woodlands Park, Iver  
+
+  - site_key: SITE-Hillingdon/39707/APP/2022/3243
+    alias: West London Technology Park - Woodlands Park, near Iver (Greystoke)
+    source: |
+      Reporter reference (LH): add Greystoke, Woodlands Park, Iver  
+
+
+     
