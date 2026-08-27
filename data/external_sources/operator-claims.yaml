@@ -151,6 +151,17 @@ sources:
       spec panel qualifies the same number as "Site capacity end-state".
       Recorded here with the spec panel's wording, not the lead's.
 
+  - key: apatura_consultation
+    operator: Apatura
+    snapshot_dir: operator_snapshots
+    note: >-
+      A developer's pre-application consultation site
+      (consult.apatura.energy), not an operator location page: every
+      figure is a proposal. The Westerhill page pairs the data centre
+      figure with a 500MW BESS in one sentence and states the BESS is
+      consented separately, via a Section 36 application to the
+      Scottish Government's Energy Consents Unit.
+
 claims:
   # --- Ark, per campus ---------------------------------------------------
   - source: ark_website
@@ -844,6 +855,24 @@ claims:
     stage: operational
     quote: Total IT power 1.35MW
 
+  - source: apatura_consultation
+    snapshot: apatura-westerhill
+    claim_name: Westerhill AI Energy Campus (Bishopbriggs)
+    quantity_type: announced_capacity
+    value: 300
+    unit: MW
+    term: Data Centre Campus
+    stage: proposed; full application TP/ED/25/0428 filed
+    quote: We are proposing a 300MW Data Centre Campus alongside a 500MW BESS
+    note: >-
+      The 500MW BESS in the same sentence is not loaded as a claim: it
+      is storage rather than data-centre capacity, and the page states
+      it is consented separately (Section 36, Energy Consents Unit).
+      The 300MW agrees with the planning application's own description,
+      "AI data centre with 300MW demand utility capacity" — the rare
+      case where the marketing figure and the planning figure are the
+      same number.
+
 matches:
   - claim_name: Digital Realty LHR13 (Chessington, KT9 1SJ)
     site_id: 414
@@ -1160,6 +1189,22 @@ matches:
       applicant of record across its 26 Land at Tudor Works,
       Beaconsfield Road applications is Colt Data Centre Services /
       HDCI Hayes London Limited in the planning documents themselves.
+
+  - claim_name: Westerhill AI Energy Campus (Bishopbriggs)
+    site_id: 127
+    method: scheme_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-27
+    evidence: >-
+      The consultation page places the scheme in the adopted Westerhill
+      Regeneration Masterplan north-east of Bishopbriggs, connecting to
+      the Lambhill substation, and states the BESS is consented
+      separately via Section 36. Site 127 (PTNO-12857728) holds the
+      full application EastDunbartonshire/TP/ED/25/0428, "Land Adjacent
+      To Crosshill Road Bishopbriggs" — "AI data centre with 300MW
+      demand utility capacity with ancillary BESS (to be consented via
+      separate S36 application)". Same figure, same place, same
+      consenting split. Identified by Luke, 2026-08-27.
 
 considered:
   - claim_name: Union Park
