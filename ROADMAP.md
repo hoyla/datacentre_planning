@@ -250,24 +250,15 @@ alongside it.
   settled the framing is the argument in one line: computed and
   citable beats vivid and wrong.
 
-- **A site's display name is the address of whichever application sorts
-  first**, which bears no relation to what anyone calls the place
-  (issue #169 holds the request; this is the plan, and the design is
-  Luke's from that issue). The defect: West Burton Power Station
-  renders as "Land East Of Gainsborough Road Bole", the Blyth
-  offshore-wind site as "Land North Of Blyth Powerstation Cambois" — a
-  site nobody can find by its own name is a site a reporter concludes
-  is missing, which is what happened when the Guardian asked about
-  Wapseys Wood. The plan: a curated **site name alias** prior
-  (`data/priors/` yaml, keyed by site key, per-entry provenance, the
-  same shape as every other prior), stored beside the derived name and
-  never over it, per principle 3. Where an alias exists it displays in
-  every list, table, map card and workbook row; the derived default
-  stays visible only on the site's own page, so the record still shows
-  what it is built from. The workbook carries two columns — default
-  name and alias. Derivation stays untouched, so a re-materialise
-  cannot clobber a curated name and an alias survives the key it is
-  attached to.
+- **Site name aliases are built; the curation is standing work.** The
+  mechanism from issue #169 landed 2026-08-27: `data/priors/
+  site_aliases.yaml` (alias beside the derived name, per-entry source,
+  a dead key fails the build), displayed everywhere with the derived
+  default kept on the site's own page, and two columns on the workbook's
+  Sites sheet. Seeded with the three known cases — West Burton, the
+  Blyth substation, Maydown Road Derry. What remains is editorial and
+  continuous: name a site when its derived name misleads, in the yaml,
+  with the source.
 
 - **Northumberland Energy Park holds four unrelated schemes.**
   `PTNO-12785975` clusters 35 applications spanning the Blyth offshore

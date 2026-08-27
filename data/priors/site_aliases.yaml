@@ -1,0 +1,56 @@
+# Curated display names for sites whose derived name misleads.
+#
+# A site's default display name is derived — Barbour's project title
+# where a project anchors the cluster, otherwise the address of
+# whichever application sorts first — and the derivation can produce a
+# name nobody uses for the place: a site nobody can find by its own
+# name is a site a reporter concludes is missing, which is what
+# happened when the Guardian asked about Wapseys Wood. An alias here
+# displays in every list, table, map card and workbook row; the
+# derived default stays visible on the site's own page, so the record
+# still shows what it is built from. The design is Luke's, issue #169.
+#
+# Principle 3 applies: the alias lives beside the derived name, never
+# over it. Derivation is untouched, so a re-materialise cannot clobber
+# a curated name. An entry naming a site key that is not live fails
+# the build rather than silently vanishing — the same contract as
+# site_partitions.yaml — because a key changes when a cluster's
+# anchor changes, and an alias that quietly stops applying is a
+# regression nobody sees.
+#
+# Each entry records:
+#   - site_key:  the live sites.site_key the alias attaches to
+#   - alias:     the name people use for the place
+#   - source:    where that name comes from — documentary, never taste
+
+aliases:
+  - site_key: SITE-Bassetlaw/22/01713/FUL
+    alias: West Burton Power Station
+    source: |
+      The site is the former West Burton power station land; the
+      application's own documents and every press mention name it West
+      Burton. The derived name is the lead application's address line,
+      "Land East Of Gainsborough Road Bole Nottinghamshire", which
+      nobody searching for West Burton will find (ROADMAP, the
+      display-name defect, second occurrence).
+
+  - site_key: SITE-Northumberland/13/01352/FUL
+    alias: Blyth Offshore Wind Farm onshore substation
+    source: |
+      Northumberland/15/04021/FUL names the scheme in full —
+      "construction of the Blyth Offshore Wind Farm onshore
+      substation" — and the site exists as its own record precisely
+      because the 2026-08-26 partition separated this scheme from the
+      Northumberland Energy Park cluster
+      (site_partitions.yaml, blyth-offshore-wind-onshore-substation).
+      The derived name is the 2013 application's address line.
+
+  - site_key: SITE-DerryStrabane/LA11/2018/0197/O
+    alias: Maydown Road data centre campus, Derry
+    source: |
+      The site's applications describe "IT Services and Data Centre"
+      buildings with substation compounds and generators at Maydown
+      Road (LA11/2018/0197/O and siblings); the derived name is the
+      lead application's address line, "lands 150m North of no. 23
+      Maydown Road Derry BT47 6UJ". Named the day Northern Ireland's
+      documents first arrived, 2026-08-27.
