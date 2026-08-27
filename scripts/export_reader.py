@@ -2617,6 +2617,33 @@ def main() -> int:
     for r in app_rows:
         apps_by_site[r[0]].append(r)
 
+    # Why an application with no documents has none. The acquisition
+    # machinery records a verdict for every attempt — a blocked portal
+    # and a council that publishes nothing look identical in a count of
+    # zero and mean opposite things — and until now the record stayed in
+    # the database while the reader showed a bare 0 (issue: the Hackney
+    # register that dropped its own history read the same as a council
+    # that never published). Keyed by reference; the latest outcome per
+    # application, only for applications holding nothing.
+    with db.connect() as _conn, _conn.cursor() as _cur:
+        _cur.execute("""
+            WITH latest AS (
+              SELECT DISTINCT ON (application_id) application_id, outcome,
+                     coalesce(detail, '') AS detail
+              FROM acquisition_outcome
+              ORDER BY application_id, checked_at DESC)
+            SELECT a.application_ref, t.outcome, t.detail
+            FROM latest t JOIN applications a ON a.id = t.application_id
+            WHERE NOT EXISTS (SELECT 1 FROM documents d
+                              WHERE d.application_id = a.id)""")
+        empty_reasons = {ref: (outcome, detail)
+                         for ref, outcome, detail in _cur.fetchall()}
+    _OUTCOME_PHRASE = {
+        "none_published": "the register lists no documents",
+        "error": "the last retrieval attempt failed and will be retried",
+        "no_adapter": "this portal cannot be read automatically yet",
+    }
+
     nsip = [{"ref": r[0], "status": r[1], "lat": r[2], "lon": r[3],
              "name": r[4] or r[0], "applicant": r[5] or "", "type": r[6] or "",
              "region": r[7] or "", "stage": r[8] or "",
@@ -3019,7 +3046,20 @@ def main() -> int:
                 f"<td>{esc(a[7]) or '<span class=\"q\">not triaged</span>'}</td>"
                 f"<td>{docs_cell}</td><td>{portal}</td></tr>"
                 f"<tr><td colspan='8' class='help' style='padding-bottom:9px'>"
-                f"{esc(trim(a[16], 320))}</td></tr>")
+                f"{esc(trim(a[16], 320))}"
+                # A zero with its reason beside it. A blocked portal and
+                # a council that publishes nothing produce the same 0,
+                # and the recorded acquisition verdict is what tells
+                # them apart — e.g. Hackney's new register dropped its
+                # own history, which a reporter should read as a
+                # public-access failure, not a quiet application.
+                + (lambda _r: (
+                    f"<br><span class='q'>No documents held — "
+                    f"{esc(trim(_r[1], 300)) if _r[1] else esc(_OUTCOME_PHRASE.get(_r[0], _r[0]))}"
+                    f"</span>") if _r else "")(
+                        empty_reasons.get(a[1])
+                        if not (a[13] or 0) else None)
+                + "</td></tr>")
         apps_html = ("<table class='apps'><thead><tr><th>Reference</th><th>Council</th>"
                      "<th>Status</th><th>Received</th><th>Decided</th><th>Verdict</th>"
                      "<th>Documents</th><th>Source</th></tr></thead><tbody>"
