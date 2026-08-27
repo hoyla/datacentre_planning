@@ -232,16 +232,42 @@ alongside it.
   own design. 2.10-shaped: it changes what the list asserts about
   every row, so it wants the measured fold-in before any styling.
 
+- **Replace "The rest of the package" block with a computed scale
+  panel** (issue #166 holds the request; shape agreed with Luke
+  2026-08-27). The block is duplicative — a button pointing at content
+  one scroll away — and what the start page actually lacks is scale at
+  a glance. The replacement: "The scale of what the documents
+  disclose", every figure computed at build and never typed, every row
+  linked to the query or cohort that produces it, caveats in the
+  panel's own words (covers only the minority of sites stating
+  figures; floors from an incomplete read). Candidate rows: total
+  disclosed capacity across the N disclosing sites; standby generator
+  units where documents state counts, with the diesel/gas split where
+  fuel is named; total standby MW; total contracted grid connections.
+  Comparators only where a published source states one — Ofgem's 73 GW
+  queue is in External aggregates with its paragraph number — never
+  invented. The 12.73-GW-is-twelve-million-households correction that
+  settled the framing is the argument in one line: computed and
+  citable beats vivid and wrong.
+
 - **A site's display name is the address of whichever application sorts
-  first**, which bears no relation to what anyone calls the place. The
-  Wapseys case is fixed by accident rather than design — the key
-  dissolved into `PTNO-12913776`, "SDC M40 CAMPUS - 300MW DATA CENTRE
-  CAMPUS" — but the defect stands and has now bitten twice more: West
-  Burton Power Station renders as "Land East Of Gainsborough Road
-  Bole", and the Blyth offshore-wind site as "Land North Of Blyth
-  Powerstation Cambois". A site nobody can find by its own name is a
-  site a reporter concludes is missing, which is exactly what happened
-  when the Guardian asked about Wapseys Wood.
+  first**, which bears no relation to what anyone calls the place
+  (issue #169 holds the request; this is the plan, and the design is
+  Luke's from that issue). The defect: West Burton Power Station
+  renders as "Land East Of Gainsborough Road Bole", the Blyth
+  offshore-wind site as "Land North Of Blyth Powerstation Cambois" — a
+  site nobody can find by its own name is a site a reporter concludes
+  is missing, which is what happened when the Guardian asked about
+  Wapseys Wood. The plan: a curated **site name alias** prior
+  (`data/priors/` yaml, keyed by site key, per-entry provenance, the
+  same shape as every other prior), stored beside the derived name and
+  never over it, per principle 3. Where an alias exists it displays in
+  every list, table, map card and workbook row; the derived default
+  stays visible only on the site's own page, so the record still shows
+  what it is built from. The workbook carries two columns — default
+  name and alias. Derivation stays untouched, so a re-materialise
+  cannot clobber a curated name and an alias survives the key it is
+  attached to.
 
 - **Northumberland Energy Park holds four unrelated schemes.**
   `PTNO-12785975` clusters 35 applications spanning the Blyth offshore
