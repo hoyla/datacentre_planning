@@ -211,26 +211,66 @@ alongside it.
   flight; nothing of it remains to do beyond that chain completing.
 
 - **The sites list does not say which of its rows are datacentres**
-  (issue #159 holds the request; this is the plan). The corpus keeps
-  adjacency and disguise-suspects deliberately, and the corridor split
-  made the consequence visible: the Clearstone gas generator, the
-  Western International Market substation and the Old Vinyl Factory
-  now sit in the list as their own rows, indistinguishable at a glance
-  from the campuses beside them. Measured 2026-08-27 on the dc_build
-  verdicts alone: **346 live sites carry a DC-positive member verdict
-  (new_build, expansion_refurb, built); roughly 134 do not** — of
-  which 11 are adjacent-power only, 53 disguise-suspect only, and ~70
-  read procedural-or-unverdicted, a figure that overcounts because the
-  quick query ignored v1-era verdicts. The plan, in order: define the
-  v1/dc_build fold-in so a site's class is derived from *both*
-  generations of verdict (the clustering already solves this for
-  membership — reuse its per-rubric shape); derive a site class from
-  members' verdicts (any DC-positive member → datacentre; else
-  adjacent-power / disguise-suspect / procedural-only); render it as a
-  filter and a muted row treatment — **never an ejection**, because
-  the adjacency layer and the suspect class are the investigation's
-  own design. 2.10-shaped: it changes what the list asserts about
-  every row, so it wants the measured fold-in before any styling.
+  (issue #159 holds the request; this is the spec, written for
+  handover — it decides the contested points rather than leaving them
+  to the implementer). The corpus keeps adjacency and
+  disguise-suspects deliberately, and the corridor split made the
+  consequence visible: the Clearstone gas generator, the Western
+  International Market substation and the Old Vinyl Factory now sit
+  in the list as their own rows, indistinguishable at a glance from
+  the campuses beside them.
+
+  *The fold-in already exists — reuse it, do not reinvent it.* The
+  clustering resolves the two verdict generations in
+  `dcp/sites.py` (the `per_rubric`/`membership` CTE, currently at
+  lines 138–161): latest verdict per (application, rubric), where
+  rubric is `coalesce(raw_response->>'rubric','v1')`, and the folded
+  per-application verdict is `coalesce(dc_build_verdict,
+  v1_verdict)`. The comment above that SQL records why anything
+  simpler collapses the universe (2026-08-06, 1,046 → 629 mid-run).
+  Extract or mirror that CTE; a second, divergent fold-in is the
+  failure mode to avoid. Note the actual triage vocabularies —
+  dc_build: new_build, expansion_refurb, pre_application,
+  enabling_works, procedural, adjacent_power, unknown, not_dc; v1:
+  DC, adjacent, unknown, unrelated. (No `built` verdict exists at
+  triage level; an earlier note here said otherwise.)
+
+  *Class derivation*, over a site's live members' folded verdicts,
+  first match wins:
+  1. `datacentre` — any member in {new_build, expansion_refurb,
+     pre_application, enabling_works}, or a member whose only verdict
+     is v1 `DC`. Pre-application and enabling works are DC-positive
+     by decision: a site whose only application is a DC pre-app is a
+     datacentre site in the pipeline, which is what this
+     investigation is for.
+  2. `disguise suspect` — else any member with dc_build `unknown`,
+     which is the disguise-suspect class by the triage prompt's own
+     definition (dcp/triage.py, "unknown (disguise suspect: …)").
+  3. `adjacent power` — else any member `adjacent_power` (dc_build)
+     or `adjacent` (v1).
+  4. `procedural only` — everything left (procedural members,
+     unverdicted members).
+  The order asserts the least: a disguise suspect must not be
+  dismissed as adjacency ("unclear beats wrong"). Classes 2–4 are
+  never an ejection — the adjacency layer and the suspect class are
+  the investigation's own design.
+
+  *Where it lives*: a `dcp/` module in the shape of
+  `dcp/site_cohorts.py` — computed from the database at build time,
+  never stored back (it is derived and recomputable). Each site's
+  class carries its provenance: the member application_ref(s) and
+  folded verdict(s) that produced it, so every class is drillable.
+  Consumed by both exporters: reader (filter control on the sites
+  list, muted row treatment for classes 2–4, and a line in Site
+  details stating the class with its producing members), workbook
+  ("Site class" column), and a column on the DuckDB sites table.
+
+  *Verification*: re-measure the 2026-08-27 quick split (346
+  DC-positive / ~134 not, which ignored v1-era verdicts and used the
+  wrong DC-positive set) under the folded rule and put the measured
+  class counts in the PR; wording-pin tests for new reader text;
+  release-diff against the previous build before shipping.
+  2.10-shaped: it changes what the list asserts about every row.
 
 - **Replace "The rest of the package" block with a computed scale
   panel** (issue #166 holds the request; shape agreed with Luke
