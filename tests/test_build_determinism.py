@@ -34,8 +34,11 @@ refused was not built twice.
 
 from __future__ import annotations
 
+import difflib
+import hashlib
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -74,6 +77,31 @@ SELECT (SELECT count(*) FROM findings),
 """
 
 
+# The reader does not read the database alone. `_drive_folder_map`,
+# `_drive_application_map` and `_drive_findings_map` in
+# export_handover all read this JSON ledger from disk, and every Drive
+# link in the built page comes from it. `drive_sync` rewrites it once
+# per file while it runs, and a Postgres snapshot cannot pin a file —
+# so two builds either side of a sync read different ledgers and differ
+# for a reason that has nothing to do with query determinism.
+#
+# This is the best candidate for the single 2026-08-26 failure, which
+# the ROADMAP records as arriving "immediately after the Drive-id
+# work". Rather than assume, the test measures: if the ledger moves
+# between the two builds the comparison is void and says so, exactly as
+# the fingerprint above voids a comparison whose snapshot did not hold.
+DRIVE_LEDGER = ROOT / "data" / "exports" / ".drive_sync_state.json"
+
+
+def _ledger_fingerprint() -> str:
+    """What the ledger looked like, or 'absent'. Content, not mtime: a
+    sync that rewrites the file with the same bytes has not changed
+    what either build reads."""
+    if not DRIVE_LEDGER.exists():
+        return "absent"
+    return hashlib.sha256(DRIVE_LEDGER.read_bytes()).hexdigest()
+
+
 def _live_connection():
     url = os.environ.get("DATABASE_URL")
     if not url:
@@ -100,6 +128,50 @@ def _normalise(text: str) -> str:
     return _STAMP_RE.sub("generated <stamp>", text)
 
 
+# Where a failing run leaves its evidence. Under data/, so git ignores
+# it; a fixed path rather than a timestamped one, because the thing that
+# matters is that the next person knows where to look without having to
+# find a pytest tmp directory before it is recycled.
+FAILURE_DIR = ROOT / "data" / "exports" / "determinism_failure"
+
+
+def _keep_the_evidence(a: Path, b: Path, ta: str, tb: str) -> Path:
+    """Save both builds and their diff, and return where.
+
+    This test failed once, on 2026-08-26, and has passed every run
+    since. The detail of *which* lines differed was never captured,
+    because the failure message named a line and the builds went out
+    with pytest's tmp directory — so a rare failure taught us nothing
+    and we are still waiting for the next one. One reproduction has to
+    be enough (ROADMAP, the determinism item).
+    """
+    FAILURE_DIR.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(a, FAILURE_DIR / "a.html")
+    shutil.copy2(b, FAILURE_DIR / "b.html")
+    # The normalised text is what was actually compared, so it is what a
+    # person should diff; the raw builds are kept beside it because the
+    # stamp regex itself has been the bug before (see _STAMP_RE).
+    (FAILURE_DIR / "a.normalised.html").write_text(ta, encoding="utf-8")
+    (FAILURE_DIR / "b.normalised.html").write_text(tb, encoding="utf-8")
+    diff = difflib.unified_diff(ta.splitlines(), tb.splitlines(),
+                                "a.normalised.html", "b.normalised.html",
+                                n=2, lineterm="")
+    # Capped: a build is 27 MB and a diff of two of them can be most of
+    # that. The first few thousand lines have always been enough to see
+    # the shape, and an unbounded write here would be its own incident.
+    kept, truncated = [], False
+    for i, line in enumerate(diff):
+        if i >= 4000:
+            truncated = True
+            break
+        kept.append(line)
+    if truncated:
+        kept.append("… diff truncated at 4000 lines; "
+                    "diff the two .normalised.html files for the rest")
+    (FAILURE_DIR / "diff.txt").write_text("\n".join(kept), encoding="utf-8")
+    return FAILURE_DIR
+
+
 @pytest.mark.integration
 def test_two_builds_of_one_snapshot_are_identical(tmp_path):
     # The exporting transaction must stay open for as long as anyone
@@ -117,8 +189,17 @@ def test_two_builds_of_one_snapshot_are_identical(tmp_path):
 
         env = {**os.environ, db.SNAPSHOT_ENV: snapshot}
         a, b = tmp_path / "a.html", tmp_path / "b.html"
+        ledger_before = _ledger_fingerprint()
         _build(a, env)
         _build(b, env)
+        ledger_after = _ledger_fingerprint()
+        if ledger_before != ledger_after:
+            pytest.skip(
+                "the Drive ledger changed between the two builds "
+                f"({DRIVE_LEDGER}) — every Drive link in the page comes "
+                "from it, so the two builds had different inputs and "
+                "their diff proves nothing. Re-run when no drive_sync "
+                "is in flight.")
 
         # Seen through the snapshot from a fresh connection, the corpus
         # must read exactly as the holder saw it — or the import is not
@@ -143,11 +224,25 @@ def test_two_builds_of_one_snapshot_are_identical(tmp_path):
     la, lb = ta.splitlines(), tb.splitlines()
     differing = [i for i, (x, y) in enumerate(zip(la, lb)) if x != y]
     first = differing[0] if differing else min(len(la), len(lb))
+    where = _keep_the_evidence(a, b, ta, tb)
+    # Both builds and their diff are on disk before this message is
+    # composed: the message can be read once and lost, the files cannot.
+    shown = []
+    for i in differing[:3]:
+        shown.append(f"  line {i + 1}:\n"
+                     f"    a: {la[i][:200]}\n"
+                     f"    b: {lb[i][:200]}")
     pytest.fail(
         f"two builds of one snapshot differ on {len(differing)} line(s) "
-        f"(lengths {len(la)} vs {len(lb)}); first at line {first + 1}:\n"
-        f"  a: {la[first][:240] if first < len(la) else '<eof>'}\n"
-        f"  b: {lb[first][:240] if first < len(lb) else '<eof>'}")
+        f"(lengths {len(la)} vs {len(lb)}); first at line {first + 1}.\n"
+        + "\n".join(shown)
+        + f"\n  both builds and a unified diff kept in: {where}"
+        + "\n  (a.html / b.html as built, *.normalised.html as compared, "
+          "diff.txt)"
+        # Said explicitly so a future failure is not mis-diagnosed as
+        # the ledger when the ledger has been ruled out.
+        + "\n  the Drive ledger did NOT move between the builds, so the "
+          "difference is in the build itself.")
 
 
 @pytest.mark.integration
@@ -193,3 +288,76 @@ def test_only_the_stamp_is_time_dependent():
     line = src[:uses[0]].count("\n") + 1
     context = src.splitlines()[line - 1]
     assert "generated" in context, f"the clock read at line {line} is not the stamp: {context!r}"
+
+
+def test_the_failure_path_keeps_what_the_next_person_needs(tmp_path, monkeypatch):
+    """The evidence-keeping runs on the rare failure, so it cannot wait
+    for the rare failure to be tested. A handler that has never run is
+    the same trap as a guard that cannot see: this test exercises it
+    with two builds that differ by one line.
+    """
+    dest = tmp_path / "kept"
+    monkeypatch.setattr(
+        sys.modules[__name__], "FAILURE_DIR", dest, raising=True)
+    a, b = tmp_path / "a.html", tmp_path / "b.html"
+    ta = "<p>one</p>\n<p>two</p>\n<p>three</p>\n"
+    tb = "<p>one</p>\n<p>TWO</p>\n<p>three</p>\n"
+    a.write_text(ta, encoding="utf-8")
+    b.write_text(tb, encoding="utf-8")
+
+    where = _keep_the_evidence(a, b, ta, tb)
+
+    assert where == dest
+    for name in ("a.html", "b.html", "a.normalised.html",
+                 "b.normalised.html", "diff.txt"):
+        assert (dest / name).exists(), f"{name} was not kept"
+    assert (dest / "a.html").read_text(encoding="utf-8") == ta
+    diff = (dest / "diff.txt").read_text(encoding="utf-8")
+    assert "-<p>two</p>" in diff and "+<p>TWO</p>" in diff, diff
+
+
+def test_a_vast_diff_is_capped_rather_than_written_whole(tmp_path, monkeypatch):
+    """A reader build is ~27 MB. Writing an unbounded diff of two of them
+    would be its own incident, so the cap is asserted rather than
+    trusted."""
+    dest = tmp_path / "kept"
+    monkeypatch.setattr(
+        sys.modules[__name__], "FAILURE_DIR", dest, raising=True)
+    a, b = tmp_path / "a.html", tmp_path / "b.html"
+    ta = "\n".join(f"<p>{i}</p>" for i in range(9000))
+    tb = "\n".join(f"<p>x{i}</p>" for i in range(9000))
+    a.write_text(ta, encoding="utf-8")
+    b.write_text(tb, encoding="utf-8")
+
+    _keep_the_evidence(a, b, ta, tb)
+
+    lines = (dest / "diff.txt").read_text(encoding="utf-8").splitlines()
+    assert len(lines) <= 4001, len(lines)
+    assert "truncated" in lines[-1]
+    # The whole builds are still there, so nothing is actually lost.
+    assert (dest / "a.normalised.html").read_text(encoding="utf-8") == ta
+
+
+def test_the_ledger_fingerprint_is_content_not_mtime(tmp_path, monkeypatch):
+    """A sync that rewrites the ledger with identical bytes has not
+    changed what either build reads, and must not void a comparison —
+    otherwise the guard turns every concurrent sync into a skip and the
+    determinism check quietly stops running at all.
+    """
+    import time
+    led = tmp_path / ".drive_sync_state.json"
+    monkeypatch.setattr(sys.modules[__name__], "DRIVE_LEDGER", led,
+                        raising=True)
+
+    assert _ledger_fingerprint() == "absent"
+
+    led.write_text('{"folders": {"a/sites": "ID1"}}', encoding="utf-8")
+    first = _ledger_fingerprint()
+    assert first != "absent"
+
+    time.sleep(0.01)
+    led.write_text('{"folders": {"a/sites": "ID1"}}', encoding="utf-8")
+    assert _ledger_fingerprint() == first, "same bytes must fingerprint the same"
+
+    led.write_text('{"folders": {"a/sites": "ID2"}}', encoding="utf-8")
+    assert _ledger_fingerprint() != first, "changed bytes must be seen"
