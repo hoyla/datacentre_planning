@@ -924,9 +924,10 @@ Deferred consciously. Return when journalism need warrants.
 
 None is abandoned; each is a known, scoped piece of work.
 
-- **The acquisition tail.** 31 browser-routed applications, 20 across
-  bespoke portals, 13 genuinely hard — a slow process needing a human at
-  the keyboard, and not worth holding the release for.
+- **The acquisition tail.** Counts superseded on 2026-08-27 — see
+  "Phase 2 — the tail of the collecting" above for what dissolved and
+  what the sweep found; the honest residue is a query on
+  `acquisition_outcome` after it completes.
 - **Scanned-page orientation detection — closed on evidence, not done.**
   The theory was that councils scan sideways and `--psm 3` misses it. The
   231 documents that OCR'd to nothing were the obvious test cohort, and
