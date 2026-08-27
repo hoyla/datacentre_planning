@@ -859,6 +859,19 @@ For this release specifically, three things belong in that note:
 - **`git add` failing with "did not match any files" means the file is on
   another branch.** Do not drop it from the commit; go and find it. That
   is how `sweep_null_capacity.py` went missing for six hours.
+- **A lock error or a `.wal` beside a DuckDB file means a writer may be
+  ALIVE — check before touching anything.** `lsof <file>` names the
+  process holding it; if one exists, wait for it, and if none does, open
+  the file with duckdb so the WAL is replayed and merged — deleting the
+  WAL discards committed work, and deleting "the stale file" can pull it
+  out from under a running export. Both happened on 2026-08-27, minutes
+  apart, to the same 2.9 build: the lock the release diff hit was the
+  export still writing, and the "stale" WAL removed to clear it was
+  live. `export_duckdb.py` now builds to a `.building` sibling and
+  renames on completion, so a database at its final name is finished by
+  construction and a `.building` file says exactly what it is — but the
+  check-for-a-writer habit is the general form, and it applies to
+  anything a lock protects.
 ### Off the chain: the notebook bundle — optional, local
 
 ```sh

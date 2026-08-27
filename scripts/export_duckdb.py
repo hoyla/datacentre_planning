@@ -304,10 +304,18 @@ def main() -> None:
         f"data/exports/dc_build_{dt.date.today().isoformat()}.duckdb"))
     args = ap.parse_args()
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    if args.out.exists():
-        args.out.unlink()
+    # Build to a `.building` sibling and rename on completion — the same
+    # contract build_drive_staging.py adopted on 2026-08-26 — so a
+    # database at the target path is by construction a finished one.
+    # Before this, a half-written file sat at the final name with a
+    # `.wal` beside it for the whole build, and on 2026-08-27 that pair
+    # was twice mistaken for debris and deleted while the export was
+    # still writing. A leftover `.building` now says exactly what it is.
+    building = args.out.with_name(args.out.name + ".building")
+    if building.exists():
+        building.unlink()
 
-    con = duckdb.connect(str(args.out))
+    con = duckdb.connect(str(building))
     counts: dict[str, int] = {}
     with db.connect() as pg:
         for name, sql in TABLES.items():
@@ -520,6 +528,9 @@ def main() -> None:
                          "withdrawn assertions kept as history."),
     ])
     con.close()
+    # A clean close leaves no .wal; the swap is the last act, so a
+    # crash anywhere above leaves the target untouched.
+    building.replace(args.out)
 
     size_mb = args.out.stat().st_size / 1e6
     print(f"wrote {args.out} ({size_mb:.1f} MB)")
