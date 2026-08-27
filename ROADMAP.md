@@ -660,19 +660,18 @@ HISTORY.)
   calls, not the ledger writes. Found mid-release 2026-08-27 and
   deliberately not patched mid-run.
 
-- **`SAMPLE_SITES` names a dissolved key, and readings have no
-  render-time freshness guard.** Both found 2026-08-27. `SITE-EN0110030`
-  in `scripts/machine_reading_openai.py` stopped being a site when the
-  Wapseys key dissolved into `PTNO-12913776`; its sample slot now
-  generates a reading against zero documents that renders nowhere —
-  one wasted model call per refresh until the entry is repointed. And
+- **Readings have no render-time freshness guard.**
   `mreading.load_latest` returns the newest stored reading per site
   key with no check that the site's input still matches — the
   input-hash discipline exists only at generation. Rendering guards
   against a reading whose documents or membership have moved since it
   was written would be the belt to generation's braces; today the only
   protection is re-running the sample before a release, which is a
-  step someone has to remember.
+  step someone has to remember. (The dissolved `SITE-EN0110030` sample
+  slot this item also carried was repointed to `PTNO-12913776` on
+  2026-08-27; readings submission now also defers partly-read sites —
+  Luke's completeness rule — so the guard's remaining gap is drift
+  *after* generation, not coverage at it.)
 
 - **`test_two_builds_of_one_snapshot_are_identical` failed once and has
   not since.** Seen 2026-08-26 during a full-suite run, immediately
