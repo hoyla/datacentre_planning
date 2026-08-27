@@ -13,10 +13,10 @@ Six sheets, in the order a new reader meets them:
 - **Applications** — one row per member application, linked by site_key.
 - **Energy projects** — the NSIP energy layer: nationally significant
   generation/transmission projects, ranked by distance to the nearest
-  data-centre site. A different unit of analysis, kept in the same
+  datacentre site. A different unit of analysis, kept in the same
   workbook because the site rows point into it.
 - **External aggregates** — regulators' and network operators' published
-  aggregate figures on data centre power demand, presented beside — and
+  aggregate figures on datacentre power demand, presented beside — and
   deliberately never joined to — the planning-derived rows. They measure
   different quantities from planning documents, which is itself the
   point: the sheet shows what each side can and cannot see.
@@ -455,7 +455,7 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "How the site entered the universe, and therefore what kind of "
      "evidence stands behind it. Five values, from dcp/sites.py: "
      "**both** — the cluster holds at least one planning application in "
-     "the data-centre universe AND a Barbour ABI project record, so two "
+     "the datacentre universe AND a Barbour ABI project record, so two "
      "independent sources agree the site exists. "
      "**ours_only** — planning applications we found and classified, with "
      "no matching Barbour project. Those applications arrived by several "
@@ -778,7 +778,7 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "between 2019 and 2024, for the site's local authority and for "
      "Great Britain, from DESNZ sub-national electricity statistics "
      "(Open Government Licence v3). Large users — half-hourly-metered "
-     "non-domestic consumers — are the class data centres belong to, and "
+     "non-domestic consumers — are the class datacentres belong to, and "
      "DESNZ publishes it at local-authority level only: every per-MSOA "
      "row in the source carries zero half-hourly meters, so nothing "
      "finer exists. The figure describes the authority, not the site: an "
@@ -820,7 +820,7 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "capacity means the page states none, not that the project is small."),
     ("External aggregates", "All tables",
      "Aggregate figures published by Ofgem, NESO and UK Power Networks "
-     "about data centre power demand, presented beside the planning-"
+     "about datacentre power demand, presented beside the planning-"
      "derived sheets and deliberately never joined to them: the sources "
      "measure different quantities (contracted grid headroom, developer "
      "survey responses, metered draw), none of which is the quantity a "
@@ -830,7 +830,7 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "transcribed. Two of the sources are anonymised by their "
      "publishers, and no attempt has been made to match them to sites."),
     ("External aggregates", "Size distribution table",
-     "Ofgem's Table 1 — the size distribution of the ~315 data centre "
+     "Ofgem's Table 1 — the size distribution of the ~315 datacentre "
      "projects holding ~73 GW of contracted connection offers in the GB "
      "demand queue at June 2025 — beside the count of sites in this "
      "workbook whose planning documents yield a figure in the same "
@@ -1631,7 +1631,7 @@ def main() -> None:
             c.fill = PatternFill("solid", fgColor="DDDDDD")
 
     _agg_title("External aggregates: what the regulator and network "
-               "operators publish about data centre power demand")
+               "operators publish about datacentre power demand")
     ws.append(["These figures are presented beside the planning-derived "
                "sheets and deliberately never joined to them. The sources "
                "measure different quantities — the first table says what "
@@ -1703,7 +1703,7 @@ def main() -> None:
          "(an inference, not a disclosure)",
          n_by_basis.pop(("Estimated from floorspace", None), 0)),
         ("Readable documents read in full; no capacity or floorspace "
-         "disclosed — for a data centre, itself notable",
+         "disclosed — for a datacentre, itself notable",
          n_by_basis.pop(("No capacity disclosed", True), 0)),
         ("No capacity disclosed so far; reading incomplete, so the "
          "absence is provisional",

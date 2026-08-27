@@ -143,7 +143,10 @@ class TestOriginRoutes:
 
     def test_explain_covers_the_labels_it_is_given(self):
         note = origin.explain(["Keyword search"])
-        assert "data-centre language" in note
+        # "datacentre", one word: the chrome spelling agreed in issue
+        # #161; the search itself used the two-word form and the module
+        # docstring still says so.
+        assert "datacentre language" in note
         assert origin.explain([]) == ""
 
 

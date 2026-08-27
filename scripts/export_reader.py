@@ -464,10 +464,10 @@ SITE_ORIGIN = {
     "both": ("The planning sweep and Barbour",
              "found independently in both, and merged"),
     "ours_only": ("The planning sweep",
-                  "one or more applications we triaged as a data centre; "
+                  "one or more applications we triaged as a datacentre; "
                   "Barbour has no project here"),
     "unlocatable": ("The planning sweep, without coordinates",
-                    "triaged as a data centre, but no application in it "
+                    "triaged as a datacentre, but no application in it "
                     "carries a map position, so it cannot be clustered "
                     "by proximity or drawn on the map"),
     "barbour_only": ("Barbour only",
@@ -476,7 +476,7 @@ SITE_ORIGIN = {
                      "have been found"),
     "barbour_covered": ("Barbour, with applications alongside",
                         "a Barbour project whose nearby applications were "
-                        "not themselves triaged as data centres"),
+                        "not themselves triaged as datacentres"),
 }
 
 
@@ -1205,6 +1205,9 @@ table.apps td{padding:5px 9px 5px 0}
 h4.sub-head{margin:18px 0 4px;font-size:13px;text-transform:uppercase;
   letter-spacing:.5px;color:var(--mut)}
 details.apps-d{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+/* The applications table is wider than the page allows; it scrolls
+   inside its band rather than spilling over the layout (issue #156). */
+details.apps-d .appscroll{overflow-x:auto;min-width:0}
 details.apps-d>summary{cursor:pointer;font-size:14px;color:var(--accent);
   list-style:none;display:inline-block;padding:3px 0}
 details.apps-d>summary::-webkit-details-marker{display:none}
@@ -3705,7 +3708,6 @@ def main() -> int:
   {claims_html}
   <div class="box"><h4>What the documents say</h4>
    {findings_html}</div>
-  {f'''<details class="apps-d"><summary>Show the {len(apps)} planning application{'' if len(apps)==1 else 's'} for this site</summary>{apps_html}</details>''' if apps else apps_html}
  </div>
  <div class="col-computed">
   {reading_html}
@@ -3779,6 +3781,14 @@ def main() -> int:
   {ctx_html}
  </div>
 </div>
+<!-- Below BOTH columns, not the last item of the left one (issue
+     #156). The applications table is wider than a column and used to
+     overflow the left column to full width — which read as designed
+     until a site with a short left column put the right column's boxes
+     level with it, and the spill collided with them. A full-width band
+     after the grid is the layout the overflow was accidentally
+     imitating, and the scroll wrapper keeps the wide table inside it. -->
+{f'''<details class="apps-d"><summary>Show the {len(apps)} planning application{'' if len(apps) == 1 else 's'} for this site</summary><div class="appscroll">{apps_html}</div></details>''' if apps else apps_html}
 </td></tr>""")
 
     # Barbour-recorded projects with no planning application yet. They are
@@ -4561,7 +4571,7 @@ def main() -> int:
         for d, q in _lfl)
 
     operators_html = f"""
- <p class="lede">A data centre's size is stated to at least five different audiences: the
+ <p class="lede">A datacentre's size is stated to at least five different audiences: the
  planning authority, the grid operator, the auditors, its customers and the environmental
  regulator. This page puts those figures beside each other, one row per operator. The
  regulator's column is the odd one out — it is the thermal rating of the standby generator
@@ -4610,10 +4620,10 @@ def main() -> int:
  the editorial judgement applied afterwards, to structured facts.</p>
  <ul class="m">
   <li><b>Keyword search</b> across council planning registers via the PlanIt index —
-   data-centre language in the application description.</li>
+   datacentre language in the application description.</li>
   <li><b>Operator watch-list</b> — searches for named developers, operators and advisers.</li>
   <li><b>Spatial sweeps</b> around known sites, which catch the substations, grid connections
-   and enabling works that never mention a data centre.</li>
+   and enabling works that never mention a datacentre.</li>
   <li><b>Family links</b> — the parents and children of applications already held.</li>
   <li><b>Barbour ABI</b> project intelligence, reconciled against the planning universe in
    both directions.</li>
@@ -4726,7 +4736,7 @@ def main() -> int:
  <p class="m">On 29 July 2026 Ofgem published its
  <a href="{esc(_ofgem_src.url)}" target="_blank" rel="noopener">Curate consultation</a> on
  demand connections reform. Its paragraph 2.8 states that approximately 73&nbsp;GW of the GB
- demand connection queue is data centres — around 315 projects holding contracted connection
+ demand connection queue is datacentres — around 315 projects holding contracted connection
  offers of 1&nbsp;MW to 1,500&nbsp;MW — against a 2025/26 peak GB electricity demand of
  45&nbsp;GW. The project-level data behind those aggregates, NESO's mandatory Information
  Request Notice of March 2026, is not published. What can be compared is the shape of the
@@ -4748,12 +4758,12 @@ def main() -> int:
  asymmetry at the top end is the finding: the larger the project, the more likely its power
  figure exists only in the connection queue.</p>
  <p class="m">Two more of the consultation's findings bear directly on this dataset. At
- least 9&nbsp;GW of queue projects reclassified themselves from battery to data centre
+ least 9&nbsp;GW of queue projects reclassified themselves from battery to datacentre
  between May 2024 and August 2025 (paragraph 2.10), so any register that classifies projects
- by declared technology undercounts data centres — the planning-side counterpart is the
+ by declared technology undercounts datacentres — the planning-side counterpart is the
  naming-invisibility cases this corpus tracks. And NESO's voluntary
  <a href="{esc(_cfi_src.url)}" target="_blank" rel="noopener">call for input</a> on the
- demand queue found only 32% of data centre projects had secured an off-taker, and 71 of 148
+ demand queue found only 32% of datacentre projects had secured an off-taker, and 71 of 148
  reported financial commitment with FID evidence — NESO's own caveat: developer intent, not
  confirmed deliverability. These aggregates are deliberately not joined to the sites here:
  the sources measure different quantities, and the anonymised ones cannot be matched to a
@@ -4762,12 +4772,12 @@ def main() -> int:
  <p class="m">Consumption is the measurement the queue cannot make. DESNZ's
  <a href="{esc(_desnz_src.url)}" target="_blank" rel="noopener">sub-national electricity
  statistics</a> record what large users actually drew: Half-Hourly-metered non-domestic
- consumption — the meter class data centres belong to — published at local-authority level
+ consumption — the meter class datacentres belong to — published at local-authority level
  only, because below that level the source carries no half-hourly meters at all. Between
  2019 and 2024 that consumption fell {abs(_d_nat)}% nationally, while rising
  {_d_slough}% in Slough and {_d_hillingdon}% in Hillingdon — the two largest absolute rises
  of any GB local authority. The nulls are as visible as the rises: Tower Hamlets, holding
- the Docklands cluster, fell {abs(_d_towerhamlets)}%, and Hertsmere, with data-centre sites
+ the Docklands cluster, fell {abs(_d_towerhamlets)}%, and Hertsmere, with datacentre sites
  of its own in this dataset, fell {abs(_d_hertsmere)}%. Each site panel carries its own
  authority's change beside the national one where the authority maps cleanly
  ({ctx_mapped} of {n_sites} sites; the remainder span more than one authority, sit outside
@@ -4882,7 +4892,7 @@ def main() -> int:
  and names any fleet the documents disclose by count and rating — without multiplying.
  Across the 47 sites stating both figures the ratio's median is 0.75 and the modal case is
  below half, so no band of it diagnoses the engineering; it says where to look.</p>
- <p class="m"><b>Energy parks with a data centre attached.</b> Several records pair a data
+ <p class="m"><b>Energy parks with a datacentre attached.</b> Several records pair a data
  centre with generation or storage far larger than the computing load — the scheme's centre
  of gravity is arguably the power project, not the building. Worth deciding, per site, which
  story is being told.</p>
@@ -5112,7 +5122,7 @@ def main() -> int:
 </div>
 
 <section id="view-start" class="view on"><div class="wrap wide">
- <p class="lede">Every planning application we can find for a UK data centre or its
+ <p class="lede">Every planning application we can find for a UK datacentre or its
  supporting power infrastructure, the documents councils published with them, and what those
  documents say. Assembled from council planning registers, the Planning Inspectorate's
  national infrastructure register, and Barbour ABI project intelligence.</p>
@@ -5333,7 +5343,7 @@ def main() -> int:
       <td class="help">Documents are held and readable; nothing has been extracted yet.</td></tr>
  </tbody></table>
  <p class="help">A further {n_outside:,} documents sit outside these figures, on applications
- that were retrieved, reviewed and judged not to be data centres. They stay in the corpus —
+ that were retrieved, reviewed and judged not to be datacentres. They stay in the corpus —
  counter-evidence is part of the record — but they are not part of this dataset's
  {n_docs:,}.</p>
 
@@ -5403,7 +5413,7 @@ def main() -> int:
 
 <section id="view-energy" class="view">
 <div class="controls"><span class="count">{len(nsip)} nationally significant energy projects,
- nearest data-centre site first. Metadata only — no project documents fetched.</span></div>
+ nearest datacentre site first. Metadata only — no project documents fetched.</span></div>
 <table id="tbl-energy"><thead><tr><th>Project</th>
  <th>{dl("Energy projects","All columns","Stated capacity")}</th><th>Type</th>
  <th>Stage</th><th>Applicant</th><th>Region</th><th data-num="1">Nearest site</th>
@@ -5423,7 +5433,7 @@ def main() -> int:
   <button type="button" id="mreset" class="toggle">Fit the map to these sites</button>
   <p class="count" id="mapcount"></p>
   <div id="mapkey">
-   <div><span class="pin s"></span> data-centre site</div>
+   <div><span class="pin s"></span> datacentre site</div>
    <div><span class="pin e"></span> energy project</div>
    <div id="mapcohortkey" hidden><span class="pin s inco"></span>
     in <span id="mapcohortname"></span></div>
