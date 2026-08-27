@@ -717,18 +717,40 @@ HISTORY.)
   calls, not the ledger writes. Found mid-release 2026-08-27 and
   deliberately not patched mid-run.
 
-- **Readings have no render-time freshness guard.**
-  `mreading.load_latest` returns the newest stored reading per site
-  key with no check that the site's input still matches — the
-  input-hash discipline exists only at generation. Rendering guards
-  against a reading whose documents or membership have moved since it
-  was written would be the belt to generation's braces; today the only
-  protection is re-running the sample before a release, which is a
-  step someone has to remember. (The dissolved `SITE-EN0110030` sample
-  slot this item also carried was repointed to `PTNO-12913776` on
-  2026-08-27; readings submission now also defers partly-read sites —
-  Luke's completeness rule — so the guard's remaining gap is drift
-  *after* generation, not coverage at it.)
+- **Readings are now checked for freshness, but not at render time —
+  the exact check costs more than a build (done 2026-08-27).**
+  `mreading.load_latest` returned the newest stored reading per site
+  key with no check that the site's input still matched; the
+  input-hash discipline existed only at generation. Measured on the
+  day: **4 of 258 rendered readings were already stale**, one of them
+  keyed to a site retired by that morning's merges.
+
+  Rebuilding one site's input to re-hash it costs **8.2 seconds** —
+  `select_pages` reads and scores every cached page — so verifying 258
+  readings would add about **35 minutes** to a build that takes ten.
+  Nothing cheaper is sound, either: `documents_read` and `pages_read`
+  are the only stored numbers that could be compared, and recomputing
+  *them* also needs `select_pages`. So the check is split by what each
+  half costs.
+
+  **Cheap half, every build.** `load_latest(live_only=True)` drops a
+  reading whose site key is no longer live — free, exact, and the case
+  that matters most, since the reading describes a record a reporter
+  cannot open.
+
+  **Exact half, offline.** `scripts/verify_reading_freshness.py`
+  rebuilds every input, compares the hash, and records the verdict
+  append-only: a site whose input has moved gets a *new* row carrying
+  the current hash, no reading, and a withheld reason, so the reader
+  shows the panel as withheld by the path a gate refusal already
+  takes. The marker is written under the model tag `freshness-check`
+  so it can never occupy the unique key a genuine reading of that same
+  input would need. Re-runs are no-ops.
+
+  What remains: deciding where the offline check belongs in the
+  release chain — it is not yet in the runbook, because 35 minutes is
+  a real cost and whether it runs per release or per batch is an
+  editorial call, not a build one.
 
 - **`test_two_builds_of_one_snapshot_are_identical` failed once and has
   not since.** Seen 2026-08-26 during a full-suite run, immediately

@@ -438,3 +438,88 @@ def test_a_nul_anywhere_in_a_reading_is_stripped_at_the_database_boundary():
     assert quote["document_id"] == 7, "non-strings pass through untouched"
     assert reading["sections"]["what_the_documents_say"][0]["quotes"][0][
         "quote"].endswith("\x00"), "the input is not mutated"
+
+
+# --- freshness: a reading has to still describe its site --------------
+
+class _FakeCursor:
+    """Enough of a cursor for load_latest: answers the two queries it
+    runs, in the order it runs them."""
+
+    def __init__(self, live, rows):
+        self._live, self._rows, self._result = live, rows, []
+
+    def execute(self, sql, params=None):
+        self._result = (
+            [(k,) for k in self._live] if "FROM sites" in sql else self._rows)
+
+    def fetchall(self):
+        return self._result
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+
+class _FakeConn:
+    def __init__(self, live, rows):
+        self._live, self._rows = live, rows
+
+    def cursor(self):
+        return _FakeCursor(self._live, self._rows)
+
+
+def _row(site_key, reading=None, why=None):
+    return (site_key, "gpt-5", "reading-1.2", reading, 5, 20,
+            "2026-08-27", "gate-1.0", why)
+
+
+def test_a_reading_for_a_retired_site_is_not_returned():
+    """Three site keys were retired by merges on 2026-08-27, and the
+    reading written for each describes a record that no longer exists.
+    Rendering it would attach a machine's prose to a site a reporter
+    cannot open."""
+    conn = _FakeConn(live={"PTNO-1"},
+                     rows=[_row("PTNO-1", {"sections": {}}),
+                           _row("SITE-GONE/1", {"sections": {}})])
+    passed, withheld = mr.load_latest(conn)
+    assert set(passed) == {"PTNO-1"}
+    # Not surfaced as a withheld reason either: there is no page left to
+    # carry one.
+    assert "SITE-GONE/1" not in withheld
+
+
+def test_the_liveness_guard_can_be_turned_off_for_an_audit():
+    conn = _FakeConn(live={"PTNO-1"},
+                     rows=[_row("PTNO-1", {"sections": {}}),
+                           _row("SITE-GONE/1", {"sections": {}})])
+    passed, _ = mr.load_latest(conn, live_only=False)
+    assert set(passed) == {"PTNO-1", "SITE-GONE/1"}
+
+
+def test_a_withheld_row_still_reaches_the_page_that_shows_the_reason():
+    conn = _FakeConn(live={"PTNO-1"},
+                     rows=[_row("PTNO-1", None, mr.STALE_REASON)])
+    passed, withheld = mr.load_latest(conn)
+    assert not passed
+    assert withheld["PTNO-1"] == mr.STALE_REASON
+
+
+def test_the_freshness_marker_cannot_occupy_a_real_reading_s_key():
+    """The marker is stored under its own model tag. Were it stored
+    under the reading's model, the unique key
+    (site_key, model, prompt_version, input_hash, gate_version) it took
+    would be exactly the one a genuine reading of that same input needs,
+    and ON CONFLICT DO NOTHING would silently drop the real reading."""
+    assert mr.FRESHNESS_MODEL not in ("gpt-5", "claude-sonnet-5")
+    assert "check" in mr.FRESHNESS_MODEL
+
+
+def test_the_two_freshness_reasons_say_which_happened():
+    """A merged site and a moved document are different facts, and a
+    reporter asking why a panel is blank should be told which."""
+    assert mr.RETIRED_REASON != mr.STALE_REASON
+    assert "merged" in mr.RETIRED_REASON
+    assert "changed" in mr.STALE_REASON
