@@ -107,10 +107,11 @@ aliases:
     source: |
       Reporter reference (LH): add Greystoke  
 
-  - site_key: PTNO-12727863 
+  - site_key: PTNO-12727863
     alias: CWL2 Data Centre Campus - St Athan (Vantage)
     source: |
-      Reporter reference (LH): add Greystoke  
+      Reporter reference (LH): add St Athan and Vantage — the group
+      link is VDC CWL21's, recorded in organisation_aliases.yaml.
 
 
      
