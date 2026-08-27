@@ -1194,7 +1194,12 @@ def main() -> None:
         # in the priors fails the build, per the loader's contract.
         from dcp import site_aliases as _sal
         _site_aliases = _sal.load_aliases()
-        _sal.require_live(_site_aliases, {r[0] for r in site_rows})
+        # Pre-planning rows carry aliases too, and their pseudo keys are
+        # not in `sites`; the liveness set is the rendered universe.
+        cur.execute(BARBOUR_ONLY_SQL)
+        _barbour_keys = {f"PTNO-{r[0]}" for r in cur.fetchall()}
+        _sal.require_live(_site_aliases,
+                          {r[0] for r in site_rows} | _barbour_keys)
         # What kind of site each row is (issue #159), derived from both
         # generations of triage verdict. Never an ejection: every site
         # keeps its row, and the column is what lets a reporter filter

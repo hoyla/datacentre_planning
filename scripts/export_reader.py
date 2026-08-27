@@ -2341,12 +2341,20 @@ def main() -> int:
         # renders under the misleading derived name again.
         from dcp import site_aliases as _sal
         _aliases = _sal.load_aliases()
-        _sal.require_live(_aliases, {r[0] for r in site_rows})
         derived_names = {r[0]: r[2] for r in site_rows if r[0] in _aliases}
         site_rows = [(r[0], r[1], _aliases.get(r[0], r[2]), *r[3:])
                      for r in site_rows]
         cur.execute(hv.APP_SQL); app_rows = cur.fetchall()
         cur.execute(hv.BARBOUR_ONLY_SQL); barbour_rows = cur.fetchall()
+        # A pre-planning row is a row a reporter reads, so it can carry
+        # an alias like any other — three do, added the day the Segro
+        # rows were looked at. Its key is not in `sites` (there is no
+        # site record yet), so liveness is checked against the rendered
+        # universe rather than the table: pseudo keys included, and the
+        # check therefore has to wait until they are known.
+        _preplanning_keys = {f"PTNO-{r[0]}" for r in barbour_rows}
+        _sal.require_live(_aliases,
+                          {r[0] for r in site_rows} | _preplanning_keys)
         cur.execute(hv.NSIP_SQL); nsip_rows = cur.fetchall()
         # Coverage, counted over the applications that belong to a live
         # site — the ones this page shows. The wider corpus also holds
@@ -2908,13 +2916,33 @@ def main() -> int:
         primary = _bare(prof.get("operator_primary"))
         end_user = _bare(prof.get("end_user"))
         applicant = _bare(prof.get("applicant_of_record"))
-        badge = group or primary
+        # Where the applicant came from decides how to read it. Barbour
+        # states a list of organisations; the documents state one party
+        # and then its contact details — "Slough Holdings UK Limited,
+        # 103 Mount Street, London, W1K 2TJ" — so only the first field
+        # of a document-sourced applicant is a name, and splitting the
+        # rest out would put a postcode on the row as an operator.
+        from_documents = (prof.get("applicant_of_record") or "").strip(
+            ).endswith("(documents)")
+        applicant_first = applicant.split(",")[0].strip()
+        # The column said "not established" whenever Barbour named no
+        # operator — on 158 live sites whose own page named an applicant
+        # of record read from the documents. The page knew more than the
+        # column that indexes it, which is the Segro fault in reverse
+        # (Luke, 2026-08-27). An applicant is a weaker claim than an
+        # operator, so it is used only when nothing stronger exists and
+        # the tooltip names its source.
+        badge = group or primary or applicant_first
         if not badge:
             return {"filter_key": "", "sort": "zzz",
                     "cell": '<span class="q">not established</span>'}
-        source = ("a confirmed alias group" if group else
-                  "Barbour's end user" if end_user else
-                  "Barbour's client")
+        if group:
+            source = "a confirmed alias group"
+        elif primary:
+            source = "Barbour's end user" if end_user else "Barbour's client"
+        else:
+            source = ("the site's documents" if from_documents
+                      else "Barbour's client")
         # Every operator Barbour states for the site, so that a chip for
         # any of them finds the site. A site record that covers an estate
         # holds several — the Slough Trading Estate record carries
@@ -2947,7 +2975,10 @@ def main() -> int:
         # "one organisation, once" true of two spellings of one name;
         # this makes it true of a group and its member.
         operators, _seen = [badge], {_fkey(badge)}
-        for n in (end_user or applicant).split(","):
+        # Barbour's end user is a list, and so is a Barbour applicant; a
+        # document-sourced applicant is one name followed by an address.
+        shared = end_user or (applicant_first if from_documents else applicant)
+        for n in shared.split(","):
             n = n.strip()
             k = _fkey(n)
             if n and k not in _seen:
@@ -3918,6 +3949,10 @@ def main() -> int:
         if key.upper() in existing:
             continue
         n_barbour += 1
+        # Same contract as a live site: the alias displays, the derived
+        # title stays visible on the row's own page.
+        derived_title = title
+        title = _aliases.get(key, title)
         _, cap_label = site_profile.capacity_status(
             pre_application=True, docs_held=0, docs_read=0,
             power_value_mw=None, power_basis="")
@@ -3996,7 +4031,10 @@ def main() -> int:
    f'<span class="classbadge" title="{esc(_pcls.display_description)}">'
    f'{esc(_pcls.label)}</span>'}{esc(prop.title_case(title or key))}</h2>
   <p class="siteident">{esc(authority or '')}{" · " if address else ""}{esc(trim(address, 90))}
-   · <code>{esc(key)}</code> · Barbour ABI project, no application yet</p>
+   · <code>{esc(key)}</code> · Barbour ABI project, no application yet</p>{
+   f'<p class="siteident">Barbour ABI titles this project '
+   f'&#8220;{esc(derived_title)}&#8221;; the name above is a reporter&#8217;s.</p>'
+   if derived_title != title else ''}
   <p class="sitelinks"><span><a href="#site-{esc(key)}">Link to this site</a></span></p>
  </div>
  <div class="banner" style="margin-top:0"><b>No application submitted yet.</b>
