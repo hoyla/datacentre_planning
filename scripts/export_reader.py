@@ -4017,6 +4017,25 @@ def main() -> int:
    </dl>
    <p class="help provenance">Barbour ABI data is licensed and must be credited
     in published output.</p></div>
+  <!-- The row's "Who's behind it" column is computed for these rows from
+       Barbour's role blocks (bprof, above), but the panel used to show
+       none of it: the table asserted "Segro" on three Ipswich Road /
+       Buckingham Avenue / Ajax Avenue rows and the page a reader clicked
+       through to never mentioned Segro (Luke, 2026-08-27). A column the
+       page cannot substantiate is the one thing provenance forbids, so
+       the same fields the column reads are stated here. -->
+  <div class="box parties"><h4>Who is behind it</h4>
+   <dl class="kv">
+    <dt>End user</dt><dd>{esc(bprof.get('end_user')) or NOT_STATED}
+     {f'<span class="help">group: {esc(bprof["operator_group"])}</span>'
+       if bprof.get('operator_group') else ''}</dd>
+    <dt>Applicant of record</dt><dd>{esc(bprof.get('applicant_of_record')) or NOT_STATED}</dd>
+    <dt>Advisers</dt><dd>{esc(bprof.get('advisers')) or NOT_STATED}</dd>
+    <dt>Planning authority</dt><dd>{esc(bprof.get('authority')) or NOT_STATED}</dd>
+   </dl>
+   <p class="help">Every name here is Barbour ABI's own role block for this
+    project, and nothing else: with no application there are no documents to
+    read, so there is no second source to agree or disagree with it.</p></div>
   </div>
   <div class="col-computed">
    <div class="box identity"><h4>Site details</h4>
