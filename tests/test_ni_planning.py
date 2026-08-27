@@ -68,3 +68,12 @@ class TestUnwrap:
         body, ext = ni_planning._unwrap(b"PK\x03\x04garbage", "abc.zip")
         assert body == b"PK\x03\x04garbage"
         assert ext == "zip"
+
+    def test_dedup_suffix_after_the_extension_is_stripped(self):
+        """The register names duplicate members "x.pdf(2)" — the dedup
+        suffix lands after the extension, and the first live fetch
+        stored a file called `<sha>.pdf(2)` before this was caught."""
+        body, ext = ni_planning._unwrap(
+            _zip_of({"abc.pdf(2)": b"%PDF-1.4 dup"}), "abc.zip")
+        assert body == b"%PDF-1.4 dup"
+        assert ext == "pdf"

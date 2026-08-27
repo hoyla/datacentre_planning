@@ -63,6 +63,17 @@ _HEADERS = {"Accept": "application/json", "TQ-Tenant": TQ_TENANT}
 
 _APP_ID_RE = re.compile(r"/application/(\d+)(?:[/?#]|$)")
 
+# The register names duplicate members "x.pdf(2)" — the dedup suffix
+# lands AFTER the extension, so Path.suffix reads ".pdf(2)" and the
+# stored file would carry an extension nothing downstream dispatches
+# on. Keep only the leading alphanumeric run.
+_EXT_RE = re.compile(r"[a-z0-9]+")
+
+
+def _ext_of(name: str) -> str:
+    m = _EXT_RE.match(Path(name).suffix.lstrip(".").lower())
+    return m.group(0) if m else "bin"
+
 
 def _is_ni_url(url: str | None) -> bool:
     return bool(url) and "planningsystemni.gov.uk" in url.lower()
@@ -81,7 +92,7 @@ def _unwrap(body: bytes, guid_name: str) -> tuple[bytes, str]:
     and logged so a person can look.
     """
     if not body.startswith(b"PK"):
-        return body, Path(guid_name).suffix.lstrip(".").lower() or "bin"
+        return body, _ext_of(guid_name)
     try:
         with zipfile.ZipFile(io.BytesIO(body)) as zf:
             names = zf.namelist()
@@ -92,9 +103,9 @@ def _unwrap(body: bytes, guid_name: str) -> tuple[bytes, str]:
             inner = zf.read(names[0])
             if not inner:
                 return body, "zip"
-            return inner, Path(names[0]).suffix.lstrip(".").lower() or "bin"
+            return inner, _ext_of(names[0])
     except zipfile.BadZipFile:
-        return body, Path(guid_name).suffix.lstrip(".").lower() or "bin"
+        return body, "zip"
 
 
 def fetch_documents_for_application(
