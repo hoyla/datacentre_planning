@@ -233,15 +233,23 @@ alongside it.
   every row, so it wants the measured fold-in before any styling.
 
 - **A site's display name is the address of whichever application sorts
-  first**, which bears no relation to what anyone calls the place. The
-  Wapseys case is fixed by accident rather than design — the key
-  dissolved into `PTNO-12913776`, "SDC M40 CAMPUS - 300MW DATA CENTRE
-  CAMPUS" — but the defect stands and has now bitten twice more: West
-  Burton Power Station renders as "Land East Of Gainsborough Road
-  Bole", and the Blyth offshore-wind site as "Land North Of Blyth
-  Powerstation Cambois". A site nobody can find by its own name is a
-  site a reporter concludes is missing, which is exactly what happened
-  when the Guardian asked about Wapseys Wood.
+  first**, which bears no relation to what anyone calls the place
+  (issue #169 holds the request; this is the plan, and the design is
+  Luke's from that issue). The defect: West Burton Power Station
+  renders as "Land East Of Gainsborough Road Bole", the Blyth
+  offshore-wind site as "Land North Of Blyth Powerstation Cambois" — a
+  site nobody can find by its own name is a site a reporter concludes
+  is missing, which is what happened when the Guardian asked about
+  Wapseys Wood. The plan: a curated **site name alias** prior
+  (`data/priors/` yaml, keyed by site key, per-entry provenance, the
+  same shape as every other prior), stored beside the derived name and
+  never over it, per principle 3. Where an alias exists it displays in
+  every list, table, map card and workbook row; the derived default
+  stays visible only on the site's own page, so the record still shows
+  what it is built from. The workbook carries two columns — default
+  name and alias. Derivation stays untouched, so a re-materialise
+  cannot clobber a curated name and an alias survives the key it is
+  attached to.
 
 - **Northumberland Energy Park holds four unrelated schemes.**
   `PTNO-12785975` clusters 35 applications spanning the Blyth offshore
