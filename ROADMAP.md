@@ -209,45 +209,29 @@ alongside it.
   this table.** A count of held documents is a floor until the site's
   applications are measured and their shortfall is either refetched or
   stated.
-- **Site 61 is now the only campus conflation left, and the evidence
-  for splitting it is in hand.** `PTNO-12511337` holds 301 members
-  across the Hayes/Southall corridor. Two independent signals agree on
-  the boundaries, and neither is spatial: **Hillingdon's own reference
-  stem** groups applications by site, and **the applicant of record**
-  says who is building. They align exactly —
+- **The site 61 split is drawn; the materialise makes it real.** Ten
+  partitions covering all 293 live application members and 8 project
+  members of the Hayes/Southall corridor landed in
+  `data/priors/site_partitions.yaml` on 2026-08-27 — the evidence, the
+  one place the stem premise failed, and what the drawing turned up
+  (a CyrusOne campus, a Clearstone gas plant) are in HISTORY.
+  Preflighted against the live corpus: 7 new sites, 2 revived keys,
+  0 retiring, **0 orphaned claims**. What is left, in order:
 
-  | stem | apps | applicant of record | campus |
-  |---|---|---|---|
-  | 1331 | 186 | Barratt London / SEGRO | Former Nestlé factory, Hayes — mixed use, data centre included |
-  | 75111 | 57 | Ark Estates 2 / Ark UP4 / Ark Data Centres | Union Park, North Hyde Gardens |
-  | 38421 | 24 | Colt Data Centre Services / HDCI Hayes London | Hayes Bridge Retail Park, Tudor Works |
-  | 49261 | 5 | Marvell Developments LLC | Silverdale Industrial Estate |
-
-  Colt and Ark do not build as a joint venture (Luke, 2026-08-25), so
-  proximity is the only thing that ever joined them. All four are
-  partitions, and writing them is mechanical from the stems.
-
-  **Stem 1331 stays in the universe.** It was briefly characterised
-  here as housing that did not belong — from its applicant, Barratt
-  London, without reading a description. All 186 of its applications
-  name the use in full: "22,663sq.m (GEA) of commercial floorspace (Use
-  Classes B1c/B2/B8 and Data Centre (sui generis))", and one record
-  puts it at "approximately 28,700m2 (GFA) ... and ancillary office and
-  sui generis for a data centre". The stem carries 2,069
-  `power_generation` findings, 294 `power_grid`, 279 `power_demand` and
-  50 `cooling`. The `new_build` verdict on
-  `Hillingdon/1331/APP/2017/1883` is right; the 1,386 dwellings sit
-  beside a consented data centre rather than instead of one. Ejecting
-  the stem would have deleted that data centre from the corpus.
-
-  The lesson is worth more than the correction: **applicant identity
-  separates campuses and must never decide universe membership.** A
-  housebuilder's hybrid permission can contain a data centre, and this
-  one does.
-
-  Retiring alongside the split: the Ark "99 MW for Union Park" claim,
-  retired 2026-08-21 because site 61 was mostly somewhere else, becomes
-  matchable again the moment 75111 is its own site.
+  1. **Run the materialise** (after the partitions merge, per the
+     established sequencing). Site 61 keeps its key and becomes
+     genuinely Union Park at 59 applications.
+  2. **Re-match the Ark "99 MW for Union Park" claim**, retired
+     2026-08-21 because site 61 was mostly somewhere else. A person's
+     adjudication, now that the site is only Union Park.
+  3. **Adjudicate the Union Park SPV claims** held under `considered:`
+     in `companies-house-claims.yaml` (24/48/24 MW) — same person,
+     same sitting. Sites 59 and 5 still block the rest; see the SPV
+     section.
+  4. **The Drive staging tree re-partitions on the next rebuild** —
+     seven new site folders, members moving out of the Union Park
+     folder. `build_drive_staging.py` handles moves since 2026-08-26;
+     nothing to do beyond the normal runbook order.
 
 - **A site's display name is the address of whichever application sorts
   first**, which bears no relation to what anyone calls the place. The
@@ -521,13 +505,13 @@ not just this one. Three results worth carrying forward:
 
 Still open, and now better specified:
 
-5. **Site 61, 59 and 5 block six otherwise-good matches.** Union Park's
-   24/48/24 MW, Premier Park's £147.8m and the DataVita figures are
-   loaded as claims and deliberately left unmatched, because their site
-   records are over-merged clusters (site 61 holds 308 applications
-   across about six campuses). They are listed under `considered:` in
-   `companies-house-claims.yaml` with the reason; the partitions work is
-   what unblocks them.
+5. **Sites 59 and 5 still block four otherwise-good matches; site 61
+   no longer does.** Premier Park's £147.8m and the DataVita figures
+   stay under `considered:` in `companies-house-claims.yaml` because
+   their site records are over-merged clusters. Union Park's 24/48/24 MW
+   were held back for the same reason and that reason is gone — the
+   site 61 split is drawn (2026-08-27), so once the materialise runs
+   those three are a person's adjudication, not a blocked one.
 6. **Eleven names could not be resolved to a company**, listed under
    `unresolved:` in `companies-house-spvs.yaml` — including "Avalon DC
    Limited" and "BGO Code Propco Limited", both of which are somebody's
@@ -746,9 +730,9 @@ HISTORY.)
   end user or client. Confirming a group is what makes "Ark Estates 5
   Ltd" and "Ark Data Centres Ltd" one name, and what lets an
   organisation named only in a document reach the operator field at all.
-  The Hayes work (site 61, above) shows what a confirmed group is worth:
-  applicant of record separated four campuses cleanly where coordinates
-  could not.
+  The site 61 split (HISTORY, 2026-08-27) shows what a confirmed group
+  is worth: applicant of record separated ten campuses cleanly where
+  coordinates could not.
 
 ## Smaller things
 
@@ -1076,17 +1060,13 @@ None is abandoned; each is a known, scoped piece of work.
   Telehouse; site 59 holds Vantage and Colt as well as Microsoft; site 11
   holds Amazon and NTT. Each of these is listed under `considered`, with
   the reason, in `environment-agency-permit-matches.yaml`. The mechanism
-  is `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py`. It
-  holds one drawn partition — the International Trading Estate split —
-  and, under it, the seven campuses site 61 still needs separating,
-  already named with the evidence each would take: Union Park / North
-  Hyde Gardens, the former Nestlé factory, Southall Gas Works, Tudor
-  Works, Hayes Bridge Retail Park, Silverdale Road and Western
-  International Market. **Start there rather than re-deriving the
-  list.** Everything in that corridor is pairwise within a kilometre, so
-  no radius separates them; each needs documentary evidence that a set
-  of applications is one campus, which is what the ITE split has. Until
-  they are drawn, any match to site 61 stays suspect.
+  is `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py`,
+  and it works at corridor scale: the site 61 split (ten campuses,
+  2026-08-27, see Phase 2 above and HISTORY) is the worked example to
+  copy — reference stems and the applicant of record in the documents
+  as the boundary evidence, every member assigned so nothing is left
+  to spatial chance. Sites 5, 23, 59 and 11 are what remain, and the
+  permits carry their evidence.
 - **Requests outstanding, and requests never sent.** NESO and Ofgem were
   written to on 2026-08-12 and replies are due around 10 September. Three
   more are worth sending and have not been: a CCA site-level consumption
@@ -1107,8 +1087,10 @@ None is abandoned; each is a known, scoped piece of work.
   the operating company.
 - **A fourth operator tranche would be cheap.** Add URLs to `PAGES` in
   `scripts/fetch_operator_snapshots.py`, run it, add curated claims with
-  verbatim quotes. Colt is blocked on the Hayes fragmentation rather than
-  on the fetching.
+  verbatim quotes. Colt was blocked on the Hayes fragmentation rather
+  than on the fetching, and the site 61 split resolves it: Colt's two
+  campuses (Tudor Works, Hayes Bridge Retail Park) are their own sites
+  once the materialise runs.
 - **Multimodal pass over drawings.** Rejected in v1 and still rejected:
   PDFs are overwhelmingly text-layered, and concealed plant will not be
   in the drawings. Revisit only for a specific application where both
