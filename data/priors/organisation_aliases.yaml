@@ -170,7 +170,12 @@ groups:
             date: 2026-08-26
 
   - group: Vantage Data Centers
-    note: Vantage's UK sites are developed through numbered SPVs (VDC LHR…).
+    note: >-
+      Vantage's UK sites are developed through numbered SPVs whose names
+      carry an airport code (VDC LHR…, VDC CWL…). The PSC disclosure on
+      the CWL21 landholder names Digital Bridge Group, Inc. (Maryland,
+      D17285487) — DigitalBridge, Vantage's parent — as its person with
+      significant control.
     members:
       - name: Vantage Data Centres Limited
         relation: same_organisation
@@ -205,8 +210,50 @@ groups:
             date: 2026-08-23
           - source: companies_house
             ref: "OE003126"
-            note: Luke looked up on Lurch (the Guardian's land and property research tool). Parent company D17285487 (Digitalbridge Group) is in partnership with VDC. 
-            date: 2026-08-24  
+            note: Luke looked up on Lurch (the Guardian's land and property research tool). Parent company D17285487 (Digitalbridge Group) is in partnership with VDC.
+            date: 2026-08-24
+      - name: VDC CWL21 Limited
+        relation: spv_of
+        status: confirmed
+        note: >-
+          Barbour's client of record on CWL2 Data Centre Campus, St Athan
+          (CWL is Cardiff's airport code, following Vantage's LHR
+          pattern). No company number is attached because Companies House
+          shows four Jersey-registered vehicles sharing the stem — VDC
+          CWL21 LANDCO LIMITED and three propcos — and none is named
+          exactly as Barbour writes it; picking one would assert more
+          than is known. The group link is carried by the Landco's own
+          PSC disclosure, recorded on the next member.
+        evidence:
+          - source: barbour
+            ref: "12727863"
+            note: CyName_Client on CWL2 DATA CENTRE CAMPUS (St Athan, Vale of Glamorgan).
+            date: 2026-08-27
+            site_key: PTNO-12727863
+      - name: VDC CWL21 Landco Limited
+        relation: spv_of
+        status: confirmed
+        company_number: "OE006962"
+        register: roe
+        note: >-
+          A JERSEY company holding UK land, on the Register of Overseas
+          Entities since 8 December 2022, registered at 44 Esplanade,
+          St Helier — the same office as VDC LHR11. Three sibling
+          propcos (OE033263, OE033264, OE033265, registered 16 October
+          2024) share the VDC CWL21 stem and the office. Its registered
+          person with significant control is Digital Bridge Group, Inc.
+          — DigitalBridge, Vantage's parent.
+        evidence:
+          - source: companies_house
+            ref: "OE006962"
+            note: >-
+              PSC register names Digital Bridge Group, Inc. (United
+              States, Maryland corporation D17285487), nature of
+              control "has significant influence or control" — the
+              same parent number recorded against VDC LHR11. Link
+              supplied by Luke, 2026-08-27.
+            date: 2026-08-27
+            site_key: PTNO-12727863
 
   - group: Amazon
     note: Amazon Web Services / Amazon Data Services; several legal entities.
