@@ -43,6 +43,18 @@ dependencies = [
     # an undeclared dependency of the default path is a trap for the
     # next person who clones this.
     "openai>=1.100",
+    # Google Workspace client, for the Drive archive and the Sheet
+    # conversion — drive_sync.py, sheet_sync.py, backup_db.py,
+    # create_workbook_sheet.py. Every one imports it inside the function
+    # that needs it, which is how it stayed undeclared: any machine that
+    # had ever run a sync already had it, so nothing local could notice.
+    # CI, cloning from nothing, noticed on the first run.
+    "google-api-python-client>=2.190",
+    "google-auth-oauthlib>=1.2",
+    # DuckDB, for the published database and the release diff —
+    # export_duckdb.py, release_diff.py. Undeclared for the same reason,
+    # and found the same way.
+    "duckdb>=1.4",
 ]
 
 [project.optional-dependencies]

@@ -371,6 +371,7 @@ def test_a_machine_reading_is_collapsed_labelled_and_quoted(page):
     assert d.locator(".rbody p").count() >= 1
 
 
+@pytest.mark.integration
 def test_a_withheld_paragraph_is_declared_before_it_is_found(page):
     """A panel opens closed, so a withheld paragraph sitting inside it is
     invisible to a reader who never expands — and an omission a reader
@@ -401,7 +402,13 @@ def test_a_withheld_paragraph_is_declared_before_it_is_found(page):
     # register link beside the link to our own copy, so one-span-per-item
     # stopped being the same claim as every-item-has-a-span.
     assert d.locator("ul.rq li:has(.q)").count() == d.locator("ul.rq li").count()
-    page.click("#view-site .sitenav a")
+    # Cleanup, and guarded because this test never opens the site page
+    # itself — it reads panels wherever they sit. The site view is open
+    # only because the test above navigated there, so an unguarded click
+    # waits the full 30 seconds for a view that was never on whenever
+    # that test is deselected, skipped, or reordered.
+    if page.locator("#view-site").is_visible():
+        page.click("#view-site .sitenav a")
 
 
 @pytest.mark.integration
@@ -497,6 +504,7 @@ def test_a_cohort_chip_colours_the_map(page):
     page.click("#tab-sites")
 
 
+@pytest.mark.integration
 def test_a_map_card_link_survives_a_real_mouse(page):
     """The 2.1 regression, re-enacted.
 
@@ -550,6 +558,7 @@ def test_nothing_threw(page):
     assert real == [], real
 
 
+@pytest.mark.integration
 def test_next_and_previous_walk_the_filtered_set(page):
     """A reporter's own set, stepped through without going back.
 
