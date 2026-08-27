@@ -266,3 +266,20 @@ entries:
       are ChilternSouthBucks/PL/22/3491/OA's own portal pin — the
       parent whose description and plan pack it duplicates
       (2026-08-27).
+
+  # Westerhill AI Energy Campus, Bishopbriggs. The EIA screening
+  # request preceding the full application sat as its own unlocatable
+  # singleton; Apatura's consultation site names the scheme
+  # (https://consult.apatura.energy/westerhill/the-project, via LH).
+  - ref: EastDunbartonshire/TP/ED/25/0245
+    lat: 55.923267
+    lon: -4.199008
+    source: |
+      EIA screening request carrying the identical address line —
+      "Land Adjacent To Crosshill Road Bishopbriggs" — as
+      EastDunbartonshire/TP/ED/25/0428, the full application for the
+      300MW AI data centre it precedes. Neither record carries a
+      portal pin, so coordinates are Barbour's for project 12857728,
+      whose planning_ref is TP/ED/25/0428. The nearest foreign
+      cluster is over 5 km away, so no partition entry is needed
+      (2026-08-27).

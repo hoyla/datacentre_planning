@@ -110,7 +110,7 @@ aliases:
   - site_key: PTNO-12727863
     alias: CWL2 Data Centre Campus - St Athan (Vantage)
     source: |
-      Reporter reference (LH): add St Athan and Vantage  
+      Reporter reference (LH): add St Athan, Vantage  
 
   - site_key: PTNO-12814730
     alias: Manor Farm, Wraysbury Reservoir, Slough - 147MW Data Centre & Battery Energy Storage
@@ -120,7 +120,63 @@ aliases:
   - site_key: PTNO-12820102
     alias: Former Ford Engine Plant, Bridgend - 2MW Data Centre - Building 1 (Vantage)
     source: |
-      Reporter reference (LH): add Bridgend and Vantage 
+      Reporter reference (LH): add Bridgend, Vantage 
+
+  - site_key: PTNO-12866567
+    alias: Thurrock Data Centre - 4 Data Centre Buildings (Google)
+    source: |
+      Reporter reference (LH): add Google/Alphabet
+
+  - site_key: PTNO-12869683
+    alias: Heriot-Watt University, Currie - 200MW AI Data Centre Campus (Apatura)
+    source: |
+      Reporter reference (LH): add Currie, Apatura
+      (spelling: the university writes Heriot-Watt, one t)
+
+  - site_key: PTNO-12879308
+    alias: A41 Watford Bypass - Data Centre (Ark)
+    source: |
+      Reporter reference (LH): add Ark
+
+  - site_key: PTNO-12885096 
+    alias: Former Honey Monster Food Factory, Southall - Data Centre (CyrusOne)
+    source: |
+      Reporter reference (LH): add Southall, CyrusOne
+
+  - site_key: PTNO-12885139 
+    alias: Skelton Grange, Leeds - Microsoft Data Centre Campus
+    source: |
+      Reporter reference (LH): add Leeds
+
+  - site_key: PTNO-12913776 
+    alias: SDC M40 Campus, Wapseys Wood, Gerrards Cross - 300MW Data Centre Campus
+    source: |
+      Reporter reference (LH): add Wapsey's Wood
+      Placed at Gerrards Cross, not Slough: Barbour's pin sat in
+      Slough 8.5 km south of the site's own address (Hedgerley Green,
+      SL9 8TD) — the wrong pin corrected in inferred_coords.yaml. The
+      S35 direction titles it "Wapseys Wood, Buckinghamshire", no
+      apostrophe.
+
+  - site_key: SITE-data-centre-campus-new-barn-road-dartford-section-35-direction-planning-act-2008 
+    alias: Ebbsfleet Datacentre Campus, Dartford (Clearstone)
+    source: |
+      Reporter reference (LH): Section 35 titling; let Datford be Dartford
+
+  - site_key: SITE-EastAyrshire/25/0003/EIASCR
+    alias: Apatura DC Project 12, A70, Cumnock
+    source: |
+      Reporter reference (LH): renamed from uninformative land description
+
+  - site_key: PTNO-12857728
+    alias: Westerhill AI Energy Campus (Apatura)
+    source: |
+      Reporter reference (LH): part of Westerhill Regeneration Area Masterplan
+      see https://consult.apatura.energy/westerhill/the-project
+      Repointed from SITE-EastDunbartonshire/TP/ED/25/0245 when the
+      screening singleton merged into the Barbour-anchored site
+      (inferred_coords.yaml, 2026-08-27).
+
 
 
 
