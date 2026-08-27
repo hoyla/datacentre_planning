@@ -1275,6 +1275,11 @@ figure.chart .xl,figure.chart .yl{fill:var(--mut);font-size:12px}
    colour means the same thing in a chart as it does in the table. */
 figure.chart rect.s-stated,figure.chart .s-stated{fill:var(--brand)}
 figure.chart rect.s-est,figure.chart .s-est{fill:var(--machine)}
+/* The two document-based-but-not-disclosed bases (issue #151): the
+   provenance pie separates them from a stated load, in the same
+   muted register the Power MW column gives their figures. */
+figure.chart .s-grid{fill:#5b7d9c}
+figure.chart .s-standby{fill:#9c8a5b}
 figure.chart .s-none{fill:#dcdcdc}
 figure.chart .s-strong{fill:#1d6b38}
 figure.chart .s-prob{fill:#c74600}
@@ -1288,6 +1293,8 @@ figure.chart path:hover,figure.chart circle:hover{opacity:1}
   position:relative;top:1px}
 .legend .s-stated{background:var(--brand)}
 .legend .s-est,.legend .s-tent{background:var(--machine)}
+.legend .s-grid{background:#5b7d9c}
+.legend .s-standby{background:#9c8a5b}
 .legend .s-none{background:#dcdcdc}
 .legend .s-strong{background:#1d6b38}
 .legend .s-prob{background:#c74600}
@@ -4259,22 +4266,38 @@ def main() -> int:
         [(b[0], band_split[b[0]]) for b in BANDS],
         "Sites by capacity (MW)",
         f"Sites whose documents are unread, or which disclose nothing and cannot be "
-        f"estimated, are absent — not zero. An estimate is this project's arithmetic on "
+        f"estimated, are absent — not zero. “From the site's documents” covers a "
+        f"stated load, a grid connection or standby plant sized to the load — the pie "
+        f"beside this separates those. An estimate is this project's arithmetic on "
         f"a floor area, never a figure anybody published, and it is the weakest class in "
         f"the release: usable as a sense of scale, never as a quoted number. Partly-read "
         f"sites can move up a band as reading continues.",
-        [("stated", "Stated in the application", "s-stated"),
+        [("stated", "From the site's documents", "s-stated"),
          ("estimated", "Estimated from floorspace", "s-est")])
 
-    # Of the sites that have a figure at all, how many of them are
-    # somebody's disclosure.
+    # The same population as the bands, split by provenance instead of
+    # scale. Grid connection and standby capacity render in the Power MW
+    # column in the estimated style, so hiding them inside “stated” here
+    # both overstated disclosure and contradicted the column (issue
+    # #151, Luke's call on 2026-08-27: refine the pie, leave the stack
+    # two-way).
+    _n_it = power_basis_counts.get("Disclosed IT load", 0)
+    _n_tot = power_basis_counts.get("Disclosed total site demand", 0)
+    _n_grid = power_basis_counts.get("Grid connection capacity", 0)
+    _n_standby = power_basis_counts.get("Standby generation capacity", 0)
     chart_basis = pie(
-        [("Stated in the application", _n_stated, "s-stated"),
+        [("Stated as the site's own load", _n_it + _n_tot, "s-stated"),
+         ("Grid connection capacity", _n_grid, "s-grid"),
+         ("Standby generation capacity", _n_standby, "s-standby"),
          ("Estimated from floorspace", _n_est, "s-est")],
         "Where a site's own figure comes from",
-        f"The {_n_stated + _n_est} sites carrying any capacity figure. The other "
-        f"{n_sites - _n_stated - _n_est} carry none — their documents are unread, or "
-        f"disclose nothing and give no floor area to work from.")
+        f"The {_n_stated + _n_est} sites carrying any capacity figure — the same sites "
+        f"the chart above bands by size, split here by what each figure rests on. A "
+        f"stated load is the applicant's own number; a grid connection is headroom "
+        f"rather than consumption; standby capacity is inferred from plant sized to "
+        f"carry the load; a floorspace estimate is this project's arithmetic. The other "
+        f"{n_sites - _n_stated - _n_est} sites carry none — their documents are unread, "
+        f"or disclose nothing and give no floor area to work from.")
 
     # And of the sites whose applications say nothing, how many are
     # described by something outside the planning system.
