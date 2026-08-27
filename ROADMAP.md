@@ -209,29 +209,21 @@ alongside it.
   this table.** A count of held documents is a floor until the site's
   applications are measured and their shortfall is either refetched or
   stated.
-- **The site 61 split is drawn; the materialise makes it real.** Ten
-  partitions covering all 293 live application members and 8 project
-  members of the Hayes/Southall corridor landed in
-  `data/priors/site_partitions.yaml` on 2026-08-27 — the evidence, the
-  one place the stem premise failed, and what the drawing turned up
-  (a CyrusOne campus, a Clearstone gas plant) are in HISTORY.
-  Preflighted against the live corpus: 7 new sites, 2 revived keys,
-  0 retiring, **0 orphaned claims**. What is left, in order:
-
-  1. **Run the materialise** (after the partitions merge, per the
-     established sequencing). Site 61 keeps its key and becomes
-     genuinely Union Park at 59 applications.
-  2. **Re-match the Ark "99 MW for Union Park" claim**, retired
-     2026-08-21 because site 61 was mostly somewhere else. A person's
-     adjudication, now that the site is only Union Park.
-  3. **Adjudicate the Union Park SPV claims** held under `considered:`
-     in `companies-house-claims.yaml` (24/48/24 MW) — same person,
-     same sitting. Sites 59 and 5 still block the rest; see the SPV
-     section.
-  4. **The Drive staging tree re-partitions on the next rebuild** —
-     seven new site folders, members moving out of the Union Park
-     folder. `build_drive_staging.py` handles moves since 2026-08-26;
-     nothing to do beyond the normal runbook order.
+- **The site 61 split is materialised and its claims are re-matched.**
+  Ten partitions (2026-08-27, HISTORY has the account) plus a follow-up
+  the first materialise exposed: four Ealing out-of-borough
+  consultations with no coordinates sat as unlocatable singleton sites
+  (213–215 for Tudor Works — the "three separate site records" that
+  blocked the Colt claim — and 405 for Nestlé), dissolved into their
+  campuses via coordinate priors. 499 live sites. Six claim matches
+  loaded the same day: Ark's 99 MW re-matched to site 61 (its
+  2026-08-21 retirement entry records the release condition it met),
+  the four Union Park SPV figures (24 built / 48 under construction /
+  24 subject-to-planning / £839.79m), and Colt London 4's 31 MW to
+  site 75. What is left: the next artefact build and Drive staging
+  rebuild pick all of this up through the normal runbook order —
+  seven new site folders, members leaving the Union Park folder,
+  nothing bespoke.
 
 - **A site's display name is the address of whichever application sorts
   first**, which bears no relation to what anyone calls the place. The
@@ -505,13 +497,13 @@ not just this one. Three results worth carrying forward:
 
 Still open, and now better specified:
 
-5. **Sites 59 and 5 still block four otherwise-good matches; site 61
-   no longer does.** Premier Park's £147.8m and the DataVita figures
-   stay under `considered:` in `companies-house-claims.yaml` because
-   their site records are over-merged clusters. Union Park's 24/48/24 MW
-   were held back for the same reason and that reason is gone — the
-   site 61 split is drawn (2026-08-27), so once the materialise runs
-   those three are a person's adjudication, not a blocked one.
+5. **Sites 59 and 5 still block the Premier Park and DataVita
+   matches.** Premier Park's £147.8m and the DataVita figures stay
+   under `considered:` in `companies-house-claims.yaml` because their
+   site records are over-merged clusters (and DataVita's needs a
+   person to establish which building the figure describes). Union
+   Park's four claims were unblocked by the site 61 split and matched
+   on 2026-08-27.
 6. **Eleven names could not be resolved to a company**, listed under
    `unresolved:` in `companies-house-spvs.yaml` — including "Avalon DC
    Limited" and "BGO Code Propco Limited", both of which are somebody's
@@ -1087,10 +1079,10 @@ None is abandoned; each is a known, scoped piece of work.
   the operating company.
 - **A fourth operator tranche would be cheap.** Add URLs to `PAGES` in
   `scripts/fetch_operator_snapshots.py`, run it, add curated claims with
-  verbatim quotes. Colt was blocked on the Hayes fragmentation rather
-  than on the fetching, and the site 61 split resolves it: Colt's two
-  campuses (Tudor Works, Hayes Bridge Retail Park) are their own sites
-  once the materialise runs.
+  verbatim quotes. Colt is no longer blocked: Tudor Works and Hayes
+  Bridge Retail Park are their own sites as of 2026-08-27 and the
+  London 4 claim is matched, so a Colt snapshot tranche (London 5–8)
+  now has records to land on.
 - **Multimodal pass over drawings.** Rejected in v1 and still rejected:
   PDFs are overwhelmingly text-layered, and concealed plant will not be
   in the drawings. Revisit only for a specific application where both

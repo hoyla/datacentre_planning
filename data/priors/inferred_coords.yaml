@@ -188,3 +188,50 @@ entries:
       ("Cherwell"). Corrected to the NSIP register's GPS for the same
       scheme (EN0110030: 51.58726008957555, -0.5945505216141749).
       2026-08-25.
+
+  # Hayes/Southall corridor out-of-borough consultations (4 refs).
+  # Ealing's consultation copies of Hillingdon schemes carry no
+  # coordinates in PlanIt, so each sat as its own unlocatable
+  # singleton site (213, 214, 215, 405 in the 2026-08-26
+  # materialisation) — which is how "three separate site records for
+  # the same address" came to block the Colt London 4 capacity claim
+  # (operator-claims.yaml, considered). Each pin below is the
+  # Hillingdon stem's own portal coordinate for the scheme the
+  # consultation restates; the partition entry in site_partitions.yaml
+  # is what lets the resulting spatial edge join them to their campus
+  # and nothing else.
+
+  - ref: Ealing/216506CONS
+    lat: 51.509789
+    lon: -0.395012
+    source: |
+      Consultation on the Tudor Works data centre campus ("two data
+      centre buildings", Land at Tudor Works, Beaconsfield Road).
+      Coordinates are Hillingdon/38421/APP/2021/3613's own portal
+      pin for the same scheme (2026-08-27).
+
+  - ref: Ealing/216742CONS
+    lat: 51.509789
+    lon: -0.395012
+    source: |
+      Consultation restating the same Tudor Works description as
+      216506CONS, addressed "Land at Tudor Works Beaconsfield Road
+      Hayes Townfield". Same derivation: Hillingdon/38421's portal
+      pin (2026-08-27).
+
+  - ref: Ealing/221024CONS
+    lat: 51.509789
+    lon: -0.395012
+    source: |
+      Consultation restating the same Tudor Works description as
+      216506CONS. Same derivation: Hillingdon/38421's portal pin
+      (2026-08-27).
+
+  - ref: Ealing/212659CONS
+    lat: 51.501434
+    lon: -0.41443
+    source: |
+      Section 73 consultation on 1331/APP/2019/1666 at the former
+      Nestlé factory, Nestles Avenue. Coordinates are
+      Hillingdon/1331/APP/2023/2363's own portal pin for the same
+      site (2026-08-27).
