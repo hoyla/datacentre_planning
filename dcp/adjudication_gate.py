@@ -115,6 +115,87 @@ def uncorrected_count(conn=None) -> int:
         return cur.fetchone()[0]
 
 
+# The units scripts/adjudicate_power.py treats as power figures (its
+# TO_MW and APPARENT tables). Copied here for the same reason the
+# correction predicates are, and pinned in step by
+# tests/test_adjudication_gate.py.
+POWER_UNITS = [
+    "mw", "megawatt", "megawatts", "mwe",
+    "kw", "kilowatt", "kilowatts",
+    "gw", "gigawatt", "gigawatts",
+    "mva", "kva",
+]
+
+# The adjudication tail: power-unit findings no model has adjudicated.
+#
+# The number this must count is "no verdict from ANY model", and never
+# "not yet done by the model whose resume query is to hand".
+# adjudicate_power.load_candidates excludes only its own model+prompt —
+# that is its resume contract — and read as a completeness measure it
+# was misleading by fifty times (15,220 against a real 299, measured
+# 2026-08-26; ROADMAP has the table). A gate that reported a
+# five-figure backlog before every release would be ignored within two.
+#
+# Report-only, never a refusal: not every unadjudicated row is a site
+# capacity waiting to be claimed — some are not-this-site by
+# inspection, such as an operator describing its whole European fleet —
+# so the honest assertion is the size, split by whether the row could
+# move a headline (its site has no adjudicated capacity at all) or
+# only refine one.
+TAIL_SQL = r"""
+WITH tail AS (
+  SELECT f.id, f.application_id FROM findings f
+  WHERE f.value_number IS NOT NULL
+    AND lower(f.value_unit) = ANY(%s)
+    AND NOT EXISTS (SELECT 1 FROM power_adjudication p
+                    WHERE p.finding_id = f.id)),
+site_of AS (
+  SELECT m.application_id, m.site_id FROM site_members m
+  JOIN sites s ON s.id = m.site_id
+  WHERE m.retired_at IS NULL AND s.retired_at IS NULL),
+sites_with_capacity AS (
+  SELECT DISTINCT so.site_id
+  FROM power_adjudication pa
+  JOIN findings f ON f.id = pa.finding_id
+  JOIN site_of so ON so.application_id = f.application_id
+  WHERE pa.verdict = 'site_capacity')
+SELECT count(DISTINCT t.id),
+       count(DISTINCT t.id) FILTER (
+         WHERE so.site_id IS NOT NULL
+           AND so.site_id NOT IN (SELECT site_id FROM sites_with_capacity))
+FROM tail t LEFT JOIN site_of so ON so.application_id = t.application_id
+"""
+
+
+def tail_counts(conn=None) -> tuple[int, int]:
+    """(power-unit findings with no verdict from any model, the subset
+    on live sites that carry no adjudicated capacity at all)."""
+    if conn is not None:
+        with conn.cursor() as cur:
+            cur.execute(TAIL_SQL, (POWER_UNITS,))
+            return cur.fetchone()
+    with db.connect() as c, c.cursor() as cur:
+        cur.execute(TAIL_SQL, (POWER_UNITS,))
+        return cur.fetchone()
+
+
+def report_tail(conn=None) -> tuple[int, int]:
+    """Print the tail beside the corrections check, so no build can ship
+    unadjudicated figures without having said so. 2.7 came within one
+    runbook step of shipping 4,117 of them silently."""
+    total, consequential = tail_counts(conn)
+    if total:
+        print(f"Adjudication tail: {total} power-unit findings have no "
+              f"verdict from any model; {consequential} sit on sites with "
+              f"no adjudicated capacity, where a verdict moves a headline. "
+              f"scripts/adjudicate_power.py is the route. Building anyway "
+              f"— the artefacts will not carry the missing figures.")
+    else:
+        print("Adjudication tail: empty — every power-unit finding has a "
+              "verdict from at least one model.")
+    return total, consequential
+
+
 def require_corrected(conn=None, *, allow_override: bool = True) -> None:
     """Stop the build if uncorrected adjudications exist.
 
@@ -128,3 +209,4 @@ def require_corrected(conn=None, *, allow_override: bool = True) -> None:
     n = uncorrected_count(conn)
     if n:
         sys.exit(MESSAGE.format(n=n))
+    report_tail(conn)
