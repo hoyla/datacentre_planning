@@ -168,33 +168,454 @@ partitions:
     projects:
       - "12851883"
 
-# Known boundaries still to adjudicate, recorded so the next person
-# starts from the list rather than rediscovering it.
-#
-# Site 61 is not fixed by the partition above; it is one campus less
-# conflated. After the International Trading Estate moved to site 443 it
-# still holds 294 members, dominated by the former Nestlé factory (286
-# applications) and reaching as far as Western International Market,
-# under a display name that reads "NORTH HYDE GARDENS UNION PARK". The
-# name describes one of the campuses it contains.
-#
-# That is not cosmetic. A capacity claim matched to site 61 on
-# 2026-08-21 — Ark's 99 MW for Union Park — was retired precisely
-# because the record is mostly somewhere else, and no claim should
-# attach to site 61 until these are separated. The campuses the subtask
-# identified, each needing its own adjudicated boundary and written
-# evidence:
-#
-#   Union Park / North Hyde Gardens   (Ark)
-#   Former Nestlé factory             (~180 Hillingdon 1331/* applications)
-#   Southall Gas Works / The Straight
-#   Tudor Works                       (Colt London 4 and 5)
-#   Hayes Bridge Retail Park          (Colt London 6-8)
-#   Silverdale Road
-#   Western International Market
-#
-# Everything in the Hayes/Southall corridor is pairwise within 1 km, so
-# no radius separates them: each needs the same treatment the ITE got,
-# which is documentary evidence that a set of applications is one
-# campus. Colt's claims are currently unmatched for the same reason —
-# its own pages name the campus "London Hayes" and no street.
+  # ---------------------------------------------------------------
+  # The site 61 split (Hayes/Southall corridor), drawn 2026-08-27.
+  # Everything here is pairwise within the radius, so no distance
+  # separates any of it; the boundaries below rest on Hillingdon's
+  # own reference stems and the applicant of record in the documents,
+  # which agree — with one exception, noted where it is filed. All
+  # 293 live application members and 8 project members of site 61 as
+  # measured on 2026-08-27 are assigned; the split leaves nothing to
+  # spatial chance. Preflighted the same day: 7 new sites, 2 revived
+  # keys, 0 retiring, 0 orphaned claims.
+  # ---------------------------------------------------------------
+
+  - name: union-park-north-hyde-gardens
+    reason: |
+      Ark's Union Park campus at North Hyde Gardens, Hayes — the campus
+      site 61's display name always described, now with the boundary to
+      match. Hillingdon stem 75111 (57 applications); applicant of
+      record in the documents is Ark Estates 2 Ltd / Ark UP4 Ltd / Ark
+      Data Centres Ltd. Ealing/202655CONS is Ealing's copy of
+      Hillingdon/75111/APP/2020/1955 (discovered_via records the
+      duplicate; same Bulls Bridge / North Hyde Gardens scheme, with
+      its two MV energy centres, stand-by generation and gas storage),
+      and Ealing/251491CONS is the out-of-borough consultation on the
+      UP4 extension. This partition keeps the cluster's lowest Ptno, so
+      the successor site keeps site 61's key, PTNO-12511337 — and the
+      Ark "99 MW for Union Park" claim, retired 2026-08-21 because the
+      record was mostly somewhere else, is matchable again.
+    applications:
+      - Ealing/202655CONS
+      - Ealing/251491CONS
+      - Hillingdon/75111/APP/2020/1955
+      - Hillingdon/75111/APP/2020/3643
+      - Hillingdon/75111/APP/2021/1506
+      - Hillingdon/75111/APP/2021/1515
+      - Hillingdon/75111/APP/2021/1520
+      - Hillingdon/75111/APP/2021/1601
+      - Hillingdon/75111/APP/2021/2378
+      - Hillingdon/75111/APP/2021/2853
+      - Hillingdon/75111/APP/2021/3607
+      - Hillingdon/75111/APP/2022/1007
+      - Hillingdon/75111/APP/2022/2049
+      - Hillingdon/75111/APP/2022/2096
+      - Hillingdon/75111/APP/2022/2565
+      - Hillingdon/75111/APP/2022/2960
+      - Hillingdon/75111/APP/2022/3012
+      - Hillingdon/75111/APP/2022/3428
+      - Hillingdon/75111/APP/2022/3435
+      - Hillingdon/75111/APP/2022/3595
+      - Hillingdon/75111/APP/2023/1661
+      - Hillingdon/75111/APP/2023/1662
+      - Hillingdon/75111/APP/2023/2544
+      - Hillingdon/75111/APP/2023/2894
+      - Hillingdon/75111/APP/2023/2939
+      - Hillingdon/75111/APP/2023/2940
+      - Hillingdon/75111/APP/2023/3024
+      - Hillingdon/75111/APP/2023/3033
+      - Hillingdon/75111/APP/2023/3053
+      - Hillingdon/75111/APP/2023/3060
+      - Hillingdon/75111/APP/2023/3063
+      - Hillingdon/75111/APP/2023/3065
+      - Hillingdon/75111/APP/2023/3071
+      - Hillingdon/75111/APP/2023/3119
+      - Hillingdon/75111/APP/2023/3239
+      - Hillingdon/75111/APP/2023/3265
+      - Hillingdon/75111/APP/2023/3266
+      - Hillingdon/75111/APP/2023/3272
+      - Hillingdon/75111/APP/2023/3273
+      - Hillingdon/75111/APP/2023/3275
+      - Hillingdon/75111/APP/2023/3276
+      - Hillingdon/75111/APP/2023/3284
+      - Hillingdon/75111/APP/2023/3286
+      - Hillingdon/75111/APP/2023/696
+      - Hillingdon/75111/APP/2023/697
+      - Hillingdon/75111/APP/2023/960
+      - Hillingdon/75111/APP/2024/3327
+      - Hillingdon/75111/APP/2025/1440
+      - Hillingdon/75111/APP/2025/1441
+      - Hillingdon/75111/APP/2025/1458
+      - Hillingdon/75111/APP/2025/1459
+      - Hillingdon/75111/APP/2025/2035
+      - Hillingdon/75111/APP/2025/2120
+      - Hillingdon/75111/APP/2025/2153
+      - Hillingdon/75111/APP/2025/2237
+      - Hillingdon/75111/APP/2025/2238
+      - Hillingdon/75111/APP/2025/2523
+      - Hillingdon/75111/APP/2025/2525
+      - Hillingdon/75111/APP/2025/739
+    projects:
+      - "12511337"   # the site-key holder
+      - "12843948"   # Union Park Block 4
+
+  - name: nestle-factory-hayes
+    reason: |
+      The former Nestlé factory, Nestles Avenue, Hayes — Hillingdon
+      stem 1331 (186 applications), applicant of record Barratt London
+      (BDW Trading Ltd) with SEGRO. A housebuilder's hybrid permission
+      that contains a consented data centre: all its applications name
+      "Use Classes B1c/B2/B8 and Data Centre (sui generis)" in full,
+      which is why the stem stays in the universe (see ROADMAP,
+      2026-08-25 — applicant identity separates campuses and must never
+      decide universe membership). The two Ealing entries are S73
+      consultations on 1331/APP/2017/1883 at the same address; their
+      descriptions name the Hillingdon reference but a cross-council
+      description reference does not family-edge, so they are listed.
+    applications:
+      - Ealing/200958CONS
+      - Ealing/201082CONS
+      - Hillingdon/1331/APP/2017/1883
+      - Hillingdon/1331/APP/2018/2495
+      - Hillingdon/1331/APP/2018/2496
+      - Hillingdon/1331/APP/2018/2497
+      - Hillingdon/1331/APP/2018/2537
+      - Hillingdon/1331/APP/2018/2538
+      - Hillingdon/1331/APP/2018/2562
+      - Hillingdon/1331/APP/2018/2662
+      - Hillingdon/1331/APP/2018/2680
+      - Hillingdon/1331/APP/2018/2682
+      - Hillingdon/1331/APP/2018/2683
+      - Hillingdon/1331/APP/2018/2822
+      - Hillingdon/1331/APP/2018/2845
+      - Hillingdon/1331/APP/2018/2879
+      - Hillingdon/1331/APP/2018/2967
+      - Hillingdon/1331/APP/2018/2977
+      - Hillingdon/1331/APP/2018/2984
+      - Hillingdon/1331/APP/2018/2987
+      - Hillingdon/1331/APP/2018/2988
+      - Hillingdon/1331/APP/2018/2996
+      - Hillingdon/1331/APP/2018/3107
+      - Hillingdon/1331/APP/2018/3111
+      - Hillingdon/1331/APP/2018/3199
+      - Hillingdon/1331/APP/2018/3644
+      - Hillingdon/1331/APP/2018/3646
+      - Hillingdon/1331/APP/2018/3868
+      - Hillingdon/1331/APP/2018/3869
+      - Hillingdon/1331/APP/2018/3870
+      - Hillingdon/1331/APP/2018/3871
+      - Hillingdon/1331/APP/2018/3872
+      - Hillingdon/1331/APP/2018/3881
+      - Hillingdon/1331/APP/2018/4052
+      - Hillingdon/1331/APP/2018/4053
+      - Hillingdon/1331/APP/2018/4183
+      - Hillingdon/1331/APP/2018/4186
+      - Hillingdon/1331/APP/2018/4217
+      - Hillingdon/1331/APP/2018/4218
+      - Hillingdon/1331/APP/2018/4219
+      - Hillingdon/1331/APP/2018/4229
+      - Hillingdon/1331/APP/2018/4230
+      - Hillingdon/1331/APP/2018/4236
+      - Hillingdon/1331/APP/2018/4243
+      - Hillingdon/1331/APP/2018/4299
+      - Hillingdon/1331/APP/2018/4302
+      - Hillingdon/1331/APP/2018/4305
+      - Hillingdon/1331/APP/2018/4306
+      - Hillingdon/1331/APP/2018/4307
+      - Hillingdon/1331/APP/2018/4308
+      - Hillingdon/1331/APP/2018/4309
+      - Hillingdon/1331/APP/2018/4379
+      - Hillingdon/1331/APP/2018/4381
+      - Hillingdon/1331/APP/2018/4432
+      - Hillingdon/1331/APP/2018/4467
+      - Hillingdon/1331/APP/2018/4470
+      - Hillingdon/1331/APP/2019/100
+      - Hillingdon/1331/APP/2019/1040
+      - Hillingdon/1331/APP/2019/1101
+      - Hillingdon/1331/APP/2019/1104
+      - Hillingdon/1331/APP/2019/1216
+      - Hillingdon/1331/APP/2019/1279
+      - Hillingdon/1331/APP/2019/1304
+      - Hillingdon/1331/APP/2019/1307
+      - Hillingdon/1331/APP/2019/1362
+      - Hillingdon/1331/APP/2019/1553
+      - Hillingdon/1331/APP/2019/1628
+      - Hillingdon/1331/APP/2019/1666
+      - Hillingdon/1331/APP/2019/1708
+      - Hillingdon/1331/APP/2019/1747
+      - Hillingdon/1331/APP/2019/1751
+      - Hillingdon/1331/APP/2019/1754
+      - Hillingdon/1331/APP/2019/1902
+      - Hillingdon/1331/APP/2019/1903
+      - Hillingdon/1331/APP/2019/2011
+      - Hillingdon/1331/APP/2019/2017
+      - Hillingdon/1331/APP/2019/2123
+      - Hillingdon/1331/APP/2019/2124
+      - Hillingdon/1331/APP/2019/2208
+      - Hillingdon/1331/APP/2019/2220
+      - Hillingdon/1331/APP/2019/2266
+      - Hillingdon/1331/APP/2019/2386
+      - Hillingdon/1331/APP/2019/2387
+      - Hillingdon/1331/APP/2019/2394
+      - Hillingdon/1331/APP/2019/2396
+      - Hillingdon/1331/APP/2019/269
+      - Hillingdon/1331/APP/2019/2859
+      - Hillingdon/1331/APP/2019/2861
+      - Hillingdon/1331/APP/2019/2865
+      - Hillingdon/1331/APP/2019/2866
+      - Hillingdon/1331/APP/2019/309
+      - Hillingdon/1331/APP/2019/314
+      - Hillingdon/1331/APP/2019/3338
+      - Hillingdon/1331/APP/2019/3343
+      - Hillingdon/1331/APP/2019/3938
+      - Hillingdon/1331/APP/2019/3977
+      - Hillingdon/1331/APP/2019/3987
+      - Hillingdon/1331/APP/2019/4023
+      - Hillingdon/1331/APP/2019/534
+      - Hillingdon/1331/APP/2019/537
+      - Hillingdon/1331/APP/2019/552
+      - Hillingdon/1331/APP/2019/599
+      - Hillingdon/1331/APP/2019/609
+      - Hillingdon/1331/APP/2019/634
+      - Hillingdon/1331/APP/2019/636
+      - Hillingdon/1331/APP/2020/1081
+      - Hillingdon/1331/APP/2020/1082
+      - Hillingdon/1331/APP/2020/1992
+      - Hillingdon/1331/APP/2020/2455
+      - Hillingdon/1331/APP/2020/2547
+      - Hillingdon/1331/APP/2020/2703
+      - Hillingdon/1331/APP/2020/2704
+      - Hillingdon/1331/APP/2020/2705
+      - Hillingdon/1331/APP/2020/2944
+      - Hillingdon/1331/APP/2020/2945
+      - Hillingdon/1331/APP/2020/2946
+      - Hillingdon/1331/APP/2020/2948
+      - Hillingdon/1331/APP/2020/3388
+      - Hillingdon/1331/APP/2020/3741
+      - Hillingdon/1331/APP/2020/3742
+      - Hillingdon/1331/APP/2020/3743
+      - Hillingdon/1331/APP/2020/3744
+      - Hillingdon/1331/APP/2020/3822
+      - Hillingdon/1331/APP/2020/3824
+      - Hillingdon/1331/APP/2020/3893
+      - Hillingdon/1331/APP/2020/3915
+      - Hillingdon/1331/APP/2020/4023
+      - Hillingdon/1331/APP/2020/4157
+      - Hillingdon/1331/APP/2020/4206
+      - Hillingdon/1331/APP/2020/50
+      - Hillingdon/1331/APP/2020/589
+      - Hillingdon/1331/APP/2020/994
+      - Hillingdon/1331/APP/2020/995
+      - Hillingdon/1331/APP/2020/996
+      - Hillingdon/1331/APP/2021/1124
+      - Hillingdon/1331/APP/2021/1821
+      - Hillingdon/1331/APP/2021/2162
+      - Hillingdon/1331/APP/2021/2163
+      - Hillingdon/1331/APP/2021/2169
+      - Hillingdon/1331/APP/2021/2170
+      - Hillingdon/1331/APP/2021/2172
+      - Hillingdon/1331/APP/2021/2626
+      - Hillingdon/1331/APP/2021/2627
+      - Hillingdon/1331/APP/2021/3436
+      - Hillingdon/1331/APP/2021/3450
+      - Hillingdon/1331/APP/2021/3796
+      - Hillingdon/1331/APP/2021/4497
+      - Hillingdon/1331/APP/2021/707
+      - Hillingdon/1331/APP/2021/708
+      - Hillingdon/1331/APP/2021/751
+      - Hillingdon/1331/APP/2021/805
+      - Hillingdon/1331/APP/2022/1348
+      - Hillingdon/1331/APP/2022/1349
+      - Hillingdon/1331/APP/2022/1353
+      - Hillingdon/1331/APP/2022/1448
+      - Hillingdon/1331/APP/2022/1449
+      - Hillingdon/1331/APP/2022/1964
+      - Hillingdon/1331/APP/2022/1965
+      - Hillingdon/1331/APP/2022/1966
+      - Hillingdon/1331/APP/2022/1967
+      - Hillingdon/1331/APP/2022/2257
+      - Hillingdon/1331/APP/2022/416
+      - Hillingdon/1331/APP/2022/559
+      - Hillingdon/1331/APP/2022/561
+      - Hillingdon/1331/APP/2022/821
+      - Hillingdon/1331/APP/2022/836
+      - Hillingdon/1331/APP/2023/2322
+      - Hillingdon/1331/APP/2023/2323
+      - Hillingdon/1331/APP/2023/2324
+      - Hillingdon/1331/APP/2023/2325
+      - Hillingdon/1331/APP/2023/2328
+      - Hillingdon/1331/APP/2023/2363
+      - Hillingdon/1331/APP/2023/2365
+      - Hillingdon/1331/APP/2023/2441
+      - Hillingdon/1331/APP/2023/2446
+      - Hillingdon/1331/APP/2023/2486
+      - Hillingdon/1331/APP/2023/2627
+      - Hillingdon/1331/APP/2023/2996
+      - Hillingdon/1331/APP/2023/3387
+      - Hillingdon/1331/APP/2023/3388
+      - Hillingdon/1331/APP/2023/3391
+      - Hillingdon/1331/APP/2023/3393
+      - Hillingdon/1331/APP/2024/38
+      - Hillingdon/1331/APP/2025/1966
+      - Hillingdon/1331/APP/2025/1968
+      - Hillingdon/1331/APP/2025/1969
+      - Hillingdon/1331/APP/2025/299
+      - Hillingdon/1331/APP/2025/3220
+
+  - name: tudor-works-colt
+    reason: |
+      Colt's first Hayes campus — Colt London 4 and 5 at Tudor Works,
+      Beaconsfield Road. Hillingdon stem 38421, applicant of record
+      Colt Data Centre Services / HDCI Hayes London Limited. One
+      application filed under this stem is deliberately NOT here:
+      38421/APP/2024/2215 is addressed at Hayes Bridge Retail Park and
+      Heathrow Interchange and describes that campus's redevelopment,
+      so it sits in the hayes-bridge-retail-park partition below — the
+      one place the stem premise fails, caught by reading the record.
+    applications:
+      - Hillingdon/38421/APP/2021/3613
+      - Hillingdon/38421/APP/2021/4045
+      - Hillingdon/38421/APP/2022/3607
+      - Hillingdon/38421/APP/2022/3660
+      - Hillingdon/38421/APP/2023/2296
+      - Hillingdon/38421/APP/2023/3194
+      - Hillingdon/38421/APP/2023/3342
+      - Hillingdon/38421/APP/2023/517
+      - Hillingdon/38421/APP/2024/11
+      - Hillingdon/38421/APP/2024/1178
+      - Hillingdon/38421/APP/2024/1501
+      - Hillingdon/38421/APP/2024/2069
+      - Hillingdon/38421/APP/2024/261
+      - Hillingdon/38421/APP/2024/2724
+      - Hillingdon/38421/APP/2024/2998
+      - Hillingdon/38421/APP/2024/453
+      - Hillingdon/38421/APP/2025/1019
+      - Hillingdon/38421/APP/2025/1118
+      - Hillingdon/38421/APP/2025/1315
+      - Hillingdon/38421/APP/2025/48
+      - Hillingdon/38421/APP/2025/539
+      - Hillingdon/38421/APP/2025/920
+      - Hillingdon/38421/APP/2025/978
+    projects:
+      - "12608004"   # Colt London 4
+
+  - name: hayes-bridge-retail-park
+    reason: |
+      Colt's second Hayes campus — LON6, LON7, LON8 at Hayes Bridge
+      Retail Park and Heathrow Interchange, Uxbridge Road. Three stems
+      converge on one scheme: 78343 is the four-phase hybrid
+      application (applicant of record Colt Data Centre Services),
+      71554 is its substation at Unit 1 Heathrow Interchange,
+      Bullsbrook Road — "in connection with the permitted and emerging
+      Data Centre Campus", applicant HDCI Hayes Bridge Limited, a
+      different SPV from Tudor Works' HDCI Hayes London Limited — and
+      38421/APP/2024/2215 is the 2024 EIA screening for this
+      redevelopment, filed under the Tudor Works stem but addressed
+      and described as this campus. Ealing/251348CONS is the
+      out-of-borough consultation on the hybrid application.
+    applications:
+      - Ealing/251348CONS
+      - Hillingdon/38421/APP/2024/2215
+      - Hillingdon/71554/APP/2025/2436
+      - Hillingdon/71554/APP/2025/47
+      - Hillingdon/78343/APP/2025/719
+    projects:
+      - "12837470"   # LON7/LON8
+      - "12845205"   # LON6
+      - "12831113"   # the Bullsbrook Road substation
+
+  - name: silverdale-road-hayes
+    reason: |
+      Silverdale Industrial Estate, Silverdale Road, Hayes —
+      Hillingdon stem 49261, applicant of record Marvell Developments
+      LLC (with Mulhaven Properties LLC). Ealing/244495CONS is the
+      out-of-borough consultation on the same demolition-and-data-
+      centre scheme at Unit 4.
+    applications:
+      - Ealing/244495CONS
+      - Hillingdon/49261/APP/2024/2904
+      - Hillingdon/49261/APP/2026/1013
+      - Hillingdon/49261/APP/2026/763
+      - Hillingdon/49261/APP/2026/964
+      - Hillingdon/49261/APP/2026/985
+    projects:
+      - "12818519"   # Silverdale Road data centre
+
+  - name: southall-gas-works
+    reason: |
+      The former Southall Gas Works / The Green Quarter, The Straight,
+      Southall — Berkeley Homes (Southall) Limited. Conditions
+      discharges on 171562VAR plus a temporary energy centre
+      (221810FUL) and its sound-assessment discharge. The parent
+      permission is not in the corpus and the parent references carry
+      no council prefix, so nothing family-edges these six; proximity
+      alone put a housing regeneration's paperwork inside "Union
+      Park".
+    applications:
+      - Ealing/212971CND
+      - Ealing/214005CND
+      - Ealing/216510CND
+      - Ealing/216512CND
+      - Ealing/221810FUL
+      - Ealing/240127CND
+
+  - name: honey-monster-factory-southall
+    reason: |
+      CyrusOne's hyperscale scheme at the former Honey Monster food
+      factory, Bridge Road, Southall — a different former food factory
+      from Nestlé's (Bridge Road UB2 against Nestles Avenue UB3, a
+      kilometre apart, and the corridor's radius merged them anyway).
+      Ealing/251707SCE is the screening request, Ealing/253874FUL the
+      full application (applicant of record CyrusOne Limited), and
+      Hillingdon/79468/APP/2025/1250 is Hillingdon's out-of-borough
+      consultation on the screening.
+    applications:
+      - Ealing/251707SCE
+      - Ealing/253874FUL
+      - Hillingdon/79468/APP/2025/1250
+    projects:
+      - "12885096"   # the CyrusOne scheme
+
+  - name: north-hyde-gas-generator
+    reason: |
+      A gas-powered electricity generator on land north of the North
+      Hyde electricity substation — applicant of record Clearstone
+      Energy Ltd, 2018, verdict unknown (v1: adjacent). No documentary
+      edge ties it to any campus: proximity to the substation that
+      also serves Union Park was the only join, and a merchant
+      generation scheme is not evidence that it is Ark's. Clearstone
+      is the developer behind the Dartford Section 35 direction
+      (CSE52), which makes its presence beside this corridor worth
+      seeing on its own row rather than dissolved into a data centre
+      campus.
+    applications:
+      - Hillingdon/73785/APP/2018/3115
+
+  - name: western-international-market
+    reason: |
+      A single electrical substation installation on land forming part
+      of the former Western International Market, Southall Lane,
+      Heston — verdict unknown (v1: adjacent), no documents held, and
+      nothing in the record describing any neighbouring campus as its
+      scheme. Partitioned alone on the leamouth-castle-wharf
+      precedent: a stray record separated because of where it sits
+      rather than what it is.
+    applications:
+      - Hounslow/P/2018/1499
+
+  - name: old-vinyl-factory-hayes
+    reason: |
+      The Old Vinyl Factory, Blyth Road, Hayes — the former EMI works,
+      a mixed-use regeneration whose one application here is a Section
+      106 discharge (procedural) that entered the universe through the
+      energy_national discovery layer. Its associated references
+      (59872/APP/2013/3775, 59872/APP/2012/1838) are not in the
+      corpus, so it has no family and joined by proximity alone. Its
+      own campus, not Union Park's.
+    applications:
+      - Hillingdon/59872/APP/2019/223
+
+# The Hayes/Southall corridor above was this file's longest-standing
+# to-do; what remains adjudicated nowhere is recorded in ROADMAP
+# (Northumberland Energy Park's four schemes, and the estate-scale
+# records blocking permit matches at sites 5, 23 and 59).

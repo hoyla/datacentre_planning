@@ -1329,6 +1329,74 @@ first is its own piece of work.
 
 ---
 
+## The Hayes/Southall corridor becomes ten campuses (2026-08-27)
+
+Site 61 — `PTNO-12511337`, displayed as "NORTH HYDE GARDENS UNION PARK -
+DATA CENTRES" — held 293 live applications and 8 Barbour projects, and
+the name described one of the campuses inside it. Everything in the
+corridor is pairwise within the 1 km radius, so no distance separates
+any of it; the split needed adjudicated boundaries with written
+evidence, which the International Trading Estate partition (2026-08-20)
+had already shown how to draw. Ten partitions landed in
+`data/priors/site_partitions.yaml`, covering every live member so
+nothing is left to spatial chance.
+
+**The boundary evidence is Hillingdon's own reference stems and the
+applicant of record in the documents, and they agree — with exactly one
+exception.** The stems were verified live (1331: 186, 75111: 57,
+38421: 24, 49261: 5, plus 71554, 78343 and 21 stragglers), and the
+applicants read from `party_applicant` findings rather than inherited
+from the earlier session's table. That reading corrected the table on
+two points:
+
+- **Tudor Works and Hayes Bridge Retail Park are two Colt campuses, not
+  one.** The table had them on one row. Distinct stems (38421 against
+  78343/71554), distinct SPVs — HDCI Hayes London Limited at Tudor
+  Works, HDCI Hayes Bridge Limited at the substation serving Hayes
+  Bridge — and distinct Barbour projects (Colt London 4 against
+  LON6/LON7/LON8).
+- **One application breaks the stem premise.** `38421/APP/2024/2215` is
+  filed under the Tudor Works stem but is the 2024 EIA screening for
+  the Hayes Bridge redevelopment, addressed at the retail park and
+  describing that campus. It is partitioned by what it says, not where
+  it is filed — the same read-the-record discipline that kept stem 1331
+  (Barratt London's hybrid permission with a consented data centre) in
+  the universe on 2026-08-25.
+
+**Two campuses nobody had named fell out of the drawing.** The former
+Honey Monster food factory on Bridge Road, Southall is a CyrusOne
+hyperscale scheme (`253874FUL`, 230 documents) — a different former
+food factory from Nestlé's, a kilometre away, and the radius had
+dissolved it into the same site. And the "gas powered electricity
+generator" on land north of the North Hyde substation is **Clearstone
+Energy's** — the developer behind the Dartford Section 35 direction —
+with no documentary tie to Ark or anyone else; it was inside "Union
+Park" on proximity alone, which is precisely the adjacency the
+investigation wants visible on its own row.
+
+The rest: the former Nestlé factory (Barratt London/SEGRO, 188),
+Union Park itself (Ark, 59, keeping the site key and so the site id),
+Southall Gas Works / The Green Quarter (Berkeley Homes, 6, including a
+temporary energy centre), Silverdale Road (Marvell Developments, 6),
+Western International Market and the Old Vinyl Factory (one stray
+each, partitioned alone on the leamouth precedent).
+
+**Preflighted against the live corpus before committing:** 7 new
+sites, 2 revived keys (Tudor Works and Honey Monster existed from
+earlier materialisations), 0 retiring, 0 orphaned claims — and a
+baseline run with the unchanged priors confirmed the delta is entirely
+the partitions. The cross-partition documentary-edge guard and the
+unknown-ref guard both ran clean. The materialise itself waits for the
+partitions to merge, per the sequencing the 2026-08-25 partitions
+established.
+
+What it unblocks, recorded in ROADMAP: re-matching Ark's retired
+"99 MW for Union Park" claim, the Union Park 24/48/24 MW SPV claims
+held under `considered:`, and the Colt operator tranche that was
+"blocked on the Hayes fragmentation".
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across
