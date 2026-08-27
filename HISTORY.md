@@ -1178,6 +1178,95 @@ should not have been quoted as though it were.
 
 ---
 
+## v2.8, and the links that pointed at a filesystem (2026-08-26)
+
+2.8 shipped and Luke opened it. The document links pointed at his
+computer: `file:///Users/hoyla/Code/.../Request_Statement_on_behalf_of_Questpit_Limited.pdf`,
+401 of them, aimed at paths no reader has. 503 documents carry a
+`file://` URL into a checkout that exists on no machine at all, and 9
+more came from the manual-ingest path the same day.
+
+The applications table had guarded against exactly this since it was
+written — `not str(a[12]).startswith("file://")`. The three document
+links had not. One rule, applied in one place and not the others.
+
+**The first fix was the wrong half.** `doc_link` became that rule in one
+place and rendered anything unfetchable as plain text. Luke: *"I don't
+want to just suppress links to documents that people will want to see.
+Can you actually fix it please?"* Every one of those 401 links named a
+document this project holds a copy of. Hiding the title serves nobody:
+the reporter still wants the document, and now cannot even see that it
+exists.
+
+**Our copy, with the register beside it.** The Drive archive is not a
+convenience, it is the durable copy — a council can withdraw a document
+from its register, renumber it, move the portal or put it behind a
+session, and all four have happened here. So the title links to ours.
+The register keeps a quieter link of its own, because Luke's point cuts
+the other way too: *"For published reporting a journalist has to be able
+to cite the public register, not a private Drive."* Both, because they
+answer different questions.
+
+Reader document links to our copy went **782 → 6,588**, 5,339 of them
+carrying a register link alongside. The workbook gained 36 on *Figures
+by audience*, where each row is a specific figure from a specific
+document and the source link had been silently degrading to the
+application page. No site panel lost a link.
+
+Every one of the 26,293 documents cited on a live site resolves. The
+3,952 that do not all belong to applications with no live `site_members`
+row — the staging rule working as written, not a gap.
+
+### And then: a Drive file is an id, not a path
+
+> I thought we were identifying Drive files by ID, not name …
+
+The *link* always was. `/file/d/{id}/view` survives the file being moved
+or renamed on Drive, which is the entire reason this project addresses
+Drive by id and never by name — a name lookup under the `drive.file`
+scope finds nothing and once silently created a duplicate archive.
+
+**Finding** the id did not. The export rebuilt each document's expected
+staging path — site stem, application reference, and a number counting
+the application's documents in `fetched_at, id` order — and looked that
+path up in the sync ledger.
+
+It was correct. 120 of 120 sampled links verified content-addressed, the
+bytes on disk matching the md5 the ledger recorded for the Drive copy;
+30 ids resolved live against the API; 25 filenames matched. *Correct
+when measured* was the problem. Every input to that derivation can move,
+and when one does the lookup either finds nothing — a document silently
+loses its link — or finds the neighbouring file, which is a **working
+link to the wrong document under a citation naming a different one**.
+The first is annoying. The second puts a real quote against a real but
+different source, is invisible from outside, and is what principle 7
+exists to prevent.
+
+Migration 031 adds `document_drive_files`, append-only with a unique
+index on `(document_id, file_id)`. `scripts/record_drive_ids.py` writes
+it after each sync; `--verify-bytes` hashes every local file and refuses
+any id whose md5 disagrees with what the ledger says it uploaded. First
+run: **52,908 ids recorded, 0 refused**, 3m15s over 138 GB.
+`_drive_document_map` reads that table and nothing else, and the
+derivation was deleted rather than kept as a fallback — leaving a second
+way to find a file leaves the failure in place. The rebuilt artefacts
+matched the derivation-based ones link for link, which is the check that
+only the lookup changed.
+
+**Nothing in the build had ever asserted where a link went**, which is
+why 401 of them went nowhere. The new guard reads the built bytes; run
+against the pre-fix `index.html` it fails with exactly those 401.
+
+**Left open.** `test_two_builds_of_one_snapshot_are_identical` failed
+once during this work and passed nine times after, so the failing run's
+detail was never captured — it names the first differing line only in
+the run that fails. On the roadmap under *Smaller things* rather than
+waved off: a build that is deterministic most of the time is a build
+whose release diff cannot be trusted, and that diff is the check
+standing between a regression and a published one.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across
