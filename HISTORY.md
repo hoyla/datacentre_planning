@@ -1425,6 +1425,104 @@ provenance of the match.
 
 ---
 
+## The day between the split and the release (2026-08-27)
+
+The corridor split and the CI workflow above were the morning; this is
+the rest of the day, worked while 2.9 assembled. Each block was a
+ROADMAP item or a user-review issue; what each *changed about how the
+project works* is the part worth keeping.
+
+**The gate states the adjudication tail** (PR #155). Every export's
+`require_corrected()` now also prints the count of power-unit findings
+with no verdict from ANY model, split by whether the row sits on a site
+with no adjudicated capacity. Three properties are pinned by tests: the
+count is unqualified by model (the 15,220-vs-299 trap), the unit list
+stays in step with `adjudicate_power`, and the report cannot refuse a
+build — a gate demanding zero would be overridden within two releases.
+Measured at build: the tail was empty; the 299 from 2026-08-26 had been
+closed by an `openai:gpt-5:low` batch of exactly 299 rows.
+
+**An export limit is not a grid connection** (PR #158). The named rule
+from the redesign review, measured before adoption: the candidate
+population had grown from 16 rows to 40 since the corroboration read,
+and the growth is why the predicate is value-adjacency rather than
+vocabulary — Home of Production's "18 MW of import capacity as well as
+10.5MW of export capacity" holds a correct import figure within eighty
+characters of the word "export". 23 adjudications demoted across four
+sites, one of them pinned (a chunk-cut fragment whose sibling rows hold
+the sentence naming it the Maximum Permitted Export Capacity).
+Deliberately untouched: Kingsnorth's 47,405 kW rows, the same figure at
+leading and lagging power factor, which no predicate can settle and a
+person can — they now stand as that site's largest grid figure.
+
+**The refetch can be left unattended** (PR #162). Not
+`fetch_outstanding`'s SIGALRM — that only works in the main thread and
+the refetch runs worker shards — but a `threading.Timer` that closes
+the shard's clients at the same 900s ceiling, so a stalled read raises
+into the error arm and is recorded retryable, never settled.
+
+**Northern Ireland needed a header, not a browser** (PR #163). The
+register's Next.js pages draw everything from an anonymous TerraQuest
+REST API whose only gate is a `TQ-Tenant` header published in the
+page's own `__ENV.js` — and without that header the API answers `200`
+with a JSON `null` body, indistinguishable from an application that
+does not exist. The adapter exchanges a stable API route for a
+~30-minute Azure SAS URL per document and unwraps the single-file zip
+each blob is; the register's `x.pdf(2)` dedup naming (suffix AFTER the
+extension) was caught because the first live file stored as
+`<sha>.pdf(2)`. The held NI applications fetched through it the same
+hour. PORTAL_NOTES has the route map; what remains is discovery, which
+is the whole of Northern Ireland.
+
+**Eleven user-review issues closed in the reader** (#144–#148, #150,
+#152, #153, #156, #161, and #151 by decision). The ones that changed
+more than pixels: every "What the documents say" statement now cites
+its document inline — Drive copy, register, page (#146); the
+applications list renders as a full-width band below BOTH columns,
+after 19 Yeoman Street showed the old left-column overflow colliding
+with the right column (#156); the provenance pie splits the 156 sites
+carrying a figure into stated-load / grid-connection /
+standby-inferred / floorspace-estimate, because `DISCLOSED_BASES` had
+been folding the middle two invisibly into "Stated in the application"
+— overstating disclosure on the chart about disclosure (#151, pie only
+by Luke's call); and the chrome says "datacentre" (#161) with the
+load-bearing exceptions recorded in the commit: quotes and
+descriptions keep source spelling, the machine-reading gate's
+banned-phrase regexes keep the space a model writes, and the workbook
+headers stay because `sheet_sync` reconciles columns by name and a
+rename is a formatting-destroying delete-plus-insert. The Assistant's
+notes were de-editorialised on Luke's standing rule — say what is
+significant, never rank what matters most, because that is the
+journalists' call: "the silences are significant", not "the strongest
+material".
+
+**Two detector honesty fixes, found by the release chain itself.**
+`release_diff`'s last-panel slice ran to end-of-document and attributed
+a −154 from the post-table views to the National Physical Laboratory
+panel (whose links had gone 3 → 4); it now stops at its `</tbody>`.
+And `export_duckdb` writes to a `.building` sibling renamed on
+completion, after its half-written file at the final name was twice
+mistaken for debris mid-build — the runbook's traps now carry the
+general habit: `lsof` before touching anything a lock protects, and a
+WAL is replayed by opening the file, never deleted.
+
+**The readings input-hash earned its keep in both directions.** The
+morning batch regenerated all twenty sample sites (their inputs carry
+the corpus-wide profiles, which the day's corrections and materialise
+had moved); the pre-release refresh then re-read exactly one (JVC) and
+skip-confirmed nineteen, proving the corrections had in fact preceded
+the batch. One wasted call surfaced a defect: `SITE-EN0110030` in
+SAMPLE_SITES is a dissolved key — its site merged into PTNO-12913776 —
+so its reading generated against zero documents and renders nowhere.
+
+**Three regulator requests drafted** (docs/requests/): CCA site-level
+consumption to the Environment Agency copied to DESNZ, the NESO EIR
+for the project-level demand queue, the DNO template addressed to all
+fourteen licensed plcs — each carrying regulation 5(6) against section
+105 pre-emptively. Handed to Luke for the team and the sending.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across
