@@ -92,6 +92,24 @@ URL=$(gcloud run services describe "$SERVICE" --region "$REGION" --project "$PRO
         --format='value(status.url)' 2>/dev/null || true)
 [ -n "$URL" ] || { echo "Deployed, but could not read the service URL. Check the Cloud Run console."; exit 0; }
 
+# Cloud Run answers on two hostnames for the same service: the legacy
+# <service>-<hash>-<regioncode>.a.run.app, which is what status.url still
+# returns, and <service>-<projectnumber>.<region>.run.app, which is the
+# form Google is moving to. Both work and both gate identically.
+#
+# The one we PROBE is status.url, because that is what the platform says
+# it is serving. The one we SHARE is the project-number form (Luke,
+# 2026-08-26), because a URL handed to colleagues becomes a bookmark, and
+# asking a newsroom to re-bookmark once is enough — which is the whole
+# reason the EdgeOne deployment is being retired behind a redirect rather
+# than switched off.
+PNUM=$(gcloud projects describe "$PROJECT" --format='value(projectNumber)' 2>/dev/null || true)
+if [ -n "$PNUM" ]; then
+    SHARE_URL="https://${SERVICE}-${PNUM}.${REGION}.run.app"
+else
+    SHARE_URL="$URL"      # no project number, so the probed URL is all we have
+fi
+
 # --- verify the LIVE deployment is gated ------------------------------------
 # With IAP live, an anonymous request is redirected to Google sign-in (3xx to
 # accounts.google.com). Before IAP is wired, a private service answers 401/403
@@ -131,7 +149,8 @@ if [ -n "$open_paths" ]; then
     exit 1
 elif $saw_iap; then
     echo "✓ Verified: anonymous requests are redirected to Google sign-in (IAP gating)."
-    echo "Share with colleagues — any @guardian.co.uk account: $URL/"
+    echo "Share with colleagues — any @guardian.co.uk account: $SHARE_URL/"
+    [ "$SHARE_URL" = "$URL" ] || echo "  (also answers on $URL/ — same service, legacy hostname)"
 else
     echo "✓ Verified: the service is private (401/403), but IAP is not fully wired yet"
     echo "  (service agent + invoker, custom OAuth client, IAP enabled, domain grant)."

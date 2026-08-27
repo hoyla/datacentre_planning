@@ -247,8 +247,16 @@ one-time IAP wiring, the gotchas inherited from the meridian and tribunal
 deployments, and the anonymous-access probes are all in
 [cloudrun/CLOUDRUN.md](cloudrun/CLOUDRUN.md).
 
-**EdgeOne (legacy): shared password.** Retained in parallel until the
-Cloud Run deployment has bedded in. `middleware.js` is EdgeOne edge
+**EdgeOne (legacy): a redirect.** It serves nothing — every path 302s
+to the Cloud Run URL above, so links colleagues saved keep working while
+they drain. `middleware.js` is that redirect, and it is deliberately
+unauthenticated: gating it would make someone type the old password to
+be told where the reader went, and the destination fails closed anyway.
+Deleting the deployment is a separate decision, once the bookmarks have
+moved.
+
+The shared-password gate it replaced is described below and lives in
+this file's git history. `middleware.js` is EdgeOne edge
 middleware matching every route, so the
 page and its embedded dataset need a session before anything is served —
 unlike a password prompt written into the page, where the data has
