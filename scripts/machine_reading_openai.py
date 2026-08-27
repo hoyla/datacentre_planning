@@ -109,6 +109,28 @@ def _already(conn, site_key: str, model: str, input_hash: str) -> bool:
         return cur.fetchone() is not None
 
 
+def _no_nul(v):
+    """Postgres text cannot hold NUL (0x00) and raises on it, and JSON
+    carrying an escaped \\u0000 is refused the same way. A reading is a
+    nested structure, so the strip is recursive — the flat per-field
+    version the deep-read path uses (deepread_escalate_openai._no_nul,
+    same reasoning) cannot reach a quote nested two levels down, which
+    is exactly where one arrived in the 2026-08-27 batch and stopped
+    the collect at site 157 of 250.
+
+    Applied at the database boundary only, never before the gate: the
+    gate must see exactly what the model emitted, and a NUL the source
+    never contained is evidence about the model, not about the site.
+    """
+    if isinstance(v, str):
+        return v.replace("\x00", "")
+    if isinstance(v, dict):
+        return {k: _no_nul(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_no_nul(x) for x in v]
+    return v
+
+
 def _store(conn, inp: mr.SiteInput, model: str, reading: dict | None,
            verdict: mr.GateResult) -> None:
     with conn.cursor() as cur:
@@ -123,8 +145,8 @@ def _store(conn, inp: mr.SiteInput, model: str, reading: dict | None,
             (inp.site_key, model, mr.PROMPT_VERSION, inp.input_hash,
              mr.GATE_VERSION, inp.documents_read, len(inp.pages),
              sum(len(p.text) for p in inp.pages),
-             json.dumps(reading) if reading is not None else None,
-             None if verdict.ok else verdict.reason))
+             json.dumps(_no_nul(reading)) if reading is not None else None,
+             _no_nul(None if verdict.ok else verdict.reason)))
     conn.commit()
 
 
