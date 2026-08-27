@@ -138,7 +138,17 @@ def reader_shape(path: Path) -> ReaderShape:
         d = _DETAIL_START_RE.search(src, pos)
         if not d:
             continue
-        end = rows[i + 1][1] if i + 1 < len(rows) else len(src)
+        if i + 1 < len(rows):
+            end = rows[i + 1][1]
+        else:
+            # The LAST panel must stop at its table's end, not the end
+            # of the document: run to len(src) and the slice swallows
+            # every later view's links, so the final site's count moves
+            # whenever anything after the table does. On 2026-08-27 it
+            # attributed a -154 from the post-table views to the NPL
+            # panel, whose own links had in fact gone from 3 to 4.
+            t = src.find("</tbody>", d.start())
+            end = t if t != -1 else len(src)
         shape.links_per_site[key] = len(_LINK_RE.findall(src[d.start():end]))
     shape.sections = len(_SECTION_RE.findall(src))
     shape.boxes = len(_BOX_RE.findall(src))
