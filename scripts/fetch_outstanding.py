@@ -82,8 +82,24 @@ def _campaign():
     return mod
 
 
-class ApplicationTimeout(Exception):
-    """A single application exceeded its wall-clock budget."""
+class ApplicationTimeout(BaseException):
+    """A single application exceeded its wall-clock budget.
+
+    **BaseException, not Exception, and that is the whole point.** The
+    adapters catch `Exception` per document so that one bad link does
+    not cost the rest of a bundle — `idox.fetch_documents_for_application`
+    ends its download loop with a bare `except Exception as exc: failure
+    = exc; break`. A timeout raised as an ordinary Exception therefore
+    landed in that handler, was filed as one document's failure, and the
+    loop moved to the next link. SIGALRM fires once, so the ceiling was
+    then gone for good and the application ran unbounded.
+
+    Measured on 2026-08-27: `Southwark/18/AP/1604` ran for **216
+    minutes** against a 900-second deadline, and the sweep's rate fell
+    from 321 documents an hour to under 50 while it did. Deriving from
+    BaseException puts the timeout beside KeyboardInterrupt and
+    SystemExit, where a per-item `except Exception` cannot reach it.
+    """
 
 
 @contextlib.contextmanager
@@ -269,7 +285,11 @@ def main() -> int:
                 try:
                     with deadline(args.app_timeout):
                         s = mods[fam].fetch_documents_for_application(**kw)
-                except Exception as exc:
+                # ApplicationTimeout is a BaseException so the adapters
+                # cannot swallow it, which means this handler has to name
+                # it: `except Exception` alone would let the ceiling
+                # abort the whole sweep instead of one application.
+                except (ApplicationTimeout, Exception) as exc:
                     record(conn, app_id, "error", fam, str(exc)[:180])
                     totals["error"] += 1
                     log.error("[%d/%d] %-28s %s: %s", i, len(todo), ref, fam,
