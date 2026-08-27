@@ -742,14 +742,37 @@ HISTORY.)
   Not dismissed as noise. A build that is deterministic 90% of the time
   is a build whose diff against the previous release cannot be trusted,
   and that diff is the check standing between a regression and a
-  published one. Two candidate causes worth eliminating before looking
-  further afield: the `DISTINCT ON (document_id) … ORDER BY document_id,
-  recorded_at DESC, id DESC` in `_drive_document_map`, where every row
-  from a single recorder run shares one `recorded_at` and the tiebreak
-  falls to `id` — deterministic on inspection, but it is new; and
-  anything in the reader iterating a `set` or a `dict` built from one.
-  Cheapest next step is to have the test keep both builds on failure
-  rather than only naming a line, so a single reproduction is enough.
+  published one.
+
+  **Both original candidates are now largely eliminated, and a third
+  found (2026-08-27).** The `DISTINCT ON (document_id) … ORDER BY
+  document_id, recorded_at DESC, id DESC` in `_drive_document_map` is
+  deterministic on inspection. Set-ordering can be ruled out by
+  argument rather than inspection: the two builds are separate
+  processes with independent `PYTHONHASHSEED`, so anything depending on
+  set iteration order would fail nearly every run rather than one in
+  ten — and the one set-iteration that reaches an exporter
+  (`site_profile` building `out` from `set(barbour) | set(counts) |
+  set(authority)`) has a single consumer, which sorts.
+
+  The likelier cause is that **the snapshot pins the database but the
+  reader also reads a file**. `_drive_folder_map`,
+  `_drive_application_map` and `_drive_findings_map` all read
+  `data/exports/.drive_sync_state.json`, and every Drive link in the
+  page comes from it; `drive_sync` rewrites that ledger once per file
+  while it runs, and `DCP_PG_SNAPSHOT` cannot pin a file on disk. Two
+  builds either side of a sync read different inputs. That fits the one
+  observed failure, which arrived immediately after the Drive-id work.
+
+  The test now measures rather than assumes: it fingerprints the ledger
+  by content before and after both builds and voids the comparison with
+  a reason if it moved, the same discipline the database fingerprint
+  already applies — and where it did not move, the failure message says
+  so, so the ledger cannot be blamed for a difference it did not cause.
+  Both builds, both normalised texts and a capped unified diff are kept
+  in `data/exports/determinism_failure/` on any failure, so one
+  reproduction is enough. What remains is to see a failure with the
+  ledger held: if one comes, the evidence will be on disk.
 
 - **Every OpenAI finding was missing its family, and two panels select on
   nothing else.** Found 2026-08-26. The INSERT in
