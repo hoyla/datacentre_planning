@@ -647,6 +647,19 @@ HISTORY.)
 
 ## Smaller things
 
+- **`drive_sync.py` is latency-bound, not quota-bound, and the 2.9
+  reorganisation paid for it.** There is no deliberate delay in the
+  sync — the only sleep is error backoff — but it is a single thread
+  paying one HTTPS round-trip per file, ~43 moves/minute against a
+  Drive per-user quota near 12,000 requests/minute. The site 61 split
+  moved ~5,400 files and took hours that batching (the Drive batch
+  endpoint takes 100 calls per request) or modest concurrency would
+  cut to minutes. The design constraint to respect: `Sync.state` is a
+  plain dict saved per file with no locking, and it is the record that
+  makes syncs resumable and moves recognisable — parallelise the API
+  calls, not the ledger writes. Found mid-release 2026-08-27 and
+  deliberately not patched mid-run.
+
 - **`SAMPLE_SITES` names a dissolved key, and readings have no
   render-time freshness guard.** Both found 2026-08-27. `SITE-EN0110030`
   in `scripts/machine_reading_openai.py` stopped being a site when the
