@@ -848,18 +848,55 @@ FROM site_machine_readings
 ORDER BY site_key, inserted_at DESC, id DESC
 """
 
+# The model tag a freshness marker is written under. Not a model at all:
+# it keeps the marker out of the unique key a real reading occupies
+# (site_key, model, prompt_version, input_hash, gate_version), so
+# marking a site stale can never block the genuine reading of that same
+# input from being stored later.
+FRESHNESS_MODEL = "freshness-check"
 
-def load_latest(conn) -> tuple[dict[str, dict], dict[str, str]]:
+RETIRED_REASON = (
+    "the site record this reading was written for has since been merged "
+    "into another or retired")
+
+STALE_REASON = (
+    "the site's documents or established facts have changed since this "
+    "reading was written")
+
+LIVE_KEYS_SQL = "SELECT site_key FROM sites WHERE retired_at IS NULL"
+
+
+def load_latest(conn, *, live_only: bool = True
+                ) -> tuple[dict[str, dict], dict[str, str]]:
     """(readings that passed, reasons for those that did not).
 
     One query, split here: both halves are the same "latest row per
     site", so a site cannot appear in both.
+
+    `live_only` drops readings whose site no longer exists. A site key
+    is retired when its cluster merges into another — three did on
+    2026-08-27 — and the reading written for it describes a record that
+    is gone. This is the only freshness check cheap enough to run on
+    every build: rebuilding one site's input to re-hash it costs ~8s,
+    so verifying the corpus's 258 readings would add 35 minutes to a
+    build. The rest of the check therefore runs offline and records its
+    verdict, in `scripts/verify_reading_freshness.py`.
     """
     passed: dict[str, dict] = {}
     withheld: dict[str, str] = {}
+    live: set[str] | None = None
+    if live_only:
+        with conn.cursor() as cur:
+            cur.execute(LIVE_KEYS_SQL)
+            live = {r[0] for r in cur.fetchall()}
     with conn.cursor() as cur:
         cur.execute(LATEST_SQL)
         for key, model, pv, reading, nd, npg, at, gv, why in cur.fetchall():
+            if live is not None and key not in live:
+                # Not surfaced as a withheld reason: there is no site
+                # page left to carry one, and a reason attached to a
+                # dissolved key would be a row a reporter cannot reach.
+                continue
             if why:
                 withheld[key] = why
             elif reading:
