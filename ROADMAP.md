@@ -592,15 +592,18 @@ absent from the corpus rather than misclassified.
    class B8, and one as "fibre exchange (Sui Generis)" — which belong with
    the existing invisibility-flag work.
 
-**Northern Ireland is a coverage gap, not just a missing adapter.** PlanIt
-does not cover NI at all, so the only NI applications we hold arrived by
-other routes — seven, from Derry & Strabane and Causeway Coast & Glens.
-They sit on `planningregister.planningsystemni.gov.uk`, which is a
-Next.js application: the page carries only an id and the documents come
-from an API call made in the browser. Finding that endpoint needs a
-session with the network tab open, after which an adapter is
-straightforward. Worth doing — it is the whole of NI, not seven
-applications.
+**Northern Ireland: the adapter exists; the coverage sweep does not.**
+The network-tab session happened on 2026-08-27 and found something
+better than an endpoint: an anonymous TerraQuest REST API behind a
+public tenant header (`dcp/sources/ni_planning.py`, and
+docs/PORTAL_NOTES.md for the route map — including that a missing
+header answers `200 null`, which reads exactly like an absent
+application). The applications we already hold are fetched through it
+and `fetch_outstanding.py` dispatches the family. What remains is the
+*coverage* half: PlanIt does not index NI, so NI applications only
+enter the universe by other routes. A discovery sweep against the
+register's own search API is the remaining work, and it is the whole
+of Northern Ireland, not the dozen applications we happened to hold.
 
 **Read the 58 Section 106 agreements the tiering used to skip.** The
 classification is fixed — `LEGAL_INSTRUMENT_KINDS` is now tested before
