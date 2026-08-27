@@ -2310,6 +2310,19 @@ def main() -> int:
 
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute(hv.SITE_SQL); site_rows = cur.fetchall()
+        # Curated display names (issue #169): where an alias exists it
+        # becomes the working name everywhere downstream — the table,
+        # the map, the search haystack, the nearest-site labels — and
+        # the derived default survives in `derived_names` so the site's
+        # own page can still show what the record is built from. An
+        # alias naming a dead key fails the build here, before anything
+        # renders under the misleading derived name again.
+        from dcp import site_aliases as _sal
+        _aliases = _sal.load_aliases()
+        _sal.require_live(_aliases, {r[0] for r in site_rows})
+        derived_names = {r[0]: r[2] for r in site_rows if r[0] in _aliases}
+        site_rows = [(r[0], r[1], _aliases.get(r[0], r[2]), *r[3:])
+                     for r in site_rows]
         cur.execute(hv.APP_SQL); app_rows = cur.fetchall()
         cur.execute(hv.BARBOUR_ONLY_SQL); barbour_rows = cur.fetchall()
         cur.execute(hv.NSIP_SQL); nsip_rows = cur.fetchall()
@@ -3635,7 +3648,8 @@ def main() -> int:
         who = who_cell(prof)
         reading_html = reading_panel(key, held)
         hay = " ".join(str(x or "").lower() for x in
-                       (name, key, addr, ", ".join(councils or []), full_desc,
+                       (name, derived_names.get(key), key, addr,
+                        ", ".join(councils or []), full_desc,
                         prof.get("operator_group"), prof.get("end_user"),
                         prof.get("applicant_of_record"), prof.get("advisers"),
                         prof.get("named_in_documents"),
@@ -3758,6 +3772,10 @@ def main() -> int:
       <div><span class="lbl">Record built from</span><span class="val">{
         esc(SITE_ORIGIN.get(cls, (cls, ""))[0])}
        <span class="help">{esc(SITE_ORIGIN.get(cls, ("", ""))[1])}</span></span></div>
+      {f'''<div><span class="lbl">Derived name</span><span class="val">{esc(derived_names[key])}
+       <span class="help">the record&#x27;s own generated name; the display name is a
+       curated alias (data/priors/site_aliases.yaml, with its source)</span></span></div>'''
+       if key in derived_names else ''}
      </div>
      <!-- The coordinates themselves link to our map, not just the word
           "map" beside them: users clicked the Google Maps link and

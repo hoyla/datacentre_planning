@@ -335,7 +335,7 @@ DRIVE_LEDGER = Path("data/exports/.drive_sync_state.json")
 
 SITE_HEADERS = [
     # --- identity & links -------------------------------------------------
-    "Site key", "Classification", "Site name", "Proposal",
+    "Site key", "Classification", "Site name", "Site name alias", "Proposal",
     "Proposal describes a development?",
     "Latitude", "Longitude", "Coordinate source", "Councils",
     # The workbook is the interface to the Drive-by-site archive and to
@@ -475,6 +475,12 @@ DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Site name",
      "Display name assembled at site materialisation; for pre-planning "
      "rows, the Barbour project title."),
+    ("Sites", "Site name alias",
+     "Curated name for the place, present only where the derived Site "
+     "name misleads — e.g. a site named by its lead application's "
+     "address line rather than what anyone calls it. From "
+     "data/priors/site_aliases.yaml, each entry carrying the source of "
+     "the name; the derived Site name is never overwritten."),
     ("Sites", "Proposal",
      "A one-line description of what is proposed, taken word-for-word from "
      "the council's own application description. Planning descriptions "
@@ -1171,6 +1177,13 @@ def main() -> None:
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute(SITE_SQL)
         site_rows = cur.fetchall()
+        # Curated aliases (issue #169): the Sites sheet carries both
+        # names in their own columns — the derived name the record
+        # generates, and the curated alias where one exists. A dead key
+        # in the priors fails the build, per the loader's contract.
+        from dcp import site_aliases as _sal
+        _site_aliases = _sal.load_aliases()
+        _sal.require_live(_site_aliases, {r[0] for r in site_rows})
         cur.execute(APP_SQL)
         app_rows = cur.fetchall()
         cur.execute(BARBOUR_ONLY_SQL)
@@ -1438,7 +1451,8 @@ def main() -> None:
                         else f"Open portal (1 of {n_hosts} registers)")
 
         row = [
-            key, cls, name, proposal_cell, proposal_flag,
+            key, cls, name, _site_aliases.get(key, ""), proposal_cell,
+            proposal_flag,
             lat, lon, csrc,
             ", ".join(councils or []),
             _hyperlink(drive_urls.get(_folder_key(key)), "Open Drive folder"),
@@ -1536,7 +1550,7 @@ def main() -> None:
             ctx_unmapped += 1
             ctx_cells = ["", "", ""]
         row = [
-            pseudo_key, "barbour_only", title,
+            pseudo_key, "barbour_only", title, "",
             proposal.tidy(bsummary),
             "Yes" if bdescriptive else "No — Barbour intelligence only",
             plat, plon, "barbour", authority or "",
