@@ -5207,7 +5207,7 @@ def main() -> int:
    <p class="cnote">This reader is one artefact in the release, not the whole of it.</p>
    <button type="button" class="cta secondary"
     onclick="document.getElementById('package').scrollIntoView()">Workbook, database,
-    Drive, Pinpoint, notebook</button>
+    Drive, Pinpoint, Giant, notebook</button>
   </div>
  </aside>
  </div>
@@ -5295,6 +5295,17 @@ def main() -> int:
     </p>
    <p class="golink"><a href="{PINPOINT_URL}" target="_blank" rel="noopener">Open the
     collection</a></p></div>
+  <div class="part"><p class="kind">Giant</p>
+   <h3>Search the documents on Giant</h3>
+   <p class="what">The same document set — the planning applications, the findings —
+    in the Guardian&#x27;s secure document platform, ingested as
+    <code>uk-datacentres</code>.</p>
+   <p class="when"><b>Reach for it when</b> you want pure text search across the set
+    with results that show the context and take you directly to the matching
+    passage.</p>
+   <p class="golink"><a
+    href="https://giant.pfi.gutools.co.uk/search?filters.ingestion[]=uk-datacentres"
+    target="_blank" rel="noopener">Search the collection</a></p></div>
   <div class="part"><p class="kind">DuckDB</p>
    <h3>Query database</h3>
    <p class="what">Every site, application, document and finding in one file
