@@ -232,6 +232,24 @@ alongside it.
   own design. 2.10-shaped: it changes what the list asserts about
   every row, so it wants the measured fold-in before any styling.
 
+- **Replace "The rest of the package" block with a computed scale
+  panel** (issue #166 holds the request; shape agreed with Luke
+  2026-08-27). The block is duplicative — a button pointing at content
+  one scroll away — and what the start page actually lacks is scale at
+  a glance. The replacement: "The scale of what the documents
+  disclose", every figure computed at build and never typed, every row
+  linked to the query or cohort that produces it, caveats in the
+  panel's own words (covers only the minority of sites stating
+  figures; floors from an incomplete read). Candidate rows: total
+  disclosed capacity across the N disclosing sites; standby generator
+  units where documents state counts, with the diesel/gas split where
+  fuel is named; total standby MW; total contracted grid connections.
+  Comparators only where a published source states one — Ofgem's 73 GW
+  queue is in External aggregates with its paragraph number — never
+  invented. The 12.73-GW-is-twelve-million-households correction that
+  settled the framing is the argument in one line: computed and
+  citable beats vivid and wrong.
+
 - **A site's display name is the address of whichever application sorts
   first**, which bears no relation to what anyone calls the place
   (issue #169 holds the request; this is the plan, and the design is
