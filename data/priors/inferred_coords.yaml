@@ -236,6 +236,28 @@ entries:
       Hillingdon/1331/APP/2023/2363's own portal pin for the same
       site (2026-08-27).
 
+  # SDC M40 Campus, Wapseys Wood. Milton Keynes' copy of the Planning
+  # Inspectorate's DCO scoping consultation carries no coordinates, so
+  # it sat as its own unlocatable singleton while the scheme it
+  # describes already had a site record. Spotted by Luke, 2026-08-27.
+  - ref: MiltonKeynes/PLN/2026/0914
+    lat: 51.58726
+    lon: -0.59455
+    source: |
+      "Consultation from Planning Inspectorate ... relating to proposed
+      SDC M40 Campus project comprising a Data Centre Campus of three
+      units, together with an integrated on site energy generation
+      centre", addressed "Green Belt land located north of the M40
+      motorway and south of the A40". PTNO-12913776 is "SDC M40 CAMPUS
+      - 300MW DATA CENTRE CAMPUS" and already holds the Section 35
+      Direction and NSIP register entry EN0110030, whose own text reads
+      "a data centre campus of up to three units". Same scheme name,
+      same three units, same consenting route. Coordinates are the
+      NSIP register's own GPS for EN0110030, which is also the pin the
+      ptno override below sets for 12913776. The nearest foreign
+      application is 4.83 km away, so no partition entry is needed
+      (2026-08-27).
+
   # West London Technology Park, Iver (2 refs). Hillingdon's
   # out-of-borough consultation copies of Buckinghamshire's Woodlands
   # Park outline applications carry no coordinates, so each sat as its

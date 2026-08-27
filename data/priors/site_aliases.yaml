@@ -177,6 +177,35 @@ aliases:
       screening singleton merged into the Barbour-anchored site
       (inferred_coords.yaml, 2026-08-27).
 
+  - site_key: PTNO-12468506
+    alias: 110 Buckingham Avenue, Slough - Data Centre
+    source: |
+      Reporter reference (LH): added Slough
+
+  - site_key: PTNO-12522787
+    alias: Ipswich Road, Slough - Data Centre
+    source: |
+      Reporter reference (LH): added Slough
+
+  - site_key: PTNO-12833153
+    alias: Lon 3 Data Centre, 111 Buckingham Avenue, Slough
+    source: |
+      Reporter reference (LH): added address. 
+      May be the same site as PTNO-12468506, which is  
+      at 110 Buckingham Avenue
+
+  - site_key: PTNO-12135970
+    alias: Barclays Bank, Slough Trading Estate - Data Centre Solar PV Panels
+    source: |
+      Reporter reference (LH): added Slough Trading Estate
+
+  - site_key: PTNO-12818519
+    alias: Silverdale Road, Hayes - Data Centre
+    source: |
+      Reporter reference (LH): added Hayes
+
+
+
 
 
 
