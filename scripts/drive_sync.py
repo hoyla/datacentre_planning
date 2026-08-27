@@ -39,6 +39,7 @@ import hashlib
 import json
 import mimetypes
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -55,11 +56,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dcp.drive import FOLDER_ID as HANDOVER_FOLDER_ID  # noqa: E402
 
 
-def get_service():
+def get_credentials():
     from google.auth.transport.requests import Request
     from google.oauth2.credentials import Credentials
     from google_auth_oauthlib.flow import InstalledAppFlow
-    from googleapiclient.discovery import build
 
     creds = None
     if TOKEN_PATH.exists():
@@ -75,7 +75,12 @@ def get_service():
             creds = flow.run_local_server(port=0)
         TOKEN_PATH.write_text(creds.to_json())
         TOKEN_PATH.chmod(0o600)
-    return build("drive", "v3", credentials=creds)
+    return creds
+
+
+def get_service(creds=None):
+    from googleapiclient.discovery import build
+    return build("drive", "v3", credentials=creds or get_credentials())
 
 
 def md5_of(path: Path) -> str:
@@ -87,18 +92,51 @@ def md5_of(path: Path) -> str:
 
 
 class Sync:
-    def __init__(self, service):
-        self.svc = service
+    def __init__(self, service, credentials=None):
+        # googleapiclient service objects are NOT thread-safe (their
+        # httplib2 transport keeps per-connection state), so each worker
+        # thread builds its own from the shared credentials, which are.
+        # Tests inject a fake by assigning `sync.svc = ...`; the setter
+        # clears the credentials so a fake is never bypassed by a
+        # thread-local real service.
+        self._default_svc = service
+        self._creds = credentials
+        self._tls = threading.local()
+        # One lock over the ledger. The state dict is mutated per file
+        # and dumped by save(); either racing a worker corrupts the one
+        # record that makes syncs resumable and moves recognisable. API
+        # calls happen OUTSIDE the lock — it guards memory, not network.
+        self._lock = threading.RLock()
         self.state: dict = (json.loads(STATE_PATH.read_text())
                             if STATE_PATH.exists() else {"folders": {}, "files": {}})
         self._dirty = 0
 
+    @property
+    def svc(self):
+        tls = getattr(self._tls, "svc", None)
+        if tls is not None:
+            return tls
+        if self._creds is None or threading.current_thread() is threading.main_thread():
+            return self._default_svc
+        from googleapiclient.discovery import build
+        self._tls.svc = build("drive", "v3", credentials=self._creds)
+        return self._tls.svc
+
+    @svc.setter
+    def svc(self, service):
+        self._default_svc = service
+        self._creds = None
+
     def save(self, force: bool = False) -> None:
-        self._dirty += 1
-        if force or self._dirty >= 50:
-            STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-            STATE_PATH.write_text(json.dumps(self.state))
-            self._dirty = 0
+        with self._lock:
+            self._dirty += 1
+            if force or self._dirty >= 50:
+                payload = json.dumps(self.state)
+                self._dirty = 0
+            else:
+                return
+        STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        STATE_PATH.write_text(payload)
 
     # Server-side pushback: the API is reachable and saying "not now".
     _API_TRANSIENT = ("429", "500", "502", "503", "rateLimit",
@@ -147,8 +185,9 @@ class Sync:
 
     def folder(self, name: str, parent: str | None) -> str:
         key = f"{parent or 'root'}/{name}"
-        if key in self.state["folders"]:
-            return self.state["folders"][key]
+        with self._lock:
+            if key in self.state["folders"]:
+                return self.state["folders"][key]
         q = (f"name = '{name.replace(chr(39), chr(92)+chr(39))}' and "
              f"mimeType = 'application/vnd.google-apps.folder' and trashed = false"
              + (f" and '{parent}' in parents" if parent else ""))
@@ -163,7 +202,8 @@ class Sync:
                 body["parents"] = [parent]
             fid = self._retry(lambda: self.svc.files().create(
                 body=body, fields="id").execute())["id"]
-        self.state["folders"][key] = fid
+        with self._lock:
+            self.state["folders"][key] = fid
         self.save()
         return fid
 
@@ -192,6 +232,8 @@ class Sync:
         return candidates[0] if len(candidates) == 1 else None
 
     def _md5_index(self) -> dict[str, list]:
+        # Callers hold self._lock; the cache and the ledger it is built
+        # from are guarded together.
         if getattr(self, "_md5_cache", None) is None:
             idx: dict[str, list] = {}
             for rel, meta in self.state["files"].items():
@@ -205,12 +247,14 @@ class Sync:
 
         rel = str(local)
         local_md5 = md5_of(local)
-        cached = self.state["files"].get(rel)
-        if cached and cached.get("md5") == local_md5:
-            return "cached"
+        with self._lock:
+            cached = self.state["files"].get(rel)
+            if cached and cached.get("md5") == local_md5:
+                return "cached"
         name = local.name
 
-        moved = self._moved_source(local_md5, name)
+        with self._lock:
+            moved = self._moved_source(local_md5, name)
         if moved:
             old_rel, fid = moved
             meta = self._retry(lambda: self.svc.files().get(
@@ -221,9 +265,10 @@ class Sync:
                     self._retry(lambda: self.svc.files().update(
                         fileId=fid, addParents=parent,
                         removeParents=old_parents, fields="id").execute())
-                self.state["files"][rel] = {"md5": local_md5, "id": fid}
-                self.state["files"].pop(old_rel, None)
-                self._md5_cache = None
+                with self._lock:
+                    self.state["files"][rel] = {"md5": local_md5, "id": fid}
+                    self.state["files"].pop(old_rel, None)
+                    self._md5_cache = None
                 self.save()
                 return "moved"
         q = (f"name = '{name.replace(chr(39), chr(92)+chr(39))}' and "
@@ -236,7 +281,9 @@ class Sync:
         if res.get("files"):
             remote = res["files"][0]
             if remote.get("md5Checksum") == local_md5:
-                self.state["files"][rel] = {"md5": local_md5, "id": remote["id"]}
+                with self._lock:
+                    self.state["files"][rel] = {"md5": local_md5, "id": remote["id"]}
+                    self._md5_cache = None
                 self.save()
                 return "skipped"
             fid = self._retry(lambda: self.svc.files().update(
@@ -247,7 +294,9 @@ class Sync:
                 body={"name": name, "parents": [parent]},
                 media_body=media, fields="id").execute())["id"]
             outcome = "uploaded"
-        self.state["files"][rel] = {"md5": local_md5, "id": fid}
+        with self._lock:
+            self.state["files"][rel] = {"md5": local_md5, "id": fid}
+            self._md5_cache = None
         self.save()
         return outcome
 
@@ -356,6 +405,12 @@ def main() -> None:
                     help="Let --prune proceed when it would remove more than "
                          "half the tracked tree. Almost always means the "
                          "staging build did not finish.")
+    ap.add_argument("--workers", type=int, default=1,
+                    help="concurrent upload/move workers. 1 (default) is "
+                         "the historical sequential behaviour; the sync "
+                         "is latency-bound, not quota-bound, so 8-16 is "
+                         "safe. Folder resolution stays sequential "
+                         "regardless.")
     ap.add_argument("--dry-run", action="store_true",
                     help="Report what --prune would bin and stop, uploading "
                          "nothing. Run this first.")
@@ -364,7 +419,8 @@ def main() -> None:
                          "verify access, then report and stop.")
     args = ap.parse_args()
 
-    svc = get_service()
+    creds = get_credentials()
+    svc = get_service(creds)
     if args.auth:
         about = svc.about().get(fields="user(emailAddress)").execute()
         print(f"authorised as: {about['user']['emailAddress']}")
@@ -389,7 +445,7 @@ def main() -> None:
         print("nothing to do — pass --sync DIR")
         return
 
-    sync = Sync(svc)
+    sync = Sync(svc, credentials=creds)
     # Resolving the destination by name is how a second, parallel copy of
     # the whole archive came to exist. The handover folder was created by
     # the operator, so `drive.file` cannot see it — a name lookup found
@@ -418,29 +474,60 @@ def main() -> None:
     t0 = time.time()
     files = sorted(p for p in args.sync.rglob("*")
                    if p.is_file() and not p.name.startswith("."))
-    print(f"{len(files)} files to consider -> Drive folder {root}")
+    print(f"{len(files)} files to consider -> Drive folder {root} "
+          f"({args.workers} worker{'s' if args.workers != 1 else ''})")
     folder_ids: dict[Path, str] = {args.sync: root}
-    for i, f in enumerate(files, 1):
+
+    def parent_id(f: Path):
+        # Sequential and main-thread only: concurrent folder-by-name
+        # resolution could create the same folder twice, which is the
+        # duplicate-archive failure the ID-only rule exists to prevent.
         parent_path = f.parent
-        try:
-            # Inside the try deliberately: resolving the folder chain
-            # calls the API too, and when it sat outside, one failure
-            # there ended the whole pass rather than one file. That is
-            # how the 2026-08-25 overnight run died at 2,800 of 54,293.
-            if parent_path not in folder_ids:
-                fid = root
-                for part in parent_path.relative_to(args.sync).parts:
-                    fid = sync.folder(part, fid)
-                folder_ids[parent_path] = fid
-            outcome = sync.upload(f, folder_ids[parent_path])
-            counts[outcome] += 1
-        except Exception as exc:
-            counts["failed"] += 1
-            print(f"  FAILED {f}: {str(exc)[:140]}")
+        if parent_path not in folder_ids:
+            fid = root
+            for part in parent_path.relative_to(args.sync).parts:
+                fid = sync.folder(part, fid)
+            folder_ids[parent_path] = fid
+        return folder_ids[parent_path]
+
+    def progress(i):
         if i % 200 == 0:
             rate = i / (time.time() - t0)
             eta = (len(files) - i) / rate / 3600
-            print(f"  {i}/{len(files)}  {counts}  eta {eta:.1f}h")
+            print(f"  {i}/{len(files)}  {counts}  eta {eta:.1f}h", flush=True)
+
+    if args.workers <= 1:
+        for i, f in enumerate(files, 1):
+            try:
+                # Inside the try deliberately: resolving the folder chain
+                # calls the API too, and when it sat outside, one failure
+                # there ended the whole pass rather than one file. That is
+                # how the 2026-08-25 overnight run died at 2,800 of 54,293.
+                outcome = sync.upload(f, parent_id(f))
+                counts[outcome] += 1
+            except Exception as exc:
+                counts["failed"] += 1
+                print(f"  FAILED {f}: {str(exc)[:140]}")
+            progress(i)
+    else:
+        # Workers do API calls only; the ledger is guarded by Sync's own
+        # lock, and every count and print stays on this thread.
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        with ThreadPoolExecutor(max_workers=args.workers) as pool:
+            futures = {}
+            for f in files:
+                try:
+                    futures[pool.submit(sync.upload, f, parent_id(f))] = f
+                except Exception as exc:
+                    counts["failed"] += 1
+                    print(f"  FAILED {f}: {str(exc)[:140]}")
+            for i, fut in enumerate(as_completed(futures), 1):
+                try:
+                    counts[fut.result()] += 1
+                except Exception as exc:
+                    counts["failed"] += 1
+                    print(f"  FAILED {futures[fut]}: {str(exc)[:140]}")
+                progress(i)
     sync.save(force=True)
     print(f"done: {counts}")
     # After the uploads, never before: pruning first would bin a file and

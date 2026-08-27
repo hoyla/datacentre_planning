@@ -28,7 +28,7 @@ _ROUTES: tuple[tuple[str, str, str], ...] = (
     ("nsip_register", "Planning Inspectorate",
      "From the NSIP register"),
     ("dc_keyword", "Keyword search",
-     "Found by searching planning registers for data-centre language"),
+     "Found by searching planning registers for datacentre language"),
     ("energy_national:", "Energy search near a site",
      "Found by searching for energy infrastructure around a known site"),
     ("spatial:", "Next to a known site",
@@ -44,7 +44,7 @@ _ROUTES: tuple[tuple[str, str, str], ...] = (
     ("duplicate_of:", "Duplicate record",
      "A council's duplicate of another application here"),
     ("exclude:", "Reviewed and excluded",
-     "Considered and judged not to be a data centre"),
+     "Considered and judged not to be a datacentre"),
 )
 
 

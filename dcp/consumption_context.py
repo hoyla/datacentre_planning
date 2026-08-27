@@ -354,7 +354,7 @@ def context_sentence(la: str,
             f"while nationally it {_verb(national_change(series))} "
             f"(DESNZ sub-national statistics; large users are "
             f"half-hourly-metered non-domestic consumers, which includes "
-            f"data centres).")
+            f"datacentres).")
 
 
 def context_note(la: str) -> str:

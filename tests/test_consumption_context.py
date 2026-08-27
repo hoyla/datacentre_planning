@@ -183,8 +183,8 @@ def test_sentence_wording_is_the_agreed_form():
         "Large-user electricity consumption in this site's local authority "
         "rose 60% between 2019 and 2024, while nationally it fell 9% "
         "(DESNZ sub-national statistics; large users are "
-        "half-hourly-metered non-domestic consumers, which includes data "
-        "centres).")
+        "half-hourly-metered non-domestic consumers, which includes "
+        "datacentres).")
 
 
 def test_sentence_never_written_for_unmapped_authority():

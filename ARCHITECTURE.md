@@ -1,9 +1,9 @@
 # Architecture
 
-The shape of the system, the schema, the design principles, and where we expect to extend.
-
-For *what is still to do*, see [ROADMAP.md](ROADMAP.md); for what was
-built and decided, including what was tried and rejected, see
+The shape of the system as it is: the schema, the pipeline, and the
+design principles it is held to. This document describes what exists —
+*what is still to do* lives in [ROADMAP.md](ROADMAP.md), and what was
+built and decided, including what was tried and rejected, in
 [HISTORY.md](HISTORY.md).
 For *why a journalism investigation needs this*, see [prior_art.md](prior_art.md) and `data/seed_cases/walkthrough_findings.md`.
 
@@ -23,32 +23,43 @@ Seven principles, in order of importance:
 
 ---
 
-## Three-stage pipeline
+## The pipeline
 
 ```
-INDEX  →  TRIAGE  →  DEEP-READ
+INDEX  →  TRIAGE  →  DEEP-READ  →  SITES  →  ADJUDICATION  →  RELEASE
 ```
 
-Each stage is idempotent and resumable. Each writes to a separate table family. They communicate only through Postgres, not in-memory state — so a stage can be re-run in isolation without re-doing earlier work.
+Each stage is idempotent and resumable. Each writes to a separate table
+family. They communicate only through Postgres, not in-memory state — so
+a stage can be re-run in isolation without re-doing earlier work. The
+first three build the corpus; the last three turn it into the thing a
+reporter opens, and their ordering constraints and traps are the
+regeneration runbook
+([docs/REGENERATION_RUNBOOK.md](docs/REGENERATION_RUNBOOK.md)).
 
 ### 1. Index
 
 Per source, paginate the recent-applications feed (or equivalent), upsert structured metadata into `applications`, preserve the raw response in `source_snapshots`.
 
-Implemented: PlanIt (`dcp/sources/planit.py`, including the parent-application backfill and operator/spatial sweeps), NSIP CSV (`dcp/sources/nsip.py`), Barbour ABI xlsx (`dcp/sources/barbour.py` — file-based, `dcp index --source barbour --file <xlsx>`; ingests construction projects into `projects` and links them to applications by reference).
-Pending: gov.uk-search-API Section 35 Directions half, MHCLG national service as a cross-validation source.
+Implemented: PlanIt (`dcp/sources/planit.py`, including the parent-application backfill and operator/spatial sweeps), NSIP CSV (`dcp/sources/nsip.py`), Barbour ABI xlsx (`dcp/sources/barbour.py` — file-based, `dcp index --source barbour --file <xlsx>`; ingests construction projects into `projects` and links them to applications by reference), and the Section 35 watcher (`dcp index --source s35` — the gov.uk publication feed, keyed on publication slug, deliberately fetching the *fact* of a direction rather than its attachments; HISTORY 2026-08-25).
 
 ### 2. Triage
 
-For each application without a recent triage verdict, ask an LLM (Ollama by default) to classify:
-
-- Is this a data centre, adjacent, unrelated, or unknown?
-- What's the rough capacity (MW) if mentioned?
-- Are there power-related signals worth examining (substation, generator, fuel storage, "energy centre", etc.)?
-
-Verdicts versioned per `(application_id, model, inserted_at)`; latest wins for "what do we currently think." Prior verdicts retained for prompt-revision comparison. The resume contract is per-model: `applications_pending_triage(conn, model=X)` excludes apps that already have a verdict from model X, so re-running with a new model overlays a second opinion without touching the first.
-
-**Implemented** (`dcp triage`, prompt frozen 2026-05-14, model granite4.1:30b). Output fields: `verdict`, `worth_deep_read`, `signals[]`, `why`, `confidence`. The rubric lives in `data/triage_labelling/rubric.md` (tracked); the prompt is in [dcp/triage.py](dcp/triage.py). Captured lexicon includes: backup, generator, turbine, LPG, gas, failover, substation, fuel storage, emergency power, resilience, uptime, CHP, kVA, kW, MW, "energy centre" (Aisha-confirmed coded term — see `data/seed_cases/walkthrough_findings.md`).
+For each application without a recent triage verdict under the current
+rubric, ask an LLM to classify it. Verdicts are versioned per
+`(application_id, model, inserted_at)` **and per rubric**: the v1 rubric
+(is this a data centre; model granite4.1:30b, prompt frozen 2026-05-14)
+and the dc_build rubric (the truth-based classes: `new_build`,
+`expansion_refurb`, `built`, `adjacent_power`, `procedural`, `unknown`,
+`not_dc`; model claude-sonnet-5) coexist as generations, and universe
+membership reads the latest verdict *per rubric* — an application is
+in-universe if either generation calls it datacentre-related, which
+under dc_build is every class except `not_dc`. `procedural` and
+`unknown` are kept deliberately: a conditions discharge belongs to its
+parent's site, and a disguise suspect is precisely what must not be
+dropped. The rubric lives in `data/triage_labelling/rubric.md`; the
+five adjudication rules and the trial that chose the sweep
+configuration are in HISTORY (2026-08-03).
 
 ### 3. Deep-read
 
@@ -60,15 +71,46 @@ Two-stage extraction per the seed walkthrough:
 
 A multimodal pass (Claude vision on site plans and elevations) was originally planned as Phase 5; rejected after the Phase 4 sweep — see [HISTORY.md](HISTORY.md). Vision can only see what's drawn and labelled; concealed plant won't appear in the drawings, and labelled plant is already text-extractable.
 
-**Document-fetch implemented** for three transports:
+**Document-fetch adapters**, one module per portal family under
+`dcp/sources/`, all dispatched by `scripts/fetch_outstanding.py` (which
+works from `acquisition_outcome` rather than from the absence of
+documents, so a settled negative leaves the queue and a transient error
+stays in it):
 
-- **Idox** (`dcp fetch-docs --source idox`, [dcp/sources/idox.py](dcp/sources/idox.py)) — canonical and `/newplanningaccess/` variants. SSL chain reconstruction via the `truststore` package (OS native trust store + AIA chasing) unblocks councils whose servers send incomplete certificate chains.
-- **Ocella** (`dcp fetch-docs --source ocella`, [dcp/sources/ocella.py](dcp/sources/ocella.py)) — POST to `showDocuments?reference=<ref>&module=pl`, parse `<a href="viewDocument?file=...">` anchors. Regex tolerates the stray-space `href =` variant some Ocella instances emit. Adds Hillingdon, NorthLincs, Slough Langley, several Welsh portals.
-- **Manual** (`scripts/ingest_manual_docs.py` + [dcp/sources/manual.py](dcp/sources/manual.py)) — for one-off portals without an adapter, the journalist drops files into `data/raw/fully_manual/<application_ref>/`; the ingest script hashes them, hard-links to the canonical `data/raw/manual/<ref>/<sha[:16]>.<ext>` path (copy fallback on EXDEV), records via `repo.record_document`, and **preserves any existing adapter-recorded URL** rather than overwriting with `file://`. The check-before-insert pattern keeps the principle-3 invariant (originals not mutated) even when the same doc is reachable via multiple paths.
+- **Idox** ([dcp/sources/idox.py](dcp/sources/idox.py)) — canonical and `/newplanningaccess/` variants; SSL chain reconstruction via `truststore` unblocks councils sending incomplete chains. The polite-client base the other adapters share.
+- **Ocella** ([dcp/sources/ocella.py](dcp/sources/ocella.py)) — Hillingdon, NorthLincs and others.
+- **Agile**, **Arcus**, **aifusion**, **Salesforce** ([dcp/sources/](dcp/sources/)) — the 2026-08 portal families; Salesforce fetches against browser-harvested listings, Arcus handles both disclaimer variants.
+- **Northern Ireland** ([dcp/sources/ni_planning.py](dcp/sources/ni_planning.py)) — the whole-nation register via its own anonymous API (2026-08-27; docs/PORTAL_NOTES.md has the route map).
+- **Newport docstore** (`scripts/fetch_newport_docstore.py`) — documents held off the documents tab.
+- **Manual** (`scripts/ingest_manual_docs.py` + [dcp/sources/manual.py](dcp/sources/manual.py)) — for one-off portals: files dropped per application, hashed, recorded via `repo.record_document`, **preserving any adapter-recorded URL** rather than overwriting with `file://`.
+- **Browser-assisted** (`scripts/browser_receiver.py`) — a loopback sink for portals that only serve a real browser; the page POSTs each document to it. Rules and per-portal routes in [docs/PORTAL_NOTES.md](docs/PORTAL_NOTES.md).
 
-Per-application `_manifest.json` is the hand-over signal across all three transports.
+Per-application `_manifest.json` is the hand-over signal across every
+transport, and `repo.record_document` is the single gate every path
+passes through — which is where the zero-byte guard lives (an empty
+body is a failed fetch, never a document).
 
-#### Stage-2 extraction: implemented (v1)
+#### Reading at scale — the current shape
+
+The corpus is deep-read by three model families, every finding behind
+the same **verbatim-quote gate**: an extracted quote must appear in the
+document's cached text or the finding is rejected, which makes the gate
+— not the model — the hallucination protection. Each finding records
+its model; the three coexist in the append-only store (GPT-5 on the
+OpenAI Batch API, Claude Sonnet, and Qwen under MLX on the Studio).
+Standing policy (2026-08-26): **the local reader is a phase-3 second
+opinion and never the first read of anything** — the label audit
+measured it misfiling the power families at up to 68% against Sonnet's
+9%. New content's first read is `scripts/deepread_escalate_openai.py
+--cohort first_read`; the Studio runs the corroboration pass
+(`scripts/deepread_run.py`), whose deliverable — the corpus-wide
+comparison where a disagreement is the finding — is still owed
+(ROADMAP). Findings carry a `signal_family` (derived where a model
+did not supply one, `family_source` saying which), and a label audit
+(`finding_label_audit`) demotes misfiled rows at render with a "[filed
+as X]" marker — moves, never deletes.
+
+#### Stage-2 extraction as first built (v1, kept for the record)
 
 The `findings` table (migration 001) holds one row per `(application_id, document_id, signal_type, model, inserted_at)`, with `value_text` / `value_number` / `value_unit` for structured facts, `evidence_text` + `evidence_page` for the supporting quote, and the model name for auditability. Append-only / versioned — re-extraction with a refined prompt adds rows; nothing is destroyed.
 
@@ -85,7 +127,7 @@ PDF parsing alone covers ~92% of files; long-tail loaders are still a follow-on.
 
 1. **Per-file text extraction** — pypdf for PDFs, cached at `data/raw_text/<source>/<application_ref>/<sha[:16]>.pages.json` (page-indexed JSON). Pages with no usable text layer (~5% of the corpus, measured Aug 2026 — scanned council forms plus image-only pages *inside* text-layered documents) fall back to OCR: pypdfium2 rendering at 300 DPI + tesseract by default (RapidOCR as the alternative engine). Both engines are deliberately **non-generative** — the OCR text is the substrate the quote-verification gate checks against, and it must fail noisily (garbage characters) rather than fluently (a VLM's plausible hallucination would let an invented quote verify). OCR'd page numbers are recorded per document in the cache (`ocr_pages`) and surfaced in the verification report. LLM step is decoupled from parsing — either can be re-run. Backfill across pre-existing caches: `scripts/ocr_backfill.py`.
 2. **Regex pre-pass** — `extract.find_candidates` surfaces high-signal sentences against patterns for MW capacity (`\d+(\.\d+)?\s*(MW|kVA|kW)\b`), generator counts (`\d+\s*(diesel|gas|emergency|standby|back[- ]up)\s+generators?\b`), and fuel storage hours / litres / tonnes. Deterministic; produces candidate windows for the LLM step.
-3. **LLM extraction** — currently human-in-loop via Claude Code's Read tool acting as the LLM (`model=claude-opus-4-7+read-tool`). The Read tool opens the cached page-JSON, the model identifies structured facts + the literal evidence quote + the page number, and `scripts/extract_findings.py` records them via `repo.record_finding`. The same shape (decoupled from parsing, cached text inputs, append-only rows) makes a later switch to a batch SDK pass a drop-in.
+3. **LLM extraction** — in v1, human-in-loop via Claude Code's Read tool acting as the LLM (`model=claude-opus-4-7+read-tool`); superseded by the batch readers above. The Read tool opens the cached page-JSON, the model identifies structured facts + the literal evidence quote + the page number, and `scripts/extract_findings.py` records them via `repo.record_finding`. The same shape (decoupled from parsing, cached text inputs, append-only rows) makes a later switch to a batch SDK pass a drop-in.
 4. **Delta classifier** ([dcp/findings.py](dcp/findings.py): `classify()`) — compares each finding against the application's `triage.signals` array and the description text. Three categories per the original design:
 
    | Category | What it is | Rendered? |
@@ -102,30 +144,71 @@ PDF parsing alone covers ~92% of files; long-tail loaders are still a follow-on.
 
 **Resume / idempotency**: parallel to the triage path. Re-extraction with a refined model name adds rows; the export reads the latest per `(application_id, document_id, signal_type, model)` tuple.
 
-#### Editorial output structure
+### 4. Sites
 
-`dcp export` produces a single markdown + xlsx pair (no per-app sidecars). The reporter re-opens the same filenames each cycle; new findings appear inline on cards she's already reviewed.
+A *site* is the unit the investigation reasons about: a cluster of
+applications and Barbour projects joined by project links, family edges
+(`associated_id`, with a stricter description fallback), or spatial
+proximity within 1 km. `dcp/sites.py` builds the clusters and
+`scripts/materialise_sites.py` writes them to `sites` /
+`site_members` — stable keys (`PTNO-<lowest Ptno>`, else
+`SITE-<first ref>`), recomputable membership, retire-and-revive rather
+than delete. Two hand-adjudicated priors correct what the radius cannot
+see, both failing the run on an unknown reference rather than weakening
+silently: `data/priors/site_partitions.yaml` (campus boundaries —
+partitioned nodes take no spatial edge outside their partition, while
+documentary edges extend it, and a documentary edge joining two
+partitions is surfaced, never resolved) and
+`data/priors/inferred_coords.yaml` (coordinate priors, each with its
+derivation). `preflight()` states what a materialise would change —
+including any hand-matched claim it would orphan — before it changes
+it.
 
-The export is now organised editorially rather than as a flat ranked list, via [dcp/cohorts.py](dcp/cohorts.py) and the YAML at `data/priors/cohorts.yaml`. Five top-level sections:
+### 5. Adjudication
 
-1. **At a glance** — universe-level counts (total, by verdict, worklist size, excluded).
-2. **Editorial highlights** — a hand-picked bullet list of the most newsworthy applications (10 entries with one-line hooks).
-3. **Methodology** — the rubric, the prompt freeze date, the model trail.
-4. **Editorial cohorts** — themed groupings (Humber Estuary cluster, Greystoke sites, Ark Project Union, Hurley Palmer Flatt consultant trio, …) in YAML-defined editorial order. Each cohort renders its primary apps as full cards; apps that also belong to later cohorts appear as cross-references rather than duplicated cards. The "primary cohort" for an app is the first cohort in YAML order that lists it; subsequent cohorts list it under an "Also in this cohort" cross-reference. HTML anchors (`<a id="...">`) make cohort hops in-document clickable.
-5. **Other applications** — the long tail of worklist apps not in any cohort, in rank order.
-6. **Filtered from the worklist** — applications confirmed NOT to be data centres after deep-read (4 entries at time of writing), tagged `exclude:<reason>`, plus consultation-stage duplicates tagged `duplicate_of:<primary>`. Filtered apps don't count toward the worklist total; the section makes the filter audit-able.
+Extraction asks what a document says; adjudication asks **whose figure
+it is**. `power_adjudication` holds one verdict per finding per model
+(`site_capacity` / `not_this_site` classes / `unclear`), append-only,
+multi-model. On top of it sit the corrections
+(`scripts/correct_adjudications.py`: named, idempotent rules that
+demote quantity-type errors — energy-not-power, storage, thermal,
+export limits — each mirrored in `dcp/adjudication_gate.py`, which
+every export calls and which refuses to build over uncorrected rows
+and reports the adjudication tail); the generation-figure adjudication
+(basis, plant type, unit counts); and the external **capacity claims**
+(`capacity_claims` / `capacity_claim_matches`: figures from Companies
+House filings, operator pages, the NESO register and Environment
+Agency permits, loaded as claims beside the planning data — never into
+site columns — with hand matches carrying method, confidence and
+evidence, and quote-verification against committed snapshots).
 
-The xlsx mirrors this: three new editorial-structure columns (`Highlight`, `Primary cohort`, `Also in cohorts`) sit alongside the existing data columns, and a separate `Filtered` sheet lists the excluded / duplicate apps with their reason and (where relevant) primary ref. The xlsx's auto-filter range and humanised-lineage column index move accordingly (see [tests/test_export.py](tests/test_export.py) for the structural contract).
+### 6. Release
 
-**Why this shape**: a flat rank doesn't surface that four applications within 2 km of each other on the Humber Estuary are the editorial story, or that three Greystoke sites share an applicant and a consultant. Cohorts let the journalist see *patterns* the rank order would obscure, while the long-tail "Other applications" preserves the principle-1 commitment to surfacing the whole universe rather than pre-filtering to the hypothesis.
+The handover is four artefacts over one corpus, regenerated per release
+by the runbook chain: the **reader** (one self-contained HTML file —
+sites, applications, energy projects, map, machine readings behind
+their own quote gate, methodology and data dictionary generated inside
+it from the same queries as the data), the **workbook**, the **DuckDB
+file**, and the **Drive tree** (per-site folders of source documents
+with generated site reports and findings CSVs, hard-linked from the
+canonical store, rebuilt clean and swapped so re-partitions move
+folders rather than duplicating them). Documents link to our Drive copy
+first with the register beside it, addressed by recorded file ID
+(`document_drive_files`), never by derived path. Releases land beside
+their predecessors so citations keep resolving; `scripts/release_diff.py`
+diffs each build against the last release before anything deploys. The
+published reader is served from Cloud Run behind Guardian sign-in;
+EdgeOne redirects. CI runs the no-database test suite and drives the
+committed reader on every push (`.github/workflows/checks.yml`).
 
-The `exclude:*` filter is the engineering corollary: confirmed non-DCs no longer pollute the worklist count without being silently dropped from the corpus. The original triage verdict stays untouched (principle 3); the exclusion is a separate tag.
+The v1 editorial output — the markdown/xlsx pair, cohorts and the
+integrated viewer — is in HISTORY; its append-only store and
+provenance discipline are what everything above still runs on.
 
----
 
 ## Schema
 
-Current schema in [migrations/001_initial.sql](migrations/001_initial.sql) plus subsequent migrations: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table), [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric), [004_council_aliases.sql](migrations/004_council_aliases.sql) (JSONB `councils.notes` + the `council_aliases` reorganisation map) and [005_projects.sql](migrations/005_projects.sql) (the `projects` + `project_applications` pair for commercial construction-intelligence records — see "Projects vs applications" below). Tables and their relationships:
+Current schema is migrations 001–030 applied in order. The early ones in detail: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table), [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric), [004_council_aliases.sql](migrations/004_council_aliases.sql) (JSONB `councils.notes` + the `council_aliases` reorganisation map) and [005_projects.sql](migrations/005_projects.sql) (the `projects` + `project_applications` pair for commercial construction-intelligence records — see "Projects vs applications" below). Tables and their relationships:
 
 ```
 sources        ──┐
@@ -143,12 +226,27 @@ documents        │ (application_id, content_sha256) UNIQUE
                  │
                  ▼
 triage           │ append-only, versioned per inserted_at
-findings         │ append-only, versioned per inserted_at
-                 │ (no multimodal sibling — see ROADMAP)
+findings         │ append-only, versioned per inserted_at; signal_family
+                 │ + family_source since 009
 
 projects         │ (source_id, external_ref) UNIQUE — commercial construction-
                  │ intelligence records (Barbour ABI); full source row in raw_metadata
 project_applications │ many-to-many link to applications, match_method per link
+
+sites            │ stable site_key; retire-and-revive, never delete (006)
+site_members     │ application/project membership, joined_via, retired_at
+
+power_adjudication    │ whose figure is it — per finding per model,
+                      │ append-only; unit_note carries correction markers (008)
+finding_label_audit   │ misfiled-family verdicts; demotes at render (025)
+site_machine_readings │ per-site readings behind their own quote gate,
+                      │ keyed on input hash (§7b–e)
+capacity_claims       │ external figures as claims, never columns (021, 030)
+capacity_claim_matches│ hand matches: method, confidence, evidence, retirable
+deepread_log          │ what was sent to which reader, per document
+acquisition_outcome   │ per-attempt fetch verdicts; the outstanding queue
+document_listing_audit│ offered-vs-held per application (026)
+document_drive_files  │ the Drive file ID of every uploaded document
 ```
 
 ### Projects vs applications
@@ -247,28 +345,16 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 |---|---|---|
 | Database | Postgres 16 | Matches Luke's reference repos; JSONB for source-specific raw metadata. |
 | ORM | None — raw `psycopg2` | Matches fuel-finder / meridian convention; queries short and obvious. |
-| Triage LLM | Ollama (local), `granite4.1:30b` | Five-model eval (May 2026): granite4.1:30b 97% verdict accuracy at ~9s/app. IBM's JSON-tuning + 30b reasoning beat bigger non-granite models on calibration. `FakeBackend` for CI. |
+| Triage LLM | v1: `granite4.1:30b` local (five-model eval, May 2026: 97% verdict accuracy at ~9s/app). dc_build: `claude-sonnet-5` against the enriched rubric (trial 2026-08-03: 47/50, 9/10 on invisibility cases). | Generations coexist per rubric; `FakeBackend` for CI. |
 | Triage versioning | Per `(application_id, model, inserted_at)` | Re-running with a different model overlays a second opinion without touching the first. Resume is model-scoped. |
-| Findings extraction LLM | Claude Code Read-tool (human-in-loop), model name `claude-opus-4-7+read-tool` | v1 calibration. Decoupled from text extraction (cached page-JSON), append-only rows, model-named — a future batch SDK pass slots in as a new model name without disturbing existing rows. Personal-account routing flagged when pre-publication. |
+| Findings extraction | Three model families behind the verbatim-quote gate: GPT-5 (OpenAI Batch, primary for new content), Claude Sonnet, Qwen/MLX (second opinion only, per the label audit). v1's human-in-loop Read-tool rows remain in the store under their own model name. | The gate, not the model, is the hallucination protection; append-only rows make each family an overlay. |
 | Multimodal pass | Originally planned via Claude vision; **probably won't do** | Phase 4 confirmed PDFs are overwhelmingly text-layered; vision can only see what's drawn and labelled, and concealed plant won't appear in drawings. Revisit per-app only. |
 | Document corpus | Local filesystem first, S3 later | Mirrors fuel-finder's "local until it hurts" pattern. |
 | Time scope | 2018+ for v1 | PlanIt has consistent coverage from 2018; sharp drop before. |
 | Source order | PlanIt first | National, full-text searchable, single API. NSIP and per-council adapters added when journalism need warrants. |
 | Schema mutability | Append-only / versioned where it matters; original values never overwritten | Reproducibility for journalism; defensibility back to source; re-analysis with refined prompts is cheap. |
 | Resume mechanism | Cache via `source_snapshots`, not a separate cache table | One source of truth; same data serves both audit and resume. |
-| Web framework | None. Browsing is the **integrated viewer** — a single static HTML file (`dcp/reader.py` → `datacentre_energy_review_v<version>.html`) | The integrated viewer is the static-site answer: split-screen Leaflet map + chaptered card list, bidirectional click sync, in-page search and filter, all inlined into one file with the data embedded as JSON. No server, no build step, no dynamic deps. Generated alongside the existing markdown/xlsx/KML in the release-folder pipeline. |
-| Release packaging | `dcp release --version <v>` produces a single dated, versioned folder | Each release is one self-contained folder under `data/exports/datacentre_energy_review_v<version>_<date>/` with the headline integrated viewer at top level, journalist-facing companions (markdown, xlsx, standalone map, "How to read this") alongside, and two subfolders: `Map data/` (geojson + kml + OSM power-plants context) and `Self-scrutiny/` (the four QA artefacts — findings verification, privacy sweep, Foxglove reconciliation, map spot-check). Version bumped manually per published release. Source-of-truth filenames don't carry dates (dates live on the folder); the integrated viewer keeps the full `datacentre_energy_review` stem, components use the abbreviated `dc_energy_review_*` stem. |
+| Web framework | None. The reader (`scripts/export_reader.py`) is one self-contained HTML file — data, methodology and dictionary generated from the same queries; served from Cloud Run behind Guardian sign-in, no server-side logic of its own. | No build step, no runtime dependency beyond map tiles; a companion document is the first thing to go stale, so there are none. |
+| Release packaging | Phased releases (2.x) regenerated by the runbook chain; artefacts carry their phase and land beside their predecessors on Drive; `release_diff.py` gates each against the last. v1's `dcp release` folders are HISTORY. | A citation of an earlier release keeps resolving; the diff is the check between a regression and a published one. |
 | OCR for scanned-only pages | pypdfium2 + tesseract (default) / RapidOCR; generative VLMs excluded from the substrate role | The OCR text doubles as the verbatim-quote verification substrate. Non-generative engines fail noisily on illegible input; a VLM fails fluently, which would let invented quotes verify. Vision-capable models remain available as *readers* during extraction — never as the text of record. |
 | Map coord backfill | `data/priors/inferred_coords.yaml` (typed alongside the raw record) | 11 of the top-61 worklist applications have no `location_x/y` in the raw PlanIt record because the address field carries no postcode. Inferred coordinates live in a small yaml priors file with per-entry provenance ("Nominatim forward-search returned …" or "sibling-ref backfill from …"); `dcp/map.py` falls back to it when source coords are null and flags inferred pins distinctly (`inferred_coords: true` in geojson + ⚑ badge in popups). Source coords stay null in `raw_metadata` — principle 3 (never mutate source) preserved. |
-
----
-
-## What's not in the architecture yet
-
-- **Council-reorganisation handling** for pre-2020 records under legacy district names (Wycombe → Buckinghamshire, Chiltern South Bucks → Buckinghamshire, etc.). Currently surfaces as NULL `council_gss` with the legacy `area_name` preserved in `raw_metadata`. Per principle 3, the legacy name stays untouched; any canonicalisation goes in a new column or join table, not over the original.
-- **Long-tail document-fetch adapters.** Idox + Ocella + manual ingest cover the top-100 worklist and most of the Barbour round. The 2026-08 fetch enumerated the remaining portal families by observed need: **Agile Applications** (Slough, Middlesbrough), **Arcus registers** (Cherwell — incl. Graven Hill — Crawley, Welwyn Hatfield), **Northgate PlanningExplorer** (Birmingham, Camden, Runnymede), **Salesforce** (Bracknell, Milton Keynes), **NEC/LPAssure** (Broxbourne), plus bespoke one-offs (St Albans, Jersey, Harlow) that stay on the manual path.
-- **`parent_ref` as a first-class column** rather than a `discovered_via` tag. Currently a `parent_backfill:<child_ref>` array entry; promoting to a column would simplify join queries.
-- **Findings extraction at scale.** v1 covers ~35 apps via human-in-loop Read-tool extraction; running across the full top-100 and the long-tail worklist needs either a batch SDK pass or a continued slow-and-steady human-in-loop sweep. Resolved since: the corpus is deep-read at scale behind the
-verbatim-quote gate — see [HISTORY.md](HISTORY.md).
-- ~~**Browse UI.**~~ **Built 2026-05-17 as the integrated viewer** (`dcp/reader.py`). Single self-contained HTML file with split-screen Leaflet map + chaptered card list, bidirectional click sync, in-page search across all card fields, filter chips, and a "Read this first" intro panel embedding at-a-glance stats / methodology / how-to-read. Built for Aisha + two colleagues on M4-Air-class machines; opens straight from `file://`. Static, no server, no build step.
-- **CI**. Tests are local-only; no GitHub Actions yet. Worth setting up when team scales beyond Luke + Aisha.

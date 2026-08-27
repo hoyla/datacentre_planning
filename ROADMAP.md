@@ -4,18 +4,21 @@ What is still to do. Everything already built and decided — including
 the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
-Current state: **494 sites** (plus 25 pre-planning), **2,034
-applications** in the site universe, **56,860 documents**. Findings and
-adjudication counts move while the corroboration pass runs and are
-deliberately not restated here — `scripts/corpus_stats.py` prints them,
-and each release states the boundary it was stamped at.
+Current state: **499 sites** (plus 25 pre-planning), **2,034
+applications** in the site universe, **~57,000 documents and moving**
+(the 2026-08-27 acquisition sweep is paused mid-run for the release
+boundary and resumes after it). Findings and adjudication counts move
+while the corroboration pass runs and are deliberately not restated
+here — `scripts/corpus_stats.py` prints them, and each release states
+the boundary it was stamped at.
 
-**2.8 shipped on 2026-08-26** and reaches readers at the Cloud Run
+**2.9 is in flight** (2026-08-27): artefacts built and diffed against
+2.8, the Drive sync running as this is written; what remains is the
+ledger, the final reader rebuild, the release PR and the deploy. 2.8
+remains the version readers see until then, at the Cloud Run
 deployment behind Guardian sign-in, which changes only when
-`cloudrun/deploy.sh` is run. EdgeOne, which builds from git, is a
-signpost rather than a surface: PR #135 merged on 2026-08-27, so it
-redirects and the shared password is retired. What 2.8 contains is in
-HISTORY. No release is in flight.
+`cloudrun/deploy.sh` is run. EdgeOne is a signpost: PR #135 merged
+2026-08-27, so it redirects and the shared password is retired.
 
 **Reading is complete for phase 2.1**, stamped 2026-08-11 with the
 Studio reader stopped so the boundary is clean: 37,992 of 38,005 prose
@@ -62,37 +65,40 @@ alongside it.
   name — the adapter sets it whenever `len(links) == 0`, whether the
   page was a register or a refusal.
 
-- **The 31 browser-routed applications.** The largest and cheapest bloc
-  of the acquisition tail, using tooling that already works: 15 behind
-  AWS WAF (the Coventry signature), 8 on LPAssure serving
-  `UnsupportedWebBrowser`, 8 Salesforce needing a harvested document
-  listing. Needs a human at the keyboard, so it is scheduled rather than
-  queued. See the acquisition tail below for the rest of that class.
-
-- **`relist_refetch.py` now has a per-application deadline**
-  (2026-08-27). Not `fetch_outstanding.py`'s SIGALRM — that only works
-  in the main thread and the refetch runs worker shards — but a
-  `threading.Timer` that closes the shard's clients at the ceiling
-  (900s, the same default), so the stalled read that sat twenty
-  minutes on an open idle connection on 2026-08-26 raises into the
-  error path instead. A timed-out application is recorded as a
-  retryable `error`, never settled, and the next application builds
-  fresh clients. Resuming the outstanding tranches
-  (`--tranche rest`, then `--tranche glasgow`) can now be left
-  unattended.
+- **The "31 browser-routed applications" mostly dissolved on
+  measurement** (2026-08-27) — the notes had aged past their premise.
+  Broxbourne's LPAssure bloc: all 27 applications already hold
+  documents. Coventry: 26 of 29 already hold documents (3 empty; its
+  completeness is still unmeasured because the relist audit skips the
+  host by name). Northern Ireland: no longer browser work at all — the
+  adapter exists (HISTORY, 2026-08-27). What genuinely remains after
+  the 2026-08-27 sweep finishes: **24 NEC, 3 Northgate, ~14 bespoke**
+  — and the Northgate three are three different situations, probed the
+  same day: Liverpool migrated to a Tascomi register
+  (lar.liverpool.gov.uk answers; the northgate host is dead), Hackney's
+  host refuses connections entirely (find where its register lives
+  now), and Birmingham gates scripted clients with 403/503 (a real
+  browser passes — the one genuine human-at-keyboard job left, and its
+  Hackney application is a conditions detail on the Interxion site's
+  energy-centre emissions). Re-measure the residue from
+  `acquisition_outcome` once the sweep completes; do not re-quote these
+  counts without doing so.
 
 ## Phase 2 — the tail of the collecting
 
-- **The acquisition tail.** 108 applications are being worked now. Of
-  those recorded unreadable, a host-by-host probe found **20 reachable
-  without a browser, across eleven unrelated bespoke portals** — roughly
-  one adapter per two applications, which is poor value. The larger and
-  cheaper bloc is **31 that route through the browser**, using tooling
-  that already works: 15 behind AWS WAF (the Coventry signature), 8 on
-  LPAssure serving `UnsupportedWebBrowser`, 8 Salesforce needing a
-  harvested document listing. Needs a human at the keyboard.
-  Genuinely hard: 5 behind CAPTCHA, 7 refusing with 403/500/503
-  regardless of user-agent, 1 Incapsula.
+- **The acquisition tail, remeasured 2026-08-27 and shrinking as this
+  is written.** The standing counts (108 being worked, 31
+  browser-routed) had aged badly — see the Deferred-to-2.9 note above
+  for what dissolved. The day's real finding was larger than any of
+  them: **159 outstanding applications were reachable with adapters
+  that already existed** and had simply never been swept — dominated by
+  the energy-adjacency blocs discovered on 2026-08-07 (Southwark 24,
+  Camden 21, Bristol, Brent…) whose fetch never ran. That sweep is in
+  flight, paused for the 2.9 boundary, resuming after; every
+  application writes its outcome row, so the honest residue is a query
+  on `acquisition_outcome` after it completes, not a number written
+  here. The genuinely-hard classes (CAPTCHA, hard 403/500/503,
+  Incapsula) still stand.
 - **Historical partial fetches are now measured. The refetch is not
   done.** A short fetch used to be recorded as complete, and the
   manifests could not show it because they record what was stored and
@@ -199,21 +205,32 @@ alongside it.
   this table.** A count of held documents is a floor until the site's
   applications are measured and their shortfall is either refetched or
   stated.
-- **The site 61 split is materialised and its claims are re-matched.**
-  Ten partitions (2026-08-27, HISTORY has the account) plus a follow-up
-  the first materialise exposed: four Ealing out-of-borough
-  consultations with no coordinates sat as unlocatable singleton sites
-  (213–215 for Tudor Works — the "three separate site records" that
-  blocked the Colt claim — and 405 for Nestlé), dissolved into their
-  campuses via coordinate priors. 499 live sites. Six claim matches
-  loaded the same day: Ark's 99 MW re-matched to site 61 (its
-  2026-08-21 retirement entry records the release condition it met),
-  the four Union Park SPV figures (24 built / 48 under construction /
-  24 subject-to-planning / £839.79m), and Colt London 4's 31 MW to
-  site 75. What is left: the next artefact build and Drive staging
-  rebuild pick all of this up through the normal runbook order —
-  seven new site folders, members leaving the Union Park folder,
-  nothing bespoke.
+- **The site 61 split is done** — drawn, materialised, singletons
+  dissolved, six claim matches loaded (HISTORY, 2026-08-27, two
+  entries). Its artefact and Drive pickup is the 2.9 chain now in
+  flight; nothing of it remains to do beyond that chain completing.
+
+- **The sites list does not say which of its rows are datacentres**
+  (issue #159 holds the request; this is the plan). The corpus keeps
+  adjacency and disguise-suspects deliberately, and the corridor split
+  made the consequence visible: the Clearstone gas generator, the
+  Western International Market substation and the Old Vinyl Factory
+  now sit in the list as their own rows, indistinguishable at a glance
+  from the campuses beside them. Measured 2026-08-27 on the dc_build
+  verdicts alone: **346 live sites carry a DC-positive member verdict
+  (new_build, expansion_refurb, built); roughly 134 do not** — of
+  which 11 are adjacent-power only, 53 disguise-suspect only, and ~70
+  read procedural-or-unverdicted, a figure that overcounts because the
+  quick query ignored v1-era verdicts. The plan, in order: define the
+  v1/dc_build fold-in so a site's class is derived from *both*
+  generations of verdict (the clustering already solves this for
+  membership — reuse its per-rubric shape); derive a site class from
+  members' verdicts (any DC-positive member → datacentre; else
+  adjacent-power / disguise-suspect / procedural-only); render it as a
+  filter and a muted row treatment — **never an ejection**, because
+  the adjacency layer and the suspect class are the investigation's
+  own design. 2.10-shaped: it changes what the list asserts about
+  every row, so it wants the measured fold-in before any styling.
 
 - **A site's display name is the address of whichever application sorts
   first**, which bears no relation to what anyone calls the place. The
@@ -339,48 +356,10 @@ alongside it.
   because a citation of it has to keep resolving, which is the same rule
   `drive_sync.py --prune` already follows.
 
-- **Nothing checks for figures that were never adjudicated.** The
-  corrections gate examines adjudications that exist and cannot see a
-  figure nobody has asked about; `sweep_null_capacity.py` only reports
-  sites with no capacity at all. 2.7 came within one runbook step of
-  shipping 4,117 unadjudicated figures from the corroboration read. A
-  cheap pre-build assertion — "the adjudication tail is empty, or say
-  how large it is" — belongs in `dcp/adjudication_gate.py` beside the
-  corrections check.
-
-  **The number to assert on is 299, and "15,220" is the wrong one.**
-  Both were measured on 2026-08-26 and they answer different questions.
-  `adjudicate_power.load_candidates` excludes only what
-  `claude-sonnet-5`/`power-1.0` has already done, because that script
-  *is* the Sonnet route and the exclusion is its resume contract —
-  "what have I not done", not "what has nobody done". Read as a measure
-  of corpus completeness it is misleading by fifty times:
-
-  | | |
-  |---|---|
-  | power-unit findings in the corpus | 19,194 |
-  | with no adjudication from **claude-sonnet-5** | 15,220 |
-  | with no adjudication from **any model** | **299** |
-
-  Adjudications on record: `openai:gpt-5:medium` 11,870,
-  `claude-sonnet-5` 3,974, `openai:gpt-5:high` 1,937,
-  `claude-sonnet-5+subagent` 1,114. The corpus is adjudicated; it is
-  mostly adjudicated by a model other than the one whose resume query
-  gets quoted. A pre-build assertion must count rows with no verdict
-  from **any** model, or it will report a five-figure backlog before
-  every release and be ignored within two.
-
-  Of the real 299: 205 sit on sites that already carry an adjudicated
-  capacity (the cheap OpenAI batch route, measured at $0.05 input and
-  $3.25 worst case), and 61 are consequential — on sites with no
-  capacity at all, where a verdict moves a headline rather than
-  refining it, which is the subagent route's stated scope. Not every
-  row is a site capacity waiting to be claimed: several are plainly
-  not-this-site, such as an operator describing "over two gigawatts of
-  critical power capacity under customer contract in Europe and North
-  America". That is why the assertion should report the size rather
-  than demand a zero.
-
+- **The pre-build tail assertion is built** (2026-08-27, HISTORY):
+  every export prints the count of power-unit findings with no verdict
+  from any model, beside the corrections gate. Report-only by design,
+  and empty at the 2.9 build.
 ## Phase 3 — the second opinion
 
 - **Re-extract what the local model read.** The label audit
@@ -453,30 +432,14 @@ single-asset SPVs disclose it by construction**, because the scheme is
 the investment property and FRS 102 makes the directors state what the
 valuation assumes.
 
-**Built 2026-08-26.** Items 1–4 below are done; what they produced, and
-what they overturned, is recorded in EXTERNAL_DATA_SOURCES §6 and in
-`data/external_sources/companies-house-spvs.yaml` (which company is
-which scheme) and `companies-house-ownership.yaml` (who lends and who
-owns). Migration 030 added `scheme_capacity` and
-`investment_property_fair_value`, and `scripts/load_capacity_claims.py`
-runs again — it had been rolling back **every batch from every source**,
-not just this one. Three results worth carrying forward:
-
-- **The 103.3-against-140 gap was not a gap.** Site 81's own
-  environmental statement states "Total IT Load - 103.32 MW" and "Total
-  Data Centre Load – 139.5 MW" in one table on page 10, and a reserved
-  140 MW grid connection on page 27. The accounts quote the IT load. The
-  rule survives in a sharper form: never compare an external megawatt to
-  a planning megawatt without first establishing that they measure the
-  same thing — here that took one join and overturned the headline.
-- **A single-asset SPV does not always name a capacity.** Segro Pure
-  Premier Park Data Centre Limited is the same shape as Court Lane and
-  states none across 25 pages. Of 52 filers whose accounts category
-  could carry an investment-property note, ten mention megawatts at all
-  and four said something new.
-- **The ownership half is the durable half.** The charges register had
-  to be *probed* rather than inferred from the profile's `has_charges`
-  flag, which read false for 44 of the 49 companies that carry charges.
+**Built 2026-08-26.** The original four items — name the SPVs, pull
+their filings, load what they say as claims never columns, report the
+disagreements — are done; what they produced and overturned (the
+103.3-against-140 gap that was two quantities in one table, the SPV
+that states no capacity across 25 pages, the charges register that had
+to be probed because `has_charges` read false for 44 of 49 charged
+companies) is recorded in EXTERNAL_DATA_SOURCES §6, with the mappings
+in `companies-house-spvs.yaml` and `companies-house-ownership.yaml`.
 
 Still open, and now better specified:
 
@@ -496,33 +459,6 @@ Still open, and now better specified:
    names to numbers with evidence; folding the confirmed ones into
    `data/priors/organisation_aliases.yaml` is a person's decision at a
    release checkpoint, not a session's.
-
-The original four, for the record:
-
-1. **Name the SPVs we already hold.** Barbour's client-of-record slot is
-   full of them — `UK Court Lane DC Limited`, `VDC LHR11 Limited` — and
-   `data/priors/organisation_aliases.yaml` is already the place a person
-   records what a name turned out to be. A list of scheme SPVs with
-   company numbers is the input to everything below and costs a query
-   plus a person's judgement.
-2. **Pull their filing history** (`CH_API_KEY` is in `.env`; the sweep
-   is small — tens of companies, not thousands). Accounts for the
-   capacity assumption and the going-concern position; the charges
-   register for who lends, which is the most honest statement of who
-   owns; the confirmation statement for shareholders.
-3. **Load what they say as claims, never as columns.** The precedent is
-   settled (§7.1): an external figure goes in beside the planning data
-   with its own quantity type and its provenance, never into a site
-   column that implies it measures the same thing. `scheme_capacity` is
-   a new type and needs one — and **the two claims are already in the
-   YAML without it**, which is what has been breaking
-   `scripts/load_capacity_claims.py` outright since the SPV work. See
-   the Phase 2 item above; that migration unblocks every source, not
-   just this one.
-4. **Report the disagreements.** Where an SPV's audited assumption
-   differs from the planning record or from Barbour — 103.3 against 140
-   here — that gap is a finding, and averaging or preferring one silently
-   would destroy it.
 
 The class is bounded and the reward is high: a per-scheme capacity that
 an external valuer priced and an auditor signed, a solvency signal the
@@ -654,15 +590,20 @@ worst available failure mode.
 
 Three pieces of work, smallest first:
 
-1. **Guard at fetch.** A zero-length body is a failed fetch, not a
-   document: record the failure against the application and leave no
-   file, so a re-run retries rather than treating emptiness as done.
-2. **Sweep the corpus.** `find -size -1c` over the canonical store is the
-   whole check. Three today; nothing would flag a fourth.
-3. **Say so in the artefacts.** Where a document is held but empty, the
-   site report and the coverage detail should show it as unavailable
-   from the source rather than as read — the same honesty the coverage
-   split already applies to drawings and sampled objection letters.
+1. **Guard at fetch — DONE.** `repo.record_document` refuses the empty
+   hash and every adapter checks the body before writing; both halves
+   are pinned by `tests/test_zero_byte_guard.py`.
+2. **Sweep the corpus — re-run 2026-08-27: still exactly the three.**
+   `find -size -1c` over `data/raw/documents` is the whole check
+   (three empty Companies House OCR page files also surface — blank
+   pages, a different and benign thing). Nothing runs it on a
+   schedule; a durable home — corpus_stats, or a test over the store —
+   is still wanted so a fourth would announce itself.
+3. **Say so in the artefacts — still open.** Where a document is held
+   but empty, the site report and the coverage detail should show it
+   as unavailable from the source rather than as read — the same
+   honesty the coverage split already applies to drawings and sampled
+   objection letters.
 
 Worth raising with the three councils as well: a listed document that
 downloads as nothing is a public-access failure independent of this
@@ -675,23 +616,15 @@ Found 2026-08-23 while reviewing the reader redesign
 `scripts/correct_adjudications.py` as a named rule, so it is recorded
 here rather than applied from the build lane.
 
-- **Export limits stored as grid connections.** Of 810 `grid_connection`
-  rows adjudicated `site_capacity`, 16 across 4 sites quote an *export*
-  figure. Kingsnorth (`SITE-Medway/MC/21/0979`) is the one that reached a
-  headline: "Maximum MW export = 49.9 MW (at unity power factor)" is the
-  49.9 MW energy-from-waste hub's export, and the same offer letter gives
-  the site "an import capacity of 5,000 kVA". So the 2.2 like-for-like
-  "340 MW to the grid operator, 49.9 MW to the planning authority, 6.81×"
-  compares export with import, and the planning-side figure to put
-  beside the register row is 5 MVA, not 49.9 MW. Also export: Yorkshire
-  Energy Park's "permission … to export 21MWe" (`PTNO-12628941`, 21 and
-  9 MW rows) and `PTNO-12669230`'s "18 MW of import capacity 10.5MW of
-  export capacity" (the 18 is right, the 10.5 is not). Measure before
-  adopting, as ever: `evidence_text ~* '\m(export|exporting|exported)\M'`
-  on `grid_connection` rows is the candidate predicate, and at 16 rows a
-  hand pass over the list is cheaper than a clever one. Re-check the
-  Operators tab's like-for-like after.
-
+- **The export-limit rule is built and applied** (2026-08-27,
+  HISTORY): 23 rows demoted, value-adjacency not vocabulary, one
+  pinned instance. What remains is a person's row: **Kingsnorth's
+  47,405 kW figures** — the same value at leading and lagging power
+  factor in one connection table, against the offer letter's 5,000 kVA
+  import — now stand as that site's largest grid figure, and no
+  predicate can say which direction the site's connection is. Settle
+  it by hand, then re-check the Operators tab's like-for-like, which
+  still quotes the register-vs-planning comparison this family fed.
 ## From the reader redesign — waiting on a checkpoint
 
 2.4 work whose next step is a person's, recorded here so the build lane
@@ -713,6 +646,33 @@ HISTORY.)
   coordinates could not.
 
 ## Smaller things
+
+- **`drive_sync.py` is latency-bound, not quota-bound, and the 2.9
+  reorganisation paid for it.** There is no deliberate delay in the
+  sync — the only sleep is error backoff — but it is a single thread
+  paying one HTTPS round-trip per file, ~43 moves/minute against a
+  Drive per-user quota near 12,000 requests/minute. The site 61 split
+  moved ~5,400 files and took hours that batching (the Drive batch
+  endpoint takes 100 calls per request) or modest concurrency would
+  cut to minutes. The design constraint to respect: `Sync.state` is a
+  plain dict saved per file with no locking, and it is the record that
+  makes syncs resumable and moves recognisable — parallelise the API
+  calls, not the ledger writes. Found mid-release 2026-08-27 and
+  deliberately not patched mid-run.
+
+- **`SAMPLE_SITES` names a dissolved key, and readings have no
+  render-time freshness guard.** Both found 2026-08-27. `SITE-EN0110030`
+  in `scripts/machine_reading_openai.py` stopped being a site when the
+  Wapseys key dissolved into `PTNO-12913776`; its sample slot now
+  generates a reading against zero documents that renders nowhere —
+  one wasted model call per refresh until the entry is repointed. And
+  `mreading.load_latest` returns the newest stored reading per site
+  key with no check that the site's input still matches — the
+  input-hash discipline exists only at generation. Rendering guards
+  against a reading whose documents or membership have moved since it
+  was written would be the belt to generation's braces; today the only
+  protection is re-running the sample before a release, which is a
+  step someone has to remember.
 
 - **`test_two_builds_of_one_snapshot_are_identical` failed once and has
   not since.** Seen 2026-08-26 during a full-suite run, immediately
@@ -977,9 +937,10 @@ Deferred consciously. Return when journalism need warrants.
 
 None is abandoned; each is a known, scoped piece of work.
 
-- **The acquisition tail.** 31 browser-routed applications, 20 across
-  bespoke portals, 13 genuinely hard — a slow process needing a human at
-  the keyboard, and not worth holding the release for.
+- **The acquisition tail.** Counts superseded on 2026-08-27 — see
+  "Phase 2 — the tail of the collecting" above for what dissolved and
+  what the sweep found; the honest residue is a query on
+  `acquisition_outcome` after it completes.
 - **Scanned-page orientation detection — closed on evidence, not done.**
   The theory was that councils scan sideways and `--psm 3` misses it. The
   231 documents that OCR'd to nothing were the obvious test cohort, and
@@ -1045,24 +1006,25 @@ None is abandoned; each is a known, scoped piece of work.
   as the boundary evidence, every member assigned so nothing is left
   to spatial chance. Sites 5, 23, 59 and 11 are what remain, and the
   permits carry their evidence.
-- **Requests outstanding, and requests never sent.** NESO and Ofgem were
-  written to on 2026-08-12 and replies are due around 10 September. Three
-  more are worth sending and have not been: a CCA site-level consumption
-  FoI to DESNZ/EA, EIR requests to the DNOs, and an EIR request to NESO
-  for the project-level demand connection queue. Each runs ~28 days, so
-  starting them is cheap and waiting is the whole cost. EIR is the right
-  frame for the DNOs — address the *licensed* plc, not the management
-  company, and note that section 105 of the Utilities Act is
-  near-absolute under FOIA but disapplied for environmental information
-  by EIR regulation 5(6).
+- **Requests outstanding, and three drafted awaiting Luke's send.**
+  NESO and Ofgem were written to on 2026-08-12 and replies are due
+  around 10 September. The three never-sent requests are now drafted in
+  [docs/requests/](requests/) (2026-08-27): the CCA site-level
+  consumption FoI/EIR to the Environment Agency copied to DESNZ, the
+  NESO EIR for the project-level demand connection queue, and the DNO
+  EIR template with its fourteen-licensee address list. Each carries
+  the reg 5(6) answer to section 105 pre-emptively, and each runs ~28
+  days from sending — waiting is still the whole cost, and only the
+  sending remains.
 - **UKPN's gated datasets are unpulled.** The Large Demand List and
   "Data Centres by Local Authority" sit behind Luke's portal login;
   anonymous access returns headers only, so nobody else can fetch them.
-- **Two VIRTUS filings are still not retrievable.** Accounts made up to
-  31 December 2025, filed on 19 and 20 August 2026; the Companies House
-  document API had no images for them as of 2026-08-21. Worth retrying —
-  the property company (09840065) is the one that states capacity, not
-  the operating company.
+- **The VIRTUS property company's accounts are still not retrievable,
+  and the filing moved.** Retried 2026-08-27: the 19 and 20 August
+  filings no longer appear in 09840065's filing history — replaced by a
+  single group-accounts filing dated 2026-08-26, which has no document
+  image yet either. Keep retrying; the property company is the one that
+  states capacity, not the operating company.
 - **A fourth operator tranche would be cheap.** Add URLs to `PAGES` in
   `scripts/fetch_operator_snapshots.py`, run it, add curated claims with
   verbatim quotes. Colt is no longer blocked: Tudor Works and Hayes
