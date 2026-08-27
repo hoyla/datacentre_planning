@@ -1267,6 +1267,68 @@ standing between a regression and a published one.
 
 ---
 
+## The first automation checks rather than publishes (2026-08-27)
+
+Two workflows were sketched on 2026-08-26, and the order between them
+was the argument: a repo with no automation should get one that checks
+before it gets one that publishes. This is the first. Three jobs on
+every push to every branch, none of which needs Postgres, a secret or a
+credential — which is why it could go first, and why a fork running it
+gains nothing.
+
+`pytest -m "not integration"` (986 tests), the two browser suites driving
+the committed `index.html` through the `READER_HTML` fixture (37), and
+`node --test tests/middleware.test.mjs` (17). Around 1m40s wall clock,
+the three jobs in parallel.
+
+**The reader job asserts Chromium launches before it runs anything.**
+The `page` fixture skips the whole suite when it cannot, and a suite
+that skips reports green while asserting nothing — the failure mode that
+made the `READER_HTML` fixture necessary in the first place. A missing or
+truncated `index.html` was already a hard failure, because conftest calls
+`pytest.fail` there rather than `pytest.skip`; Chromium was the one route
+left to a silent pass, so it is now a step of its own.
+
+**The flaky test was not flaky.**
+`test_a_withheld_paragraph_is_declared_before_it_is_found` had been
+recorded as failing intermittently under load, always on a Playwright
+30-second click timeout, passing when its file ran alone. It fails every
+single time when run in isolation. The
+test reads panels wherever they sit but ends by clicking back from the
+site page — a view only the test *above* it opens. Deselect that
+predecessor and the click waits the full timeout for a view that was
+never on. It was three tests, not one: all three were the only tests in
+the file missing `@pytest.mark.integration`, so `pytest -m "not
+integration"` — the command this CI job runs without a database — was
+selecting them. The other two navigate for themselves and so had only
+ever skipped, which is why nothing showed.
+
+The lesson is the one this repo keeps relearning: *load* was the
+explanation available without a reproduction, and a defect described by
+its symptom stays open. Running it once in isolation settled it.
+
+**What the first run caught, which nothing local could.** Two
+dependencies were declared only by being installed. `googleapiclient`
+and `duckdb` are imported inside the functions that use them —
+`drive_sync`, `sheet_sync`, `backup_db`, `create_workbook_sheet` for the
+first; `export_duckdb` and `release_diff` for the second — so no module
+load touches them and every machine that had ever run a sync or built a
+database already had them. A clean clone had neither. This is exactly
+the trap the `openai` comment in `pyproject.toml` describes, in two more
+places, and it took a machine that starts from nothing to find it.
+
+Worth knowing before the local suite is trusted as a proxy: a clean
+worktree without `.env` reproduced the no-database condition faithfully
+for everything *except* this, because the venv is shared. Only the
+runner installs from the manifest alone.
+
+**Ruff is deliberately not gated.** It reports 799 errors on the tree as
+it stands. A check that is red on the day it lands is one people learn
+to ignore, which costs more than the check is worth; cleaning the tree
+first is its own piece of work.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across

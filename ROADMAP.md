@@ -10,18 +10,17 @@ adjudication counts move while the corroboration pass runs and are
 deliberately not restated here — `scripts/corpus_stats.py` prints them,
 and each release states the boundary it was stamped at.
 
-**2.8 shipped on 2026-08-26** and is live on both surfaces: EdgeOne,
-which builds from git, and a new Cloud Run deployment behind Guardian
-sign-in, which changes only when `cloudrun/deploy.sh` is run. What it
-contains is in HISTORY. No release is in flight.
+**2.8 shipped on 2026-08-26** and reaches readers at the Cloud Run
+deployment behind Guardian sign-in, which changes only when
+`cloudrun/deploy.sh` is run. EdgeOne, which builds from git, is a
+signpost rather than a surface: PR #135 merged on 2026-08-27, so it
+redirects and the shared password is retired. What 2.8 contains is in
+HISTORY. No release is in flight.
 
-**Three things are waiting on a person, not on work.** The 2.8 Google
+**Two things are waiting on a person, not on work.** The 2.8 Google
 Sheet (`DC_handover_v2_phase2.8`) is created and populated but not yet
 formatted — a one-time job, after which `sheet_sync` refreshes it in
-place and the formatting survives. PR #135 turns the EdgeOne deployment
-into a redirect to Cloud Run so saved bookmarks drain, and is a draft
-because merging it stops EdgeOne serving the reader and retires the
-shared password with it. And **Dartford is still unreported** — a
+place and the formatting survives. And **Dartford is still unreported** — a
 300 MW campus with a firm Gate 2 connection, directed on 2026-07-01,
 briefed at [docs/briefs/dartford_ebbsfleet.md](docs/briefs/dartford_ebbsfleet.md),
 and it decays.
@@ -943,32 +942,12 @@ HISTORY.)
   gate agree, and nothing asserts either is right, which is how the
   thermal-output hole survived.
 
-- **CI on GitHub Actions, then a publish button.** Two workflows, and
-  the order between them matters: the first automation in a repo with
-  none should be one that checks, not one that publishes. Sketched with
-  Luke on 2026-08-26, when Cloud Run arrived and made the second
-  possible.
-
-  **Workflow 1 — checks, on every push.** `pytest -m "not integration"`
-  and `node --test tests/middleware.test.mjs`. Measured on 2026-08-26:
-  **978 unit tests pass with no database at all, in 23 seconds** — so
-  this needs no Postgres, no secrets and no credentials, which is why
-  it can go first and go now.
-
-  Add the browser suites through the fixture built the same day:
-  `READER_HTML=index.html pytest tests/test_reader_smoke.py
-  tests/test_design_conformance.py` drives the committed reader instead
-  of building one — 36 tests in 24 seconds, again with no database.
-  Before that fixture existed they skipped without a `DATABASE_URL`:
-  seventeen green ticks meaning *nothing was tested*, which is worse
-  than no ticks at all.
-
-  One thing to fix first.
-  `test_a_withheld_paragraph_is_declared_before_it_is_found` fails
-  intermittently under load — always a Playwright 30-second click
-  timeout, and it passes when its own file runs alone. A flaky test
-  gating a deploy is worse than no gate, because people learn to
-  re-run it.
+- **The publish button.** The second of the two workflows sketched with
+  Luke on 2026-08-26. The first — checks on every push — is built and
+  green as of 2026-08-27, and what it caught on its first run against a
+  clone from nothing is in HISTORY. The order between them was the
+  whole point: the first automation in a repo with none should be one
+  that checks, not one that publishes.
 
   **Workflow 2 — build, verify, then wait for a click.** On a push to
   `main` touching `index.html`: build the Cloud Run image, run
