@@ -2927,16 +2927,6 @@ def main() -> int:
         # Frimley Health NHS…". The panel can afford to show a name in
         # two roles because it labels the roles; this column names no
         # category, so a repeat is only noise. Luke, 2026-08-26.
-        operators, _seen = [], set()
-        for n in (end_user or applicant).split(","):
-            n = n.strip()
-            k = entities.canonical_key(n)
-            if n and k not in _seen:
-                _seen.add(k)
-                operators.append(n)
-        if entities.canonical_key(badge) not in _seen:
-            _seen.add(entities.canonical_key(badge))
-            operators.insert(0, badge)
         # The key a badge filters on is the alias GROUP where one is
         # confirmed, and the raw name otherwise. Luke, 2026-08-25: "no
         # one will want to filter to different names of the same group —
@@ -2947,6 +2937,22 @@ def main() -> int:
             g = organisations.group_for(name, alias_index)
             return entities.canonical_key(g.group if g else name)
 
+        # ...and every comparison below uses that same key, because a
+        # confirmed group IS the organisation. Comparing raw names let a
+        # group's own member stand beside it as a second party —
+        # "Google and Global Infrastructure…", where Global
+        # Infrastructure UK Limited is the Alphabet subsidiary the badge
+        # already names. Six groups showed it (Luke, 2026-08-27): Google,
+        # Vantage, Colt, Microsoft, Amazon. The 2026-08-26 fix above made
+        # "one organisation, once" true of two spellings of one name;
+        # this makes it true of a group and its member.
+        operators, _seen = [badge], {_fkey(badge)}
+        for n in (end_user or applicant).split(","):
+            n = n.strip()
+            k = _fkey(n)
+            if n and k not in _seen:
+                _seen.add(k)
+                operators.append(n)
         keys = [_fkey(n) for n in operators]
         for n in operators:
             who_counts[n] += 1
@@ -2965,13 +2971,12 @@ def main() -> int:
                          f'each one’s chip finds it.">{len(operators)} operators</span>'
                          f'<span class="q">{esc(trim(names, 60))}</span>')}
         via_bits = []
-        _badge_key = entities.canonical_key(badge)
         _applicant_first = applicant.split(",")[0].strip()
-        if (_applicant_first
-                and entities.canonical_key(_applicant_first) != _badge_key
-                and entities.canonical_key(_applicant_first) not in _seen):
+        # `_seen` already holds the badge's group key and every operator
+        # kept, so one test covers what two raw-name tests used to.
+        if _applicant_first and _fkey(_applicant_first) not in _seen:
             via_bits.append(f"via {trim(_applicant_first, 34)}")
-        if others and entities.canonical_key(operators[1]) != _badge_key:
+        if others:
             via_bits.append(f"and {trim(operators[1], 24)}")
         via = (f'<span class="q">{esc(" · ".join(via_bits))}</span>'
                if via_bits else "")
