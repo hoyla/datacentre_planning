@@ -732,3 +732,34 @@ class TestDriveFilesAreFoundById:
             "register that can withdraw them"
         assert sh.index("drive_sync.py") < sh.index("record_drive_ids.py"), \
             "the recorder reads the ledger the sync writes, so it follows it"
+
+
+class TestTheDatabaseOffersOurCopy:
+    """The third artefact had the same gap the reader and workbook had.
+
+    `documents` in the DuckDB export offered `source_url` — 512 of them
+    `file://` paths naming the machine that ingested the file — and
+    `bytes_path`, which is local to the pipeline. Neither is something a
+    reporter can open. Luke, 2026-08-26: "we always wanted to have our
+    own copy of the documents and to link to them."
+    """
+
+    def test_the_documents_table_carries_a_drive_link(self):
+        src = pathlib.Path("scripts/export_duckdb.py").read_text()
+        q = src[src.index('"documents": """'):]
+        q = q[:q.index('""",')]
+        assert "drive_url" in q, \
+            "the database must offer the copy we hold, not only the " \
+            "register URL that may no longer resolve"
+        assert "document_drive_files" in q, \
+            "the link must come from the recorded file id, not a path"
+
+    def test_the_note_says_which_url_is_which(self):
+        """Two URL columns is a trap unless the note distinguishes them."""
+        src = pathlib.Path("scripts/export_duckdb.py").read_text()
+        i = src.index('"documents_note"')
+        note = src[i:i + 700]
+        assert "drive_url is our copy" in note
+        assert "source_url is where it came from" in note, \
+            "a reader choosing between two URL columns needs to be told " \
+            "that one is durable and the other is citable"
