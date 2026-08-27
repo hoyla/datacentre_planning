@@ -297,6 +297,40 @@ groups:
             note: End user on Amazon Data Centre Didcot (client of record Willow Developments Llc).
             date: 2026-08-23
 
+  - group: Google
+    note: >-
+      Alphabet, Inc. (Delaware, 5786925) is the listed parent; UK
+      data-centre development appears under Global Infrastructure UK
+      Limited, whose name says neither.
+    members:
+      - name: Global Infrastructure UK Limited
+        relation: subsidiary_of
+        status: confirmed
+        company_number: "10031299"
+        evidence:
+          - source: companies_house
+            ref: "10031299"
+            note: >-
+              PSC register names Alphabet, Inc. (Delaware, registration
+              5786925) with ownership of shares and of voting rights at
+              75% or more and the right to appoint or remove directors.
+              Link supplied by Luke, 2026-08-27.
+            date: 2026-08-27
+          - source: barbour
+            ref: "12848057"
+            note: >-
+              CyName_Client on "GOOGLE DATA CENTRE NORTH WEALD
+              AIRFIELD" — Barbour's own title corroborates whose
+              scheme the client fronts.
+            date: 2026-08-27
+          - source: barbour
+            ref: "12866567"
+            note: >-
+              CyName_Client on "THURROCK DATA CENTRE - 4 DATA CENTRE
+              BUILDINGS", whose title does NOT name Google — the
+              identity is what puts Alphabet on the Thurrock scheme.
+            date: 2026-08-27
+
   - group: Microsoft
     members:
       - name: Microsoft MSFT MCIO Limited
