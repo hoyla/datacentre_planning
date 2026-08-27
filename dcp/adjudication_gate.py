@@ -71,6 +71,22 @@ WHERE pa.verdict = 'site_capacity'
  OR (coalesce(pa.unit_note,'') NOT LIKE '%[equipment_label_not_connection]%'
      AND pa.quantity_type = 'grid_connection'
      AND f.evidence_text ~* 'floor plan|sections drawing|figure\s+[0-9]|substation\s+[0-9.]+\s*m²|legacy')
+ OR (coalesce(pa.unit_note,'') NOT LIKE '%[export_limit_not_connection]%'
+     AND pa.quantity_type = 'grid_connection' AND pa.value_mw IS NOT NULL
+     AND (f.evidence_text ~* ('\y(export|exporting|exported)\y[^.;]{0,80}\y'
+            || replace(trim(trailing '.' from trim(trailing '0'
+                 from pa.value_mw::text)), '.', '\.') || '\s*MWe?\y')
+          OR f.evidence_text ~* ('\y'
+            || replace(trim(trailing '.' from trim(trailing '0'
+                 from pa.value_mw::text)), '.', '\.')
+            || '\s*MWe?\y[^.;]{0,80}\y(export|exporting|exported)\y'))
+     AND NOT f.evidence_text ~* ('\y'
+            || replace(trim(trailing '.' from trim(trailing '0'
+                 from pa.value_mw::text)), '.', '\.')
+            || '\s*MWe?\y[^.;]{0,25}\yimport'))
+ OR (coalesce(pa.unit_note,'') NOT LIKE '%[export_limit_not_connection_chunkcut]%'
+     AND pa.quantity_type = 'grid_connection' AND pa.value_mw = 49.9
+     AND f.evidence_text ~* 'limited to\s+49,900\s+kW at unity p\.f\.')
  OR (coalesce(pa.unit_note,'') NOT LIKE '%[contradicted_by_own_document]%'
      AND pa.value_mw = 2240
      AND f.evidence_text ~* 'contribute.{0,12}2240\s*MW')
