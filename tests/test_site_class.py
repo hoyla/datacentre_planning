@@ -221,3 +221,17 @@ def test_a_dc_positive_application_is_not_credited_to_the_catalogue():
 def test_provenance_names_the_applications_and_counts_the_rest():
     site = sc.classify("S", [_m(f"a/{i}", "procedural") for i in range(7)])
     assert "a/0" in site.provenance and "and 3 more" in site.provenance
+
+
+def test_a_catalogue_decided_site_does_not_describe_itself_as_two_things():
+    """The generic datacentre description opens 'at least one
+    application here is a datacentre proposal', which sat one sentence
+    from a provenance line saying no application states one. A reader
+    should never be shown both."""
+    site = sc.classify("S", [_m("a/1", "unknown")], ("1",),
+                       (("1", "SOMEWHERE - DATA CENTRE"),))
+    assert site.decided_by_catalogue
+    assert "at least one application" not in site.display_description.lower()
+    assert "catalogue" in site.display_description.lower()
+    ordinary = sc.classify("S", [_m("a/1", "new_build")])
+    assert ordinary.display_description == ordinary.description

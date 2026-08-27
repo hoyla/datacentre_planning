@@ -140,6 +140,14 @@ CLASS_DESCRIPTIONS = {
 # The same classes as the object of a "show me only…" control. Kept
 # beside the labels so the reader cannot drift into its own vocabulary
 # for classes defined here.
+# What a catalogue-decided datacentre says about itself. The ordinary
+# DATACENTRE description opens "at least one application here is a
+# datacentre proposal", which is false of these sites and sat one
+# sentence away from the provenance saying so.
+CATALOGUE_DESCRIPTION = (
+    "Named a data centre by the Barbour project catalogue rather than "
+    "by any planning application in the corpus.")
+
 CLASS_FILTER_LABELS = {
     DATACENTRE: "Only datacentres",
     DISGUISE_SUSPECT: "Only disguise suspects",
@@ -204,6 +212,13 @@ class SiteClass:
         Barbour title is what makes this a datacentre."""
         return bool(self.catalogue_dc) and self.key == DATACENTRE and not any(
             _member_class(m) == DATACENTRE for m in self.members)
+
+    @property
+    def display_description(self) -> str:
+        """The description as a reader should see it, which is not the
+        class's generic one where the catalogue is what decided it."""
+        return (CATALOGUE_DESCRIPTION if self.decided_by_catalogue
+                else self.description)
 
     @property
     def provenance(self) -> str:

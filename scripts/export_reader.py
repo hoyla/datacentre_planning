@@ -3809,7 +3809,7 @@ def main() -> int:
            check rather than a label the site has been given. -->
       <div><span class="lbl">Kind of site</span><span class="val">{
         esc(site_classes[key].label)}
-       <span class="help">{esc(site_classes[key].description)}{
+       <span class="help">{esc(site_classes[key].display_description)}{
         " " + esc(site_classes[key].provenance)
         if site_classes[key].provenance else ""}</span></span></div>
       {f'''<div><span class="lbl">Derived name</span><span class="val">{esc(derived_names[key])}
@@ -3950,14 +3950,22 @@ def main() -> int:
         else:
             ctx_unmapped += 1
             ctx_html = ""
-        rendered_classes[sclass.BARBOUR_ONLY] += 1
+        # A pre-planning row is a Barbour record with no application, so
+        # it goes through the same rule rather than being told what it
+        # is: several of these titles name a data centre outright, and
+        # hardcoding the class badged "Virtus Data Centres - London 3
+        # Data Centre" as having no planning record AND not being a
+        # datacentre.
+        _pcls = sclass.classify(key, (), (key,), ((key, title or ""),))
+        rendered_classes[_pcls.key] += 1
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="0"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
  data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts=""
- data-class="{esc(sclass.BARBOUR_ONLY)}">
-<td class="sitecell" data-v="{esc(prop.title_case(title or key))}"><span class="sname">{esc(trim(prop.title_case(title or key), 84))}</span><span
- class="classbadge" title="{esc(sclass.CLASS_DESCRIPTIONS[sclass.BARBOUR_ONLY])}">{esc(sclass.CLASS_LABELS[sclass.BARBOUR_ONLY])}</span>
+ data-class="{esc(_pcls.key)}">
+<td class="sitecell" data-v="{esc(prop.title_case(title or key))}"><span class="sname">{esc(trim(prop.title_case(title or key), 84))}</span>{
+ '' if _pcls.is_datacentre else
+ f'<span class="classbadge" title="{esc(_pcls.description)}">{esc(_pcls.label)}</span>'}
  <span class="skey">{esc(' · '.join([x for x in [key, trim(address or '', 74), authority or ''] if x]))}</span>
  <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>

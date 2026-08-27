@@ -1569,11 +1569,15 @@ def main() -> None:
             ctx_unmapped += 1
             ctx_cells = ["", "", ""]
         row = [
-            # Pre-planning rows are Barbour records with no planning
-            # application by definition, so the class is the same one
-            # site_class gives a live site in that position.
+            # Pre-planning rows go through the same rule rather than
+            # being told what they are: many of these Barbour titles
+            # name a data centre outright, and hardcoding the class
+            # said of "Virtus Data Centres - London 3 Data Centre" both
+            # that it has no planning record and that it is not a
+            # datacentre.
             pseudo_key, "barbour_only",
-            _scl.CLASS_LABELS[_scl.BARBOUR_ONLY], title, "",
+            _scl.classify(pseudo_key, (), (pseudo_key,),
+                          ((pseudo_key, title or ""),)).label, title, "",
             proposal.tidy(bsummary),
             "Yes" if bdescriptive else "No — Barbour intelligence only",
             plat, plon, "barbour", authority or "",
