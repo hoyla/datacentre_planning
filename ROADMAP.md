@@ -215,6 +215,28 @@ alongside it.
   seven new site folders, members leaving the Union Park folder,
   nothing bespoke.
 
+- **The sites list does not say which of its rows are datacentres**
+  (issue #159 holds the request; this is the plan). The corpus keeps
+  adjacency and disguise-suspects deliberately, and the corridor split
+  made the consequence visible: the Clearstone gas generator, the
+  Western International Market substation and the Old Vinyl Factory
+  now sit in the list as their own rows, indistinguishable at a glance
+  from the campuses beside them. Measured 2026-08-27 on the dc_build
+  verdicts alone: **346 live sites carry a DC-positive member verdict
+  (new_build, expansion_refurb, built); roughly 134 do not** — of
+  which 11 are adjacent-power only, 53 disguise-suspect only, and ~70
+  read procedural-or-unverdicted, a figure that overcounts because the
+  quick query ignored v1-era verdicts. The plan, in order: define the
+  v1/dc_build fold-in so a site's class is derived from *both*
+  generations of verdict (the clustering already solves this for
+  membership — reuse its per-rubric shape); derive a site class from
+  members' verdicts (any DC-positive member → datacentre; else
+  adjacent-power / disguise-suspect / procedural-only); render it as a
+  filter and a muted row treatment — **never an ejection**, because
+  the adjacency layer and the suspect class are the investigation's
+  own design. 2.10-shaped: it changes what the list asserts about
+  every row, so it wants the measured fold-in before any styling.
+
 - **A site's display name is the address of whichever application sorts
   first**, which bears no relation to what anyone calls the place. The
   Wapseys case is fixed by accident rather than design — the key
