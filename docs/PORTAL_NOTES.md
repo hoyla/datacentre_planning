@@ -129,6 +129,29 @@ results page.
 Coverage: 26 of 37 hold documents; the `T/` and `SMI/` series genuinely
 hold none.
 
+## Northern Ireland — planningregister.planningsystemni.gov.uk (whole nation)
+
+No browser needed after all, despite the Next.js front end: the pages
+draw everything from an anonymous TerraQuest API, mapped 2026-08-27
+with the fetch/XHR hooks in a page session. `dcp/sources/ni_planning.py`
+is the adapter; the module docstring carries the details. The essentials:
+
+- Backend: `https://api-planningregister-planningportal.pr.tqinfra.co.uk/api/v1`
+- Every call needs header `TQ-Tenant: <NEXT_APP_PP_TENANT_ID>` — the
+  value is public, shipped to every visitor in the page's `__ENV.js`.
+  **Without it the API answers `200` with a JSON `null` body**, which is
+  indistinguishable from an application that does not exist.
+- `GET /application/{id}` — full metadata including
+  `supportingDocuments` (documentId, guid filename, description, type).
+  `{id}` is the numeric tail of the register URL we already store, and
+  ids minted by the old register still resolve.
+- `GET /application/{appId}/{docId}` — JSON with `documentUri`: a
+  time-limited Azure blob SAS URL (~30 minutes). Redeem per document at
+  download time; store the API route as the document URL, never the SAS.
+- The blob is a zip wrapping a single guid-named file (a PDF, in every
+  case observed). The adapter stores the inner file; a multi-member zip
+  is stored as-is and logged.
+
 ## Not a user-agent problem
 
 `scripts/probe_user_agents.py` tested one page per host with the plain

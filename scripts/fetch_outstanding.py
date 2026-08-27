@@ -45,7 +45,8 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from dcp import db, repo  # noqa: E402
 from dcp.acquisition_outcome import SETTLED, classify_outcome  # noqa: E402
-from dcp.sources import agile, arcus, idox, ocella, salesforce_pr  # noqa: E402
+from dcp.sources import (agile, arcus, idox, ni_planning, ocella,  # noqa: E402
+                         salesforce_pr)
 
 log = logging.getLogger("fetch_outstanding")
 
@@ -161,7 +162,8 @@ def main() -> int:
             fam = "salesforce_needs_listing"
         plan.setdefault(fam, []).append((app_id, ref, url))
 
-    handled = ("idox", "ocella", "agile", "arcus", "salesforce")
+    handled = ("idox", "ocella", "agile", "arcus", "salesforce",
+               "ni_planning")
     log.info("outstanding: %d applications across %d portal families",
              len(rows), len(plan))
     for fam in sorted(plan, key=lambda f: -len(plan[f])):
@@ -187,6 +189,11 @@ def main() -> int:
                                        backoff_seconds=args.backoff, **rt)
         if fam == "agile":
             return agile.AgileClient(delay_seconds=args.delay, **rt)
+        if fam == "ni_planning":
+            # A plain polite HTTP client; the adapter supplies the
+            # tenant header itself, per request.
+            return idox.IdoxClient(delay_seconds=args.delay,
+                                   backoff_seconds=args.backoff, **rt)
         return arcus.ArcusClient(delay_seconds=args.delay, **rt)
     clients: dict[tuple, object] = {}
     def client_for(fam, url):
@@ -195,7 +202,8 @@ def main() -> int:
             clients[key] = make(fam)
         return clients[key]
     mods = {"idox": idox, "ocella": ocella, "agile": agile,
-            "arcus": arcus, "salesforce": salesforce_pr}
+            "arcus": arcus, "salesforce": salesforce_pr,
+            "ni_planning": ni_planning}
     totals = {"fetched": 0, "partial": 0, "none_published": 0, "error": 0,
               "no_adapter": 0, "documents": 0}
     started = time.monotonic()
