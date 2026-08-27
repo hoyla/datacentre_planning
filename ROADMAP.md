@@ -1045,24 +1045,25 @@ None is abandoned; each is a known, scoped piece of work.
   as the boundary evidence, every member assigned so nothing is left
   to spatial chance. Sites 5, 23, 59 and 11 are what remain, and the
   permits carry their evidence.
-- **Requests outstanding, and requests never sent.** NESO and Ofgem were
-  written to on 2026-08-12 and replies are due around 10 September. Three
-  more are worth sending and have not been: a CCA site-level consumption
-  FoI to DESNZ/EA, EIR requests to the DNOs, and an EIR request to NESO
-  for the project-level demand connection queue. Each runs ~28 days, so
-  starting them is cheap and waiting is the whole cost. EIR is the right
-  frame for the DNOs — address the *licensed* plc, not the management
-  company, and note that section 105 of the Utilities Act is
-  near-absolute under FOIA but disapplied for environmental information
-  by EIR regulation 5(6).
+- **Requests outstanding, and three drafted awaiting Luke's send.**
+  NESO and Ofgem were written to on 2026-08-12 and replies are due
+  around 10 September. The three never-sent requests are now drafted in
+  [docs/requests/](requests/) (2026-08-27): the CCA site-level
+  consumption FoI/EIR to the Environment Agency copied to DESNZ, the
+  NESO EIR for the project-level demand connection queue, and the DNO
+  EIR template with its fourteen-licensee address list. Each carries
+  the reg 5(6) answer to section 105 pre-emptively, and each runs ~28
+  days from sending — waiting is still the whole cost, and only the
+  sending remains.
 - **UKPN's gated datasets are unpulled.** The Large Demand List and
   "Data Centres by Local Authority" sit behind Luke's portal login;
   anonymous access returns headers only, so nobody else can fetch them.
-- **Two VIRTUS filings are still not retrievable.** Accounts made up to
-  31 December 2025, filed on 19 and 20 August 2026; the Companies House
-  document API had no images for them as of 2026-08-21. Worth retrying —
-  the property company (09840065) is the one that states capacity, not
-  the operating company.
+- **The VIRTUS property company's accounts are still not retrievable,
+  and the filing moved.** Retried 2026-08-27: the 19 and 20 August
+  filings no longer appear in 09840065's filing history — replaced by a
+  single group-accounts filing dated 2026-08-26, which has no document
+  image yet either. Keep retrying; the property company is the one that
+  states capacity, not the operating company.
 - **A fourth operator tranche would be cheap.** Add URLs to `PAGES` in
   `scripts/fetch_operator_snapshots.py`, run it, add curated claims with
   verbatim quotes. Colt is no longer blocked: Tudor Works and Hayes
