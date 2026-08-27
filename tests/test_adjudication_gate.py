@@ -186,3 +186,47 @@ class TestNoExportBypassesAdjudication:
             "columns would be unadjudicated")
         assert "site_capacity" in view, (
             "site_overview does not filter to verdict='site_capacity'")
+
+
+class TestTailReport:
+    """The tail report must count what NO model has done, in the units
+    the adjudicator actually selects on.
+
+    The number it exists to replace is the adjudicator's own resume
+    query, which excludes only its own model+prompt and so read as a
+    completeness measure was misleading by fifty times (15,220 against
+    a real 299, 2026-08-26). These pin the two properties that keep the
+    report honest: the unit list stays in step with adjudicate_power,
+    and the NOT EXISTS is unqualified by model.
+    """
+
+    def _load_adjudicator(self):
+        spec = importlib.util.spec_from_file_location(
+            "adjudicate_power", ROOT / "scripts" / "adjudicate_power.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
+    def test_units_stay_in_step_with_the_adjudicator(self):
+        adj = self._load_adjudicator()
+        theirs = set(adj.TO_MW) | set(adj.APPARENT)
+        assert set(adjudication_gate.POWER_UNITS) == theirs, (
+            "the gate's POWER_UNITS and adjudicate_power's TO_MW+APPARENT "
+            "have drifted; a unit counted by one and not the other is a "
+            "figure the tail report cannot see")
+
+    def test_tail_is_counted_across_all_models(self):
+        """`p.model` anywhere in the NOT EXISTS would turn this back into
+        a resume query — the exact five-figure mistake the ROADMAP
+        documents."""
+        assert "model" not in adjudication_gate.TAIL_SQL, (
+            "TAIL_SQL qualifies its NOT EXISTS by model; the tail must "
+            "count findings with no verdict from ANY model")
+
+    def test_tail_reports_rather_than_refuses(self):
+        """Not every unadjudicated row is a claimable capacity, so the
+        assertion reports the size; sys.exit here would train people to
+        override it."""
+        import inspect
+        src = inspect.getsource(adjudication_gate.report_tail)
+        assert "sys.exit" not in src and "raise" not in src
