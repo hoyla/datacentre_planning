@@ -1631,7 +1631,7 @@ def main() -> None:
             c.fill = PatternFill("solid", fgColor="DDDDDD")
 
     _agg_title("External aggregates: what the regulator and network "
-               "operators publish about datacentre power demand")
+               "operators publish about data centre power demand")
     ws.append(["These figures are presented beside the planning-derived "
                "sheets and deliberately never joined to them. The sources "
                "measure different quantities — the first table says what "
