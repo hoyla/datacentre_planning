@@ -235,3 +235,51 @@ entries:
       Nestlé factory, Nestles Avenue. Coordinates are
       Hillingdon/1331/APP/2023/2363's own portal pin for the same
       site (2026-08-27).
+
+  # West London Technology Park, Iver (2 refs). Hillingdon's
+  # out-of-borough consultation copies of Buckinghamshire's Woodlands
+  # Park outline applications carry no coordinates, so each sat as its
+  # own unlocatable singleton. The PLAN document filed under both is
+  # byte-identical (content hash 24bdc2bd9ce35d14 — the WLTP Parameter
+  # Plan Pack, Greystoke | Altrad), and each restates its parent's
+  # outline description verbatim. Within 1 km of the pin every located
+  # application already belongs to PTNO-12610936; the nearest foreign
+  # cluster member is 1.64 km away, so no partition entry is needed.
+
+  - ref: Hillingdon/39707/APP/2021/4456
+    lat: 51.53314
+    lon: -0.493362
+    source: |
+      Out-of-borough consultation restating the outline application
+      for the former Woodlands Park landfill ("data centre development
+      … up to 163,000 sqm (GEA) … across 3 buildings"). Coordinates
+      are ChilternSouthBucks/PL/21/4429/OA's own portal pin — the 2021
+      parent this consultation copies, whose description it repeats
+      and whose plan pack it holds byte-for-byte (2026-08-27).
+
+  - ref: Hillingdon/39707/APP/2022/3243
+    lat: 51.53327
+    lon: -0.494439
+    source: |
+      The 2022 resubmission's consultation copy, addressed "Woodlands
+      Park Landfill Site Land South Of Slough Road Iver". Coordinates
+      are ChilternSouthBucks/PL/22/3491/OA's own portal pin — the
+      parent whose description and plan pack it duplicates
+      (2026-08-27).
+
+  # Westerhill AI Energy Campus, Bishopbriggs. The EIA screening
+  # request preceding the full application sat as its own unlocatable
+  # singleton; Apatura's consultation site names the scheme
+  # (https://consult.apatura.energy/westerhill/the-project, via LH).
+  - ref: EastDunbartonshire/TP/ED/25/0245
+    lat: 55.923267
+    lon: -4.199008
+    source: |
+      EIA screening request carrying the identical address line —
+      "Land Adjacent To Crosshill Road Bishopbriggs" — as
+      EastDunbartonshire/TP/ED/25/0428, the full application for the
+      300MW AI data centre it precedes. Neither record carries a
+      portal pin, so coordinates are Barbour's for project 12857728,
+      whose planning_ref is TP/ED/25/0428. The nearest foreign
+      cluster is over 5 km away, so no partition entry is needed
+      (2026-08-27).

@@ -95,6 +95,12 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     "ada": [
         ("ada-docklands", "https://adainfrastructure.com/en-US/docklands"),
     ],
+    # A developer's pre-application consultation site rather than an
+    # operator's location page: the figures are proposals, and the
+    # claims file labels them so.
+    "apatura": [
+        ("apatura-westerhill", "https://consult.apatura.energy/westerhill/the-project"),
+    ],
     "globalswitch": [
         ("globalswitch-london", "https://www.globalswitch.com/data-centres/london/"),
     ],
