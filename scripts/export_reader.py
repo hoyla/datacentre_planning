@@ -125,8 +125,12 @@ FINDINGS_SQL = """
             ranked AS (
               -- Within each family, the figures the adjudication attributed
               -- to this site come first; then the fullest text; then id.
+              -- The document join carries each statement's own citation
+              -- (issue #146): the register URL here, the Drive copy
+              -- resolved at render time, the page from the finding.
               SELECT s.site_key, f.signal_type, f.value_text, f.value_number,
                      f.value_unit, adj.verdict, f.signal_family, f.id,
+                     f.document_id, f.evidence_page, d.url AS doc_url,
                      row_number() OVER (PARTITION BY s.site_key, f.signal_family
                        ORDER BY coalesce(adj.verdict = 'site_capacity', false) DESC,
                                 length(coalesce(f.value_text,'')) DESC,
@@ -135,10 +139,12 @@ FINDINGS_SQL = """
               JOIN site_members m ON m.application_id=f.application_id AND m.retired_at IS NULL
               JOIN sites s ON s.id=m.site_id
               LEFT JOIN adj ON adj.finding_id = f.id
+              LEFT JOIN documents d ON d.id = f.document_id
               WHERE s.retired_at IS NULL AND f.value_text IS NOT NULL
                 AND f.signal_family <> 'unclassified')
             SELECT site_key, signal_type, value_text, value_number, value_unit,
-                   verdict, signal_family, id FROM (
+                   verdict, signal_family, id, document_id, evidence_page,
+                   doc_url FROM (
               -- Round-robin across families: the first of every family
               -- before the second of any. Each round leads with figures
               -- adjudicated as this site's, then the power families, then
@@ -147,6 +153,7 @@ FINDINGS_SQL = """
               -- the top of a site's evidence, four times over.
               SELECT f.site_key, f.signal_type, f.value_text, f.value_number,
                      f.value_unit, f.verdict, f.signal_family, f.id,
+                     f.document_id, f.evidence_page, f.doc_url,
                      row_number() OVER (PARTITION BY f.site_key
                        ORDER BY f.rf,
                                 coalesce(f.verdict = 'site_capacity', false) DESC,
@@ -983,7 +990,13 @@ th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);verti
   top:var(--th-top,82px);z-index:7}
 th{background:var(--bg);cursor:pointer;white-space:nowrap;font-weight:600;
   border-bottom:2px solid var(--line);vertical-align:bottom}
-th:after{content:" ↕";color:var(--mut);font-size:12px;opacity:.55}
+/* U+00A0, not a space: the sites-table headings wrap (white-space:normal
+   below), and a breaking space here put the glyph on a line of its own
+   under "Who's behind it" and "External power indicators" (ROADMAP,
+   2026-08-27). The heading's ?-link already abuts its last word, so the
+   non-breaking space chains word, link and glyph into one unbreakable
+   tail. */
+th:after{content:"\\00a0↕";color:var(--mut);font-size:12px;opacity:.55}
 tr.site{cursor:pointer}
 tr.site:hover{background:rgba(127,127,127,.06)}
 /* An open row and its panel share a background and a left edge, so it is
@@ -1001,6 +1014,10 @@ tr.detail td{padding:14px 18px 18px 30px}
 .mw .q{white-space:normal}
 .prov{color:var(--warn);font-weight:400}
 .q{display:block;color:var(--mut);font-size:13px;font-weight:400;line-height:1.35}
+/* A statement's citation runs on from the statement (issue #146); .q
+   would stack it in a block of its own. */
+.cite{color:var(--mut);font-size:13px;font-weight:400}
+.cite a{color:var(--mut)}
 /* Status labels wrap. They are occasionally a full sentence — "No figure
    found so far — 56 of 69 documents analysed" — and holding those on one
    line gave the column more width than any other, on rows that are
@@ -2488,7 +2505,8 @@ def main() -> int:
         # A flag that cannot show its words in the text does not move a
         # reader's quote; it is counted instead.
         n_demoted = n_not_findings = n_unsupported = 0
-        for k, st, vt, vn, vu, verdict, fam, fid in _raw_findings:
+        for (k, st, vt, vn, vu, verdict, fam, fid,
+             doc_id, page, doc_url) in _raw_findings:
             filed_as = ""
             moved = label_verdicts.get(fid)
             if moved and not spans.verify_span(moved[2], vt or ""):
@@ -2500,7 +2518,8 @@ def main() -> int:
             if moved and moved[1] and moved[1] != fam:
                 filed_as, fam = fam, moved[1]
                 n_demoted += 1
-            findings[k].append((st, vt, vn, vu, verdict, fam, filed_as))
+            findings[k].append((st, vt, vn, vu, verdict, fam, filed_as,
+                                doc_id, page, doc_url))
         cur.execute(FAMILY_COUNTS_SQL)
         family_counts: dict[str, dict[str, int]] = defaultdict(dict)
         for k, fam, n in cur.fetchall():
@@ -2702,7 +2721,7 @@ def main() -> int:
             return f'document {doc_id}{page}'
         return f'application {esc(q.get("application_ref") or "")}, adjudicated figure'
 
-    def reading_panel(key):
+    def reading_panel(key, docs_held=0):
         nonlocal n_readings_rendered, n_readings_withheld, n_paragraphs_withheld
         r = readings.get(key)
         if not r:
@@ -2713,6 +2732,25 @@ def main() -> int:
                         f'this site\u2019s documents</h4><p class="help">Withheld: '
                         f'{esc(why)}. A reading is shown only where every figure in it '
                         f'carries a quote that verified against the documents.</p></div>')
+            # A site with documents and no reading says why, instead of
+            # silently lacking a panel its neighbours have (issue #145).
+            # The reason is mechanical, not editorial \u2014 readings are
+            # generated in batches from each site's own documents and
+            # the batches have covered only some sites so far \u2014 and the
+            # wording must not overpromise a schedule: at this build 19
+            # of 524 sites carry one. Sites with no documents get no
+            # note; their page already says no documents are held, and
+            # there is nothing for a reading to read.
+            if docs_held:
+                return ('<div class="box reading withheld"><h4>A machine\u2019s '
+                        'reading of this site\u2019s documents</h4>'
+                        '<p class="help">None yet \u2014 not a judgement about '
+                        'this site. Readings are generated in batches from '
+                        'each site\u2019s own documents, and the batches run so '
+                        'far have covered only some sites; this one has not '
+                        'been read yet. Where a reading exists it renders '
+                        'only if every figure in it carries a quote that '
+                        'verified against the documents.</p></div>')
             return ""
         n_readings_rendered += 1
         sections = (r["reading"] or {}).get("sections") or {}
@@ -2992,14 +3030,15 @@ def main() -> int:
         # exist yet, so nothing is excluded on that ground; the family a
         # row sits under is the extractor's label, as ever.
         grouped: dict[str, list] = {}
-        for st, vt, vn, vu, verdict, fam, filed_as in findings.get(key, []):
+        for (st, vt, vn, vu, verdict, fam, filed_as,
+             f_doc, f_page, f_url) in findings.get(key, []):
             grouped.setdefault(fam or "other", []).append(
-                (st, vt, vn, vu, verdict, filed_as))
+                (st, vt, vn, vu, verdict, filed_as, f_doc, f_page, f_url))
         fl = []
         n_shown = 0
         for fam, rows_ in grouped.items():
             items = []
-            for st, vt, vn, vu, verdict, filed_as in rows_:
+            for st, vt, vn, vu, verdict, filed_as, f_doc, f_page, f_url in rows_:
                 num = f" <strong>{vn:g} {esc(vu or '')}</strong>" if vn is not None else ""
                 # Adjudicated as describing something other than this site.
                 not_ours = {
@@ -3014,8 +3053,33 @@ def main() -> int:
                 # only which heading a reader finds it under.
                 moved = (f" <span class='q'>[filed as {esc(filed_as)}]</span>"
                          if filed_as else "")
+                # Each statement cites its document (issue #146): the
+                # Drive copy as the working link, the register beside it,
+                # the page where the finding recorded one — the same
+                # two-link rule as doc_link, built flat here because .q
+                # is display:block and a citation must sit on the
+                # statement's own line, not stack under it.
+                cite = ""
+                if f_doc or f_url:
+                    _drive = drive_docs.get(int(f_doc), "") if f_doc else ""
+                    _u = str(f_url or "")
+                    _reg = _u if _u.startswith(("http://", "https://")) else ""
+                    parts = []
+                    if _drive:
+                        parts.append(f'<a href="{esc(_drive)}" target="_blank" '
+                                     f'rel="noopener">document</a>')
+                        if _reg:
+                            parts.append(f'<a href="{esc(_reg)}" target="_blank" '
+                                         f'rel="noopener">register</a>')
+                    elif _reg:
+                        parts.append(f'<a href="{esc(_reg)}" target="_blank" '
+                                     f'rel="noopener">document</a>')
+                    if parts:
+                        pg = f", p. {f_page}" if f_page else ""
+                        cite = (" <span class='cite'>· "
+                                + " · ".join(parts) + pg + "</span>")
                 items.append(f"<li><span class='st'>{esc(st)}</span>{num}{tag}{moved} — "
-                             f"{esc(trim(vt,190))}</li>")
+                             f"{esc(trim(vt,190))}{cite}</li>")
             n_shown += len(items)
             total = family_counts.get(key, {}).get(fam, len(items))
             head = (f"<span class='famname'>{esc(humanise(fam))}</span> "
@@ -3519,7 +3583,7 @@ def main() -> int:
             + '</div>')
 
         who = who_cell(prof)
-        reading_html = reading_panel(key)
+        reading_html = reading_panel(key, held)
         hay = " ".join(str(x or "").lower() for x in
                        (name, key, addr, ", ".join(councils or []), full_desc,
                         prof.get("operator_group"), prof.get("end_user"),
@@ -3607,8 +3671,13 @@ def main() -> int:
  <div class="card sitehead">
   {sig_pills}
   <h2 class="sitename">{esc(prop.title_case(name or key))}</h2>
+  <!-- "Record built from" is said, not implied: the bare origin phrase
+       ("The planning sweep and Barbour") read as an unlabelled mystery
+       in the subheading, while the Site details box below labels the
+       same value (issue #153). Lower-cased to sit inside the sentence
+       the label starts. -->
   <p class="siteident">{esc(", ".join(councils or []))}{" · " if addr else ""}{esc(trim(addr, 90))}
-   · <code>{esc(key)}</code> · {esc(SITE_ORIGIN.get(cls, (cls, ""))[0])}</p>
+   · <code>{esc(key)}</code> · Record built from {esc(SITE_ORIGIN.get(cls, (cls, ""))[0][:1].lower() + SITE_ORIGIN.get(cls, (cls, ""))[0][1:])}</p>
   <p class="sitestate">{state_html}</p>
   <p class="sitelinks">{site_links}</p>
  </div>
@@ -3641,8 +3710,14 @@ def main() -> int:
         esc(SITE_ORIGIN.get(cls, (cls, ""))[0])}
        <span class="help">{esc(SITE_ORIGIN.get(cls, ("", ""))[1])}</span></span></div>
      </div>
+     <!-- The coordinates themselves link to our map, not just the word
+          "map" beside them: users clicked the Google Maps link and
+          missed ours, which is the one showing proximity to energy
+          projects (issue #144). -->
      <div><span class="lbl">Coordinates</span><span class="val">
-      {f'{lat:.5f}, {lon:.5f}' if lat and lon else '—'}
+      {f'<a href="#map" onclick="showMap(\'{esc(key)}\');return false" '
+       f'title="Show this site on the map">{lat:.5f}, {lon:.5f}</a>'
+       if lat and lon else '—'}
       {maplink}{' · ' + gmaps if gmaps else ''}
       <span class="help">{esc(csrc or 'source unknown')}</span></span></div>
      <div><span class="lbl">How we found it</span><span class="val">
@@ -3808,7 +3883,9 @@ def main() -> int:
      </div>
      <div><span class="lbl">Development type</span><span class="val">{esc(dev_type) or NOT_STATED}</span></div>
      <div><span class="lbl">Coordinates</span><span class="val">
-      {f'{plat:.5f}, {plon:.5f}' if plat and plon else '—'} {maplink}</span></div>
+      {f'<a href="#map" onclick="showMap(\'{esc(key)}\');return false" '
+       f'title="Show this site on the map">{plat:.5f}, {plon:.5f}</a>'
+       if plat and plon else '—'} {maplink}</span></div>
      <div><span class="lbl">Environmental subjects</span>
       <span class="val">{esc(', '.join(env)) or NOT_STATED}</span></div>
      <div><span class="lbl">Nearest energy project</span>
@@ -4751,14 +4828,22 @@ def main() -> int:
  verified that way, treat it as an opinion and discard it.</p>
 
  <h2 class="sec">What looks worth pulling on</h2>
- <p class="m"><b>The silences are the strongest material.</b> This dataset's most unusual
- property is that it can show what applications <em>do not</em> say. Two examples are
+ <p class="m"><b>The silences are significant.</b> An unusual
+ property of this dataset is that it can show what applications <em>do not</em> say. Two examples are
  already visible: sites whose documents were read in full and state no capacity figure at
- all, and — more striking — the majority of on-site generation figures that name no fuel and
+ all, and the majority of on-site generation figures that name no fuel and
  no plant type. For an investigation that began by asking whether operators disclose
  generation contradicting their public renewable positioning, "most of them do not say what
  it burns" is a finding about disclosure itself, and it is measurable here rather than
  anecdotal.</p>
+ <p class="m"><b>Figures that stop just under 50 MW.</b> Above 50 MW a generating station
+ in England needs consent from the Secretary of State rather than the local council, and
+ 855 findings across 51 sites state a bound just under it — "generation totalling less
+ than 50 MW", "capped at 50 MW", "49.9". That is a behaviour, not noise: a ceiling stated
+ that precisely is a routing decision about which consent regime applies. A ceiling is
+ also not a load — the like-for-like comparisons here exclude these figures for that
+ reason — so where one appears, the question is what the site actually intends to
+ install, and that answer is usually elsewhere in its documents.</p>
  <p class="m"><b>The gap between demand and grid connection.</b> A handful of sites state
  they will draw materially more than the connection their own documents describe. Those are
  not errors — they have been checked by hand — and they raise a question the planning file
@@ -4804,6 +4889,13 @@ def main() -> int:
    in its source document, which guarantees fidelity, not legibility — a scanned page can
    yield a verbatim-true but unreadable quote. Check the source document before quoting
    anything that reads oddly.</li>
+  <li><b>An external megawatt and a planning megawatt rarely measure the same thing.</b> A
+   company's accounts, a market report and a planning statement can each state a capacity
+   for one scheme and all be right: one site's environmental statement gives 103.32 MW of
+   IT load and 139.5 MW of total load in a single table, beside a 140 MW reserved grid
+   connection. A gap between two sources is only a finding after establishing that they
+   measure the same quantity — here that took one table and dissolved what looked like a
+   36 MW discrepancy.</li>
  </ul>
 
  <h2 class="sec">What deserves a human before publication</h2>
@@ -4836,7 +4928,13 @@ def main() -> int:
    persons of significant control and registered addresses are the route from an SPV to the
    operator behind it. This dataset deliberately does not fuzzy-match company names, because
    near-identical names are often genuinely different companies — which is exactly the
-   distinction an ownership story turns on.</li>
+   distinction an ownership story turns on. Since these notes were first written the route
+   has been tested and it pays twice over: a single-asset SPV's audited accounts state what
+   its property valuation assumes — for one scheme here, "successful delivery of a
+   103.3 MW hyperscale data centre", a capacity an external valuer priced and an auditor
+   signed — and the charges register records who lends against the scheme, which the PSC
+   register is structurally unable to show. The External claims panel on a site's page
+   carries what has been loaded so far.</li>
   <li><b>Planning appeals.</b> Refused applications generate appeal evidence that is
    cross-examined and often far more candid than the original submission. Nothing from the
    appeals system is in this release.</li>
@@ -4879,11 +4977,13 @@ def main() -> int:
  rows are marked <em>(prior to complete deep read)</em> and can be isolated with the Sites
  filter. A small tail of applications is also still being retrieved. Both are completed in
  the next release.
- <p class="m"><b>Read twice: not yet done.</b> Every document here has been read once. A
- second reading, by a different model against the same pages, is what would turn "no
- capacity disclosed" from an absence of evidence into evidence of absence — and it has not
- been carried out. Where this release says a site discloses nothing, it means nothing was
- found on one pass, which is the weaker claim.</p></div></details>"""
+ <p class="m"><b>Read twice: under way, not complete.</b> Every document here has been read
+ once. A second reading, by a different model against the same pages, is what would turn
+ "no capacity disclosed" from an absence of evidence into evidence of absence. That pass
+ has started and its findings feed this release where it has reached, but it is not
+ complete and the corpus-wide comparison — where two readings disagree, the disagreement
+ is the finding — has not been produced. Where this release says a site discloses
+ nothing, that remains the weaker claim.</p></div></details>"""
 
     out = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>UK datacentre plans v2, phase {args.phase} release</title>
@@ -4903,9 +5003,11 @@ def main() -> int:
 <style>{CSS}</style></head><body>
 <header class="masthead"><div class="mhead">
  <h1>UK datacentre plans</h1>
+ <!-- Sites and applications only: the document and verified-findings
+      counts live in the coverage panel, where they sit beside what they
+      mean (issue #147). -->
  <div class="sub">v2, phase {args.phase} · {n_sites} sites ·
- {len(app_rows):,} applications · {n_docs:,} documents ·
- {n_findings_total:,} verified findings ·
+ {len(app_rows):,} applications ·
  generated {dt.datetime.now(dt.timezone.utc):%-d %b %Y %H:%M} UTC ·
  pipeline {esc(hv._git_commit())}</div></div></header>
 <nav class="top"><div class="navinner">
@@ -5008,7 +5110,10 @@ def main() -> int:
     <p>Named queries over the adjudicated findings — cohorts of sites that share a
      measurable property. Each one shows its own definition and the script that produces
      it. No model chooses what appears, and no cohort is a conclusion.</p>
-    <button type="button" class="cta" onclick="show('signals')">Open the signal list</button>
+    <!-- secondary like its neighbour: the filled style read as "the
+         default way in" and kept steering frequent users to Signals,
+         when the meat of the reader is the Sites table (issue #148). -->
+    <button type="button" class="cta secondary" onclick="show('signals')">Open the signal list</button>
    </div>
    <div class="way way-data">
     <div class="waylab">The data</div>
@@ -5089,7 +5194,7 @@ def main() -> int:
    <h3><a href="#notes" onclick="show('notes');return false">Assistant's
     notes</a></h3>
    <p class="what">A record of what this data looks like from the inside, written by the AI
-    assistant that built the pipeline: which silences look like the strongest material, where
+    assistant that built the pipeline: which silences look significant, where
     the figures can mislead, what to check before publishing, and where to look next.
     <b>Nothing in it is a finding</b> — every claim points at a site, a column or a document
     you can open, and anything that cannot be traced that way is an opinion to discard.</p>
@@ -5328,7 +5433,7 @@ def main() -> int:
  {''.join(dict_html)}
 </div></section>
 
-<footer><b>Please do not forward this link or the password.</b> This
+<footer>This
  supports unpublished reporting. Barbour ABI data is licensed and requires credit in published output. Personal
  contact details are excluded throughout. Distances are straight-line, to the nearest site we
  hold coordinates for. A blank stated capacity on an energy project means its PINS page states
