@@ -115,14 +115,28 @@ TABLES: dict[str, str] = {
                t.raw_response->>'rendered_input' AS model_input,
                t.inserted_at
         FROM triage t JOIN applications a ON a.id = t.application_id""",
+    # `drive_url` is the copy this project holds, and it is the one to
+    # open. `source_url` is where the file came from, which is what a
+    # published citation needs and what may not resolve any more: a
+    # council can withdraw a document from its register or move the
+    # portal, and 512 rows carry a `file://` path naming the machine
+    # that ingested them, which resolves for nobody. `bytes_path` is
+    # local to the pipeline and is provenance, not a link.
     "documents": """
         SELECT a.application_ref, d.kind, d.content_sha256, d.bytes_path,
+               'https://drive.google.com/file/d/' || ddf.file_id || '/view'
+                 AS drive_url,
                d.url AS source_url,
                CASE WHEN d.url LIKE 'file://%' THEN 'by hand'
                     WHEN d.url LIKE '%#%' THEN 'by hand via browser'
                     ELSE 'portal fetch' END AS obtained,
                d.page_count, d.ocr_used, d.fetched_at
-        FROM documents d JOIN applications a ON a.id = d.application_id""",
+        FROM documents d
+        JOIN applications a ON a.id = d.application_id
+        LEFT JOIN LATERAL (
+          SELECT file_id FROM document_drive_files x
+          WHERE x.document_id = d.id
+          ORDER BY x.recorded_at DESC, x.id DESC LIMIT 1) ddf ON true""",
     # The adjudication columns matter more here than anywhere else. This
     # file exists for the question that is not in a column, which means
     # somebody will write `WHERE value_unit = 'MW' ORDER BY value_number
@@ -436,8 +450,7 @@ def main() -> None:
         ("barbour_note", "Barbour ABI data licensed for this use; attribution "
                          "required in published output. Contact and role fields "
                          "deliberately not exported."),
-        ("documents_note", "bytes_path is relative to the pipeline's data store; "
-                           "source_url and obtained record how each file was got."),
+        ("documents_note", "drive_url is our copy and the one to open — a register can withdraw a document, and 512 source_urls are file:// paths that resolve for nobody. source_url is where it came from, which is what a published citation needs. bytes_path is relative to the pipeline's data store. obtained records how each file was got."),
         ("cohorts_note", "A cohort is a named rule over the adjudicated "
                          "figures — sites sharing a measurable property, "
                          "never a conclusion about them. cohort_definitions "
