@@ -17,14 +17,6 @@ signpost rather than a surface: PR #135 merged on 2026-08-27, so it
 redirects and the shared password is retired. What 2.8 contains is in
 HISTORY. No release is in flight.
 
-**Two things are waiting on a person, not on work.** The 2.8 Google
-Sheet (`DC_handover_v2_phase2.8`) is created and populated but not yet
-formatted — a one-time job, after which `sheet_sync` refreshes it in
-place and the formatting survives. And **Dartford is still unreported** — a
-300 MW campus with a firm Gate 2 connection, directed on 2026-07-01,
-briefed at [docs/briefs/dartford_ebbsfleet.md](docs/briefs/dartford_ebbsfleet.md),
-and it decays.
-
 **Reading is complete for phase 2.1**, stamped 2026-08-11 with the
 Studio reader stopped so the boundary is clean: 37,992 of 38,005 prose
 documents read. The Phase 3 corroboration read continues on the Studio
@@ -280,13 +272,6 @@ alongside it.
   unbuilt. Until then, **re-run `dcp index --source s35` weekly**
   (idempotent, free on no change) so a fourth direction is noticed the
   week it publishes rather than the day a story runs.
-
-- **The Dartford direction is an unreported lead.** New Barn Road,
-  Dartford — CSE52 Limited, "Ebbsfleet DCC", directed 2026-07-01, 300MW
-  power and 240MW IT load, Clearstone-linked, grid-led rather than
-  gas-led. As at 2026-08-25 it had been reported nowhere, including in
-  the Guardian piece that prompted the watcher. Journalism, not
-  engineering, and it decays.
 
 - **`scripts/load_capacity_claims.py` was broken from the SPV work until
   2026-08-26; fixed.** `companies-house-claims.yaml` gained claims with
