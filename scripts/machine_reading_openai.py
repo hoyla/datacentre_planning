@@ -68,7 +68,12 @@ SAMPLE_SITES: tuple[tuple[str, str], ...] = (
     ("PTNO-12610936", "West London Technology Park — 342 MW total, 140 MW grid"),
     ("PTNO-11891737", "Interxion — many applications, many audiences"),
     ("PTNO-12511337", "Union Park — the multi-campus site"),
-    ("SITE-EN0110030", "A nationally significant project"),
+    # PTNO-12913776, not SITE-EN0110030: the Wapseys key dissolved into
+    # the Barbour-keyed site on 2026-08-26, and the old key generated a
+    # reading against zero documents that rendered nowhere — one wasted
+    # model call per refresh until this was repointed (ROADMAP,
+    # 2026-08-27).
+    ("PTNO-12913776", "A nationally significant project"),
     ("SITE-NorthAyrshire/26/00138/EIA", "Hunterston — per-unit headline, EIA"),
     ("PTNO-12628941", "Yorkshire Energy Park — 559 generation findings"),
     ("PTNO-12489447", "Langley Business Centre — 26 x 4 MW stated two ways"),
@@ -314,7 +319,21 @@ def do_submit(model: str, effort: str, dry_run: bool) -> None:
                            ORDER BY s.site_key""")
             keys = [r[0] for r in cur.fetchall()]
         lines, meta, skipped, chars = [], {}, 0, 0
+        deferred_partial = 0
         for key in keys:
+            # A reading narrates with the model's fluent confidence, and
+            # doing that over a partly-read site turns a floor into an
+            # apparent ceiling — the reading cannot say "the documents
+            # disclose no more" while documents sit unread. So a site
+            # qualifies only once its prose is read in full; the rest
+            # wait, and the reader's own panel explains their absence
+            # (Luke's rule, 2026-08-27). Same coverage source the
+            # provisional flag uses.
+            c = coverage.get(key, {})
+            if not c.get("prose_held") or (c.get("prose_read", 0)
+                                           < c["prose_held"]):
+                deferred_partial += 1
+                continue
             inp = mr.load_site_input(conn, key, profile=profiles.get(key, {}),
                                      coverage=coverage.get(key, {}),
                                      cohorts=cohorts)
@@ -335,7 +354,8 @@ def do_submit(model: str, effort: str, dry_run: bool) -> None:
                          "input_chars": sum(len(p.text) for p in inp.pages)}
             chars += meta[key]["input_chars"]
     print(f"{len(lines)} sites to read, {skipped} already read under their "
-          f"current input; ≈{chars / 4 / 1e6:.1f}M input tokens")
+          f"current input, {deferred_partial} deferred as partly read; "
+          f"≈{chars / 4 / 1e6:.1f}M input tokens")
     if dry_run or not lines:
         return
     client = _client()
