@@ -24,6 +24,11 @@ _spec.loader.exec_module(drive_sync)
 
 def _sync(state):
     s = drive_sync.Sync.__new__(drive_sync.Sync)
+    # __new__ deliberately, bypassing __init__'s ledger load — so the
+    # concurrency plumbing __init__ normally provides is built here.
+    s._tls = drive_sync.threading.local()
+    s._lock = drive_sync.threading.RLock()
+    s._creds = None
     s.svc = None
     s.state = state
     s._dirty = 0
@@ -202,3 +207,44 @@ def test_network_gets_more_attempts_than_api_pushback(monkeypatch):
     with pytest.raises(RuntimeError):
         s._retry(_Boom("503 backend error", 6))
     assert s._retry(_Boom("Unable to find the server at x", 6)) == "ok"
+
+
+def test_a_worker_thread_sees_the_injected_fake_service():
+    """Tests inject fakes by assigning `sync.svc`; the thread-local
+    real-service machinery must never bypass that — a worker thread
+    building a real client under a fake would hit live Drive from a
+    unit test."""
+    import threading
+
+    s = _sync({"folders": {}, "files": {}})
+    fake = _FakeService({})
+    s.svc = fake
+    seen = []
+    t = threading.Thread(target=lambda: seen.append(s.svc))
+    t.start(); t.join()
+    assert seen == [fake]
+
+
+def test_concurrent_ledger_writes_survive_a_racing_save(tmp_path, monkeypatch):
+    """The lock's whole job: many threads writing entries while save()
+    dumps must neither crash ("dict changed size during iteration")
+    nor lose entries."""
+    import threading
+
+    s = _sync({"folders": {}, "files": {}})
+    monkeypatch.setattr(drive_sync, "STATE_PATH", tmp_path / "state.json")
+
+    def write(n):
+        for i in range(200):
+            with s._lock:
+                s.state["files"][f"t{n}/f{i}"] = {"md5": "x", "id": str(i)}
+                s._md5_cache = None
+            s.save()
+
+    threads = [threading.Thread(target=write, args=(n,)) for n in range(8)]
+    for t in threads: t.start()
+    for t in threads: t.join()
+    s.save(force=True)
+    import json
+    on_disk = json.loads((tmp_path / "state.json").read_text())
+    assert len(on_disk["files"]) == 8 * 200
