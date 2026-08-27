@@ -1395,6 +1395,34 @@ What it unblocks, recorded in ROADMAP: re-matching Ark's retired
 held under `considered:`, and the Colt operator tranche that was
 "blocked on the Hayes fragmentation".
 
+**Materialised, extended and cashed in the same day.** The first
+materialise (7 new, 2 revived, 0 retired) exposed a second form of the
+same conflation, inverted: four Ealing out-of-borough consultations
+carrying no coordinates had each sat as an unlocatable singleton
+*site* — 213, 214 and 215 all reading "Land at Tudor Works,
+Beaconsfield Road" (the "three separate site records for the same
+address" that the Colt claim's considered entry names as its blocker),
+and 405 for the Nestlé factory. Coordinate priors in
+`inferred_coords.yaml` (each pin is the Hillingdon stem's own portal
+coordinate for the scheme the consultation restates) plus partition
+membership dissolved all four into their campuses; the second
+materialise retired them. 499 live sites.
+
+Then the matches the split had been blocking, six loaded through
+`load_capacity_claims.py` with the batch validator green: Ark's 99 MW
+"Total Capacity" re-matched to site 61 — its 2026-08-21 retirement
+entry had named "an adjudicated partition for Union Park" as the
+release condition, and the new match sits beside the retired one in
+`capacity_claim_matches`, append-only — the four Ark Estates 2 FY2025
+figures (24 MW built, 48 MW under construction, 24 MW subject to
+planning, £839.79m investment property), and Colt London 4's 31 MW to
+site 75, where the evidence is no longer press-only: Barbour's title
+for the record is "COLT LONDON 4 - DATA CENTRE BUILDINGS" and the
+applicant of record in the planning documents is HDCI Hayes London
+Limited. Every considered entry that held these back stays in place
+with a SETTLED coda, because the reason for the hold is part of the
+provenance of the match.
+
 ---
 
 ## How this project is worked on

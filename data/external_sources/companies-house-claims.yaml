@@ -707,6 +707,64 @@ matches:
       construction at Corsham is a forward-looking number a reporter may
       want to track separately.
 
+  # --- Union Park: matched 2026-08-27, after the site 61 split -------
+  #
+  # All four were held under `considered:` below because site 61 was an
+  # over-merged cluster; the considered entries said so and named the
+  # partition as the release condition. The partition was drawn and
+  # materialised on 2026-08-27, site 61 is only Ark's Union Park (59
+  # applications, all stem 75111 or its Ealing consultations, keyed
+  # PTNO-12511337), and the company identity was never in doubt (Ark
+  # Estates 2 Limited, 12113969, companies-house-spvs.yaml). One match
+  # per claim so each figure carries its own stage to the site.
+
+  - claim_name: Union Park
+    site_id: 61
+    method: partition_and_applicant
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-27
+    evidence: >-
+      The considered entry below recorded that "the match is a
+      site-record question, not an evidence question", and the site
+      record is settled: after the 2026-08-27 partition and
+      materialise, site 61 holds only Ark's Union Park campus, whose
+      documents name Ark Estates 2 Ltd as applicant of record 97 times.
+      The accounts state the campus's built capacity; the site is the
+      campus.
+
+  - claim_name: Union Park (under construction)
+    site_id: 61
+    method: partition_and_applicant
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-27
+    evidence: >-
+      Same sentence, same filing and same settled site record as the
+      built figure above; kept as its own match so the 48 MW carries
+      its under-construction stage to the site rather than inflating
+      the built figure.
+
+  - claim_name: Union Park (subject to planning permission)
+    site_id: 61
+    method: partition_and_applicant
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-27
+    evidence: >-
+      Same sentence, same filing and same settled site record; the
+      24 MW that depends on a consent Ark does not yet have is the
+      figure a planning reporter should see against this site's own
+      applications.
+
+  - claim_name: Union Park (site value)
+    site_id: 61
+    method: partition_and_applicant
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-27
+    evidence: >-
+      The financial-indicators table in the same filing: investment
+      property £839,790,000 at 30 June 2025, and the group's stated
+      holding is the Union Park site — which is now the whole of what
+      site 61 describes.
+
 # Claims examined and deliberately left unmatched, with the reason.
 considered:
   - claim_name: Meridian Park
@@ -746,15 +804,23 @@ considered:
       partitioning work splits 61; the company identity is not in doubt
       (Ark Estates 2 Limited, 12113969, see companies-house-spvs.yaml)
       and the match is a site-record question, not an evidence question.
+      SETTLED 2026-08-27: the split happened and all four Union Park
+      claims are matched above. Kept as the record of the hold.
 
   - claim_name: Union Park (under construction)
-    reason: Same site-61 cluster as the built figure above.
+    reason: >-
+      Same site-61 cluster as the built figure above.
+      SETTLED 2026-08-27, matched above.
 
   - claim_name: Union Park (subject to planning permission)
-    reason: Same site-61 cluster as the built figure above.
+    reason: >-
+      Same site-61 cluster as the built figure above.
+      SETTLED 2026-08-27, matched above.
 
   - claim_name: Union Park (site value)
-    reason: Same site-61 cluster as the built figure above.
+    reason: >-
+      Same site-61 cluster as the built figure above.
+      SETTLED 2026-08-27, matched above.
 
   - claim_name: DataVita Tier III data centre — first phase AI capacity
     reason: >-

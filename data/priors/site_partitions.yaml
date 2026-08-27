@@ -275,6 +275,9 @@ partitions:
     applications:
       - Ealing/200958CONS
       - Ealing/201082CONS
+      - Ealing/212659CONS   # S73 consultation on 1331/APP/2019/1666; was
+                            # unlocatable singleton site 405 until its
+                            # coordinate prior (inferred_coords.yaml)
       - Hillingdon/1331/APP/2017/1883
       - Hillingdon/1331/APP/2018/2495
       - Hillingdon/1331/APP/2018/2496
@@ -473,6 +476,12 @@ partitions:
       so it sits in the hayes-bridge-retail-park partition below — the
       one place the stem premise fails, caught by reading the record.
     applications:
+      - Ealing/216506CONS   # consultations on the Tudor Works campus;
+      - Ealing/216742CONS   # were unlocatable singleton sites 213-215 —
+      - Ealing/221024CONS   # the "three separate site records for the
+                            # same address" blocking the Colt London 4
+                            # claim — until their coordinate priors
+                            # (inferred_coords.yaml, 2026-08-27)
       - Hillingdon/38421/APP/2021/3613
       - Hillingdon/38421/APP/2021/4045
       - Hillingdon/38421/APP/2022/3607

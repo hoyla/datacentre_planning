@@ -1120,6 +1120,47 @@ matches:
       scheme. A lead for someone to resolve from the Runnymede register,
       not an attribution.
 
+  - claim_name: Union Park
+    site_id: 61
+    method: partition_and_applicant
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-27
+    evidence: >-
+      Re-matched after the site 61 split. The 2026-08-21 retirement
+      below named its own release condition — "an adjudicated partition
+      for Union Park in data/priors/site_partitions.yaml, the same
+      treatment the International Trading Estate got" — and that
+      partition was drawn and materialised on 2026-08-27. Site 61 is
+      now only Ark's campus: 59 applications, every one on Hillingdon
+      stem 75111 or its Ealing out-of-borough consultations, applicant
+      of record Ark Estates 2 Ltd / Ark UP4 Ltd / Ark Data Centres Ltd
+      throughout the documents, keyed PTNO-12511337 ("NORTH HYDE
+      GARDENS UNION PARK - DATA CENTRES"). The SPV's audited accounts
+      corroborate the identity from the other direction: Ark Estates 2
+      Limited states 24 MW built, 48 MW under construction and 24 MW
+      subject to planning at Union Park (companies-house-claims.yaml)
+      — 96 MW across build stages against this page's 99 MW "Total
+      Capacity", a gap that is the two sources' business, not a doubt
+      about which campus they describe.
+
+  - claim_name: Colt London 4 (Hayes campus)
+    site_id: 75
+    method: barbour_title_and_applicant
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-27
+    evidence: >-
+      The block recorded below was "three separate site records (213,
+      214, 215) for the same address"; those were Ealing out-of-borough
+      consultations with no coordinates, each stranded as a singleton,
+      and they dissolved into site 75 on 2026-08-27 via coordinate
+      priors (inferred_coords.yaml) and the tudor-works-colt partition.
+      One record now holds the campus, and the evidence is no longer
+      press-only: site 75 is keyed PTNO-12608004, Barbour's own title
+      for it is "COLT LONDON 4 - DATA CENTRE BUILDINGS", and the
+      applicant of record across its 26 Land at Tudor Works,
+      Beaconsfield Road applications is Colt Data Centre Services /
+      HDCI Hayes London Limited in the planning documents themselves.
+
 considered:
   - claim_name: Union Park
     reason: >-
@@ -1139,6 +1180,10 @@ considered:
       the International Trading Estate got. Until then no claim should
       attach to site 61 at all — it is a record whose name describes one
       of the campuses it contains.
+      SETTLED 2026-08-27: the partition was drawn (site_partitions.yaml,
+      ten campuses) and materialised, site 61 is only Union Park, and
+      the claim is re-matched above. This entry stays as the record of
+      why it was retired and what the release condition was.
 
   - claim_name: Colt London 4 (Hayes campus)
     reason: >-
@@ -1149,6 +1194,10 @@ considered:
       the three on press evidence alone would be a guess dressed as a
       match; the claim is loaded unmatched until the fragmentation is
       resolved or Colt's own material names the street.
+      SETTLED 2026-08-27: the fragmentation was the three consultations
+      being unlocatable singletons; coordinate priors and the
+      tudor-works-colt partition dissolved them into site 75, whose
+      Barbour title names Colt London 4 outright. Matched above.
 
   - claim_name: nLighten London (Hoddesdon)
     reason: >-
