@@ -4,21 +4,24 @@ What is still to do. Everything already built and decided — including
 the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
-Current state: **499 sites** (plus 25 pre-planning), **2,034
-applications** in the site universe, **~57,000 documents and moving**
-(the 2026-08-27 acquisition sweep is paused mid-run for the release
-boundary and resumes after it). Findings and adjudication counts move
-while the corroboration pass runs and are deliberately not restated
-here — `scripts/corpus_stats.py` prints them, and each release states
-the boundary it was stamped at.
+Current state: **496 sites** (plus 25 pre-planning), **2,034
+applications** in the site universe, **58,262 documents and moving**
+(the 2026-08-27 acquisition sweep resumed after the release boundary
+and is still running). Findings and adjudication counts move while the
+corroboration pass runs and are deliberately not restated here —
+`scripts/corpus_stats.py` prints them, and each release states the
+boundary it was stamped at.
 
-**2.9 is in flight** (2026-08-27): artefacts built and diffed against
-2.8, the Drive sync running as this is written; what remains is the
-ledger, the final reader rebuild, the release PR and the deploy. 2.8
-remains the version readers see until then, at the Cloud Run
-deployment behind Guardian sign-in, which changes only when
-`cloudrun/deploy.sh` is run. EdgeOne is a signpost: PR #135 merged
-2026-08-27, so it redirects and the shared password is retired.
+**2.9 released** (PR #165, merged 2026-08-27 14:15; artefacts in
+`data/exports/phase2.9_build/`, reader stamped 14:45). The corpus has
+moved on considerably behind it — three site merges, 13,138 deep-read
+findings and 238 machine readings collected the same evening — so the
+next release is not a rebuild of the same corpus. Whether the Cloud
+Run deployment has been run for 2.9 is not recorded here and is not
+checkable from the repo: `cloudrun/deploy.sh` is the only thing that
+changes what readers see behind Guardian sign-in. EdgeOne is a
+signpost: PR #135 merged 2026-08-27, so it redirects and the shared
+password is retired.
 
 **Reading is complete for phase 2.1**, stamped 2026-08-11 with the
 Studio reader stopped so the boundary is clean: 37,992 of 38,005 prose
@@ -93,11 +96,14 @@ alongside it.
   them: **159 outstanding applications were reachable with adapters
   that already existed** and had simply never been swept — dominated by
   the energy-adjacency blocs discovered on 2026-08-07 (Southwark 24,
-  Camden 21, Bristol, Brent…) whose fetch never ran. That sweep is in
-  flight, paused for the 2.9 boundary, resuming after; every
-  application writes its outcome row, so the honest residue is a query
-  on `acquisition_outcome` after it completes, not a number written
-  here. The genuinely-hard classes (CAPTCHA, hard 403/500/503,
+  Camden 21, Bristol, Brent…) whose fetch never ran. That sweep resumed
+  after the 2.9 boundary and was still running overnight on 2026-08-27,
+  into the S's with **42 applications left after the one in hand, 23 of
+  them Southwark**; every application writes its outcome row, so the
+  honest residue is a query on `acquisition_outcome` after it
+  completes, not a number written here. Note the run in flight predates
+  PR #183, so its per-application ceiling is still the broken one —
+  expect it to have spent hours on single Southwark applications. The genuinely-hard classes (CAPTCHA, hard 403/500/503,
   Incapsula) still stand.
 - **Historical partial fetches are now measured. The refetch is not
   done.** A short fetch used to be recorded as complete, and the
@@ -207,70 +213,19 @@ alongside it.
   stated.
 - **The site 61 split is done** — drawn, materialised, singletons
   dissolved, six claim matches loaded (HISTORY, 2026-08-27, two
-  entries). Its artefact and Drive pickup is the 2.9 chain now in
-  flight; nothing of it remains to do beyond that chain completing.
+  entries). Its artefact and Drive pickup shipped in 2.9; nothing of
+  it remains.
 
-- **The sites list does not say which of its rows are datacentres**
-  (issue #159 holds the request; this is the spec, written for
-  handover — it decides the contested points rather than leaving them
-  to the implementer). The corpus keeps adjacency and
-  disguise-suspects deliberately, and the corridor split made the
-  consequence visible: the Clearstone gas generator, the Western
-  International Market substation and the Old Vinyl Factory now sit
-  in the list as their own rows, indistinguishable at a glance from
-  the campuses beside them.
-
-  *The fold-in already exists — reuse it, do not reinvent it.* The
-  clustering resolves the two verdict generations in
-  `dcp/sites.py` (the `per_rubric`/`membership` CTE, currently at
-  lines 138–161): latest verdict per (application, rubric), where
-  rubric is `coalesce(raw_response->>'rubric','v1')`, and the folded
-  per-application verdict is `coalesce(dc_build_verdict,
-  v1_verdict)`. The comment above that SQL records why anything
-  simpler collapses the universe (2026-08-06, 1,046 → 629 mid-run).
-  Extract or mirror that CTE; a second, divergent fold-in is the
-  failure mode to avoid. Note the actual triage vocabularies —
-  dc_build: new_build, expansion_refurb, pre_application,
-  enabling_works, procedural, adjacent_power, unknown, not_dc; v1:
-  DC, adjacent, unknown, unrelated. (No `built` verdict exists at
-  triage level; an earlier note here said otherwise.)
-
-  *Class derivation*, over a site's live members' folded verdicts,
-  first match wins:
-  1. `datacentre` — any member in {new_build, expansion_refurb,
-     pre_application, enabling_works}, or a member whose only verdict
-     is v1 `DC`. Pre-application and enabling works are DC-positive
-     by decision: a site whose only application is a DC pre-app is a
-     datacentre site in the pipeline, which is what this
-     investigation is for.
-  2. `disguise suspect` — else any member with dc_build `unknown`,
-     which is the disguise-suspect class by the triage prompt's own
-     definition (dcp/triage.py, "unknown (disguise suspect: …)").
-  3. `adjacent power` — else any member `adjacent_power` (dc_build)
-     or `adjacent` (v1).
-  4. `procedural only` — everything left (procedural members,
-     unverdicted members).
-  The order asserts the least: a disguise suspect must not be
-  dismissed as adjacency ("unclear beats wrong"). Classes 2–4 are
-  never an ejection — the adjacency layer and the suspect class are
-  the investigation's own design.
-
-  *Where it lives*: a `dcp/` module in the shape of
-  `dcp/site_cohorts.py` — computed from the database at build time,
-  never stored back (it is derived and recomputable). Each site's
-  class carries its provenance: the member application_ref(s) and
-  folded verdict(s) that produced it, so every class is drillable.
-  Consumed by both exporters: reader (filter control on the sites
-  list, muted row treatment for classes 2–4, and a line in Site
-  details stating the class with its producing members), workbook
-  ("Site class" column), and a column on the DuckDB sites table.
-
-  *Verification*: re-measure the 2026-08-27 quick split (346
-  DC-positive / ~134 not, which ignored v1-era verdicts and used the
-  wrong DC-positive set) under the folded rule and put the measured
-  class counts in the PR; wording-pin tests for new reader text;
-  release-diff against the previous build before shipping.
-  2.10-shaped: it changes what the list asserts about every row.
+- **The sites list now says which of its rows are datacentres** (issue
+  #159, PR #178, HISTORY 2026-08-27) — derived, filterable and
+  rendered, so the original item is done. What it leaves for 2.10 is
+  narrower and editorial: two of the classification's rules were
+  decided in the building of it and deserve a reporter's eye, since
+  each changes what the list asserts about real rows. That a Barbour
+  project title naming a data centre settles the class (21 sites), and
+  that `pre_application` and `enabling_works` count as
+  datacentre-positive. Both are one constant each in
+  `dcp/site_class.py` to revisit.
 
 - **Replace "The rest of the package" block with a computed scale
   panel** (issue #166 holds the request; shape agreed with Luke

@@ -164,6 +164,24 @@ derivation). `preflight()` states what a materialise would change —
 including any hand-matched claim it would orphan — before it changes
 it.
 
+A site's **class** — what kind of place the row is — is derived from
+its members' triage verdicts by `dcp/site_class.py`, not stored:
+`datacentre`, `disguise suspect`, `adjacent power`, `procedural only`,
+or `no planning record` for a Barbour project with no application. It
+folds both verdict generations exactly as the clustering does (latest
+per application per rubric, `dc_build` over `v1`), so a site cannot be
+in the universe on one rule and classified on another, and a Barbour
+project title naming a data centre settles the class on its own. The
+class is a filter and a badge in the reader, a column in the workbook
+and two in the DuckDB — **never an ejection**, because the adjacency
+layer and the disguise-suspect class are the investigation's own
+design. Every class carries the applications that produced it.
+
+Curated display names live beside the derived ones in
+`data/priors/site_aliases.yaml`, read by `dcp/site_aliases.py`; an
+alias naming a site key that is no longer live fails the build rather
+than silently ceasing to apply.
+
 ### 5. Adjudication
 
 Extraction asks what a document says; adjudication asks **whose figure

@@ -1523,6 +1523,112 @@ fourteen licensed plcs — each carrying regulation 5(6) against section
 
 ---
 
+## The evening 2.9 shipped, and the guards that were not guarding (2026-08-27)
+
+2.9 merged at 14:15 (PR #165). The evening behind it collected two
+OpenAI batches, put a long-standing request into the reader, and found
+three guards that were not doing their job. Six branches, one change
+each.
+
+**The batches.** The deep-read collected 543 documents into **13,138
+findings**, 234 rejected by the verbatim gate — 1.7%, against a ~9%
+baseline. The readings batch stopped at site 157 of 250: a model had
+emitted a NUL inside a quote, and Postgres refuses JSON carrying an
+escaped `\u0000`. The deep-read path had guarded against this since a
+NUL arrived in 460,000 findings; the readings path never had, and its
+flat per-field version would not have reached this one anyway, two
+levels down inside a quote object. A recursive strip at the database
+boundary — never before the gate, because a NUL the source never
+contained is evidence about the model — and the re-run collected
+**238 stored, 9 withheld, 3 unparseable** (PR #176).
+
+**The sites list now says which of its rows are datacentres** (issue
+#159, PR #178). The class folds both generations of triage verdict
+using the clustering's own CTE, and is derived at build time, never
+stored. Measured: **434 datacentre, 48 disguise suspect, 8 adjacent
+power, 23 procedural only, 8 no planning record** across 521 rendered
+rows. It is a filter and a badge, never an ejection.
+
+Two rules had to be added that the agreed spec did not anticipate, and
+**both were found by measuring rather than by reasoning** — which is
+why the spec demanded a measurement before any styling:
+
+- Nineteen live sites are Barbour project records with no planning
+  application, so there is no verdict to fold; the first query dropped
+  them silently. Filing them as procedural would have greyed out real
+  datacentres, so they get a fifth class saying what is true. Its value
+  is `no_planning_record`, not `barbour_only`, because that string
+  already means something different on `sites.classification`.
+- A Barbour title naming a data centre now settles the class. The first
+  build badged "John Innes — Norwich Bioscience Institutes **Data
+  Centre**" a *Disguise suspect*, a class whose definition opens "no
+  application here is stated as a datacentre" while the site's own
+  record stated it. Six sites showed the contradiction; 21 changed
+  class. Deliberately a title test, not a membership test: Barbour's
+  harvest is a sector sweep, so having a project record is not the same
+  claim as being called a data centre.
+
+Driving it in a browser caught three defects the markup could not: a
+filter control claiming 19 for a filter that produced 44 rows (the
+count-honesty rule broken where a reporter would check it); pre-planning
+rows classified by hardcoding rather than by the rule, which told
+readers "Virtus Data Centres — London 3 Data Centre" was neither a
+datacentre nor holder of a planning record; and a site page asserting
+"at least one application here is a datacentre proposal" one sentence
+before "no planning application here states a datacentre".
+
+**A group and its own member were being counted as two organisations**
+(PR #179). After Global Infrastructure UK Limited was confirmed under a
+new Google group, the sites table showed a `Google` pill *and* "and
+Global Infrastructure…" beside it. Not the `(Barbour)` suffix, which is
+stripped: the badge is the group name while de-duplication compared raw
+canonical names. The same "one organisation, once" rule fixed on
+2026-08-26 for two spellings of one name, needed one level up. "and X"
+suffixes fell **25 → 14**; the eleven removed were all group members
+standing beside their own group.
+
+**A pre-planning page did not state the parties its row asserted** (PR
+#181). Three Barbour rows showed **Segro** in the Who column — sourced,
+`CyName_Client = "Segro Plc"` — while the page a reader clicked through
+to never mentioned Segro, because pre-planning panels carried no party
+fields at all. A column the page cannot substantiate is the one thing
+provenance forbids.
+
+**The determinism test kept nothing, and the snapshot did not cover
+everything** (PR #180). `test_two_builds_of_one_snapshot_are_identical`
+had failed once and never since, so the evidence was never captured; it
+now keeps both builds, both normalised texts and a capped diff. Both
+suspected causes were largely eliminated — and set-ordering by argument
+rather than inspection, since the two builds are separate processes with
+independent `PYTHONHASHSEED`, so such a dependence would fail nearly
+every run. The likelier cause: the Postgres snapshot pins the database,
+but the reader also reads `data/exports/.drive_sync_state.json`, which
+`drive_sync` rewrites per file. The test now voids a comparison whose
+ledger moved, and says so when it did not.
+
+**Readings had no freshness guard after generation** (PR #182). Four of
+258 rendered readings were already stale, one keyed to a site retired by
+that morning's merges. Rebuilding one site's input to re-hash it costs
+**8.2 seconds** — 35 minutes for the corpus — so the check is split:
+liveness on every build, and an offline verifier that records its
+verdict append-only, under the model tag `freshness-check` so a stale
+marker can never occupy the unique key a genuine reading needs.
+
+**The sweep's per-application ceiling had never fired** (PR #183). The
+900-second deadline raised an ordinary `Exception`, and the adapters
+catch `Exception` per document so one bad link does not cost a bundle —
+so the timeout was filed as one document's failure and the loop moved
+on. SIGALRM fires once, so the application then ran unbounded:
+`Southwark/18/AP/1604` reached **216 minutes**, and the sweep's rate
+fell from 321 documents an hour to under 50. `ApplicationTimeout` now
+derives from `BaseException`, where a per-item `except Exception` cannot
+reach it.
+
+Three of the day's lessons rhyme: a guard nobody has watched fire is a
+guard nobody knows works.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across
