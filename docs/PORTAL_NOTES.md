@@ -152,6 +152,30 @@ is the adapter; the module docstring carries the details. The essentials:
   case observed). The adapter stores the inner file; a multi-member zip
   is stored as-is and logged.
 
+## The Tascomi family — Hackney, Liverpool (and Coventry's gate)
+
+Probed 2026-08-27. Hackney and Liverpool both retired their Northgate
+registers for the same Tascomi "Council Direct" platform
+(`developmentandhousing.hackney.gov.uk`, `lar.liverpool.gov.uk`), and
+both serve the Coventry signature to scripted clients: landing pages
+answer 200, everything behind `?fa=` answers **HTTP 202 with an empty
+body**. Hackney's own page says why — "inaccessible outside the United
+Kingdom due to supplier security restrictions" — and a real browser
+passes without any challenge. Harvest route when needed: the browser
+pane + `browser_receiver.py`, as for Coventry.
+
+What the registers actually hold is the sharper finding:
+
+- **Hackney did not migrate its history.** `2020/1287` (the Interxion
+  energy-centre emissions detail) is absent by reference AND by
+  proposal text, while the control `2026/1779` resolves. The page
+  invites email to planning@hackney.gov.uk; recorded `none_published`
+  with the evidence.
+- **Liverpool renumbered** (`26H/2405`-style, year first). Neither the
+  old `PL/INV/1646/21` nor the `21INV/1646` transposition resolves,
+  and a proposal-text search returned the server's own 502 — at which
+  point probing stopped for the day. Recorded as a retryable error.
+
 ## Not a user-agent problem
 
 `scripts/probe_user_agents.py` tested one page per host with the plain
