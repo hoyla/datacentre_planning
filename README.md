@@ -6,12 +6,12 @@ the planning system records but does not collect: how much power these
 sites will draw, what generation they propose on site, how they will be
 cooled, and who is behind them.
 
-**What it holds today:** at the 2.8 boundary, 494 sites plus 25 known
-only at pre-planning stage, 2,034 in-scope planning applications, 56,860
-documents from council registers — 52,908 of them mirrored to Drive, the
-rest belonging to applications reviewed and found not to be data centres
-— and a layer of 197 nationally significant energy projects for
-adjacency.
+**What it holds today:** at the 2.9 boundary (2026-08-27), 499 sites
+plus 25 known only at pre-planning stage, 2,034 in-scope planning
+applications, 57,001 documents from council registers — 53,049 of them
+staged for Drive at that boundary, the rest belonging to applications
+reviewed and found not to be data centres — and a layer of 197
+nationally significant energy projects for adjacency.
 
 Every one of those numbers is a hand copy and will be wrong again. The
 previous set was: it said 429 sites, 1,709 applications and 55,678
@@ -105,10 +105,12 @@ raise.
   three model families, all behind the same verbatim-quote gate, and
   every finding records which one produced it: GPT-5 on OpenAI batch
   (54%), Sonnet (34%), and Qwen 3.6 under MLX locally (12%).
-- Reading the tier-A corpus twice, so that disagreements between models
-  can be kept rather than resolved, is built but **not yet done** — it
-  stopped at the 2.1 boundary and the corpus-wide comparison is the next
-  release's deliverable.
+- Reading the corpus twice, so that disagreements between models can be
+  kept rather than resolved, is built and part-run — the corroboration
+  pass has covered a substantial minority of its in-scope documents and
+  is currently stopped — but the deliverable, the corpus-wide
+  comparison in which a disagreement is the finding, **has not been
+  produced**. ROADMAP holds the live fraction; it moves.
 - Document corpus on the local filesystem, mirrored to Google Drive by
   site and application.
 - The published reader is one self-contained HTML file — no CDN, no
@@ -128,7 +130,7 @@ for m in migrations/*.sql; do psql "$DATABASE_URL" -f "$m"; done
 git config core.hooksPath .githooks   # push safety, see below
 pytest                                 # full suite
 pytest -m "not integration"            # no Postgres required
-node --test tests/middleware.test.mjs  # the edge password gate
+node --test tests/middleware.test.mjs  # the EdgeOne redirect
 ```
 
 `.githooks/pre-push` refuses a push to a branch whose pull request has
@@ -255,40 +257,20 @@ be told where the reader went, and the destination fails closed anyway.
 Deleting the deployment is a separate decision, once the bookmarks have
 moved.
 
-The shared-password gate it replaced is described below and lives in
-this file's git history. `middleware.js` is EdgeOne edge
-middleware matching every route, so the
-page and its embedded dataset need a session before anything is served —
-unlike a password prompt written into the page, where the data has
-already reached the browser by the time it asks. Two variables are set in
-the EdgeOne dashboard and never in the repository:
+The shared-password gate the redirect replaced — HMAC-signed sessions,
+the double-slash bypass it survived, the 22-path probe — lives in this
+file's git history and in `middleware.js`'s own comments; nothing here
+describes it as current because nothing about it is. The probe that
+matters now is Cloud Run's: `cloudrun/deploy.sh` checks after every
+deploy that the service refuses anonymous access, and fails the deploy
+if it does not.
 
-| Variable | Purpose |
-|---|---|
-| `DC_READER_PASSWORD` | shared password, 12 characters or more |
-| `DC_READER_SESSION_SECRET` | cookie signing key, 32 or more |
-
-Missing or too short and it answers 503. It fails closed deliberately: an
-unset variable must never mean *serve it to anyone*.
-
-**Probe it from outside after every deploy**, because a browser with a
-session cannot show you this — a double slash once skipped the middleware
-entirely and EdgeOne served the whole dataset with a 200 to anyone who
-typed the extra slash:
-
-```bash
-scripts/probe_gate.sh https://<the-deployment>
-```
-
-22 paths — the bypass class, traversal and percent-encoded forms — plus a
-forged session cookie. Exit 0 if every one is refused.
-
-**The gate protects the deployment, not the repository.** EdgeOne builds
-from git, so the reader is committed — and this repository is public, so
-that file is readable from GitHub whatever the middleware does. The gate
-stops a link being passed around; it is not a confidentiality control.
-The material is public-register data plus credited Barbour ABI, which is
-why that trade is acceptable here.
+**Access control protects the deployment, not the repository.** This
+repository is public and the reader is committed, so `index.html` is
+readable from GitHub whatever the deployment does. Sign-in stops a link
+being passed around; it is not a confidentiality control. The material
+is public-register data plus credited Barbour ABI, which is why that
+trade is acceptable here.
 
 ## Licence
 
