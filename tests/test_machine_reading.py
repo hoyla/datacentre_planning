@@ -413,3 +413,28 @@ def test_the_stored_reason_keeps_everything():
     stored = r["sections"]["what_the_documents_say"][0]["withheld"]
     assert "one hundred and twenty megawatts" in stored
     assert "one hundred and twenty megawatts" not in mr.public_reason(stored)
+
+
+def test_a_nul_anywhere_in_a_reading_is_stripped_at_the_database_boundary():
+    """Postgres refuses JSON carrying an escaped \\u0000, and a model can
+    emit a NUL the source never contained: one arrived nested inside a
+    quote in the 2026-08-27 batch and stopped a 250-site collect at
+    site 157. The strip is recursive because a reading is nested — the
+    flat per-field version in the deep-read path cannot reach it.
+    """
+    import json
+    from scripts.machine_reading_openai import _no_nul
+
+    reading = {"sections": {"what_the_documents_say": [
+        {"text": "Generator rooms\x00 are shown.",
+         "quotes": [{"quote": "Building 1 Generator rooms\x00",
+                     "document_id": 7}]},
+    ]}}
+    clean = _no_nul(reading)
+    assert "\x00" not in json.dumps(clean)
+    assert "\\u0000" not in json.dumps(clean)
+    quote = clean["sections"]["what_the_documents_say"][0]["quotes"][0]
+    assert quote["quote"] == "Building 1 Generator rooms"
+    assert quote["document_id"] == 7, "non-strings pass through untouched"
+    assert reading["sections"]["what_the_documents_say"][0]["quotes"][0][
+        "quote"].endswith("\x00"), "the input is not mutated"
