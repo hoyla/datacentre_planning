@@ -1065,6 +1065,21 @@ tr.detail td{padding:14px 18px 18px 30px}
 .sitename{margin:0 0 6px;font-family:"Source Serif 4",Georgia,serif;
   font-size:32px;line-height:1.15;font-weight:700}
 .siteident{margin:0 0 12px;font-size:15px;color:var(--mut)}
+/* Issue #159: a row that is not a datacentre says so, quietly. The
+   treatment is a badge and a slightly receded name, never a hidden or
+   struck-through row — these sites are in the corpus on purpose, and
+   the adjacency layer is how the energy story gets told. */
+#tbl-sites tr.site:not([data-class="datacentre"]) .sname{color:var(--mut)}
+.classbadge{display:inline-block;margin-right:8px;padding:1px 7px;
+ border:1px solid var(--line);border-radius:10px;font-size:11px;
+ font-weight:600;color:var(--mut);white-space:nowrap;
+ /* The badge leads the title, in both the row and the site heading.
+    The heading is serif at a much larger size, so the chip states its
+    own family, size and line-height rather than inheriting them and
+    growing with whatever it sits in. */
+ font-family:"Source Sans 3",-apple-system,BlinkMacSystemFont,
+ "Segoe UI",Roboto,sans-serif;
+ line-height:1.7;vertical-align:middle;letter-spacing:.01em}
 /* §5's adjudicated power figures. The measurements are the handoff's:
    a 132px value column, the value in Source Serif at 23px, the quote in
    serif italic behind a 3px rule. A figure and its evidence read as one
@@ -2107,9 +2122,11 @@ document.querySelectorAll('tr.op').forEach(tr=>tr.addEventListener('click',e=>{
 }));
 const rows=[...document.querySelectorAll('tr.site')];
 const q=document.getElementById('q'),f=document.getElementById('f'),
-      o=document.getElementById('o'),n=document.getElementById('n');
+      o=document.getElementById('o'),n=document.getElementById('n'),
+      sc=document.getElementById('sc');
 function apply(){
-  const s=q.value.toLowerCase().trim(), mode=f.value, org=o.value; let shown=0;
+  const s=q.value.toLowerCase().trim(), mode=f.value, org=o.value,
+        kind=sc.value; let shown=0;
   // Rows that pass everything EXCEPT the cohort chip. The chips count
   // against this, so the number beside each one is what that chip would
   // leave from where the reader is standing — which is what the help
@@ -2126,6 +2143,10 @@ function apply(){
     if(ok&&mode==='power')   ok=r.dataset.mw!=='';
     if(ok&&mode==='prov')    ok=r.dataset.prov==='1';
     if(ok&&org)              ok=r.dataset.origin.indexOf(org)>=0;
+    // Issue #159. The class filter selects; it never ejects. With no
+    // kind chosen every row is present, adjacency and suspects
+    // included, which is the corpus as collected.
+    if(ok&&kind)             ok=r.dataset.class===kind;
     if(ok) base.push(r);
     if(ok&&cohort)           ok=('|'+r.dataset.cohorts+'|').indexOf('|'+cohort+'|')>=0;
     r.style.display=ok?'':'none';
@@ -2227,7 +2248,7 @@ function openCohort(k){
   return false;
 }
 
-[q,f,o].forEach(el=>el.addEventListener('input',apply));
+[q,f,o,sc].forEach(el=>el.addEventListener('input',apply));
 document.getElementById('seemap').addEventListener('click', seeAllOnMap);
 function wire(sel){
   document.querySelectorAll(sel+' > thead th').forEach((th,i)=>th.addEventListener('click',()=>{
@@ -2303,6 +2324,7 @@ def main() -> int:
     from dcp import operator_disclosure as odis
     from dcp import organisations
     from dcp import site_cohorts
+    from dcp import site_class as sclass
     from dcp import origin as origin_mod
     from dcp import proposal as prop
     from dcp import signals as sig
@@ -2617,6 +2639,18 @@ def main() -> int:
                 JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL""")
             n_findings_total = _cur.fetchone()[0]
     site_names = {r[0]: r[2] for r in site_rows}
+    # What kind of site each row is (issue #159). A class is a filter and
+    # a row treatment, never an ejection: the adjacency layer and the
+    # disguise-suspect class are the investigation's own design, and a
+    # reader that hid them would hide the reason they were collected.
+    with db.connect() as _cconn:
+        site_classes = sclass.compute_all(_cconn)
+    # The control's numbers must be the table's, not the corpus's: the
+    # reader renders 25 pre-planning rows the database has no site for,
+    # and they are 'no planning record' too. A control saying 19 that
+    # produces 44 rows is the count-honesty rule broken in the one place
+    # a reporter would check it.
+    rendered_classes: dict[str, int] = defaultdict(int)
     cohorts_of_site: dict[str, list[str]] = defaultdict(list)
     cohort_title: dict[str, str] = {}
     cohort_tone: dict[str, str] = {}
@@ -3704,12 +3738,17 @@ def main() -> int:
             ind_cell = '<span class="q">no external match</span>'
             ind_sort = 0
 
+        rendered_classes[site_classes[key].key] += 1
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="{1 if known else 0}"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="{est.value_mw or ''}"
  data-prov="{1 if is_prov else 0}" data-origin="{esc('|'.join(org))}"
- data-who="{esc(who['filter_key'])}" data-cohorts="{esc('|'.join(cohorts_of_site.get(key, ())))}">
-<td class="sitecell" data-v="{esc(prop.title_case(name or key))}"><span class="sname">{esc(trim(prop.title_case(name or key), 84))}</span>
+ data-who="{esc(who['filter_key'])}" data-cohorts="{esc('|'.join(cohorts_of_site.get(key, ())))}"
+ data-class="{esc(site_classes[key].key)}">
+<td class="sitecell" data-v="{esc(prop.title_case(name or key))}"><span class="sname">{
+ '' if site_classes[key].is_datacentre else
+ f'<span class="classbadge" title="{esc(site_classes[key].display_description)}">'
+ f'{esc(site_classes[key].label)}</span>'}{esc(trim(prop.title_case(name or key), 84))}</span>
  <span class="skey">{esc(' · '.join([x for x in [key, trim(addr, 74), ', '.join(councils or [])] if x]))}</span>
  <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}{
  '' if descriptive else ' — the register holds no description of the development itself, only procedural applications'}</span></td>
@@ -3734,7 +3773,10 @@ def main() -> int:
       themselves, it cannot drift from the row again. -->
  <div class="card sitehead">
   {sig_pills}
-  <h2 class="sitename">{esc(prop.title_case(name or key))}</h2>
+  <h2 class="sitename">{
+   '' if site_classes[key].is_datacentre else
+   f'<span class="classbadge" title="{esc(site_classes[key].display_description)}">'
+   f'{esc(site_classes[key].label)}</span>'}{esc(prop.title_case(name or key))}</h2>
   <!-- "Record built from" is said, not implied: the bare origin phrase
        ("The planning sweep and Barbour") read as an unlabelled mystery
        in the subheading, while the Site details box below labels the
@@ -3772,6 +3814,14 @@ def main() -> int:
       <div><span class="lbl">Record built from</span><span class="val">{
         esc(SITE_ORIGIN.get(cls, (cls, ""))[0])}
        <span class="help">{esc(SITE_ORIGIN.get(cls, ("", ""))[1])}</span></span></div>
+      <!-- Issue #159. The class is stated with the applications that
+           produced it, so it reads as a derivation a reporter can
+           check rather than a label the site has been given. -->
+      <div><span class="lbl">Kind of site</span><span class="val">{
+        esc(site_classes[key].label)}
+       <span class="help">{esc(site_classes[key].display_description)}{
+        " " + esc(site_classes[key].provenance)
+        if site_classes[key].provenance else ""}</span></span></div>
       {f'''<div><span class="lbl">Derived name</span><span class="val">{esc(derived_names[key])}
        <span class="help">the record&#x27;s own generated name; the display name is a
        curated alias (data/priors/site_aliases.yaml, with its source)</span></span></div>'''
@@ -3910,11 +3960,22 @@ def main() -> int:
         else:
             ctx_unmapped += 1
             ctx_html = ""
+        # A pre-planning row is a Barbour record with no application, so
+        # it goes through the same rule rather than being told what it
+        # is: several of these titles name a data centre outright, and
+        # hardcoding the class badged "Virtus Data Centres - London 3
+        # Data Centre" as having no planning record AND not being a
+        # datacentre.
+        _pcls = sclass.classify(key, (), (key,), ((key, title or ""),))
+        rendered_classes[_pcls.key] += 1
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="0"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
- data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts="">
-<td class="sitecell" data-v="{esc(prop.title_case(title or key))}"><span class="sname">{esc(trim(prop.title_case(title or key), 84))}</span>
+ data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts=""
+ data-class="{esc(_pcls.key)}">
+<td class="sitecell" data-v="{esc(prop.title_case(title or key))}"><span class="sname">{
+ '' if _pcls.is_datacentre else
+ f'<span class="classbadge" title="{esc(_pcls.display_description)}">{esc(_pcls.label)}</span>'}{esc(trim(prop.title_case(title or key), 84))}</span>
  <span class="skey">{esc(' · '.join([x for x in [key, trim(address or '', 74), authority or ''] if x]))}</span>
  <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
@@ -3925,7 +3986,10 @@ def main() -> int:
 </tr>
 <tr class="detail"><td colspan="6">
  <div class="card sitehead">
-  <h2 class="sitename">{esc(prop.title_case(title or key))}</h2>
+  <h2 class="sitename">{
+   '' if _pcls.is_datacentre else
+   f'<span class="classbadge" title="{esc(_pcls.display_description)}">'
+   f'{esc(_pcls.label)}</span>'}{esc(prop.title_case(title or key))}</h2>
   <p class="siteident">{esc(authority or '')}{" · " if address else ""}{esc(trim(address, 90))}
    · <code>{esc(key)}</code> · Barbour ABI project, no application yet</p>
   <p class="sitelinks"><span><a href="#site-{esc(key)}">Link to this site</a></span></p>
@@ -5132,6 +5196,12 @@ def main() -> int:
   <option value="unknown">Only where reading or acquisition is incomplete</option>
   <option value="prov">Only sites whose figures may rise</option>
   <option value="energy">Only sites near a national energy project</option>
+ </select>
+ <select id="sc">
+  <option value="">Any kind of site</option>
+  {''.join(f'<option value="{esc(k)}">{esc(sclass.CLASS_FILTER_LABELS[k])}'
+           f' ({rendered_classes[k]:,})</option>'
+           for k in sclass.CLASS_ORDER if rendered_classes[k])}
  </select>
  <select id="o"><option value="">Any origin</option>
   {''.join(f'<option value="{esc(o)}">{esc(o)}</option>' for o in origin_opts)}</select>

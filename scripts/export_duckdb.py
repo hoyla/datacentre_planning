@@ -44,6 +44,7 @@ from dcp import adjudication_gate  # noqa: E402
 from dcp import db, signals  # noqa: E402
 from dcp import operator_disclosure  # noqa: E402
 from dcp import organisations  # noqa: E402
+from dcp import site_class  # noqa: E402
 from dcp import site_cohorts  # noqa: E402
 from dcp import site_profile  # noqa: E402
 
@@ -347,6 +348,25 @@ def main() -> None:
     for legal, brand in operator_disclosure.COMPANY_TO_OPERATOR.items():
         con.execute("UPDATE capacity_claims SET operator = ? "
                     "WHERE published_by = ?", [brand, legal])
+
+    # What kind of site each row is (issue #159), derived from both
+    # generations of triage verdict and never stored back in Postgres —
+    # dcp/site_class.py is the one rule, so the reader, the workbook and
+    # this table cannot disagree. Note `site_class` is a different axis
+    # from `classification`, which says which sources cover the site.
+    # `site_class_members` names the applications that produced the
+    # class, so a query can drill from the label to the evidence.
+    con.execute("ALTER TABLE sites ADD COLUMN site_class VARCHAR")
+    con.execute("ALTER TABLE sites ADD COLUMN site_class_members VARCHAR")
+    with db.connect() as pg:
+        classes = site_class.compute_all(pg)
+    for key, sc in classes.items():
+        con.execute("UPDATE sites SET site_class = ?, "
+                    "site_class_members = ? WHERE site_key = ?",
+                    [sc.label,
+                     ", ".join(f"{m.application_ref} ({m.folded or 'untriaged'})"
+                               for m in sc.deciding),
+                     key])
 
     # Parties, long format: one row per organisation per role per site,
     # the same rows the workbook's Parties sheet shows and derived from
