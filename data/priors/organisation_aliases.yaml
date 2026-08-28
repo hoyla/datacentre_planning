@@ -389,10 +389,28 @@ groups:
     members:
       - name: UK Court Lane DC Limited
         relation: spv_of
-        status: proposed
+        status: confirmed
+        company_number: "14045228"
+        note: >-
+          Confirmed by Luke, 2026-08-28. The judgement recorded below —
+          Corscale's vehicle, or a developer acting for it — is settled
+          by the trade press naming the scheme as Corscale's own with
+          Corscale Europe's Head of Development speaking for it, and by
+          Corscale/Patrinely names on the SPV's board. The PSC is a
+          Gateley formation nominee and settles nothing either way,
+          which is why it is not cited.
         evidence:
           - source: barbour
             ref: "12684006"
             note: Client of record on Court Lane 140 MW with Corscale Data Centers as end user; whether the client is Corscale's vehicle or a developer acting for it is the judgement to confirm.
             date: 2026-08-23
+          - source: reporter
+            ref: https://www.industrialisedconstruction.co.uk/2026/06/15/mclaren-to-lead-1bn-buckinghamshire-data-centre-campus/
+            quote: McLaren Construction has been appointed to spearhead delivery of Corscale's £1bn Court Lane hyperscale data centre campus at Iver in Buckinghamshire.
+            note: Supplied by Luke. Julian Michalski, Head of Development for Corscale Europe, is quoted on the scheme; the article states 140MW of capacity and a 140MVA substation, matching Barbour's figure rather than the SPV accounts' 103.3 MW.
+            date: 2026-08-28
+          - source: companies_house
+            ref: "14045228"
+            note: Officers of UK Court Lane DC Ltd include Justin Scott Hildebrandt and Carrington David Brown, Corscale/Patrinely names, at a shared Swan House service address alongside Gateley nominees.
+            date: 2026-08-28
             
