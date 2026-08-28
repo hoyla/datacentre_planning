@@ -297,7 +297,7 @@ aliases:
       Derived name: "SLOUGH TRADING ESTATE - LD14 DATA CENTRE".
 
   - site_key: PTNO-12216044
-    alias: Liverpool Road, Slough - VIRTUS London 3 and London 11 (formerly Zenium)
+    alias: VIRTUS Slough campus - London 3, London 10 and London 11 (formerly Zenium)
     source: |
       Three Barbour projects at SL1 4QZ: Zenium's "London One" fit-out
       at 12 Liverpool Road, and VIRTUS LONDON 3 and LONDON 11. Permit
@@ -307,6 +307,11 @@ aliases:
       SL1 4QZ, at 13 Liverpool Road next door (2026-08-28). The
       membership rests on the operator names on the records
       themselves. Derived name: "ZENIUM - DATA CENTRE - FIT-OUT".
+
+      LONDON10 at 75 Buckingham Avenue joined on 2026-08-28, on a
+      Companies House charge naming "london 10, 75 buckingham avenue"
+      against VIRTUS LONDON 10 LIMITED — so the campus is no longer
+      only Liverpool Road, which is why this alias no longer says so.
 
   - site_key: PTNO-12355161
     alias: Ipswich Road, Slough - Data Centres (Segro)
@@ -362,20 +367,13 @@ aliases:
       Derived name was the application's address line, "700, Stirling
       Road, Slough, SL1 4ST".
 
-  - site_key: SITE-Slough/T/138
-    alias: Slough Trading Estate - two data centre sites, operator not established
+  - site_key: SITE-Slough/T/145(SPZ/119/19)
+    alias: 204 Bedford Avenue, Slough - Data Centre, operator not established
     source: |
-      What the site 23 partition still cannot attribute: Slough/T/138
-      (75 Buckingham Avenue) and Slough/T/145 (204 Bedford Avenue),
-      each a data centre proposal whose documents name no operator.
-      They are one record only because nothing separates them, and the
-      derived name — "75, Buckingham Avenue, Slough, SL1 4PN" — names
-      one of the two. Was three sites until CyrusOne LON3 was
-      identified at 700 Stirling Road (2026-08-28).
-
-      Note for review, not asserted here: Amazon's permit EPR/PP3309MK
-      (151.34 MWth, 20 engines) carries grid reference 495732/181088,
-      which converts to 51.520608, -0.621611 — 105 m from 75
-      Buckingham Avenue, the nearest record of any kind. Suggestive of
-      an Amazon campus, but a permit grid reference can be a site
-      centroid, so no member is assigned on it.
+      The last member of site 23 the partition cannot attribute:
+      Slough/T/145, a warehouse unit for data centre development at
+      the Arben Precision Sheet Metal address, whose documents name no
+      operator. Derived name is the application's own address line.
+      Was one of three such records until CyrusOne LON3 was identified
+      at 700 Stirling Road and VIRTUS LONDON10 at 75 Buckingham Avenue
+      (both 2026-08-28).

@@ -59,6 +59,7 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     "virtus": [
         ("virtus-saunderton", "https://virtusdatacentres.com/locations/uk/london/saunderton-campus"),
         ("virtus-slough-campus", "https://virtusdatacentres.com/locations/uk/london/slough-campus"),
+        ("virtus-slough-london10", "https://virtusdatacentres.com/locations/uk/london/slough-london10"),
         ("virtus-stockley-park", "https://virtusdatacentres.com/locations/uk/london/stockley-park-campus"),
         ("virtus-hayes", "https://virtusdatacentres.com/locations/uk/london/hayes-campus"),
         ("virtus-enfield", "https://virtusdatacentres.com/locations/uk/london/enfield-campus"),

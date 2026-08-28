@@ -428,6 +428,27 @@ claims:
       before 2026-08-28 would have quoted. The grid-supply claim from
       the same page (15 MVA) did not move.
 
+  - source: virtus_website
+    snapshot: virtus-slough-london10
+    claim_name: VIRTUS LONDON10 (75 Buckingham Avenue, Slough)
+    quantity_type: announced_capacity
+    value: 6.6
+    unit: MW
+    term: IT load
+    stage: operational
+    as_at: 2026-08-28
+    quote: 6.6MW of IT load
+    note: >-
+      The building is identified by a Companies House charge, not by
+      the operator's page, which gives no address: the charge against
+      VIRTUS LONDON 10 LIMITED (11619901) covers "land and building
+      known as london 10, 75 buckingham avenue trading estate, slough,
+      berkshire, SL1", title BK410987 (Luke, 2026-08-28). That is what
+      attributes Slough/T/138, a 6,500 sqm data centre application
+      naming no applicant. VIRTUS places LONDON10 "as part of the
+      VIRTUS Data Centre Campus at Slough", so it sits in the same
+      site as LONDON 3 and LONDON 11 rather than on its own.
+
   - source: cyrusone_website
     snapshot: cyrusone-lon2
     claim_name: CyrusOne LON2 (Prologis Park Heathrow, West Drayton)

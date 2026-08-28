@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/saunderton-campus
 
-# fetched: 2026-08-20
+# fetched: 2026-08-28
 
-# sha256(html): 0f2fe295c824ae9929c6836dbf42464a9f2f4d7a8de2ea9a046a1a436c5f3b22
+# sha256(html): 4092bdbb9f9e9b0db0d23ed197ff72012d48af4c0b8b6a231abc2806c3469591
 
 ## STRUCTURED
 
@@ -178,13 +178,10 @@ Saunderton Data Centre Campus - VIRTUS
  General Videos AI VIRTUS Blog News & Press Releases Downloads About Us 
  
  
- Global Data Centre Platform Vision & Values People Board of Directors Investors Partners Careers Why VIRTUS 
+ Global Data Centre Platform Vision & Values People Board of Directors Investors Careers Why VIRTUS 
  
  
- Agile Commercials 
- 
- 
- Examples of VIRTUS Flex Going Green? Operational Excellence Quality Credentials Sustainability 
+ Operational Excellence Quality Credentials Sustainability 
 
  
  

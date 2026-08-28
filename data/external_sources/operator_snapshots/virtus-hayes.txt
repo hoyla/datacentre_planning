@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/hayes-campus
 
-# fetched: 2026-08-20
+# fetched: 2026-08-28
 
-# sha256(html): b2f45234d33ad92c0b72ea49d78285e07dd1e1fcfe89b2b65d444c68a8c254d3
+# sha256(html): ef376c5f8907d3d418229fa1524856764ee000fc43031a98ccbf5c2f510fb495
 
 ## STRUCTURED
 
@@ -181,13 +181,10 @@ Hayes LONDON2 Data Centre Campus - VIRTUS
  General Videos AI VIRTUS Blog News & Press Releases Downloads About Us 
  
  
- Global Data Centre Platform Vision & Values People Board of Directors Investors Partners Careers Why VIRTUS 
+ Global Data Centre Platform Vision & Values People Board of Directors Investors Careers Why VIRTUS 
  
  
- Agile Commercials 
- 
- 
- Examples of VIRTUS Flex Going Green? Operational Excellence Quality Credentials Sustainability 
+ Operational Excellence Quality Credentials Sustainability 
 
  
  

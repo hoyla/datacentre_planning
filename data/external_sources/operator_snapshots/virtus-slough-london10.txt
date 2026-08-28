@@ -1,8 +1,8 @@
-# url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+# url: https://virtusdatacentres.com/locations/uk/london/slough-london10
 
 # fetched: 2026-08-28
 
-# sha256(html): 2d6b45183ddddb9e9fec996b9c83c9128c59a44290265ccd43d23dd62578a881
+# sha256(html): cd9aa49200c16636532b7cd2b58c87006a59e2c919346b96004e5d1020b19cab
 
 ## STRUCTURED
 
@@ -44,24 +44,24 @@
    "about": {
     "@id": "https://virtusdatacentres.com/#/schema/Organization/base"
    },
-   "description": "The VIRTUS Data Centre Campus at Stockley Park is one of the UK's largest and most established data centres, with four facilities built with flexibility in mind",
+   "description": "This facility is part of the VIRTUS Data Centre Campus at Slough, with LONDON 10 designed to deliver high-quality customer and business solutions.",
    "inLanguage": "en-GB",
    "isPartOf": {
     "@id": "https://virtusdatacentres.com/#/schema/WebSite/base"
    },
-   "name": "Stockley Park Data Centre Campus - VIRTUS",
-   "url": "https://virtusdatacentres.com/locations/uk/london/stockley-park-campus"
+   "name": "Slough - LONDON10 - VIRTUS Data Centres",
+   "url": "https://virtusdatacentres.com/locations/uk/london/slough-london10"
   },
   {
-   "@id": "https://virtusdatacentres.com/#/schema/com_content/article/394",
+   "@id": "https://virtusdatacentres.com/#/schema/com_content/article/398",
    "@type": "Article",
-   "headline": "London Data Centres | Stockley Park Campus",
+   "headline": "Slough Data Centres | LONDON10",
    "inLanguage": "en-GB",
    "isPartOf": {
     "@id": "https://virtusdatacentres.com/#/schema/WebPage/base"
    },
-   "name": "London Data Centres | Stockley Park Campus",
-   "thumbnailUrl": "images/locations/LONDON5.jpg"
+   "name": "Slough Data Centres | LONDON10",
+   "thumbnailUrl": "images/locations/LONDON6.jpg"
   }
  ]
 }
@@ -80,7 +80,7 @@
 
 ## VISIBLE TEXT
 
-Stockley Park Data Centre Campus - VIRTUS 
+Slough - LONDON10 - VIRTUS Data Centres 
  
 
  
@@ -92,12 +92,7 @@ Stockley Park Data Centre Campus - VIRTUS
  
  
  
- 
- 
 
- 
- 
- 
  
  
  
@@ -203,7 +198,7 @@ Stockley Park Data Centre Campus - VIRTUS
  
  
  
- London Data Centres | Stockley Park Campus The UK's largest data centre campus is built to scale for today's modern data centre consumer 
+ Slough Data Centres | LONDON10 Announced in 2017 as part of the VIRTUS Data Centre Campus at Slough, the LONDON10 data centre is highly efficient, delivering substantial TCO reductions to VIRTUS' customers. 
  
  
  
@@ -212,35 +207,25 @@ Stockley Park Data Centre Campus - VIRTUS
  
  
  
- Campus Overview Data Centres The VIRTUS Data Centre Campus at Stockley Park is located close to the well known Stockley Park business centre. The campus comprises of four facilities and is built with VIRTUS' value of flexibility at the core of the design. With 112.5MW of IT load over 45,400 NTM, the site provides wide scope for customer expansion, ensuring that our facilities grow with your business. The data centres have excellent public transport and airport links, offering close proximity to both London and international travel. For further customer convenience, the facilities have dedicated office and meeting space also available to all customers. VIRTUS operates a 'defence-in-depth' approach to security. With a dedicated on-site security team 24/7, protecting your IT infrastructure is our highest priority. The data centre also incorporates VIRTUS' real-time monitoring dashboards, and self-service tools for clients to use either remotely, or in one of the customer-friendly dedicated rooms or café areas that are designed into the facility. The facility is carrier neutral and provides access to a wide choice of Tier I and Tier II carriers, and on-ramp access to all major cloud and connectivity platforms. LONDON5 
+ Key features Slough Data Centres The facility is part of the VIRTUS Data Centre Campus at Slough, with LONDON10 designed to deliver high quality customer solutions, comprised of over 3,000m 2 net technical data centre space, and delivering 6.6MW of IT load. LONDON10 is capable of being subdivided allowing clients to have anything from a rack in a colocation space, to their own suite or data hall with dedicated power and cooling. 
+ The site is highly secure - VIRTUS operates a 'defence-in-depth' approach to security. With a dedicated on-site security team 24/7, protecting your IT infrastructure is our highest priority. 
+ The data centre also incorporates VIRTUS' real-time monitoring dashboards, and self-service tools for customers to use either remotely, or in one of our dedicated customer offices, kitchen or touchdown areas that are designed into the facility. 
+ The facility is carrier neutral and provides access to a wide choice of Tier I and Tier II carriers, and on-ramp access to all major cloud and connectivity platforms. LONDON3 
+ 
+ 7.2MW 
+ 3,000 NTM 
+ LONDON9 
  
  24MW 
  10,000 NTM 
- LONDON7 32.5MW 13,000 NTM LONDON14 Bespoke design 8,400 NTM LONDON6 
+ LONDON11 13.3MW 5,500 NTM LONDON19 33.5MW 8,500 NTM LONDON4 26.6MW 10,600 NTM LONDON10 
  
- 16MW 
- 7,000 NTM 
- LONDON8 Bespoke design 7,000 NTM 
+ 6.6MW 
+ 3,000 NTM 
+ LONDON12 
  
- 
- 
- 
- 
- 
- 
- Back 
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+ 21MW 
+ 7,800 NTM 
  Total Flexibility 
  Eco-efficient, optimised design for fully flexible, bespoke customer solutions 
  Ultra-high power density solutions available for high performance computing requirements 
@@ -248,17 +233,17 @@ Stockley Park Data Centre Campus - VIRTUS
  Maximum Efficency 
  VIRTUS 'Air Flooded Room' principle 
  Hot-aisle containement 
- Ability to host up to 80kW racks 
+ Ability to host over 40kW racks 
  Optimised Locations 
- Situated close to the well known Stockley Park business centre 
- 16 miles from central London and accessible by a fast rail link station located less than one mile away 
+ Strategically situated on the Slough Trading Estate 
+ 27 miles from Central London and accessible by a fast rail link station located less than one mile away 
  Easy access to M25/M4 
  Data Centre Locations 
  > Stockley Park Campus 
  > Slough Campus 
  > Hayes 
  > Enfield 
- Downloads VIRTUS Stockley Park Campus Specifications Sheet 
+ Downloads VIRTUS LONDON10 Specifications Sheet 
  
  
  
@@ -320,7 +305,13 @@ Stockley Park Data Centre Campus - VIRTUS
  
  
  
- London Data Centres | Stockley Park Campus 
+ London Data Centres | Slough Campus 
+ 
+ > 
+ 
+ 
+ 
+ Slough Data Centres | LONDON10 
  
  
  

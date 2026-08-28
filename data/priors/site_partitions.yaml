@@ -698,7 +698,32 @@ partitions:
       SL1 4QZ; EPR/DP3348QS (VIRTUS LONDON 11 LIMITED, 72 MWth) is at
       SL1 4HA, which is why LONDON 11 travels with the campus on the
       operator's own naming rather than on its permit postcode.
-      No planning application in the corpus carries this campus.
+
+      **LONDON10 at 75 Buckingham Avenue joins it** (Luke, 2026-08-28),
+      and is the one planning application this campus carries.
+      Slough/T/138 — "Provision of a detached single business unit
+      providing 6,500 sqm for data centre" — named no applicant, and
+      three sources close it. The Companies House charge against
+      VIRTUS LONDON 10 LIMITED (11619901, incorporated 12 October
+      2018) covers "land and building known as london 10, 75
+      buckingham avenue trading estate, slough, berkshire, SL1",
+      title BK410987, to Standard Chartered Bank (Hong Kong) on
+      14 April 2020. VIRTUS's own page places LONDON10 "as part of the
+      VIRTUS Data Centre Campus at Slough", delivering 6.6MW of IT
+      load — the operator's campus definition, which decides
+      membership here as it did for Iron Mountain. Kovara Projects
+      records the build at 75 Buckingham Avenue with client Segro,
+      contractor Kier, architect Langley Hall Associates, completed
+      2019: the same landlord-builds/operator-runs split as Segro and
+      CyrusOne at 225 Bath Road.
+
+      Note what this rules out. Amazon's permit EPR/PP3309MK grid
+      reference lands 105 m from 75 Buckingham Avenue, which had made
+      it the nearest candidate for an Amazon campus; the charge shows
+      the building is VIRTUS's, so that reading is withdrawn and
+      Amazon's Slough facility remains unplaced.
+    applications:
+      - Slough/T/138              # LONDON10, 75 Buckingham Avenue
     projects:
       - "12216044"                # ZENIUM - DATA CENTRE - FIT-OUT
       - "12277044"                # VIRTUS - LONDON 3

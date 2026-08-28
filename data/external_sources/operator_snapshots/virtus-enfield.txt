@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/enfield-campus
 
-# fetched: 2026-08-20
+# fetched: 2026-08-28
 
-# sha256(html): 888a21e0b8e8faa0c8866b172b64bdec272ca98122ec1f751c831bdeda01ca95
+# sha256(html): 7ea44747bb3874f1c8bd7e302789d1de7ca750cd83035787b4c03b5bbdf06a75
 
 ## STRUCTURED
 
@@ -181,13 +181,10 @@ LONDON1 Enfield Data Centre Campus - VIRTUS
  General Videos AI VIRTUS Blog News & Press Releases Downloads About Us 
  
  
- Global Data Centre Platform Vision & Values People Board of Directors Investors Partners Careers Why VIRTUS 
+ Global Data Centre Platform Vision & Values People Board of Directors Investors Careers Why VIRTUS 
  
  
- Agile Commercials 
- 
- 
- Examples of VIRTUS Flex Going Green? Operational Excellence Quality Credentials Sustainability 
+ Operational Excellence Quality Credentials Sustainability 
 
  
  
