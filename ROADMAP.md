@@ -519,6 +519,24 @@ field and is not publishable as it stands.
   release. Distinguish "did not answer" from 401/403 — conflating them
   would mark Camden's 23 live-but-challenged applications as dead.
 
+  **Deferred past 2.10 by Luke, 2026-08-28, and recorded here so the
+  work does not need re-deriving.** The 26, as probed on that date —
+  a host that answers again later is a fix, not a regression, so
+  re-probe before acting rather than trusting this list:
+
+    publicaccess.wycombe.gov.uk — Wycombe/08/05740/FULEA, Wycombe/22/06872/VCDN, Wycombe/24/07967/OUT, Wycombe/25/06079/MINAMD, Wycombe/25/06382/MINAMD
+    planning.stoke.gov.uk — Stoke/65328/FUL, Stoke/65376/FUL, Stoke/65426/FUL, Stoke/65465/FUL
+    planpa.peterborough.gov.uk — Peterborough/08/01079/FUL, Peterborough/08/01225/FUL, Peterborough/18/00937/R4FUL, Peterborough/18/01340/R4FUL
+    eppingforestdcpr.force.com — EppingForest/EPF/1136/19 (2 docs, on Drive), EppingForest/EPF/1165/22 (46 docs, on Drive)
+    pa.chilternandsouthbucks.gov.uk — ChilternSouthBucks/PL/20/0646/ADJ, ChilternSouthBucks/PL/22/3403/FA
+    pa.manchester.gov.uk — Manchester/132638/FO/2022 (15 docs, on Drive), Manchester/137424/FO/2023
+    planning.hounslow.gov.uk — Hounslow/C/2020/0555, Hounslow/C/2020/0865
+    communitymap.harlow.gov.uk — Harlow/HW/PL/16/00243
+    northgate.liverpool.gov.uk — Liverpool/PL/INV/1646/21
+    planapp.bracknell-forest.gov.uk — Bracknell/17/01227/OUT
+    planning.coventry.gov.uk — Coventry/FUL/2021/1299
+    planning.hackney.gov.uk — Hackney/2020/1287
+
 - **One address, two postcodes: a three-line check that would have
   caught the British Museum merge without anyone reading a document.**
   The premise, established 2026-08-28: a postcode inside a council's
