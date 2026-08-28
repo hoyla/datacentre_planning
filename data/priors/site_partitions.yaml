@@ -28,6 +28,225 @@
 #   - projects:     Barbour Ptnos (projects.external_ref; must exist)
 
 partitions:
+  - name: park-royal-premier-park-segro-pure
+    reason: |
+      SEGRO and Pure DC's 72MW Premier Park scheme, Unit F 6 Premier
+      Park Road NW10 7NZ — its own Barbour project (12841450), its own
+      applicant SPV (SEGRO PURE PREMIER PARK DATA CENTRE LIMITED, whose
+      accounts value the site at £147.8m, a claim deliberately left
+      unmatched while the site was inside the blob), and SEGRO's own
+      proposals page for it. The Section 278 highway works project
+      (12888670, also NW10 7NZ) travels with it. Found by Luke asking
+      why the corpus appeared to hold no Premier Park applications: it
+      held four, inside a cluster attributed to Vantage.
+      Part of the six-way Park Royal split, 2026-08-28: 106
+      applications and 8 Barbour projects union-found into one
+      site by spatial chaining across NW10's dense grid
+      (7NZ-7NQ-6NF-6PF-6SN, each hop inside 1 km), anchored on
+      Microsoft's project and attributed to Vantage. Barbour
+      itself keeps every campus as a separate project, and the
+      address families are disjoint — the assignment script
+      covered all 106 members with none left over.
+    applications:
+      - Brent/25/3098
+      - Ealing/254196OPDCOB
+      - OldOakParkRoyal/25/0120/SCROPDC
+      - OldOakParkRoyal/25/0196/FUMOPDC
+    projects:
+      - "12841450"
+      - "12888670"
+
+  - name: park-royal-bashley-road-microsoft
+    reason: |
+      Microsoft's Bashley Road campus, NW10 6SN — the Barbour project
+      (12496630) the merged site took its key and anchor from. Keeps
+      the PTNO-12496630 key.
+      Part of the six-way Park Royal split, 2026-08-28: 106
+      applications and 8 Barbour projects union-found into one
+      site by spatial chaining across NW10's dense grid
+      (7NZ-7NQ-6NF-6PF-6SN, each hop inside 1 km), anchored on
+      Microsoft's project and attributed to Vantage. Barbour
+      itself keeps every campus as a separate project, and the
+      address families are disjoint — the assignment script
+      covered all 106 members with none left over.
+    applications:
+      - Ealing/252233OPDCOB
+      - OldOakParkRoyal/20/0037/FUMOPDC
+      - OldOakParkRoyal/21/0077/REMOPDC
+      - OldOakParkRoyal/22/0075/VAROPDC
+      - OldOakParkRoyal/23/0027/AODOPDC
+      - OldOakParkRoyal/23/0121/AODOPDC
+      - OldOakParkRoyal/25/0094/AODOPDC
+      - OldOakParkRoyal/26/0010/AODOPDC
+    projects:
+      - "12496630"
+
+  - name: park-royal-north-acton-road-lhr21
+    reason: |
+      Vantage's LHR21, 37-39 North Acton Road NW10 6PF — Barbour
+      project 12536509 names the code, and the organisation aliases
+      already record VDC LHR11 Limited as client of record with Vantage
+      as end user on this campus.
+      Part of the six-way Park Royal split, 2026-08-28: 106
+      applications and 8 Barbour projects union-found into one
+      site by spatial chaining across NW10's dense grid
+      (7NZ-7NQ-6NF-6PF-6SN, each hop inside 1 km), anchored on
+      Microsoft's project and attributed to Vantage. Barbour
+      itself keeps every campus as a separate project, and the
+      address families are disjoint — the assignment script
+      covered all 106 members with none left over.
+    applications:
+      - Ealing/204979OPDCOB
+      - Ealing/224500OPDCOB
+      - Ealing/251165OPDCOB
+      - Ealing/252234OPDCOB
+      - Ealing/252336OPDCOB
+      - Ealing/252511OPDCOB
+      - OldOakParkRoyal/20/0122/OUTOPDC
+      - OldOakParkRoyal/22/0142/REMOPDC
+      - OldOakParkRoyal/22/0155/AODOPDC
+      - OldOakParkRoyal/23/0016/AODOPDC
+      - OldOakParkRoyal/23/0127/AODOPDC
+      - OldOakParkRoyal/23/0132/AODOPDC
+      - OldOakParkRoyal/23/0202/AODOPDC
+      - OldOakParkRoyal/24/0089/AODOPDC
+      - OldOakParkRoyal/24/0119/NMAOPDC
+      - OldOakParkRoyal/24/0140/NMAOPDC
+      - OldOakParkRoyal/25/0016/AODOPDC
+      - OldOakParkRoyal/25/0041/AODOPDC
+      - OldOakParkRoyal/25/0055/NMAOPDC
+      - OldOakParkRoyal/25/0067/AODOPDC
+      - OldOakParkRoyal/25/0089/NMAOPDC
+      - OldOakParkRoyal/25/0092/AODOPDC
+      - OldOakParkRoyal/25/0093/AODOPDC
+      - OldOakParkRoyal/25/0100/AODOPDC
+      - OldOakParkRoyal/25/0121/NMAOPDC
+    projects:
+      - "12536509"
+
+  - name: park-royal-chandos-road-lhr11
+    reason: |
+      Vantage's LHR11 at Chandos Road Trading Estate NW10 6NF — three
+      Barbour projects (12554252, 12597123 whose title carries "48MW
+      LHR11", 12666073 phase 2), the largest family in the cluster,
+      including the Triangle site applications that name themselves
+      part of the wider Chandos estate.
+      Part of the six-way Park Royal split, 2026-08-28: 106
+      applications and 8 Barbour projects union-found into one
+      site by spatial chaining across NW10's dense grid
+      (7NZ-7NQ-6NF-6PF-6SN, each hop inside 1 km), anchored on
+      Microsoft's project and attributed to Vantage. Barbour
+      itself keeps every campus as a separate project, and the
+      address families are disjoint — the assignment script
+      covered all 106 members with none left over.
+    applications:
+      - Ealing/213388OPDCOB
+      - Ealing/215884OPDCOB
+      - Ealing/215886OPDCOB
+      - Ealing/215888OPDCOB
+      - Ealing/215889OPDCOB
+      - Ealing/217133CONS
+      - Ealing/220249CONS
+      - Ealing/221606OPDCOB
+      - Ealing/224496OPDCOB
+      - Ealing/224499OPDCOB
+      - Ealing/232730OPDCOB
+      - Ealing/240129OPDCOB
+      - Ealing/240202OPDCOB
+      - Ealing/252552OPDCOB
+      - Ealing/252884OPDCOB
+      - Ealing/254769OPDCOB
+      - Ealing/254797OPDCOB
+      - Ealing/261034OPDCOB
+      - Ealing/261400OPDCOB
+      - OldOakParkRoyal/21/0013/OUTOPDC
+      - OldOakParkRoyal/21/0150/REMOPDC
+      - OldOakParkRoyal/21/0151/AODOPDC
+      - OldOakParkRoyal/21/0152/AODOPDC
+      - OldOakParkRoyal/21/0153/AODOPDC
+      - OldOakParkRoyal/21/0193/NMAOPDC
+      - OldOakParkRoyal/21/0200/AODOPDC
+      - OldOakParkRoyal/22/0002/AODOPDC
+      - OldOakParkRoyal/22/0035/AODOPDC
+      - OldOakParkRoyal/22/0036/AODOPDC
+      - OldOakParkRoyal/22/0095/AODOPDC
+      - OldOakParkRoyal/22/0141/REMOPDC
+      - OldOakParkRoyal/22/0144/FULOPDC
+      - OldOakParkRoyal/22/0159/NMAOPDC
+      - OldOakParkRoyal/23/0004/NMAOPDC
+      - OldOakParkRoyal/23/0089/AODOPDC
+      - OldOakParkRoyal/23/0099/AODOPDC
+      - OldOakParkRoyal/23/0138/AODOPDC
+      - OldOakParkRoyal/23/0176/NMAOPDC
+      - OldOakParkRoyal/23/0201/AODOPDC
+      - OldOakParkRoyal/23/0270/REMOPDC
+      - OldOakParkRoyal/24/0025/AODOPDC
+      - OldOakParkRoyal/24/0052/AODOPDC
+      - OldOakParkRoyal/24/0072/AODOPDC
+      - OldOakParkRoyal/25/0104/AODOPDC
+      - OldOakParkRoyal/25/0105/AODOPDC
+      - OldOakParkRoyal/25/0122/AODOPDC
+      - OldOakParkRoyal/25/0159/AODOPDC
+      - OldOakParkRoyal/25/0173/AODOPDC
+      - OldOakParkRoyal/25/0199/NMAOPDC
+      - OldOakParkRoyal/25/0226/AODOPDC
+      - OldOakParkRoyal/26/0039/AODOPDC
+      - OldOakParkRoyal/26/0040/AODOPDC
+      - OldOakParkRoyal/26/0041/AODOPDC
+      - OldOakParkRoyal/26/0046/AODOPDC
+      - OldOakParkRoyal/26/0060/AODOPDC
+      - OldOakParkRoyal/26/0082/AODOPDC
+      - OldOakParkRoyal/26/0083/AODOPDC
+      - OldOakParkRoyal/26/0084/AODOPDC
+    projects:
+      - "12554252"
+      - "12597123"
+      - "12666073"
+
+  - name: park-royal-frogmore-acton-lane
+    reason: |
+      The Frogmore Industrial Estate redevelopment on Acton Lane,
+      NW10 7NQ — Barbour project 12611548, its own outline permission
+      and reserved matters chain.
+      Part of the six-way Park Royal split, 2026-08-28: 106
+      applications and 8 Barbour projects union-found into one
+      site by spatial chaining across NW10's dense grid
+      (7NZ-7NQ-6NF-6PF-6SN, each hop inside 1 km), anchored on
+      Microsoft's project and attributed to Vantage. Barbour
+      itself keeps every campus as a separate project, and the
+      address families are disjoint — the assignment script
+      covered all 106 members with none left over.
+    applications:
+      - Ealing/215938OPDCOB
+      - Ealing/217036OPDCOB
+      - Ealing/254076OPDCOB
+      - OldOakParkRoyal/21/0157/SCROPDC
+      - OldOakParkRoyal/21/0182/OUTOPDC
+      - OldOakParkRoyal/25/0083/NMAOPDC
+      - OldOakParkRoyal/25/0177/AODOPDC
+      - OldOakParkRoyal/25/0179/REMOPDC
+    projects:
+      - "12611548"
+
+  - name: park-royal-powergate-volt-avenue
+    reason: |
+      Powergate Business Park, Volt Avenue — three applications with no
+      Barbour project. Equinix's LD9 is listed at Powergate Business
+      Park NW10 6PW in the coverage-gap note on Equinix's estate; kept
+      as its own campus rather than asserted to be Equinix's.
+      Part of the six-way Park Royal split, 2026-08-28: 106
+      applications and 8 Barbour projects union-found into one
+      site by spatial chaining across NW10's dense grid
+      (7NZ-7NQ-6NF-6PF-6SN, each hop inside 1 km), anchored on
+      Microsoft's project and attributed to Vantage. Barbour
+      itself keeps every campus as a separate project, and the
+      address families are disjoint — the assignment script
+      covered all 106 members with none left over.
+    applications:
+      - Ealing/224110OPDFUL
+      - OldOakParkRoyal/22/0093/DELEAL
+      - OldOakParkRoyal/22/0136/DELEAL
+
   - name: british-museum-great-russell-street
     reason: |
       Site PTNO-12087852 is "UNIVERSITY COLLEGE LONDON - INTERIM DATA
