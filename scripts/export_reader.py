@@ -441,7 +441,13 @@ DISCOVERY_ROUTES = {
     "parent_backfill": "parent of an application we held",
     "cohort": "added with a cohort",
     "barbour": "from Barbour's project record",
-    "foxglove_top10": "from the Foxglove list",
+    # (label, citation URL) where the origin is someone's published
+    # work: the phrase alone credits, the link cites, and this project
+    # does not show one without the other.
+    "foxglove_top10": ("from the Foxglove list",
+                       "https://www.foxglove.org.uk/wp-content/uploads/2025/10/"
+                       "2025_09_26-FINAL-Big-Tech-Data-Centres-Report-"
+                       "Website-Version.pdf"),
     "s35_direction": "a Section 35 direction",
     "seed_accretion": "seeded by hand",
     "duplicate_of": "duplicate of another record",
@@ -450,14 +456,25 @@ DISCOVERY_ROUTES = {
 
 
 def discovery(value: str) -> str:
-    """The routes that found an application, deduplicated, in order."""
+    """The routes that found an application, deduplicated, in order.
+
+    Returns HTML (labels escaped here): a route sourced from someone's
+    published work carries a link to it — "from the Foxglove list" was
+    a credit with no way to reach the list (Luke, 2026-08-28).
+    """
     seen, out = set(), []
     for part in (value or "").split(", "):
         route = DISCOVERY_ROUTES.get(part.split(":")[0].strip())
-        if route and route not in seen:
-            seen.add(route)
-            out.append(route)
-    return " · ".join(out)
+        if not route or route in seen:
+            continue
+        seen.add(route)
+        if isinstance(route, tuple):
+            label, url = route
+            out.append(f'<a href="{esc(url)}" target="_blank" '
+                       f'rel="noopener">{esc(label)}</a>')
+        else:
+            out.append(esc(route))
+    return " &middot; ".join(out)
 
 
 SITE_ORIGIN = {
@@ -4345,7 +4362,7 @@ def main() -> int:
             # register link, why it was there at all -- and the answer
             # was recorded and simply not shown: our keyword sweep found
             # it, and its description names a data centre in terms.
-            f"<span class='q'>{esc(discovery(r[17]))}</span></td>"
+            f"<span class='q'>{discovery(r[17])}</span></td>"
             f"<td>{esc(r[3])}</td><td>{esc(r[4]) or NOT_STATED}</td>"
             f"<td data-v='{esc(str(r[5] or ''))}'>{esc(str(r[5] or '')) or NOT_STATED}</td>"
             f"<td>{esc(r[7]) or '<span class=\"q\">not triaged</span>'}</td>"
