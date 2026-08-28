@@ -413,4 +413,15 @@ groups:
             ref: "14045228"
             note: Officers of UK Court Lane DC Ltd include Justin Scott Hildebrandt and Carrington David Brown, Corscale/Patrinely names, at a shared Swan House service address alongside Gateley nominees.
             date: 2026-08-28
+          - source: companies_house
+            ref: "17009007"
+            note: >-
+              The board bridge, spotted by Luke: Justin Scott Hildebrandt
+              is simultaneously an active director of UK Court Lane DC
+              Ltd (14045228) and of CORSCALE UK, LTD (17009007, 50
+              Broadway SW1H 0DB) — a company carrying the group's own
+              name, verified at Companies House the same day. This turns
+              "Corscale/Patrinely names on the SPV board" into a direct
+              directorship link to a Corscale entity.
+            date: 2026-08-28
             
