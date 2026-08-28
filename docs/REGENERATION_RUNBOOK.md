@@ -638,6 +638,24 @@ once, checked, and read back by key.
 
 ### 12. Rebuild the artefacts against the new ledger, and re-sync them
 
+**If a new notebook is being made, its URL must be in `dcp/drive.py`
+before this build** — `NOTEBOOK_URL` is compiled into the reader, and
+this is the build that publishes `index.html`.
+
+**Do it at the start of the chain, not here.** A notebook's URL is
+fixed when it is created and does not change as sources are added, so
+Luke creates it **empty** before anything is built and supplies the URL
+then (his solution, 2026-08-28). The apparent circularity — bundle
+needs step 9, notebook needs bundle, reader needs notebook — dissolves:
+only the *sources* wait on the bundle, and they can be uploaded at
+leisure, even after deployment.
+
+This stop remains as the backstop for when that was not done. The
+failure is silent: last release's notebook still exists and still
+opens, so a reader built without the update looks entirely correct and
+sends the reporter to a stale corpus.
+
+
 ```sh
 scripts/export_reader.py   --out data/exports/<build>/reader.html --phase <N> --publish index.html
 scripts/export_handover.py --out data/exports/<build>/dc_handover_phase<N>.xlsx
@@ -780,10 +798,30 @@ For this release specifically, three things belong in that note:
 
 ## Still outstanding after the phase 2 release — Luke's, not the runner's
 
-- **Upload the notebook bundle.** 506 documents sit in
-  `data/exports/notebook_bundle/` (step 7a). The Gemini Notebook is
-  linked from the reader already, so until they are uploaded the link
-  leads somewhere emptier than the page implies.
+- **Build and upload the notebook bundle.** The bundle directory is
+  **absent from this checkout** — checked 2026-08-28. The earlier note
+  claiming "506 documents sit in `data/exports/notebook_bundle/`" was
+  not wrong when written: it was built on Luke's previous laptop, and
+  the directory is gitignored, so it did not travel. Whether those 506
+  were uploaded to the notebook before the machine changed is not
+  recorded anywhere and cannot be determined from here — ask before
+  assuming the step is outstanding. Rebuild it with
+  `scripts/export_notebook_bundle.py`, which reads the Drive staging tree
+  (2,131 markdown files present) and writes locally only.
+
+  **Build it AFTER step 9 rebuilds the staging tree, never before.** The
+  bundle is welded from the report prose that step 9 generates, so
+  building it against the previous release's staging produces a bundle
+  that looks current and is not.
+
+  **A new notebook needs its URL in `dcp/drive.py` before step 12**,
+  the build that publishes `index.html`. The full order is at the stop
+  in step 12 (Luke, 2026-08-28).
+
+  The Gemini Notebook is linked from the reader (`dcp/drive.py`
+  NOTEBOOK_URL) and holds whichever bundle was last uploaded by hand —
+  shared with the reporting team 2026-08-11, so roughly three releases
+  behind. Nothing in the chain refreshes it; the upload is manual.
 - **The Google Sheet is still titled `DC_handover_v2_phase1`.** Renaming
   it is safe: `sheet_sync.py` resolves the spreadsheet by the id in
   `WORKBOOK_SHEET_URL` and only prints the title. The **tab** names are
