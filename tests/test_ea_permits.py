@@ -255,3 +255,69 @@ def test_manifest_and_claims_agree_about_documents():
         entry = manifest[c.attrs["permission_number"].rsplit("/", 1)[-1].lower()]
         stems = {d["stem"] for d in entry["documents"]}
         assert c.attrs["document_stem"] in stems
+
+
+# --- Compliance Assessment Reports -------------------------------------
+#
+# A CAR is the only published source in this corpus that says what
+# standby plant actually did, and the register hands over no metadata
+# with it — only a filename. So the filename parse is load-bearing, and
+# the case that matters is the one it must refuse to guess at.
+
+def test_compliance_name_parses_type_date_and_report_id():
+    got = ea.parse_compliance_name("EPR-QP3434DR_RD_0578435_20250911.pdf")
+    assert got["permit"] == "QP3434DR"
+    assert got["type"] == "RD"
+    assert got["type_label"] == "assessment report / data review"
+    assert got["report_id"] == "0578435"
+    assert got["issued"] == "2025-09-11"
+
+
+def test_compliance_name_flags_an_unknown_code_rather_than_guessing():
+    """The sweep met PR and AU codes that were not in the map.
+
+    Defaulting an unknown code to the commonest label would have filed
+    16 procedure reviews and 2 audits as data reviews — and a data
+    review is the one that reads the operator's annual return, so the
+    wrong label would overstate how much run-hour evidence exists.
+    """
+    got = ea.parse_compliance_name("EPR-BP3945QX_ZZ_0597239_20260415.pdf")
+    assert got["type"] == "ZZ"
+    assert "unrecognised" in got["type_label"]
+    assert got["issued"] == "2026-04-15"
+
+
+def test_compliance_name_survives_an_unparseable_filename():
+    got = ea.parse_compliance_name("something-else.pdf")
+    assert got == {"permit": "", "type": "", "type_label": "",
+                   "report_id": "", "issued": None}
+
+
+def test_every_manifest_report_carries_a_recognised_assessment_type():
+    """A code this project cannot name is a change at the Agency's end."""
+    m = ea.load_compliance_manifest()
+    if not m:
+        pytest.skip("no compliance manifest in this checkout")
+    unknown = sorted({d["assessment_type"] for v in m.values()
+                      for d in v.get("documents") or []}
+                     - set(ea.ASSESSMENT_TYPES))
+    assert not unknown, (
+        f"unrecognised assessment codes {unknown} — read one of the reports, "
+        f"take the wording from its 'Assessment' field, and add it to "
+        f"ea_permits.ASSESSMENT_TYPES")
+
+
+def test_compliance_manifest_records_permits_checked_and_found_empty():
+    """"No report published" is a finding; a permit never swept is not.
+
+    The register answers a permit with no compliance documents with a
+    404, and treating that as an error would have made the commonest
+    real result in the sweep look like a network failure. Every entry
+    therefore carries the date it was checked, whether or not it yielded
+    anything.
+    """
+    m = ea.load_compliance_manifest()
+    if not m:
+        pytest.skip("no compliance manifest in this checkout")
+    assert all(v.get("checked") for v in m.values())
+    assert any(not v.get("documents") for v in m.values())

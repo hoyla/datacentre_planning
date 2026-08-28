@@ -110,6 +110,37 @@ CLAIMS_PATH = EXTERNAL / "environment-agency-permit-claims.yaml"
 PDF_DIR = ROOT / "data" / "raw" / "ea_permits"
 TEXT_DIR = PDF_DIR / "text"
 
+# Compliance Assessment Reports. A permit says what an operator *may*
+# run; a CAR is an Environment Agency officer writing down what it
+# found. The Agency began publishing them for Installations on 18 August
+# 2025, so they are recent and thin — but they are the only published
+# source in this project that reports what standby plant actually did,
+# as against what it is permitted to do.
+COMPLIANCE_MANIFEST_PATH = (
+    EXTERNAL / "environment-agency-compliance-documents.json")
+COMPLIANCE_PDF_DIR = PDF_DIR / "compliance"
+COMPLIANCE_TEXT_DIR = COMPLIANCE_PDF_DIR / "text"
+
+COMPLIANCE_LIST_URL = (
+    "https://environment.data.gov.uk/public-register/installation-register/"
+    "registration/documents/compliance/EPR_{stem}")
+COMPLIANCE_BASE_URL = "https://environment.data.gov.uk"
+
+# The two-letter code in a CAR's filename is the kind of assessment, not
+# the kind of document — both of these are the same "CAR 2" form. The
+# distinction matters more than it looks: an SI is an officer on site,
+# while an RD is the officer reading the operator's own **annual
+# return**, which is the document this project has asked for under the
+# EIR. Run hours and fuel use appear in the RD reports.
+# Each label is the wording of the form's own "Assessment" field in a
+# report carrying that code, not an expansion of the initials.
+ASSESSMENT_TYPES = {
+    "RD": "assessment report / data review",   # 76 reports
+    "SI": "site inspection",                   # 36
+    "PR": "procedure review",                  # 16
+    "AU": "audit",                             # 2
+}
+
 SOURCE_KEY = "ea_permit"
 REGISTER_URL = ("https://environment.data.gov.uk/public-register/downloads/"
                 "industrial-installations")
@@ -573,6 +604,52 @@ def permit_pages(stem: str, text_dir: Path = TEXT_DIR) -> list[str]:
         pages.append((text_dir / f"{stem}-p{n}.txt").read_text())
         n += 1
     return pages
+
+
+def load_compliance_manifest(
+        path: Path = COMPLIANCE_MANIFEST_PATH) -> dict:
+    return json.loads(path.read_text()) if path.exists() else {}
+
+
+def compliance_pages(stem: str,
+                     text_dir: Path = COMPLIANCE_TEXT_DIR) -> list[str]:
+    """The committed text of one compliance report, in page order."""
+    return permit_pages(stem, text_dir)
+
+
+# EPR-QP3434DR_RD_0578435_20250911.pdf
+_CAR_NAME_RE = re.compile(
+    r"^EPR-(?P<permit>[A-Z0-9]+)_(?P<type>[A-Z]{2})_(?P<report>\d+)_"
+    r"(?P<date>\d{8})\.pdf$", re.I)
+
+
+def parse_compliance_name(name: str) -> dict:
+    """What a published CAR's filename says about it.
+
+    The register gives no metadata alongside the document list — only a
+    filename — so the assessment type and the date it was issued are
+    read from the name. An unrecognised shape returns the code raw
+    rather than guessing: a filename this project cannot parse is a
+    signal the Agency changed something, and silently defaulting it to
+    "site inspection" would file a data review as an inspection.
+    """
+    m = _CAR_NAME_RE.match(name.strip())
+    if not m:
+        return {"permit": "", "type": "", "type_label": "",
+                "report_id": "", "issued": None}
+    code = m.group("type").upper()
+    raw = m.group("date")
+    try:
+        issued = date(int(raw[:4]), int(raw[4:6]), int(raw[6:8])).isoformat()
+    except ValueError:
+        issued = None
+    return {
+        "permit": m.group("permit").upper(),
+        "type": code,
+        "type_label": ASSESSMENT_TYPES.get(code, f"unrecognised code {code}"),
+        "report_id": m.group("report"),
+        "issued": issued,
+    }
 
 
 def _site_name(entry: dict) -> str:

@@ -32,19 +32,64 @@ gov.uk publications for these permits carry only the permit, the
 decision document and variations — no returns. The Environment
 Agency's Public Registers Online holds each permit, and since **18
 August 2025** it also publishes **Compliance Assessment Reports** for
-Installations. Those are real and worth having: the CAR for EPR/
-QP3434DR (Brick Lane Data Centre, Interxion Carrier Hotel Limited,
-inspected 28/10/2025) records that "Emergency operation of the standby
-generators and operation for testing/maintenance was discussed" and
-that "during the … UPS replacement from 30 September to 3 October
-2025, operation of three standby generators was required", with a
-resulting noise complaint.
+Installations.
 
-What the CARs do **not** give is the annual figure: they are inspection
-reports, not returns, they begin only in August 2025, and several of
-these permits still show "No document published" against Compliance.
-So this request asks for the annual returns themselves, and the CARs
-are a cross-check on the answer rather than a substitute for it.
+**Those reports already publish some of the figures this request asks
+for, and that matters to how it should be answered.** A sweep of all 97
+permits on 2026-08-28 found compliance documents published for 50 of
+them, 130 reports in total, of which 51 carry an operating-hours
+figure. Most are of the type the form calls "Assessment Report/data
+review", where the officer is reading the operator's **annual return**
+and writing its numbers down.
+
+The two reports for EPR/QP3434DR (Brick Lane Data Centre, Interxion
+Carrier Hotel Limited) show what that yields. The report issued
+11/09/2025, assessing the 2024 annual report, gives the series:
+
+> "Fuel use (in tonnes) and hours
+> 61.08 (2024) for 356 hours
+> 33.74 (2023) for 706 hours
+> 39.44 (2022) {282 hours - PLC upgrade works}"
+
+with the detail beneath it — "Lon1: Gen1, 2 and 2a ran at 50-60hrs
+each, the rest nearer 20hours for testing and use in 2024. The site
+average was 25hours/gen (around half of last year's run hours) but fuel
+consumption was much higher and will be discussed during the next
+inspection" — and a real emergency: "There was a short power outage on
+14/08/2024 on LON1 and 3 generators supported the site load. The total
+run duration was 2hrs and 25 min."
+
+The report issued 05/02/2026 continues the series to "22.94 (2025) for
+464 hours", and separates the reason for the running: "Generators were
+not running in emergency scenario in 2025, however, 3 generators were
+running during UPS replacement projects." A site inspection report of
+30/10/2025 sets out that episode — "During the first phase of critical
+UPS replacement from 30 September to 3 October 2025, operation of three
+standby generators was required" — and records that the site then
+received a noise complaint from a nearby resident, notified the Agency
+and opened a dialogue with Tower Hamlets.
+
+So hours, fuel quantities and the reason for each run are all being
+reported to you and, for these permits, published by you — which is
+items 1 to 4 below.
+
+Those annual totals are the installation summed across its generators,
+and the 500-hour condition applies to each plant, so the 2023 figure is
+not a breach: the report records none, and states "Overall, no issues
+with the annual return". It is quoted here to establish what the Agency
+holds and already discloses, not to allege non-compliance.
+
+So the position is stronger than a request into the unknown, in three
+ways. The returns exist and are received annually. The Agency has
+**already published** operating hours and fuel quantities for named
+data-centre installations, so it cannot consistently treat the same
+class of information as commercially confidential under reg 12(5)(e)
+elsewhere. And what the CARs give is partial in ways only the returns
+can fix: 47 of the 97 permits have no compliance document at all, the
+series begins in August 2025 so it cannot reach back to 2021, the
+figures are an officer's summary rather than the return itself, and
+they are recorded inconsistently — sometimes per generator, sometimes
+as a site total, sometimes as fuel tonnage alone.
 
 The published ceiling remains 500 hours a year, and the same documents
 note that "Emission limit values (ELVs) to air are not applicable to
@@ -112,9 +157,11 @@ commercial-confidentiality exception at reg 12(5)(e). Operating hours
 and fuel quantities for combustion plant are information on emissions:
 they determine the mass of pollutants released. If you nevertheless
 consider an exception engaged, please identify it per item and conduct
-the public-interest balance in the knowledge that the published figure
-today is only a permitted maximum, that the maximum is set at the
-threshold below which emission limit values cease to apply, and that
+the public-interest balance in the knowledge that you have already
+published figures of this kind for some of these installations in
+Compliance Assessment Reports, that for the rest the only public figure
+is a permitted maximum, that the maximum is set at the threshold below
+which emission limit values cease to apply, and that
 several operators of these installations publicly describe themselves
 as powered by 100% renewable energy without stating what their standby
 plant is or how often it runs.
