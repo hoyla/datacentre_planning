@@ -890,7 +890,57 @@ source reads poorly.
 
 It reads the staging tree rather than the database on purpose, so the
 report prose has exactly one implementation and the notebook cannot
-drift from the Drive folder. Run it after step 5.
+drift from the Drive folder. **Run it after step 9**, which is the step
+that rebuilds that tree — an earlier note here said step 5, which would
+weld in the *previous* release's prose and produce a bundle that looks
+current and is not.
+
+#### Replacing or refreshing the notebook
+
+Two paths, and the choice is made before anything is built.
+
+**Replace — a new notebook.** What 2.10 did. Saved notes are lost, so
+prefer it when they are stale anyway.
+
+1. Create the notebook **empty** and take its URL. A notebook's URL is
+   fixed at creation and does not change as sources are added, so this
+   can be done before the chain starts.
+2. Put it in `NOTEBOOK_URL` in `dcp/drive.py` **before step 12**, the
+   build that publishes `index.html`. Doing it at step 1 is easiest.
+3. Build the bundle after step 9; upload before deployment.
+
+**Refresh — add to the notebook already in use.** Keeps the notes, and
+the URL never changes, so nothing in the code moves.
+
+Use `--only KEY [KEY …]` or `--only-from FILE` to build just the sites
+being added. The prune is suppressed when filtering, because a partial
+build must not delete the sites it was not asked for.
+
+**Only ever add a site the notebook does not already hold.** Uploading
+a document for a site already in it adds a *second* source rather than
+replacing the first, and the notebook then holds two versions of one
+site with nothing on the page to say which is current — worse than the
+staleness being fixed. To update a site already present, delete its
+source first.
+
+**Working out what is new is the hard part, and the database cannot
+tell you.** `sites.materialised_at` is rewritten for every site on
+every materialisation, so it records the last run and not creation —
+after a materialisation all 508 sites read the same date. Two workable
+routes:
+
+- read the notebook's own source list and diff against it, which is
+  exact; or
+- diff site keys against a previous release's DuckDB in
+  `data/exports/phase<N>_build/`, which under-counts if that release
+  postdates the last upload. Under-counting leaves a site stale rather
+  than duplicated, which is the safe direction. As measured on
+  2026-08-28: the 2.2 build held 430 sites against 508 live, 95 added
+  and 17 gone.
+
+The 17 gone are the other half of a refresh: sites the notebook still
+holds that no longer exist. They do not disappear on their own, and
+nothing but deleting their sources will remove them.
 
 Big sites are **split, never truncated**: a source is capped near
 500,000 words and one site holds 130,092 findings. Parts are budgeted by

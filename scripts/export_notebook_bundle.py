@@ -110,6 +110,19 @@ def main() -> int:
     ap.add_argument("--out", type=Path,
                     default=Path("data/exports/notebook_bundle"),
                     help="local folder to write into; created if absent")
+    ap.add_argument("--only", nargs="+", metavar="SITE_KEY",
+                    help="build only these sites. For adding to a notebook "
+                         "that already holds the others: a site absent from "
+                         "the notebook has no source to duplicate, so its "
+                         "document can be uploaded alongside them. Do NOT "
+                         "use this for a site the notebook already holds — "
+                         "the upload adds a second source rather than "
+                         "replacing the first, and the notebook would then "
+                         "hold two versions of one site with nothing to say "
+                         "which is current.")
+    ap.add_argument("--only-from", type=Path, metavar="FILE",
+                    help="a file of site keys, one per line, same rule as "
+                         "--only. Blank lines and # comments ignored.")
     ap.add_argument("--max-words", type=int, default=DEFAULT_MAX_WORDS,
                     help=f"words per document before a site's findings are "
                          f"split across parts (default {DEFAULT_MAX_WORDS:,}; "
@@ -120,20 +133,38 @@ def main() -> int:
         sys.exit(f"no staging tree at {args.staging} — run "
                  f"scripts/build_drive_staging.py first")
 
+    only: set[str] | None = None
+    if args.only or args.only_from:
+        only = set(args.only or [])
+        if args.only_from:
+            only |= {ln.strip() for ln in
+                     args.only_from.read_text().splitlines()
+                     if ln.strip() and not ln.startswith("#")}
+
     args.out.mkdir(parents=True, exist_ok=True)
-    # Stale documents from an earlier run would be uploaded alongside
-    # their replacements and read as separate sources. Same reasoning as
-    # the Drive sync's prune, and safe here because this folder holds
-    # nothing this script did not write.
-    stale = sorted(args.out.glob("*report_and_findings*.md"))
-    for f in stale:
-        f.unlink()
+    if only is None:
+        # Stale documents from an earlier run would be uploaded alongside
+        # their replacements and read as separate sources. Same reasoning as
+        # the Drive sync's prune, and safe here because this folder holds
+        # nothing this script did not write.
+        stale = sorted(args.out.glob("*report_and_findings*.md"))
+        for f in stale:
+            f.unlink()
+    else:
+        # Emphatically NOT pruning under --only: the prune exists to stop
+        # a full rebuild leaving last run's documents behind, and applying
+        # it to a partial build would delete every site the run was not
+        # asked for — turning "add three sites" into "keep only three".
+        print(f"--only: building {len(only)} named sites; not pruning "
+              f"{args.out} (a partial build must not delete the rest)")
 
     n_docs = n_sites = n_rows = 0
     biggest = ("", 0)
     for site_dir in sorted(p for p in args.staging.iterdir() if p.is_dir()):
         report_path = next(site_dir.glob("_site_report — *.md"), None)
         if report_path is None:
+            continue
+        if only is not None and site_dir.name.split(" — ")[0] not in only:
             continue
         n_sites += 1
         stem = site_dir.name                       # "<key> — <name>"
