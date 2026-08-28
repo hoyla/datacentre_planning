@@ -525,12 +525,20 @@ field and is not publishable as it stands.
   **Staleness sits on top of that.** The last upload was 2026-08-12 and
   4,464 documents have arrived since, with more in 2.10.
 
+  **Giant has no such quota, and takes the reduced bundle anyway** —
+  Luke's decision, 2026-08-28, for consistency. It is the right call:
+  two search tools answering the same query differently, with nothing on
+  either page to explain why, is worse than one corpus that is reduced
+  in a documented way. But it means the drawings are absent from Giant
+  to match a constraint that does not apply to it, so the drawings
+  question is **one decision governing both** and must be revisited for
+  both together or not at all.
+
   **Explicitly deferred past 2.10 by Luke.** When picked up: settle the
   drawings question in one place rather than two; record what each
   repository holds, since neither can be queried for its own contents;
   and fold re-upload into the release chain rather than leaving it to be
-  remembered. Whether Giant shares Pinpoint's quota constraint — and so
-  needs the reduction at all — is unestablished.
+  remembered.
 
 - **One address, two postcodes: a three-line check that would have
   caught the British Museum merge without anyone reading a document.**
