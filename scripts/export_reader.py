@@ -1362,6 +1362,11 @@ table.stats tr.op.open>td{background:var(--soft);
 .opsite .claim p{margin:0 0 2px}
 .charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));
   gap:20px 28px;margin:12px 0 6px;align-items:start}
+/* A chart whose labels are names rather than bands needs the whole
+   row: at half width the site names set at ~7px and the longest
+   overran the viewBox (Luke, 2026-08-28). Full width also shortens
+   the explainer beneath it, which buys the bars vertical room. */
+.charts .chart-wide{grid-column:1/-1}
 figure.chart{margin:0}
 figure.chart figcaption{font-size:14px;font-weight:650;margin-bottom:6px}
 figure.chart svg{width:100%;height:auto}
@@ -4486,6 +4491,41 @@ def main() -> int:
                 f'</svg><p class="legend">{legend}</p></div>'
                 f'<p class="help">{esc(note)}</p></figure>')
 
+    def hbars(items, title, note, unit=""):
+        """Horizontal bars for few items with real names.
+
+        `items` is [(label, value, hover)] largest-first; the vertical
+        helper's x-axis labels cannot hold a project name, and rotating
+        them was rejected the last time it came up. Values render at
+        the bar end so the chart reads without the axis."""
+        if not items:
+            return ""
+        # Full-width canvas. The label gutter is measured from the
+        # longest label rather than guessed — a fixed 190px clipped
+        # "HASPIELAW 200MW BATTERY STORAG" against the viewBox edge,
+        # and SVG has no overflow to save it. ~6.6px per character at
+        # this size, floored so short-label charts keep their bars long.
+        w, rh, pad_r = 1080, 30, 74
+        pad_l = max(200, int(max(len(l) for l, _, _ in items) * 6.6) + 14)
+        h = len(items) * rh + 10
+        top = max(v for _, v, _ in items) or 1
+        rows = []
+        for i, (lab, v, hover) in enumerate(items):
+            bw = (w - pad_l - pad_r) * v / top
+            y = 4 + i * rh
+            rows.append(
+                f'<text class="xl" x="{pad_l - 8}" y="{y + rh - 10}" '
+                f'text-anchor="end">{esc(lab)}</text>'
+                f'<rect x="{pad_l}" y="{y}" width="{bw:.1f}" height="{rh - 8}">'
+                f'<title>{esc(hover)}: £{v:,.0f}{esc(unit)}</title></rect>'
+                f'<text class="xl" x="{pad_l + bw + 6:.1f}" y="{y + rh - 10}">'
+                f'&pound;{v:,.0f}{esc(unit)}</text>')
+        return (f'<figure class="chart chart-wide">'
+                f'<figcaption>{esc(title)}</figcaption>'
+                f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{esc(title)}">'
+                + "".join(rows)
+                + f'</svg><p class="help">{esc(note)}</p></figure>')
+
     def bars(items, title, note, unit="", highlight=None):
         if not items:
             return ""
@@ -4589,6 +4629,48 @@ def main() -> int:
     _by_tier = {t: sum(1 for r in _silent if r["claim"] == t)
                 for t in ("strong", "probable", "tentative")}
     _silent_est = sum(1 for r in _silent if r["mw"])
+    # ---- The Barbour hyperscalers, by value (issue #177) -------------
+    # Luke: the chart works if we clearly state what we display. What we
+    # display: projects where Barbour records a value AND the promoter's
+    # own title claims 100 MW or more. Both numbers are the promoter's
+    # world — the title MW is the figure the dictionary already warns is
+    # never copied into the Power MW column, and the value is Barbour's
+    # project estimate. A floor, not a census: most valued projects
+    # state no MW at all, and the note prints the split.
+    _hyp_mw_re = re.compile(r"(\d+(?:\.\d+)?)\s*MW", re.I)
+    with db.connect() as _bconn, _bconn.cursor() as _bcur:
+        _bcur.execute("SELECT title, value_gbp FROM projects "
+                      "WHERE value_gbp IS NOT NULL")
+        _valued = _bcur.fetchall()
+    _hyp = []
+    for _t, _v in _valued:
+        _ms = [float(m) for m in _hyp_mw_re.findall(_t or "")]
+        if _ms and max(_ms) >= 100:
+            _hyp.append((_t, float(_v), max(_ms)))
+    _hyp.sort(key=lambda r: -r[1])
+
+    def _hyp_label(title):
+        # The place name, not the whole promoter title: everything
+        # before the first " - ", in Barbour's own casing — .title()
+        # was tried and mangled the codes ("Sdc M40", "200Mw"), and
+        # this project does not rewrite source names anyway. The full
+        # title is the hover.
+        head = re.split(r"\s+-\s+", title or "")[0].strip()
+        return re.sub(r"\s+", " ", head)[:44]
+
+    chart_barbour = hbars(
+        [(_hyp_label(t), v / 1e6, f"{mw:,.0f} MW — {t}") for t, v, mw in _hyp],
+        "The Barbour hyperscalers, by project value",
+        f"Barbour ABI project estimates (licensed, credited): the "
+        f"{len(_hyp)} projects of the {len(_valued)} carrying a value whose "
+        f"own title also claims 100 MW or more. Both figures are the "
+        f"promoter's — the MW is the title's claim, never copied into the "
+        f"power columns, and the value is Barbour's estimate of the "
+        f"project, not a disclosed cost. A floor, not a census: the other "
+        f"{len(_valued) - len(_hyp)} valued projects state no MW in their "
+        f"title, which does not make them small.",
+        unit="m")
+
     chart_elsewhere = pie(
         [("Nothing from outside either",
           sum(1 for r in _silent if not r["claim"]), "s-none"),
@@ -5654,7 +5736,7 @@ def main() -> int:
  it moves only as the tail of applications is retrieved. The three capacity charts do depend
  on it, and every figure in them is a floor — further reading can raise a site's capacity,
  and can move a site into a chart it is not in yet, but cannot do the reverse.</p>
- <div class="charts">{chart_years}{chart_bands}{chart_basis}{chart_elsewhere}</div>
+ <div class="charts">{chart_years}{chart_bands}{chart_basis}{chart_elsewhere}{chart_barbour}</div>
  </div>
 
  <aside class="startside">
