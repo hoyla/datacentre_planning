@@ -997,6 +997,136 @@ HISTORY.)
   the reader. Worth adjudicating by hand rather than changing the
   rollup rule.
 
+- **A story lead the corpus can already evidence: who qualifies their
+  "100% renewable" claim, and who does not** (Luke's idea, measured
+  2026-08-28). Eight operators in the snapshot store make a green
+  claim — "Powered by 100% renewable resources", "100% renewable
+  energy powered", net-zero commitments. Five of them also hold
+  Environment Agency permits for standby combustion, and the
+  difference between them is in the wording:
+
+    operator   permits   MWth   engines   claim names its generators?
+    VIRTUS           4   832.5      121   no
+    Ark              3   476.1      114   yes — "supported by HVO"
+    Vantage          1   225.7       37   no
+    CyrusOne         1   201.3       32   no
+    Kao              1   152.3       25   yes — HVO named
+    Apatura, Greystoke, Pulsant: green claim, no permit found
+
+  **Ark and Kao name their standby fuel beside the green claim;
+  VIRTUS, Vantage and CyrusOne make an unqualified claim while holding
+  permits for 1,259 MWth across 190 engines.**
+
+  **A permit is only required at 50 MWth and above, which limits what
+  the bottom three rows can mean** (Luke, 2026-08-28; confirmed in the
+  permit data). The permitted activity is written in the permits
+  themselves as "Combustion; Any Fuel =>50MW - 1.1 A(1) a)", with two
+  entries reading "Medium Combustion Plant collectively =>50MW" —
+  individually small engines that aggregate past the threshold. Below
+  it a site falls to the MCP regime: registration rather than a
+  bespoke permit, lighter touch, and possibly not published at all
+  (see the Environment Agency item above). So **no permit found is not
+  no generators** — it may only mean the installation is under 50
+  MWth. Pulsant is the clearest case: its whole disclosed estate is
+  22.12 MW of IT load, which would not reach the threshold however it
+  is aggregated. The table's bottom three rows are therefore not
+  evidence of a cleaner operator, and must never be read as such.
+
+  Five caveats belong with it, and without them this is a cheap
+  gotcha rather than a finding. "100% renewable" conventionally
+  describes *procured grid electricity*, so an unqualified claim is
+  not false — the question is what it omits. Standby plant runs for
+  testing and outages, so its output is small against a site's grid
+  draw; the point is disclosure, not equivalence. Permit MWth is
+  thermal input capacity, not emissions. And the snapshot store is
+  curated, so an operator absent from the table may simply have no
+  page snapshotted — absence here is not absence of a claim.
+
+  **The run-hour limit is in the permits, and it is 500 hours a year**
+  (read 2026-08-28 from the 85 permit PDFs the project holds; 42
+  permit stems carry the condition). The standard wording is "The
+  activities shall not operate for more than 500 hours in emergency
+  use per annum", and the Environment Agency spells out that this is
+  an installation-level cap, not a per-engine one: "500 hours is for
+  the installation as a whole, meaning that as soon as one generator
+  starts operating the hours count towards the 500 hours". So the
+  honest sentence is *"permitted to run for up to 500 hours a year"*
+  per site — never engines multiplied by hours, which the permits
+  explicitly forbid as a reading.
+
+  And the number is not arbitrary. The same documents state that
+  "Emission limit values (ELVs) to air are not applicable to MCPs
+  operating less than 500 hours per year" — the cap sits exactly at
+  the threshold below which air-emission limits do not bite. That is
+  the sharper story than the green claims themselves: an operator can
+  hold hundreds of megawatts of standby diesel and stay outside the
+  emission-limit regime by staying under 500 hours, and the permit
+  is written to that line.
+
+  **Below the threshold, the planning documents catch what the permits
+  cannot** (Luke, 2026-08-28). Sites matched to a green-claiming
+  operator can be searched for their own disclosures of on-site fossil
+  generation, and that reaches the operators with no permit at all:
+  Greystoke's West London Technology Park carries 379 findings
+  mentioning diesel and 156 gas, and its documents say so plainly —
+  "given the significant number of diesel back-up generators, and the
+  lifetime associated with the operation of the proposed development
+  (i.e. 30 years)". Abbots Langley and one other Greystoke site carry
+  the same pattern at smaller scale.
+
+  **The direction of the mention decides its meaning, so the counts are
+  a route to evidence and never the evidence.** Apatura's Westerhill
+  shows why: its ten diesel findings are proposals to *avoid* diesel —
+  "The BESS would reduce (or ideally) eliminate the practical need for
+  the data centre to utilise and rely upon diesel backup generators."
+  A count that treated those as disclosure of diesel reliance would
+  have the story backwards. Ark's sites, which do hold permits, carry
+  heavy HVO mentions alongside the diesel, consistent with the
+  qualified claim its website makes.
+
+  Two next steps, one of them now drafted. **The actual run hours are
+  obtainable**: 29 permits' decision documents state that "Reporting of
+  standby generator maintenance run hours is required annually and any
+  electrical outages (planned or grid failures regardless of duration)
+  require both annual reporting and immediate notification of the
+  Environment Agency", and permit conditions require the operator to
+  record "the type and quantity of fuel used and the total annual
+  operating hours for each MCP" and "the number of runs for each of the
+  generators". The Agency therefore holds the returns, and an EIR
+  request for them is drafted at
+  `docs/requests/2026-08_ea_standby_generator_run_hours_eir.md` —
+  including the reg 12(9) point that information on emissions cannot be
+  withheld as commercially confidential, which matters because the
+  decision document for EPR/QP3434DR records the Agency accepting a
+  confidentiality claim and excluding "financial and operational data"
+  from the public register.
+
+- **A public document class the project does not yet harvest:
+  Environment Agency Compliance Assessment Reports** (found 2026-08-28
+  when Luke asked whether run hours were already published — they are
+  not, but this is). Public Registers Online has published CARs for
+  **Installations since 18 August 2025**, free to download at a
+  predictable path
+  (`/public-register/documents/installations/compliance/EPR_<STEM>/…`),
+  and they record what an Environment Agency officer found on site.
+  The CAR for EPR/QP3434DR — Brick Lane Data Centre, Interxion Carrier
+  Hotel Limited, inspected 28/10/2025 — states that "Emergency
+  operation of the standby generators and operation for testing/
+  maintenance was discussed", and that "during the … UPS replacement
+  from 30 September to 3 October 2025, operation of three standby
+  generators was required", with a noise complaint following.
+
+  That is *actual* generator operation, dated, from a public source —
+  the thing the corpus has never held. Coverage is thin and growing:
+  the scheme is weeks old, several data-centre permits still show "No
+  document published" against Compliance, and CARs are inspection
+  reports rather than annual returns, so they corroborate the EIR
+  above rather than replace it. Worth an adapter on the same pattern
+  as `fetch_ea_permits.py`, and worth re-running periodically as the
+  register fills. Second: read the generation
+  findings at the no-permit sites rather than counting them, which is
+  what turns Greystoke's 379 mentions into a number of generators.
+
 ---
 
 ## Parked
