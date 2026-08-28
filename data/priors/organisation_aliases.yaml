@@ -141,7 +141,7 @@ groups:
       # group level.
       - name: Appatura DC Project 12 Ltd
         relation: spv_of
-        status: proposed
+        status: confirmed
         company_number: "16470093"
         evidence:
           - source: document
@@ -152,6 +152,17 @@ groups:
               correctly; the doubled A is the EXTRACTOR's misreading, not
               the scan's — which is why this one can carry a company
               number where the next cannot.
+          - source: companies_house
+            ref: "16470093"
+            note: >-
+              APATURA DC PROJECT 12 LTD's registered office is 3rd Floor
+              1 Ashley Road, Altrincham WA14 2DT — the address this
+              group's note records for all five original vehicles. The
+              register also shows the series has grown since the entry
+              was written: APATURA DC LTD plus DC PROJECT 1 through 12,
+              sequential numbers 16043950-16470100. Checked 2026-08-28,
+              the same sweep that confirmed Court Lane.
+            date: 2026-08-28
             date: 2026-08-26
       - name: APATURA OC PROJECT 114 LTD
         relation: spv_of
