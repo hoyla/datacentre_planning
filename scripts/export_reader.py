@@ -4785,9 +4785,26 @@ def main() -> int:
                   f"{'' if r.permit_count == 1 else 's'}, {r.permit_engines} engines</span>"
                   if r.has_permit else
                   '<span class="q">no permit found &mdash; may be under 50 MWth</span>')
+        # The quote links to the page it was taken from, so the claim
+        # can be checked at source rather than taken on trust.
+        quoted = esc(r.claim.quote)
+        if r.claim.source_url:
+            quoted = (f'<a href="{esc(r.claim.source_url)}" rel="nofollow noopener" '
+                      f'target="_blank">{quoted}</a>')
+        # Every site the row is built from, reachable. Names rather than
+        # keys — the key for an S35 stub runs to eighty characters and
+        # would set the column width for the whole table — and `_site_a`
+        # trims them to a fixed length.
+        if r.sites:
+            sitecell = ('<span class="fuelist">' + "".join(
+                f'<span class="f">{_site_a(k, site_names.get(k) or k, 34)}</span>'
+                for k in r.sites) + '</span>')
+        else:
+            sitecell = '<span class="q">none in this corpus</span>'
         return (f'<tr><td>{esc(r.claim.operator)}</td>'
-                f'<td><q>{esc(r.claim.quote)}</q>'
+                f'<td><q>{quoted}</q>'
                 f'<span class="q">{esc(r.claim.gloss)}</span></td>'
+                f'<td>{sitecell}</td>'
                 f'<td>{fuels}</td>'
                 f'<td>{esc(r.generation_use) if r.fuels else "&mdash;"}</td>'
                 f'<td data-num="1">{units}</td>'
@@ -4828,7 +4845,8 @@ def main() -> int:
   own planning documents describe on-site combustion. Both are shown here, in the
   operator's own words, because the wording is the finding: <em>procurement</em> is a
   statement about what is bought, <em>powered</em> about how a building runs, and a
-  <em>goal</em> is neither.</p>
+  <em>goal</em> is neither. Each quote links to the page it was taken from, and each
+  site name opens that site.</p>
  <div class="banner"><b>What this table is not.</b> It is not a list of operators caught
   out. &ldquo;100% renewable&rdquo; conventionally describes procured grid electricity, so
   an unqualified claim is not false because a site also holds standby plant &mdash; the
@@ -4836,6 +4854,7 @@ def main() -> int:
   standby fuel beside the claim.</div>
  <table class="stats" id="tbl-green"><thead><tr>
   <th scope="col">Operator</th><th scope="col">What it claims, in its own words</th>
+  <th scope="col">Its sites in this corpus</th>
   <th scope="col">On-site generation its documents describe</th>
   <th scope="col">Use</th><th scope="col">Units disclosed</th>
   <th scope="col">Permitted standby</th></tr></thead>

@@ -89,6 +89,11 @@ class GreenClaim:
     kind: str
     quote: str
     note: str = ""
+    # The page the quote came from, read from the snapshot's own header
+    # rather than repeated in the claims file: one source of truth for
+    # where a snapshot came from, and it cannot drift from the file the
+    # quote is verified against.
+    source_url: str = ""
 
     @property
     def gloss(self) -> str:
@@ -145,6 +150,17 @@ def _norm(text: str) -> str:
     return re.sub(r"\s+", " ", text or "").strip()
 
 
+def snapshot_url(snapshot: str, snapshot_dir: Path = SNAPSHOT_DIR) -> str:
+    """The page a snapshot was taken from, from its `# url:` header."""
+    f = snapshot_dir / f"{snapshot}.txt"
+    if not f.exists():
+        return ""
+    for line in f.read_text(encoding="utf-8").splitlines()[:6]:
+        if line.startswith("# url:"):
+            return line.split(":", 1)[1].strip()
+    return ""
+
+
 def load_document(path: Path = CLAIMS_PATH) -> dict:
     import yaml
     return yaml.safe_load(path.read_text()) or {}
@@ -163,8 +179,10 @@ def load_claims(path: Path = CLAIMS_PATH) -> list[GreenClaim]:
         if op in seen:
             raise GreenClaimError(f"duplicate operator {op!r}")
         seen.add(op)
-        out.append(GreenClaim(op, str(c["snapshot"]).strip(), kind,
-                              _norm(str(c["quote"])), _norm(str(c.get("note", "")))))
+        snap = str(c["snapshot"]).strip()
+        out.append(GreenClaim(op, snap, kind, _norm(str(c["quote"])),
+                              _norm(str(c.get("note", ""))),
+                              snapshot_url(snap, path.parent / "operator_snapshots")))
     return out
 
 
