@@ -491,6 +491,46 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **About 37% of the verbatim gate's rejections are correct quotes,
+  lost to whitespace artefacts in the extracted text — roughly 17,000
+  findings** (measured 2026-08-28 on a random sample of 900 of the
+  46,709 `quote_failed_verification*` escalations, every one with
+  cached page text). The premise, which the code already half-accepts:
+  pypdf splits words at line breaks and around units, so the page text
+  says "acro ss the site", "d ata centres", "c ooling", "sust ainable",
+  "940 µ g/m 3", "600m 3". A model that quotes the passage correctly
+  then fails a gate comparing it against the broken text.
+  `verify_findings._PLURAL_SPLIT_RE` already repairs exactly this, but
+  only for a trailing `s` after a 4+ letter word — one letter of
+  twenty-six — and its own comment names the cases it does not cover
+  ("energ y generation", "centr e of").
+
+  Classified against the cached page text, the sample of 900 splits:
+  62.7% genuinely absent under any normalisation (the gate working —
+  paraphrase or invention), **32.0% present if whitespace is ignored
+  entirely**, 5.1% present after generalising the single-letter split
+  repair, 0.1% on a page that was never sent. Median rejected-quote
+  length in the recoverable class is 120 characters, so these are not
+  short fragments matching by accident.
+
+  Two reasons this is worth doing before more reading is bought.
+  First, the loss is silent: a rejected finding is counted as a failed
+  gate, which reads as the model behaving badly rather than as
+  evidence discarded. Second, **recovery is free** — the escalation
+  log carries the whole finding payload beside its sha and page, so
+  the rejected quotes can be re-gated offline and reinstated without
+  re-spending a penny of API budget. The fix is a whitespace-
+  insensitive containment test with a minimum-length guard (the gate
+  is hallucination protection and must not become a substring lottery
+  for three-character quotes), plus generalising the split repair
+  beyond `s`.
+
+  **Not** an explanation of the PARSE FAIL energy-report gap recorded
+  elsewhere: `read_state = 'parse_failed'` means the model's JSON
+  response was truncated and salvaged, which is unrelated to how the
+  PDF extracted. Whether the whitespace-artefact rate also differs by
+  document class is a separate, unmeasured question.
+
 - **Equinix's UK estate is largely absent from the corpus: three of
   fifteen facilities have a planning record** (measured 2026-08-28
   from equinix.com, prompted by Luke). Eleven London IBX sites — LD3
