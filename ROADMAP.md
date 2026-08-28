@@ -1391,11 +1391,15 @@ None is abandoned; each is a known, scoped piece of work.
 
 ### Longer-standing
 
-- **DC01, the unidentified Foxglove case.** A 320 MW outline approved
-  2025-02 with implausibly low emissions and no council, developer or
-  address. Three of four originally-unidentified cases are resolved;
-  this is the fourth. Most likely falls out of an operator-name sweep
-  for hyperscaler-affiliated SPVs.
+- **DC01 — identified (2026-08-28), follow-up remains.** DC01UK, land
+  east of South Mimms Services, Hertsmere: our PTNO-12809263, outline
+  Hertsmere/24/1152/OUTEI approved 23 January 2025 (NCE, supplied by
+  Luke; 162 corpus findings name DC01). All four originally-unidentified
+  Foxglove cases are now resolved. What remains is the journalism the
+  reconciliation flagged: Foxglove's 6,056 tCO2e/yr for 320 MW is the
+  most implausibly low emissions figure on their list, and the site's
+  own documents (400 MW, beside Barbour's 250 and Foxglove's 320) are
+  the place to test it.
 - **Document corpus mirror.** `data/raw/` is local-only and growing.
   Zenodo (DOI, CC-BY) is the leading candidate for a reproducibility
   mirror. Decide once the corpus stops moving.
