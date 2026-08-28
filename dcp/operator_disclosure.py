@@ -37,13 +37,36 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-# Filed accounts name a legal entity; websites name a brand. Mapped by
-# hand because there are few enough to check, and a fuzzy match here
-# would silently merge two companies that share a word.
+# Filed accounts name a legal entity; websites name a brand. The
+# organisation aliases file is the identity mechanism — evidence-backed,
+# person-confirmed — and it is consulted first; this map is the fallback
+# for the two names that predate it. It must not grow: a new
+# entity-to-brand link belongs in data/priors/organisation_aliases.yaml
+# with its evidence, where confirming it is a person's recorded act,
+# not an edit to a dict (Luke, 2026-08-28, after "UK COURT LANE DC LTD"
+# rendered raw while the aliases file knew it as Corscale — correctly,
+# as it happens: that membership is still status proposed, and a
+# proposed alias changing a rendered name would be the file's central
+# rule broken).
 COMPANY_TO_OPERATOR = {
     "ARK DATA CENTRES LIMITED": "Ark Data Centres",
     "KAO DATA LIMITED": "Kao Data",
 }
+
+
+def operator_display(who: str) -> str:
+    """The display name for an entity: confirmed alias group, then the
+    legacy hand map, then the name as the source wrote it."""
+    from dcp import organisations
+    global _ALIAS_IDX
+    try:
+        _ALIAS_IDX
+    except NameError:
+        _ALIAS_IDX = organisations.alias_index(organisations.load_groups())
+    g = organisations.group_for(who, _ALIAS_IDX)
+    if g:
+        return g.group
+    return COMPANY_TO_OPERATOR.get(who, who)
 
 AUDIENCES = (
     ("planning", "The planning authority",
@@ -120,14 +143,13 @@ def load_rows(cur, doc_links: dict[int, str] | None = None) -> list[OperatorRow]
     site_operator: dict[int, str] = {}
     for src, who, _n, _v, _u, _q, _t, site_id, *_rest in raw:
         if site_id and who:
-            site_operator.setdefault(
-                site_id, COMPANY_TO_OPERATOR.get(who, who))
+            site_operator.setdefault(site_id, operator_display(who))
 
     rows: dict[str, OperatorRow] = {}
     for (src, who, name, value, unit, qty, term, site_id, site_key,
          site_name, source_url, locator, confidence, stage, quote,
          evidence, method, as_at) in raw:
-        operator = COMPANY_TO_OPERATOR.get(who, who) if who else None
+        operator = operator_display(who) if who else None
         # An unattributed register row belongs to whoever else claims the
         # site it matched. Without a match it belongs to nobody, which is
         # the honest answer for most of the register.
