@@ -675,6 +675,15 @@ nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
    masthead's 1620px is the page's width; these use it. */
 .wrap{max-width:920px;padding:24px 22px 10px}
 .wrap.wide{max-width:1620px;padding:24px 32px 10px;margin:0 auto}
+/* Pages that are mostly tables with prose between them. The container
+   goes to the page's own width so the tables can use it, and the prose
+   is held to the ordinary reading measure inside it — a wide table and
+   a 1620px-long sentence are not the same request (Luke, 2026-08-28).
+   Everything is left-aligned rather than centred so the prose and the
+   tables share a left edge and the eye has one line to return to. */
+.wrap.tables{max-width:1620px;padding:24px 32px 10px;margin:0 auto}
+.wrap.tables > p,.wrap.tables > h3,.wrap.tables > .banner,
+.wrap.tables > .lede{max-width:920px}
 .lede{font-family:"Source Serif 4",Georgia,serif;font-size:20px;line-height:1.45;
   max-width:46em}
 .parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
@@ -5761,7 +5770,7 @@ def main() -> int:
 </div>
 </section>
 
-<section id="view-operators" class="view"><div class="wrap">{operators_html}</div></section>
+<section id="view-operators" class="view"><div class="wrap tables">{operators_html}</div></section>
 
 <section id="view-method" class="view"><div class="wrap">{methodology_html}</div></section>
 
