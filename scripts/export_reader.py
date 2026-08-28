@@ -2338,6 +2338,13 @@ wire('#tbl-sites'); wire('#tbl-apps'); wire('#tbl-energy');
 apply(); sticky(); fromHash(); paintWhoBar(); addEventListener('load', ()=>{sticky(); fromHash();});
 
 // A column heading explains itself: jump to its dictionary entry.
+function goView(v,id){
+  show(v, true);
+  history.pushState(null,'','#'+id);
+  const el=document.getElementById(id);
+  if(el){el.scrollIntoView({block:'center'}); el.classList.add('flash');
+         setTimeout(()=>el.classList.remove('flash'), 1600);}
+}
 function goDict(id){
   show('dict', true);
   // pushState, not replaceState: a jump from a column heading to its
@@ -4656,6 +4663,65 @@ def main() -> int:
         f"<td class='n'>100%</td>"
         f"<td class='n'>{len(site_mw_values):,}</td></tr>")
     _ofgem_src = extagg.SOURCES["ofgem_curate"]
+
+    # ---- The scale panel (issue #166) --------------------------------
+    # Replaces "The rest of the package" block: scale at a glance, every
+    # figure computed here and never typed, every row linked to the
+    # definition or comparison that produces it. The framing that
+    # settled this panel: computed and citable beats vivid and wrong —
+    # no invented equivalences, and the one comparator is Ofgem's own
+    # published figure. Row indices follow the site_rows unpack above.
+    # float() throughout: these columns arrive as Decimal, and
+    # Decimal / 1e9 is a TypeError rather than a number.
+    _sp_grid = [float(r[14]) for r in site_rows if r[14]]
+    _sp_gen = [float(r[15]) for r in site_rows if r[15]]
+    _sp_bval = [float(r[25]) for r in site_rows if r[25]]
+    _sp_gc, _sp_diesel, _sp_gas = [], 0, 0
+    for r in site_rows:
+        _prof = profiles.get(r[0], {})
+        if _prof.get("generator_count"):
+            _sp_gc.append(_prof["generator_count"])
+        _fuels = _prof.get("generator_fuels") or ()
+        _sp_diesel += "Diesel" in _fuels
+        _sp_gas += "Gas" in _fuels
+
+    def _sp_pow(mw: float) -> str:
+        return (f"{mw/1000:,.1f} GW" if mw >= 1000 else f"{mw:,.0f} MW")
+
+    def _sp_link(view, anchor_id, label):
+        return (f'<a href="#{anchor_id}" onclick="goView(\'{view}\','
+                f'\'{anchor_id}\');return false">{label}</a>')
+
+    _q_link = _sp_link("method", "meth-queue",
+                       "the banded comparison with Ofgem&rsquo;s queue")
+    scale_panel = f"""
+  <div class="card card-ink">
+   <h2 class="sideh">The scale of what the documents disclose</h2>
+   <p class="cnote">Sums over the minority of sites whose documents state a figure.
+    Every number below is computed from the corpus when this page is built, is a floor
+    from an incomplete read, and is a measure of what is disclosed — not of what exists.</p>
+   <div class="crow"><span>Disclosed capacity</span><b>{_sp_pow(sum(site_mw_values))}</b></div>
+   <p class="cnote">Summed over the {len(site_mw_values)} sites stating one, of {n_sites}.
+    Ofgem&rsquo;s Curate consultation (para 2.8) puts &asymp;{extagg.OFGEM_QUEUE_TOTALS[1]/1000:,.0f}&nbsp;GW
+    of data-centre demand in the GB connection queue across &asymp;{extagg.OFGEM_QUEUE_TOTALS[0]}
+    projects &mdash; {_q_link}.</p>
+   <div class="crow"><span>Contracted grid connections</span><b>{_sp_pow(sum(_sp_grid))}</b></div>
+   <p class="cnote">Summed over {len(_sp_grid)} sites with an adjudicated connection figure.
+    A connection is an offer to draw, not consumption &mdash;
+    {_sp_link("dict", dict_ids[("Sites", "IT load / Total site / Grid connection / On-site generation MW")], "what each power column means")}.</p>
+   <div class="crow"><span>On-site generation disclosed</span><b>{_sp_pow(sum(_sp_gen))}</b></div>
+   <p class="cnote">Summed over {len(_sp_gen)} sites disclosing a generation figure &mdash;
+    {_sp_link("dict", dict_ids[("Sites", "On-site generation figure basis")], "what counts as one")}.</p>
+   <div class="crow"><span>Standby generators</span><b>at least {sum(_sp_gc):,}</b></div>
+   <p class="cnote">Summed over the {len(_sp_gc)} sites whose documents state a count
+    ({_sp_diesel} sites name diesel, {_sp_gas} gas). Floors: the highest count in any one
+    document per site, phases never added &mdash;
+    {_sp_link("dict", dict_ids[("Sites", "Standby generators (count)")], "how these are counted")}.</p>
+   <div class="crow"><span>Barbour ABI project value</span><b>&pound;{sum(_sp_bval)/1e9:,.1f}bn</b></div>
+   <p class="cnote">Summed over the {len(_sp_bval)} sites whose Barbour ABI record prices the
+    project (licensed data, credited) &mdash;
+    {_sp_link("dict", dict_ids[("Sites", "Barbour columns")], "what the Barbour columns are")}.</p>
+  </div>"""
     _cfi_src = extagg.SOURCES["neso_cfi"]
     # The DESNZ paragraph's figures are computed from the committed
     # extract at generation time, like every number on this page — the
@@ -5121,7 +5187,7 @@ def main() -> int:
  reserved 57&nbsp;MW "anticipated to serve the needs of building 1" for a 155&nbsp;MW
  scheme.</p>
 
- <h2 class="sec">What the regulator can see that these documents cannot</h2>
+ <h2 class="sec" id="meth-queue">What the regulator can see that these documents cannot</h2>
  <p class="m">On 29 July 2026 Ofgem published its
  <a href="{esc(_ofgem_src.url)}" target="_blank" rel="noopener">Curate consultation</a> on
  demand connections reform. Its paragraph 2.8 states that approximately 73&nbsp;GW of the GB
@@ -5597,13 +5663,7 @@ def main() -> int:
     absence rather than an absence of evidence. Not carried out for this release.</p>
    {about_numbers}
   </div>
-  <div class="card card-ink">
-   <h2 class="sideh">The rest of the package</h2>
-   <p class="cnote">This reader is one artefact in the release, not the whole of it.</p>
-   <button type="button" class="cta secondary"
-    onclick="document.getElementById('package').scrollIntoView()">Workbook, database,
-    Drive, Pinpoint, Giant, notebook</button>
-  </div>
+{scale_panel}
  </aside>
  </div>
 
