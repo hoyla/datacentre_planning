@@ -1095,12 +1095,30 @@ None is abandoned; each is a known, scoped piece of work.
   and it works at corridor scale: the site 61 split (ten campuses,
   2026-08-27, see Phase 2 above and HISTORY) is the worked example to
   copy. **Site 23 is now done** — eleven campuses, 2026-08-28 — which
-  leaves 5, 59, 11, and one the permits did not name: **site 37**
-  (`PTNO-12301553`, 30 applications) covers Prologis Park / Stockley
-  Road, West Drayton, and holds VIRTUS London 5, 7 and 8 alongside
-  CyrusOne's LON2 at "DC2 Prologis Park Heathrow, Stockley Road, West
-  Drayton, UB7 9FN" — the same mixed-operator shape as site 23, found
-  the same day by reading CyrusOne's own pages — reference stems and the applicant of record in the documents
+  leaves 5, 59 and 11.
+
+  **Site 37 was examined and needs no partition** (2026-08-28), which
+  is worth recording because it was briefly listed as a target here on
+  a postcode match. `PTNO-12301553` holds 30 applications across two
+  Hillingdon stems 1,002 m apart — 37977 at Prologis Park West London,
+  Horton Road, Yiewsley, and 18399 at Unit D, Prologis Park, Stockley
+  Road, West Drayton — and the applicant of record in *both* is
+  VIRTUS, with Prologis UK Ltd as landlord. VIRTUS's own page calls
+  the whole thing one place: "The VIRTUS Data Centre Campus at
+  Stockley Park … comprises of four facilities", listing LONDON5,
+  LONDON6, LONDON7, LONDON8 and LONDON14. By the same rule that keeps
+  Iron Mountain's LON-1 to LON-3 together over 810 m, this is one
+  campus and the site record is right.
+
+  The reason it looked like a target is instructive: CyrusOne
+  publishes LON2 at "DC2 Prologis Park Heathrow, Stockley Road, West
+  Drayton, UB7 9FN", the same postcode as stem 18399 — but **no
+  application in the corpus names CyrusOne at that postcode or in
+  that site** (checked directly). CyrusOne DC2 is a coverage gap on
+  the same business park, not a second operator inside the site
+  record. Postcode proximity suggested a partition that the operator
+  evidence then refused, which is the trap the permit-matches file
+  warns about — reference stems and the applicant of record in the documents
   as the boundary evidence, every member assigned so nothing is left
   to spatial chance. Sites 5, 23, 59 and 11 are what remain, and the
   permits carry their evidence.
