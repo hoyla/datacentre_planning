@@ -408,11 +408,93 @@ claims:
     snapshot: cyrusone-lon1
     claim_name: CyrusOne LON1 (Slough)
     quantity_type: announced_capacity
-    value: 8.72
+    value: 9
     unit: MW
-    term: Total Megawatts IT Capacity
+    term: Total IT Capacity
     stage: operational
-    quote: 8.72 MW Total Megawatts IT Capacity
+    as_at: 2026-08-28
+    quote: 9 MW Total IT Capacity
+    note: >-
+      **The figure changed under us, and the snapshot guard is how we
+      know.** At the 2026-08-20 snapshot this page read "8.72 MW Total
+      Megawatts IT Capacity", in the spec panel and again in the prose
+      ("delivers 8.72 MW IT capacity to 4,309 sq. m."). Re-fetched
+      2026-08-28 it reads "9 MW" and "Total IT Capacity" — the value
+      rounded up and the label shortened, with the floor area
+      unchanged at 4,309 sq. m. Eight days apart, no announcement on
+      the page. Recorded rather than silently updated: an operator
+      replacing a precise published figure with a round one is a fact
+      about the disclosure, and 8.72 is what anyone citing this site
+      before 2026-08-28 would have quoted. The grid-supply claim from
+      the same page (15 MVA) did not move.
+
+  - source: cyrusone_website
+    snapshot: cyrusone-lon2
+    claim_name: CyrusOne LON2 (Prologis Park Heathrow, West Drayton)
+    quantity_type: announced_capacity
+    value: 14
+    unit: MW
+    term: Total IT Capacity
+    stage: operational
+    as_at: 2026-08-28
+    quote: 14 MW Total IT Capacity
+    note: >-
+      "DC2 Prologis Park Heathrow, Stockley Road, West Drayton, UB7
+      9FN". Not Slough: this one sits in Hillingdon, on the estate that
+      site 37 (PTNO-12301553) covers along with VIRTUS London 5, 7 and
+      8 — a second mixed-operator cluster of the same kind as site 23.
+
+  - source: cyrusone_website
+    snapshot: cyrusone-lon3
+    claim_name: CyrusOne LON3 (700 Stirling Road, Slough)
+    quantity_type: announced_capacity
+    value: 9
+    unit: MW
+    term: Total IT Capacity
+    stage: operational
+    as_at: 2026-08-28
+    quote: 9 MW Total IT Capacity
+    note: >-
+      "700 Stirling Road, Slough SL1 4ST" — the address that attributed
+      Slough/T/137, which named no operator in its own documents
+      (Luke, 2026-08-28; site_partitions.yaml,
+      stirling-road-700-cyrusone-lon3).
+
+  - source: cyrusone_website
+    snapshot: cyrusone-lon4
+    claim_name: CyrusOne LON4 (225B Bath Road, Slough)
+    quantity_type: announced_capacity
+    value: 18
+    unit: MW
+    term: Total IT Capacity
+    stage: operational
+    as_at: 2026-08-28
+    quote: 18 MW Total IT Capacity
+    note: >-
+      CyrusOne gives "225B Bath Road, Slough SL1 5PP". The corpus and
+      the Environment Agency both say SL1 4AA for 225 Bath Road —
+      permit EPR/EP3508PS is titled "CyrusOne London 4/5 Datacentres"
+      and issued at SL1 4AA, and the planning applications carry the
+      same. Two sources to one, so SL1 5PP is the outlier; recorded
+      because postcode is a matching key and this pair would otherwise
+      look like different places.
+
+  - source: cyrusone_website
+    snapshot: cyrusone-lon5
+    claim_name: CyrusOne LON5 (225C Bath Road, Slough)
+    quantity_type: announced_capacity
+    value: 18
+    unit: MW
+    term: Total IT Capacity
+    stage: operational
+    as_at: 2026-08-28
+    quote: 18 MW Total IT Capacity
+    note: >-
+      "225C Bath Road, Slough SL1 5PP", next door to LON4 and sharing
+      its published postcode; see that claim for the SL1 5PP / SL1 4AA
+      conflict. LON4 and LON5 are one permit — EPR/EP3508PS covers
+      "London 4/5" at 201.28 MWth — so their 36 MW of IT capacity and
+      that thermal figure describe the same pair of buildings.
 
   - source: cyrusone_website
     snapshot: cyrusone-lon1

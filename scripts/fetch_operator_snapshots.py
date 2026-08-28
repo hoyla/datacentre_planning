@@ -74,6 +74,10 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     # how far the two diverge.
     "cyrusone": [
         ("cyrusone-lon1", "https://cyrusone.com/data-centers/emea/london-uk-lon1"),
+        ("cyrusone-lon2", "https://cyrusone.com/data-centers/emea/london-uk-lon2"),
+        ("cyrusone-lon3", "https://cyrusone.com/data-centers/emea/london-uk-lon3"),
+        ("cyrusone-lon4", "https://cyrusone.com/data-centers/emea/london-uk-lon4"),
+        ("cyrusone-lon5", "https://cyrusone.com/data-centers/emea/london-uk-lon5"),
         ("cyrusone-lon6", "https://cyrusone.com/data-centers/emea/london-uk-lon6"),
     ],
     "colt": [

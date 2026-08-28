@@ -352,14 +352,26 @@ aliases:
       "84-85, Buckingham Avenue, Slough, Berkshire, SL1 4PN".
 
   - site_key: SITE-Slough/T/137
-    alias: Slough Trading Estate - three data centre sites, operator not established
+    alias: 700 Stirling Road, Slough - CyrusOne LON3
     source: |
-      What the site 23 partition could not attribute: Slough/T/137
-      (700 Stirling Road), Slough/T/138 (75 Buckingham Avenue) and
-      Slough/T/145 (204 Bedford Avenue), each a data centre proposal
-      whose documents name no operator. They are one record only
-      because nothing separates them, and the derived name — "700,
-      Stirling Road, Slough, SL1 4ST" — names one of the three.
+      Attributed 2026-08-28 (Luke). CyrusOne's own page gives "700
+      Stirling Road, Slough SL1 4ST, United Kingdom" and states "LON3
+      delivers 9 MW of IT capacity to 3,600 sq. m." — address and
+      postcode both match Slough/T/137, which named no operator in its
+      documents and had been left unassigned when site 23 was drawn.
+      Derived name was the application's address line, "700, Stirling
+      Road, Slough, SL1 4ST".
+
+  - site_key: SITE-Slough/T/138
+    alias: Slough Trading Estate - two data centre sites, operator not established
+    source: |
+      What the site 23 partition still cannot attribute: Slough/T/138
+      (75 Buckingham Avenue) and Slough/T/145 (204 Bedford Avenue),
+      each a data centre proposal whose documents name no operator.
+      They are one record only because nothing separates them, and the
+      derived name — "75, Buckingham Avenue, Slough, SL1 4PN" — names
+      one of the two. Was three sites until CyrusOne LON3 was
+      identified at 700 Stirling Road (2026-08-28).
 
       Note for review, not asserted here: Amazon's permit EPR/PP3309MK
       (151.34 MWth, 20 engines) carries grid reference 495732/181088,

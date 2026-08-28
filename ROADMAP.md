@@ -1094,7 +1094,13 @@ None is abandoned; each is a known, scoped piece of work.
   is `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py`,
   and it works at corridor scale: the site 61 split (ten campuses,
   2026-08-27, see Phase 2 above and HISTORY) is the worked example to
-  copy — reference stems and the applicant of record in the documents
+  copy. **Site 23 is now done** — eleven campuses, 2026-08-28 — which
+  leaves 5, 59, 11, and one the permits did not name: **site 37**
+  (`PTNO-12301553`, 30 applications) covers Prologis Park / Stockley
+  Road, West Drayton, and holds VIRTUS London 5, 7 and 8 alongside
+  CyrusOne's LON2 at "DC2 Prologis Park Heathrow, Stockley Road, West
+  Drayton, UB7 9FN" — the same mixed-operator shape as site 23, found
+  the same day by reading CyrusOne's own pages — reference stems and the applicant of record in the documents
   as the boundary evidence, every member assigned so nothing is left
   to spatial chance. Sites 5, 23, 59 and 11 are what remain, and the
   permits carry their evidence.

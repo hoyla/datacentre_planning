@@ -821,3 +821,24 @@ partitions:
     applications:
       - Slough/P/01069/018
 
+  - name: stirling-road-700-cyrusone-lon3
+    reason: |
+      700 Stirling Road, SL1 4ST — CyrusOne LON3. Slough/T/137 named
+      no operator in its documents and was left unassigned when site 23
+      was first drawn, clustering with two other unattributed records;
+      CyrusOne's own page closes it: "700 Stirling Road, Slough SL1
+      4ST, United Kingdom … LON3 delivers 9 MW of IT capacity to 3,600
+      sq. m." (cyrusone.com/data-centers/emea/london-uk-lon3, via Luke
+      2026-08-28). Address and postcode both match the application.
+
+      Left open deliberately: CyrusOne also operates London 4/5, whose
+      permit EPR/EP3508PS (201.28 MWth) is issued at SL1 4AA — the
+      225 Bath Road campus, 1.06 km away and therefore outside the
+      radius in any case. Whether CyrusOne considers Stirling Road and
+      Bath Road one campus is not established, and the Iron Mountain
+      case (LON-1 to LON-3, 810 m apart but one campus by the
+      operator's own definition) is the reason not to assume either
+      way from distance alone.
+    applications:
+      - Slough/T/137
+

@@ -1,8 +1,8 @@
 # url: https://cyrusone.com/data-centers/emea/london-uk-lon1
 
-# fetched: 2026-08-20
+# fetched: 2026-08-28
 
-# sha256(html): 865b4664993da0ba68b2b00109b0be7ae3aa2c6d6ce6d6e4031ddd4e9022b4e9
+# sha256(html): 13bd3dc4d55f696f46be83fadda0199d3c7235877ea5d0a3587ce9e88607052a
 
 ## STRUCTURED
 
@@ -536,12 +536,6 @@ London, UK: LON1 | CyrusOne
  
  
  Aurora, IL, CHI1-CHI3 
- 
- 
- 
- 
- 
- Lombard, IL, CHI5 
  
  
  
@@ -1342,7 +1336,7 @@ London, UK: LON1 | CyrusOne
  CyrusOne's purpose-built data center in London offers customized solutions and technical sophistication. 
  
  
- Strategically located in Slough, UK, and close to Heathrow Airport, our LON1 data center delivers 8.72 MW IT capacity to 4,309 sq. m. of world-class technical space within one building over two stories. Each data hall is meticulously engineered for maximum efficiency and scalability, tailored to meet unique customer requirements. 
+ Strategically located in Slough, UK, and close to Heathrow Airport, our LON1 data center delivers 9 MW of IT capacity to 4,309 sq. m. of world-class technical space within one building over two stories. Each data hall is meticulously engineered for maximum efficiency and scalability, tailored to meet unique customer requirements. 
  The facility offers ultra-low PUE through Indirect Adiabatic Air Cooling and features advanced power and building monitoring systems. A team of on-site mechanical and electrical (M&E) engineers is available 24x7x365, implementing rigorous Planned Preventative Maintenance (PPM) programs to guarantee peak performance. 
  
  
@@ -1386,8 +1380,8 @@ London, UK: LON1 | CyrusOne
  
  
  
- 8.72 MW 
- Total Megawatts IT Capacity 
+ 9 MW 
+ Total IT Capacity 
  
  
  
