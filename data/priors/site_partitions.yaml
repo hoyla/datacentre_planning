@@ -28,6 +28,61 @@
 #   - projects:     Barbour Ptnos (projects.external_ref; must exist)
 
 partitions:
+  - name: british-museum-great-russell-street
+    reason: |
+      Site PTNO-12087852 is "UNIVERSITY COLLEGE LONDON - INTERIM DATA
+      CENTRE" (Woolfson House), a real data-centre project. It had
+      accreted 23 members of which 21 are the British Museum's masterplan
+      on Great Russell Street — the South West Energy Centre and its
+      condition discharges, down to secondary glazing, bird and bat boxes
+      and tree protection. 22 of the 23 joined by a SPATIAL edge.
+
+      The cause is in the source, not the clustering. Camden's register
+      records these applications at postcode **WC1E 7JW**, which is the
+      Gower Street / Torrington Place area around UCL; the British Museum
+      is WC1B 3DG, roughly 600 m east. Two later applications in the same
+      set do carry the museum's own postcodes (WC1B 3DG, WC1B 8DG), which
+      is what makes the earlier value visibly wrong rather than merely
+      surprising. The 1 km rule then did exactly what it was told.
+
+      Camden's postcode is not corrected here — it is their record, and a
+      derived correction belongs beside the original, never over it
+      (principle 3). The partition blocks the spatial edge instead, which
+      is the mechanism built for precisely this case.
+
+      An energy centre beside a data centre is a real pattern in this
+      corpus and worth keeping visible, so nothing is deleted: the
+      British Museum applications keep their records, their documents and
+      their triage verdicts (25 not_dc, 5 procedural, 2 unrelated across
+      the Camden set). They simply stop being members of a data-centre
+      site they are not part of.
+
+      Found 2026-08-28 by Luke, reading the Camden documents he had
+      downloaded by hand: "the camden applications material is all just
+      stuff for the british museum and probably of no interest".
+    applications:
+      - Camden/2023/4648/P
+      - Camden/2023/4903/L
+      - Camden/2024/4979/L
+      - Camden/2024/5571/L
+      - Camden/2024/5791/P
+      - Camden/2024/5794/P
+      - Camden/2025/0111/P
+      - Camden/2025/0129/P
+      - Camden/2025/0130/P
+      - Camden/2025/0131/P
+      - Camden/2025/0146/L
+      - Camden/2025/0195/P
+      - Camden/2025/0425/P
+      - Camden/2025/0724/L
+      - Camden/2025/2750/P
+      - Camden/2025/2905/P
+      - Camden/2025/4384/L
+      - Camden/2025/5511/L
+      - Camden/2025/5570/P
+      - Camden/2026/2961/P
+      - Camden/2026/2987/P
+
   - name: international-trading-estate-southall
     reason: |
       Two distinct campuses materialised as one site: PTNO-12511337,
