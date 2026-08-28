@@ -25,13 +25,40 @@ and the permit conditions require the operator to keep it:
 > number of runs for each of the generators."
 
 So the returns exist, they are made annually, and they are held by a
-public authority. What is published is only the ceiling: permits cap
-emergency operation at 500 hours a year, and the same documents note
-that "Emission limit values (ELVs) to air are not applicable to MCPs
-operating less than 500 hours per year" — so the cap sits exactly at
-the threshold below which air-emission limits do not apply. The gap
-between that ceiling and actual use is the thing no public source
-states.
+public authority.
+
+**What is already public, checked before sending (2026-08-28).** The
+gov.uk publications for these permits carry only the permit, the
+decision document and variations — no returns. The Environment
+Agency's Public Registers Online holds each permit, and since **18
+August 2025** it also publishes **Compliance Assessment Reports** for
+Installations. Those are real and worth having: the CAR for EPR/
+QP3434DR (Brick Lane Data Centre, Interxion Carrier Hotel Limited,
+inspected 28/10/2025) records that "Emergency operation of the standby
+generators and operation for testing/maintenance was discussed" and
+that "during the … UPS replacement from 30 September to 3 October
+2025, operation of three standby generators was required", with a
+resulting noise complaint.
+
+What the CARs do **not** give is the annual figure: they are inspection
+reports, not returns, they begin only in August 2025, and several of
+these permits still show "No document published" against Compliance.
+So this request asks for the annual returns themselves, and the CARs
+are a cross-check on the answer rather than a substitute for it.
+
+The published ceiling remains 500 hours a year, and the same documents
+note that "Emission limit values (ELVs) to air are not applicable to
+MCPs operating less than 500 hours per year" — so the cap sits exactly
+at the threshold below which air-emission limits do not apply.
+
+**One permit has already had operational data withheld from the
+register.** The decision document for EPR/QP3434DR records: "We have
+accepted the claim for confidentiality. We have excluded financial and
+operational data. We consider that the inclusion of the relevant
+information on the public register would prejudice the applicant's
+interests to an unreasonable degree." That precedent is why the
+emissions-information point below is made explicitly rather than left
+to be raised on review.
 
 ---
 

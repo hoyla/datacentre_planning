@@ -1096,7 +1096,34 @@ HISTORY.)
   request for them is drafted at
   `docs/requests/2026-08_ea_standby_generator_run_hours_eir.md` —
   including the reg 12(9) point that information on emissions cannot be
-  withheld as commercially confidential. Second: read the generation
+  withheld as commercially confidential, which matters because the
+  decision document for EPR/QP3434DR records the Agency accepting a
+  confidentiality claim and excluding "financial and operational data"
+  from the public register.
+
+- **A public document class the project does not yet harvest:
+  Environment Agency Compliance Assessment Reports** (found 2026-08-28
+  when Luke asked whether run hours were already published — they are
+  not, but this is). Public Registers Online has published CARs for
+  **Installations since 18 August 2025**, free to download at a
+  predictable path
+  (`/public-register/documents/installations/compliance/EPR_<STEM>/…`),
+  and they record what an Environment Agency officer found on site.
+  The CAR for EPR/QP3434DR — Brick Lane Data Centre, Interxion Carrier
+  Hotel Limited, inspected 28/10/2025 — states that "Emergency
+  operation of the standby generators and operation for testing/
+  maintenance was discussed", and that "during the … UPS replacement
+  from 30 September to 3 October 2025, operation of three standby
+  generators was required", with a noise complaint following.
+
+  That is *actual* generator operation, dated, from a public source —
+  the thing the corpus has never held. Coverage is thin and growing:
+  the scheme is weeks old, several data-centre permits still show "No
+  document published" against Compliance, and CARs are inspection
+  reports rather than annual returns, so they corroborate the EIR
+  above rather than replace it. Worth an adapter on the same pattern
+  as `fetch_ea_permits.py`, and worth re-running periodically as the
+  register fills. Second: read the generation
   findings at the no-permit sites rather than counting them, which is
   what turns Greystoke's 379 mentions into a number of generators.
 
