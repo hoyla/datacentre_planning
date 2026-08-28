@@ -152,6 +152,7 @@ groups:
               correctly; the doubled A is the EXTRACTOR's misreading, not
               the scan's — which is why this one can carry a company
               number where the next cannot.
+            date: 2026-08-26
           - source: companies_house
             ref: "16470093"
             note: >-
@@ -163,7 +164,6 @@ groups:
               sequential numbers 16043950-16470100. Checked 2026-08-28,
               the same sweep that confirmed Court Lane.
             date: 2026-08-28
-            date: 2026-08-26
       - name: APATURA OC PROJECT 114 LTD
         relation: spv_of
         status: proposed
