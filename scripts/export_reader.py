@@ -5099,6 +5099,12 @@ def main() -> int:
   <li><b>Family links</b> — the parents and children of applications already held.</li>
   <li><b>Barbour ABI</b> project intelligence, reconciled against the planning universe in
    both directions.</li>
+  <li><b>Foxglove and Global Action Plan's</b>
+   <a href="https://www.foxglove.org.uk/wp-content/uploads/2025/10/2025_09_26-FINAL-Big-Tech-Data-Centres-Report-Website-Version.pdf"
+   target="_blank" rel="noopener">September 2025 report</a> on large data centres in the
+   English planning system, which seeded ten application families here and served as an
+   independent check on this project&rsquo;s coverage — every site on their list is in this
+   dataset, identified down to its planning references.</li>
   <li><b>The Planning Inspectorate's</b> national infrastructure register, for the energy
    layer.</li>
  </ul>
