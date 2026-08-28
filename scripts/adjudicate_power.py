@@ -49,6 +49,21 @@ load_dotenv(ROOT / ".env")
 
 from dcp import db  # noqa: E402
 
+# ---------------------------------------------------------------------
+# BEFORE USING --submit: this is the Anthropic batch route, and it is
+# NOT the agreed default. The agreement (Luke, restated 2026-08-28) is
+# that Claude Code does the adjudications rather than the paid API, and
+# HISTORY records why it holds: a subagent probe was measured blind
+# against 229 already-judged figures at 94% agreement on the five-way
+# verdict and 95% on the only distinction a chart cares about. The
+# settled division is subagents for the consequential figures — where a
+# verdict moves a headline — and an OpenAI batch for the tail.
+#
+# This route ran again on 2026-08-28 because nobody read that before
+# reaching for --submit; it cost about twice its own projection. Use it
+# only when someone has decided, in the moment, that the API route is
+# wanted.
+# ---------------------------------------------------------------------
 MODEL = "claude-sonnet-5"
 # power-1.0 is what the corpus was adjudicated under and must not change:
 # it is half of the (finding_id, model, prompt_version) key, so editing it
