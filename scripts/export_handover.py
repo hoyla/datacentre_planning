@@ -745,9 +745,15 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "connection and the ratio; the prose documents read and held — so "
      "the membership can be checked from the Sites sheet without "
      "re-running anything."),
-    ("Cohorts", "(the cohorts)",
-     "; ".join(f"{c.title}: {c.definition} Rule: {c.rule} Limits: {c.limits}"
-               for c in site_cohorts.REGISTRY)),
+    # One entry per cohort, not one entry holding all of them: the joined
+    # form rendered as a single unreadable paragraph on the dictionary
+    # page and a single overstuffed cell on the sheet (issue #192). Each
+    # cohort's title becomes its own dictionary term, so the page gives
+    # each a heading and the sheet a row — and the text remains the
+    # registry's own, never retyped here.
+    *(("Cohorts", c.title,
+       f"{c.definition} Rule: {c.rule} What it does not tell you: {c.limits}")
+      for c in site_cohorts.REGISTRY),
     ("Parties", "group; Barbour role",
      "The confirmed alias group beside the raw name, empty where there "
      "is none; and, for a Barbour row, the role exactly as Barbour "
