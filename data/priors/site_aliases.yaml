@@ -182,10 +182,36 @@ aliases:
     source: |
       Reporter reference (LH): added Slough. REVISED 2026-08-28 by the
       site 23 partition, which turned this key from one building into
-      the whole Iron Mountain campus: it now also holds LON-1 at
-      724-729 Dundee Road and LON-3 at 111 Buckingham Avenue, so
-      "110 Buckingham Avenue" had become the name of one member.
-      Derived name: "110 BUCKINGHAM AVENUE - DATA CENTRE".
+      the whole Iron Mountain campus, so "110 Buckingham Avenue" had
+      become the name of one member. Derived name: "110 BUCKINGHAM
+      AVENUE - DATA CENTRE".
+
+      The three facilities, written out because two of them share a
+      street and two share a postcode, and the pair is easy to confuse:
+
+        LON-1  724-729 Dundee Road, Slough, SL1 4JU    8.75 MW
+        LON-2  110 Buckingham Avenue, Slough, SL1 4PF  27 MW
+        LON-3  111 Buckingham Avenue, Slough, SL1 4PF  25 MW
+
+      LON-1 and LON-3 addresses and all three capacities are Iron
+      Mountain's own (ironmountain.com …/london, …/london/lon-1,
+      …/london/lon-3); the campus page gives 61 MW in total, which its
+      own breakdown checks (8.7 + 27 + 25 = 60.7). LON-2's address is
+      from the planning record rather than the operator: Slough/
+      P/04829/030 at 110 Buckingham Avenue names "Iron Mountain LON2",
+      and Slough/T/142(121/19) is the demolition of 110 "and the
+      construction of a new data centre facility". LON-3 is under
+      construction for 2026; LON-1 is the former Credit Suisse
+      facility, which is why the campus is not contiguous — Dundee
+      Road is 810 m from Buckingham Avenue.
+
+      Two traps this table exists to stop. **SL1 4PF is not a
+      discriminator**: it covers 110 and 111 Buckingham Avenue,
+      Equinix's LD6 at 352 Buckingham Avenue, and Amazon's permit
+      EPR/PP3309MK. And **Barbour puts 111 Buckingham Avenue at
+      SL1 4PN**, against SL1 4PF from both Iron Mountain and the
+      Environment Agency's own permit URL for EPR/TP3120LE — two
+      sources to one, so Barbour is the outlier.
 
   - site_key: PTNO-12522787
     alias: Ipswich Road, Slough - Data Centre
