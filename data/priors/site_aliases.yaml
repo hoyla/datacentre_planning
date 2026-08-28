@@ -377,3 +377,17 @@ aliases:
       Was one of three such records until CyrusOne LON3 was identified
       at 700 Stirling Road and VIRTUS LONDON10 at 75 Buckingham Avenue
       (both 2026-08-28).
+
+  - site_key: PTNO-12301553
+    alias: VIRTUS Stockley Park campus - LONDON5, 6, 7, 8 and 14
+    source: |
+      Examined 2026-08-28 for partitioning and found to need none: the
+      applicant of record across both its Hillingdon stems (37977,
+      Horton Road, Yiewsley; 18399, Unit D, Stockley Road, West
+      Drayton) is VIRTUS, and VIRTUS's own page calls them one place —
+      "The VIRTUS Data Centre Campus at Stockley Park … comprises of
+      four facilities", listing LONDON5, LONDON6, LONDON7, LONDON8 and
+      LONDON14. The derived name, "VIRTUS DATA CENTRES - LONDON 5 DATA
+      CENTRE", names one facility of the campus, which is the
+      display-name defect this file exists for.
+

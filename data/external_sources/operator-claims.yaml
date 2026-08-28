@@ -57,6 +57,55 @@ sources:
       that exceeds the sum of its listed buildings — worth putting to
       them, and the reason only campus figures are loaded here.
 
+      **VIRTUS also publishes its own campus boundaries, which is the
+      most useful thing on the site for this project** (read
+      2026-08-28, Luke). Five UK campuses, each with its own page:
+
+        Stockley Park  LONDON5, 6, 7, 8 (+ LONDON14) — "comprises of
+                       four facilities"
+        Slough         LONDON3, 4, 9, 10, 11, 12, 19 — "comprises of
+                       seven state-of-the-art facilities"
+        Hayes          LONDON2
+        Enfield        LONDON1
+        Saunderton     its own
+
+      **VIRTUS states an IT load for every facility on those campus
+      pages** (Luke, 2026-08-28), and they are not loaded here — not
+      by policy but because **the snapshotter cannot see them**:
+
+        Stockley Park  LONDON5 24MW · LONDON6 16MW · LONDON7 32.5MW ·
+                       LONDON8 bespoke · LONDON14 bespoke
+        Slough         LONDON3 7.2MW · LONDON4 26.6MW · LONDON9 24MW ·
+                       LONDON10 6.6MW · LONDON11 13.3MW ·
+                       LONDON12 21MW · LONDON19 33.5MW  (132.2MW summed)
+        Hayes          LONDON2 12.3MW
+        Enfield        LONDON1 4.2MW
+        Saunderton     78MW across four data centres
+
+      The campus tables are rendered client-side, and
+      `fetch_operator_snapshots.py` reads the served HTML: of the rows
+      above only "LONDON7 32.5MW" survives into the committed
+      snapshot, while the prose figures on the single-facility pages
+      (Hayes, Enfield, Saunderton) do. Since every claim here must
+      quote text present in its snapshot, twelve published figures
+      cannot be loaded until the snapshotter can capture a
+      JS-rendered table. That is a gap in the instrument rather than
+      in the disclosure, and it will apply to any operator that
+      publishes its specifications this way — worth fixing before the
+      next capacity sweep, and worth knowing when reading the claim
+      store as a survey of what operators publish.
+
+      That taxonomy is boundary evidence of the kind
+      site_partitions.yaml runs on, and it has already settled two
+      questions independently. It confirms the Slough campus drawn out
+      of site 23 — LONDON3, LONDON10 and LONDON11 are all Slough by
+      VIRTUS's own listing, and LONDON10 is the 75 Buckingham Avenue
+      building a Companies House charge identifies. And it confirms
+      that site 37 needs no partition: its two Hillingdon stems are
+      LONDON5 to LONDON8, which VIRTUS calls one campus. Note the
+      corpus does not hold LONDON4, 9, 12 or 19, which VIRTUS places
+      at Slough.
+
   - key: kao_website
     operator: Kao Data
     snapshot_dir: operator_snapshots
