@@ -41,7 +41,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from dcp import site_profile
+from dcp import entities, organisations, site_profile
 
 ROOT = Path(__file__).resolve().parent.parent
 CLAIMS_PATH = ROOT / "data" / "external_sources" / "operator-green-claims.yaml"
@@ -222,6 +222,30 @@ def build_rows(conn, profiles: dict[str, dict],
     already hold it.
     """
     claims = claims if claims is not None else load_claims()
+    # Which sites belong to an operator. The first version asked only
+    # `capacity_claim_matches`, which meant "sites with a matched
+    # website capacity claim" — a much narrower thing than "sites this
+    # operator runs", and it reported "no site matched" for Vantage
+    # while the corpus held five of them (Luke, 2026-08-28). The
+    # association now uses the project's own identity machinery: the
+    # confirmed alias group, or the operator named on the site resolved
+    # through that same group. Substring matching is deliberately not
+    # used — "Ark" is three characters and matches things that are not
+    # Ark Data Centres.
+    alias_index = organisations.alias_index(organisations.load_groups())
+
+    def _belongs(prof: dict, operator: str) -> bool:
+        want = entities.canonical_key(operator)
+        if entities.canonical_key(prof.get("operator_group") or "") == want:
+            return True
+        primary = (prof.get("operator_primary") or "").split(",")[0].strip()
+        if not primary:
+            return False
+        if entities.canonical_key(primary) == want:
+            return True
+        g = organisations.group_for(primary, alias_index)
+        return bool(g) and entities.canonical_key(g.group) == want
+
     by_op: dict[str, list[str]] = {}
     permits: dict[str, tuple[int, float, int]] = {}
     gen_fuels: dict[str, tuple[str, ...]] = {}
@@ -241,7 +265,9 @@ def build_rows(conn, profiles: dict[str, dict],
 
     rows = []
     for c in claims:
-        keys = sorted(by_op.get(c.operator, []))
+        keys = sorted(set(by_op.get(c.operator, []))
+                      | {k for k, prof in profiles.items()
+                         if _belongs(prof, c.operator)})
         fuel_sites: dict[str, int] = {}
         floor = None
         chp = 0
