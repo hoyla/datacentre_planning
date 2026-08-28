@@ -1,0 +1,128 @@
+# What operators say about their power, in their own words.
+#
+# A sibling of operator-claims.yaml and held to the same contract: every
+# claim quotes a verbatim span that must still appear in the committed
+# snapshot under operator_snapshots/, checked by
+# dcp.green_claims.verify_quotes. A figure that has moved fails the
+# check rather than drifting silently — which is not hypothetical here,
+# since CyrusOne's LON1 capacity changed under us on 2026-08-28.
+#
+# **Why this file exists, and what it must not be turned into.** Put an
+# operator's renewable-power claim beside the on-site combustion its own
+# planning documents describe, and the pairing is worth a reporter's
+# attention. It is also very easy to turn into a cheap gotcha, so the
+# rules are written down:
+#
+#   - "100% renewable" conventionally describes PROCURED GRID
+#     ELECTRICITY. An unqualified claim is not false because a site also
+#     holds standby plant. The question is what the claim omits, never
+#     whether it lies.
+#   - The exact wording is the finding. "100% renewable energy
+#     procurement" (Pulsant) says something different from "100%
+#     renewable energy powered" (CyrusOne), and a table that flattened
+#     them into one label would destroy the only thing worth reporting.
+#     That is why the quote, not a boolean, is the unit here.
+#   - Standby plant is permitted to run at most 500 hours a year in
+#     emergency use, and the Environment Agency treats operation below
+#     that threshold as emergency-only: "Emission limit values (ELVs) to
+#     air are not applicable to MCPs operating less than 500 hours per
+#     year". Generators existing is not generators running.
+#   - No permit is required below 50 MWth aggregated, so an operator
+#     absent from the permit register may simply be under the threshold
+#     rather than free of combustion. Pulsant's whole disclosed estate
+#     is 22.12 MW of IT load.
+#
+# Each entry records:
+#   - operator:  as dcp.operator_disclosure names them, so the row joins
+#   - snapshot:  the committed snapshot the quote must appear in
+#   - quote:     verbatim, whitespace-normalised
+#   - kind:      procurement | powered | goal — what the claim asserts
+#   - note:      anything a reader needs to read the wording correctly
+
+claims:
+  - operator: Ark Data Centres
+    snapshot: ark-union-park
+    kind: powered
+    quote: blending onsite solar, living roofs, and 100% renewable power
+    note: >-
+      Ark is the one operator whose site pages name the standby fuel
+      beside the green claim — its pages describe generators "supported
+      by HVO", the hydrotreated vegetable oil substitute for diesel. It
+      also holds three Environment Agency permits totalling 476.1 MWth
+      across 114 engines, so this is a qualified claim from an operator
+      with substantial permitted combustion.
+
+  - operator: CyrusOne
+    snapshot: cyrusone-lon6
+    kind: powered
+    quote: 100% renewable energy powered
+    note: >-
+      Stated as a bare specification line in the sustainability panel,
+      with no qualification and no mention of standby plant on the same
+      page. CyrusOne holds one permit, 201.28 MWth across 32 engines,
+      for London 4/5 at 225 Bath Road.
+
+  - operator: Kao Data
+    snapshot: kao-harlow
+    kind: powered
+    quote: all powered by 100% renewable energy
+    note: >-
+      Kao's pages name HVO for the generators elsewhere on the site, so
+      like Ark this is a qualified claim. One permit, 152.3 MWth across
+      25 engines.
+
+  - operator: Pulsant
+    snapshot: pulsant-wm1
+    kind: procurement
+    quote: In addition to 100% renewable energy procurement, the site features photovoltaic solar panels which can generate more than 400,000 kWh per annum.
+    note: >-
+      The most precisely worded claim in the file, and the reason `kind`
+      exists: Pulsant says *procurement*, which is what a renewable
+      tariff actually buys, rather than implying the building runs on
+      renewable electrons. No Environment Agency permit found — but its
+      whole disclosed estate is 22.12 MW of IT load, well under the
+      50 MWth threshold at which a permit becomes necessary, so the
+      absence says nothing about whether it holds generators.
+
+  - operator: Vantage Data Centers
+    snapshot: vantage-cardiff
+    kind: powered
+    quote: All power into the campus is 100% renewable energy and available at highly competitive rates.
+    note: >-
+      "All power into the campus" is a supply-side statement and does
+      not address on-site generation. One permit, 225.7 MWth across
+      37 engines.
+
+  - operator: VIRTUS Data Centres
+    snapshot: virtus-saunderton
+    kind: goal
+    quote: the campus will utilise 100% renewable energy consistent with the rest of the VIRTUS portfolio.
+    note: >-
+      Framed as part of a net-zero goal — the same page states the aim
+      of "achieving net zero emissions on all reportable activities by
+      2030" — and is forward-looking for a campus still being built.
+      VIRTUS holds the largest permitted standby total in the corpus:
+      four permits, 832.5 MWth across 121 engines.
+
+# Considered and not loaded, with the reason. Kept so that the absence
+# of an operator from the table above is itself readable.
+considered:
+  - operator: Apatura
+    why: >-
+      Its Westerhill page supports "Scotland's Net Zero" ambitions
+      rather than claiming renewable power for the site, and its
+      planning documents propose a BESS specifically to "reduce (or
+      ideally) eliminate the practical need for the data centre to
+      utilise and rely upon diesel backup generators". Including it
+      would put an operator arguing *against* diesel into a table about
+      undisclosed diesel.
+
+  - operator: Greystoke Land
+    why: >-
+      Its net-zero language is about the North Lincolnshire AI Growth
+      Zone's contribution to decarbonising an industrial cluster, not a
+      claim about how its own data centres are powered. Its planning
+      documents do describe "the significant number of diesel back-up
+      generators" at West London Technology Park, which is worth
+      pursuing on its own terms rather than under a claim it has not
+      made.
