@@ -37,8 +37,18 @@ families:
       - NorthLincs/PA/2024/584          # outline
       - NorthLincs/PA/SCR/2024/2        # EIA screening
 
-  # #4 DC01 — 320 MW unconfirmed; no PlanIt match. Track in
-  # foxglove_reconciliation.md; revisit after operator-name sweep widens.
+  # #4 DC01 — IDENTIFIED 2026-08-28: DC01UK, land east of South Mimms
+  # Services, Hertsmere — our PTNO-12809263 ("SOUTH MIMMS SERVICE
+  # STATION - 250MW DATA CENTRE"). Luke supplied the NCE article naming
+  # developer DC01 UK Ltd and the Hertsmere approval of 23 January
+  # 2025 (newcivilengineer.com, 24-01-2025); 162 findings across 18
+  # applications in the corpus name DC01 — the earlier "no PlanIt
+  # match" searched titles and descriptions, where the name never
+  # appears. Foxglove's 320 MW sits beside Barbour's 250 and the
+  # documents' and NESO's 400 — the audiences story in one site.
+  - name: "#4 DC01 — 320 MW (DC01UK, South Mimms, Hertsmere)"
+    refs:
+      - Hertsmere/24/1152/OUTEI          # the outline, approved 23 Jan 2025
 
   - name: "#5 Thurrock (Google) — 225 MW"
     refs:

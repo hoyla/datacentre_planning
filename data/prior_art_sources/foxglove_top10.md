@@ -22,13 +22,13 @@ So the **universe of ≥100 MW England DC applications known to Foxglove as of S
 | 1 | **Cambois (QTS)** | QTS / Blackstone | 2024 | 1,100 | Outline approved 03.2025 | 184,160 | Northumberland *(ref: 24_04112_OUTES — confirmed via DeSmog)* |
 | 2 | **Elsham Tech (Greystoke)** | Greystoke | 2025 | 1,000 | Pending outline | 857,254 | North Lincolnshire *(verify)* |
 | 3 | **Humber Tech (Greystoke)** | Greystoke | 2024 | 384 | Approved | 387,805 | North Lincolnshire *(verify; ref likely PA/2025/643)* |
-| 4 | **DC01** | *(not named in report)* | 2024 | 320 | Outline approved 02.2025 | **6,056** *(flagged inconsistent — see below)* | TBC |
+| 4 | **DC01** | *(not named in report)* | 2024 | 320 | Outline approved 02.2025 | **6,056** *(flagged inconsistent — see below)* | Hertsmere *(identified 2026-08-28: DC01UK, South Mimms — PTNO-12809263, Hertsmere/24/1152/OUTEI, approved 23.01.2025 per NCE)* |
 | 5 | **Thurrock (Google)** | Google / Greystoke Capital | 2025 | 225 *(estimated)* | Pending | 568,657 | Thurrock |
 | 6 | **Virtus Saunderton** | Virtus | 2022 | 300 | Under construction | 101,660 | Buckinghamshire *(Wycombe area; verify)* |
 | 7 | **International Trading Estate (GTR)** | GTR | 2025 | 256 | Permission pending | 219,031 | TBC |
 | 8 | **G-Park Docklands (GLP)** | GLP | 2025 (RM) | 210 | Under construction | **1,148** *(flagged inconsistent)* | London Borough — likely Newham *(verify)* |
 | 9 | **North Weald (Google)** | Google / Greystoke Capital | 2025 | 164 | Under consultation | 419,427 | Epping Forest *(verify)* |
-| 10 | **103MW Court Lane** | *(not named in report)* | 2022 | 103 | Approved | **340** *(flagged inconsistent)* | Portsmouth *(Court Lane Cosham; verify)* |
+| 10 | **103MW Court Lane** | *(not named in report)* | 2022 | 103 | Approved | **340** *(flagged inconsistent)* | ~~Portsmouth~~ Iver, Buckinghamshire *(inference corrected 2026-08-28: UK Court Lane DC Ltd's accounts state "Court Lane Industrial Estate, Iver" at 103.3 MW — matching Foxglove's figure exactly; PTNO-12684006, Corscale)* |
 | | **Total** | | | **4,137 MW** | | **2,745,538** | |
 
 ## Key observations from the report itself
