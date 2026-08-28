@@ -1613,6 +1613,12 @@ def load_site_profiles(conn) -> dict[str, dict]:
             p = profiles.setdefault(site_key, {})
             p["generator_count"] = gp.count
             p["generator_fuel"] = gp.fuel_label
+            # The fuels as data, beside the display label. Anything that
+            # needs the split (the scale panel counts diesel and gas
+            # sites) reads this rather than parsing the label back —
+            # green_claims already learned that lesson and queries the
+            # ranking directly; this saves the next caller the round trip.
+            p["generator_fuels"] = tuple(label for label, _n in gp.fuels)
             p["generator_is_chp"] = gp.is_chp
             p["generator_caveat"] = gp.caveat
 
