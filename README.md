@@ -6,21 +6,13 @@ the planning system records but does not collect: how much power these
 sites will draw, what generation they propose on site, how they will be
 cooled, and who is behind them.
 
-**What it holds today:** at the 2.9 boundary (2026-08-27), 499 sites
+**What it holds :** at the 2.9 boundary (2026-08-27), 499 sites
 plus 25 known only at pre-planning stage, 2,034 in-scope planning
 applications, 57,001 documents from council registers — 53,049 of them
 staged for Drive at that boundary, the rest belonging to applications
 reviewed and found not to be data centres — and a layer of 197
-nationally significant energy projects for adjacency.
-
-Every one of those numbers is a hand copy and will be wrong again. The
-previous set was: it said 429 sites, 1,709 applications and 55,678
-documents while the corpus held 494, 2,034 and 56,860, and it stood that
-way through two releases because nothing checks it.
-`scripts/corpus_stats.py` prints the current figures and every published
-release states the boundary it was stamped at, so **cite one of those,
-never this paragraph.** The analysed and findings counts are not repeated
-here at all, for the same reason one step further on: they move daily.
+nationally significant energy projects for adjacency. 
+_Last updated 27 August 2026_
 
 The output is a handover package, not a live service: a reader, a
 workbook, a queryable database, and the source documents themselves.
