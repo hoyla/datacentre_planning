@@ -4772,6 +4772,19 @@ def main() -> int:
 
     # One row per claim. Every cell either carries evidence or says why
     # it does not — a blank here would read as "no generators".
+    def _unknown_use(r):
+        """Never a dash. A dash in this column would be read as "none",
+        and we do not know that: no fuel disclosed in the documents we
+        hold is a statement about our reading, not about the site
+        (Luke, 2026-08-28 — the same rule as the two "none" strings the
+        generation column distinguishes).
+        """
+        if not r.sites:
+            return ('<span class="q">not established: no site of this '
+                    'operator is in the corpus</span>')
+        return ('<span class="q">not established: no generation described '
+                'in the documents held</span>')
+
     def _green_row(r):
         fuels = (('<span class="fuelist">' + "".join(
                      f'<span class="f">{esc(lbl)}'
@@ -4784,21 +4797,34 @@ def main() -> int:
         permit = (f"{r.permit_mwth:,.1f} MWth<span class=\"q\">{r.permit_count} permit"
                   f"{'' if r.permit_count == 1 else 's'}, {r.permit_engines} engines</span>"
                   if r.has_permit else
-                  '<span class="q">no permit found &mdash; may be under 50 MWth</span>')
+                  '<span class="q">no permit found; may be under the 50 MWth '
+                  'threshold at which one is required</span>')
         # The quote links to the page it was taken from, so the claim
         # can be checked at source rather than taken on trust.
         quoted = esc(r.claim.quote)
         if r.claim.source_url:
             quoted = (f'<a href="{esc(r.claim.source_url)}" rel="nofollow noopener" '
                       f'target="_blank">{quoted}</a>')
-        # Every site the row is built from, reachable. Names rather than
-        # keys — the key for an S35 stub runs to eighty characters and
-        # would set the column width for the whole table — and `_site_a`
-        # trims them to a fixed length.
+        # Every site the row is built from, reachable. Site KEYS rather
+        # than names (Luke, 2026-08-28): names mix curated aliases in
+        # sentence case with raw Barbour titles in capitals, which reads
+        # as disorder in a narrow column, and the key is what a reporter
+        # carries between the reader, the workbook and the DuckDB.
+        # Truncated because an S35 stub's key runs to eighty characters
+        # and would set the width of the whole table; the full key and
+        # the site's name are on hover.
+        def _keylink(k):
+            short = k if len(k) <= 24 else k[:23] + "\u2026"
+            nm = site_names.get(k) or ""
+            tip = esc(k + (" \u2014 " + nm if nm else ""))
+            return (f'<a href="#site-{quote(k, safe="")}" '
+                    f'onclick="return goSite(&#39;{esc(k)}&#39;)" '
+                    f'title="{tip}"><code>{esc(short)}</code></a>')
+
         if r.sites:
             sitecell = ('<span class="fuelist">' + "".join(
-                f'<span class="f">{_site_a(k, site_names.get(k) or k, 34)}</span>'
-                for k in r.sites) + '</span>')
+                f'<span class="f">{_keylink(k)}</span>' for k in r.sites)
+                + '</span>')
         else:
             sitecell = '<span class="q">none in this corpus</span>'
         return (f'<tr><td>{esc(r.claim.operator)}</td>'
@@ -4806,7 +4832,7 @@ def main() -> int:
                 f'<span class="q">{esc(r.claim.gloss)}</span></td>'
                 f'<td>{sitecell}</td>'
                 f'<td>{fuels}</td>'
-                f'<td>{esc(r.generation_use) if r.fuels else "&mdash;"}</td>'
+                f'<td>{esc(r.generation_use) if r.fuels else _unknown_use(r)}</td>'
                 f'<td data-num="1">{units}</td>'
                 f'<td data-num="1">{permit}</td></tr>')
 
@@ -4846,7 +4872,7 @@ def main() -> int:
   operator's own words, because the wording is the finding: <em>procurement</em> is a
   statement about what is bought, <em>powered</em> about how a building runs, and a
   <em>goal</em> is neither. Each quote links to the page it was taken from, and each
-  site name opens that site.</p>
+  site key opens that site; hover a key for its name.</p>
  <div class="banner"><b>What this table is not.</b> It is not a list of operators caught
   out. &ldquo;100% renewable&rdquo; conventionally describes procured grid electricity, so
   an unqualified claim is not false because a site also holds standby plant &mdash; the
