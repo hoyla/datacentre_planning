@@ -682,6 +682,31 @@ nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
    Everything is left-aligned rather than centred so the prose and the
    tables share a left edge and the eye has one line to return to. */
 .wrap.tables{max-width:1620px;padding:24px 32px 10px;margin:0 auto}
+/* Column widths on the Operators page, set because auto layout spends
+   the page badly here: it gave "Terms the figures are published under"
+   799px of 1536 to hold "Total Capacity", and squeezed the five
+   audience columns to 80px each so every one of their headings wrapped
+   over three lines. The rule Luke set (2026-08-28): a prose column may
+   wrap, a narrow data column should not. So the data columns get a
+   width and `nowrap`, and whatever is left goes to the prose. */
+#tbl-ops th:nth-child(1),#tbl-ops td:nth-child(1){width:190px}
+#tbl-ops th:nth-child(n+2):nth-child(-n+8),
+#tbl-ops td:nth-child(n+2):nth-child(-n+8){width:96px;white-space:nowrap}
+#tbl-ops th:nth-child(9),#tbl-ops td:nth-child(9){width:auto}
+
+#tbl-green th:nth-child(1),#tbl-green td:nth-child(1){width:130px}
+#tbl-green th:nth-child(2),#tbl-green td:nth-child(2){width:auto}
+#tbl-green th:nth-child(3),#tbl-green td:nth-child(3){width:160px}
+#tbl-green th:nth-child(4),#tbl-green td:nth-child(4){width:210px}
+#tbl-green th:nth-child(5),#tbl-green td:nth-child(5){width:190px}
+#tbl-green th:nth-child(6),#tbl-green td:nth-child(6){width:120px}
+#tbl-green th:nth-child(7),#tbl-green td:nth-child(7){width:160px}
+/* A site key and a figure are single tokens: breaking them mid-string
+   makes them unreadable and unsearchable. The prose columns beside
+   them wrap as normal. */
+#tbl-green .fuelist .f{white-space:nowrap}
+#tbl-green td:nth-child(6),#tbl-green td:nth-child(7){white-space:nowrap}
+#tbl-green td:nth-child(6) .q,#tbl-green td:nth-child(7) .q{white-space:normal}
 .wrap.tables > p,.wrap.tables > h3,.wrap.tables > .banner,
 .wrap.tables > .lede{max-width:920px}
 .lede{font-family:"Source Serif 4",Georgia,serif;font-size:20px;line-height:1.45;
