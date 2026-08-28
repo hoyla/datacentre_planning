@@ -491,6 +491,34 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **26 applications link to a register host that no longer answers,
+  and they would ship in 2.10 that way** (probed 2026-08-28: every host
+  the reader links to, 208 of them behind 2,033 linked applications).
+  194 answer normally. **11 do not answer at all** — publicaccess.
+  wycombe, planpa.peterborough, planning.stoke, pa.chilternandsouthbucks,
+  pa.manchester, planning.hounslow, planapp.bracknell-forest,
+  planning.hackney, communitymap.harlow, planning.coventry,
+  northgate.liverpool — six of which no longer resolve in DNS at all.
+  eppingforestdcpr.force.com returns 404. Camden and Portsmouth return
+  403, which is a bot challenge rather than a dead host: those links
+  still work for a person in a browser and must not be treated as dead.
+
+  Found because Luke reported one URL from a hand-download list as
+  missing; the host had been retired under it.
+
+  **Three of the 26 hold documents, and all three are wholly on Drive**
+  — EppingForest/EPF/1165/22 (46), Manchester/132638/FO/2022 (15),
+  EppingForest/EPF/1136/19 (2). For those the rule already applies:
+  link our copy, keep the register link beside it for citation, never
+  suppress. The other 23 hold nothing, so the dead link is the entire
+  record of them and the honest treatment is to say the register link
+  no longer resolves rather than render a link that fails silently.
+
+  The check is worth keeping rather than repeating by hand: one HEAD
+  per distinct host, ~208 requests, cheap enough to run before every
+  release. Distinguish "did not answer" from 401/403 — conflating them
+  would mark Camden's 23 live-but-challenged applications as dead.
+
 - **One address, two postcodes: a three-line check that would have
   caught the British Museum merge without anyone reading a document.**
   The premise, established 2026-08-28: a postcode inside a council's
