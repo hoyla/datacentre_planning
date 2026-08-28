@@ -491,22 +491,41 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **Equinix's Buckingham Avenue estate is absent from the corpus**
-  (found 2026-08-28 while partitioning site 23). Equinix's own LD6
-  page names three IBX facilities on one Slough street — LD4 at 2
-  Buckingham Avenue, LD5 at 8, and LD6 at "352 Buckingham Avenue …
-  Slough Trading Estate … SL1 4PF" — and the corpus holds **no
-  application and no Barbour project for any of them**. The two
-  apparent hits on "8 Buckingham" are 128 Buckingham Road, Bletchley.
-  Equinix also holds two Slough permits the corpus cannot place:
-  EPR/LP3303PR ("Equinix Slough Campus Data Centre", 331.084 MWth,
-  SL1 4AX) and EPR/CP3409BH ("LD11x", 96 MWth, SL1 4JW), neither at
-  the postcode of LD14, the only Equinix campus we do hold. The
-  likeliest cause is the indexing window — council registers are
+- **Equinix's UK estate is largely absent from the corpus: three of
+  fifteen facilities have a planning record** (measured 2026-08-28
+  from equinix.com, prompted by Luke). Eleven London IBX sites — LD3
+  (Coronation Road, NW10 7PH), LD4 (2 Buckingham Avenue, SL1 4NB),
+  LD5 (8 Buckingham Avenue, SL1 4AX), LD6 (352 Buckingham Avenue,
+  SL1 4PF), LD7 (1 Banbury Avenue, SL1 4LH), LD8 (Harbour Exchange
+  Square, E14 9GE), LD9 (Powergate Business Park, NW10 6PW), LD10 and
+  LD13x (both 13 Liverpool Road, SL1 4QZ), LD11x (765/767 Henley
+  Road, SL1 4JW), LD14 (Banbury Avenue) — and four in Manchester:
+  MA1 (Williams House, M15 6SE), MA3 (Joule House, 76 Trafford Wharf
+  Road, M17 1HE), MA4 (Synergy House, M15 6SY), MA5 (Agecroft
+  Commerce Park, Swinton, M27 8BX).
+
+  Only **LD14**, **LD9** (`OldOakParkRoyal/22/0093/DELEAL`, "Powergate
+  Business Park, Unit 2, Volt Avenue") and **MA5**
+  (`Salford/20/75336/FUL`, "conversion of 2 existing warehouses into
+  data centres") verify by address. Match by postcode alone and the
+  count looks like seven — SL1 4PF returns Iron Mountain's 110
+  Buckingham Avenue for LD6, SL1 4QZ returns Zenium at number 12 for
+  LD10 and LD13x — which is the same trap the site 23 partition had to
+  avoid, and a warning against postcode joins in this corridor
+  generally.
+
+  **Two of the nine site-23 permits are now placeable and neither has
+  a planning record**: EPR/LP3303PR ("Equinix Slough Campus Data
+  Centre", 331.084 MWth) is at SL1 4AX, which is LD5 at 8 Buckingham
+  Avenue; EPR/CP3409BH ("LD11x", 96 MWth) is at SL1 4JW, which is
+  765/767 Henley Road. That is 427 MWth of permitted standby plant at
+  addresses the planning corpus has never seen.
+
+  The likeliest cause is the indexing window — council registers are
   indexed mostly from 2018 and these are older builds — which would
   make it a general undercount of *operating* capacity rather than an
-  Equinix-specific miss. Worth testing against another
-  long-established operator before it is described that way in print.
+  Equinix-specific miss. Worth testing against another long-established
+  operator before it is described that way in print.
 
 Prompted by the **Devon Data Campus** (Xlinks, North Devon), a scheme
 with an active public campaign of which the corpus holds almost nothing:
