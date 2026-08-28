@@ -1070,6 +1070,14 @@ tr.detail td{padding:14px 18px 18px 30px}
    struck-through row — these sites are in the corpus on purpose, and
    the adjacency layer is how the energy story gets told. */
 #tbl-sites tr.site:not([data-class="datacentre"]) .sname{color:var(--mut)}
+/* The fuel list in the renewable-claims table. `.q` is display:block
+   everywhere else, which is right for a caption under a figure and
+   wrong inside a list: it broke each count onto its own line and left
+   the separating comma stranding at the head of the next fuel
+   ("Diesel / (6 sites) / , Gas"). One fuel per line, count inline,
+   no separators to strand (Luke, 2026-08-28). */
+.fuelist .f{display:block}
+.fuelist .f .q{display:inline;margin-left:5px}
 .classbadge{display:inline-block;margin-right:8px;padding:1px 7px;
  border:1px solid var(--line);border-radius:10px;font-size:11px;
  font-weight:600;color:var(--mut);white-space:nowrap;
@@ -4765,8 +4773,10 @@ def main() -> int:
     # One row per claim. Every cell either carries evidence or says why
     # it does not — a blank here would read as "no generators".
     def _green_row(r):
-        fuels = (", ".join(f"{esc(lbl)} <span class=\"q\">({n} site{'' if n == 1 else 's'})</span>"
-                           for lbl, n in r.fuels)
+        fuels = (('<span class="fuelist">' + "".join(
+                     f'<span class="f">{esc(lbl)}'
+                     f'<span class="q">({n} site{"" if n == 1 else "s"})</span></span>'
+                     for lbl, n in r.fuels) + '</span>')
                  if r.fuels else
                  f'<span class="q">{esc(r.generation_use)}</span>')
         units = (f"at least {r.generator_floor}"
