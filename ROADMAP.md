@@ -491,6 +491,52 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **26 applications link to a register host that no longer answers,
+  and they would ship in 2.10 that way** (probed 2026-08-28: every host
+  the reader links to, 208 of them behind 2,033 linked applications).
+  194 answer normally. **11 do not answer at all** — publicaccess.
+  wycombe, planpa.peterborough, planning.stoke, pa.chilternandsouthbucks,
+  pa.manchester, planning.hounslow, planapp.bracknell-forest,
+  planning.hackney, communitymap.harlow, planning.coventry,
+  northgate.liverpool — six of which no longer resolve in DNS at all.
+  eppingforestdcpr.force.com returns 404. Camden and Portsmouth return
+  403, which is a bot challenge rather than a dead host: those links
+  still work for a person in a browser and must not be treated as dead.
+
+  Found because Luke reported one URL from a hand-download list as
+  missing; the host had been retired under it.
+
+  **Three of the 26 hold documents, and all three are wholly on Drive**
+  — EppingForest/EPF/1165/22 (46), Manchester/132638/FO/2022 (15),
+  EppingForest/EPF/1136/19 (2). For those the rule already applies:
+  link our copy, keep the register link beside it for citation, never
+  suppress. The other 23 hold nothing, so the dead link is the entire
+  record of them and the honest treatment is to say the register link
+  no longer resolves rather than render a link that fails silently.
+
+  The check is worth keeping rather than repeating by hand: one HEAD
+  per distinct host, ~208 requests, cheap enough to run before every
+  release. Distinguish "did not answer" from 401/403 — conflating them
+  would mark Camden's 23 live-but-challenged applications as dead.
+
+  **Deferred past 2.10 by Luke, 2026-08-28, and recorded here so the
+  work does not need re-deriving.** The 26, as probed on that date —
+  a host that answers again later is a fix, not a regression, so
+  re-probe before acting rather than trusting this list:
+
+    publicaccess.wycombe.gov.uk — Wycombe/08/05740/FULEA, Wycombe/22/06872/VCDN, Wycombe/24/07967/OUT, Wycombe/25/06079/MINAMD, Wycombe/25/06382/MINAMD
+    planning.stoke.gov.uk — Stoke/65328/FUL, Stoke/65376/FUL, Stoke/65426/FUL, Stoke/65465/FUL
+    planpa.peterborough.gov.uk — Peterborough/08/01079/FUL, Peterborough/08/01225/FUL, Peterborough/18/00937/R4FUL, Peterborough/18/01340/R4FUL
+    eppingforestdcpr.force.com — EppingForest/EPF/1136/19 (2 docs, on Drive), EppingForest/EPF/1165/22 (46 docs, on Drive)
+    pa.chilternandsouthbucks.gov.uk — ChilternSouthBucks/PL/20/0646/ADJ, ChilternSouthBucks/PL/22/3403/FA
+    pa.manchester.gov.uk — Manchester/132638/FO/2022 (15 docs, on Drive), Manchester/137424/FO/2023
+    planning.hounslow.gov.uk — Hounslow/C/2020/0555, Hounslow/C/2020/0865
+    communitymap.harlow.gov.uk — Harlow/HW/PL/16/00243
+    northgate.liverpool.gov.uk — Liverpool/PL/INV/1646/21
+    planapp.bracknell-forest.gov.uk — Bracknell/17/01227/OUT
+    planning.coventry.gov.uk — Coventry/FUL/2021/1299
+    planning.hackney.gov.uk — Hackney/2020/1287
+
 - **One address, two postcodes: a three-line check that would have
   caught the British Museum merge without anyone reading a document.**
   The premise, established 2026-08-28: a postcode inside a council's
