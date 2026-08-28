@@ -14,6 +14,20 @@
 
 entries:
 
+  - ref: EppingForest/EPF/1449/24
+    lat: 51.71355
+    lon: 0.154967
+    source: |
+      The EIA scoping report for Google's North Weald scheme, split
+      from its own site because the record carries no coordinates. Its
+      description reads "prepared for the proposed North Weald Data
+      Centre development" and its address is "North Weald Airfield,
+      Merlin Way"; the outline for the same development
+      (EppingForest/EPF/0849/25, "Land West of Merlin Way, North Weald
+      Airfield") sits in PTNO-12848057 at Barbour's pin (51.71355,
+      0.154967), which this entry reuses so the scoping joins the
+      campus it describes. Luke spotted the split, 2026-08-28.
+
   - ref: Havering/Z0001.24
     lat: 51.5434
     lon: 0.3215
