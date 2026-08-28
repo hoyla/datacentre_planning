@@ -491,31 +491,46 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **Pinpoint and Giant hold a snapshot that is going stale, and nothing
-  measures the gap.** Both take exactly the same input — the entire
-  contents of the Drive `sites` folder, which is the documents
-  themselves: 55,491 files and 141GB in the 2.9 staging tree, grouped by
-  site and application beside each site's report and findings CSV.
-  Neither cares about that structure; both care about **completeness**,
-  because a document absent from the upload is a document that returns
-  no hits and says nothing about why (Luke, 2026-08-28).
+- **Pinpoint and Giant are missing content by construction, not only by
+  age.** Both take the same input, and it is **not** the Drive `sites`
+  folder: it is the derivative bundle from
+  `scripts/export_pinpoint_bundle.py` (Luke, 2026-08-28). Pinpoint has
+  no folders — the namespace is flat and zipped uploads are unsupported
+  — so structure is discarded by design and each filename carries
+  `<site> — <application> — ` in front of it instead. Neither repository
+  cares about that. Both care about **completeness**, and the bundle is
+  a reduction: 130.6GB in 50,615 files down to ~64GB in 42,647, under
+  Pinpoint's 100GB-per-user quota.
 
-  The last upload was 2026-08-12. **4,464 documents have been added to
-  the corpus since**, and 2.10 adds more — Hounslow's 271 and Camden's
-  221 arrived by hand today alone. So both repositories search a corpus
-  that no longer matches the reader, the workbook or the database, and a
-  reporter who searches Pinpoint and finds nothing cannot tell "not in
-  the documents" from "not uploaded yet".
+  **The reduction that matters is the drawings**, 5,536 files and 9.5GB,
+  dropped on the grounds that they "carry no extractable prose". The
+  project's own extraction layer settled the opposite question in the
+  opposite direction, in terms: `extract_text_corpus.py` extracts every
+  drawing because "a proposed site plan often labels the energy centre,
+  an elevation may annotate a generator enclosure, and plant layouts
+  carry specifications that never appear in prose at all", and because
+  skipping them "baked an analytical judgement into the cheapest and
+  most reusable layer, against the project's first principle — ingest
+  broadly, analyse second". The corpus holds 3,210 documents of kind
+  `Drawing`, 2,752 `Plans` and 2,248 `PLAN`. Two parts of one pipeline
+  hold contradictory positions on whether those carry information, and
+  the search tool a reporter actually uses is on the losing side.
 
-  **Explicitly deferred past 2.10 by Luke.** What it needs when picked
-  up: a record of what each repository holds — neither is queryable for
-  its own contents from here — so the delta can be computed rather than
-  guessed, and re-upload folded into the release chain rather than left
-  to be remembered. Note the quota interaction: Pinpoint's is 100GB
-  against the folder's 141GB, which is why
-  `scripts/export_pinpoint_bundle.py` drops drawings, dedups and
-  recompresses at 200dpi. Whether Giant needs the same treatment is
-  unestablished.
+  The other two reductions look sound and are worth keeping if this is
+  revisited: exact duplicates removed by content hash (2,432 files), and
+  types sniffed rather than trusted, which recovered ~450 files
+  including 237 Outlook messages of kind *Consultee Comment* — tier A,
+  the class the methodology says disclosures live in.
+
+  **Staleness sits on top of that.** The last upload was 2026-08-12 and
+  4,464 documents have arrived since, with more in 2.10.
+
+  **Explicitly deferred past 2.10 by Luke.** When picked up: settle the
+  drawings question in one place rather than two; record what each
+  repository holds, since neither can be queried for its own contents;
+  and fold re-upload into the release chain rather than leaving it to be
+  remembered. Whether Giant shares Pinpoint's quota constraint — and so
+  needs the reduction at all — is unestablished.
 
 - **One address, two postcodes: a three-line check that would have
   caught the British Museum merge without anyone reading a document.**
