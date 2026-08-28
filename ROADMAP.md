@@ -491,6 +491,38 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **One address, two postcodes: a three-line check that would have
+  caught the British Museum merge without anyone reading a document.**
+  The premise, established 2026-08-28: a postcode inside a council's
+  register can simply be wrong, and the 1 km spatial rule propagates it
+  faithfully. Camden records 25 British Museum applications at
+  **WC1E 7JW** (Gower Street, by UCL) and 3 at the museum's own
+  **WC1B 3DG / WC1B 8DG**. The wrong value put the museum on top of
+  "UCL Interim Data Centre" (PTNO-12087852) and 21 of its applications
+  became members of a data-centre site — fixed by partition in PR #197,
+  but only because Luke read the documents.
+
+  The generalisable signal is the corpus contradicting itself: the same
+  address string carrying two different outward codes. Measured over
+  875 distinct address strings it flags **3**, of which one is the real
+  error; "Reading Quarry Berrys Lane Burghfield" (RG30 ×7, RG7 ×5) is
+  benign, a quarry genuinely spanning West Berkshire, Reading and
+  Wokingham and already split across three sites, and "Broadwater Farm
+  Estate" is one application each side. Three flags to review is free,
+  so this is worth wiring in as a build-time warning rather than a
+  script someone remembers to run.
+
+  **Two traps, both hit while writing it.** Compare the FULL outward
+  code: `WC1E` and `WC1B` both truncate to `WC1`, and a first version
+  that truncated found nothing — the check could not see the case it
+  was built for. And normalise a leading "The": Camden writes both
+  "British Museum …" and "The British Museum …", which key differently
+  and hide the contradiction. A third approach — comparing members
+  against the postcode of the Barbour project the site is named after —
+  was measured and **rejected**: the UCL project is itself WC1E 6BT, so
+  members and anchor agree and the check sails past. It flags 7 sites,
+  none of them this one.
+
 - **About 37% of the verbatim gate's rejections are correct quotes,
   lost to whitespace artefacts in the extracted text — roughly 17,000
   findings** (measured 2026-08-28 on a random sample of 900 of the
