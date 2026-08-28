@@ -683,6 +683,14 @@ field and is not publishable as it stands.
   for three-character quotes), plus generalising the split repair
   beyond `s`.
 
+  **Scheduled as the key part of 2.11** (Luke, 2026-08-28). It is the
+  largest single quality gain available and it costs no API spend: the
+  escalation log carries the whole finding beside its sha and page, so
+  the rejected quotes are re-gated offline and reinstated. Do the
+  re-gate and the gate fix together — a fixed gate without a re-gate
+  leaves the 17,000 discarded, and a re-gate without the fix means
+  doing it again next release.
+
   **Not** an explanation of the PARSE FAIL energy-report gap recorded
   elsewhere: `read_state = 'parse_failed'` means the model's JSON
   response was truncated and salvaged, which is unrelated to how the
