@@ -780,10 +780,22 @@ For this release specifically, three things belong in that note:
 
 ## Still outstanding after the phase 2 release — Luke's, not the runner's
 
-- **Upload the notebook bundle.** 506 documents sit in
-  `data/exports/notebook_bundle/` (step 7a). The Gemini Notebook is
-  linked from the reader already, so until they are uploaded the link
-  leads somewhere emptier than the page implies.
+- **Build and upload the notebook bundle.** The bundle directory does
+  **not** exist — checked 2026-08-28, `data/exports/notebook_bundle/` is
+  absent, so the earlier note here claiming "506 documents sit in" it was
+  describing a state that has not been true for some time. Build it with
+  `scripts/export_notebook_bundle.py`, which reads the Drive staging tree
+  (2,131 markdown files present) and writes locally only.
+
+  **Build it AFTER step 9 rebuilds the staging tree, never before.** The
+  bundle is welded from the report prose that step 9 generates, so
+  building it against the previous release's staging produces a bundle
+  that looks current and is not.
+
+  The Gemini Notebook is linked from the reader (`dcp/drive.py`
+  NOTEBOOK_URL) and holds whichever bundle was last uploaded by hand —
+  shared with the reporting team 2026-08-11, so roughly three releases
+  behind. Nothing in the chain refreshes it; the upload is manual.
 - **The Google Sheet is still titled `DC_handover_v2_phase1`.** Renaming
   it is safe: `sheet_sync.py` resolves the spreadsheet by the id in
   `WORKBOOK_SHEET_URL` and only prints the title. The **tab** names are
