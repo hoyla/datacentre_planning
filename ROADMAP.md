@@ -1027,9 +1027,31 @@ HISTORY.)
   curated, so an operator absent from the table may simply have no
   page snapshotted — absence here is not absence of a claim.
 
+  **The run-hour limit is in the permits, and it is 500 hours a year**
+  (read 2026-08-28 from the 85 permit PDFs the project holds; 42
+  permit stems carry the condition). The standard wording is "The
+  activities shall not operate for more than 500 hours in emergency
+  use per annum", and the Environment Agency spells out that this is
+  an installation-level cap, not a per-engine one: "500 hours is for
+  the installation as a whole, meaning that as soon as one generator
+  starts operating the hours count towards the 500 hours". So the
+  honest sentence is *"permitted to run for up to 500 hours a year"*
+  per site — never engines multiplied by hours, which the permits
+  explicitly forbid as a reading.
+
+  And the number is not arbitrary. The same documents state that
+  "Emission limit values (ELVs) to air are not applicable to MCPs
+  operating less than 500 hours per year" — the cap sits exactly at
+  the threshold below which air-emission limits do not bite. That is
+  the sharper story than the green claims themselves: an operator can
+  hold hundreds of megawatts of standby diesel and stay outside the
+  emission-limit regime by staying under 500 hours, and the permit
+  is written to that line.
+
   Next step if it is taken up: put the pairing to each operator, and
-  read the permits' own schedules for run-hour limits, which is where
-  a standby installation's expected use is actually written down.
+  ask what the actual run hours were — permits require the operator to
+  record them, so the difference between the 500-hour ceiling and
+  observed use is obtainable and is the quantified version of this.
 
 ---
 
