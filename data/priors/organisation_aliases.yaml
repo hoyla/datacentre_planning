@@ -494,6 +494,37 @@ groups:
             note: Luke looked up on Lurch (the Guardian's land and property research tool). Subsidiary of Colt Technology Services Group Limited 
             date: 2026-08-24
 
+  - group: HFD Datavita
+    company_number: "SC467509"
+    note: >-
+      Who they are, recorded for context rather than for joins: this
+      corpus holds one HFD site, so the group folds nothing — it exists
+      to put a display name on the raw HFD DATAVITA LIMITED row and to
+      record the ownership chain (Luke, 2026-08-28). Datavita is HFD
+      Group's technology division, per hfdgroup.com/divisions/technology.
+      The PSC chain at Companies House runs HFD Datavita Limited
+      (SC467509) -> HFD Technology Group Limited (SC806309) -> HFD Group
+      Limited (SC362322) -> HFD Managements Ltd and Mr William Dale
+      Hill, every company registered at 177 Bothwell Street, Glasgow.
+    members:
+      - name: HFD DATAVITA LIMITED
+        relation: subsidiary_of
+        status: confirmed
+        company_number: "SC467509"
+        evidence:
+          - source: companies_house
+            ref: "SC467509"
+            note: >-
+              PSCs are HFD Technology Group Limited, HFD Group Limited,
+              HFD Managements Ltd and Mr William Dale Hill; registered
+              office 177 Bothwell Street, Glasgow G2 7ER, shared with
+              HFD Technology Group (SC806309) and HFD Group (SC362322).
+            date: 2026-08-28
+          - source: operator_website
+            ref: https://www.hfdgroup.com/divisions/technology
+            note: HFD Group's own site presents Datavita as its technology division. Supplied by Luke.
+            date: 2026-08-28
+
   - group: Corscale Data Centers
     note: part of Patrinely and Affinius Capital (US).
     members:
