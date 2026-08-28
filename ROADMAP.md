@@ -502,19 +502,35 @@ field and is not publishable as it stands.
   a reduction: 130.6GB in 50,615 files down to ~64GB in 42,647, under
   Pinpoint's 100GB-per-user quota.
 
-  **The reduction that matters is the drawings**, 5,536 files and 9.5GB,
-  dropped on the grounds that they "carry no extractable prose". The
-  project's own extraction layer settled the opposite question in the
-  opposite direction, in terms: `extract_text_corpus.py` extracts every
-  drawing because "a proposed site plan often labels the energy centre,
-  an elevation may annotate a generator enclosure, and plant layouts
-  carry specifications that never appear in prose at all", and because
-  skipping them "baked an analytical judgement into the cheapest and
-  most reusable layer, against the project's first principle — ingest
-  broadly, analyse second". The corpus holds 3,210 documents of kind
-  `Drawing`, 2,752 `Plans` and 2,248 `PLAN`. Two parts of one pipeline
-  hold contradictory positions on whether those carry information, and
-  the search tool a reporter actually uses is on the losing side.
+  **The drawings are dropped deliberately, and for Giant too** — 5,536
+  files, 9.5GB, on the grounds that they carry no extractable prose.
+  That looks at first like a contradiction with
+  `extract_text_corpus.py`, which extracts every drawing precisely
+  because "a proposed site plan often labels the energy centre, an
+  elevation may annotate a generator enclosure, and plant layouts carry
+  specifications that never appear in prose at all". It is not.
+
+  The two tools want different things. Giant's value is returning a hit
+  **in context** — the surrounding text — and taking the reporter to the
+  exact place, page 278 of a long document if that is where it is
+  (Luke, 2026-08-28). A drawing supports neither: OCR of a plan yields
+  scattered label fragments, so even a matching drawing returns a result
+  with no readable context and nowhere meaningful to jump to. Extraction
+  wants every scrap of text because a figure may appear only there;
+  full-text search wants documents that read. Both are right for their
+  layer, and the drawing content is not lost to the project — the
+  deep-read reads it and its findings surface on the site page.
+
+  **Giant has no quota limit and takes the reduced bundle anyway**,
+  Luke's decision, for consistency. Two search tools answering one query
+  differently, with nothing on either page to explain the difference,
+  would be worse than a single corpus reduced in a documented way — and
+  on the drawings the reduction is right for Giant on its own merits.
+
+  The residual worth watching: a reporter using Giant as a completeness
+  check can still infer "not in the documents" from a drawing-only
+  disclosure that never reaches it. The reader is where that content
+  lives, so the two must not be presented as interchangeable.
 
   The other two reductions look sound and are worth keeping if this is
   revisited: exact duplicates removed by content hash (2,432 files), and
