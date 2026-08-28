@@ -638,6 +638,24 @@ once, checked, and read back by key.
 
 ### 12. Rebuild the artefacts against the new ledger, and re-sync them
 
+**STOP if a new notebook is being made.** `NOTEBOOK_URL` in
+`dcp/drive.py` is compiled into the reader at build time, and this is
+the build that publishes `index.html`. The order is forced, and it is
+circular unless followed exactly:
+
+1. step 9 rebuilds the staging tree;
+2. `scripts/export_notebook_bundle.py` welds the bundle from it;
+3. **Luke** uploads the bundle to Drive, creates the notebook and
+   supplies its URL — nobody else can, the upload is manual;
+4. `NOTEBOOK_URL` is updated **before** the command below runs.
+
+Skip step 4 and the published reader links last release's notebook,
+which still exists and still opens, so nothing looks broken and the
+reporter reads a stale corpus. The step 7 reader carries the old URL of
+necessity — the new notebook does not exist yet — which is why this
+build, and not that one, is the one that has to be right.
+
+
 ```sh
 scripts/export_reader.py   --out data/exports/<build>/reader.html --phase <N> --publish index.html
 scripts/export_handover.py --out data/exports/<build>/dc_handover_phase<N>.xlsx
@@ -795,6 +813,10 @@ For this release specifically, three things belong in that note:
   bundle is welded from the report prose that step 9 generates, so
   building it against the previous release's staging produces a bundle
   that looks current and is not.
+
+  **A new notebook needs its URL in `dcp/drive.py` before step 12**,
+  the build that publishes `index.html`. The full order is at the stop
+  in step 12 (Luke, 2026-08-28).
 
   The Gemini Notebook is linked from the reader (`dcp/drive.py`
   NOTEBOOK_URL) and holds whichever bundle was last uploaded by hand —
