@@ -638,22 +638,22 @@ once, checked, and read back by key.
 
 ### 12. Rebuild the artefacts against the new ledger, and re-sync them
 
-**STOP if a new notebook is being made.** `NOTEBOOK_URL` in
-`dcp/drive.py` is compiled into the reader at build time, and this is
-the build that publishes `index.html`. The order is forced, and it is
-circular unless followed exactly:
+**If a new notebook is being made, its URL must be in `dcp/drive.py`
+before this build** — `NOTEBOOK_URL` is compiled into the reader, and
+this is the build that publishes `index.html`.
 
-1. step 9 rebuilds the staging tree;
-2. `scripts/export_notebook_bundle.py` welds the bundle from it;
-3. **Luke** uploads the bundle to Drive, creates the notebook and
-   supplies its URL — nobody else can, the upload is manual;
-4. `NOTEBOOK_URL` is updated **before** the command below runs.
+**Do it at the start of the chain, not here.** A notebook's URL is
+fixed when it is created and does not change as sources are added, so
+Luke creates it **empty** before anything is built and supplies the URL
+then (his solution, 2026-08-28). The apparent circularity — bundle
+needs step 9, notebook needs bundle, reader needs notebook — dissolves:
+only the *sources* wait on the bundle, and they can be uploaded at
+leisure, even after deployment.
 
-Skip step 4 and the published reader links last release's notebook,
-which still exists and still opens, so nothing looks broken and the
-reporter reads a stale corpus. The step 7 reader carries the old URL of
-necessity — the new notebook does not exist yet — which is why this
-build, and not that one, is the one that has to be right.
+This stop remains as the backstop for when that was not done. The
+failure is silent: last release's notebook still exists and still
+opens, so a reader built without the update looks entirely correct and
+sends the reporter to a stale corpus.
 
 
 ```sh
