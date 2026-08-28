@@ -494,6 +494,50 @@ groups:
             note: Luke looked up on Lurch (the Guardian's land and property research tool). Subsidiary of Colt Technology Services Group Limited 
             date: 2026-08-24
 
+  - group: VIRTUS Data Centres
+    company_number: "07670473"
+    note: >-
+      The brand this corpus already uses for the operator's website
+      claims and the five-campus taxonomy. Two legal entities stand
+      behind it in our sources and both are recorded: Virtus Holdco
+      Limited holds the EA permits, and VIRTUS DATA CENTRES PROPERTIES
+      LIMITED files the accounts, with the register itself joining
+      them — Properties' PSC is Virtus Holdco. Supplied by Luke,
+      2026-08-28, after the audiences table showed the Properties name
+      raw beside the brand.
+    members:
+      - name: VIRTUS DATA CENTRES PROPERTIES LIMITED
+        relation: subsidiary_of
+        status: confirmed
+        company_number: "09840065"
+        evidence:
+          - source: companies_house
+            ref: "09840065"
+            note: >-
+              PSC is Virtus Holdco Limited — a direct parent link the
+              register states, not an inference. Registered office 4th
+              Floor 20 Balderton Street W1K 6TL. The name itself
+              carries the brand.
+            date: 2026-08-28
+      - name: Virtus Holdco Limited
+        relation: same_organisation
+        status: confirmed
+        company_number: "07670473"
+        evidence:
+          - source: register
+            ref: EPR/BP3945QX
+            note: >-
+              The Environment Agency's register names VIRTUS HOLDCO
+              LIMITED as permit holder for "Virtus Slough Campus Data
+              Centres" — the regulator filing the brand's own campus
+              under this entity. Three further permits in the corpus
+              carry the same holder.
+            date: 2026-08-28
+          - source: companies_house
+            ref: "09840065"
+            note: Named as PSC of VIRTUS DATA CENTRES PROPERTIES LIMITED.
+            date: 2026-08-28
+
   - group: Corscale Data Centers
     note: part of Patrinely and Affinius Capital (US).
     members:
