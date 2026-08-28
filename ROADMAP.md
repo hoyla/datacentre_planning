@@ -550,11 +550,27 @@ field and is not publishable as it stands.
   question is **one decision governing both** and must be revisited for
   both together or not at all.
 
-  **Explicitly deferred past 2.10 by Luke.** When picked up: settle the
-  drawings question in one place rather than two; record what each
-  repository holds, since neither can be queried for its own contents;
-  and fold re-upload into the release chain rather than leaving it to be
-  remembered.
+  **The delta is computable, and does not need guessing.** Luke still
+  has the uploaded bundle and its `_manifest.csv` on the previous laptop
+  (2026-08-28). That manifest carries one row per bundled file with
+  `sha256`, `site`, `application`, `kind`, `tier`, `action` and
+  `staging_path` — so:
+
+  - `manifest.sha256` against `documents.content_sha256` gives exactly
+    what Pinpoint and Giant hold and, by omission, what they do not;
+  - `action` and `kind` separate the deliberate exclusions (drawings,
+    hash duplicates) from the genuine gap, so staleness can be measured
+    without re-litigating the reductions.
+
+  Get that file off the old laptop before it becomes the thing nobody
+  can find — it is the only record of what was uploaded, and the bundle
+  it describes is not reproducible from here: the corpus has moved on by
+  4,464 documents, so re-running the script now produces a different
+  bundle.
+
+  **Explicitly deferred past 2.10 by Luke.** When picked up: compute the
+  delta from the manifest, and fold re-upload into the release chain
+  rather than leaving it to be remembered.
 
 - **One address, two postcodes: a three-line check that would have
   caught the British Museum merge without anyone reading a document.**
