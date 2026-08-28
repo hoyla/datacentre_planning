@@ -780,10 +780,14 @@ For this release specifically, three things belong in that note:
 
 ## Still outstanding after the phase 2 release — Luke's, not the runner's
 
-- **Build and upload the notebook bundle.** The bundle directory does
-  **not** exist — checked 2026-08-28, `data/exports/notebook_bundle/` is
-  absent, so the earlier note here claiming "506 documents sit in" it was
-  describing a state that has not been true for some time. Build it with
+- **Build and upload the notebook bundle.** The bundle directory is
+  **absent from this checkout** — checked 2026-08-28. The earlier note
+  claiming "506 documents sit in `data/exports/notebook_bundle/`" was
+  not wrong when written: it was built on Luke's previous laptop, and
+  the directory is gitignored, so it did not travel. Whether those 506
+  were uploaded to the notebook before the machine changed is not
+  recorded anywhere and cannot be determined from here — ask before
+  assuming the step is outstanding. Rebuild it with
   `scripts/export_notebook_bundle.py`, which reads the Drive staging tree
   (2,131 markdown files present) and writes locally only.
 
