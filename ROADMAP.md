@@ -1063,10 +1063,42 @@ HISTORY.)
   emission-limit regime by staying under 500 hours, and the permit
   is written to that line.
 
-  Next step if it is taken up: put the pairing to each operator, and
-  ask what the actual run hours were — permits require the operator to
-  record them, so the difference between the 500-hour ceiling and
-  observed use is obtainable and is the quantified version of this.
+  **Below the threshold, the planning documents catch what the permits
+  cannot** (Luke, 2026-08-28). Sites matched to a green-claiming
+  operator can be searched for their own disclosures of on-site fossil
+  generation, and that reaches the operators with no permit at all:
+  Greystoke's West London Technology Park carries 379 findings
+  mentioning diesel and 156 gas, and its documents say so plainly —
+  "given the significant number of diesel back-up generators, and the
+  lifetime associated with the operation of the proposed development
+  (i.e. 30 years)". Abbots Langley and one other Greystoke site carry
+  the same pattern at smaller scale.
+
+  **The direction of the mention decides its meaning, so the counts are
+  a route to evidence and never the evidence.** Apatura's Westerhill
+  shows why: its ten diesel findings are proposals to *avoid* diesel —
+  "The BESS would reduce (or ideally) eliminate the practical need for
+  the data centre to utilise and rely upon diesel backup generators."
+  A count that treated those as disclosure of diesel reliance would
+  have the story backwards. Ark's sites, which do hold permits, carry
+  heavy HVO mentions alongside the diesel, consistent with the
+  qualified claim its website makes.
+
+  Two next steps, one of them now drafted. **The actual run hours are
+  obtainable**: 29 permits' decision documents state that "Reporting of
+  standby generator maintenance run hours is required annually and any
+  electrical outages (planned or grid failures regardless of duration)
+  require both annual reporting and immediate notification of the
+  Environment Agency", and permit conditions require the operator to
+  record "the type and quantity of fuel used and the total annual
+  operating hours for each MCP" and "the number of runs for each of the
+  generators". The Agency therefore holds the returns, and an EIR
+  request for them is drafted at
+  `docs/requests/2026-08_ea_standby_generator_run_hours_eir.md` —
+  including the reg 12(9) point that information on emissions cannot be
+  withheld as commercially confidential. Second: read the generation
+  findings at the no-permit sites rather than counting them, which is
+  what turns Greystoke's 379 mentions into a number of generators.
 
 ---
 
