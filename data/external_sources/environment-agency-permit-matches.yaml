@@ -36,6 +36,99 @@
 # in data/priors/site_partitions.yaml rather than evidence about a site.
 
 matches:
+  # --- Slough Trading Estate, matched once site 23 was partitioned ----
+  # Six of the nine permits that sat inside site 23 now name a campus
+  # rather than an estate (site_partitions.yaml, 2026-08-28). Distances
+  # below are from the permit's own grid reference to the nearest MEMBER
+  # of the site, not to the site's centroid: a site centroid is pulled
+  # about by its Barbour project pins, and matching CyrusOne on centroid
+  # would have picked SEGRO's Ipswich Road record 409 m away over the
+  # 225 Bath Road applications 139 m away.
+
+  - claim_name: LON3 Data Centre (EPR/TP3120LE)
+    site_id: 529
+    method: operator_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-28
+    evidence: >-
+      The permit is held by IRON MOUNTAIN (UK) DATA CENTRE LIMITED and
+      titled "LON3 Data Centre"; site 529 is the Iron Mountain London
+      campus, which holds LON-3 at 111 Buckingham Avenue by the
+      operator's own definition ("Our campus features three facilities
+      — LON-1, LON-2, and LON-3"). The permit's grid reference sits
+      284 m from the campus centroid, which spans 810 m because LON-1
+      is on Dundee Road. Holder name and permit title both name the
+      facility, so this does not rest on geography.
+
+  - claim_name: CyrusOne London 4/5 Datacentres (EPR/EP3508PS)
+    site_id: 526
+    method: building_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-28
+    evidence: >-
+      The permit is issued at SL1 4AA, the postcode all three of site
+      526's applications carry (225 Bath Road), and its grid reference
+      is 139 m from each of them. CyrusOne publishes LON4 and LON5 as
+      "225B Bath Road" and "225C Bath Road", and the permit is titled
+      "London 4/5". Note CyrusOne gives those buildings the postcode
+      SL1 5PP against SL1 4AA from both the permit and the planning
+      record — two sources to one, recorded in operator-claims.yaml.
+
+  - claim_name: Virtus Slough Campus Data Centres (EPR/BP3945QX)
+    site_id: 525
+    method: operator_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-28
+    evidence: >-
+      Held by VIRTUS HOLDCO LIMITED and titled for the campus itself.
+      Site 525 is the VIRTUS Slough campus — LONDON 3, LONDON 10 and
+      LONDON 11 plus the Zenium fit-out VIRTUS acquired — and the
+      permit is issued at SL1 4QZ, the postcode its Barbour records
+      carry, 287 m from the site's centroid.
+
+  - claim_name: LON11 Data Centre (EPR/DP3348QS)
+    site_id: 525
+    method: operator_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-28
+    evidence: >-
+      Held by VIRTUS LONDON 11 LIMITED, and site 525 holds the Barbour
+      record "VIRTUS DATA CENTRES - LONDON 11 DATA CENTRE" — the same
+      facility named by both. The permit's own postcode is SL1 4HA
+      rather than the campus's SL1 4QZ, which is why this rests on the
+      name identity rather than the postcode; the grid reference is
+      257 m from the site. Two permits therefore attach to site 525,
+      the campus permit and LONDON 11's own, and they are not to be
+      added together without reading both schedules.
+
+  - claim_name: GB One Data Centre (EPR/CP3042QG)
+    site_id: 530
+    method: building_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-28
+    evidence: >-
+      Held by GTR MANAGEMENT SERVICES LIMITED and issued at SL1 4BG,
+      the postcode Barbour gives for 650-660 Ajax Avenue, which is the
+      whole of site 530. The permit's grid reference is 38 m from it —
+      the closest of the nine. Distinct from the Cyxtera campus at
+      631-634 on the same street, which is why the street name alone
+      could not have made this match.
+
+  - claim_name: Ajax Avenue Datacentre (EPR/YP3935QM)
+    site_id: 534
+    method: building_identity
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-08-28
+    evidence: >-
+      Issued at SL1 4DG, the postcode both of site 534's applications
+      carry (631-634 Ajax Avenue), 126 m from them. Held short of
+      strong because the holder is "LHR1 Data Center Holdings Limited"
+      while the applications name Cyxtera — "Additional ancillary plant
+      and side extension to Cyxtera data centre" — so the permit holder
+      and the operator in the planning record are different companies.
+      Address, postcode and permit title all agree on the place; who
+      holds it does not, and that is worth a reader seeing.
+
   - claim_name: Cody Park Data Centre (EPR/VP3235DJ)
     site_id: 14
     method: building_identity
@@ -187,17 +280,32 @@ considered:
       - LON11 Data Centre (EPR/DP3348QS)
       - Virtus Slough Campus Data Centres (EPR/BP3945QX)
     why: >-
-      All nine fall inside site 23, the only site record on the Slough
-      Trading Estate, which holds 35 applications across at least seven
-      operators' campuses. 1,430 MWth of permitted standby plant sits
-      inside one site record. Matching any one of them would assert an
-      identity between campuses that are plainly distinct — Equinix's LD4
-      to LD10, CyrusOne London 4/5, Amazon's Buckingham Avenue site, Iron
-      Mountain LON3, the VIRTUS Slough campus, VIRTUS LONDON11 and GTR's
-      GB One. Revisit once site
-      23 is partitioned; the permits' grid references are the sharpest
-      partition evidence available, since each names a campus and gives
-      its coordinates.
+      **Six of these nine are now matched above; three remain here, and
+      for a different reason than before (2026-08-28).** All nine used
+      to fall inside site 23, the only site record on the Slough
+      Trading Estate, which held 21 applications and 15 Barbour
+      projects across at least nine operators' campuses — 1,430 MWth
+      of permitted standby plant inside one record. Matching any one
+      would have asserted an identity between campuses that are
+      plainly distinct. Site 23 was partitioned into eleven campuses
+      on 2026-08-28 (site_partitions.yaml), and LON3, CyrusOne London
+      4/5, the Virtus Slough campus, LON11, GB One and the Ajax Avenue
+      datacentre each found a campus to attach to.
+
+      The three still listed here are not blocked by clustering any
+      more — they are blocked by the corpus. Equinix's own pages place
+      "Equinix Slough Campus Data Centre" (EPR/LP3303PR, SL1 4AX) at
+      LD5, 8 Buckingham Avenue, and "LD11x" (EPR/CP3409BH, SL1 4JW) at
+      765/767 Henley Road; the corpus holds **no application and no
+      Barbour project for either address** (ROADMAP, coverage gaps).
+      Amazon's "Slough Data Centre Back-up Generation Facility"
+      (EPR/PP3309MK, 151.34 MWth) has a grid reference that lands 105 m
+      from 75 Buckingham Avenue, but a Companies House charge shows
+      that building is VIRTUS LONDON10, so Amazon's Slough facility is
+      unplaced rather than merely unmatched. **427 MWth of Equinix
+      plant and 151 MWth of Amazon's therefore sit at addresses the
+      planning corpus has never seen** — which is a finding about
+      coverage, not about matching.
 
   - claims:
       - North Hyde Gardens, Hayes Data Centre Emergency Back-up Generation Facility (EPR/DP3442QV)
