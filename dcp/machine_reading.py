@@ -923,13 +923,33 @@ def document_title(url: str, kind: str) -> str:
     interpreted: underscores to spaces, the extension and the register's
     trailing id dropped, and the kind kept as the fallback.
     """
-    from urllib.parse import unquote
-    name = unquote((url or "").rsplit("/", 1)[-1])
+    from urllib.parse import parse_qs, unquote_plus, urlparse
+    # The filename is not always the last path segment. Ocella portals
+    # (Hillingdon among them) carry it in a query parameter, with
+    # backslash-separated folders inside the value:
+    #   viewDocument?file=dv_pl_files%5C75111_APP_2025_739%5C<name>.pdf&module=pl
+    # rsplit("/") on that returns the whole query string, which rendered
+    # 90 characters of raw URL as a document title in the reading panel
+    # (Luke, 2026-08-28). Parse the URL, prefer a file-ish parameter,
+    # and take the basename across both slash directions; unquote_plus
+    # because query values encode spaces as +.
+    parts = urlparse(url or "")
+    candidate = parts.path.rsplit("/", 1)[-1]
+    if parts.query:
+        qs = parse_qs(parts.query)
+        for k in ("file", "filename", "document", "doc"):
+            if qs.get(k) and qs[k][0]:
+                candidate = qs[k][0]
+                break
+    name = re.split(r"[\\/]", unquote_plus(candidate))[-1]
     name = re.sub(r"\.(pdf|docx?|msg|rtf)$", "", name, flags=re.IGNORECASE)
     name = re.sub(r"-\d{6,}$", "", name)              # the register's id
     name = re.sub(r"^[A-Z0-9]+_[A-Z0-9]+_[A-Z]+-", "", name)   # 25_1781_FUL-
     name = re.sub(r"_+", " ", name).strip()
-    if len(name) < 4:
+    # A name that still reads as plumbing is worse than the kind: a
+    # label with query syntax in it looks like a path-keyed link and
+    # sends a reader hunting for a bug that is not there.
+    if len(name) < 4 or "?" in name or "=" in name:
         return kind or "document"
     return name[:90]
 
