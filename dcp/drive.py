@@ -95,7 +95,21 @@ PHASE1_ARCHIVE_URL = (
 
 # The Gemini Notebook, built by hand from scripts/export_notebook_bundle.py
 # — one document per site, the site report with that site's findings
-# tabulated beneath it. Shared with the reporting team (Luke, 2026-08-11).
+# tabulated beneath it.
+#
+# **New notebook for 2.10, created empty by Luke on 2026-08-28.** A
+# notebook's URL is fixed at creation and does not change as sources are
+# added, so it is made and recorded here before the chain runs; the
+# sources follow once step 9 has rebuilt the staging tree the bundle is
+# welded from. Its predecessor (91c4227e-…) holds the bundle uploaded on
+# 2026-08-11 and is superseded, not deleted — the saved notes in it were
+# out of date, which is why a fresh notebook was preferred to adding to
+# that one.
+#
+# **It is empty until the bundle is uploaded.** Until then the reader
+# links somewhere emptier than the page implies. That is the honest
+# failure of the two — an empty notebook announces itself, where a stale
+# one reads as current — but the upload still belongs before deployment.
 #
 # Not written by any script and not refreshed by the release chain: the
 # upload is manual, so the notebook holds whichever bundle was last
@@ -103,7 +117,7 @@ PHASE1_ARCHIVE_URL = (
 # that matters, the same caveat as the Sheet above.
 NOTEBOOK_URL = (
     "https://notebook.google.com/notebook/"
-    "91c4227e-7625-452d-8def-4fd6a667aabe")
+    "64207c7d-b53f-4128-b0b9-9accdd232684")
 
 # The Pinpoint collection, built by hand from
 # scripts/export_pinpoint_bundle.py — the planning application documents
