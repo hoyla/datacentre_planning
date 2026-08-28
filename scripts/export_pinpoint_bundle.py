@@ -773,6 +773,14 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
     ap.add_argument("--limit", type=int, help="first N sites only")
     ap.add_argument("--jobs", type=int, default=max(1, (os.cpu_count() or 4) - 2))
+    ap.add_argument("--already-uploaded", type=Path, metavar="MANIFEST_CSV",
+                    help="a _manifest.csv from a bundle already linked into "
+                         "Pinpoint. Its documents are skipped entirely — not "
+                         "re-converted, not re-linked — and only what is new "
+                         "is built, into tranches numbered after the highest "
+                         "that manifest records. The old bundle's output "
+                         "files are NOT needed; the manifest alone is "
+                         "enough, which is the point.")
     ap.add_argument("--tranche-size", type=int, default=20_000,
                     help="max files per upload tranche (Pinpoint's daily cap)")
     ap.add_argument("--plan", action="store_true",
@@ -812,6 +820,27 @@ def main() -> None:
     log(logf, f"scanning {args.src}")
     kept, stats = collect(args.src, args.limit)
     log(logf, f"{stats['seen']:,} files, {stats['bytes_in']/g:.1f} GB")
+
+    # Documents already in Pinpoint are dropped here, before conversion,
+    # rather than at tranche time. Skipping late would still recompress
+    # 42,000 PDFs to produce files nobody uploads, and would need the
+    # previous bundle's 64GB on disk to recognise them as cached — the
+    # manifest alone cannot do that, because "cached" means the output
+    # file exists. Keyed on the source content hash, not the staging
+    # path, because paths move: today's British Museum partition renamed
+    # a site folder and every path under it (Luke, 2026-08-28).
+    prior_tranche = 0
+    if args.already_uploaded:
+        with open(args.already_uploaded, encoding="utf-8-sig", newline="") as fh:
+            prior = list(csv.DictReader(fh))
+        done_sha = {r["sha256"] for r in prior if r.get("sha256")}
+        prior_tranche = max((int(r["tranche"]) for r in prior
+                             if str(r.get("tranche", "")).isdigit()), default=0)
+        before = len(kept)
+        kept = [k for k in kept if k[2] not in done_sha]
+        log(logf, f"- {before - len(kept):,} already uploaded "
+                  f"({len(done_sha):,} in {args.already_uploaded.name}, "
+                  f"tranches 1-{prior_tranche})")
     log(logf, f"- {stats['drawings']:,} drawings "
               f"({stats['bytes_drawings']/g:.1f} GB)")
     log(logf, f"- {stats['duplicates']:,} duplicates "
@@ -925,7 +954,7 @@ def main() -> None:
                     or with_site > args.tranche_size:
                 tranche += 1
         for r in group:
-            r["tranche"] = str(tranche + 1)
+            r["tranche"] = str(tranche + 1 + prior_tranche)
         counts[tranche] += len(group)
 
     manifest = args.out / "_manifest.csv"
