@@ -92,6 +92,16 @@ PAGES: dict[str, list[tuple[str, str]]] = {
         ("puredc-brent-cross", "https://puredc.com/london-brent-cross"),
         ("puredc-park-royal", "https://puredc.com/our-london-park-royal-site"),
     ],
+    # Three facilities on one campus, and the campus page adds them up:
+    # 8.7 + 27 + 25 = 60.7 against a stated 61 MW. The rarest thing in
+    # this survey — an operator whose total and breakdown check each
+    # other (Luke, 2026-08-28).
+    "ironmountain": [
+        ("ironmountain-london-campus",
+         "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london"),
+        ("ironmountain-lon3",
+         "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-3"),
+    ],
     "ada": [
         ("ada-docklands", "https://adainfrastructure.com/en-US/docklands"),
     ],

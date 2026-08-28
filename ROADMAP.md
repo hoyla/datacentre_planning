@@ -491,6 +491,23 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **Equinix's Buckingham Avenue estate is absent from the corpus**
+  (found 2026-08-28 while partitioning site 23). Equinix's own LD6
+  page names three IBX facilities on one Slough street — LD4 at 2
+  Buckingham Avenue, LD5 at 8, and LD6 at "352 Buckingham Avenue …
+  Slough Trading Estate … SL1 4PF" — and the corpus holds **no
+  application and no Barbour project for any of them**. The two
+  apparent hits on "8 Buckingham" are 128 Buckingham Road, Bletchley.
+  Equinix also holds two Slough permits the corpus cannot place:
+  EPR/LP3303PR ("Equinix Slough Campus Data Centre", 331.084 MWth,
+  SL1 4AX) and EPR/CP3409BH ("LD11x", 96 MWth, SL1 4JW), neither at
+  the postcode of LD14, the only Equinix campus we do hold. The
+  likeliest cause is the indexing window — council registers are
+  indexed mostly from 2018 and these are older builds — which would
+  make it a general undercount of *operating* capacity rather than an
+  Equinix-specific miss. Worth testing against another
+  long-established operator before it is described that way in print.
+
 Prompted by the **Devon Data Campus** (Xlinks, North Devon), a scheme
 with an active public campaign of which the corpus holds almost nothing:
 zero matches for Xlinks, Valeon or Devon Data Campus. The single
@@ -1062,6 +1079,28 @@ None is abandoned; each is a known, scoped piece of work.
   as the boundary evidence, every member assigned so nothing is left
   to spatial chance. Sites 5, 23, 59 and 11 are what remain, and the
   permits carry their evidence.
+
+  **The partition unit is the campus, not the building** (Luke,
+  2026-08-28, with the operator's own pages as the source). Iron
+  Mountain's London campus page states "Our campus features three
+  facilities — LON-1, LON-2, and LON-3", and the LON-3 page places it
+  on a "Secure 2.5-acre site in Slough Trading Estate, part of LON-1,
+  LON-2, LON-3 campus". So 110 and 111 Buckingham Avenue — 232 m apart
+  and separate Barbour projects (PTNO-12468506, PTNO-12833153) — are
+  distinct data centres that belong in **one** partition, not two. A
+  partition drawn per building would fragment a campus as surely as
+  the 1 km radius has welded seven of them together, and the site 61
+  split exists precisely because fragmentation blocked a capacity
+  claim.
+
+  Two facts to carry into the drawing. The campus discloses **61 MW**
+  across the three facilities (8.7 + 27 + 25 = 60.7, the rarest thing
+  in this survey: a total its own breakdown checks). And the postcodes
+  **conflict** — Iron Mountain gives LON-3 at "111 Buckingham Avenue
+  Slough, SL1 4PF", while Barbour has 111 Buckingham Avenue at SL1 4PN
+  and puts SL1 4PF on 110. Postcode is a matching key, so one of the
+  two is wrong and the conflict has to be resolved rather than
+  averaged.
 - **Requests outstanding, and three drafted awaiting Luke's send.**
   NESO and Ofgem were written to on 2026-08-12 and replies are due
   around 10 September. The three never-sent requests are now drafted in
