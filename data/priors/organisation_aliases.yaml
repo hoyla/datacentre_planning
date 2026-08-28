@@ -169,6 +169,116 @@ groups:
               here at all.
             date: 2026-08-26
 
+  - group: Ark Data Centres
+    company_number: "05656968"
+    note: >-
+      Ark files its planning applications through numbered "Ark Estates"
+      SPVs, roughly one per campus: Estates 2 at Union Park (Hillingdon
+      75111), Estates 3 at Park Royal, Estates 4 and Spring Park at
+      Corsham, Estates 5 at Hertsmere. Every member below is registered
+      at Ark Data Centres' own registered office — Spring Park, Westwells
+      Road, Corsham SN13 9GB — and Ark Estates 2 shares eight officers
+      with Ark Data Centres Limited. The relationship is common ownership
+      rather than a PSC chain: Ark Data Centres' PSC is Revcap Properties
+      25 Limited while Ark Estates 2's is Paul Elliott Singer as an
+      individual, the same ultimate interest arriving by different
+      routes, so the shared office and officers carry the identification.
+      Same-name strangers deliberately excluded after checking: ARK
+      ESTATES LIMITED (03759198), ARK ESTATES LTD (09867281), ARK ESTATES
+      (SCOTLAND) LIMITED (SC245309) and ARK ESTATES MANAGEMENT LLP
+      (OC451909) show no Spring Park connection and are not this group.
+      Spotted by Luke, 2026-08-28, from the registrum.co.uk group view of
+      05656968.
+    members:
+      - name: Ark Estates 1 Limited
+        relation: spv_of
+        status: confirmed
+        company_number: "12104497"
+        note: >-
+          Not yet named in any document this corpus holds; recorded so
+          that when it appears it lands in the group rather than as a
+          stranger.
+        evidence:
+          - source: companies_house
+            ref: "12104497"
+            note: Registered office Spring Park, Westwells Road, Corsham SN13 9GB, Ark Data Centres' own; incorporated 2019-07-17, nine days before Ark Estates 2.
+            date: 2026-08-28
+      - name: Ark Estates 2 Ltd
+        relation: spv_of
+        status: confirmed
+        company_number: "12113969"
+        evidence:
+          - source: companies_house
+            ref: "12113969"
+            note: >-
+              Registered office Spring Park, Westwells Road, Corsham
+              SN13 9GB, Ark Data Centres' own. Eight current or former
+              officers shared with Ark Data Centres Limited (Burrage,
+              Garvin, McDonald, Owen, Perryment, Pettit, Silvester,
+              Singh). PSC Paul Elliott Singer, 75%+.
+            date: 2026-08-28
+          - source: register
+            ref: Hillingdon/75111/APP/2020/1955
+            site_key: PTNO-12511337
+            note: Applicant of record across the Union Park campus; 56 applications in the corpus name it.
+            date: 2026-08-28
+      - name: Ark Estates 3 Ltd
+        relation: spv_of
+        status: confirmed
+        company_number: "12777470"
+        evidence:
+          - source: companies_house
+            ref: "12777470"
+            note: Registered office Spring Park, Westwells Road, Corsham SN13 9GB.
+            date: 2026-08-28
+          - source: register
+            ref: OldOakParkRoyal/22/0059/FUMOPDC
+            site_key: PTNO-12548129
+            note: Applicant of record at Park Royal.
+            date: 2026-08-28
+      - name: Ark Estates 4 Limited
+        relation: spv_of
+        status: confirmed
+        company_number: "13626341"
+        evidence:
+          - source: companies_house
+            ref: "13626341"
+            note: Registered office Spring Park, Westwells Road, Corsham SN13 9GB.
+            date: 2026-08-28
+          - source: register
+            ref: Wiltshire/PL/2024/05527
+            site_key: PTNO-12235447
+            note: Applicant of record at Corsham.
+            date: 2026-08-28
+      - name: Ark Estates 5 Ltd
+        relation: spv_of
+        status: confirmed
+        company_number: "15253589"
+        evidence:
+          - source: companies_house
+            ref: "15253589"
+            note: Registered office Spring Park, Westwells Road, Corsham SN13 9GB.
+            date: 2026-08-28
+          - source: register
+            ref: Hertsmere/25/1781/FUL
+            site_key: PTNO-12879308
+            note: Applicant of record at the Hertsmere site.
+            date: 2026-08-28
+      - name: Ark Estates Spring Park Limited
+        relation: spv_of
+        status: confirmed
+        company_number: "10009711"
+        evidence:
+          - source: companies_house
+            ref: "10009711"
+            note: Registered office Spring Park, Westwells Road, Hawthorn, Corsham SN13 9GB.
+            date: 2026-08-28
+          - source: register
+            ref: Wiltshire/PL/2022/01975
+            site_key: PTNO-12235447
+            note: Applicant of record at Corsham.
+            date: 2026-08-28
+
   - group: Vantage Data Centers
     note: >-
       Vantage's UK sites are developed through numbered SPVs whose names
