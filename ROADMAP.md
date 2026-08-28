@@ -491,6 +491,32 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **Pinpoint and Giant hold a snapshot that is going stale, and nothing
+  measures the gap.** Both take exactly the same input — the entire
+  contents of the Drive `sites` folder, which is the documents
+  themselves: 55,491 files and 141GB in the 2.9 staging tree, grouped by
+  site and application beside each site's report and findings CSV.
+  Neither cares about that structure; both care about **completeness**,
+  because a document absent from the upload is a document that returns
+  no hits and says nothing about why (Luke, 2026-08-28).
+
+  The last upload was 2026-08-12. **4,464 documents have been added to
+  the corpus since**, and 2.10 adds more — Hounslow's 271 and Camden's
+  221 arrived by hand today alone. So both repositories search a corpus
+  that no longer matches the reader, the workbook or the database, and a
+  reporter who searches Pinpoint and finds nothing cannot tell "not in
+  the documents" from "not uploaded yet".
+
+  **Explicitly deferred past 2.10 by Luke.** What it needs when picked
+  up: a record of what each repository holds — neither is queryable for
+  its own contents from here — so the delta can be computed rather than
+  guessed, and re-upload folded into the release chain rather than left
+  to be remembered. Note the quota interaction: Pinpoint's is 100GB
+  against the folder's 141GB, which is why
+  `scripts/export_pinpoint_bundle.py` drops drawings, dedups and
+  recompresses at 200dpi. Whether Giant needs the same treatment is
+  unestablished.
+
 - **One address, two postcodes: a three-line check that would have
   caught the British Museum merge without anyone reading a document.**
   The premise, established 2026-08-28: a postcode inside a council's
