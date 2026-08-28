@@ -1,0 +1,2615 @@
+{
+  "ap3427sq": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/AP3427SQ",
+    "postcode": "LU5 5GX",
+    "site_address": "Linmere Island Data Centre, Sundon Road, Luton, LU5 5GX"
+  },
+  "ap3522se": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Kyndryl UK Limited",
+    "operator": "Kyndryl",
+    "permission_number": "EPR/AP3522SE",
+    "postcode": "PO6 3AU",
+    "site_address": "IBM, IBM Data Centre North Harbour, North Harbour, Cosham, Portsmouth, PO6 3AU"
+  },
+  "ap3903pd": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1362071,
+        "document": "EPR-AP3903PD_SI_0576003_20250827.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-08-27",
+        "pages": 5,
+        "report_id": "0576003",
+        "sha256": "9c7ab85a51a200f1c913d430509e825b2472cc82da801b9d693e3bad5b0a9e44",
+        "stem": "ap3903pd-car-0576003",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_AP3903PD/EPR-AP3903PD_SI_0576003_20250827.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1156772,
+        "document": "EPR-AP3903PD_RD_0576015_20250904.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-04",
+        "pages": 6,
+        "report_id": "0576015",
+        "sha256": "1b3dff421d3e976990b4f1fbd9b57b50bfac461c35cdbd323cff5ebed86778e6",
+        "stem": "ap3903pd-car-0576015",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_AP3903PD/EPR-AP3903PD_RD_0576015_20250904.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1180838,
+        "document": "EPR-AP3903PD_RD_0599157_20260515.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-15",
+        "pages": 5,
+        "report_id": "0599157",
+        "sha256": "4f1aec45e4e18f2271a5e649f472358dffccb40579f23f7e6496520b1155a640",
+        "stem": "ap3903pd-car-0599157",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_AP3903PD/EPR-AP3903PD_RD_0599157_20260515.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1066489,
+        "document": "EPR-AP3903PD_RD_0600375_20260605.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-06-05",
+        "pages": 4,
+        "report_id": "0600375",
+        "sha256": "50df51305ad6cbafb50854fded0ead5ab46d7bf0ee97d104fcaf24bd19914040",
+        "stem": "ap3903pd-car-0600375",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_AP3903PD/EPR-AP3903PD_RD_0600375_20260605.pdf"
+      }
+    ],
+    "holder": "VIRTUS HOLDCO LIMITED",
+    "operator": "VIRTUS Data Centres",
+    "permission_number": "EPR/AP3903PD",
+    "postcode": "UB11 1HB",
+    "site_address": "Prologis Park, Virtus Data Centres Stockley Park campus, Horton Road, London, UB11 1HB"
+  },
+  "bp3322lu": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Pulsant Limited",
+    "operator": "Pulsant",
+    "permission_number": "EPR/BP3322LU",
+    "postcode": "B11 3RZ",
+    "site_address": "Pulsant, 20 Westwood Avenue, Birmingham, B11 3RZ"
+  },
+  "bp3425sd": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "operator": "Barclays",
+    "permission_number": "EPR/BP3425SD",
+    "postcode": "NN4 7SG",
+    "site_address": "Barclays Northampton Campus, Barclays Northampton Campus, 1234 Pavillion Drive, Northampton, NN4 7SG"
+  },
+  "bp3530yr": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1173488,
+        "document": "EPR-BP3530YR_RD_0599693_20260526.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-26",
+        "pages": 5,
+        "report_id": "0599693",
+        "sha256": "412c53ebe9b72e798c281406632939b99345626db54f36b8a5e398bd2fc12000",
+        "stem": "bp3530yr-car-0599693",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3530YR/EPR-BP3530YR_RD_0599693_20260526.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1715711,
+        "document": "EPR-BP3530YR_SI_0600949_20260617.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-06-17",
+        "pages": 5,
+        "report_id": "0600949",
+        "sha256": "28dff374a90774e60304f158efb14fd5d455eb2701fadce7e65c73c71ac8e048",
+        "stem": "bp3530yr-car-0600949",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3530YR/EPR-BP3530YR_SI_0600949_20260617.pdf"
+      }
+    ],
+    "holder": "GLOBAL SWITCH LIMITED",
+    "operator": "Global Switch",
+    "permission_number": "EPR/BP3530YR",
+    "postcode": "E14 9YY",
+    "site_address": "240, East India Dock House, East India Dock Road, East India Dock Road, London, E14 9YY"
+  },
+  "bp3546qp": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1085636,
+        "document": "EPR-BP3546QP_SI_0587947_20251201.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-01",
+        "pages": 4,
+        "report_id": "0587947",
+        "sha256": "56e981b26b7b4573ec9a305aec305c4e479777441cb30293c648efffd8048300",
+        "stem": "bp3546qp-car-0587947",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3546QP/EPR-BP3546QP_SI_0587947_20251201.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1065877,
+        "document": "EPR-BP3546QP_RD_0599440_20260520.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-20",
+        "pages": 4,
+        "report_id": "0599440",
+        "sha256": "697f3b627ea646e522f1bd08e825b20e24a5b0dc6b10712e58e6d656d574fac1",
+        "stem": "bp3546qp-car-0599440",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3546QP/EPR-BP3546QP_RD_0599440_20260520.pdf"
+      }
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/BP3546QP",
+    "postcode": "HP2 4ZB",
+    "site_address": "3A , Hemel Hempstead Data Centre - Emergency Back-up, Blossom Way, Hemel Hempstead, Hertfordshire, HP2 4ZB"
+  },
+  "bp3800pz": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1771091,
+        "document": "EPR-BP3800PZ_SI_0587535_20251127.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-27",
+        "pages": 7,
+        "report_id": "0587535",
+        "sha256": "eaaf0f400a6400b23c1d556e228b0b9e2a0e83b75f9dfe636d259d9d803ef250",
+        "stem": "bp3800pz-car-0587535",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3800PZ/EPR-BP3800PZ_SI_0587535_20251127.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1111624,
+        "document": "EPR-BP3800PZ_RD_0599412_20260520.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-20",
+        "pages": 4,
+        "report_id": "0599412",
+        "sha256": "ee24eb05fb3fa259f818a154e55e79204366f85b4e06b8bce75d4ef483dfe2b9",
+        "stem": "bp3800pz-car-0599412",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3800PZ/EPR-BP3800PZ_RD_0599412_20260520.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1109135,
+        "document": "EPR-BP3800PZ_RD_0599414_20260520.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-20",
+        "pages": 4,
+        "report_id": "0599414",
+        "sha256": "20561352ae2cdfb4003682a01344b5f1f67433d1ae3f184340fe635f1d8f11dc",
+        "stem": "bp3800pz-car-0599414",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3800PZ/EPR-BP3800PZ_RD_0599414_20260520.pdf"
+      }
+    ],
+    "holder": "NTT GLOBAL DATA CENTERS EMEA UK LTD",
+    "operator": "NTT Global Data Centers",
+    "permission_number": "EPR/BP3800PZ",
+    "postcode": "HP2 7SU",
+    "site_address": "NTT GDC EMEA UK Limited, Hemel Hempstead Datacentres - EPR/BP3800PZ/A001, 3 Centro Boundary Way, Hemel Hempstead, HP2 7SU"
+  },
+  "bp3825sm": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "CANARY WHARF MANAGEMENT LIMITED",
+    "operator": "Barclays",
+    "permission_number": "EPR/BP3825SM",
+    "postcode": "E14 4EY",
+    "site_address": "Barclays Execution Services Ltd, 5 North Colonnade, London, E14 4EY"
+  },
+  "bp3945qx": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1169181,
+        "document": "EPR-BP3945QX_RD_0593367_20260220.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-20",
+        "pages": 4,
+        "report_id": "0593367",
+        "sha256": "2690d4ef57b3d3b24251f1fc058e47bca2794ad4ef8d540af074acbf44a14347",
+        "stem": "bp3945qx-car-0593367",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3945QX/EPR-BP3945QX_RD_0593367_20260220.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1161710,
+        "document": "EPR-BP3945QX_RD_0597197_20260409.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-09",
+        "pages": 4,
+        "report_id": "0597197",
+        "sha256": "6eab8769312dae535ed3ff40636418fbd799595193e1d1482f97b5e6e37ea8b1",
+        "stem": "bp3945qx-car-0597197",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3945QX/EPR-BP3945QX_RD_0597197_20260409.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1287583,
+        "document": "EPR-BP3945QX_RD_0591711_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 5,
+        "report_id": "0591711",
+        "sha256": "5245b6a82ad123810e0970bba014e6ee67f0dec5ab94bc2868c86b40bca897fe",
+        "stem": "bp3945qx-car-0591711",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3945QX/EPR-BP3945QX_RD_0591711_20260415.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1235443,
+        "document": "EPR-BP3945QX_PR_0597239_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 4,
+        "report_id": "0597239",
+        "sha256": "89aedf8d98b4adb8ce46e94142b63fd802c6de7ba5a482366a4c45d27823838b",
+        "stem": "bp3945qx-car-0597239",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3945QX/EPR-BP3945QX_PR_0597239_20260415.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1340115,
+        "document": "EPR-BP3945QX_PR_0597264_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 4,
+        "report_id": "0597264",
+        "sha256": "25d3211741e94f7a2bb2936f79f9f6bf2a974561cb40f2dda715a8c56a082c05",
+        "stem": "bp3945qx-car-0597264",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3945QX/EPR-BP3945QX_PR_0597264_20260415.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1363641,
+        "document": "EPR-BP3945QX_PR_0597274_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 5,
+        "report_id": "0597274",
+        "sha256": "7fc4d738ca513f9a700f75529ecf3543427c7f1bee38470380452a071adf5c82",
+        "stem": "bp3945qx-car-0597274",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_BP3945QX/EPR-BP3945QX_PR_0597274_20260415.pdf"
+      }
+    ],
+    "holder": "VIRTUS HOLDCO LIMITED",
+    "operator": "VIRTUS Data Centres",
+    "permission_number": "EPR/BP3945QX",
+    "postcode": "SL1 4QZ",
+    "site_address": "Virtus Slough Campus Data Centres, Virtus Slough Campus Data Centres, 14 Liverpool Road, Slough Trading Estate, Slough, SL1 4QZ"
+  },
+  "cp3042qg": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1160856,
+        "document": "EPR-CP3042QG_RD_0597078_20260408.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-08",
+        "pages": 4,
+        "report_id": "0597078",
+        "sha256": "662dfa32aa5d438e8919dcd547ab2f706962c0a7870035424f8dbcf84d6ae5a6",
+        "stem": "cp3042qg-car-0597078",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3042QG/EPR-CP3042QG_RD_0597078_20260408.pdf"
+      }
+    ],
+    "holder": "GTR MANAGEMENT SERVICES LIMITED",
+    "operator": "unattributed",
+    "permission_number": "EPR/CP3042QG",
+    "postcode": "SL1 4BG",
+    "site_address": "GB One Data Centre, GB One Data Centre, Ajax Avenue, Slough, SL1 4BG"
+  },
+  "cp3347jv": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1161316,
+        "document": "EPR-CP3347JV_RD_0597217_20260409.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-09",
+        "pages": 4,
+        "report_id": "0597217",
+        "sha256": "caec3ed53a971f25ec784e5ab1f16798ba785c4a1c16aa36794f9160634fa816",
+        "stem": "cp3347jv-car-0597217",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3347JV/EPR-CP3347JV_RD_0597217_20260409.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1300779,
+        "document": "EPR-CP3347JV_PR_0593331_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 5,
+        "report_id": "0593331",
+        "sha256": "2df6c02e3236701fc266a742981ccb7af3fc1239490ac6c46b0f19ad0f7c8267",
+        "stem": "cp3347jv-car-0593331",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3347JV/EPR-CP3347JV_PR_0593331_20260415.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1247515,
+        "document": "EPR-CP3347JV_PR_0597248_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 12,
+        "report_id": "0597248",
+        "sha256": "a65ed8cff82eedf77630540737b278dc5a158f325e3133ed6415e4ba1d9e426a",
+        "stem": "cp3347jv-car-0597248",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3347JV/EPR-CP3347JV_PR_0597248_20260415.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1276684,
+        "document": "EPR-CP3347JV_PR_0597250_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 4,
+        "report_id": "0597250",
+        "sha256": "0895defbbfcec8e2f8dfe28caa5161c4270211073b7c82dbe6e56c3a5a5ac6c3",
+        "stem": "cp3347jv-car-0597250",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3347JV/EPR-CP3347JV_PR_0597250_20260415.pdf"
+      }
+    ],
+    "holder": "VIRTUS LONDON 9 LIMITED",
+    "operator": "VIRTUS Data Centres",
+    "permission_number": "EPR/CP3347JV",
+    "postcode": "SL1 4QU",
+    "site_address": "470-474, LON9 Data Centre, Malton Avenue, Slough Trading Estate, Slough, SL1 4QU"
+  },
+  "cp3409bh": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1161867,
+        "document": "EPR-CP3409BH_PR_0573085_20250915.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-15",
+        "pages": 4,
+        "report_id": "0573085",
+        "sha256": "f2e2cc022125c6e5495ab90cf4303ef74d244c85b7dbfee172e616d7284566e2",
+        "stem": "cp3409bh-car-0573085",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3409BH/EPR-CP3409BH_PR_0573085_20250915.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1061649,
+        "document": "EPR-CP3409BH_SI_0585165_20251027.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-10-27",
+        "pages": 3,
+        "report_id": "0585165",
+        "sha256": "81ccf0b844e7e461b4f8ee1b3a1ae681c4a64816df088a54492cbf3048d4ded1",
+        "stem": "cp3409bh-car-0585165",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3409BH/EPR-CP3409BH_SI_0585165_20251027.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1160960,
+        "document": "EPR-CP3409BH_RD_0596927_20260401.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-01",
+        "pages": 4,
+        "report_id": "0596927",
+        "sha256": "4af9a09a9ec505c88aa2211a16e4e6e0458d5305f9b1fcb8ce0b9ed0621d8dac",
+        "stem": "cp3409bh-car-0596927",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3409BH/EPR-CP3409BH_RD_0596927_20260401.pdf"
+      }
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "operator": "Equinix",
+    "permission_number": "EPR/CP3409BH",
+    "postcode": "SL1 4JW",
+    "site_address": "765, Equinix LD11X, Henley Road, Slough Trading Estate, Slough, SL1 4JW"
+  },
+  "cp3726su": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "operator": "Barclays",
+    "permission_number": "EPR/CP3726SU",
+    "postcode": "BH8 8EH",
+    "site_address": "The Helm, The Helm, 37 Holdenhurst Road, Bournemouth, BH8 8EH"
+  },
+  "cp3902lv": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1247765,
+        "document": "EPR-CP3902LV_SI_0587261_20251118.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-18",
+        "pages": 5,
+        "report_id": "0587261",
+        "sha256": "8e8506ecffe279a457c4afe53c9be530b67f9745f0cab138186fa4181be33c51",
+        "stem": "cp3902lv-car-0587261",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3902LV/EPR-CP3902LV_SI_0587261_20251118.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1169354,
+        "document": "EPR-CP3902LV_RD_0599706_20260527.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-27",
+        "pages": 4,
+        "report_id": "0599706",
+        "sha256": "1ad2e9259d9a1323909e4278a17e43fae72082d0c76bb84a1af22d3237dd8bbb",
+        "stem": "cp3902lv-car-0599706",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_CP3902LV/EPR-CP3902LV_RD_0599706_20260527.pdf"
+      }
+    ],
+    "holder": "NTT GLOBAL DATA CENTERS EMEA UK LTD",
+    "operator": "NTT Global Data Centers",
+    "permission_number": "EPR/CP3902LV",
+    "postcode": "RM10 7FZ",
+    "site_address": "NTT Global Data Centers UK EMEA Limited, NTT Global Data Centers UK EMEA Limited EPR/CP3902LV, Yewtree Avenue, Dagenham, RM10 7FZ"
+  },
+  "db3490yy": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "operator": "Barclays",
+    "permission_number": "EPR/DB3490YY",
+    "postcode": "WA16 9EU",
+    "site_address": "Radbroke Hall, Barclays Radbroke Hall, Stocks Lane, Knutsford, WA16 9EU"
+  },
+  "dp3107lf": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1108736,
+        "document": "EPR-DP3107LF_RD_0599446_20260520.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-20",
+        "pages": 4,
+        "report_id": "0599446",
+        "sha256": "c5e98b67e33cc2114f043783d8b3d1b6b66b9ddc23fb73d14a652f7abc58e86b",
+        "stem": "dp3107lf-car-0599446",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3107LF/EPR-DP3107LF_RD_0599446_20260520.pdf"
+      }
+    ],
+    "holder": "COLT DATA CENTRE SERVICES UK LIMITED",
+    "operator": "Colt Data Centre Services",
+    "permission_number": "EPR/DP3107LF",
+    "postcode": "NW10 6PN",
+    "site_address": "Unit 9 - 13, Colt - Powergate, Colt - Powergate EPR/DP3107LF, Volt Avenue, Powergate Business Park, North Acton, NW10 6PN"
+  },
+  "dp3348qs": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1171452,
+        "document": "EPR-DP3348QS_RD_0597219_20260409.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-09",
+        "pages": 4,
+        "report_id": "0597219",
+        "sha256": "30a18de8e1fab8ee7c9e58094050af7f757e2457c7ea127bb329c0bd330b02ba",
+        "stem": "dp3348qs-car-0597219",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3348QS/EPR-DP3348QS_RD_0597219_20260409.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1232202,
+        "document": "EPR-DP3348QS_PR_0597125_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 4,
+        "report_id": "0597125",
+        "sha256": "d38eb08bc29b51eb694c5ba95fe5881fa904a9ffe55d59a1aaee70ce52e447fd",
+        "stem": "dp3348qs-car-0597125",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3348QS/EPR-DP3348QS_PR_0597125_20260415.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1241370,
+        "document": "EPR-DP3348QS_PR_0597128_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 5,
+        "report_id": "0597128",
+        "sha256": "db6261f152c8c315810c75811b6f7770bfae8c61e6cb3dfb5f1b4713e3e0b89c",
+        "stem": "dp3348qs-car-0597128",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3348QS/EPR-DP3348QS_PR_0597128_20260415.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1234928,
+        "document": "EPR-DP3348QS_PR_0597243_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 4,
+        "report_id": "0597243",
+        "sha256": "f85203b0fc73547b35b58dc1b7c593a1162346ca639522bcc04eb2810d53442a",
+        "stem": "dp3348qs-car-0597243",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3348QS/EPR-DP3348QS_PR_0597243_20260415.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1217554,
+        "document": "EPR-DP3348QS_PR_0597258_20260415.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-15",
+        "pages": 4,
+        "report_id": "0597258",
+        "sha256": "c95116023f723c2b796bf254f7dd317f11ace8e46cea723ba9581e754254aaa1",
+        "stem": "dp3348qs-car-0597258",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3348QS/EPR-DP3348QS_PR_0597258_20260415.pdf"
+      }
+    ],
+    "holder": "VIRTUS LONDON 11 LIMITED",
+    "operator": "VIRTUS Data Centres",
+    "permission_number": "EPR/DP3348QS",
+    "postcode": "SL1 4HA",
+    "site_address": "580, LON11 Data Centre, Ipswich Road, Slough Trading Estate, Slough, SL1 4HA"
+  },
+  "dp3442qv": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1331447,
+        "document": "EPR-DP3442QV_SI_0587720_20251127.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-27",
+        "pages": 6,
+        "report_id": "0587720",
+        "sha256": "d3d9cfe2ae99f0e061eb0892663b9514c7a35297ec2fa6bc317cb55bcfb03f0e",
+        "stem": "dp3442qv-car-0587720",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3442QV/EPR-DP3442QV_SI_0587720_20251127.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1164842,
+        "document": "EPR-DP3442QV_RD_0599264_20260518.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-18",
+        "pages": 5,
+        "report_id": "0599264",
+        "sha256": "e71fa88e2efc92e9e468ffd9d0ad715773f07b87809e8bd0cde99b50f7d920c1",
+        "stem": "dp3442qv-car-0599264",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3442QV/EPR-DP3442QV_RD_0599264_20260518.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1116675,
+        "document": "EPR-DP3442QV_RD_0599315_20260519.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-19",
+        "pages": 4,
+        "report_id": "0599315",
+        "sha256": "18aa7aa91f9345454205ba55ca2204bf420547e60faf9b9639f4beeac944f62b",
+        "stem": "dp3442qv-car-0599315",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3442QV/EPR-DP3442QV_RD_0599315_20260519.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1200851,
+        "document": "EPR-DP3442QV_RD_0600464_20260609.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-06-09",
+        "pages": 6,
+        "report_id": "0600464",
+        "sha256": "cc900432f1b41c023fe0d42ccfcb06cd2b5a8dccd96a91bc28eccad2857f0947",
+        "stem": "dp3442qv-car-0600464",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3442QV/EPR-DP3442QV_RD_0600464_20260609.pdf"
+      }
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/DP3442QV",
+    "postcode": "UB3 4DG",
+    "site_address": "North Hyde Gardens, Hayes Data Centre Emergency Back-up Generation Facility, Hayes Data Centre Emergency Back-up Generation Facility, Bulls Bridge Industrial Estate, Hayes, UB3 4DG"
+  },
+  "dp3528lq": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "nLighten Chester Limited",
+    "operator": "nLighten",
+    "permission_number": "EPR/DP3528LQ",
+    "postcode": "CH1 6LT",
+    "site_address": "Chester Data Centre, Telford Court, Chester, CH1 6LT"
+  },
+  "dp3728ll": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "nLighten Liverpool Limited",
+    "operator": "nLighten",
+    "permission_number": "EPR/DP3728LL",
+    "postcode": "CH62 3RD",
+    "site_address": "Liverpool Data Centre, Liverpool Data Centre, Georgia Avenue, Bromborough, CH62 3RD"
+  },
+  "dp3906be": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1570277,
+        "document": "EPR-DP3906BE_SI_0574969_20250826.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-08-26",
+        "pages": 6,
+        "report_id": "0574969",
+        "sha256": "8bb943316c5ef5243e003b578ca007b8a77a287b4d65ef81ccbdb00d862d57d7",
+        "stem": "dp3906be-car-0574969",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3906BE/EPR-DP3906BE_SI_0574969_20250826.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1104614,
+        "document": "EPR-DP3906BE_RD_0590374_20260120.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-01-20",
+        "pages": 5,
+        "report_id": "0590374",
+        "sha256": "9fa5c6867f70b8669397d9559a3dcbb2cc61f369bc3052b05c053cc65c7b7494",
+        "stem": "dp3906be-car-0590374",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3906BE/EPR-DP3906BE_RD_0590374_20260120.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1241723,
+        "document": "EPR-DP3906BE_RD_0599648_20260526.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-26",
+        "pages": 4,
+        "report_id": "0599648",
+        "sha256": "ef11ffaeabd29c0dabe4d459ff26a8f38012a33985ccb6642ae5ed3043759bd1",
+        "stem": "dp3906be-car-0599648",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_DP3906BE/EPR-DP3906BE_RD_0599648_20260526.pdf"
+      }
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "operator": "Equinix",
+    "permission_number": "EPR/DP3906BE",
+    "postcode": "E14 9GE",
+    "site_address": "6/7/8/9, LD8, LD8, Harbour Exchange Square, London, E14 9GE"
+  },
+  "ep3022st": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1123585,
+        "document": "EPR-EP3022ST_SI_0577928_20250909.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-09",
+        "pages": 4,
+        "report_id": "0577928",
+        "sha256": "e8638738980b64b3650d2038a9958d2d8972a5756c047bfedcfa707dbdeca235",
+        "stem": "ep3022st-car-0577928",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3022ST/EPR-EP3022ST_SI_0577928_20250909.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1108986,
+        "document": "EPR-EP3022ST_RD_0595008_20260309.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-09",
+        "pages": 4,
+        "report_id": "0595008",
+        "sha256": "f8ed00a482dede130fcad62f037c49e32a8584a447254a12f7df8829fa6eaf2f",
+        "stem": "ep3022st-car-0595008",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3022ST/EPR-EP3022ST_RD_0595008_20260309.pdf"
+      }
+    ],
+    "holder": "DIGITAL REALTY (UK) LIMITED",
+    "operator": "Digital Realty",
+    "permission_number": "EPR/EP3022ST",
+    "postcode": "RH10 9BD",
+    "site_address": "Digital Realty Crawley Data Centre Campus, Unit 1 and Unit 2, Manor Royal, Crawley, RH10 9BD"
+  },
+  "ep3247jv": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1110965,
+        "document": "EPR-EP3247JV_RD_0599105_20260514.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-14",
+        "pages": 4,
+        "report_id": "0599105",
+        "sha256": "9219f5d86b8c82e2f753f9a579bf19851fe2cc2e0a3f4df283b3cf2c1a1c7d61",
+        "stem": "ep3247jv-car-0599105",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3247JV/EPR-EP3247JV_RD_0599105_20260514.pdf"
+      }
+    ],
+    "holder": "VIRTUS HAYES LIMITED",
+    "operator": "VIRTUS Data Centres",
+    "permission_number": "EPR/EP3247JV",
+    "postcode": "UB2 5XX",
+    "site_address": "Western International Park, LON2 Data Centre, Hayes Road, Hayes, UB2 5XX"
+  },
+  "ep3335jz": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1236894,
+        "document": "EPR-EP3335JZ_SI_0590976_20260202.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-02",
+        "pages": 4,
+        "report_id": "0590976",
+        "sha256": "48f6d4a855bc63900606818a3f1c3cccc78e848aeeec20c17fecd04f56c3ae11",
+        "stem": "ep3335jz-car-0590976",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3335JZ/EPR-EP3335JZ_SI_0590976_20260202.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1109945,
+        "document": "EPR-EP3335JZ_RD_0594980_20260309.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-09",
+        "pages": 4,
+        "report_id": "0594980",
+        "sha256": "29e1867754b8fe9d3aee67e977ab610e3dc643386be0352a6dd53dbaf9b6da13",
+        "stem": "ep3335jz-car-0594980",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3335JZ/EPR-EP3335JZ_RD_0594980_20260309.pdf"
+      }
+    ],
+    "holder": "DIGITAL REALTY (UK) LIMITED",
+    "operator": "Digital Realty",
+    "permission_number": "EPR/EP3335JZ",
+    "postcode": "KT9 1SJ",
+    "site_address": "Digital Realty, Fountain Court, Digital Realty Chessington (LHR13), Cox Lane, Chessington, Kingston upon Thames, KT9 1SJ"
+  },
+  "ep3507sl": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1066061,
+        "document": "EPR-EP3507SL_RD_0597852_20260423.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-23",
+        "pages": 4,
+        "report_id": "0597852",
+        "sha256": "ba7db7871f40dd003f70104f432c4d86798d19c99d75ea36325ade68c81862fd",
+        "stem": "ep3507sl-car-0597852",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3507SL/EPR-EP3507SL_RD_0597852_20260423.pdf"
+      }
+    ],
+    "holder": "TELEHOUSE INTERNATIONAL CORPORATION OF EUROPE LTD",
+    "operator": "Telehouse",
+    "permission_number": "EPR/EP3507SL",
+    "postcode": "E14 2EH",
+    "site_address": "Docklands Technical centre, Docklands Technical Centre, 1 Paul Julius Close, Blackwall Way Poplar, London, E14 2EH"
+  },
+  "ep3508ps": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1315739,
+        "document": "EPR-EP3508PS_RD_0580356_20250929.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-29",
+        "pages": 4,
+        "report_id": "0580356",
+        "sha256": "6e30e6b16e6ad6fd8a55597c0fc1a1e242409948c9571d4b34ffe44fd950b06b",
+        "stem": "ep3508ps-car-0580356",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3508PS/EPR-EP3508PS_RD_0580356_20250929.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1255603,
+        "document": "EPR-EP3508PS_RD_0580399_20250929.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-29",
+        "pages": 4,
+        "report_id": "0580399",
+        "sha256": "59d42d6679c9eaa73f26cf432e2acf64a18b22ed2d22627d1843f3d140c366ac",
+        "stem": "ep3508ps-car-0580399",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3508PS/EPR-EP3508PS_RD_0580399_20250929.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1233742,
+        "document": "EPR-EP3508PS_RD_0580939_20250929.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-29",
+        "pages": 4,
+        "report_id": "0580939",
+        "sha256": "0108e7c13a8dcb9b033e2818374a2b54f322e09ae70efca11534680b8e3aafcf",
+        "stem": "ep3508ps-car-0580939",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3508PS/EPR-EP3508PS_RD_0580939_20250929.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1322080,
+        "document": "EPR-EP3508PS_SI_0587861_20251201.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-01",
+        "pages": 6,
+        "report_id": "0587861",
+        "sha256": "15711f94039b66f6b49021d1bc8e52648479f7213411147a95d61a4b53fd608b",
+        "stem": "ep3508ps-car-0587861",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3508PS/EPR-EP3508PS_SI_0587861_20251201.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1155961,
+        "document": "EPR-EP3508PS_RD_0596845_20260401.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-01",
+        "pages": 4,
+        "report_id": "0596845",
+        "sha256": "ad69b7110589025249833b93baea6e712a6187efca2beda0810d3e18ee7fa29e",
+        "stem": "ep3508ps-car-0596845",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3508PS/EPR-EP3508PS_RD_0596845_20260401.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1121703,
+        "document": "EPR-EP3508PS_RD_0603026_20260707.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-07-07",
+        "pages": 4,
+        "report_id": "0603026",
+        "sha256": "e12e84cbee4616ef9569ba9705dcf8743a3dfd050dd6fdee8eaf450f567b94d9",
+        "stem": "ep3508ps-car-0603026",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3508PS/EPR-EP3508PS_RD_0603026_20260707.pdf"
+      }
+    ],
+    "holder": "CYRUSONE UK4 LIMITED",
+    "operator": "CyrusOne",
+    "permission_number": "EPR/EP3508PS",
+    "postcode": "SL1 4AA",
+    "site_address": "225, CyrusOne (London 4), CyrusOne London 4/5 Datacentres EPR/EP3508PS, Bath Road, Slough, SL1 4AA"
+  },
+  "ep3608pm": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1184946,
+        "document": "EPR-EP3608PM_RD_0577009_20250908.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-08",
+        "pages": 4,
+        "report_id": "0577009",
+        "sha256": "7cd8dbf2e195d918b45df244ef50205fc82479d6b899811e754af0088da0d2cd",
+        "stem": "ep3608pm-car-0577009",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3608PM/EPR-EP3608PM_RD_0577009_20250908.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1363703,
+        "document": "EPR-EP3608PM_RD_0578126_20250915.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-15",
+        "pages": 4,
+        "report_id": "0578126",
+        "sha256": "444d1b517347b1942dcc0701d5b94075e64bdc2022a797fea65186f343799e55",
+        "stem": "ep3608pm-car-0578126",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3608PM/EPR-EP3608PM_RD_0578126_20250915.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1161565,
+        "document": "EPR-EP3608PM_SI_0587881_20251201.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-01",
+        "pages": 4,
+        "report_id": "0587881",
+        "sha256": "9c70e5128792a5a1a6bc0db97385b1132387782dddaece319a72e04885877ed8",
+        "stem": "ep3608pm-car-0587881",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3608PM/EPR-EP3608PM_SI_0587881_20251201.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1157180,
+        "document": "EPR-EP3608PM_RD_0596844_20260401.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-01",
+        "pages": 4,
+        "report_id": "0596844",
+        "sha256": "eec77156cd00595e3b3f3c1498cfc092c664111d3c988c3ae07043b10d93ed18",
+        "stem": "ep3608pm-car-0596844",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3608PM/EPR-EP3608PM_RD_0596844_20260401.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1122352,
+        "document": "EPR-EP3608PM_RD_0603080_20260708.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-07-08",
+        "pages": 4,
+        "report_id": "0603080",
+        "sha256": "dff28d9fd1c68294c7e695068ea3e61501c9605c7f92731a09fcceff096ed736",
+        "stem": "ep3608pm-car-0603080",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_EP3608PM/EPR-EP3608PM_RD_0603080_20260708.pdf"
+      }
+    ],
+    "holder": "CYRUSONE UK3 LIMITED",
+    "operator": "CyrusOne",
+    "permission_number": "EPR/EP3608PM",
+    "postcode": "SL1 4ST",
+    "site_address": "700, CyrusOne London 3 Datacentre, Stirling Road, Slough, SL1 4ST"
+  },
+  "fb3795ye": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "VIRGIN MEDIA LIMITED",
+    "operator": "Virgin Media",
+    "permission_number": "EPR/FB3795YE",
+    "postcode": "SL3 8XP",
+    "site_address": "Langley Data Centre, Virgin Media Digital Media Centre, Heron Drive, Langley, Slough, SL3 8XP"
+  },
+  "fp3000ly": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1224546,
+        "document": "EPR-FP3000LY_SI_0589227_20251223.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-23",
+        "pages": 4,
+        "report_id": "0589227",
+        "sha256": "a1176bf583110269e1b1cbdef904d4602702ee04159b84f9060ba76eba6729c1",
+        "stem": "fp3000ly-car-0589227",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_FP3000LY/EPR-FP3000LY_SI_0589227_20251223.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1118919,
+        "document": "EPR-FP3000LY_RD_0596823_20260331.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-31",
+        "pages": 4,
+        "report_id": "0596823",
+        "sha256": "fe9a7125548461ad076e9b9a532f3678e1141d0723f7d483a0418ed70eeab89d",
+        "stem": "fp3000ly-car-0596823",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_FP3000LY/EPR-FP3000LY_RD_0596823_20260331.pdf"
+      }
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/FP3000LY",
+    "postcode": "SN4 0QD",
+    "site_address": "Swindon Data Centre, Swindon Data Centre Emergency Back-up Generation Facility EPR/FP3000LY, Brimble Hill Road, Burderop Park, Brimble Hill, Swindon, SN4 0QD"
+  },
+  "fp3328sm": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Pulsant Limited",
+    "operator": "Pulsant",
+    "permission_number": "EPR/FP3328SM",
+    "postcode": "CR0 4RR",
+    "site_address": "Unit 1, South London Data Centre, 35 Imperial Way, Croydon, London, CR0 4RR"
+  },
+  "fp3625mj": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/FP3625MJ",
+    "postcode": "HP2 4FQ",
+    "site_address": "Plot 3, Maylands Avenue Data Centre, Maylands Avenue, Hemel Hempstead, HP2 4FQ"
+  },
+  "fp3630eu": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1121379,
+        "document": "EPR-FP3630EU_RD_0593340_20260220.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-20",
+        "pages": 4,
+        "report_id": "0593340",
+        "sha256": "bec31499887237688544f1a8ff3fe6c0dca9bab19a79bbc1fae6cd279a91a07b",
+        "stem": "fp3630eu-car-0593340",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_FP3630EU/EPR-FP3630EU_RD_0593340_20260220.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1170513,
+        "document": "EPR-FP3630EU_SI_0598676_20260507.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-07",
+        "pages": 5,
+        "report_id": "0598676",
+        "sha256": "08ca923230ade98b543af9d9ee92021e0832863a34873f00c706700453893677",
+        "stem": "fp3630eu-car-0598676",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_FP3630EU/EPR-FP3630EU_SI_0598676_20260507.pdf"
+      }
+    ],
+    "holder": "GREEN MOUNTAIN DC UK LIMITED",
+    "operator": "Green Mountain",
+    "permission_number": "EPR/FP3630EU",
+    "postcode": "RM7 7PN",
+    "site_address": "ISDC Development (No2 Limited, Romford North Data Centre, Unit 3 King George close, Romford, Essex, RM7 7PN"
+  },
+  "fp3900le": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1144170,
+        "document": "EPR-FP3900LE_RD_0572845_20250909.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-09",
+        "pages": 4,
+        "report_id": "0572845",
+        "sha256": "ce326075e9ba6be84df66dabc65decd68fcf854abad45881ba0c78ed75e56f82",
+        "stem": "fp3900le-car-0572845",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_FP3900LE/EPR-FP3900LE_RD_0572845_20250909.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1160319,
+        "document": "EPR-FP3900LE_RD_0596819_20260331.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-31",
+        "pages": 4,
+        "report_id": "0596819",
+        "sha256": "00269b68c60a0573c84fff832d9080e196425f49bdb0168ed800ea08f1f9011e",
+        "stem": "fp3900le-car-0596819",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_FP3900LE/EPR-FP3900LE_RD_0596819_20260331.pdf"
+      }
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/FP3900LE",
+    "postcode": "RG12 1HN",
+    "site_address": "Amen Corner Business Park, Bracknell Data Centre - Back-up Generation Facility - EPR/FP3900LE, Cain Road, Binfield, Bracknell, RG12 1HN"
+  },
+  "gp3127lv": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/GP3127LV",
+    "postcode": "OX11 7BF",
+    "site_address": "Didcot North Data Centre Campus, former Didcot A Power Station, Didcot, Oxfordshire, OX11 7BF"
+  },
+  "gp3721sq": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1746040,
+        "document": "EPR-GP3721SQ_SI_0584460_20251014.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-10-14",
+        "pages": 7,
+        "report_id": "0584460",
+        "sha256": "7a085be5156129c6c25a5944b1464ac5bf5a125ba19dd802d4c2304306cb0853",
+        "stem": "gp3721sq-car-0584460",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_GP3721SQ/EPR-GP3721SQ_SI_0584460_20251014.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1070875,
+        "document": "EPR-GP3721SQ_RD_0599594_20260522.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-22",
+        "pages": 4,
+        "report_id": "0599594",
+        "sha256": "b646844d6fe54834294b38568c6585987cf9d171fe0012e81b694e09bee7a1c5",
+        "stem": "gp3721sq-car-0599594",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_GP3721SQ/EPR-GP3721SQ_RD_0599594_20260522.pdf"
+      }
+    ],
+    "holder": "COLT DATA CENTRE SERVICES UK LIMITED",
+    "operator": "Colt Data Centre Services",
+    "permission_number": "EPR/GP3721SQ",
+    "postcode": "UB4 0SL",
+    "site_address": "Colt - Hayes, Colt - Hayes, BEACONSFIELD ROAD, HAYES, HILLINGDON, UB4 0SL"
+  },
+  "hp3136dk": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1170482,
+        "document": "EPR-HP3136DK_SI_0588726_20251211.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-11",
+        "pages": 5,
+        "report_id": "0588726",
+        "sha256": "dfc3cd15f81e4c264cf0b449e754973b691f58cb04d46f43093b7c0cab2166da",
+        "stem": "hp3136dk-car-0588726",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_HP3136DK/EPR-HP3136DK_SI_0588726_20251211.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1065473,
+        "document": "EPR-HP3136DK_RD_0591577_20260205.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-05",
+        "pages": 4,
+        "report_id": "0591577",
+        "sha256": "39760f0e6df91070df67c381c176735867a72aa0773bf8b2e3be572486bda49b",
+        "stem": "hp3136dk-car-0591577",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_HP3136DK/EPR-HP3136DK_RD_0591577_20260205.pdf"
+      }
+    ],
+    "holder": "DIGITAL REALTY (UK) LIMITED",
+    "operator": "Digital Realty",
+    "permission_number": "EPR/HP3136DK",
+    "postcode": "WD18 8UA",
+    "site_address": "9-17, The Chess Building, Digital Realty Watford (LHR14) - EPR/HP3136DK, Caxton Way, Watford, Hertfordshire, WD18 8UA"
+  },
+  "jp3024sa": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Vodafone Limited",
+    "operator": "Vodafone",
+    "permission_number": "EPR/JP3024SA",
+    "postcode": "NW10 7PH",
+    "site_address": "PRLON2, PRLON2, Coronation Road, Park Royal, London, NW10 7PH"
+  },
+  "jp3300sn": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1063840,
+        "document": "EPR-JP3300SN_RD_0586763_20251110.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-10",
+        "pages": 3,
+        "report_id": "0586763",
+        "sha256": "0f9cb8ed0538adbdbe81c9ba592af654bae2a4eaf9f3b66b512ac88ed33b1ea0",
+        "stem": "jp3300sn-car-0586763",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_JP3300SN/EPR-JP3300SN_RD_0586763_20251110.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1114885,
+        "document": "EPR-JP3300SN_SI_0586986_20251113.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-13",
+        "pages": 4,
+        "report_id": "0586986",
+        "sha256": "b24824589225325df2e10a1444163a14c9a5cd521ec5423720e86deb00c7a702",
+        "stem": "jp3300sn-car-0586986",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_JP3300SN/EPR-JP3300SN_SI_0586986_20251113.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1063627,
+        "document": "EPR-JP3300SN_RD_0593676_20260224.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-24",
+        "pages": 3,
+        "report_id": "0593676",
+        "sha256": "7943f644b667e95b2ed073235b05a45ede80439ae29beb51e2f4f13ed0137e3e",
+        "stem": "jp3300sn-car-0593676",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_JP3300SN/EPR-JP3300SN_RD_0593676_20260224.pdf"
+      }
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "operator": "Ark Data Centres",
+    "permission_number": "EPR/JP3300SN",
+    "postcode": "N9 0BD",
+    "site_address": "Meridian Park Data Centre, Meridian Park Data Centre EPR/JP3300SN, 10 Adra Road, Enfield, London, N9 0BD"
+  },
+  "jp3424ss": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Vodafone Limited",
+    "operator": "Vodafone",
+    "permission_number": "EPR/JP3424SS",
+    "postcode": "RG12 2PW",
+    "site_address": "The Sterling Centre, The Sterling Centre, Eastern Road, Bracknell, RG12 2PW"
+  },
+  "jp3824sh": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Vodafone Limited",
+    "operator": "Vodafone",
+    "permission_number": "EPR/JP3824SH",
+    "postcode": "M1 2NP",
+    "site_address": "Manchester Unit 1, Manchester Unit 1, Piccadilly Trading Estate, Manchester, M1 2NP"
+  },
+  "jp3924sc": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Vodafone Limited",
+    "operator": "Vodafone",
+    "permission_number": "EPR/JP3924SC",
+    "postcode": "N1 6EF",
+    "site_address": "Chart Street, Chart Street, Vodafone, 32-43 Chart Street, Hoxton, London Borough of Hackney, N1 6EF"
+  },
+  "jp3929sj": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1109832,
+        "document": "EPR-JP3929SJ_RD_0594991_20260309.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-09",
+        "pages": 4,
+        "report_id": "0594991",
+        "sha256": "d04892a2100892196d3efbebff6295eb2be28018e6b906327ad50692271e296a",
+        "stem": "jp3929sj-car-0594991",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_JP3929SJ/EPR-JP3929SJ_RD_0594991_20260309.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1181002,
+        "document": "EPR-JP3929SJ_RD_0598964_20260513.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-13",
+        "pages": 4,
+        "report_id": "0598964",
+        "sha256": "ede8802a61ec12557db33f41880c4a32980418af0fd9c9f0db390d5a255ca0a9",
+        "stem": "jp3929sj-car-0598964",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_JP3929SJ/EPR-JP3929SJ_RD_0598964_20260513.pdf"
+      }
+    ],
+    "holder": "Redhill Data Centre Limited",
+    "operator": "Digital Realty",
+    "permission_number": "EPR/JP3929SJ",
+    "postcode": "RH1 1AX",
+    "site_address": "Unit 2 & 3 Redhill Data Centre, St Anne's Boulevard, Redhill, RH1 1AX"
+  },
+  "kp3139dw": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1163394,
+        "document": "EPR-KP3139DW_RD_0586583_20251113.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-13",
+        "pages": 4,
+        "report_id": "0586583",
+        "sha256": "97385e9b3dd99bdb08e6f7a914cb771092c46e951027c5fd4f5303831c14a9f4",
+        "stem": "kp3139dw-car-0586583",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_KP3139DW/EPR-KP3139DW_RD_0586583_20251113.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1114233,
+        "document": "EPR-KP3139DW_SI_0586995_20251113.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-13",
+        "pages": 4,
+        "report_id": "0586995",
+        "sha256": "f382319cef8876c0b183fcc0edaf3ba6f4ea3e80fd207abb3997ce863f813d7a",
+        "stem": "kp3139dw-car-0586995",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_KP3139DW/EPR-KP3139DW_SI_0586995_20251113.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1163255,
+        "document": "EPR-KP3139DW_RD_0591614_20260205.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-05",
+        "pages": 4,
+        "report_id": "0591614",
+        "sha256": "721fe5c680966a21d74dfe550c3f2199d37029ef3b644ea8fcd712dfe3de0973",
+        "stem": "kp3139dw-car-0591614",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_KP3139DW/EPR-KP3139DW_RD_0591614_20260205.pdf"
+      }
+    ],
+    "holder": "COLT DATA CENTRE SERVICES UK LIMITED",
+    "operator": "Colt Data Centre Services",
+    "permission_number": "EPR/KP3139DW",
+    "postcode": "AL7 1QA",
+    "site_address": "20, Colt Welwyn Garden - EPR/KP3139DW, Blackfan Road, Welwyn Garden City, AL7 1QA"
+  },
+  "lp3005bl": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1149810,
+        "document": "EPR-LP3005BL_SI_0589459_20251224.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-24",
+        "pages": 4,
+        "report_id": "0589459",
+        "sha256": "687688ac0ce9644455528fe7205ced87eebe53aba23c751b29b12454107be452",
+        "stem": "lp3005bl-car-0589459",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3005BL/EPR-LP3005BL_SI_0589459_20251224.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1118944,
+        "document": "EPR-LP3005BL_RD_0596826_20260331.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-31",
+        "pages": 4,
+        "report_id": "0596826",
+        "sha256": "fbb22be9043f4a4283fb6d580a62cf74ea1e7538548a59d086e50e0a384b44f6",
+        "stem": "lp3005bl-car-0596826",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3005BL/EPR-LP3005BL_RD_0596826_20260331.pdf"
+      }
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/LP3005BL",
+    "postcode": "OX11 7TT",
+    "site_address": "Former Didcot A Power Station, Didcot Data Centre - Emergency Back-up Generation Facility  EPR/LP3005BL, Milton Road, Didcot, OX11 7TT"
+  },
+  "lp3205lw": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1172587,
+        "document": "EPR-LP3205LW_PR_0579178_20250916.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-16",
+        "pages": 4,
+        "report_id": "0579178",
+        "sha256": "dd6ab3794c0c272e19044dc79ea79ec54f83130eb654d80e64ad080094e6a364",
+        "stem": "lp3205lw-car-0579178",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3205LW/EPR-LP3205LW_PR_0579178_20250916.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1061701,
+        "document": "EPR-LP3205LW_SI_0585164_20251027.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-10-27",
+        "pages": 3,
+        "report_id": "0585164",
+        "sha256": "f70c5b853f146fe06a4db07be740b390f988d73649f2ac0d531a763bed2be9c3",
+        "stem": "lp3205lw-car-0585164",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3205LW/EPR-LP3205LW_SI_0585164_20251027.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1160108,
+        "document": "EPR-LP3205LW_RD_0596926_20260401.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-01",
+        "pages": 4,
+        "report_id": "0596926",
+        "sha256": "b94724d60d7d84fd71a674004ed83df493e1eca36d2c8db47bf89f67f8285d89",
+        "stem": "lp3205lw-car-0596926",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3205LW/EPR-LP3205LW_RD_0596926_20260401.pdf"
+      }
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "operator": "Equinix",
+    "permission_number": "EPR/LP3205LW",
+    "postcode": "SL1 4AX",
+    "site_address": "Slough Trading Estate, Equinix Slough Campus, Equinix LD13x Data Centre - EPR/LP3205LW, Buckingham Avenue, Slough, Slough, SL1 4AX"
+  },
+  "lp3303pr": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1173829,
+        "document": "EPR-LP3303PR_PR_0579162_20250916.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-16",
+        "pages": 4,
+        "report_id": "0579162",
+        "sha256": "51ba86ea5c10b7920661cd176d266e7a1d8d2c8342d0c8335888bfbb724073c2",
+        "stem": "lp3303pr-car-0579162",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3303PR/EPR-LP3303PR_PR_0579162_20250916.pdf"
+      },
+      {
+        "assessment": "audit",
+        "assessment_type": "AU",
+        "bytes": 1172051,
+        "document": "EPR-LP3303PR_AU_0585152_20251027.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-10-27",
+        "pages": 5,
+        "report_id": "0585152",
+        "sha256": "8cc21c2badec57197e26b876bef2796bd952707ba4f2c461546aa754f0c67023",
+        "stem": "lp3303pr-car-0585152",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3303PR/EPR-LP3303PR_AU_0585152_20251027.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1247372,
+        "document": "EPR-LP3303PR_PR_0590474_20260121.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-01-21",
+        "pages": 4,
+        "report_id": "0590474",
+        "sha256": "e63143e86523263d1820f79c1e6de3aa66da31f1c907830f90beaaf0668cad08",
+        "stem": "lp3303pr-car-0590474",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3303PR/EPR-LP3303PR_PR_0590474_20260121.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1159956,
+        "document": "EPR-LP3303PR_RD_0596923_20260401.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-01",
+        "pages": 4,
+        "report_id": "0596923",
+        "sha256": "3187fb6a2f0bfc69d60b2cd34246ab215452550c8deacee30226d2699c34ff1e",
+        "stem": "lp3303pr-car-0596923",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3303PR/EPR-LP3303PR_RD_0596923_20260401.pdf"
+      }
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "operator": "Equinix",
+    "permission_number": "EPR/LP3303PR",
+    "postcode": "SL1 4AX",
+    "site_address": "Slough Trading Estate, Equinix Slough Campus Data Centre, Equinix Slough Campus Data Centre, Buckingham Avenue, Slough, SL1 4AX"
+  },
+  "lp3426sk": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1242397,
+        "document": "EPR-LP3426SK_SI_0587642_20251124.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-24",
+        "pages": 5,
+        "report_id": "0587642",
+        "sha256": "51aba2974f4c215fab402460e80c8f81d2ff38cc32fc4f7f018e581b6964576d",
+        "stem": "lp3426sk-car-0587642",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3426SK/EPR-LP3426SK_SI_0587642_20251124.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1189711,
+        "document": "EPR-LP3426SK_SI_0591938_20260209.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-09",
+        "pages": 4,
+        "report_id": "0591938",
+        "sha256": "54ec357733093f3672a19c48b605f68acf99880424ab8e5da8bf804adb9f9699",
+        "stem": "lp3426sk-car-0591938",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3426SK/EPR-LP3426SK_SI_0591938_20260209.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1065294,
+        "document": "EPR-LP3426SK_RD_0592984_20260218.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-18",
+        "pages": 4,
+        "report_id": "0592984",
+        "sha256": "3dcb145b136ceace939182b752f6a2b3600ff61140e76f0e1a752ca090679456",
+        "stem": "lp3426sk-car-0592984",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_LP3426SK/EPR-LP3426SK_RD_0592984_20260218.pdf"
+      }
+    ],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "operator": "Barclays",
+    "permission_number": "EPR/LP3426SK",
+    "postcode": "GL4 3RU",
+    "site_address": "Gloucester Data Centre, Barnett Way, Barnwood, Gloucester, Gloucestershire, GL4 3RU"
+  },
+  "lp3926sa": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "operator": "Barclays",
+    "permission_number": "EPR/LP3926SA",
+    "postcode": "E14 5HP",
+    "site_address": "1 Churchill Place (1CP), 1 Churchill Place, Canary Wharf, London, E14 5HP"
+  },
+  "mp3521la": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "BT PLC",
+    "operator": "BT",
+    "permission_number": "EPR/MP3521LA",
+    "postcode": "W5 5DA",
+    "site_address": "EALING TE, EALING TE, EALING GREEN, EALING, W5 5DA"
+  },
+  "mp3620mr": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/MP3620MR",
+    "postcode": "OX11 7BF",
+    "site_address": "Purchas Road Data Centre, Purchas Road, Didcot, Oxfordshire, OX11 7BF"
+  },
+  "mp3822st": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "EQUINIX (UK) LIMITED",
+    "operator": "Equinix",
+    "permission_number": "EPR/MP3822ST",
+    "postcode": "M17 1HE",
+    "site_address": "Equinix MA3, Joule House, Equinix MA3, 76 Trafford Wharf Road, Trafford Park, Manchester, M17 1HE"
+  },
+  "np3121lf": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "ZENIUM UK LIMITED",
+    "operator": "Zenium",
+    "permission_number": "EPR/NP3121LF",
+    "postcode": "SL1 4QZ",
+    "site_address": "Unit 12, LON 1, Liverpool Road, Slough, SL1 4QZ"
+  },
+  "np3422ss": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Pulsant Limited",
+    "operator": "Pulsant",
+    "permission_number": "EPR/NP3422SS",
+    "postcode": "M32 0QT",
+    "site_address": "Cobra Court, Manchester Data Centre, 1-2 Ball Green, Trafford Park, Manchester, M32 0QT"
+  },
+  "np3524sk": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "VERIZON UK LIMITED",
+    "operator": "Verizon",
+    "permission_number": "EPR/NP3524SK",
+    "postcode": "TW14 0XQ",
+    "site_address": "Skyways Building, Central Way, Heathrow, Feltham, TW14 0XQ"
+  },
+  "np3735jx": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1300516,
+        "document": "EPR-NP3735JX_SI_0589981_20260114.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-01-14",
+        "pages": 9,
+        "report_id": "0589981",
+        "sha256": "ced6686359385a8755bc461c8da4f206e794f7bed6ca83f5bdb45e0d48fa69ff",
+        "stem": "np3735jx-car-0589981",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_NP3735JX/EPR-NP3735JX_SI_0589981_20260114.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1110350,
+        "document": "EPR-NP3735JX_RD_0595011_20260309.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-09",
+        "pages": 4,
+        "report_id": "0595011",
+        "sha256": "d00936f8e1db652bf62959adefcc750c3a9e6d3db1c60e927a7d204644f8c9ef",
+        "stem": "np3735jx-car-0595011",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_NP3735JX/EPR-NP3735JX_RD_0595011_20260309.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1181509,
+        "document": "EPR-NP3735JX_RD_0598751_20260508.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-08",
+        "pages": 4,
+        "report_id": "0598751",
+        "sha256": "b251b99494f71a22dedc974b136dd936b9595b9ff878ad6c56e3f78bce2ef774",
+        "stem": "np3735jx-car-0598751",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_NP3735JX/EPR-NP3735JX_RD_0598751_20260508.pdf"
+      }
+    ],
+    "holder": "CL INTERNATIONAL MANAGEMENT (UK) LIMITED",
+    "operator": "unattributed",
+    "permission_number": "EPR/NP3735JX",
+    "postcode": "EC3M 7AF",
+    "site_address": "C/o Ascendas Reit (Croydon) UK Limited, Croydon Data Centre (LGW13) EPR/NP3735JX, The Scalpel, 18th Floor, 52 Lime Street, London, EC3M 7AF"
+  },
+  "np3826sa": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Vodafone Limited",
+    "operator": "Vodafone",
+    "permission_number": "EPR/NP3826SA",
+    "postcode": "SN5 6LA",
+    "site_address": "Swindon Internet Solutions Centre, Swindon Internet Solutions Centre, Whitehall Way, Windmill Hill Business Park, Swindon, SN5 6LA"
+  },
+  "pp3003pw": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1119906,
+        "document": "EPR-PP3003PW_SI_0587169_20251117.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-17",
+        "pages": 5,
+        "report_id": "0587169",
+        "sha256": "c7828d47eb8b97218568bb2d166ef9ca177b6cb15e376178e58da0920d97c47a",
+        "stem": "pp3003pw-car-0587169",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_PP3003PW/EPR-PP3003PW_SI_0587169_20251117.pdf"
+      }
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "operator": "Ark Data Centres",
+    "permission_number": "EPR/PP3003PW",
+    "postcode": "SN13 9GB",
+    "site_address": "Ark Data Centres, Spring Park Data Centre - EPR/PP3003PW, Westwells Road, Corsham, Wiltshire, SN13 9GB"
+  },
+  "pp3225sx": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Enfield DC Service Company Limited",
+    "operator": "VIRTUS Data Centres",
+    "permission_number": "EPR/PP3225SX",
+    "postcode": "EN1 1TH",
+    "site_address": "Virtus Enfield LONDON1 Data Centre, Unit 3, Virtus Enfield LONDON1 Data Centre, Trade City, Crown Road, Enfield, EN1 1TH"
+  },
+  "pp3309mk": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1170497,
+        "document": "EPR-PP3309MK_RD_0576898_20250908.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-08",
+        "pages": 4,
+        "report_id": "0576898",
+        "sha256": "f2cd932b4b2abe7926b6fd4f63b2a307528dc1134d1a1101e002f6f741e75e59",
+        "stem": "pp3309mk-car-0576898",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_PP3309MK/EPR-PP3309MK_RD_0576898_20250908.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1160084,
+        "document": "EPR-PP3309MK_RD_0596822_20260331.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-31",
+        "pages": 4,
+        "report_id": "0596822",
+        "sha256": "997f8bdc6fb13625b8d9306486d905ad161a9ce34d041041da03cadf830bac21",
+        "stem": "pp3309mk-car-0596822",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_PP3309MK/EPR-PP3309MK_RD_0596822_20260331.pdf"
+      }
+    ],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/PP3309MK",
+    "postcode": "SL1 4PF",
+    "site_address": "110, Data Centre, Datacentre EPR/PP3309MK, Buckingham Avenue, Trading Estate, Slough, Berkshire, SL1 4PF"
+  },
+  "qp3434dr": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1115758,
+        "document": "EPR-QP3434DR_RD_0578435_20250911.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-11",
+        "pages": 4,
+        "report_id": "0578435",
+        "sha256": "46d0f0446aa59d01f831ab66877cac0123e47047fc3ebebe24895fbe8348cebc",
+        "stem": "qp3434dr-car-0578435",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_QP3434DR/EPR-QP3434DR_RD_0578435_20250911.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1166564,
+        "document": "EPR-QP3434DR_SI_0586020_20251030.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-10-30",
+        "pages": 4,
+        "report_id": "0586020",
+        "sha256": "06daf05903eb03706de61b6eda3cc0542148778c26049879e7759773fa8c8140",
+        "stem": "qp3434dr-car-0586020",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_QP3434DR/EPR-QP3434DR_SI_0586020_20251030.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1065498,
+        "document": "EPR-QP3434DR_RD_0591573_20260205.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-05",
+        "pages": 4,
+        "report_id": "0591573",
+        "sha256": "2f97152cee6ef1fb397ebefe36b91d87d69a474a9754c2cef6bc29f410554433",
+        "stem": "qp3434dr-car-0591573",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_QP3434DR/EPR-QP3434DR_RD_0591573_20260205.pdf"
+      }
+    ],
+    "holder": "INTERXION CARRIER HOTEL LIMITED",
+    "operator": "Digital Realty (Interxion)",
+    "permission_number": "EPR/QP3434DR",
+    "postcode": "E1 6QL",
+    "site_address": "5th Floor, 91-95, Brick Lane Data Centre EPR/QP3434DR, Brick Lane, London, E1 6QL"
+  },
+  "qp3533ed": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1067482,
+        "document": "EPR-QP3533ED_SI_0576019_20250827.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-08-27",
+        "pages": 4,
+        "report_id": "0576019",
+        "sha256": "9068ce6ca142a58dbc4b91c4888db7a508ed13ed202dcd2f381185b3cb95a2fe",
+        "stem": "qp3533ed-car-0576019",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_QP3533ED/EPR-QP3533ED_SI_0576019_20250827.pdf"
+      }
+    ],
+    "holder": "SANTANDER UK PLC",
+    "operator": "Santander",
+    "permission_number": "EPR/QP3533ED",
+    "postcode": "LE19 0AL",
+    "site_address": "Data Centre 1 and 2, Narborough Combustion Plant EPR/QP3533ED, Carlton Park, Narborough, Leicestershire, LE19 0AL"
+  },
+  "qp3706lh": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1067309,
+        "document": "EPR-QP3706LH_RD_0587816_20251127.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-27",
+        "pages": 4,
+        "report_id": "0587816",
+        "sha256": "abf01fc5aef337c635efc33e8826534430947c4d72a9c3eac651da8ac1b67be8",
+        "stem": "qp3706lh-car-0587816",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_QP3706LH/EPR-QP3706LH_RD_0587816_20251127.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1177934,
+        "document": "EPR-QP3706LH_SI_0587817_20251127.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-27",
+        "pages": 5,
+        "report_id": "0587817",
+        "sha256": "ac183b911b51c76fc4347e4abd703d2a7de5f2f3ef99e6a041d8876ed46ae918",
+        "stem": "qp3706lh-car-0587817",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_QP3706LH/EPR-QP3706LH_SI_0587817_20251127.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1066371,
+        "document": "EPR-QP3706LH_RD_0593750_20260225.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-02-25",
+        "pages": 4,
+        "report_id": "0593750",
+        "sha256": "332302e08f3a471a9ea20f9cbb598f6370618b1455111cb6fc241aa4a90916d4",
+        "stem": "qp3706lh-car-0593750",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_QP3706LH/EPR-QP3706LH_RD_0593750_20260225.pdf"
+      }
+    ],
+    "holder": "PDCG (GROUP SERVICES) LIMITED",
+    "operator": "unattributed",
+    "permission_number": "EPR/QP3706LH",
+    "postcode": "NW2 7BA",
+    "site_address": "JVC Business Park, 14, Data Centre Staples Corner - EPR/QP3706LH, Priestley Way, Staples Corner, London, NW2 7BA"
+  },
+  "qp3828la": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "nLighten Milton Keynes Limited",
+    "operator": "nLighten",
+    "permission_number": "EPR/QP3828LA",
+    "postcode": "MK11 3JB",
+    "site_address": "Milton Keynes Data Centre, 1 Brick Close, Kiln Farm, Milton Keynes, MK11 3JB"
+  },
+  "rp3328sv": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "SANTANDER UK PLC",
+    "operator": "Santander",
+    "permission_number": "EPR/RP3328SV",
+    "postcode": "MK9 1UP",
+    "site_address": "Santander, Unity Place, 200 Grafton Gate, Milton Keynes, Buckinghamshire, MK9 1UP"
+  },
+  "sp3004sb": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "audit",
+        "assessment_type": "AU",
+        "bytes": 1229807,
+        "document": "EPR-SP3004SB_AU_0588375_20251208.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-08",
+        "pages": 4,
+        "report_id": "0588375",
+        "sha256": "a14a43a58c289f26ed534cfd041646a044277d16ee4e56292bdb9a6e45d1a0c4",
+        "stem": "sp3004sb-car-0588375",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_SP3004SB/EPR-SP3004SB_AU_0588375_20251208.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1119190,
+        "document": "EPR-SP3004SB_RD_0588503_20251208.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-08",
+        "pages": 4,
+        "report_id": "0588503",
+        "sha256": "526e7d41195cfc58f94889674dd1cea5f13c71386d4da0337a2bf7aaec3ad0e6",
+        "stem": "sp3004sb-car-0588503",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_SP3004SB/EPR-SP3004SB_RD_0588503_20251208.pdf"
+      }
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "operator": "Ark Data Centres",
+    "permission_number": "EPR/SP3004SB",
+    "postcode": "KT16 0EE",
+    "site_address": "Longcross Park, Longcross Park, Chobham Lane, Longcross, Chertsey, KT16 0EE"
+  },
+  "sp3028lm": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "BT PLC",
+    "operator": "BT",
+    "permission_number": "EPR/SP3028LM",
+    "postcode": "MK40 1BA",
+    "site_address": "Bedford ATE, Bedford ATE, Harpur Street, Bedford, Bedfordshire, MK40 1BA"
+  },
+  "sp3237ju": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "TELEHOUSE INTERNATIONAL CORPORATION OF EUROPE LIMITED",
+    "operator": "Telehouse",
+    "permission_number": "EPR/SP3237JU",
+    "postcode": "E14 2EH",
+    "site_address": "Docklands Technical centre, Docklands Technical Centre, 1 Paul Julius Close, Blackwall Way Poplar, London, E14 2EH"
+  },
+  "tp3120le": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "IRON MOUNTAIN (UK) DATA CENTRE LIMITED",
+    "operator": "Iron Mountain Data Centers",
+    "permission_number": "EPR/TP3120LE",
+    "postcode": "SL1 4PF",
+    "site_address": "LON3 Data Centre, 111 Buckingham Avenue, Slough, Berkshire, SL1 4PF"
+  },
+  "tp3500pb": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1313604,
+        "document": "EPR-TP3500PB_SI_0574362_20250818.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-08-18",
+        "pages": 6,
+        "report_id": "0574362",
+        "sha256": "2b7f57c0a894fdff35a83ee2c99c6a4a923850c1dc2ee9399254f3f7f094dbf4",
+        "stem": "tp3500pb-car-0574362",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_TP3500PB/EPR-TP3500PB_SI_0574362_20250818.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1115929,
+        "document": "EPR-TP3500PB_RD_0590382_20260120.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-01-20",
+        "pages": 5,
+        "report_id": "0590382",
+        "sha256": "3d90ffb253da9b2856719e614a870c97bb1e5eec7f9b9250691a0af0ba1b0e99",
+        "stem": "tp3500pb-car-0590382",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_TP3500PB/EPR-TP3500PB_RD_0590382_20260120.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1111848,
+        "document": "EPR-TP3500PB_RD_0599872_20260529.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-29",
+        "pages": 4,
+        "report_id": "0599872",
+        "sha256": "d06e5a469ce432a27d6393ffe8c425a639dba06809b6c0ec3272b24fc6ce5ba3",
+        "stem": "tp3500pb-car-0599872",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_TP3500PB/EPR-TP3500PB_RD_0599872_20260529.pdf"
+      }
+    ],
+    "holder": "EQUINIX (UK) LIMITED",
+    "operator": "Equinix",
+    "permission_number": "EPR/TP3500PB",
+    "postcode": "NW10 6PW",
+    "site_address": "2 Powergate Business Park, Equinix (UK) Limited - EPR/TP3500PB, Volt Avenue, Park Royal, Ealing, NW10 6PW"
+  },
+  "tp3527sd": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Lumen Technologies UK Limited",
+    "operator": "Lumen",
+    "permission_number": "EPR/TP3527SD",
+    "postcode": "EC1V 7EB",
+    "site_address": "Goswell Road, 260-266 Goswell Road, Islington, London, EC1V 7EB"
+  },
+  "tp3530dv": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1157920,
+        "document": "EPR-TP3530DV_RD_0597301_20260413.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-04-13",
+        "pages": 4,
+        "report_id": "0597301",
+        "sha256": "812c1db44c938d2a65c03cc1eed403e018249252c2036bf0286805a129ba4f50",
+        "stem": "tp3530dv-car-0597301",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_TP3530DV/EPR-TP3530DV_RD_0597301_20260413.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1176314,
+        "document": "EPR-TP3530DV_SI_0599013_20260512.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-12",
+        "pages": 4,
+        "report_id": "0599013",
+        "sha256": "f47e55ba3208547b47ce30909268ebed175c229039ecf767c3fd85d1d3cc52d7",
+        "stem": "tp3530dv-car-0599013",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_TP3530DV/EPR-TP3530DV_SI_0599013_20260512.pdf"
+      }
+    ],
+    "holder": "DIGITAL REALTY (UK) LIMITED",
+    "operator": "Digital Realty",
+    "permission_number": "EPR/TP3530DV",
+    "postcode": "GU21 3BA",
+    "site_address": "Woking Data Centre, Woking Data Centre EPR/TP3530DV, Goldsworth Park Trading Estate, Unit 21, Kestrel Way, GU21 3BA"
+  },
+  "tp3839qu": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1074840,
+        "document": "EPR-TP3839QU_PR_0589904_20260109.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-01-09",
+        "pages": 4,
+        "report_id": "0589904",
+        "sha256": "a7cc20ff3ac1b31f7abd9acb474beb9b52acfa979f6b41756fc183d149bf06bc",
+        "stem": "tp3839qu-car-0589904",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_TP3839QU/EPR-TP3839QU_PR_0589904_20260109.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1079237,
+        "document": "EPR-TP3839QU_SI_0596176_20260319.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-19",
+        "pages": 4,
+        "report_id": "0596176",
+        "sha256": "e0e3f9c54aa2167fcf46df983fc6966b7bd02efcf4e12183e5ece5c2d91a0fb4",
+        "stem": "tp3839qu-car-0596176",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_TP3839QU/EPR-TP3839QU_SI_0596176_20260319.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1068918,
+        "document": "EPR-TP3839QU_RD_0599370_20260519.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-19",
+        "pages": 4,
+        "report_id": "0599370",
+        "sha256": "dcdb954b3b6809b56da660963997c0d56f2502bb6238c637c96766bef823f26b",
+        "stem": "tp3839qu-car-0599370",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_TP3839QU/EPR-TP3839QU_RD_0599370_20260519.pdf"
+      }
+    ],
+    "holder": "ZENIUM UK2 LIMITED",
+    "operator": "Zenium",
+    "permission_number": "EPR/TP3839QU",
+    "postcode": "UB7 9FN",
+    "site_address": "Unit F, Prologis Distribution Park, London Two, London Two, Stockley Road, West Drayton, UB7 9FN"
+  },
+  "up3526lc": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "AMAZON DATA SERVICES UK LIMITED",
+    "operator": "Amazon Web Services",
+    "permission_number": "EPR/UP3526LC",
+    "postcode": "UB3 3BL",
+    "site_address": "Silverdale Estate Data Centre, Silverdale Estate Data Centre, Silverdale Road, Hayes, UB3 3BL"
+  },
+  "up3528sq": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "CYXTERA TECHNOLOGY UK LIMITED",
+    "operator": "Cyxtera",
+    "permission_number": "EPR/UP3528SQ",
+    "postcode": "E14 9NN",
+    "site_address": "LHR2 Data Centre, 7 Greenwich View Pl, London, E14 9NN"
+  },
+  "up3624sw": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1487988,
+        "document": "EPR-UP3624SW_SI_0575831_20250826.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-08-26",
+        "pages": 6,
+        "report_id": "0575831",
+        "sha256": "eaf22567074b6e047c08e22f6f5c970d9ea1e4bcb2305a015b5102769dc71b5b",
+        "stem": "up3624sw-car-0575831",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_UP3624SW/EPR-UP3624SW_SI_0575831_20250826.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1078142,
+        "document": "EPR-UP3624SW_RD_0599245_20260518.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-18",
+        "pages": 4,
+        "report_id": "0599245",
+        "sha256": "9c520d91a754adbe4d4f689836ff7e5a12fac52a4dcbd1e936e2fa4f8386070d",
+        "stem": "up3624sw-car-0599245",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_UP3624SW/EPR-UP3624SW_RD_0599245_20260518.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1067426,
+        "document": "EPR-UP3624SW_RD_0600355_20260605.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-06-05",
+        "pages": 4,
+        "report_id": "0600355",
+        "sha256": "63c0fbfd025ea9b2b449379b22ea63f8ae3dfac17131b76eb6f960b376e1267f",
+        "stem": "up3624sw-car-0600355",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_UP3624SW/EPR-UP3624SW_RD_0600355_20260605.pdf"
+      }
+    ],
+    "holder": "VIRTUS HOLDCO LIMITED",
+    "operator": "VIRTUS Data Centres",
+    "permission_number": "EPR/UP3624SW",
+    "postcode": "UB3 1QF",
+    "site_address": "LONDON14 Datacentre: DC6, Unit D, Plot C, Prologis park Heathrow, LONDON14 Datacentre, Stockley Road, Hayes, UB3 1QF"
+  },
+  "vb3295yy": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "COLT TECHNOLOGY SERVICES",
+    "operator": "Colt Data Centre Services",
+    "permission_number": "EPR/VB3295YY",
+    "postcode": "E14 9XX",
+    "site_address": "COLT DATA CENTRE, Poplar Business Park, WILLIAMSBURG PLAZA, LONDON, TOWER HAMLETS, E14 9XX"
+  },
+  "vp3225sc": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1191602,
+        "document": "EPR-VP3225SC_RD_0599004_20260513.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-13",
+        "pages": 4,
+        "report_id": "0599004",
+        "sha256": "b7cd05b9d2324ea50239de733af4645cfdf3a1e79f8631079dee7ded32e9063c",
+        "stem": "vp3225sc-car-0599004",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_VP3225SC/EPR-VP3225SC_RD_0599004_20260513.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1140290,
+        "document": "EPR-VP3225SC_RD_0599008_20260513.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-13",
+        "pages": 5,
+        "report_id": "0599008",
+        "sha256": "8daab5852a5cb3dc8e7f9106c6bb5cbcadb13fb42151cc572201a3a8f76bfbe3",
+        "stem": "vp3225sc-car-0599008",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_VP3225SC/EPR-VP3225SC_RD_0599008_20260513.pdf"
+      }
+    ],
+    "holder": "VDC LHR21 LIMITED",
+    "operator": "Vantage Data Centers",
+    "permission_number": "EPR/VP3225SC",
+    "postcode": "NW10 6PF",
+    "site_address": "37-39, Vantage LHR21, NORTH ACTON ROAD, LONDON, EALING, NW10 6PF"
+  },
+  "vp3235dj": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "operator": "Ark Data Centres",
+    "permission_number": "EPR/VP3235DJ",
+    "postcode": "GU14 0LH",
+    "site_address": "A57, Cody Park, Cody Park Data Centre, Cody Park Data Centre, Old Ively Road, Farnborough, Hampshire, GU14 0LH"
+  },
+  "vp3722lt": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "nLighten Bristol Limited",
+    "operator": "nLighten",
+    "permission_number": "EPR/VP3722LT",
+    "postcode": "BS32 4SX",
+    "site_address": "Bristol Data Centre, 1120 AZTEC WEST, BRISTOL, SOUTH GLOUCESTERSHIRE, BS32 4SX"
+  },
+  "vp3821lt": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "nLighten London Limited",
+    "operator": "nLighten",
+    "permission_number": "EPR/VP3821LT",
+    "postcode": "EN11 0NT",
+    "site_address": "Abbey House, Hoddesdon Data Centre, Geddings Road, Hoddesdon, Hertfordshire, EN11 0NT"
+  },
+  "vp3929sh": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Vodafone Limited",
+    "operator": "Vodafone",
+    "permission_number": "EPR/VP3929SH",
+    "postcode": "B6 7JJ",
+    "site_address": "Unit 14, Gravelly MTX, Junction 6 Industrial Park, Electric Avenue, Birmingham, B6 7JJ"
+  },
+  "we2798ab": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "EQUINIX (UK) LIMITED",
+    "operator": "Equinix",
+    "permission_number": "EPR/WE2798AB",
+    "postcode": "M27 8BX",
+    "site_address": "Equinix MA6, MA5, Swinton, Greater Manchester, M27 8BX"
+  },
+  "we4588ab": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1443720,
+        "document": "EPR-WE4588AB_SI_0586731_20251110.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-11-10",
+        "pages": 6,
+        "report_id": "0586731",
+        "sha256": "e1ff42e9690872f04e42f1320a2bb8ff27ff3b5e13ed39d8190a546d6b2bdcbd",
+        "stem": "we4588ab-car-0586731",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_WE4588AB/EPR-WE4588AB_SI_0586731_20251110.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1143246,
+        "document": "EPR-WE4588AB_RD_0590552_20260122.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-01-22",
+        "pages": 5,
+        "report_id": "0590552",
+        "sha256": "acf7c6df8f51d8b3ef54b6d5385a94d297f0bd3845f8a4036cc83f146fb8be04",
+        "stem": "we4588ab-car-0590552",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_WE4588AB/EPR-WE4588AB_RD_0590552_20260122.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1163132,
+        "document": "EPR-WE4588AB_RD_0599754_20260527.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-27",
+        "pages": 4,
+        "report_id": "0599754",
+        "sha256": "cb412db75f78cca873198dbe90b4dce6e82337d3ade52dde763e80be2ff4dc7c",
+        "stem": "we4588ab-car-0599754",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_WE4588AB/EPR-WE4588AB_RD_0599754_20260527.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1118850,
+        "document": "EPR-WE4588AB_RD_0601046_20260619.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-06-19",
+        "pages": 5,
+        "report_id": "0601046",
+        "sha256": "1e953e36cecece6ad05e38f8a68f12a50e6b9514352c9af4a304f5868cfc754b",
+        "stem": "we4588ab-car-0601046",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_WE4588AB/EPR-WE4588AB_RD_0601046_20260619.pdf"
+      }
+    ],
+    "holder": "HARLOW OPERATIONS LIMITED",
+    "operator": "Kao Data",
+    "permission_number": "EPR/WE4588AB",
+    "postcode": "CM17 9NA",
+    "site_address": "Kao Data Campus, KAO Data Harlow Campus, London Road, Harlow, Essex, CM17 9NA"
+  },
+  "we9618aa": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "EQUINIX (UK) LIMITED",
+    "operator": "Equinix",
+    "permission_number": "EPR/WE9618AA",
+    "postcode": "M15 6SE",
+    "site_address": "Enterprise House, MA1, Lloyd Street North, Manchester Science Park, Lancashire, M15 6SE"
+  },
+  "xb3299yg": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "VIRGIN MEDIA LIMITED",
+    "operator": "Virgin Media",
+    "permission_number": "EPR/XB3299YG",
+    "postcode": "M50 2UE",
+    "site_address": "400 Metroplex, T1520 Metroplex, Broadway, Salford, M50 2UE"
+  },
+  "xp3624mn": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Vodafone Limited",
+    "operator": "Vodafone",
+    "permission_number": "EPR/XP3624MN",
+    "postcode": "GL2 4LS",
+    "site_address": "Gloucester Data Centre facility, Gloucester Data Centre facility, located at Falcon Close, Quedgeley, Gloucester, Gloucestershire, GL2 4LS"
+  },
+  "yp3329sb": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1116304,
+        "document": "EPR-YP3329SB_RD_0589034_20251218.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-18",
+        "pages": 5,
+        "report_id": "0589034",
+        "sha256": "705690df71bc4814ec81455a4ef13de1a9f9c1056dc2af9a93b6ef75ae82dd34",
+        "stem": "yp3329sb-car-0589034",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_YP3329SB/EPR-YP3329SB_RD_0589034_20251218.pdf"
+      },
+      {
+        "assessment": "procedure review",
+        "assessment_type": "PR",
+        "bytes": 1124266,
+        "document": "EPR-YP3329SB_PR_0599322_20260519.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-19",
+        "pages": 4,
+        "report_id": "0599322",
+        "sha256": "22f7e3855a59ea6e947040c476107fbc2e7778697a79837267eaae66e282004a",
+        "stem": "yp3329sb-car-0599322",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_YP3329SB/EPR-YP3329SB_PR_0599322_20260519.pdf"
+      }
+    ],
+    "holder": "VDC LHR11 LIMITED",
+    "operator": "Vantage Data Centers",
+    "permission_number": "EPR/YP3329SB",
+    "postcode": "NW10 6NF",
+    "site_address": "2 Black Arrow House, LHR11/12, Chandos Rd, London, NW10 6NF"
+  },
+  "yp3426sy": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "Volta Data Centres Limited",
+    "operator": "Volta Data Centres",
+    "permission_number": "EPR/YP3426SY",
+    "postcode": "EC1V 0AB",
+    "site_address": "Volta Data Centre, 36-43 Great Sutton Street, London, EC1V 0AB"
+  },
+  "yp3633qa": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "NTT GLOBAL DATA CENTERS EMEA UK LTD",
+    "operator": "NTT Global Data Centers",
+    "permission_number": "EPR/YP3633QA",
+    "postcode": "SL1 4BG",
+    "site_address": "665 to 670, NTT GDC EMEA UK Limited EPR/YP3633QA, Ajax Avenue, Slough, SL1 4BG"
+  },
+  "yp3724sq": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "BARCLAYS EXECUTION SERVICES LIMITED",
+    "operator": "Barclays",
+    "permission_number": "EPR/YP3724SQ",
+    "postcode": "SR3 3XW",
+    "site_address": "Doxford Park, Barclays Sunderland, 35 Admiral Way, Sunderland, SR3 3XW"
+  },
+  "yp3728lp": {
+    "checked": "2026-08-28",
+    "documents": [],
+    "holder": "nLighten UK Data Centres Limited",
+    "operator": "nLighten",
+    "permission_number": "EPR/YP3728LP",
+    "postcode": "B9 4ER",
+    "site_address": "Garrison Technology Park, Birmingham Data Centre, 3 Westley Street, Birmingham, B9 4ER"
+  },
+  "yp3935qm": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1159204,
+        "document": "EPR-YP3935QM_RD_0596815_20260331.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-03-31",
+        "pages": 4,
+        "report_id": "0596815",
+        "sha256": "1dd1413cf8040fe7eac2846808ded6359e520e8aff622d0d66d9f49a6a3d394e",
+        "stem": "yp3935qm-car-0596815",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_YP3935QM/EPR-YP3935QM_RD_0596815_20260331.pdf"
+      }
+    ],
+    "holder": "LHR1 Data Center Holdings Limited",
+    "operator": "unattributed",
+    "permission_number": "EPR/YP3935QM",
+    "postcode": "SL1 4DG",
+    "site_address": "628 - 635, Ajax Avenue Datacentre, Ajax Avenue, Slough, Berkshire, SL1 4DG"
+  },
+  "zp3128sd": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1731401,
+        "document": "EPR-ZP3128SD_SI_0577391_20250908.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-08",
+        "pages": 9,
+        "report_id": "0577391",
+        "sha256": "7b13aa1be9cc2b47e5275509a184d46fc13f95a7eae7fa933e7c817ab1875ce5",
+        "stem": "zp3128sd-car-0577391",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_ZP3128SD/EPR-ZP3128SD_SI_0577391_20250908.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1192647,
+        "document": "EPR-ZP3128SD_RD_0590458_20260121.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-01-21",
+        "pages": 6,
+        "report_id": "0590458",
+        "sha256": "531066963330f040c319e6a9bf29b3e26b38d018765b3c4453786694e4b939fb",
+        "stem": "zp3128sd-car-0590458",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_ZP3128SD/EPR-ZP3128SD_RD_0590458_20260121.pdf"
+      }
+    ],
+    "holder": "GLOBAL INFRASTRUCTURE UK LIMITED",
+    "operator": "unattributed",
+    "permission_number": "EPR/ZP3128SD",
+    "postcode": "EN8 8XH",
+    "site_address": "Data Center at Maxwells Farm West, Great Cambridge Road, Cheshunt, EN8 8XH"
+  },
+  "zp3238dk": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1199353,
+        "document": "EPR-ZP3238DK_RD_0581651_20250930.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-09-30",
+        "pages": 4,
+        "report_id": "0581651",
+        "sha256": "d190b65089a1c1696eb763e116de35f38596c6beb8c125260bec1df2635e34f9",
+        "stem": "zp3238dk-car-0581651",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_ZP3238DK/EPR-ZP3238DK_RD_0581651_20250930.pdf"
+      },
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1345530,
+        "document": "EPR-ZP3238DK_SI_0588941_20251216.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-16",
+        "pages": 6,
+        "report_id": "0588941",
+        "sha256": "e81ccfd6543ff418b08bd9177b421a11bee7140e2081948a1114b9c51f28ea7e",
+        "stem": "zp3238dk-car-0588941",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_ZP3238DK/EPR-ZP3238DK_SI_0588941_20251216.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1134572,
+        "document": "EPR-ZP3238DK_RD_0599848_20260529.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-29",
+        "pages": 4,
+        "report_id": "0599848",
+        "sha256": "bfef5a9af8322defb2e55dba7644553525e5c72098c776767f8282fdfde99878",
+        "stem": "zp3238dk-car-0599848",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_ZP3238DK/EPR-ZP3238DK_RD_0599848_20260529.pdf"
+      }
+    ],
+    "holder": "UBS AG",
+    "operator": "UBS",
+    "permission_number": "EPR/ZP3238DK",
+    "postcode": "EC2M 2QY",
+    "site_address": "5, Broadgate Data Centre - EPR/ZP3238DK, Broadgate, London, EC2M 2QY"
+  },
+  "zp3321sh": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1821519,
+        "document": "EPR-ZP3321SH_SI_0602269_20260701.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-07-01",
+        "pages": 8,
+        "report_id": "0602269",
+        "sha256": "724bdd6f94647e9366ed0217a21a5dd39e06166197aa7a0f899a35b5230e71dc",
+        "stem": "zp3321sh-car-0602269",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_ZP3321SH/EPR-ZP3321SH_SI_0602269_20260701.pdf"
+      }
+    ],
+    "holder": "SF LHR LTD",
+    "operator": "unattributed",
+    "permission_number": "EPR/ZP3321SH",
+    "postcode": "TW14 8RS",
+    "site_address": "SF LHR Ltd, LON1 Data Centre, Unit 4 Westgate Industrial Estate, Feltham, TW14 8RS"
+  },
+  "zp3527ss": {
+    "checked": "2026-08-28",
+    "documents": [
+      {
+        "assessment": "site inspection",
+        "assessment_type": "SI",
+        "bytes": 1169440,
+        "document": "EPR-ZP3527SS_SI_0588422_20251208.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2025-12-08",
+        "pages": 5,
+        "report_id": "0588422",
+        "sha256": "376cbe7172297ea6feff4fb1e7f63b899d3b63b90534ff528c61eafb217f3b0c",
+        "stem": "zp3527ss-car-0588422",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_ZP3527SS/EPR-ZP3527SS_SI_0588422_20251208.pdf"
+      },
+      {
+        "assessment": "assessment report / data review",
+        "assessment_type": "RD",
+        "bytes": 1065306,
+        "document": "EPR-ZP3527SS_RD_0599841_20260529.pdf",
+        "fetched": "2026-08-28",
+        "issued": "2026-05-29",
+        "pages": 4,
+        "report_id": "0599841",
+        "sha256": "df1f6d741005687d7198d5c81d2e875c19b0f1adb3d72f49f50ee34e0cb0c7c7",
+        "stem": "zp3527ss-car-0599841",
+        "url": "https://environment.data.gov.uk/public-register/documents/installations/compliance/EPR_ZP3527SS/EPR-ZP3527SS_RD_0599841_20260529.pdf"
+      }
+    ],
+    "holder": "ARK DATA CENTRES LIMITED",
+    "operator": "Ark Data Centres",
+    "permission_number": "EPR/ZP3527SS",
+    "postcode": "UB3 4QQ",
+    "site_address": "Bulls Bridge Industrial Estate, Union Park, North Hyde Gardens, Hayes, UB3 4QQ"
+  }
+}
