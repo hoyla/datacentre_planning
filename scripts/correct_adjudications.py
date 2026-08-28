@@ -176,6 +176,27 @@ RULES = [
      r"""pa.quantity_type='grid_connection' AND f.evidence_text ~* '\ytemporar'""",
      "temporary construction supply, not the completed connection"),
 
+    # The premise: **a line's voltage is not the site's capacity.** UK
+    # distribution runs at 11, 33, 66, 132, 275 and 400 kV, and a
+    # document naming one is describing the wire, not how much the site
+    # may draw. Found 2026-08-28 at Ballykelly, where "connected through
+    # a 33kW overhead line" — kV written or extracted as kW — became a
+    # 0.033 MW grid connection, and then a contradiction against the
+    # site's own 50 MW in the consumption-integrity report.
+    #
+    # The predicate needs both halves: a standard distribution voltage
+    # AND line vocabulary in the same sentence. "33 kW" beside a
+    # generator really is 33 kW, and this must not touch it. Swept over
+    # all 316 sub-1 MW headline figures in the corpus: exactly one row
+    # matches, so the rule is narrow by measurement rather than by hope.
+    ("voltage_not_capacity",
+     "verdict='unclear', quantity_type=NULL, value_mw=NULL, is_maximum=NULL",
+     r"""pa.quantity_type IN ('grid_connection','total_site_power','it_load')
+         AND pa.value_mw < 1
+         AND f.evidence_text ~* '\y(11|33|66|132|275|400)\s*k[VW]\y'
+         AND f.evidence_text ~* '\y(overhead|line|cable|circuit|feeder|network)\y'""",
+     "a line's voltage, not a capacity the site may draw"),
+
     ("equipment_label_not_connection",
      "verdict='unclear', quantity_type=NULL, value_mw=NULL, is_maximum=NULL",
      r"""pa.quantity_type='grid_connection'

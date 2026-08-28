@@ -68,6 +68,11 @@ WHERE pa.verdict = 'site_capacity'
  OR (coalesce(pa.unit_note,'') NOT LIKE '%[temporary_supply]%'
      AND pa.quantity_type = 'grid_connection'
      AND f.evidence_text ~* '\ytemporar')
+ OR (coalesce(pa.unit_note,'') NOT LIKE '%[voltage_not_capacity]%'
+     AND pa.quantity_type IN ('grid_connection','total_site_power','it_load')
+     AND pa.value_mw < 1
+     AND f.evidence_text ~* '\y(11|33|66|132|275|400)\s*k[VW]\y'
+     AND f.evidence_text ~* '\y(overhead|line|cable|circuit|feeder|network)\y')
  OR (coalesce(pa.unit_note,'') NOT LIKE '%[equipment_label_not_connection]%'
      AND pa.quantity_type = 'grid_connection'
      AND f.evidence_text ~* 'floor plan|sections drawing|figure\s+[0-9]|substation\s+[0-9.]+\s*m²|legacy')
