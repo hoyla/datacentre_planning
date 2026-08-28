@@ -607,7 +607,14 @@ REGISTRY: tuple[Cohort, ...] = (
             "available is the same ladder the sites table ranks on: a "
             "disclosed IT load or total site demand first, then a contracted "
             "grid connection or a standby-implied figure, and last a figure "
-            "inferred from floorspace."),
+            "inferred from floorspace. The 100 MW line is the industry's "
+            "own, not this project's: IBM's working definition of a "
+            "hyperscale data centre puts it at 100 MW or more "
+            "(https://www.ibm.com/think/topics/hyperscale-data-center). The "
+            "older formal definition — 5,000 servers in 10,000 square feet "
+            "— is unusable against planning records, because server counts "
+            "change too quickly for applicants to state them; power is the "
+            "quantity these documents actually disclose."),
         rule=(
             "site_scale.power_estimate(...).value_mw >= 100, over the "
             "adjudicated figures for the site plus its floorspace."),
