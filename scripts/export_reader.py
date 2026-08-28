@@ -4606,6 +4606,14 @@ def main() -> int:
     with db.cursor(dict_rows=False) as _cur:
         op_rows = odis.load_rows(_cur, drive_docs)
         op_divs = odis.load_divergences(_cur, drive_docs)
+    # The renewable claim beside the combustion the sites disclose
+    # (Luke, 2026-08-28). Built from a curated claims file, never
+    # inferred from a keyword: the direction of a mention decides its
+    # meaning, and Apatura's diesel passages argue for eliminating
+    # diesel. dcp/green_claims.py carries the reasoning.
+    from dcp import green_claims as _gc
+    with db.connect() as _gconn:
+        _green_rows = _gc.build_rows(_gconn, profiles)
     _AUD = [(k, lbl) for k, lbl, _ in odis.AUDIENCES]
 
     def _aud_cell(row, key):
@@ -4754,6 +4762,29 @@ def main() -> int:
         f'<td class="n">{q["ratio"]:.2f}&times;</td></tr>'
         for d, q in _lfl)
 
+    # One row per claim. Every cell either carries evidence or says why
+    # it does not — a blank here would read as "no generators".
+    def _green_row(r):
+        fuels = (", ".join(f"{esc(lbl)} <span class=\"q\">({n} site{'' if n == 1 else 's'})</span>"
+                           for lbl, n in r.fuels)
+                 if r.fuels else
+                 f'<span class="q">{esc(r.generation_use)}</span>')
+        units = (f"at least {r.generator_floor}"
+                 if r.generator_floor else '<span class="q">no count disclosed</span>')
+        permit = (f"{r.permit_mwth:,.1f} MWth<span class=\"q\">{r.permit_count} permit"
+                  f"{'' if r.permit_count == 1 else 's'}, {r.permit_engines} engines</span>"
+                  if r.has_permit else
+                  '<span class="q">no permit found &mdash; may be under 50 MWth</span>')
+        return (f'<tr><td>{esc(r.claim.operator)}</td>'
+                f'<td><q>{esc(r.claim.quote)}</q>'
+                f'<span class="q">{esc(r.claim.gloss)}</span></td>'
+                f'<td>{fuels}</td>'
+                f'<td>{esc(r.generation_use) if r.fuels else "&mdash;"}</td>'
+                f'<td data-num="1">{units}</td>'
+                f'<td data-num="1">{permit}</td></tr>')
+
+    _green_body = "".join(_green_row(r) for r in _green_rows)
+
     operators_html = f"""
  <p class="lede">A datacentre's size is stated to at least five different audiences: the
  planning authority, the grid operator, the auditors, its customers and the environmental
@@ -4781,6 +4812,27 @@ def main() -> int:
  {f'<table class="stats"><thead><tr><th scope="col">Site</th><th scope="col">Quantity</th><th scope="col">Figures on record, and where each was published</th><th scope="col">Ratio</th></tr></thead><tbody>{_lfl_rows}</tbody></table>' if _lfl_rows else '<p class="help">None currently.</p>'}
  <p class="help">A ratio of 1.00× is corroboration, not coincidence: two audiences given
  the same number by the same developer, arrived at independently by this project.</p>
+
+ <h3>Renewable-power claims, beside the generation the documents describe</h3>
+ <p>Six operators in this corpus publish a claim about renewable power. Their sites'
+  own planning documents describe on-site combustion. Both are shown here, in the
+  operator's own words, because the wording is the finding: <em>procurement</em> is a
+  statement about what is bought, <em>powered</em> about how a building runs, and a
+  <em>goal</em> is neither.</p>
+ <div class="banner"><b>What this table is not.</b> It is not a list of operators caught
+  out. &ldquo;100% renewable&rdquo; conventionally describes procured grid electricity, so
+  an unqualified claim is not false because a site also holds standby plant &mdash; the
+  question is what the claim leaves out. Two operators here, Ark and Kao Data, name their
+  standby fuel beside the claim.</div>
+ <table class="stats" id="tbl-green"><thead><tr>
+  <th scope="col">Operator</th><th scope="col">What it claims, in its own words</th>
+  <th scope="col">On-site generation its documents describe</th>
+  <th scope="col">Use</th><th scope="col">Units disclosed</th>
+  <th scope="col">Permitted standby</th></tr></thead>
+  <tbody>{_green_body}</tbody></table>
+ <p class="help"><b>Generators existing is not generators running.</b> {esc(_gc.REGULATORY_CAVEAT)}</p>
+ <p class="help"><b>A missing permit is not a clean site.</b> {esc(_gc.PERMIT_THRESHOLD_CAVEAT)}</p>
+ <p class="help"><b>Counts are floors.</b> {esc(_gc.COUNT_CAVEAT)}</p>
 
  <h3>Every site whose figures reached more than one audience</h3>
  <p class="help">{len(op_divs)} sites. Figures are shown in the unit each source printed,
