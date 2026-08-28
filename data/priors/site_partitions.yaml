@@ -628,3 +628,242 @@ partitions:
 # to-do; what remains adjudicated nowhere is recorded in ROADMAP
 # (Northumberland Energy Park's four schemes, and the estate-scale
 # records blocking permit matches at sites 5, 23 and 59).
+
+  # ------------------------------------------------------------------
+  # Slough Trading Estate — site 23 (PTNO-12135970), the largest
+  # over-clustering left in the corpus. One site record held 21
+  # applications and 15 Barbour projects across at least nine
+  # operators' campuses, spread 1.3 km end to end and named after
+  # whichever member sorted lowest ("BARCLAYS BANK - DATA CENTRE
+  # SOLAR PV PANELS"). Nine Environment Agency permits totalling
+  # 1,430 MWth fall inside it, and every one is recorded `considered`
+  # rather than matched, because matching any of them would assert an
+  # identity between campuses that are plainly distinct
+  # (environment-agency-permit-matches.yaml, "Revisit once site 23 is
+  # partitioned"). This is that revisit.
+  #
+  # Boundary evidence, in the order it was trusted: the operator named
+  # in the application's own documents; then the permit postcode where
+  # it matches an address; then the address itself. The partition unit
+  # is the CAMPUS, not the building — Iron Mountain's own pages call
+  # LON-1, LON-2 and LON-3 one campus though they sit 810 m apart, and
+  # a partition per building would fragment a campus as surely as the
+  # radius has welded nine together (Luke, 2026-08-28).
+  # ------------------------------------------------------------------
+
+  - name: iron-mountain-london-campus-slough
+    reason: |
+      Iron Mountain's London campus, and the case that settles how
+      these boundaries are drawn. Its own site states "Our campus
+      features three facilities — LON-1, LON-2, and LON-3", and gives
+      each an address: LON-1 at "724-729 Dundee Road, Slough, SL1 4JU"
+      (8.75 MW, "Former Credit Suisse facility extensively upgraded"),
+      LON-2 at 110 Buckingham Avenue, LON-3 at "111 Buckingham Avenue
+      Slough, SL1 4PF" on a "Secure 2.5-acre site in Slough Trading
+      Estate, part of LON-1, LON-2, LON-3 campus". Dundee Road is
+      810 m from Buckingham Avenue, so this partition is deliberately
+      not contiguous: the operator's own definition of its campus wins
+      over the distance between its buildings.
+
+      The documents agree independently. Slough/P/04829/030 names
+      "Iron Mountain LON2" and its agent "Gratte Brothers Ltd (on
+      behalf of Iron Mountain)"; Slough/P/02933/009 at 724-729 Dundee
+      Road names "Iron Mountain"; Slough/T/142(121/19) is the
+      demolition of 110 Buckingham Avenue "and the construction of a
+      new data centre facility", which is LON-2 replacing the
+      Logicalis building the address still carries.
+
+      Permit EPR/TP3120LE (LON3 Data Centre, IRON MOUNTAIN (UK) DATA
+      CENTRE LIMITED, 113.31 MWth) is issued at SL1 4PF — the same
+      postcode Iron Mountain publishes for 111 Buckingham Avenue, and
+      evidence that Barbour's SL1 4PN on PTNO-12833153 is the outlier
+      of three sources rather than the truth. Note SL1 4PF is shared
+      with Amazon's EPR/PP3309MK, so postcode alone cannot assign a
+      permit here; the holder name does.
+    applications:
+      - Slough/P/02933/009        # LON-1, 724-729 Dundee Road
+      - Slough/P/04829/030        # LON-2, 110 Buckingham Avenue
+      - Slough/T/142(121/19)      # demolition of 110 for the new build
+    projects:
+      - "12468506"                # 110 BUCKINGHAM AVENUE - DATA CENTRE
+      - "12833153"                # LON 3 DATA CENTRE
+
+  - name: virtus-zenium-slough-campus
+    reason: |
+      SL1 4QZ, the campus VIRTUS acquired from Zenium. Three Barbour
+      projects share the postcode and the estate address: Zenium's
+      "London One" fit-out at 12 Liverpool Road, and VIRTUS LONDON 3
+      and LONDON 11. Permit EPR/BP3945QX (VIRTUS HOLDCO LIMITED,
+      "Virtus Slough Campus Data Centres", 180.5 MWth) is issued at
+      SL1 4QZ; EPR/DP3348QS (VIRTUS LONDON 11 LIMITED, 72 MWth) is at
+      SL1 4HA, which is why LONDON 11 travels with the campus on the
+      operator's own naming rather than on its permit postcode.
+
+      **LONDON10 at 75 Buckingham Avenue joins it** (Luke, 2026-08-28),
+      and is the one planning application this campus carries.
+      Slough/T/138 — "Provision of a detached single business unit
+      providing 6,500 sqm for data centre" — named no applicant, and
+      three sources close it. The Companies House charge against
+      VIRTUS LONDON 10 LIMITED (11619901, incorporated 12 October
+      2018) covers "land and building known as london 10, 75
+      buckingham avenue trading estate, slough, berkshire, SL1",
+      title BK410987, to Standard Chartered Bank (Hong Kong) on
+      14 April 2020. VIRTUS's own page places LONDON10 "as part of the
+      VIRTUS Data Centre Campus at Slough", delivering 6.6MW of IT
+      load — the operator's campus definition, which decides
+      membership here as it did for Iron Mountain. Kovara Projects
+      records the build at 75 Buckingham Avenue with client Segro,
+      contractor Kier, architect Langley Hall Associates, completed
+      2019: the same landlord-builds/operator-runs split as Segro and
+      CyrusOne at 225 Bath Road.
+
+      Note what this rules out. Amazon's permit EPR/PP3309MK grid
+      reference lands 105 m from 75 Buckingham Avenue, which had made
+      it the nearest candidate for an Amazon campus; the charge shows
+      the building is VIRTUS's, so that reading is withdrawn and
+      Amazon's Slough facility remains unplaced.
+    applications:
+      - Slough/T/138              # LONDON10, 75 Buckingham Avenue
+    projects:
+      - "12216044"                # ZENIUM - DATA CENTRE - FIT-OUT
+      - "12277044"                # VIRTUS - LONDON 3
+      - "12575087"                # VIRTUS - LONDON 11
+
+  - name: galvin-road-672-slough
+    reason: |
+      672 Galvin Road, SL1 4AN — one building with two operators in
+      its record, a decade apart, which is why this partition is named
+      for the address rather than either of them. Slough/P/00348/008
+      is Barclays Bank PLC's solar installation (applicant BELECTRIC
+      Solar Ltd) and Slough/P/00348/011 states "Operator is KAO DATA".
+      Barbour's PTNO-12135970 ("BARCLAYS BANK - DATA CENTRE SOLAR PV
+      PANELS") is the record whose Ptno currently names the whole
+      estate, and it belongs here.
+    applications:
+      - Slough/P/00348/008
+      - Slough/P/00348/009
+      - Slough/P/00348/011
+    projects:
+      - "12135970"
+
+  - name: ajax-avenue-631-cyxtera
+    reason: |
+      631-634 Ajax Avenue, SL1 4DG. Both applications name Cyxtera —
+      "Additional ancillary plant and side extension to Cyxtera data
+      centre" — and permit EPR/YP3935QM ("Ajax Avenue Datacentre",
+      LHR1 Data Center Holdings Limited, 98 MWth) is issued at
+      SL1 4DG, the same postcode. Distinct from 650-660 Ajax Avenue
+      below, which is a different campus on the same street.
+    applications:
+      - Slough/P/01123/002
+      - Slough/P/01123/003
+
+  - name: ajax-avenue-650-gb-one
+    reason: |
+      650-660 Ajax Avenue, SL1 4BG — GTR's GB One. The Barbour record
+      gives the postcode SL1 4BG, which is where permit EPR/CP3042QG
+      ("GB One Data Centre", GTR MANAGEMENT SERVICES LIMITED, 186.417
+      MWth) is issued. Two campuses on one street is exactly the case
+      a 1 km radius cannot see.
+    projects:
+      - "12602383"                # 650-660 AJAX AVENUE - SHELL ONLY
+
+  - name: bath-road-225-slough
+    reason: |
+      225 Bath Road, SL1 4AA. The applications name "SEGRO (225 Bath
+      Road) Limited" as applicant of record, and permit EPR/EP3508PS
+      ("CyrusOne London 4/5 Datacentres", CYRUSONE UK4 LIMITED, 201.28
+      MWth) is issued at SL1 4AA — landlord and operator of one
+      campus, which is why the partition is named for the address.
+      Slough/P/00730/091 is the "Land Adjacent To" parcel of the same
+      redevelopment.
+    applications:
+      - Slough/P/00730/076
+      - Slough/P/00730/087
+      - Slough/P/00730/091
+    projects:
+      - "12232573"                # 225 BATH ROAD MASTERPLAN
+      - "12369559"                # SEGRO PLC BATH ROAD - SITE B
+      - "12406653"                # 225 BATH ROAD SUITE C
+
+  - name: bath-road-188-slough
+    reason: |
+      188-216 Bath Road, SL1 3YD/3WE — a separate SEGRO scheme from
+      225 Bath Road, 700 m east along the same road. Both applications
+      name "SEGRO STE Limited" (the trading-estate company) rather
+      than "SEGRO (225 Bath Road) Limited", which is the distinction
+      that separates them.
+    applications:
+      - Slough/P/20367/000
+      - Slough/P/20367/001
+    projects:
+      - "12757841"                # 188-216 BATH ROAD - 2 DATA CENTRE
+
+  - name: equinix-ld14-banbury-avenue
+    reason: |
+      LD14, Banbury Avenue, SL1 4LH. Slough/P/20054/001 states "Client
+      is Equinix"; Slough/P/20054/000 is its EIA screening opinion.
+      Equinix holds two permits on the estate — EPR/LP3303PR ("Equinix
+      Slough Campus Data Centre", 331.084 MWth, SL1 4AX) and
+      EPR/CP3409BH ("LD11x", 96 MWth, SL1 4JW) — and neither postcode
+      is LD14's, so which of Equinix's Slough campuses those permits
+      belong to is left open rather than guessed.
+    applications:
+      - Slough/P/20054/000
+      - Slough/P/20054/001
+    projects:
+      - "12685382"                # SLOUGH TRADING ESTATE - LD14
+
+  - name: ipswich-road-segro-slough
+    reason: |
+      SEGRO's Ipswich Road buildings — 535-546 (SL1 4EP) and 580-581
+      (SL1 4EQ), adjacent postcodes on one street, 200 m apart.
+      Slough/t/131 is the detached data centre building at 535-546.
+    applications:
+      - Slough/t/131
+    projects:
+      - "12355161"                # SEGRO 535-546 IPSWICH ROAD
+      - "12522787"                # 580-581 IPSWICH ROAD
+
+  - name: malton-avenue-segro-slough
+    reason: |
+      470-475 Malton Avenue, SL1 4QU. Slough/T/135 is a "Single
+      building for data centre development" at the Fullers Logistics
+      address, and Barbour's PTNO-12409629 is SEGRO's Malton Avenue
+      data centre at the same numbers.
+    applications:
+      - Slough/T/135
+    projects:
+      - "12409629"
+
+  - name: buckingham-avenue-84-virgin-media
+    reason: |
+      84-85 Buckingham Avenue. Slough/P/01069/018 names Virgin Media
+      Ltd and describes increasing "the capacity of the data hall
+      within the Virgin Media" building — a distinct operator 300 m
+      from Iron Mountain's LON-2, and the reason Buckingham Avenue
+      cannot be treated as one campus by street name.
+    applications:
+      - Slough/P/01069/018
+
+  - name: stirling-road-700-cyrusone-lon3
+    reason: |
+      700 Stirling Road, SL1 4ST — CyrusOne LON3. Slough/T/137 named
+      no operator in its documents and was left unassigned when site 23
+      was first drawn, clustering with two other unattributed records;
+      CyrusOne's own page closes it: "700 Stirling Road, Slough SL1
+      4ST, United Kingdom … LON3 delivers 9 MW of IT capacity to 3,600
+      sq. m." (cyrusone.com/data-centers/emea/london-uk-lon3, via Luke
+      2026-08-28). Address and postcode both match the application.
+
+      Left open deliberately: CyrusOne also operates London 4/5, whose
+      permit EPR/EP3508PS (201.28 MWth) is issued at SL1 4AA — the
+      225 Bath Road campus, 1.06 km away and therefore outside the
+      radius in any case. Whether CyrusOne considers Stirling Road and
+      Bath Road one campus is not established, and the Iron Mountain
+      case (LON-1 to LON-3, 810 m apart but one campus by the
+      operator's own definition) is the reason not to assume either
+      way from distance alone.
+    applications:
+      - Slough/T/137
+

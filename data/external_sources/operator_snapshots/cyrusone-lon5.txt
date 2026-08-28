@@ -1,8 +1,8 @@
-# url: https://cyrusone.com/data-centers/emea/london-uk-lon6
+# url: https://cyrusone.com/data-centers/emea/london-uk-lon5
 
 # fetched: 2026-08-28
 
-# sha256(html): 8a63e8fb5120d933157dd05251ff38a2b41a323a31c6c202b44ef9848df2d6be
+# sha256(html): 9e8dea09e1515770271b2c549c1efb1335cd5589b865d397c040519e0f96ef9b
 
 ## STRUCTURED
 
@@ -10,7 +10,7 @@
 
 ## VISIBLE TEXT
 
-Data Center -- London, UK: LON6 
+London, UK: LON5 | CyrusOne 
  
  
  
@@ -1221,7 +1221,7 @@ Data Center -- London, UK: LON6
  
  
  
- London, UK: LON6 
+ London, UK: LON5 
  
  
  
@@ -1236,7 +1236,7 @@ Data Center -- London, UK: LON6
  
  Data Centers 
  London, UK 
- LON6 
+ LON5 
  
  
  
@@ -1245,7 +1245,7 @@ Data Center -- London, UK: LON6
  
  
  
- Seven Hills Rd Iver Heath, SL0 0PA United Kingdom
+ 225C Bath Road, Slough SL1 5PP, United Kingdom
  
  
  
@@ -1333,12 +1333,11 @@ Data Center -- London, UK: LON6
  
  
  
- Transformative Sustainable Campus Delivers Advanced Technology with Environmental Leadership 
+ CyrusOne's LON5 cutting-edge facility is located near London in one of the UK's premier data center locations. 
  
  
- CyrusOne LON6 is a transformative, sustainable, biodiverse, and community-focused data center development strategically located in Iver Heath, Buckinghamshire, close to Iver Grid Supply Point, and able to serve both West London Availability Zones. The facility will deliver 90 MW of IT capacity to 30,000 sqm highly complex technical infrastructure across ten 9 MW data halls designed to be fully integrated into the landscape. 
- The development project will restore and reconnect communities, delivering 71% Biodiversity Net Gain through the creation of an ecologically rich parkland and new habitats that will enhance the quality of the Colne Valley Regional Park.. A Training Centre will improve economic and educational opportunities for the local and wider area through the extension of CyrusOne’s successful partnership with the UTC Heathrow. 
- 
+ Strategically located in Slough, UK, and close to Heathrow Airport, LON5 is a brand new purpose-built state-of-the-art data center delivering 18 MW of IT capacity to 6,452 sq. m. technical space. Each data hall is meticulously engineered for maximum efficiency and scalability, tailored to meet unique customer requirements. 
+ The facility features advanced power and building monitoring systems, ensuring comprehensive real-time oversight of all electrical and mechanical infrastructures. A team of on-site mechanical and electrical (M&E) engineers is available 24x7x365, implementing rigorous Planned Preventative Maintenance (PPM) programs to guarantee peak performance. 
  
  
  
@@ -1362,7 +1361,7 @@ Data Center -- London, UK: LON6
  
  
  
- 30,000 sq. m. 
+ 6,452 sq. m. 
  Technical IT Space 
  
  
@@ -1381,8 +1380,8 @@ Data Center -- London, UK: LON6
  
  
  
- 90 MW 
- Total Megawatts IT Capacity 
+ 18 MW 
+ Total IT Capacity 
  
  
  
@@ -1425,21 +1424,16 @@ Data Center -- London, UK: LON6
  
  
  
- Ten 9 MW data halls (six ground level, four lower ground) 
- 160 MVA power capacity via 132 kV active/active feeds 
- 99.999% reliability with concurrent maintainability 
- Block redundant UPS topology with 8-minute battery backup 
- N+1 Free cooling air cooled chillers 
- Dual fed ring chilled water system 
- Low PUE (<1.3) through free-cooling technology 
- ASHRAE optimized operating temperatures 
- Four diverse fiber routes with carrier-neutral access 
- 2.5-metre high security perimeter fence 
- PAS 68 rated security gates 
- 24x7x365 on-site security and M&E engineers 
- Biometric access control systems 
- Three-stage fire detection with VESDA 
- Nitrogen filled pre-action sprinkler system 
+ Two-floor technical space configuration 
+ Highly resilient, concurrently maintainable infrastructure 
+ Dedicated electrical plant to each floor 
+ 900 mm heavy duty raised floor with 3,600 mm clear height 
+ Active/Active dual redundant power supplies of 27 MVA 
+ Multi-layered security with 24/7 staffing 
+ Advanced access control systems 
+ Comprehensive video surveillance 
+ Secure delivery bay with 3-ton goods lift 
+ Multiple authentication layers 
  
  
  
@@ -1465,18 +1459,15 @@ Data Center -- London, UK: LON6
  
  
  
- BREEAM "Excellent" target certification 
- 100% renewable energy powered 
- 71% Biodiversity Net Gain 
- Planting over 670 trees (including 145 fruit trees) 
- Over 7,000sqm of woodland and 90,600sqm of mixed meadow areas and acid grassland. 
- 18 acres of public-access green space, with 6.7 acres dedicated exclusively for wildlife preservation 
+ BREEAM "Very Good" target certification 
+ ISO 14001 Environmental Management certified 
+ 100% powered by renewable energy since 2021 
+ Low PUE and WUE through closed-loop water cooling systems 
  Zero Waste to Landfill program 
- Photovoltaic panels providing 64% office energy 
- Rainwater collection and reuse system 
- Electric vehicle charging in 50% of parking 
- Heat export capability 
- 25-year Landscape Ecological Management Plan 
+ Sustainable building materials 
+ Local contractor and staff sourcing where possible 
+ Protected ecological features 
+ Energy-efficient systems 
  
  
  
@@ -1545,7 +1536,7 @@ Data Center -- London, UK: LON6
  
  
  
- Gallery 
+ Contact Us 
  Connect with Our Team for Expert Guidance 
  
  

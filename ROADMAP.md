@@ -491,6 +491,42 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **Equinix's UK estate is largely absent from the corpus: three of
+  fifteen facilities have a planning record** (measured 2026-08-28
+  from equinix.com, prompted by Luke). Eleven London IBX sites — LD3
+  (Coronation Road, NW10 7PH), LD4 (2 Buckingham Avenue, SL1 4NB),
+  LD5 (8 Buckingham Avenue, SL1 4AX), LD6 (352 Buckingham Avenue,
+  SL1 4PF), LD7 (1 Banbury Avenue, SL1 4LH), LD8 (Harbour Exchange
+  Square, E14 9GE), LD9 (Powergate Business Park, NW10 6PW), LD10 and
+  LD13x (both 13 Liverpool Road, SL1 4QZ), LD11x (765/767 Henley
+  Road, SL1 4JW), LD14 (Banbury Avenue) — and four in Manchester:
+  MA1 (Williams House, M15 6SE), MA3 (Joule House, 76 Trafford Wharf
+  Road, M17 1HE), MA4 (Synergy House, M15 6SY), MA5 (Agecroft
+  Commerce Park, Swinton, M27 8BX).
+
+  Only **LD14**, **LD9** (`OldOakParkRoyal/22/0093/DELEAL`, "Powergate
+  Business Park, Unit 2, Volt Avenue") and **MA5**
+  (`Salford/20/75336/FUL`, "conversion of 2 existing warehouses into
+  data centres") verify by address. Match by postcode alone and the
+  count looks like seven — SL1 4PF returns Iron Mountain's 110
+  Buckingham Avenue for LD6, SL1 4QZ returns Zenium at number 12 for
+  LD10 and LD13x — which is the same trap the site 23 partition had to
+  avoid, and a warning against postcode joins in this corridor
+  generally.
+
+  **Two of the nine site-23 permits are now placeable and neither has
+  a planning record**: EPR/LP3303PR ("Equinix Slough Campus Data
+  Centre", 331.084 MWth) is at SL1 4AX, which is LD5 at 8 Buckingham
+  Avenue; EPR/CP3409BH ("LD11x", 96 MWth) is at SL1 4JW, which is
+  765/767 Henley Road. That is 427 MWth of permitted standby plant at
+  addresses the planning corpus has never seen.
+
+  The likeliest cause is the indexing window — council registers are
+  indexed mostly from 2018 and these are older builds — which would
+  make it a general undercount of *operating* capacity rather than an
+  Equinix-specific miss. Worth testing against another long-established
+  operator before it is described that way in print.
+
 Prompted by the **Devon Data Campus** (Xlinks, North Devon), a scheme
 with an active public campaign of which the corpus holds almost nothing:
 zero matches for Xlinks, Valeon or Devon Data Campus. The single
@@ -1058,10 +1094,38 @@ None is abandoned; each is a known, scoped piece of work.
   is `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py`,
   and it works at corridor scale: the site 61 split (ten campuses,
   2026-08-27, see Phase 2 above and HISTORY) is the worked example to
-  copy — reference stems and the applicant of record in the documents
+  copy. **Site 23 is now done** — eleven campuses, 2026-08-28 — which
+  leaves 5, 59, 11, and one the permits did not name: **site 37**
+  (`PTNO-12301553`, 30 applications) covers Prologis Park / Stockley
+  Road, West Drayton, and holds VIRTUS London 5, 7 and 8 alongside
+  CyrusOne's LON2 at "DC2 Prologis Park Heathrow, Stockley Road, West
+  Drayton, UB7 9FN" — the same mixed-operator shape as site 23, found
+  the same day by reading CyrusOne's own pages — reference stems and the applicant of record in the documents
   as the boundary evidence, every member assigned so nothing is left
   to spatial chance. Sites 5, 23, 59 and 11 are what remain, and the
   permits carry their evidence.
+
+  **The partition unit is the campus, not the building** (Luke,
+  2026-08-28, with the operator's own pages as the source). Iron
+  Mountain's London campus page states "Our campus features three
+  facilities — LON-1, LON-2, and LON-3", and the LON-3 page places it
+  on a "Secure 2.5-acre site in Slough Trading Estate, part of LON-1,
+  LON-2, LON-3 campus". So 110 and 111 Buckingham Avenue — 232 m apart
+  and separate Barbour projects (PTNO-12468506, PTNO-12833153) — are
+  distinct data centres that belong in **one** partition, not two. A
+  partition drawn per building would fragment a campus as surely as
+  the 1 km radius has welded seven of them together, and the site 61
+  split exists precisely because fragmentation blocked a capacity
+  claim.
+
+  Two facts to carry into the drawing. The campus discloses **61 MW**
+  across the three facilities (8.7 + 27 + 25 = 60.7, the rarest thing
+  in this survey: a total its own breakdown checks). And the postcodes
+  **conflict** — Iron Mountain gives LON-3 at "111 Buckingham Avenue
+  Slough, SL1 4PF", while Barbour has 111 Buckingham Avenue at SL1 4PN
+  and puts SL1 4PF on 110. Postcode is a matching key, so one of the
+  two is wrong and the conflict has to be resolved rather than
+  averaged.
 - **Requests outstanding, and three drafted awaiting Luke's send.**
   NESO and Ofgem were written to on 2026-08-12 and replies are due
   around 10 September. The three never-sent requests are now drafted in

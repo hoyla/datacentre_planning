@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/slough-campus
 
-# fetched: 2026-08-20
+# fetched: 2026-08-28
 
-# sha256(html): 71054433869b16210fd2512bdd51545b6f1eafb90ed7fcb46866330d9a188ec2
+# sha256(html): 021f31311e2d94fb57e391248e209466fff193c84975800e8ec008741e6ad99a
 
 ## STRUCTURED
 
@@ -181,13 +181,10 @@ Slough Data Centre Campus - VIRTUS
  General Videos AI VIRTUS Blog News & Press Releases Downloads About Us 
  
  
- Global Data Centre Platform Vision & Values People Board of Directors Investors Partners Careers Why VIRTUS 
+ Global Data Centre Platform Vision & Values People Board of Directors Investors Careers Why VIRTUS 
  
  
- Agile Commercials 
- 
- 
- Examples of VIRTUS Flex Going Green? Operational Excellence Quality Credentials Sustainability 
+ Operational Excellence Quality Credentials Sustainability 
 
  
  

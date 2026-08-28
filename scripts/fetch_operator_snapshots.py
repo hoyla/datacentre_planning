@@ -59,6 +59,7 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     "virtus": [
         ("virtus-saunderton", "https://virtusdatacentres.com/locations/uk/london/saunderton-campus"),
         ("virtus-slough-campus", "https://virtusdatacentres.com/locations/uk/london/slough-campus"),
+        ("virtus-slough-london10", "https://virtusdatacentres.com/locations/uk/london/slough-london10"),
         ("virtus-stockley-park", "https://virtusdatacentres.com/locations/uk/london/stockley-park-campus"),
         ("virtus-hayes", "https://virtusdatacentres.com/locations/uk/london/hayes-campus"),
         ("virtus-enfield", "https://virtusdatacentres.com/locations/uk/london/enfield-campus"),
@@ -74,6 +75,10 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     # how far the two diverge.
     "cyrusone": [
         ("cyrusone-lon1", "https://cyrusone.com/data-centers/emea/london-uk-lon1"),
+        ("cyrusone-lon2", "https://cyrusone.com/data-centers/emea/london-uk-lon2"),
+        ("cyrusone-lon3", "https://cyrusone.com/data-centers/emea/london-uk-lon3"),
+        ("cyrusone-lon4", "https://cyrusone.com/data-centers/emea/london-uk-lon4"),
+        ("cyrusone-lon5", "https://cyrusone.com/data-centers/emea/london-uk-lon5"),
         ("cyrusone-lon6", "https://cyrusone.com/data-centers/emea/london-uk-lon6"),
     ],
     "colt": [
@@ -91,6 +96,16 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     "puredc": [
         ("puredc-brent-cross", "https://puredc.com/london-brent-cross"),
         ("puredc-park-royal", "https://puredc.com/our-london-park-royal-site"),
+    ],
+    # Three facilities on one campus, and the campus page adds them up:
+    # 8.7 + 27 + 25 = 60.7 against a stated 61 MW. The rarest thing in
+    # this survey — an operator whose total and breakdown check each
+    # other (Luke, 2026-08-28).
+    "ironmountain": [
+        ("ironmountain-london-campus",
+         "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london"),
+        ("ironmountain-lon3",
+         "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-3"),
     ],
     "ada": [
         ("ada-docklands", "https://adainfrastructure.com/en-US/docklands"),
