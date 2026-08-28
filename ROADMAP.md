@@ -997,6 +997,40 @@ HISTORY.)
   the reader. Worth adjudicating by hand rather than changing the
   rollup rule.
 
+- **A story lead the corpus can already evidence: who qualifies their
+  "100% renewable" claim, and who does not** (Luke's idea, measured
+  2026-08-28). Eight operators in the snapshot store make a green
+  claim — "Powered by 100% renewable resources", "100% renewable
+  energy powered", net-zero commitments. Five of them also hold
+  Environment Agency permits for standby combustion, and the
+  difference between them is in the wording:
+
+    operator   permits   MWth   engines   claim names its generators?
+    VIRTUS           4   832.5      121   no
+    Ark              3   476.1      114   yes — "supported by HVO"
+    Vantage          1   225.7       37   no
+    CyrusOne         1   201.3       32   no
+    Kao              1   152.3       25   yes — HVO named
+    Apatura, Greystoke, Pulsant: green claim, no permit held
+
+  **Ark and Kao name their standby fuel beside the green claim;
+  VIRTUS, Vantage and CyrusOne make an unqualified claim while holding
+  permits for 1,259 MWth across 190 engines.**
+
+  Four caveats belong with it, and without them this is a cheap
+  gotcha rather than a finding. "100% renewable" conventionally
+  describes *procured grid electricity*, so an unqualified claim is
+  not false — the question is what it omits. Standby plant runs for
+  testing and outages, so its output is small against a site's grid
+  draw; the point is disclosure, not equivalence. Permit MWth is
+  thermal input capacity, not emissions. And the snapshot store is
+  curated, so an operator absent from the table may simply have no
+  page snapshotted — absence here is not absence of a claim.
+
+  Next step if it is taken up: put the pairing to each operator, and
+  read the permits' own schedules for run-hour limits, which is where
+  a standby installation's expected use is actually written down.
+
 ---
 
 ## Parked
