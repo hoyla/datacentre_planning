@@ -265,7 +265,9 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--submit", action="store_true")
     ap.add_argument("--collect", action="store_true")
-    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="Estimate and stop without sending. Wins over "
+                         "--submit when both are given.")
     ap.add_argument("--model", default="gpt-5")
     ap.add_argument("--reasoning-effort", default="low",
                     choices=["minimal", "low", "medium", "high"])
@@ -275,8 +277,10 @@ def main() -> int:
     if args.collect:
         do_collect()
     elif args.submit or args.dry_run:
+        # --dry-run wins over --submit: the safe reading of a
+        # contradictory pair is the one that does not spend money.
         do_submit(args.model, args.reasoning_effort,
-                  dry_run=not args.submit,
+                  dry_run=args.dry_run or not args.submit,
                   rate_in=args.rate_in, rate_out=args.rate_out)
     else:
         ap.error("pass --dry-run, --submit or --collect")

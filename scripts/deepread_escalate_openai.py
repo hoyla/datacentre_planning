@@ -1133,7 +1133,11 @@ def main() -> None:
                          "model has read, closing the coverage gap rather "
                          "than adding a second opinion. Matches the "
                          "reader's own definition of unread.")
-    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="Estimate and build the requests, then stop without "
+                         "sending. Wins over --submit when both are given: "
+                         "the safe reading of a contradictory pair is the "
+                         "one that does not spend money.")
     args = ap.parse_args()
 
     if args.preflight:
@@ -1162,8 +1166,16 @@ def main() -> None:
             # whole job is to be able to say exactly which documents it
             # covered.
             ap.error("--cohort first_read requires --since YYYY-MM-DD")
+        # `--dry-run` is authoritative, and this OR is the whole reason
+        # it exists. It used to read `dry_run=not args.submit`, which
+        # made the flag a decoy: `--submit --dry-run` — the natural way
+        # to write "show me what a submit would do", and the exact
+        # phrasing the docstring's own examples encourage — set
+        # dry_run False and sent 1,936 requests to the API on
+        # 2026-08-28. A flag that is documented, accepted without
+        # complaint, and silently overridden is worse than no flag.
         do_submit(args.cohort, args.model or "<unset>", args.max_chars,
-                  dry_run=not args.submit, sample=args.sample,
+                  dry_run=args.dry_run or not args.submit, sample=args.sample,
                   rate_in=args.rate_in, rate_out=args.rate_out,
                   max_spend=args.max_spend_usd,
                   reasoning_effort=args.reasoning_effort,

@@ -495,7 +495,9 @@ def main() -> int:
     ap.add_argument("--sample", action="store_true")
     ap.add_argument("--site", action="append", help="restrict --sample to these keys")
     ap.add_argument("--submit", action="store_true")
-    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="Estimate and stop without sending. Wins over "
+                         "--submit when both are given.")
     ap.add_argument("--collect", action="store_true")
     ap.add_argument("--report", action="store_true")
     ap.add_argument("--sample-markdown", action="store_true",
@@ -510,7 +512,12 @@ def main() -> int:
     if args.sample:
         do_sample(args.model, args.reasoning_effort, args.site)
     elif args.submit or args.dry_run:
-        do_submit(args.model, args.reasoning_effort, dry_run=not args.submit)
+        # `--dry-run` wins over `--submit`: the safe reading of a
+        # contradictory pair is the one that does not spend money.
+        # It used to read `dry_run=not args.submit`, which made the
+        # flag a decoy and sent a live batch on 2026-08-28.
+        do_submit(args.model, args.reasoning_effort,
+                  dry_run=args.dry_run or not args.submit)
     elif args.collect:
         do_collect()
     elif args.sample_markdown:
