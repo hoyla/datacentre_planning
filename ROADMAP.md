@@ -1011,13 +1011,28 @@ HISTORY.)
     Vantage          1   225.7       37   no
     CyrusOne         1   201.3       32   no
     Kao              1   152.3       25   yes — HVO named
-    Apatura, Greystoke, Pulsant: green claim, no permit held
+    Apatura, Greystoke, Pulsant: green claim, no permit found
 
   **Ark and Kao name their standby fuel beside the green claim;
   VIRTUS, Vantage and CyrusOne make an unqualified claim while holding
   permits for 1,259 MWth across 190 engines.**
 
-  Four caveats belong with it, and without them this is a cheap
+  **A permit is only required at 50 MWth and above, which limits what
+  the bottom three rows can mean** (Luke, 2026-08-28; confirmed in the
+  permit data). The permitted activity is written in the permits
+  themselves as "Combustion; Any Fuel =>50MW - 1.1 A(1) a)", with two
+  entries reading "Medium Combustion Plant collectively =>50MW" —
+  individually small engines that aggregate past the threshold. Below
+  it a site falls to the MCP regime: registration rather than a
+  bespoke permit, lighter touch, and possibly not published at all
+  (see the Environment Agency item above). So **no permit found is not
+  no generators** — it may only mean the installation is under 50
+  MWth. Pulsant is the clearest case: its whole disclosed estate is
+  22.12 MW of IT load, which would not reach the threshold however it
+  is aggregated. The table's bottom three rows are therefore not
+  evidence of a cleaner operator, and must never be read as such.
+
+  Five caveats belong with it, and without them this is a cheap
   gotcha rather than a finding. "100% renewable" conventionally
   describes *procured grid electricity*, so an unqualified claim is
   not false — the question is what it omits. Standby plant runs for
