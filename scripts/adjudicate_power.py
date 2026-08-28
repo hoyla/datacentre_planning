@@ -813,20 +813,39 @@ def do_measure(submit: bool = False) -> None:
     # bulk pass taught that lesson at a cost of $150.
     import anthropic
     client = anthropic.Anthropic()
-    sample = reqs[:min(25, len(reqs))]
+    # Spread the sample across the requests rather than taking the first
+    # 25: they are built per application in order, so a head sample
+    # measures whichever applications happen to sort first. The
+    # deep-read estimator has always done this ("spread across the
+    # cohort") and this one did not, which is half of why a run
+    # projected at $6.90 spent about twice that (Luke, 2026-08-28).
+    n_sample = min(25, len(reqs))
+    step = max(1, len(reqs) // n_sample)
+    sample = reqs[::step][:n_sample]
     counted = 0
     for r in sample:
         counted += client.messages.count_tokens(
             model=MODEL, messages=r["params"]["messages"]).input_tokens
     mean_in = counted / len(sample)
     total_in = mean_in * len(reqs)
-    # Output is one small object per figure; measured shape ~60 tokens each.
-    total_out = n_figs * 60
-    cost = total_in / 1e6 * 1.0 + total_out / 1e6 * 5.0
+    # Output is one small object per figure; measured shape ~60 tokens
+    # each. This is an assumption, not a measurement — it is stated as
+    # one below so nobody quotes the total as though it were measured.
+    OUT_PER_FIGURE = 60
+    total_out = n_figs * OUT_PER_FIGURE
+    # Sonnet list is $3/M in, $15/M out; the batch API is half of each.
+    # The previous $1.00/$5.00 was neither list nor batch — it under-read
+    # the bill by a third on both sides.
+    RATE_IN, RATE_OUT = 1.50, 7.50
+    cost = total_in / 1e6 * RATE_IN + total_out / 1e6 * RATE_OUT
     print(f"measured mean input: {mean_in:,.0f} tokens/request "
           f"(sampled {len(sample)})")
-    print(f"projected: {total_in/1e6:.2f}M input + ~{total_out/1e6:.2f}M "
-          f"output -> ${cost:,.2f} at Sonnet batch rates")
+    print(f"projected: {total_in/1e6:.2f}M input (sampled {len(sample)} "
+          f"spread across {len(reqs)}) + ~{total_out/1e6:.2f}M output "
+          f"(ASSUMED {OUT_PER_FIGURE} tokens x {n_figs:,} figures, not "
+          f"measured) -> ${cost:,.2f} at Sonnet batch rates "
+          f"(${RATE_IN}/${RATE_OUT} per M). Treat as a floor: the output "
+          f"side is an assumption and drifts with the response schema.")
     if not submit:
         print("\n(measurement only — nothing spent; re-run with --submit)")
         return
