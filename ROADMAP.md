@@ -491,6 +491,86 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **Pinpoint and Giant are missing content by construction, not only by
+  age.** Both take the same input, and it is **not** the Drive `sites`
+  folder: it is the derivative bundle from
+  `scripts/export_pinpoint_bundle.py` (Luke, 2026-08-28). Pinpoint has
+  no folders — the namespace is flat and zipped uploads are unsupported
+  — so structure is discarded by design and each filename carries
+  `<site> — <application> — ` in front of it instead. Neither repository
+  cares about that. Both care about **completeness**, and the bundle is
+  a reduction: 130.6GB in 50,615 files down to ~64GB in 42,647, under
+  Pinpoint's 100GB-per-user quota.
+
+  **The drawings are dropped deliberately, and for Giant too** — 5,536
+  files, 9.5GB, on the grounds that they carry no extractable prose.
+  That looks at first like a contradiction with
+  `extract_text_corpus.py`, which extracts every drawing precisely
+  because "a proposed site plan often labels the energy centre, an
+  elevation may annotate a generator enclosure, and plant layouts carry
+  specifications that never appear in prose at all". It is not.
+
+  The two tools want different things. Giant's value is returning a hit
+  **in context** — the surrounding text — and taking the reporter to the
+  exact place, page 278 of a long document if that is where it is
+  (Luke, 2026-08-28). A drawing supports neither: OCR of a plan yields
+  scattered label fragments, so even a matching drawing returns a result
+  with no readable context and nowhere meaningful to jump to. Extraction
+  wants every scrap of text because a figure may appear only there;
+  full-text search wants documents that read. Both are right for their
+  layer, and the drawing content is not lost to the project — the
+  deep-read reads it and its findings surface on the site page.
+
+  **Giant has no quota limit and takes the reduced bundle anyway**,
+  Luke's decision, for consistency. Two search tools answering one query
+  differently, with nothing on either page to explain the difference,
+  would be worse than a single corpus reduced in a documented way — and
+  on the drawings the reduction is right for Giant on its own merits.
+
+  The residual worth watching: a reporter using Giant as a completeness
+  check can still infer "not in the documents" from a drawing-only
+  disclosure that never reaches it. The reader is where that content
+  lives, so the two must not be presented as interchangeable.
+
+  The other two reductions look sound and are worth keeping if this is
+  revisited: exact duplicates removed by content hash (2,432 files), and
+  types sniffed rather than trusted, which recovered ~450 files
+  including 237 Outlook messages of kind *Consultee Comment* — tier A,
+  the class the methodology says disclosures live in.
+
+  **Staleness sits on top of that.** The last upload was 2026-08-12 and
+  4,464 documents have arrived since, with more in 2.10.
+
+  **Giant has no such quota, and takes the reduced bundle anyway** —
+  Luke's decision, 2026-08-28, for consistency. It is the right call:
+  two search tools answering the same query differently, with nothing on
+  either page to explain why, is worse than one corpus that is reduced
+  in a documented way. But it means the drawings are absent from Giant
+  to match a constraint that does not apply to it, so the drawings
+  question is **one decision governing both** and must be revisited for
+  both together or not at all.
+
+  **The delta is computable, and does not need guessing.** Luke still
+  has the uploaded bundle and its `_manifest.csv` on the previous laptop
+  (2026-08-28). That manifest carries one row per bundled file with
+  `sha256`, `site`, `application`, `kind`, `tier`, `action` and
+  `staging_path` — so:
+
+  - `manifest.sha256` against `documents.content_sha256` gives exactly
+    what Pinpoint and Giant hold and, by omission, what they do not;
+  - `action` and `kind` separate the deliberate exclusions (drawings,
+    hash duplicates) from the genuine gap, so staleness can be measured
+    without re-litigating the reductions.
+
+  Get that file off the old laptop before it becomes the thing nobody
+  can find — it is the only record of what was uploaded, and the bundle
+  it describes is not reproducible from here: the corpus has moved on by
+  4,464 documents, so re-running the script now produces a different
+  bundle.
+
+  **Explicitly deferred past 2.10 by Luke.** When picked up: compute the
+  delta from the manifest, and fold re-upload into the release chain
+  rather than leaving it to be remembered.
 - **26 applications link to a register host that no longer answers,
   and they would ship in 2.10 that way** (probed 2026-08-28: every host
   the reader links to, 208 of them behind 2,033 linked applications).
