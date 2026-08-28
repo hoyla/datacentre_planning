@@ -390,7 +390,12 @@ def main() -> None:
                     help="Report cohort size and cost estimate only.")
     args = ap.parse_args()
     if args.dry_run or args.submit:
-        do_submit(args.max_chars, dry_run=not args.submit, cohort=args.cohort)
+        # `--dry-run` wins over `--submit`: the safe reading of a
+        # contradictory pair is the one that does not spend money.
+        # It used to read `dry_run=not args.submit`, which made the
+        # flag a decoy and sent a live batch on 2026-08-28.
+        do_submit(args.max_chars, dry_run=args.dry_run or not args.submit,
+                  cohort=args.cohort)
     elif args.collect_all:
         for path in sorted(BATCH_DIR.glob("msgbatch_*.json")):
             if not json.loads(path.read_text()).get("collected"):
