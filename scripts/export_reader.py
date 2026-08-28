@@ -704,6 +704,13 @@ nav.top button .pill{background:none;color:inherit;opacity:.6;padding:0 0 0 5px;
 /* A site key and a figure are single tokens: breaking them mid-string
    makes them unreadable and unsearchable. The prose columns beside
    them wrap as normal. */
+/* "12" and "figures" are one phrase, not a figure with a caption under
+   it. `.q` is display:block everywhere, which is right beneath a value
+   that needs explaining and wrong for a unit word: it put every count
+   in this table on two lines and doubled the height of every row
+   (Luke, 2026-08-28). The same applies to "no figure", which is the
+   whole cell. */
+#tbl-ops td .q{display:inline;margin-left:4px}
 #tbl-green .fuelist .f{white-space:nowrap}
 #tbl-green td:nth-child(6),#tbl-green td:nth-child(7){white-space:nowrap}
 #tbl-green td:nth-child(6) .q,#tbl-green td:nth-child(7) .q{white-space:normal}
@@ -1297,6 +1304,23 @@ table.stats td.none{color:var(--mut)}
 table.stats td.n{font-variant-numeric:tabular-nums;text-align:right;width:74px;
   white-space:nowrap}
 table.stats td.help{width:52%}
+/* One quantity, one site, several figures: one row per figure, with the
+   site, quantity and ratio spanning them. Widths on <col> rather than
+   nth-child, because rowspan means the second row of a group starts at
+   the figure and every positional selector would land a column out. */
+/* Site names here run to 600px set on one line and the provenance to
+   340px; a 23/auto split gave the provenance 686px of which half was
+   empty and wrapped the site name to four lines, which then set the
+   height of every row in its group. */
+#tbl-lfl .c-site{width:38%}
+#tbl-lfl .c-qty{width:14%}
+#tbl-lfl .c-val{width:88px}
+#tbl-lfl .c-aud{width:150px}
+#tbl-lfl .c-ratio{width:74px}
+#tbl-lfl td.src{color:var(--mut);font-size:13px;line-height:1.35}
+/* The rule-off belongs at the end of a group, not between the figures
+   inside one. */
+#tbl-lfl tr.fig>td{border-bottom:0}
 /* Operator rows expand, the same one-at-a-time gesture as the Sites
    table. Every number in that table is an aggregate — six sites, eleven
    figures — and an aggregate a reader cannot open is an assertion.
@@ -4672,12 +4696,19 @@ def main() -> int:
         what still works if scripting is off, the onclick does the work
         without a round trip through hashchange — which would not fire
         at all if the reader is already on that site's hash.
+
+        `n=None` sets the name in full. Truncation earns its place in a
+        narrow column and nowhere else: in a column with room to spare
+        it only makes two long, similar site names look identical
+        (Luke, 2026-08-28).
         """
+        def _lab(t):
+            return esc(t if n is None else trim(t, n))
         if not key:
-            return esc(trim(name or "—", n))
+            return _lab(name or "—")
         return (f'<a href="#site-{quote(key, safe="")}" '
                 f'onclick="return goSite(\'{esc(key)}\')">'
-                f'{esc(trim(name or key, n))}</a>')
+                f'{_lab(name or key)}</a>')
 
     def _op_source(c):
         """Where one figure came from: the link, and where to look in it.
@@ -4789,20 +4820,53 @@ def main() -> int:
     _lfl = [(d, q) for d in op_divs for q in d.get("like_for_like", [])]
     _lfl.sort(key=lambda x: -x[1]["ratio"])
 
-    def _lfl_values(values):
-        return "".join(
-            f'<div>{float(c["value"]):,.4g} MW '
-            f'<span class="q">'
-            f'{esc(dict(_AUD).get(c["audience"], c["audience"]))} — '
-            f'{_op_source(c)}</span></div>'
-            for c in values)
+    def _lfl_group(d, q):
+        """One table row per figure, the site and ratio spanning them.
 
-    _lfl_rows = "".join(
-        f'<tr><td>{_site_a(d.get("site_key"), d["site"], 46)}</td>'
-        f'<td>{esc(ccl.QUANTITY_LABELS.get(q["quantity_type"], q["quantity_type"]))}</td>'
-        f'<td>{_lfl_values(q["values"])}</td>'
-        f'<td class="n">{q["ratio"]:.2f}&times;</td></tr>'
-        for d, q in _lfl)
+        The figure and its provenance used to share a cell, as a stack
+        of divs — a column by eye only. Nothing held "340 MW" level with
+        the NESO row it came from once a provenance line wrapped, and
+        the audience, which is the whole point of this comparison, was
+        buried mid-sentence. Real cells make that alignment the table's
+        job rather than the reader's (Luke, 2026-08-28).
+
+        The site, quantity and ratio are one value per group, so they
+        use rowspan rather than repeating: a ratio printed against each
+        of the figures it was computed from would read as a property of
+        the figure.
+        """
+        vals = q["values"]
+        span = f' rowspan="{len(vals)}"' if len(vals) > 1 else ""
+        qty = ccl.QUANTITY_LABELS.get(q["quantity_type"], q["quantity_type"])
+        out = []
+        for i, c in enumerate(vals):
+            # Hairlines inside a group would make the group boundary
+            # indistinguishable from the rows within it; the rowspan
+            # cells only rule off at the end, so the figure cells match.
+            row = "" if i == len(vals) - 1 else ' class="fig"'
+            head = (f'<td{span}>{_site_a(d.get("site_key"), d["site"], None)}</td>'
+                    f'<td{span}>{esc(qty)}</td>') if i == 0 else ""
+            tail = (f'<td class="n"{span}>{q["ratio"]:.2f}&times;</td>'
+                    if i == 0 else "")
+            out.append(
+                f'<tr{row}>{head}'
+                f'<td class="n">{float(c["value"]):,.4g} MW</td>'
+                f'<td>{esc(dict(_AUD).get(c["audience"], c["audience"]))}</td>'
+                f'<td class="src">{_op_source(c)}</td>'
+                f'{tail}</tr>')
+        return "".join(out)
+
+    _lfl_rows = "".join(_lfl_group(d, q) for d, q in _lfl)
+    _lfl_table = (
+        '<table class="stats" id="tbl-lfl">'
+        '<colgroup><col class="c-site"><col class="c-qty"><col class="c-val">'
+        '<col class="c-aud"><col class="c-src"><col class="c-ratio"></colgroup>'
+        '<thead><tr><th scope="col">Site</th><th scope="col">Quantity</th>'
+        '<th scope="col">Figure</th><th scope="col">Audience</th>'
+        '<th scope="col">Where it was published</th>'
+        '<th scope="col">Ratio</th></tr></thead>'
+        f'<tbody>{_lfl_rows}</tbody></table>'
+    ) if _lfl_rows else '<p class="help">None currently.</p>'
 
     # One row per claim. Every cell either carries evidence or says why
     # it does not — a blank here would read as "no generators".
@@ -4896,7 +4960,7 @@ def main() -> int:
  supposed to be smaller than total site power, and a contracted grid connection is a
  different thing again. The comparison below is the narrow one where a gap really is a
  gap — one quantity, one site, more than one audience.</p>
- {f'<table class="stats"><thead><tr><th scope="col">Site</th><th scope="col">Quantity</th><th scope="col">Figures on record, and where each was published</th><th scope="col">Ratio</th></tr></thead><tbody>{_lfl_rows}</tbody></table>' if _lfl_rows else '<p class="help">None currently.</p>'}
+ {_lfl_table}
  <p class="help">A ratio of 1.00× is corroboration, not coincidence: two audiences given
  the same number by the same developer, arrived at independently by this project.</p>
 
