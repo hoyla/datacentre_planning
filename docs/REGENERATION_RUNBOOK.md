@@ -185,8 +185,10 @@ them with no power-unit text anywhere.
 The order is not cosmetic. Two steps must precede the artefacts or the
 handover ships wrong numbers, and one of them is enforced in code.
 
-The numbers now run in the order the steps run in: 0 to 14, top to
-bottom. They did not until 2026-08-26, when the chain read 0, 1–4, 7, 5,
+The numbers now run in the order the steps run in: 0 to 15, top to
+bottom, with the search bundles at 13a — added 2026-08-29 because being
+"off the chain, optional" is how the notebook went three releases stale
+and Pinpoint four. They did not until 2026-08-26, when the chain read 0, 1–4, 7, 5,
 6, 8, 9 and a reader had to hold the map in their head — which HISTORY
 records catching a bug for exactly once, and is not a system. Only 0, 1,
 2 and 7 kept their old numbers; anything citing another number from
@@ -751,6 +753,46 @@ different site slides underneath it. Luke confirmed on 2026-08-10 that
 nobody has annotated the Sheet yet, so this cycle is safe; that will not
 be true forever.
 
+### 13a. The search bundles — notebook, Pinpoint and Giant
+
+```sh
+scripts/export_notebook_bundle.py --max-words 480000
+scripts/export_pinpoint_bundle.py \
+    --already-uploaded data/exports/pinpoint_bundle/_manifest.csv --jobs 12
+```
+
+**These are in the chain now** (Luke, 2026-08-29). They were "off the
+chain, optional, local", which is how the notebook came to be three
+releases stale and Pinpoint and Giant four — nobody skipped them, they
+were simply never on the list anybody worked through.
+
+**Both must run after step 9**, which rebuilds the staging tree they
+read. Run either against the previous release's tree and it produces a
+bundle that looks current and is not.
+
+**The notebook bundle has a hard ceiling of 600 sources.** At 2.10's
+size the default `--max-words` split the corpus into **615 documents** —
+over the limit, and the run says so. Raising `--max-words` merges parts
+back up: 480,000 gives 597. Check that line every release; the corpus
+only grows, so the default will fail again.
+
+**The Pinpoint bundle takes `--already-uploaded`**, pointing at the
+manifest of what is already linked into Pinpoint. It skips those
+documents before conversion — the manifest alone is enough, so the
+previous bundle's 64GB does not need to be on disk — and numbers what
+remains into fresh tranches after the highest the manifest records. At
+2.10 that was tranche 4.
+
+**Both uploads are manual and are Luke's.** The bundles land locally;
+nothing here touches Drive, the notebook or Pinpoint. And if a NEW
+notebook is being made rather than added to, its URL must be in
+`dcp/drive.py` before step 12 — see the stop there.
+
+**Giant takes the same bundle as Pinpoint**, by choice rather than
+constraint: it has no quota limit, but two search tools answering one
+query differently, with nothing on either page to explain the
+difference, is worse than one corpus reduced in a documented way.
+
 ### 14. Deploy and probe
 
 **Two surfaces now, and only one of them is automatic.** Merging the PR
@@ -926,7 +968,7 @@ For this release specifically, three things belong in that note:
   construction and a `.building` file says exactly what it is — but the
   check-for-a-writer habit is the general form, and it applies to
   anything a lock protects.
-### Off the chain: the notebook bundle — optional, local
+### The notebook bundle, in detail (the step is 13a, not off the chain)
 
 ```sh
 scripts/export_notebook_bundle.py            # -> data/exports/notebook_bundle/
