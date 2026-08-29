@@ -391,3 +391,36 @@ aliases:
       CENTRE", names one facility of the campus, which is the
       display-name defect this file exists for.
 
+  - site_key: PTNO-12809263
+    alias: Hertfordshire Campus, South Mimms (DC01 / Equinix)
+    source: |
+      Both names are load-bearing, because the scheme changed hands
+      between them. DC01UK's own site records the sale — "DC01UK's
+      South Mimms data centre site has been acquired by Equinix" — and
+      Equinix's consultation site for the same land, east of South
+      Mimms Motorway Services in Hertsmere, heads every page
+      "Hertfordshire Campus" (dc01uk.com and
+      equinixtogether.com/hertfordshire, both read 2026-08-29). A
+      reporter arriving from press coverage will search either name;
+      neither alone finds the other.
+
+      The derived name is Barbour's project title, "SOUTH MIMMS
+      SERVICE STATION - 250MW DATA CENTRE", and its figure matches
+      neither quantity the application states. The scheme is explicit
+      that the two are different things: the Data Centre Development
+      Report and the Alternative Sites Assessment both say the secured
+      supply "will equate to a data centre load of at least 300 MW of
+      IT power with the remainder of the site load power to be
+      utilised for the cooling and operation of the facility". That
+      supply is the firm 400 MW connection from the Letchmoor Heath
+      grid supply point; the IT load beneath it is a floor of 300 MW,
+      put at "300 to 320 MW IT Load" in the Economic Benefits
+      Statement and the Statement of Community Involvement.
+
+      So 250MW is not a rounding of either. It sits below the IT-load
+      floor the applicant states and far below the total connection,
+      and a title figure is read as a finding once it reaches a list,
+      a table and a map card. The alias carries no capacity claim at
+      all, which leaves the site's own adjudicated figures — each with
+      its quantity type — to say what the scheme draws (Luke,
+      2026-08-29).
