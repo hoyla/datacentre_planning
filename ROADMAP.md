@@ -932,6 +932,91 @@ HISTORY.)
 
 ## Smaller things
 
+- **The search bundles could be uploaded to Drive by the pipeline, and
+  the `drive.file` scope is not the obstacle it looks like.** Today step
+  13a leaves `notebook_bundle/` and `pinpoint_bundle/upload/tranche_N/`
+  sitting locally, and Luke moves them to Drive by hand before pushing
+  them out to Notebook, Pinpoint and Giant. He has been comfortable
+  doing that because the sync can only see folders it created — which is
+  true, and is not the whole picture.
+
+  **Measured 2026-08-29, because the assumption was worth testing rather
+  than inheriting.** Handing the token a folder ID does *not* make the
+  folder visible: `files.get` on the notebook bundle folder, the pinpoint
+  bundle folder and even `dcp/drive.py`'s own `FOLDER_ID` all return
+  **404 — not created by this app**. An ID is not a key.
+
+  **But writing into an invisible folder by ID works, and the archive is
+  the proof.** `SITES_FOLDER_ID` is visible, `ownedByMe`, created
+  2026-08-07 — and its `parents` is exactly the handover root that
+  answers 404. The sync created a folder inside a folder it cannot see.
+  So `drive.file` blocks *listing and reading*, not *writing to a known
+  parent*, and this can be built without widening the scope.
+
+  **Which is the point: do not widen the scope.** It was chosen
+  deliberately (`scripts/drive_sync.py`, "this tool can create and
+  manage only the files and folders it itself uploads"), and the
+  alternative hands a document-mover visibility of the whole of Luke's
+  Drive — personal and Guardian alike — to solve a file-copying problem.
+  A capability that broad is not worth an ergonomic gain this small.
+
+  **Writing blind is avoidable, and the shape that avoids it is Luke's
+  (2026-08-29): never write into a folder we did not create — always
+  create a fresh per-release child.** Both bundles already work that
+  way, for reasons that have nothing to do with Drive.
+
+  - **Pinpoint and Giant grow by tranche.** Each release adds
+    `tranche_N`, never revisiting an earlier one. If the pipeline
+    *creates* that folder inside the bundle parent, it owns it: listable,
+    `md5Checksum` available, complete knowledge of its own additions.
+    The parent stays invisible and never needs reading, because tranches
+    are append-only by construction.
+  - **The notebook is replaced wholesale, not updated.** Re-tuning
+    `--max-words` moves every part boundary, so a re-fit is a new set of
+    files and a new notebook rather than an edit. Luke is therefore
+    naming the Drive parent after the release — `notebook_bundle_2.10`,
+    renamed by hand on 2026-08-29 — so each future release creates its
+    own top-level folder and has total visibility of the whole tree,
+    not merely of a child.
+
+  So the trio of costs that writing blind would impose — a ledger as the
+  sole record, idempotency without `md5Checksum`, no post-hoc
+  verification — **does not arise** under this shape. It would only
+  arise if we wrote into a folder somebody else made.
+
+  **Which makes the real hazard a name collision, not blindness.**
+  `Sync.folder(name, parent)` resolves by name: it queries for a folder
+  of that name under that parent and creates one if the query comes back
+  empty. Under `drive.file` that query can only ever see folders the app
+  itself created, so it is structurally incapable of finding one made or
+  renamed by hand — it will quietly create a second folder beside it,
+  and Drive permits duplicate names, so nothing complains. That is the
+  duplicate-archive mechanism, still live.
+
+  **So the convention only holds while the pipeline is the sole creator
+  of release folders.** Pre-creating one by hand and expecting the
+  pipeline to fill it is the failure case. Guard it rather than
+  documenting it: after `folder()` creates one, `files.get` the id back
+  and stop if it 404s.
+
+  **Where the IDs go.** Any destination the pipeline does *not* create —
+  the pinpoint bundle parent — belongs in `dcp/drive.py` as a named
+  constant beside `FOLDER_ID` and `SITES_FOLDER_ID`, never resolved by
+  name, never retyped, per that module's opening warning. Folders the
+  pipeline creates need no constant: it learns their ids on creation.
+  Renaming is safe either way, since an id survives a rename — which is
+  the whole reason the ID-only rule exists.
+
+  **One step stays manual whatever happens**: a notebook that already
+  holds a previous release must be emptied first, because uploading adds
+  sources rather than replacing them — and on the per-release naming
+  above the answer is usually a new notebook instead, whose URL must
+  reach `NOTEBOOK_URL` before step 12, as the runbook already requires.
+
+  Raised by Luke 2026-08-29 — "perhaps we should streamline that process
+  eventually" — and narrowed by him the same day to the per-release
+  folder shape above.
+
 - **The Start Here page's Gemini Notebook card claims more than the
   notebook holds.** The card says "Every site's report and its full
   findings table, one document per site". Since PR #230 that is not
