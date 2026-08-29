@@ -16,6 +16,7 @@ front of reporters with nothing to say it had happened.
 
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 
 ALIASES_PATH = Path("data/priors/site_aliases.yaml")
@@ -48,3 +49,33 @@ def require_live(aliases: dict[str, str], live_keys: set[str]) -> None:
             + " — a key changes when its cluster's anchor changes; "
               "repoint or remove the entry rather than letting the "
               "alias silently stop applying")
+
+
+@lru_cache(maxsize=1)
+def _cached_aliases() -> dict[str, str]:
+    """The alias map, read once per process.
+
+    The three consumers below reach for a single site's name deep
+    inside a render, where threading a preloaded map through every
+    caller would be the larger change. The file is small and does not
+    move during a build.
+    """
+    return load_aliases()
+
+
+def displayed(site_key: str, derived: str | None) -> str:
+    """The name a reporter sees for one site: the curated alias where
+    one exists, else the derived name, else the key.
+
+    `load_aliases` serves the exporters, which hold whole tables of
+    rows and substitute in bulk. This serves the surfaces that read
+    `sites.display_name` straight out of a query — the capacity-claims
+    rows, the operator-disclosure panels, and the machine reading's own
+    input. Until 2026-08-29 those three bypassed the alias, so a site
+    whose curated name existed precisely because the derived one
+    misleads still showed the misleading name in a table, a chart
+    tooltip and the prose a model was asked to write. South Mimms put
+    "400 MW contracted" under a heading reading "250MW DATA CENTRE"
+    (issue #169's defect, three surfaces it had not reached).
+    """
+    return _cached_aliases().get(site_key) or (derived or site_key)

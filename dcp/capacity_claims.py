@@ -25,6 +25,7 @@ from pathlib import Path
 
 import openpyxl
 import yaml
+from dcp.site_aliases import displayed
 
 ROOT = Path(__file__).parent.parent
 REGISTER_PATH = ROOT / "data" / "external_sources" / "neso-ea-register.xlsx"
@@ -462,7 +463,14 @@ def load_claim_rows(cur) -> list[dict]:
             "connection_date", "as_at", "source_key", "source_url",
             "source_locator", "site_key", "site_name",
             "method", "confidence", "evidence")
-    return [dict(zip(cols, r)) for r in cur.fetchall()]
+    rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+    # A matched claim names its site in the workbook sheet and the
+    # reader's claims table, both of which the alias covers. Unmatched
+    # claims have no site to name.
+    for row in rows:
+        if row["site_key"]:
+            row["site_name"] = displayed(row["site_key"], row["site_name"])
+    return rows
 
 
 @dataclass(frozen=True)

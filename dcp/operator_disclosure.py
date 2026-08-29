@@ -36,6 +36,7 @@ than inventing any.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from dcp.site_aliases import displayed
 
 # Filed accounts name a legal entity; websites name a brand. The
 # organisation aliases file is the identity mechanism — evidence-backed,
@@ -149,6 +150,10 @@ def load_rows(cur, doc_links: dict[int, str] | None = None) -> list[OperatorRow]
     for (src, who, name, value, unit, qty, term, site_id, site_key,
          site_name, source_url, locator, confidence, stage, quote,
          evidence, method, as_at) in raw:
+        # The curated name where one exists: these rows name sites in
+        # panels and chart tooltips, which the alias file's contract
+        # covers (dcp/site_aliases.py, `displayed`).
+        site_name = displayed(site_key, site_name) if site_key else site_name
         operator = operator_display(who) if who else None
         # An unattributed register row belongs to whoever else claims the
         # site it matched. Without a match it belongs to nobody, which is
@@ -233,7 +238,8 @@ def load_planning_figures(cur, site_ids,
             "audience": "planning", "source_key": "planning_documents",
             "claim_name": ref, "value": mw, "unit": "MW",
             "quantity_type": qty, "term": None, "confidence": None,
-            "site_id": site_id, "site_key": site_key, "site_name": site_name,
+            "site_id": site_id, "site_key": site_key,
+            "site_name": displayed(site_key, site_name),
             # The document the figure was read out of. Our copy first:
             # a register can withdraw, move or gate a document and all
             # three have happened here, and 512 documents carry a
@@ -275,7 +281,8 @@ def load_divergences(cur, doc_links: dict[int, str] | None = None) -> list[dict]
     by_site: dict[int, dict] = {}
     for (sid, name, skey, src, claim, value, unit, qty, term,
          conf, source_url, locator, quote) in cur.fetchall():
-        d = by_site.setdefault(sid, {"site_id": sid, "site": name,
+        d = by_site.setdefault(sid, {"site_id": sid,
+                                     "site": displayed(skey, name),
                                      "site_key": skey, "claims": []})
         d["claims"].append({
             "audience": SOURCE_TO_AUDIENCE.get(src, src),
