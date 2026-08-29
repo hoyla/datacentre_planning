@@ -932,6 +932,59 @@ HISTORY.)
 
 ## Smaller things
 
+- **The search bundles could be uploaded to Drive by the pipeline, and
+  the `drive.file` scope is not the obstacle it looks like.** Today step
+  13a leaves `notebook_bundle/` and `pinpoint_bundle/upload/tranche_N/`
+  sitting locally, and Luke moves them to Drive by hand before pushing
+  them out to Notebook, Pinpoint and Giant. He has been comfortable
+  doing that because the sync can only see folders it created — which is
+  true, and is not the whole picture.
+
+  **Measured 2026-08-29, because the assumption was worth testing rather
+  than inheriting.** Handing the token a folder ID does *not* make the
+  folder visible: `files.get` on the notebook bundle folder, the pinpoint
+  bundle folder and even `dcp/drive.py`'s own `FOLDER_ID` all return
+  **404 — not created by this app**. An ID is not a key.
+
+  **But writing into an invisible folder by ID works, and the archive is
+  the proof.** `SITES_FOLDER_ID` is visible, `ownedByMe`, created
+  2026-08-07 — and its `parents` is exactly the handover root that
+  answers 404. The sync created a folder inside a folder it cannot see.
+  So `drive.file` blocks *listing and reading*, not *writing to a known
+  parent*, and this can be built without widening the scope.
+
+  **Which is the point: do not widen the scope.** It was chosen
+  deliberately (`scripts/drive_sync.py`, "this tool can create and
+  manage only the files and folders it itself uploads"), and the
+  alternative hands a document-mover visibility of the whole of Luke's
+  Drive — personal and Guardian alike — to solve a file-copying problem.
+  A capability that broad is not worth an ergonomic gain this small.
+
+  **What has to be designed around, all consequences of writing blind.**
+  There is no read-back, so the upload ledger becomes the sole record of
+  what went up — which `--prune` already assumes, and which the
+  duplicate-archive incident is the standing warning about. A re-run
+  cannot detect what is already there and would add second copies rather
+  than skipping, so idempotency has to come from the ledger alone
+  instead of from Drive's `md5Checksum`, which is how the site sync gets
+  it today. And nothing can verify afterwards that what landed matches
+  what was sent, so the run's own manifest is the only assurance
+  available. That trio is the reason this is worth doing carefully
+  rather than quickly.
+
+  **Where it goes.** The two destination folder IDs belong in
+  `dcp/drive.py` as named constants beside `FOLDER_ID` and
+  `SITES_FOLDER_ID` — never resolved by name, never retyped, per that
+  module's opening warning. Luke has the IDs.
+
+  **One step stays manual whatever happens**: a notebook that already
+  holds a previous release must be emptied before the new bundle goes
+  in, because uploading adds sources rather than replacing them, and
+  that is Gemini Notebook rather than Drive.
+
+  Raised by Luke 2026-08-29 — "perhaps we should streamline that process
+  eventually".
+
 - **The Start Here page's Gemini Notebook card claims more than the
   notebook holds.** The card says "Every site's report and its full
   findings table, one document per site". Since PR #230 that is not
