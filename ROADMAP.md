@@ -914,6 +914,15 @@ HISTORY.)
   calls, not the ledger writes. Found mid-release 2026-08-27 and
   deliberately not patched mid-run.
 
+  **Half closed 2026-08-29.** The concurrency existed all along behind
+  `--workers`, defaulting to 1; the default is now 12 (Luke's call,
+  after a 58,799-file sync spent 9h16m reaching 54% because nobody
+  passed the flag). What remains open is the batching: the Drive batch
+  endpoint takes 100 calls per request, which would beat any number of
+  threads, and the ledger's own write is still a non-atomic
+  `write_text` every 50 changes — worth making atomic before anyone
+  relies on killing a sync safely.
+
 - **Readings are now checked for freshness, but not at render time —
   the exact check costs more than a build (done 2026-08-27).**
   `mreading.load_latest` returned the newest stored reading per site

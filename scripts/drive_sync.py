@@ -405,12 +405,14 @@ def main() -> None:
                     help="Let --prune proceed when it would remove more than "
                          "half the tracked tree. Almost always means the "
                          "staging build did not finish.")
-    ap.add_argument("--workers", type=int, default=1,
-                    help="concurrent upload/move workers. 1 (default) is "
-                         "the historical sequential behaviour; the sync "
-                         "is latency-bound, not quota-bound, so 8-16 is "
-                         "safe. Folder resolution stays sequential "
-                         "regardless.")
+    ap.add_argument("--workers", type=int, default=12,
+                    help="concurrent upload/move workers. The sync is "
+                         "latency-bound, not quota-bound — one HTTPS "
+                         "round-trip per file against a per-user quota "
+                         "near 12,000 requests/minute — so 12 is the "
+                         "default and 8-16 the useful range. Pass 1 for "
+                         "the historical sequential behaviour. Folder "
+                         "resolution stays sequential regardless.")
     ap.add_argument("--dry-run", action="store_true",
                     help="Report what --prune would bin and stop, uploading "
                          "nothing. Run this first.")

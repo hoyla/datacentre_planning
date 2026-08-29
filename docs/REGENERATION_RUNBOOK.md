@@ -530,6 +530,22 @@ scripts/drive_sync.py --sync data/exports/drive_staging --prune --dry-run
 scripts/drive_sync.py --sync data/exports/drive_staging --prune
 ```
 
+**`--workers` now defaults to 12.** It used to default to 1, and on
+2026-08-29 that ran a 58,799-file sync for **9h16m to reach 54%** before
+anyone noticed — the flag existed, its own help said 8-16 was safe, and
+nobody passed it. The sync is latency-bound: one HTTPS round-trip per
+file against a per-user quota near 12,000 requests/minute, so the
+sequential path was leaving the quota almost entirely unused. Restarted
+with 12 workers it finished the remainder in minutes. Pass `--workers 1`
+if you want the old behaviour.
+
+**Killing a sync mid-run is safe only with the ledger copied first.**
+`Sync.save` writes `.drive_sync_state.json` with a plain `write_text`
+every 50 changes, so a kill during that write truncates the record every
+link in the next build depends on — the 2.2 failure mode. Copy it, kill,
+confirm the live file still parses, then restart; the sync compares
+md5s, so nothing already uploaded is re-sent.
+
 `--prune` moves to the Drive bin every file this tool uploaded whose
 local copy has gone — the stale twins left by the step 5 rename. It
 works from the upload ledger, because the grant is `drive.file` and the
