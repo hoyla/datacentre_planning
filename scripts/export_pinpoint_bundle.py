@@ -830,10 +830,18 @@ def main() -> None:
     # path, because paths move: today's British Museum partition renamed
     # a site folder and every path under it (Luke, 2026-08-28).
     prior_tranche = 0
+    done_sha: set[str] = set()
+    prior_tranche_of: dict[str, str] = {}
     if args.already_uploaded:
         with open(args.already_uploaded, encoding="utf-8-sig", newline="") as fh:
             prior = list(csv.DictReader(fh))
         done_sha = {r["sha256"] for r in prior if r.get("sha256")}
+        # The journal never carries a tranche — it is written during
+        # conversion, before tranches exist — so the only record of which
+        # batch an uploaded file went out in is the manifest we were
+        # handed. Keep it, or re-numbering loses the audit trail.
+        prior_tranche_of = {r["sha256"]: r.get("tranche", "")
+                            for r in prior if r.get("sha256")}
         prior_tranche = max((int(r["tranche"]) for r in prior
                              if str(r.get("tranche", "")).isdigit()), default=0)
         before = len(kept)
@@ -872,6 +880,28 @@ def main() -> None:
     rows = [r for group in done_paths.values() for r in group]
     if done_paths:
         log(logf, f"resuming: {len(done_paths):,} input files already journalled")
+
+    # The journal spans the whole bundle's history, so it holds the
+    # previous tranches too — and `--already-uploaded` filtered the
+    # *conversion* list, not this one. Left unfiltered, an incremental
+    # run re-tranches all 49,000 files into fresh batches and then tries
+    # to hard-link 42,000 outputs that were deleted once they were in
+    # Pinpoint, which is exactly how the 2026-08-29 run died on its
+    # first link. Prior rows keep their original tranche and stay in the
+    # manifest — that is the record of what was uploaded when — but they
+    # take no part in tranching or in building the upload folders.
+    prior_rows: list[dict] = []
+    if done_sha:
+        fresh = []
+        for r in rows:
+            if r.get("sha256") in done_sha:
+                r["tranche"] = prior_tranche_of.get(r["sha256"], r.get("tranche", ""))
+                prior_rows.append(r)
+            else:
+                fresh.append(r)
+        rows = fresh
+        log(logf, f"{len(prior_rows):,} journalled rows are already uploaded "
+                  f"— kept in the manifest, excluded from this tranche")
     jobs = [j for j in jobs if j[0] not in done_paths]
     log(logf, f"{len(jobs):,} to process, {args.jobs} workers")
 
@@ -958,10 +988,18 @@ def main() -> None:
         counts[tranche] += len(group)
 
     manifest = args.out / "_manifest.csv"
+    # The runbook points --already-uploaded at this very file, so the run
+    # overwrites its own input. That is fine when it succeeds and fatal
+    # when it does not: the 2026-08-29 run died after the write, taking
+    # the record of tranches 1-3 with it. Keep the old one first — it is
+    # 23MB against a 64GB bundle, and it is the only place the tranche a
+    # document went out in is written down.
+    if manifest.exists():
+        shutil.copy2(manifest, manifest.with_suffix(".csv.prev"))
     with open(manifest, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=MANIFEST_COLUMNS, extrasaction="ignore")
         w.writeheader()
-        for r in sorted(rows, key=lambda r: r["staging_path"]):
+        for r in sorted(rows + prior_rows, key=lambda r: r["staging_path"]):
             w.writerow(r)
 
     # The tranche was previously only a column in the manifest, which
@@ -972,16 +1010,29 @@ def main() -> None:
     # second copy of 61GB.
     upload = args.out / "upload"
     shutil.rmtree(upload, ignore_errors=True)
+    absent = []
     for r in live:
         d = upload / f"tranche_{r['tranche']}"
         d.mkdir(parents=True, exist_ok=True)
         target_path = d / r["pinpoint_filename"]
-        if not target_path.exists():
-            try:
-                os.link(files_dir / r["pinpoint_filename"], target_path)
-            except OSError:
-                shutil.copy2(files_dir / r["pinpoint_filename"], target_path)
+        src = files_dir / r["pinpoint_filename"]
+        if target_path.exists():
+            continue
+        if not src.exists():
+            # Report the whole set at the end rather than raising here.
+            # Dying on the first one leaves a directory that looks like a
+            # finished tranche and is silently short — the worst of the
+            # three outcomes for someone about to drag it into a browser.
+            absent.append(r["pinpoint_filename"])
+            continue
+        try:
+            os.link(src, target_path)
+        except OSError:
+            shutil.copy2(src, target_path)
     log(logf, f"upload folders: {upload}")
+    if absent:
+        log(logf, f"!! {len(absent):,} files are in the manifest but not in "
+                  f"{files_dir} — the tranche is incomplete. First: {absent[0]}")
     for t in sorted({r["tranche"] for r in live}, key=int):
         members = [r for r in live if r["tranche"] == t]
         sites = len({r["site"] for r in members})

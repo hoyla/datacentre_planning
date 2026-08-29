@@ -787,6 +787,24 @@ previous bundle's 64GB does not need to be on disk — and numbers what
 remains into fresh tranches after the highest the manifest records. At
 2.10 that was tranche 4.
 
+**Note that this command reads the file it overwrites.** The run writes
+`_manifest.csv` at the end, so a crash after that write destroys the
+record of which tranche each earlier document went out in — which is
+what happened on the first 2.10 attempt. The script now copies the old
+one to `_manifest.csv.prev` before writing. If both are somehow lost,
+the tranche assignment is a pure function of the journalled rows and can
+be replayed: filter `_journal.jsonl` to rows whose output is no longer
+in `files/`, sort by `(site, application, pinpoint_filename)` and run
+the same fill loop. That reproduced 12,709 / 14,022 / 15,555 exactly on
+2026-08-29.
+
+**Only the new tranche is built into `upload/`.** Earlier tranches stay
+in the manifest — that is the record of what went out when — but their
+files are deleted from `files/` once they are in Pinpoint, so they are
+excluded from tranching and from the hard-link stage. If a run reports
+`!! N files are in the manifest but not in files/`, the tranche it just
+built is short and must not be uploaded.
+
 **Both uploads are manual and are Luke's.** The bundles land locally;
 nothing here touches Drive, the notebook or Pinpoint. And if a NEW
 notebook is being made rather than added to, its URL must be in
