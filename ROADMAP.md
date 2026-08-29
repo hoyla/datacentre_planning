@@ -960,30 +960,62 @@ HISTORY.)
   Drive — personal and Guardian alike — to solve a file-copying problem.
   A capability that broad is not worth an ergonomic gain this small.
 
-  **What has to be designed around, all consequences of writing blind.**
-  There is no read-back, so the upload ledger becomes the sole record of
-  what went up — which `--prune` already assumes, and which the
-  duplicate-archive incident is the standing warning about. A re-run
-  cannot detect what is already there and would add second copies rather
-  than skipping, so idempotency has to come from the ledger alone
-  instead of from Drive's `md5Checksum`, which is how the site sync gets
-  it today. And nothing can verify afterwards that what landed matches
-  what was sent, so the run's own manifest is the only assurance
-  available. That trio is the reason this is worth doing carefully
-  rather than quickly.
+  **Writing blind is avoidable, and the shape that avoids it is Luke's
+  (2026-08-29): never write into a folder we did not create — always
+  create a fresh per-release child.** Both bundles already work that
+  way, for reasons that have nothing to do with Drive.
 
-  **Where it goes.** The two destination folder IDs belong in
-  `dcp/drive.py` as named constants beside `FOLDER_ID` and
-  `SITES_FOLDER_ID` — never resolved by name, never retyped, per that
-  module's opening warning. Luke has the IDs.
+  - **Pinpoint and Giant grow by tranche.** Each release adds
+    `tranche_N`, never revisiting an earlier one. If the pipeline
+    *creates* that folder inside the bundle parent, it owns it: listable,
+    `md5Checksum` available, complete knowledge of its own additions.
+    The parent stays invisible and never needs reading, because tranches
+    are append-only by construction.
+  - **The notebook is replaced wholesale, not updated.** Re-tuning
+    `--max-words` moves every part boundary, so a re-fit is a new set of
+    files and a new notebook rather than an edit. Luke is therefore
+    naming the Drive parent after the release — `notebook_bundle_2.10`,
+    renamed by hand on 2026-08-29 — so each future release creates its
+    own top-level folder and has total visibility of the whole tree,
+    not merely of a child.
+
+  So the trio of costs that writing blind would impose — a ledger as the
+  sole record, idempotency without `md5Checksum`, no post-hoc
+  verification — **does not arise** under this shape. It would only
+  arise if we wrote into a folder somebody else made.
+
+  **Which makes the real hazard a name collision, not blindness.**
+  `Sync.folder(name, parent)` resolves by name: it queries for a folder
+  of that name under that parent and creates one if the query comes back
+  empty. Under `drive.file` that query can only ever see folders the app
+  itself created, so it is structurally incapable of finding one made or
+  renamed by hand — it will quietly create a second folder beside it,
+  and Drive permits duplicate names, so nothing complains. That is the
+  duplicate-archive mechanism, still live.
+
+  **So the convention only holds while the pipeline is the sole creator
+  of release folders.** Pre-creating one by hand and expecting the
+  pipeline to fill it is the failure case. Guard it rather than
+  documenting it: after `folder()` creates one, `files.get` the id back
+  and stop if it 404s.
+
+  **Where the IDs go.** Any destination the pipeline does *not* create —
+  the pinpoint bundle parent — belongs in `dcp/drive.py` as a named
+  constant beside `FOLDER_ID` and `SITES_FOLDER_ID`, never resolved by
+  name, never retyped, per that module's opening warning. Folders the
+  pipeline creates need no constant: it learns their ids on creation.
+  Renaming is safe either way, since an id survives a rename — which is
+  the whole reason the ID-only rule exists.
 
   **One step stays manual whatever happens**: a notebook that already
-  holds a previous release must be emptied before the new bundle goes
-  in, because uploading adds sources rather than replacing them, and
-  that is Gemini Notebook rather than Drive.
+  holds a previous release must be emptied first, because uploading adds
+  sources rather than replacing them — and on the per-release naming
+  above the answer is usually a new notebook instead, whose URL must
+  reach `NOTEBOOK_URL` before step 12, as the runbook already requires.
 
   Raised by Luke 2026-08-29 — "perhaps we should streamline that process
-  eventually".
+  eventually" — and narrowed by him the same day to the per-release
+  folder shape above.
 
 - **The Start Here page's Gemini Notebook card claims more than the
   notebook holds.** The card says "Every site's report and its full
