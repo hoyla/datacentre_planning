@@ -760,7 +760,7 @@ be true forever.
 ### 13a. The search bundles — notebook, Pinpoint and Giant
 
 ```sh
-scripts/export_notebook_bundle.py --max-words 480000
+scripts/export_notebook_bundle.py --max-words 300000
 scripts/export_pinpoint_bundle.py \
     --already-uploaded data/exports/pinpoint_bundle/_manifest.csv --jobs 12
 ```
@@ -774,11 +774,52 @@ were simply never on the list anybody worked through.
 read. Run either against the previous release's tree and it produces a
 bundle that looks current and is not.
 
-**The notebook bundle has a hard ceiling of 600 sources.** At 2.10's
-size the default `--max-words` split the corpus into **615 documents** —
-over the limit, and the run says so. Raising `--max-words` merges parts
-back up: 480,000 gives 597. Check that line every release; the corpus
-only grows, so the default will fail again.
+**The notebook bundle has two ceilings that pull against each other.**
+600 sources, and a per-source word limit that is 500,000 on paper and
+lower in practice. A smaller `--max-words` buys safer documents and
+spends the file allowance; a larger one does the reverse. Both numbers
+are printed at the end of the run — check them every release.
+
+2.10 went out at `--max-words 480000` and Gemini Notebook **failed on
+roughly a tenth of the files, all of them the largest** (Luke,
+2026-08-29). Two causes, both now fixed:
+
+- the budget counted only the findings table, so part 1 — which also
+  carries the site report — came out at **500,962 words**, over the
+  notional limit;
+- every site was exported, datacentre or not.
+
+The default is now datacentre-classed sites only, which is what pays for
+the smaller budget, and `--max-words` is a whole-document ceiling. At
+300,000 that gives **428 sites → 584 documents, largest 299,807 words**.
+
+**Excluding the other classes is worth less than it looks.** The 84
+non-datacentre sites are 4.9% of the words: exclusion is worth about one
+step of budget, 480,000 down to 300,000, and no more. It also costs the
+**48 disguise suspects**, whose class description begins "no application
+here is stated as a datacentre, and at least one could not be ruled
+out — kept for exactly that reason". They remain in Drive, Pinpoint, the
+workbook and the reader; it is only the notebook that stops answering
+questions about them. `--classes all` puts them back, at a budget of
+about 450,000. Decide it per release rather than inheriting it.
+
+**584 of 600 leaves 16 documents of headroom.** The corpus only grows,
+so this will need re-deciding — the next lever is accepting a larger
+budget, or splitting the corpus across two notebooks.
+
+**The bundle arrives pre-divided into upload folders** of 50, because
+that is Gemini Notebook's per-upload limit — `01` … `12`. Upload each in
+turn. `--batch-size 0` writes them flat.
+
+**Uploading adds sources; it never replaces them.** A notebook that
+already holds a previous release's documents must be emptied first, or
+it ends up holding two versions of every site with nothing on the page
+to say which is current.
+
+**The reader counts 533 sites and this exports 428.** Both are right:
+533 is 512 live sites plus 21 Barbour catalogue records for pre-planning
+schemes, which have no planning application and so no documents to
+export; of the 512, 428 are classed as datacentres.
 
 **The Pinpoint bundle takes `--already-uploaded`**, pointing at the
 manifest of what is already linked into Pinpoint. It skips those
