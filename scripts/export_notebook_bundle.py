@@ -25,12 +25,28 @@ Drive folder cannot disagree.
 **Large sites are split, not truncated.** A notebook source is capped at
 around half a million words, and the largest site here holds 130,092
 findings — comfortably past it. Splitting keeps every row at the cost of
-a few more files (429 sites become 506 documents at the default budget,
-still under the 600 limit). Truncation was the alternative and was
-rejected: a table that silently stops is worse than no table, because
-nothing on the page tells the reader — or the model — that it stopped.
+a few more files. Truncation was the alternative and was rejected: a
+table that silently stops is worse than no table, because nothing on the
+page tells the reader — or the model — that it stopped.
+
+**Two ceilings, pulling against each other.** The notebook takes 600
+sources and reads each one whole, so a smaller word budget buys safer
+documents and spends the file allowance. 500,000 words is the notional
+source limit and the practical one is lower: at 2.10 the bundle went out
+at `--max-words 480000` and Gemini Notebook failed on roughly a tenth of
+the files, all of them the largest (Luke, 2026-08-29).
+
+**By default only datacentre-classed sites are exported**, which is what
+pays for the smaller budget. The measurement behind it: of 512 sites in
+the staging tree, 428 are datacentres, and the other 84 are 4.9% of the
+words — so exclusion alone is not much of a saving. It is worth roughly
+one step down the budget, from 480,000 to around 300,000, and no more.
+Pass `--classes all` to put them back. The reader counts 533 sites, not
+512: the extra 21 are Barbour catalogue records for pre-planning schemes
+with no planning application, so they have no documents to export.
 
     scripts/export_notebook_bundle.py
+    scripts/export_notebook_bundle.py --classes all --max-words 450000
     scripts/export_notebook_bundle.py --out ~/Desktop/dc_notebook
 """
 
@@ -38,8 +54,42 @@ from __future__ import annotations
 
 import argparse
 import csv
+import importlib.util
 import sys
 from pathlib import Path
+
+ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(ROOT))
+
+from dotenv import load_dotenv
+
+load_dotenv(ROOT / ".env")
+
+from dcp import site_class as sc
+from dcp.db import connect
+
+
+def _staging_key(site_key: str) -> str:
+    """A site key as `build_drive_staging.py` spells it in a folder name.
+
+    Imported from that script rather than reimplemented. A site key like
+    `SITE-Aberdeen/180242/DPP` cannot be a directory, so the builder
+    replaces the slashes; a lookalike regex here would drift from it. On
+    the first attempt at this filter a private copy of the rule left 332
+    of 512 sites unmatched and therefore unclassified, which would have
+    dropped two thirds of the corpus from the notebook without saying so.
+    """
+    global _clean
+    if _clean is None:
+        spec = importlib.util.spec_from_file_location(
+            "_bds", ROOT / "scripts/build_drive_staging.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _clean = mod.clean
+    return _clean(site_key, 40)
+
+
+_clean = None
 
 # Words per document, not rows. A row-based cap was tried first and set
 # at 12,500 on an estimate of ~40 words a row; the real corpus averages
@@ -48,6 +98,12 @@ from pathlib import Path
 # from the loop. 400,000 leaves headroom under the ~500,000-word source
 # limit for the report and the headers above the table.
 DEFAULT_MAX_WORDS = 400_000
+
+# The identification block, the two paragraphs above the table and the
+# table header, which every part carries whether or not it carries the
+# report. Measured at about 430 words; rounded up so the budget is a
+# ceiling rather than a target.
+FURNITURE = 500
 
 # The CSV's own column order, which is the order a reporter sees in
 # Excel. Kept identical so the table and the CSV are the same artefact
@@ -80,21 +136,32 @@ def table_header() -> list[str]:
             "|" + "|".join("---" for _ in COLUMNS) + "|"]
 
 
-def split_by_words(rows: list[dict], budget: int) -> list[list[dict]]:
+def split_by_words(rows: list[dict], budget: int,
+                   first_budget: int | None = None) -> list[list[dict]]:
     """Group rows into parts, each under `budget` words.
 
     Counted from the rendered line, because that is what the notebook
     will read — a quote is most of a row's length and quote length is
     exactly what varies between sites.
+
+    `first_budget` is the allowance for part 1, which is smaller because
+    part 1 also carries the site report. Budgeting the rows alone was
+    the bug behind the 2.10 upload failures: the report and the preamble
+    add about 21,000 words on top, so `--max-words 480000` produced
+    documents of 500,962 words — over the notional 500,000-word source
+    limit — and Gemini Notebook rejected roughly a tenth of the bundle,
+    all of them the largest files (Luke, 2026-08-29).
     """
     if not rows:
         return [[]]
     parts, current, used = [], [], 0
+    cap = budget if first_budget is None else first_budget
     for r in rows:
         n = len(row_line(r).split())
-        if current and used + n > budget:
+        if current and used + n > cap:
             parts.append(current)
             current, used = [], 0
+            cap = budget
         current.append(r)
         used += n
     if current:
@@ -124,9 +191,25 @@ def main() -> int:
                     help="a file of site keys, one per line, same rule as "
                          "--only. Blank lines and # comments ignored.")
     ap.add_argument("--max-words", type=int, default=DEFAULT_MAX_WORDS,
-                    help=f"words per document before a site's findings are "
-                         f"split across parts (default {DEFAULT_MAX_WORDS:,}; "
-                         f"the notebook source limit is around 500,000)")
+                    help=f"words per whole document, report included, before "
+                         f"a site's findings are split across parts (default "
+                         f"{DEFAULT_MAX_WORDS:,}; the notebook's notional "
+                         f"source limit is 500,000 and its practical one is "
+                         f"lower)")
+    ap.add_argument("--classes", nargs="+", default=[sc.DATACENTRE],
+                    metavar="CLASS", choices=list(sc.CLASS_ORDER) + ["all"],
+                    help="site classes to include, from dcp/site_class.py "
+                         f"(default: {sc.DATACENTRE}). 'all' includes every "
+                         "class. Note what the non-default classes are before "
+                         "excluding them: disguise suspects are the sites the "
+                         "investigation exists to find, and adjacent power is "
+                         "how the energy story is told. Excluding a class "
+                         "here removes it from the notebook only — it stays "
+                         "in Drive, Pinpoint, the workbook and the reader.")
+    ap.add_argument("--batch-size", type=int, default=50, metavar="N",
+                    help="documents per numbered subfolder (default 50, "
+                         "which is Gemini Notebook's per-upload limit). "
+                         "0 writes everything flat.")
     args = ap.parse_args()
 
     if not args.staging.is_dir():
@@ -141,15 +224,31 @@ def main() -> int:
                      args.only_from.read_text().splitlines()
                      if ln.strip() and not ln.startswith("#")}
 
+    # Which sites are datacentres is derived from verdicts in the
+    # database, and there is nowhere else to read it: the staging tree
+    # does not carry the class. So this is the one thing the script asks
+    # the database for — everything rendered still comes from staging, so
+    # the notebook and the Drive folder cannot disagree about content.
+    keep_classes = (set(sc.CLASS_ORDER) if "all" in args.classes
+                    else set(args.classes))
+    with connect() as conn:
+        classes = {_staging_key(k): v
+                   for k, v in sc.compute_all(conn).items()}
+
     args.out.mkdir(parents=True, exist_ok=True)
     if only is None:
         # Stale documents from an earlier run would be uploaded alongside
         # their replacements and read as separate sources. Same reasoning as
         # the Drive sync's prune, and safe here because this folder holds
-        # nothing this script did not write.
-        stale = sorted(args.out.glob("*report_and_findings*.md"))
+        # nothing this script did not write. rglob because the batch
+        # subfolders are ours too, and a document left in batch_09 by a
+        # longer previous run is exactly as stale as one left at the top.
+        stale = sorted(args.out.rglob("*report_and_findings*.md"))
         for f in stale:
             f.unlink()
+        for d in sorted(args.out.glob("*/"), reverse=True):
+            if d.is_dir() and not any(d.iterdir()):
+                d.rmdir()
     else:
         # Emphatically NOT pruning under --only: the prune exists to stop
         # a full rebuild leaving last run's documents behind, and applying
@@ -160,11 +259,24 @@ def main() -> int:
 
     n_docs = n_sites = n_rows = 0
     biggest = ("", 0)
+    skipped: dict[str, int] = {}
+    unclassified: list[str] = []
     for site_dir in sorted(p for p in args.staging.iterdir() if p.is_dir()):
         report_path = next(site_dir.glob("_site_report — *.md"), None)
         if report_path is None:
             continue
         if only is not None and site_dir.name.split(" — ")[0] not in only:
+            continue
+        cls = classes.get(site_dir.name.split(" — ")[0])
+        if cls is None:
+            # Never quietly excluded. A site the database does not
+            # classify is a staging tree and a database that disagree,
+            # which is a reason to stop rather than to publish a bundle
+            # that is short by an unknown amount.
+            unclassified.append(site_dir.name)
+            continue
+        if cls.key not in keep_classes:
+            skipped[cls.key] = skipped.get(cls.key, 0) + 1
             continue
         n_sites += 1
         stem = site_dir.name                       # "<key> — <name>"
@@ -180,7 +292,15 @@ def main() -> int:
             biggest = (stem, len(rows))
 
         key, _, name = stem.partition(" — ")
-        chunks = split_by_words(rows, args.max_words)
+        # Part 1 carries the report, so its row allowance is what is left
+        # after it. FURNITURE covers the identification block, the two
+        # paragraphs of guidance and the table header, measured at about
+        # 430 words; the floor stops a site with an enormous report from
+        # producing parts with almost no rows in them.
+        report_words = len(report.split())
+        first = max(args.max_words // 10,
+                    args.max_words - report_words - FURNITURE)
+        chunks = split_by_words(rows, args.max_words - FURNITURE, first)
         parts = len(chunks)
         seen = 0
         for i, chunk in enumerate(chunks):
@@ -242,16 +362,54 @@ def main() -> int:
                      + (f", part {i + 1} of {parts}" if parts > 1 else "")
                      + ".*", ""]
             seen += len(chunk)
-            out_path = args.out / f"{stem} — report_and_findings{suffix}.md"
+            # Gemini Notebook takes 50 files per upload, so the bundle
+            # arrives pre-divided into uploads. Numbered sequentially
+            # over the whole run rather than by site, because the unit
+            # being sized is the upload; a site's parts may straddle a
+            # boundary and that costs nothing, since every batch is
+            # uploaded in the end.
+            folder = args.out
+            if args.batch_size:
+                folder = args.out / f"{n_docs // args.batch_size + 1:02d}"
+                folder.mkdir(parents=True, exist_ok=True)
+            out_path = folder / f"{stem} — report_and_findings{suffix}.md"
             out_path.write_text("\n".join(body) + "\n", encoding="utf-8")
             n_docs += 1
 
-    total_mb = sum(f.stat().st_size for f in args.out.glob("*.md")) / 1e6
+    if unclassified:
+        sys.exit(
+            f"{len(unclassified)} staging site(s) have no class in the "
+            f"database, so they can be neither included nor excluded "
+            f"honestly:\n  "
+            + "\n  ".join(unclassified[:10])
+            + (f"\n  … and {len(unclassified) - 10} more"
+               if len(unclassified) > 10 else "")
+            + "\nThe staging tree and the database disagree — rebuild "
+              "staging (step 9) before building the notebook bundle.")
+
+    total_mb = sum(f.stat().st_size for f in args.out.rglob("*.md")) / 1e6
     if stale:
         print(f"removed {len(stale)} document(s) from a previous run")
     print(f"{n_sites} sites, {n_rows:,} findings rows -> {n_docs} documents "
           f"({total_mb:.1f} MB) in {args.out}")
     print(f"  largest site: {biggest[0][:60]} ({biggest[1]:,} findings)")
+    # The largest document is the number that decides whether the upload
+    # succeeds, so it is stated rather than left to be discovered by
+    # Gemini Notebook rejecting a tenth of the bundle.
+    if n_docs:
+        worst = max(args.out.rglob("*.md"),
+                    key=lambda f: len(f.read_text(encoding="utf-8").split()))
+        ww = len(worst.read_text(encoding="utf-8").split())
+        print(f"  largest document: {ww:,} words "
+              f"({worst.parent.name}/{worst.name[:52]})")
+    if skipped:
+        print("  excluded by --classes: "
+              + ", ".join(f"{n} {sc.CLASS_LABELS[k].lower()}"
+                          for k, n in sorted(skipped.items())))
+    if args.batch_size:
+        batches = sorted(d for d in args.out.iterdir() if d.is_dir())
+        print(f"  {len(batches)} upload folders of up to {args.batch_size} "
+              f"documents: {args.out}/01 … {args.out}/{len(batches):02d}")
     if n_docs >= 600:
         print(f"  WARNING: {n_docs} documents is at or over the 600-source "
               f"notebook limit — raise --max-words to merge parts back up "
