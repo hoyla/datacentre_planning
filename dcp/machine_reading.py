@@ -39,6 +39,7 @@ from pathlib import Path
 
 from dcp import extract
 from dcp.deepread_select import classify_kind, score_page
+from dcp.site_aliases import displayed
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -290,7 +291,12 @@ def load_site_input(conn, site_key: str, *, profile: dict,
         cur.execute("SELECT display_name FROM sites WHERE site_key = %s "
                     "AND retired_at IS NULL", (site_key,))
         row = cur.fetchone()
-        name = (row[0] if row else None) or site_key
+        # The name the model is told the site has, and so the name it
+        # writes back in prose a reporter reads. It has to be the name
+        # the reader shows: a derived title carrying a figure the
+        # documents contradict — "250MW DATA CENTRE" against a stated
+        # 400 MW connection — is contamination, not context.
+        name = displayed(site_key, row[0] if row else None)
         cur.execute(FIGURES_SQL, (site_key,))
         figures = [{
             "quantity": q, "value_mw": float(mw), "is_maximum": mx,
