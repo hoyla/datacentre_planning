@@ -491,6 +491,37 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **Two external sources reach the workbook and not the reader, and
+  "Provenance" appears in neither.** Luke asked during the 2.10 release
+  whether he had missed the Published aggregates and Sources tables in
+  the reader; he had not — they are workbook-only. The workbook carries
+  an **External aggregates** sheet (62 rows) and a **Provenance** sheet
+  (20 rows), each with its dictionary entry. The reader carries a
+  subset, woven into the methodology prose rather than tabulated:
+
+  | source | in the reader |
+  |---|---|
+  | Ofgem Curate | yes — the banded queue table, linked, para 2.8 cited |
+  | NESO Call for Input | yes — linked in prose |
+  | DESNZ sub-national consumption | yes — linked, and the per-site line |
+  | UKPN Large Demand List | **no** |
+  | UKPN Data Centre Demand Profiles | **no** |
+
+  So three of five external sources reach someone reading the web page,
+  and the word "Provenance" — the sheet recording where each external
+  figure came from — appears nowhere in it. That cuts against the rule
+  the rest of the reader keeps: every number drillable to its source.
+  A reporter who works from the reader alone cannot see two of the
+  sources the release rests on, or the record of where any of them came
+  from.
+
+  Not a defect in what is shown — everything shown is cited — but an
+  asymmetry nobody chose. The fix is a section on the methodology page
+  listing all five with their locators, generated from
+  `dcp/external_aggregates.SOURCES` so it cannot drift from the
+  workbook's own sheet. Deferred past 2.10 because the artefacts were
+  built and diffed when it surfaced.
+
 - **Pinpoint and Giant are missing content by construction, not only by
   age.** Both take the same input, and it is **not** the Drive `sites`
   folder: it is the derivative bundle from
