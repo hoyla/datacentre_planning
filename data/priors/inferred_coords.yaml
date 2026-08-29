@@ -319,3 +319,60 @@ entries:
       whose planning_ref is TP/ED/25/0428. The nearest foreign
       cluster is over 5 km away, so no partition entry is needed
       (2026-08-27).
+
+  # DC01 UK / South Mimms (4 refs). Enfield's and Barnet's
+  # out-of-borough records for the Hertsmere outline carry no
+  # coordinates — the land is in neither borough — so each sat as its
+  # own unlocatable singleton beside PTNO-12809263, which already holds
+  # the application itself. All four restate the parent's description
+  # verbatim, down to the "up to 187,000 sqm GEA" ceiling, and give the
+  # same address. Coordinates below are Hertsmere's own portal pin for
+  # that parent. The nearest foreign record is 4.09 km away, so no
+  # partition entry is needed. Luke spotted the split, 2026-08-29.
+
+  - ref: Enfield/24/03171/OA
+    lat: 51.688189
+    lon: -0.21547
+    source: |
+      Enfield's record for the September 2024 outline at "Land East Of
+      South Mimms Services, St Albans Road, South Mimms, Hertfordshire"
+      — an address outside Enfield. Its description is
+      Hertsmere/24/1152/OUTEI's, word for word; it was registered eight
+      days after that application and closed thirteen days later
+      (received 2024-09-17, "Permitted" 2024-09-30), which is a
+      neighbouring-authority consultation turnaround and not a separate
+      outline consent. Coordinates are 24/1152/OUTEI's own portal pin
+      (2026-08-29).
+
+  - ref: Barnet/24/3678/NAC
+    lat: 51.688189
+    lon: -0.21547
+    source: |
+      Barnet's NAC — neighbouring-authority consultation — on the same
+      September 2024 outline, addressed "Land East Of South Mimms
+      Services St Albans Road South Mimms EN6", registered the same day
+      as Enfield's copy and carrying the identical description.
+      Coordinates are Hertsmere/24/1152/OUTEI's own portal pin
+      (2026-08-29).
+
+  - ref: Barnet/25/0171/NAC
+    lat: 51.688189
+    lon: -0.21547
+    source: |
+      The January 2025 consultation round on the same application:
+      same address, same verbatim description, dated between
+      24/1152/OUTEI's submission (2024-09-09) and its determination
+      (2025-02-11). No other application in the corpus carries that
+      description, so 24/1152/OUTEI is the only parent it can restate.
+      Coordinates are that parent's own portal pin (2026-08-29).
+
+  - ref: Enfield/25/00169/OA
+    lat: 51.688189
+    lon: -0.21547
+    source: |
+      Enfield's half of the January 2025 consultation round, registered
+      a day after Barnet's and closed in a fortnight (received
+      2025-01-15, "Permitted" 2025-01-29). Same address outside the
+      borough, same verbatim description as
+      Hertsmere/24/1152/OUTEI, whose portal pin the coordinates are
+      (2026-08-29).
