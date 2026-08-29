@@ -254,7 +254,10 @@ def main() -> int:
     print(f"  largest site: {biggest[0][:60]} ({biggest[1]:,} findings)")
     if n_docs >= 600:
         print(f"  WARNING: {n_docs} documents is at or over the 600-source "
-              f"notebook limit — raise --max-rows to merge parts back up.")
+              f"notebook limit — raise --max-words to merge parts back up "
+              f"(the flag is --max-words; --max-rows has never existed, and "
+              f"the advice named it for the first time on the run that "
+              f"needed it, 2026-08-29).")
     return 0
 
 
