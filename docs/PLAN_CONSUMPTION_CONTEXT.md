@@ -113,7 +113,7 @@ round-trips its own numbers.
 ## Context worth having (2026-08-12 session)
 
 - PR #61 (external aggregates beside the data) and #60 (Pinpoint link)
-  are merged; EdgeOne deploys from main.
+  are merged. (Stale as of 2026-08-26: EdgeOne no longer deploys anything — its middleware redirects to Cloud Run, which is published by `cloudrun/deploy.sh`.)
 - The reader's methodology now ends its adjudication section with the
   Ofgem queue comparison table — the DESNZ paragraph belongs right
   after it, same voice: what each side can see, nulls visible

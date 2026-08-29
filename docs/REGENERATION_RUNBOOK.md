@@ -48,9 +48,13 @@ substation's 99.9 MW rendering as a data centre's grid connection on the
 largest site in the corpus, which no gate would ever have flagged.
 
 
-**Every step is done except the deploy, which happens when the release
-branch merges** — EdgeOne builds from git, so writing `index.html` is not
-publishing it. The gate probe is only meaningful after that merge.
+**Every step is done except the deploy, and the deploy is
+`cloudrun/deploy.sh`** — not a merge. This said for months that merging
+the release branch published it, which stopped being true on 2026-08-26
+when the EdgeOne middleware became a pure redirect: it serves nothing,
+so nothing in git reaches a reader. Merging the release PR records what
+was published; running the script is what publishes it (Luke corrected
+this during the 2.10 deploy, 2026-08-29).
 
 The next regeneration starts at step 0 again, and the steps now run in
 the order they are written in: 0 to 14, top to bottom.
@@ -795,13 +799,17 @@ difference, is worse than one corpus reduced in a documented way.
 
 ### 14. Deploy and probe
 
-**Two surfaces now, and only one of them is automatic.** Merging the PR
-deploys `index.html` via EdgeOne, which builds from git. The Cloud Run
-copy — the same page behind Guardian sign-in, added 2026-08-26 — changes
-only when someone runs its script, and it serves whatever `index.html`
-sits at the root of the checkout it is run from, committed or not. So a
-merged release reaches EdgeOne on its own and reaches colleagues only
-when you say so:
+**One surface, and it is not automatic.** The reader lives on Cloud
+Run behind Guardian sign-in, and it changes only when someone runs its
+script; it serves whatever `index.html` sits at the root of the
+checkout it is run from, committed or not.
+
+**EdgeOne publishes nothing.** Since 2026-08-26 its middleware is a
+signpost — every path 302s to the Cloud Run host and it serves neither
+the page nor the dataset. Merging a release PR therefore deploys
+*nothing*; it records in git what was published. Three documents said
+otherwise until 2026-08-29, including this one, because the middleware
+changed and the deploy step did not.
 
 ```sh
 ./cloudrun/deploy.sh          # see cloudrun/CLOUDRUN.md
@@ -813,7 +821,10 @@ The script verifies the live deployment refuses anonymous access before
 declaring success, so a failure there is the gate holding rather than
 the deploy failing.
 
-Then the EdgeOne gate:
+Then the EdgeOne signpost. The probe still earns its place, but what
+it proves has changed: not that a gate refuses content, but that the
+redirect serves none. A deployment that serves nothing cannot leak the
+dataset the way the double-slash bypass once did:
 
 ```sh
 scripts/probe_gate.sh https://dc-review-gdn-hoyla.edgeone.app
