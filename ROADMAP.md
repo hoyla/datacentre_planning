@@ -932,6 +932,46 @@ HISTORY.)
 
 ## Smaller things
 
+- **The Start Here page's Gemini Notebook card claims more than the
+  notebook holds.** The card says "Every site's report and its full
+  findings table, one document per site". Since PR #230 that is not
+  true: `export_notebook_bundle.py` exports only sites classed
+  `datacentre`, 428 of the 512 in the staging tree. Left out are 48
+  disguise suspects, 23 procedural-only sites, 9 adjacent-power sites
+  and 4 with no planning record.
+
+  **The premise, stated because the card is asserting it either way.**
+  The filter is not an editorial judgement about what is worth reading;
+  it is what pays for a smaller per-document word budget. Gemini
+  Notebook takes 600 sources and rejects sources that are too large, and
+  at 2.10's size those two limits could not both be met with every site
+  in. The measured cost of *not* filtering is one step of budget —
+  450,000 words a document rather than 300,000 — because the 84
+  excluded sites are only 4.9% of the words.
+
+  **Why it needs saying on the card rather than in the methodology.**
+  The absent class that matters is the disguise suspects, whose own
+  description is "no application here is stated as a datacentre, and at
+  least one could not be ruled out — kept for exactly that reason". A
+  reporter who asks the notebook about large unnamed single-use
+  buildings gets nothing back, and nothing reads as *there are none*.
+  That is the same failure as a dash in a table: our silence presenting
+  as theirs. The card immediately below it makes the gap worse by
+  contrast — Pinpoint holds **all** sites' source documents, so the two
+  cards now differ in coverage as well as in kind, and the page says
+  only the latter.
+
+  **What to change.** In `scripts/export_reader.py`, the Gemini Notebook
+  card's `what` paragraph (around line 5832): replace "Every site's
+  report" with a statement of the actual scope, and name where the rest
+  can be found — the site folders and Pinpoint both hold them. The
+  count should be generated, not typed: the reader already computes
+  `site_classes` via `sclass.compute_all` and tallies
+  `rendered_classes`, so the number of datacentre-classed sites is
+  already in hand at build time and will follow the corpus.
+
+  Raised by Luke 2026-08-29, the day the filter landed.
+
 - **`drive_sync.py` is latency-bound, not quota-bound, and the 2.9
   reorganisation paid for it.** There is no deliberate delay in the
   sync — the only sleep is error backoff — but it is a single thread
