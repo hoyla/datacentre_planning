@@ -1081,26 +1081,6 @@ here rather than applied from the build lane.
   the site's connection is. Settle it by hand, then re-check the
   Operators tab's like-for-like, which still quotes the
   register-vs-planning comparison this family fed.
-## From the reader redesign — waiting on a checkpoint
-
-2.4 work whose next step is a person's, recorded here so the build lane
-does not have to remember it. (The generation batch that sat here has
-run — 1,667 figures under `gpt-5/generation-2.5`, migration 024 applied,
-and the workbook columns and cohorts that consume it are in 2.7. See
-HISTORY.)
-
-- **Confirming the rest of the alias groups.** Eight of the ten seeded
-  members are confirmed and one is still `proposed`, which is enough for
-  `operator_group` to reach **15 sites** — Vantage, Colt, Amazon,
-  Microsoft. It is not enough to be a filter anyone would trust: 305
-  sites appear in `parties` and 290 of them still fall back to Barbour's
-  end user or client. Confirming a group is what makes "Ark Estates 5
-  Ltd" and "Ark Data Centres Ltd" one name, and what lets an
-  organisation named only in a document reach the operator field at all.
-  The site 61 split (HISTORY, 2026-08-27) shows what a confirmed group
-  is worth: applicant of record separated ten campuses cleanly where
-  coordinates could not.
-
 ## Smaller things
 
 - **Pipeline upload of the search bundles to Drive.** The shape is
