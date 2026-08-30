@@ -1627,6 +1627,176 @@ reach it.
 Three of the day's lessons rhyme: a guard nobody has watched fire is a
 guard nobody knows works.
 
+## The corrections that landed between 2.9 and 2.10 (2026-08-26 to 2026-08-29)
+
+Moved here from the ROADMAP once each closed; the residuals that
+survive them are still there.
+
+**`load_capacity_claims.py` was broken from the SPV work until
+2026-08-26; fixed.** `companies-house-claims.yaml` gained claims with
+`quantity_type: scheme_capacity` and `investment_property_fair_value`,
+and no migration had added either value to the
+`capacity_claims_quantity_known` CHECK constraint — so the loader
+aborted on a check violation and rolled the whole batch back, taking
+every source with it, NESO and the Environment Agency permits
+included. Migration 030 added both types with the reasoning for each;
+10 claims inserted, 234 → 242 in the store, the pending SPV figures
+loaded with the Court Lane matches already adjudicated and six new
+ones held under `considered:` because their site records were
+over-merged clusters.
+
+**The incomplete Drive archive was explained, and the fix landed**
+(2026-08-26). `build_drive_staging.py` stages a document only if its
+application has a live `site_members` row; 143 applications discovered
+2026-08-07 had no membership until the materialise of 2026-08-25, so
+their 3,679 documents were never in the staging tree and invisible to
+the sync's `skipped` and `failed` alike. The 08-21 sync was complete
+and correct over the tree it was given — the ledger-loss episode is
+exonerated. Now in code: the staging build prints what it did not
+stage grouped by verdict and exits non-zero unless every one is
+`not_dc`; it refuses to build when `max(sites.materialised_at)`
+predates the newest first_seen; `verify_drive_sample.py` samples the
+universe rather than the ledger, whose old frame was structurally
+incapable of finding a document that never reached the tree.
+
+**`build_drive_staging.py` removes what has left a site** (closed
+2026-08-26). It was additive: after a re-partition the old site folder
+kept application directories that had moved away, so one document
+existed under two site folders and `drive_sync.py` could not read the
+move as a move. The tree is now written to a `.building` sibling and
+swapped in — 65 seconds for 494 sites and 52,000 documents, free on
+disk because the documents are hard links. The tree root stays
+deliberately additive so published artefacts from earlier phases keep
+resolving.
+
+**Every OpenAI finding was missing its family, and two panels select
+on nothing else** (found and fixed 2026-08-26). The INSERT in
+`deepread_escalate_openai.py` omitted `signal_family`, so all 557,747
+findings from the three OpenAI runs carried NULL — 46% of the corpus —
+and no OpenAI finding had ever reached the EIA-process or parties
+panels, silently. Fixed at source and backfilled the same day
+(`backfill_signal_family.py`, `family_source='derived'`, originals
+untouched): EIA panel 190 → 234 sites, parties 296 → 304. The 49,039
+local-model findings predating migration 009 were backfilled by the
+same command. And `\b` cannot end a snake_case token — `eia\b` never
+matched `eia_status` — corrected by writing the boundary over the
+characters a label token is made of (`TOK_END`/`TOK_START`), re-run
+scoped to `derived` rows left `unclassified`: EIA 234 → 239 sites,
+parties 202,223 → 209,875 rows. Four editorial questions from that
+measurement stay on the ROADMAP.
+
+**The pre-build tail assertion** (2026-08-27): every export prints the
+count of power-unit findings with no verdict from any model, beside
+the corrections gate. Report-only by design, empty at the 2.9 build.
+
+**The export-limit correction rule** (2026-08-27): 23 rows demoted,
+value-adjacency not vocabulary, one pinned instance. Kingsnorth's
+47,405 kW leading/lagging pair stays on the ROADMAP as a person's row.
+
+**Reading freshness** (2026-08-27): `load_latest(live_only=True)`
+drops readings whose site key retired — free, every build — and
+`verify_reading_freshness.py` does the exact half offline, append-only
+under the `freshness-check` tag so it can never occupy a real
+reading's key. Where it runs in the release chain is still the
+ROADMAP's question.
+
+**`drive_sync` concurrency** (2026-08-29): the `--workers` flag
+existed all along, defaulting to 1; the default is now 12, after a
+58,799-file sync spent 9h16m reaching 54% because nobody passed the
+flag. Batching and an atomic ledger write remain open.
+
+## The operator pages day (2026-08-30)
+
+Issue #255 — "link the operator's web page" — turned into the largest
+single-day advance the external-claims channel has had, because Luke
+reviewed every pairing by hand and the review kept finding things.
+
+**The review sheet** (`data/operator_pages_review/`, 68 rows, four
+tiers by provenance plus his own additions): every site→page pairing
+verified, three response columns (use the URL; notable claims on the
+page; proposed alias), an actions column that became a work queue, and
+a `page_kind` split after Luke realised corporate and consultation
+sites say different things to different audiences.
+
+**Shipped from it, same day:** `data/priors/operator_pages.yaml` (39
+pairs, kind-labelled) with `dcp/operator_pages.py` on the
+site_aliases contract and reader links labelled by audience (PR #265);
+thirteen new snapshot pages including all nine consultation sites and
+the Cato architect's page, every existing page refreshed to the
+review's own read date (PR #267); eighteen new operator claims and
+nineteen matches, every quote verified against a same-day snapshot
+(PR #270) — Vantage Cardiff's 148 MW, issue #250's headline unmatched
+claim, among them; aliases folded with the sheet winning on conflict;
+and the Kao Harlow merge (PR #268) — Project Nobel's Barbour pin was
+2.1 km from the campus its own application names, corrected by ptno
+override, one site retired, key preserved.
+
+**The decision over it: typed standing, not equal standing** (Luke).
+First-party operator statements about their own facilities may become
+a labelled rung on the declared-power ladder; third-party aggregates
+stay tier-and-count. A recorded revision of the 2026-08-20 no-raw-MW
+ruling's scope — that ruling was about comparability, and a labelled
+rung is how the ladder already handles incomparability.
+
+**The audiences finding, five for five and snapshot-backed:** every
+reviewed site holding both kinds states MW on the corporate page and
+nothing on the consultation page (East Havering 600, West London
+Technology Park 90, Iver Heath 90, Abbots Langley 96, Humber 384 —
+three of those from Greystoke's single listing page, whose figures sit
+against zero MW mentions in all three schemes' consultation-site
+snapshots). Apatura is the counter-example that sharpens it — its
+consult pages state MW, and they are also its only scheme presence —
+and Colt runs the other way, publishing 31 MW against larger planning
+figures. Working hypothesis, Luke's endorsement: one page, one story;
+two pages, two stories.
+
+## Adjacent power leaves membership (2026-08-30)
+
+Issue #252, opened in the morning out of the Stockley Park question
+and shipped end to end the same day — stages, corrections to its own
+premises included.
+
+**Stage 1** (PR #253): migration 032's `site_adjacent_power`,
+`dcp/adjacent_power.py`, materialised — 114 relationships across 42
+records and 66 sites, tiered discovery/cohort/proximity, changing no
+output. **The survivor check** (on the issue, with its query)
+corrected the section's own claim before implementation: "seven
+headline figures go" was measured with the wrong ladder; with the
+reader's own preference order exactly two sites changed, because a
+scheme restates its capacity across its own applications —
+Kingsnorth's 49.9 stood on a `new_build` member, Colt fell to its own
+3.2 MW disclosed IT load. **Stages 2 and 3 together** (PR #269,
+decisions Luke's): the clusterer vetoes the `adjacent_power` verdict;
+the reader renders an "Adjacent power" box — documentary rows as
+entries, proximity as a count, because 71 distance-only rows rendered
+as peers of 39 documentary ones would read as endorsement by volume.
+Eight sites retired, not the predicted six — Hallen's and Barking's
+remnants were not sites by the classifier's own rules — and the two
+university leads (the Plymouth generator, Northampton's Newton DRUPS)
+dissolved into a tracked ROADMAP note. **The veto had two more doors**
+(PR #271, found by running it): project-linked applications join their
+project's cluster regardless of the universe test, and the family
+expansion re-admits a vetoed record when an in-universe discharge
+cites it — 18 of the 42 sited records came straight back before both
+paths honoured the veto. The Barbour linkage survives as a documentary
+cohort relationship; two procedural singletons stranded as tracked
+warts of the typed-`parent_ref` gap. End state, verified: zero
+adjacent-power memberships, 501 live sites, 110 relationship rows.
+
+**And the Kingsnorth follow-up dissolved on measurement** (PR #273).
+The export figure was never the site's published headline — the table
+showed 39.724 MW disclosed total site demand all along; "shows 49.9"
+was the all-quantity-types max, the same conflation the survivor check
+caught. What was genuinely wrong on published pages was five sites
+ranked on the generation rung with plant the generation adjudication
+calls `prime_combustion` or `renewable` — "standby generation … sized
+to carry full load" asserted against energy-park export plant, two of
+them wearing the sub-50 MW DCO threshold cap as if it were demand.
+Fixed by making the ladder's generation rung honour `plant_type` in
+both consumers; mixed and unclear keep their behaviour, because
+exclusion needs a positive adjudication. Heyford Park 49.9 → 23.5,
+three sites → a reportable absence, Kingsnorth untouched.
+
 ---
 
 ## How this project is worked on
