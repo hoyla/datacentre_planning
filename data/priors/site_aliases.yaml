@@ -83,9 +83,9 @@ aliases:
       Reporter reference (LH): add Bicester  
 
   - site_key: PTNO-12669230 
-    alias: Quest Pit Phase 2 Film & TV Studio Campus and Data Centre
+    alias: Quest Park Data Centre, Quest Pit
     source: |
-      Reporter reference (LH): add Quest Pit  
+      Reporter reference (LH): show trading name and location  
 
   - site_key: PTNO-12671637
     alias: Iver Heath Data Park - 90MW Data Centre (CyrusOne)
@@ -149,7 +149,7 @@ aliases:
       Reporter reference (LH): add Leeds
 
   - site_key: PTNO-12913776 
-    alias: SDC M40 Campus, Wapseys Wood, Gerrards Cross - 300MW Data Centre Campus
+    alias: SDC M40 Campus, Wapseys Wood, Gerrards Cross
     source: |
       Reporter reference (LH): add Wapsey's Wood
       Placed at Gerrards Cross, not Slough: Barbour's pin sat in
@@ -424,3 +424,44 @@ aliases:
       all, which leaves the site's own adjudicated figures — each with
       its quantity type — to say what the scheme draws (Luke,
       2026-08-29).
+
+  - site_key: PTNO-12917829
+    alias: Cato Data Centre campus, Auchtertool, Fife (ILI Group)
+    source: |
+      Operator's own name for the site - see https://cato.ili-energy.com/
+ 
+  - site_key: SITE-Havering/Z0001.24
+    alias: East Havering Data Centre campus (Digital Reef)
+    source: |
+      Operator's own name - see https://www.digital-reef.io/digital-reef-projects 
+      and https://www.easthaveringdatacentrecampus.com/
+ 
+  - site_key: PTNO-12857078 
+    alias: Ravenscraig Data Centre Campus (Apatura)
+    source: |
+      Operator's own name for the site - see 
+      https://consult.apatura.energy/ravenscraig/the-project
+ 
+  - site_key: PTNO-12550160 
+    alias: Teesworks/Redcar Bulk Terminal Data Centre Campus 
+    source: |
+      The overall development (not just the DC) is called Teesworks
+      - see https://www.teesworks.co.uk/
+  
+  - site_key: SITE-WestLothian/0346/EIA/25 
+    alias: Freeport Data Centre Campus (Apatura) 
+    source: |
+      Operator's name - see https://consult.apatura.energy/freeport
+  
+  - site_key: PTNO-12785975 
+    alias: Cambois Data Centre campus, Northumberland Energy Park (QTS / Blackstone)
+    source: |
+      Operator's name - see https://q.com/data-centers/cambois/
+    
+    
+      
+      
+      
+     
+      
+      

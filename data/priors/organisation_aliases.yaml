@@ -630,3 +630,35 @@ groups:
               directorship link to a Corscale entity.
             date: 2026-08-28
             
+  - group: SDC Capital Partners LLC
+    note: >-
+      US company SDC Capital Partners (CRD #291389, SEC #801-115188) owns 
+      multiple relevant development vehicles in the UK. 'SDC' originally 
+      stood for Sentinel Data Centers. 
+    members:
+      - name: Slough Holdings UK Limited
+        relation: spv_of
+        status: confirmed
+        company_number: "16140892"
+        evidence:
+          - source: companies_house
+            ref: "16140892"
+            note: >-
+              (LH) PSC Aaron Todd is the founder of SDC Capital Partners, and
+              Victoria Anne Seskin is from SDC via Data Hills Holdings (another SDC vehicle). See 
+              https://find-and-update.company-information.service.gov.uk/officers/BP8AmvLo_HaDsach6fRETBKpC0U/appointments
+              https://find-and-update.company-information.service.gov.uk/officers/zixSaxjFufVDMnhKQtkQ3Va9ahw/appointments
+              https://sdccapitalpartners.com/team/todd-aaron/
+            date: 2026-08-30
+      - name: SDC Capital Partners Limited
+        relation: subsidiary_of
+        status: confirmed
+        company_number: "14850015"
+        evidence:
+          - source: companies_house
+            ref: "14850015"
+            note: >-
+              (LH) PSC Aaron Todd is the founder of SDC Capital Partners. See 
+              https://find-and-update.company-information.service.gov.uk/officers/BP8AmvLo_HaDsach6fRETBKpC0U/appointments
+              https://sdccapitalpartners.com/team/todd-aaron/
+            date: 2026-08-30
