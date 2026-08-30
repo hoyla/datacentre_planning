@@ -292,6 +292,15 @@ SELECT p.external_ref, p.title, p.stage_summary, p.dev_type,
 FROM projects p
 WHERE NOT EXISTS (SELECT 1 FROM project_applications pa
                   WHERE pa.project_id = p.id)
+  -- A pre-planning row is a Barbour project the planning system has
+  -- not caught up with. A project that clustered into a site is not
+  -- that: it is already on the page, inside the site it belongs to.
+  -- Without this clause it was rendered twice — VIRTUS LONDON 7 and
+  -- LONDON 8 stood as their own rows beside the Stockley Park campus
+  -- that holds them, and the header's site count added them again
+  -- (Luke, 2026-08-30). 47 projects were in both places.
+  AND NOT EXISTS (SELECT 1 FROM site_members sm
+                  WHERE sm.project_id = p.id AND sm.retired_at IS NULL)
 ORDER BY p.external_ref
 """
 
