@@ -51,7 +51,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # every refusal a real breach: a figure with no quote ("1 generator",
 # "250MW"), a quote copied from memory rather than the page, "plans to".
 # 1.2 tells the model each of those in the words the gate uses.
-PROMPT_VERSION = "reading-1.2"
+PROMPT_VERSION = "reading-1.3"
 
 # The gate has a version of its own, in the table's key, because it is
 # a judgement too. gate-1.0 refused Watford for a dropped comma and
@@ -406,9 +406,12 @@ discarded — the whole reading, for this site, not the sentence.
   from a structured fact above — never from memory of the document,
   never tidied. The same characters, the same line of figures. Copy
   from the passage in front of you and check it is there. Cite the
-  document id and page for a page quote; cite the application reference
-  for a structured-fact quote. A quote that is not on the page it cites
-  discards the reading.
+  document id and page for a page quote. An adjudicated power figure
+  above is printed with the document and page it was read from: quote
+  it and you cite those, exactly as you would a page quote. Cite the
+  application reference alone only for a fact that has no document —
+  an application's description, its status, its dates. A quote that is
+  not on the page it cites discards the reading.
 - Describe this site only. Do not compare it with any other site, do
   not rank it, do not say it is large or small for its kind, do not
   refer to "other sites" or "most data centres".
@@ -913,11 +916,89 @@ def load_latest(conn, *, live_only: bool = True
     return passed, withheld
 
 
+FIGURE_SOURCES_SQL = """
+WITH adj AS (
+  SELECT DISTINCT ON (finding_id) finding_id, verdict, application_id
+  FROM power_adjudication
+  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC)
+SELECT s.site_key, f.evidence_text, f.document_id, f.evidence_page
+FROM adj
+JOIN findings f ON f.id = adj.finding_id
+JOIN site_members sm ON sm.application_id = adj.application_id
+     AND sm.retired_at IS NULL
+JOIN sites s ON s.id = sm.site_id
+WHERE s.retired_at IS NULL AND adj.verdict = 'site_capacity'
+  AND f.document_id IS NOT NULL AND f.evidence_text IS NOT NULL
+"""
+
+
+def figure_sources(conn) -> dict[str, dict[str, tuple[int, int | None]]]:
+    """site_key -> normalised figure quote -> (document_id, page).
+
+    The prompt tells the model to cite the application reference, not a
+    document, for a quote it copied from the structured facts — and the
+    gate verifies those against `panel_quotes` and stops, so nothing
+    ever puts a document back. The reader then renders 212 of the
+    corpus's 11,244 quotes as unlinked text, concentrated on the sites
+    whose evidence is richest in adjudicated figures: 23 of South
+    Mimms's 33.
+
+    The document is not inferred from the words. An adjudicated figure
+    *is* a finding, the quote *is* that finding's `evidence_text`, and
+    the finding already carries the document it was read from — so this
+    identifies which figure the model copied and follows provenance
+    that was established when the finding was gated. The same exact
+    normalised equality the gate used to verify the quote is the test
+    used here.
+
+    **A quote whose text is the evidence of findings on more than one
+    document is dropped, not guessed.** Sixteen are, and picking either
+    document would assert a source over an equally good one — the
+    failure principle 7 exists to prevent. They keep the citation they
+    have.
+    """
+    by_site: dict[str, dict[str, set[tuple[int, int | None]]]] = {}
+    with conn.cursor() as cur:
+        cur.execute(FIGURE_SOURCES_SQL)
+        for site_key, ev, doc_id, page in cur.fetchall():
+            key = " ".join((ev or "").split())
+            if key:
+                by_site.setdefault(site_key, {}).setdefault(key, set()).add(
+                    (int(doc_id), page))
+    out: dict[str, dict[str, tuple[int, int | None]]] = {}
+    for site_key, quotes in by_site.items():
+        resolved = {}
+        for quote, hits in quotes.items():
+            if len({d for d, _ in hits}) == 1:
+                resolved[quote] = sorted(hits, key=lambda h: (h[1] is None, h[1]))[0]
+        out[site_key] = resolved
+    return out
+
+
 CITED_DOCS_SQL = """
 SELECT d.id, d.url, coalesce(d.kind, ''), a.application_ref
 FROM documents d JOIN applications a ON a.id = d.application_id
 WHERE d.id = ANY(%s)
 """
+
+
+def cited_documents_by_id(conn, ids) -> dict[int, dict]:
+    """The same shape as `cited_documents`, for documents named by id.
+
+    A quote resolved through `figure_sources` points at a document no
+    reading cited by id, so it is absent from `cited_documents` and the
+    panel would fall back to unlinked text having just found the link.
+    """
+    ids = sorted({int(i) for i in ids})
+    if not ids:
+        return {}
+    out: dict[int, dict] = {}
+    with conn.cursor() as cur:
+        cur.execute(CITED_DOCS_SQL, (ids,))
+        for doc_id, url, kind, ref in cur.fetchall():
+            out[doc_id] = {"url": url or "", "title": document_title(url, kind),
+                           "application_ref": ref}
+    return out
 
 
 def document_title(url: str, kind: str) -> str:
