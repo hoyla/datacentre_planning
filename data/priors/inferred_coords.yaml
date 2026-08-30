@@ -203,6 +203,25 @@ entries:
       scheme (EN0110030: 51.58726008957555, -0.5945505216141749).
       2026-08-25.
 
+  - ptno: "12240972"
+    lat: 51.7693
+    lon: 0.130503
+    source: |
+      Barbour's pin for Project Nobel (51.770467, 0.099148) sits 2.1 km
+      west of the campus its own linked application describes:
+      Harlow/HW/PL/16/00243, "South Redevelopment Site Harlow Campus
+      London Road Harlow" — the Kao Data campus at CM17 9NA. The
+      distance kept Project Nobel apart from the site holding the same
+      scheme's LDO family (KAO DATA CAMPUS - KLON-03, Ptno 12839274),
+      whose member applications for the identical address carry portal
+      coordinates at (51.7693, 0.130503) — the value adopted here — and
+      whose pin the EA permit for "KAO Data Harlow Campus, London Road,
+      CM17 9NA" matched to within 80 m (EPR/WE4588AB). Kao's own page
+      (kaodata.com/locations/harlow/, snapshot 2026-08-30) rosters
+      KLON-01 to KLON-04 as one campus. Correcting the pin merges the
+      two sites; the key stays PTNO-12240972 (lowest Ptno). Luke's
+      merge instruction, operator pages review T2-08, 2026-08-30.
+
   # Hayes/Southall corridor out-of-borough consultations (4 refs).
   # Ealing's consultation copies of Hillingdon schemes carry no
   # coordinates in PlanIt, so each sat as its own unlocatable
