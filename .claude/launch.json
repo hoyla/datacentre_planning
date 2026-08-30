@@ -9,7 +9,7 @@
         "http.server",
         "8791",
         "--directory",
-        "data/exports/phase2.2_build"
+        "data/exports/phase2.10_build"
       ],
       "port": 8791
     },
