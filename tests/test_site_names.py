@@ -17,7 +17,7 @@ from dcp.proposal import title_case
 
 def test_a_shouting_name_comes_back_in_title_case():
     assert (title_case("SAUNDERTON DATA CENTRE - 4 VIRTUS DATA CENTRES")
-            == "Saunderton Data Centre - 4 Virtus Data Centres")
+            == "Saunderton Data Centre - 4 VIRTUS Data Centres")
 
 
 def test_a_name_the_register_already_cased_is_untouched():
@@ -40,8 +40,22 @@ def test_tokens_carrying_a_digit_are_left_alone():
 
 
 def test_initialisms_stay_initialisms():
-    assert title_case("VIRTUS DC LONDON") == "Virtus DC London"
+    assert title_case("SAUNDERTON DC LONDON") == "Saunderton DC London"
     assert title_case("PHASE II - EIA SCREENING") == "Phase II - EIA Screening"
+
+
+def test_a_brand_keeps_the_capitals_it_writes_itself():
+    """VIRTUS is not shouting, it is the operator's own spelling.
+
+    The example here used to be the other way round — "VIRTUS DC LONDON"
+    became "Virtus DC London", with VIRTUS standing as the shouted word
+    against DC as the initialism. That was an assumption about a name
+    rather than a fact about it: the operator's site and this corpus's
+    own group label both write VIRTUS (Luke, 2026-08-30).
+    """
+    assert title_case("VIRTUS DC LONDON") == "VIRTUS DC London"
+    assert (title_case("VIRTUS DATA CENTRES - LONDON 5 DATA CENTRE")
+            == "VIRTUS Data Centres - London 5 Data Centre")
 
 
 def test_small_words_lower_case_except_first():
