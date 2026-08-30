@@ -1700,6 +1700,11 @@ under the `freshness-check` tag so it can never occupy a real
 reading's key. Where it runs in the release chain is still the
 ROADMAP's question.
 
+**The sort glyph no longer breaks onto its own line**: `th:after`'s
+content now opens with a non-breaking space, binding ↕ to the
+heading's last word — the remedy the ROADMAP item proposed, verified
+in the CSS 2026-08-30.
+
 **`drive_sync` concurrency** (2026-08-29): the `--workers` flag
 existed all along, defaulting to 1; the default is now 12, after a
 58,799-file sync spent 9h16m reaching 54% because nobody passed the
