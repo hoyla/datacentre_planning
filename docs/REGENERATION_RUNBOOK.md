@@ -459,6 +459,18 @@ scripts/drive_sync.py --sync data/exports/drive_staging --prune --dry-run
 scripts/drive_sync.py --sync data/exports/drive_staging --prune
 ```
 
+**Nothing reconciles tree against ledger against Drive at the end of a
+sync, and that is deliberate** (moved here from the ROADMAP
+2026-08-30; the fix this qualifies shipped 2026-08-26 — HISTORY, "The
+corrections that landed between 2.9 and 2.10"). On 08-21 all three
+agreed while 3,679 documents were missing, so such a check would have
+passed; the guard sits between the *universe* and the staging tree,
+which is the only place this class of failure is visible. Expect the
+guards' first run after corpus movement to fail — that is the guards
+working, not crying wolf. `data/exports/drive_staging.pre-clean` is
+the primary evidence of the original episode and stays until a full
+guarded sync has been observed clean.
+
 **`--workers` now defaults to 12.** It used to default to 1, and on
 2026-08-29 that ran a 58,799-file sync for **9h16m to reach 54%** before
 anyone noticed — the flag existed, its own help said 8-16 was safe, and

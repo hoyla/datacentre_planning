@@ -586,17 +586,6 @@ work.
   (idempotent, free on no change) so a fourth direction is noticed the
   week it publishes rather than the day a story runs.
 
-- **What the Drive-archive fix leaves open** (the fix itself shipped
-  2026-08-26; HISTORY, "The corrections that landed between 2.9 and
-  2.10"). Nothing reconciles tree against ledger against Drive at the
-  end of a sync — a deliberate omission rather than an oversight,
-  because on 08-21 all three agreed and such a check would have
-  passed; the guard sits between the *universe* and the tree, which is
-  the only place this class of failure is visible. The first real run
-  of the new guards will fail until the corpus stops moving, which is
-  the guards working, not crying wolf.
-  `data/exports/drive_staging.pre-clean` is the primary evidence and
-  stays until this closes.
 ## Phase 3 — the second opinion
 
 - **Re-extract what the local model read.** The label audit
