@@ -1700,6 +1700,15 @@ under the `freshness-check` tag so it can never occupy a real
 reading's key. Where it runs in the release chain is still the
 ROADMAP's question.
 
+**The alias groups outgrew their checkpoint** (verified 2026-08-30).
+The ROADMAP had held "confirming the rest of the alias groups" at its
+2.4-era snapshot — eight of ten seeded members confirmed, one
+proposed. `organisation_aliases.yaml` now holds 12 groups with 31
+confirmed members and 2 proposed, Luke confirming as the work finds
+them (the Greystoke SPV group landed 2026-08-30 from the operator
+pages review). The residual curation is standing procedure, the same
+class as site aliases.
+
 **`drive_sync` concurrency** (2026-08-29): the `--workers` flag
 existed all along, defaulting to 1; the default is now 12, after a
 58,799-file sync spent 9h16m reaching 54% because nobody passed the
