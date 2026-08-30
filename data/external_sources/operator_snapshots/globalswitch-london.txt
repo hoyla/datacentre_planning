@@ -1,8 +1,8 @@
 # url: https://www.globalswitch.com/data-centres/london/
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): 67d0c7a61016df693489bc31358091f759acf9f48c9b076023a980c7dc5c89e2
+# sha256(html): 3d0c240dc0998544c92a5126dfeb8fcf242d0715fc9f31bdb15539a1ee027450
 
 ## STRUCTURED
 

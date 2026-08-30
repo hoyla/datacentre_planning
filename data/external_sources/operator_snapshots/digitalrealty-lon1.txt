@@ -1,8 +1,8 @@
 # url: https://www.digitalrealty.com/data-centers/emea/london/lon1
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 83252971583c0d38650a7b781403817f88af7e9d676f8621b5b488a2fcecc9d2
+# sha256(html): 3295e3b1d5b4768ecf228596ff72f30b5e0d3b8de74413e3aac0b1ca7ad17b2b
 
 ## STRUCTURED
 
@@ -17,5 +17,5 @@ LON1 Hanbury Street is situated as part of our highly connected London City Camp
  Compliance We’re globally certified by the industry’s most trusted organizations. 
  SOC2 ISO 9001 ISO 22301 ISO 27001 PCI-DSS ISO 14001 Sustainability Elevating efficiency, reducing waste, and building responsibly. 
  Certifications BREEAM Renewable Energy % 100 % You’ve got a direct line to our experts. Let’s talk.
- Related resources View all Webinars Enterprise Webinars Americas From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Related resources View all White Papers Healthcare High-Density Colocation Pharmaceutical White Papers High-Density Colocation Manufacturing AI/ML From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
  Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers

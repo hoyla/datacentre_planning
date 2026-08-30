@@ -1,8 +1,8 @@
 # url: https://cyrusone.com/data-centers/emea/london-uk-lon2
 
-# fetched: 2026-08-28
+# fetched: 2026-08-30
 
-# sha256(html): f1d11a56d849cffcaeb0b503400b0cadee4ae06ebe8f696e2a8d481c85e962e9
+# sha256(html): 838e26d61d5ea5b11d8452437ea2e83581843925866a5e77002650dbe8c3d52f
 
 ## STRUCTURED
 
@@ -598,7 +598,7 @@ London, UK: LON2 | CyrusOne
  
  
  
- Durham, NC, DUR1 
+ Durham, NC, DUR1-DUR2 
  
  
  

@@ -1,8 +1,8 @@
 # url: https://cyrusone.com/data-centers/emea/london-uk-lon6
 
-# fetched: 2026-08-28
+# fetched: 2026-08-30
 
-# sha256(html): 8a63e8fb5120d933157dd05251ff38a2b41a323a31c6c202b44ef9848df2d6be
+# sha256(html): ad147b75fd9f2be4c33e84005d8036a290d3074e0be2e5ec89d64f4519b54e6a
 
 ## STRUCTURED
 
@@ -598,7 +598,7 @@ Data Center -- London, UK: LON6
  
  
  
- Durham, NC, DUR1 
+ Durham, NC, DUR1-DUR2 
  
  
  

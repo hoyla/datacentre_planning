@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-reading-south-datacentre
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): b4a745aabbfa93cc57bf8545687e17043761f755aad21a537c4de7e6dd062036
+# sha256(html): 48670c08406022addaadbea351e487c78df3552109f96ced4c503b247d9316d8
 
 ## STRUCTURED
 

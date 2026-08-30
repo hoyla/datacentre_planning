@@ -1,8 +1,8 @@
 # url: https://kaodata.com/locations/slough/
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): db73e2f9af5b1ea61c3961179ea231f4780831646093ce72785765bcbc6578bf
+# sha256(html): 4376a61879f40496102e6cb6eb072cc930170557b8aad52471ac20b8c100f291
 
 ## STRUCTURED
 
@@ -11,6 +11,8 @@
 ## VISIBLE TEXT
 
 Slough – Kao Data Website 
+ 
+ 
  
  
  

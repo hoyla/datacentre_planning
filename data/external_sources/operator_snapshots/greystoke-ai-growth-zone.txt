@@ -1,8 +1,8 @@
 # url: https://greystoke.co.uk/ai-growth-zone
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): ecf81918d3672b9f52f792f1cdce75bcae48c5e1ca7292d093f64aed6ea5463a
+# sha256(html): f56c082b49069f913b51f93a55686d56c2dc52affd1fb21795b1fcef25d10fe4
 
 ## STRUCTURED
 

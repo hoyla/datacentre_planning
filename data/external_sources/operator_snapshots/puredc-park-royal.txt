@@ -1,8 +1,8 @@
 # url: https://puredc.com/our-london-park-royal-site
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): 5c0a1da900eae3cc19188c5e6019642853a1163890106da959fc8fafe80e840f
+# sha256(html): c78ab104ce2ecf9ff97c832ae27eddb15ce2f46f71bc032267a0b987efdfa7b7
 
 ## STRUCTURED
 

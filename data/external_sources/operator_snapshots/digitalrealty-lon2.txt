@@ -1,8 +1,8 @@
 # url: https://www.digitalrealty.com/data-centers/emea/london/lon2
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): e17521a41eeca554e0eb0a36948faa579454a1178e2fe0402a26b3557d984819
+# sha256(html): 6639e2e44a5567f4a4f362b429aafa79ec7c6c2eb7c76517bb2c50372e7e6e52
 
 ## STRUCTURED
 
@@ -19,5 +19,5 @@ LON2 LON2, part of Hanbury Street Data Center, is situated in the financial and 
  SOC2 PCI-DSS ISO 9001 ISO 27001 ISO 22301 ISO 14001 Sustainability Eco-efficient solutions for tomorrow’s data needs. 
  Certifications BREEAM Renewable Energy % 100 % Security & Infrastructure Layered security measures for ultimate infrastructure protection. 
  24/ 7 onsite security 24/ 7 CCTV inside and out, 90 days recording Anti-tailgate system Card readers Motion detection You’ve got a direct line to our experts. Let’s talk.
- Related resources View all Webinars Enterprise Blog Enterprise From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Related resources View all Webinars Enterprise Tech Talk AI/ML Webinars Enterprise AI/ML Americas From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
  Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers

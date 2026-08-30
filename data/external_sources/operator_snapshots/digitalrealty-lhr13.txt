@@ -1,8 +1,8 @@
 # url: https://www.digitalrealty.com/data-centers/emea/london/lhr13
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 60beeb353b0c65eb791c57c245d0b1dae1547acc633f9d117ff691bf9d912053
+# sha256(html): 8ac34531e060e960787b1a50ae1d243ab454c186ee0e94e82177a467b2686adf
 
 ## STRUCTURED
 
@@ -18,5 +18,5 @@ LHR13 Our 6 interconnected campuses in London comprise the largest data center r
  SOC1 SOC2 SOC3 PCI-DSS ISO 9001 ISO 14001 ISO 27001 ISO 50001 Sustainability Leading the industry in energy efficiency and sustainable performance. 
  Renewable Energy % 100 % Security & Infrastructure Our comprehensive security features keep your critical IT infrastructure safe. 
  Biometric/ Photo badge access External and internal CCTV You’ve got a direct line to our experts. Let’s talk.
- Related resources View all Webinars Enterprise Webinars Americas From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Related resources View all White Papers Healthcare High-Density Colocation Pharmaceutical White Papers High-Density Colocation Manufacturing AI/ML From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
  Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers

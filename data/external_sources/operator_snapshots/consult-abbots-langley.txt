@@ -1,0 +1,218 @@
+# url: https://www.abbotslangleydatacentre.co.uk/
+
+# fetched: 2026-08-30
+
+# sha256(html): b714fe49183b45e178ba6f569a8693929f4b8c1540e49dfd37b999c2330e45fa
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org/",
+ "@type": "WebSite",
+ "name": "Abbots Langley DC",
+ "url": "https://www.abbotslangleydatacentre.co.uk"
+}
+
+## VISIBLE TEXT
+
+-->
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Abbots Langley Data Centre | Technology 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+
+ top of page Abbots Langley Data Centre Boosting the UK economy Supporting Britain’s digital leadership Bringing Three Benefits to Three Rivers: 
+ 
+Employment, Education, and Ecology Three Benefits for Three Rivers Abbots Langley Data Centre is a proposed data centre located adjacent to the M25 motorway in Abbots Langley, Hertfordshire. The greenbelt site slopes down to the motorway and contains a scrapyard on part of the property. 
+
+ ​ 
+
+ The proposal would unlock £1 billion of foreign direct investment. It would bring hundreds of well-paid local jobs, a new country park and £12 million to use for the education and training of local people. 
+
+ ​ 
+
+ Abbots Langley Data Centre will help safeguard Britain’s economic future, and maintain our digital leadership among the world’s economies. 
+
+ ​ Learn more about the Three Benefits for Three Rivers Employment Up to 260 operational jobs will be created at the data centre with average salaries of £46,000 to £54,000. The data centre will also support thousands of jobs across the country by storing and processing data for businesses. Education £12 million will be set aside for the education and training of local people, helping them build skills for jobs at the data centre and in related industries. An education and training centre will be on site. Ecology A new landscaped country park will be created, the size of 25 football pitches. Fully accessible to everyone and their dogs, it will be on land which is currently private. Biodiversity will more than double. CGI fly-through video 
+ 
+ 
+ 
+ 
+ Planning statement 
+ 
+ 
+ 
+ 
+ Plan of the 
+site ​ 
+ 
+ 
+ 
+ 
+ Economic benefits report 
+ 
+ 
+ 
+ 
+ Design and 
+access statement 
+ 
+ 
+ 
+ 
+ Up 
+ 
+ 
+ 
+ 
+ 
+ Greystoke ©2023 bottom of page

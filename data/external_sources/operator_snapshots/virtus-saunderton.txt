@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/saunderton-campus
 
-# fetched: 2026-08-28
+# fetched: 2026-08-30
 
-# sha256(html): 4092bdbb9f9e9b0db0d23ed197ff72012d48af4c0b8b6a231abc2806c3469591
+# sha256(html): 28f0a912fc4b0c4ac9e88089d7f5649b0b5614cfb6e82ed324a210e1d2369f6f
 
 ## STRUCTURED
 

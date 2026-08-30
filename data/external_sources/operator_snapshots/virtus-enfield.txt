@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/enfield-campus
 
-# fetched: 2026-08-28
+# fetched: 2026-08-30
 
-# sha256(html): 7ea44747bb3874f1c8bd7e302789d1de7ca750cd83035787b4c03b5bbdf06a75
+# sha256(html): c0f2d83eb126a6df1c1b2d89dffe6b8e426195cd112c66446e5b4c7286bea219
 
 ## STRUCTURED
 

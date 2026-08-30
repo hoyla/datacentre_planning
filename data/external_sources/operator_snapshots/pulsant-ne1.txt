@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-newcastle-central-datacentre
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 7878cf0c31cf89bc90bfa4354828a789efffb240471899bcd075ee73eec5fcb7
+# sha256(html): e73543d893202e28af2ca6c94cc8c87d35e906663c15036fe1972421abdc3db4
 
 ## STRUCTURED
 

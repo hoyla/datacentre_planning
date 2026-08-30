@@ -169,6 +169,37 @@ PAGES: dict[str, list[tuple[str, str]]] = {
         ("digitalrealty-lon2", "https://www.digitalrealty.com/data-centers/emea/london/lon2"),
         ("digitalrealty-lon3", "https://www.digitalrealty.com/data-centers/emea/london/lon3"),
     ],
+    # The public-consultation half of the pairs in
+    # data/priors/operator_pages.yaml (issue #255). These are campaign
+    # sites: they usually die when the process closes, and the audiences
+    # finding asserts their *silence* on power — a negative result that
+    # can only rest on a held snapshot showing the probe could have seen
+    # the figure. First fetched 2026-08-30, the day of the review that
+    # verified them.
+    "consultation": [
+        ("consult-elsham-tech-park", "https://www.elshamtechpark.com/"),
+        ("consult-cato-auchtertool", "https://cato.ili-energy.com/"),
+        ("consult-east-havering", "https://www.easthaveringdatacentrecampus.com/"),
+        ("consult-apatura-ravenscraig", "https://consult.apatura.energy/ravenscraig/the-project"),
+        ("consult-apatura-freeport", "https://consult.apatura.energy/freeport"),
+        ("consult-west-london-tech-park", "https://www.westlondontechpark.com/"),
+        ("consult-iver-heath-data-park", "https://iverheathdatapark.com/"),
+        ("consult-abbots-langley", "https://www.abbotslangleydatacentre.co.uk/"),
+        ("consult-humber-tech-park", "https://www.humbertechpark.com/"),
+    ],
+    # Corporate and scheme pages verified on the same review that were
+    # not yet in this survey.
+    "scheme": [
+        ("questpark-home-of-production", "https://questpark.co.uk/"),
+        ("digital-reef-projects", "https://www.digital-reef.io/digital-reef-projects"),
+        ("qts-cambois", "https://q.com/data-centers/cambois/"),
+    ],
+    # The scheme's own architect stating 600MW for Cato (review sheet
+    # T1-02) — neither operator nor consultation, held for the claims
+    # channel.
+    "architect": [
+        ("graemenicholls-cato", "https://graemenicholls.com/cato-data-centre"),
+    ],
 }
 
 

@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/slough-london10
 
-# fetched: 2026-08-28
+# fetched: 2026-08-30
 
-# sha256(html): cd9aa49200c16636532b7cd2b58c87006a59e2c919346b96004e5d1020b19cab
+# sha256(html): f585b2fd933aed902c51f7cea0b744b4eaec1f03fee0c8bc3dd00e19b4299a26
 
 ## STRUCTURED
 

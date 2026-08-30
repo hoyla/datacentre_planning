@@ -1,8 +1,8 @@
 # url: https://www.digitalrealty.com/data-centers/emea/london/lhr26
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): ce53b901ece064ba2b051287eac3a1dd5cb68fb282d5b9df4912f5f1785a497e
+# sha256(html): ebd314d698f19a43713ee2208676f063b9a444f15bff37df4eb0ae84415a66c6
 
 ## STRUCTURED
 
@@ -17,5 +17,5 @@ LHR26 Nestled in the Slough Trading Estate just 15 minutes from London Heathrow,
  Sustainability Harnessing the power of data to deliver sustainable performance. 
  Renewable Energy % 100 % Carbon-Free Energy % 100 % Security & Infrastructure We protect every detail of your data. 
  24x7 onsite security personnel Biometric / Card access CCTV with 90 day backup You’ve got a direct line to our experts. Let’s talk.
- Related resources View all Blog EMEA Blog EMEA From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Related resources View all Blog EMEA Connectivity Data Blog EMEA Sustainability Financial services From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
  Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers

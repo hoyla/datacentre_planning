@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-maidenhead-datacentre
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 69f49a053fc5e83716257a40bf41ec48b04be970679f33074f2dfa90d73c5758
+# sha256(html): c18b60a939706cf31470d00e98d31d5f6d0b6db95e8e2de2aae5d207598515c4
 
 ## STRUCTURED
 
