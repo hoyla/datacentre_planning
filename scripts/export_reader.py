@@ -3955,7 +3955,7 @@ def main() -> int:
        in the subheading, while the Site details box below labels the
        same value (issue #153). Lower-cased to sit inside the sentence
        the label starts. -->
-  <p class="siteident">{esc(", ".join(councils or []))}{" · " if addr else ""}{esc(trim(addr, 90))}
+  <p class="siteident">{esc(", ".join(councils or []))}{" · " if addr else ""}{esc(addr)}
    · <code>{esc(key)}</code> · Record built from {esc(SITE_ORIGIN.get(cls, (cls, ""))[0][:1].lower() + SITE_ORIGIN.get(cls, (cls, ""))[0][1:])}</p>
   <p class="sitestate">{state_html}</p>
   <p class="sitelinks">{site_links}</p>
@@ -4167,7 +4167,7 @@ def main() -> int:
    '' if _pcls.is_datacentre else
    f'<span class="classbadge" title="{esc(_pcls.display_description)}">'
    f'{esc(_pcls.label)}</span>'}{esc(_shown(key, title))}</h2>
-  <p class="siteident">{esc(authority or '')}{" · " if address else ""}{esc(trim(address, 90))}
+  <p class="siteident">{esc(authority or '')}{" · " if address else ""}{esc(address)}
    · <code>{esc(key)}</code> · Barbour ABI project, no application yet</p>{
    f'<p class="siteident">Barbour ABI titles this project '
    f'&#8220;{esc(derived_title)}&#8221;; the name above is a reporter&#8217;s.</p>'
