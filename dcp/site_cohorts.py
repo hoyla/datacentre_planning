@@ -159,7 +159,11 @@ WITH adj AS (
   SELECT DISTINCT ON (finding_id) finding_id, verdict, quantity_type,
          value_mw, application_id
   FROM power_adjudication
-  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC)
+  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC),
+gen_adj AS (
+  SELECT DISTINCT ON (finding_id) finding_id, figure_basis, plant_type
+  FROM generation_adjudication
+  ORDER BY finding_id, inserted_at DESC, id DESC)
 SELECT s.site_key,
        max(adj.value_mw) FILTER (WHERE adj.quantity_type = 'it_load')
            AS it_load_mw,
@@ -167,9 +171,19 @@ SELECT s.site_key,
            AS total_site_mw,
        max(adj.value_mw) FILTER (WHERE adj.quantity_type = 'grid_connection')
            AS grid_mw,
-       max(adj.value_mw) FILTER (WHERE adj.quantity_type = 'onsite_generation')
+       -- Standby-shaped plant only, matching export_handover's app_power:
+       -- the generation rung's premise is that standby plant is sized to
+       -- the load, and plant adjudicated prime_combustion, renewable or
+       -- storage runs for export (or is not generation at all) and says
+       -- nothing about the site's own demand. Mixed and unclear keep
+       -- today's behaviour — exclusion needs a positive adjudication.
+       max(adj.value_mw) FILTER (WHERE adj.quantity_type = 'onsite_generation'
+           AND coalesce(g.figure_basis, '') <> 'not_generation'
+           AND coalesce(g.plant_type, '') NOT IN
+               ('prime_combustion', 'renewable', 'storage'))
            AS generation_mw
 FROM adj
+LEFT JOIN gen_adj g ON g.finding_id = adj.finding_id
 JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id

@@ -391,7 +391,10 @@ def power_estimate(*, it_load_mw=None, total_site_mw=None,
             float(generation_mw), "Standby generation capacity", "Low",
             "Inferred from on-site standby generation, which is normally "
             "sized to carry full load and so approximates it — but it is "
-            "backup plant, not a demand figure, and some sites over-provide.")
+            "backup plant, not a demand figure, and some sites over-provide. "
+            "Plant adjudicated as intended to run, renewable or storage is "
+            "not counted here: it generates for export and says nothing "
+            "about this site's own demand.")
 
     if floorspace_sqm and floorspace_sqm >= 500:
         est = _round_sensibly(floorspace_sqm * FLOOR_AREA_KW_PER_SQM / 1000)
