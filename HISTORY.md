@@ -1705,6 +1705,42 @@ existed all along, defaulting to 1; the default is now 12, after a
 58,799-file sync spent 9h16m reaching 54% because nobody passed the
 flag. Batching and an atomic ledger write remain open.
 
+## The relist audit measured the shortfall, and the refetch recovered the class that mattered (2026-08-26)
+
+Historical partial fetches were invisible: a short fetch was recorded
+as complete, and the manifests record what was stored, not what was
+offered. `scripts/relist_audit.py` settled it by re-listing and
+comparing, landing in `document_listing_audit` (migration 026,
+append-only, idempotent on the listing's content hash), in three
+passes cheapest first — snapshot HTML already held (1,166
+applications at no portal cost), harvested Salesforce listings (64),
+then live re-lists through the project's own adapters.
+
+**As measured: 1,554 of 1,696 document-holding applications, and
+2,260 URLs the registers offered that the corpus did not hold** —
+never "2,260 documents missing": the refetch proved 62% of a 3,083-URL
+sample byte-identical to documents already held under different URLs
+(Buckinghamshire PL/24/0754/OA downloaded 170 and created no rows).
+**1,380 of the 2,260 were then fetched (61%), and 249 of the 291
+reports and statements (86%)** — the class where power disclosures
+live. Northumberland Energy Park recovered 176 of 177 absent
+documents, 161 of them reports and statements. 229 per-document
+failures each carry a reason; Greater Cambridge's blanket 403 on file
+downloads (158) and Tower Hamlets' persistent 504s on two energy
+strategy reports are the genuine portal refusals. What was
+deliberately deferred — Union Park's 157, Gilmorehill's 491 — stays on
+the ROADMAP with the resume commands.
+
+## v2.10 (2026-08-29/30)
+
+Rebuilt in place across the 29th and 30th — Drive and the Google
+Sheet brought current on the 30th, artefacts in
+`data/exports/phase2.10_build/`, with `phase2.10_prior` kept as the
+release-diff baseline — and released (Luke, 2026-08-30). The corpus
+work of 2026-08-30 (the operator pages day, the adjacent-power chain,
+the Kao merge — below) landed after the build and renders at the next
+one, which builds on 2.10 as its base.
+
 ## The operator pages day (2026-08-30)
 
 Issue #255 — "link the operator's web page" — turned into the largest

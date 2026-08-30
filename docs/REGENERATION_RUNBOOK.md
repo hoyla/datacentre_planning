@@ -765,6 +765,40 @@ scripts/export_pinpoint_bundle.py \
     --already-uploaded data/exports/pinpoint_bundle/_manifest.csv --jobs 12
 ```
 
+**What the Pinpoint/Giant bundle contains, and why — the standing
+policy** (moved here from the ROADMAP 2026-08-30; the decisions are
+Luke's, 2026-08-28). Both tools take the same input, and it is **not**
+the Drive `sites` folder: it is the derivative bundle from
+`export_pinpoint_bundle.py`. Pinpoint has no folders — the namespace
+is flat and zipped uploads are unsupported — so structure is discarded
+by design and each filename carries `<site> — <application> — ` in
+front of it. The bundle is a reduction, 130.6GB in 50,615 files down
+to ~64GB in 42,647, under Pinpoint's 100GB-per-user quota:
+
+- **Drawings are dropped deliberately — for Giant too** (5,536 files,
+  9.5GB). Not a contradiction with `extract_text_corpus.py`, which
+  extracts every drawing because plant layouts carry specifications
+  prose never states: the two tools want different things. Giant's
+  value is a hit *in context* with somewhere meaningful to jump to,
+  and OCR of a plan yields scattered label fragments supporting
+  neither. Extraction wants every scrap; full-text search wants
+  documents that read. The drawing content is not lost — the deep
+  read reads it and its findings surface on the site page. Giant has
+  no quota and takes the reduced bundle anyway, for consistency: two
+  search tools answering one query differently, with nothing on
+  either page to explain why, would be worse. This means the drawings
+  question is **one decision governing both** and must be revisited
+  for both together or not at all.
+- **Exact duplicates are removed by content hash** (2,432 files), and
+  **types are sniffed rather than trusted**, which recovered ~450
+  files including 237 Outlook messages of kind *Consultee Comment* —
+  tier A, the class the methodology says disclosures live in.
+- **The residual to keep in mind**: a reporter using Giant as a
+  completeness check can still infer "not in the documents" from a
+  drawing-only disclosure that never reaches it. The reader is where
+  that content lives; the two must not be presented as
+  interchangeable.
+
 **These are in the chain now** (Luke, 2026-08-29). They were "off the
 chain, optional, local", which is how the notebook came to be three
 releases stale and Pinpoint and Giant four — nobody skipped them, they

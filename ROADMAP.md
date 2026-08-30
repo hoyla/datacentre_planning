@@ -6,58 +6,34 @@ re-proposing them — is in [HISTORY.md](HISTORY.md).
 
 Current state: **501 sites** (plus 7 pre-planning; 508 rows in the
 reader), **1,978 applications** in the site universe, **60,142
-documents**. The fall from 508 sites and 2,034 applications happened on
-2026-08-30 evening and was deliberate, in two parts: the Kao Harlow
-merge (PR #268, two sites that were one campus with a misplaced pin
-between them) and the #252 chain (PRs #269 and #271 — adjacent power
-left membership for the relationship table, retiring eight sites and
-ejecting the 42 sited adjacent-power records plus their stranded
-paperwork; two procedural singletons were born as tracked warts). The
-pre-planning count fell from 21 to 7 the same day because 14 rows were
-duplicates — a Barbour project that had clustered into a site was also
-rendering beside it (PR #249). Findings and adjudication counts move
-while the corroboration pass runs and are deliberately not restated
-here — `scripts/corpus_stats.py` prints them, and each release states
-the boundary it was stamped at.
+documents** — counts as at 2026-08-30 evening; the falls that day were
+deliberate (HISTORY: the Kao merge, the adjacent-power chain, the
+pre-planning dedup). Findings and adjudication counts move while the
+corroboration pass runs and are deliberately not restated here —
+`scripts/corpus_stats.py` prints them, and each release states the
+boundary it was stamped at.
 
-**2.10 is built and half-published.** Artefacts in
-`data/exports/phase2.10_build/`; Drive and the Google Sheet were
-brought current on 2026-08-30, but `index.html` is deliberately **not**
-republished and **no Cloud Run deploy is pending**. Luke's call, and the
-reasoning is worth keeping: more changes will land before anyone looks
-(bank holiday weekend, and the team is often waiting on EIR and FOI
-replies), so one deploy carrying a statable change beats several that
-reshuffle citation formatting. `data/exports/phase2.10_prior/` is the
-2026-08-29 morning build, kept as the release-diff baseline — it is
-deliberately not named `*_build` so `release.release_dirs()` ignores it.
+**The base is 2.10, released** (HISTORY). Artefacts in
+`data/exports/phase2.10_build/`; `data/exports/phase2.10_prior/` is
+the release-diff baseline, deliberately not named `*_build` so
+`release.release_dirs()` ignores it. Everything shipped on 2026-08-30
+evening renders at the next build.
 
 **A landmine for the next release:** `mr.PROMPT_VERSION` is now
 `reading-1.3` (PR #241), and `_already()` in
-`scripts/machine_reading_openai.py` keys on it. **The next
-`--submit` re-reads all ~358 sites**, roughly 15M input tokens. Nothing
-is spent until someone runs it; the flag is not a mistake, but it should
-be a decision rather than a surprise.
+`scripts/machine_reading_openai.py` keys on it — and on `input_hash`,
+which the 2026-08-30 membership changes moved for dozens of sites.
+**The next `--submit` re-reads all ~358 sites**, roughly 15M input
+tokens. Nothing is spent until someone runs it; the flag is not a
+mistake, but it should be a decision rather than a surprise.
 
-**2.9 released** (PR #165, merged 2026-08-27 14:15; artefacts in
-`data/exports/phase2.9_build/`, reader stamped 14:45). The corpus has
-moved on considerably behind it — three site merges, 13,138 deep-read
-findings and 238 machine readings collected the same evening — so the
-next release is not a rebuild of the same corpus. Whether the Cloud
-Run deployment has been run for 2.9 is not recorded here and is not
-checkable from the repo: `cloudrun/deploy.sh` is the only thing that
-changes what readers see behind Guardian sign-in. EdgeOne is a
-signpost: PR #135 merged 2026-08-27, so it redirects and the shared
-password is retired.
-
-**Reading is complete for phase 2.1**, stamped 2026-08-11 with the
-Studio reader stopped so the boundary is clean: 37,992 of 38,005 prose
-documents read. The Phase 3 corroboration read continues on the Studio
-and is roughly 60% through its 48,191 in-scope documents. Two other numbers belong beside that one and are stated
-in the reader rather than folded into it — 4,204 documents in the
-repetitive classes are sampled out at one in five by policy, not
+**The Phase 3 corroboration read is roughly 60% through its 48,191
+in-scope documents** (the 2.1 prose read completed 2026-08-11;
+HISTORY). Two numbers belong beside coverage claims: 4,204 documents
+in the repetitive classes are sampled at one in five by policy, not
 backlog, and 231 are held but contain no words at all, confirmed blank
 by two independent OCR engines. Every capacity figure that existed at
-the boundary is adjudicated.
+the 2.1 boundary is adjudicated.
 
 ---
 
@@ -78,9 +54,9 @@ that is live now. **Read this section before touching site capacity;
 the detail and the evidence are in the issues, and the reasoning that
 produced each decision is in their comment threads.**
 
-Sequencing matters and is not arbitrary: #252 changes which figures a
-site holds, and every other issue reads that. Reviewing campuses first
-would mean reviewing them twice.
+#252 was sequenced first because it changed which figures a site
+holds; it shipped 2026-08-30, so the remaining three read a settled
+membership.
 
 ### 1. #252 — adjacent power relates to a site, it does not belong to one
 
@@ -259,35 +235,27 @@ issue, so `at_least_100mw` is not one cohort among several — it is the
 answer to the question a reader arrives with, and its definition takes
 the 100 MW line from the industry rather than from this project.
 
-**A cause we can act on: 148 capacity claims match no site.**
+**A cause we can act on: 147 capacity claims with a figure match no
+site** (re-measured 2026-08-30 evening, after the #255 review
+hand-matched most of the operator channel — Vantage Cardiff's 148 MW,
+the original headline example here, now attaches to a site that ranks
+on it):
 
 | source | claims | matched | unmatched with a figure |
 |---|---|---|---|
-| NESO EA register | 119 | 13 | 106 |
-| operator website | 66 | 27 | 36 |
+| NESO EA register | 119 | 13 | **106** |
+| operator website | 81 | 43 | 35 |
 | Companies House | 22 | 10 | 6 |
 | EA permit | 42 | 14 | 0 |
 
-Among the unmatched: Vantage Cardiff 148 MW, Global Switch London East
-87 MW, Global Switch London South 70 MW, Digital Realty LGW14 64 MW,
-Vantage London I 55 MW. Any of those, matched, could move a site across
-the line or give it a figure where it shows none.
-
-The concrete instance: VIRTUS Slough (`PTNO-12216044`) renders "No
-documents held" while VIRTUS's own published figure for LONDON10 — 6.6
-MW, from the operator's site — sits unmatched, even though the site's
-own alias asserts LONDON10 belongs to the campus on a Companies House
-charge. Likely cause is address mismatch (the campus's Barbour addresses
-are Liverpool Road and Slough Trading Estate at SL1 4QZ; the claim is 75
-Buckingham Avenue) but 148 claims will not have one cause. **Establish
-why the matcher misses them before proposing anything.**
-
-This also bears on #247: the operator channel already names facilities
-properly (`CyrusOne LON2/LON3/LON4/LON5`, `Digital Realty LGW14/15/16`)
-on a single quantity type, which is the comparability planning documents
-do not give Stockley Park. Not interchangeable — an operator's
-announcement is not a planning disclosure — but the per-facility
-comparability #247 wants may already exist, unattached.
+The NESO EA register is now the live work: 106 unmatched demand-queue
+claims, among them Global Switch London East 87 MW and London South
+70 MW. Any of those, matched, could move a site across the line or
+give it a figure where it shows none. The one diagnosed cause —
+address mismatch, as in the original VIRTUS Slough case — will not be
+the only one across 106 claims. **Establish why the matcher misses
+them before proposing anything.** The remaining operator-channel 35
+are mostly the sheet's "not yet" and keyless rows, tracked there.
 
 ### 4. #248 — a figure we assemble is not a figure a source states
 
@@ -428,79 +396,45 @@ one-at-a-time method.
   300 MW, and `max()` takes the wrong one. The same document set states
   the development requires 250 MW. One site, not a pattern, but it is
   wrong on the page.
-- **`PTNO-12831113` is the worst-contaminated campus**: 24
-  adjacent-power members, a 150 MW substation figure, three named
-  facilities (LON6, LON7, LON8), and the doubled 300 MW. It is the
-  reason #252 sequences before #247.
+- **`PTNO-12831113` (Hayes) still carries the doubled 300 MW and three
+  named facilities (LON6, LON7, LON8)** — its 24 adjacent-power
+  members and the 150 MW substation figure left with the #252 chain,
+  so what remains here is the N+N adjudication above and a campus
+  worth an early slot in the facility-roster review.
 
-## Operator pages and typed standing — what the promoters publish
+## Operator pages and typed standing — what remains
 
-Opened 2026-08-30, the same day as the capacity-model section above and
-deliberately its counterpart: that section is about what the planning
-documents say, this one about what the schemes' own websites say, and
-the decision that connects them. **Typed standing, not equal standing**
-(Luke, 2026-08-30): first-party operator statements about their own
-facilities may become a labelled rung on the declared-power ladder and
-admissible to `at_least_100mw` with the basis named; third-party
-aggregates (DC Byte, Baxtel, DCM, the registers) stay tier-and-count
-only. This is a recorded *revision* of the 2026-08-20 no-raw-MW ruling's
-scope, not a quiet contradiction — that ruling was about comparability,
-and a labelled rung is how the ladder already handles incomparability.
+The build-out shipped 2026-08-30 (HISTORY, "The operator pages day"):
+the prior and labelled reader links, the snapshots with the five
+paired consultation-site silences held, the claims fold, the alias
+fold, and the decision over it all — **typed standing, not equal
+standing**: first-party operator statements may become a labelled
+ladder rung; third-party aggregates stay tier-and-count. What is
+still to do:
 
-**Shipped.** `data/priors/operator_pages.yaml` (39 hand-verified
-site→page pairs), `dcp/operator_pages.py`, and reader links labelled by
-kind (PR #265, closes #255). The verification record is
-`data/operator_pages_review/operator_pages_review.xlsx` — Luke's hand
-pass over every page, 68 rows, and the tracker for the "not yet" rows:
-two unconfirmed identifications (nLighten Hoddesdon, Digital Realty
-LHR17/Link Park), Global Switch London South (waits for the #247
-partition), and the keyless tier-4 estate, of which the Pulsant twelve
-are the standing example of facilities that will only ever rank on the
-operator rung — legacy colocation fit-outs leave no planning
-application to hold. Site aliases from the sheet are folded into
-`site_aliases.yaml` (sheet wins on conflict, Luke's rule).
+- **Design the ladder rung and the cohort-admission rule** — whether
+  and how a first-party operator figure fills the declared-power cell
+  at a labelled weight, and whether `at_least_100mw` admits on one
+  with the basis named. The claims to design against exist, matched,
+  snapshotted and quantity-typed. Two inputs waiting inside them: the
+  Stockley wrinkle (VIRTUS puts 24 MW on LONDON5 and 32.5 on LONDON7,
+  so the 24 the table shows from LONDON7's handover document may be
+  the right number on the wrong building) and the audiences finding
+  the kind field makes countable.
+- **The review sheet stays the tracker for its "not yet" rows**
+  (`data/operator_pages_review/operator_pages_review.xlsx`): two
+  unconfirmed identifications (nLighten Hoddesdon, Digital Realty
+  LHR17/Link Park), Global Switch London South (waits for the #247
+  partition), and the keyless tier-4 estate — the Pulsant twelve being
+  the standing example of facilities that will only ever rank on the
+  operator rung, because legacy colocation fit-outs leave no planning
+  application to hold.
+- **The VIRTUS Saunderton datasheet PDF is unsnapshotted** — the
+  fetcher takes HTML only — and its per-facility figures join the
+  instrument gaps if the rung wants them.
 
-**The audiences finding, five for five.** Every site in the review
-holding both a corporate and a consultation page states MW on the
-corporate page and nothing on the consultation page (East Havering 600,
-West London Technology Park 90, Iver Heath 90, Abbots Langley 96,
-Humber 384 — Greystoke's one listing page carries three of those).
-Apatura is the counter-example that sharpens it: its consult pages
-state MW, and they are also its only web presence. Working hypothesis:
-silence appears where a developer runs *two* pages and can segment
-audiences — one page, one story; two pages, two stories. And one case
-runs the other way: Colt's page says 31 MW for London 4, *below* the
-planning documents' figures. The kind field on every prior entry exists
-so this becomes countable rather than anecdotal.
+### Actions still open from the review sheet
 
-### Next: design the ladder rung, on claims now matched and snapshotted
-
-Steps 1 and 2 of the original sequencing shipped on 2026-08-30 (PRs
-#267 and #270; HISTORY, "The operator pages day"): all 39 pages plus
-the consultation sites are snapshotted at the review's own read date —
-the five paired silences hold, zero MW mentions against the corporate
-figures — and the sheet's claims are in `capacity_claims`, every quote
-verified against a same-day snapshot, with the out-of-scope VIRTUS
-Slough facility claims deliberately unmatched pending the campus-scope
-decision. The Stockley wrinkle stands recorded on the claims: VIRTUS
-puts 24 MW on LONDON5 and 32.5 on LONDON7, so the 24 the sites table
-shows from LONDON7's handover document may be the right number on the
-wrong building.
-
-What remains is step 3, deliberately last: **design the ladder rung
-and the cohort-admission rule** — whether and how a first-party
-operator figure fills the declared-power cell at a labelled weight,
-and whether `at_least_100mw` admits on one with the basis named. The
-claims to design against now exist, matched, snapshotted and
-quantity-typed. The VIRTUS Saunderton datasheet PDF (per-facility
-figures behind the page) is unsnapshotted — the fetcher takes HTML
-only — and joins the instrument gaps if the rung wants it.
-
-### Actions harvested from the review sheet
-
-- ~~Merge KLON-03 into the Kao Harlow campus~~ — **done 2026-08-30**
-  (PR #268 and HISTORY: Project Nobel's misplaced pin corrected, one
-  site retired, key preserved, EA campus permit re-pointed).
 - **VIRTUS Slough campus scope**: VIRTUS rosters LONDON3, 4, 9, 10,
   11, 12 and 19 as its Slough campus; `PTNO-12216044` currently claims
   three of them. A `campus_scope.yaml` question, and the operator
@@ -508,24 +442,12 @@ only — and joins the instrument gaps if the rung wants it.
 - **Vantage ↔ Next Generation Data organisation alias** — Luke's
   question on sheet T3-04; `organisation_aliases.yaml` is the place.
 - **The Cato architect's site states 600 MW**
-  (graemenicholls.com/cato-data-centre, sheet T1-02) — a claims lead
+  (graemenicholls.com/cato-data-centre, snapshotted) — a claims lead
   from a source kind the claims channel does not yet name: neither
   operator nor register, but the scheme's own architect.
 - **CyrusOne LON2 (Prologis Park, West Drayton) is a separate site**
   from the VIRTUS Prologis Park campus — they share an estate, not a
   scheme (sheet T4-02). A note for whenever that site is created.
-
-### What this changed elsewhere
-
-- #250's operator-channel misses are largely dissolved — the sheet
-  hand-matched them, including the 148 MW Vantage Cardiff claim that
-  was that issue's headline example. The NESO EA register's 106
-  unmatched claims are untouched and remain #250's live work.
-- #247 gains per-facility rosters on a single quantity basis from the
-  operator channel, which is the input its campus-floor question was
-  missing — but an operator's announcement is still not a planning
-  disclosure, and the no-campus-total decision for planning figures
-  stands.
 
 ## Acquisition decisions waiting on a person
 
@@ -569,129 +491,46 @@ work.
 
 ## Phase 2 — the tail of the collecting
 
-- **The acquisition tail, remeasured 2026-08-27 and shrinking as this
-  is written.** The standing counts (108 being worked, 31
-  browser-routed) had aged badly — see "Acquisition decisions waiting
-  on a person" above for what dissolved. The day's real finding was
-  larger than any of
-  them: **159 outstanding applications were reachable with adapters
-  that already existed** and had simply never been swept — dominated by
-  the energy-adjacency blocs discovered on 2026-08-07 (Southwark 24,
-  Camden 21, Bristol, Brent…) whose fetch never ran. That sweep resumed
-  after the 2.9 boundary and was still running overnight on 2026-08-27,
-  into the S's with **42 applications left after the one in hand, 23 of
-  them Southwark**; every application writes its outcome row, so the
-  honest residue is a query on `acquisition_outcome` after it
-  completes, not a number written here. Note the run in flight predates
-  PR #183, so its per-application ceiling is still the broken one —
-  expect it to have spent hours on single Southwark applications. The genuinely-hard classes (CAPTCHA, hard 403/500/503,
-  Incapsula) still stand.
-- **Historical partial fetches are now measured. The refetch is not
-  done.** A short fetch used to be recorded as complete, and the
-  manifests could not show it because they record what was stored and
-  not what was offered. `scripts/relist_audit.py` settles the question by
-  re-listing and comparing; the comparison lands in
-  `document_listing_audit` (migration 026), append-only and idempotent on
-  the listing's own content hash, with the full offered set kept beside
-  every count. It obtains listings and never downloads a document: the
-  deliverable is a measurement and a prioritised list, and which of it is
-  worth the portal traffic is an editorial decision.
+- **The acquisition tail, as measured 2026-08-30 late evening: 290
+  in-universe applications hold no documents.** By latest
+  `acquisition_outcome`: **119 `none_published`** (the register lists
+  nothing — the refused-page class in "Acquisition decisions waiting
+  on a person" sits inside this), **94 `no_adapter`**, **74 `error`**
+  (retryable — re-running the fetch picks them up), and one each of
+  `login_required`, `portal_blocked` and never-attempted. The
+  measurement is one query — universe members with no `documents` row,
+  grouped by latest outcome — so re-measure rather than re-quote. The
+  genuinely-hard classes (CAPTCHA, hard 403/500/503, Incapsula) still
+  stand; the 2026-08-27 sweep history that used to sit here is in
+  HISTORY.
+- **The relist refetch: two deferred tranches and the unmeasured
+  residue** (the audit and the recovery it drove are in HISTORY,
+  2026-08-26 — including why "2,260" was URLs, never missing
+  documents). Still to do:
 
-  Three passes, cheapest first. `--pass snapshot` parses the
-  documents-tab HTML already in `source_snapshots` — the very page each
-  short fetch was working from — at no portal cost, and covered 1,166
-  applications on its own. `--pass harvest` does the same for the
-  browser-harvested Salesforce listings (64). `--pass live` re-lists the
-  rest through the project's own adapters at 10s spacing, one client per
-  host, round-robin so a slow council costs only its own queue.
+  - **Resume the refetch**: `scripts/relist_refetch.py --tranche
+    rest`, then `--tranche glasgow` — idempotent, costs nothing
+    already done. Deliberately deferred: Union Park's 157 (cut in
+    favour of the Northumberland reports) and Gilmorehill's 491 (a
+    university masterplan's drawings). The full absent-document list
+    is `data/reports/relist_refetch_list.csv`.
+  - **142 applications are still unmeasured**, holding 3,381
+    documents: 107 on portals with no listing-only path (44 bespoke,
+    35 Northgate, 28 NEC), 26 on Coventry (skipped by name — AWS
+    WAF), 7 Wychavon, 1 Manchester timeout, 1 unharvested Salesforce.
+    Errors are retryable via `--pass live`; the rest need an adapter
+    that only has to produce a listing, a much smaller job than a
+    fetcher.
+  - **29 applications hold documents against an empty listing** —
+    mostly manual harvests whose `file://` URLs no listing can match.
+  - Known refusals that stand: Greater Cambridge's blanket 403 on
+    file downloads (158), Tower Hamlets' persistent 504s including
+    two energy strategy reports.
 
-  **As measured on 2026-08-26: 1,554 of 1,696 applications that hold
-  documents, and 2,260 documents the registers offered that the corpus
-  does not hold, across 219 applications.** The raw offered-minus-stored
-  difference is 2,846, and two structural over-counts are subtracted from
-  it: 74 documents held under a twin application (seventeen portal URLs
-  each serve two application references for the same case —
-  Cambridge/SouthCambs, a Reading reference in two spellings — so one
-  listing describes both and the fetch filed each document under
-  whichever row it reached first), and 512
-  where the register listed one file under two URLs and `documents`,
-  unique on `(application_id, content_sha256)`, stored it once. The
-  shortfall is concentrated — 3 applications lose more than 100
-  documents, 28 lose 21–100, and 99 lose exactly one — and it is not
-  only drawings: 175 of the absent documents are filed
-  `Report/ Statement`, the class where power disclosures live.
-
-  **2,260 is an upper bound on URLs, not a count of missing content, and
-  the refetch proved it.** Fetching 3,083 of those documents produced
-  only 1,173 new rows: **1,910, or 62%, were byte-identical to a
-  document already held under the same application at a different URL.**
-  The audit subtracted 512 such cases; the real number is more than
-  three times that, because a register that lists one file under two
-  URLs is far commoner than the sample suggested. Buckinghamshire
-  `PL/24/0754/OA` downloaded 170 documents and created no rows at all;
-  Hillingdon `78343/APP/2025/719` downloaded 219 and created none.
-  Quote "2,260 URLs the registers offered that we had not fetched",
-  never "2,260 documents missing" — and note the recovery rates below
-  are against URLs for the same reason.
-
-  **1,380 of the 2,260 are now held (61%), and 249 of the 291
-  reports/statements (86%)** — the class that mattered. Northumberland
-  Energy Park recovered 176 of 177, Green Tech 171 of 179, Catalyst 135
-  of 136, Telehouse North Two 93 of 104. What is left is deliberate:
-  Union Park keeps 157 unfetched because that tranche was cut in favour
-  of the Northumberland reports (30 Hillingdon applications at 25–35
-  minutes each, on one host, with Union Park behind the partition
-  blocker anyway), and Gilmorehill's 491 were never attempted — a
-  university masterplan's drawings. Resuming is one command and costs
-  nothing already done: `scripts/relist_refetch.py --tranche rest`, then
-  `--tranche glasgow`.
-
-  229 per-document failures, each with a reason: 158 HTTP 403 from
-  Greater Cambridge (a blanket refusal on file downloads), 85 server
-  disconnects from Northumberland that all recovered on the retry pass,
-  39 404s for documents withdrawn since the May listing, and 18
-  persistent 504s from Tower Hamlets — including two energy strategy
-  reports that failed identically an hour apart, which is a genuine
-  portal failure on exactly the class we want.
-
-  Worst affected, which is the reporter-facing number at risk — and the
-  document type matters as much as the count, because a site short of
-  drawings has lost far less than a site short of statements:
-
-  | site | absent / offered | mostly |
-  |---|---|---|
-  | Northumberland Energy Park (`PTNO-12785975`) | 177 / 552 | **161 reports and statements** |
-  | Green Tech Business Park (`PTNO-12578951`) | 179 / 500 | 158 drawings |
-  | Catalyst Business Park, Widnes (`PTNO-12906175`) | 136 / 382 | 133 plans |
-  | Telehouse North Two (`PTNO-12058499`) | 104 / 1,030 | **50 reports**, 23 plans |
-  | Union Park / North Hyde Gardens (`PTNO-12511337`) | 160 / 3,062 | mixed, across 34 applications |
-  | Gilmorehill campus (`PTNO-12104907`) | 491 / 1,565 | drawings; a university masterplan, not the investigation |
-
-  The full list is `data/reports/relist_refetch_list.csv`, one row per
-  absent document, ordered by site.
-
-  What is left:
-
-  - **The refetch pass itself.** Nothing has been re-downloaded. The
-    obvious first cut is the reports and statements, not the drawings.
-  - **142 applications are still unmeasured**, holding 3,381 documents:
-    107 on portals with no listing-only path (44 bespoke, 35 Northgate,
-    28 NEC), 26 on Coventry, skipped by name because it is AWS
-    WAF-protected, 7 Wychavon applications whose host reset the
-    connection three times and was abandoned, 1 Manchester timeout, and
-    1 Salesforce register with no harvested listing. Errors are
-    retryable — re-running `--pass live` picks them up. The rest need
-    either an adapter or a browser, and the adapter only has to produce
-    a listing, which is a much smaller job than a fetcher.
-  - **29 applications hold documents against an empty listing.** Newport
-    was the bulk of these until its separate docstore was wired into the
-    audit; what remains is mostly manual harvests, whose documents carry
-    `file://` URLs no listing can match.
-
-  **Still true: do not quote a per-site document count without checking
-  this table.** A count of held documents is a floor until the site's
-  applications are measured and their shortfall is either refetched or
-  stated.
+  **Still true: do not quote a per-site document count without
+  checking `document_listing_audit`.** A count of held documents is a
+  floor until the site's applications are measured and their
+  shortfall is either refetched or stated.
 - **Two site-classification rules deserve a reporter's eye** (the
   mechanism itself shipped — issue #159, PR #178, HISTORY 2026-08-27).
   Each was decided in the building and changes what the list asserts
@@ -718,15 +557,9 @@ work.
   settled the framing is the argument in one line: computed and
   citable beats vivid and wrong.
 
-- **Site name aliases are built; the curation is standing work.** The
-  mechanism from issue #169 landed 2026-08-27: `data/priors/
-  site_aliases.yaml` (alias beside the derived name, per-entry source,
-  a dead key fails the build), displayed everywhere with the derived
-  default kept on the site's own page, and two columns on the workbook's
-  Sites sheet. Seeded with the three known cases — West Burton, the
-  Blyth substation, Maydown Road Derry. What remains is editorial and
-  continuous: name a site when its derived name misleads, in the yaml,
-  with the source.
+- **Site-alias curation is standing editorial work** (the mechanism is
+  built — issue #169, HISTORY): name a site when its derived name
+  misleads, in `data/priors/site_aliases.yaml`, with the source.
 
 - **Northumberland Energy Park holds four unrelated schemes.**
   `PTNO-12785975` clusters 35 applications spanning the Blyth offshore
@@ -856,16 +689,9 @@ single-asset SPVs disclose it by construction**, because the scheme is
 the investment property and FRS 102 makes the directors state what the
 valuation assumes.
 
-**Built 2026-08-26.** The original four items — name the SPVs, pull
-their filings, load what they say as claims never columns, report the
-disagreements — are done; what they produced and overturned (the
-103.3-against-140 gap that was two quantities in one table, the SPV
-that states no capacity across 25 pages, the charges register that had
-to be probed because `has_charges` read false for 44 of 49 charged
-companies) is recorded in EXTERNAL_DATA_SOURCES §6, with the mappings
-in `companies-house-spvs.yaml` and `companies-house-ownership.yaml`.
-
-Still open, and now better specified:
+The sweep itself is built and its findings recorded
+(EXTERNAL_DATA_SOURCES §6; mappings in `companies-house-spvs.yaml`
+and `companies-house-ownership.yaml`). Still open:
 
 5. **Sites 59 and 5 still block the Premier Park and DataVita
    matches.** Premier Park's £147.8m and the DataVita figures stay
@@ -934,86 +760,21 @@ field and is not publishable as it stands.
   workbook's own sheet. Deferred past 2.10 because the artefacts were
   built and diffed when it surfaced.
 
-- **Pinpoint and Giant are missing content by construction, not only by
-  age.** Both take the same input, and it is **not** the Drive `sites`
-  folder: it is the derivative bundle from
-  `scripts/export_pinpoint_bundle.py` (Luke, 2026-08-28). Pinpoint has
-  no folders — the namespace is flat and zipped uploads are unsupported
-  — so structure is discarded by design and each filename carries
-  `<site> — <application> — ` in front of it instead. Neither repository
-  cares about that. Both care about **completeness**, and the bundle is
-  a reduction: 130.6GB in 50,615 files down to ~64GB in 42,647, under
-  Pinpoint's 100GB-per-user quota.
-
-  **The drawings are dropped deliberately, and for Giant too** — 5,536
-  files, 9.5GB, on the grounds that they carry no extractable prose.
-  That looks at first like a contradiction with
-  `extract_text_corpus.py`, which extracts every drawing precisely
-  because "a proposed site plan often labels the energy centre, an
-  elevation may annotate a generator enclosure, and plant layouts carry
-  specifications that never appear in prose at all". It is not.
-
-  The two tools want different things. Giant's value is returning a hit
-  **in context** — the surrounding text — and taking the reporter to the
-  exact place, page 278 of a long document if that is where it is
-  (Luke, 2026-08-28). A drawing supports neither: OCR of a plan yields
-  scattered label fragments, so even a matching drawing returns a result
-  with no readable context and nowhere meaningful to jump to. Extraction
-  wants every scrap of text because a figure may appear only there;
-  full-text search wants documents that read. Both are right for their
-  layer, and the drawing content is not lost to the project — the
-  deep-read reads it and its findings surface on the site page.
-
-  **Giant has no quota limit and takes the reduced bundle anyway**,
-  Luke's decision, for consistency. Two search tools answering one query
-  differently, with nothing on either page to explain the difference,
-  would be worse than a single corpus reduced in a documented way — and
-  on the drawings the reduction is right for Giant on its own merits.
-
-  The residual worth watching: a reporter using Giant as a completeness
-  check can still infer "not in the documents" from a drawing-only
-  disclosure that never reaches it. The reader is where that content
-  lives, so the two must not be presented as interchangeable.
-
-  The other two reductions look sound and are worth keeping if this is
-  revisited: exact duplicates removed by content hash (2,432 files), and
-  types sniffed rather than trusted, which recovered ~450 files
-  including 237 Outlook messages of kind *Consultee Comment* — tier A,
-  the class the methodology says disclosures live in.
-
-  **Staleness sits on top of that.** The last upload was 2026-08-12 and
-  4,464 documents have arrived since, with more in 2.10.
-
-  **Giant has no such quota, and takes the reduced bundle anyway** —
-  Luke's decision, 2026-08-28, for consistency. It is the right call:
-  two search tools answering the same query differently, with nothing on
-  either page to explain why, is worse than one corpus that is reduced
-  in a documented way. But it means the drawings are absent from Giant
-  to match a constraint that does not apply to it, so the drawings
-  question is **one decision governing both** and must be revisited for
-  both together or not at all.
-
-  **The delta is computable, and does not need guessing.** Luke still
-  has the uploaded bundle and its `_manifest.csv` on the previous laptop
-  (2026-08-28). That manifest carries one row per bundled file with
-  `sha256`, `site`, `application`, `kind`, `tier`, `action` and
-  `staging_path` — so:
-
-  - `manifest.sha256` against `documents.content_sha256` gives exactly
-    what Pinpoint and Giant hold and, by omission, what they do not;
-  - `action` and `kind` separate the deliberate exclusions (drawings,
-    hash duplicates) from the genuine gap, so staleness can be measured
-    without re-litigating the reductions.
-
-  Get that file off the old laptop before it becomes the thing nobody
-  can find — it is the only record of what was uploaded, and the bundle
-  it describes is not reproducible from here: the corpus has moved on by
-  4,464 documents, so re-running the script now produces a different
-  bundle.
-
-  **Explicitly deferred past 2.10 by Luke.** When picked up: compute the
-  delta from the manifest, and fold re-upload into the release chain
-  rather than leaving it to be remembered.
+- **The Pinpoint/Giant delta: get the manifest, compute it, put
+  re-upload in the chain.** The bundle policy — what the reduction
+  drops and why, decided by Luke 2026-08-28 — now lives in the
+  runbook (step 13a); what remains here is the work. The last upload
+  was 2026-08-12 and thousands of documents have arrived since
+  (measure, don't quote). Luke still has the uploaded bundle's
+  `_manifest.csv` on the previous laptop — one row per bundled file
+  with sha256, site, kind, tier and action — so `manifest.sha256`
+  against `documents.content_sha256` gives exactly what Pinpoint and
+  Giant hold and, by omission, what they do not, with the deliberate
+  exclusions separable from the genuine gap. **Get that file off the
+  old laptop before it becomes the thing nobody can find** — the
+  corpus has moved on, so re-running the script cannot reproduce the
+  uploaded bundle. Then fold re-upload into the release chain rather
+  than leaving it to be remembered.
 - **26 applications link to a register host that no longer answers,
   and they would ship in 2.10 that way** (probed 2026-08-28: every host
   the reader links to, 208 of them behind 2,033 linked applications).
@@ -1289,21 +1050,16 @@ and one is an s106; on kind alone they are exactly the material the
 investigation is looking for, so "we hold it and it was silent" is the
 worst available failure mode.
 
-Three pieces of work, smallest first:
+What remains (the fetch guard is done and test-pinned; the corpus
+sweep re-run 2026-08-27 still finds exactly the three):
 
-1. **Guard at fetch — DONE.** `repo.record_document` refuses the empty
-   hash and every adapter checks the body before writing; both halves
-   are pinned by `tests/test_zero_byte_guard.py`.
-2. **Sweep the corpus — re-run 2026-08-27: still exactly the three.**
-   `find -size -1c` over `data/raw/documents` is the whole check
-   (three empty Companies House OCR page files also surface — blank
-   pages, a different and benign thing). Nothing runs it on a
-   schedule; a durable home — corpus_stats, or a test over the store —
-   is still wanted so a fourth would announce itself.
-3. **Say so in the artefacts — still open.** Where a document is held
-   but empty, the site report and the coverage detail should show it
-   as unavailable from the source rather than as read — the same
-   honesty the coverage split already applies to drawings and sampled
+1. **A durable home for the sweep** — corpus_stats, or a test over the
+   store (`find -size -1c` is the whole check) — so a fourth empty
+   document would announce itself.
+2. **Say so in the artefacts.** Where a document is held but empty,
+   the site report and the coverage detail should show it as
+   unavailable from the source rather than as read — the same honesty
+   the coverage split already applies to drawings and sampled
    objection letters.
 
 Worth raising with the three councils as well: a listed document that
@@ -1347,90 +1103,22 @@ HISTORY.)
 
 ## Smaller things
 
-- **The search bundles could be uploaded to Drive by the pipeline, and
-  the `drive.file` scope is not the obstacle it looks like.** Today step
-  13a leaves `notebook_bundle/` and `pinpoint_bundle/upload/tranche_N/`
-  sitting locally, and Luke moves them to Drive by hand before pushing
-  them out to Notebook, Pinpoint and Giant. He has been comfortable
-  doing that because the sync can only see folders it created — which is
-  true, and is not the whole picture.
-
-  **Measured 2026-08-29, because the assumption was worth testing rather
-  than inheriting.** Handing the token a folder ID does *not* make the
-  folder visible: `files.get` on the notebook bundle folder, the pinpoint
-  bundle folder and even `dcp/drive.py`'s own `FOLDER_ID` all return
-  **404 — not created by this app**. An ID is not a key.
-
-  **But writing into an invisible folder by ID works, and the archive is
-  the proof.** `SITES_FOLDER_ID` is visible, `ownedByMe`, created
-  2026-08-07 — and its `parents` is exactly the handover root that
-  answers 404. The sync created a folder inside a folder it cannot see.
-  So `drive.file` blocks *listing and reading*, not *writing to a known
-  parent*, and this can be built without widening the scope.
-
-  **Which is the point: do not widen the scope.** It was chosen
-  deliberately (`scripts/drive_sync.py`, "this tool can create and
-  manage only the files and folders it itself uploads"), and the
-  alternative hands a document-mover visibility of the whole of Luke's
-  Drive — personal and Guardian alike — to solve a file-copying problem.
-  A capability that broad is not worth an ergonomic gain this small.
-
-  **Writing blind is avoidable, and the shape that avoids it is Luke's
-  (2026-08-29): never write into a folder we did not create — always
-  create a fresh per-release child.** Both bundles already work that
-  way, for reasons that have nothing to do with Drive.
-
-  - **Pinpoint and Giant grow by tranche.** Each release adds
-    `tranche_N`, never revisiting an earlier one. If the pipeline
-    *creates* that folder inside the bundle parent, it owns it: listable,
-    `md5Checksum` available, complete knowledge of its own additions.
-    The parent stays invisible and never needs reading, because tranches
-    are append-only by construction.
-  - **The notebook is replaced wholesale, not updated.** Re-tuning
-    `--max-words` moves every part boundary, so a re-fit is a new set of
-    files and a new notebook rather than an edit. Luke is therefore
-    naming the Drive parent after the release — `notebook_bundle_2.10`,
-    renamed by hand on 2026-08-29 — so each future release creates its
-    own top-level folder and has total visibility of the whole tree,
-    not merely of a child.
-
-  So the trio of costs that writing blind would impose — a ledger as the
-  sole record, idempotency without `md5Checksum`, no post-hoc
-  verification — **does not arise** under this shape. It would only
-  arise if we wrote into a folder somebody else made.
-
-  **Which makes the real hazard a name collision, not blindness.**
-  `Sync.folder(name, parent)` resolves by name: it queries for a folder
-  of that name under that parent and creates one if the query comes back
-  empty. Under `drive.file` that query can only ever see folders the app
-  itself created, so it is structurally incapable of finding one made or
-  renamed by hand — it will quietly create a second folder beside it,
-  and Drive permits duplicate names, so nothing complains. That is the
-  duplicate-archive mechanism, still live.
-
-  **So the convention only holds while the pipeline is the sole creator
-  of release folders.** Pre-creating one by hand and expecting the
-  pipeline to fill it is the failure case. Guard it rather than
-  documenting it: after `folder()` creates one, `files.get` the id back
-  and stop if it 404s.
-
-  **Where the IDs go.** Any destination the pipeline does *not* create —
-  the pinpoint bundle parent — belongs in `dcp/drive.py` as a named
-  constant beside `FOLDER_ID` and `SITES_FOLDER_ID`, never resolved by
-  name, never retyped, per that module's opening warning. Folders the
-  pipeline creates need no constant: it learns their ids on creation.
-  Renaming is safe either way, since an id survives a rename — which is
-  the whole reason the ID-only rule exists.
-
-  **One step stays manual whatever happens**: a notebook that already
-  holds a previous release must be emptied first, because uploading adds
-  sources rather than replacing them — and on the per-release naming
-  above the answer is usually a new notebook instead, whose URL must
-  reach `NOTEBOOK_URL` before step 12, as the runbook already requires.
-
-  Raised by Luke 2026-08-29 — "perhaps we should streamline that process
-  eventually" — and narrowed by him the same day to the per-release
-  folder shape above.
+- **Pipeline upload of the search bundles to Drive.** The shape is
+  decided (Luke, 2026-08-29, measured rather than inherited): never
+  write into a folder the pipeline did not create; always create a
+  fresh per-release child, which both bundles' tranche/replace
+  patterns already suit; keep the `drive.file` scope — widening it
+  hands a document-mover visibility of the whole of Luke's Drive to
+  solve a file-copying problem. What is left is the build: create the
+  per-release folder, upload, and guard the name-collision hazard by
+  `files.get`-ing the created id back and stopping on 404 (under
+  `drive.file`, `Sync.folder`'s name query cannot see hand-made
+  folders and would quietly create a duplicate beside one — the
+  duplicate-archive mechanism, still live). Destinations the pipeline
+  does not create belong in `dcp/drive.py` as ID constants, never
+  resolved by name. One step stays manual whatever happens: a notebook
+  holding a previous release must be emptied or replaced, and the new
+  notebook's URL must reach `NOTEBOOK_URL` before step 12.
 
 - **The Start Here page's Gemini Notebook card claims more than the
   notebook holds.** The card says "Every site's report and its full
@@ -1489,49 +1177,18 @@ HISTORY.)
   cheap half — `load_latest(live_only=True)` dropping readings whose
   site key retired — runs every build already.
 
-- **`test_two_builds_of_one_snapshot_are_identical` failed once and has
-  not since.** Seen 2026-08-26 during a full-suite run, immediately
-  after the Drive-id work; the failure was the two-builds comparison,
-  not the snapshot assertion above it. Nine subsequent runs — three
-  full-suite, six of the test alone — all passed, so the detail of
-  *which* lines differed was never captured, and that is the thing to
-  fix first: the failure message names the first differing line, but
-  only in the run that fails.
-
-  Not dismissed as noise. A build that is deterministic 90% of the time
-  is a build whose diff against the previous release cannot be trusted,
-  and that diff is the check standing between a regression and a
-  published one.
-
-  **Both original candidates are now largely eliminated, and a third
-  found (2026-08-27).** The `DISTINCT ON (document_id) … ORDER BY
-  document_id, recorded_at DESC, id DESC` in `_drive_document_map` is
-  deterministic on inspection. Set-ordering can be ruled out by
-  argument rather than inspection: the two builds are separate
-  processes with independent `PYTHONHASHSEED`, so anything depending on
-  set iteration order would fail nearly every run rather than one in
-  ten — and the one set-iteration that reaches an exporter
-  (`site_profile` building `out` from `set(barbour) | set(counts) |
-  set(authority)`) has a single consumer, which sorts.
-
-  The likelier cause is that **the snapshot pins the database but the
-  reader also reads a file**. `_drive_folder_map`,
-  `_drive_application_map` and `_drive_findings_map` all read
-  `data/exports/.drive_sync_state.json`, and every Drive link in the
-  page comes from it; `drive_sync` rewrites that ledger once per file
-  while it runs, and `DCP_PG_SNAPSHOT` cannot pin a file on disk. Two
-  builds either side of a sync read different inputs. That fits the one
-  observed failure, which arrived immediately after the Drive-id work.
-
-  The test now measures rather than assumes: it fingerprints the ledger
-  by content before and after both builds and voids the comparison with
-  a reason if it moved, the same discipline the database fingerprint
-  already applies — and where it did not move, the failure message says
-  so, so the ledger cannot be blamed for a difference it did not cause.
-  Both builds, both normalised texts and a capped unified diff are kept
-  in `data/exports/determinism_failure/` on any failure, so one
-  reproduction is enough. What remains is to see a failure with the
-  ledger held: if one comes, the evidence will be on disk.
+- **`test_two_builds_of_one_snapshot_are_identical` failed once
+  (2026-08-26) and has not since.** Not dismissed as noise: a build
+  deterministic 90% of the time is a build whose release diff cannot
+  be trusted. The likelier cause is that the snapshot pins the
+  database but the reader also reads
+  `data/exports/.drive_sync_state.json`, which a running sync rewrites
+  — and the test now measures rather than assumes: it fingerprints the
+  ledger around both builds, voids the comparison with a reason if it
+  moved, and keeps both builds plus a capped diff in
+  `data/exports/determinism_failure/` on any failure. What remains is
+  to see a failure with the ledger held; if one comes, the evidence
+  will be on disk.
 
 - **Four editorial questions from the signal-family repair** (the
   repair itself — the missing-family backfill across 557,747 OpenAI
@@ -1705,133 +1362,51 @@ HISTORY.)
 
 - **A story lead the corpus can already evidence: who qualifies their
   "100% renewable" claim, and who does not** (Luke's idea, measured
-  2026-08-28). Eight operators in the snapshot store make a green
-  claim — "Powered by 100% renewable resources", "100% renewable
-  energy powered", net-zero commitments. Five of them also hold
-  Environment Agency permits for standby combustion, and the
-  difference between them is in the wording:
-
-    operator   permits   MWth   engines   claim names its generators?
-    VIRTUS           4   832.5      121   no
-    Ark              3   476.1      114   yes — "supported by HVO"
-    Vantage          1   225.7       37   no
-    CyrusOne         1   201.3       32   no
-    Kao              1   152.3       25   yes — HVO named
-    Apatura, Greystoke, Pulsant: green claim, no permit found
-
-  **Ark and Kao name their standby fuel beside the green claim;
+  2026-08-28 across the snapshot store and the EA permits; the full
+  working is in this file's git history at that date). The asymmetry:
+  **Ark and Kao name their standby fuel (HVO) beside the green claim;
   VIRTUS, Vantage and CyrusOne make an unqualified claim while holding
-  permits for 1,259 MWth across 190 engines.**
+  permits for 1,259 MWth across 190 engines.** Guards that must travel
+  with it: "100% renewable" conventionally describes procured grid
+  electricity, so an unqualified claim is not false — the question is
+  what it omits; permits are only required at 50 MWth, so **no permit
+  found is not no generators** (Pulsant's whole estate sits under the
+  threshold) and the no-permit rows are never evidence of a cleaner
+  operator; permit MWth is thermal input, not emissions; and the
+  snapshot store is curated, so absence from it is not absence of a
+  claim. The sharper finding underneath: the standard permit cap is
+  **500 hours' emergency use a year, per installation** — never
+  engines × hours — and the emission-limit regime does not bite below
+  exactly that line, so the permit is written to it. Three actions:
 
-  **A permit is only required at 50 MWth and above, which limits what
-  the bottom three rows can mean** (Luke, 2026-08-28; confirmed in the
-  permit data). The permitted activity is written in the permits
-  themselves as "Combustion; Any Fuel =>50MW - 1.1 A(1) a)", with two
-  entries reading "Medium Combustion Plant collectively =>50MW" —
-  individually small engines that aggregate past the threshold. Below
-  it a site falls to the MCP regime: registration rather than a
-  bespoke permit, lighter touch, and possibly not published at all
-  (see the Environment Agency item above). So **no permit found is not
-  no generators** — it may only mean the installation is under 50
-  MWth. Pulsant is the clearest case: its whole disclosed estate is
-  22.12 MW of IT load, which would not reach the threshold however it
-  is aggregated. The table's bottom three rows are therefore not
-  evidence of a cleaner operator, and must never be read as such.
+  1. **Send the drafted EIR for the actual run-hour returns**
+     (`docs/requests/2026-08_ea_standby_generator_run_hours_eir.md`) —
+     the Agency holds annual returns and outage notifications, and reg
+     12(9) means emissions information cannot be withheld as
+     commercially confidential.
+  2. **Read, don't count, the generation findings at the no-permit
+     green claimants** — direction decides meaning: Greystoke's West
+     London Technology Park carries 379 diesel mentions stated as
+     reliance ("significant number of diesel back-up generators … 30
+     years"), while Apatura's ten are proposals to avoid diesel.
+  3. The CAR adapter below, which corroborates the EIR with dated
+     inspection records.
 
-  Five caveats belong with it, and without them this is a cheap
-  gotcha rather than a finding. "100% renewable" conventionally
-  describes *procured grid electricity*, so an unqualified claim is
-  not false — the question is what it omits. Standby plant runs for
-  testing and outages, so its output is small against a site's grid
-  draw; the point is disclosure, not equivalence. Permit MWth is
-  thermal input capacity, not emissions. And the snapshot store is
-  curated, so an operator absent from the table may simply have no
-  page snapshotted — absence here is not absence of a claim.
-
-  **The run-hour limit is in the permits, and it is 500 hours a year**
-  (read 2026-08-28 from the 85 permit PDFs the project holds; 42
-  permit stems carry the condition). The standard wording is "The
-  activities shall not operate for more than 500 hours in emergency
-  use per annum", and the Environment Agency spells out that this is
-  an installation-level cap, not a per-engine one: "500 hours is for
-  the installation as a whole, meaning that as soon as one generator
-  starts operating the hours count towards the 500 hours". So the
-  honest sentence is *"permitted to run for up to 500 hours a year"*
-  per site — never engines multiplied by hours, which the permits
-  explicitly forbid as a reading.
-
-  And the number is not arbitrary. The same documents state that
-  "Emission limit values (ELVs) to air are not applicable to MCPs
-  operating less than 500 hours per year" — the cap sits exactly at
-  the threshold below which air-emission limits do not bite. That is
-  the sharper story than the green claims themselves: an operator can
-  hold hundreds of megawatts of standby diesel and stay outside the
-  emission-limit regime by staying under 500 hours, and the permit
-  is written to that line.
-
-  **Below the threshold, the planning documents catch what the permits
-  cannot** (Luke, 2026-08-28). Sites matched to a green-claiming
-  operator can be searched for their own disclosures of on-site fossil
-  generation, and that reaches the operators with no permit at all:
-  Greystoke's West London Technology Park carries 379 findings
-  mentioning diesel and 156 gas, and its documents say so plainly —
-  "given the significant number of diesel back-up generators, and the
-  lifetime associated with the operation of the proposed development
-  (i.e. 30 years)". Abbots Langley and one other Greystoke site carry
-  the same pattern at smaller scale.
-
-  **The direction of the mention decides its meaning, so the counts are
-  a route to evidence and never the evidence.** Apatura's Westerhill
-  shows why: its ten diesel findings are proposals to *avoid* diesel —
-  "The BESS would reduce (or ideally) eliminate the practical need for
-  the data centre to utilise and rely upon diesel backup generators."
-  A count that treated those as disclosure of diesel reliance would
-  have the story backwards. Ark's sites, which do hold permits, carry
-  heavy HVO mentions alongside the diesel, consistent with the
-  qualified claim its website makes.
-
-  Two next steps, one of them now drafted. **The actual run hours are
-  obtainable**: 29 permits' decision documents state that "Reporting of
-  standby generator maintenance run hours is required annually and any
-  electrical outages (planned or grid failures regardless of duration)
-  require both annual reporting and immediate notification of the
-  Environment Agency", and permit conditions require the operator to
-  record "the type and quantity of fuel used and the total annual
-  operating hours for each MCP" and "the number of runs for each of the
-  generators". The Agency therefore holds the returns, and an EIR
-  request for them is drafted at
-  `docs/requests/2026-08_ea_standby_generator_run_hours_eir.md` —
-  including the reg 12(9) point that information on emissions cannot be
-  withheld as commercially confidential, which matters because the
-  decision document for EPR/QP3434DR records the Agency accepting a
-  confidentiality claim and excluding "financial and operational data"
-  from the public register.
-
-- **A public document class the project does not yet harvest:
-  Environment Agency Compliance Assessment Reports** (found 2026-08-28
-  when Luke asked whether run hours were already published — they are
-  not, but this is). Public Registers Online has published CARs for
-  **Installations since 18 August 2025**, free to download at a
-  predictable path
+- **Harvest Environment Agency Compliance Assessment Reports** (found
+  2026-08-28 when Luke asked whether run hours were already published
+  — they are not, but this is). Public Registers Online publishes CARs
+  for Installations since 18 August 2025, free at a predictable path
   (`/public-register/documents/installations/compliance/EPR_<STEM>/…`),
-  and they record what an Environment Agency officer found on site.
-  The CAR for EPR/QP3434DR — Brick Lane Data Centre, Interxion Carrier
-  Hotel Limited, inspected 28/10/2025 — states that "Emergency
-  operation of the standby generators and operation for testing/
-  maintenance was discussed", and that "during the … UPS replacement
-  from 30 September to 3 October 2025, operation of three standby
-  generators was required", with a noise complaint following.
-
-  That is *actual* generator operation, dated, from a public source —
-  the thing the corpus has never held. Coverage is thin and growing:
-  the scheme is weeks old, several data-centre permits still show "No
-  document published" against Compliance, and CARs are inspection
-  reports rather than annual returns, so they corroborate the EIR
-  above rather than replace it. Worth an adapter on the same pattern
-  as `fetch_ea_permits.py`, and worth re-running periodically as the
-  register fills. Second: read the generation
-  findings at the no-permit sites rather than counting them, which is
-  what turns Greystoke's 379 mentions into a number of generators.
+  recording what an officer found on site — the CAR for EPR/QP3434DR
+  (Brick Lane Data Centre, inspected 28/10/2025) states that three
+  standby generators ran during a UPS replacement, with a noise
+  complaint following: *actual* generator operation, dated, from a
+  public source. Coverage is thin and growing — several data-centre
+  permits still show "No document published" — and CARs are inspection
+  reports, not annual returns, so they corroborate the run-hours EIR
+  rather than replace it. Worth an adapter on the
+  `fetch_ea_permits.py` pattern, re-run periodically as the register
+  fills.
 
 ---
 
