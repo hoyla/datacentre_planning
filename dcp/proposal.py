@@ -239,7 +239,11 @@ def tidy(clause: str) -> str:
 # reader applies on the way out, the same way `tidy` is.
 
 # Kept as they are, because lower-casing them would be a mistake rather
-# than a style: an initialism, a compass point in a postcode, or a unit.
+# than a style: an initialism, a compass point in a postcode, a unit, or
+# a name its owner writes in capitals. The last is not the same kind of
+# thing as the others — VIRTUS is not an abbreviation of anything, it is
+# a brand's own spelling — but it fails the same way, coming back as a
+# company's name written how the company does not write it.
 _KEEP_CAPS = {
     "DC", "UK", "US", "EU", "GB", "IT", "AI", "HQ", "PLC", "LLP", "NHS",
     "BBC", "EE", "AWS", "IBM", "BT", "GW", "MW", "KW", "MVA", "KVA",
@@ -251,6 +255,13 @@ _KEEP_CAPS = {
     # and AOC are the bodies of those names, RAF and MOD are estates.
     "NTT", "JVC", "MK", "ONS", "AOC", "RAF", "MOD", "EDF", "SSE", "RWE",
     "UKPN", "SSEN", "CBRE", "VDC", "GLP", "DP",
+    # The brand styling: VIRTUS is how the operator writes its name, on its
+    # website and in the group label this corpus already holds for it
+    # (organisation_aliases.yaml). Title-cased it read "Virtus" — the
+    # operator's name spelled the way the operator does not (Luke,
+    # 2026-08-30). Checked, per the rule above: two live sites carry
+    # the token in a derived Barbour title, and six Barbour projects.
+    "VIRTUS",
 }
 # Deliberately not here: the single letters N, S, E and W. As a
 # compass point one is worth keeping, but as the tail of an apostrophe
