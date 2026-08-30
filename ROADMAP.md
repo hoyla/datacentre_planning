@@ -209,10 +209,28 @@ fourth relationship basis. One more stranded singleton of the Barnet
 kind: `Hillingdon/71554/APP/2025/2436`, a discharge whose
 adjacent-power parent left the Hayes campus site.
 
-**Still open after stage 3** — the per-figure restatements: Kingsnorth's
-export figure on its `new_build` member is an adjudication correction,
-not a membership question, and the `not_dc` live members holding
-figures (Hallen was one) are a small leak of the same kind.
+**The Kingsnorth follow-up dissolved on measurement** (2026-08-30,
+late). The export figure was never the site's published headline: the
+sites table shows Kingsnorth at 39.724 MW disclosed total site demand,
+and the 49.9 — "an EfW plant up to 49.9 MW", the sub-50 DCO threshold
+cap — renders only as the site's on-site generation, which it is. The
+issue's table had measured "shows 49.9" with the all-quantity-types
+max, the same ladder conflation the survivor check caught. What WAS
+wrong on published pages was the same figure-shape elsewhere: five
+sites' headline rested on the generation rung with plant the
+generation adjudication calls `prime_combustion` or `renewable` —
+"Standby generation capacity... sized to carry full load" asserted
+against an energy-park plant that runs for export (Heyford Park's own
+49.9 cap, Dumfries, Reading ×2, PTNO-12122711). Fixed by making the
+ladder's generation rung honour `plant_type`: prime, renewable and
+storage plant no longer stand in for load; mixed and unclear keep
+today's behaviour, because exclusion needs a positive adjudication.
+The figures stay on their site pages labelled by plant kind.
+
+**Still open after stage 3** — the `not_dc` live members holding
+figures (Hallen was one) remain a small leak of the verdict-tracking
+kind, and Hayes Bridge's doubled N+N 300 (the "Not in an issue" note
+below) still stands.
 
 ### 2. #247 — a campus load figure from one building is shown as the site's
 

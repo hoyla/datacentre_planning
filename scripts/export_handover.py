@@ -131,9 +131,22 @@ app_power AS (
          max(value_mw) FILTER (WHERE quantity_type = 'total_site')  AS total_site_mw,
          max(value_mw) FILTER (WHERE quantity_type = 'grid_connection')
                                                                     AS grid_mw,
+         -- Standby-shaped plant only. The ladder's generation rung
+         -- rests on one premise — standby generation is sized to carry
+         -- full load and so approximates it — and plant the generation
+         -- adjudication calls prime_combustion, renewable or storage
+         -- breaks it: an energy-park plant capped at 49.9 MW (the
+         -- sub-50 DCO threshold) runs for export and says nothing about
+         -- the site's own demand. Five sites' headline figures rested
+         -- on such plant when this was measured (2026-08-30); the
+         -- figures stay on their site pages, labelled by plant kind —
+         -- only the load inference stops. Mixed and unclear plant keep
+         -- today's behaviour: exclusion needs a positive adjudication.
          max(value_mw) FILTER (
              WHERE quantity_type = 'onsite_generation'
-               AND coalesce(g.figure_basis, '') <> 'not_generation')  AS gen_mw,
+               AND coalesce(g.figure_basis, '') <> 'not_generation'
+               AND coalesce(g.plant_type, '') NOT IN
+                   ('prime_combustion', 'renewable', 'storage'))  AS gen_mw,
          count(*)                                                   AS n_capacity,
          count(*) FILTER (WHERE is_maximum)                         AS n_ultimate
   FROM power_adjudication
