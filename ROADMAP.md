@@ -84,99 +84,20 @@ would mean reviewing them twice.
 
 ### 1. #252 — adjacent power relates to a site, it does not belong to one
 
-**The only one of the four correcting errors that are published.**
+**Shipped end to end on 2026-08-30** — the veto at all three of the
+clusterer's admission paths, the relationship table, the reader's
+"Adjacent power" box (documentary rows as entries, proximity as a
+count), eight sites retired, zero adjacent-power memberships verified
+remaining, and the ladder's generation rung honouring `plant_type` so
+export plant no longer stands in for load. The full account — the
+survivor check that corrected "seven figures go" to two, the two extra
+admission doors found by running it, the Kingsnorth follow-up that
+dissolved on measurement — is in HISTORY ("Adjacent power leaves
+membership", 2026-08-30) and on the issue with its queries.
 
-`build_clusters` admits every dc_build verdict except `not_dc`, and once
-a record is in-universe the only thing the clusterer can do is put it in
-a site. So all 49 `adjacent_power` applications — substations, energy
-centres, standby fleets consented in their own right — are members of a
-data centre site. Three consequences:
+What survives it here:
 
-- **Seven sites take their headline power figure from one.** Cardiff
-  Ipswich Road shows 93 MW from a battery-storage and 132kV substation
-  scheme; Kingsnorth 49.9 MW from a figure the reader redesign review
-  already identified as an *export* figure; Colt Project Brenda 22.5 MW
-  across five Welwyn Hatfield applications. **Not one of the seven is a
-  clean IT load for the data centre.**
-- **Eight of the 39 records with coordinates sit within 1 km of more
-  than one live site.** A three-storey low voltage plant building in
-  Park Royal stands inside the radius of five separate schemes including
-  Microsoft's. One site has to take it, decided by whichever spatial
-  edge formed first.
-- **Membership cannot express the finding that matters.** Data centres
-  cluster around substations because substations make a location viable,
-  so the interesting sentence is the one membership cannot write: these
-  five schemes stand around one piece of infrastructure. That is a
-  resilience question about assets the state calls nationally
-  significant (Luke's line, and the best argument for the change).
-
-**Decided.** Adjacent power must not define a data centre's capacity.
-Luke, 2026-08-30: the capacity of adjacent power is valuable but must
-not define the capacity of the data centre, because that power could
-serve many purposes. This is the quantity-type discipline applied
-across a boundary the model currently lets it cross. The absence is
-already a supported and *reportable* state — `site_scale.power_estimate`
-distinguishes "read in full and discloses nothing, which for a
-consented data centre is itself notable" from "reading is incomplete".
-
-**The "seven figures go" claim did not survive measurement** (the
-survivor check is on the issue, 2026-08-30, with the query). With the
-reader's own ladder, removing adjacent-power membership changes the
-outcome on exactly **two** sites — Cardiff and Plymouth, both to
-nothing, both dissolving anyway — while twenty keep their figure
-because a scheme restates its capacity across applications: Kingsnorth's
-49.9 stands on a `new_build` member and two others, so the known-bad
-export figure is **not** removed by membership change and still needs
-its own adjudication correction; Hallen's 49.9/44.9 stand on a `not_dc`
-live member; Colt falls to its own 3.2 MW disclosed IT load — a new
-published figure appearing, arguably the system working. The larger
-numbers in the issue's table were measured across all quantity types
-including `other`, a different ladder from the one the table ranks on.
-
-**Stage 1 merged as PR #253.** Migration 032 adds `site_adjacent_power`;
-`dcp/adjacent_power.py` computes and materialises it;
-`scripts/materialise_adjacent_power.py` runs it; nine tests. It changed
-no output — nothing read the table, membership was untouched.
-
-114 relationships across 42 records and 66 sites, tiered by evidence:
-
-| basis | rows | rests on |
-|---|---|---|
-| `discovery` | 39 | `discovered_via energy_national:<site_key>` — the site the sweep ran outward from |
-| `cohort` | 4 | a `spatial:` or `barbour:` token resolved to the site now holding that record |
-| `proximity` | 71 | distance and nothing else |
-
-The relationship is largely **recorded rather than inferred**: 26 of the
-48 records already carry a token naming the site they were found
-through.
-
-**A proximity row is a candidate, never a claim.** One kilometre is the
-clustering radius, not a supply relationship — the Slough solar PV
-installation lies within reach of eleven sites and supplies none of them
-by being close. "Site X shares grid infrastructure with Site Y" needs
-the applications to name the same substation or connection point. Stage
-1 deliberately does not attempt that extraction.
-
-**Stage 2, decided and shipped with stage 3** (Luke, 2026-08-30):
-documentary rows (discovery, cohort) render as entries in an "Adjacent
-power" box on the site page, each with its evidence line; the 71
-proximity rows appear only as a count with a disclosure — 71 rendered
-as peers of 39 would read as endorsement by volume, and Union Park
-alone has 19.
-
-**Stage 3, shipped with stage 2**: the clusterer stops admitting
-`adjacent_power` (a dc_build verdict of adjacent_power vetoes
-membership, a v1 `DC` notwithstanding). Measured consequences, from a
-member-level diff of the clustering before and after:
-
-- **Eight sites retire**, not six: the six all-adjacent sites, plus
-  Barking (whose second member is the energy scheme's own
-  non-material-amendment paperwork) and **Hallen** — whose two
-  remaining members are `not_dc` under dc_build, so with the energy
-  scheme gone the remnant is not a site by the classifier's own rules.
-  The Mary Somerville site survives as `no_planning_record`: its
-  Barbour project stays when its adjacent application leaves.
-- **The two leads dissolve and are tracked here, not as sites**
+- **The two university leads, tracked as leads and not as sites**
   (Luke's call): `Plymouth/20/01477/MOR` — a generator "serving the
   University's relocated data centre", University of Plymouth, Drake
   Circus — and `WestNorthamptonshire/N/2018/1565` — a DRUPS "to
@@ -185,52 +106,28 @@ member-level diff of the clustering before and after:
   it serves; both records stay in `applications` and in the
   relationship table's history. A future sweep of either university's
   register is the follow-up.
-- **Fourteen further sites lose members without losing their ladder
-  figure.** One wart is accepted and tracked: `Barnet/26/0696/CON`, a
-  conditions discharge for Brent Cross's Plot 59 Main Energy Centre,
-  strands as its own procedural-only site because its family edge ran
-  through the vetoed reserved-matters application — the typed
-  `parent_ref` gap this file already records, expressing itself.
-- Six further adjacent-power records attach to no site at all:
-  keyword-swept, no coordinates. Unchanged.
-
-**The veto had two more doors, found and closed on the first
-materialisation** (same day). Eighteen of the 42 sited adjacent-power
-records came straight back: a project-linked application joins its
-project's cluster regardless of the universe test, and a family
-reference from an in-universe application — a conditions discharge
-citing the substation consent it discharges against — re-admits the
-record the veto excluded. Both paths now honour the veto. Kingsnorth's
-export-figure application was among the eighteen, which is why the
-first materialisation left it a member. The Barbour linkage survives
-as a documentary `cohort` relationship (three records carry one); the
-family-reference tie is recorded nowhere yet and is a candidate for a
-fourth relationship basis. One more stranded singleton of the Barnet
-kind: `Hillingdon/71554/APP/2025/2436`, a discharge whose
-adjacent-power parent left the Hayes campus site.
-
-**The Kingsnorth follow-up dissolved on measurement** (2026-08-30,
-late). The export figure was never the site's published headline: the
-sites table shows Kingsnorth at 39.724 MW disclosed total site demand,
-and the 49.9 — "an EfW plant up to 49.9 MW", the sub-50 DCO threshold
-cap — renders only as the site's on-site generation, which it is. The
-issue's table had measured "shows 49.9" with the all-quantity-types
-max, the same ladder conflation the survivor check caught. What WAS
-wrong on published pages was the same figure-shape elsewhere: five
-sites' headline rested on the generation rung with plant the
-generation adjudication calls `prime_combustion` or `renewable` —
-"Standby generation capacity... sized to carry full load" asserted
-against an energy-park plant that runs for export (Heyford Park's own
-49.9 cap, Dumfries, Reading ×2, PTNO-12122711). Fixed by making the
-ladder's generation rung honour `plant_type`: prime, renewable and
-storage plant no longer stand in for load; mixed and unclear keep
-today's behaviour, because exclusion needs a positive adjudication.
-The figures stay on their site pages labelled by plant kind.
-
-**Still open after stage 3** — the `not_dc` live members holding
-figures (Hallen was one) remain a small leak of the verdict-tracking
-kind, and Hayes Bridge's doubled N+N 300 (the "Not in an issue" note
-below) still stands.
+- **"Site X shares grid infrastructure with Site Y" remains
+  deliberately unattempted.** A proximity row is a candidate, never a
+  claim — the sentence needs the applications to name the same
+  substation or connection point, and that extraction is the open
+  design question, not the tables.
+- **The family-reference tie is a candidate fourth relationship
+  basis.** Fifteen of the ejected records are family-known to their
+  neighbouring site (a discharge citing the substation consent it
+  discharges against) and that documentary tie is recorded nowhere;
+  only the three Barbour-linked records carry a cohort row.
+- **Two procedural singletons stand as tracked warts of the typed
+  `parent_ref` gap**: `Barnet/26/0696/CON` and
+  `Hillingdon/71554/APP/2025/2436`, each the paperwork of a vetoed
+  energy scheme, stranded because family edges cannot see typed
+  parents.
+- **The `not_dc` live-member leak**: membership does not track verdict
+  changes, and figures can stand on members whose latest verdict is
+  `not_dc` (Hallen's did). Small, verdict-tracking in kind.
+- Six adjacent-power records attach to no site at all: keyword-swept,
+  no coordinates. Unchanged by any of this.
+- Hayes Bridge's doubled N+N 300 (the "Not in an issue" note below)
+  still stands.
 
 ### 2. #247 — a campus load figure from one building is shown as the site's
 
@@ -576,36 +473,34 @@ runs the other way: Colt's page says 31 MW for London 4, *below* the
 planning documents' figures. The kind field on every prior entry exists
 so this becomes countable rather than anecdotal.
 
-### Next: snapshot the pages, then fold the claims
+### Next: design the ladder rung, on claims now matched and snapshotted
 
-Order matters and the first step is time-sensitive. **Consultation
-sites are campaign infrastructure and die when the process closes**,
-with no register copy behind them — and the audiences finding asserts
-*silence*, a negative result that can only rest on a held snapshot (a
-probe that could have seen the figure). So:
+Steps 1 and 2 of the original sequencing shipped on 2026-08-30 (PRs
+#267 and #270; HISTORY, "The operator pages day"): all 39 pages plus
+the consultation sites are snapshotted at the review's own read date —
+the five paired silences hold, zero MW mentions against the corporate
+figures — and the sheet's claims are in `capacity_claims`, every quote
+verified against a same-day snapshot, with the out-of-scope VIRTUS
+Slough facility claims deliberately unmatched pending the campus-scope
+decision. The Stockley wrinkle stands recorded on the claims: VIRTUS
+puts 24 MW on LONDON5 and 32.5 on LONDON7, so the 24 the sites table
+shows from LONDON7's handover document may be the right number on the
+wrong building.
 
-1. **Snapshot all 39 pages now** — every URL in `operator_pages.yaml`,
-   into the append-only snapshot store, before any of them changes or
-   vanishes. Cheap, and everything downstream cites it.
-2. **Fold the sheet's claims** into `capacity_claims`
-   (operator_website channel, `as_at` 2026-08-30, source URL = the
-   page, snapshot alongside): roughly twenty rows of quotable MW,
-   including two per-facility rosters on a single basis — VIRTUS
-   Saunderton (LONDON15 9.5 / 16 22.5 / 17 16 / 18 30, "Campus Total
-   of 78 MW") and VIRTUS Slough (seven facilities) — which are exactly
-   the comparability #247 established the planning corpus lacks.
-   The Stockley roster carries a wrinkle worth its own look: VIRTUS
-   states LONDON5 24 MW and LONDON7 32.5 MW, so the 24 the sites table
-   shows from LONDON7's handover document may be the right number on
-   the wrong building.
-3. **Only then** design the ladder rung and the cohort-admission rule —
-   with matched, snapshotted, quantity-typed claims to design against.
+What remains is step 3, deliberately last: **design the ladder rung
+and the cohort-admission rule** — whether and how a first-party
+operator figure fills the declared-power cell at a labelled weight,
+and whether `at_least_100mw` admits on one with the basis named. The
+claims to design against now exist, matched, snapshotted and
+quantity-typed. The VIRTUS Saunderton datasheet PDF (per-facility
+figures behind the page) is unsnapshotted — the fetcher takes HTML
+only — and joins the instrument gaps if the rung wants it.
 
 ### Actions harvested from the review sheet
 
-- **Merge `PTNO-12839274` (KLON-03) into the Kao Harlow campus**
-  (`PTNO-12240972`). Kao's own page rosters KLON-01–04 as one campus;
-  the sheet's T2-08 action. Evidence is in hand; small.
+- ~~Merge KLON-03 into the Kao Harlow campus~~ — **done 2026-08-30**
+  (PR #268 and HISTORY: Project Nobel's misplaced pin corrected, one
+  site retired, key preserved, EA campus permit re-pointed).
 - **VIRTUS Slough campus scope**: VIRTUS rosters LONDON3, 4, 9, 10,
   11, 12 and 19 as its Slough campus; `PTNO-12216044` currently claims
   three of them. A `campus_scope.yaml` question, and the operator
@@ -632,12 +527,12 @@ probe that could have seen the figure). So:
   disclosure, and the no-campus-total decision for planning figures
   stands.
 
-## Deferred to 2.9
+## Acquisition decisions waiting on a person
 
-Decided on 2026-08-26, while 2.8 was being assembled. Each is scoped
-and none is blocked on anything but sequencing — they are held back so
-2.8 ships the corpus work rather than growing to hold everything found
-alongside it.
+Deferred at 2.8 (2026-08-26) and still standing — 2.9 and 2.10 have
+both shipped since, so the old section title ("Deferred to 2.9") had
+aged into a lie. Each is scoped; what blocks each is a decision, not
+work.
 
 - **Re-fetch the 52 applications whose `none_published` was awarded on a
   page that refused.** Established 2026-08-26 without touching a portal,
@@ -657,31 +552,28 @@ alongside it.
   name — the adapter sets it whenever `len(links) == 0`, whether the
   page was a register or a refusal.
 
-- **The "31 browser-routed applications" mostly dissolved on
-  measurement** (2026-08-27) — the notes had aged past their premise.
-  Broxbourne's LPAssure bloc: all 27 applications already hold
-  documents. Coventry: 26 of 29 already hold documents (3 empty; its
-  completeness is still unmeasured because the relist audit skips the
-  host by name). Northern Ireland: no longer browser work at all — the
-  adapter exists (HISTORY, 2026-08-27). What genuinely remains after
-  the 2026-08-27 sweep finishes: **24 NEC, 3 Northgate, ~14 bespoke**
-  — and the Northgate three are three different situations, probed the
-  same day: Liverpool migrated to a Tascomi register
+- **The browser-routed residue: 24 NEC, 3 Northgate, ~14 bespoke** (as
+  probed 2026-08-27; the "31 browser-routed" notes they replaced had
+  aged past their premise and are recorded in the dissolution
+  measurement of that day). The Northgate three are three different
+  situations: Liverpool migrated to a Tascomi register
   (lar.liverpool.gov.uk answers; the northgate host is dead), Hackney's
   host refuses connections entirely (find where its register lives
-  now), and Birmingham gates scripted clients with 403/503 (a real
-  browser passes — the one genuine human-at-keyboard job left, and its
+  now), and Birmingham gates scripted clients with 403/503 — a real
+  browser passes, the one genuine human-at-keyboard job left, and its
   Hackney application is a conditions detail on the Interxion site's
-  energy-centre emissions). Re-measure the residue from
-  `acquisition_outcome` once the sweep completes; do not re-quote these
-  counts without doing so.
+  energy-centre emissions. Coventry's completeness is still unmeasured
+  because the relist audit skips the host by name. Re-measure the
+  residue from `acquisition_outcome` once the 2026-08-27 sweep's
+  outcomes are settled; do not re-quote these counts without doing so.
 
 ## Phase 2 — the tail of the collecting
 
 - **The acquisition tail, remeasured 2026-08-27 and shrinking as this
   is written.** The standing counts (108 being worked, 31
-  browser-routed) had aged badly — see the Deferred-to-2.9 note above
-  for what dissolved. The day's real finding was larger than any of
+  browser-routed) had aged badly — see "Acquisition decisions waiting
+  on a person" above for what dissolved. The day's real finding was
+  larger than any of
   them: **159 outstanding applications were reachable with adapters
   that already existed** and had simply never been swept — dominated by
   the energy-adjacency blocs discovered on 2026-08-07 (Southwark 24,
@@ -800,21 +692,13 @@ alongside it.
   this table.** A count of held documents is a floor until the site's
   applications are measured and their shortfall is either refetched or
   stated.
-- **The site 61 split is done** — drawn, materialised, singletons
-  dissolved, six claim matches loaded (HISTORY, 2026-08-27, two
-  entries). Its artefact and Drive pickup shipped in 2.9; nothing of
-  it remains.
-
-- **The sites list now says which of its rows are datacentres** (issue
-  #159, PR #178, HISTORY 2026-08-27) — derived, filterable and
-  rendered, so the original item is done. What it leaves for 2.10 is
-  narrower and editorial: two of the classification's rules were
-  decided in the building of it and deserve a reporter's eye, since
-  each changes what the list asserts about real rows. That a Barbour
-  project title naming a data centre settles the class (21 sites), and
-  that `pre_application` and `enabling_works` count as
-  datacentre-positive. Both are one constant each in
-  `dcp/site_class.py` to revisit.
+- **Two site-classification rules deserve a reporter's eye** (the
+  mechanism itself shipped — issue #159, PR #178, HISTORY 2026-08-27).
+  Each was decided in the building and changes what the list asserts
+  about real rows: that a Barbour project title naming a data centre
+  settles the class (21 sites), and that `pre_application` and
+  `enabling_works` count as datacentre-positive. Both are one constant
+  each in `dcp/site_class.py` to revisit.
 
 - **Replace "The rest of the package" block with a computed scale
   panel** (issue #166 holds the request; shape agreed with Luke
@@ -889,78 +773,17 @@ alongside it.
   (idempotent, free on no change) so a fourth direction is noticed the
   week it publishes rather than the day a story runs.
 
-- **`scripts/load_capacity_claims.py` was broken from the SPV work until
-  2026-08-26; fixed.** `companies-house-claims.yaml` gained claims with
-  `quantity_type: scheme_capacity` and `investment_property_fair_value`,
-  and no migration had added either value to the
-  `capacity_claims_quantity_known` CHECK constraint — so the loader
-  aborted on a check violation and rolled the whole batch back, taking
-  **every source** with it, NESO and the Environment Agency permits
-  included. Migration 030 adds both types with the reasoning for each,
-  and the loader now runs: 10 claims inserted, 234 → 242 in the store.
-  The reason it had been left was that applying the migration also loads
-  the pending SPV figures; those are now loaded, with the Court Lane
-  matches already adjudicated and six new ones held back under
-  `considered:` because their site records are over-merged clusters.
-
-- **The incomplete Drive archive is explained, and the fix is in.**
-  The cause, established 2026-08-26: `build_drive_staging.py` stages a
-  document only if its application has a live `site_members` row. 143
-  applications discovered 2026-08-07 (`discovered_via: energy_national`),
-  whose 3,679 documents were fetched on 08-08/09, had no site membership
-  until the materialise of 2026-08-25. Their files were therefore never
-  in the staging tree, never in the 2026-08-21 sync's candidate set, and
-  invisible to that sync's `skipped` and `failed` alike. **The 08-21 sync
-  was complete and correct over the tree it was given** — 50,406
-  candidates, 0 failed, 0 skipped in `data/drive_sync.log`, and the
-  arithmetic closes exactly against the later runs. The ledger-loss
-  episode of 2026-08-21 is **exonerated**; it was the obvious suspect and
-  it was not this.
-
-  What is now in code: `build_drive_staging.py` prints the documents it
-  did not stage, grouped by the application's latest triage verdict, and
-  exits non-zero unless every one of them is triaged `not_dc`. Replayed
-  against the 08-21 state it reports *3,584 documents held for 139
-  in-universe applications are not in this tree*. It also refuses to
-  build when `max(sites.materialised_at)` predates the newest
-  `applications.first_seen_at` or `projects.first_seen_at`, and
-  `verify_drive_sample.py` now samples the universe rather than the
-  ledger — its old frame was derived from the tree and so was
-  structurally incapable of finding a document that never reached it.
-
-  What is left. **The materialise had never been in the runbook** and now
-  is (step 0) — the process half of the same defect. Nothing reconciles
-  tree against ledger against Drive at the end of a sync, and that is a
-  deliberate omission rather than an oversight: on 08-21 all three
-  agreed, so such a check would have passed. The only place this class
-  of failure is visible is between the *universe* and the tree, which is
-  where the guard now sits. And the first real run of the new guards
-  will fail until the corpus stops moving — the refetch pass has already
-  added documents and changed document kinds since the tree was built,
-  which is the guards working, not crying wolf.
+- **What the Drive-archive fix leaves open** (the fix itself shipped
+  2026-08-26; HISTORY, "The corrections that landed between 2.9 and
+  2.10"). Nothing reconciles tree against ledger against Drive at the
+  end of a sync — a deliberate omission rather than an oversight,
+  because on 08-21 all three agreed and such a check would have
+  passed; the guard sits between the *universe* and the tree, which is
+  the only place this class of failure is visible. The first real run
+  of the new guards will fail until the corpus stops moving, which is
+  the guards working, not crying wolf.
   `data/exports/drive_staging.pre-clean` is the primary evidence and
   stays until this closes.
-
-- **`build_drive_staging.py` now removes what has left a site.** Closed
-  2026-08-26 as part of the above. It was additive: after a re-partition
-  the old site folder kept the application directories that had moved
-  away, so the same document existed under two site folders and
-  `drive_sync.py` could not read the move as a move, because it only
-  recognises one when the old path has gone. Found 2026-08-25 when the
-  Interxion folder held 45 application directories for a site with 16.
-  The tree is now written to a `.building` sibling and swapped in, so the
-  clean rebuild is what the script does rather than something you had to
-  know to do by hand; measured at 65 seconds for 494 sites and 52,000
-  documents, and free on disk because the documents are hard links into
-  `data/raw`. The tree root is deliberately still additive — a published
-  workbook or database from an earlier phase is carried across the swap,
-  because a citation of it has to keep resolving, which is the same rule
-  `drive_sync.py --prune` already follows.
-
-- **The pre-build tail assertion is built** (2026-08-27, HISTORY):
-  every export prints the count of power-unit findings with no verdict
-  from any model, beside the corrections gate. Report-only by design,
-  and empty at the 2.9 build.
 ## Phase 3 — the second opinion
 
 - **Re-extract what the local model read.** The label audit
@@ -1380,9 +1203,13 @@ order of effort:
    handles badly — it wants its own node type and evidence-based rather
    than proximity-based association.
 
-`adjacent_power` holds only ~15 applications universe-wide, which is
-implausibly few and consistent with power schemes near campuses being
-absent from the corpus rather than misclassified.
+(The "~15 adjacent_power applications universe-wide" this item once
+cited was itself the undercount it predicted: the energy-adjacency
+sweeps took the class to 48 records, now held in the
+`site_adjacent_power` relationship table rather than in membership —
+see the capacity-model section. The structural point stands: power
+schemes near campuses enter the corpus only when a sweep looks for
+them.)
 
 4. **Generator capacity that accretes through follow-on applications.**
    Found while cross-checking the Capacity Market sites against planning
@@ -1490,15 +1317,14 @@ Found 2026-08-23 while reviewing the reader redesign
 `scripts/correct_adjudications.py` as a named rule, so it is recorded
 here rather than applied from the build lane.
 
-- **The export-limit rule is built and applied** (2026-08-27,
-  HISTORY): 23 rows demoted, value-adjacency not vocabulary, one
-  pinned instance. What remains is a person's row: **Kingsnorth's
-  47,405 kW figures** — the same value at leading and lagging power
-  factor in one connection table, against the offer letter's 5,000 kVA
-  import — now stand as that site's largest grid figure, and no
-  predicate can say which direction the site's connection is. Settle
-  it by hand, then re-check the Operators tab's like-for-like, which
-  still quotes the register-vs-planning comparison this family fed.
+- **A person's row from the export-limit rule** (the rule itself
+  shipped 2026-08-27; HISTORY): **Kingsnorth's 47,405 kW figures** —
+  the same value at leading and lagging power factor in one connection
+  table, against the offer letter's 5,000 kVA import — stand as that
+  site's largest grid figure, and no predicate can say which direction
+  the site's connection is. Settle it by hand, then re-check the
+  Operators tab's like-for-like, which still quotes the
+  register-vs-planning comparison this family fed.
 ## From the reader redesign — waiting on a checkpoint
 
 2.4 work whose next step is a person's, recorded here so the build lane
@@ -1646,62 +1472,22 @@ HISTORY.)
 
   Raised by Luke 2026-08-29, the day the filter landed.
 
-- **`drive_sync.py` is latency-bound, not quota-bound, and the 2.9
-  reorganisation paid for it.** There is no deliberate delay in the
-  sync — the only sleep is error backoff — but it is a single thread
-  paying one HTTPS round-trip per file, ~43 moves/minute against a
-  Drive per-user quota near 12,000 requests/minute. The site 61 split
-  moved ~5,400 files and took hours that batching (the Drive batch
-  endpoint takes 100 calls per request) or modest concurrency would
-  cut to minutes. The design constraint to respect: `Sync.state` is a
-  plain dict saved per file with no locking, and it is the record that
-  makes syncs resumable and moves recognisable — parallelise the API
-  calls, not the ledger writes. Found mid-release 2026-08-27 and
-  deliberately not patched mid-run.
+- **`drive_sync.py`: the batching half is still open** (the
+  concurrency half closed 2026-08-29 — `--workers` now defaults to 12;
+  HISTORY). The Drive batch endpoint takes 100 calls per request,
+  which would beat any number of threads, and the ledger's own write
+  is still a non-atomic `write_text` every 50 changes — worth making
+  atomic before anyone relies on killing a sync safely. The design
+  constraint stands: parallelise the API calls, never the ledger
+  writes.
 
-  **Half closed 2026-08-29.** The concurrency existed all along behind
-  `--workers`, defaulting to 1; the default is now 12 (Luke's call,
-  after a 58,799-file sync spent 9h16m reaching 54% because nobody
-  passed the flag). What remains open is the batching: the Drive batch
-  endpoint takes 100 calls per request, which would beat any number of
-  threads, and the ledger's own write is still a non-atomic
-  `write_text` every 50 changes — worth making atomic before anyone
-  relies on killing a sync safely.
-
-- **Readings are now checked for freshness, but not at render time —
-  the exact check costs more than a build (done 2026-08-27).**
-  `mreading.load_latest` returned the newest stored reading per site
-  key with no check that the site's input still matched; the
-  input-hash discipline existed only at generation. Measured on the
-  day: **4 of 258 rendered readings were already stale**, one of them
-  keyed to a site retired by that morning's merges.
-
-  Rebuilding one site's input to re-hash it costs **8.2 seconds** —
-  `select_pages` reads and scores every cached page — so verifying 258
-  readings would add about **35 minutes** to a build that takes ten.
-  Nothing cheaper is sound, either: `documents_read` and `pages_read`
-  are the only stored numbers that could be compared, and recomputing
-  *them* also needs `select_pages`. So the check is split by what each
-  half costs.
-
-  **Cheap half, every build.** `load_latest(live_only=True)` drops a
-  reading whose site key is no longer live — free, exact, and the case
-  that matters most, since the reading describes a record a reporter
-  cannot open.
-
-  **Exact half, offline.** `scripts/verify_reading_freshness.py`
-  rebuilds every input, compares the hash, and records the verdict
-  append-only: a site whose input has moved gets a *new* row carrying
-  the current hash, no reading, and a withheld reason, so the reader
-  shows the panel as withheld by the path a gate refusal already
-  takes. The marker is written under the model tag `freshness-check`
-  so it can never occupy the unique key a genuine reading of that same
-  input would need. Re-runs are no-ops.
-
-  What remains: deciding where the offline check belongs in the
-  release chain — it is not yet in the runbook, because 35 minutes is
-  a real cost and whether it runs per release or per batch is an
-  editorial call, not a build one.
+- **Where the offline reading-freshness check belongs in the release
+  chain** (the checks themselves shipped 2026-08-27; HISTORY). It is
+  not yet in the runbook, because rebuilding every input to re-hash it
+  costs ~35 minutes against a ten-minute build, and whether it runs
+  per release or per batch is an editorial call, not a build one. The
+  cheap half — `load_latest(live_only=True)` dropping readings whose
+  site key retired — runs every build already.
 
 - **`test_two_builds_of_one_snapshot_are_identical` failed once and has
   not since.** Seen 2026-08-26 during a full-suite run, immediately
@@ -1747,53 +1533,13 @@ HISTORY.)
   reproduction is enough. What remains is to see a failure with the
   ledger held: if one comes, the evidence will be on disk.
 
-- **Every OpenAI finding was missing its family, and two panels select on
-  nothing else.** Found 2026-08-26. The INSERT in
-  `scripts/deepread_escalate_openai.py` omitted `signal_family` and
-  `family_source` from its column list, so all **557,747** findings from
-  the three OpenAI runs carried `signal_family` NULL — 46% of the corpus.
-  `claude-sonnet-5` had 0 NULL of 346,647, which is why nothing looked
-  wrong. `site_profile.EIA_TEXTS_SQL` (`signal_family = 'eia_process'`)
-  and `PARTIES_SQL` (`signal_family LIKE 'party_%'`) filter on that
-  column alone, and NULL matches neither — silently — so no OpenAI
-  finding had ever reached either panel. The water/cooling query has an
-  `OR value_text ~*` arm and was only partly affected. Fixed at source
-  and backfilled the same day (`scripts/backfill_signal_family.py`,
-  derived from `signal_type`, `family_source = 'derived'`, originals
-  untouched). The EIA-process panel went **190 → 234 sites**, parties
-  **296 → 304 sites** and 97,088 → 202,223 rows.
-
-  The two things left after that were both done on 2026-08-26:
-
-  - **The 49,039 local-model findings from 2026-08-07/09 are
-    backfilled.** NULL for a different reason — written before migration
-    009 added the column — and cured by the same command,
-    `--model-like 'mlx:%'`. 3.9% landed in `unclassified`. No finding in
-    the corpus now carries a NULL `signal_family`, on any model.
-  - **`\b` cannot end a snake_case token, and the family patterns were
-    full of it.** `_` is a word character, so `eia\b` never matched
-    `eia_status` and the family `eia_process` did not classify as
-    `eia_process`. Corrected for `eia`, `suds`, `chp`, `ups`, `hvo`,
-    `dno`, `kv`, `mva`, `pue`, `mw`, `crac`, `crah`, `sac`, `spa`,
-    `bng`, `scr`, `cemp`, `lpa`, `gia` and `gea` by writing the boundary
-    over the characters a label token is actually made of
-    (`signal_families.TOK_END` / `TOK_START`) — a change to how a token
-    is delimited, not to which tokens a family claims. The derivation
-    was then re-run over the rows it had left `unclassified`, under a
-    new `--rederive-unclassified` scoped to `family_source = 'derived'`
-    so that a model's own answer can never be overruled by a regex.
-    **13,991 rows left `unclassified`**: +5,292 `eia_process`, +3,845
-    `flood_drainage`, +1,466 `power_generation`, +1,023 `power_demand`,
-    +997 `ecology_biodiversity`, +546 `party_authority`. In the
-    artefacts, the EIA panel went **234 → 239 sites** and the parties
-    panel **202,223 → 209,875 rows** (304 sites, unchanged). The rule is
-    asserted over the whole vocabulary in `tests/test_signal_families.py`
-    — including that the boundary was corrected rather than deleted,
-    which is the easier and more damaging repair.
-
-  Four editorial questions came out of the measurement. All are left for
-  the data and visuals teams, because each changes what a family means
-  rather than how a token is delimited:
+- **Four editorial questions from the signal-family repair** (the
+  repair itself — the missing-family backfill across 557,747 OpenAI
+  and 49,039 local findings, and the snake_case token-boundary fix —
+  shipped 2026-08-26; HISTORY, "The corrections that landed between
+  2.9 and 2.10"). All four are left for the data and visuals teams,
+  because each changes what a family means rather than how a token is
+  delimited:
 
   - **`author` in `party_adviser` captures "authority".** party_adviser
     is declared first, so `party_authority`'s own
@@ -2214,8 +1960,9 @@ None is abandoned; each is a known, scoped piece of work.
   evidence then refused, which is the trap the permit-matches file
   warns about — reference stems and the applicant of record in the documents
   as the boundary evidence, every member assigned so nothing is left
-  to spatial chance. Sites 5, 23, 59 and 11 are what remain, and the
-  permits carry their evidence.
+  to spatial chance. Sites 5, 59 and 11 are what remain (23 was done
+  on 2026-08-28, eleven campuses), and the permits carry their
+  evidence.
 
   **The partition unit is the campus, not the building** (Luke,
   2026-08-28, with the operator's own pages as the source). Iron
@@ -2257,12 +2004,15 @@ None is abandoned; each is a known, scoped piece of work.
   single group-accounts filing dated 2026-08-26, which has no document
   image yet either. Keep retrying; the property company is the one that
   states capacity, not the operating company.
-- **A fourth operator tranche would be cheap.** Add URLs to `PAGES` in
-  `scripts/fetch_operator_snapshots.py`, run it, add curated claims with
-  verbatim quotes. Colt is no longer blocked: Tudor Works and Hayes
-  Bridge Retail Park are their own sites as of 2026-08-27 and the
-  London 4 claim is matched, so a Colt snapshot tranche (London 5–8)
-  now has records to land on.
+- **A fifth operator tranche would be cheap** (the fourth landed
+  2026-08-30 — thirteen pages including the consultation sites, with
+  claims; HISTORY, "The operator pages day"). Colt is no longer
+  blocked: Tudor Works and Hayes Bridge Retail Park are their own
+  sites as of 2026-08-27 and the London 4 claim is matched, so a Colt
+  tranche (London 5–8) now has records to land on. Iron Mountain's two
+  pages 429 and have never had a snapshot despite the survey citing
+  their figures — retry with backoff, or the 61 MW calibration case
+  rests on pages we do not hold.
 - **Multimodal pass over drawings.** Rejected in v1 and still rejected:
   PDFs are overwhelmingly text-layered, and concealed plant will not be
   in the drawings. Revisit only for a specific application where both
