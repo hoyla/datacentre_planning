@@ -1705,6 +1705,16 @@ existed all along, defaulting to 1; the default is now 12, after a
 58,799-file sync spent 9h16m reaching 54% because nobody passed the
 flag. Batching and an atomic ledger write remain open.
 
+**The computed scale panel** (issue #166, shape agreed 2026-08-27,
+shipped in the 2.10 build): "The rest of the package" — a button
+pointing at content one scroll away — replaced by "The scale of what
+the documents disclose", every figure computed at build and never
+typed, every row linked to the query or cohort that produces it,
+caveats in the panel's own words. The
+12.73-GW-is-twelve-million-households correction that settled the
+framing is the argument in one line: computed and citable beats vivid
+and wrong.
+
 ## The relist audit measured the shortfall, and the refetch recovered the class that mattered (2026-08-26)
 
 Historical partial fetches were invisible: a short fetch was recorded
