@@ -1072,6 +1072,11 @@ tr.detail td{padding:14px 18px 18px 30px}
 .mw .q{white-space:normal}
 .prov{color:var(--warn);font-weight:400}
 .q{display:block;color:var(--mut);font-size:13px;font-weight:400;line-height:1.35}
+/* A citation nests the register link inside itself, and both carry
+   .q — so the block rule broke one citation across three lines and
+   stranded the leading comma of ", p.1" at the start of one. A .q
+   inside a .q is part of a line, not a line. */
+.q .q{display:inline}
 /* A statement's citation runs on from the statement (issue #146); .q
    would stack it in a block of its own. */
 .cite{color:var(--mut);font-size:13px;font-weight:400}
