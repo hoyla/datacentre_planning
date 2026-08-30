@@ -3511,6 +3511,12 @@ def main() -> int:
             _bits.append(f'<a href="{esc(_csv)}" target="_blank" rel="noopener">'
                          f'Findings CSV'
                          + (f' ({findings_n:,})' if findings_n else '') + '</a>')
+        # Our map, not Google's: the internal map is the one showing
+        # proximity to energy projects (issue #144), and Google Maps
+        # already sits beside the coordinates in Site details.
+        if lat is not None and lon is not None:
+            _bits.append(f'<a href="#map" onclick="showMap(\'{esc(key)}\');'
+                         f'return false">Show on the map</a>')
         _bits.append(f'<a href="#site-{esc(key)}">Link to this site</a>')
         site_links = "".join(f'<span>{b}</span>' for b in _bits)
 
@@ -4172,7 +4178,8 @@ def main() -> int:
    f'<p class="siteident">Barbour ABI titles this project '
    f'&#8220;{esc(derived_title)}&#8221;; the name above is a reporter&#8217;s.</p>'
    if derived_title != title else ''}
-  <p class="sitelinks"><span><a href="#site-{esc(key)}">Link to this site</a></span></p>
+  <p class="sitelinks">{f'''<span><a href="#map" onclick="showMap('{esc(key)}');return false">Show on the map</a></span>'''
+   if plat is not None and plon is not None else ''}<span><a href="#site-{esc(key)}">Link to this site</a></span></p>
  </div>
  <div class="banner" style="margin-top:0"><b>No application submitted yet.</b>
   {esc(site_profile.NO_DOCUMENT_REASONS['pre_application'])}</div>
