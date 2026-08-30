@@ -4,13 +4,32 @@ What is still to do. Everything already built and decided — including
 the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
-Current state: **496 sites** (plus 25 pre-planning), **2,034
-applications** in the site universe, **58,262 documents and moving**
-(the 2026-08-27 acquisition sweep resumed after the release boundary
-and is still running). Findings and adjudication counts move while the
-corroboration pass runs and are deliberately not restated here —
-`scripts/corpus_stats.py` prints them, and each release states the
-boundary it was stamped at.
+Current state: **508 sites** (plus 7 pre-planning; 515 rows in the
+reader), **2,034 applications** in the site universe, **60,142
+documents**. The pre-planning count fell from 21 to 7 on 2026-08-30
+because 14 rows were duplicates — a Barbour project that had clustered
+into a site was also rendering beside it (PR #249). Findings and
+adjudication counts move while the corroboration pass runs and are
+deliberately not restated here — `scripts/corpus_stats.py` prints them,
+and each release states the boundary it was stamped at.
+
+**2.10 is built and half-published.** Artefacts in
+`data/exports/phase2.10_build/`; Drive and the Google Sheet were
+brought current on 2026-08-30, but `index.html` is deliberately **not**
+republished and **no Cloud Run deploy is pending**. Luke's call, and the
+reasoning is worth keeping: more changes will land before anyone looks
+(bank holiday weekend, and the team is often waiting on EIR and FOI
+replies), so one deploy carrying a statable change beats several that
+reshuffle citation formatting. `data/exports/phase2.10_prior/` is the
+2026-08-29 morning build, kept as the release-diff baseline — it is
+deliberately not named `*_build` so `release.release_dirs()` ignores it.
+
+**A landmine for the next release:** `mr.PROMPT_VERSION` is now
+`reading-1.3` (PR #241), and `_already()` in
+`scripts/machine_reading_openai.py` keys on it. **The next
+`--submit` re-reads all ~358 sites**, roughly 15M input tokens. Nothing
+is spent until someone runs it; the flag is not a mistake, but it should
+be a decision rather than a surprise.
 
 **2.9 released** (PR #165, merged 2026-08-27 14:15; artefacts in
 `data/exports/phase2.9_build/`, reader stamped 14:45). The corpus has
@@ -42,6 +61,330 @@ The chain, its ordering constraints and the traps are in
 must precede the artefacts: adjudication corrections (enforced in code
 by `dcp/adjudication_gate.py`) and the Drive staging rebuild that picks
 up the new CSV adjudication columns.
+
+## The capacity model — what a site's power figure means
+
+Opened 2026-08-30 out of one question from Luke: why does VIRTUS
+Stockley Park, a campus of five facilities, show 24 MW? The answer took
+most of a day and turned into four issues, one of which corrects output
+that is live now. **Read this section before touching site capacity;
+the detail and the evidence are in the issues, and the reasoning that
+produced each decision is in their comment threads.**
+
+Sequencing matters and is not arbitrary: #252 changes which figures a
+site holds, and every other issue reads that. Reviewing campuses first
+would mean reviewing them twice.
+
+### 1. #252 — adjacent power relates to a site, it does not belong to one
+
+**The only one of the four correcting errors that are published.**
+
+`build_clusters` admits every dc_build verdict except `not_dc`, and once
+a record is in-universe the only thing the clusterer can do is put it in
+a site. So all 49 `adjacent_power` applications — substations, energy
+centres, standby fleets consented in their own right — are members of a
+data centre site. Three consequences:
+
+- **Seven sites take their headline power figure from one.** Cardiff
+  Ipswich Road shows 93 MW from a battery-storage and 132kV substation
+  scheme; Kingsnorth 49.9 MW from a figure the reader redesign review
+  already identified as an *export* figure; Colt Project Brenda 22.5 MW
+  across five Welwyn Hatfield applications. **Not one of the seven is a
+  clean IT load for the data centre.**
+- **Eight of the 39 records with coordinates sit within 1 km of more
+  than one live site.** A three-storey low voltage plant building in
+  Park Royal stands inside the radius of five separate schemes including
+  Microsoft's. One site has to take it, decided by whichever spatial
+  edge formed first.
+- **Membership cannot express the finding that matters.** Data centres
+  cluster around substations because substations make a location viable,
+  so the interesting sentence is the one membership cannot write: these
+  five schemes stand around one piece of infrastructure. That is a
+  resilience question about assets the state calls nationally
+  significant (Luke's line, and the best argument for the change).
+
+**Decided.** The seven sites show **no capacity**. Luke, 2026-08-30: the
+capacity of adjacent power is valuable but must not define the capacity
+of the data centre, because that power could serve many purposes. This
+is the quantity-type discipline applied across a boundary the model
+currently lets it cross. The absence is already a supported and
+*reportable* state — `site_scale.power_estimate` distinguishes "read in
+full and discloses nothing, which for a consented data centre is itself
+notable" from "reading is incomplete". Removing the substation figure
+surfaces a finding rather than losing a number, and it removes the
+known-bad Kingsnorth figure with no special case.
+
+**Stage 1 is PR #253, open.** Migration 032 adds `site_adjacent_power`;
+`dcp/adjacent_power.py` computes and materialises it;
+`scripts/materialise_adjacent_power.py` runs it; nine tests. **It changes
+no output** — nothing reads the table, membership is untouched.
+
+114 relationships across 42 records and 66 sites, tiered by evidence:
+
+| basis | rows | rests on |
+|---|---|---|
+| `discovery` | 39 | `discovered_via energy_national:<site_key>` — the site the sweep ran outward from |
+| `cohort` | 4 | a `spatial:` or `barbour:` token resolved to the site now holding that record |
+| `proximity` | 71 | distance and nothing else |
+
+The relationship is largely **recorded rather than inferred**: 26 of the
+48 records already carry a token naming the site they were found
+through.
+
+**A proximity row is a candidate, never a claim.** One kilometre is the
+clustering radius, not a supply relationship — the Slough solar PV
+installation lies within reach of eleven sites and supplies none of them
+by being close. "Site X shares grid infrastructure with Site Y" needs
+the applications to name the same substation or connection point. Stage
+1 deliberately does not attempt that extraction.
+
+**Stage 2 (reader renders the relationship) has one open question**: do
+proximity rows render beside documentary ones? 71 against 39 would drown
+them on a site page — Union Park alone has 19. The alternative is to
+render all three with the basis shown and trust the label, which is how
+the reader tiers confidence elsewhere. **Not decided.**
+
+**Stage 3** removes `adjacent_power` from `site_members`: 34 sites
+change, seven headline figures go. Six sites consist of *nothing but*
+adjacent power and would disappear — and they are two different things.
+Two are the only trace this corpus holds of a data centre (a generator
+"serving the University's relocated data centre" at Plymouth, a DRUPS
+"to support the Newton Data Centre"), so they are leads. Four are energy
+schemes with no data centre in sight (Bearsden BESS, the Exeter and
+Liverpool energy centres, the Cardiff battery scheme) and are arguably
+`not_dc` — a triage question, not a modelling one. Six further records
+attach to no site at all: keyword-swept, no coordinates.
+
+### 2. #247 — a campus load figure from one building is shown as the site's
+
+Stockley Park displays 24 MW. That figure is ours and correctly cited —
+but it is a **commissioning milestone**, from a document titled *VIRTUS
+LONDON7*: "We expect Data halls 1, 2, 3, 4, 6, 7, 10 to be handed over
+to the client by the end of 2021 … power capacity of 24MW". VIRTUS
+publishes LONDON7 at 32.5 MW.
+
+**Decided: no campus total renders.** The campus holds
+installation-specific figures for three of five facilities and **no two
+are the same kind of quantity** — LONDON5 an average operational load
+(6.613 MW, 2018), LONDON7 a partial handover (24 MW, 2021), LONDON14 a
+design capacity (22 MW, 2023). A floor requires adding like to like. The
+three render per facility with their kinds stated, and the
+incomparability is left visible **because it is the finding**.
+
+**The finding, which needs no code and may be the most valuable thing
+here:** no document has ever stated this campus's load on a common
+basis, across five facilities built on one site over at least seven
+years, and the planning system did not require it. The same holds at
+VIRTUS Slough. That is a question for the operator and for Hillingdon.
+
+**Facility identity comes from the document, not the application.** Stem
+`37977` holds papers naming both LONDON5 and LONDON7. Only 8 of 434
+documents name a facility, in four spellings. A naive filename pattern
+is dangerous: matching on the whole URL made a Central Bedfordshire
+SharePoint path `/sites/LPPSCasework/DC50/` look like a facility 1,673
+times.
+
+**Summing is wrong in most cases.** Within a facility, phases are
+subsets (LONDON14's 22 MW is two 11 MW phases). Across applications, a
+scheme restates its own capacity — Cambois carries 1,100 MW in three
+applications and sums to 3,300.
+
+**The sites-table cell, agreed:** keep the number so sorting and ranking
+survive, drop it to `w-implied` weight because it is not a disclosed
+*campus* figure, and let the basis line name the facility and the
+coverage — "LONDON7 only · 3 of 5 facilities disclose, on 3 different
+bases". Rejected: showing no number, which drops the site out of sorting
+and out of `at_least_100mw`.
+
+**`data/priors/campus_scope.yaml` (merged, PR #251) lists all 35
+multi-project sites**, every entry `unreviewed`, with a deliberately
+crude `proposed` classification that decides nothing and failed to place
+17 of them. The four kinds are distinct facilities, phases of one
+scheme, a masterplan beside its own components, and co-located
+operators — and summing is right in at most one.
+
+**The review will grow, not shrink.** `PTNO-12058499` turned out to be
+three operators plus a fourth scheme: Telehouse (North Two, West 2,
+South), Global Switch (House, London South), Republic, and the Astoria
+Way change-of-use at E14 9FT. Luke: "It's three." Partitioning it into
+four creates **two new multi-facility campuses** each needing a scope
+decision. Global Switch may be the first constructible total in the
+corpus — two facilities, one operator, both figures `it_load`, 80 + 35 —
+which makes it the case that tests whether `total: sum` is ever safe.
+Two substation applications at *Land to West of East India Dock House*
+belong to none of the four and are what raised #252.
+
+**Also unresolved here:** Stockley Park's 22 MW is adjudicated as both
+`it_load` and `total_site` from the same document, and must resolve to
+one before it can be summed or compared.
+
+### 3. #250 — a campus ranked on one facility falls below a line it would clear
+
+The mirror of #247 and **the invisible half**. A wrong amber pill invites
+a check; a site simply absent from `at_least_100mw` invites nothing.
+
+Luke's reason for raising its priority: "hyperscale" is a live news
+issue, so `at_least_100mw` is not one cohort among several — it is the
+answer to the question a reader arrives with, and its definition takes
+the 100 MW line from the industry rather than from this project.
+
+**A cause we can act on: 148 capacity claims match no site.**
+
+| source | claims | matched | unmatched with a figure |
+|---|---|---|---|
+| NESO EA register | 119 | 13 | 106 |
+| operator website | 66 | 27 | 36 |
+| Companies House | 22 | 10 | 6 |
+| EA permit | 42 | 14 | 0 |
+
+Among the unmatched: Vantage Cardiff 148 MW, Global Switch London East
+87 MW, Global Switch London South 70 MW, Digital Realty LGW14 64 MW,
+Vantage London I 55 MW. Any of those, matched, could move a site across
+the line or give it a figure where it shows none.
+
+The concrete instance: VIRTUS Slough (`PTNO-12216044`) renders "No
+documents held" while VIRTUS's own published figure for LONDON10 — 6.6
+MW, from the operator's site — sits unmatched, even though the site's
+own alias asserts LONDON10 belongs to the campus on a Companies House
+charge. Likely cause is address mismatch (the campus's Barbour addresses
+are Liverpool Road and Slough Trading Estate at SL1 4QZ; the claim is 75
+Buckingham Avenue) but 148 claims will not have one cause. **Establish
+why the matcher misses them before proposing anything.**
+
+This also bears on #247: the operator channel already names facilities
+properly (`CyrusOne LON2/LON3/LON4/LON5`, `Digital Realty LGW14/15/16`)
+on a single quantity type, which is the comparability planning documents
+do not give Stockley Park. Not interchangeable — an operator's
+announcement is not a planning disclosure — but the per-facility
+comparability #247 wants may already exist, unattached.
+
+### 4. #248 — a figure we assemble is not a figure a source states
+
+**Not speculative: 234 of 9,747 site-capacity figures (2.4%) hold a
+value that appears nowhere in their own quote.** They were computed —
+"Wind Generation of 3 no. 900kW turbines" → 2.7 MW; "4no 25kw split
+units and 2no 7.1Kw" → 0.1142 MW; "1 x 1.25MWe and 57 x 2.4MWe diesel
+generators" → 140.35 MW.
+
+The arithmetic is right in each. That is not the issue. They render
+exactly as a figure a document states, with a verbatim quote beneath
+that does not contain the number, and a reporter checking one finds the
+components and no total — with no way to tell a disclosure from our
+multiplication.
+
+The reader's weight ladder already has a rung for this in spirit:
+`w-modelled` with a `≈` glyph, used for a floorspace estimate because it
+is "arithmetic on an area rather than anything anyone published". A
+figure multiplied out of a unit count is the same kind of thing and does
+not carry the mark.
+
+**First thing to establish:** how many of the 234 are a plain unit-count
+multiplication (defensible, needs a label) versus something looser. The
+generation cohort's existing exclusion of per-unit ratings is the
+nearest precedent for where the line sits.
+
+### Approaches tried and rejected, so they are not re-proposed
+
+- **Summing a campus's figures into a total.** Rejected twice, for two
+  different reasons. Arithmetically, phases are subsets of their own
+  facility and a scheme restates its capacity across its own
+  applications (Cambois: 1,100 MW three times, summing to 3,300).
+  Editorially, Stockley Park's three facility figures are an average, a
+  milestone and a design capacity — a floor needs like added to like.
+- **Deriving facility identity from document filenames.** Sparse (8 of
+  434 documents), inconsistent across operators (`LONDON7`, `BUILDING2`,
+  `LON14`), and actively dangerous: matching the whole URL turned a
+  council's SharePoint folder into a facility 1,673 times. Facility
+  names belong in a prior, hand-adjudicated.
+- **Routing planning-document figures into `capacity_claims`.** Proposed
+  early and wrong — Luke: "capacity claims come principally from the
+  applications, and we already have them, and we're already displaying
+  them." The per-application figure panels already carry document, page,
+  quote and gate line. `capacity_claims` is for figures published
+  *outside* the planning system, and mixing the channels would lose the
+  distinction the reader depends on.
+- **Showing no number in the sites-table capacity cell for a
+  multi-facility campus.** More honest in isolation, but it drops the
+  site out of sorting and out of `at_least_100mw` — which, given
+  hyperscale is the question readers arrive with, hides the biggest
+  sites behind their own complexity.
+- **A computed rule for withholding the generation-exceeds-load ratio.**
+  "More than one application with a load figure" fires on 35 sites and
+  would be wrong on most of them, because the usual cause is one scheme
+  restating itself. What distinguishes Stockley Park is a document
+  naming a facility, which exists corpus-wide for 8 documents. Hand
+  adjudication, not a heuristic.
+- **`at_least_100mw` admitting a campus on a summed figure.** Not
+  rejected outright but parked: it needs #250's matching work first,
+  because an operator's published campus figure may make the question
+  moot.
+
+### How to continue the 35-campus review
+
+`data/priors/campus_scope.yaml` holds every multi-project site with
+`scope: unreviewed`. Nothing reads it, so an unreviewed site keeps
+today's behaviour — the largest single figure, framed as a floor. A
+reviewed entry sets `scope` and `total` and carries a `reason` written
+as evidence, the way `site_partitions.yaml` entries do.
+
+Luke's method, and it worked: **take them one at a time and discuss
+each**, because they are not one kind of thing and the classifier
+cannot tell them apart. The first one consumed a long stretch and
+produced a four-way partition, a modelling issue and no scope decision —
+so budget accordingly, and note the honest counter-argument that a
+targeted pass over the largest sites may deliver more than an exhaustive
+one.
+
+**Two axes, independent, and easy to conflate.** A *partition*
+(`site_partitions.yaml`) decides which site a record belongs to. A
+*scope* (`campus_scope.yaml`) decides how a site presents its power.
+Partitioning `PTNO-12058499` did not resolve it — it created two new
+multi-facility campuses that each need a scope decision.
+
+### Traps this work hit, recorded so the next session does not
+
+- **A probe that cannot see the thing it is looking for.** This happened
+  repeatedly and cost real time. `ORDER BY value_mw DESC` puts NULLs
+  first in Postgres and hid every figure on a site. Joining `sites`
+  without `retired_at IS NULL` made 45 applications look like they were
+  in several live sites at once (they were not: 0). Matching facility
+  names against the whole URL matched a SharePoint path. Swallowing an
+  exception from the wrong page-cache accessor reported "130 documents
+  have no cached text" when all 130 had text. **Check what the probe
+  could have seen before believing what it did not find.**
+- **A token that resolves to nothing fails silently.** `spatial:` holds
+  an application reference and `barbour:` a Ptno — neither is a site
+  key. Compared against site keys they raise nothing, match nothing, and
+  quietly demote a documentary relationship to bare distance. Four
+  records were affected before the tests caught it.
+- **A guard can test the wrong thing and look like no guard at all.**
+  The reader *did* skip a pre-planning row whose key matched a site key —
+  which catches a project anchoring its own site and misses one that is
+  a member of a *different* site, which was the entire bug.
+- **`--dry-run` on `drive_sync.py` describes only the prune.** It errors
+  without `--prune` and returns before any upload analysis, so there is
+  no preview of what will be uploaded.
+- **The Drive tree and the reader do not contain the same things.** A
+  pre-planning row exists in the reader and has no Drive folder at all,
+  because staging is built from documents. Predicting one from the other
+  is a mistake.
+- **Test bounds fitted to whatever the code returned test nothing.** A
+  distance assertion was guessed at 24–26 km and failed at 26.7; the
+  fix was to derive it from the components, not to widen the bound.
+
+### Not in an issue, and worth someone's time
+
+- **The N+N question is closed.** Redundancy handling is correct
+  throughout — "5 MW N+1" → 5.0, "1125 kW N+1" → 1.125. But Hayes Bridge
+  (`PTNO-12831113`) has the *same sentence* — "The campus will be served
+  by 2No (N+N) 150MW 66kV connections" — adjudicated at both 150 and
+  300 MW, and `max()` takes the wrong one. The same document set states
+  the development requires 250 MW. One site, not a pattern, but it is
+  wrong on the page.
+- **`PTNO-12831113` is the worst-contaminated campus**: 24
+  adjacent-power members, a 150 MW substation figure, three named
+  facilities (LON6, LON7, LON8), and the doubled 300 MW. It is the
+  reason #252 sequences before #247.
 
 ## Deferred to 2.9
 
