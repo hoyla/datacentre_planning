@@ -3975,7 +3975,7 @@ def main() -> int:
      as:</p><p>{esc(trim(full_desc, 640)) or NO_DESCRIPTION}</p></div>
 {figures_html}
   {claims_html}
-  <div class="box"><h4>What the documents say</h4>
+  <div class="box"><h4>Key findings from the planning applications</h4>
    {findings_html}</div>
  </div>
  <div class="col-computed">
