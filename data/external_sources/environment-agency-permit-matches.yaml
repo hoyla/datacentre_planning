@@ -249,22 +249,25 @@ matches:
       649 carries the retirement.
 
   - claim_name: KAO Data Harlow Campus (EPR/WE4588AB)
-    site_id: 117
+    site_id: 34
     method: name_identity
     confidence: probable
     matched_by: hand:claude-opus-5:2026-08-22
     evidence: >-
       The variation notice is addressed to "Harlow Operations Limited,
       KAO Data Harlow Campus, London Road, Harlow CM17 9NA" and heads its
-      pages "KAO Data Harlow Campus"; site 117 is "KAO DATA CAMPUS -
-      KLON-03 - DATA CENTRE", 80 m away, and its applications are for
-      "Four new data centres and security gatehouse" on the South
-      Redevelopment Site of the Harlow Campus. The other Kao record, site
-      34 (Kao Park, Project Nobel), is 2.1 km off. Probable rather than
-      strong for two reasons: the permit states 152.26 MWth as "the total
-      thermal capacity for the campus" while the site record is named for
-      one building of it, and site 117 also holds applications for
-      Harlow Innovation Park, a separate scheme.
+      pages "KAO Data Harlow Campus". Originally matched to site 117
+      ("KAO DATA CAMPUS - KLON-03 - DATA CENTRE", 80 m away, whose
+      applications are "Four new data centres and security gatehouse" on
+      the South Redevelopment Site of the Harlow Campus); the "other Kao
+      record, 2.1 km off" was Project Nobel's misplaced Barbour pin, and
+      on 2026-08-30 the pin was corrected (inferred_coords.yaml, Ptno
+      12240972) and the two sites merged under PTNO-12240972 — site 34,
+      which this match now names. The permit's campus framing fits the
+      merged site better than it fit one building. Probable rather than
+      strong: the permit states 152.26 MWth as "the total thermal
+      capacity for the campus" and the merged site also holds
+      applications for Harlow Innovation Park, a separate scheme.
 
 # Permits examined and deliberately NOT matched. A tested-and-empty
 # result is not the same thing as an untested one.
