@@ -4,14 +4,21 @@ What is still to do. Everything already built and decided — including
 the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
-Current state: **508 sites** (plus 7 pre-planning; 515 rows in the
-reader), **2,034 applications** in the site universe, **60,142
-documents**. The pre-planning count fell from 21 to 7 on 2026-08-30
-because 14 rows were duplicates — a Barbour project that had clustered
-into a site was also rendering beside it (PR #249). Findings and
-adjudication counts move while the corroboration pass runs and are
-deliberately not restated here — `scripts/corpus_stats.py` prints them,
-and each release states the boundary it was stamped at.
+Current state: **501 sites** (plus 7 pre-planning; 508 rows in the
+reader), **1,978 applications** in the site universe, **60,142
+documents**. The fall from 508 sites and 2,034 applications happened on
+2026-08-30 evening and was deliberate, in two parts: the Kao Harlow
+merge (PR #268, two sites that were one campus with a misplaced pin
+between them) and the #252 chain (PRs #269 and #271 — adjacent power
+left membership for the relationship table, retiring eight sites and
+ejecting the 42 sited adjacent-power records plus their stranded
+paperwork; two procedural singletons were born as tracked warts). The
+pre-planning count fell from 21 to 7 the same day because 14 rows were
+duplicates — a Barbour project that had clustered into a site was also
+rendering beside it (PR #249). Findings and adjudication counts move
+while the corroboration pass runs and are deliberately not restated
+here — `scripts/corpus_stats.py` prints them, and each release states
+the boundary it was stamped at.
 
 **2.10 is built and half-published.** Artefacts in
 `data/exports/phase2.10_build/`; Drive and the Google Sheet were
