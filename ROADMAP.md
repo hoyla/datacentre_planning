@@ -1174,16 +1174,6 @@ here rather than applied from the build lane.
     own names.** Neither claims a token containing "land" or "admin".
     Recorded in the test as known gaps rather than papered over.
 
-- **The sites table's sort glyph wraps onto a line of its own.** The
-  ↕ every sortable header carries is a `th:after` pseudo-element, so it
-  sits after the heading text and the `?` dictionary link — but the
-  per-column `min-width`s in the sites-table CSS were sized to the
-  heading text without it. On the headers that already wrap,
-  "Who's behind it" and "External power indicators", the glyph lands on
-  a line by itself under the heading instead of beside it. Account for
-  the glyph when sizing the columns, or bind it to the heading's last
-  word so it can never break alone.
-
 - **The deep-read's evidence quotes are snippets, not sentences.**
   Found by Luke while hand-checking the generation sample: row after row
   arrived as a fragment — "Total Installed Capacity (Megawatts) 0.21",

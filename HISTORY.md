@@ -1700,6 +1700,11 @@ under the `freshness-check` tag so it can never occupy a real
 reading's key. Where it runs in the release chain is still the
 ROADMAP's question.
 
+**The sort glyph no longer breaks onto its own line**: `th:after`'s
+content now opens with a non-breaking space, binding ↕ to the
+heading's last word — the remedy the ROADMAP item proposed, verified
+in the CSS 2026-08-30.
+
 **The alias groups outgrew their checkpoint** (verified 2026-08-30).
 The ROADMAP had held "confirming the rest of the alias groups" at its
 2.4-era snapshot — eight of ten seeded members confirmed, one
