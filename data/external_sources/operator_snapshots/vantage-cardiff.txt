@@ -1,8 +1,8 @@
 # url: https://vantage-dc.com/data-center-locations/emea/cardiff-united-kingdom/
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): e73d200b75c638027c84243a7f31e34c81229ff45cbff2cf4d59656a17aac95f
+# sha256(html): c46adf603b5dbbd9fef3c6a86a2e9015b111832cf7580e839950bbd320b8026d
 
 ## STRUCTURED
 
@@ -1020,7 +1020,7 @@ United Kingdom
 
  
  
- © 2026 Vantage Data Centers 
+ © 2026 Vantage 
  
  
  

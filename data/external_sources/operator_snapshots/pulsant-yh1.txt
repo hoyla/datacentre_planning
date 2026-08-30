@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-rotherham-datacentre
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): b716d05c931f4b348cbe14f00f26a1328b71e31264995e370f07eca5e5516c87
+# sha256(html): 7e14c48e7be2a6bc0e96128feb99cf1dc7c89ab1be6f36701b70855b6577881f
 
 ## STRUCTURED
 

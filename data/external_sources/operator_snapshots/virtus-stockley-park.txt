@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
 
-# fetched: 2026-08-28
+# fetched: 2026-08-30
 
-# sha256(html): 2d6b45183ddddb9e9fec996b9c83c9128c59a44290265ccd43d23dd62578a881
+# sha256(html): e1d560a5eea82251ff38aeed62c9f961d63f579ae79c08f35b83763eaeaeaaf6
 
 ## STRUCTURED
 

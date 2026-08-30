@@ -1,8 +1,8 @@
 # url: https://www.digitalrealty.com/data-centers/emea/london/lon3
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 18d193aa0cf4b8022481b1aa6eea213fffca6a685ad4a304f675aa704858e166
+# sha256(html): 6de89e6213c4ee3359e585c1a223ad085dea34f9448dba944d23a989a6d7fe76
 
 ## STRUCTURED
 
@@ -18,5 +18,5 @@ LON3 Our LON3 data center is part of the Hanbury Street Data Center, the recogni
  ISO 9001 ISO 14001 ISO 27001 ISO 22301 SOC2 PCI-DSS Sustainability Leading with green innovation in the data center industry. 
  Certifications BREEAM Renewable Energy % 100 % Security & Infrastructure Layered security measures for ultimate infrastructure protection. 
  5 layers of physical security 24x7 CCTV You’ve got a direct line to our experts. Let’s talk.
- Related resources View all Webinars Enterprise Webinars Americas From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
+ Related resources View all White Papers Healthcare High-Density Colocation Pharmaceutical White Papers High-Density Colocation Manufacturing AI/ML From concept to execution, we're ready to build a plan. Talk techs, specs, and availability with our engineering team. Talk to a specialist  Regions Americas EMEA APAC View Metros Company About Us Impact Investors Careers PlatformDIGITAL® Colocation Connectivity Data Insights Hub Pervasive Datacenter Architecture The meeting place, for companies, technologies, and data.
  Sales +1 877 378 3282 sales@digitalrealty.com Customer Care customercare@digitalrealty.com Portal Login 2026 Digital Realty Trust All rights reserved. Legal Privacy Terms Cookies Acceptable Use Suppliers

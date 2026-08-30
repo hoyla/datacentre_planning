@@ -1,8 +1,8 @@
 # url: https://nlighten.com/en/edge-location/london/
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): b1c76b4e025e4c742ffc7a17ba3fabde2afddd005fa1e1240e8a50016f086d3f
+# sha256(html): 3af66a767a63f63639e6101513f84ca72f136c5574a8d288fc97ca690cf781e0
 
 ## STRUCTURED
 
@@ -2028,7 +2028,7 @@ We are now a major player in the UK and have the resources of nLighten to accele
  
  
  
- Name This field is for validation purposes and should be left unchanged. First Name* (Required) Last Name* (Required) Email* (Required) 
+ Email This field is for validation purposes and should be left unchanged. First Name* (Required) Last Name* (Required) Email* (Required) 
  
  Company* (Required) Event I'm attending Message 
  

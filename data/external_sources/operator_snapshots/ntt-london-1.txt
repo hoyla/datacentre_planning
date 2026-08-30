@@ -1,8 +1,8 @@
 # url: https://services.global.ntt/en-us/services/data-centers/emea/london-1-data-center
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): bcd7dff745564f0447b24620a19ddda8686e9747a1a500508c0b13abefb19ae0
+# sha256(html): 91f1bac5495494f1b717fe2a03c96050a4ecadad17b6aee50806948d5b711b00
 
 ## STRUCTURED
 

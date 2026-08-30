@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-medway-datacentre
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 11ce6d0ca430fbd999e72fd48aa0005db51fc9ed226109016104f140753ca7a9
+# sha256(html): 78058197973ae7bd7059e5446889d28deafaefbddde6ed7ca3e72689f042b4c0
 
 ## STRUCTURED
 

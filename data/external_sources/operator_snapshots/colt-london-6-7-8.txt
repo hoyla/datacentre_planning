@@ -1,8 +1,8 @@
 # url: https://www.coltdatacentres.net/en-GB/our-locations/data-centre-locations-europe/london-6-7-8
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): 857bdf855aeac8c7d646ca4d53c7db557f68bff282d4a058828d62f70572d76e
+# sha256(html): 6b35eada92972109c2f980d97443075c500a7f6e256f818b7cc18e45cb605e70
 
 ## STRUCTURED
 

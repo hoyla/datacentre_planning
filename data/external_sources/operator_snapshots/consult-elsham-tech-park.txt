@@ -1,0 +1,231 @@
+# url: https://www.elshamtechpark.com/
+
+# fetched: 2026-08-30
+
+# sha256(html): d8bc43f4292a638138ef547b8b590f458ae10b2b309258c47bbcdfd4e88df77e
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org/",
+ "@type": "WebSite",
+ "name": "Elsham Tech Park",
+ "url": "https://www.elshamtechpark.com"
+}
+
+## VISIBLE TEXT
+
+-->
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Elsham Tech Park 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+
+ top of page About Benefits Masterplan Timeline Get in Touch Elsham Tech Park is a proposed AI data centre campus in North Lincolnshire, next to Elsham Wolds Industrial Estate. 
+
+ ​ ​ ​ ​ ​ 
+
+ It will help meet a critical UK need for data centre infrastructure and support companies and organisations as they improve the way they use artificial intelligence. 
+
+ 
+
+ It is one of a proposed network of AI data centre campuses in the proposed Northern Lincolnshire AI Growth Zone. The area has the potential to become a European hub for the AI industry, and to help secure the future of Britain’s digital economy. ​ ​ 
+
+ ​ 
+
+ ​ A planning application for Elsham Tech Park was submitted in 2025. Construction is expected to begin in 2027, with the first phase of the campus set to open in 2029. ​​ Benefits for North Lincolnshire and the UK 1 Substantial boost to UK AI compute capacity Providing the country with an internationally-competitive location to carry out AI training services, supporting economic growth and UK leadership in AI. 2 £10bn landmark investment £10bn+ is likely to be invested in the campus as it is fully built out, with local businesses able to bid for supply chain opportunities 3 Jobs for local people Up to 900 full-time operational jobs will be created, with average salaries of more than £50,000. There will be technical roles in electrical and mechanical engineering as well as support roles such as facilities management, security, catering and cleaning 4 Education and training programmes Substantial funds will be set aside to support local education and skills programmes. These will provide digital skills and training for people in the region, helping them to prepare for jobs at the campus and in the technology industry 5 Highways upgrades and transport improvements The campus will see carefully-considered plans to improve nearby roads and transport links 6 Supporting local Businesses Local businesses in North Lincolnshire and the broader region will be given priority to tender for supply chain opportunities. For example, the development will require over 100,000 tonnes of steel to construct the site. Elsham Tech Park, as part of the proposed Northern Lincolnshire AI Growth Zone, has committed to the UK Steel Charter, meaning British Steel's site at Scunthorpe is ideally placed to supply these materials. 7 New amenity centre for Elsham Wolds industrial estate The campus will include new amenity buildings which could include a creche, gym or canteen. This will be open to people working on the campus or on the Elsham Wolds Industrial Estate. Details are subject to consultation. 8 Biodiversity net gain across the site The plan for the campus involves a significant % improvement to biodiversity. 9 Accelerate path to net zero for the Humber Industrial Cluster North Lincolnshire and the surrounding area is already a leader in green power technologies. Substantial investment from tech companies in Elsham Tech Park, and the Northern Lincolnshire AI Growth Zone more broadly, will drive further substantial improvements in green energy provision 10 Elsham Tech Park has a highly-water efficient design. It will use closed-loop systems, which consume minimal water, to cool the servers. Indicative Timeline 2025 Outline planning application submitted 2026 Reserved matters submitted 2027 Construction begins 2029 1st phase opens Design and access statement 
+ 
+ 
+ 
+ 
+ Planning statement 
+ 
+ 
+ 
+ 
+ Economic benefits report 
+ 
+ 
+ 
+ 
+ Planning statement 
+ 
+ 
+ 
+ 
+ Plan of the 
+
+ site 
+ 
+ 
+ 
+ 
+ What do you think about Elsham Tech Park? 
+Please share your feedback Email Your message SUBMIT Thanks for your input Media enquiries: media@greystokeland.com ​ ​ Up 
+ 
+ 
+ 
+ 
+ 
+ Up 
+ 
+ 
+ 
+ 
+ 
+ Greystoke ©2025 bottom of page

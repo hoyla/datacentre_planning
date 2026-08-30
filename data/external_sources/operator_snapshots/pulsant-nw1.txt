@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-manchester-datacentre
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 25079795b3f7c68876febccf6e6c4e31cd95a1e60412155f54bcf25db487ab18
+# sha256(html): 78b23073dfa3b9851bb2cb050292965d849e35d73d5f5a478bdce5e26a1ae1c5
 
 ## STRUCTURED
 

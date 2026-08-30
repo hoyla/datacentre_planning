@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-newbridge-datacentre
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 2e4919fc15570082eb36c8985f2ac5da41b673bff308cb0e316ed4cf25277a51
+# sha256(html): c5da34866a3583bf8da659d33ebd1928f86993e1205c66f4c8b794360f782062
 
 ## STRUCTURED
 

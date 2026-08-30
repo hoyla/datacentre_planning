@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-reading-east-datacentre
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): 51182993c85ed7035249643b46dfc223ff6c35349cf13b05fdc0b4fab00a8755
+# sha256(html): de55dbe3b24152dbddbd981442017f047928dd96383ae0eaa0127f8dd05b7c43
 
 ## STRUCTURED
 

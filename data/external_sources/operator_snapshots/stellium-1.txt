@@ -1,8 +1,8 @@
 # url: https://stelliumdc.com/stellium-1/
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): a8a0c79f941f4af43455f36c654bb401edb1d27611eb97ba8d6346b11025ff14
+# sha256(html): d58651450fe5f211c5f73382694ac4a13a69cbb98f6c040311941232416b13f9
 
 ## STRUCTURED
 

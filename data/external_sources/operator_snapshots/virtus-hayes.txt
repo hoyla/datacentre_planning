@@ -1,8 +1,8 @@
 # url: https://virtusdatacentres.com/locations/uk/london/hayes-campus
 
-# fetched: 2026-08-28
+# fetched: 2026-08-30
 
-# sha256(html): ef376c5f8907d3d418229fa1524856764ee000fc43031a98ccbf5c2f510fb495
+# sha256(html): fc303ed05625d58d636a6c865cfd938a231e3e75abd6a253f3add6b64ded67b2
 
 ## STRUCTURED
 

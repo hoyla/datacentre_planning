@@ -1,8 +1,8 @@
 # url: https://services.global.ntt/en-us/services/data-centers/emea/hemel-hempstead-3-data-center
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): c42249fd276b9df7a8ee31658713044a84febce60c78b859855c1c21c3532223
+# sha256(html): 649292399e37e3109ec3f5bd412323423abf91601484dc317f79bd5fe537bd94
 
 ## STRUCTURED
 

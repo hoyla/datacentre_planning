@@ -1,0 +1,76 @@
+# url: https://questpark.co.uk/
+
+# fetched: 2026-08-30
+
+# sha256(html): 9d024e49e384b82ff8231405437ea8aa6c994aaa1cd3047cd331c91e08c4b028
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://questpark.co.uk/#organization",
+   "@type": "Organization",
+   "logo": {
+    "@type": "ImageObject",
+    "caption": "Quest Park Data Campus",
+    "url": "https://questpark.co.uk/__l5e/assets-v1/29b0804c-a45b-4a8d-83f1-5157eed08e06/qp-logo-white.png"
+   },
+   "name": "Quest Park Data Campus",
+   "url": "https://questpark.co.uk"
+  },
+  {
+   "@id": "https://questpark.co.uk/#website",
+   "@type": "WebSite",
+   "name": "Quest Park Data Campus",
+   "publisher": {
+    "@id": "https://questpark.co.uk/#organization"
+   },
+   "url": "https://questpark.co.uk"
+  }
+ ]
+}
+
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "There is no official register, but industry estimates put the UK at roughly 450\u2013500 operational data centres, with a fast-growing share built or retrofitted for AI workloads. Capacity is concentrated around London (Slough, West London, the M25) \u2014 which is why power-secured sites within 35 minutes of central London, such as Quest Park, are in short supply."
+   },
+   "name": "How many AI data centres are in the UK?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The vast majority sit inside the M25 \u2014 Slough, Park Royal, Docklands and the Thames Valley \u2014 with secondary clusters in Manchester, Cardiff and the North East. New hyperscale and AI campuses are moving north and east of London where 100MW+ grid connections are available; Quest Park sits in Bedfordshire, 35 minutes from central London, on the spine of the UK's emerging compute corridor."
+   },
+   "name": "Where are the UK's data centres located?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Hyperscalers (AWS, Microsoft, Google, Meta), specialist developers (Ark, Kao, Yondr, Nscale, Pure DC) and infrastructure investors are all active. The binding constraint is no longer capital or planning \u2014 it is grid power. Quest Park is one of a small number of UK sites with a secured grid connection and consented land ready for development."
+   },
+   "name": "Who is building new data centres in the UK?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Three things: a secured grid connection plus on-site private generation with AVK, an existing June 2024 Class B8 consent for 1.5m sq ft sets accepted site parameters as to bulk and scale and unlocks enabling works, and 143 acres on a single contiguous plot \u2014 35 minutes from central London and designated as Critical National Infrastructure."
+   },
+   "name": "What makes Quest Park different from other UK data centre sites?"
+  }
+ ]
+}
+
+## VISIBLE TEXT
+
+Quest Park — Hyperscale & AI Data Centre Campus near London Importance Proposals Timeline Team Investment News Contact Request Data Room → Importance Proposals Timeline Team Investment News Contact Request Data Room Access Building today, to power tomorrow. A 143-acre data centre campus in Bedfordshire - power secured through a grid connection and on-site generation, with around 72 acres on a single consented plot, 35 minutes from central London. Request Data Room Access View the Proposals Scroll Latest update Section 35 Direction granted by the Secretary of State Quest Park has been formally directed under Section 35(1) of the Planning Act 2008 by the Secretary of State for Housing, Communities and Local Government — confirming the project as a Nationally Significant Infrastructure Project (NSIP) and unlocking the Development Consent Order pathway. View on GOV.UK A national priority The UK's digital economy depends on world-class data centre infrastructure. In 2024 the Government designated data centres as Critical National Infrastructure . Quest Park answers that need with scale, a planning head start, and the one thing the market lacks most: secured power. Location Stewartby, Bedfordshire 35 minutes from central London. On the spine of the UK's emerging compute corridor. 143 Acres Total landholding Secured Grid connection ~ 1 GW Long-term capability 1.5 m sq ft Consented baseline Why Quest Park Four reasons this site is different. See the full proposal Power, secured two ways A grid connection plus an on-site gas-powered prime-power and microgrid solution delivered with AVK. Scale on a single plot Around 72 acres on one contiguous, consented plot — clean phasing and simple infrastructure routing. A planning head start An existing June 2024 Class B8 consent for 1.5m sq ft sets accepted site parameters as to bulk and scale and unlocks enabling works. National significance Pursuing a single integrated Development Consent Order, backed by Critical National Infrastructure status. Economic impact A national-scale return. Volterra Partners economic needs assessment, January 2025. Figures are assessment estimates. Up to 6,365 Net additional jobs nationally £ 46 –£ 73 m Added to economy each year (GVA) FAQ UK data centres — the questions investors and operators ask. How many AI data centres are in the UK? There is no official register, but industry estimates put the UK at roughly 450–500 operational data centres, with a fast-growing share built or retrofitted for AI workloads. Capacity is concentrated around London (Slough, West London, the M25) — which is why power-secured sites within 35 minutes of central London, such as Quest Park, are in short supply. Where are the UK's data centres located? The vast majority sit inside the M25 — Slough, Park Royal, Docklands and the Thames Valley — with secondary clusters in Manchester, Cardiff and the North East. New hyperscale and AI campuses are moving north and east of London where 100MW+ grid connections are available; Quest Park sits in Bedfordshire, 35 minutes from central London, on the spine of the UK's emerging compute corridor. Who is building new data centres in the UK? Hyperscalers (AWS, Microsoft, Google, Meta), specialist developers (Ark, Kao, Yondr, Nscale, Pure DC) and infrastructure investors are all active. The binding constraint is no longer capital or planning — it is grid power. Quest Park is one of a small number of UK sites with a secured grid connection and consented land ready for development. What makes Quest Park different from other UK data centre sites? Three things: a secured grid connection plus on-site private generation with AVK, an existing June 2024 Class B8 consent for 1.5m sq ft sets accepted site parameters as to bulk and scale and unlocks enabling works, and 143 acres on a single contiguous plot — 35 minutes from central London and designated as Critical National Infrastructure. Power certainty. Planning optionality. Institutional scale. Request Data Room Access Quest Park Data Campus Power certainty. Planning optionality. Institutional scale. Request Data Room Access → Location Ampthill Road, Stewartby Bedford, MK45 3JP United Kingdom Enquiries For investment, offtake and partnership enquiries, get in touch → Developer Quest Pit Ltd Partners Meet the full team → © 2026 Quest Pit Ltd. All rights reserved. Help Privacy Policy This website is provided for general information only and does not constitute an offer or invitation to invest. Figures are indicative and subject to change. Chat with us

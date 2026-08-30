@@ -1,6 +1,6 @@
 # url: https://consult.apatura.energy/westerhill/the-project
 
-# fetched: 2026-08-27
+# fetched: 2026-08-30
 
 # sha256(html): 1558cebd5621a51ac86736cac660446064c2ec90f882a77051c16c51b2be59df
 

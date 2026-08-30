@@ -1,8 +1,8 @@
 # url: https://puredc.com/london-brent-cross
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): e63bb4b4efc479582e0e71fb4e65ffe80542b70264acfd54eb2ec321a8e5b150
+# sha256(html): a415bb8eea61b9ce2d7cfb7316812399506ce3568638aef0cc6b86773469e91b
 
 ## STRUCTURED
 

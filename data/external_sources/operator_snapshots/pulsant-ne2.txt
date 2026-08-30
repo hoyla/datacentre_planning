@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-newcastle-ne2
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): a35d58779ae7e72fe5bd5adbecc2bc6982f500c922bafaa4103ec26c93b73564
+# sha256(html): ec8c20812ee23f1ff9cbff92d0ab64a24125a997ec647ac5dd6749dad576858f
 
 ## STRUCTURED
 

@@ -1,8 +1,8 @@
 # url: https://cyrusone.com/data-centers/emea/london-uk-lon5
 
-# fetched: 2026-08-28
+# fetched: 2026-08-30
 
-# sha256(html): 9e8dea09e1515770271b2c549c1efb1335cd5589b865d397c040519e0f96ef9b
+# sha256(html): aa27ff7c55b7d2c3ac1b05ee635d3caa7c2154fbf7e4dbd8908d38adb5cd0e73
 
 ## STRUCTURED
 
@@ -598,7 +598,7 @@ London, UK: LON5 | CyrusOne
  
  
  
- Durham, NC, DUR1 
+ Durham, NC, DUR1-DUR2 
  
  
  

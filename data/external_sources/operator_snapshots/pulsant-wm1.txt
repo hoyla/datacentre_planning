@@ -1,8 +1,8 @@
 # url: https://www.pulsant.com/colocation-birmingham-wm1
 
-# fetched: 2026-08-21
+# fetched: 2026-08-30
 
-# sha256(html): e77d68150b73869b2c5034dd0998ec686863c971c785b62222973276fb24fa84
+# sha256(html): 01f731af4fe8cc2d658be6c8643a13092782c7b1c7fe8b8541718a7f3da2018c
 
 ## STRUCTURED
 

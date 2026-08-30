@@ -1,0 +1,277 @@
+# url: https://www.westlondontechpark.com/
+
+# fetched: 2026-08-30
+
+# sha256(html): 4057d60877e3a7c0f50e2879f2efdb4fa0ec6931035373623381fc479f676b01
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org/",
+ "@type": "LocalBusiness",
+ "address": {
+  "@type": "PostalAddress",
+  "addressCountry": "GB",
+  "addressLocality": "London",
+  "addressRegion": "ENG"
+ },
+ "name": "West London Technology Park",
+ "url": "https://www.westlondontechpark.com"
+}
+
+{
+ "@context": "https://schema.org/",
+ "@type": "WebSite",
+ "name": "Iver Tech Park",
+ "url": "https://www.westlondontechpark.com"
+}
+
+## VISIBLE TEXT
+
+-->
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ West London Tech Park | Data Centre 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+
+ 
+
+
+
+
+
+
+
+ 
+ 
+ 
+
+ top of page Economic benefits Location Proposals 
+ 
+ 
+ 
+ 
+ Boosting Britain’s economic growth 
+ 
+ 
+ 
+ 
+ Developing the UK’s data economy​ 
+ 
+ 
+ 
+ 
+ Building our digital infrastructure West London Technology Park is a proposed data centre campus located between Uxbridge and Iver. ​ Hyperscale data centres are required for all forms of cloud computing including video streaming, picture storage, online shopping, online medical consultations and the internet of things. 
+ 
+ In September 2024 the Government designated data centres as Critical National Infrastructure, confirming their importance to the UK economy. Economic benefits West London Technology Park will bring substantial benefits to the UK economy. These include £1 billion of foreign direct investment and up to £350m of new economic activity annually across London and the South East. 
+ 
+Around 230 well-paid jobs will be created at the data centre and many more supported beyond the immediate vicinity. 
+ 
+Failing to build at West London Technology Park and other similar locations will mean employers and investors will look to Amsterdam, Dublin, Frankfurt and Paris instead. £1bn foreign direct investment 
+
+ 
+
+ £350m new economic activity supported annually 
+
+ 
+
+ 230 full-time jobs created locally 
+
+ 
+
+ Many more jobs supported nationally Location Cloud data centres have very specific technical requirements in terms of fibre connections, power and proximity to other data centres. 
+ 
+ West London Technology Park is ideally positioned on the UK’s long–haul fibre network and is close to existing data centres in Stockley Park and Slough. 
+ 
+ The nationally–significant campus will be built on degraded land. The site is a historic landfill which is bordered by the eight-lane M25 to the west, to the east by the West London Industrial Estate, and to the north by Iver substation. Location 
+ 
+ 
+ 
+ 
+ 
+ Proposals West London Technology Park will transform the former landfill into a state-of-the art data centre. 
+ 
+ Generous green spaces will cover the majority of the site area, enhancing the visual appeal of the landscape. 
+ 
+ Its two carefully-designed buildings will be almost entirely screened by trees and landscaping. Plants will grow on the living walls and the landscaping and ponds will significantly improve biodiversity. Design and access statement 
+ 
+ 
+ 
+ 
+ 
+ Economic benefits report 
+ 
+ 
+ 
+ 
+ 
+ Plan of the 
+
+ site 
+ 
+ 
+ 
+ 
+ 
+ Planning 
+
+ statement 
+ 
+ 
+ 
+ 
+ 
+ Find out more First name Last name Email Comments Send enquiry Media enquiries: media@greystokeland.co.uk Up 
+ 
+ 
+ 
+ 
+ 
+ Up 
+ 
+ 
+ 
+ 
+ 
+ Greystoke ©2024 bottom of page

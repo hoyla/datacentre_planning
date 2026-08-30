@@ -1,8 +1,8 @@
 # url: https://vantage-dc.com/data-center-locations/emea/london-i-united-kingdom/
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): 510b7f450776a2855855f48466b1fcdb1d18c76f628c49ae1bfba138a440f337
+# sha256(html): 6d0cac1bb8bfe6a8fd3375829016baed06934e5ccab1f276bf8f1a7adc94e8b1
 
 ## STRUCTURED
 
@@ -949,7 +949,7 @@ Vantage Data Centers doubles its hyperscale portfolio in 2020 with an aggressive
 
  
  
- © 2026 Vantage Data Centers 
+ © 2026 Vantage 
  
  
  

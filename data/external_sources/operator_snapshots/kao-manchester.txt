@@ -1,8 +1,8 @@
 # url: https://kaodata.com/locations/manchester/
 
-# fetched: 2026-08-20
+# fetched: 2026-08-30
 
-# sha256(html): 679ada0aaaa29724ffd484353840fec1945969e0035d649ad26b713cce3d3cfb
+# sha256(html): bde07145235a8ea748e7119f832e79e96321ca1787b6222797c0ca9fe70419b7
 
 ## STRUCTURED
 
@@ -11,6 +11,8 @@
 ## VISIBLE TEXT
 
 Manchester – Kao Data Website 
+ 
+ 
  
  
  
