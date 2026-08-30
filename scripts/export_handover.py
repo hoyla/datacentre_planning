@@ -1436,7 +1436,7 @@ def main() -> None:
         # The register's own wording, reduced to the clause that describes
         # the development. Verbatim, so it stays quotable; the untouched
         # description remains on every Applications row.
-        _summary, _descriptive = proposal.summarise(
+        _summary, _descriptive, _ = proposal.summarise(
             site_desc.get(key) or [btitle])
         proposal_cell = proposal.tidy(_summary)
         proposal_flag = ("Yes" if _descriptive else
@@ -1574,7 +1574,7 @@ def main() -> None:
             near_name, near_km, near_cap = (
                 f"{p['name']} ({p['ref']})", km, p["capacity"])
         env = sig.environmental_signals(description)
-        bsummary, bdescriptive = proposal.summarise([description, title])
+        bsummary, bdescriptive, _ = proposal.summarise([description, title])
         bparties = site_profile.site_parties(
             site_profile.barbour_parties(praw or {}, str(pref or "")),
             (), [site_profile._AUTHORITY_PHONE_RE.sub("", authority or "")],
