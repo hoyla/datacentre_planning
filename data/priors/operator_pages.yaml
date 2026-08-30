@@ -1,0 +1,250 @@
+# The operator's own web pages for a site, hand-verified and
+# kind-labelled. Issue #255; the review that produced every entry is
+# data/operator_pages_review/operator_pages_review.xlsx (Luke,
+# 2026-08-30), and dcp/operator_pages.py holds the loading contract:
+# a dead site key fails the build, kinds are `corporate` or
+# `consultation`, and `label` only disambiguates same-kind siblings.
+#
+# The kinds are audiences. A corporate page markets the asset to
+# customers and investors and states the power figure almost without
+# fail; a consultation page addresses residents and interested parties
+# (the tell is a stated consultation period) and almost never states
+# it. Five of the first five sites holding both kinds disclosed MW on
+# the corporate page and nothing on the consultation page — so the
+# kind travels with the link.
+#
+# "Sheet Tn-nn" below is the row in the review workbook that verified
+# the entry; the workbook also holds the capacity claims each page
+# made on the day, which fold separately with snapshots.
+
+pages:
+  # ---- Luke's own list (issue #255), keys verified live 2026-08-30
+  - site_key: PTNO-12849818
+    url: https://www.elshamtechpark.com/
+    kind: consultation
+    source: Sheet T1-01; Luke's list in the issue.
+  - site_key: PTNO-12917829
+    url: https://cato.ili-energy.com/
+    kind: consultation
+    source: |
+      Sheet T1-02; Luke's list in the issue. The architect's own site
+      (graemenicholls.com/cato-data-centre) states 600MW for the scheme
+      — a claims-channel lead, recorded on the sheet's actions column.
+  - site_key: PTNO-12669230
+    url: https://questpark.co.uk/
+    kind: corporate
+    source: Sheet T1-03; Luke's list in the issue.
+  - site_key: SITE-Havering/Z0001.24
+    url: https://www.digital-reef.io/digital-reef-projects
+    kind: corporate
+    source: |
+      Sheet T1-04a. The developer's corporate page, stating 600MW where
+      the scheme's consultation site below says nothing about energy.
+  - site_key: SITE-Havering/Z0001.24
+    url: https://www.easthaveringdatacentrecampus.com/
+    kind: consultation
+    source: Sheet T1-04b; the scheme's public-consultation site.
+  - site_key: PTNO-12857078
+    url: https://consult.apatura.energy/ravenscraig/the-project
+    kind: consultation
+    source: |
+      Sheet T1-05. Apatura's consultation pages are also its scheme
+      presence, and unusually they state capacity ("a 550MW sustainably
+      designed data campus alongside a 150MW battery energy storage
+      system").
+  - site_key: SITE-WestLothian/0346/EIA/25
+    url: https://consult.apatura.energy/freeport
+    kind: consultation
+    source: Sheet T1-06; states "a 250MW Data Centre Campus".
+  - site_key: PTNO-12785975
+    url: https://q.com/data-centers/cambois/
+    kind: corporate
+    source: Sheet T1-07; Luke's list in the issue.
+  - site_key: PTNO-12301553
+    url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+    kind: corporate
+    source: Sheet T1-08; VIRTUS's campus page for Stockley Park.
+
+  # ---- Adopted from live capacity-claim matches, confirmed on the sheet
+  - site_key: PTNO-10234430
+    url: https://virtusdatacentres.com/locations/uk/london/saunderton-campus
+    kind: corporate
+    source: |
+      Sheet T2-01; claim match strong (name_and_operator). The page's
+      datasheet names four facilities on one basis — LONDON15 9.5,
+      LONDON16 22.5, LONDON17 16, LONDON18 30, "Campus Total of 78 MW".
+  - site_key: PTNO-11891737
+    url: https://www.digitalrealty.com/data-centers/emea/london/lon1
+    kind: corporate
+    label: LON1
+    source: Sheet T2-02; claim match probable (postcode_and_operator).
+  - site_key: PTNO-11891737
+    url: https://www.digitalrealty.com/data-centers/emea/london/lon2
+    kind: corporate
+    label: LON2
+    source: Sheet T2-03; claim match probable (postcode_and_operator).
+  - site_key: PTNO-11891737
+    url: https://www.digitalrealty.com/data-centers/emea/london/lon3
+    kind: corporate
+    label: LON3
+    source: Sheet T2-04; claim match probable (postcode_and_operator).
+  # PTNO-11969852 (Eurohub, Greenwich View Place) is deliberately absent:
+  # Luke, sheet T2-05 — the site has been through multiple owners and
+  # Digital Realty's LHR19 page could not be confirmed as the current
+  # one, so the identification stays unknown rather than asserted.
+  - site_key: PTNO-12081576
+    url: https://www.ark-d-c.com/locations/cody-park
+    kind: corporate
+    source: Sheet T2-06; claim match strong (name_and_postcode).
+  - site_key: PTNO-12235447
+    url: https://www.ark-d-c.com/locations/spring-park
+    kind: corporate
+    source: Sheet T2-07; claim match strong (name_and_postcode).
+  - site_key: PTNO-12240972
+    url: https://kaodata.com/locations/harlow/
+    kind: corporate
+    source: |
+      Sheet T2-08; claim match strong (name_identity). Kao's page
+      rosters the campus as KLON-01, -02, -03 and -04 — the ground for
+      the pending merge of PTNO-12839274 (KLON-03) into this site.
+  - site_key: PTNO-12256124
+    url: https://www.ark-d-c.com/locations/longcross-park
+    kind: corporate
+    source: |
+      Sheet T2-09. The claim match was only tentative (postcode_only);
+      Luke confirmed the pairing by eye on 2026-08-30.
+  - site_key: PTNO-12406621
+    url: https://adainfrastructure.com/en-US/docklands
+    kind: corporate
+    source: |
+      Sheet T2-10; corroborated by postcode and by DCD's report of the
+      210MW approval (datacenterdynamics.com, "Ada Infrastructure gets
+      approval for 210MW London Docklands data center").
+  - site_key: PTNO-12511337
+    url: https://www.ark-d-c.com/locations/union-park
+    kind: corporate
+    source: Sheet T2-11; claim match strong (partition_and_applicant).
+  - site_key: PTNO-12513167
+    url: https://puredc.com/london-brent-cross
+    kind: corporate
+    source: |
+      Sheet T2-12; corroborated by constructionmap.info's record of the
+      LON01B2 data centre at the same site.
+  - site_key: PTNO-12548129
+    url: https://www.ark-d-c.com/locations/alliance-park
+    kind: corporate
+    source: Sheet T2-13; claim match strong (name_and_postcode).
+  - site_key: PTNO-12608004
+    url: https://www.coltdatacentres.net/en-GB/our-locations/data-centre-locations-europe/london-4
+    kind: corporate
+    source: |
+      Sheet T2-14; claim match strong (barbour_title_and_applicant).
+      Notable the other way round: Colt's page says 31MW, below the
+      figures the planning documents state (Hillingdon/38421/APP/2021/
+      4045) — the one case so far where the corporate channel
+      understates the planning record.
+  - site_key: PTNO-12610936
+    url: https://www.greystoke.co.uk/data-centres
+    kind: corporate
+    source: |
+      Sheet T2-15a. Greystoke's listing page carries the per-scheme
+      figures (90MW here) that the scheme's own consultation site omits.
+  - site_key: PTNO-12610936
+    url: https://www.westlondontechpark.com/
+    kind: consultation
+    source: Sheet T2-15b; the scheme's public-consultation site, silent on load.
+  - site_key: PTNO-12671637
+    url: https://cyrusone.com/data-centers/emea/london-uk-lon6
+    kind: corporate
+    source: |
+      Sheet T2-16a; claim match strong (name_and_capacity). States 90MW
+      where the consultation site below does not.
+  - site_key: PTNO-12671637
+    url: https://iverheathdatapark.com/
+    kind: consultation
+    source: Sheet T2-16b; the scheme's public-consultation site, silent on load.
+  - site_key: PTNO-12717884
+    url: https://www.greystoke.co.uk/data-centres
+    kind: corporate
+    source: Sheet T2-17a; Greystoke's listing page, stating 96MW for this scheme.
+  - site_key: PTNO-12717884
+    url: https://www.abbotslangleydatacentre.co.uk/
+    kind: consultation
+    source: Sheet T2-17b; the scheme's public-consultation site, silent on load.
+  - site_key: PTNO-12776851
+    url: https://www.greystoke.co.uk/data-centres
+    kind: corporate
+    source: Sheet T2-18a; Greystoke's listing page, stating 384MW for this scheme.
+  - site_key: PTNO-12776851
+    url: https://www.humbertechpark.com/
+    kind: consultation
+    source: Sheet T2-18b; the scheme's public-consultation site, silent on load.
+  - site_key: PTNO-12857728
+    url: https://consult.apatura.energy/westerhill/the-project
+    kind: consultation
+    source: |
+      Sheet T2-19; claim match strong (scheme_identity). States "a
+      300MW Data Centre Campus alongside a 500MW BESS".
+  - site_key: PTNO-12879308
+    url: https://www.ark-d-c.com/locations/elstree
+    kind: corporate
+    source: Sheet T2-20; claim match strong (name_and_place).
+  - site_key: SITE-Kingston/11/10150
+    url: https://www.digitalrealty.com/data-centers/emea/london/lhr13
+    kind: corporate
+    source: Sheet T2-21; claim match strong (postcode_identity).
+
+  # ---- Candidates proposed by the matching pass, verified on the sheet
+  - site_key: SITE-Slough/T/137
+    url: https://cyrusone.com/data-centers/emea/london-uk-lon3
+    kind: corporate
+    source: |
+      Sheet T3-01. The site's derived name is the claim's address (700
+      Stirling Road); the page states "LON3 delivers 9 MW of IT
+      capacity".
+  - site_key: PTNO-12232573
+    url: https://cyrusone.com/data-centers/emea/london-uk-lon4
+    kind: corporate
+    label: LON4
+    source: |
+      Sheet T3-02. 225B Bath Road, on the 225 Bath Road masterplan
+      site; LON4 and LON5 are neighbours on one plot, so this site
+      carries both facility pages.
+  - site_key: PTNO-12232573
+    url: https://cyrusone.com/data-centers/emea/london-uk-lon5
+    kind: corporate
+    label: LON5
+    source: Sheet T3-03; 225C Bath Road, the other half of the pair.
+  - site_key: PTNO-12489438
+    url: https://vantage-dc.com/data-center-locations/emea/cardiff-united-kingdom/
+    kind: corporate
+    source: |
+      Sheet T3-04. NGD — the company Vantage acquired — is the Barbour
+      title; the page also matches on the CWL1 facility code and states
+      three data centres with "148MW of critical IT load" for the
+      campus. This was #250's headline unmatched claim.
+  - site_key: PTNO-12216044
+    url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+    kind: corporate
+    source: |
+      Sheet T3-05. Luke replaced the LONDON10 facility URL with the
+      campus page, which rosters LONDON3, 4, 9, 10, 11, 12 and 19 with
+      per-facility MW — wider than the three facilities this site
+      currently claims, which is a campus-scope question recorded on
+      the sheet's actions column.
+  # T3-06 (Global Switch London South), T3-07 (nLighten Hoddesdon) and
+  # T3-08 (Digital Realty LHR17 / Link Park Heathrow) are "not yet" on
+  # the sheet: the Global Switch URL waits for the #247 partition, and
+  # the other two identifications are unconfirmed. The tier-4 rows
+  # (operator pages with no site in the corpus — the Pulsant estate
+  # among them) stay on the sheet as the tracker.
+
+  # ---- Found during the review
+  - site_key: PTNO-12135970
+    url: https://kaodata.com/locations/slough/
+    kind: corporate
+    source: |
+      Sheet LH-1, found by Luke during the review: Kao's KLON-06 page
+      is 672 Galvin Road, Slough — the former Barclays data centre —
+      not the Ajax Avenue near-miss the matching pass suggested. The
+      page states 20MW.

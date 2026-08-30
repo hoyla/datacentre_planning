@@ -2480,6 +2480,15 @@ def main() -> int:
         _preplanning_keys = {f"PTNO-{r[0]}" for r in barbour_rows}
         _sal.require_live(_aliases,
                           {r[0] for r in site_rows} | _preplanning_keys)
+        # The operator's own pages for a site (issue #255), labelled by
+        # the audience they address — corporate pages state the power
+        # figure almost without fail, consultation pages almost never
+        # do, so the kind travels with the link. Same liveness contract
+        # as the aliases, for the same reason.
+        from dcp import operator_pages as _opp
+        _operator_pages = _opp.load_pages()
+        _opp.require_live(_operator_pages,
+                          {r[0] for r in site_rows} | _preplanning_keys)
 
         def _shown(key, name):
             """A site's name as it should read.
@@ -3564,6 +3573,9 @@ def main() -> int:
             _bits.append(f'<a href="{esc(_csv)}" target="_blank" rel="noopener">'
                          f'Findings CSV'
                          + (f' ({findings_n:,})' if findings_n else '') + '</a>')
+        for _pg in _operator_pages.get(key, ()):
+            _bits.append(f'<a href="{esc(_pg["url"])}" target="_blank" '
+                         f'rel="noopener">{esc(_opp.link_text(_pg))}</a>')
         # Our map, not Google's: the internal map is the one showing
         # proximity to energy projects (issue #144), and Google Maps
         # already sits beside the coordinates in Site details.
@@ -4230,7 +4242,9 @@ def main() -> int:
    f'<p class="siteident">Barbour ABI titles this project '
    f'&#8220;{esc(derived_title)}&#8221;; the name above is a reporter&#8217;s.</p>'
    if derived_title != title else ''}
-  <p class="sitelinks">{f'''<span><a href="#map" onclick="showMap('{esc(key)}');return false">Show on the map</a></span>'''
+  <p class="sitelinks">{''.join(
+    f'''<span><a href="{esc(_pg["url"])}" target="_blank" rel="noopener">{esc(_opp.link_text(_pg))}</a></span>'''
+    for _pg in _operator_pages.get(key, ()))}{f'''<span><a href="#map" onclick="showMap('{esc(key)}');return false">Show on the map</a></span>'''
    if plat is not None and plon is not None else ''}<span><a href="#site-{esc(key)}">Link to this site</a></span></p>
  </div>
  <div class="banner" style="margin-top:0"><b>No application submitted yet.</b>
