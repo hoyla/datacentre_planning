@@ -539,27 +539,7 @@ work.
   `enabling_works` count as datacentre-positive. Both are one constant
   each in `dcp/site_class.py` to revisit.
 
-- **Replace "The rest of the package" block with a computed scale
-  panel** (issue #166 holds the request; shape agreed with Luke
-  2026-08-27). The block is duplicative — a button pointing at content
-  one scroll away — and what the start page actually lacks is scale at
-  a glance. The replacement: "The scale of what the documents
-  disclose", every figure computed at build and never typed, every row
-  linked to the query or cohort that produces it, caveats in the
-  panel's own words (covers only the minority of sites stating
-  figures; floors from an incomplete read). Candidate rows: total
-  disclosed capacity across the N disclosing sites; standby generator
-  units where documents state counts, with the diesel/gas split where
-  fuel is named; total standby MW; total contracted grid connections.
-  Comparators only where a published source states one — Ofgem's 73 GW
-  queue is in External aggregates with its paragraph number — never
-  invented. The 12.73-GW-is-twelve-million-households correction that
-  settled the framing is the argument in one line: computed and
-  citable beats vivid and wrong.
 
-- **Site-alias curation is standing editorial work** (the mechanism is
-  built — issue #169, HISTORY): name a site when its derived name
-  misleads, in `data/priors/site_aliases.yaml`, with the source.
 
 - **Northumberland Energy Park holds four unrelated schemes.**
   `PTNO-12785975` clusters 35 applications spanning the Blyth offshore
@@ -606,17 +586,6 @@ work.
   (idempotent, free on no change) so a fourth direction is noticed the
   week it publishes rather than the day a story runs.
 
-- **What the Drive-archive fix leaves open** (the fix itself shipped
-  2026-08-26; HISTORY, "The corrections that landed between 2.9 and
-  2.10"). Nothing reconciles tree against ledger against Drive at the
-  end of a sync — a deliberate omission rather than an oversight,
-  because on 08-21 all three agreed and such a check would have
-  passed; the guard sits between the *universe* and the tree, which is
-  the only place this class of failure is visible. The first real run
-  of the new guards will fail until the corpus stops moving, which is
-  the guards working, not crying wolf.
-  `data/exports/drive_staging.pre-clean` is the primary evidence and
-  stays until this closes.
 ## Phase 3 — the second opinion
 
 - **Re-extract what the local model read.** The label audit
@@ -1081,26 +1050,6 @@ here rather than applied from the build lane.
   the site's connection is. Settle it by hand, then re-check the
   Operators tab's like-for-like, which still quotes the
   register-vs-planning comparison this family fed.
-## From the reader redesign — waiting on a checkpoint
-
-2.4 work whose next step is a person's, recorded here so the build lane
-does not have to remember it. (The generation batch that sat here has
-run — 1,667 figures under `gpt-5/generation-2.5`, migration 024 applied,
-and the workbook columns and cohorts that consume it are in 2.7. See
-HISTORY.)
-
-- **Confirming the rest of the alias groups.** Eight of the ten seeded
-  members are confirmed and one is still `proposed`, which is enough for
-  `operator_group` to reach **15 sites** — Vantage, Colt, Amazon,
-  Microsoft. It is not enough to be a filter anyone would trust: 305
-  sites appear in `parties` and 290 of them still fall back to Barbour's
-  end user or client. Confirming a group is what makes "Ark Estates 5
-  Ltd" and "Ark Data Centres Ltd" one name, and what lets an
-  organisation named only in a document reach the operator field at all.
-  The site 61 split (HISTORY, 2026-08-27) shows what a confirmed group
-  is worth: applicant of record separated ten campuses cleanly where
-  coordinates could not.
-
 ## Smaller things
 
 - **Pipeline upload of the search bundles to Drive.** The shape is
