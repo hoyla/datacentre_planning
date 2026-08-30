@@ -252,7 +252,17 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             partition[("P", p["id"])] = name
 
     dc_apps = [a for a in apps if a["in_universe"]]
-    linked_ids = {aid for _pid, aid in links}
+    # A project-linked application joins its project's cluster whatever
+    # triage made of it — Barbour's linkage is documentary evidence the
+    # verdicts cannot see. The adjacent_power veto has to hold here too,
+    # or it holds nowhere that matters: 18 of the 42 sited adjacent-power
+    # records were project-linked and re-entered membership through this
+    # set on the first materialisation after the veto shipped, Kingsnorth's
+    # export-figure application among them. The Barbour linkage is not
+    # discarded — dcp/adjacent_power.py records it as a documentary
+    # (cohort) relationship to the project's site.
+    linked_ids = {aid for _pid, aid in links
+                  if aid in by_id and by_id[aid]["verdict"] != "adjacent_power"}
     node_ids = {a["id"] for a in dc_apps} | linked_ids
 
     # Family edges: an application naming another application's reference.
@@ -284,8 +294,16 @@ def build_clusters(conn, *, radius_km: float = 1.0,
                 fam_edges.append((a["id"], other["id"], source))
     for x, y, _src in fam_edges:
         if x in node_ids or y in node_ids:
-            node_ids.add(x)
-            node_ids.add(y)
+            # The adjacent_power veto holds here too: a family reference
+            # from an in-universe application — a conditions discharge
+            # citing the substation consent it discharges against, say —
+            # would otherwise pull the vetoed record straight back into
+            # membership. This expansion exists to admit *untriaged*
+            # paperwork a family knows about, not to overrule a verdict.
+            if by_id[x]["verdict"] != "adjacent_power":
+                node_ids.add(x)
+            if by_id[y]["verdict"] != "adjacent_power":
+                node_ids.add(y)
 
     uf = _UF()
     for nid in node_ids:

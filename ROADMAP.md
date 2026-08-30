@@ -187,6 +187,21 @@ member-level diff of the clustering before and after:
 - Six further adjacent-power records attach to no site at all:
   keyword-swept, no coordinates. Unchanged.
 
+**The veto had two more doors, found and closed on the first
+materialisation** (same day). Eighteen of the 42 sited adjacent-power
+records came straight back: a project-linked application joins its
+project's cluster regardless of the universe test, and a family
+reference from an in-universe application — a conditions discharge
+citing the substation consent it discharges against — re-admits the
+record the veto excluded. Both paths now honour the veto. Kingsnorth's
+export-figure application was among the eighteen, which is why the
+first materialisation left it a member. The Barbour linkage survives
+as a documentary `cohort` relationship (three records carry one); the
+family-reference tie is recorded nowhere yet and is a candidate for a
+fourth relationship basis. One more stranded singleton of the Barnet
+kind: `Hillingdon/71554/APP/2025/2436`, a discharge whose
+adjacent-power parent left the Hayes campus site.
+
 **Still open after stage 3** — the per-figure restatements: Kingsnorth's
 export figure on its `new_build` member is an adjudication correction,
 not a membership question, and the `not_dc` live members holding

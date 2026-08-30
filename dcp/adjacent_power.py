@@ -83,6 +83,19 @@ JOIN site_members sm ON sm.project_id = p.id AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id AND s.retired_at IS NULL
 """
 
+# Barbour links some adjacent-power applications directly to a project
+# (project_applications) — the documentary tie that used to put them in
+# the project's site through the clusterer's linked_ids set, until the
+# adjacent_power veto was extended to it. The linkage itself is evidence
+# and survives here as a cohort row to the project's site.
+PROJECT_LINKED_SQL = """
+SELECT pa.application_id, p.external_ref, s.site_key
+FROM project_applications pa
+JOIN projects p ON p.id = pa.project_id
+JOIN site_members sm ON sm.project_id = p.id AND sm.retired_at IS NULL
+JOIN sites s ON s.id = sm.site_id AND s.retired_at IS NULL
+"""
+
 
 @dataclass(frozen=True)
 class Relation:
@@ -147,6 +160,10 @@ def relations(conn, *, proximity_km: float = PROXIMITY_KM) -> list[Relation]:
         site_of_app = dict(cur.fetchall())
         cur.execute(SITE_OF_PROJECT_SQL)
         site_of_project = dict(cur.fetchall())
+        cur.execute(PROJECT_LINKED_SQL)
+        project_linked: dict[int, list[tuple[str, str]]] = {}
+        for app_id, ptno, skey in cur.fetchall():
+            project_linked.setdefault(app_id, []).append((ptno, skey))
 
     by_key = {key: (sid, lat, lon) for sid, key, lat, lon in sites}
     located = [(sid, key, lat, lon) for sid, key, lat, lon in sites
@@ -156,7 +173,23 @@ def relations(conn, *, proximity_km: float = PROXIMITY_KM) -> list[Relation]:
     for app_id, ref, via, lat, lon in records:
         seen: set[tuple[int, str]] = set()
 
-        # Documentary first. `energy_national:<site_key>` names the site
+        # Barbour's own linkage first: a project_applications row ties
+        # the record to a project, and the project to its site. This is
+        # the strongest documentary basis here — the catalogue asserts
+        # the connection outright — and it is what carried these records
+        # into membership before the veto reached linked_ids.
+        for ptno, key in project_linked.get(app_id, ()):
+            if key not in by_key or (by_key[key][0], "cohort") in seen:
+                continue
+            sid, slat, slon = by_key[key]
+            d = (_metres(lat, lon, slat, slon)
+                 if None not in (lat, lon, slat, slon) else None)
+            seen.add((sid, "cohort"))
+            out.append(Relation(sid, key, app_id, ref, "cohort", d,
+                                f"linked by Barbour to project {ptno}, "
+                                f"whose site this is"))
+
+        # Documentary next. `energy_national:<site_key>` names the site
         # the search ran outward from, so the corpus already holds the
         # relationship that membership was standing in for.
         for token in via or []:
