@@ -386,6 +386,102 @@ multi-facility campuses that each need a scope decision.
   facilities (LON6, LON7, LON8), and the doubled 300 MW. It is the
   reason #252 sequences before #247.
 
+## Operator pages and typed standing — what the promoters publish
+
+Opened 2026-08-30, the same day as the capacity-model section above and
+deliberately its counterpart: that section is about what the planning
+documents say, this one about what the schemes' own websites say, and
+the decision that connects them. **Typed standing, not equal standing**
+(Luke, 2026-08-30): first-party operator statements about their own
+facilities may become a labelled rung on the declared-power ladder and
+admissible to `at_least_100mw` with the basis named; third-party
+aggregates (DC Byte, Baxtel, DCM, the registers) stay tier-and-count
+only. This is a recorded *revision* of the 2026-08-20 no-raw-MW ruling's
+scope, not a quiet contradiction — that ruling was about comparability,
+and a labelled rung is how the ladder already handles incomparability.
+
+**Shipped.** `data/priors/operator_pages.yaml` (39 hand-verified
+site→page pairs), `dcp/operator_pages.py`, and reader links labelled by
+kind (PR #265, closes #255). The verification record is
+`data/operator_pages_review/operator_pages_review.xlsx` — Luke's hand
+pass over every page, 68 rows, and the tracker for the "not yet" rows:
+two unconfirmed identifications (nLighten Hoddesdon, Digital Realty
+LHR17/Link Park), Global Switch London South (waits for the #247
+partition), and the keyless tier-4 estate, of which the Pulsant twelve
+are the standing example of facilities that will only ever rank on the
+operator rung — legacy colocation fit-outs leave no planning
+application to hold. Site aliases from the sheet are folded into
+`site_aliases.yaml` (sheet wins on conflict, Luke's rule).
+
+**The audiences finding, five for five.** Every site in the review
+holding both a corporate and a consultation page states MW on the
+corporate page and nothing on the consultation page (East Havering 600,
+West London Technology Park 90, Iver Heath 90, Abbots Langley 96,
+Humber 384 — Greystoke's one listing page carries three of those).
+Apatura is the counter-example that sharpens it: its consult pages
+state MW, and they are also its only web presence. Working hypothesis:
+silence appears where a developer runs *two* pages and can segment
+audiences — one page, one story; two pages, two stories. And one case
+runs the other way: Colt's page says 31 MW for London 4, *below* the
+planning documents' figures. The kind field on every prior entry exists
+so this becomes countable rather than anecdotal.
+
+### Next: snapshot the pages, then fold the claims
+
+Order matters and the first step is time-sensitive. **Consultation
+sites are campaign infrastructure and die when the process closes**,
+with no register copy behind them — and the audiences finding asserts
+*silence*, a negative result that can only rest on a held snapshot (a
+probe that could have seen the figure). So:
+
+1. **Snapshot all 39 pages now** — every URL in `operator_pages.yaml`,
+   into the append-only snapshot store, before any of them changes or
+   vanishes. Cheap, and everything downstream cites it.
+2. **Fold the sheet's claims** into `capacity_claims`
+   (operator_website channel, `as_at` 2026-08-30, source URL = the
+   page, snapshot alongside): roughly twenty rows of quotable MW,
+   including two per-facility rosters on a single basis — VIRTUS
+   Saunderton (LONDON15 9.5 / 16 22.5 / 17 16 / 18 30, "Campus Total
+   of 78 MW") and VIRTUS Slough (seven facilities) — which are exactly
+   the comparability #247 established the planning corpus lacks.
+   The Stockley roster carries a wrinkle worth its own look: VIRTUS
+   states LONDON5 24 MW and LONDON7 32.5 MW, so the 24 the sites table
+   shows from LONDON7's handover document may be the right number on
+   the wrong building.
+3. **Only then** design the ladder rung and the cohort-admission rule —
+   with matched, snapshotted, quantity-typed claims to design against.
+
+### Actions harvested from the review sheet
+
+- **Merge `PTNO-12839274` (KLON-03) into the Kao Harlow campus**
+  (`PTNO-12240972`). Kao's own page rosters KLON-01–04 as one campus;
+  the sheet's T2-08 action. Evidence is in hand; small.
+- **VIRTUS Slough campus scope**: VIRTUS rosters LONDON3, 4, 9, 10,
+  11, 12 and 19 as its Slough campus; `PTNO-12216044` currently claims
+  three of them. A `campus_scope.yaml` question, and the operator
+  channel's first direct input to the 35-campus review above.
+- **Vantage ↔ Next Generation Data organisation alias** — Luke's
+  question on sheet T3-04; `organisation_aliases.yaml` is the place.
+- **The Cato architect's site states 600 MW**
+  (graemenicholls.com/cato-data-centre, sheet T1-02) — a claims lead
+  from a source kind the claims channel does not yet name: neither
+  operator nor register, but the scheme's own architect.
+- **CyrusOne LON2 (Prologis Park, West Drayton) is a separate site**
+  from the VIRTUS Prologis Park campus — they share an estate, not a
+  scheme (sheet T4-02). A note for whenever that site is created.
+
+### What this changed elsewhere
+
+- #250's operator-channel misses are largely dissolved — the sheet
+  hand-matched them, including the 148 MW Vantage Cardiff claim that
+  was that issue's headline example. The NESO EA register's 106
+  unmatched claims are untouched and remain #250's live work.
+- #247 gains per-facility rosters on a single quantity basis from the
+  operator channel, which is the input its campus-floor question was
+  missing — but an operator's announcement is still not a planning
+  disclosure, and the no-campus-total decision for planning figures
+  stands.
+
 ## Deferred to 2.9
 
 Decided on 2026-08-26, while 2.8 was being assembled. Each is scoped
