@@ -1,0 +1,447 @@
+# How a site made of several Barbour projects should present its power.
+#
+# 35 sites hold more than one Barbour project. They are not one kind of
+# thing, which is why no single rule works (Luke, 2026-08-30): some are
+# distinct facilities on a campus, some are phases of one scheme, some
+# are a masterplan sitting beside its own components, and some are
+# different operators who happen to share a postcode. The figures mean
+# something different in each case, and summing is right in at most one
+# of them.
+#
+# Every entry here is UNREVIEWED. `proposed` is a first pass from the
+# project titles alone and decides nothing; `scope` stays `unreviewed`
+# until a person has looked at the records and written the reason. An
+# unreviewed site keeps today's behaviour — the largest single figure,
+# framed as a floor.
+#
+# The first pass is crude on purpose and its precedence is arbitrary: it
+# tests for a masterplan before it tests for several operators, so
+# PTNO-12058499 reads `masterplan_and_parts` when it is also three
+# operators — Global Switch, Telehouse and Republic. A site can be more
+# than one kind at once, and 17 of the 35 the pass could not place at
+# all. Read `proposed` as a starting point for the eye, never as a
+# finding.
+#
+#   scope: distinct_facilities | phases | masterplan_and_parts
+#          | co_located | unreviewed
+#   total: sum | withhold | unreviewed
+#
+# See issues #247 (what a campus shows), #250 (under-ranking).
+
+campuses:
+
+  - site_key: PTNO-12058499
+    projects: 7
+    proposed: masterplan_and_parts
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - GLOBAL SWITCH HOUSE - CHILLER QUADRANT WORKS
+      - GLOBAL SWITCH HOUSE - EAST AND WEST EXTENSIONS
+      - GLOBAL SWITCH LONDON SOUTH - 40MW DATA CENTRE
+      - REPUBLIC MASTERPLAN
+      - TELEHOUSE NORTH TWO & DISTRIBUTION BUILDINGS
+      - TELEHOUSE SOUTH MAIN WORKS - RETROFIT
+      - TELEHOUSE WEST 2 - DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12406621
+    projects: 5
+    proposed: masterplan_and_parts
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - G PARK 1 LONDON DOCKLANDS - DATA CENTRE FIT OU
+      - G PARK 1 LONDON DOCKLANDS - DATA CENTRE - PROJ
+      - G PARK 2 LONDON DOCKLANDS - 70MW DATA CENTRE -
+      - G PARK 2 LONDON DOCKLANDS - 70MW DATA CENTRES
+      - G PARK DOCKLANDS MASTERPLAN
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12645087
+    projects: 5
+    proposed: co_located
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - AMAZON DATA CENTRE - RIDGEWAY DISTRIBUTION CEN
+      - COURT LANE - 140MW DATA CENTRE
+      - SEGRO PARK  THORNEY BUSINESS PARK - PHASE 1 -
+      - SEGRO PARK  THORNEY BUSINESS PARK - PHASE 2 -
+      - THORNEY LANE BUSINESS PARK - DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12081576
+    projects: 4
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - A50 & A57 CODY PARK - DATA CENTRE
+      - CODY TECHNOLOGY PARK - 2 DATA CENTRES - WESTER
+      - CODY TECHNOLOGY PARK - FRN2 DATA CENTRE
+      - DATUM FRNI FACILITY - EXTENSION
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12179784
+    projects: 4
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - COLT DATA CENTRE - PROJECT BRENDA
+      - COLT TECHNOLOGY SERVICES DATA CENTRE - FIT OUT
+      - COLT TECHNOLOGY SERVICES DATA CENTRE - SHELL A
+      - WELWYN DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12489438
+    projects: 4
+    proposed: co_located
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - MICROSOFT - IMPERIAL PARK DATA CENTRE
+      - MICROSOFT  IMPERIAL PARK DATA CENTRE - CIVIL W
+      - NEXT GENERATION DATA - DATA CENTRE THREE (DC3)
+      - NEXT GENERATION DATA PROJECT DELTA
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-11310969
+    projects: 3
+    proposed: masterplan_and_parts
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - CAMRO DATA CENTRE - MASTERPLAN
+      - ELEAN BUSINESS PARK - PHASE 1 - UTILITY SUBSTA
+      - PROJECT CAMRO PLUS - ELEAN BUSINESS PARK - DAT
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-11969852
+    projects: 3
+    proposed: phases
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - DATA CENTRE - PAD PROJECT
+      - DATA CENTRE - PHASE 2  1 GREENWICH VIEW PLACE
+      - EUROHUB DATA CENTRE - THE POINT  GREENWICH VIE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12122711
+    projects: 3
+    proposed: phases
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - AOC QUEENSWAY DATA CENTRE - DC3
+      - AOC QUEENSWAY DATA CENTRE - ENABLING WORKS
+      - AOC QUEENSWAY DATA CENTRE - PHASE 1 - DC1
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12216044
+    projects: 3
+    proposed: co_located
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - VIRTUS DATA CENTRES - LONDON 11 DATA CENTRE
+      - VIRTUS DATA CENTRES - LONDON 3 DATA CENTRE
+      - ZENIUM - DATA CENTRE - FIT-OUT
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12232573
+    projects: 3
+    proposed: masterplan_and_parts
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - 225 BATH ROAD  MASTERPLAN- DATA CENTRE  SHOWRO
+      - 225 BATH ROAD  SUITE C - DATA CENTRE
+      - SEGRO PLC  BATH ROAD - DATA CENTRE SITE B
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12235447
+    projects: 3
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - SPRING PARK  BUILDING P5 NORTH DATA CENTRE EXT
+      - SPRING PARK P6 - DATA CENTRE
+      - SPRING PARK - TWO DATA CENTRES P3 & P4
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12256124
+    projects: 3
+    proposed: phases
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - CHOBHAM LANE  LONGCROSS  PHASE 3 - DATA CENTRE
+      - LONGCROSS GARDEN VILLAGE DEVELOPMENT
+      - LONGCROSS NORTH DATA CENTRE CAMPUS - NEW DC03
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12301553
+    projects: 3
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - VIRTUS DATA CENTRES - LONDON 5 DATA CENTRE
+      - VIRTUS DATA CENTRES - LONDON 7 DATA CENTRE
+      - VIRTUS DATA CENTRES - LONDON 8 DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12513167
+    projects: 3
+    proposed: phases
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - BRENT CROSS CAMPUS - DATA CENTRE - LON1B2
+      - BRENT CROSS  PHASE 2 - DATA CENTRE EXTENSION
+      - JVC BUSINESS PARK - INDUSTRIAL EXTENSION
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12549436
+    projects: 3
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - AMAZON DATA CENTRE  DIDCOT - DATA CENTRE 1
+      - DIDCOT DATA CENTRE
+      - PURCHAS ROAD - DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12554252
+    projects: 3
+    proposed: phases
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - CHANDOS ROAD TRADING ESTATE - 2 DATA CENTRES
+      - CHANDOS ROAD TRADING ESTATE - 30MW DATA CENTRE
+      - CHANDOS ROAD TRADING ESTATE  PHASE 1A - 48MW L
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12564753
+    projects: 3
+    proposed: phases
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - AKZONOBEL DECORATIVE PAINTS - DATA CENTRE
+      - FORMER AKZO NOBEL SITE  PHASE 1 & 2 - BUILDING
+      - FORMER AKZO NOBEL SITE PHASE 1 - BUILDING C  D
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12610936
+    projects: 3
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - PINEWOOD STUDIOS SOUTH - DATA CENTRE
+      - SEQUENCE PARK - 48MW DATA CENTRE
+      - WEST LONDON TECHNOLOGY PARK - DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12831113
+    projects: 3
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - HAYES BRIDGE RETAIL PARK - LON6 DATA CENTRE
+      - HAYES BRIDGE RETAIL PARK  LON7  LON8 DATA CENT
+      - LONDON DIGITAL PARK  BULLSBROOK ROAD - SUBSTAT
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-11891737
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - GREY EAGLE STREET - STORAGE & DATA CENTRE
+      - INTERXION - DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-11999034
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - PRINCIPAL PARK CRAWLEY - DIGITAL AND DATA CENT
+      - PRINCIPAL PARK - TWO DATA CENTRES - PROJECT ME
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12063929
+    projects: 2
+    proposed: co_located
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - AMAZON DATA SERVICES  MAYLANDS AVENUE - DATA C
+      - GYRON LIMITED - NEW DATA CENTRE AND STORAGE FA
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12104907
+    projects: 2
+    proposed: masterplan_and_parts
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - GILMOREHILL CAMPUS MASTERPLAN
+      - UNIVERSITY OF GLASGOW - KELVIN DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12307116
+    projects: 2
+    proposed: co_located
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - FUJITSU SERVICES  CAVENDISH ROAD - EXTENSION
+      - MBDA UK - DATA CENTRE BUILDING
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12329293
+    projects: 2
+    proposed: co_located
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - AMAZON UK  DATA CENTRE - CAIN ROAD
+      - SEGRO PARK  SITES 3 & 4 - INDUSTRIAL UNIT
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12344772
+    projects: 2
+    proposed: phases
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - NTT COMMUNICATIONS DATA CENTRE
+      - NTT COMMUNICATIONS DATA CENTRE - PHASE 2 FIT O
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12355161
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - 580-581 IPSWICH ROAD - DATA CENTRE
+      - SEGRO  535-546 IPSWICH ROAD - DATA CENTRE SHEL
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12468506
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - 110 BUCKINGHAM AVENUE - DATA CENTRE
+      - LON 3 DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12511337
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - NORTH HYDE GARDENS  UNION PARK - DATA CENTRES
+      - UNION PARK DATA CENTRE - BLOCK 4
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12706575
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - KENWOOD POINT  REDDISH - 40MW DATA CENTRE
+      - KENWOOD ROAD  NORTH REDDISH - DEMOLITION
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12785975
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - NORTHUMBERLAND ENERGY PARK - NEW CAMBOIS AI DA
+      - VILLAGE OF CAMBOIS - CAMBOIS DATA CENTRE CAMPU
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12820102
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - FORMER FORD ENGINE PLANT - 2MW DATA CENTRE - B
+      - FORMER FORD ENGINE PLANT - DATA CENTRE CAMPUS
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12841450
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - PARK ROYAL INDUSTRIAL ESTATE - SECTION 278 WOR
+      - PREMIER PARK DATA CENTRE
+    reason: |
+      Not yet reviewed.
+
+  - site_key: PTNO-12879308
+    projects: 2
+    proposed: needs_a_look
+    scope: unreviewed
+    total: unreviewed
+    barbour_titles:
+      - A41 WATFORD BYPASS - DATA CENTRE
+      - FORMER MERCURE HOTEL - 200MW DATA CENTRE
+    reason: |
+      Not yet reviewed.
