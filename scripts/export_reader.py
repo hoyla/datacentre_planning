@@ -1174,6 +1174,8 @@ tr.detail td{padding:14px 18px 18px 30px}
 .figq{font-size:13px;color:var(--mut);margin-top:3px;line-height:1.35}
 .figtold{margin:0;font-size:14px;line-height:1.45;color:var(--ink)}
 .figmeta{margin:4px 0 0;font-size:14px;line-height:1.45}
+.adjlist{margin:6px 0 0;padding-left:18px;font-size:14px;line-height:1.45}
+.adjlist li{margin:0 0 9px}
 /* The figure's citation is one line: the document title, then two
    sibling .q spans — doc_link's "· register" and the page/ref/model/
    fetched meta. Block .q broke it over three rows. The `.q .q` rule
@@ -2852,6 +2854,33 @@ def main() -> int:
                               WHERE d.application_id = a.id)""")
         empty_reasons = {ref: (outcome, detail)
                          for ref, outcome, detail in _cur.fetchall()}
+        # Adjacent power (issue #252): substations, energy centres and
+        # standby fleets consented in their own right relate to a site,
+        # they do not belong to one, and since the clusterer stopped
+        # admitting the verdict they are not members anywhere. The
+        # relationship table carries the evidence; documentary rows
+        # (discovery, cohort) render as entries, proximity rows only as
+        # a count — one kilometre is the clustering radius, not a supply
+        # relationship, and 71 distance-only rows rendered as peers of
+        # 39 documentary ones would read as endorsement by volume
+        # (Luke's call, 2026-08-30).
+        _cur.execute("""
+            SELECT s.site_key, sap.basis, sap.distance_m, sap.evidence,
+                   a.application_ref, left(coalesce(a.description,''), 240),
+                   a.url
+            FROM site_adjacent_power sap
+            JOIN sites s ON s.id = sap.site_id AND s.retired_at IS NULL
+            JOIN applications a ON a.id = sap.application_id
+            WHERE sap.retired_at IS NULL
+            ORDER BY s.site_key, (sap.basis = 'proximity'),
+                     sap.basis, sap.distance_m NULLS LAST""")
+        adjacent_by_site: dict[str, dict] = {}
+        for _sk, _basis, _dist, _evid, _ref, _desc, _aurl in _cur.fetchall():
+            _e = adjacent_by_site.setdefault(_sk, {"doc": [], "prox": 0})
+            if _basis == "proximity":
+                _e["prox"] += 1
+            else:
+                _e["doc"].append((_basis, _dist, _evid, _ref, _desc, _aurl))
     _OUTCOME_PHRASE = {
         "none_published": "the register lists no documents",
         "error": "the last retrieval attempt failed and will be retried",
@@ -3925,6 +3954,36 @@ def main() -> int:
 
         who = who_cell(prof)
         reading_html = reading_panel(key, held)
+        _adj = adjacent_by_site.get(key)
+        adjacent_html = ""
+        if _adj:
+            _items = "".join(
+                f'<li><b>{esc(_ref)}</b>'
+                + (f' · <a href="{esc(_aurl)}" target="_blank" '
+                   f'rel="noopener">register</a>'
+                   if _aurl and str(_aurl).startswith("http") else '')
+                + (f' · {_dist / 1000:.2f} km' if _dist is not None else '')
+                + f'<br>{esc(trim(_desc, 180))}'
+                + f'<br><span class="help">{esc(_evid)}</span></li>'
+                for _basis, _dist, _evid, _ref, _desc, _aurl in _adj["doc"])
+            _prox = _adj["prox"]
+            _prox_note = (
+                f'<p class="help">{_prox} further power application'
+                f'{"" if _prox == 1 else "s"} lie'
+                f'{"s" if _prox == 1 else ""} within 1 km of this site. '
+                f'Distance alone is a candidate, not a supply '
+                f'relationship, so they are counted rather than '
+                f'listed.</p>' if _prox else '')
+            adjacent_html = (
+                '<div class="box adjacent"><h4>Adjacent power</h4>'
+                '<p class="help">Power infrastructure consented in its '
+                'own right — a substation, an energy centre, a standby '
+                'fleet — stands beside this site rather than belonging '
+                'to it: its capacity could serve many purposes and is '
+                'not this site’s demand. Each entry records how '
+                'the connection is known.</p>'
+                + (f'<ul class="adjlist">{_items}</ul>' if _items else '')
+                + _prox_note + '</div>')
         hay = " ".join(str(x or "").lower() for x in
                        (name, derived_names.get(key), key, addr,
                         ", ".join(councils or []), full_desc,
@@ -4050,6 +4109,7 @@ def main() -> int:
  </div>
  <div class="col-computed">
   {reading_html}
+  {adjacent_html}
   <div class="box identity"><h4>Site details</h4>
     <div class="fields">
      <div class="stack">
