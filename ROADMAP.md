@@ -103,21 +103,33 @@ data centre site. Three consequences:
   resilience question about assets the state calls nationally
   significant (Luke's line, and the best argument for the change).
 
-**Decided.** The seven sites show **no capacity**. Luke, 2026-08-30: the
-capacity of adjacent power is valuable but must not define the capacity
-of the data centre, because that power could serve many purposes. This
-is the quantity-type discipline applied across a boundary the model
-currently lets it cross. The absence is already a supported and
-*reportable* state — `site_scale.power_estimate` distinguishes "read in
-full and discloses nothing, which for a consented data centre is itself
-notable" from "reading is incomplete". Removing the substation figure
-surfaces a finding rather than losing a number, and it removes the
-known-bad Kingsnorth figure with no special case.
+**Decided.** Adjacent power must not define a data centre's capacity.
+Luke, 2026-08-30: the capacity of adjacent power is valuable but must
+not define the capacity of the data centre, because that power could
+serve many purposes. This is the quantity-type discipline applied
+across a boundary the model currently lets it cross. The absence is
+already a supported and *reportable* state — `site_scale.power_estimate`
+distinguishes "read in full and discloses nothing, which for a
+consented data centre is itself notable" from "reading is incomplete".
 
-**Stage 1 is PR #253, open.** Migration 032 adds `site_adjacent_power`;
+**The "seven figures go" claim did not survive measurement** (the
+survivor check is on the issue, 2026-08-30, with the query). With the
+reader's own ladder, removing adjacent-power membership changes the
+outcome on exactly **two** sites — Cardiff and Plymouth, both to
+nothing, both dissolving anyway — while twenty keep their figure
+because a scheme restates its capacity across applications: Kingsnorth's
+49.9 stands on a `new_build` member and two others, so the known-bad
+export figure is **not** removed by membership change and still needs
+its own adjudication correction; Hallen's 49.9/44.9 stand on a `not_dc`
+live member; Colt falls to its own 3.2 MW disclosed IT load — a new
+published figure appearing, arguably the system working. The larger
+numbers in the issue's table were measured across all quantity types
+including `other`, a different ladder from the one the table ranks on.
+
+**Stage 1 merged as PR #253.** Migration 032 adds `site_adjacent_power`;
 `dcp/adjacent_power.py` computes and materialises it;
-`scripts/materialise_adjacent_power.py` runs it; nine tests. **It changes
-no output** — nothing reads the table, membership is untouched.
+`scripts/materialise_adjacent_power.py` runs it; nine tests. It changed
+no output — nothing read the table, membership was untouched.
 
 114 relationships across 42 records and 66 sites, tiered by evidence:
 
@@ -138,22 +150,47 @@ by being close. "Site X shares grid infrastructure with Site Y" needs
 the applications to name the same substation or connection point. Stage
 1 deliberately does not attempt that extraction.
 
-**Stage 2 (reader renders the relationship) has one open question**: do
-proximity rows render beside documentary ones? 71 against 39 would drown
-them on a site page — Union Park alone has 19. The alternative is to
-render all three with the basis shown and trust the label, which is how
-the reader tiers confidence elsewhere. **Not decided.**
+**Stage 2, decided and shipped with stage 3** (Luke, 2026-08-30):
+documentary rows (discovery, cohort) render as entries in an "Adjacent
+power" box on the site page, each with its evidence line; the 71
+proximity rows appear only as a count with a disclosure — 71 rendered
+as peers of 39 would read as endorsement by volume, and Union Park
+alone has 19.
 
-**Stage 3** removes `adjacent_power` from `site_members`: 34 sites
-change, seven headline figures go. Six sites consist of *nothing but*
-adjacent power and would disappear — and they are two different things.
-Two are the only trace this corpus holds of a data centre (a generator
-"serving the University's relocated data centre" at Plymouth, a DRUPS
-"to support the Newton Data Centre"), so they are leads. Four are energy
-schemes with no data centre in sight (Bearsden BESS, the Exeter and
-Liverpool energy centres, the Cardiff battery scheme) and are arguably
-`not_dc` — a triage question, not a modelling one. Six further records
-attach to no site at all: keyword-swept, no coordinates.
+**Stage 3, shipped with stage 2**: the clusterer stops admitting
+`adjacent_power` (a dc_build verdict of adjacent_power vetoes
+membership, a v1 `DC` notwithstanding). Measured consequences, from a
+member-level diff of the clustering before and after:
+
+- **Eight sites retire**, not six: the six all-adjacent sites, plus
+  Barking (whose second member is the energy scheme's own
+  non-material-amendment paperwork) and **Hallen** — whose two
+  remaining members are `not_dc` under dc_build, so with the energy
+  scheme gone the remnant is not a site by the classifier's own rules.
+  The Mary Somerville site survives as `no_planning_record`: its
+  Barbour project stays when its adjacent application leaves.
+- **The two leads dissolve and are tracked here, not as sites**
+  (Luke's call): `Plymouth/20/01477/MOR` — a generator "serving the
+  University's relocated data centre", University of Plymouth, Drake
+  Circus — and `WestNorthamptonshire/N/2018/1565` — a DRUPS "to
+  support the Newton Data Centre", University of Northampton, Avenue
+  Campus. Each is the only trace the corpus holds of the data centre
+  it serves; both records stay in `applications` and in the
+  relationship table's history. A future sweep of either university's
+  register is the follow-up.
+- **Fourteen further sites lose members without losing their ladder
+  figure.** One wart is accepted and tracked: `Barnet/26/0696/CON`, a
+  conditions discharge for Brent Cross's Plot 59 Main Energy Centre,
+  strands as its own procedural-only site because its family edge ran
+  through the vetoed reserved-matters application — the typed
+  `parent_ref` gap this file already records, expressing itself.
+- Six further adjacent-power records attach to no site at all:
+  keyword-swept, no coordinates. Unchanged.
+
+**Still open after stage 3** — the per-figure restatements: Kingsnorth's
+export figure on its `new_build` member is an adjudication correction,
+not a membership question, and the `not_dc` live members holding
+figures (Hallen was one) are a small leak of the same kind.
 
 ### 2. #247 — a campus load figure from one building is shown as the site's
 

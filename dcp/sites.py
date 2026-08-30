@@ -134,6 +134,17 @@ def build_clusters(conn, *, radius_km: float = 1.0,
     # `unknown` included, because a conditions discharge belongs to its
     # parent's site and a disguise suspect is precisely what we must not
     # drop.
+    #
+    # `adjacent_power` is the one exception, and it vetoes (issue #252,
+    # decided 2026-08-30): a substation, an energy centre or a standby
+    # fleet consented in its own right relates to a data centre, it is
+    # not part of one. Membership lent seven sites a capacity that was
+    # not their own and forced shared infrastructure to pick one owner.
+    # The veto applies whenever the latest dc_build verdict says
+    # adjacent_power, a v1 'DC' notwithstanding — dc_build introduced
+    # the concept precisely because v1 could not express it. These
+    # records stay in the corpus and relate to sites through
+    # site_adjacent_power (migration 032), which the reader renders.
     with conn.cursor() as cur:
         cur.execute("""
             WITH per_rubric AS (
@@ -147,6 +158,9 @@ def build_clusters(conn, *, radius_km: float = 1.0,
               SELECT application_id,
                      bool_or(rubric = 'v1' AND verdict = 'DC'
                              OR rubric = 'dc_build' AND verdict <> 'not_dc')
+                     AND coalesce(
+                           max(verdict) FILTER (WHERE rubric = 'dc_build')
+                             <> 'adjacent_power', true)
                        AS in_universe,
                      max(verdict) FILTER (WHERE rubric = 'dc_build') AS dc_build_verdict,
                      max(verdict) FILTER (WHERE rubric = 'v1')       AS v1_verdict
