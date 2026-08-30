@@ -95,6 +95,16 @@ sources:
       next capacity sweep, and worth knowing when reading the claim
       store as a survey of what operators publish.
 
+      RESOLVED 2026-08-30: the full snapshot refresh taken for the
+      operator pages review captures the campus tables — every row
+      above now verifies verbatim against virtus-stockley-park and
+      virtus-slough-campus — so the per-facility figures are loaded
+      below, each quote gate-checked. The internal contradictions the
+      earlier survey found stand and travel as notes on the claims
+      (LONDON7 32.5 here against 28 in a carousel; the Slough campus
+      total of 145.5 against 132.2 summed from its own rows), because
+      they are the reportable part.
+
       That taxonomy is boundary evidence of the kind
       site_partitions.yaml runs on, and it has already settled two
       questions independently. It confirms the Slough campus drawn out
@@ -1046,43 +1056,15 @@ claims:
 
   # --- Operator pages review, 2026-08-30 (issue #255). Every quote is
   # verbatim from a snapshot taken the day Luke read the pages. The
-  # Greystoke trio is the audiences finding in claim form: the
-  # developer's one listing page states the figures the schemes' own
-  # consultation sites omit (consult-west-london-tech-park,
-  # consult-abbots-langley and consult-humber-tech-park all hold zero
-  # megawatt mentions).
+  # Greystoke figures (90/96/384) were already claimed above from
+  # greystoke-home and are not repeated; what the review added for them
+  # is the audiences finding — the schemes' own consultation sites,
+  # snapshotted the same day (consult-west-london-tech-park,
+  # consult-abbots-langley, consult-humber-tech-park), hold zero
+  # megawatt mentions against the developer's stated figures.
 
-  - source: greystoke_website
-    snapshot: greystoke-data-centres
-    claim_name: West London Technology Park (Greystoke)
-    quantity_type: announced_capacity
-    value: 90
-    unit: MW
-    as_at: 2026-08-30
-    quote: West London Technology Park 90 MW data centre project next to the M25 in Buckinghamshire
 
-  - source: greystoke_website
-    snapshot: greystoke-data-centres
-    claim_name: Abbots Langley Data Centre (Greystoke)
-    quantity_type: announced_capacity
-    value: 96
-    unit: MW
-    as_at: 2026-08-30
-    quote: Abbots Langley Data Centre 96 MW data centre project
 
-  - source: greystoke_website
-    snapshot: greystoke-data-centres
-    claim_name: Humber Tech Park (Greystoke)
-    quantity_type: announced_capacity
-    value: 384
-    unit: MW
-    as_at: 2026-08-30
-    quote: Humber Tech Park 384 MW AI data centre project in North Lincolnshire
-    note: >-
-      The same developer's AI Growth Zone page states "384 GW" for this
-      scheme — the unit error recorded under `noted`, which two other
-      pages on the same site contradict. This page's 384 MW is the
-      figure the developer can mean.
 
   - source: digitalreef_website
     snapshot: digital-reef-projects
@@ -1681,42 +1663,8 @@ matches:
       unmatched claim: 148 MW of critical IT load now attaches to a
       site that ranks on it.
 
-  - claim_name: West London Technology Park (Greystoke)
-    site_id: 77
-    method: name_identity
-    confidence: strong
-    matched_by: hand:luke+claude-fable-5:2026-08-30
-    evidence: >-
-      Site 77 is "WEST LONDON TECHNOLOGY PARK - DATA CENTRE" and the
-      developer's listing page names the scheme in full beside its 90
-      MW. The scheme's own consultation site (westlondontechpark.com,
-      snapshot 2026-08-30) states no load — the audiences pattern.
-      Verified by Luke, operator pages review T2-15.
 
-  - claim_name: Abbots Langley Data Centre (Greystoke)
-    site_id: 91
-    method: name_identity
-    confidence: strong
-    matched_by: hand:luke+claude-fable-5:2026-08-30
-    evidence: >-
-      Site 91 is the Abbots Langley data centre and the developer's
-      listing page names the scheme beside its 96 MW. The scheme's own
-      consultation site (abbotslangleydatacentre.co.uk, snapshot
-      2026-08-30) states no load. Verified by Luke, operator pages
-      review T2-17.
 
-  - claim_name: Humber Tech Park (Greystoke)
-    site_id: 95
-    method: name_identity
-    confidence: strong
-    matched_by: hand:luke+claude-fable-5:2026-08-30
-    evidence: >-
-      Site 95 is "THE HUMBER TECH PARK DATA CENTRE" and the developer's
-      listing page names the scheme beside its 384 MW (the AI Growth
-      Zone page's "384 GW" for the same scheme stays under `noted` as a
-      unit error). The scheme's consultation site (humbertechpark.com,
-      snapshot 2026-08-30) states no load. Verified by Luke, operator
-      pages review T2-18.
 
   - claim_name: East Havering Data Centre Campus (Digital Reef)
     site_id: 246

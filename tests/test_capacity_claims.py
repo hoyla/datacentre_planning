@@ -188,14 +188,23 @@ def test_a_changed_page_fails_rather_than_drifts():
 def test_the_unit_error_is_documented_but_not_loaded():
     """Greystoke publishes 384 GW where two other pages say 384 MW. It is
     recorded as a finding and kept out of the claims, because loading it
-    would poison every aggregate it reached."""
+    would poison every aggregate it reached.
+
+    The guard targets that misprint, not the unit: a gigawatt-scale
+    figure is a legitimate claim where a page genuinely states one —
+    Quest Park's "Secured Grid connection ~ 1 GW" is a grid ambition
+    recorded as printed — so the ban is on 384 arriving in GW, and on
+    any single claim exceeding UK-peak-demand scale, not on GW itself.
+    """
     doc = cc.load_operator_document()
     noted = doc.get("noted", [])
     assert any("384 GW" in n["subject"] for n in noted)
     values = {(c.claim_name, c.value, c.unit)
               for c in cc.load_operator_claims()}
     assert ("Humber Tech Park", 384.0, "MW") in values
-    assert not any(u == "GW" for _, _, u in values)
+    assert not any(u == "GW" and v >= 10 for _, v, u in values), (
+        "a tens-of-gigawatts claim is beyond any single UK site and is "
+        "almost certainly a unit error — record it under `noted` instead")
 
 
 # ---------------------------------------------------------------------------
