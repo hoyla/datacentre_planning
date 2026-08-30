@@ -1174,6 +1174,12 @@ tr.detail td{padding:14px 18px 18px 30px}
 .figq{font-size:13px;color:var(--mut);margin-top:3px;line-height:1.35}
 .figtold{margin:0;font-size:14px;line-height:1.45;color:var(--ink)}
 .figmeta{margin:4px 0 0;font-size:14px;line-height:1.45}
+/* The figure's citation is one line: the document title, then two
+   sibling .q spans — doc_link's "· register" and the page/ref/model/
+   fetched meta. Block .q broke it over three rows. The `.q .q` rule
+   cannot reach these: their parent is .figmeta, not another .q — the
+   same disease PR #240 cured for nested citations, in sibling form. */
+.figmeta .q{display:inline}
 .figquote{font-family:"Source Serif 4",Georgia,serif;font-style:italic;
   font-size:15px;color:var(--ink);border-left:3px solid var(--line);
   padding-left:12px;margin:7px 0 0;line-height:1.45}
