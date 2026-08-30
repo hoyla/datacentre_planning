@@ -295,6 +295,63 @@ belong to none of the four and are what raised #252.
 `it_load` and `total_site` from the same document, and must resolve to
 one before it can be summed or compared.
 
+**The missing object is the facility, not a sharper site** (assessed
+with Luke, 2026-08-30 evening, after the adjacent-power work and the
+operator-pages fold). Four definitions, written down so they stop
+being re-litigated:
+
+> A **site** is the planning record's unit of aggregation — the
+> cluster of applications and projects that belong together
+> documentarily and spatially — not an asset. A **facility** is the
+> asset: one building or installation with one operator, one identity
+> (LONDON7, KLON-03), and figures of stated kinds. A **campus** is an
+> operator's own aggregation of facilities, which is a claim about
+> sites, never a redefinition of one — VIRTUS's Slough campus is seven
+> facilities where our site holds three, and the site must stay
+> derivable from the planning record. A **scope** decision lives at
+> the facility↔site mapping: which facilities a site holds, and
+> whether their figures roll up.
+
+Site-load vs campus-load was never a boundary problem; it is an
+attribution problem. Figures attach to applications, applications
+aggregate to sites, and the thing a figure is actually *about* — the
+facility — exists nowhere in the model. That is the same disease #252
+just cured for substations: membership (or site-attribution) because
+the model has nowhere else to put it. The same recipe applies — do
+not sharpen the container, add the missing relation with its
+evidence.
+
+**The proposal: a facility prior**, `site_adjacent_power`'s sibling —
+hand-curated on the `site_aliases.yaml` contract (a dead site key
+fails the build; every entry carries its source). Per site: the
+facility roster with the source that names it, and per facility any
+figure attribution a document supports. Two sources of identity, kept
+distinct: planning documents where they name a facility (8 of 434 at
+Stockley — sparse, hand-adjudicated), and operator rosters where
+published (snapshot-backed claims since 2026-08-30). What the
+operator channel now supplies, per campus where a roster exists:
+
+- **The denominator, sourced.** "3 of 5 facilities disclose" needed a
+  sourced count of 5; VIRTUS's roster is that source, with a snapshot
+  behind it.
+- **A self-auditing calibration case.** Saunderton: 9.5 + 22.5 + 16 +
+  30 against a stated "Campus Total of 78 MW" — exact. The operator
+  whose arithmetic checks itself is the benchmark for when
+  `total: sum` can ever be trusted.
+- **A discrepancy worth putting to the operator.** VIRTUS Slough
+  states 145.5 MW against 132.2 summed from its own seven rows.
+- **The attribution wrinkle a roster cannot resolve.** Planning gives
+  Stockley 24 MW from LONDON7's 2021 handover; VIRTUS puts 24 on
+  LONDON5 and 32.5 on LONDON7 — possibly the right number on the
+  wrong building, and only a document or the operator can settle it.
+
+**Two cautions that bound the layer.** The roster gives campus
+*structure*, never planning-figure *attribution* — planning figures
+stay site-attributed unless a document names the facility or a hand
+adjudication does. And the quantity-kind discipline survives intact: a
+sum needs like kinds on same-layer figures, whichever layer they sit
+on.
+
 ### 3. #250 — a campus ranked on one facility falls below a line it would clear
 
 The mirror of #247 and **the invisible half**. A wrong amber pill invites
@@ -417,6 +474,22 @@ one.
 *scope* (`campus_scope.yaml`) decides how a site presents its power.
 Partitioning `PTNO-12058499` did not resolve it — it created two new
 multi-facility campuses that each need a scope decision.
+
+**Revised method after the operator-pages fold** (2026-08-30 evening,
+and see the facility-layer note under #247): for a campus whose
+operator publishes a roster, the review is no longer classify from
+scratch — it is **confirm the operator's roster against the planning
+record, facility by facility**, a much cheaper pass. The roster gives
+the facility list, the per-facility figures on one basis, and often a
+campus total that can be checked against its own rows (Saunderton's
+checks exactly; Slough's is 13 MW over). The scope entry then records
+which facilities the site holds, which the roster names beyond it, and
+whether a total is constructible. Start with the campuses whose
+rosters landed as snapshot-backed claims: VIRTUS Stockley Park and
+Slough, Kao Harlow, Ark's parks, the CyrusOne pairs. Global Switch
+(80 + 35, both `it_load`, both planning-sourced) remains the first
+`total: sum` test case; sites with no published roster keep the
+one-at-a-time method.
 
 ### Traps this work hit, recorded so the next session does not
 
