@@ -2450,6 +2450,23 @@ def main() -> int:
         _preplanning_keys = {f"PTNO-{r[0]}" for r in barbour_rows}
         _sal.require_live(_aliases,
                           {r[0] for r in site_rows} | _preplanning_keys)
+
+        def _shown(key, name):
+            """A site's name as it should read.
+
+            `prop.title_case` exists to tame a derived name a register
+            or Barbour shouts in capitals. A curated alias is not that:
+            a person wrote it, initialisms and all, and title_case only
+            rewrites tokens that arrive entirely in capitals — which is
+            exactly what an initialism is. It rendered "SDC" as "Sdc"
+            and "(ILI" as "(ili", the second because `capitalize`
+            lowercases everything after a first character that cannot
+            itself be uppercased (Luke, 2026-08-30). The alias was
+            already exact in every link on the page, so one site was
+            being named two ways in one document.
+            """
+            shown = name or key
+            return shown if key in _aliases else prop.title_case(shown)
         cur.execute(hv.NSIP_SQL); nsip_rows = cur.fetchall()
         # Coverage, counted over the applications that belong to a live
         # site — the ones this page shows. The wider corpus also holds
@@ -3876,10 +3893,10 @@ def main() -> int:
  data-prov="{1 if is_prov else 0}" data-origin="{esc('|'.join(org))}"
  data-who="{esc(who['filter_key'])}" data-cohorts="{esc('|'.join(cohorts_of_site.get(key, ())))}"
  data-class="{esc(site_classes[key].key)}">
-<td class="sitecell" data-v="{esc(prop.title_case(name or key))}"><span class="sname">{
+<td class="sitecell" data-v="{esc(_shown(key, name))}"><span class="sname">{
  '' if site_classes[key].is_datacentre else
  f'<span class="classbadge" title="{esc(site_classes[key].display_description)}">'
- f'{esc(site_classes[key].label)}</span>'}{esc(trim(prop.title_case(name or key), 84))}</span>
+ f'{esc(site_classes[key].label)}</span>'}{esc(trim(_shown(key, name), 84))}</span>
  <span class="skey">{esc(' · '.join([x for x in [key, trim(addr, 74), ', '.join(councils or [])] if x]))}</span>
  <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}{
  '' if descriptive else ' — the register holds no description of the development itself, only procedural applications'}</span></td>
@@ -3907,7 +3924,7 @@ def main() -> int:
   <h2 class="sitename">{
    '' if site_classes[key].is_datacentre else
    f'<span class="classbadge" title="{esc(site_classes[key].display_description)}">'
-   f'{esc(site_classes[key].label)}</span>'}{esc(prop.title_case(name or key))}</h2>
+   f'{esc(site_classes[key].label)}</span>'}{esc(_shown(key, name))}</h2>
   <!-- "Record built from" is said, not implied: the bare origin phrase
        ("The planning sweep and Barbour") read as an unlabelled mystery
        in the subheading, while the Site details box below labels the
@@ -4108,9 +4125,9 @@ def main() -> int:
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
  data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts=""
  data-class="{esc(_pcls.key)}">
-<td class="sitecell" data-v="{esc(prop.title_case(title or key))}"><span class="sname">{
+<td class="sitecell" data-v="{esc(_shown(key, title))}"><span class="sname">{
  '' if _pcls.is_datacentre else
- f'<span class="classbadge" title="{esc(_pcls.display_description)}">{esc(_pcls.label)}</span>'}{esc(trim(prop.title_case(title or key), 84))}</span>
+ f'<span class="classbadge" title="{esc(_pcls.display_description)}">{esc(_pcls.label)}</span>'}{esc(trim(_shown(key, title), 84))}</span>
  <span class="skey">{esc(' · '.join([x for x in [key, trim(address or '', 74), authority or ''] if x]))}</span>
  <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
@@ -4124,7 +4141,7 @@ def main() -> int:
   <h2 class="sitename">{
    '' if _pcls.is_datacentre else
    f'<span class="classbadge" title="{esc(_pcls.display_description)}">'
-   f'{esc(_pcls.label)}</span>'}{esc(prop.title_case(title or key))}</h2>
+   f'{esc(_pcls.label)}</span>'}{esc(_shown(key, title))}</h2>
   <p class="siteident">{esc(authority or '')}{" · " if address else ""}{esc(trim(address, 90))}
    · <code>{esc(key)}</code> · Barbour ABI project, no application yet</p>{
    f'<p class="siteident">Barbour ABI titles this project '
