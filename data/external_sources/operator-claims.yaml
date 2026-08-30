@@ -211,6 +211,25 @@ sources:
       consented separately, via a Section 36 application to the
       Scottish Government's Energy Consents Unit.
 
+  - key: digitalreef_website
+    operator: Digital Reef
+    snapshot_dir: operator_snapshots
+    note: >-
+      The developer's corporate projects page, the paired opposite of
+      the scheme's own consultation site: it states the East Havering
+      figure the consultation site omits (the consultation snapshot,
+      consult-east-havering, holds no megawatt figure at all —
+      operator pages review, 2026-08-30).
+
+  - key: questpark_website
+    operator: QuestPit
+    snapshot_dir: operator_snapshots
+    note: >-
+      The scheme's marketing site for Quest Park (Home of Production,
+      Bedfordshire). The only figure is a grid ambition — "~ 1 GW
+      Long-term capability" on a secured connection — not a built or
+      announced IT capacity, and the quantity type records it so.
+
 claims:
   # --- Ark, per campus ---------------------------------------------------
   - source: ark_website
@@ -1025,6 +1044,233 @@ claims:
       case where the marketing figure and the planning figure are the
       same number.
 
+  # --- Operator pages review, 2026-08-30 (issue #255). Every quote is
+  # verbatim from a snapshot taken the day Luke read the pages. The
+  # Greystoke trio is the audiences finding in claim form: the
+  # developer's one listing page states the figures the schemes' own
+  # consultation sites omit (consult-west-london-tech-park,
+  # consult-abbots-langley and consult-humber-tech-park all hold zero
+  # megawatt mentions).
+
+  - source: greystoke_website
+    snapshot: greystoke-data-centres
+    claim_name: West London Technology Park (Greystoke)
+    quantity_type: announced_capacity
+    value: 90
+    unit: MW
+    as_at: 2026-08-30
+    quote: West London Technology Park 90 MW data centre project next to the M25 in Buckinghamshire
+
+  - source: greystoke_website
+    snapshot: greystoke-data-centres
+    claim_name: Abbots Langley Data Centre (Greystoke)
+    quantity_type: announced_capacity
+    value: 96
+    unit: MW
+    as_at: 2026-08-30
+    quote: Abbots Langley Data Centre 96 MW data centre project
+
+  - source: greystoke_website
+    snapshot: greystoke-data-centres
+    claim_name: Humber Tech Park (Greystoke)
+    quantity_type: announced_capacity
+    value: 384
+    unit: MW
+    as_at: 2026-08-30
+    quote: Humber Tech Park 384 MW AI data centre project in North Lincolnshire
+    note: >-
+      The same developer's AI Growth Zone page states "384 GW" for this
+      scheme — the unit error recorded under `noted`, which two other
+      pages on the same site contradict. This page's 384 MW is the
+      figure the developer can mean.
+
+  - source: digitalreef_website
+    snapshot: digital-reef-projects
+    claim_name: East Havering Data Centre Campus (Digital Reef)
+    quantity_type: announced_capacity
+    value: 600
+    unit: MW
+    as_at: 2026-08-30
+    quote: East Havering 600MW Data Centre campus
+
+  - source: questpark_website
+    snapshot: questpark-home-of-production
+    claim_name: Quest Park grid connection (Bedfordshire)
+    quantity_type: grid_connection
+    value: 1
+    unit: GW
+    as_at: 2026-08-30
+    term: Long-term capability
+    quote: Secured Grid connection ~ 1 GW Long-term capability
+    note: >-
+      A stated ambition on a secured connection, not a built or
+      announced IT capacity — the page offers no other figure.
+
+  - source: apatura_consultation
+    snapshot: consult-apatura-ravenscraig
+    claim_name: Ravenscraig data campus (Apatura)
+    quantity_type: announced_capacity
+    value: 550
+    unit: MW
+    as_at: 2026-08-30
+    stage: proposed
+    quote: We are proposing a 550MW sustainably designed data campus alongside a 150MW battery
+    note: >-
+      The 150MW battery in the same sentence is not loaded as a claim,
+      the same rule as Westerhill's 500MW BESS: storage rather than
+      data-centre capacity. A consultation page stating capacity at
+      all is the Apatura pattern — its consult pages are also its only
+      scheme presence.
+
+  - source: apatura_consultation
+    snapshot: consult-apatura-freeport
+    claim_name: Freeport Data Centre Campus (Apatura)
+    quantity_type: announced_capacity
+    value: 250
+    unit: MW
+    as_at: 2026-08-30
+    stage: proposed
+    quote: proposals for a 250MW Data Centre Campus located at Freeport Leisure Village
+
+  - source: virtus_website
+    snapshot: virtus-stockley-park
+    claim_name: VIRTUS Stockley Park campus
+    quantity_type: announced_capacity
+    value: 112.5
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: With 112.5MW of IT load over 45,400 NTM
+    note: >-
+      The campus page also lists LONDON14 and LONDON8 as "Bespoke
+      design" with floor areas and no megawatt figure — so VIRTUS's own
+      roster discloses power for three of five facilities, the same
+      partial-disclosure shape the planning record shows this campus
+      (issue #247).
+
+  - source: virtus_website
+    snapshot: virtus-stockley-park
+    claim_name: VIRTUS LONDON5 (Stockley Park)
+    quantity_type: announced_capacity
+    value: 24
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON5 24MW 10,000 NTM
+    note: >-
+      24 is the figure the sites table currently shows for this campus
+      from LONDON7's 2021 handover document — VIRTUS puts 24 on LONDON5
+      and 32.5 on LONDON7, so the planning-derived number may be the
+      right value on the wrong building (issue #247).
+
+  - source: virtus_website
+    snapshot: virtus-stockley-park
+    claim_name: VIRTUS LONDON7 (Stockley Park)
+    quantity_type: announced_capacity
+    value: 32.5
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON7 32.5MW 13,000 NTM
+
+  - source: virtus_website
+    snapshot: virtus-stockley-park
+    claim_name: VIRTUS LONDON6 (Stockley Park)
+    quantity_type: announced_capacity
+    value: 16
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON6 16MW 7,000 NTM
+
+  - source: virtus_website
+    snapshot: virtus-slough-campus
+    claim_name: VIRTUS Slough campus (VIRTUS's own scope)
+    quantity_type: announced_capacity
+    value: 145.5
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: With 145.5MW of IT load
+    note: >-
+      Deliberately unmatched. VIRTUS's campus is LONDON3, 4, 9, 10, 11,
+      12 and 19; the corpus's Slough site holds LONDON3, 10 and 11.
+      Matching the seven-facility total to the three-facility site
+      would assert a scope the campus review has not decided (operator
+      pages review T3-05; campus_scope.yaml).
+
+  - source: virtus_website
+    snapshot: virtus-slough-campus
+    claim_name: VIRTUS LONDON3 (Slough)
+    quantity_type: announced_capacity
+    value: 7.2
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON3 7.2MW 3,000 NTM
+
+  - source: virtus_website
+    snapshot: virtus-slough-campus
+    claim_name: VIRTUS LONDON11 (Slough)
+    quantity_type: announced_capacity
+    value: 13.3
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON11 13.3MW 5,500 NTM
+
+  - source: virtus_website
+    snapshot: virtus-slough-campus
+    claim_name: VIRTUS LONDON9 (Slough)
+    quantity_type: announced_capacity
+    value: 24
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON9 24MW 10,000 NTM
+    note: >-
+      Unmatched pending the Slough campus-scope decision — the corpus
+      does not hold LONDON9 (operator pages review T3-05).
+
+  - source: virtus_website
+    snapshot: virtus-slough-campus
+    claim_name: VIRTUS LONDON19 (Slough)
+    quantity_type: announced_capacity
+    value: 33.5
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON19 33.5MW 8,500 NTM
+    note: >-
+      Unmatched pending the Slough campus-scope decision — the corpus
+      does not hold LONDON19 (operator pages review T3-05).
+
+  - source: virtus_website
+    snapshot: virtus-slough-campus
+    claim_name: VIRTUS LONDON4 (Slough)
+    quantity_type: announced_capacity
+    value: 26.6
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON4 26.6MW 10,600 NTM
+    note: >-
+      Unmatched pending the Slough campus-scope decision — the corpus
+      does not hold LONDON4 (operator pages review T3-05).
+
+  - source: virtus_website
+    snapshot: virtus-slough-campus
+    claim_name: VIRTUS LONDON12 (Slough)
+    quantity_type: announced_capacity
+    value: 21
+    unit: MW
+    as_at: 2026-08-30
+    term: IT load
+    quote: LONDON12 21MW 7,800 NTM
+    note: >-
+      Unmatched pending the Slough campus-scope decision — the corpus
+      does not hold LONDON12 (operator pages review T3-05).
+
 matches:
   - claim_name: Digital Realty LHR13 (Chessington, KT9 1SJ)
     site_id: 414
@@ -1357,6 +1603,236 @@ matches:
       demand utility capacity with ancillary BESS (to be consented via
       separate S36 application)". Same figure, same place, same
       consenting split. Identified by Luke, 2026-08-27.
+
+  # --- Operator pages review, 2026-08-30 (issue #255): Luke verified
+  # every site→page pairing by hand; data/priors/operator_pages.yaml
+  # carries the same identifications for the reader's links.
+
+  - claim_name: CyrusOne LON3 (700 Stirling Road, Slough)
+    site_id: 535
+    method: address_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      The site's derived name IS the claim's address: SITE-Slough/T/137
+      is "700, Stirling Road, Slough, SL1 4ST" and CyrusOne's LON3 page
+      gives "700 Stirling Road, Slough SL1 4ST". Verified by Luke,
+      operator pages review T3-01.
+
+  - claim_name: CyrusOne LON4 (225B Bath Road, Slough)
+    site_id: 526
+    method: address_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      225B Bath Road on the 225 Bath Road masterplan site, whose permit
+      (EPR/EP3508PS, "CyrusOne London 4/5 Datacentres") is already
+      matched here at 139 m. Verified by Luke, operator pages review
+      T3-02; LON4 and LON5 are neighbours on one plot, so this site
+      carries both facility claims.
+
+  - claim_name: CyrusOne LON5 (225C Bath Road, Slough)
+    site_id: 526
+    method: address_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      225C Bath Road, the other half of the LON4/LON5 pair on the 225
+      Bath Road masterplan site — see the LON4 entry and the campus
+      permit already matched at this postcode. Verified by Luke,
+      operator pages review T3-03.
+
+  - claim_name: KLON-06 (Slough)
+    site_id: 23
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      Kao's KLON-06 page is 672 Galvin Road, Slough — the former
+      Barclays data centre, which is exactly what site 23's record
+      holds: Slough/P/00348/008 is Barclays Bank PLC's solar
+      installation and Slough/P/00348/011 states "Operator is KAO
+      DATA". Found by Luke during the review (sheet LH-1), correcting
+      the matching pass's Ajax Avenue near-miss.
+
+  - claim_name: VIRTUS LONDON10 (75 Buckingham Avenue, Slough)
+    site_id: 525
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      The site's own alias asserts LONDON10 membership on a Companies
+      House charge naming "london 10, 75 buckingham avenue" against
+      VIRTUS LONDON 10 LIMITED (established by hand, 2026-08-28), and
+      VIRTUS's Slough campus page rosters LONDON10 at 6.6MW. Verified
+      by Luke, operator pages review T3-05.
+
+  - claim_name: Vantage Cardiff campus
+    site_id: 55
+    method: name_and_place
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      Site 55 is "NEXT GENERATION DATA PROJECT DELTA" — NGD is the
+      company Vantage acquired, and the claim's page places the campus
+      at Imperial Park, Celtic Way, both of which appear in the site's
+      planning record. Also matches on the CWL1 facility code (Luke,
+      operator pages review T3-04). This was issue #250's headline
+      unmatched claim: 148 MW of critical IT load now attaches to a
+      site that ranks on it.
+
+  - claim_name: West London Technology Park (Greystoke)
+    site_id: 77
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      Site 77 is "WEST LONDON TECHNOLOGY PARK - DATA CENTRE" and the
+      developer's listing page names the scheme in full beside its 90
+      MW. The scheme's own consultation site (westlondontechpark.com,
+      snapshot 2026-08-30) states no load — the audiences pattern.
+      Verified by Luke, operator pages review T2-15.
+
+  - claim_name: Abbots Langley Data Centre (Greystoke)
+    site_id: 91
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      Site 91 is the Abbots Langley data centre and the developer's
+      listing page names the scheme beside its 96 MW. The scheme's own
+      consultation site (abbotslangleydatacentre.co.uk, snapshot
+      2026-08-30) states no load. Verified by Luke, operator pages
+      review T2-17.
+
+  - claim_name: Humber Tech Park (Greystoke)
+    site_id: 95
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      Site 95 is "THE HUMBER TECH PARK DATA CENTRE" and the developer's
+      listing page names the scheme beside its 384 MW (the AI Growth
+      Zone page's "384 GW" for the same scheme stays under `noted` as a
+      unit error). The scheme's consultation site (humbertechpark.com,
+      snapshot 2026-08-30) states no load. Verified by Luke, operator
+      pages review T2-18.
+
+  - claim_name: East Havering Data Centre Campus (Digital Reef)
+    site_id: 246
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      The developer's projects page names "East Havering 600MW Data
+      Centre campus"; site 246 is SITE-Havering/Z0001.24, the East
+      Havering Data Centre Campus LDO at Fen Lane, whose consultation
+      site (easthaveringdatacentrecampus.com, snapshot 2026-08-30)
+      says nothing about energy. Verified by Luke, operator pages
+      review T1-04.
+
+  - claim_name: Quest Park grid connection (Bedfordshire)
+    site_id: 83
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      The scheme's own marketing site (questpark.co.uk) for the Quest
+      Pit campus at Ampthill Road; site 83 is the Home of Production
+      site whose Section 35 direction stub already anchors to the same
+      land. Verified by Luke, operator pages review T1-03.
+
+  - claim_name: Ravenscraig data campus (Apatura)
+    site_id: 126
+    method: scheme_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      Apatura's consultation page for the former Ravenscraig steelworks
+      scheme; site 126 is "FORMER RAVENSCRAIG STEELWORKS - 550MW AI
+      DATA CENTRE" — the same figure, the same place, from Barbour's
+      own title. Verified by Luke, operator pages review T1-05.
+
+  - claim_name: Freeport Data Centre Campus (Apatura)
+    site_id: 368
+    method: scheme_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      Apatura's consultation page for the Freeport Leisure Village
+      scheme at West Calder; site 368 is
+      SITE-WestLothian/0346/EIA/25, "Land At Former Freeport Shopping
+      & Leisure Village Westwood West Calder". Verified by Luke,
+      operator pages review T1-06.
+
+  - claim_name: VIRTUS Stockley Park campus
+    site_id: 37
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      VIRTUS's own campus page for Stockley Park; site 37 holds the
+      campus's planning record (the LONDON5-LONDON8 and LONDON14
+      applications, issue #247). The campus figure is VIRTUS's roster
+      total across the three facilities it discloses, on one basis —
+      the comparability the planning documents do not give this
+      campus. Verified by Luke, operator pages review T1-08.
+
+  - claim_name: VIRTUS LONDON5 (Stockley Park)
+    site_id: 37
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      LONDON5 on VIRTUS's Stockley Park campus roster; site 37 holds
+      the LONDON5 planning record, including the 2018 reporting-scheme
+      average the adjudication carries. Operator pages review T1-08.
+
+  - claim_name: VIRTUS LONDON7 (Stockley Park)
+    site_id: 37
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      LONDON7 on VIRTUS's Stockley Park campus roster; site 37 holds
+      the LONDON7 planning record, including the 2021 handover
+      milestone whose 24 MW the sites table currently shows — against
+      VIRTUS's 32.5 here, and VIRTUS's 24 on LONDON5. Operator pages
+      review T1-08.
+
+  - claim_name: VIRTUS LONDON6 (Stockley Park)
+    site_id: 37
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      LONDON6 on VIRTUS's Stockley Park campus roster; site 37's
+      planning record names LONDON5-LONDON8 across its Hillingdon
+      stems. Operator pages review T1-08.
+
+  - claim_name: VIRTUS LONDON3 (Slough)
+    site_id: 525
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      LONDON3 on VIRTUS's Slough campus roster; site 525 holds the
+      Barbour record "VIRTUS DATA CENTRES - LONDON 3" among its
+      members. In the corpus's current campus scope (LONDON3, 10, 11),
+      so matched; the roster's LONDON4, 9, 12 and 19 claims stay
+      unmatched pending the scope decision (operator pages review
+      T3-05).
+
+  - claim_name: VIRTUS LONDON11 (Slough)
+    site_id: 525
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-08-30
+    evidence: >-
+      LONDON11 on VIRTUS's Slough campus roster; site 525 holds the
+      Barbour record "VIRTUS DATA CENTRES - LONDON 11 DATA CENTRE" and
+      LONDON11's own permit is already matched here. In the corpus's
+      current campus scope, so matched (operator pages review T3-05).
 
 considered:
   - claim_name: Union Park
