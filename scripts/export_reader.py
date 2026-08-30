@@ -570,6 +570,15 @@ def trim(text, n: int) -> str:
     return t if len(t) <= n else t[: n - 1].rsplit(" ", 1)[0] + "…"
 
 
+def app_anchor(key: str, ref: str) -> str:
+    """A fragment id for one application's row on its site page.
+
+    Slashes are legal in a fragment and the site permalinks already use
+    them; whitespace is not, and a handful of references carry it.
+    """
+    return "app-" + re.sub(r"\s+", "_", f"{key}-{ref}")
+
+
 # Glyphs are written as characters, not CSS escapes. `content:"\25B8"`
 # in a Python string is an octal escape first and a CSS one never: it
 # reached the page as chr(0x15) + "B8", so the disclosure arrow read
@@ -1956,6 +1965,16 @@ function scrollRowToTop(r, tries){
   }, 120);
 }
 
+function goApp(id){
+  // The Proposal box links to the application row its clause was lifted
+  // from. That row sits inside a closed <details>, so the bare anchor
+  // would scroll to nothing: open every enclosing disclosure first.
+  const el=document.getElementById(id);
+  if(!el) return true;   // fall back to the plain anchor jump
+  for(let d=el.closest('details'); d; d=d.parentElement&&d.parentElement.closest('details')) d.open=true;
+  el.scrollIntoView({block:'center'});
+  return false;
+}
 function goSite(key){
   // A link to one site opens that site's page. The table's filters are
   // left exactly as they were: the page shows regardless of what the
@@ -3240,8 +3259,35 @@ def main() -> int:
         gmaps = (f'<a href="https://www.google.com/maps/search/?api=1&query={lat},{lon}"'
                  f' target="_blank" rel="noopener">Google Maps</a>') if lat and lon else ""
         full_desc = max((a[16] or "" for a in apps), key=len, default="") or (btitle or "")
-        summary, descriptive = prop.summarise([a[16] for a in apps] or [btitle])
+        summary, descriptive, src_i = prop.summarise(
+            [a[16] for a in apps] or [btitle])
         summary = prop.tidy(summary)
+        # Issue #256: the Proposal box names its source. The summary is
+        # verbatim from exactly one application, so the phrase links to
+        # that application's row, carries its reference and received
+        # date, and the text under "published as" is that application's
+        # own description — not the longest on record, which the box
+        # used to show even when the clause came from a different one.
+        if apps and src_i is not None:
+            _sa = apps[src_i]
+            prop_source = (
+                f'Lifted verbatim from <a href="#{esc(app_anchor(key, _sa[1]))}"'
+                f' onclick="return goApp(\'{esc(app_anchor(key, _sa[1]))}\')">'
+                f'an application below</a> ({esc(_sa[1])}, received '
+                + (esc(str(_sa[5])) if _sa[5] else NOT_STATED)
+                + '), which the council published as:')
+            box_desc = _sa[16] or ""
+        elif apps:
+            prop_source = ('Lifted verbatim from an application below, '
+                           'which the council published as:')
+            box_desc = full_desc
+        else:
+            # No applications at all: the summary came from the Barbour
+            # title, and "an application below" would point at a table
+            # that says there are none. Same phrasing as the
+            # pre-planning page.
+            prop_source = 'Barbour ABI records it as:'
+            box_desc = full_desc
         near = nearest(lat, lon)
         org = origins.get(key, [])
         env = sorted({s for a in apps for s in sig.environmental_signals(a[16] or "")})
@@ -3255,7 +3301,8 @@ def main() -> int:
             docs_cell = (f'<a href="{esc(durl)}" target="_blank" rel="noopener">'
                          f'{a[13] or 0}</a>' if durl else str(a[13] or 0))
             approws.append(
-                f"<tr><td><strong>{esc(a[1])}</strong></td><td>{esc(a[3])}</td>"
+                f"<tr id=\"{esc(app_anchor(key, a[1]))}\">"
+                f"<td><strong>{esc(a[1])}</strong></td><td>{esc(a[3])}</td>"
                 # Four different silences. The register not publishing a
                 # status or a date is not the same as us not having
                 # triaged the application, and "not triaged" is a fact
@@ -3977,8 +4024,7 @@ def main() -> int:
  <div class="col-record">
   <div class="box proposal"><h4>Proposal</h4>
     <p><strong>{esc(summary) or NO_DESCRIPTION}</strong></p>
-    <p class="help">Lifted verbatim from an application below, which the council published
-     as:</p><p>{esc(trim(full_desc, 640)) or NO_DESCRIPTION}</p></div>
+    <p class="help">{prop_source}</p><p>{esc(trim(box_desc, 640)) or NO_DESCRIPTION}</p></div>
 {figures_html}
   {claims_html}
   <div class="box"><h4>Key findings from the planning applications</h4>

@@ -21,7 +21,7 @@ def test_lifts_the_clause_after_a_planning_reference():
     text = ("Reserved matters application pursuant to outline permission "
             "14/1190/OUT The re-development of the site to provide up to "
             "25,020 sqm data centre (use class B8) floorspace")
-    got, descriptive = proposal.summarise([text])
+    got, descriptive, _ = proposal.summarise([text])
     assert got.startswith("The re-development of the site")
     assert "Reserved matters" not in got
     assert descriptive
@@ -32,7 +32,7 @@ def test_lifts_the_clause_after_a_semicolon():
             "to 13/00531/MAJOR; Hybrid planning application comprising 1) "
             "application for full planning permission for the development of "
             "two data centres and a gatehouse with associated highway works")
-    got, descriptive = proposal.summarise([text])
+    got, descriptive, _ = proposal.summarise([text])
     assert got.startswith("Hybrid planning application")
     assert descriptive
 
@@ -51,7 +51,7 @@ def test_prefers_the_scheme_over_ancillary_works_at_the_same_site():
     scheme = ("Demolition of 188, 190 and 200 Bath Road and the construction "
               "of a Data Centre with ancillary office space, together with "
               "landscaping and boundary treatments")
-    got, _ = proposal.summarise([ancillary, scheme])
+    got, _, _ = proposal.summarise([ancillary, scheme])
     assert got.startswith("Demolition of 188")
 
 
@@ -66,7 +66,7 @@ def test_demolition_of_existing_buildings_is_not_ancillary():
               "demolition of existing buildings and the erection of new "
               "flexible use employment floorspace of 45,000 sqm")
     minor = "Erection of a single storey cycle store at the existing building"
-    got, _ = proposal.summarise([scheme, minor])
+    got, _, _ = proposal.summarise([scheme, minor])
     assert got.startswith("Outline planning application for phased")
 
 
@@ -76,7 +76,7 @@ def test_flags_a_site_with_nothing_but_procedure_on_record():
     The caller has to be able to say so rather than presenting procedural
     text as a summary of the development.
     """
-    got, descriptive = proposal.summarise(["Discharge of condition 7 - Sample Panel"])
+    got, descriptive, _ = proposal.summarise(["Discharge of condition 7 - Sample Panel"])
     assert not descriptive
     assert "Discharge of condition 7" in got
 
@@ -95,7 +95,7 @@ def test_result_is_always_a_substring_of_the_source():
         "22/00123/FUL - Erection of a Data Centre with office space",
     ]
     for t in texts:
-        got, _ = proposal.summarise([t])
+        got, _, _ = proposal.summarise([t])
         assert got in t, f"{got!r} is not verbatim in {t!r}"
 
 
@@ -104,13 +104,36 @@ def test_strips_register_housekeeping():
             "appearance for construction of an off-grid data centre "
             "(pursuant to outline approval 16/06850/MAO) - AMENDED PLANS "
             "RECEIVED")
-    got, _ = proposal.summarise([text])
+    got, _, _ = proposal.summarise([text])
     assert "AMENDED PLANS" not in got
 
 
 def test_handles_empty_and_missing_input():
-    assert proposal.summarise([]) == ("", False)
-    assert proposal.summarise([None, ""]) == ("", False)
+    assert proposal.summarise([]) == ("", False, None)
+    assert proposal.summarise([None, ""]) == ("", False, None)
+
+
+def test_names_the_description_the_clause_was_lifted_from():
+    """The index is the clause's provenance: which application said it.
+
+    The winner here is the second description, and the index has to say
+    so even though the first is non-empty — and it must refer to the
+    caller's list, holes included, so a None ahead of the winner cannot
+    shift it (issue #256).
+    """
+    ancillary = "Erection of a boundary fence with a height limit of 2m"
+    scheme = ("Construction of a data centre with ancillary office space, "
+              "together with landscaping")
+    got, _, idx = proposal.summarise([ancillary, scheme])
+    assert got.startswith("Construction of a data centre")
+    assert idx == 1
+    got, _, idx = proposal.summarise([None, ancillary, scheme])
+    assert idx == 2
+    # The procedural fallback still says where its text came from.
+    got, descriptive, idx = proposal.summarise(
+        [None, "Discharge of condition 7 - Sample Panel"])
+    assert not descriptive
+    assert idx == 1
 
 
 def test_tidy_sentence_cases_a_shouting_description():

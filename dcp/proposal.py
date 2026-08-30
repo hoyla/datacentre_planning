@@ -185,29 +185,36 @@ def best_clause(text: str) -> tuple[str, float]:
     return best, best_s
 
 
-def summarise(descriptions) -> tuple[str, bool]:
-    """(one-line proposal, whether it describes a development).
+def summarise(descriptions) -> tuple[str, bool, int | None]:
+    """(one-line proposal, whether it describes a development, source).
 
     Scores every clause of every description given — pass all of a site's
     applications — and returns the best. The second value is False when
     nothing on record describes a development, which happens when a site
     is known only through condition discharges; the caller should say so
     rather than presenting the text as a summary.
+
+    The third value is the index into `descriptions` of the text the
+    clause was lifted from, or None when nothing usable was given. The
+    clause is verbatim from exactly one application, so "which one" is
+    part of its provenance — a caller can name and link the application
+    rather than gesture at "an application below" (issue #256).
     """
-    texts = [_NOISE.sub("", (d or "").strip()) for d in descriptions if d]
+    texts = [(i, _NOISE.sub("", (d or "").strip()))
+             for i, d in enumerate(descriptions) if d]
     if not texts:
-        return "", False
-    best, best_s, best_src = "", float("-inf"), ""
-    for t in texts:
+        return "", False, None
+    best, best_s, best_i = "", float("-inf"), None
+    for i, t in texts:
         c, sc = best_clause(t)
         if c and sc > best_s:
-            best, best_s, best_src = c, sc, t
+            best, best_s, best_i = c, sc, i
     if not best:
-        longest = max(texts, key=len)
-        return longest, False
+        i, longest = max(texts, key=lambda p: len(p[1]))
+        return longest, False, i
     # A winning clause that still opens administratively means the site
     # has no descriptive text anywhere; say so rather than dressing it up.
-    return best, not _ADMIN.match(best) and best_s > 0
+    return best, not _ADMIN.match(best) and best_s > 0, best_i
 
 
 def tidy(clause: str) -> str:
