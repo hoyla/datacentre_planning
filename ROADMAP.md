@@ -539,27 +539,7 @@ work.
   `enabling_works` count as datacentre-positive. Both are one constant
   each in `dcp/site_class.py` to revisit.
 
-- **Replace "The rest of the package" block with a computed scale
-  panel** (issue #166 holds the request; shape agreed with Luke
-  2026-08-27). The block is duplicative — a button pointing at content
-  one scroll away — and what the start page actually lacks is scale at
-  a glance. The replacement: "The scale of what the documents
-  disclose", every figure computed at build and never typed, every row
-  linked to the query or cohort that produces it, caveats in the
-  panel's own words (covers only the minority of sites stating
-  figures; floors from an incomplete read). Candidate rows: total
-  disclosed capacity across the N disclosing sites; standby generator
-  units where documents state counts, with the diesel/gas split where
-  fuel is named; total standby MW; total contracted grid connections.
-  Comparators only where a published source states one — Ofgem's 73 GW
-  queue is in External aggregates with its paragraph number — never
-  invented. The 12.73-GW-is-twelve-million-households correction that
-  settled the framing is the argument in one line: computed and
-  citable beats vivid and wrong.
 
-- **Site-alias curation is standing editorial work** (the mechanism is
-  built — issue #169, HISTORY): name a site when its derived name
-  misleads, in `data/priors/site_aliases.yaml`, with the source.
 
 - **Northumberland Energy Park holds four unrelated schemes.**
   `PTNO-12785975` clusters 35 applications spanning the Blyth offshore
