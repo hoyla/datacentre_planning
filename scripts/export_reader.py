@@ -2697,6 +2697,14 @@ def main() -> int:
         if args.no_readings:
             readings, readings_withheld = {}, {}
         cited_docs = mreading.cited_documents(conn, readings)
+        # A quote copied from the structured facts cites its application
+        # and no document, because the prompt asks for exactly that. The
+        # figure it was copied from is a finding and carries the document
+        # it was read from, so the link is recoverable without guessing;
+        # ambiguous text is dropped inside `figure_sources`.
+        fig_sources = mreading.figure_sources(conn)
+        cited_docs.update(mreading.cited_documents_by_id(
+            conn, {d for m in fig_sources.values() for d, _ in m.values()}))
         # `held`/`read` are every document; `prose_*` are the ones the
         # deep-read is for. The caveats run off prose, the counts shown
         # to a reporter run off both, and they are different numbers on
@@ -2899,11 +2907,23 @@ def main() -> int:
     # The label states; it does not instruct.
     n_readings_rendered = n_readings_withheld = n_paragraphs_withheld = 0
 
-    def _cite(q):
+    def _cite(q, site_key=None):
         """Where a quote is from: the document, linked to the register's
         copy, with its page; or the application whose adjudicated figure
-        it is."""
+        it is.
+
+        A quote the model cited to an application alone is resolved back
+        to the document of the adjudicated figure it was copied from,
+        where exactly one figure on this site carries that text. The
+        model's own citation is untouched in the stored reading; this is
+        a lookup at render, not a rewrite of the record.
+        """
         doc_id = q.get("document_id")
+        if not doc_id and site_key:
+            hit = fig_sources.get(site_key, {}).get(
+                " ".join((q.get("quote") or "").split()))
+            if hit:
+                doc_id, q = hit[0], {**q, "page": hit[1]}
         if doc_id:
             d = cited_docs.get(int(doc_id))
             page = f', p.{q["page"]}' if q.get("page") else ""
@@ -2973,7 +2993,7 @@ def main() -> int:
                     continue
                 quotes = "".join(
                     f'<li>\u201c{esc(" ".join((q.get("quote") or "").split()))}\u201d '
-                    f'<span class="q">{_cite(q)}</span></li>'
+                    f'<span class="q">{_cite(q, key)}</span></li>'
                     for q in (para.get("quotes") or []))
                 body.append(f'<p>{esc(para.get("text", ""))}</p>'
                             + (f'<ul class="rq">{quotes}</ul>' if quotes else ""))
