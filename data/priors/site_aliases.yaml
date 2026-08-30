@@ -213,36 +213,6 @@ aliases:
       Environment Agency's own permit URL for EPR/TP3120LE — two
       sources to one, so Barbour is the outlier.
 
-  - site_key: PTNO-12522787
-    alias: Ipswich Road, Slough - Data Centre
-    source: |
-      Reporter reference (LH): added Slough
-
-  - site_key: PTNO-12833153
-    alias: Iron Mountain LON-3, 111 Buckingham Avenue, Slough
-    source: |
-      Reporter reference (LH): added address.
-
-      The question this entry originally asked — "May be the same site
-      as PTNO-12468506, which is at 110 Buckingham Avenue" — is
-      settled, and the answer is neither yes nor no. They are distinct
-      data centres on one campus: Iron Mountain states "Our campus
-      features three facilities — LON-1, LON-2, and LON-3", and the
-      site 23 partition (2026-08-28) accordingly puts this project
-      inside PTNO-12468506 with LON-1 and LON-2.
-
-      **This entry is due for deletion, but not yet.** The project is
-      now a member of a live site AND still rendered as its own
-      pre-planning row, because BARBOUR_ONLY_SQL selects projects with
-      no linked application without checking whether the project is
-      already in a site — 14 rows are double-counted this way. Deleting
-      the alias today would only make the duplicate row show its
-      Barbour title. When that selection is fixed the row disappears,
-      require_live stops finding this key, and the build will fail
-      until the entry is removed — which is the guard working, and the
-      moment to delete it. The same applies to PTNO-12522787, now
-      inside PTNO-12355161.
-
   - site_key: PTNO-12135970
     alias: 672 Galvin Road, Slough - Data Centre (Kao Data, formerly Barclays)
     source: |
