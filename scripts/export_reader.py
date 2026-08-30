@@ -5899,9 +5899,9 @@ def main() -> int:
     collection</a></p></div>
   <div class="part"><p class="kind">Giant</p>
    <h3>Search the documents on Giant</h3>
-   <p class="what">The same document set — the planning applications, the findings —
-    in the Guardian&#x27;s secure document platform, ingested as
-    <code>uk-datacentres</code>.</p>
+   <p class="what">The same document set as the Pinpoint collection above — the planning
+    applications, the findings — in the Guardian&#x27;s secure document platform,
+    ingested as <code>uk-datacentres</code>.</p>
    <p class="when"><b>Reach for it when</b> you want pure text search across the set
     with results that show the context and take you directly to the matching
     passage.</p>
