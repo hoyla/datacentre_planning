@@ -106,7 +106,9 @@ pages:
     source: |
       Sheet T2-08; claim match strong (name_identity). Kao's page
       rosters the campus as KLON-01, -02, -03 and -04 — the ground for
-      the pending merge of PTNO-12839274 (KLON-03) into this site.
+      the merge of PTNO-12839274 (KLON-03) into this site, which
+      happened the same day (PR #268, 2026-08-30: that site is retired
+      and its project is a member here).
   - site_key: PTNO-12256124
     url: https://www.ark-d-c.com/locations/longcross-park
     kind: corporate
