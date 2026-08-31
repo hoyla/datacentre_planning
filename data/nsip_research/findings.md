@@ -71,7 +71,7 @@ Once a DCO is submitted, each project gets a documents page with the full bundle
 |---|---|
 | Single index page | None |
 | RSS feed | None for Section 35 Directions specifically |
-| Gov.uk search API | https://www.gov.uk/api/search.json — exists, public, supports `q=` and `filter_format=publication` parameters. **Recommended discovery mechanism.** |
+| Gov.uk search API | https://www.gov.uk/api/search.json — exists, public, supports `q=`. **Recommended discovery mechanism**, but **do not pass `filter_format=publication`** — the directions are published as format `decision`, so it excludes all three. See the 2026-08-25 addendum. |
 | PDF URLs | Stable `https://assets.publishing.service.gov.uk/media/{hash}/{filename}.pdf` |
 | Anti-scraping | None |
 
@@ -127,7 +127,9 @@ Volume: ~280 projects total; expected DC subset = small single digits initially,
 
 ```
 Weekly poll of gov.uk search API:
-  GET https://www.gov.uk/api/search.json?q=%22Section+35+Direction%22&filter_format=publication&order=-public_timestamp
+  GET https://www.gov.uk/api/search.json?q=%22Section+35+Direction%22&order=-public_timestamp
+  # NB: no filter_format=publication — it excludes the directions
+  # (they publish as format `decision`). See the 2026-08-25 addendum.
 → parse JSON; for each result published since last_seen_at:
   - check publication page for "data centre" / "DC" mentions
   - if relevant: cache the publication page + linked PDFs

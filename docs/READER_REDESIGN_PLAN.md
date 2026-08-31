@@ -90,8 +90,11 @@ Guardianesque yet), and the handoff's reading bar.**
 Google Fonts are fine to use — Luke, and the licences were never the
 issue; §8b's "no Google Fonts" line should read "no LINKED web fonts",
 since a vendored woff2 subset costs tens of KB against 11 MB and removes
-the third-party request. The reader is served from EdgeOne, not opened
-from Drive; an earlier note here said otherwise and was wrong.
+the third-party request. *(Applied to §8b, 2026-08-31.)* The reader is
+served from EdgeOne, not opened from Drive; an earlier note here said
+otherwise and was wrong. *(That was true on 2026-08-24 and is not now:
+since 2026-08-26 EdgeOne only redirects, and the reader is served from
+Cloud Run behind Guardian sign-in.)*
 
 **Tomorrow, in order:**
 
@@ -149,7 +152,7 @@ their tests, and `docs/REGENERATION_RUNBOOK.md`.
 | `dcp/site_scale.py` | Lane B reads `power_estimate` and never edits the module; a new basis label is a one-line PR agreed first. |
 | `scripts/adjudicate_power.py` (the shared prompt and schema) | Any new adjudication question (§4.1e) extends the one prompt file all routes import, under a new prompt version, never a second copy. |
 | `HISTORY.md`, `ROADMAP.md` | Each lane appends under its own heading; never rewrite the other's section in the same PR. |
-| `index.html` | **Never regenerated except in a release PR.** EdgeOne builds from main, so merging a generator change deploys nothing; writing `--publish index.html` does. Every other build goes to `--out` under scratch or a `*_build` folder. |
+| `index.html` | **Never regenerated except in a release PR.** The rule stands; its original reason ("EdgeOne builds from main") stopped applying on 2026-08-26, when EdgeOne became a pure redirect. Merging now deploys nothing at all: `cloudrun/deploy.sh` serves whatever `index.html` is in the checkout it runs from, so an unreviewed regeneration is what a later deploy would publish. Every other build goes to `--out` under scratch or a `*_build` folder. |
 | The database | Append-only, so builds are safe at any time; but a build made while the corroboration read or a correction run is writing is a snapshot of a moving corpus. Stamp and diff; do not quote. |
 
 Site keys are the join everywhere. A partition split in lane R (site 61's
@@ -480,7 +483,7 @@ sessions.*
   at the bottom.
 - **b. Visual reconciliation.** The tokens introduced in 2.4 applied
   everywhere they are not yet: type scale, spacing, square cards, 4 px
-  rules, no shadows; system serif/sans stacks — no Google Fonts, no
+  rules, no shadows; system serif/sans stacks — no LINKED web fonts, no
   licensed faces in a public repo; one neutral colour for cohort and
   organisation pills, colour reserved for verification state; tables
   scroll in their own container, never the page.
