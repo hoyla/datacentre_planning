@@ -75,12 +75,36 @@ Strongest first. Each names the corpus site to check; none is a match yet.
 | 1137 | 160 | Edinburgh Business Park | `PTNO-12869683` Heriot-Watt 200MW AI data centre campus, at Currie |
 | 1460 | 150 | Cardiff DC | `PTNO-12675606` Cardiff East park and ride, Old St Mellons |
 | 1354 | 120 | Waltham | `PTNO-12406644` Google data centre, Waltham Cross |
-| 1078 | 600 | Cato | `PTNO-12917829` Camilla Road, **Auchtertool** — adjacent to Mossmorran |
+| 1078 | 600 | Cato | `PTNO-12917829`, aliased "**Cato** Data Centre campus, Auchtertool, Fife (ILI Group)" — name identity |
 | 870 | 450 | Bryn Coch DC | `PTNO-12880893` former Ferodo site, Caernarfon Road — Pentir serves Bangor |
-| 1681 | 200 | Laleham DC | `PTNO-12814730` Manor Farm, 147MW data centre and BESS |
+| 1681 | 200 | Laleham DC | `PTNO-12814730` Manor Farm — but see the caution below |
 
-The last three arrived on a second pass and are the reason this document
-has a second pass at all — see *the rebrand problem* below.
+**Two of these read differently once the aliases are searched.** Quest
+Park (1673) and Cato (1078) are not locality inferences at all: the alias
+file names both schemes in the register's own words, so each is a
+name-identity match and should be written at `strong` rather than
+`probable`. Cato's alias also supplies the operator — ILI Group — which
+the register does not. Edinburgh Business Park (1137) firms up the same
+way: `PTNO-12869683` is aliased "Heriot-Watt University, **Currie** —
+200MW AI Data Centre Campus (Apatura)", and Currie is the connection
+point. Cardiff DC (1460) likewise meets "**Cardiff East** Park and Ride —
+Data Centre (Curtis Hall Limited)" against a Cardiff East GSP.
+
+Three cautions, all of them from the alias file arguing *against* a match:
+
+- **Laleham (1681).** `PTNO-12814730`'s alias places Manor Farm at
+  **Wraysbury Reservoir**, not Laleham. The Spelthorne highway
+  application does name the run between the Laleham substation and Manor
+  Farm, so the lead survives — but it is weaker than the second pass
+  made it, and belongs at the bottom of this table rather than in it.
+- **The three Iver rows (722, 764, 1508).** The register calls them
+  "Ark Estates". The corpus's Iver sites are aliased to *other*
+  operators — "West London Technology Park — Iver (Greystoke)" and "Iver
+  Heath Data Park — 90MW Data Centre (CyrusOne)". Three 435 MW
+  agreements and no Ark-aliased site at Iver is a reason to look for a
+  fourth site, not to match these to a neighbour.
+- **Bryn Coch (870)** rests on the local-authority sweep alone; no alias
+  supports it.
 
 Two of these carry a trap:
 
@@ -106,17 +130,23 @@ So the thirteen were re-probed by a method that can see it: list **every**
 corpus site in the containing local authority and look, rather than
 matching a string. Three moved to `dc_candidate`:
 
-- **Cato** (600 MW at Mossmorran) → `PTNO-12917829`, "Camilla Road,
-  Auchtertool — data centre buildings". Auchtertool sits beside
-  Mossmorran; the name-based probe had searched "cato", "mossmorran" and
-  "cowdenbeath" and found nothing.
+- **Cato** (600 MW at Mossmorran) → `PTNO-12917829`, whose planning text
+  is "Camilla Road, Auchtertool — data centre buildings" and whose
+  **alias is "Cato Data Centre campus, Auchtertool, Fife (ILI Group)"**.
+  The sweep reached it by geography; the alias names it outright.
 - **Bryn Coch DC** (450 MW at Pentir) → `PTNO-12880893`, the former
   Ferodo site on Caernarfon Road. Pentir is the Bangor supply point.
+  This one the sweep genuinely earned — no alias carries it.
 - **Laleham DC** (200 MW at Sunbury Common) → `PTNO-12814730`, "Manor
   Farm — 147MW data centre & battery energy storage". The Spelthorne
   highway application that the first pass dismissed as noise in fact
   names the run *between* the National Grid Laleham substation and Manor
-  Farm.
+  Farm — though the site's own alias places it at Wraysbury Reservoir,
+  so treat it as the weakest of the three.
+
+The sweep was the right instinct and the wrong instrument. What it was
+reaching for already exists as a curated file, and the next section says
+so.
 
 None is confirmed. Each is now a document to read rather than a gap.
 
@@ -139,12 +169,16 @@ Radlett 1 and 2 (150 each; Hertsmere holds three data-centre sites, none
 at Radlett). Locality-only, no name link — weaker than the three above
 and not worth writing a match on without a document.
 
-**Cato has left this list**, and its corroboration is now the more
-interesting for it: the ROADMAP carries a Cato lead from the scheme's
-architect (graemenicholls.com, snapshotted, 600 MW), the register states
-600 MW for a Cato demand connection at Mossmorran, and there is now a
-Fife planning candidate beside that substation. Three sources, one
-figure — pending the read that ties the third to the first two.
+**Cato has left this list**, and it is the strongest thing the triage
+found. The alias file already names the site — "Cato Data Centre campus,
+Auchtertool, Fife (ILI Group)", sourced to the operator's own
+cato.ili-energy.com — so the register row and the corpus site agree on
+the word *Cato*, and the site sits beside the Mossmorran substation the
+register names. Against that: the scheme's architect states 600 MW
+(graemenicholls.com, snapshotted, already in the ROADMAP) and the
+register states 600 MW. **A named site, a named operator, and two
+unrelated sources on the same figure** — the one row here that looks
+ready to write at `strong` on the evidence already held.
 
 ## Two corrections to the ROADMAP
 
@@ -181,13 +215,33 @@ records the new name while the planning file keeps the old. **A name
 search across the two therefore has a systematic blind spot, not a random
 one**, and it fails in the direction that produces confident negatives.
 
-The fix used here is to sweep the local authority and look at everything
-in it. That is affordable at this scale (13 rows), and it found three
-sites a name search could never have reached. Anyone re-running this
-should treat a name-only negative as untested, not as absent — the
-`dc_no_site` bucket above is split into "nothing in the authority" and
-"something in the authority, but nothing that names the scheme" for
-exactly that reason.
+### The probe was searching the wrong corpus of names
+
+Both earlier passes searched site display names and the titles, addresses
+and postcodes of member applications and projects. **Neither searched
+`data/priors/site_aliases.yaml`** — which is precisely where this project
+records the reconciliation the rebrand problem creates. The alias file
+holds both names in one string:
+
+- `PTNO-12669230` → "**Quest Park** Data Centre, Quest Pit"
+- `PTNO-12917829` → "**Cato** Data Centre campus, Auchtertool, Fife (ILI
+  Group)"
+
+Either would have matched the register's own string immediately. The
+local-authority sweep that found Cato was doing expensively, and with a
+weaker result, what one join to the alias map does exactly (Luke,
+2026-08-31).
+
+**So the rule for any future name search against this corpus: search the
+aliases alongside the derived names.** A derived name is what a source
+called a place; an alias is what a person established it *is*. Fifty-six
+aliases carry that work, and a probe that skips them re-derives it badly.
+Re-run alias-aware across all 106, twenty rows hit an alias, and the
+material results are in the corrections above and below.
+
+The `dc_no_site` bucket stays split into "nothing in the authority" and
+"something in the authority, but nothing that names the scheme", because
+a name-only negative is untested rather than absent.
 
 What this triage cannot do is confirm a match. Every candidate above is a
 prompt to read a document, not evidence. The `dc_candidate` and

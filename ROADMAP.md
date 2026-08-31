@@ -267,11 +267,18 @@ establishes, before anything is proposed:
   Park is the operator rebrand"). The register carries the rebrand, the
   planning file keeps the ground's own name — so a name search across
   the two has a systematic blind spot, failing towards confident
-  negatives. Re-probing the no-site leads by sweeping the whole local
-  authority found three more candidates a name search could not reach,
-  Cato among them: the register's 600 MW at Mossmorran, the architect's
-  600 MW recorded below, and now a Fife planning candidate beside that
-  substation.
+  negatives.
+- **Search `site_aliases.yaml` alongside the derived names.** The fix
+  for the above is already curated: the alias file holds both names in
+  one string — "Quest Park Data Centre, Quest Pit"; "Cato Data Centre
+  campus, Auchtertool, Fife (ILI Group)" — and either would have matched
+  the register outright. A derived name is what a source called a place;
+  an alias is what a person established it *is*. Any future name search
+  against this corpus that skips the 56 aliases re-derives that work
+  badly, which is what two passes of the triage did before Luke pointed
+  it out. **Cato is the strongest result to come out of it**: a named
+  site, a named operator (ILI Group), and the register's 600 MW against
+  the architect's 600 MW recorded below.
 - **19 rows are Ethos Green "Green Energy Centres"**, 8,660 MW, held
   apart from both buckets: those hubs colocate data centres with
   generation and storage by design — Ethos has a joint development
