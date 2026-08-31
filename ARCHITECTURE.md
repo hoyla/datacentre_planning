@@ -37,6 +37,43 @@ reporter opens, and their ordering constraints and traps are the
 regeneration runbook
 ([docs/REGENERATION_RUNBOOK.md](docs/REGENERATION_RUNBOOK.md)).
 
+### Which model runs which task
+
+Row counts measured 2026-08-31; they move, so read them as proportions
+rather than current figures. What does not move is the routing.
+
+| Task | Model | Route | Versioned by |
+|---|---|---|---|
+| Triage | `claude-sonnet-5` (dc_build); `granite4.1:30b` (v1) | Anthropic API; local Ollama | `(application_id, model, inserted_at)` |
+| Findings extraction | `gpt-5:low` 412,007 · `claude-sonnet-5` 349,373 · `mlx:Qwen3.6-35B-A3B-4bit` 311,430 · `gpt-5:minimal` 299,528 · `gpt-5.6-luna` 2,971 · `gpt-5.6-terra` 1,964 · `gpt-5` 692 · `claude-opus-4-7+read-tool` 182 | OpenAI Batch · Anthropic API · local MLX · v1 Read tool | `model`, `prompt_version`, `gate_version` |
+| Power adjudication — long tail | `openai:gpt-5` medium 11,870 · high 1,937 · low 299 | OpenAI Batch | `model`, `prompt_version` |
+| Power adjudication — consequential | `claude-sonnet-5+subagent` 1,175 | Claude Code subagents | `model`, `prompt_version` |
+| Power adjudication — earlier pass | `claude-sonnet-5` 14,095 | Anthropic API (budget spent) | `model`, `prompt_version` |
+| Generation adjudication | `gpt-5/generation-2.5` 2,705 | OpenAI Batch | `(finding_id, model, prompt_version)` |
+| Label audit | `gpt-5/label-1.0` 18,478 | OpenAI Batch | `(finding_id, model, prompt_version)` |
+| Site machine reading | `gpt-5.6-terra/reading-1.4` (current) · `gpt-5/reading-1.2` 630 | OpenAI Batch | `model`, `prompt_version`, `gate_version` |
+| OCR substrate | pypdfium2 + tesseract / RapidOCR — **no generative model** | local | n/a |
+
+**Power adjudication is split by consequence, not by preference.** The
+subagent route runs the same rubric and the same prompt as the batch —
+the same model as the Anthropic API route, reached differently, and
+tagged `claude-sonnet-5+subagent` because how a judgement was made is
+part of its provenance. A validation probe over 229 already-adjudicated
+figures put subagent-vs-API agreement at 94% on the full five-way
+verdict and 95% on the distinction a published chart cares about. But it
+costs ~862 tokens per figure, so it is reserved for figures on sites
+carrying no adjudicated capacity at all, where a verdict can move a
+site's headline number rather than refine it. The long tail goes to the
+batch for a few dollars. Model continuity is bought where it changes
+what gets published.
+
+Two names that are easy to confuse. **"Local" means `mlx:Qwen3.6-35B-A3B-4bit`**,
+which extracts findings and never adjudicates; the Claude Code subagent
+route is Sonnet reached by a different billing path, not a local model.
+And **`gate_version` is not `prompt_version`** — the first records the
+quote gate that admitted a row, the second the instruction that produced
+it. Both sit outside the content key, so re-gating does not duplicate.
+
 ### 1. Index
 
 Per source, paginate the recent-applications feed (or equivalent), upsert structured metadata into `applications`, preserve the raw response in `source_snapshots`.
@@ -92,12 +129,15 @@ body is a failed fetch, never a document).
 
 #### Reading at scale — the current shape
 
-The corpus is deep-read by three model families, every finding behind
+The corpus is deep-read by four model families, every finding behind
 the same **verbatim-quote gate**: an extracted quote must appear in the
 document's cached text or the finding is rejected, which makes the gate
 — not the model — the hallucination protection. Each finding records
-its model; the three coexist in the append-only store (GPT-5 on the
-OpenAI Batch API, Claude Sonnet, and Qwen under MLX on the Studio).
+its model, and they coexist in the append-only store: GPT-5 on the
+OpenAI Batch API (52%), Claude Sonnet (25%), Qwen under MLX on the
+Studio (23%), and GPT-5.6 — luna, then terra — as the current reader
+(<1%, and rising as the terra pass lands). The roster and its counts
+live in [Which model runs which task](#which-model-runs-which-task).
 Standing policy (2026-08-26): **the local reader is a phase-3 second
 opinion and never the first read of anything** — the label audit
 measured it misfiling the power families at up to 68% against Sonnet's
@@ -365,7 +405,7 @@ For full-refresh runs (e.g. before publishing aggregate claims), `dcp index --so
 | ORM | None — raw `psycopg2` | Matches fuel-finder / meridian convention; queries short and obvious. |
 | Triage LLM | v1: `granite4.1:30b` local (five-model eval, May 2026: 97% verdict accuracy at ~9s/app). dc_build: `claude-sonnet-5` against the enriched rubric (trial 2026-08-03: 47/50, 9/10 on invisibility cases). | Generations coexist per rubric; `FakeBackend` for CI. |
 | Triage versioning | Per `(application_id, model, inserted_at)` | Re-running with a different model overlays a second opinion without touching the first. Resume is model-scoped. |
-| Findings extraction | Three model families behind the verbatim-quote gate: GPT-5 (OpenAI Batch, primary for new content), Claude Sonnet, Qwen/MLX (second opinion only, per the label audit). v1's human-in-loop Read-tool rows remain in the store under their own model name. | The gate, not the model, is the hallucination protection; append-only rows make each family an overlay. |
+| Findings extraction | Several model families behind the verbatim-quote gate — GPT-5, GPT-5.6, Claude Sonnet, Qwen/MLX (second opinion only, per the label audit), and v1's human-in-loop Read-tool rows under their own model name. Per-task routing and current counts are in [Which model runs which task](#which-model-runs-which-task); this row is the *decision*, not the roster. | The gate, not the model, is the hallucination protection; append-only rows make each family an overlay. An earlier version of this row said "three model families" and named them, which meant it went stale every time one was added. |
 | Multimodal pass | Originally planned via Claude vision; **probably won't do** | Phase 4 confirmed PDFs are overwhelmingly text-layered; vision can only see what's drawn and labelled, and concealed plant won't appear in drawings. Revisit per-app only. |
 | Document corpus | Local filesystem first, S3 later | Mirrors fuel-finder's "local until it hurts" pattern. |
 | Time scope | 2018+ for v1 | PlanIt has consistent coverage from 2018; sharp drop before. |
