@@ -28,8 +28,10 @@ workbook, a queryable database, and the source documents themselves.
 - [docs/PORTAL_NOTES.md](docs/PORTAL_NOTES.md) — how to reach the
   council registers that ordinary HTTP cannot.
 - [docs/MAC_STUDIO.md](docs/MAC_STUDIO.md) — the machine that runs the
-  long deep-reads: how to reach it, start it, and tell whether it is
-  actually working.
+  long *corroboration* reads: how to reach it, start it, and tell whether
+  it is actually working. Which reader gets which work is ARCHITECTURE's
+  standing policy, not this file's; the local model is never a first
+  read.
 - [docs/BACKUP.md](docs/BACKUP.md) — the database is the part that
   cannot be re-fetched. How it is dumped, encrypted, verified and
   rehearsed, and where the copies live.

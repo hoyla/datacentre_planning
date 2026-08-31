@@ -35,8 +35,9 @@ tables here are append-only, so the latest row per subject is the
 current state and the raw count is history.
 
 **3. Check whether it already exists before proposing it.** The commonest
-failure on this project is re-deriving something carefully arrived at
-months ago, badly. Search HISTORY and ROADMAP for the topic, read the
+failure on this project is poorly re-deriving something that was
+carefully arrived at months ago. Search HISTORY and ROADMAP for the
+topic, read the
 relevant priors file's header comment, and look for the sections named
 **"Decisions already made — do not relitigate"**, **"Approaches tried and
 rejected"**, **"What is already done and needs no repeating"** and
@@ -66,7 +67,8 @@ Read these **before** touching the area, in the order given.
 | The reader, or any UI change | [design_handoff_datacentre_reader/README.md](design_handoff_datacentre_reader/README.md) is **the specification**; [docs/READER_REDESIGN_PLAN.md](docs/READER_REDESIGN_PLAN.md) is the diff against it; [docs/DESIGN_CONFORMANCE.md](docs/DESIGN_CONFORMANCE.md) records who decided each departure; `tests/test_design_conformance.py` enforces the numbers |
 | Regenerating or releasing anything | [docs/REGENERATION_RUNBOOK.md](docs/REGENERATION_RUNBOOK.md) **in full**, including its Traps and its already-done sections |
 | Acquisition, portals, a council that returns nothing | [docs/PORTAL_NOTES.md](docs/PORTAL_NOTES.md), ARCHITECTURE §3 |
-| Running the deep read | [docs/MAC_STUDIO.md](docs/MAC_STUDIO.md) |
+| Reading documents — deciding **which reader** gets the work | [ARCHITECTURE.md](ARCHITECTURE.md) §3, "Reading at scale", which carries the standing policy on what reads first and what only ever reads second. Settle this before touching any runner |
+| Operating the Studio, once that policy says to | [docs/MAC_STUDIO.md](docs/MAC_STUDIO.md) — the machine's operating manual, **not** the policy on which reader to use |
 | The database, backups, restores | [docs/BACKUP.md](docs/BACKUP.md) |
 | Adjudication rules or corrections | [docs/RULES_AUDIT.md](docs/RULES_AUDIT.md) — and use its method: write down the domain fact a rule asserts, then check that fact against HISTORY, ROADMAP and the corpus |
 | Ranking, scale, or choosing sites to chase | [docs/SCALE_RANKING_RESEARCH.md](docs/SCALE_RANKING_RESEARCH.md) |
