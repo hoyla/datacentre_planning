@@ -17,6 +17,9 @@ _Last updated 27 August 2026_
 The output is a handover package, not a live service: a reader, a
 workbook, a queryable database, and the source documents themselves.
 
+- [AGENTS.md](AGENTS.md) — what to read before working on a given part of
+  this, and the three rules that stop the same mistakes recurring. Routing
+  only; it restates nothing. Start there if you are picking work up.
 - [ROADMAP.md](ROADMAP.md) — what is still to do.
 - [HISTORY.md](HISTORY.md) — what has been built and decided, including
   what was tried and rejected.
@@ -25,8 +28,10 @@ workbook, a queryable database, and the source documents themselves.
 - [docs/PORTAL_NOTES.md](docs/PORTAL_NOTES.md) — how to reach the
   council registers that ordinary HTTP cannot.
 - [docs/MAC_STUDIO.md](docs/MAC_STUDIO.md) — the machine that runs the
-  long deep-reads: how to reach it, start it, and tell whether it is
-  actually working.
+  long *corroboration* reads: how to reach it, start it, and tell whether
+  it is actually working. Which reader gets which work is ARCHITECTURE's
+  standing policy, not this file's; the local model is never a first
+  read.
 - [docs/BACKUP.md](docs/BACKUP.md) — the database is the part that
   cannot be re-fetched. How it is dumped, encrypted, verified and
   rehearsed, and where the copies live.

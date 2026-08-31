@@ -1,9 +1,19 @@
 # The Mac Studio deep-read
 
-The Studio (M1 Max, `36261`) runs the local MLX deep-read. It is the
-machine to use for long reads: it never gets near thermal limits, stays
-usable for other work while reading, and can be left for days. The
-laptop is faster per document and overheats, so it is for bursts only.
+> **This machine runs the corroboration pass. It is never the first read
+> of anything.** The standing policy — which reader gets new content,
+> which does adjudication, and why the local model is a second opinion
+> only — is in [ARCHITECTURE.md](../ARCHITECTURE.md) §3, "Reading at
+> scale". **Read that before starting anything here**, because this file
+> is an operating manual for the hardware and says nothing about when it
+> is the right tool. Sending a first read to the local model on the
+> strength of this page is a mistake that has been made.
+
+The Studio (M1 Max, `36261`) runs the local MLX deep-read. Within the
+work the policy above assigns to it, it is the machine to use for long
+reads: it never gets near thermal limits, stays usable for other work
+while reading, and can be left for days. The laptop is faster per
+document and overheats, so it is for bursts only.
 
 Written down because it was not, and an evening was spent rediscovering
 it from a session transcript.
