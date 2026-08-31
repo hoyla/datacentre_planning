@@ -51,7 +51,7 @@ rather than current figures. What does not move is the routing.
 | Power adjudication — earlier pass | `claude-sonnet-5` 14,095 | Anthropic API (budget spent) | `model`, `prompt_version` |
 | Generation adjudication | `gpt-5/generation-2.5` 2,705 | OpenAI Batch | `(finding_id, model, prompt_version)` |
 | Label audit | `gpt-5/label-1.0` 18,478 | OpenAI Batch | `(finding_id, model, prompt_version)` |
-| Site machine reading | `gpt-5.6-terra/reading-1.4` (current) · `gpt-5/reading-1.2` 630 | OpenAI Batch | `model`, `prompt_version`, `gate_version` |
+| Site machine reading | `gpt-5/reading-1.4` 345, renders on 349 of 363 sites · `gpt-5.6-terra/reading-1.4` 352, superseded · `gpt-5/reading-1.2` 630 | OpenAI Batch | `model`, `prompt_version`, `gate_version` |
 | OCR substrate | pypdfium2 + tesseract / RapidOCR — **no generative model** | local | n/a |
 
 **Power adjudication is split by consequence, not by preference.** The
@@ -135,9 +135,11 @@ document's cached text or the finding is rejected, which makes the gate
 — not the model — the hallucination protection. Each finding records
 its model, and they coexist in the append-only store: GPT-5 on the
 OpenAI Batch API (52%), Claude Sonnet (25%), Qwen under MLX on the
-Studio (23%), and GPT-5.6 — luna, then terra — as the current reader
-(<1%, and rising as the terra pass lands). The roster and its counts
-live in [Which model runs which task](#which-model-runs-which-task).
+Studio (23%), and GPT-5.6 — luna, then terra — at under 1% between
+them. No GPT-5.6 pass over the findings corpus is planned; those rows
+came from escalations, and the deep-read `--model` has no default. The
+roster and its counts live in
+[Which model runs which task](#which-model-runs-which-task).
 Standing policy (2026-08-26): **the local reader is a phase-3 second
 opinion and never the first read of anything** — the label audit
 measured it misfiling the power families at up to 68% against Sonnet's
