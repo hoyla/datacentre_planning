@@ -6,6 +6,19 @@ phase-1 deliverable the ROADMAP asked for — **establish why the rows are
 unmatched before proposing anything.** No matches have been written; that
 is phase 2, and several rows below need a decision rather than a guess.
 
+> **A note on how this document was built, since it bears on trusting
+> it.** Three passes, and each of the first two hit something the project
+> had already written down. The first walked into the ROADMAP's own
+> recorded trap — *"a probe that cannot see the thing it is looking
+> for… check what the probe could have seen before believing what it did
+> not find"* — and filed a site with 435 documents as absent. The second
+> re-derived, by sweeping local authorities, what `site_aliases.yaml`
+> already holds. The third found that
+> `environment-agency-permit-matches.yaml` had articulated two causes of
+> unmatching this document had not. The findings below survive that, but
+> the sequence is the argument for reading the ROADMAP, HISTORY and the
+> sibling channel's own files *before* building a probe, not after.
+
 ## The headline
 
 **61 of the 106 unmatched rows are not data-centre schemes and never
@@ -113,6 +126,46 @@ Two of these carry a trap:
   those risks three claims on one site from one substation.
 - **Bro Tathan** is two rows (200 and 80 MW) on one development. Two
   agreements, one scheme — the same shape as West Burton below.
+
+## The channel next door had already worked this out
+
+`environment-agency-permit-matches.yaml` is the sibling of the NESO
+matches file, and its header had already articulated two structural
+causes of unmatching before this triage invented its own vocabulary.
+Both apply here and neither was in the first taxonomy:
+
+- **Blocked by clustering.** Where a site record holds a whole estate,
+  attaching a claim to it asserts that every operator inside it is one
+  site. Nine permits from seven operators once sat inside site 23 for
+  exactly this reason; they were listed under `considered` as evidence
+  for `site_partitions.yaml` rather than as evidence about a site, and
+  six of them found a campus once site 23 was partitioned.
+- **Blocked by the corpus** — "a finding about coverage, not about
+  matching". The permit file records 427 MWth of Equinix plant and
+  151 MWth of Amazon's sitting at addresses the planning corpus has
+  never seen.
+
+The second is what this document called `dc_no_site`, arrived at
+independently and named differently, which is worse than useless. **Read
+it as "blocked by the corpus", the project's own phrase**, and treat the
+ten as a coverage finding.
+
+The first has no bucket here at all, and at least three rows want it:
+
+- **The three Iver rows** (722, 764, 1508 — 435 MW each, "Iver 1/2/3
+  Ark Estates" at Uxbridge Moor). The corpus's Iver sites are aliased to
+  Greystoke and CyrusOne, and Ark's estate is aliased at Cody, Spring,
+  Longcross, Alliance and Union Park but not at Iver. So these are
+  either a coverage gap on an Ark scheme or a clustering problem at
+  Uxbridge Moor, where site 443 already carries two matched rows
+  (927 and 968). **Which of the two it is has to be settled before any
+  of the three can be written**, and the permit file's Hayes entry — the
+  same operator's Union Park, against site 61's six campuses — is the
+  worked precedent.
+
+The permit file's other warning applies too, verbatim: *"Postcode
+proximity suggested a partition that the operator evidence then
+refused."* Every locality-only candidate below is in that position.
 
 ## The rebrand problem, and what it changed
 
