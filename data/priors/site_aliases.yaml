@@ -68,9 +68,11 @@ aliases:
       are now trading under the Digital Realty brand.     
       
   - site_key: PTNO-12511337
-    alias: Hillingdon North Hyde Gardens Union Park (Ark Data Centres)
+    alias: Ark Union Park campus, North Hyde Gardens, Hayes
     source: |
-      Reporter reference (LH): add Hillingdon and Ark            
+      Operator's name - see https://www.ark-d-c.com/locations/union-park
+      (operator pages review T2-11, 2026-08-30). Previously "Hillingdon
+      North Hyde Gardens Union Park (Ark Data Centres)".            
            
   - site_key: PTNO-12608189 
     alias: Edinburgh Redheghs Avenue - 213MW Green Data Centre
@@ -214,9 +216,11 @@ aliases:
       sources to one, so Barbour is the outlier.
 
   - site_key: PTNO-12135970
-    alias: 672 Galvin Road, Slough - Data Centre (Kao Data, formerly Barclays)
+    alias: Kao Klon-06, Slough
     source: |
-      Reporter reference (LH): added Slough Trading Estate. REVISED
+      Operator's name - see https://kaodata.com/locations/slough/
+      (operator pages review LH-1, 2026-08-30; 672 Galvin Road, the
+      former Barclays data centre). Earlier history: REVISED
       2026-08-28: until the site 23 partition this key named the whole
       Slough Trading Estate, and the derived name came from its solar
       application. The site is one building with two operators in its
@@ -240,13 +244,16 @@ aliases:
   # ------------------------------------------------------------------
 
   - site_key: PTNO-12232573
-    alias: 225 Bath Road, Slough - Data Centre Campus (Segro; CyrusOne London 4/5)
+    alias: CyrusOne LON4 & LON5, Bath Road, Slough
     source: |
-      Applicant of record is "SEGRO (225 Bath Road) Limited"; permit
-      EPR/EP3508PS ("CyrusOne London 4/5 Datacentres", 201.28 MWth) is
-      issued at SL1 4AA, this campus's postcode — landlord and operator
-      of one place. Derived name: "225 BATH ROAD  MASTERPLAN- DATA
-      CENTRE  SHOWROOM & TRADE COUNTER".
+      Operator's names - see cyrusone.com london-uk-lon4 (225B Bath
+      Road) and london-uk-lon5 (225C), both on this masterplan site
+      (operator pages review T3-02/T3-03, 2026-08-30). The prior
+      grounding stands: applicant of record is "SEGRO (225 Bath Road)
+      Limited"; permit EPR/EP3508PS ("CyrusOne London 4/5 Datacentres",
+      201.28 MWth) is issued at SL1 4AA, this campus's postcode —
+      landlord and operator of one place. Derived name: "225 BATH ROAD
+      MASTERPLAN- DATA CENTRE  SHOWROOM & TRADE COUNTER".
 
   - site_key: PTNO-12757841
     alias: 188-216 Bath Road, Slough - Data Centre (Segro STE)
@@ -327,7 +334,7 @@ aliases:
       "84-85, Buckingham Avenue, Slough, Berkshire, SL1 4PN".
 
   - site_key: SITE-Slough/T/137
-    alias: 700 Stirling Road, Slough - CyrusOne LON3
+    alias: CyrusOne LON3, Stirling Road, Slough
     source: |
       Attributed 2026-08-28 (Luke). CyrusOne's own page gives "700
       Stirling Road, Slough SL1 4ST, United Kingdom" and states "LON3
@@ -430,10 +437,68 @@ aliases:
     source: |
       Operator's name - see https://consult.apatura.energy/freeport
   
-  - site_key: PTNO-12785975 
+  - site_key: PTNO-12785975
     alias: Cambois Data Centre campus, Northumberland Energy Park (QTS / Blackstone)
     source: |
       Operator's name - see https://q.com/data-centers/cambois/
+
+  - site_key: PTNO-12081576
+    alias: Ark Cody Park campus, Farnborough
+    source: |
+      Operator's name - see https://www.ark-d-c.com/locations/cody-park
+      (operator pages review T2-06, 2026-08-30)
+
+  - site_key: PTNO-12235447
+    alias: Ark Spring Park campus, Corsham
+    source: |
+      Operator's name - see https://www.ark-d-c.com/locations/spring-park
+      (operator pages review T2-07, 2026-08-30)
+
+  - site_key: PTNO-12240972
+    alias: Kao Harlow Data Campus
+    source: |
+      Operator's name - see https://kaodata.com/locations/harlow/
+      (operator pages review T2-08, 2026-08-30); the page rosters
+      KLON-01 to KLON-04 on this one campus
+
+  - site_key: PTNO-12256124
+    alias: Ark Longcross Park campus, Chertsey
+    source: |
+      Operator's name - see https://www.ark-d-c.com/locations/longcross-park
+      (operator pages review T2-09, 2026-08-30)
+
+  - site_key: PTNO-12406621
+    alias: Ada Docklands LCY01 Campus
+    source: |
+      Operator's name - see https://adainfrastructure.com/en-US/docklands
+      (operator pages review T2-10, 2026-08-30)
+
+  - site_key: PTNO-12513167
+    alias: Pure DC Brent Cross LON01
+    source: |
+      Operator's name - see https://puredc.com/london-brent-cross
+      (operator pages review T2-12, 2026-08-30)
+
+  - site_key: PTNO-12548129
+    alias: Ark Alliance Park campus, London W3
+    source: |
+      Operator's name - see https://www.ark-d-c.com/locations/alliance-park
+      (operator pages review T2-13, 2026-08-30)
+
+  - site_key: SITE-Kingston/11/10150
+    alias: Chessington Data Centre LHR13 (Digital Realty)
+    source: |
+      Operator's name - see
+      https://www.digitalrealty.com/data-centers/emea/london/lhr13
+      (operator pages review T2-21, 2026-08-30)
+
+  - site_key: PTNO-12489438
+    alias: Cardiff Data Center Campus (Vantage)
+    source: |
+      Operator's name - see
+      https://vantage-dc.com/data-center-locations/emea/cardiff-united-kingdom/
+      (operator pages review T3-04, 2026-08-30; Vantage acquired Next
+      Generation Data, the Barbour title's name for the scheme)
     
     
       
