@@ -1700,6 +1700,20 @@ under the `freshness-check` tag so it can never occupy a real
 reading's key. Where it runs in the release chain is still the
 ROADMAP's question.
 
+**The sort glyph no longer breaks onto its own line**: `th:after`'s
+content now opens with a non-breaking space, binding ↕ to the
+heading's last word — the remedy the ROADMAP item proposed, verified
+in the CSS 2026-08-30.
+
+**The alias groups outgrew their checkpoint** (verified 2026-08-30).
+The ROADMAP had held "confirming the rest of the alias groups" at its
+2.4-era snapshot — eight of ten seeded members confirmed, one
+proposed. `organisation_aliases.yaml` now holds 12 groups with 31
+confirmed members and 2 proposed, Luke confirming as the work finds
+them (the Greystoke SPV group landed 2026-08-30 from the operator
+pages review). The residual curation is standing procedure, the same
+class as site aliases.
+
 **`drive_sync` concurrency** (2026-08-29): the `--workers` flag
 existed all along, defaulting to 1; the default is now 12, after a
 58,799-file sync spent 9h16m reaching 54% because nobody passed the
@@ -1712,6 +1726,15 @@ evidence being the same failure that once made the Guardian's team
 conclude Wapseys Wood was missing. As verified: Quest Park holds 435
 documents and 5,672 findings, the Wapseys/SDC M40 site 8 and 2,838,
 Dartford 7 and 97 — every one now reads as a site rather than a stub.
+**The computed scale panel** (issue #166, shape agreed 2026-08-27,
+shipped in the 2.10 build): "The rest of the package" — a button
+pointing at content one scroll away — replaced by "The scale of what
+the documents disclose", every figure computed at build and never
+typed, every row linked to the query or cohort that produces it,
+caveats in the panel's own words. The
+12.73-GW-is-twelve-million-households correction that settled the
+framing is the argument in one line: computed and citable beats vivid
+and wrong.
 
 ## The relist audit measured the shortfall, and the refetch recovered the class that mattered (2026-08-26)
 

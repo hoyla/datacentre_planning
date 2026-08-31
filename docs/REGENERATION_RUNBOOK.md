@@ -12,175 +12,98 @@ those two, which were the documents it kept duplicating.)
 
 ---
 
-## State — 2.7 built and verified 2026-08-26, deploys on merge; the table below is still the 2.1 boundary
+## State — the base is 2.10, released; figures move, so read stamps, not this file
 
-Since 2.2 the chain has grown two interpretive passes, **2a** and **2b**
-below, both of which change what a reader sees and neither of which
-existed when this was written. Neither is gated in code the way step 2
-is, for the reason given under each.
+Current state lives in two places, deliberately not here: the
+[ROADMAP](../ROADMAP.md) header for the corpus counts, and
+`scripts/corpus_stats.py` for the figures that move while the
+corroboration pass runs. Release runs themselves are recorded in
+[HISTORY](../HISTORY.md) — v2.7, the 2.9 evening, v2.10 — including
+each run's debrief. What stays in this section is only what remains
+true between releases.
 
-**The corpus moves under the artefacts, so every figure in a build is a
-snapshot.** The Phase 3 corroboration read writes to the database
+**The deploy is `cloudrun/deploy.sh` — not a merge.** This document
+said for months that merging the release branch published it, which
+stopped being true on 2026-08-26 when the EdgeOne middleware became a
+pure redirect: it serves nothing, so nothing in git reaches a reader.
+Merging the release PR records what was published; running the script
+is what publishes it (Luke corrected this during the 2.10 deploy,
+2026-08-29).
+
+**The corpus moves under the artefacts, so every figure in a build is
+a snapshot.** The corroboration read writes to the database
 continuously, and rebuilding an artefact against an unchanged codebase
-moves cells: the 2.2 workbook rebuild shifted sixteen on Sites and
-fifteen on Applications with no code change behind them — mention
-counts, one application's verified-findings count, and Drive links that
-had resolved since. Two consequences. **Before quoting a figure from an
-artefact, check its stamp**; every one carries a generation time and a
-pipeline commit. And when a release needs a clean boundary, stop the
-reader first, as the 2.1 run did.
+moves cells — the 2.2 workbook rebuild shifted sixteen on Sites with
+no code change behind them. Two consequences. **Before quoting a
+figure from an artefact, check its stamp**; every one carries a
+generation time and a pipeline commit. And when a release needs a
+clean boundary, stop the reader first — or do what 2.7 did, and take
+the boundary when the corpus has stopped moving on its own.
 
-The table below is the 2.1 boundary, kept because it is the last one
-taken with reading stopped. 2.2 was a source release — external capacity
-claims, no new reading — so it did not move these. **2.7 does move
-them**: 494 sites, 2,032 applications, 18,895 power adjudications, built
-2026-08-26 against a corpus that had stopped moving on its own (last
-finding 2026-08-24, last document 2026-08-09), so its boundary is clean
-without a reader having to be killed for it.
-
-**Two things the 2.7 run learned that change how you should read the
-steps below.** Step 1 is not optional bookkeeping: the corroboration
-read had left 4,117 figures unadjudicated, nothing downstream can see a
+**Two lessons from the 2.7 run that change how you read the steps
+below.** Step 1 is not optional bookkeeping: the corroboration read
+had left 4,117 figures unadjudicated, nothing downstream can see a
 figure nobody has asked about, and only the step order caught it. And
 step 5's contradicted-sites count is worth reading rather than
 counting — the third one it reported was a 2013 offshore-wind
-substation's 99.9 MW rendering as a data centre's grid connection on the
-largest site in the corpus, which no gate would ever have flagged.
+substation's 99.9 MW rendering as a data centre's grid connection on
+the largest site in the corpus, which no gate would ever have flagged.
 
-
-**Every step is done except the deploy, and the deploy is
-`cloudrun/deploy.sh`** — not a merge. This said for months that merging
-the release branch published it, which stopped being true on 2026-08-26
-when the EdgeOne middleware became a pure redirect: it serves nothing,
-so nothing in git reaches a reader. Merging the release PR records what
-was published; running the script is what publishes it (Luke corrected
-this during the 2.10 deploy, 2026-08-29).
-
-The next regeneration starts at step 0 again, and the steps now run in
-the order they are written in: 0 to 14, top to bottom.
+The next regeneration starts at step 0 and the steps run in the order
+they are written: 0 to 15, top to bottom.
 
 **Step 0 is new on 2026-08-26.** The materialise was never in this
 document — `grep -n materialise` returned nothing — and it is the step
-that decides which applications exist at all as far as every later step
-is concerned. That omission is the process half of the incomplete Drive
-archive; the code half is now two guards inside
+that decides which applications exist at all as far as every later
+step is concerned. That omission is the process half of the incomplete
+Drive archive; the code half is now two guards inside
 `build_drive_staging.py`.
 
-Step 7 comes before step 9 deliberately: `build_drive_staging.py` copies
-the release artefacts into the Drive root, so building the tree before
-the exports stages the *previous* release's workbook and database.
+Step 7 comes before step 9 deliberately: `build_drive_staging.py`
+copies the release artefacts into the Drive root, so building the tree
+before the exports stages the *previous* release's workbook and
+database.
 
-**And check which release folder it took.** Its `--release-dir` used to
-default to a hardcoded `phase2_build`, so the 2.1 run staged phase 2's
-workbook and database beside 2.1's per-site files and said so in a line
-nobody would think to doubt. It now defaults to the most recently
+**And check which release folder it took.** Its `--release-dir` used
+to default to a hardcoded `phase2_build`, so the 2.1 run staged phase
+2's workbook and database beside 2.1's per-site files and said so in a
+line nobody would think to doubt. It now defaults to the most recently
 written `data/exports/*_build` and prints which one it chose.
 
-| | |
-|---|---|
-| Reading | **stopped for a clean boundary** — the Studio reader was killed with TERM so nothing was written under the exports |
-| Documents | 55,678 held; **36,744 prose analysed (99%)**, 0 applications with reading outstanding |
-| Excluded on purpose | 5,751 drawings, 1,248 of 5,457 objection letters sampled, 226 held but wordless |
-| Findings | 1,027,946 rows over 884,495 distinct passages |
-| Adjudications | **14,780** — every capacity figure at the boundary is adjudicated |
-| Release | `data/exports/phase2.1_build/`, artefacts named `phase2.1` |
-| Drive | 2.1 artefacts synced; phase 1 and phase 2 artefacts still at the root, Luke archiving the phase 2 pair by hand |
-| Backup | `dcp_2026-08-11T1130.dump.gpg`, 134 MB, verified, on Drive |
-| Deployed | **not yet — on merge** |
-
-**Versioning was set aside deliberately this time.** The rule is that a
-release lands beside its predecessor so a citation of the phase 2
-workbook keeps resolving. For 2.1 Luke overrode it knowing the user
-state: the Google Sheet is being refreshed in place anyway, nobody is
-using the phase 2 workbook or database, and the person who wants the
-database has not opened any version. The cost, stated once because it is
-invisible until someone hits it: a citation of "the phase 2 workbook" no
-longer resolves to the file that produced those numbers.
-
 **The largest figures, stated carefully, because getting this wrong is
-the standing hazard of this dataset.** Largest disclosed IT load is
-**Elsham Wolds at 1,000 MW**; largest total site demand is
-**Northumberland Energy Park (Cambois) at 1,100 MW**.
+the standing hazard of this dataset** (re-verified 2026-08-30).
+Largest disclosed IT load is **Elsham Wolds at 1,000 MW**; largest
+total site demand is **Northumberland Energy Park (Cambois) at
+1,100 MW** — and Cambois restates its 1,100 across three of its own
+applications, so summing a site's figures triples it.
 
-The largest single row carrying `verdict='site_capacity'` is **1,200 MW
-at Camilla Road, and it is a `thermal_input`** — fuel entering a plant,
-two to three times the electricity leaving it. An earlier version of this
-table called it the dataset's largest site capacity, which was wrong, and
-wrong in exactly the way the `thermal_not_electrical` correction exists
-to prevent. **`verdict='site_capacity'` alone does not mean "an
-electrical capacity".** It means the figure is about this development;
-`quantity_type` says what kind of quantity it is, and `thermal_input` and
-`energy_storage` are both in there. Filter on both, always. The three
-exports do; a `max(value_mw)` typed at a psql prompt does not.
+The largest single row carrying `verdict='site_capacity'` is **1,200
+MW at Camilla Road, and it is a `thermal_input`** — fuel entering a
+plant, two to three times the electricity leaving it. An earlier
+version of this table called it the dataset's largest site capacity,
+which was wrong, and wrong in exactly the way the
+`thermal_not_electrical` correction exists to prevent.
+**`verdict='site_capacity'` alone does not mean "an electrical
+capacity".** It means the figure is about this development;
+`quantity_type` says what kind of quantity it is, and `thermal_input`
+and `energy_storage` are both in there. Filter on both, always. The
+three exports do; a `max(value_mw)` typed at a psql prompt does not.
 
-What happened in the adjudication and audit steps (2 to 4 in today's numbering, 1 to 2b in the numbering this was written under):
+Two durable rules distilled from the 2.1 run's West London episode
+(the full story is in this file's git history at 2026-08-11, and the
+correction's reasoning lives beside the rule):
 
-- **Adjudication is complete.** The final batch ran at `medium` effort
-  with a 16,000-token ceiling: 158 of 158 finished cleanly, no
-  truncation, $5.91. 18 figures across 7 applications remain
-  unadjudicated — findings that arrived after the cohort was built, not
-  worth a batch.
-- **127 corrections applied**, and that number is the answer to "would a
-  replay reintroduce the errors": across 9,692 newly adjudicated figures
-  the unchanged prompt recreated 43 storage-as-generation, 47 headerless
-  table rows, 32 thermal inputs, 3 equipment labels and 2 temporary
-  supplies. About 1.3%, all caught mechanically. Re-run is a no-op and
-  the export gate is satisfied.
-- **The correction script had a bug that only fired tonight**: rule notes
-  were interpolated into SQL and one contains an apostrophe. It had run
-  clean before only because that rule matched zero rows. Now bound as a
-  parameter.
-- **The West London figure was read, and it was wrong.** Resolved
-  2026-08-11; nothing further to do. The quote is paragraph 32 of the
-  PL/21/4429/OA appeal decision: "the urgent need for data centres up
-  until 2027 (this proposal would contribute of 2240MW towards this
-  need)". The text layer is not damaged — the sentence is simply broken
-  ("contribute of") in the Inspector's summary of the Council's case.
-  The same document settles it three times over: paragraph 59, "The
-  total power requirement of the appeal proposal is anticipated to be
-  147MW"; paragraph 37, "The 147MW, which the appeal proposal will
-  deliver"; paragraph 59 again, "would deliver around 147MW towards the
-  anticipated demand of 1730MW in the SAZ". The nearest real 2,2xx
-  figure in the document is the appellant's London forecast of
-  2,248MW–3,082MW at paragraph 21. So 2240 belongs to the need side of
-  that sentence, not the contribution.
-
-  Demoted to `unclear`, not to `market_context`: what the document rules
-  out is that this is the proposal's capacity, not what the number
-  counts. The adjudicator had itself reached `unclear` on one of its
-  three passes over the same sentence. The site now reads 155 MW
-  disclosed IT load and 342 MW theoretical maximum, and no longer holds
-  the dataset's largest figure — see the state table above for what
-  does, and for why the largest `site_capacity` row is not it.
-
-  **A general rule was written for this and rejected on measurement.**
-  "Demote a site_capacity figure whose document also holds one five
-  times smaller, where the quote talks of need, demand or a forecast"
-  matched 64 rows and was wrong on about 62: "Maximum power demand ≈ 450
-  MW", "210MW IT capacity" and "an IT capacity of around 72 MW towards
-  demand in the SAZ" are all real capacities. Need and demand are the
-  ordinary vocabulary of a capacity statement. The correction is
-  therefore pinned to the value and the sentence, is named
-  `contradicted_by_own_document`, and lives in
-  `correct_adjudications.py` rather than a migration because a
-  re-adjudication would recreate it.
-
-A caution about how it was found, because the first version of this
-runbook got it wrong. The report flags four sites where IT load exceeds
-the site's own stated total, and an earlier draft called that
-*impossible*. It is not: ROADMAP already records that at multi-building
-sites the two figures routinely come from different applications and
-different scopes, and all four flagged sites are cross-application.
-**Do not "fix" the other three.** The check is now called
-`components-differ` and says so; only the magnitude of the West London
-gap made it worth reading.
-
-Everything else from step 5, for reference: 2 contradicted sites (both
-known and genuine), 5 generation-understated, 2 clustering artefacts,
-21 corroborated, 37 uncorroborated. Generation: 1,846 verdicts across 99
-sites, **71% naming no fuel**, 61 of 99 sites disclosing none at all.
-Null-capacity sweep: 65 fully-read sites with no capacity figure, 57 of
-them with no power-unit text anywhere.
+- **`contradicted_by_own_document`** is pinned to one value and one
+  sentence in `correct_adjudications.py`, because the general rule —
+  demote a figure whose document holds one five times smaller amid
+  need/demand language — was measured at 64 matches and wrong on
+  about 62. Need and demand are the ordinary vocabulary of a capacity
+  statement.
+- **Do not "fix" a site whose IT load exceeds its own stated total.**
+  At multi-building sites the two figures routinely come from
+  different applications and different scopes; the check is called
+  `components-differ` and says so. Only a magnitude as extreme as
+  West London's was worth reading.
 
 ---
 
@@ -472,10 +395,10 @@ Interxion folder held 45 application directories for a site with 16.
 A full clean rebuild takes about a minute and costs nothing on disk: the
 documents are hard links into `data/raw`, so both trees exist at once for
 the price of directory entries. The one thing carried across the swap is
-a *published* artefact at the tree root — phase 2.2's workbook and
-database stay beside 2.7's, because a citation of them has to keep
-resolving, and `drive_sync.py --prune` already declines to touch the root
-for the same reason.
+a *published* artefact at the tree root — an earlier release's workbook
+and database stay beside the current one's, because a citation of them
+has to keep resolving, and `drive_sync.py --prune` already declines to
+touch the root for the same reason.
 
 **It also states its own shortfall and exits non-zero on it.** Every run
 prints the documents it did **not** stage, grouped by the application's
@@ -536,6 +459,18 @@ scripts/drive_sync.py --sync data/exports/drive_staging --prune --dry-run
 scripts/drive_sync.py --sync data/exports/drive_staging --prune
 ```
 
+**Nothing reconciles tree against ledger against Drive at the end of a
+sync, and that is deliberate** (moved here from the ROADMAP
+2026-08-30; the fix this qualifies shipped 2026-08-26 — HISTORY, "The
+corrections that landed between 2.9 and 2.10"). On 08-21 all three
+agreed while 3,679 documents were missing, so such a check would have
+passed; the guard sits between the *universe* and the staging tree,
+which is the only place this class of failure is visible. Expect the
+guards' first run after corpus movement to fail — that is the guards
+working, not crying wolf. `data/exports/drive_staging.pre-clean` is
+the primary evidence of the original episode and stays until a full
+guarded sync has been observed clean.
+
 **`--workers` now defaults to 12.** It used to default to 1, and on
 2026-08-29 that ran a 58,799-file sync for **9h16m to reach 54%** before
 anyone noticed — the flag existed, its own help said 8-16 was safe, and
@@ -569,7 +504,7 @@ never deleted, so a wrong prune is a restore from the bin rather than a
 re-upload of 70GB.
 
 ```sh
-scripts/verify_drive_sample.py --sample 30 --phase 2.7
+scripts/verify_drive_sample.py --sample 30 --phase 2.10   # the current phase
 ```
 
 That is the check, now a script rather than a described intention.
