@@ -88,6 +88,13 @@ same PR — corrections *caused by* the change are part of the change, not
 follow-up work. Unrelated staleness you notice on the way gets its own
 PR or a flag; do not fold it in.
 
+The line between the two is what the PR itself asserts, not which file
+the edit lands in. If review shows a claim this PR makes is unsound
+because a document it relies on or points at is unsound, fixing that
+document belongs here too — it is a direct result of modifying what the
+PR asserted (Luke, 2026-08-31, on this file's own review). Staleness
+that would still be there had this PR never existed is the other kind.
+
 **Then check the same claim is not asserted elsewhere.** Grep the repo
 for the figures, filenames, parameters and section numbers your change
 touches, and **say in the PR body what you searched for**. An unbounded
