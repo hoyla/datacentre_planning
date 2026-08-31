@@ -364,11 +364,64 @@ fails.** Two reasons:
 staged plan in the spike's `findings.md` stands.
 
 **What TEC is honestly good for:** national context on the gas build-out.
-139 gas rows totalling ~109 GW, including a distinctive cluster of
-400–1,025 MW "Green Energy Centre" projects (Cilfynydd, Drakelow, East
-Claydon, Buntington, Daines, Burwell) and `Eggborough CCGT - OCGT - BESS`
-at 2,450 MW awaiting consents. Eggborough is also a named data centre
+139 gas rows totalling ~109 GW, and `Eggborough CCGT - OCGT - BESS` at
+2,450 MW awaiting consents. Eggborough is also a named data centre
 location; whether the two are related is **unverified** and worth checking.
+
+> **Correction, 2026-08-31.** This paragraph previously placed "a
+> distinctive cluster of 400–1,025 MW 'Green Energy Centre' projects
+> (Cilfynydd, Drakelow, East Claydon, Buntington, Daines, Burwell)"
+> *inside* the gas rows. **None of those is gas.** Re-queried against the
+> live register: 52 GEC rows across 42 distinct schemes, and the plant
+> type on every one of them is some combination of `Demand`, `Energy
+> Storage System`, `PV Array (Photo Voltaic/solar)` and `Wind Onshore`.
+> Zero carry any gas term. Of 102 rows whose plant type names a gas
+> technology, exactly one has a green-energy name — "Didcot High Impact
+> Green Energy Hub (HIGEH) 1", a CCGT with storage, solar and wind at
+> 1,000 MW — and it is a *Hub*, not one of these Centres.
+>
+> The error was quoted onward before it was checked (into ROADMAP and
+> `docs/NESO_UNMATCHED_TRIAGE.md`, both corrected in the same change),
+> which is the cost of a characterisation stated without the field it
+> rests on. Where a claim rests on a coded field, name the field.
+
+### The "Green Energy Centre" portfolios — 2026-08-31
+
+Worth its own note because the schemes recur across both NESO artefacts
+and hold no planning presence here at all.
+
+**In the TEC register:** 52 rows, 42 distinct schemes, 57–2,050 MW
+cumulative. **30 of the 52 carry `Demand` in `Plant Type`** — NESO's own
+classification records a demand component alongside the storage and
+solar. Two SPV naming families: twenty customers of the form
+"⟨substation⟩ NG Limited" (Drakelow NG, Willington NG, Cilfynydd NG …)
+and twelve schemes suffixed "(Ethos Green)".
+
+**In the Existing Agreements register:** nineteen of the same schemes
+appear as `Transmission Connected Demand`, 8,660 MW between them —
+Buntington 850, Hockliffe 850, Navenby 580, East Claydon 500, Hawthorn
+Pit 500, Overton 500, Feckenham 500, and so on down to Botley and
+Bramford 2 at 200 each.
+
+**Almost every scheme is named after the substation it connects at**
+(Navenby GEC at Navenby, Drakelow at Drakelow, Pelham at Pelham), which
+is what grid-capacity acquisition looks like before a site is named.
+**None of the nineteen has a planning application anywhere in this
+corpus** — checked against site display names, member application and
+project text, and the curated aliases.
+
+**Why it matters, stated carefully.** Ethos Green Energy publicly
+describes its Green Energy Centres as integrated hubs of renewable
+generation, long-duration storage *and colocated data centres*, and has
+announced a joint development agreement with Frontier Power for up to
+5 GW of colocated data-centre capacity. So the `Demand` leg *may* be a
+data centre. **The register does not say so**, and the null hypothesis
+above — that a `Demand` plant type is the import leg of a storage-and-
+solar hybrid — is untested against these schemes and fits the plant-type
+coding equally well. What can be said without inference: 8,660 MW of
+transmission-connected demand sits behind a name that a search for "data
+centre" does not return, and the planning system, as this corpus has
+collected it, holds nothing about any of it.
 
 ---
 

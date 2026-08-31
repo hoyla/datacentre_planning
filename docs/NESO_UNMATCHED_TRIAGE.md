@@ -39,10 +39,10 @@ What is genuinely actionable is **29 rows** — 19 with a corpus candidate
 to test, 10 real data-centre schemes the corpus does not hold at all.
 But 13 of those 19 were already adjudicated on 2026-08-20, so the honest
 count of *new* candidates is six, of which three are strong: **Cato,
-Relode Immingham and Bro Tathan**. Set against those, two findings here
-matter more than any single match: the four "Green Energy Centre" schemes
-that hold a gas generation connection and a demand connection at once,
-and the Quest Park correction.
+Relode Immingham and Bro Tathan**. Set against those, two things here
+matter more than any single match: the "Green Energy Centre" portfolios —
+8,660 MW of transmission demand across nineteen schemes with no planning
+application anywhere in this corpus — and the Quest Park correction.
 
 The framing "106 unmatched claims, any of which could move a site across
 the line" overstates the pool by roughly four times.
@@ -78,27 +78,43 @@ demand queue under a green-energy name, is demand that a search for "data
 centre" does not find. Whether any individual GEC is a data centre is
 unestablished — which is the point.
 
-**And the project has already met these schemes from the other side.**
-`docs/EXTERNAL_DATA_SOURCES.md` §3 records, in the TEC *generation*
-register, "a distinctive cluster of 400–1,025 MW 'Green Energy Centre'
-projects (Cilfynydd, Drakelow, East Claydon, Buntington, Daines,
-Burwell)" among 139 gas rows. Four of those six names appear in the
-demand queue too:
+**And the project has already met these schemes from the other side —
+but not as gas.**
 
-| scheme | TEC register | EA register (demand) |
+> **Correction, 2026-08-31.** An earlier version of this section said the
+> same schemes hold "a gas generation connection and a transmission
+> demand connection at once", on the strength of
+> `docs/EXTERNAL_DATA_SOURCES.md` §3 placing a "Green Energy Centre"
+> cluster inside its 139 gas rows. **That was wrong, and I repeated it
+> without checking the field it rested on.** Re-queried against the live
+> TEC register: 52 GEC rows, 42 schemes, and **not one carries any gas
+> term**. Their plant types are combinations of `Demand`, `Energy Storage
+> System`, `PV Array (solar)` and `Wind Onshore`. §3 is corrected in the
+> same change.
+
+What the two registers do show, jointly:
+
+| | TEC register | Existing Agreements register |
 |---|---|---|
-| Buntington | gas | 850 MW, row 998 |
-| East Claydon | gas | 500 MW, row 514 |
-| Daines | gas | 400 MW, row 515 |
-| Drakelow | gas | 400 MW, row 1018 |
+| rows | 52, across 42 schemes | 19 of the same schemes |
+| capacity | 57–2,050 MW cumulative | 8,660 MW of `Transmission Connected Demand` |
+| plant type | `Demand` on 30 of 52, with storage and solar | demand only |
 
-So the same named scheme holds **a gas generation connection and a
-transmission demand connection at once** — which is what a colocated
-energy hub looks like in the registers, and is the pairing
-`EXTERNAL_DATA_SOURCES.md` flagged as "worth checking" without connecting
-the two halves. Neither register alone shows it. That is the most
-reportable thing in this document, and it is a generation-plus-demand
-finding rather than a matching one.
+Two SPV families — twenty customers named "⟨substation⟩ NG Limited",
+twelve schemes suffixed "(Ethos Green)" — and almost every scheme named
+after the substation it connects at, which is what grid-capacity
+acquisition looks like before a site is named. **None of the nineteen
+has a planning application anywhere in this corpus.**
+
+Ethos Green publicly describes these as hubs of generation, storage
+*and colocated data centres*, under a 5 GW joint development agreement
+with Frontier Power. So the `Demand` leg may be a data centre — but the
+register does not say so, and §3's own null hypothesis, that a `Demand`
+plant type is the import leg of a storage-and-solar hybrid, fits the
+coding just as well and is untested here. What survives without
+inference: 8,660 MW of transmission-connected demand behind a name no
+data-centre search returns, and nothing in the planning corpus about any
+of it.
 
 ## The rows to test
 
