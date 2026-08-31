@@ -19,6 +19,28 @@ the release-diff baseline, deliberately not named `*_build` so
 `release.release_dirs()` ignores it. Everything shipped on 2026-08-30
 evening renders at the next build.
 
+**2.11 is the site / facility / campus effort** (Luke, 2026-08-31,
+redefining it: "the focus of 2.11 has evolved into the effort to make
+sense of the site/facility/campus issues"). It is the capacity-model
+section below — #247, #250 and #248, the facility prior, the
+ladder-rung design and the 35-campus review — and it is where the
+output is wrong on the page now rather than merely absent: #247
+corrects live output, and #250's failure is invisible by construction,
+a campus dropping out of `at_least_100mw` for a reason about our data.
+It also unblocks other work, since the over-merged site records are
+what hold the Premier Park and DataVita claims under `considered:`.
+
+**One thing runs before it, and it is a dependency rather than a rival:
+the verbatim gate's whitespace fix and re-gate** (under Coverage gaps).
+That item used to be described here as the key part of 2.11 and is now
+its preliminary. The reason is sequencing, measured 2026-08-31: of the
+50,565 quote-failure escalations, 15,111 carry a numeric value and
+**1,207 carry a numeric value with a power unit**, concentrated in
+`on_site_power_generation`, `grid_connection` and
+`grid_connection_capacity` — the families the facility work reasons
+over. Hand-adjudicating campus scopes against a corpus still missing
+them means redoing some of that adjudication when they land.
+
 **A landmine for the next release:** `mr.PROMPT_VERSION` is now
 `reading-1.3` (PR #241), and `_already()` in
 `scripts/machine_reading_openai.py` keys on it — and on `input_hash`,
@@ -318,6 +340,34 @@ and belong to the operator channel's 35), and "any of the 106, matched,
 could move a site across the line" is true of 29. The remaining
 operator-channel 35 are mostly the sheet's "not yet" and keyless rows,
 tracked there.
+
+**What is left on #250, now the triage has run:**
+
+- **Write the outcomes.** For the rows evidence supports, add `matches`
+  entries in the file's existing style — `row`, `claim_name`, `site_id`,
+  `method`, `confidence`, `matched_by`, and written `evidence` naming
+  what identifies the site and what the figure does not mean. Every row
+  examined and not matched gets a `considered` entry with the reason.
+  Start from the triage document's tables, and **read the existing
+  `considered:` section first** — it already adjudicates 24 of the 106,
+  its judgements mostly stand, and the Iver rows are settled there.
+  Cato, Relode Immingham and Bro Tathan are the three new candidates
+  strong enough to write.
+- **State the exclusion in the cohort's own `limits`.** The issue names
+  this as the cheap, honest half and it is still not done: a sentence in
+  `at_least_100mw` saying a multi-facility campus may be absent because
+  its figures are per-facility and no defensible total exists. The
+  cohort registry is `dcp/site_cohorts.py`; `limits` is required and the
+  build fails without it, so this is an edit to existing text rather
+  than new machinery. Check how past limits-only edits treated
+  `rule_version` before changing it — limits prose is not the rule.
+- **Measure how many sites the under-ranking actually affects**, which
+  the issue calls its first thing to establish and nothing has done:
+  how many multi-facility campuses hold per-facility figures, and how
+  many sit near enough to 100 MW for the ranking to matter. Inputs are
+  `campus_scope.yaml`, the operator rosters in `operator_pages.yaml`
+  and `site_scale.power_estimate`, which is what actually feeds the
+  ranking. A report, not a behaviour change.
 
 ### 4. #248 — a figure we assemble is not a figure a source states
 
@@ -952,13 +1002,33 @@ field and is not publishable as it stands.
   for three-character quotes), plus generalising the split repair
   beyond `s`.
 
-  **Scheduled as the key part of 2.11** (Luke, 2026-08-28). It is the
-  largest single quality gain available and it costs no API spend: the
-  escalation log carries the whole finding beside its sha and page, so
-  the rejected quotes are re-gated offline and reinstated. Do the
-  re-gate and the gate fix together — a fixed gate without a re-gate
-  leaves the 17,000 discarded, and a re-gate without the fix means
-  doing it again next release.
+  **The preliminary to 2.11, and its first work** (Luke, 2026-08-28
+  scheduled it as 2.11's key part; 2026-08-31 he redefined 2.11 as the
+  site/facility/campus effort, which makes this the thing that runs
+  first). It costs no API spend: the escalation log
+  (`data/deepread_escalations.jsonl`) carries the whole finding under a
+  `finding` key beside its sha and `claimed_page`, so the rejected
+  quotes are re-gated offline and reinstated. Do the re-gate and the
+  gate fix together — a fixed gate without a re-gate leaves the 17,000
+  discarded, and a re-gate without the fix means doing it again next
+  release.
+
+  **Why it precedes the campus work rather than competing with it**
+  (measured 2026-08-31 over the whole escalation log, not a sample):
+  50,565 quote-failure rows, of which 15,111 carry a numeric value and
+  **1,207 carry a numeric value with a power unit** (MW, kW, MVA, kVA,
+  MWth). The largest discarded signal types are
+  `on_site_power_generation` (1,865 rows, 854 numeric), `grid_connection`
+  (847, 430) and `grid_connection_capacity` (458, 429) — the families
+  the facility prior and the campus-scope review reason over. At the
+  ~37% recovery rate measured on the 900-row sample that is of the order
+  of 450 capacity figures, so adjudicating campuses first means
+  adjudicating against a corpus that is still missing them.
+
+  **First thing to measure**, because it either confirms that number or
+  shrinks it: whether the ~37% recovery rate holds for the power-family
+  subset specifically. The 900-row sample was drawn at random across all
+  rejections and the rate may differ by family.
 
   **Not** an explanation of the PARSE FAIL energy-report gap recorded
   elsewhere: `read_state = 'parse_failed'` means the model's JSON

@@ -1915,6 +1915,100 @@ three sites → a reportable absence, Kingsnorth untouched.
 
 ---
 
+## The NESO triage, and a day spent re-deriving the record (2026-08-31)
+
+**The alias fold from the operator-pages review landed** as PR #283 —
+eleven operator-named site aliases, three renames, and the Greystoke
+Land group with the Elsham and Humber Tech Park SPVs on Companies House
+PSC evidence. Two loose ends closed with it. The Vantage ↔ Next
+Generation Data organisation alias was **assessed and not written**:
+zero organisation-name fields anywhere in the corpus contain "Next
+Generation Data", which survives only in three Barbour *project titles*,
+and all three of those projects already name Vantage Data Centres
+Limited as client and end user, already resolving to the Vantage group.
+A member keyed `nextgenerationdata` would have matched nothing. The Kao
+KLON-03 merge turned out to have shipped the same evening it was
+proposed (#268); only the prior's note still called it pending, fixed in
+#286.
+
+**The NESO register's unmatched rows were triaged** —
+`docs/NESO_UNMATCHED_TRIAGE.md`, PR #284. **61 of the 106 are not
+data-centre schemes at all**: the register lists transmission demand
+customers of every kind, and the cohort is dominated by hydrogen
+electrolysis, HS2 traction supply, carbon capture, steel and battery
+storage. The actionable pool is 29, not 106, and after reconciliation
+only six candidates are new. Cato is the strongest — `PTNO-12917829` is
+aliased "Cato Data Centre campus, Auchtertool, Fife (ILI Group)", it
+sits beside the Mossmorran substation the register names, and a
+contracted 600 MW meets the architect's 600 MW and a stated 600 MW
+`it_load`. The same documents also state 850 MW `it_load`, so that is
+three quantity types landing on one number rather than three sources
+agreeing, and the document says so.
+
+**Two ROADMAP claims were corrected by it.** Global Switch London East
+87 MW and London South 70 MW, named as the headline unmatched examples,
+are not in this register at all — no row anywhere in the workbook
+mentions Global Switch and no demand row is valued 87 or 70. They are
+`operator_website` claims from globalswitch.com, belonging to a
+different row of the ROADMAP's own table.
+
+**The Green Energy Centres are not gas, and this file's own source
+document said they were** (PR #288). `EXTERNAL_DATA_SOURCES` §3 placed a
+cluster of "Green Energy Centre" projects inside its 139 gas rows; the
+live TEC register has 52 GEC rows across 42 schemes and **not one
+carries any gas term** — the plant types combine `Demand`, `Energy
+Storage System`, `PV Array` and `Wind Onshore`. Of 102 rows whose plant
+type names a gas technology, exactly one has a green-energy name, and it
+is a *Hub*. The error was quoted onward into ROADMAP and the triage
+before it was checked. What survives is better grounded and weaker, and
+is now a coverage gap: nineteen of those schemes hold 8,660 MW of
+transmission demand, almost every one is named after the substation it
+connects at, and **none has a planning application in this corpus**.
+
+**Four passes over one triage, each of the first three re-deriving
+something the repo already held.** Pass 1 walked into the trap this file
+records under the runbook's own heading — a probe that cannot see what
+it is looking for — and filed Quest Park as absent when the corpus holds
+it as Quest **Pit** with 435 documents. Pass 2 swept every local
+authority to reach by geography what `site_aliases.yaml` names outright.
+Pass 3 found that `environment-agency-permit-matches.yaml` had already
+articulated two causes of unmatching the new taxonomy lacked. Pass 4
+found the matches file's own `considered:` section, which had
+adjudicated **24 of the 106 rows on 2026-08-20** and was invisible
+because the probe counting it looked for a `row:` key where the file
+uses `rows:`. Several of those earlier judgements are better than what
+the triage produced independently, and the Iver rows were withdrawn on
+the strength of theirs. One is overturned: Quest Park was recorded there
+as having no corpus site.
+
+**What came out of that, and is the durable part.** `AGENTS.md` (PR
+#292) — a task-level entry point, the slot for which was empty: routing
+only, restating nothing, with three rules ahead of it. Read whole files,
+because corrections here are appended rather than applied and stopping
+early leaves you implementing something already retracted. Read the data
+before the prose about it. Check whether a thing exists before proposing
+it, with the names of the sections that exist to answer that. It also
+carries the PR discipline Luke set the same day: carry the documentation
+your change makes stale, grep for the same claim elsewhere, and say in
+the PR body what you searched for.
+
+**Then the backlog that discipline cannot reach** (PR #293): corrections
+appended while the superseded text was left standing. `nsip_research`
+recommended the gov.uk `filter_format=publication` parameter and used it
+in its worked query, while its addendum forbids it because the Section
+35 directions publish as format `decision` — implementing from the body
+rebuilt the bug that had already cost the Bedford and Dartford
+directions. Three passages still had EdgeOne publishing, four months
+after it became a redirect. Two runbook step numbers cited the scheme
+the runbook itself warns is superseded. "No Google Fonts" still stood in
+a section whose own header said it should read "no LINKED web fonts".
+
+**And `site_aliases.yaml` got its entry here** (PR #287), having been
+built on 2026-08-27 and never written up — the omission that cost two of
+the four passes above.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across
