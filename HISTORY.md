@@ -1521,6 +1521,55 @@ for the project-level demand queue, the DNO template addressed to all
 fourteen licensed plcs — each carrying regulation 5(6) against section
 105 pre-emptively. Handed to Luke for the team and the sending.
 
+**A site can be called what people call it** (issue #169, PR #173) —
+`data/priors/site_aliases.yaml`, and it is recorded here late, on
+2026-08-31, having been built on the 27th and never written up. The
+omission is the reason this entry exists: two passes of the NESO
+unmatched triage searched derived names and member application text,
+found neither Quest Park nor Cato, and reported them absent. Both are
+in the file by name. A curated prior that the project's own record does
+not mention is a prior the next session will re-derive, badly.
+
+**What it is.** A site's display name is *derived* — Barbour's project
+title where a project anchors the cluster, otherwise the address of
+whichever application sorts first — and that derivation routinely
+produces a name nobody uses for the place. The file attaches a curated
+alias to a live `site_key`, with a `source` line recording where the
+name comes from, "documentary, never taste". Per principle 3 the alias
+sits *beside* the derived name and never over it: the derived default
+stays visible on the site's own page as a "Derived name" row, so a
+re-materialise cannot clobber curation and the record still shows what
+it is built from. An entry naming a key that is not live **fails the
+build** — the `site_partitions.yaml` contract — because a key changes
+when a cluster's anchor changes, and an alias that quietly stops
+applying is a regression nobody sees.
+
+**Why it exists.** A site nobody can find by its own name is a site a
+reporter concludes is missing. That is not hypothetical: it is what
+happened when the Guardian's team asked about Wapseys Wood, which was
+in the corpus all along under the NSIP register's own name for it, "SDC
+M40 Campus", with a display name taken from the register's location
+prose — the words "Wapseys Wood" appear in neither.
+
+**What it is also for, which nothing had written down.** The aliases
+are the project's record of the reconciliation between the name a
+developer uses and the name the planning record carries — a pit becomes
+a park, a works becomes a campus, and the two registers disagree about
+a word. Entries hold both: "Quest Park Data Centre, Quest Pit"; "Cato
+Data Centre campus, Auchtertool, Fife (ILI Group)". **So any name search
+against this corpus must search the aliases alongside the derived
+names**, and one that does not has a systematic blind spot rather than
+a random one, failing towards confident negatives. Luke, 2026-08-31:
+"Quest Pit is the true location; Quest Park is the operator rebrand."
+
+**How it grew.** Fifty-six entries by 2026-08-31, curated in batches
+rather than in one pass — #174 (Bletchley), #236 (South Mimms), #237
+(three surfaces were reading the derived name and never saw the alias),
+#242 (title casing must not be enforced on a user-defined name), #244
+and #283 (Luke's own runs, and the operator-pages fold). It is standing
+curation of the same class as `organisation_aliases.yaml`, not a task
+that completes.
+
 ---
 
 ## The evening 2.9 shipped, and the guards that were not guarding (2026-08-27)
