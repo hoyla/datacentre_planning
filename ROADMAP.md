@@ -1250,8 +1250,10 @@ field and is not publishable as it stands.
   quote is still never searched in a page the model was not shown.*
 
   **Two things to weigh before `--write`.** The reinstated rows have not
-  been through the label audit, which ran over 10,602 rendered findings
-  — and 1,965 of them come from the local reader, which HISTORY measures
+  been through the label audit, which holds 18,209 verdicts under
+  `gpt-5/label-1.0`, last run 2026-08-28 (14,143 `fits`, 3,271
+  `does_not_fit`, 515 `unclear`, 280 `not_a_finding`) — and 1,965 of the
+  recoveries come from the local reader, which HISTORY measures
   misfiling families at 28.4% against Sonnet's 11.3%. A recovered row
   carries the label its reader gave it, and the dry run's own sample
   shows one already: a site area of "approximately 2 hectares" filed as
@@ -1260,6 +1262,28 @@ field and is not publishable as it stands.
   wants re-running over the new rows. And 416 of the recoveries carry a
   numeric power unit, so they join the adjudication tail and want a
   batch: the $20–40 tier.
+
+  **Which makes the audit part of this job rather than a later one**
+  (measured 2026-08-31). The audit's cohort is the reader's own
+  `FINDINGS_SQL` — the top 40 findings per site — and that currently
+  renders 13,679 findings across 357 sites, of which 326 (91%) are
+  already at the cap. The ceiling is 14,280, so the 15,679 reinstated
+  rows can add at most ~600 slots; every other effect they have is to
+  displace something already on a page. What they displace it on is
+  length: within a family the order is adjudicated-as-this-site's first,
+  then `length(value_text) DESC`, then id. So the specific risk is a
+  long misfiled reinstatement evicting a correct shorter finding — the
+  same ranking whose earlier version put a landscape paragraph labelled
+  `it_load` at the top of a site's evidence four times over — and the
+  audit is the only machinery that looks at whether a family fits its
+  text. Run it in the same pass as the write, before the build.
+
+  The re-run is incremental: `do_batch` skips every finding already
+  audited under the same `(model, prompt_version)`, so the ask is only
+  the rows that newly render, and `--batch` without `--submit` prices it
+  first. Keep the pair on `gpt-5`/`label-1.0` — the skip is keyed on it,
+  so moving the audit to `gpt-5.6-terra` alongside the reading switch
+  would quietly re-audit all 18,209.
 
   **The preliminary to 2.11, and its first work** (Luke, 2026-08-28
   scheduled it as 2.11's key part; 2026-08-31 he redefined 2.11 as the

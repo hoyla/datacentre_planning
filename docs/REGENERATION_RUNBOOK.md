@@ -250,6 +250,30 @@ and the build says so. It is not gated like step 2 because a missing
 audit leaves the page as it was, where a missing correction puts wrong
 numbers on it.
 
+**That reasoning fails after a re-gate**, and the 2026-08-31 re-gate is
+the first time it has. It holds while the cohort is the one already
+audited. When a run reinstates findings — 15,679 of them, there — a
+missing audit does not leave the page as it was. Measured that day, the
+reader renders 13,679 findings across 357 sites and 326 of those (91%)
+are at the 40-per-site cap, so a reinstated row reaches a page mostly by
+displacing one that was on it. What it wins the slot on is length:
+within a family `FINDINGS_SQL` orders by adjudicated-as-this-site's
+first, then `length(value_text) DESC`. That is the ranking whose earlier
+version put a landscape paragraph labelled `it_load` at the top of a
+site's evidence four times over. So run this step in the same pass as
+the write, before the build.
+
+It is cheap to run again: `do_batch` skips every finding already audited
+under the same model and prompt version, so the ask is only the rows
+that newly render — and `--batch` without `--submit` prices that before
+anything is sent.
+
+**Keep the pair as it is** (`gpt-5`, `label-1.0`) unless a full
+re-audit is what you want. The skip is keyed on model *and* prompt
+version, so moving the audit onto a newer reading model — `gpt-5.6-terra`
+is the live temptation — silently turns an incremental run into all
+18,209 rows again.
+
 ### 5. Look at what moved
 
 ```sh
