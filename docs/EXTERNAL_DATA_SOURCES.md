@@ -326,18 +326,21 @@ observed draw, and any consumer that renders a claim renders its
 **Matching is hand adjudication, not a join.** Every attachment of a row
 to a site lives in `neso-ea-register-matches.yaml` with written evidence,
 a `method`, a `confidence` from `strong | probable | tentative` (enforced
-by migration 021) and a `matched_by` stamp. **13 rows are matched.** The
-file's `considered:` section is as important as its `matches:` — it
-records rows examined and *not* matched with the reason, because a
-tested-and-empty result is not an untested one. A row with no match is a
-normal, permanent state rather than a backlog item.
+by migration 021) and a `matched_by` stamp. **18 rows are matched**
+(13 on 2026-08-20, five more on 2026-08-31 when the triage's outcomes
+were written). The file's `considered:` section is as important as its
+`matches:` — it records rows examined and *not* matched with the reason,
+because a tested-and-empty result is not an untested one. A row with no
+match is a normal, permanent state rather than a backlog item.
 
-**The unmatched cohort was triaged on 2026-08-31** —
-`docs/NESO_UNMATCHED_TRIAGE.md`. The headline for anyone tempted to treat
-the 106 as a work queue: **61 of them are not data-centre schemes at
-all**, the register listing transmission demand customers of every kind,
-and the cohort is dominated by hydrogen electrolysis, rail traction
-supply, carbon capture, steel and battery storage.
+**The unmatched cohort was triaged on 2026-08-31, and every row now
+carries an outcome** — `docs/NESO_UNMATCHED_TRIAGE.md` for the
+row-by-row working, the matches file for the standing adjudications.
+The headline for anyone tempted to treat the residue as a work queue:
+**61 of the 106 were not data-centre schemes at all**, the register
+listing transmission demand customers of every kind — hydrogen
+electrolysis, rail traction supply, carbon capture, steel and battery
+storage.
 
 ### What IS published — 2026-08-12 sweep of the open-data portals
 
