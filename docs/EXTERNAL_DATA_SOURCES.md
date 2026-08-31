@@ -957,12 +957,26 @@ that owns the asset.
 since a site can hold both a corporate and a consultation page, and the
 loader keys by site. 43 claims are matched to sites.
 
-*A drift worth knowing about when counting:* the store holds 81
-`operator_website` rows against the file's 80. The extra is `CyrusOne
-LON1 (Slough)`, 8.72 MW, whose entry was edited out of the YAML after
-loading. `capacity_claims` has no retirement column — only
-`capacity_claim_matches` does — so a claim withdrawn from the file leaves
-a row nothing removes. Count from the file, not the table.
+*Why the file and the table give different counts, and why the table is
+right:* the file holds 80 claims and the store holds 81
+`operator_website` rows. **This is the append-only design working, not a
+drift.** The file states the current reading of each claim; the table
+keeps every reading ever taken. Exactly one claim has been read twice —
+`CyrusOne LON1 (Slough)`, at 8.72 MW on 2026-08-20 and 9 MW on
+2026-08-28 — and both rows stand, with their own quotes and snapshots.
+
+That single pair is the best argument in this file for the snapshot
+discipline, and the claim's own note says why: *"The figure changed under
+us, and the snapshot guard is how we know … an operator replacing a
+precise published figure with a round one is a fact about the
+disclosure, and 8.72 is what anyone citing this site before 2026-08-28
+would have quoted."* Eight days apart, no announcement on the page,
+floor area unchanged at 4,309 sq. m. The grid-supply claim from the same
+page did not move.
+
+So when counting, **fold to the latest reading per claim** — do not treat
+the extra row as an orphan and do not count the raw table as a claim
+total.
 Every claim is quote-verified against a **same-day snapshot** in
 `data/external_sources/operator_snapshots/`, because a marketing page has
 no register behind it: nothing preserves what a redesigned site used to
