@@ -257,11 +257,25 @@ establishes, before anything is proposed:
   cohort is dominated by hydrogen electrolysis, rail traction supply,
   carbon capture, steel and battery storage. They belong in
   `considered` with a reason, not in a backlog.
-- **29 rows are actionable**: 19 with a corpus candidate to test
-  (Cottam Giga against the 1GW Cottam campus, Relode Immingham against
-  Humber Tech Park, Quest Park against the Quest **Pit** S35 site, Bro
-  Tathan against Vantage's CWL2, and more), and 10 real schemes the
+- **24 of the 106 had already been adjudicated** in the matches file's
+  own `considered` section on 2026-08-20, and the triage re-examined
+  them blind because its probe looked for a `row:` key where the file
+  uses `rows:`. Several earlier judgements are better and stand — the
+  Iver rows especially ("no Ark scheme at Iver anywhere in the corpus…
+  a null worth reporting, not matching"). **One is overturned**: Quest
+  Park is recorded there as having no corpus site in the right place,
+  and site 83 holds 435 documents.
+- **29 rows are actionable**, but only six of those candidates are new,
+  three of them strong: Cato, Relode Immingham against Humber Tech Park,
+  and Bro Tathan against Vantage's CWL2. Ten more are real schemes the
   corpus does not hold at all — leads, not matching failures.
+- **Four "Green Energy Centre" schemes hold a gas generation connection
+  and a demand connection at once** — Buntington, East Claydon, Daines
+  and Drakelow appear both in the TEC gas cluster
+  `docs/EXTERNAL_DATA_SOURCES.md` §3 records and in this demand queue.
+  Neither register alone shows it, and §3 flagged the gas cluster as
+  worth checking without connecting the halves. The most reportable
+  thing in the triage, and not a matching finding.
 - **A developer's name and the planning record's name are different
   things** (Luke, 2026-08-31: "Quest Pit is the true location; Quest
   Park is the operator rebrand"). The register carries the rebrand, the
@@ -276,9 +290,13 @@ establishes, before anything is proposed:
   an alias is what a person established it *is*. Any future name search
   against this corpus that skips the 56 aliases re-derives that work
   badly, which is what two passes of the triage did before Luke pointed
-  it out. **Cato is the strongest result to come out of it**: a named
-  site, a named operator (ILI Group), and the register's 600 MW against
-  the architect's 600 MW recorded below.
+  it out. **Cato is the strongest new candidate to come out of it**: a
+  named site, a named operator (ILI Group), and a contracted 600 MW
+  against the architect's 600 MW recorded below — though the site's own
+  documents state both a 600 MW and an 850 MW `it_load`, so the
+  convergence is three quantity types landing on one number, not three
+  sources agreeing. Its 1,200 MW `thermal_input` row carries a standing
+  warning in `docs/REGENERATION_RUNBOOK.md`.
 - **19 rows are Ethos Green "Green Energy Centres"**, 8,660 MW, held
   apart from both buckets: those hubs colocate data centres with
   generation and storage by design — Ethos has a joint development
