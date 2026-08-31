@@ -101,8 +101,8 @@ raise.
 - Claude Sonnet 5 catalogues the universe. The deep read is split across
   four model families, all behind the same verbatim-quote gate, and
   every finding records which one produced it: GPT-5 on OpenAI batch
-  (52%), Sonnet (25%), Qwen 3.6 under MLX locally (23%), and GPT-5.6 as
-  the current reader (<1%, rising as the terra pass lands).
+  (52%), Sonnet (25%), Qwen 3.6 under MLX locally (23%), and GPT-5.6
+  (<1%, from escalations).
 - Reading the corpus twice, so that disagreements between models can be
   kept rather than resolved, is built and part-run — the corroboration
   pass has covered a substantial minority of its in-scope documents and

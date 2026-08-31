@@ -66,7 +66,11 @@ boundary rather than mid-phase, which is what that decision said to do.
 `--model` now defaults to it.
 
 **The evidence, from six sites read on both models at the same reasoning
-effort.** Terra names figures where gpt-5 names categories: on Amazon
+effort** — and note the prompts differed: gpt-5 at `reading-1.2`
+against terra at `reading-1.3`. *The figure-naming half of this was
+overturned by the full run; see "What the full terra run measured"
+below. The rest stands.* Terra names figures where gpt-5 names
+categories: on Amazon
 Didcot it sets "a 150MVA substation" against "192MW IT load and 288MW
 gross power capacity", where gpt-5 describes the same tension without a
 number in it. It is better calibrated about absence, tying silence to
@@ -94,12 +98,79 @@ quantity-type catch — a structured fact recording `energy_storage:
 terra flags quantity-type errors at all**; if it does not, that is a
 real loss against a real gain.
 
+**Answered, and in terra's favour** (2026-08-31, full run). It flags
+them well: on Elsham it caught four in one reading — figures typed as
+energy storage on a quote stating a generation limit, on-site generation
+taken from a hypothetical biomass plant's *fuel* requirement, per-unit
+engine output and thermal fuel input both typed as whole-site
+generation — where gpt-5 at `reading-1.2` caught one. That gain is real
+and is not what the decision below turns on.
+
 **Cost: about $59 against gpt-5's $33.** Terra reasons roughly 2.3×
 harder (~13,300 reasoning tokens per site against 5,849) while producing
 6% *less* visible output. The "half the output tokens" figure from the
 2026-08-28 comparison does not transfer — that was 60 deep-read
 documents at `gpt-5:low`, and a machine reading emits a fixed-schema
 document whose length the schema largely sets.
+
+**What the full terra run measured, and why the readings go back to
+gpt-5.** Run 2026-08-31: 346 sites on `gpt-5.6-terra`/`reading-1.4`, collected
+clean (346 stored, 0 withheld, 0 unparseable). `reading-1.4` added the
+instruction to flag figures whose quantity type contradicts their own
+quote — Luke's suggestion, and it works, as the answer above records.
+
+**But terra states far fewer power figures.** Over the 344 sites read by
+both models: 0.89 figures per site against gpt-5's 2.75, and 21.8% of
+sites carrying any figure against 33.1%. It is not reading less — it
+produced *more* quotes per site than either gpt-5 arm. It shifted from
+stating figures to quoting text around them.
+
+**Three arms on 17 sites, `medium` effort throughout, which separates
+model from prompt:**
+
+| arm | items | quotes | power figures | sites with one |
+|---|---|---|---|---|
+| gpt-5 / `reading-1.2` | 21.00 | 34.18 | 6.65 | 65% |
+| gpt-5 / `reading-1.4` | 21.18 | 35.41 | **8.53** | 65% |
+| terra / `reading-1.4` | 16.88 | 36.59 | **2.18** | 53% |
+
+So `reading-1.4` *helped* gpt-5 — 6.65 → 8.53 — and on Didcot took it
+from 2 distinct figures to 15, **including the `150MVA` and `192MW` this
+section credits to terra as its advantage.** At the same prompt, gpt-5
+states about four times terra's figures. On Elsham, gpt-5 states the
+1,000 MW campus load in four places and terra in none.
+
+**Terra is erratic here rather than simply worse, which matters for what
+to do next.** Same model, `reading-1.3` → `1.4`, six sites: Didcot 8 → 0,
+Watford 6 → 0, Elsham 6 → 2 (losing the 1,000 MW headline it *did* state
+under 1.3), but Union Park 0 → 10 and Yorkshire 0 → 3. Twenty figures
+became fifteen. Terra's prompt-to-prompt variance on this axis is nearly
+as large as its gap to gpt-5, so "terra is worse at figures" overstates
+a stable property that the data does not show.
+
+**Why this was urgent rather than academic.** `LATEST_SQL` renders the
+newest reading per site whatever version made it — deliberately, so a
+re-read the gate refuses shows as withheld rather than falling back.
+After the collect, **331 of 363 sites would have rendered terra**. The
+append-only store preserves the history; it does not protect the page.
+Nothing reached a reader: no build ran between the collect and the fix.
+
+**Decided (Luke, 2026-08-31): re-run on `gpt-5`/`reading-1.4`** — the
+best arm measured on every column, and the only one keeping the new
+prompt's flagging without the figure loss. ~$33. Not a reversal of the
+terra decision so much as its deferral: gpt-5 is legacy at OpenAI, so
+this buys correctness now, not a durable answer.
+
+**Worth doing before terra is tried again** (Luke proposed it; not
+scheduled): an A/B of two or three prompts on terra, scored against
+sites where it demonstrably lost figures — Didcot, Watford, Elsham — and
+where `reading-1.3` gives a baseline to beat. The hypothesis is specific:
+`reading-1.4`'s flagging instruction directs terra toward challenging
+figures rather than reporting them. Name what to state (each site's
+headline capacity, with unit and scope) rather than saying figures
+matter, and score both directions — figures recovered *and*
+quantity-type flags retained — since the two may trade against each
+other.
 
 **And the decision has an answer that was not obvious** (established
 2026-08-31): *most of that spend buys very little, because the problem
