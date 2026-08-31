@@ -234,6 +234,109 @@ matches:
       agreed with NESO, not IT load and not build). Same "Bath Road"
       residual as row 927.
 
+  - row: 1078
+    claim_name: Cato
+    site_id: 161
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-31
+    evidence: >-
+      Register row "Cato", 600 MW at Mossmorran Storage BESS 132kV
+      Substation (2032-10-31). The curated alias for PTNO-12917829
+      names the scheme in the register's own word — "Cato Data Centre
+      campus, Auchtertool, Fife (ILI Group)" — and the site sits beside
+      Mossmorran; the operator's own consultation site
+      (cato.ili-energy.com, in operator_pages.yaml) is a second
+      identity anchor. The register's 600 MW is contracted connection
+      capacity: the scheme's own documents state both 600 and 850 MW
+      IT-load figures and its architect publishes 600, so three
+      quantity types land on one number without being three sources
+      agreeing (docs/NESO_UNMATCHED_TRIAGE.md). The match rests on the
+      name and the substation, not on the figure. The site's 1,200 MW
+      thermal_input row carries a standing warning in
+      docs/REGENERATION_RUNBOOK.md.
+
+  - row: 1673
+    claim_name: Quest Park
+    site_id: 83
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-08-31
+    evidence: >-
+      Register row "Quest Park", 200 MW at Marston Vale 400kV,
+      connection date 2034-10-31. Site 83 is the QuestPit Limited
+      Section 35 scheme at Quest Pit, Ampthill Road, Houghton Conquest
+      (435 documents), aliased "Quest Park Data Centre, Quest Pit" —
+      the developer's rebrand and the ground's own name in one string,
+      and the register carries the rebrand. The scheme's request
+      statement states a 1 GW campus with 720 MW IT load powered by
+      its on-site gas generating station until a grid connection it
+      does not expect before 2034 — and the register's connection date
+      is exactly 2034, corroborating identity from the scheme's own
+      timeline. What the figure does not mean: 200 MW contracted is a
+      fifth of the campus's stated scale, and a 1 GW gas-first scheme
+      holding 200 MW of contracted grid is a finding to report, not
+      reconcile. Overturns the 2026-08-20 "no corpus site" judgement —
+      see the addendum on that entry below.
+
+  - row: 1620
+    claim_name: Bro Tathan Development
+    site_id: 93
+    method: address_and_substation
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-08-31
+    evidence: >-
+      Register row "Bro Tathan Development", 200 MW at Aberthaw 132kV
+      (2029-10-31). Site 93 is the CWL2 Data Centre Campus (Vantage;
+      the Barbour title) whose member applications are addressed "Land
+      North of Ffordd Bro Tathan, Bro Tathan, St. Athan"
+      (Glamorgan/2023/00780/FUL and its family) — the register's name
+      is the site's own address, and Aberthaw is the adjacent former
+      power station, the local transmission point. The consent is for
+      a Class B8 building — the storage-use-class naming-invisibility
+      pattern — so neither the row nor the consent says "data centre";
+      that, and the possibility of another Bro Tathan park occupier as
+      the customer, holds this below strong. The 280 MW across this
+      row and row 1621 is a contracted connection ceiling for the
+      scheme, not IT load and not build.
+
+  - row: 1621
+    claim_name: Bro Tathan Development
+    site_id: 93
+    method: address_and_substation
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-08-31
+    evidence: >-
+      Second "Bro Tathan Development" row, 80 MW at the same substation
+      with an earlier connection date (2027-10-29 against 2029-10-31) —
+      read as an earlier tranche of the same development's connection:
+      two agreements over one scheme, the West Burton / GTR shape.
+      Matched on the same evidence and with the same reservations as
+      row 1620.
+
+  - row: 1091
+    claim_name: Cottam Giga
+    site_id: 133
+    method: name_and_substation
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-08-31
+    evidence: >-
+      Register row "Cottam Giga", 1,000 MW at Cottam 400kV
+      (2039-10-30). PTNO-12871423 is Barbour's "FORMER COTTAM POWER
+      STATION COTTAM - 1GW ADVANCED DATA CENTRE CAMPUS" — the place,
+      the substation on the station site, and an exactly corresponding
+      scale (the register's 1,000 MW against the title's 1 GW). Unlike
+      West Burton, where the "Giga" row was left unmatched because a
+      row naming a data centre already covered the site and a second
+      customer could not be excluded, Cottam has one demand row and one
+      scheme. Held below strong because the row name alone names no
+      data centre and the site holds no planning record at all — a
+      Barbour-only record, zero applications, zero documents — so this
+      claim is currently the scheme's only capacity signal and there is
+      no planning file to corroborate against. Overturns the 2026-08-20
+      judgement: the site had been in the corpus since 2026-08-02. See
+      the addendum below.
+
 # Rows examined and deliberately not matched. Reasons recorded so the
 # next adjudicator starts from the nulls, not from zero.
 considered:
@@ -288,3 +391,154 @@ considered:
       Rows listed by name because several were checked as a class;
       the placeholder row number 0 marks this entry as documentation,
       not a loadable match.
+
+      ADDENDUM 2026-08-31, after the row-by-row triage
+      (docs/NESO_UNMATCHED_TRIAGE.md) and this change's own checks.
+      Two judgements are overturned, both by the same rebrand blind
+      spot: Quest Park (row 1673) was in the corpus all along as Quest
+      Pit — site 83, 435 documents, aliased "Quest Park Data Centre,
+      Quest Pit" — and is now matched; Cottam Giga (row 1091) had a
+      corpus site since 2026-08-02 (PTNO-12871423, Barbour's 1GW
+      advanced data centre campus at the former power station) and is
+      now matched. Ratcliffe Data Centre (row 610, 720 MW) is UPHELD
+      with sharper evidence: the only Ratcliffe on Soar record in the
+      corpus (site 490) is a proposed battery energy storage system on
+      both of its applications, read directly, so no data-centre site
+      exists to match and the row is a coverage lead. The remaining
+      judgements stand — the triage re-examined them blind and mostly
+      reproduced weaker versions of what is written here.
+
+  - rows: [1287]
+    claim_name: Relode Immingham
+    reason: >-
+      920 MW at Killingholme 400kV (2039-10-30), among the largest
+      unmatched demand rows. Proposed by docs/NESO_UNMATCHED_TRIAGE.md
+      as a strong candidate for PTNO-12776851 (The Humber Tech Park
+      Data Centre, land south of the A160, South Killingholme) and
+      examined 2026-08-31: NOT matched. "Relode" appears nowhere in
+      the corpus — zero findings, zero applications — and resolves at
+      Companies House to Relode Energy Limited (15568908), active,
+      incorporated 2024-03-16, whose PSCs are two individuals with no
+      visible connection to the Greystoke Land group that owns Humber
+      Tech Park Limited (organisation_aliases.yaml). The row is
+      therefore as consistent with a separate Relode scheme at
+      Killingholme as with Greystoke's; 920 MW disagrees with the
+      scheme's stated 384 MW by 2.4x; and nothing names the site.
+      What would settle it: Humber Tech Park's own energy or utilities
+      statement naming its connection agreement (78 documents held),
+      or Relode Energy publishing its Immingham project. Either answer
+      matters — a second transmission-scale data-centre customer at
+      Killingholme would be a coverage finding in its own right.
+
+  - rows: [870]
+    claim_name: Bryn Coch DC
+    reason: >-
+      450 MW at Pentir 400kV (2037-10-30). The triage's
+      local-authority sweep reached PTNO-12880893 (the former Ferodo
+      site, Caernarfon Road, Bangor — Pentir is the Bangor supply
+      point), and its own caution stands: no alias or name supports
+      the pairing, "Bryn Coch" is a common Welsh place name that is
+      not the Ferodo site's recorded name, and nothing else
+      triangulates. A lead to test against the Ferodo scheme's
+      documents, not a match.
+
+  - rows: [1354]
+    claim_name: Waltham
+    reason: >-
+      120 MW at Waltham Cross 275kV (2033-10-31). The corpus's only
+      scheme of this scale at Waltham Cross is site 49 (the Google
+      data centre, Cheshunt), which already carries rows 630 and 632 —
+      "Waltham Cross Farm 2", 650 MW combined at Waltham Cross B 400kV
+      — matched tentatively. Writing a third claim onto the same site
+      from a third agreement, at a different voltage level, on
+      locality alone would stack three tentative attributions where
+      nothing names the customer of any of them. Deliberately left
+      until the Farm 2 pair is settled; whatever settles those (a
+      Broxbourne utilities statement, or any Google disclosure)
+      settles this row the same way.
+
+  - rows: [444, 514, 515, 571, 580, 592, 640, 885, 923, 944, 998,
+           1018, 1317, 1324, 1327, 1337, 1339, 1345, 1422]
+    claim_name: Green Energy Centre portfolios (nineteen rows, two SPV families)
+    reason: >-
+      8,660 MW of Transmission Connected Demand across nineteen "Green
+      Energy Centre" schemes — twelve suffixed "(Ethos Green)", the
+      rest of the "substation-name NG Limited" family — almost every
+      one named after the substation it connects at (Navenby at
+      Navenby, Drakelow at Drakelow), which is what grid-capacity
+      acquisition looks like before a site is named. None has a
+      planning application anywhere in this corpus. Held apart from
+      both the matched and the not-data-centre buckets: Ethos Green
+      publicly describes these as hubs of renewable generation,
+      storage and colocated data centres, under a joint development
+      agreement with Frontier Power for up to 5 GW — so the demand leg
+      may be a data centre. The register does not say so, and the
+      import-leg-of-a-storage-hybrid explanation fits the coding
+      equally well (docs/EXTERNAL_DATA_SOURCES.md section 3, corrected
+      2026-08-31: no GEC row carries any gas term). Demand whose
+      consumer is undeclared, not demand known to be something else.
+      The open question and the routes to settle it are in ROADMAP's
+      coverage-gaps section; nothing here is matchable until a site
+      exists.
+
+  - rows: [58, 93, 180, 306, 423, 430, 624, 678, 808, 809, 859, 869,
+           960, 962, 1183, 1189, 1190, 1249, 1250, 1259, 1293, 1313,
+           1370, 1372, 1375, 1376, 1377, 1378, 1379, 1516, 1544, 1545,
+           1548, 1592, 3400, 3402]
+    claim_name: Rows naming their own non-data-centre technology
+    reason: >-
+      Examined 2026-08-31; each row's name states what the customer
+      is, and it is not a data centre. Hydrogen and electrolysis
+      (Hunterston Green Hydrogen 58 and 423, Humber H2ub 624, Centrica
+      Easington H2HE 678, Peterhead Hydrogen 1249 and 1250, four
+      Kintore Electrolysis rows 1376-1379); carbon capture and BECCS
+      (Stallingborough CCGT 93, Drax BECCS 306, Acorn Transport &
+      Storage 859); offshore wind and INTOG platform electrification
+      (Green Volt 808, CENOS 809, Mossy Hill 869, INTOG 2 1183, the
+      two Cerulean INTOG rows 3400 and 3402); storage and grid parks
+      (SSE Ferrybridge BESS 180, the two Scatsta Greener Grid Parks
+      960 and 962, Forss Abbey 1293, Waltham Cross BESS 1548);
+      Network Rail and HS2 traction supply (Ickenham 1189, Quainton
+      1190, Tweedbank 1313, Newton 1372, Portobello 1375, Thornton
+      1544, Dundee Feeder 1545, NR Wymondley 1592); Teesside
+      industrial works (South Tees Enhancement rows 1370 and 1516);
+      the XLCC Hunterston cable factory (1259); and Walpole Flexible
+      Generation (430). Correctly and permanently unmatched — the
+      register lists transmission demand customers of every kind, and
+      these rows are the proof.
+
+  - rows: [635, 680, 733, 956, 1057, 1079, 1082, 1111, 1188, 1270,
+           1284, 1285, 1286, 1351, 1478, 1523, 1691]
+    claim_name: Rows whose name identifies nothing
+    reason: >-
+      Examined 2026-08-31; the name neither states a technology nor
+      names any place or scheme the corpus can test (Darwin 956,
+      Horsey 1057, Aurelius 1079, Rufus 1082, Apollo 1270 at 0.1 MW,
+      Berkswell 1188, Penwortham 1351, Factory Road 1478, Wymondley
+      Farm 733, Ratcliffe on Soar Farm 680 and the 40 MW "(EX)" row
+      1691). Three inside it are worth naming. The four "Power Park"
+      rows (Biggleswade 635 at 600 MW, Ipswich 1284 at 920, Rugby 1285
+      at 950, Retford 1286 at 440 — 2,910 MW) read as a third named
+      portfolio family beside the two GEC ones, and nothing states
+      what a Power Park is. "MKE DC" (1111, 500 MW) shares the East
+      Claydon 400kV connection point with the East Claydon Green
+      Energy Centre row, and the corpus's one Milton Keynes site (276,
+      Linford Wood) has no stated tie; the initialism stays
+      unexpanded. "CEG LP2 (II) Site 1" (1523, 300 MW) connects at
+      Culham JET 400kV — the Culham AI Growth Zone's substation — and
+      no corpus site exists at Culham at all, which makes it the
+      sharpest of these to chase despite the empty name.
+
+  - rows: [480, 1212, 1231, 1461]
+    claim_name: Data-centre-shaped rows with no corpus site (2026-08-31)
+    reason: >-
+      Blocked by the corpus — the environment-agency-permit-matches
+      phrase: a finding about coverage, not about matching. Edzell
+      Data Centre (480, 800 MW at New Brechin; Angus holds no corpus
+      site at all). Radlett 1 and 2 (1231 and 1212, 150 MW each at
+      Elstree GSP; Hertsmere holds three data-centre sites, none at
+      Radlett, and the rows state no technology — the pairing and the
+      corridor make data centres plausible, not established). Baglan
+      Bay DC (1461, 500 MW; the nearest corpus scheme is a 12 MW
+      Margam site, a different size of thing). Acquisition leads,
+      joining the ten the triage already lists.

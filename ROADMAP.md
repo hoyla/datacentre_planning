@@ -487,6 +487,10 @@ on it):
 | Companies House | 22 | 10 | 6 |
 | EA permit | 42 | 14 | 0 |
 
+*The NESO row moved on 2026-08-31, when the outcomes were written into
+the matches file: **18 matched, 101 unmatched**, and every examined row
+now carries a match or a `considered` reason.*
+
 The NESO EA register was the live work, and was triaged 2026-08-31 —
 **`docs/NESO_UNMATCHED_TRIAGE.md` is the row-by-row result.** What it
 establishes, before anything is proposed:
@@ -503,11 +507,24 @@ establishes, before anything is proposed:
   Iver rows especially ("no Ark scheme at Iver anywhere in the corpus…
   a null worth reporting, not matching"). **One is overturned**: Quest
   Park is recorded there as having no corpus site in the right place,
-  and site 83 holds 435 documents.
+  and site 83 holds 435 documents. (Writing the outcomes found a
+  second, Cottam Giga — see the outcome note below.)
 - **29 rows are actionable**, but only six of those candidates are new,
   three of them strong: Cato, Relode Immingham against Humber Tech Park,
   and Bro Tathan against Vantage's CWL2. Ten more are real schemes the
   corpus does not hold at all — leads, not matching failures.
+  **Outcome, 2026-08-31: two of the three survived contact with the
+  evidence.** Cato and both Bro Tathan rows are matched, alongside
+  Quest Park and Cottam Giga — each of those two overturning a
+  2026-08-20 null, Cottam's site having been in the corpus since
+  2026-08-02. Relode Immingham is **not** matched: "Relode" appears
+  nowhere in the corpus and resolves at Companies House to Relode
+  Energy Limited (15568908), an independent company with no Greystoke
+  tie, so the 920 MW row is as consistent with a separate Killingholme
+  scheme as with Humber Tech Park — recorded in `considered` with the
+  test that would settle it. Ratcliffe's null was upheld the same way:
+  the one Ratcliffe on Soar corpus site is a battery scheme on its own
+  applications' text.
 - **The "Green Energy Centre" portfolios are the thing worth pursuing,
   and they are not gas.** An earlier version of this bullet said four of
   them held a gas connection and a demand connection at once, following
@@ -560,16 +577,19 @@ tracked there.
 
 **What is left on #250, now the triage has run:**
 
-- **Write the outcomes.** For the rows evidence supports, add `matches`
-  entries in the file's existing style — `row`, `claim_name`, `site_id`,
-  `method`, `confidence`, `matched_by`, and written `evidence` naming
-  what identifies the site and what the figure does not mean. Every row
-  examined and not matched gets a `considered` entry with the reason.
-  Start from the triage document's tables, and **read the existing
-  `considered:` section first** — it already adjudicates 24 of the 106,
-  its judgements mostly stand, and the Iver rows are settled there.
-  Cato, Relode Immingham and Bro Tathan are the three new candidates
-  strong enough to write.
+- ~~**Write the outcomes.**~~ **Done, 2026-08-31.** Every one of the
+  106 examined rows now carries an outcome in
+  `neso-ea-register-matches.yaml`: five new matches (Cato and Quest
+  Park at `strong`; the two Bro Tathan rows and Cottam Giga at
+  `probable`), an addendum on the 2026-08-20 class entry recording the
+  two overturns and the Ratcliffe upholding, and `considered` entries
+  for everything else — the 19 GECs held apart, 36 rows naming their
+  own non-data-centre technology, 17 whose name identifies nothing
+  (the four "Power Park" rows and CEG LP2 at Culham JET flagged inside
+  that entry), four new coverage leads, and Relode Immingham, Bryn
+  Coch and Waltham each abstained with the test that would settle it
+  written down. The matches load at the next `load_capacity_claims.py`
+  run, per the runbook.
 - **State the exclusion in the cohort's own `limits`.** The issue names
   this as the cheap, honest half and it is still not done: a sentence in
   `at_least_100mw` saying a multi-facility campus may be absent because

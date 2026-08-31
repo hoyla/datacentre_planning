@@ -6,6 +6,23 @@ phase-1 deliverable the ROADMAP asked for — **establish why the rows are
 unmatched before proposing anything.** No matches have been written; that
 is phase 2, and several rows below need a decision rather than a guess.
 
+> **Phase 2 outcome (2026-08-31, later the same day).** Every row now
+> carries a match or a `considered` entry in
+> `neso-ea-register-matches.yaml`, **which supersedes this document's
+> proposals where they differ.** Cato, both Bro Tathan rows, Quest Park
+> and Cottam Giga are matched. **Relode Immingham is not**: "Relode"
+> appears nowhere in the corpus and resolves at Companies House to
+> Relode Energy Limited (15568908), an independent company with no
+> visible Greystoke tie, so the 920 MW row is as consistent with a
+> separate Killingholme scheme as with Humber Tech Park — this
+> document's "strong" call did not survive checking who Relode is.
+> And Ratcliffe's 2026-08-20 null is upheld: the corpus site proposed
+> below (`SITE-NorthWestLeicestershire/23/01083/NAC`) is a proposed
+> battery energy storage system on both of its applications, read
+> directly — a site can be present and be a different scheme, as the
+> closing caveat here warned. Read the matches file for the standing
+> adjudications.
+
 > **Read this first: 24 of the 106 had already been adjudicated.**
 > `neso-ea-register-matches.yaml` carries a `considered` section written
 > on 2026-08-20 covering six rows explicitly and eighteen more by name.
