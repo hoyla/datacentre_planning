@@ -15,8 +15,12 @@ supply, carbon capture, steel and battery storage. Those rows are
 correctly and permanently unmatched: they belong in `considered` with a
 reason, not in a backlog.
 
-What is genuinely actionable is **29 rows** — 16 with a corpus candidate
-to test, 13 real data-centre schemes the corpus does not hold at all.
+What is genuinely actionable is **29 rows** — 19 with a corpus candidate
+to test, 10 real data-centre schemes the corpus does not hold at all.
+Three of the 19 arrived on a second pass, after Luke pointed out that a
+developer's name for a site and the planning record's name for the same
+ground are routinely different things; *the rebrand problem*, below, is
+the general form of that and the reason the first pass under-counted.
 
 The framing "106 unmatched claims, any of which could move a site across
 the line" overstates the pool by roughly four times.
@@ -25,8 +29,8 @@ the line" overstates the pool by roughly four times.
 
 | cause | rows | MW | what it means |
 |---|---:|---:|---|
-| `dc_candidate` | 16 | 7,155 | a data-centre scheme, and the corpus holds a site worth testing |
-| `dc_no_site` | 13 | 4,820 | a data-centre scheme with no corpus presence — a lead, not a defect |
+| `dc_candidate` | 19 | 8,405 | a data-centre scheme, and the corpus holds a site worth testing |
+| `dc_no_site` | 10 | 3,570 | a data-centre scheme with no corpus presence — a lead, not a defect |
 | `colocated_plausible` | 19 | 8,660 | Ethos Green "Green Energy Centre" — see below |
 | `unknown` | 16 | 7,064 | the row names nothing that identifies what it is |
 | `not_dc` | 42 | 17,086 | the row names its own technology, and it is not a data centre |
@@ -71,6 +75,12 @@ Strongest first. Each names the corpus site to check; none is a match yet.
 | 1137 | 160 | Edinburgh Business Park | `PTNO-12869683` Heriot-Watt 200MW AI data centre campus, at Currie |
 | 1460 | 150 | Cardiff DC | `PTNO-12675606` Cardiff East park and ride, Old St Mellons |
 | 1354 | 120 | Waltham | `PTNO-12406644` Google data centre, Waltham Cross |
+| 1078 | 600 | Cato | `PTNO-12917829` Camilla Road, **Auchtertool** — adjacent to Mossmorran |
+| 870 | 450 | Bryn Coch DC | `PTNO-12880893` former Ferodo site, Caernarfon Road — Pentir serves Bangor |
+| 1681 | 200 | Laleham DC | `PTNO-12814730` Manor Farm, 147MW data centre and BESS |
+
+The last three arrived on a second pass and are the reason this document
+has a second pass at all — see *the rebrand problem* below.
 
 Two of these carry a trap:
 
@@ -80,22 +90,61 @@ Two of these carry a trap:
 - **Bro Tathan** is two rows (200 and 80 MW) on one development. Two
   agreements, one scheme — the same shape as West Burton below.
 
-## The 13 leads with no corpus site
+## The rebrand problem, and what it changed
 
-Edzell (800 MW), Baglan Bay (500), Seagull Data connect at Gravity (450),
-Bryn Coch (450), Clydebridge (360), Micklefield (300), Laleham (200),
-Inchinnan (180), Jawcraig (180), Radlett 1 and 2 (150 each), the
-Easterhouse "Digital and Manufacturing Campus Including Data Centres"
-(500), and **Cato (600 MW at Mossmorran)**.
+Luke, on reading the first pass: **"Quest Pit is the true location;
+Quest Park is the operator rebrand."** That is not a note about one row.
+It names a general cause of unmatching, and the first pass could not see
+it: the register carries the name the *developer* uses, while the
+planning record carries the name the *place* has — often the quarry,
+pit, works or factory that was there before. A search for the register's
+name against the corpus is blind to exactly that case, which is how the
+first pass filed Quest Park as "no corpus site" when site 83 holds 435
+documents.
 
-These are correctly unmatched — the corpus does not cover them — and each
-is an acquisition lead rather than a matching failure.
+So the thirteen were re-probed by a method that can see it: list **every**
+corpus site in the containing local authority and look, rather than
+matching a string. Three moved to `dc_candidate`:
 
-**Cato is worth flagging on its own.** The ROADMAP already carries a Cato
-lead from the scheme's architect (graemenicholls.com, snapshotted, states
-600 MW). The register independently states 600 MW for a Cato demand
-connection at Mossmorran. Two unrelated sources, the same figure, and no
-planning presence in the corpus.
+- **Cato** (600 MW at Mossmorran) → `PTNO-12917829`, "Camilla Road,
+  Auchtertool — data centre buildings". Auchtertool sits beside
+  Mossmorran; the name-based probe had searched "cato", "mossmorran" and
+  "cowdenbeath" and found nothing.
+- **Bryn Coch DC** (450 MW at Pentir) → `PTNO-12880893`, the former
+  Ferodo site on Caernarfon Road. Pentir is the Bangor supply point.
+- **Laleham DC** (200 MW at Sunbury Common) → `PTNO-12814730`, "Manor
+  Farm — 147MW data centre & battery energy storage". The Spelthorne
+  highway application that the first pass dismissed as noise in fact
+  names the run *between* the National Grid Laleham substation and Manor
+  Farm.
+
+None is confirmed. Each is now a document to read rather than a gap.
+
+## The 10 leads with no corpus site
+
+Two kinds, and the difference matters for whether anyone should look
+again:
+
+**Nothing in the local authority at all** — Edzell (800 MW; Angus holds
+no corpus site), Seagull Data connect at Gravity (450; Sedgemoor holds
+one hospital), Inchinnan (180), Jawcraig (180). These are acquisition
+leads: real schemes the corpus does not cover.
+
+**A site in the area, but nothing that names the scheme** — Baglan Bay
+(500 MW; the nearest is a 12MW Margam scheme, a different size of
+thing), Easterhouse's "Digital and Manufacturing Campus Including Data
+Centres" (500), Clydebridge (360; South Lanarkshire holds the M74
+Central Eco Park), Micklefield (300; Leeds holds Skelton Grange), and
+Radlett 1 and 2 (150 each; Hertsmere holds three data-centre sites, none
+at Radlett). Locality-only, no name link — weaker than the three above
+and not worth writing a match on without a document.
+
+**Cato has left this list**, and its corroboration is now the more
+interesting for it: the ROADMAP carries a Cato lead from the scheme's
+architect (graemenicholls.com, snapshotted, 600 MW), the register states
+600 MW for a Cato demand connection at Mossmorran, and there is now a
+Fife planning candidate beside that substation. Three sources, one
+figure — pending the read that ties the third to the first two.
 
 ## Two corrections to the ROADMAP
 
@@ -123,9 +172,22 @@ confident negatives:
 - A substring search for `ark` matched every "Park" in the corpus.
 - Searching for "Quest Park" returned nothing, and the first read of that
   was "no corpus site". The corpus spells it **Quest Pit**. The site
-  exists, holds 435 documents, and is the QuestPit S35 scheme. A
-  place-name probe has to allow for the register and the register office
-  disagreeing about a word.
+  exists, holds 435 documents, and is the QuestPit S35 scheme.
+
+The second defect turned out to be the general one. Luke: *"Quest Pit is
+the true location; Quest Park is the operator rebrand."* A developer
+renames the ground it builds on — a pit becomes a park — and the register
+records the new name while the planning file keeps the old. **A name
+search across the two therefore has a systematic blind spot, not a random
+one**, and it fails in the direction that produces confident negatives.
+
+The fix used here is to sweep the local authority and look at everything
+in it. That is affordable at this scale (13 rows), and it found three
+sites a name search could never have reached. Anyone re-running this
+should treat a name-only negative as untested, not as absent — the
+`dc_no_site` bucket above is split into "nothing in the authority" and
+"something in the authority, but nothing that names the scheme" for
+exactly that reason.
 
 What this triage cannot do is confirm a match. Every candidate above is a
 prompt to read a document, not evidence. The `dc_candidate` and

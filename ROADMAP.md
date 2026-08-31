@@ -257,13 +257,21 @@ establishes, before anything is proposed:
   cohort is dominated by hydrogen electrolysis, rail traction supply,
   carbon capture, steel and battery storage. They belong in
   `considered` with a reason, not in a backlog.
-- **29 rows are actionable**: 16 with a corpus candidate to test
+- **29 rows are actionable**: 19 with a corpus candidate to test
   (Cottam Giga against the 1GW Cottam campus, Relode Immingham against
   Humber Tech Park, Quest Park against the Quest **Pit** S35 site, Bro
-  Tathan against Vantage's CWL2, and ten more), and 13 real schemes the
-  corpus does not hold at all — leads, not matching failures. Cato at
-  Mossmorran is among them, and the register's 600 MW independently
-  corroborates the architect's 600 MW already recorded below.
+  Tathan against Vantage's CWL2, and more), and 10 real schemes the
+  corpus does not hold at all — leads, not matching failures.
+- **A developer's name and the planning record's name are different
+  things** (Luke, 2026-08-31: "Quest Pit is the true location; Quest
+  Park is the operator rebrand"). The register carries the rebrand, the
+  planning file keeps the ground's own name — so a name search across
+  the two has a systematic blind spot, failing towards confident
+  negatives. Re-probing the no-site leads by sweeping the whole local
+  authority found three more candidates a name search could not reach,
+  Cato among them: the register's 600 MW at Mossmorran, the architect's
+  600 MW recorded below, and now a Fife planning candidate beside that
+  substation.
 - **19 rows are Ethos Green "Green Energy Centres"**, 8,660 MW, held
   apart from both buckets: those hubs colocate data centres with
   generation and storage by design — Ethos has a joint development
