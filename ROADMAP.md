@@ -269,13 +269,20 @@ establishes, before anything is proposed:
   three of them strong: Cato, Relode Immingham against Humber Tech Park,
   and Bro Tathan against Vantage's CWL2. Ten more are real schemes the
   corpus does not hold at all — leads, not matching failures.
-- **Four "Green Energy Centre" schemes hold a gas generation connection
-  and a demand connection at once** — Buntington, East Claydon, Daines
-  and Drakelow appear both in the TEC gas cluster
-  `docs/EXTERNAL_DATA_SOURCES.md` §3 records and in this demand queue.
-  Neither register alone shows it, and §3 flagged the gas cluster as
-  worth checking without connecting the halves. The most reportable
-  thing in the triage, and not a matching finding.
+- **The "Green Energy Centre" portfolios are the thing worth pursuing,
+  and they are not gas.** An earlier version of this bullet said four of
+  them held a gas connection and a demand connection at once, following
+  §3 of `docs/EXTERNAL_DATA_SOURCES.md`; **both were wrong and are
+  corrected** — 52 TEC rows across 42 schemes, not one carrying any gas
+  term, plant types combining `Demand`, storage, solar and wind. What
+  stands: nineteen of those schemes hold 8,660 MW of transmission
+  demand in the Existing Agreements register, thirty of the 52 TEC rows
+  carry `Demand` in their plant type, almost every scheme is named after
+  its substation, and **none has a planning application in this corpus**.
+  Ethos Green says publicly that its centres colocate data centres (a
+  5 GW agreement with Frontier Power); the registers do not say so, and
+  the import-leg-of-a-hybrid explanation fits the coding equally well.
+  Untested either way — which is the open question, not a finding.
 - **A developer's name and the planning record's name are different
   things** (Luke, 2026-08-31: "Quest Pit is the true location; Quest
   Park is the operator rebrand"). The register carries the rebrand, the
