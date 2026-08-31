@@ -248,14 +248,36 @@ on it):
 | Companies House | 22 | 10 | 6 |
 | EA permit | 42 | 14 | 0 |
 
-The NESO EA register is now the live work: 106 unmatched demand-queue
-claims, among them Global Switch London East 87 MW and London South
-70 MW. Any of those, matched, could move a site across the line or
-give it a figure where it shows none. The one diagnosed cause —
-address mismatch, as in the original VIRTUS Slough case — will not be
-the only one across 106 claims. **Establish why the matcher misses
-them before proposing anything.** The remaining operator-channel 35
-are mostly the sheet's "not yet" and keyless rows, tracked there.
+The NESO EA register was the live work, and was triaged 2026-08-31 —
+**`docs/NESO_UNMATCHED_TRIAGE.md` is the row-by-row result.** What it
+establishes, before anything is proposed:
+
+- **61 of the 106 are not data-centre schemes**, and never will be. The
+  register lists transmission demand customers of every kind; the
+  cohort is dominated by hydrogen electrolysis, rail traction supply,
+  carbon capture, steel and battery storage. They belong in
+  `considered` with a reason, not in a backlog.
+- **29 rows are actionable**: 16 with a corpus candidate to test
+  (Cottam Giga against the 1GW Cottam campus, Relode Immingham against
+  Humber Tech Park, Quest Park against the Quest **Pit** S35 site, Bro
+  Tathan against Vantage's CWL2, and ten more), and 13 real schemes the
+  corpus does not hold at all — leads, not matching failures. Cato at
+  Mossmorran is among them, and the register's 600 MW independently
+  corroborates the architect's 600 MW already recorded below.
+- **19 rows are Ethos Green "Green Energy Centres"**, 8,660 MW, held
+  apart from both buckets: those hubs colocate data centres with
+  generation and storage by design — Ethos has a joint development
+  agreement with Frontier Power for up to 5GW of colocated capacity —
+  so a GEC row is demand whose consumer is undeclared, not demand that
+  is known to be something else.
+
+So the earlier framing was wrong twice, and both corrections are in the
+triage document: Global Switch London East 87 MW and London South 70 MW
+are **not in this register at all** (they are `operator_website` claims,
+and belong to the operator channel's 35), and "any of the 106, matched,
+could move a site across the line" is true of 29. The remaining
+operator-channel 35 are mostly the sheet's "not yet" and keyless rows,
+tracked there.
 
 ### 4. #248 — a figure we assemble is not a figure a source states
 
