@@ -1224,13 +1224,42 @@ field and is not publishable as it stands.
   cohort at once, and it closes a gap that exists whether or not the
   re-gate runs.
 
-  **Two details for the doing:** the 646 rows whose reason-family
-  matches more than one model tag (`openai:gpt-5:minimal` against
-  `:low`) disambiguate by nearest `completed_at` to the escalation's
+  **Both details are handled in the implementation:** the rows whose
+  reason-family matches more than one model tag (`openai:gpt-5:minimal`
+  against `:low`) resolve by nearest `completed_at` to the escalation's
   timestamp; the nine that resolve to nothing are dropped, because a
   finding whose read cannot be identified should not be reinstated on a
-  guess. And 416 of the recoveries carry a numeric power unit, so they
-  join the adjudication tail and want a batch — the $20–40 tier.
+  guess.
+
+  **Built 2026-08-31, dry-run, not written.**
+  `scripts/regate_escalations.py` (nothing happens without `--write`)
+  and migration 033, which adds `findings.gate_version`.
+
+  **The dry run: 15,679 recoverable** of 50,565 escalations carrying a
+  usable finding. 34,877 remain absent under the fixed gate — the gate
+  being right — and 9 are dropped as unattributable. By the model that
+  originally read the document: 6,501 `openai:gpt-5:minimal`, 4,404
+  `openai:gpt-5:low`, 2,726 `claude-sonnet-5`, 1,965
+  `mlx:Qwen3.6-35B-A3B-4bit`, 83 `openai:gpt-5.6-terra`. All would carry
+  `gate_version = 'gate-2.1'`.
+
+  *15,679 rather than the 15,042 measured earlier: that figure searched
+  the claimed page alone, where the script uses the runners' own
+  candidate order — the claimed page, its neighbours, then the other
+  pages sent to the model. The larger number is the right one, and a
+  quote is still never searched in a page the model was not shown.*
+
+  **Two things to weigh before `--write`.** The reinstated rows have not
+  been through the label audit, which ran over 10,602 rendered findings
+  — and 1,965 of them come from the local reader, which HISTORY measures
+  misfiling families at 28.4% against Sonnet's 11.3%. A recovered row
+  carries the label its reader gave it, and the dry run's own sample
+  shows one already: a site area of "approximately 2 hectares" filed as
+  `grid_connection`. That is the reader's error rather than the gate's,
+  and `finding_label_audit` is the machinery for it — but the audit
+  wants re-running over the new rows. And 416 of the recoveries carry a
+  numeric power unit, so they join the adjudication tail and want a
+  batch: the $20–40 tier.
 
   **The preliminary to 2.11, and its first work** (Luke, 2026-08-28
   scheduled it as 2.11's key part; 2026-08-31 he redefined 2.11 as the
