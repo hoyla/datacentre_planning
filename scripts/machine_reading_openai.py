@@ -505,7 +505,15 @@ def main() -> int:
                          "readings, as the reader renders them")
     ap.add_argument("--regate", action="store_true",
                     help="re-judge the cached sample answers under the current gate")
-    ap.add_argument("--model", default="gpt-5")
+    # gpt-5.6-terra, decided 2026-08-31 after a six-site comparison against
+    # gpt-5 at the same reasoning effort. Terra names the figures where
+    # gpt-5 names the categories, and on Elsham Wolds it surfaced an
+    # Operational Power Demand of 84 MW against a stated 1,000 MW maximum
+    # that gpt-5's reading of the same site never reached. It costs about
+    # 1.8x as much — roughly $59 against $33 for a full run — because it
+    # reasons about 2.3x harder; visible output is if anything slightly
+    # shorter. See ROADMAP, "the machine readings move to terra".
+    ap.add_argument("--model", default="gpt-5.6-terra")
     ap.add_argument("--reasoning-effort", default="medium",
                     choices=["minimal", "low", "medium", "high"])
     args = ap.parse_args()

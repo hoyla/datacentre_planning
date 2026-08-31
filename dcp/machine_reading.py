@@ -51,7 +51,17 @@ ROOT = Path(__file__).resolve().parent.parent
 # every refusal a real breach: a figure with no quote ("1 generator",
 # "250MW"), a quote copied from memory rather than the page, "plans to".
 # 1.2 tells the model each of those in the words the gate uses.
-PROMPT_VERSION = "reading-1.3"
+# reading-1.4 (2026-08-31): section 3 asks explicitly for adjudicated
+# figures whose quantity type contradicts their own quote. The prompt
+# already said "where the structured facts and the pages disagree, say
+# so", and gpt-5 acted on it — catching an `energy_storage: 50 MW` on
+# Elsham read from "Energy Centre (generation no greater than 50MW)
+# including energy storage", where the number is the generation cap and
+# no storage capacity is stated anywhere. Terra did not. Elsham carries
+# six such rows. The model sees each figure's type beside its quote, so
+# it is the cheapest place in the pipeline to catch a mis-typing the
+# correction rules missed.
+PROMPT_VERSION = "reading-1.4"
 
 # The gate has a version of its own, in the table's key, because it is
 # a judgement too. gate-1.0 refused Watford for a dropped comma and
@@ -89,7 +99,14 @@ PROMPT_VERSION = "reading-1.3"
 # matches PDF text"); the gate now applies it: after the punctuation
 # pass, the fragments and the page are compared with all whitespace
 # removed, every word and figure still required in order.
-GATE_VERSION = "gate-2.0"
+# gate-2.1 (2026-08-31): the squash above takes the findings gate's
+# 25-character minimum. An unguarded whitespace-blind match admits a
+# three-character quote against any page, which is a substring lottery
+# rather than verification; the threshold is set from the distribution of
+# real recoveries (median 122 characters, first percentile 26), so it
+# costs 0.7% of them. Bumped alongside the move to gpt-5.6-terra, which
+# re-reads every site regardless.
+GATE_VERSION = "gate-2.1"
 
 # The text budget per site, in characters. ~120k tokens: enough for a
 # planning statement, an energy statement, an officer report and the
@@ -390,6 +407,14 @@ Write three sections.
 3. "not_determined" — what could not be determined from what you were
    given: figures absent from the pages, documents referred to but not
    held, things the structured facts mark as unread or provisional.
+   Include here any adjudicated figure above whose quantity type does
+   not match its own quote: a thermal input typed as generation, a
+   battery's rating typed as this site's power, an export limit typed
+   as a connection, an annual energy figure typed as a power one, or a
+   figure typed as storage on a quote that states a generation limit.
+   Say which type the quote supports, and quote it. State it as an
+   observation about the figure you were given, not as a correction to
+   it and not as advice.
 
 RULES. These are not style preferences; a reading that breaks one is
 discarded — the whole reading, for this site, not the sentence.
@@ -609,10 +634,16 @@ def quote_in_text(quote: str, text: str) -> bool:
     if _VF._all_fragments_in_order(strip(page), [strip(f) for f in frags]):
         return True
     # The page's own spaces are not evidence: "buildi ng" is "building".
-    # This relaxation used to be unguarded here and absent from the
-    # findings gate. Both now go through verify_findings.fragments_present,
-    # which applies it with a minimum-length guard — an unguarded squash
-    # can admit a three-character quote against any page (2026-08-31).
+    #
+    # Routed through `verify_findings.fragments_present` since 2026-08-31,
+    # which applies the same relaxation behind a 25-character minimum. It
+    # was unguarded here and absent from the findings gate, so a very
+    # short quote could verify against almost any page. Taking the guard
+    # tightens this gate and therefore needs GATE_VERSION to move, which
+    # marks every site for a re-read — done here because the move to
+    # gpt-5.6-terra re-reads them all anyway, which is the accumulation
+    # rule in ROADMAP working as intended: park a change that cannot
+    # justify a re-read on its own, then land it with one that can.
     return _VF.fragments_present(strip(page), [strip(f) for f in frags])
 
 

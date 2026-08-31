@@ -41,13 +41,140 @@ its preliminary. The reason is sequencing, measured 2026-08-31: of the
 over. Hand-adjudicating campus scopes against a corpus still missing
 them means redoing some of that adjudication when they land.
 
-**A landmine for the next release:** `mr.PROMPT_VERSION` is now
-`reading-1.3` (PR #241), and `_already()` in
+**A note for the next release, and it is smaller than it looks:**
+`mr.PROMPT_VERSION` is now `reading-1.3` (PR #241), and `_already()` in
 `scripts/machine_reading_openai.py` keys on it — and on `input_hash`,
-which the 2026-08-30 membership changes moved for dozens of sites.
-**The next `--submit` re-reads all ~358 sites**, roughly 15M input
-tokens. Nothing is spent until someone runs it; the flag is not a
-mistake, but it should be a decision rather than a surprise.
+which the 2026-08-30 membership changes moved for dozens of sites. **The
+next `--submit` re-reads all ~359 sites.**
+
+**Measured 2026-08-31, from the batch output files and confirmed against
+the OpenAI console: that costs about $34.** The 2026-08-29 batch is the
+clean anchor — 182 sites, alone overnight, **$16.98** for 15,817,922
+input and 1,439,745 output tokens, the console's day total matching the
+output files to the token. Per site: 71,865 in, 8,228 out, of which
+**5,849 is reasoning** (71% of output, and invisible in the stored
+reading, which is why it cannot be estimated from what is on disk).
+
+*This corrects "roughly 15M input tokens" for a full run, which was
+this batch's own figure — 182 sites — mistaken for all 358. A full run
+is about 26M in and 3M out.*
+
+**The machine readings move to gpt-5.6-terra** (Luke, 2026-08-31), which
+is the decision that makes that re-read worth running. It is the model
+choice recorded on 2026-08-28 for future work, applied at a phase
+boundary rather than mid-phase, which is what that decision said to do.
+`--model` now defaults to it.
+
+**The evidence, from six sites read on both models at the same reasoning
+effort.** Terra names figures where gpt-5 names categories: on Amazon
+Didcot it sets "a 150MVA substation" against "192MW IT load and 288MW
+gross power capacity", where gpt-5 describes the same tension without a
+number in it. It is better calibrated about absence, tying silence to
+the structured facts rather than reporting "no figures in the pages".
+It flags naming discrepancies as discrepancies — Ark Data Centres
+against ARK Continuity, Greystoke Land against Elsham Tech Park. And it
+catches the conditional green claim ("renewable diesel is expected only
+subject to availability") that the seed-case walkthrough named a Tier-1
+signal.
+
+**One concrete difference**: on Elsham Wolds terra surfaced an
+Operational Power Demand of 84 MW on a page gpt-5's reading of the same
+site never reached. That is a point in terra's favour — it read a table
+the other model did not — but it is a smaller point than it first looked,
+because the 84 MW turns out to be an inconsistency inside the
+applicant's own arithmetic rather than anything that unsettles the site's
+well-corroborated 1,000 MW. The decision rests on the pattern above, not
+on that one catch.
+
+**What gpt-5 did better, so it is not lost:** more comprehensive
+descriptive coverage (site areas, GIA breakdowns, ramp-up schedules), a
+permission-history question terra missed on Didcot, and one
+quantity-type catch — a structured fact recording `energy_storage:
+50 MW` from a sentence about generation. **Check on the full run whether
+terra flags quantity-type errors at all**; if it does not, that is a
+real loss against a real gain.
+
+**Cost: about $59 against gpt-5's $33.** Terra reasons roughly 2.3×
+harder (~13,300 reasoning tokens per site against 5,849) while producing
+6% *less* visible output. The "half the output tokens" figure from the
+2026-08-28 comparison does not transfer — that was 60 deep-read
+documents at `gpt-5:low`, and a machine reading emits a fixed-schema
+document whose length the schema largely sets.
+
+**And the decision has an answer that was not obvious** (established
+2026-08-31): *most of that spend buys very little, because the problem
+reading-1.3 was raised for is already fixed without re-reading.* Every
+stored reading is `reading-1.2`. The defect PR #241 addressed was
+quotes copied from the structured facts citing an application reference
+and rendering as unlinked text — and the same PR shipped
+`mreading.figure_sources`, which resolves those to their document
+**at export time, from whatever readings are stored**, by matching the
+quote to the finding it was copied from. So a 1.2 reading already
+renders with its citations linked. What a re-read additionally buys is
+the model citing the document natively, and the sixteen cases
+`figure_sources` drops because the text stands as evidence on more than
+one document and picking one would assert a source.
+
+So **be discerning rather than re-reading 358 sites**. Three cuts, in
+order of defensibility: sites whose `input_hash` has actually moved
+(their stored reading describes a different document set, which is a
+real staleness rather than a version-string one); sites where citations
+are still unlinked after `figure_sources` has run; and the
+datacentre-classed subset rather than the whole 359. Measure each
+before spending — the first is the one that genuinely invalidates a
+reading.
+
+## Changes waiting for a re-read they cannot justify on their own
+
+**The policy** (Luke, 2026-08-31). A full re-read has to clear one of
+two bars: *what we hold is dangerously misleading and needs
+correcting*, or *the re-read brings a very important new revelation*.
+Neither is met today. And spending, then discovering a further problem
+that needs another re-read, is the outcome to avoid — so improvements
+that would each individually mark the corpus stale **accumulate here
+without being enacted**, and go in together when something crosses the
+bar.
+
+**Keep the tiers apart, because they are not the same money.** Batching
+a cheap change behind an expensive threshold is its own waste.
+
+| tier | what it re-runs | recorded cost |
+|---|---|---|
+| re-adjudication | `power_adjudication` over existing findings | **~$20–40** (runbook, "Decisions outstanding") |
+| machine-reading re-submit | ~359 sites, ~26M input and ~3M output tokens | **~$34, measured 2026-08-31** |
+| full deep re-read | 48,191 documents | the ~$1,000 class; nothing in the repo records it |
+
+Only the third is what the policy above is really about, and **nothing
+currently on the table needs it.** The gate fix applies to future reads
+and recovers past ones offline; the re-gate reads nothing; adjudication
+is tier 1. Say which tier a parked item needs, so a cheap one is not
+held behind an expensive one's threshold.
+
+**One downstream cost the re-gate does create, and it is tier 1.** A
+recovered finding carrying a capacity figure reaches a site's power
+panel only through `power_adjudication`, so the 416 recoveries with a
+numeric power unit would join the adjudication tail and want a batch —
+runbook step 1, the same collect-and-submit as any other. Cheap, but it
+is work the re-gate implies rather than work it avoids.
+
+**Accumulating now:**
+
+- ~~**The guard on the machine-reading gate's squash**~~ and
+  ~~**`reading-1.3`**~~ — **both enacted 2026-08-31**, riding on the
+  move to terra, which re-reads every site anyway. `GATE_VERSION` is now
+  `gate-2.1`. This is the accumulation rule working as designed: park a
+  change that cannot justify a re-read on its own, then land it with one
+  that can. **The list is empty; check it is still empty before the
+  submit runs**, because a change landing after that has missed the
+  boat.
+- **`power-1.1`** (tier 1, ~$20–40, so it does *not* need to wait for
+  the others). Committed but inert and unvalidated; the 229-figure
+  ground-truth set exists to test it against the known-bad cases first.
+
+**Enacting rule:** when the bar is met, re-read once with everything on
+this list applied, and check the list is empty before submitting. A
+change landed after the submit starts has missed the boat and waits for
+the next one.
 
 **The Phase 3 corroboration read is roughly 60% through its 48,191
 in-scope documents** (the 2.1 prose read completed 2026-08-11;
@@ -788,6 +915,41 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **Elsham Wolds states three power figures that do not reconcile with
+  each other** (found 2026-08-31, and verified against the cached page
+  text rather than taken from the reading that surfaced it). The Energy
+  & Sustainability Statement in `NorthLincs/PA/2025/643`, page 15 of 40,
+  prints in one table:
+
+  > Maximum Power Demand ≈1,000 MW · Assumed Operational Diversity 50%
+  > of maximum · **Operational Power Demand 84 MW** · 8,760 hours/year ·
+  > Annual Energy Consumption 3,679,200,000 kWh
+
+  **The 1,000 MW is not in question and this item does not put it in
+  question** (Luke, 2026-08-31). It is corroborated well beyond this
+  table: the applications state it in their own words — "The Proposed
+  Development is for a Data Centre Park with the IT Load capacity of up
+  to 1000MW" — the Guardian reported it in March 2026, one of the
+  articles that led this project to devote more resources to the
+  hyperscale subject, and the construction trade press repeats it at
+  15 facilities and £7.5bn.
+
+  **What does not reconcile are the rows derived from it.** Fifty per
+  cent of 1,000 MW is 500 MW, not 84. Eighty-four megawatts over 8,760
+  hours is 736 GWh, not the 3,679 GWh printed beneath it. The annual
+  energy figure divided by the hours implies **≈420 MW average draw** —
+  which is an unremarkable utilisation for a 1 GW nameplate, and is the
+  number the carbon arithmetic on that page actually rests on.
+
+  So the honest reading is a defect in one table, not a doubt about the
+  scheme: the 84 MW row and the 50% line reconcile with neither the
+  maximum above them nor the energy total below them. It is worth
+  recording because **a reader of that table takes away 84 MW**, and
+  because the 420 MW implied by the energy figure is the operative
+  number for emissions and appears nowhere as a stated figure. Only the
+  applicant can say which was meant.
+
+
 - **The "Green Energy Centre" portfolios: 8,660 MW of transmission
   demand, and not one planning application** (measured 2026-08-31).
   The largest single hole the corpus has, and the one where what is
@@ -976,6 +1138,18 @@ field and is not publishable as it stands.
   50,517 rejections that have cached page text (29.8%), of which 416
   carry a numeric value with a power unit.** Those findings are still
   discarded until someone runs the re-gate — see below.
+
+- **The unguarded squash in the machine-reading gate.** `dcp/machine_
+  reading.quote_in_text` has compared page and quote with all whitespace
+  removed since gate-1.2, with no minimum length — so a very short quote
+  can verify against almost any page. The findings gate gained the same
+  relaxation on 2026-08-31 *with* a 25-character guard, and the honest
+  way to adopt it here is to bump `GATE_VERSION`, because `_already()`
+  keys on it. That marks all ~359 sites for a re-read at roughly 15M
+  input tokens, which is not worth spending on its own. Parked under
+  "Changes waiting for a re-read they cannot justify on their own"; the
+  fix is one line, routing the squash through
+  `verify_findings.fragments_present`.
 
 - **About 30% of the verbatim gate's rejections are correct quotes,
   lost to whitespace artefacts in the extracted text — 15,042
