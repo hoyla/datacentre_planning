@@ -464,6 +464,21 @@ adjudication does. And the quantity-kind discipline survives intact: a
 sum needs like kinds on same-layer figures, whichever layer they sit
 on.
 
+**Built, 2026-08-31**: `data/priors/site_facilities.yaml` with
+`dcp/site_facilities.py` on the `site_aliases.yaml` contract, both
+cautions enforced by the loader rather than remembered — an
+attribution references a claim or a planning document and can never
+carry a value of its own, and a roster-sourced planning attribution
+cannot be written at all. Seeded with Kao Harlow (KLON-01–04), VIRTUS
+Slough (the seven-facility roster beside the three-facility site),
+Saunderton (recorded as a gap — the datasheet naming its facilities
+is unsnapshotted, so no roster is citable), Stockley Park (the
+LONDON5/LONDON7 wrinkle held unresolved on both attributions) and
+Hayes (LON6/7/8 on Barbour titles, a third identity-source kind the
+build vocabulary carries). The reader build validates liveness;
+nothing renders from the prior yet — "3 of 5 facilities disclose" is
+a later consumer, and the ladder rung is WP4's design question.
+
 ### 3. #250 — a campus ranked on one facility falls below a line it would clear
 
 The mirror of #247 and **the invisible half**. A wrong amber pill invites

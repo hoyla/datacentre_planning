@@ -2491,6 +2491,13 @@ def main() -> int:
         _operator_pages = _opp.load_pages()
         _opp.require_live(_operator_pages,
                           {r[0] for r in site_rows} | _preplanning_keys)
+        # The facility rosters (issue #247). Nothing renders from them
+        # yet; the build validates their liveness anyway, because a
+        # roster keyed to a dead site is curation silently lost — the
+        # same contract as the aliases and the operator pages.
+        from dcp import site_facilities as _sfac
+        _sfac.require_live(_sfac.load_facilities(),
+                           {r[0] for r in site_rows} | _preplanning_keys)
 
         def _shown(key, name):
             """A site's name as it should read.

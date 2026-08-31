@@ -1,0 +1,175 @@
+"""The facility prior: the relation is validated, never the values.
+
+The contract under test (dcp/site_facilities.py, issue #247): every
+facility carries a citable identity source; an attribution references
+exactly one of a claim or a planning document and never restates a
+figure; a dead site key or a dangling claim reference fails loudly.
+The claim-reference check runs here against the real claims files, so
+CI enforces it on every push even though no exporter consumes the
+prior yet.
+"""
+
+from pathlib import Path
+
+import pytest
+import yaml
+
+from dcp import site_facilities as sf
+
+
+def _write(tmp_path: Path, payload: dict) -> Path:
+    p = tmp_path / "site_facilities.yaml"
+    p.write_text(yaml.safe_dump(payload))
+    return p
+
+
+def _entry(**overrides) -> dict:
+    base = {
+        "site_key": "PTNO-1",
+        "facilities": [{
+            "id": "LONDON7",
+            "identity": [{
+                "source": "operator_roster",
+                "url": "https://example.com/campus",
+                "date": "2026-08-30",
+            }],
+            "attributions": [{
+                "kind": "announced capacity",
+                "claim": "EXAMPLE LONDON7",
+            }],
+        }],
+    }
+    base.update(overrides)
+    return base
+
+
+# ---------------------------------------------------------------------------
+# The real file
+# ---------------------------------------------------------------------------
+
+def test_the_real_prior_loads_and_every_entry_is_wellformed():
+    loaded = sf.load_facilities()
+    assert loaded, "the seeded prior should not load empty"
+    assert "PTNO-12301553" in loaded, "Stockley Park is the worked case"
+
+
+def test_the_worked_case_holds_its_conflict_unresolved():
+    """Stockley's LONDON7 carries both the operator figure and the
+    planning milestone — the wrinkle is recorded, not resolved."""
+    stockley = sf.load_facilities()["PTNO-12301553"]
+    london7 = next(f for f in stockley["facilities"] if f["id"] == "LONDON7")
+    kinds = {"claim" if a.get("claim") else "document"
+             for a in london7["attributions"]}
+    assert kinds == {"claim", "document"}
+
+
+def test_every_claim_reference_in_the_real_file_resolves():
+    from dcp import capacity_claims as cc
+    known = {c.claim_name for c in cc.load_operator_claims()}
+    known |= {c.claim_name for c in cc.load_register_demand_claims()}
+    known |= {c.claim_name for c in cc.load_ch_claims()}
+    sf.require_known_claims(sf.load_facilities(), known)
+
+
+def test_a_dangling_claim_reference_fails_loudly():
+    with pytest.raises(ValueError, match="references claims"):
+        sf.require_known_claims(
+            {"PTNO-1": {"facilities": [{
+                "id": "X",
+                "attributions": [{"kind": "k", "claim": "NO SUCH CLAIM"}],
+            }], "note": ""}},
+            {"A REAL CLAIM"})
+
+
+# ---------------------------------------------------------------------------
+# Liveness — the site_aliases contract
+# ---------------------------------------------------------------------------
+
+def test_a_dead_site_key_fails_the_build():
+    with pytest.raises(ValueError, match="not live"):
+        sf.require_live({"PTNO-DEAD": {"facilities": [], "note": "n"}},
+                        {"PTNO-ALIVE"})
+
+
+def test_live_keys_pass():
+    sf.require_live({"PTNO-1": {"facilities": [], "note": "n"}}, {"PTNO-1"})
+
+
+# ---------------------------------------------------------------------------
+# The loader refuses what the design forbids
+# ---------------------------------------------------------------------------
+
+def test_a_restated_value_is_rejected(tmp_path):
+    e = _entry()
+    e["facilities"][0]["attributions"][0]["value_mw"] = 32.5
+    with pytest.raises(ValueError, match="ever restated"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_an_attribution_needs_exactly_one_reference(tmp_path):
+    e = _entry()
+    e["facilities"][0]["attributions"][0]["document"] = "abc123"
+    e["facilities"][0]["attributions"][0]["application"] = "X/1"
+    with pytest.raises(ValueError, match="exactly one"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+    e2 = _entry()
+    del e2["facilities"][0]["attributions"][0]["claim"]
+    with pytest.raises(ValueError, match="exactly one"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e2]}))
+
+
+def test_a_document_attribution_names_its_application(tmp_path):
+    e = _entry()
+    e["facilities"][0]["attributions"][0] = {
+        "kind": "design capacity", "document": "abc123"}
+    with pytest.raises(ValueError, match="names no application"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_an_unknown_identity_source_fails(tmp_path):
+    e = _entry()
+    e["facilities"][0]["identity"][0]["source"] = "press_release"
+    with pytest.raises(ValueError, match="known sources"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_an_identity_source_missing_its_locator_fails(tmp_path):
+    e = _entry()
+    del e["facilities"][0]["identity"][0]["date"]
+    with pytest.raises(ValueError, match="missing date"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_a_facility_without_identity_fails(tmp_path):
+    e = _entry()
+    e["facilities"][0]["identity"] = []
+    with pytest.raises(ValueError, match="no\\s+identity source"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_a_duplicate_facility_id_fails(tmp_path):
+    e = _entry()
+    e["facilities"].append(dict(e["facilities"][0]))
+    with pytest.raises(ValueError, match="twice"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_an_empty_entry_must_explain_itself(tmp_path):
+    e = {"site_key": "PTNO-1", "facilities": []}
+    with pytest.raises(ValueError, match="must explain"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+    e["note"] = "the roster is unciteable until the datasheet is held"
+    loaded = sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+    assert loaded["PTNO-1"]["facilities"] == []
+
+
+def test_an_attribution_without_a_kind_fails(tmp_path):
+    e = _entry()
+    del e["facilities"][0]["attributions"][0]["kind"]
+    with pytest.raises(ValueError, match="no kind"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_a_missing_file_loads_empty(tmp_path):
+    assert sf.load_facilities(tmp_path / "absent.yaml") == {}
