@@ -161,6 +161,25 @@ prompt's flagging without the figure loss. ~$33. Not a reversal of the
 terra decision so much as its deferral: gpt-5 is legacy at OpenAI, so
 this buys correctness now, not a durable answer.
 
+**Done, 2026-08-31 evening. 331 requests, 0 failed, collected clean.**
+What the reader renders now: **349 sites on `gpt-5`/`reading-1.4`**, 13
+still on `reading-1.2` (no new input to read), and one on terra —
+`SITE-CentralBedfordshire/CB/23/02827/DOC`, which the batch did not
+cover and which is the one site where the regression stands. Two
+readings were withheld by the guard for the right reason: *"the site's
+inputs changed between submission and collection"*
+(`SITE-EastDunbartonshire/TP/ED/25/0245`,
+`SITE-Hillingdon/39707/APP/2021/4456`). They re-read on the next run.
+
+**And the outcome beats both arms it was chosen between.** Across the
+361 rendered readings: **4.23 power figures per site, 40% of sites
+carrying at least one** — against terra's 0.89 and 21.8%, and against
+the `reading-1.2` baseline's 2.75 and 33.1%. So the prompt change is
+worth more than the model change was: it lifted the figure rate 54%
+above where the corpus stood before either was tried. That is the
+measurement the A/B below should be scored against, not the old
+baseline.
+
 **Worth doing before terra is tried again** (Luke proposed it; not
 scheduled): an A/B of two or three prompts on terra, scored against
 sites where it demonstrably lost figures — Didcot, Watford, Elsham — and

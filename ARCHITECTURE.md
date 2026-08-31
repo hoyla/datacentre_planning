@@ -51,7 +51,7 @@ rather than current figures. What does not move is the routing.
 | Power adjudication — earlier pass | `claude-sonnet-5` 14,095 | Anthropic API (budget spent) | `model`, `prompt_version` |
 | Generation adjudication | `gpt-5/generation-2.5` 2,705 | OpenAI Batch | `(finding_id, model, prompt_version)` |
 | Label audit | `gpt-5/label-1.0` 18,478 | OpenAI Batch | `(finding_id, model, prompt_version)` |
-| Site machine reading | `gpt-5/reading-1.4` (current) · `gpt-5.6-terra/reading-1.4` 352 · `gpt-5/reading-1.2` 630 | OpenAI Batch | `model`, `prompt_version`, `gate_version` |
+| Site machine reading | `gpt-5/reading-1.4` 345, renders on 349 of 363 sites · `gpt-5.6-terra/reading-1.4` 352, superseded · `gpt-5/reading-1.2` 630 | OpenAI Batch | `model`, `prompt_version`, `gate_version` |
 | OCR substrate | pypdfium2 + tesseract / RapidOCR — **no generative model** | local | n/a |
 
 **Power adjudication is split by consequence, not by preference.** The
