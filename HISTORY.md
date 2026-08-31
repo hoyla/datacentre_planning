@@ -1719,6 +1719,13 @@ existed all along, defaulting to 1; the default is now 12, after a
 58,799-file sync spent 9h16m reaching 54% because nobody passed the
 flag. Batching and an atomic ledger write remain open.
 
+**The three Section 35 sites are no longer empty** (verified
+2026-08-30). The ROADMAP had recorded Quest Park, Dartford and the
+Wapseys stub at 0 documents and 0 findings each — a named site with no
+evidence being the same failure that once made the Guardian's team
+conclude Wapseys Wood was missing. As verified: Quest Park holds 435
+documents and 5,672 findings, the Wapseys/SDC M40 site 8 and 2,838,
+Dartford 7 and 97 — every one now reads as a site rather than a stub.
 **The computed scale panel** (issue #166, shape agreed 2026-08-27,
 shipped in the 2.10 build): "The rest of the package" — a button
 pointing at content one scroll away — replaced by "The scale of what
