@@ -517,13 +517,17 @@ establishes, before anything is proposed:
   evidence.** Cato and both Bro Tathan rows are matched, alongside
   Quest Park and Cottam Giga — each of those two overturning a
   2026-08-20 null, Cottam's site having been in the corpus since
-  2026-08-02. Relode Immingham is **not** matched: "Relode" appears
-  nowhere in the corpus and resolves at Companies House to Relode
-  Energy Limited (15568908), an independent company with no Greystoke
-  tie, so the 920 MW row is as consistent with a separate Killingholme
-  scheme as with Humber Tech Park — recorded in `considered` with the
-  test that would settle it. Ratcliffe's null was upheld the same way:
-  the one Ratcliffe on Soar corpus site is a battery scheme on its own
+  2026-08-02. Relode Immingham is **not** matched, and is not a
+  data-centre scheme as such: "Relode" appears nowhere in the corpus
+  and resolves at Companies House to Relode Energy Limited (15568908),
+  whose own site identifies it as the "Power Park" developer —
+  gigawatt-scale multi-customer supply hubs (eHGV charging, port
+  shore-power, e-fuels) whose stated markets also include data
+  centres. The same identity claims the register's four anonymous
+  "Power Park" rows: 3,830 MW across the five, a third hub-portfolio
+  family beside the two GEC ones, with the same undeclared-consumer
+  standing. Ratcliffe's null was upheld the same way: the one
+  Ratcliffe on Soar corpus site is a battery scheme on its own
   applications' text.
 - **The "Green Energy Centre" portfolios are the thing worth pursuing,
   and they are not gas.** An earlier version of this bullet said four of
@@ -586,10 +590,11 @@ tracked there.
   for everything else — the 19 GECs held apart, 36 rows naming their
   own non-data-centre technology, 17 whose name identifies nothing
   (the four "Power Park" rows and CEG LP2 at Culham JET flagged inside
-  that entry), four new coverage leads, and Relode Immingham, Bryn
-  Coch and Waltham each abstained with the test that would settle it
-  written down. The matches load at the next `load_capacity_claims.py`
-  run, per the runbook.
+  that entry), four new coverage leads, the five Relode "Power Park"
+  rows identified as a third hub-portfolio family (see the outcome
+  note above), and Bryn Coch and Waltham abstained with the test that
+  would settle each written down. The matches load at the next
+  `load_capacity_claims.py` run, per the runbook.
 - **State the exclusion in the cohort's own `limits`.** The issue names
   this as the cheap, honest half and it is still not done: a sentence in
   `at_least_100mw` saying a multi-facility campus may be absent because

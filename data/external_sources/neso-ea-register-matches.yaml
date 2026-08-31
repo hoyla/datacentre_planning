@@ -415,20 +415,27 @@ considered:
       unmatched demand rows. Proposed by docs/NESO_UNMATCHED_TRIAGE.md
       as a strong candidate for PTNO-12776851 (The Humber Tech Park
       Data Centre, land south of the A160, South Killingholme) and
-      examined 2026-08-31: NOT matched. "Relode" appears nowhere in
-      the corpus — zero findings, zero applications — and resolves at
-      Companies House to Relode Energy Limited (15568908), active,
-      incorporated 2024-03-16, whose PSCs are two individuals with no
-      visible connection to the Greystoke Land group that owns Humber
-      Tech Park Limited (organisation_aliases.yaml). The row is
-      therefore as consistent with a separate Relode scheme at
-      Killingholme as with Greystoke's; 920 MW disagrees with the
-      scheme's stated 384 MW by 2.4x; and nothing names the site.
-      What would settle it: Humber Tech Park's own energy or utilities
-      statement naming its connection agreement (78 documents held),
-      or Relode Energy publishing its Immingham project. Either answer
-      matters — a second transmission-scale data-centre customer at
-      Killingholme would be a coverage finding in its own right.
+      examined 2026-08-31: NOT matched — and the dc_candidate
+      classification itself is withdrawn, because it rested on nothing
+      but adjacency to a known scheme plus scale. "Relode" appears
+      nowhere in the corpus and resolves at Companies House to Relode
+      Energy Limited (15568908, incorporated 2024-03-16, two
+      individual PSCs, no visible tie to the Greystoke Land group that
+      owns Humber Tech Park Limited). Relode's own site
+      (relode.energy, read 2026-08-31) identifies the business: a
+      planned UK-wide network of roughly fifteen gigawatt-scale
+      "Power Parks" — substation-plus-supply hubs for eHGV charging,
+      port shore-power and e-fuels production, whose stated markets
+      also include "new high-power demand industries such as data
+      centres" (their words). So this row is read as the Immingham
+      Power Park — a multi-customer power hub at a port cluster, of
+      which a data centre may be one tenant — not Humber Tech Park's
+      connection and not a data-centre scheme as such. Same
+      undeclared-consumer standing as the Green Energy Centre rows,
+      and see the Power Park portfolio entry below for the four
+      sibling rows. What would still settle the Humber question the
+      other way: the scheme's own energy or utilities statement naming
+      its connection agreement (78 documents held).
 
   - rows: [870]
     claim_name: Bryn Coch DC
@@ -507,8 +514,8 @@ considered:
       register lists transmission demand customers of every kind, and
       these rows are the proof.
 
-  - rows: [635, 680, 733, 956, 1057, 1079, 1082, 1111, 1188, 1270,
-           1284, 1285, 1286, 1351, 1478, 1523, 1691]
+  - rows: [680, 733, 956, 1057, 1079, 1082, 1111, 1188, 1270,
+           1351, 1478, 1523, 1691]
     claim_name: Rows whose name identifies nothing
     reason: >-
       Examined 2026-08-31; the name neither states a technology nor
@@ -516,18 +523,38 @@ considered:
       Horsey 1057, Aurelius 1079, Rufus 1082, Apollo 1270 at 0.1 MW,
       Berkswell 1188, Penwortham 1351, Factory Road 1478, Wymondley
       Farm 733, Ratcliffe on Soar Farm 680 and the 40 MW "(EX)" row
-      1691). Three inside it are worth naming. The four "Power Park"
-      rows (Biggleswade 635 at 600 MW, Ipswich 1284 at 920, Rugby 1285
-      at 950, Retford 1286 at 440 — 2,910 MW) read as a third named
-      portfolio family beside the two GEC ones, and nothing states
-      what a Power Park is. "MKE DC" (1111, 500 MW) shares the East
-      Claydon 400kV connection point with the East Claydon Green
-      Energy Centre row, and the corpus's one Milton Keynes site (276,
-      Linford Wood) has no stated tie; the initialism stays
-      unexpanded. "CEG LP2 (II) Site 1" (1523, 300 MW) connects at
-      Culham JET 400kV — the Culham AI Growth Zone's substation — and
-      no corpus site exists at Culham at all, which makes it the
-      sharpest of these to chase despite the empty name.
+      1691). Two inside it are worth naming. "MKE DC" (1111, 500 MW)
+      shares the East Claydon 400kV connection point with the East
+      Claydon Green Energy Centre row, and the corpus's one Milton
+      Keynes site (276, Linford Wood) has no stated tie; the
+      initialism stays unexpanded. "CEG LP2 (II) Site 1" (1523,
+      300 MW) connects at Culham JET 400kV — the Culham AI Growth
+      Zone's substation — and no corpus site exists at Culham at all,
+      which makes it the sharpest of these to chase despite the empty
+      name. (The four "Power Park" rows sat here until Relode Energy's
+      identity resolved on 2026-08-31; they now have their own entry
+      below.)
+
+  - rows: [635, 1284, 1285, 1286]
+    claim_name: Relode "Power Park" portfolio (with row 1287 above)
+    reason: >-
+      Power Park Biggleswade (635, 600 MW), Ipswich (1284, 920), Rugby
+      (1285, 950) and Retford (1286, 440) — 2,910 MW, and 3,830 with
+      Relode Immingham (1287), whose entry above carries the company
+      evidence. "Power Park" is Relode Energy's product name: a
+      planned network of roughly fifteen gigawatt-scale
+      substation-plus-supply hubs for eHGV charging, port shore-power,
+      e-fuels production and "new high-power demand industries such as
+      data centres" (relode.energy, read 2026-08-31; the page names no
+      locations, so the tie for these four is the brand term and the
+      portfolio's stated shape rather than a named-site identity —
+      short of certain, stated as such). A third hub-portfolio family
+      in the demand register beside the two Green Energy Centre ones,
+      with the same standing: demand whose consumers include but are
+      not limited to data centres, undeclared per row, and no planning
+      application anywhere in this corpus. Not matchable until a site
+      exists; the combined ~12.5 GW across the three families belongs
+      with the GEC coverage-gap question in ROADMAP.
 
   - rows: [480, 1212, 1231, 1461]
     claim_name: Data-centre-shaped rows with no corpus site (2026-08-31)

@@ -12,10 +12,18 @@ is phase 2, and several rows below need a decision rather than a guess.
 > proposals where they differ.** Cato, both Bro Tathan rows, Quest Park
 > and Cottam Giga are matched. **Relode Immingham is not**: "Relode"
 > appears nowhere in the corpus and resolves at Companies House to
-> Relode Energy Limited (15568908), an independent company with no
-> visible Greystoke tie, so the 920 MW row is as consistent with a
-> separate Killingholme scheme as with Humber Tech Park — this
-> document's "strong" call did not survive checking who Relode is.
+> Relode Energy Limited (15568908) — whose own site identifies it as
+> the "Power Park" developer, building gigawatt-scale multi-customer
+> supply hubs (eHGV charging, port shore-power, e-fuels, and "new
+> high-power demand industries such as data centres"). So the row is
+> read as the Immingham Power Park, a hub of which a data centre may
+> be one tenant — not Humber Tech Park's connection, and not a
+> data-centre scheme as such. This document's "strong" call did not
+> survive checking who Relode is, and its `dc_candidate` class for the
+> row rested on adjacency alone. The same identity claims the four
+> anonymous "Power Park" rows this document filed as `unknown` —
+> 3,830 MW across the five, a third hub-portfolio family beside the
+> two GEC ones.
 > And Ratcliffe's 2026-08-20 null is upheld: the corpus site proposed
 > below (`SITE-NorthWestLeicestershire/23/01083/NAC`) is a proposed
 > battery energy storage system on both of its applications, read
