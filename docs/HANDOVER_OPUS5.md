@@ -141,11 +141,29 @@ behind it) reported to Luke before phase 2 begins. Do not slice the
 cohort for speed; sweep all 106.
 
 **Phase 1 outcome (2026-08-31, PR #284):** done —
-`docs/NESO_UNMATCHED_TRIAGE.md`. 61 not data centres, 16 with a corpus
-candidate, 13 leads with no corpus site, 19 Ethos Green "Green Energy
-Centres" whose consumer is undeclared, 16 unidentifiable. Two ROADMAP
-corrections fell out of it, including that Global Switch is not in this
-register at all. Phase 2 should start from that document's tables.
+`docs/NESO_UNMATCHED_TRIAGE.md`. 61 of the 106 are not data-centre
+schemes; 19 are Ethos Green "Green Energy Centres" whose consumer is
+undeclared; the rest split into candidates, leads and unidentifiable
+rows. **Read the document rather than these figures** — it went through
+four passes and the counts moved each time.
+
+Three things in it bear on phase 2 more than any count:
+
+- **24 rows were already adjudicated** in the matches file's own
+  `considered` section on 2026-08-20, and the triage re-examined them
+  blind because its probe looked for a `row:` key where the file uses
+  `rows:`. Several earlier judgements are better and stand; the Iver
+  rows are withdrawn on the strength of theirs. Only six candidates are
+  new, three of them strong: Cato, Relode Immingham, Bro Tathan.
+- **Search `site_aliases.yaml` in any name matching.** It is where the
+  developer's name and the planning record's name are reconciled, and
+  skipping it is what made two passes report Quest Park and Cato absent.
+- **Two ROADMAP corrections** fell out, including that Global Switch is
+  not in this register at all.
+
+The most reportable finding is not a match: four "Green Energy Centre"
+schemes hold a gas generation connection in the TEC register *and* a
+transmission demand connection here.
 
 **Phase 2 — write the defensible outcomes:** for rows where evidence
 supports a match, add entries to the `matches` section in the existing
