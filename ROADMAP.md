@@ -731,6 +731,62 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **The "Green Energy Centre" portfolios: 8,660 MW of transmission
+  demand, and not one planning application** (measured 2026-08-31).
+  The largest single hole the corpus has, and the one where what is
+  missing is not a document but a whole class of scheme.
+
+  What the two NESO artefacts hold between them. In the **TEC register**,
+  52 rows across 42 distinct schemes, 57–2,050 MW cumulative, and **30 of
+  the 52 carry `Demand` in their `Plant Type`** alongside energy storage
+  and solar. In the **Existing Agreements register**, nineteen of the
+  same schemes appear as `Transmission Connected Demand` totalling
+  8,660 MW — Buntington 850, Hockliffe 850, Navenby 580, East Claydon,
+  Hawthorn Pit, Overton and Feckenham 500 each, down to Botley and
+  Bramford 2 at 200.
+
+  Three things make it worth a look rather than a note. **The schemes are
+  named after the substations they connect at** — Navenby GEC at Navenby,
+  Drakelow at Drakelow, Pelham at Pelham — which is what grid-capacity
+  acquisition looks like before a site has been chosen or named. **They
+  are two SPV families**: twenty customers of the form "⟨substation⟩ NG
+  Limited" and twelve schemes suffixed "(Ethos Green)", which is a
+  Companies House thread of exactly the kind
+  `organisation_aliases.yaml` and `companies-house-spvs.yaml` exist for.
+  And **none of the nineteen has a planning application anywhere in this
+  corpus** — checked against site display names, member application and
+  project text, and the curated aliases.
+
+  **The open question, and it is genuinely open.** Ethos Green Energy
+  publicly describes its Green Energy Centres as integrated hubs of
+  renewable generation, long-duration storage *and colocated data
+  centres*, and has announced a joint development agreement with
+  Frontier Power for up to 5 GW of colocated data-centre capacity. So
+  the `Demand` leg may be a data centre. **The registers do not say so**,
+  and the competing explanation in `docs/EXTERNAL_DATA_SOURCES.md` §3 —
+  that a `Demand` plant type is the import leg of a storage-and-solar
+  hybrid — fits the plant-type coding equally well and has never been
+  tested against these schemes. Either answer is worth having: 8,660 MW
+  of colocated data-centre demand invisible to every data-centre search
+  is a story, and a confident null is the kind of counter-evidence the
+  first principle exists to protect.
+
+  **What would settle it**, cheapest first: the SPVs' Companies House
+  filings, since a single-asset SPV's accounts and its SIC code state
+  what the asset is; the developers' own scheme pages and any
+  consultation material, which is where the operator channel already
+  reads capacity; and a targeted planning sweep on the substation names,
+  which is a bounded list of nineteen localities rather than a national
+  trawl. **Do not sum the 8,660 MW into anything** — the TEC and EA rows
+  are different agreements over the same schemes and the quantity types
+  differ, which is the whole discipline of the claims channel.
+
+  A caution recorded because it already cost a correction: an earlier
+  version of this item said these schemes held a *gas* connection,
+  following §3's placing of them inside its gas rows. They do not; no
+  GEC row carries any gas term. Where a claim about these rests on a
+  coded field, name the field.
+
 - **Two external sources reach the workbook and not the reader, and
   "Provenance" appears in neither.** Luke asked during the 2.10 release
   whether he had missed the Published aggregates and Sources tables in
