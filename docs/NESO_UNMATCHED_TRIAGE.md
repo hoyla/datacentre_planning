@@ -6,18 +6,25 @@ phase-1 deliverable the ROADMAP asked for — **establish why the rows are
 unmatched before proposing anything.** No matches have been written; that
 is phase 2, and several rows below need a decision rather than a guess.
 
-> **A note on how this document was built, since it bears on trusting
-> it.** Three passes, and each of the first two hit something the project
-> had already written down. The first walked into the ROADMAP's own
-> recorded trap — *"a probe that cannot see the thing it is looking
-> for… check what the probe could have seen before believing what it did
-> not find"* — and filed a site with 435 documents as absent. The second
-> re-derived, by sweeping local authorities, what `site_aliases.yaml`
-> already holds. The third found that
-> `environment-agency-permit-matches.yaml` had articulated two causes of
-> unmatching this document had not. The findings below survive that, but
-> the sequence is the argument for reading the ROADMAP, HISTORY and the
-> sibling channel's own files *before* building a probe, not after.
+> **Read this first: 24 of the 106 had already been adjudicated.**
+> `neso-ea-register-matches.yaml` carries a `considered` section written
+> on 2026-08-20 covering six rows explicitly and eighteen more by name.
+> This triage re-examined all of them without knowing, because the probe
+> that was supposed to count them looked for a `row:` key where the file
+> uses `rows:`, reported "considered: 1", and so made an existing triage
+> invisible. **Where this document and that section differ, the earlier
+> reasoning is usually better** — see *What was already settled*, below.
+> Eighty-two rows had never been examined, and that is where the new
+> work is.
+>
+> Four passes, and each of the first three hit something the project had
+> already written down: the ROADMAP's own recorded trap about probes
+> that cannot see what they look for; the `site_aliases.yaml` file, which
+> names outright what a local-authority sweep reached by geography; and
+> `environment-agency-permit-matches.yaml`, which had articulated two
+> causes of unmatching this document lacked. The argument for reading the
+> ROADMAP, HISTORY and the channel's own files *before* building a probe
+> could not be better made than by the cost of not doing it here.
 
 ## The headline
 
@@ -30,10 +37,12 @@ reason, not in a backlog.
 
 What is genuinely actionable is **29 rows** — 19 with a corpus candidate
 to test, 10 real data-centre schemes the corpus does not hold at all.
-Three of the 19 arrived on a second pass, after Luke pointed out that a
-developer's name for a site and the planning record's name for the same
-ground are routinely different things; *the rebrand problem*, below, is
-the general form of that and the reason the first pass under-counted.
+But 13 of those 19 were already adjudicated on 2026-08-20, so the honest
+count of *new* candidates is six, of which three are strong: **Cato,
+Relode Immingham and Bro Tathan**. Set against those, two findings here
+matter more than any single match: the four "Green Energy Centre" schemes
+that hold a gas generation connection and a demand connection at once,
+and the Quest Park correction.
 
 The framing "106 unmatched claims, any of which could move a site across
 the line" overstates the pool by roughly four times.
@@ -69,38 +78,70 @@ demand queue under a green-energy name, is demand that a search for "data
 centre" does not find. Whether any individual GEC is a data centre is
 unestablished — which is the point.
 
-## The 16 to test first
+**And the project has already met these schemes from the other side.**
+`docs/EXTERNAL_DATA_SOURCES.md` §3 records, in the TEC *generation*
+register, "a distinctive cluster of 400–1,025 MW 'Green Energy Centre'
+projects (Cilfynydd, Drakelow, East Claydon, Buntington, Daines,
+Burwell)" among 139 gas rows. Four of those six names appear in the
+demand queue too:
 
-Strongest first. Each names the corpus site to check; none is a match yet.
+| scheme | TEC register | EA register (demand) |
+|---|---|---|
+| Buntington | gas | 850 MW, row 998 |
+| East Claydon | gas | 500 MW, row 514 |
+| Daines | gas | 400 MW, row 515 |
+| Drakelow | gas | 400 MW, row 1018 |
+
+So the same named scheme holds **a gas generation connection and a
+transmission demand connection at once** — which is what a colocated
+energy hub looks like in the registers, and is the pairing
+`EXTERNAL_DATA_SOURCES.md` flagged as "worth checking" without connecting
+the two halves. Neither register alone shows it. That is the most
+reportable thing in this document, and it is a generation-plus-demand
+finding rather than a matching one.
+
+## The rows to test
+
+Strongest first. Each names the corpus site to check; none is a match
+yet. **`†` marks a row already adjudicated on 2026-08-20** — for those,
+read the `considered` entry first, and treat this row as a proposal to
+reopen it rather than as new information.
 
 | row | MW | register name | corpus candidate |
 |---:|---:|---|---|
-| 1091 | 1,000 | Cottam Giga | `PTNO-12871423` former Cottam power station, "1GW advanced data centre campus" — name and capacity both agree |
+| 1091 † | 1,000 | Cottam Giga | `PTNO-12871423` former Cottam power station, "1GW advanced data centre campus" — name and capacity both agree |
 | 1287 | 920 | Relode Immingham | `PTNO-12776851` The Humber Tech Park Data Centre, at Killingholme |
-| 1367 | 900 | Fiddler's Ferry Data Centre | Cuerdley/Widnes; corpus has Catalyst Business Park Widnes, not obviously the same |
-| 610 | 720 | Ratcliffe Data Centre | `SITE-NorthWestLeicestershire/23/01083/NAC`, Ratcliffe on Soar |
-| 1459 | 600 | Sundon DC | Central Bedfordshire, Houghton Regis / Linmere Island — locality only |
+| 1367 † | 900 | Fiddler's Ferry Data Centre | Cuerdley/Widnes; corpus has Catalyst Business Park Widnes, not obviously the same |
+| 610 † | 720 | Ratcliffe Data Centre | `SITE-NorthWestLeicestershire/23/01083/NAC`, Ratcliffe on Soar |
+| 1459 † | 600 | Sundon DC | Central Bedfordshire — already rejected as neither fitting the name nor the scale |
 | 1111 | 500 | MKE DC | East Claydon; the initialism is unexpanded |
-| 722, 764, 1508 | 435 each | Iver 1/2/3 Ark Estates | Uxbridge Moor (Iver B); Ark is a known operator with Iver-area sites |
-| 1519 | 300 | Didcot Road 2 | `PTNO-12549436` Amazon data centre, Didcot |
+| ~~722, 764, 1508~~ † | 435 each | Iver 1/2/3 Ark Estates | **Withdrawn.** The 2026-08-20 entry settles these: no Ark scheme at Iver anywhere in the corpus, Ark's presence is Union Park (Hayes), so they are "a null worth reporting, not matching" |
+| 1519 † | 300 | Didcot Road 2 | `PTNO-12549436` Amazon data centre, Didcot — earlier entry calls the name "generic", which stands |
 | 1620, 1621 | 200, 80 | Bro Tathan Development | `PTNO-12727863` CWL2 data centre campus — Vantage's St Athan site |
-| 1673 | 200 | Quest Park | site 83, Quest **Pit**, Ampthill Road, Houghton Conquest — the S35 scheme |
-| 1137 | 160 | Edinburgh Business Park | `PTNO-12869683` Heriot-Watt 200MW AI data centre campus, at Currie |
-| 1460 | 150 | Cardiff DC | `PTNO-12675606` Cardiff East park and ride, Old St Mellons |
+| 1673 † | 200 | Quest Park | site 83, Quest **Pit**, Ampthill Road, Houghton Conquest — the S35 scheme. **This is the row that overturns its earlier entry** |
+| 1137 † | 160 | Edinburgh Business Park | `PTNO-12869683` Heriot-Watt, Currie — but the earlier entry rejected exactly this on a location conflict |
+| 1460 † | 150 | Cardiff DC | `PTNO-12675606` Cardiff East park and ride — earlier entry names two candidates, not one |
 | 1354 | 120 | Waltham | `PTNO-12406644` Google data centre, Waltham Cross |
-| 1078 | 600 | Cato | `PTNO-12917829`, aliased "**Cato** Data Centre campus, Auchtertool, Fife (ILI Group)" — name identity |
+| 1078 | 600 | Cato | `PTNO-12917829`, aliased "**Cato** Data Centre campus, Auchtertool, Fife (ILI Group)" — name identity, and in no earlier entry |
 | 870 | 450 | Bryn Coch DC | `PTNO-12880893` former Ferodo site, Caernarfon Road — Pentir serves Bangor |
-| 1681 | 200 | Laleham DC | `PTNO-12814730` Manor Farm — but see the caution below |
+| 1681 † | 200 | Laleham DC | `PTNO-12814730` Manor Farm — the earlier entry already said name and connection point disagree, and the alias confirms it |
 
-**Two of these read differently once the aliases are searched.** Quest
-Park (1673) and Cato (1078) are not locality inferences at all: the alias
-file names both schemes in the register's own words, so each is a
-name-identity match and should be written at `strong` rather than
-`probable`. Cato's alias also supplies the operator — ILI Group — which
-the register does not. Edinburgh Business Park (1137) firms up the same
-way: `PTNO-12869683` is aliased "Heriot-Watt University, **Currie** —
-200MW AI Data Centre Campus (Apatura)", and Currie is the connection
-point. Cardiff DC (1460) likewise meets "**Cardiff East** Park and Ride —
+**Only three of these are both new and strong**: Cato (1078), Relode
+Immingham (1287) and Bro Tathan (1620/1621), none of which appears in any
+`considered` entry. Quest Park (1673) is new only as a *correction*.
+Everything marked † is a reopening, and most of them should probably stay
+closed.
+
+Quest Park and Cato are not locality inferences: the alias file names
+both schemes in the register's own words, so each is a name-identity
+match and should be written at `strong` rather than `probable`. Cato's
+alias also supplies the operator — ILI Group — which the register does
+not. Edinburgh Business Park (1137) looks the same way at first —
+`PTNO-12869683` is aliased "Heriot-Watt University, **Currie** — 200MW AI
+Data Centre Campus (Apatura)" and Currie is the connection point — but
+the 2026-08-20 entry rejected that pairing on a location conflict, so
+the alias is a reason to re-read that reasoning, not to override it.
+Cardiff DC (1460) likewise meets "**Cardiff East** Park and Ride —
 Data Centre (Curtis Hall Limited)" against a Cardiff East GSP.
 
 Three cautions, all of them from the alias file arguing *against* a match:
@@ -126,6 +167,47 @@ Two of these carry a trap:
   those risks three claims on one site from one substation.
 - **Bro Tathan** is two rows (200 and 80 MW) on one development. Two
   agreements, one scheme — the same shape as West Burton below.
+
+## What was already settled, and the one thing that has changed
+
+The 2026-08-20 `considered` entries cover: the two Rye House rows
+(1080, 1547), the three Iver rows (1508, 722, 764), Sundon (1459), and
+eighteen named by class — Fiddler's Ferry, Micklefield, Cardiff DC, IPC
+Tremorfa, Laleham, Edinburgh Business Park, Clydebridge, Inchinnan,
+Jawcraig, the Easterhouse campus, West Burton Giga, Cottam Giga,
+Ratcliffe, Seagull, This Gravity, West Horndon, Quest Park and Didcot
+Road 2.
+
+Several of those entries are sharper than what this triage produced
+independently, and should be preferred:
+
+- **The Iver rows.** "1,305 MW of contracted Ark demand at Uxbridge Moor
+  with no Ark scheme at Iver anywhere in the corpus — Ark's known corpus
+  presence is Union Park (Hayes). Either pre-application land or a scheme
+  our sweeps have not seen. **A null worth reporting, not matching.**"
+  That is the right answer and this document should not have relisted
+  them as candidates.
+- **Laleham.** "Laleham DC's name and connection point point at different
+  places" — which is what the Wraysbury alias says, established eleven
+  days earlier.
+- **Edinburgh Business Park.** "conflicts with the Heriot-Watt campus
+  scheme's location". Examined and rejected; this triage proposed it.
+- **Cardiff DC.** "could be Latos Rover Way or Vantage St Mellons" —
+  more careful than the single candidate offered above.
+- **The two Rye House rows** were matched to Hoddesdon on 2026-08-20 and
+  **retired the next day**, because the match rested on site 97 being
+  the only Hoddesdon data centre in the corpus — "a fact about the
+  corpus, not about Hoddesdon". They are not fresh unknowns; they carry
+  a documented history and a stated test for settling them.
+
+**One earlier conclusion is now wrong, and this is the correction worth
+making.** The class entry says of its members that "no corpus site
+exists in the right place… (Quest Park)". A corpus site does exist:
+site 83, Quest **Pit**, Ampthill Road, Houghton Conquest, holding 435
+documents and the S35 direction, and `site_aliases.yaml` names it "Quest
+Park Data Centre, Quest Pit". The 2026-08-20 judgement was made with the
+same rebrand blind spot this document walked into, which is the argument
+for fixing the method rather than the row.
 
 ## The channel next door had already worked this out
 
@@ -222,16 +304,37 @@ Radlett 1 and 2 (150 each; Hertsmere holds three data-centre sites, none
 at Radlett). Locality-only, no name link — weaker than the three above
 and not worth writing a match on without a document.
 
-**Cato has left this list**, and it is the strongest thing the triage
-found. The alias file already names the site — "Cato Data Centre campus,
-Auchtertool, Fife (ILI Group)", sourced to the operator's own
-cato.ili-energy.com — so the register row and the corpus site agree on
-the word *Cato*, and the site sits beside the Mossmorran substation the
-register names. Against that: the scheme's architect states 600 MW
-(graemenicholls.com, snapshotted, already in the ROADMAP) and the
-register states 600 MW. **A named site, a named operator, and two
-unrelated sources on the same figure** — the one row here that looks
-ready to write at `strong` on the evidence already held.
+**Cato has left this list**, and it is the strongest row in the triage —
+the one genuinely new candidate of any size, since it appears in no
+`considered` entry. The identification itself was already held twice
+over: `site_aliases.yaml` names `PTNO-12917829` "Cato Data Centre campus,
+Auchtertool, Fife (ILI Group)", and `operator_pages.yaml` pairs the same
+site with cato.ili-energy.com. What is new is that the NESO register
+carries a Cato demand connection at the Mossmorran substation this site
+sits beside.
+
+**The figures need stating by quantity type, because a shared number is
+not agreement.** Four routes reach roughly this scale and they measure
+four things:
+
+| source | figure | quantity |
+|---|---|---|
+| NESO EA register, row 1078 | 600 MW | contracted grid connection |
+| the scheme's architect (graemenicholls.com) | 600 MW | unstated — marketing |
+| the site's planning documents | 600 MW | `it_load` |
+| the same documents | 850 MW | `it_load` |
+
+The site also holds 800 MW `total_site`, 650 MW `cooling`, and the
+1,200 MW `thermal_input` that `docs/REGENERATION_RUNBOOK.md` carries a
+standing warning about — fuel entering a plant, not electricity leaving
+it, and once mistaken for the dataset's largest site capacity.
+
+So the honest reading is **not** "three sources agree on 600". It is that
+a contracted connection, a marketing figure and one of two stated IT-load
+figures all land on 600, while the same documents also state 850. The
+convergence is worth reporting and the 600/850 split inside one document
+set is worth resolving first — and neither is a reason to delay the
+match, which rests on the name and the substation, not on the number.
 
 ## Two corrections to the ROADMAP
 
@@ -267,6 +370,17 @@ renames the ground it builds on — a pit becomes a park — and the register
 records the new name while the planning file keeps the old. **A name
 search across the two therefore has a systematic blind spot, not a random
 one**, and it fails in the direction that produces confident negatives.
+
+**HISTORY records the same failure twice without ever generalising it.**
+Wapseys Wood was in the corpus all along under the NSIP register's name
+for it, "SDC M40 Campus", with a display name taken from the register's
+location prose — "the words 'Wapseys Wood' appear in neither" — and that
+is what made the Guardian's story team conclude the corpus was missing
+it. The mechanism is stated plainly elsewhere in HISTORY: "the display
+name of a site is the address of whichever application sorts first, which
+has no relationship to what anyone calls the place." Quest Park is the
+third instance. The rule below is what those three cases were waiting
+for.
 
 ### The probe was searching the wrong corpus of names
 
