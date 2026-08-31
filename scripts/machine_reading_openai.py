@@ -249,14 +249,35 @@ def read_one(client, inp: mr.SiteInput, model: str, effort: str) -> dict:
     return json.loads(text)
 
 
+def cache_is_reusable(cached: dict, input_hash: str, model: str) -> bool:
+    """Whether a cached raw answer may stand in for a fresh call.
+
+    All three of input, prompt and model must match. The model is the
+    one that is easy to leave out and the one that matters most: the
+    caller stores the reading under the model it *asked* for, so reusing
+    another model's answer would file it under the wrong author.
+    """
+    return bool(cached
+                and cached.get("input_hash") == input_hash
+                and cached.get("prompt_version") == mr.PROMPT_VERSION
+                and cached.get("model") == model)
+
+
 def _sample_one(client, conn, key, why, inp, model, effort) -> str:
     """Read one site, gate it, store it, write its files. Returns a line."""
     raw_path = SAMPLE_DIR / f"{key.replace('/', '_')}.raw.json"
     # The raw answer is written before the gate runs: a gate bug must
     # never cost a second call for the same reading.
     cached = json.loads(raw_path.read_text()) if raw_path.exists() else {}
-    if (cached.get("input_hash") == inp.input_hash
-            and cached.get("prompt_version") == mr.PROMPT_VERSION):
+    # The model belongs in this key, not only the prompt. `_store` below
+    # writes the reading under the model that was *asked for*, so a cache
+    # hit across models would file one model's answer under another's
+    # name — the reading would be real and its provenance false, which is
+    # the one kind of wrong this store must not be. It bit on 2026-08-31:
+    # six sites held terra answers at reading-1.4, and a gpt-5 run over
+    # the same prompt would have re-used every one of them and recorded
+    # gpt-5 as their author.
+    if cache_is_reusable(cached, inp.input_hash, model):
         reading = cached["reading"]
         how = "from disk"
     else:
@@ -265,12 +286,17 @@ def _sample_one(client, conn, key, why, inp, model, effort) -> str:
             reading = read_one(client, inp, model, effort)
         except Exception as e:   # noqa: BLE001
             return f"{key}: request failed: {e}"
-        # The previous prompt's answer is kept beside the new one: the
-        # progression is evidence, and a re-gate of an old answer is
-        # still possible from its own file.
-        if cached and cached.get("prompt_version") != mr.PROMPT_VERSION:
+        # The previous answer is kept beside the new one: the progression
+        # is evidence, and a re-gate of an old answer is still possible
+        # from its own file. The archive name carries the model as well
+        # as the prompt, or two models' answers to the same prompt would
+        # overwrite each other here.
+        if cached and (cached.get("prompt_version") != mr.PROMPT_VERSION
+                       or cached.get("model") != model):
+            old_model = str(cached.get("model") or "unknown").replace("/", "_")
             raw_path.with_name(raw_path.name.replace(
-                ".raw.json", f".{cached.get('prompt_version', 'old')}.raw.json")
+                ".raw.json",
+                f".{cached.get('prompt_version', 'old')}-{old_model}.raw.json")
             ).write_text(json.dumps(cached))
         raw_path.write_text(json.dumps(
             {"input_hash": inp.input_hash, "model": model,
