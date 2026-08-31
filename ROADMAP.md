@@ -1192,19 +1192,45 @@ field and is not publishable as it stands.
   containment test with a minimum-length guard, plus generalising the
   split repair beyond `s` — is done.
 
-  **What remains is the re-gate, and it needs a decision before it is
-  written.** Reinstating a recovered finding means writing it to
-  `findings`, and the insert carries `model` and `prompt_version`. The
-  escalation log records which reader produced the finding (the reason
-  names openai / sonnet / agent / local) and when, but not the prompt
-  version in force at the time, so a re-gated row cannot honestly claim
-  the original pair. The options are to attribute the row to its
-  original reader under a gate-versioned `prompt_version`, or to a
-  `regate/<reader>` model tag, or to something else — but it is a
-  provenance choice under principle 7 and belongs to a person, not to
-  the script. Whatever is chosen must leave the reinstated rows
-  countable and separable, because 15,042 rows arriving in one write is
-  the kind of thing a later reader will want to be able to isolate.
+  **What remains is the re-gate. Its provenance question is settled**
+  (agreed with Luke, 2026-08-31), and it turned out to be answerable
+  from the record rather than by judgement — an earlier version of this
+  item called it a decision for a person, on the false premise that the
+  prompt version in force at the time was lost.
+
+  **It is not lost.** `deepread_log` carries `(document_id, model,
+  prompt_version)` for every read, so the pair is recoverable by joining
+  on the document and the reader the escalation reason names. Measured
+  over all 50,565 quote-failure escalations: **50,556 resolve to exactly
+  one pair; nine do not.** And `prompt_version` is `1.0` on every reader
+  and all 98,000-plus log rows, so there was no ambiguity to adjudicate.
+
+  **So a recovered row carries the original pair, recovered from the
+  log.** That model, under that prompt, produced the finding; the gate
+  wrongly rejected it. A synthetic `regate/<reader>` tag would assert a
+  model that never read the document, and — the stronger objection —
+  `model` and `prompt_version` are both in the `ON CONFLICT` content
+  key, so a synthetic tag makes the row permanently un-deduplicable
+  against a genuine re-read. That is how 20,377 duplicates happened
+  before the unique index existed.
+
+  **Separability comes from a new column, not from falsifying the
+  model.** `site_machine_readings` already carries `gate_version`,
+  because which gate admitted a reading is part of how it came to exist;
+  `findings` has no equivalent, so nothing records which gate admitted
+  any finding and the 2026-08-31 gate change is invisible in the data.
+  **Add `gate_version` to `findings`** — NULL for existing rows, set for
+  re-gated ones. Honest provenance and a countable, isolable, retirable
+  cohort at once, and it closes a gap that exists whether or not the
+  re-gate runs.
+
+  **Two details for the doing:** the 646 rows whose reason-family
+  matches more than one model tag (`openai:gpt-5:minimal` against
+  `:low`) disambiguate by nearest `completed_at` to the escalation's
+  timestamp; the nine that resolve to nothing are dropped, because a
+  finding whose read cannot be identified should not be reinstated on a
+  guess. And 416 of the recoveries carry a numeric power unit, so they
+  join the adjudication tail and want a batch — the $20–40 tier.
 
   **The preliminary to 2.11, and its first work** (Luke, 2026-08-28
   scheduled it as 2.11's key part; 2026-08-31 he redefined 2.11 as the
