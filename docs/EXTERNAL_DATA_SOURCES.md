@@ -10,6 +10,16 @@ check produced a null result, the null is recorded — an untested source
 and a tested-and-empty source are not the same thing, and the distinction
 is the whole point of this file.
 
+**Sections carry their own dates, because sources were added later than
+the survey.** A heading reading *in use since ⟨date⟩* means the source
+reaches the artefacts: the Environment Agency permits (§6), DESNZ
+sub-national consumption (§6), Companies House (§6), NESO's Existing
+Agreements register (§3) and operators' own websites (§7). Anything
+without that marker was surveyed and not adopted, and the reason is
+stated where it sits. Four of those five were live before this file
+said so; §3's register, Companies House's status and the whole of §7
+were brought current on 2026-08-31.
+
 Companion to [prior_art.md](../prior_art.md), which covers *published
 reporting*. This file covers *data sources*.
 
@@ -290,6 +300,44 @@ since it launched in 2024, with an Information Rights team, a stated
 `boxinformationrights@nationalenergyso.com`. EIR is the right frame:
 connection data is environmental information under regulation 2(1), and
 regulation 12(2) imposes an express presumption in favour of disclosure.
+
+### The Existing Agreements register — in use since 2026-08-20
+
+**The exception to the heading above, and it needs stating plainly**: no
+project-level *demand queue* is published, but NESO does publish one
+artefact that names transmission demand customers with megawatts, and it
+has been a live source in this project since 2026-08-20. Read the two
+subsections together — "there is no demand connections register" is true
+of the CKAN connection registers and false as a statement about NESO
+overall.
+
+`data/external_sources/neso-ea-register.xlsx`, as-at 11 June 2025 per the
+file's own banner, loaded by `scripts/load_capacity_claims.py` and parsed
+by `dcp/capacity_claims.py`. Header row 5. **119 rows carry
+`Transmission Connected Demand`** in the technology column — which the
+file spells two ways, so the comparison is case-insensitive — totalling
+49,440 MW.
+
+**Quantity type: contracted transmission connection capacity.** A ceiling
+someone once agreed with NESO. Not IT load, not built capacity, not
+observed draw, and any consumer that renders a claim renders its
+`quantity_type` beside it.
+
+**Matching is hand adjudication, not a join.** Every attachment of a row
+to a site lives in `neso-ea-register-matches.yaml` with written evidence,
+a `method`, a `confidence` from `strong | probable | tentative` (enforced
+by migration 021) and a `matched_by` stamp. **13 rows are matched.** The
+file's `considered:` section is as important as its `matches:` — it
+records rows examined and *not* matched with the reason, because a
+tested-and-empty result is not an untested one. A row with no match is a
+normal, permanent state rather than a backlog item.
+
+**The unmatched cohort was triaged on 2026-08-31** —
+`docs/NESO_UNMATCHED_TRIAGE.md`. The headline for anyone tempted to treat
+the 106 as a work queue: **61 of them are not data-centre schemes at
+all**, the register listing transmission demand customers of every kind,
+and the cohort is dominated by hydrogen electrolysis, rail traction
+supply, carbon capture, steel and battery storage.
 
 ### What IS published — 2026-08-12 sweep of the open-data portals
 
@@ -654,7 +702,21 @@ statutory filings rather than marketing claims, and a story in itself.
 next 5 years." Also POSTnote
 [PN-0762](https://post.parliament.uk/research-briefings/post-pn-0762/).
 
-### Companies House — tested 2026-08-20, and mostly a null
+### Companies House — in use since 2026-08-20, and mostly a null
+
+**The heading used to read "tested 2026-08-20, and mostly a null", which
+outlived the testing.** The null below still stands and is the important
+part; what changed is that the minority which *does* disclose turned out
+to be worth harvesting. The channel is live — **22 claims, 10 of them
+matched to sites** — carried in
+`data/external_sources/companies-house-claims.yaml` with the filing, the
+page locator and a verbatim quote, and every transcribed figure checked
+against the OCR of the page it cites before it lands
+(`verify_ch_quotes`). Ownership and the scheme SPVs are separate work in
+`companies-house-ownership.yaml` and `companies-house-spvs.yaml`; the
+single-asset SPV is the reason the null is not the whole story, since a
+company whose only asset is one scheme states that scheme's capacity by
+construction rather than by choice.
 
 Statutory accounts were surveyed after the August research sweep flagged
 them as a possible per-site capacity source. **The generalisation does not
@@ -881,7 +943,87 @@ page; see `data/external_sources/README.md`.
 
 ---
 
-## 7. Recommendations
+## 7. Operators' own websites — in use since 2026-08-30
+
+Absent from this file until 2026-08-31, which was an omission rather than
+a judgement: by claim count it is the **second-largest channel** in the
+store, and the only one where the party making the claim is the party
+that owns the asset.
+
+**What it is.** 80 claims from operators' own pages, held in
+`data/external_sources/operator-claims.yaml` with
+`dcp/operator_pages.py` and the site→page prior
+`data/priors/operator_pages.yaml` — 39 page entries across 31 sites,
+since a site can hold both a corporate and a consultation page, and the
+loader keys by site. 43 claims are matched to sites.
+
+*A drift worth knowing about when counting:* the store holds 81
+`operator_website` rows against the file's 80. The extra is `CyrusOne
+LON1 (Slough)`, 8.72 MW, whose entry was edited out of the YAML after
+loading. `capacity_claims` has no retirement column — only
+`capacity_claim_matches` does — so a claim withdrawn from the file leaves
+a row nothing removes. Count from the file, not the table.
+Every claim is quote-verified against a **same-day snapshot** in
+`data/external_sources/operator_snapshots/`, because a marketing page has
+no register behind it: nothing preserves what a redesigned site used to
+say, so a claim without a snapshot taken at claim time is unciteable
+later.
+
+**Where it sits in the authority order — the weakest, and labelled so.**
+Marketing material, not an audited or regulatory disclosure. It renders
+with the operator's own name attached rather than a generic source label,
+because *who is saying it* is the entire point of the weakest-authority
+source.
+
+**Typed standing, not equal standing** (decided with Luke, 2026-08-30).
+This is a deliberate, scoped revision of the 2026-08-20 ruling that no
+external megawatt reaches a scannable row. **First-party operator
+statements about the operator's own facilities** may become a labelled
+rung on the declared-power ladder and may be admissible to
+`at_least_100mw` with the basis named — because operator pages are
+campus-level, facility-named and single-basis, which is the comparability
+the planning corpus lacks. **Third-party aggregates stay tier-and-count**
+(§2 above, and `dcp/external_aggregates.py`). The ruling was about
+comparability, and a labelled rung is how the ladder already handles
+incomparability. Conditions travelling with it: the snapshot discipline
+above, and that the planning-disclosure finding survives elevation — "no
+document ever stated this campus's load on a common basis" stays
+reportable.
+
+**Two findings the channel produced that the others could not.**
+
+*The denominator, sourced.* A campus roster on an operator's own page
+gives a sourced count of facilities, so "three of five facilities
+disclose" has a citable five. VIRTUS's Saunderton datasheet also
+self-audits: 9.5 + 22.5 + 16 + 30 against a stated "Campus Total of
+78 MW", exact — the benchmark for when a sum can ever be trusted. Its
+Slough campus states 145.5 MW against 132.2 summed from its own seven
+rows, which is a discrepancy worth putting to the operator.
+
+*The audiences finding.* Pages carry a `kind` — `corporate` or
+`consultation`, the tell for the latter being a stated consultation
+period — because they say different things to different readers. Five of
+the first five sites holding both kinds stated megawatts on the corporate
+page and nothing on the consultation page (East Havering 600, West London
+Tech Park 90, Iver Heath 90, Abbots Langley 96, Humber 384). Apatura is
+the counter-example: its consultation pages state capacity and are also
+its only scheme presence. The working hypothesis is that silence appears
+where a developer runs *two* pages and can segment audiences — one page,
+one story; two pages, two stories. Because "the consultation site doesn't
+say" is a negative result, each silent page needs its own snapshot, and
+consultation-window dates let the silence be timed against what the
+application had already told the council.
+
+**Limits.** Coverage is whatever the operator chose to publish, so
+absence proves nothing about a site. Figures are undated unless the page
+dates them. A page can restate a campus total that overlaps another
+claim, so these must never be summed across pages. And the fetcher takes
+HTML only — VIRTUS's Saunderton datasheet PDF is unsnapshotted, so its
+per-facility figures are not yet citable.
+
+---
+
+## 8. Recommendations
 
 1. **Do not add any external MW as a site column.** Nothing surveyed here
    measures the same quantity as a planning application, and DCM's planned-
