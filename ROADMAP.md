@@ -603,13 +603,31 @@ tracked there.
   build fails without it, so this is an edit to existing text rather
   than new machinery. Check how past limits-only edits treated
   `rule_version` before changing it — limits prose is not the rule.
-- **Measure how many sites the under-ranking actually affects**, which
-  the issue calls its first thing to establish and nothing has done:
-  how many multi-facility campuses hold per-facility figures, and how
-  many sit near enough to 100 MW for the ranking to matter. Inputs are
-  `campus_scope.yaml`, the operator rosters in `operator_pages.yaml`
-  and `site_scale.power_estimate`, which is what actually feeds the
-  ranking. A report, not a behaviour change.
+- ~~**Measure how many sites the under-ranking actually affects**~~
+  **Measured, 2026-08-31**, against the live corpus through
+  `site_cohorts.load_inputs` (the ladder that actually feeds the
+  ranking) and `capacity_claims.load_site_claims`, folded to the
+  latest reading per claim. Of the 35 multi-project sites in
+  `campus_scope.yaml`: **8 already rank at or above 100 MW**, and
+  **the invisible class is exactly two sites** — VIRTUS Stockley Park
+  (ranks 24.0 MW against the operator's 112.5) and Vantage Cardiff
+  (67.2 against 148), both already matched, snapshotted, first-party
+  claims. **A third joins when its scope question resolves**: VIRTUS
+  Slough ranks on nothing while its campus page's 145.5 MW sits in
+  the store unmatched — correctly, because the site claims three
+  facilities and VIRTUS rosters seven, the open question in
+  `campus_scope.yaml`. The register channel adds zero line-crossers,
+  so tier-and-count costs it nothing. Eight more sites sit at
+  60–100 MW (London Digital Park 89, Telehouse North Two 80, Brent
+  Cross 75, Longcross 73.6, Premier Park 72, Cardiff 67.2, Cody Park
+  60, former Akzo Nobel 60) — for all but Cardiff no operator campus
+  figure of 100 MW or more exists, so a ladder rung would not inflate
+  the cohort. Five of the 35 rank on nothing at all. And **29 of the
+  35 hold adjudicated figures of two or more quantity kinds** — the
+  Stockley incomparability is the corpus norm, which is the
+  measurement backing #247's facility-prior direction over any
+  summing. Re-measure rather than re-quote; the numbers move with the
+  corpus.
 
 ### 4. #248 — a figure we assemble is not a figure a source states
 
