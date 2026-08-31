@@ -1,27 +1,32 @@
 # Handover: work packages ready for an Opus 5 session
 
-Written 2026-08-31 by a Fable 5 session, at Luke's request, so the next
-stretch of work can run on Opus 5. Each package is scoped to be executed
-from this document plus the files it names — the handoff is the spec;
-do not re-litigate its decisions mid-build, and raise a blocking
-contradiction with Luke rather than resolving it silently.
+> **SPENT — do not work from this document.** Written and closed on
+> 2026-08-31. **ROADMAP.md is the inbox**; everything still live from
+> the packages below is carried there, and everything finished is in
+> HISTORY ("The NESO triage, and a day spent re-deriving the record").
+> Kept only as the record of how the day was scoped, because two of its
+> packages were closed by finding the work already done rather than by
+> doing it. A second document listing outstanding work is exactly the
+> duplication that put four passes into one triage — read the ROADMAP.
 
-**ROADMAP.md remains the source of truth for what is left.** This
-document is a session plan over it, not a second roadmap; where the two
-disagree, the ROADMAP wins.
+## Outcome of each package
 
-## Status, same day
-
-- **WP0 — landed.** Luke committed and merged the alias fold himself as
-  PR #283 (07:34, 2026-08-31) before the session began. Its Vantage ↔
-  Next Generation Data leftover was then assessed and needs **no
-  change** — see the package for the measurement. The Kao Harlow merge
-  is still open.
-- **WP1 — phase 1 complete**, PR #284:
-  `docs/NESO_UNMATCHED_TRIAGE.md`. 61 of the 106 are not data-centre
-  schemes; 29 are actionable. Phase 2 (writing matches and `considered`
-  entries) has not started.
-- **WP2, WP3, WP4 — not started.**
+- **WP0 — done.** The alias fold landed as PR #283, merged by Luke
+  before the session began. Its Vantage ↔ Next Generation Data leftover
+  was assessed and needed **no change** (the measurement is in the
+  package below). The Kao Harlow merge, listed here as outstanding, had
+  in fact shipped the same evening it was proposed as #268 — only a
+  prior's note still called it pending, corrected in #286.
+- **WP1 — phase 1 done**, PR #284, `docs/NESO_UNMATCHED_TRIAGE.md`,
+  with corrections in #288 and #291. **Phase 2 is live work and lives in
+  ROADMAP** under #250, along with the two other actions the issue had
+  been carrying unaddressed.
+- **WP2, WP3, WP4 — never started, and now folded into 2.11.** The
+  `at_least_100mw` limits sentence and its measurement are stated under
+  #250; the facility prior is under #247; the ladder rung is under
+  "Operator pages and typed standing". Luke redefined 2.11 on
+  2026-08-31 as the site/facility/campus effort, which is these three
+  plus the 35-campus review.
 
 Standing disciplines that apply to every package (from `~/.claude`
 global instructions and ROADMAP.md):
