@@ -26,6 +26,20 @@
 #          | co_located | unreviewed
 #   total: sum | withhold | unreviewed
 #
+# `total` is missing a value, found while preparing PTNO-12301553
+# (VIRTUS Stockley Park) on 2026-08-31. Where an operator publishes a
+# campus figure on one basis, neither option is right: `sum` understates
+# it — the roster's three disclosed facilities total 72.5 MW against a
+# published campus figure of 112.5, because two of five publish no
+# megawatts — and `withhold` is what #247 rejected, since it drops the
+# site out of sorting and out of `at_least_100mw`. The missing value
+# carries the operator's own stated figure as a first-party claim with
+# its source, rather than one we assemble; `operator_stated` is the
+# suggested name, and it is the typed-standing ladder rung agreed for
+# operator claims (ROADMAP, 2026-08-30). Not added here, because adding
+# an enum value nothing reads is a decision for the review, not for the
+# file.
+#
 # See issues #247 (what a campus shows), #250 (under-ranking).
 
 campuses:
@@ -207,7 +221,68 @@ campuses:
       - VIRTUS DATA CENTRES - LONDON 7 DATA CENTRE
       - VIRTUS DATA CENTRES - LONDON 8 DATA CENTRE
     reason: |
-      Not yet reviewed.
+      PREPARED FOR REVIEW, NOT DECIDED (2026-08-31). Recommendation:
+      scope `distinct_facilities`; total needs a value the schema does
+      not yet have — see below.
+
+      This is the campus #247 and #250 are both about, and VIRTUS's own
+      roster resolves both. The site shows an adjudicated `it_load` of
+      24.0 MW. VIRTUS publishes, on one page and one basis ("IT load"):
+
+        LONDON5   24.0 MW  10,000 NTM
+        LONDON6   16.0 MW   7,000 NTM
+        LONDON7   32.5 MW  13,000 NTM
+        campus   112.5 MW  45,400 NTM   "With 112.5MW of IT load over
+                                         45,400 NTM"
+
+      The three named facilities sum to 72.5 MW over 30,000 NTM, so the
+      campus figure exceeds them by 40.0 MW over 15,400 NTM. That gap is
+      LONDON8 and LONDON14, which the campus page lists as "Bespoke
+      design" with floor areas and no megawatt figure. The NTM column
+      corroborates the MW column independently, which is why the gap
+      reads as two undisclosed facilities rather than an inconsistency.
+
+      **So `total: sum` is wrong here, and it is wrong in the direction
+      that matters.** Summing what the roster discloses gives 72.5 and
+      understates the campus by 40 MW, because two of five facilities
+      publish no MW at all. Summing what *we* hold is worse still: 24.0.
+      And `total: withhold` is the option #247 explicitly rejected,
+      because it drops the site out of sorting and out of
+      `at_least_100mw`.
+
+      What is needed is a third value — the operator's own stated campus
+      figure, carried as a first-party claim with its source, not
+      assembled by us. That is the typed-standing ladder rung already
+      agreed for operator claims (ROADMAP, 2026-08-30), and this entry
+      is the first case that requires it. Suggested name: `operator_stated`.
+
+      **#250's failure is concrete here.** At 24.0 MW this campus sits
+      far below `at_least_100mw`. At VIRTUS's 112.5 MW it clears the line
+      comfortably. The site is currently under-ranked by 88.5 MW against
+      its operator's own published figure, and nothing on the page says
+      so — which is the "invisible by construction" failure #250
+      describes.
+
+      **#247's finding survives and should not be softened.** No
+      *planning* document states this campus's load on a common basis;
+      that remains true, remains a question for VIRTUS and for
+      Hillingdon, and is not answered by an operator marketing page. What
+      changes is that a comparable campus figure now exists from a
+      first-party source, so "no campus total renders" is a choice about
+      standing rather than a statement that none exists.
+
+      Also worth carrying into the entry when it is decided: our
+      `barbour_titles` name LONDON 5, 7 and 8, while the roster names
+      LONDON5, 6, 7, 8 and 14 — the planning record does not see two of
+      the five facilities under this site key at all.
+
+      Source: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+      snapshot `virtus-stockley-park`, as_at 2026-08-30, four
+      `capacity_claims` rows matched `strong`, verified by Luke in the
+      operator-pages review (T1-08). One correction to that record: its
+      match evidence says the campus figure is "VIRTUS's roster total
+      across the three facilities it discloses", which the arithmetic
+      contradicts — 72.5 against 112.5. It is the total across all five.
 
   - site_key: PTNO-12513167
     projects: 3
