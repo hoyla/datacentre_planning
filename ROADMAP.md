@@ -1231,9 +1231,36 @@ field and is not publishable as it stands.
   finding whose read cannot be identified should not be reinstated on a
   guess.
 
-  **Built 2026-08-31, dry-run, not written.**
-  `scripts/regate_escalations.py` (nothing happens without `--write`)
-  and migration 033, which adds `findings.gate_version`.
+  **DONE — written 2026-08-31**, with the whole downstream chain run in
+  the same pass. `scripts/regate_escalations.py` and migration 033,
+  which adds `findings.gate_version`.
+
+  **14,111 inserted; 1,568 already present.** That second number is the
+  provenance decision paying off rather than a curiosity: those findings
+  had also been produced by a later successful read, and the content key
+  deduped them on the true `(model, prompt_version)`. The synthetic
+  `regate/<reader>` tag rejected above would have made every one of them
+  a permanent duplicate — the mechanism behind the 20,377 duplicates
+  that predate the index. Findings now stand at 1,378,147, with the
+  cohort separable on `gate_version='gate-2.1'`.
+
+  **What it cost downstream: under $6, and less churn than predicted.**
+  The power-unit tail was 385, not the 416 measured pre-dedup. The
+  adjudication batch ran 843 figures across 73 requests with nothing
+  truncated, `correct_adjudications.py` fixed 14 (one
+  `thermal_not_electrical`, six thermal-output-with-no-electrical, seven
+  `export_limit_not_connection`) and re-ran clean, and generation added
+  51 with 2 correctly refused on span verification.
+
+  **The label audit's cap prediction held; its churn estimate did not.**
+  Rendered moved 13,679 → 13,684 — a net five rows against a 14,280
+  ceiling — which is the displacement-not-accumulation the cap analysis
+  predicted. But the churn was 270 findings across 7 requests, not the
+  substantial re-audit implied when this item was written. 269 verdicts
+  stored, 47 flagged as misfiled: **17.5%, against the corpus baseline
+  of 18%**. So the reinstated findings are no worse filed than what was
+  already on the pages — which is the answer to the worry that opened
+  this item, and it is a null result worth keeping.
 
   **The dry run: 15,679 recoverable** of 50,565 escalations carrying a
   usable finding. 34,877 remain absent under the fixed gate — the gate
@@ -1248,6 +1275,11 @@ field and is not publishable as it stands.
   candidate order — the claimed page, its neighbours, then the other
   pages sent to the model. The larger number is the right one, and a
   quote is still never searched in a page the model was not shown.*
+
+  *The two blocks below are the assessment made before the write, kept
+  because the reasoning is what justified running the chain in one pass
+  — and because one of its two predictions was wrong in a useful way.
+  Both are answered by the outcome above.*
 
   **Two things to weigh before `--write`.** The reinstated rows have not
   been through the label audit, which holds 18,209 verdicts under
