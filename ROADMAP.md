@@ -248,14 +248,69 @@ on it):
 | Companies House | 22 | 10 | 6 |
 | EA permit | 42 | 14 | 0 |
 
-The NESO EA register is now the live work: 106 unmatched demand-queue
-claims, among them Global Switch London East 87 MW and London South
-70 MW. Any of those, matched, could move a site across the line or
-give it a figure where it shows none. The one diagnosed cause —
-address mismatch, as in the original VIRTUS Slough case — will not be
-the only one across 106 claims. **Establish why the matcher misses
-them before proposing anything.** The remaining operator-channel 35
-are mostly the sheet's "not yet" and keyless rows, tracked there.
+The NESO EA register was the live work, and was triaged 2026-08-31 —
+**`docs/NESO_UNMATCHED_TRIAGE.md` is the row-by-row result.** What it
+establishes, before anything is proposed:
+
+- **61 of the 106 are not data-centre schemes**, and never will be. The
+  register lists transmission demand customers of every kind; the
+  cohort is dominated by hydrogen electrolysis, rail traction supply,
+  carbon capture, steel and battery storage. They belong in
+  `considered` with a reason, not in a backlog.
+- **24 of the 106 had already been adjudicated** in the matches file's
+  own `considered` section on 2026-08-20, and the triage re-examined
+  them blind because its probe looked for a `row:` key where the file
+  uses `rows:`. Several earlier judgements are better and stand — the
+  Iver rows especially ("no Ark scheme at Iver anywhere in the corpus…
+  a null worth reporting, not matching"). **One is overturned**: Quest
+  Park is recorded there as having no corpus site in the right place,
+  and site 83 holds 435 documents.
+- **29 rows are actionable**, but only six of those candidates are new,
+  three of them strong: Cato, Relode Immingham against Humber Tech Park,
+  and Bro Tathan against Vantage's CWL2. Ten more are real schemes the
+  corpus does not hold at all — leads, not matching failures.
+- **Four "Green Energy Centre" schemes hold a gas generation connection
+  and a demand connection at once** — Buntington, East Claydon, Daines
+  and Drakelow appear both in the TEC gas cluster
+  `docs/EXTERNAL_DATA_SOURCES.md` §3 records and in this demand queue.
+  Neither register alone shows it, and §3 flagged the gas cluster as
+  worth checking without connecting the halves. The most reportable
+  thing in the triage, and not a matching finding.
+- **A developer's name and the planning record's name are different
+  things** (Luke, 2026-08-31: "Quest Pit is the true location; Quest
+  Park is the operator rebrand"). The register carries the rebrand, the
+  planning file keeps the ground's own name — so a name search across
+  the two has a systematic blind spot, failing towards confident
+  negatives.
+- **Search `site_aliases.yaml` alongside the derived names.** The fix
+  for the above is already curated: the alias file holds both names in
+  one string — "Quest Park Data Centre, Quest Pit"; "Cato Data Centre
+  campus, Auchtertool, Fife (ILI Group)" — and either would have matched
+  the register outright. A derived name is what a source called a place;
+  an alias is what a person established it *is*. Any future name search
+  against this corpus that skips the 56 aliases re-derives that work
+  badly, which is what two passes of the triage did before Luke pointed
+  it out. **Cato is the strongest new candidate to come out of it**: a
+  named site, a named operator (ILI Group), and a contracted 600 MW
+  against the architect's 600 MW recorded below — though the site's own
+  documents state both a 600 MW and an 850 MW `it_load`, so the
+  convergence is three quantity types landing on one number, not three
+  sources agreeing. Its 1,200 MW `thermal_input` row carries a standing
+  warning in `docs/REGENERATION_RUNBOOK.md`.
+- **19 rows are Ethos Green "Green Energy Centres"**, 8,660 MW, held
+  apart from both buckets: those hubs colocate data centres with
+  generation and storage by design — Ethos has a joint development
+  agreement with Frontier Power for up to 5GW of colocated capacity —
+  so a GEC row is demand whose consumer is undeclared, not demand that
+  is known to be something else.
+
+So the earlier framing was wrong twice, and both corrections are in the
+triage document: Global Switch London East 87 MW and London South 70 MW
+are **not in this register at all** (they are `operator_website` claims,
+and belong to the operator channel's 35), and "any of the 106, matched,
+could move a site across the line" is true of 29. The remaining
+operator-channel 35 are mostly the sheet's "not yet" and keyless rows,
+tracked there.
 
 ### 4. #248 — a figure we assemble is not a figure a source states
 
