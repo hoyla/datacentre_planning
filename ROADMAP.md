@@ -968,11 +968,25 @@ field and is not publishable as it stands.
   members and anchor agree and the check sails past. It flags 7 sites,
   none of them this one.
 
-- **About 37% of the verbatim gate's rejections are correct quotes,
-  lost to whitespace artefacts in the extracted text — roughly 17,000
-  findings** (measured 2026-08-28 on a random sample of 900 of the
-  46,709 `quote_failed_verification*` escalations, every one with
-  cached page text). The premise, which the code already half-accepts:
+- **The gate fix shipped 2026-08-31; the re-gate that reinstates the
+  findings has not.** `scripts/verify_findings.fragments_present` now
+  falls back to a whitespace-blind comparison behind a minimum-length
+  guard, every reader routes through it, and 14 tests hold it. **What
+  it recovers, measured corpus-wide rather than sampled: 15,042 of the
+  50,517 rejections that have cached page text (29.8%), of which 416
+  carry a numeric value with a power unit.** Those findings are still
+  discarded until someone runs the re-gate — see below.
+
+- **About 30% of the verbatim gate's rejections are correct quotes,
+  lost to whitespace artefacts in the extracted text — 15,042
+  findings** (measured 2026-08-31 over every one of the 50,517
+  `quote_failed_verification*` escalations that has cached page text,
+  matched against the claimed page. **This supersedes the 2026-08-28
+  estimate of ~37% and ~17,000**, which came from a random sample of
+  900; corpus-wide, page-scoped and with the guard applied, it is
+  29.8%. The rate is higher in the families this project is about:
+  36.4% of the 1,144 rejections carrying a numeric power unit.) The
+  premise, which the code already half-accepts:
   pypdf splits words at line breaks and around units, so the page text
   says "acro ss the site", "d ata centres", "c ooling", "sust ainable",
   "940 µ g/m 3", "600m 3". A model that quotes the passage correctly
@@ -982,13 +996,17 @@ field and is not publishable as it stands.
   twenty-six — and its own comment names the cases it does not cover
   ("energ y generation", "centr e of").
 
-  Classified against the cached page text, the sample of 900 splits:
-  62.7% genuinely absent under any normalisation (the gate working —
-  paraphrase or invention), **32.0% present if whitespace is ignored
-  entirely**, 5.1% present after generalising the single-letter split
-  repair, 0.1% on a page that was never sent. Median rejected-quote
-  length in the recoverable class is 120 characters, so these are not
-  short fragments matching by accident.
+  Classified against the cached page text, all 50,517: **68.8%
+  genuinely absent** under any normalisation (the gate working —
+  paraphrase or invention), **29.8% recovered** by the new gate, 1.4%
+  which pass the current normaliser already (it gained its dash, glue
+  and quote rules after those rejections were logged), 0.1% on a page
+  out of range. Median recovered length is 122 characters and the first
+  percentile is 26, so these are not short fragments matching by
+  accident — and the guard is set at 25 characters precisely because
+  the 20-to-24 band that remains is dominated by repeated single-word
+  labels ("GENERATORS GENERATORS", "Substation Substation") that verify
+  almost nothing. Excluding them costs 0.7% of recoveries.
 
   Two reasons this is worth doing before more reading is bought.
   First, the loss is silent: a rejected finding is counted as a failed
@@ -996,11 +1014,23 @@ field and is not publishable as it stands.
   evidence discarded. Second, **recovery is free** — the escalation
   log carries the whole finding payload beside its sha and page, so
   the rejected quotes can be re-gated offline and reinstated without
-  re-spending a penny of API budget. The fix is a whitespace-
-  insensitive containment test with a minimum-length guard (the gate
-  is hallucination protection and must not become a substring lottery
-  for three-character quotes), plus generalising the split repair
-  beyond `s`.
+  re-spending a penny of API budget. The fix — a whitespace-insensitive
+  containment test with a minimum-length guard, plus generalising the
+  split repair beyond `s` — is done.
+
+  **What remains is the re-gate, and it needs a decision before it is
+  written.** Reinstating a recovered finding means writing it to
+  `findings`, and the insert carries `model` and `prompt_version`. The
+  escalation log records which reader produced the finding (the reason
+  names openai / sonnet / agent / local) and when, but not the prompt
+  version in force at the time, so a re-gated row cannot honestly claim
+  the original pair. The options are to attribute the row to its
+  original reader under a gate-versioned `prompt_version`, or to a
+  `regate/<reader>` model tag, or to something else — but it is a
+  provenance choice under principle 7 and belongs to a person, not to
+  the script. Whatever is chosen must leave the reinstated rows
+  countable and separable, because 15,042 rows arriving in one write is
+  the kind of thing a later reader will want to be able to isolate.
 
   **The preliminary to 2.11, and its first work** (Luke, 2026-08-28
   scheduled it as 2.11's key part; 2026-08-31 he redefined 2.11 as the
@@ -1008,10 +1038,9 @@ field and is not publishable as it stands.
   first). It costs no API spend: the escalation log
   (`data/deepread_escalations.jsonl`) carries the whole finding under a
   `finding` key beside its sha and `claimed_page`, so the rejected
-  quotes are re-gated offline and reinstated. Do the re-gate and the
-  gate fix together — a fixed gate without a re-gate leaves the 17,000
-  discarded, and a re-gate without the fix means doing it again next
-  release.
+  quotes are re-gated offline and reinstated. The gate fix landed on
+  2026-08-31; **the re-gate did not, so the 15,042 are still
+  discarded** — the half of "do them together" that is outstanding.
 
   **Why it precedes the campus work rather than competing with it**
   (measured 2026-08-31 over the whole escalation log, not a sample):

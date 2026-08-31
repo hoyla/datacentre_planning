@@ -198,7 +198,7 @@ _VF = _load_verify()
 
 def quote_on_page(quote: str, page_text: str) -> bool:
     frags = [_VF._normalise(f) for f in _VF._quote_fragments(quote)]
-    return bool(frags) and _VF._all_fragments_in_order(
+    return bool(frags) and _VF.fragments_present(
         _VF._normalise(page_text), frags)
 
 

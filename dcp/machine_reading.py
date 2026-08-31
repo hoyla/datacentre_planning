@@ -609,8 +609,11 @@ def quote_in_text(quote: str, text: str) -> bool:
     if _VF._all_fragments_in_order(strip(page), [strip(f) for f in frags]):
         return True
     # The page's own spaces are not evidence: "buildi ng" is "building".
-    squash = lambda t: strip(t).replace(" ", "")
-    return _VF._all_fragments_in_order(squash(page), [squash(f) for f in frags])
+    # This relaxation used to be unguarded here and absent from the
+    # findings gate. Both now go through verify_findings.fragments_present,
+    # which applies it with a minimum-length guard — an unguarded squash
+    # can admit a three-character quote against any page (2026-08-31).
+    return _VF.fragments_present(strip(page), [strip(f) for f in frags])
 
 
 # A number with a unit, as the rules define it. Thousands separators and

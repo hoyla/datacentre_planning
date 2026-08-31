@@ -13,6 +13,15 @@ forgiving an actual paraphrase. Ellipsis ("...") in the recorded quote
 is treated as a fragment separator — each fragment must appear in the
 page text, in order.
 
+Since 2026-08-31 there is a second attempt behind the first: pypdf also
+breaks words *within* a token ("d ata centres", "940 µ g/m 3"), which
+collapsing runs of whitespace does not repair, so a fragment that fails
+is retried with whitespace removed from both sides — but only if it is
+at least `MIN_WS_BLIND_CHARS` long, because a short fragment matched
+that way is a substring lottery rather than verification. `fragments_
+present` is the entry point every reader uses; see its comment for the
+measurement that set the threshold.
+
 Outputs a markdown report. Default exit codes:
   0 = all findings verified
   1 = one or more findings failed verification
@@ -63,7 +72,14 @@ _GLUE_WS_RE = re.compile(r"\s*([/&+\.,:;\(\)])\s*")
 # Repair the split when an [a-z]{4,} word is followed by " <letter> "
 # (or " <letter>" + punct). The lookahead excludes digit/letter
 # continuations so "policy s3" and "section A" patterns are left alone.
-_PLURAL_SPLIT_RE = re.compile(r"\b([a-z]{4,})\s+(s)(?=\s|[.,;:?!\)\]\}])")
+#
+# Generalised from `s` alone to any single letter on 2026-08-31. The
+# original comment named "energ y" and "centr e" as cases it did not
+# cover; it repaired one letter of twenty-six. Measured over the 9,079
+# power-family gate rejections that have cached page text, the
+# generalisation recovers 117 on its own — small next to what the
+# whitespace-blind fallback below recovers, and free.
+_PLURAL_SPLIT_RE = re.compile(r"\b([a-z]{4,})\s+([a-z])(?=\s|[.,;:?!\)\]\}])")
 # Quote-mark drift: humans recording a quote typically type whichever
 # of ' or " is closest to hand, and pypdf preserves whatever's in the
 # document (often curly variants). The mark itself rarely affects
@@ -192,6 +208,75 @@ def _all_fragments_in_order(page_text: str, fragments: list[str]) -> bool:
     return True
 
 
+# The whitespace-blind fallback, and the guard that keeps it honest.
+#
+# `_normalise` collapses runs of whitespace to one space, which handles
+# pypdf breaking a line. It does not handle pypdf breaking a *word*:
+# the page text reads "acro ss the site", "d ata centres", "sust ainable",
+# "940 µ g/m 3". A model that quotes the passage correctly then fails a
+# gate comparing it against the broken text, and the finding is discarded
+# as though the model had invented it.
+#
+# Measured 2026-08-31 over every gate rejection that has cached page
+# text, matched against the claimed page only — 50,517 of them. 68.8%
+# are genuinely absent under any normalisation, which is the gate doing
+# its job. **29.8% appear once whitespace is ignored entirely.** In the
+# families this project is about the rate is higher: 36.4% of the 1,144
+# rejections carrying a numeric value with a power unit.
+#
+# (The ROADMAP's earlier estimate of ~37% and ~17,000 came from a
+# 900-row random sample. Corpus-wide, page-scoped and with the guard
+# below applied, it is 29.8% and 15,042.)
+#
+# So the fallback: if a fragment is not found by the normal comparison,
+# try again with all whitespace removed from both sides.
+#
+# THE GUARD. Removing whitespace makes short fragments promiscuous. The
+# shortest recovery in an unguarded run was the quote "0 9", which
+# becomes "09" and matches almost any page carrying a number — a
+# substring lottery, not verification, and this gate is the project's
+# hallucination protection.
+#
+# 25 is set from the distribution rather than picked. Median recovered
+# length is 122 characters and the 1st percentile is 26, so the
+# threshold sits below essentially all genuine recoveries: it costs 107
+# of 15,042 (0.7%). What those 107 are is the argument for it — the
+# 20-to-24 band is dominated by repeated single-word labels
+# ("LoadingBayLoadingBay", "GENERATORS GENERATORS", "Substation
+# Substation") which do appear on the page and verify almost nothing.
+# Going further to 30 would cost 2.5% and to 40 6.2%, cutting into real
+# evidence.
+MIN_WS_BLIND_CHARS = 25
+
+_STRIP_ALL_WS = re.compile(r"\s+")
+
+
+def _all_fragments_in_order_ws_blind(page_text: str,
+                                     fragments: list[str]) -> bool:
+    """Fallback match with whitespace removed from both sides.
+
+    Returns False rather than attempting the match when any fragment is
+    shorter than the guard, so a quote is never admitted on the strength
+    of its short fragments alone.
+    """
+    stripped = [_STRIP_ALL_WS.sub("", f) for f in fragments]
+    if any(len(f) < MIN_WS_BLIND_CHARS for f in stripped):
+        return False
+    return _all_fragments_in_order(_STRIP_ALL_WS.sub("", page_text), stripped)
+
+
+def fragments_present(page_text: str, fragments: list[str]) -> bool:
+    """The gate's question: is every fragment on this page, in order?
+
+    Normal comparison first, whitespace-blind fallback second. Callers
+    should use this rather than `_all_fragments_in_order` directly, so
+    the fallback cannot be applied in one reader and not another.
+    """
+    if _all_fragments_in_order(page_text, fragments):
+        return True
+    return _all_fragments_in_order_ws_blind(page_text, fragments)
+
+
 def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
     cache_path = finding.cache_path
     if not cache_path.exists():
@@ -221,7 +306,7 @@ def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
     # 1) Recorded page in range? If not, jump straight to whole-doc search.
     if 1 <= p1 <= len(pages):
         primary_norm = pages_norm[p1 - 1]
-        if _all_fragments_in_order(primary_norm, fragments_norm):
+        if fragments_present(primary_norm, fragments_norm):
             return CheckResult(finding=finding, status="pass", matched_page=p1,
                                ocr_substrate=p1 in ocr_set)
 
@@ -238,7 +323,7 @@ def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
         for offset in range(1, tolerance + 1):
             for candidate in (p1 - 1 - offset, p1 - 1 + offset):
                 if 0 <= candidate < len(pages):
-                    if _all_fragments_in_order(pages_norm[candidate], fragments_norm):
+                    if fragments_present(pages_norm[candidate], fragments_norm):
                         return CheckResult(
                             finding=finding, status="pass_adjacent",
                             matched_page=candidate + 1,
@@ -253,7 +338,10 @@ def _check_one(finding: FindingRow, *, tolerance: int) -> CheckResult:
     for frag in fragments_norm:
         found_on: int | None = None
         for i, page_norm in enumerate(pages_norm, 1):
-            if frag in page_norm:
+            # Same relaxation as the page checks above, so a quote is not
+            # reported as absent from the document merely because pypdf
+            # broke a word on the only page that carries it.
+            if fragments_present(page_norm, [frag]):
                 found_on = i
                 break
         fragment_pages.append(found_on)
