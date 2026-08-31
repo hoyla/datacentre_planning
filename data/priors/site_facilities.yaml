@@ -1,0 +1,280 @@
+# The facility roster for a site, with the source that names each
+# facility and, per facility, the figure attributions a claim or a
+# document supports. Issue #247's missing relation, built 2026-08-31;
+# dcp/site_facilities.py holds the loading contract.
+#
+# The premise (ROADMAP, "The missing object is the facility"): figures
+# attach to applications and applications aggregate to sites, but the
+# thing a figure is actually about — one building, one operator, one
+# identity like LONDON7 or KLON-03 — exists nowhere in the model, so
+# campus-load questions were being answered by whichever single figure
+# a site's largest application carried. The remedy is this relation,
+# never a sharper site container.
+#
+# Rules, enforced by the loader:
+#   - a site key that is not live fails the build (the site_aliases
+#     contract);
+#   - every facility carries at least one identity source, each
+#     citable: `operator_roster` (url + date, snapshot-backed),
+#     `planning_document` (application + document content hash), or
+#     `barbour_title` (ptno + the title verbatim);
+#   - an attribution names its `kind` in the source's own terms and
+#     references EITHER a claim in the external-claims store (by
+#     claim_name) OR a planning document — never both, never neither,
+#     and never a value of its own. No megawatt is restated here.
+#
+# What listing a facility asserts: that the named source counts it as
+# part of the campus associated with this site. It does NOT assert the
+# site's planning record contains it — which facilities a site holds,
+# and whether any figures roll up, is `campus_scope.yaml`'s question,
+# and a roster is evidence that review can cite.
+#
+# Conflicting attributions co-exist deliberately. Stockley Park is the
+# worked case: planning's 24 MW is LONDON7's 2021 handover milestone,
+# while VIRTUS puts 24 on LONDON5 and 32.5 on LONDON7 — possibly the
+# right number on the wrong building, and only a document or the
+# operator can settle it. Both stand below, flagged, resolved by
+# nobody.
+
+sites:
+
+  # ---- Kao Harlow. The roster that drove a merge: Kao's page counts
+  # KLON-03 in this campus, which is why PTNO-12839274 folded in
+  # (PR #268, 2026-08-30).
+  - site_key: PTNO-12240972
+    note: >-
+      Kao's own campus claim ("Kao Data Harlow campus", 71 MW) sits in
+      the claims store beside the four per-facility rows referenced
+      below; whether the per-facility figures ever roll up is the
+      scope review's question.
+    facilities:
+      - id: KLON-01
+        identity:
+          - source: operator_roster
+            url: https://kaodata.com/locations/harlow/
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: KLON-01 (Harlow)
+      - id: KLON-02
+        identity:
+          - source: operator_roster
+            url: https://kaodata.com/locations/harlow/
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: KLON-02 (Harlow)
+      - id: KLON-03
+        identity:
+          - source: operator_roster
+            url: https://kaodata.com/locations/harlow/
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: KLON-03 (Harlow)
+      - id: KLON-04
+        identity:
+          - source: operator_roster
+            url: https://kaodata.com/locations/harlow/
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: KLON-04 (Harlow)
+
+  # ---- VIRTUS Slough. The operator rosters seven facilities where
+  # the site record claims three (sheet T3-05) — the widest known gap
+  # between a campus claim and a site's planning record, and an open
+  # campus_scope question. VIRTUS's own campus figure (145.5 MW) is
+  # 13.3 MW above its own seven rows summed, a discrepancy worth
+  # putting to the operator (ROADMAP, #247).
+  - site_key: PTNO-12216044
+    facilities:
+      - id: LONDON3
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON3 (Slough)
+      - id: LONDON4
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON4 (Slough)
+      - id: LONDON9
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON9 (Slough)
+      - id: LONDON10
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON10 (75 Buckingham Avenue, Slough)
+      - id: LONDON11
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON11 (Slough)
+      - id: LONDON12
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON12 (Slough)
+      - id: LONDON19
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON19 (Slough)
+
+  # ---- VIRTUS Saunderton. The self-auditing calibration case — the
+  # review sheet reports LONDON15 9.5 + LONDON16 22.5 + LONDON17 16 +
+  # LONDON18 30 against a stated "Campus Total of 78 MW", exact — but
+  # no facility entries can be written yet, honestly.
+  - site_key: PTNO-10234430
+    note: >-
+      The facility names and per-facility figures appear only in the
+      campus page's datasheet PDF, which the snapshot fetcher (HTML
+      only) has never captured; the held snapshot
+      (operator_snapshots/virtus-saunderton.txt) names no facility.
+      Until the datasheet is snapshotted or another held source names
+      them, the roster is unciteable and is deliberately not recorded
+      — the campus total is held ("VIRTUS Saunderton Campus", 78 MW,
+      claims store) and stands alone. ROADMAP carries the snapshot
+      gap under "Operator pages and typed standing".
+
+  # ---- VIRTUS Stockley Park. The campus that opened issue #247: five
+  # facilities on the operator's roster, three with planning figures
+  # of three different kinds, and no document ever stating the
+  # campus's load on a common basis. Facility identity in the planning
+  # channel is hand-adjudicated per the issue thread — only a handful
+  # of this site's 400-plus documents name a facility at all.
+  - site_key: PTNO-12301553
+    note: >-
+      VIRTUS's campus figure is in the claims store ("VIRTUS Stockley
+      Park campus", 112.5 MW). The roster page lists five facilities;
+      LONDON8 and LONDON14 carry no operator megawatts ("Bespoke
+      design"). The page's own prose says "four facilities" against
+      its list of five — quote the list, never the count.
+    facilities:
+      - id: LONDON5
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            date: 2026-08-30
+          - source: planning_document
+            application: Hillingdon/37977/APP/2018/3955
+            document: 68a0bc948192db12
+            note: identity hand-adjudicated in issue #247's thread
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON5 (Stockley Park)
+            note: >-
+              The wrinkle's other half — VIRTUS puts 24 MW here where
+              planning's 24 is LONDON7's handover. Unresolved.
+          - kind: average IT load, 2018 reporting scheme
+            application: Hillingdon/37977/APP/2018/3955
+            document: 68a0bc948192db12
+            page: 12
+      - id: LONDON6
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            date: 2026-08-30
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON6 (Stockley Park)
+      - id: LONDON7
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            date: 2026-08-30
+          - source: planning_document
+            application: Hillingdon/37977/APP/2021/2571
+            document: 2f3a0de53ab4226d
+            note: the document's own title names LONDON7
+        attributions:
+          - kind: announced capacity, operator's basis
+            claim: VIRTUS LONDON7 (Stockley Park)
+            note: >-
+              32.5 MW from the operator, against the 24 MW handover
+              milestone below — possibly the right number on the wrong
+              building (ROADMAP, #247). Unresolved.
+          - kind: commissioning milestone — seven data halls handed
+              over by end-2021, not the installation's capacity
+            application: Hillingdon/37977/APP/2021/2571
+            document: 2f3a0de53ab4226d
+            page: 2
+            note: >-
+              This is the figure the sites table currently ranks the
+              campus on.
+      - id: LONDON8
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            date: 2026-08-30
+      - id: LONDON14
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            date: 2026-08-30
+          - source: planning_document
+            application: Hillingdon/18399/APP/2023/2470
+            document: 04d3032d4d8b414f
+            note: identity hand-adjudicated in issue #247's thread
+        attributions:
+          - kind: design capacity when fully fitted out, two 11 MW
+              floors
+            application: Hillingdon/18399/APP/2023/2470
+            document: 04d3032d4d8b414f
+            page: 3
+            note: >-
+              Adjudicated as both it_load and total_site from this one
+              document; ROADMAP holds the resolution as outstanding.
+
+  # ---- Hayes Bridge Retail Park (Colt LON6/7/8). No operator pages
+  # exist for these facilities yet — the Colt tranche beyond London 4
+  # is ROADMAP's "fifth operator tranche would be cheap" — so identity
+  # rests on Barbour's project titles, one of which names two
+  # facilities in one record.
+  - site_key: PTNO-12831113
+    note: >-
+      An early slot in the facility-roster review per ROADMAP: the
+      site still carries the doubled N+N 300 MW adjudication and the
+      same document set's stated 250 MW requirement, all site-level;
+      no per-facility figure is established, so no attributions yet.
+    facilities:
+      - id: LON6
+        identity:
+          - source: barbour_title
+            ptno: "12845205"
+            title: HAYES BRIDGE RETAIL PARK - LON6 DATA CENTRE
+      - id: LON7
+        identity:
+          - source: barbour_title
+            ptno: "12837470"
+            title: HAYES BRIDGE RETAIL PARK  LON7  LON8 DATA CENTRES & INNOVATION HUB
+      - id: LON8
+        identity:
+          - source: barbour_title
+            ptno: "12837470"
+            title: HAYES BRIDGE RETAIL PARK  LON7  LON8 DATA CENTRES & INNOVATION HUB
