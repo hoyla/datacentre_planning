@@ -713,7 +713,7 @@ left over from a heading that had been deleted, holding the site name at
 the rule is written, and none changes a count, so `release_diff` sees
 nothing. `docs/DESIGN_CONFORMANCE.md` had asserted conformance in a table
 and been wrong three times; it is now
-[tests/test_design_conformance.py](../tests/test_design_conformance.py),
+[tests/test_design_conformance.py](tests/test_design_conformance.py),
 which asserts the handoff's numbers against a rendered page and which
 found the fifth on its first run.
 

@@ -1380,13 +1380,15 @@ here rather than applied from the build lane.
     fork PR able to run this workflow would hand strangers a deploy.
     The path filter also means an unchanged `index.html` carried along
     by a code merge triggers nothing at all.
-  - **It gets safer once EdgeOne retires.** Today merging *is*
-    publishing, because EdgeOne builds from git. After PR #135 and the
-    deployment's deletion, a merge is only a commit and the single
-    route to readers is the approved click. `index.html` can then live
-    in the repo like any other file rather than staying uncommitted in
-    order to stay unpublished — which is how a `reset --hard` silently
-    discarded a built payload on 2026-08-26.
+  - **The condition this waited on has already happened.** The bullet
+    used to read "it gets safer once EdgeOne retires — today merging
+    *is* publishing, because EdgeOne builds from git". Since 2026-08-26
+    EdgeOne's middleware is a pure redirect and publishes nothing, so a
+    merge is already only a commit and the single route to readers is
+    `cloudrun/deploy.sh` (runbook step 14). `index.html` can therefore
+    live in the repo like any other file rather than staying
+    uncommitted in order to stay unpublished — which is how a
+    `reset --hard` silently discarded a built payload on 2026-08-26.
   - **The probe must fail the job.** `deploy.sh` already exits non-zero
     when the live service answers anonymously, so this costs nothing.
 - **Four sites report a total site demand below their IT load.** All four
@@ -1598,7 +1600,7 @@ None is abandoned; each is a known, scoped piece of work.
 - **Requests outstanding, and three drafted awaiting Luke's send.**
   NESO and Ofgem were written to on 2026-08-12 and replies are due
   around 10 September. The three never-sent requests are now drafted in
-  [docs/requests/](requests/) (2026-08-27): the CCA site-level
+  [docs/requests/](docs/requests/) (2026-08-27): the CCA site-level
   consumption FoI/EIR to the Environment Agency copied to DESNZ, the
   NESO EIR for the project-level demand connection queue, and the DNO
   EIR template with its fourteen-licensee address list. Each carries

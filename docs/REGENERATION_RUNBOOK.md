@@ -488,7 +488,7 @@ confirm the live file still parses, then restart; the sync compares
 md5s, so nothing already uploaded is re-sent.
 
 `--prune` moves to the Drive bin every file this tool uploaded whose
-local copy has gone — the stale twins left by the step 5 rename. It
+local copy has gone — the stale twins left by the step 9 rename. It
 works from the upload ledger, because the grant is `drive.file` and the
 API cannot list the folder's contents: there is no far side to diff
 against, only the record of what this tool put there. That cuts the safe
@@ -532,7 +532,7 @@ files would pass while the one thing everybody opens sat in the wrong
 folder. `--phase` tells it which release is yours, so an older release's
 artefacts are reported without failing the run.
 
-Expect failures if the corpus has moved since step 5. A document fetched
+Expect failures if the corpus has moved since step 9. A document fetched
 after the tree was built, or one whose `kind` a re-list changed, is
 genuinely not at its expected path — which is the check working. Rebuild
 and re-sync rather than reading past it.
