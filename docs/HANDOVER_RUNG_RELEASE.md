@@ -36,7 +36,14 @@ Standing disciplines:
   his to merge.
 
 Order: R1 first (the rung's verification reads the database), R2 next,
-R3 any time, R4 last. R2 is the only large package.
+R3/R5/R6 any time **but all before R4**, R4 last. R2 is the only large
+package.
+
+*Status, 2026-09-02: R1 run (claims 264 → 273, matched 80 → 94,
+verified against a build), R3 merged (#331) and its sweep-sibling
+merged behind it (#332), R2 built and open as #333 with Luke's
+rendering review the one part left. R5 and R6 below were found by
+#332's sweep and specced after it.*
 
 ---
 
@@ -182,6 +189,89 @@ loads from a changed working directory and still sees the six sites
 which grows). Strike the ROADMAP paragraph in the same PR. Worth
 landing before R4, since the release build leans on the facility
 layer's guards.
+
+---
+
+## WP-R5 — `dcp/sites.py` resolves its data directory against the package root
+
+The worst instance of the working-directory class, measured by #332
+and recorded in ROADMAP rather than folded in: `build_clusters`
+defaults `data_dir` to `Path("data")` (~line 107), the coordinate-pin
+and partition loaders under it return empty for absent files, and
+both guards beside them check only the keys they are handed. From the
+repository root: 29 `ref` pins, 2 `ptno` pins, 476 partitioned
+applications, 34 partitioned projects; from `/tmp`: none of each,
+guards green. A materialise run from the wrong directory **re-merges
+the campuses the partitions exist to keep apart and changes site
+keys**, reporting clean — the Wapseys Wood pin back, at clustering
+time. `scripts/materialise_sites.py` and
+`scripts/split_union_park_ite.py` both call it without `data_dir`.
+
+The shape differs from #331/#332, which is why it was not folded in:
+`data_dir` is a **threaded parameter**, passed explicitly by four test
+modules. So the fix is to the *default only* — `ROOT =
+Path(__file__).resolve().parent.parent` and `data_dir: Path = ROOT /
+"data"` — and every explicit passer is untouched. Grep the callers of
+`build_clusters(` to confirm none needs a change.
+
+Tests on #332's pattern, each verified to fail against the unfixed
+module: the default is absolute; the pin and partition loaders return
+the same *key sets* from a `monkeypatch.chdir` directory as from the
+root (mechanism, never counts — and the loaders can be exercised
+without a database, so no integration marker is needed). Strike
+ROADMAP's "the same relative-path trap survives in `dcp/sites.py`"
+paragraph in the same PR.
+
+**Must land before R4**: the runbook's step 0 is the materialise.
+
+---
+
+## WP-R6 — `release_diff.py` cannot silently skip its own checks
+
+`scripts/release_diff.py` ~line 56 builds `PRIORS_WITH_SITE_KEYS`
+from two working-directory-relative paths (`cohort_checks.yaml`,
+`organisation_aliases.yaml`) — and `check_priors` (~line 282) opens
+with `if not path.exists(): continue`. **Run from the wrong directory
+it does not fail; it silently skips the dangling-site-key check and
+reports nothing** — a guard that stops guarding, on the one tool the
+"diff against the previous release" discipline rests on, in the class
+HISTORY names: "a guard that stops guarding is worse than none".
+
+Two changes, one branch:
+
+1. Resolve both paths against the package root, same form as
+   everywhere else.
+2. **The `continue` itself is the deeper defect — make the skip
+   loud.** A priors file this repository commits should never be
+   absent at diff time; if one is, that is a fact the report must
+   state, not elide. Print a line into the report ("priors file not
+   found — check skipped") at minimum; erroring out is defensible too,
+   since both files are committed. Executor's choice, stated in the
+   PR.
+
+Check how `release_diff` is tested (grep `release_diff` under
+`tests/`) and add the absolute-path assertion plus a test that a
+missing priors file is *visible* in the report rather than silent,
+each verified to fail against the unfixed script. Sweep the rest of
+the script for further relative reads while in there —
+`grep -n 'Path("' scripts/release_diff.py` — and name anything found
+rather than silently fixing or skipping it.
+
+**Must land before R4**: R4's diff is only as good as this tool.
+
+---
+
+## Two more named by #332's sweep, smaller and later
+
+- **`scripts/barbour_superset.py` (~line 84) is a third reader of
+  `inferred_coords.yaml`**, with its own inline parse. Route it
+  through `map._load_inferred_coords` so the prior has one reader;
+  own tiny branch, after R4 is fine.
+- **`dcp/sources/salesforce_pr.py` (~line 43) writes `LIST_CACHE`
+  under `data/priors/`** — a cache in a priors directory, misleading
+  about what is curated. Moving it touches the harvest flow and
+  orphans the existing file, so this is a note for Luke rather than a
+  fix: decide the location, then move it deliberately.
 
 ---
 
