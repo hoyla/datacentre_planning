@@ -345,6 +345,15 @@ What survives it here:
   `not_dc` (Hallen's did). Small, verdict-tracking in kind.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
+- **The class has a Drive home since 2026-09-02** — `adjacent_power/`
+  beside `sites/`, one folder per application with an `_index.md`
+  naming the sites it stands beside. Found by the 2.11 staging build,
+  the first after the veto: 744 held documents across 28 applications
+  had nowhere to go and a `--prune` sync would have binned them, four
+  of them cited by machine readings. What is *not* done: the reader's
+  "Adjacent power" box links each entry's register page only; linking
+  the Drive folder from there is a small follow-on, the same shape as
+  the site-folder links.
 - Hayes Bridge's doubled N+N 300 (the "Not in an issue" note below)
   still stands.
 

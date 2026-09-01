@@ -10,6 +10,11 @@ source of truth, and the tree is rebuilt rather than edited.
     ├── dc_handover_phase<N>.xlsx     (each release's, side by side)
     ├── dc_phase<N>.duckdb
     ├── reader.html                   (always the current release)
+    ├── adjacent_power/               (power schemes beside sites, not in them)
+    │   ├── _README.md
+    │   └── <application_ref>/
+    │       ├── _index.md            (documents, and the sites it stands beside)
+    │       └── NNN - <derived name>.pdf
     └── sites/
         └── <site_key> — <site name>/
             ├── _site_report — <site_key> — <site name>.md
@@ -339,6 +344,121 @@ def stale_map_lines(state: dict) -> tuple[list[str], bool]:
 TOLERATED_VERDICT = "not_dc"
 UNTRIAGED = "(not triaged)"
 
+# `adjacent_power` is the other verdict with somewhere of its own to go —
+# staged, not excused. Since issue #252 (2026-08-30) the clusterer
+# refuses that class membership: a substation, an energy centre or a
+# battery consented in its own right stands beside a site rather than
+# belonging to it, and its capacity must never read as the site's own
+# demand. So its documents cannot sit under a site folder — but they are
+# held, in-universe, and cited (four of them by a machine reading at
+# 2.11), and the first staging build after the veto found 744 of them
+# with nowhere to go. They are filed under `adjacent_power/` beside
+# `sites/` (Luke, 2026-09-02: "next to, rather than inside, sites"),
+# and the shortfall below counts them as staged only once this build has
+# actually written them.
+ADJACENT_VERDICT = "adjacent_power"
+ADJACENT_DIR = "adjacent_power"
+
+ADJACENT_SQL = f"""
+    WITH latest AS (
+      SELECT DISTINCT ON (application_id) application_id, verdict
+        FROM triage ORDER BY application_id, inserted_at DESC)
+    SELECT a.id, a.application_ref, a.url, a.status,
+           a.date_received, a.date_decided, a.description
+      FROM applications a
+      JOIN latest l ON l.application_id = a.id
+     WHERE l.verdict = '{ADJACENT_VERDICT}'
+       AND NOT EXISTS (SELECT 1 FROM site_members m
+                        WHERE m.application_id = a.id
+                          AND m.retired_at IS NULL)
+       AND EXISTS (SELECT 1 FROM documents d
+                    WHERE d.application_id = a.id
+                      AND d.bytes_path IS NOT NULL)
+     ORDER BY a.application_ref
+"""
+
+# Which sites each adjacent scheme stands beside, and how that is known
+# — the relationship table #252 built in place of membership.
+RELATED_SQL = """
+    SELECT ap.application_id, s.site_key, s.display_name,
+           ap.basis, ap.distance_m
+      FROM site_adjacent_power ap
+      JOIN sites s ON s.id = ap.site_id AND s.retired_at IS NULL
+     WHERE ap.retired_at IS NULL
+     ORDER BY ap.application_id, ap.basis, s.site_key
+"""
+
+ADJACENT_README = """# Adjacent power
+
+Power infrastructure consented in its own right — a substation, an
+energy centre, a standby fleet, a battery — that stands beside a data
+centre site rather than belonging to it.
+
+Since 30 August 2026 these applications are not members of any site:
+a substation's capacity could serve many purposes and must never read
+as a site's own demand. Each site's page in the reader lists the
+schemes beside it in its "Adjacent power" box, with how the connection
+is known. Their documents are held exactly as a site's are and are
+filed here, one folder per application, beside `sites/` rather than
+inside any site's folder. Each folder's `_index.md` names the sites the
+scheme stands beside and why.
+"""
+
+
+def stage_adjacent_power(out: Path, apps, docs_by_app,
+                         related) -> tuple[set[str], int]:
+    """Stage every membership-less adjacent-power application.
+
+    `apps` are `ADJACENT_SQL` rows, `docs_by_app` the same document
+    rows the site loop uses (so `document_filenames` numbers them
+    identically, and `record_drive_ids.py` and `verify_drive_sample.py`
+    derive the same names), `related` the `RELATED_SQL` rows keyed by
+    application id. Returns the references staged and the document
+    count; an application with nothing held is skipped and not counted
+    as staged, so the shortfall guard still sees it.
+    """
+    root = out / ADJACENT_DIR
+    staged: set[str] = set()
+    n_docs = 0
+    for app_id, ref, url, status, received, decided, desc in apps:
+        app_docs = docs_by_app.get(app_id, [])
+        if not app_docs:
+            continue
+        folder = root / app_dir_name(ref)
+        folder.mkdir(parents=True, exist_ok=True)
+        index = [f"# Documents — {ref}", "",
+                 f"Source: {url or 'obtained by hand'}", ""]
+        if desc:
+            index += [f"> {desc.strip()[:600]}", ""]
+        index += [f"- **Status:** {status or 'unknown'}"
+                  f"  |  received {received or '—'}"
+                  f"  |  decided {decided or '—'}",
+                  "- **Adjacent power, not a site member:** this scheme's "
+                  "capacity is not any site's demand; see the reader's "
+                  "'Adjacent power' box on the sites below.", ""]
+        rel = related.get(app_id, [])
+        if rel:
+            index.append("Stands beside:")
+            for key, name, basis, dist in rel:
+                index.append(f"- {name or key} (`{key}`) — {basis}"
+                             + (f", {dist:,.0f} m" if dist else ""))
+            index.append("")
+        index += ["| file | document | source |", "|---|---|---|"]
+        for sha, src, relpath, durl, kind, exists in document_filenames(
+                ref, app_docs):
+            if not exists:
+                continue
+            fname = relpath.split("/", 1)[1]
+            link_or_copy(src, folder / fname)
+            n_docs += 1
+            shown = durl if not durl.startswith("file://") else "obtained by hand"
+            index.append(f"| {fname} | {kind or '—'} | {shown} |")
+        (folder / "_index.md").write_text("\n".join(index) + "\n")
+        staged.add(ref)
+    if staged:
+        (root / "_README.md").write_text(ADJACENT_README)
+    return staged, n_docs
+
 UNSTAGED_SQL = f"""
     WITH latest AS (
       SELECT DISTINCT ON (application_id) application_id, verdict
@@ -358,17 +478,23 @@ UNSTAGED_SQL = f"""
 """
 
 
-def unstaged_documents(cur) -> list[tuple[str, str, int]]:
+def unstaged_documents(cur, staged_adjacent=frozenset()) -> list[tuple[str, str, int]]:
     """`(verdict, application_ref, document count)` for everything left out.
 
-    A document is staged if and only if its application has a live
-    `site_members` row — that is the join at the top of this script and
-    it is the whole mechanism. So this is the complement of the tree,
-    computed from the universe rather than from the tree, which is the
-    only way to see a document that never reached it.
+    A document is staged if its application has a live `site_members`
+    row — the join at the top of this script — or, since 2026-09-02,
+    if it is an adjacent-power application this build wrote under
+    `adjacent_power/`. So this is the complement of the tree, computed
+    from the universe rather than from the tree, which is the only way
+    to see a document that never reached it. `staged_adjacent` is the
+    set of references `stage_adjacent_power` actually wrote: an
+    adjacent-power application it did not write stays in the shortfall
+    and fails the build, because the class has a home now and an
+    absence from it is not on purpose.
     """
     cur.execute(UNSTAGED_SQL)
-    return [(v, ref, n) for v, ref, n in cur.fetchall()]
+    return [(v, ref, n) for v, ref, n in cur.fetchall()
+            if not (v == ADJACENT_VERDICT and ref in staged_adjacent)]
 
 
 def shortfall_lines(rows: list[tuple[str, str, int]],
@@ -743,6 +869,22 @@ def main() -> None:
         for superseded in ("_findings.csv", "_site_report.md"):
             (folder / superseded).unlink(missing_ok=True)
 
+    # The adjacent-power schemes, beside the sites rather than inside
+    # them. Skipped under --limit, which builds a subset of sites for a
+    # look and must not be mistaken for the tree.
+    staged_adjacent: set[str] = set()
+    n_adj_docs = 0
+    if not args.limit:
+        with db.connect() as conn, conn.cursor() as cur:
+            cur.execute(ADJACENT_SQL)
+            adjacent_apps = cur.fetchall()
+            cur.execute(RELATED_SQL)
+            related: dict[int, list] = defaultdict(list)
+            for app_id, key, name, basis, dist in cur.fetchall():
+                related[app_id].append((key, name, basis, dist))
+        staged_adjacent, n_adj_docs = stage_adjacent_power(
+            out, adjacent_apps, docs_by_app, related)
+
     # Root artefacts. Three things and no more: the documents, the
     # workbook, and the database. The explanatory material — README,
     # methodology, data dictionary — used to ship here as markdown beside
@@ -794,6 +936,8 @@ def main() -> None:
     print(f"staged {len(site_keys)} sites, {n_apps} applications, "
           f"{n_docs} documents, {n_findings_csv:,} findings rows in "
           f"per-site CSVs -> {final if not args.limit else out}")
+    print(f"   adjacent power: {len(staged_adjacent)} applications, "
+          f"{n_adj_docs} documents under {ADJACENT_DIR}/, beside sites/")
 
     # What is NOT in the tree, said out loud, every run. The 2026-08-21
     # sync reported 50,406 candidates, 0 failed and 0 skipped over a tree
@@ -802,7 +946,7 @@ def main() -> None:
     # candidate. Only the builder knows the difference between the tree
     # and the universe.
     with db.connect() as conn, conn.cursor() as cur:
-        rows = unstaged_documents(cur)
+        rows = unstaged_documents(cur, staged_adjacent)
     lines, failed = shortfall_lines(rows)
     print("\n".join(lines))
     if failed:

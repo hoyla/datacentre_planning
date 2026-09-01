@@ -252,7 +252,10 @@ it from the same queries as the data), the **workbook**, the **DuckDB
 file**, and the **Drive tree** (per-site folders of source documents
 with generated site reports and findings CSVs, hard-linked from the
 canonical store, rebuilt clean and swapped so re-partitions move
-folders rather than duplicating them). Documents link to our Drive copy
+folders rather than duplicating them — plus, since 2026-09-02, an
+`adjacent_power/` folder beside `sites/` for the power schemes that
+#252 keeps out of membership, and `operator_snapshots/` for the claims
+channel's evidence). Documents link to our Drive copy
 first with the register beside it, addressed by recorded file ID
 (`document_drive_files`), never by derived path. Releases land beside
 their predecessors so citations keep resolving; `scripts/release_diff.py`

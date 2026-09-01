@@ -111,17 +111,32 @@ def parent_chain(svc, file_id: str, stop_at: str, limit: int = 8) -> list[str]:
 
 
 # Every document we hold that the builder is supposed to stage: one whose
-# application has a live site membership. The complement of this set —
-# documents held for an application with no site — is what
-# `build_drive_staging.py` counts and refuses on; between them the two
-# cover every document with bytes on disk.
+# application has a live site membership, or — since 2026-09-02 — one
+# whose application is an adjacent-power scheme with no membership,
+# staged under `adjacent_power/` beside `sites/`. The complement of this
+# set is what `build_drive_staging.py` counts and refuses on; between
+# them the two cover every document with bytes on disk. A frame that
+# left the adjacent class out could never see one of its documents go
+# missing, which is the reason this script samples the universe at all.
 IN_UNIVERSE_SQL = """
+    WITH latest AS (
+      SELECT DISTINCT ON (application_id) application_id, verdict
+        FROM triage ORDER BY application_id, inserted_at DESC)
     SELECT d.id
       FROM documents d
       JOIN site_members m ON m.application_id = d.application_id
                          AND m.retired_at IS NULL
       JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
      WHERE d.bytes_path IS NOT NULL
+    UNION
+    SELECT d.id
+      FROM documents d
+      JOIN latest l ON l.application_id = d.application_id
+     WHERE d.bytes_path IS NOT NULL
+       AND l.verdict = 'adjacent_power'
+       AND NOT EXISTS (SELECT 1 FROM site_members m
+                        WHERE m.application_id = d.application_id
+                          AND m.retired_at IS NULL)
 """
 
 # The sampled documents, plus every sibling in the same application:
@@ -137,10 +152,13 @@ DETAIL_SQL = """
       FROM picked p
       JOIN applications a ON a.id = p.application_id
       JOIN documents d ON d.application_id = a.id AND d.bytes_path IS NOT NULL
-      JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
-      JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+      LEFT JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
+      LEFT JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
      ORDER BY a.id, d.fetched_at, d.id
 """
+# The LEFT JOINs are what let an adjacent-power application through with
+# no site: its expected path is under `adjacent_power/` rather than a
+# site folder, and `expected_paths` branches on the absent site key.
 
 
 def sample_universe(cur, n: int,
@@ -171,10 +189,16 @@ def expected_paths(cur, doc_ids: list[int], staging: Path,
                 rows, named):
             if doc_id not in wanted:
                 continue
+            if not relpath:
+                path = None
+            elif site_key:
+                path = staging / "sites" / stem / relpath
+            else:
+                path = staging / bds.ADJACENT_DIR / relpath
             out.append({
                 "doc_id": doc_id, "ref": ref, "site_key": site_key,
                 "sha": sha, "kind": kind, "source": src, "exists": exists,
-                "path": (staging / "sites" / stem / relpath) if relpath else None,
+                "path": path,
             })
     return out
 
