@@ -2234,10 +2234,29 @@ considered:
       Liverpool Road, or the one VIRTUS calls LONDON10 at 75 Buckingham
       Avenue. site_partitions.yaml says "the campus VIRTUS acquired from
       Zenium"; environment-agency-permit-operators.yaml says CyrusOne
-      bought Zenium's UK estate. Both are in this repository and they
-      cannot both be right about this building. Settling it needs an
-      external source — Companies House for the Zenium entities, or the
-      title register — and nobody has been.
+      bought Zenium's UK estate. Both are in this repository, and they
+      cannot both be right about *this building* — but they can both be
+      right about the estate.
+
+      **The likeliest reconciliation, and the one to test first** (Luke,
+      2026-09-01): "It may be that the Zenium projects were broken up
+      and went to different parties." That would make each file correct
+      about the assets it saw, and neither wrong. **The corporate
+      structure supports it.** The one Zenium company this corpus holds
+      is `ZENIUM UK2 LIMITED`, permit holder for "London Two" — a
+      *numbered* per-asset SPV, and the permit-operators note says the
+      permits "still stand in the Zenium **companies'** names", plural.
+      Permits stay put when the company is sold and must be varied when
+      the building is; one SPV per asset with permits undisturbed is the
+      signature of an estate sold piecemeal, buyer by buyer, with
+      nothing in the planning or permit record ever saying so.
+
+      **What would settle it, and it is this project's own machinery:**
+      the Zenium entities have never been through the Companies House
+      sweep — no Zenium appears in companies-house-spvs.yaml or in
+      organisation_aliases.yaml. The numbering bounds the set, and a
+      single-asset SPV's filings state what the asset is and who owns
+      it. That is the cheap first move, ahead of the title register.
 
   - claim_name: CyrusOne LON2 (Prologis Park Heathrow, West Drayton)
     reason: >-

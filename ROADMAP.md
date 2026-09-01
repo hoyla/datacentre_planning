@@ -1001,6 +1001,24 @@ still to do:
   it deliberately. The full evidence, and the acquisition question the
   partition turns on, are the `considered:` entries in
   `operator-claims.yaml` — do not re-derive them.
+- **Put the Zenium entities through the Companies House sweep.** The
+  partition above turns on who acquired what, and two files here
+  disagree: `site_partitions.yaml` says VIRTUS acquired the campus
+  from Zenium, `environment-agency-permit-operators.yaml` says
+  CyrusOne bought Zenium's UK estate. **Both can be right if the
+  estate was broken up and sold asset by asset** (Luke, 2026-09-01),
+  which is the hypothesis to test first, and the corporate shape fits
+  it: the one Zenium company the corpus holds is `ZENIUM UK2 LIMITED`
+  — a numbered per-asset SPV — and the permits "still stand in the
+  Zenium companies' names", plural. Permits stay put when the company
+  is sold and must be varied when the building is, so undisturbed
+  permits across numbered SPVs is what a piecemeal sale looks like.
+  **No Zenium appears in `companies-house-spvs.yaml` or
+  `organisation_aliases.yaml`**, so the sweep built for exactly this
+  class — single-asset SPVs, whose filings state the asset and its
+  owner by construction — has never been pointed at it. The numbering
+  bounds the set. Cheaper than the title register and it settles the
+  partition.
 
 ## Acquisition decisions waiting on a person
 
