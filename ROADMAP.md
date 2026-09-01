@@ -987,6 +987,20 @@ still to do:
 - **CyrusOne LON2 (Prologis Park, West Drayton) is a separate site**
   from the VIRTUS Prologis Park campus — they share an estate, not a
   scheme (sheet T4-02). A note for whenever that site is created.
+- **CyrusOne LON1 is in the corpus under Zenium's name, inside
+  VIRTUS's site, and wants a partition** (2026-09-01, Luke holding the
+  decision: "I will sort out the partitioning later"). Barbour project
+  `12216044` is `12 Liverpool Road` / `London One`, which is the
+  address CyrusOne publishes for LON1 — but it is a member of
+  `PTNO-12216044`, VIRTUS's Slough campus at 75 Buckingham Avenue,
+  joined on nothing but the shared SL1 4QZ postcode: all three Barbour
+  records in that site carry one identical coordinate, the postcode
+  centroid. It also lends the site its key and derived name, being the
+  lowest Ptno of the three. Ejecting it overturns
+  `site_partitions.yaml`'s `virtus-zenium-slough-campus`, which lists
+  it deliberately. The full evidence, and the acquisition question the
+  partition turns on, are the `considered:` entries in
+  `operator-claims.yaml` — do not re-derive them.
 
 ## Acquisition decisions waiting on a person
 

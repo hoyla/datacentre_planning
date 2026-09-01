@@ -2189,6 +2189,79 @@ considered:
       independent sources describing an operating data centre the
       planning sweep has never captured.
 
+  - claim_name: CyrusOne LON1 (Slough)
+    reason: >-
+      **The building is in the corpus; it is mis-clustered, and the
+      claim stays unmatched until a partition moves it.** Sheet row
+      T4-01 recorded "no candidate found by postcode or name token" and
+      left it "not yet". A candidate does exist, and it was missed
+      because the search was by postcode and name token: Barbour project
+      12216044 carries `Site1: 12 Liverpool Road`, `Site2: London One`,
+      developer Zenium, landlord SEGRO — and CyrusOne publishes LON1 at
+      12 Liverpool Road, SL1 4QZ. The word "CyrusOne" appears nowhere on
+      that record, because Zenium's UK estate was bought by CyrusOne in
+      2018 (environment-agency-permit-operators.yaml) and the record
+      still stands in Zenium's name. A name-token search cannot find a
+      facility filed under the name of the company that used to own it.
+
+      **Why it is still not matched** (Luke, 2026-09-01): "Ptno 12216044
+      is not the cyrusone site. It just happens to have the same
+      postcode." Project 12216044 is a live member of site
+      PTNO-12216044, which is VIRTUS's Slough campus at 75 Buckingham
+      Avenue. Attaching 9 MW to that site would put a CyrusOne figure on
+      VIRTUS's campus.
+
+      **The mechanism, measured 2026-09-01.** All three Barbour projects
+      in that site carry the *identical* coordinate 51.520628,
+      -0.623988 — the SL1 4QZ postcode centroid, not their buildings —
+      so the spatial rule sees them as zero metres apart. The two VIRTUS
+      records name no street at all ("Slough Trading Estate"); only the
+      Zenium record names one. Slough/T/138 (LONDON10, 75 Buckingham
+      Avenue) sits 243 m away. The cluster is a postcode join wearing a
+      spatial edge, and the postcode is shared: Equinix LD10 and LD13x
+      are at 13 Liverpool Road next door. Postcode joins in this
+      corridor fail towards confident wrong answers, which ROADMAP's
+      Equinix survey already warns about naming this exact postcode.
+
+      **What would settle it:** a partition ejecting 12216044 from
+      PTNO-12216044 into its own site. Luke holds that (2026-09-01, "I
+      will sort out the partitioning later"), and it overturns a written
+      adjudication — site_partitions.yaml's `virtus-zenium-slough-campus`
+      lists 12216044 deliberately — so it is not a session's call.
+
+      **Open, and deliberately not settled here:** whether Zenium's
+      "London One" is the building CyrusOne now calls LON1 at 12
+      Liverpool Road, or the one VIRTUS calls LONDON10 at 75 Buckingham
+      Avenue. site_partitions.yaml says "the campus VIRTUS acquired from
+      Zenium"; environment-agency-permit-operators.yaml says CyrusOne
+      bought Zenium's UK estate. Both are in this repository and they
+      cannot both be right about this building. Settling it needs an
+      external source — Companies House for the Zenium entities, or the
+      title register — and nobody has been.
+
+  - claim_name: CyrusOne LON2 (Prologis Park Heathrow, West Drayton)
+    reason: >-
+      **A coverage gap, not a matching failure**, and reached
+      independently three times. Sheet row T4-02, Luke's own note: "I
+      think it's a separate site to the Virtus Prologis Park campus;
+      they just happen to both be in Prologis Park." ROADMAP's site-37
+      examination (2026-08-28) checked directly and found no application
+      in the corpus naming CyrusOne at that postcode or in that site —
+      "CyrusOne DC2 is a coverage gap on the same business park, not a
+      second operator inside the site record". And the permit channel
+      agrees: environment-agency-permit-matches.yaml holds EPR/TP3839QU
+      under `considered` as one of the units that "both sit beside site
+      37 … adjacent units on one park, not the same installation".
+
+      **What is new, 2026-09-01:** that permit is the same building
+      under its former owner's name. Holder ZENIUM UK2 LIMITED, titled
+      "London Two", 86.6 MWth, at UB7 9FN — which is the postcode
+      CyrusOne publishes for LON2, and "London Two" is what LON2 stands
+      for. Probable rather than established, on the same acquisition
+      question the LON1 entry above leaves open, and it does not change
+      the outcome: there is no planning record for the building either
+      way, so the claim stays unmatched.
+
 noted:
   - subject: Digital Realty — per-site capacity published but never rendered
     snapshot: digitalrealty-london
