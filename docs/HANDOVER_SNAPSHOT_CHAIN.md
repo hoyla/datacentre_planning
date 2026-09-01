@@ -195,23 +195,124 @@ parent. A second run reports "nothing to do".
 beside the source URL it already shows, exactly as documents carry the
 Drive copy beside the register link. "Every finding is sourced" then
 holds for the claims channel without a reporter needing to know the
-repo layout.
+repo layout. One emphasis difference, deliberate: for documents our
+copy is the title link and "register" the quieter second, because
+councils withdraw documents; for claims the published page stays the
+primary link, because it is the citable source, and "our copy" is the
+labelled second. Same pair, led by what a reporter cites.
 
-- Resolution: claim → `snapshot` slug → newest dated file **at claim
-  `as_at`** where the claim has one (the whole point of WP-A is that
-  older readings keep older evidence; a claim read 2026-08-20 links
-  the snapshot that existed then, not today's), else newest overall.
-  Put that rule in `snapshot_path` or a sibling, tested.
-- Wire into `scripts/export_reader.py`'s claims panel (the
-  `site_claims` loop, ~line 3722) and the workbook's claims sheet;
-  both read through `load_site_claims`, which may need the slug added
-  to its SELECT (`cl.source_locator` already carries it — verify).
-- `release_diff.py` will report the new links; expected direction is
-  a rise in claim-panel link counts and nothing falling.
+*Spec sharpened 2026-09-01 by a Fable session after verifying WP-A, B
+and D at the far side (store 84/84 dated, ledger 84/84 with every md5
+matching local bytes, both quote gates clean, suite 1,207 green). The
+premises below were read out of the code that day — re-grep before
+trusting; line numbers drift.*
 
-**Done when**: every rendered operator/green claim carries a working
-Drive link to the snapshot supporting it, counts verified in the
-release diff, and Luke has seen the rendering before it ships.
+- An operator claim's `source_locator` **is** its snapshot slug —
+  `load_operator_claims` sets `locator=c["snapshot"]`. NESO rows carry
+  "row N", Companies House rows a filing locator, so resolving by slug
+  naturally excludes them: resolve, and render nothing where
+  resolution fails. Never guess a link.
+- Two readings of one claim are two `capacity_claims` rows (the
+  content key includes `value_original` and `as_at`), each carrying
+  its own `as_at` and slug — per-row resolution is exactly what the
+  append-only store was built for.
+- Green claims (`operator-green-claims.yaml`) carry a slug and **no
+  `as_at`** — they assert the current page, so they take the
+  newest-file arm.
+- The surfaces are five, not two: the site page's "Other power
+  indicators" panel (the `site_claims` loop's `src` line, ~3781); the
+  Operators tab's `_op_source` (~5086); the green-claims table's
+  `_green_row` (~5275, which links the quote to `source_url`); the
+  workbook's "Capacity claims" sheet (~1935) and "Figures by
+  audience" sheet (~2013). Enumerate by grepping `source_url` in
+  `scripts/export_reader.py` and `scripts/export_handover.py` rather
+  than trusting this list.
+- `dcp/snapshot_drive.py` already has `load_ledger()` and
+  `url_for(filename)`; `dcp.drive.file_url` is the one viewer-URL
+  shape. Do not hand-build a viewer URL — the two exporters that
+  still do are a recorded ROADMAP item, not a pattern. No import
+  cycle: `snapshot_drive` imports only `drive`, so it can lazily
+  import the resolver from `capacity_claims`.
+
+**The resolution rule, and why the quote is part of it.** A pure date
+rule is not enough. The superseded CyrusOne LON1 reading (8.72 MW,
+`as_at` 2026-08-20) still stands as a `capacity_claims` row, the store
+holds only the 2026-08-30 file that reads 9 MW, and any date-only
+fallback would link the 8.72 row to evidence stating 9 — the
+working-link-to-the-wrong-evidence failure this whole chain exists to
+prevent. The discriminator is the claim's own verbatim quote, which is
+in `attrs->>'quote'` on every operator and green claim: **a claim
+links the file nearest its `as_at` in which its quote actually
+appears, whitespace-normalised both sides as the gate does, and links
+nothing otherwise.** Candidate order: newest dated file ≤ `as_at`,
+then the post-`as_at` files oldest first (a reading routinely predates
+the next re-fetch: CyrusOne LON1's current 9 MW is `as_at` 2026-08-28
+against `cyrusone-lon1.2026-08-30.txt`, and the quote verifies there);
+no `as_at` → newest first, then older. This also means
+`verify_operator_quotes` does not change: its job is detecting that a
+page has moved under the *current* YAML readings, which
+verify-against-newest does exactly, and the link's honesty is
+guaranteed by construction rather than by sharing the gate's
+resolution.
+
+Build, in one branch:
+
+1. **The candidate order.** `snapshot_candidates(slug, as_at,
+   snapshot_dir=OPERATOR_SNAPSHOT_DIR) -> list[Path]` in
+   `dcp/capacity_claims.py` beside `snapshot_path`, returning held
+   files in the nearness order above. Order by the parsed
+   `(date, seq)` — `_snapshot_order` — never the raw name.
+2. **One link helper, used by every surface.** In
+   `dcp/snapshot_drive.py`: `copy_url(slug, as_at, quote) -> str |
+   None` — first candidate whose text contains the
+   whitespace-normalised quote (reuse `_norm_ws`), then filename →
+   ledger id → `drive.file_url`. None when no candidate contains the
+   quote **or** the winning file has no ledger entry: a claim must
+   never render a guessed link — the `document_drive_files` argument,
+   one layer up. Lazy-import from `capacity_claims`; no cycle exists
+   in that direction. 84 small files read at most once each per
+   build — cache reads per filename within the helper if the build
+   feels it, and not before.
+3. **The quote reaches the export.** `load_site_claims` and
+   `load_claim_rows` add `cl.attrs->>'quote'` to their SELECTs. **If
+   this step turns up a conflict the spec did not anticipate, stop
+   and say so before working around it** (AGENTS rule 4).
+4. **Reader wiring.** Beside each existing source link, when
+   `copy_url` resolves: `· <a …>our copy</a>`, the document idiom's
+   own vocabulary. Site claims panel: on the `src` line. Operators
+   tab: appended to `_op_source`'s bits. Green table: after the
+   linked quote (green claims pass `as_at=None`).
+5. **Workbook wiring.** "Capacity claims" gains "Our copy (Drive)"
+   after "Source URL"; same on "Figures by audience" (its comment at
+   ~1980 explains what its Source column already points at — read it
+   first). Column widths, and a dictionary entry for each new column
+   in the same PR — the dictionary blocks start ~887.
+6. **Tests.** The candidate order against a store holding several
+   dated files and a same-day `_2` (as_at before / between / after
+   the range, and None); `copy_url` picks the older file when only it
+   contains the quote, returns None when no candidate does (the
+   8.72 MW ghost-row case, which is the test that matters), and None
+   for an unledgered file and an unknown slug; a built-page test on
+   the `test_no_link_in_the_built_page_points_at_a_filesystem`
+   pattern — every our-copy href in the built bytes names a file id
+   present in the committed ledger.
+7. **`release_diff.py` expectations**: claim-panel link counts rise;
+   nothing falls. Say so in the PR body, with the grep list.
+
+**Out of scope, deliberately**: the DuckDB's claims tables (a
+follow-up if wanted — say so in the PR rather than folding it in);
+the `site_facilities.py` relative-path defaults (ROADMAP's "latent
+trap" — two lines, its own branch, and a good first branch for an
+executor session); folding `export_handover.py` and
+`export_duckdb.py`'s hand-built viewer URLs into `drive.file_url`
+(ROADMAP, its own change).
+
+**Done when**: every rendered operator/green claim whose evidence is
+a held snapshot carries a working Drive link resolving to the file
+its quote verifies in, counts verified in the release diff, and Luke
+has seen the rendering before it ships — include the rendered claim
+block for site 529 (Iron Mountain) or CyrusOne LON1's site in the PR
+so that review has something to look at.
 
 ---
 
@@ -301,13 +402,41 @@ consumed as inputs:
   total and its facility components are different rungs, never
   summed together.
 - The facility prior and its seeds (#309/#310/#314/#316), including
-  the two self-auditing campuses (Saunderton exact; Iron Mountain
-  pending WP-D) as the benchmark for when `total: sum` is trustable.
+  the two self-auditing campuses as the benchmark for when
+  `total: sum` is trustable — **both now measured, not asserted**
+  (WP-D): `reconcile_components()` reports five campuses, Saunderton
+  78.0 against 78.0 exact and Iron Mountain 61 against 60.7, with
+  Kao, Slough and Stockley beside them. Re-run it for the document's
+  numbers rather than quoting these.
 - The audiences finding: count corporate-states/consultation-silent
   from `operator_pages.yaml` kinds and put the number in the document.
+- **The Global Switch test** (2026-09-01, ROADMAP under #247): the
+  "first constructible total" premise failed on measurement — each
+  building states figures of more than one kind, and the proposed
+  80 + 35 added a feasibility ceiling to a scheme headline while each
+  building's other figure went unused. So the rung design must answer
+  **which of a building's own figures a campus total may add** — a
+  judgement per facility, recorded in the roster, never arithmetic.
+- **The #250 measurement bounds the stakes** (2026-08-31, ROADMAP):
+  the invisible class is exactly two sites today (Stockley, Cardiff),
+  a third (Slough) pending its scope decision, and the register
+  channel adds zero line-crossers — so the rung buys correctness on a
+  handful of prominent sites, not a re-ranking of the corpus. The
+  document should say so, because it sets how much complexity the
+  design can justify.
 
 **Done when**: a `docs/` design document is PR'd ending in decision
-points for Luke, with no implementation.
+points for Luke, with no implementation. The decision points it must
+reach, at minimum: what the labelled weight says and how it sits in
+the ladder (the `w-modelled` precedent); whether a campus total and a
+facility figure are different rungs (they are different realms —
+`component_of` decided that for claims; the rung must not undo it);
+whether `at_least_100mw` admits on a first-party figure with the
+basis named, and what the cohort's `limits` then says; what renders
+when operator and planning figures disagree (the divergence is the
+finding); and the Pulsant estate — whether a facility with no
+planning record can exist in the corpus at all before a site record
+does.
 
 ---
 
