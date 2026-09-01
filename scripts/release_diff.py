@@ -20,10 +20,14 @@ them both sides have:
                     added and removed
   *.duckdb          tables; rows per table
 
-and, if the two priors files the redesign introduces exist, that every
+and, from the two priors files the redesign introduces, that every
 `site_key` they name resolves to a site row in the build — a site that
 was split or retired since the evidence was written is otherwise a
-silent dangling reference.
+silent dangling reference. Both files are committed and are found
+relative to this script, so one being absent is reported and exits 2
+rather than skipping the check: it means the checkout is incomplete,
+and a diff that quietly dropped a check reads exactly like one that
+passed it.
 
 The rule is asymmetric on purpose. Anything that **fell** — a tab gone,
 a column gone, a site that lost links, fewer rows — exits non-zero,
@@ -53,9 +57,17 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from dcp import release
 
+# Resolved against the package root, never the working directory. Both
+# files are committed, so from anywhere else `check_priors` found
+# neither and skipped itself — the dangling-site-key check silently not
+# running on the one tool the diff-against-the-last-release discipline
+# rests on. Same form as dcp/site_facilities, dcp/map and
+# dcp/site_aliases.
+ROOT = Path(__file__).resolve().parent.parent
+
 PRIORS_WITH_SITE_KEYS = (
-    Path("data/priors/cohort_checks.yaml"),
-    Path("data/priors/organisation_aliases.yaml"),
+    ROOT / "data" / "priors" / "cohort_checks.yaml",
+    ROOT / "data" / "priors" / "organisation_aliases.yaml",
 )
 
 
@@ -189,6 +201,11 @@ def duckdb_shape(path: Path) -> dict[str, int]:
 class Report:
     lines: list[str] = field(default_factory=list)
     fell: list[str] = field(default_factory=list)
+    # A check that could not run, which is a different thing from a
+    # count that fell: `fell` is a statement about the build, `broke` a
+    # statement about this instrument. `--allow-fewer` can declare a
+    # removal deliberate; it cannot declare a check it never saw.
+    broke: list[str] = field(default_factory=list)
 
     def row(self, what: str, before, after, *, fell_if_less: bool = True) -> None:
         mark = ""
@@ -284,12 +301,23 @@ def check_priors(rep: Report, site_keys: set[str]) -> None:
     """Every site_key a priors file names must still be a site."""
     import yaml
     for path in PRIORS_WITH_SITE_KEYS:
+        # Resolved absolutely, reported relatively: the report is read by
+        # a person, and an absolute path is the machine's business.
+        shown = path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
         if not path.exists():
+            # Both files are committed and the paths above are absolute,
+            # so absent means this checkout is incomplete — not that the
+            # check does not apply. Saying nothing is how a guard stops
+            # guarding: the report reads exactly as it does when every
+            # site key resolves.
+            rep.broke.append(
+                f"{shown}: not found, so dangling site keys went unchecked")
+            rep.lines.append(f"{shown}: NOT FOUND — check skipped")
             continue
         doc = yaml.safe_load(path.read_text()) or {}
         named = set(_site_keys_in(doc))
         dangling = named - site_keys
-        rep.lines.append(f"{path}")
+        rep.lines.append(f"{shown}")
         rep.row("site keys named", len(named), len(named), fell_if_less=False)
         rep.missing("site keys that no longer resolve", dangling)
 
@@ -366,6 +394,18 @@ def main() -> int:
         print("\nFELL:")
         for f in rep.fell:
             print(f"  {f}")
+    if rep.broke:
+        # Before the FELL verdict, and outside --allow-fewer's reach:
+        # this says the diff is incomplete, so no reading of it — that
+        # something fell, or that nothing did — is trustworthy.
+        print("\nCHECKS THAT DID NOT RUN:")
+        for b in rep.broke:
+            print(f"  {b}")
+        print("\nThese files are committed, so an absent one means the "
+              "checkout is\nincomplete. --allow-fewer does not cover it.",
+              file=sys.stderr)
+        return 2
+    if rep.fell:
         if args.allow_fewer:
             print("\n--allow-fewer given: removals declared deliberate")
             return 0
