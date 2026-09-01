@@ -274,6 +274,32 @@ version, so moving the audit onto a newer reading model — `gpt-5.6-terra`
 is the live temptation — silently turns an incremental run into all
 18,209 rows again.
 
+### 4a. Submit the machine readings now, collect them before step 12
+
+```sh
+scripts/machine_reading_openai.py --submit --model gpt-5 --reasoning-effort medium
+# ... later, any time before the step-12 rebuild:
+scripts/machine_reading_openai.py --collect
+```
+
+The readings were never a numbered step, and at 2.11 that nearly cost
+half an hour of wall-clock for nothing. Their inputs are the *corpus*
+— adjudicated figures, claims and matches, cohort membership, the
+documents — not the build, so they are ready to submit the moment
+steps 0–4 have settled the corpus, and `_already()` keys on the input
+hash, so a bare `--submit` reads only the sites whose inputs moved
+(47 at 2.11, ≈4.3M input tokens, for the new matches and the cohort
+whose definition #333 rewrote). The batch turnaround is 15–35 minutes,
+which the reports, the backup and the step-7 exports absorb entirely;
+only the step-12 build needs the readings in the database, because
+that is the one that publishes `index.html`.
+
+**Pass `--model gpt-5` every time.** The script's default is
+`gpt-5.6-terra`, and ROADMAP records why that model is not the one the
+readings run on: at the same prompt it states about a quarter of the
+figures, and `LATEST_SQL` would render it. A bare `--submit` would
+reintroduce that regression on every site whose inputs moved.
+
 ### 5. Look at what moved
 
 ```sh
@@ -287,8 +313,13 @@ Reports land in `data/reports/` (gitignored — they name sites and quote
 documents). You are looking for:
 
 - **contradicted** sites — a grid connection materially below stated
-  demand. Two are genuine and known (Watford Bypass, West London); more
-  than that means something new to read.
+  demand. Two are genuine and known — **Watford Bypass and Ferrybridge
+  C** (this said "West London" until 2026-09-01; West London left the
+  list when the export-limit rule landed, and Ferrybridge C has stood
+  in its place since at least the 2026-08-28 report, its grid 100 MW
+  equalling its storage 100 MW, which reads like a battery connection
+  typed as the data centre's and is a person's row); more than that
+  means something new to read.
 - **generation-understated** — a single machine's rating standing in for
   a fleet. Five known.
 - The null-capacity sweep prints **PROVISIONAL** and refuses to give a
