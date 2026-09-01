@@ -271,7 +271,8 @@ def load_divergences(cur, doc_links: dict[int, str] | None = None) -> list[dict]
                cl.source_key, cl.claim_name, cl.value_original,
                cl.unit_original, cl.quantity_type,
                cl.attrs->>'operator_term', m.confidence,
-               cl.source_url, cl.source_locator, cl.attrs->>'quote'
+               cl.source_url, cl.source_locator, cl.attrs->>'quote',
+               cl.as_at
         FROM capacity_claim_matches m
         JOIN capacity_claims cl ON cl.id = m.claim_id
         JOIN sites s ON s.id = m.site_id
@@ -280,7 +281,7 @@ def load_divergences(cur, doc_links: dict[int, str] | None = None) -> list[dict]
         ORDER BY s.id, cl.source_key, cl.id""")
     by_site: dict[int, dict] = {}
     for (sid, name, skey, src, claim, value, unit, qty, term,
-         conf, source_url, locator, quote) in cur.fetchall():
+         conf, source_url, locator, quote, as_at) in cur.fetchall():
         d = by_site.setdefault(sid, {"site_id": sid,
                                      "site": displayed(skey, name),
                                      "site_key": skey, "claims": []})
@@ -289,7 +290,12 @@ def load_divergences(cur, doc_links: dict[int, str] | None = None) -> list[dict]
             "source_key": src, "claim_name": claim, "value": value,
             "unit": unit, "quantity_type": qty, "term": term,
             "confidence": conf, "source_url": source_url,
-            "locator": locator, "quote": quote,
+            # `as_at` and `quote` together are what resolve this reading
+            # to the snapshot it was taken from — the store keeps every
+            # reading, so neither on its own names a file. The planning
+            # rows above carry neither and take no snapshot link; their
+            # "our copy" is the document's own Drive id.
+            "locator": locator, "quote": quote, "as_at": as_at,
         })
     planning = load_planning_figures(cur, list(by_site), doc_links)
     for sid, d in by_site.items():

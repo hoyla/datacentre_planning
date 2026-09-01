@@ -209,6 +209,17 @@ records each file's ID in
 means Drive for a claim exactly as it does for a document rather than
 meaning a file in this repository.
 
+**A claim links the file its own quote is in, not the newest one.** The
+store keeps every reading of a page and `capacity_claims` keeps every
+reading of a claim, and the two do not line up: CyrusOne LON1 read
+8.72 MW on 20 August 2026 and 9 MW eight days later, with no
+announcement on the page. Resolving a link by slug and date would put
+the older row against evidence stating the newer figure. So each claim
+links the nearest held snapshot in which its verbatim quote actually
+appears, and links nothing otherwise — which is the honest answer for
+that 8.72 MW row, whose own evidence was overwritten before the store
+became append-only.
+
 **Documents link to our copy first, with the register beside it.** A
 council can withdraw a document from its register, renumber it, move the
 portal or gate it, and all four have happened here — so the copy this

@@ -604,3 +604,87 @@ def test_a_facility_figure_from_a_second_page_is_not_a_component():
     assert faq.attrs["component_of"] == "Iron Mountain London campus (Slough)"
     assert page.attrs["component_of"] is None
     assert (faq.value, page.value) == (8.7, 8.75)
+
+
+# ---------------------------------------------------------------------------
+# Which held file evidences *this reading* (WP-C)
+#
+# `snapshot_path` answers "what does the page say now", which is what the
+# quote gates want. A link beside a claim needs the other question, and
+# the two have different answers the moment a page changes: CyrusOne LON1
+# read 8.72 MW on 2026-08-20 and 9 MW on 2026-08-28, both rows still
+# stand, and pointing the older one at today's file would be a working
+# link to evidence that contradicts it.
+
+def _dated(dirpath, slug, *dates):
+    return [_snap(dirpath, f"{slug}.{d}.txt") for d in dates]
+
+
+def test_candidates_before_a_reading_come_newest_first(tmp_path):
+    """The evidence a reading was actually made against, closest first."""
+    import datetime as dt
+    _dated(tmp_path, "op-site", "2026-08-14", "2026-08-20", "2026-08-28")
+    got = cc.snapshot_candidates("op-site", dt.date(2026, 8, 28), tmp_path)
+    assert [p.name for p in got] == [
+        "op-site.2026-08-28.txt", "op-site.2026-08-20.txt",
+        "op-site.2026-08-14.txt"]
+
+
+def test_later_files_follow_earlier_ones_oldest_first(tmp_path):
+    """A reading routinely predates the next re-fetch, so the file after
+    it is the next-best evidence — but only after every file that
+    existed when the reading was taken has been offered."""
+    import datetime as dt
+    _dated(tmp_path, "op-site", "2026-08-14", "2026-08-30", "2026-09-04")
+    got = cc.snapshot_candidates("op-site", dt.date(2026, 8, 20), tmp_path)
+    assert [p.name for p in got] == [
+        "op-site.2026-08-14.txt", "op-site.2026-08-30.txt",
+        "op-site.2026-09-04.txt"]
+
+
+def test_a_reading_after_every_file_still_sees_them_all(tmp_path):
+    import datetime as dt
+    _dated(tmp_path, "op-site", "2026-08-14", "2026-08-20")
+    got = cc.snapshot_candidates("op-site", dt.date(2026, 9, 30), tmp_path)
+    assert [p.name for p in got] == [
+        "op-site.2026-08-20.txt", "op-site.2026-08-14.txt"]
+
+
+def test_a_same_day_second_reading_is_ordered_by_its_sequence(tmp_path):
+    """`_2` sorts after the day's first file, and a claim dated that day
+    is offered the later one first — the same `(date, seq)` key
+    `snapshot_path` sorts on, never the raw name."""
+    import datetime as dt
+    _snap(tmp_path, "op-site.2026-08-28.txt")
+    _snap(tmp_path, "op-site.2026-08-28_2.txt")
+    got = cc.snapshot_candidates("op-site", dt.date(2026, 8, 28), tmp_path)
+    assert [p.name for p in got] == [
+        "op-site.2026-08-28_2.txt", "op-site.2026-08-28.txt"]
+
+
+def test_no_date_offers_the_whole_store_newest_first(tmp_path):
+    """A green claim asserts the page as it reads now and carries no
+    `as_at`, so the newest reading is the one it means."""
+    _dated(tmp_path, "op-site", "2026-08-14", "2026-08-30")
+    got = cc.snapshot_candidates("op-site", None, tmp_path)
+    assert [p.name for p in got] == [
+        "op-site.2026-08-30.txt", "op-site.2026-08-14.txt"]
+
+
+def test_a_locator_that_is_not_a_slug_resolves_to_nothing(tmp_path):
+    """Most claims in the store are not operator claims: the register's
+    locator is "row 47" and a filing's is "page 12". They must find no
+    candidate rather than be matched by a glob that reads them as a
+    pattern."""
+    _snap(tmp_path, "op-site.2026-08-30.txt")
+    assert cc.snapshot_candidates("row 47", None, tmp_path) == []
+    assert cc.snapshot_candidates("page [1]", None, tmp_path) == []
+    assert cc.snapshot_candidates("../op-site", None, tmp_path) == []
+    assert cc.snapshot_candidates("", None, tmp_path) == []
+
+
+def test_one_slug_is_not_offered_a_longer_slugs_files(tmp_path):
+    _snap(tmp_path, "op-site-spec-sheet.2026-09-01.txt")
+    _snap(tmp_path, "op-site.2026-08-30.txt")
+    assert [p.name for p in cc.snapshot_candidates("op-site", None, tmp_path)] \
+        == ["op-site.2026-08-30.txt"]

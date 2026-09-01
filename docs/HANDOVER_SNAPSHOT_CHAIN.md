@@ -1,12 +1,19 @@
 # Handover: the snapshot chain and its consumers
 
-> A plan over ROADMAP.md, not a second roadmap: written 2026-09-01 so
-> an Opus session can execute work whose design was settled in a Fable
-> session that ran short of credits. **ROADMAP.md stays the inbox** —
-> when a package lands, its ROADMAP item is updated in the same PR and
-> the package below gets a DONE marker; when all are landed or
-> abandoned, mark this file SPENT at the top the way
-> `docs/HANDOVER_OPUS5.md` is. Everything here was agreed with Luke on
+> **SPENT — do not work from this document.** All five packages landed
+> on 2026-09-01: WP-A (#319), WP-B (#320), WP-D (#321), WP-C (#324),
+> and WP-E — whose deliverable,
+> [PLAN_OPERATOR_RUNG.md](PLAN_OPERATOR_RUNG.md) (#326), now also
+> carries Luke's decisions on all seven points. **ROADMAP.md is the
+> inbox**; the live work this chain leads to — implementing the rung,
+> the 2.11 release, the 35-campus review — is carried there and in the
+> plan document. Kept as the record of how the packages were scoped
+> and what each measured.
+
+> *The original preamble, for the record:* a plan over ROADMAP.md, not
+> a second roadmap: written 2026-09-01 so an Opus session can execute
+> work whose design was settled in a Fable session that ran short of
+> credits. Everything here was agreed with Luke on
 > 2026-08-31/2026-09-01; where a package says "decided", do not
 > re-litigate it — the reasoning is in ROADMAP and the PR threads it
 > cites (#310–#316).
@@ -188,7 +195,7 @@ parent. A second run reports "nothing to do".
 
 ---
 
-## WP-C — Link snapshots from the reader and workbook
+## WP-C — Link snapshots from the reader and workbook — **DONE 2026-09-01, rendering awaits Luke**
 
 **Decided in shape, Luke reviews the rendering**: each operator claim
 (and green claim) renders a link to *our copy* — the Drive snapshot —
@@ -235,12 +242,19 @@ trusting; line numbers drift.*
   import the resolver from `capacity_claims`.
 
 **The resolution rule, and why the quote is part of it.** A pure date
-rule is not enough. The superseded CyrusOne LON1 reading (8.72 MW,
-`as_at` 2026-08-20) still stands as a `capacity_claims` row, the store
-holds only the 2026-08-30 file that reads 9 MW, and any date-only
-fallback would link the 8.72 row to evidence stating 9 — the
-working-link-to-the-wrong-evidence failure this whole chain exists to
-prevent. The discriminator is the claim's own verbatim quote, which is
+rule is not enough. The superseded CyrusOne LON1 reading (8.72 MW)
+still stands as a `capacity_claims` row and **carries no `as_at` at
+all**; it is in that table only, not in `operator-claims.yaml`, which
+holds current readings. The store holds only the 2026-08-30 file that
+reads 9 MW. So any date-only fallback would link the 8.72 row to
+evidence stating 9 — the working-link-to-the-wrong-evidence failure
+this whole chain exists to prevent. *(This paragraph read `as_at`
+2026-08-20 until the row was checked against the database on
+2026-09-01; corrected here rather than below, because a wrong figure
+left standing with its correction ninety lines down is the thing
+AGENTS rule 1 is about.)*
+
+The discriminator is the claim's own verbatim quote, which is
 in `attrs->>'quote'` on every operator and green claim: **a claim
 links the file nearest its `as_at` in which its quote actually
 appears, whitespace-normalised both sides as the gate does, and links
@@ -314,6 +328,47 @@ has seen the rendering before it ships — include the rendered claim
 block for site 529 (Iron Mountain) or CyrusOne LON1's site in the PR
 so that review has something to look at.
 
+**Met on the build; the review is Luke's and is the one part left.**
+80 of the 81 operator rows in the database and all six green claims
+resolve, on all five surfaces — every committed YAML claim resolves,
+the unresolved row being the database-only 8.72 MW ghost; the release
+diff against a build of
+`main` shows site-panel links 69,082 → 69,125, two workbook columns
+and two dictionary entries added, nothing fallen. Full account in
+HISTORY, "A claim links its own evidence".
+
+**The worked example was wrong; the rule was right.** The spec's
+bolded rule — a claim links the file nearest its `as_at` in which its
+quote actually appears, and links nothing otherwise — is exactly what
+was built, and the candidate order with it. What did not hold is the
+CyrusOne LON1 example that rule rests on, in two ways, both read off
+the database rather than reasoned about. **The paragraph itself is
+corrected above**; this is what the corrections changed:
+
+- **The row carries no `as_at`**, where the spec said 2026-08-20. So
+  it takes the no-date arm and is offered the whole store
+  newest-first, not the 2026-08-20 neighbourhood the example implies.
+  It still links nothing, because no held file contains its quote —
+  which is the point, and is why the rule survives a wrong premise
+  about its own example.
+- **That reading is not in `operator-claims.yaml` at all**, only in
+  `capacity_claims`. So the YAML-level test asserts every committed
+  claim resolves, and the ghost row is pinned by a fixture test
+  instead — the shape of the tests, not just their fixtures, follows
+  from this.
+
+ROADMAP carried the same rule date-first, and is corrected there.
+
+One extension beyond the spec's step 3, same shape and same purpose:
+`operator_disclosure.load_divergences` gained `cl.as_at` as well as
+the quote it already selected, because the "Figures by audience" sheet
+is built from it and would otherwise have resolved without a date
+while its four sibling surfaces resolved with one.
+
+**Out of scope and still open**, as the spec directed: the DuckDB's
+claims tables, `site_facilities.py`'s relative-path defaults, and the
+two exporters' hand-built viewer URLs. All three are on ROADMAP.
+
 ---
 
 ## WP-D — Hold Iron Mountain's pages, then let its roster carry figures — **DONE 2026-09-01**
@@ -384,7 +439,21 @@ cited.
 
 ---
 
-## WP-E — The ladder-rung design document (proposal only; decision is Luke's)
+## WP-E — The ladder-rung design document — **DONE 2026-09-01, decided the same day**
+
+**Met**: the proposal is
+[docs/PLAN_OPERATOR_RUNG.md](PLAN_OPERATOR_RUNG.md), ending in seven
+decision points and implementing nothing. It consumed every input
+below, re-measured on 2026-09-01 rather than quoted — and one
+measurement reshaped the design: the two sites the rung was raised
+for both rank on *disclosed IT load at High confidence*, so no ladder
+position fixes them; the answer is a default rung above the inferred
+rungs plus hand-adjudicated scope displacement above disclosed ones.
+The measurement also found a class nobody had enumerated: two sites
+ranking ≥100 MW on a floorspace estimate while holding a first-party
+figure of the same order, which the default rung repairs.
+
+*The original spec, for the record:*
 
 Unchanged in scope from ROADMAP ("Operator pages and typed standing —
 what remains", first bullet) and the SPENT `HANDOVER_OPUS5.md` WP4

@@ -731,14 +731,13 @@ tracked there.
   note above), and Bryn Coch and Waltham abstained with the test that
   would settle each written down. The matches load at the next
   `load_capacity_claims.py` run, per the runbook.
-- **State the exclusion in the cohort's own `limits`.** The issue names
-  this as the cheap, honest half and it is still not done: a sentence in
-  `at_least_100mw` saying a multi-facility campus may be absent because
-  its figures are per-facility and no defensible total exists. The
-  cohort registry is `dcp/site_cohorts.py`; `limits` is required and the
-  build fails without it, so this is an edit to existing text rather
-  than new machinery. Check how past limits-only edits treated
-  `rule_version` before changing it — limits prose is not the rule.
+- ~~**State the exclusion in the cohort's own `limits`.**~~ **Done
+  2026-08-31 evening** (commit 81d286f): `at_least_100mw.limits` in
+  `dcp/site_cohorts.py` now says a multi-facility campus can be absent
+  because its figures are per-facility and no defensible total exists,
+  Stockley example included, with `rule_version` untouched — limits
+  prose is not the rule. This item still read "still not done" a day
+  later; caught 2026-09-01 while the rung design read the cohort.
 - ~~**Measure how many sites the under-ranking actually affects**~~
   **Measured, 2026-08-31**, against the live corpus through
   `site_cohorts.load_inputs` (the ladder that actually feeds the
@@ -948,12 +947,23 @@ still to do:
 - **Design the ladder rung and the cohort-admission rule** — whether
   and how a first-party operator figure fills the declared-power cell
   at a labelled weight, and whether `at_least_100mw` admits on one
-  with the basis named. The claims to design against exist, matched,
-  snapshotted and quantity-typed. Two inputs waiting inside them: the
-  Stockley wrinkle (VIRTUS puts 24 MW on LONDON5 and 32.5 on LONDON7,
-  so the 24 the table shows from LONDON7's handover document may be
-  the right number on the wrong building) and the audiences finding
-  the kind field makes countable.
+  with the basis named. **Designed 2026-09-01: the proposal is
+  [docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md), ending in
+  seven decision points that are Luke's; nothing is implemented.**
+  Its shape, so this item reads without opening it: a default rung
+  between the disclosed and grid rungs (fixes the two sites ranked on
+  a floorspace estimate against a first-party statement), plus
+  displacement above a disclosed planning figure only by a hand
+  campus-scope adjudication naming the claim (the Stockley/Cardiff
+  class — measured 2026-09-01 at exactly two sites, a third when
+  Slough's scope resolves). The Stockley wrinkle (VIRTUS puts 24 MW
+  on LONDON5 and 32.5 on LONDON7, so the 24 the table shows from
+  LONDON7's handover document may be the right number on the wrong
+  building) is carried in the document and in
+  `site_facilities.yaml`, unresolved on both attributions; the
+  audiences finding is counted there (39 pages, 29 corporate, 10
+  consultation, 5 sites holding both — five for five
+  corporate-states, consultation-silent).
 - **The review sheet stays the tracker for its "not yet" rows**
   (`data/operator_pages_review/operator_pages_review.xlsx`): two
   unconfirmed identifications (nLighten Hoddesdon, Digital Realty
@@ -987,6 +997,41 @@ still to do:
 - **CyrusOne LON2 (Prologis Park, West Drayton) is a separate site**
   from the VIRTUS Prologis Park campus — they share an estate, not a
   scheme (sheet T4-02). A note for whenever that site is created.
+- **CyrusOne LON1 is in the corpus under Zenium's name, inside
+  VIRTUS's site, and wants a partition** (2026-09-01, Luke holding the
+  decision: "I will sort out the partitioning later"). Barbour project
+  `12216044` is `12 Liverpool Road` / `London One`, which is the
+  address CyrusOne publishes for LON1 — but it is a member of
+  `PTNO-12216044`, VIRTUS's Slough campus at 75 Buckingham Avenue,
+  joined on nothing but the shared SL1 4QZ postcode: all three Barbour
+  records in that site carry one identical coordinate, the postcode
+  centroid. It also lends the site its key and derived name, being the
+  lowest Ptno of the three. Ejecting it overturns
+  `site_partitions.yaml`'s `virtus-zenium-slough-campus`, which lists
+  it deliberately. The full evidence, and the acquisition question the
+  partition turns on, are the `considered:` entries in
+  `operator-claims.yaml` — do not re-derive them.
+- **Put the Zenium entities through the Companies House sweep.** The
+  partition above turns on who acquired what, and two files here
+  disagree: `site_partitions.yaml` says VIRTUS acquired the campus
+  from Zenium, `environment-agency-permit-operators.yaml` says
+  CyrusOne bought Zenium's UK estate. **Both can be right if the
+  estate was broken up and sold asset by asset** (Luke, 2026-09-01),
+  which is the hypothesis to test first, and the corporate shape is
+  consistent with it: the one Zenium company the corpus holds is
+  `ZENIUM UK2 LIMITED` — a numbered per-asset SPV — and the permits
+  "still stand in the Zenium companies' names", plural. A permit stays
+  put when a company's shares are sold and must be transferred when
+  the building alone is, so undisturbed permits across numbered SPVs
+  show the buildings changed hands as companies — which fits a
+  piecemeal break-up and fits one buyer taking every SPV equally well;
+  the filings, not the permits, say which.
+  **No Zenium appears in `companies-house-spvs.yaml` or
+  `organisation_aliases.yaml`**, so the sweep built for exactly this
+  class — single-asset SPVs, whose filings state the asset and its
+  owner by construction — has never been pointed at it. The numbering
+  bounds the set. Cheaper than the title register and it settles the
+  partition.
 
 ## Acquisition decisions waiting on a person
 
@@ -1337,29 +1382,53 @@ field and is not publishable as it stands.
   workbook's own sheet. Deferred past 2.10 because the artefacts were
   built and diffed when it surfaced.
 
-- **Link the snapshots from the reader and workbook.** Step 3 of the
-  chain opened on 2026-09-01 when Luke asked about linking snapshots
-  from the reader. **Steps 1 and 2 shipped the same day** — the store
-  is append-only, and all 81 snapshots are on Drive under
-  `operator_snapshots` with their file ids in
-  `data/external_sources/operator_snapshots_drive.yaml` (HISTORY, "The
-  snapshot store becomes append-only" and "The snapshots reach Drive").
+- ~~**Link the snapshots from the reader and workbook.**~~ **All three
+  steps shipped 2026-09-01**, the day Luke asked about linking
+  snapshots from the reader: the store is append-only, every snapshot
+  is on Drive under `operator_snapshots` with its file id in
+  `data/external_sources/operator_snapshots_drive.yaml`, and the claims
+  now render the link (HISTORY, "The snapshot store becomes
+  append-only", "The snapshots reach Drive" and "A claim links its own
+  evidence"). Kept here for the resolution rule, which is not what this
+  item predicted, and for the two follow-ons below.
 
-  What is left: each operator and green claim renders a link to our
-  copy beside the source URL it already shows, exactly as a document
-  carries its Drive copy beside the register link. The resolution rule
-  is the part that needs care — **a claim links the snapshot that
-  existed at its `as_at`, not the newest one.** That is the whole point
-  of the append-only store: CyrusOne LON1 read 8.72 MW on 2026-08-20
-  and 9 MW on 2026-08-28, and the older reading's link has to reach the
-  older evidence or the link is worse than none. `dcp/snapshot_drive.py`
-  resolves a filename to a Drive URL today; picking the filename from a
-  claim's `as_at` is the piece to add, and it belongs beside
-  `capacity_claims.snapshot_path`.
+  **Step 3 shipped 2026-09-01** (HISTORY, "A claim links its own
+  evidence"). Each operator and green claim renders a link to our copy
+  beside the source URL it already shows, on five surfaces: the site
+  panel's claims box, the Operators tab, the green-claims table, and
+  the workbook's Capacity claims and Figures by audience sheets. The
+  emphasis is deliberately the mirror of a document's — the published
+  page stays the primary link because it is what a story cites, and our
+  copy is the labelled second.
 
-  Luke reviews the rendering before it ships. The spec is WP-C of
+  **The resolution rule turned out to be the quote, not the date**, and
+  that is the correction this item most needed. It was written here as
+  *a claim links the snapshot that existed at its `as_at`*, which is
+  necessary and not sufficient: the store holds no file for a reading
+  taken before it became append-only, so CyrusOne LON1's 8.72 MW row —
+  which carries no `as_at` at all, and which stands in
+  `capacity_claims` only rather than in `operator-claims.yaml` — would
+  have fallen through any date rule onto the 2026-08-30 file that
+  reads 9 MW. Those two facts about the row were read off the database
+  rather than taken from the spec, which asserted an `as_at` of
+  2026-08-20 that the row does not carry. A claim now links the
+  nearest held file *in which its own verbatim quote appears*, on the
+  gate's own whitespace normalisation, and links nothing otherwise. As
+  built: `capacity_claims.snapshot_candidates` orders the store around a
+  reading's date and `snapshot_drive.copy_url` picks the file the quote
+  is actually in. 80 of the 81 operator rows in the database resolve;
+  the one that does not is that 8.72 MW row, which is what the design
+  is for. Every committed YAML claim resolves — the two populations
+  differ, because the YAML holds current readings only and the ghost
+  row is in the database alone.
+
+  Luke reviews the rendering before it ships. The spec was WP-C of
   [docs/HANDOVER_SNAPSHOT_CHAIN.md](docs/HANDOVER_SNAPSHOT_CHAIN.md);
   ROADMAP stays the inbox.
+
+  **Not done here, and named rather than folded in**: the DuckDB's
+  claims tables carry no such column, so a reporter working from the
+  database still reaches only the source URL.
 
   **A latent trap noticed during the WP-A work, and not caused by it.**
   `dcp/site_facilities.py` defaults both its priors path and its
