@@ -203,6 +203,23 @@ def expected_paths(cur, doc_ids: list[int], staging: Path,
     return out
 
 
+def ledger_key(path: Path) -> str:
+    """The key the sync wrote for a staged path.
+
+    `drive_sync.py` keys its ledger on the path it was handed, which the
+    runbook passes repository-relative (`data/exports/drive_staging/…`).
+    Since R7 the staging default here is absolute, and on 2026-09-01 an
+    exact-string lookup then reported every sampled document as "NOT IN
+    THE UPLOAD LEDGER" while the recorder, matching on the path's tail,
+    found 55,944 of them — the verifier failing in a way that read as
+    the tree failing. Absolute paths under the repository resolve to the
+    relative key; anything else is looked up as given.
+    """
+    if path.is_absolute() and path.is_relative_to(ROOT):
+        return str(path.relative_to(ROOT))
+    return str(path)
+
+
 def check_document(item: dict, ledger: dict, svc) -> list[str]:
     """Every link in the chain from `documents` row to bytes on Drive."""
     if not item["exists"]:
@@ -211,7 +228,7 @@ def check_document(item: dict, ledger: dict, svc) -> list[str]:
     if not local.exists():
         return ["NOT IN THE STAGING TREE — the builder did not put it at "
                 f"{local}"]
-    entry = ledger.get(str(local))
+    entry = ledger.get(ledger_key(local)) or ledger.get(str(local))
     if entry is None:
         return ["NOT IN THE UPLOAD LEDGER — it is in the tree and no sync "
                 "has ever sent it"]

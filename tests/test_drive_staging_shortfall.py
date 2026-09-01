@@ -416,3 +416,17 @@ def test_a_verdict_vocabulary_now_names_the_staged_class():
     assert bds.ADJACENT_VERDICT == "adjacent_power"
     assert bds.ADJACENT_DIR == "adjacent_power"
     assert bds.ADJACENT_VERDICT != bds.TOLERATED_VERDICT
+
+
+def test_the_verifier_keys_the_ledger_the_way_the_sync_writes_it():
+    """The sync keys its ledger repository-relative; the verifier's
+    staging default became absolute with R7, and an exact lookup then
+    reported 30 of 30 sampled documents as never uploaded while the
+    recorder found 55,944 of them (2026-09-01). The verifier must
+    resolve an absolute path under the repository to the relative key
+    — and leave a path outside the repository as it is."""
+    vds = _load("verify_drive_sample")
+    rel = "data/exports/drive_staging/sites/S — name/App/001 - Report.pdf"
+    assert vds.ledger_key(ROOT / rel) == rel
+    assert vds.ledger_key(Path(rel)) == rel
+    assert vds.ledger_key(Path("/elsewhere/tree/x.pdf")) == "/elsewhere/tree/x.pdf"
