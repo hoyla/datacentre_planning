@@ -2200,6 +2200,92 @@ facilities.
 
 ---
 
+## The intermittent determinism failure was caught, and it was a rule that had never been implemented (2026-09-01)
+
+`test_two_builds_of_one_snapshot_are_identical` had failed once on
+2026-08-26 and passed every run since, and the ROADMAP's open question
+was whether a failure would ever come with the drive ledger held. One
+did, during an unrelated review. The evidence the test was taught to
+keep — both builds, both normalised texts, a capped diff — was on disk,
+5.8 KB, and it named two sites and one field:
+
+    - Applicant of record: CityFibre, Euro-Tel Design (documents)
+    - Advisers:            Cluttons LLP, TEP - Gateshead (documents)
+    + Applicant of record: CityFibre (documents)
+    + Advisers:            Euro-Tel Design, Cluttons LLP (documents)
+
+on Redcar/R/2022/0351/FF, and `CityFibre, Michael Bingham` against
+`CityFibre, R8 Tool Hire Ltd` on Uttlesford/UTT/23/2686/FUL. Neither
+suspected cause was involved. The drive ledger was held, and the
+snapshot did pin the database.
+
+**The defect was `site_parties`' "one organisation, one role" rule.**
+The extractor files a name under whichever family the sentence it read
+suggested, so a firm can arrive as both applicant and adviser; the
+family that names it most often wins. That comparison was a strict `>`
+over the mention count alone, so when the two counts were EQUAL the
+winner was whichever family the dictionary iterated first — and that
+dictionary was built in the order Postgres returned rows in, from a
+`PARTIES_SQL` whose own comment admitted it had no `ORDER BY`. Michael
+Bingham, "Associate Planner at Murray Planning" in the documents that
+name him, is filed twice as the applicant and twice as the adviser.
+Which he was depended on the plan.
+
+**The comment stated a rule the code had never implemented**: "ties go
+to the family declared first, which is applicant". Implementing it as
+written would have been wrong. The declaration order in
+`signal_families` decides which regex claims a raw label, which is a
+different question; and the corpus answers this one plainly. Of the 34
+names tied between applicant and adviser at or above
+`DOCUMENT_NAME_FLOOR`, **every one is an adviser** — "BUJ Architects",
+"Hannah Leary, Barton Willmore LLP", "Mr D Chadwick, Chadwick Town
+Planning Limited", "Matthew Payne, Consultant Engineer", "Ove Arup &
+Partners International Limited author". Not one is an applicant.
+Applicant-wins-ties would have filed all 34 as the applicant of record,
+which is the panel's strongest claim and the expensive way to be wrong.
+
+So `PARTY_FAMILY_TIE_ORDER` is stated where it can be read, weakest
+claim first — adviser, authority, applicant, other — with `party_other`
+below the three families that state a side, because "named without a
+stated side" is the absence of a claim rather than a competing one.
+Three sites change, and each is a correction: Euro-Tel Design leaves
+Redcar's applicant field, BUJ Architects leaves Tower Hamlets', and
+R8 Tool Hire Ltd — the occupier the Uttlesford site is named after —
+takes the slot Michael Bingham had been taking half the time.
+`operator_primary`, `end_user` and `named_in_documents` do not move on
+any site: a name's mention count is unaffected by which field shows it.
+
+**What the fix is held by, and what it is not.** Not the determinism
+test: the failure is probabilistic, so a passing run proves nothing —
+it had passed ninety-odd times over this defect. The tests that pin it
+run `site_parties` over all 720 permutations of a six-row fixture built
+from Uttlesford's real counts and assert one answer, and assert the
+direction of the tie separately; both fail against the previous code,
+the first with exactly the string the captured diff recorded. Against
+the live corpus the same question was asked by running
+`_parties_for_sites` twice with the SQL ordered forwards and then
+backwards: the old code differs on **four** sites — the two the failure
+happened to expose, plus TowerHamlets/PA/18/00418/S and
+CentralBedfordshire/CB/21/00967/DOC — and the new code on none. A
+probe that could see the defect, run before the claim that it is gone.
+
+Two ordering repairs travel with it, both cheap and both the same rule
+as "Lessons that changed how the code is written" above: every
+ordering that reaches an artefact must be total. `PARTIES_SQL` gains
+`ORDER BY s.site_key, f.signal_family, f.value_text, f.id` — 0.34s
+against 0.23s over 235,581 rows, on a ten-minute build — and the ranked
+sort inside `site_parties` gains the family as a last key, where one
+name arriving under two families with one count had been left in the
+order it was handed in.
+
+The lesson is not the missing `ORDER BY`; that was known and written
+down. It is that a comment describing a tie-break is a claim about
+behaviour, and this one had been wrong since it was written — the
+tie-break it described did not exist, and the tie-break it wanted would
+have been the worse of the two.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across

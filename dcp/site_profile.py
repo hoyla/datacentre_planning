@@ -1048,6 +1048,12 @@ GROUP BY s.site_key
 """
 
 
+# ORDER BY because the rows are accumulated into dictionaries and a
+# dictionary keeps the order its keys first arrived in. `f.id` last so
+# the order is total rather than merely mostly-determined: two findings
+# can agree on every other column. Measured 2026-09-01 over the 235,581
+# party findings: 0.34s ordered against 0.23s unordered, against a
+# ten-minute build.
 PARTIES_SQL = """
 SELECT s.site_key, f.signal_family, f.value_text
 FROM findings f
@@ -1057,6 +1063,7 @@ JOIN sites s ON s.id = sm.site_id
 WHERE s.retired_at IS NULL
   AND f.signal_family LIKE 'party_%'
   AND f.value_text IS NOT NULL
+ORDER BY s.site_key, f.signal_family, f.value_text, f.id
 """
 
 # Barbour role blocks reach a site two ways — a project materialised as
@@ -1216,6 +1223,44 @@ PARTIES_ABSENT = "Not established from the sources held"
 # alias are exempt — a person has already decided who they are.
 DOCUMENT_NAME_FLOOR = 2
 
+# Which family an organisation is SHOWN under when two of them name it
+# exactly as often — the "one organisation, one role" rule in
+# `site_parties`, whose loser is decided here rather than by whichever
+# family the database happened to return first.
+#
+# The order is by what a wrong answer costs the reader, weakest claim
+# first, and NOT the declaration order in `signal_families`: that order
+# encodes which regex wins a label, which is a different question.
+#
+# `party_applicant` is last because it is the strongest claim on the
+# panel — it answers "who is behind this scheme" — and a tie is the
+# documents failing to settle exactly that. The corpus says the same
+# thing: of the 34 names tied between applicant and adviser at or above
+# DOCUMENT_NAME_FLOOR (measured 2026-09-01), every one is an adviser —
+# "BUJ Architects", "Hannah Leary, Barton Willmore LLP", "Mr D Chadwick,
+# Chadwick Town Planning Limited", "Matthew Payne, Consultant Engineer".
+# Not one is an applicant. Applicant-wins-ties would file all 34 as the
+# applicant of record.
+#
+# `party_other` is last-but-one — below the three families that state a
+# side, above nothing. It is "named without a stated side", so it is the
+# absence of a claim rather than a competing one, and it should not
+# displace a side the documents do state as often as they omit it.
+PARTY_FAMILY_TIE_ORDER = ("party_adviser", "party_authority",
+                          "party_applicant", "party_other")
+
+
+def _family_tie_rank(family: str) -> tuple[int, str]:
+    """Where a family sits in the tie order; unknown families last.
+
+    The name is carried in the key so families the vocabulary gains
+    later still order totally against each other rather than by arrival.
+    """
+    try:
+        return (PARTY_FAMILY_TIE_ORDER.index(family), family)
+    except ValueError:
+        return (len(PARTY_FAMILY_TIE_ORDER), family)
+
 
 @dataclass(frozen=True)
 class Party:
@@ -1374,19 +1419,29 @@ def site_parties(barbour_rows, findings_counts, councils, alias_index) -> dict:
     # as the agent in four passages and misread as the applicant in two
     # appears under both — Dartford showed Burges Salmon LLP as
     # applicant AND adviser when it is CSE52's solicitor. The family
-    # that names it most often wins; ties go to the family declared
-    # first, which is applicant. This decides where a name is SHOWN and
-    # changes no stored row.
-    best: dict[str, tuple[int, str]] = {}
+    # that names it most often wins; a tie goes to the family standing
+    # first in PARTY_FAMILY_TIE_ORDER, where the reasoning is. This
+    # decides where a name is SHOWN and changes no stored row.
+    #
+    # The comparison is on (mentions, tie rank) and not on mentions
+    # alone: with a strict `>` the winner of a tie was whichever family
+    # `doc_by_family` iterated first, which is the order the database
+    # returned the rows in, so two builds of one snapshot disagreed on
+    # who Redcar/R/2022/0351/FF and Uttlesford/UTT/23/2686/FUL were
+    # applied for by (2026-09-01).
+    best: dict[str, tuple[tuple, str]] = {}
     for family, rows in doc_by_family.items():
         for name, mentions in rows:
             key = entities.canonical_key(name)
-            if key and mentions > best.get(key, (0, ""))[0]:
-                best[key] = (mentions, family)
+            if not key:
+                continue
+            claim = (-mentions, _family_tie_rank(family))
+            if key not in best or claim < best[key][0]:
+                best[key] = (claim, family)
     for family in list(doc_by_family):
         doc_by_family[family] = [
             (n, m) for n, m in doc_by_family[family]
-            if best.get(entities.canonical_key(n), (0, family))[1] == family]
+            if best.get(entities.canonical_key(n), ((), family))[1] == family]
 
     # Findings, ranked the way the panel has always ranked them, and
     # kept in that lane. The only route out of it is a confirmed alias.
@@ -1397,9 +1452,16 @@ def site_parties(barbour_rows, findings_counts, councils, alias_index) -> dict:
     # A name the documents call the applicant outranks one they merely
     # name often — but only among names a person has already confirmed
     # belong to a group. Nothing here promotes a name on its count.
+    #
+    # The family is the last key so the sort is total: one name can
+    # arrive under two families with the same count, and a stable sort
+    # would otherwise leave those two rows in the order they were
+    # handed in. Nothing below reads the family, so this settles an
+    # ordering rather than changing an outcome.
     for family, name, mentions in sorted(
             findings_counts,
-            key=lambda r: (r[0] != "party_applicant", -r[2], r[1])):
+            key=lambda r: (r[0] != "party_applicant", -r[2], r[1],
+                           _family_tie_rank(r[0]))):
         name = (name or "").strip()
         if not name:
             continue
@@ -1540,11 +1602,12 @@ def _parties_for_sites(conn) -> dict[str, dict]:
         lambda: defaultdict(int))
     # Every spelling of each canonical name, counted — not the first one
     # seen. `setdefault` on first sight made the display name depend on
-    # the order Postgres happened to return rows in, and PARTIES_SQL has
-    # no ORDER BY, so two builds of one snapshot could disagree:
-    # "VIRTUS Data Centres" against "Virtus Data Centres", 44 lines apart
-    # (caught by test_build_determinism, 2026-08-24). 1,839 names of
-    # 37,135 are written more than one way in the corpus.
+    # the order Postgres happened to return rows in, so two builds of one
+    # snapshot could disagree: "VIRTUS Data Centres" against "Virtus Data
+    # Centres", 44 lines apart (caught by test_build_determinism,
+    # 2026-08-24). 1,839 names of 37,135 are written more than one way in
+    # the corpus. PARTIES_SQL has carried an ORDER BY since 2026-09-01,
+    # when the same missing order reached the artefact a second way.
     spellings: dict[str, Counter] = defaultdict(Counter)
     authority: dict[str, list[str]] = {}
 
@@ -1579,9 +1642,14 @@ def _parties_for_sites(conn) -> dict[str, dict]:
 
     out: dict[str, dict] = {}
     for site_key in set(barbour) | set(counts) | set(authority):
-        findings_counts = [(family, display[key], n)
-                           for (family, key), n
-                           in counts.get(site_key, {}).items()]
+        # Sorted, because `counts` is a dictionary and a dictionary
+        # hands back the order its keys arrived in. `site_parties` no
+        # longer depends on that, and tests/test_parties.py holds it to
+        # that over every permutation of a fixture — this is the belt to
+        # those braces, over a handful of rows a site.
+        findings_counts = sorted(
+            (family, display[key], n)
+            for (family, key), n in counts.get(site_key, {}).items())
         p = site_parties(barbour.get(site_key, ()), findings_counts,
                          authority.get(site_key, ()), index)
         # `parties` travels in the profile but is not a column: it is

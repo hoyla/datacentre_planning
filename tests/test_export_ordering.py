@@ -64,6 +64,20 @@ def test_the_findings_query_states_a_total_order():
     assert "inserted_at DESC, id DESC)" in sql
 
 
+def test_the_parties_query_states_a_total_order():
+    """The same clause, on the query that went without one until
+    2026-09-01. Its rows are accumulated into dictionaries, and a
+    dictionary keeps the order its keys first arrived in, so the row
+    order reached the panel and two builds of one snapshot disagreed
+    about who two sites were applied for by. `f.id` last because two
+    findings can agree on every other column."""
+    from dcp import site_profile
+
+    sql = re.sub(r"\s+", " ", site_profile.PARTIES_SQL).strip()
+    assert sql.endswith(
+        "ORDER BY s.site_key, f.signal_family, f.value_text, f.id"), sql[-90:]
+
+
 @pytest.mark.integration
 def test_tied_findings_rank_the_same_way_every_time(db_conn):
     """Four findings a site's ranking cannot tell apart, twice."""

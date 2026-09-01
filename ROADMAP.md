@@ -1950,19 +1950,6 @@ here rather than applied from the build lane.
   cheap half — `load_latest(live_only=True)` dropping readings whose
   site key retired — runs every build already.
 
-- **`test_two_builds_of_one_snapshot_are_identical` failed once
-  (2026-08-26) and has not since.** Not dismissed as noise: a build
-  deterministic 90% of the time is a build whose release diff cannot
-  be trusted. The likelier cause is that the snapshot pins the
-  database but the reader also reads
-  `data/exports/.drive_sync_state.json`, which a running sync rewrites
-  — and the test now measures rather than assumes: it fingerprints the
-  ledger around both builds, voids the comparison with a reason if it
-  moved, and keeps both builds plus a capped diff in
-  `data/exports/determinism_failure/` on any failure. What remains is
-  to see a failure with the ledger held; if one comes, the evidence
-  will be on disk.
-
 - **Four editorial questions from the signal-family repair** (the
   repair itself — the missing-family backfill across 557,747 OpenAI
   and 49,039 local findings, and the snake_case token-boundary fix —
