@@ -122,7 +122,7 @@ def _build_entry(row: dict, rank: int, anchors: dict[str, dict],
     inferred_source: str | None = None
     if lat is None or lon is None:
         from dcp.map import _load_inferred_coords
-        inferred = _load_inferred_coords(Path("data/priors/inferred_coords.yaml"))
+        inferred = _load_inferred_coords()
         entry = inferred.get(row["application_ref"])
         if entry:
             lat = entry["lat"]

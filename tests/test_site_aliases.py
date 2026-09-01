@@ -80,3 +80,43 @@ def test_the_committed_file_parses_and_names_only_wellformed_entries():
     for key, alias in aliases.items():
         assert key.startswith(("SITE-", "PTNO-")), key
         assert len(alias) > 3, (key, alias)
+
+
+def test_the_priors_path_is_absolute_so_a_build_cannot_lose_the_aliases():
+    """The path resolves against the package root, not the cwd.
+
+    The mechanism is pinned rather than the number of aliases, which
+    grows. A relative default is invisible from inside the module:
+    `load_aliases` returns {} for an absent file by design, so from
+    another directory nothing applies and nothing complains.
+    """
+    assert site_aliases.ALIASES_PATH.is_absolute()
+
+
+def test_the_prior_loads_the_same_from_another_working_directory(
+        tmp_path, monkeypatch):
+    """The failure this is for: a build run from anywhere else.
+
+    Asserts the key *set* against a live read rather than a count, so
+    curation can add aliases without flaking the test.
+    """
+    from_root = site_aliases.load_aliases()
+    assert from_root, "the committed prior is not empty"
+
+    monkeypatch.chdir(tmp_path)
+    assert set(site_aliases.load_aliases()) == set(from_root)
+
+
+def test_an_empty_load_cannot_satisfy_require_live(tmp_path, monkeypatch):
+    """The vacuous pass is the reason the relative default mattered.
+
+    `require_live` checks the keys it is handed, so a load that
+    returned nothing agreed with *any* corpus — including one holding
+    none of these sites. The guard written to stop an alias silently
+    ceasing to apply was the thing reporting clean while every alias
+    silently ceased to apply. From another directory it must now
+    raise, exactly as it does from the root.
+    """
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(ValueError, match="not live"):
+        site_aliases.require_live(site_aliases.load_aliases(), live_keys=set())
