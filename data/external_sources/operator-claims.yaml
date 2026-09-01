@@ -474,6 +474,7 @@ claims:
   - source: kao_website
     snapshot: kao-harlow
     claim_name: KLON-01 (Harlow)
+    component_of: Kao Data Harlow campus
     quantity_type: announced_capacity
     value: 8.8
     unit: MW
@@ -483,6 +484,7 @@ claims:
   - source: kao_website
     snapshot: kao-harlow
     claim_name: KLON-02 (Harlow)
+    component_of: Kao Data Harlow campus
     quantity_type: announced_capacity
     value: 8.8
     unit: MW
@@ -492,6 +494,7 @@ claims:
   - source: kao_website
     snapshot: kao-harlow
     claim_name: KLON-03 (Harlow)
+    component_of: Kao Data Harlow campus
     quantity_type: announced_capacity
     value: 17.6
     unit: MW
@@ -501,6 +504,7 @@ claims:
   - source: kao_website
     snapshot: kao-harlow
     claim_name: KLON-04 (Harlow)
+    component_of: Kao Data Harlow campus
     quantity_type: announced_capacity
     value: 36
     unit: MW
@@ -567,6 +571,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-slough-london10
     claim_name: VIRTUS LONDON10 (75 Buckingham Avenue, Slough)
+    component_of: "VIRTUS Slough campus (VIRTUS's own scope)"
     quantity_type: announced_capacity
     value: 6.6
     unit: MW
@@ -1191,6 +1196,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-stockley-park
     claim_name: VIRTUS LONDON5 (Stockley Park)
+    component_of: VIRTUS Stockley Park campus
     quantity_type: announced_capacity
     value: 24
     unit: MW
@@ -1206,6 +1212,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-stockley-park
     claim_name: VIRTUS LONDON7 (Stockley Park)
+    component_of: VIRTUS Stockley Park campus
     quantity_type: announced_capacity
     value: 32.5
     unit: MW
@@ -1216,6 +1223,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-stockley-park
     claim_name: VIRTUS LONDON6 (Stockley Park)
+    component_of: VIRTUS Stockley Park campus
     quantity_type: announced_capacity
     value: 16
     unit: MW
@@ -1242,6 +1250,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-slough-campus
     claim_name: VIRTUS LONDON3 (Slough)
+    component_of: "VIRTUS Slough campus (VIRTUS's own scope)"
     quantity_type: announced_capacity
     value: 7.2
     unit: MW
@@ -1252,6 +1261,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-slough-campus
     claim_name: VIRTUS LONDON11 (Slough)
+    component_of: "VIRTUS Slough campus (VIRTUS's own scope)"
     quantity_type: announced_capacity
     value: 13.3
     unit: MW
@@ -1262,6 +1272,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-slough-campus
     claim_name: VIRTUS LONDON9 (Slough)
+    component_of: "VIRTUS Slough campus (VIRTUS's own scope)"
     quantity_type: announced_capacity
     value: 24
     unit: MW
@@ -1275,6 +1286,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-slough-campus
     claim_name: VIRTUS LONDON19 (Slough)
+    component_of: "VIRTUS Slough campus (VIRTUS's own scope)"
     quantity_type: announced_capacity
     value: 33.5
     unit: MW
@@ -1288,6 +1300,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-slough-campus
     claim_name: VIRTUS LONDON4 (Slough)
+    component_of: "VIRTUS Slough campus (VIRTUS's own scope)"
     quantity_type: announced_capacity
     value: 26.6
     unit: MW
@@ -1301,6 +1314,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-slough-campus
     claim_name: VIRTUS LONDON12 (Slough)
+    component_of: "VIRTUS Slough campus (VIRTUS's own scope)"
     quantity_type: announced_capacity
     value: 21
     unit: MW

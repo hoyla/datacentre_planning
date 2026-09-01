@@ -800,6 +800,21 @@ standing**: first-party operator statements may become a labelled
 ladder rung; third-party aggregates stay tier-and-count. What is
 still to do:
 
+- **A claim now says which realm it belongs to** (built 2026-09-01).
+  `component_of` on an operator claim names the claim it is part of,
+  so a facility figure inside a campus total is legible as one source
+  itemised rather than as corroboration: the sites table counts
+  top-level claims only, and the panel labels each component. The
+  ladder rung has to answer the same question — a campus total and a
+  facility figure are different rungs, not two readings of one — and
+  `capacity_claims.reconcile_components()` is the measurement to
+  design against. As it stands: Saunderton exact (once PR #310 lands),
+  Stockley 112.5 against 72.5 because two of five facilities disclose
+  nothing, Slough 145.5 against 132.2, and Kao 71.0 against 71.2,
+  which is an integer campus figure over decimal facilities rather
+  than a disagreement. A gap is never an error — Slough's is a
+  question for the operator, Stockley's is a denominator.
+
 - **Design the ladder rung and the cohort-admission rule** — whether
   and how a first-party operator figure fills the declared-power cell
   at a labelled weight, and whether `at_least_100mw` admits on one

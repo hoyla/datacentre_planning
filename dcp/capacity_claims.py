@@ -353,6 +353,14 @@ def load_operator_claims(path: Path = OPERATOR_CLAIMS_PATH) -> list[FiledClaim]:
                 # "Total Capacity", "Total compute capacity" and "IT load"
                 # are not synonyms and the difference is the story.
                 "operator_term": c.get("term"),
+                # Which realm this figure belongs to. A facility figure
+                # that is part of a campus total names its parent here,
+                # so a consumer can tell one source itemised from
+                # several sources agreeing — and never adds a component
+                # to the total it is part of. Issue #247's campus /
+                # facility / site distinction, carried by the claim
+                # rather than inferred from its name.
+                "component_of": c.get("component_of"),
                 "note": c.get("note"),
                 "quote": c["quote"].strip(),
                 "snapshot": c["snapshot"],
@@ -396,6 +404,22 @@ def validate_operator(claims: list[FiledClaim],
     names = [c.claim_name for c in claims]
     dupes = {n for n in names if names.count(n) > 1}
     problems += [f"duplicate claim_name {n!r}" for n in sorted(dupes)]
+    by_name = {c.claim_name: c for c in claims}
+    for c in claims:
+        parent = c.attrs.get("component_of")
+        if not parent:
+            continue
+        if parent == c.claim_name:
+            problems.append(f"{c.claim_name}: component_of names itself")
+        elif parent not in by_name:
+            problems.append(
+                f"{c.claim_name}: component_of names no claim: {parent!r}")
+        elif by_name[parent].attrs.get("component_of"):
+            # One level, deliberately: a facility sits in a campus, and
+            # a chain would let a consumer double-count by walking it.
+            problems.append(
+                f"{c.claim_name}: component_of names {parent!r}, which is "
+                f"itself a component — components do not nest")
     for m in matches:
         if m["claim_name"] not in names:
             problems.append(f"match names no claim: {m['claim_name']!r}")
@@ -404,6 +428,41 @@ def validate_operator(claims: list[FiledClaim],
         if len(m.get("evidence", "").strip()) < 40:
             problems.append(f"{m['claim_name']}: evidence too thin to defend")
     return problems + verify_operator_quotes(claims)
+
+
+def reconcile_components(claims: list[FiledClaim] | None = None) -> list[dict]:
+    """Per parent claim: how its components add up against what it says.
+
+    A **report, not a validator**. Where an operator's own arithmetic
+    checks out that is the benchmark for when a campus sum can ever be
+    trusted (VIRTUS Saunderton, exact); where it does not, the gap is a
+    question for the operator (VIRTUS Slough states 145.5 MW against
+    132.2 from its own rows) or a measure of what the campus does not
+    disclose (Stockley Park's three of five). None of those is an error
+    to fail a build over, and all three are findings — so this counts
+    and returns, and the caller decides what is worth saying.
+    """
+    claims = claims if claims is not None else load_operator_claims()
+    by_name = {c.claim_name: c for c in claims}
+    kids: dict[str, list[FiledClaim]] = {}
+    for c in claims:
+        parent = c.attrs.get("component_of")
+        if parent and parent in by_name:
+            kids.setdefault(parent, []).append(c)
+    out = []
+    for parent, components in sorted(kids.items()):
+        p = by_name[parent]
+        total = sum(c.value for c in components)
+        out.append({
+            "parent": parent,
+            "parent_mw": p.value,
+            "components": len(components),
+            "component_sum_mw": round(total, 4),
+            "gap_mw": round(p.value - total, 4),
+            "reconciles": abs(p.value - total) < 0.05,
+            "component_names": [c.claim_name for c in components],
+        })
+    return out
 
 
 def load_site_claims(cur) -> dict[str, list[dict]]:
@@ -419,7 +478,8 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
                cl.as_at, cl.source_key, cl.source_url, cl.source_locator,
                m.method, m.confidence, m.evidence,
                cl.attrs->>'operator', cl.attrs->>'operator_term',
-               cl.value_original, cl.unit_original, cl.stage
+               cl.value_original, cl.unit_original, cl.stage,
+               cl.attrs->>'component_of'
         FROM capacity_claim_matches m
         JOIN capacity_claims cl ON cl.id = m.claim_id
         JOIN sites s ON s.id = m.site_id
@@ -428,7 +488,7 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
     out: dict[str, list[dict]] = {}
     for (key, name, mw, qty, point, conn_date, as_at, src, url, locator,
          method, confidence, evidence, operator, term,
-         value_original, unit_original, stage) in cur.fetchall():
+         value_original, unit_original, stage, component_of) in cur.fetchall():
         out.setdefault(key, []).append({
             "claim_name": name, "value_mw": mw, "quantity_type": qty,
             "connection_point": point, "connection_date": conn_date,
@@ -437,7 +497,7 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
             "confidence": confidence, "evidence": evidence,
             "operator": operator, "operator_term": term,
             "value_original": value_original, "unit_original": unit_original,
-            "stage": stage,
+            "stage": stage, "component_of": component_of,
         })
     return out
 
@@ -535,6 +595,22 @@ def validate_ch(claims: list[FiledClaim], matches: list[dict]) -> list[str]:
     names = [c.claim_name for c in claims]
     dupes = {n for n in names if names.count(n) > 1}
     problems += [f"duplicate claim_name {n!r}" for n in sorted(dupes)]
+    by_name = {c.claim_name: c for c in claims}
+    for c in claims:
+        parent = c.attrs.get("component_of")
+        if not parent:
+            continue
+        if parent == c.claim_name:
+            problems.append(f"{c.claim_name}: component_of names itself")
+        elif parent not in by_name:
+            problems.append(
+                f"{c.claim_name}: component_of names no claim: {parent!r}")
+        elif by_name[parent].attrs.get("component_of"):
+            # One level, deliberately: a facility sits in a campus, and
+            # a chain would let a consumer double-count by walking it.
+            problems.append(
+                f"{c.claim_name}: component_of names {parent!r}, which is "
+                f"itself a component — components do not nest")
     for m in matches:
         if m["claim_name"] not in names:
             problems.append(f"match names no claim: {m['claim_name']!r}")
