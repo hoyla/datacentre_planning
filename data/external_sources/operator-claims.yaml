@@ -2197,7 +2197,10 @@ considered:
       left it "not yet". A candidate does exist, and it was missed
       because the search was by postcode and name token: Barbour project
       12216044 carries `Site1: 12 Liverpool Road`, `Site2: London One`,
-      developer Zenium, landlord SEGRO — and CyrusOne publishes LON1 at
+      end user Zenium, client Segro Plc (the record's own role fields;
+      the client-builds/operator-runs split elsewhere on this estate
+      suggests landlord and tenant, but that is a reading, not the
+      record) — and CyrusOne publishes LON1 at
       12 Liverpool Road, SL1 4QZ. The word "CyrusOne" appears nowhere on
       that record, because Zenium's UK estate was bought by CyrusOne in
       2018 (environment-agency-permit-operators.yaml) and the record
@@ -2242,14 +2245,18 @@ considered:
       2026-09-01): "It may be that the Zenium projects were broken up
       and went to different parties." That would make each file correct
       about the assets it saw, and neither wrong. **The corporate
-      structure supports it.** The one Zenium company this corpus holds
+      structure is consistent with it, and proves less than it first
+      looks like it proves.** The one Zenium company this corpus holds
       is `ZENIUM UK2 LIMITED`, permit holder for "London Two" — a
       *numbered* per-asset SPV, and the permit-operators note says the
       permits "still stand in the Zenium **companies'** names", plural.
-      Permits stay put when the company is sold and must be varied when
-      the building is; one SPV per asset with permits undisturbed is the
-      signature of an estate sold piecemeal, buyer by buyer, with
-      nothing in the planning or permit record ever saying so.
+      A permit stays put when a company's shares are sold and must be
+      transferred when the building alone is — so undisturbed permits
+      across numbered SPVs show the buildings changed hands as
+      companies, which fits a piecemeal, buyer-by-buyer break-up and
+      fits one buyer taking every SPV exactly as well. The permits
+      narrow the mechanism of the sale, not the number of buyers; only
+      the filings can do that.
 
       **What would settle it, and it is this project's own machinery:**
       the Zenium entities have never been through the Companies House

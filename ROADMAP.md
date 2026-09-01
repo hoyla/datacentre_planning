@@ -1007,12 +1007,15 @@ still to do:
   from Zenium, `environment-agency-permit-operators.yaml` says
   CyrusOne bought Zenium's UK estate. **Both can be right if the
   estate was broken up and sold asset by asset** (Luke, 2026-09-01),
-  which is the hypothesis to test first, and the corporate shape fits
-  it: the one Zenium company the corpus holds is `ZENIUM UK2 LIMITED`
-  — a numbered per-asset SPV — and the permits "still stand in the
-  Zenium companies' names", plural. Permits stay put when the company
-  is sold and must be varied when the building is, so undisturbed
-  permits across numbered SPVs is what a piecemeal sale looks like.
+  which is the hypothesis to test first, and the corporate shape is
+  consistent with it: the one Zenium company the corpus holds is
+  `ZENIUM UK2 LIMITED` — a numbered per-asset SPV — and the permits
+  "still stand in the Zenium companies' names", plural. A permit stays
+  put when a company's shares are sold and must be transferred when
+  the building alone is, so undisturbed permits across numbered SPVs
+  show the buildings changed hands as companies — which fits a
+  piecemeal break-up and fits one buyer taking every SPV equally well;
+  the filings, not the permits, say which.
   **No Zenium appears in `companies-house-spvs.yaml` or
   `organisation_aliases.yaml`**, so the sweep built for exactly this
   class — single-asset SPVs, whose filings state the asset and its
