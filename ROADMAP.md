@@ -13,14 +13,13 @@ corroboration pass runs and are deliberately not restated here —
 `scripts/corpus_stats.py` prints them, and each release states the
 boundary it was stamped at.
 
-**2.11 is built and awaits its release PR** (2026-09-01/02; HISTORY,
+**The base is 2.11, released** (Luke, 2026-09-02, PR #341; HISTORY,
 "v2.11 — the operator rung, and the release the guards earned").
-Artefacts in `data/exports/phase2.11_build/`, diffed against
-`phase2.10_build`, synced to Drive with the sample verified, the Sheet
-refreshed in place; `index.html` ships in the release PR and
-`cloudrun/deploy.sh` publishes it on Luke's go. 2.10 remains the
-released base until then. Everything shipped on 2026-08-30 evening
-and since renders in it.
+Artefacts in `data/exports/phase2.11_build/`; the release-diff
+baseline for the next build is `phase2.10_build` until 2.11 is
+superseded, then this one. Cloud Run serves whatever `index.html`
+`cloudrun/deploy.sh` was last run against — the deploy is the script,
+not the merge.
 
 **2.11 is the site / facility / campus effort** (Luke, 2026-08-31,
 redefining it: "the focus of 2.11 has evolved into the effort to make
