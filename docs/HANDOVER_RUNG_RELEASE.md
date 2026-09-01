@@ -208,8 +208,11 @@ time. `scripts/materialise_sites.py` and
 `scripts/split_union_park_ite.py` both call it without `data_dir`.
 
 The shape differs from #331/#332, which is why it was not folded in:
-`data_dir` is a **threaded parameter**, passed explicitly by four test
-modules. So the fix is to the *default only* — `ROOT =
+`data_dir` is a **threaded parameter**, passed explicitly by three test
+modules (`test_site_partitions`, `test_project_coord_prior`,
+`test_materialise_preflight` — this file and ROADMAP both said four;
+`test_map`'s `data_dir` hits belong to the module #332 already fixed).
+So the fix is to the *default only* — `ROOT =
 Path(__file__).resolve().parent.parent` and `data_dir: Path = ROOT /
 "data"` — and every explicit passer is untouched. Grep the callers of
 `build_clusters(` to confirm none needs a change.
