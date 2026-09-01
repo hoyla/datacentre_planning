@@ -277,6 +277,88 @@ def test_the_result_does_not_depend_on_the_order_rows_arrive_in():
     assert len(seen) == 1, seen
 
 
+# Uttlesford/UTT/23/2686/FUL as the corpus holds it, cut to the names
+# that matter. Michael Bingham — "Associate Planner at Murray Planning"
+# in the documents that name him — is filed twice as the applicant and
+# twice as the adviser, and it was that 2–2 that made two builds of one
+# snapshot disagree about who the scheme was applied for by.
+UTTLESFORD = [
+    ("party_applicant", "CityFibre", 14),
+    ("party_applicant", "Michael Bingham", 2),
+    ("party_adviser", "Michael Bingham", 2),
+    ("party_applicant", "R8 Tool Hire Ltd", 2),
+    ("party_adviser", "Murray Planning Associates Ltd", 5),
+    ("party_applicant", "Murray Planning Associates Ltd", 2),
+]
+
+
+def test_the_panel_does_not_depend_on_the_order_the_findings_arrive_in():
+    """One name, two families, the same count in each.
+
+    The order test above it uses three distinct names, so no name is
+    contested and the rule that decides a contest is never reached.
+    This is the arrangement that got past it: `site_parties` was handed
+    a list built from a dictionary, whose order is the order Postgres
+    returned the rows in, and the family that won a tie was whichever
+    of the two was iterated first. Two builds of one snapshot disagreed
+    on Redcar/R/2022/0351/FF and Uttlesford/UTT/23/2686/FUL, 2026-09-01.
+
+    Permutations rather than rotations: a rotation of six rows reaches
+    six of the 720 orders, and the pair that has to swap need not be
+    adjacent.
+    """
+    import itertools
+    seen = {
+        (out["applicant_of_record"], out["advisers"],
+         out["named_in_documents"],
+         tuple((p.role, p.name) for p in out["parties"]))
+        for order in itertools.permutations(UTTLESFORD)
+        for out in [site_parties((), list(order), (), NO_ALIASES)]
+    }
+    assert len(seen) == 1, seen
+
+
+def test_a_name_the_documents_call_applicant_and_adviser_alike_is_an_adviser():
+    """A tie is the documents failing to say which, so take the weaker.
+
+    `applicant_of_record` answers "who is behind this scheme" and is the
+    strongest claim on the panel; `advisers` says a firm acted for
+    whoever is. Filing a tie as the applicant is therefore the expensive
+    way to be wrong, and the corpus agrees: of the ~36 names whose two
+    counts tie at or above the floor and at the name's own maximum
+    (measured twice, 2026-09-01), essentially all are advisers, agents
+    or case officers — "BUJ Architects", "Mr D Chadwick, Chadwick Town
+    Planning Limited", "Matthew Payne, Consultant Engineer" — with one
+    developer-shaped compound string the arguable exception, so the
+    direction rests on the cost asymmetry plus the overwhelming
+    majority, not on unanimity.
+
+    The comment this replaces said ties went to the family declared
+    first in `signal_families`, which is applicant. That order decides
+    which regex claims a raw label, and had never been the rule here.
+    """
+    out = site_parties((), UTTLESFORD, (), NO_ALIASES)
+    assert out["applicant_of_record"] == "CityFibre, R8 Tool Hire Ltd (documents)"
+    assert "Michael Bingham" in out["advisers"]
+    assert "Michael Bingham" not in out["applicant_of_record"]
+    # The count is untouched by where the name is shown: it is one
+    # organisation the documents name four times, not two named twice.
+    assert "Michael Bingham (4)" in out["named_in_documents"]
+
+
+def test_the_family_that_names_an_organisation_most_still_wins():
+    """The tie order breaks ties; it does not overrule a count.
+
+    Murray Planning Associates Ltd is named as the adviser five times
+    and as the applicant twice, so it is an adviser — and would be under
+    either direction of the tie-break, which is what makes it the check
+    that the direction is only reached on a tie.
+    """
+    out = site_parties((), UTTLESFORD, (), NO_ALIASES)
+    assert "Murray Planning Associates Ltd" in out["advisers"]
+    assert "Murray Planning" not in out["applicant_of_record"]
+
+
 def test_one_organisation_in_two_roles_is_two_rows_not_one_merged():
     """The long format keeps roles apart; §3.2 forbids combining them."""
     rows = (("1", "Mech.& Elec Engineer", "Black & White Engineering Ltd."),
