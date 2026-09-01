@@ -2166,6 +2166,44 @@ unattributed and every restatement launders it further.
 test, a shared function — rather than resolving to remember. Most of the
 lessons above exist as one of those three.
 
+**Sessions are scoped small, and a problem is stated before it is
+investigated** (Luke, 2026-09-01, and both are experiments he can
+revoke). The occasion: a session read ROADMAP in full at its start,
+then two hundred thousand tokens later spent ten tool calls
+re-establishing the Iron Mountain bot block, the collapsed-`<details>`
+lesson and the campus arithmetic — all four of which were in its context
+the whole time, along with the note that two earlier sessions had made
+the same mistake.
+
+**What that ruled out is the useful part.** The session proposed five
+fixes and every one was already tried, self-contradictory, or the named
+anti-pattern: mechanising rule 3 (tried, and the previous rounds cost
+more context than they saved); inlining settled facts into handover docs
+(the exact opposite of this repo's own rule that a restated fact is the
+one that goes stale); marking decisions as settled (that policy exists
+and is what was ignored); a hook (another conflicting source of truth);
+and a per-task grep instead of the full read (rule 1's anti-pattern
+verbatim). Luke rejected all five. **Do not re-propose them.** A session
+is not a reliable witness on its own failure modes, and the ones it
+proposes will tend to be interventions on what it *knows* — where the
+failure is in what it *does next*.
+
+So the two levers are outside the documentation. Shorter sessions put
+the read and the use minutes apart rather than hours. And rule 4 in
+AGENTS.md hands Luke the interception point at one line rather than
+after ten tool calls.
+
+**Rule 4's limit, which Luke identified as it was being written and
+which the rule now states: it relies on him.** Recognition is cheaper
+than recall, so it asks less of him than remembering unprompted — but
+only while the material is recent. Both 2026-09-01 interceptions were of
+passages written hours earlier. On a decision settled weeks back he will
+not recognise it either. The residue that does not need his memory is
+smaller and still real: a wrong direction costs one line to correct
+instead of ten calls to unwind, whenever he is reading at all. Nobody
+involved thinks this is the answer; it is the best available lever that
+is not one of the five already rejected.
+
 
 ### Phase 2.8 — the gaps in the corpus (2026-08-26)
 

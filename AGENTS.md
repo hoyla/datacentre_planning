@@ -14,7 +14,7 @@ was tried and rejected**.
 
 ---
 
-## Three rules, before the routing table
+## Four rules, before the routing table
 
 **1. Read whole files, not the section you need.** Corrections in this
 repo are *appended*, not applied, so a superseded instruction usually
@@ -44,8 +44,51 @@ rejected"**, **"What is already done and needs no repeating"** and
 **"what this note deliberately does not propose"**. They exist precisely
 to stop this.
 
-A corollary of all three: **something looking broken is not evidence that
-it is.** Several guards here are designed to fail loudly in normal
+**4. Say what you are about to establish, before you establish it.**
+Where the next step is to find out how something *outside this
+repository* behaves — a host that refuses, a source that answers
+unexpectedly, a figure that will not reconcile, a null result — say so
+in one line and let Luke see it before you spend tool calls on it.
+
+The premise is not the obvious one, and it is why this rule is separate
+from rule 3 rather than part of it. **The information is usually already
+in the session.** On 2026-09-01 a session read ROADMAP in full, had the
+Iron Mountain passage in context — the bot block, the collapsed
+`<details>` lesson, the arithmetic, and the note that two earlier
+sessions had already got this wrong — and then spent ten tool calls
+re-establishing all four anyway, two hundred thousand tokens later.
+Nothing was missing. What was missing was the question *is this already
+settled?*, because investigating produces visible progress and recalling
+produces none. Rules 1 to 3 act on what you know; this one acts on what
+you do next, which is where that failure actually sits.
+
+**What it buys, and what it does not.** It does not make the loop
+independent of Luke's memory, and an earlier draft of this rule claimed
+it did. It buys two narrower things. Recognition is cheaper than recall,
+so "I am about to establish X" asks less of him than remembering X
+unprompted — but that only works while the material is recent to him.
+Both interceptions on 2026-09-01 were of passages written hours earlier;
+on a decision settled in August he will not recognise it either, and
+that is where the risk is highest. And it bounds the failure whenever he
+is reading at all: a wrong direction costs one line to correct instead
+of ten tool calls to unwind. That second half needs him present, not
+remembering.
+
+**So expect this rule to catch recent re-derivation and miss old
+re-derivation.** If the next failure is on something settled weeks back
+and it sails past, the rule did not fail — it was out of scope, and the
+gap is elsewhere. Judge it on that boundary rather than on whether
+re-derivation stops.
+
+Scope it, or it fires constantly and becomes noise: not a failing test,
+not a typo, not a choice between two implementations, not anything
+answerable by reading this repository. The tell is that you are about to
+go and find out how the world behaves. **Adopted 2026-09-01 as an
+experiment, on Luke's decision and over his own objection that it is
+inefficient. If it costs more than it catches, it goes.**
+
+A corollary of the first three: **something looking broken is not
+evidence that it is.** Several guards here are designed to fail loudly in normal
 operation, and the runbook, `docs/BACKUP.md`, `docs/MAC_STUDIO.md` and
 `docs/PORTAL_NOTES.md` each list cases where the alarming output is the
 system working. Check those before reporting a fault.
