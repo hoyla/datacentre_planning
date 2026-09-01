@@ -1,6 +1,17 @@
 # Handover: the operator rung, and release 2.11
 
-> A plan over ROADMAP.md, not a second roadmap — the third of its kind,
+> **SPENT — do not work from this document.** Every package landed:
+> R1 run and verified, R2 (#333, rendering review passed), R3 (#331,
+> with #332 behind it), R5 (#335), R6 (#336), R7 (#337, with #338 and
+> #339 found by the release), and R4 — 2.11 released on 2026-09-02
+> (#340 the candidate, #341 the release). **ROADMAP.md is the inbox**;
+> what the capacity-model effort still owes — the 33 unreviewed
+> campuses, Slough's scope, #248's computed-figure labelling, the
+> reader's Adjacent-power box linking its Drive folder — is carried
+> there. Kept as the record of how the release was scoped and what
+> each package measured.
+
+> *The original preamble:* a plan over ROADMAP.md, not a second roadmap — the third of its kind,
 > on the pattern of the SPENT `HANDOVER_SNAPSHOT_CHAIN.md`. Written
 > 2026-09-02 for an Opus executor session, with every premise below
 > verified against the code and the live corpus on 2026-09-01/02
@@ -390,7 +401,7 @@ code, behaviour against an injected `tmp_path` exports tree.
 
 ---
 
-## WP-R4 — Release 2.11 — **run 2026-09-01/02, release PR pending**
+## WP-R4 — Release 2.11 — **DONE: released 2026-09-02 (#340, #341)**
 
 *Steps 0–13a run from `main` in order; the account, the numbers and
 the two guards that caught the release's own tooling are in HISTORY
