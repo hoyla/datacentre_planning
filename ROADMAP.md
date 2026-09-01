@@ -30,6 +30,10 @@ a campus dropping out of `at_least_100mw` for a reason about our data.
 It also unblocks other work, since the over-merged site records are
 what hold the Premier Park and DataVita claims under `considered:`.
 
+*Of those, the ladder rung shipped on 2026-09-01 and closed #250's two
+measured cases; #247's facility prior is built and now consumed;
+#248 and the 35-campus review are still open.*
+
 **One thing runs before it, and it is a dependency rather than a rival:
 the verbatim gate's whitespace fix and re-gate** (under Coverage gaps).
 That item used to be described here as the key part of 2.11 and is now
@@ -729,8 +733,19 @@ tracked there.
   that entry), four new coverage leads, the five Relode "Power Park"
   rows identified as a third hub-portfolio family (see the outcome
   note above), and Bryn Coch and Waltham abstained with the test that
-  would settle each written down. The matches load at the next
-  `load_capacity_claims.py` run, per the runbook.
+  would settle each written down. **Loaded 2026-09-01**: the five
+  matches and nine operator claims are in the database, and
+  `component_of` reached the store with them.
+- ~~**The under-ranking itself.**~~ **Closed 2026-09-01 by the
+  operator rung** (the item under "Operator pages and typed standing"
+  has the account). Both invisible sites now rank on their operator's
+  own campus figure, labelled: Stockley Park 24 → 112.5 and Vantage
+  Cardiff 67.2 → 148, and `at_least_100mw` gains exactly those two.
+  What is *not* closed is the general case — a campus with no
+  published roster, or one whose scope nobody has adjudicated, keeps
+  today's behaviour and stays invisible for the reason this section
+  describes. The 33 remaining `unreviewed` entries in
+  `campus_scope.yaml` are that residue.
 - ~~**State the exclusion in the cohort's own `limits`.**~~ **Done
   2026-08-31 evening** (commit 81d286f): `at_least_100mw.limits` in
   `dcp/site_cohorts.py` now says a multi-facility campus can be absent
@@ -944,26 +959,52 @@ still to do:
   is the class this file's own rule about computed statistics exists
   for.*
 
-- **Design the ladder rung and the cohort-admission rule** — whether
-  and how a first-party operator figure fills the declared-power cell
-  at a labelled weight, and whether `at_least_100mw` admits on one
-  with the basis named. **Designed 2026-09-01: the proposal is
-  [docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md), ending in
-  seven decision points that are Luke's; nothing is implemented.**
-  Its shape, so this item reads without opening it: a default rung
-  between the disclosed and grid rungs (fixes the two sites ranked on
-  a floorspace estimate against a first-party statement), plus
-  displacement above a disclosed planning figure only by a hand
-  campus-scope adjudication naming the claim (the Stockley/Cardiff
-  class — measured 2026-09-01 at exactly two sites, a third when
-  Slough's scope resolves). The Stockley wrinkle (VIRTUS puts 24 MW
-  on LONDON5 and 32.5 on LONDON7, so the 24 the table shows from
-  LONDON7's handover document may be the right number on the wrong
-  building) is carried in the document and in
-  `site_facilities.yaml`, unresolved on both attributions; the
-  audiences finding is counted there (39 pages, 29 corporate, 10
-  consultation, 5 sites holding both — five for five
-  corporate-states, consultation-silent).
+- ~~**Design the ladder rung and the cohort-admission rule**~~ —
+  **designed and built 2026-09-01**; the design of record is
+  [docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md), decided by
+  Luke on all seven points, and decisions 1 to 5 are implemented.
+  `site_scale.OPERATOR_BASIS` is the rung, `capacity_claims.rung_claim`
+  its eligibility, `campus_scope.yaml` its displacement adjudications,
+  and all three consumers read it through `capacity_claims.rung_inputs`
+  so the reader, the workbook and the cohort cannot disagree. **Eight
+  sites-table cells change and nothing falls**; `at_least_100mw` goes
+  42 → 44, gaining Stockley Park and Vantage Cardiff.
+
+  **The rung also fires where the planning record states nothing at
+  all** (Luke, 2026-09-01, deciding a question the seven decision
+  points had not reached: a rung inserted at a position catches
+  everything that would otherwise fall past it). That adds Saunderton,
+  Kao's KLON-06 at Slough and CyrusOne LON3 to the two floorspace
+  sites the design predicted. The read-and-silent versus
+  documents-not-held distinction is kept **in the caveat, not in
+  whether the rung fires** — coverage is stated beside a figure here,
+  never encoded in whether one ranks.
+
+  **Two counts moved for a reason worth recording**: the design
+  predicted four changed cells and the build produced eight. Three
+  extra are the empty-ladder decision above; the fourth is Kao Data
+  Harlow, and it was WP-R1 of the same handover that caused it —
+  `component_of` reached the database an hour before this was
+  measured, so a site that had looked like five competing claims
+  became one campus total and passed the sole-claim guard. A
+  prediction made before its own dependency ran.
+
+  **The Stockley wrinkle travels with the displacement and is not
+  resolved by it**: VIRTUS puts 24 MW on LONDON5 and 32.5 on LONDON7,
+  so the 24 the table showed — from a document titled LONDON7 — may be
+  the right number on the wrong building. Held unresolved on both
+  attributions in `site_facilities.yaml` and stated in the scope
+  entry's own reason; the displacement does not depend on which
+  building it belongs to. A third displacement joins when VIRTUS
+  Slough's scope resolves, which is still open in
+  `campus_scope.yaml`.
+
+  Still open: the `w-operator` rendering is Luke's to review, and
+  decision 6 (the Pulsant class) is explicitly expected to be
+  revisited rather than settled — the audiences finding those pages
+  belong to is counted in the design document (39 pages, 29 corporate,
+  10 consultation, 5 sites holding both, five for five
+  corporate-states and consultation-silent).
 - **The review sheet stays the tracker for its "not yet" rows**
   (`data/operator_pages_review/operator_pages_review.xlsx`): two
   unconfirmed identifications (nLighten Hoddesdon, Digital Realty
