@@ -948,12 +948,23 @@ still to do:
 - **Design the ladder rung and the cohort-admission rule** — whether
   and how a first-party operator figure fills the declared-power cell
   at a labelled weight, and whether `at_least_100mw` admits on one
-  with the basis named. The claims to design against exist, matched,
-  snapshotted and quantity-typed. Two inputs waiting inside them: the
-  Stockley wrinkle (VIRTUS puts 24 MW on LONDON5 and 32.5 on LONDON7,
-  so the 24 the table shows from LONDON7's handover document may be
-  the right number on the wrong building) and the audiences finding
-  the kind field makes countable.
+  with the basis named. **Designed 2026-09-01: the proposal is
+  [docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md), ending in
+  seven decision points that are Luke's; nothing is implemented.**
+  Its shape, so this item reads without opening it: a default rung
+  between the disclosed and grid rungs (fixes the two sites ranked on
+  a floorspace estimate against a first-party statement), plus
+  displacement above a disclosed planning figure only by a hand
+  campus-scope adjudication naming the claim (the Stockley/Cardiff
+  class — measured 2026-09-01 at exactly two sites, a third when
+  Slough's scope resolves). The Stockley wrinkle (VIRTUS puts 24 MW
+  on LONDON5 and 32.5 on LONDON7, so the 24 the table shows from
+  LONDON7's handover document may be the right number on the wrong
+  building) is carried in the document and in
+  `site_facilities.yaml`, unresolved on both attributions; the
+  audiences finding is counted there (39 pages, 29 corporate, 10
+  consultation, 5 sites holding both — five for five
+  corporate-states, consultation-silent).
 - **The review sheet stays the tracker for its "not yet" rows**
   (`data/operator_pages_review/operator_pages_review.xlsx`): two
   unconfirmed identifications (nLighten Hoddesdon, Digital Realty

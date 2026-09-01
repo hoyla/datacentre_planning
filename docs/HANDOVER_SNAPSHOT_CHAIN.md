@@ -384,7 +384,21 @@ cited.
 
 ---
 
-## WP-E — The ladder-rung design document (proposal only; decision is Luke's)
+## WP-E — The ladder-rung design document — **DONE 2026-09-01, decisions await Luke**
+
+**Met**: the proposal is
+[docs/PLAN_OPERATOR_RUNG.md](PLAN_OPERATOR_RUNG.md), ending in seven
+decision points and implementing nothing. It consumed every input
+below, re-measured on 2026-09-01 rather than quoted — and one
+measurement reshaped the design: the two sites the rung was raised
+for both rank on *disclosed IT load at High confidence*, so no ladder
+position fixes them; the answer is a default rung above the inferred
+rungs plus hand-adjudicated scope displacement above disclosed ones.
+The measurement also found a class nobody had enumerated: two sites
+ranking ≥100 MW on a floorspace estimate while holding a first-party
+figure of the same order, which the default rung repairs.
+
+*The original spec, for the record:*
 
 Unchanged in scope from ROADMAP ("Operator pages and typed standing —
 what remains", first bullet) and the SPENT `HANDOVER_OPUS5.md` WP4
