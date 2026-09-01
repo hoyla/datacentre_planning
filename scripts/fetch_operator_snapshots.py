@@ -16,6 +16,17 @@ Some pages render capacity only through JavaScript counters that read "0"
 in the raw HTML (Ark's Webflow counters, Kao's Elementor blocks); their
 real values sit in attributes, which is why those are captured too.
 
+**A PDF is a page here too.** Operators publish their per-facility
+figures in spec sheets as often as in HTML, and until 2026-08-31 this
+fetcher decoded every response as text and so could not hold one —
+which left VIRTUS's Saunderton roster, the only self-auditing campus
+arithmetic in the survey, uncitable. Responses are now sniffed for the
+PDF magic bytes rather than trusted by URL suffix (the corpus's own
+lesson: extensions lie), and their text is extracted with pypdf. The
+extraction is deterministic and non-generative for the same reason the
+OCR substrate is: this text is what the verbatim-quote gate checks a
+claim against, so it must fail visibly rather than fluently.
+
 Usage:
     scripts/fetch_operator_snapshots.py            # refresh all
     scripts/fetch_operator_snapshots.py --only ark
@@ -58,6 +69,13 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     ],
     "virtus": [
         ("virtus-saunderton", "https://virtusdatacentres.com/locations/uk/london/saunderton-campus"),
+        # The campus page's own spec sheet, and the only place VIRTUS
+        # publishes Saunderton's four facilities with a megawatt each.
+        # Its path carries the publication date and a version marker,
+        # which an HTML page does not give: .../2026/04/15/...-v2.pdf.
+        ("virtus-saunderton-spec-sheet",
+         "https://virtusdatacentres.com/media/attachments/2026/04/15/"
+         "virtus_spec_sheet_saunderton-campus-v2.pdf"),
         ("virtus-slough-campus", "https://virtusdatacentres.com/locations/uk/london/slough-campus"),
         ("virtus-slough-london10", "https://virtusdatacentres.com/locations/uk/london/slough-london10"),
         ("virtus-stockley-park", "https://virtusdatacentres.com/locations/uk/london/stockley-park-campus"),
@@ -207,6 +225,31 @@ def _norm(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def is_pdf(raw: bytes) -> bool:
+    """Sniffed, never taken from the URL — extensions lie, and a PDF
+    served from a path ending .html would otherwise be stored as the
+    replacement characters its bytes decode to."""
+    return raw[:5] == b"%PDF-"
+
+
+def pdf_text(raw: bytes) -> str:
+    """Page-marked text of a PDF, deterministically.
+
+    Marked by page because a spec sheet's figures sit on a particular
+    page and a claim should be checkable against it, the same reason
+    the document cache records physical pages.
+    """
+    import io
+
+    import pypdf
+
+    reader = pypdf.PdfReader(io.BytesIO(raw))
+    parts = []
+    for n, page in enumerate(reader.pages, 1):
+        parts.append(f"[PAGE {n}]\n{(page.extract_text() or '').strip()}")
+    return "\n\n".join(parts)
+
+
 def visible_text(raw: str) -> str:
     t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", raw, flags=re.DOTALL | re.IGNORECASE)
     t = re.sub(r"<[^>]+>", " ", t)
@@ -250,29 +293,46 @@ def structured(raw: str) -> list[str]:
 def snapshot(slug: str, url: str) -> Path:
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=60) as r:
-        raw = r.read().decode("utf-8", errors="replace")
-    body = "\n\n".join([
-        f"# url: {url}",
-        f"# fetched: {dt.datetime.now(dt.UTC).date().isoformat()}",
-        f"# sha256(html): {hashlib.sha256(raw.encode()).hexdigest()}",
-        "## STRUCTURED",
-        "\n\n".join(structured(raw)) or "(none)",
-        "## VISIBLE TEXT",
-        visible_text(raw),
-    ])
+        raw_bytes = r.read()
+    # The hash names what was hashed: the bytes the operator served, so
+    # a re-fetch that returns a byte-identical document is visible as
+    # such whichever kind it is.
+    digest = hashlib.sha256(raw_bytes).hexdigest()
+    if is_pdf(raw_bytes):
+        head = [f"# url: {url}",
+                f"# fetched: {dt.datetime.now(dt.UTC).date().isoformat()}",
+                f"# sha256(pdf): {digest}",
+                "## STRUCTURED",
+                "(none — PDF)",
+                "## VISIBLE TEXT",
+                pdf_text(raw_bytes)]
+    else:
+        raw = raw_bytes.decode("utf-8", errors="replace")
+        head = [f"# url: {url}",
+                f"# fetched: {dt.datetime.now(dt.UTC).date().isoformat()}",
+                f"# sha256(html): {digest}",
+                "## STRUCTURED",
+                "\n\n".join(structured(raw)) or "(none)",
+                "## VISIBLE TEXT",
+                visible_text(raw)]
     dest = OUT / f"{slug}.txt"
-    dest.write_text(body)
+    dest.write_text("\n\n".join(head))
     return dest
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", help="one operator key from PAGES")
+    ap.add_argument("--slug", help="one page slug, to add or refresh a "
+                                   "single snapshot without rewriting its "
+                                   "neighbours' fetch dates")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     keys = [args.only] if args.only else list(PAGES)
     for k in keys:
         for slug, url in PAGES[k]:
+            if args.slug and slug != args.slug:
+                continue
             try:
                 p = snapshot(slug, url)
                 print(f"  {p.name:<34} {p.stat().st_size/1000:>6.1f} kB  {url}")

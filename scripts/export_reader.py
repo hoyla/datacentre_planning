@@ -2496,8 +2496,13 @@ def main() -> int:
         # roster keyed to a dead site is curation silently lost — the
         # same contract as the aliases and the operator pages.
         from dcp import site_facilities as _sfac
-        _sfac.require_live(_sfac.load_facilities(),
+        _facilities = _sfac.load_facilities()
+        _sfac.require_live(_facilities,
                            {r[0] for r in site_rows} | _preplanning_keys)
+        # And every held copy a roster cites must actually be held: a
+        # roster naming a snapshot nobody has is a provenance claim with
+        # nothing behind it.
+        _sfac.require_held_snapshots(_facilities)
 
         def _shown(key, name):
             """A site's name as it should read.

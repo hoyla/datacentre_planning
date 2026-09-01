@@ -1,0 +1,127 @@
+# url: https://virtusdatacentres.com/media/attachments/2026/04/15/virtus_spec_sheet_saunderton-campus-v2.pdf
+
+# fetched: 2026-09-01
+
+# sha256(pdf): df25a75edd6c1aa786038323843d04adcf93f7272be50fd2fdb350d587995996
+
+## STRUCTURED
+
+(none — PDF)
+
+## VISIBLE TEXT
+
+[PAGE 1]
+› 78 MW of IT load
+ › Four individual data centres capable of running separately  
+    or simultaneously
+ › Eco-efficient, optimised design for fully flexible  
+    bespoke customer solutions
+ › Carrier neutral, with access to a wide choice of Tier I  
+    and Tier II carriers
+ › Powered by 100% renewable energy
+ › Built to Uptime Tier III standard
+ › Design PUE of less than 1.2
+Saunderton Campus  
+Spec Sheet
+LONDON
+UK
+
+[PAGE 2]
+Delivering 78MW of IT load across four separate data centres, the VIRTUS 
+Saunderton Campus is strategically located close to the existing Slough data 
+centre ecosystem. Covering more than 50 acers of land, the campus sets a 
+new benchmark in mega scale data centre capacity for cloud and AI in Europe. 
+With a blank canvas, the facilities will utilise the latest in cooling technologies 
+to cater for customers of all size.
+Facility
+ › 24/7 fully managed on-site NOC
+ › Built to Uptime Tier III standard
+Power
+ › Campus Total of 78 MW:
+ › LONDON15 9.5 MW 
+ › LONDON16 22.5 MW
+ › LONDON17 16 MW
+ › LONDON18 30 MW
+ › Centralized N+1 online UPS plant 
+ ›  Variety of of power resilience 
+options; N, N+1 and N+N
+ ›  N+1 LV DCC generators with 
+48h run time at full load
+ › Priority fuel contracts
+Connectivity
+ › Access to a wide variety of 
+carrier connectivity solutions
+ › Carrier neutral data centre
+ › Access to public and private cloud 
+via VIRTUS Cloud Connect
+Security
+ › 24/7 on-site security team
+ › 3 metre high perimeter fence
+ › Car parks fitted with vehicle traps
+ › Full authentication and 
+access policy control
+ › Security bollards at 
+building perimeter
+ › Biometric entry system
+Green Credentials
+ › LEED Gold Standard
+ › Recycling of equipment packaging
+Accreditation
+Contact
+Location (Miles)
+ › Central London (31)
+ › Slough Trading Estate (13)
+ › LHR Airport (32)
+By Rail
+ › By train from Marylebone 
+to Saunderton - 39 mins 
+Energy Efficiency
+ › Design PUE of less than 1.2
+ › Highly efficient chilled water 
+cooling system configured as N+1
+ › Highly efficient UPS systems
+ › DCIM metering and monitoring
+ › Advanced cooling design, utilising 
+VIRTUS air flooded room principle
+ › Free cooling chilled water system
+ › Liquid cooling ready
+Services
+ › Rack, Pod, Cage and Data Hall 
+colocation options available
+ › Remote Hands services 24/7
+ › On-site build room/storage room
+ › 24/7 hot desk area
+ › Managed office space available
+ › Secure on-site parking
+ › Meeting rooms and kitchen area
+Controlled Environment
+ › Leak detection system
+ › High Fog Fire Suppression
+ › Aspirated Smoke Detection - VESDA
+Certifications
+ › BS EN ISO 9001:2015 – 
+Quality Management
+ › BS EN ISO 14001:2015 – 
+Environmental Management
+ › ISO/IEC 27001:2022 – Information 
+Security Management
+ › BS EN ISO 50001:2018 – 
+Energy Management
+ › BS ISO 45001:2018 - Occupational 
+Health and Safety
+ › BS ISO 22301 - Business Continuity 
+Management Systems
+ › ISAE3402 Certification compliance
+ › PCI DSS v3.2 Compliant
+ › Uptime Institute - Management 
+& Operations
+VIRTUS Data Centres
+20 Balderton Street, 
+London, WIK 6TL
++44 (0)20 7499 1300 
+info@virtusdcs.com
+@VIRTUSDCS 
+VIRTUS Data Centres
+www.virtusdatacentres.com
+A company of
+© VIRTUS Data Centres

@@ -471,8 +471,9 @@ attribution references a claim or a planning document and can never
 carry a value of its own, and a roster-sourced planning attribution
 cannot be written at all. Seeded with Kao Harlow (KLON-01–04), VIRTUS
 Slough (the seven-facility roster beside the three-facility site),
-Saunderton (recorded as a gap — the datasheet naming its facilities
-is unsnapshotted, so no roster is citable), Stockley Park (the
+Saunderton (four of four facilities, the only complete and
+self-auditing roster in the file — see the same day's spec-sheet
+ingest), Stockley Park (the
 LONDON5/LONDON7 wrinkle held unresolved on both attributions) and
 Hayes (LON6/7/8 on Barbour titles, a third identity-source kind the
 build vocabulary carries). The reader build validates liveness;
@@ -816,9 +817,15 @@ still to do:
   the standing example of facilities that will only ever rank on the
   operator rung, because legacy colocation fit-outs leave no planning
   application to hold.
-- **The VIRTUS Saunderton datasheet PDF is unsnapshotted** — the
-  fetcher takes HTML only — and its per-facility figures join the
-  instrument gaps if the rung wants them.
+- ~~**The VIRTUS Saunderton datasheet PDF is unsnapshotted**~~ —
+  **done 2026-09-01.** `fetch_operator_snapshots.py` sniffs the PDF
+  magic bytes and extracts text with pypdf, so a spec sheet is a page
+  like any other; the sheet is snapshotted and its four facility
+  figures are claims, matched, quote-verified. The rung can have them.
+  What the sheet gives that no HTML page in the survey does: its path
+  carries a publication date and a version marker
+  (`.../2026/04/15/...-v2.pdf`), so the disclosure is dated by its
+  own source rather than only by our read.
 
 ### Actions still open from the review sheet
 

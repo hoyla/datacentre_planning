@@ -20,8 +20,19 @@
 #     `barbour_title` (ptno + the title verbatim);
 #   - an attribution names its `kind` in the source's own terms and
 #     references EITHER a claim in the external-claims store (by
-#     claim_name) OR a planning document — never both, never neither,
-#     and never a value of its own. No megawatt is restated here.
+#     claim_name) OR a planning document (by `document_sha256`, the
+#     content address the document store itself uses) — never both,
+#     never neither, and never a value of its own. No megawatt is
+#     restated here.
+#
+# Every reference is to something held, not merely to a URL. An
+# operator roster names the snapshot in
+# data/external_sources/operator_snapshots/ as well as the page it came
+# from, and the loader fails if that file is absent. A planning
+# document is named by content hash rather than by Drive file id: the
+# hash is the durable address, and `documents.content_sha256` joins to
+# `document_drive_files` for the Drive link the reader renders, so a
+# re-upload changes the id without touching anything written here.
 #
 # What listing a facility asserts: that the named source counts it as
 # part of the campus associated with this site. It does NOT assert the
@@ -52,6 +63,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://kaodata.com/locations/harlow/
+            snapshot: kao-harlow
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -60,6 +72,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://kaodata.com/locations/harlow/
+            snapshot: kao-harlow
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -68,6 +81,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://kaodata.com/locations/harlow/
+            snapshot: kao-harlow
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -76,6 +90,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://kaodata.com/locations/harlow/
+            snapshot: kao-harlow
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -93,6 +108,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            snapshot: virtus-slough-campus
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -101,6 +117,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            snapshot: virtus-slough-campus
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -109,6 +126,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            snapshot: virtus-slough-campus
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -117,6 +135,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            snapshot: virtus-slough-campus
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -125,6 +144,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            snapshot: virtus-slough-campus
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -133,6 +153,7 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            snapshot: virtus-slough-campus
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -141,26 +162,66 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
+            snapshot: virtus-slough-campus
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
             claim: VIRTUS LONDON19 (Slough)
 
-  # ---- VIRTUS Saunderton. The self-auditing calibration case — the
-  # review sheet reports LONDON15 9.5 + LONDON16 22.5 + LONDON17 16 +
-  # LONDON18 30 against a stated "Campus Total of 78 MW", exact — but
-  # no facility entries can be written yet, honestly.
+  # ---- VIRTUS Saunderton. The self-auditing calibration case, and the
+  # only complete roster in this file: four facilities, four figures,
+  # summing exactly to the campus total the same sheet states.
   - site_key: PTNO-10234430
     note: >-
-      The facility names and per-facility figures appear only in the
-      campus page's datasheet PDF, which the snapshot fetcher (HTML
-      only) has never captured; the held snapshot
-      (operator_snapshots/virtus-saunderton.txt) names no facility.
-      Until the datasheet is snapshotted or another held source names
-      them, the roster is unciteable and is deliberately not recorded
-      — the campus total is held ("VIRTUS Saunderton Campus", 78 MW,
-      claims store) and stands alone. ROADMAP carries the snapshot
-      gap under "Operator pages and typed standing".
+      The benchmark for when a campus sum can ever be trusted (ROADMAP,
+      #247): LONDON15 9.5 + LONDON16 22.5 + LONDON17 16 + LONDON18 30 =
+      the stated "Campus Total of 78 MW", exact, on one page and one
+      basis ("78MW of IT load"). Every other campus in this file
+      discloses partially, on mixed bases, or not at all. Four of four
+      facilities disclose here, and the site record's own name — "4
+      VIRTUS DATA CENTRES" — agrees with the roster's count.
+      Recorded 2026-09-01, when the snapshot fetcher gained the
+      ability to hold a PDF; the figures had been visible in the
+      campus datasheet and uncitable before that. The campus total is
+      held separately ("VIRTUS Saunderton Campus"): these four are its
+      components and must never be summed with it.
+    facilities:
+      - id: LONDON15
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/media/attachments/2026/04/15/virtus_spec_sheet_saunderton-campus-v2.pdf
+            snapshot: virtus-saunderton-spec-sheet
+            date: 2026-09-01
+        attributions:
+          - kind: IT load, component of the stated campus total
+            claim: VIRTUS LONDON15 (Saunderton)
+      - id: LONDON16
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/media/attachments/2026/04/15/virtus_spec_sheet_saunderton-campus-v2.pdf
+            snapshot: virtus-saunderton-spec-sheet
+            date: 2026-09-01
+        attributions:
+          - kind: IT load, component of the stated campus total
+            claim: VIRTUS LONDON16 (Saunderton)
+      - id: LONDON17
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/media/attachments/2026/04/15/virtus_spec_sheet_saunderton-campus-v2.pdf
+            snapshot: virtus-saunderton-spec-sheet
+            date: 2026-09-01
+        attributions:
+          - kind: IT load, component of the stated campus total
+            claim: VIRTUS LONDON17 (Saunderton)
+      - id: LONDON18
+        identity:
+          - source: operator_roster
+            url: https://virtusdatacentres.com/media/attachments/2026/04/15/virtus_spec_sheet_saunderton-campus-v2.pdf
+            snapshot: virtus-saunderton-spec-sheet
+            date: 2026-09-01
+        attributions:
+          - kind: IT load, component of the stated campus total
+            claim: VIRTUS LONDON18 (Saunderton)
 
   # ---- VIRTUS Stockley Park. The campus that opened issue #247: five
   # facilities on the operator's roster, three with planning figures
@@ -180,10 +241,11 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            snapshot: virtus-stockley-park
             date: 2026-08-30
           - source: planning_document
             application: Hillingdon/37977/APP/2018/3955
-            document: 68a0bc948192db12
+            document_sha256: 68a0bc948192db12
             note: identity hand-adjudicated in issue #247's thread
         attributions:
           - kind: announced capacity, operator's basis
@@ -193,12 +255,13 @@ sites:
               planning's 24 is LONDON7's handover. Unresolved.
           - kind: average IT load, 2018 reporting scheme
             application: Hillingdon/37977/APP/2018/3955
-            document: 68a0bc948192db12
+            document_sha256: 68a0bc948192db12
             page: 12
       - id: LONDON6
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            snapshot: virtus-stockley-park
             date: 2026-08-30
         attributions:
           - kind: announced capacity, operator's basis
@@ -207,10 +270,11 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            snapshot: virtus-stockley-park
             date: 2026-08-30
           - source: planning_document
             application: Hillingdon/37977/APP/2021/2571
-            document: 2f3a0de53ab4226d
+            document_sha256: 2f3a0de53ab4226d
             note: the document's own title names LONDON7
         attributions:
           - kind: announced capacity, operator's basis
@@ -222,7 +286,7 @@ sites:
           - kind: commissioning milestone — seven data halls handed
               over by end-2021, not the installation's capacity
             application: Hillingdon/37977/APP/2021/2571
-            document: 2f3a0de53ab4226d
+            document_sha256: 2f3a0de53ab4226d
             page: 2
             note: >-
               This is the figure the sites table currently ranks the
@@ -231,21 +295,23 @@ sites:
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            snapshot: virtus-stockley-park
             date: 2026-08-30
       - id: LONDON14
         identity:
           - source: operator_roster
             url: https://virtusdatacentres.com/locations/uk/london/stockley-park-campus
+            snapshot: virtus-stockley-park
             date: 2026-08-30
           - source: planning_document
             application: Hillingdon/18399/APP/2023/2470
-            document: 04d3032d4d8b414f
+            document_sha256: 04d3032d4d8b414f
             note: identity hand-adjudicated in issue #247's thread
         attributions:
           - kind: design capacity when fully fitted out, two 11 MW
               floors
             application: Hillingdon/18399/APP/2023/2470
-            document: 04d3032d4d8b414f
+            document_sha256: 04d3032d4d8b414f
             page: 3
             note: >-
               Adjudicated as both it_load and total_site from this one
