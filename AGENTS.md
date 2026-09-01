@@ -62,12 +62,23 @@ settled?*, because investigating produces visible progress and recalling
 produces none. Rules 1 to 3 act on what you know; this one acts on what
 you do next, which is where that failure actually sits.
 
-What it buys: Luke recognises a settled question in one line, where the
-same failure otherwise takes ten tool calls to surface. Both
-interceptions on 2026-09-01 came from him reading the output, after the
-spend. His recall of what this project has settled is a trigger this
-loop does not reliably fire for itself — not a slower substitute for
-looking something up.
+**What it buys, and what it does not.** It does not make the loop
+independent of Luke's memory, and an earlier draft of this rule claimed
+it did. It buys two narrower things. Recognition is cheaper than recall,
+so "I am about to establish X" asks less of him than remembering X
+unprompted — but that only works while the material is recent to him.
+Both interceptions on 2026-09-01 were of passages written hours earlier;
+on a decision settled in August he will not recognise it either, and
+that is where the risk is highest. And it bounds the failure whenever he
+is reading at all: a wrong direction costs one line to correct instead
+of ten tool calls to unwind. That second half needs him present, not
+remembering.
+
+**So expect this rule to catch recent re-derivation and miss old
+re-derivation.** If the next failure is on something settled weeks back
+and it sails past, the rule did not fail — it was out of scope, and the
+gap is elsewhere. Judge it on that boundary rather than on whether
+re-derivation stops.
 
 Scope it, or it fires constantly and becomes noise: not a failing test,
 not a typo, not a choice between two implementations, not anything

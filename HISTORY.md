@@ -2190,9 +2190,19 @@ failure is in what it *does next*.
 
 So the two levers are outside the documentation. Shorter sessions put
 the read and the use minutes apart rather than hours. And rule 4 in
-AGENTS.md hands Luke the interception point at one line, because he
-recognises a settled question instantly and this loop does not. Both are
-inefficient by design, and he said so when adopting them.
+AGENTS.md hands Luke the interception point at one line rather than
+after ten tool calls.
+
+**Rule 4's limit, which Luke identified as it was being written and
+which the rule now states: it relies on him.** Recognition is cheaper
+than recall, so it asks less of him than remembering unprompted — but
+only while the material is recent. Both 2026-09-01 interceptions were of
+passages written hours earlier. On a decision settled weeks back he will
+not recognise it either. The residue that does not need his memory is
+smaller and still real: a wrong direction costs one line to correct
+instead of ten calls to unwind, whenever he is reading at all. Nobody
+involved thinks this is the answer; it is the best available lever that
+is not one of the five already rejected.
 
 
 ### Phase 2.8 — the gaps in the corpus (2026-08-26)
