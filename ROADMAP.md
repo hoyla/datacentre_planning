@@ -1316,41 +1316,43 @@ field and is not publishable as it stands.
   workbook's own sheet. Deferred past 2.10 because the artefacts were
   built and diffed when it surfaced.
 
-- **The snapshot store is mutable while the claims it evidences are
-  append-only** (found 2026-09-01, answering Luke's question about
-  linking snapshots from the reader). `capacity_claims` keeps every
-  reading — CyrusOne LON1 at 8.72 MW on 2026-08-20 and 9 MW on
-  2026-08-28, both rows, on purpose — but
-  `fetch_operator_snapshots.py` writes one file per slug and
-  overwrites it, so both rows carry `source_locator: cyrusone-lon1`
-  and **the 8.72 quote is not in that file**. Measured: `grep` finds
-  no "8.72" in the held snapshot. The evidence survives only in git
-  (commit 74e0873, "CyrusOne's estate places LON3, and its LON1 figure
-  moved under us"), which is luck being relied on rather than a
-  design.
+- **Sync the snapshot store to Drive, then link it from the reader and
+  workbook.** Steps 2 and 3 of the chain opened on 2026-09-01 when Luke
+  asked about linking snapshots from the reader. **Step 1 — making the
+  store append-only — shipped the same day** (HISTORY, "The snapshot
+  store becomes append-only"); it was the blocker, because syncing a
+  store that overwrote in place would have put an "our copy" link on
+  evidence a claim no longer matched, which is the wrong-document
+  failure `document_drive_files` exists to prevent one layer up.
 
-  **Latent, not live**: LON1 is the only claim with two readings and
-  neither is matched, so nothing renders a claim its own snapshot
-  contradicts. It bites the first time a *matched* claim is re-read,
-  and re-fetching is routine.
+  Drive is the right destination on Luke's point that "our copy" should
+  mean one thing to a reporter, and everything else in the handover
+  means Drive. Snapshots get their own folder beside `sites`,
+  addressed by ID and never by name, with a per-file Drive ID recorded
+  at upload on the `document_drive_files` precedent. Then each operator
+  and green claim renders a link to our copy beside the source URL it
+  already shows — resolving to the snapshot that existed at the claim's
+  `as_at` rather than to the newest, since the point of the append-only
+  store is that an older reading keeps its own evidence.
 
-  **This blocks syncing snapshots to Drive**, which is otherwise the
-  right destination — Luke's point that "our copy" should mean one
-  thing to a reporter, and everything else in the handover means
-  Drive. Syncing as things stand would put an "our copy" link on a
-  claim the copy does not support: the wrong-document failure
-  `document_drive_files` exists to prevent, one layer up.
-
-  Order: make the snapshot store append-only; then sync to Drive
-  beside `sites`; then link it from the reader and workbook as our
-  copy, beside the source URL, exactly as documents carry our copy
-  beside the register. **Naming decided (Luke, 2026-09-01):
-  `<slug>.<date>.txt`**, sha256 staying in the header and the fetcher
-  skipping the write when content is unchanged, so a re-fetch is a
-  no-op (principle 5). The build spec for all three steps, plus the
-  Iron Mountain capture and the ladder-rung document, is
+  The build spec for both, plus the Iron Mountain capture and the
+  ladder-rung document, is
   [docs/HANDOVER_SNAPSHOT_CHAIN.md](docs/HANDOVER_SNAPSHOT_CHAIN.md)
   — written for an executor session; ROADMAP stays the inbox.
+
+  **A latent trap noticed during the WP-A work, and not caused by it.**
+  `dcp/site_facilities.py` defaults both its priors path and its
+  snapshot directory to paths *relative to the working directory*, and
+  `load_facilities` returns `{}` when its file is absent rather than
+  raising. Measured 2026-09-01: from the repository root it loads 6
+  sites; from anywhere else it loads **0**, and every guard downstream
+  then passes — `require_live` has no keys to check and
+  `require_held_snapshots` finds no snapshot missing. So the facility
+  layer would silently vanish from a build run from the wrong
+  directory, and the two guards written to make that impossible would
+  report clean. It is the shape HISTORY records as *nobody looked,
+  stored as nothing there*. Two lines: resolve both defaults against
+  the package root, as `capacity_claims` and `green_claims` already do.
 
 - **The Pinpoint/Giant delta: get the manifest, compute it, put
   re-upload in the chain.** The bundle policy — what the reduction
