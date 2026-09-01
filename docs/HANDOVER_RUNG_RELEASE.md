@@ -280,7 +280,7 @@ rather than silently fixing or skipping it.
 
 ---
 
-## WP-R7 — The release chain finds `data/exports` from the package root
+## WP-R7 — The release chain finds `data/exports` from the package root — **DONE 2026-09-02**
 
 Found by #336's sweep and named there rather than folded in, rightly:
 different module, different consumers, and it reaches the release chain
@@ -365,6 +365,28 @@ the sweep kept as an assertion, R6's pattern.
 
 **Must land before R4**: R4 runs every one of these scripts, in order,
 and the first of them stamps the phase.
+
+**Met, and with one decision taken as the spec left open.** The two
+fallbacks refuse rather than guess: `release.current_release_dir()`
+and `release.current_phase()` stop with a message naming the flag to
+pass when no release folder exists, and `phase1_build`/phase "1" no
+longer appear anywhere as a default — nor does the staging build's
+exports-wide workbook glob that stood in for a missing folder, which
+its own comment recorded as the three-dated-spreadsheets confusion.
+The ledger is `dcp.drive.SYNC_LEDGER`, read by all three scripts; a
+sync starting from no ledger now says so on stderr, since a lost
+ledger and a first sync look identical and mean every file goes up
+again. Absent-ledger behaviour as measured: the sync silently started
+from nothing (the dangerous one), the workbook silently rendered
+blank Drive cells, the verifier raised. And the defaults test that
+should have caught all three fallbacks — `tests/test_release_defaults.py`
+— was itself working-directory-relative *and* read only the one line
+carrying `default=`, which every offender had stepped around by
+putting the named release on the next line; it now resolves against
+the root and follows a statement's continuation lines, verified to
+fail on the reintroduced fallbacks. Nine new tests in
+`tests/test_release_paths.py`, each shown to fail against the unfixed
+code, behaviour against an injected `tmp_path` exports tree.
 
 ---
 

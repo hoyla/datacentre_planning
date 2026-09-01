@@ -2376,6 +2376,73 @@ ROADMAP as their own change.
 
 ---
 
+## Five priors and the release chain were one working-directory bug (2026-09-01/02)
+
+A path written as `Path("data/…")` is a path relative to wherever the
+command happens to be run, and this project had seven of them standing
+in front of loaders that return empty for an absent file. From the
+repository root every one worked. From anywhere else each layer
+silently disappeared — and the guard written to catch exactly that
+passed over the empty result, because a guard that checks the keys it
+is handed has nothing to check. Measured on 2026-09-01 from `/tmp`:
+the facility prior loaded 0 sites instead of 6; the site aliases 0
+instead of 56; the operator pages 0 instead of 39; the coordinate pins
+0 instead of 29, the reader's power-station overlay 0 plants instead
+of 3,987; the clusterer 0 partitioned applications instead of 476 —
+which re-merges the campuses the partitions exist to keep apart and
+changes site keys, reporting clean.
+
+Fixed as a family across five changes, each on the form
+`capacity_claims` and `green_claims` already used —
+`ROOT = Path(__file__).resolve().parent.parent` and every constant
+resolved against it — with tests that pin the mechanism (the path is
+absolute; a loader returns the same key set from a `chdir` directory)
+rather than a count that grows: `site_facilities` (#331), the three
+priors and the map/reader overlay (#332), the clusterer's `data_dir`
+default (#335), the release diff (#336) and the release chain itself
+(R7, this entry's occasion).
+
+**The last two were the instruments, and they were worse than the
+priors.** `release_diff.py` — the tool the diff-against-the-previous-
+release discipline rests on — opened its priors check with `if not
+path.exists(): continue`, so run from the wrong directory it skipped
+the dangling-site-key check and printed a report indistinguishable
+from one where every key resolved. It now reports the check it could
+not run and exits 2, outside `--allow-fewer`'s reach: that flag can
+declare a removal deliberate, not a check nobody ran. And
+`dcp/release.py`'s `EXPORTS` — the one location the whole chain reads
+to decide what to build — made `latest_release_dir()` return `None`
+from anywhere else, at which point the reader fell back to
+`phase1_build` and phase `"1"`, stamping its title, header and
+database filename with a phase several releases old, into a folder
+just as old, reporting success; the staging build took the same
+folder; and the Drive sync, finding no ledger, would have started
+from nothing and uploaded the whole tree beside the copy already on
+Drive — the duplicate-archive mechanism by another door.
+
+**The fallbacks are gone rather than made absolute.** A default that
+names a release is right for exactly one release and wrong from the
+next onwards, which this file recorded on 2026-08-11 and
+`tests/test_release_defaults.py` was written to prevent. Three
+survived it anyway, because that test read only the one line carrying
+`default=` and each offender had put the named release on the line
+after — and the test's own script glob was working-directory-relative,
+so from elsewhere it parametrised nothing and passed. Now
+`release.current_release_dir()` and `release.current_phase()` refuse
+with a message naming the flag to pass when there is no release
+folder to derive from; the defaults test resolves against the root
+and follows a statement's continuation lines; and the sync ledger is
+one constant, `dcp.drive.SYNC_LEDGER`, read by all three scripts that
+need it.
+
+The class is bounded by a grep and the boundary is stated:
+`data/exports` is one repository location, because everything in the
+chain reads it to decide what to build, so it resolves like the
+priors. A one-off tool's `--out` is legitimately where the command was
+run, and those defaults were named and left alone.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across

@@ -60,25 +60,32 @@ def _default_lines(path: Path) -> list[tuple[int, str]]:
     a multi-line statement is a guard the statement can step around, so
     a default's lines are followed while its brackets stay open.
     """
+    # Bracket depth is tracked across the WHOLE file, not from the
+    # `default=` line: the reader's fallback was `default=(...) if _rel`
+    # — balanced on its own line — with the enclosing `ap.add_argument(`
+    # opened on the line before, so a count that started at the
+    # `default=` line saw depth zero and never read the `else Path(
+    # ".../phase1_build/...")` beneath it. A default's statement runs
+    # until every bracket open around it has closed.
+    def _delta(text: str) -> int:
+        return (text.count("(") + text.count("[")
+                - text.count(")") - text.count("]"))
+
     out = []
-    lines = path.read_text().splitlines()
-    i = 0
-    while i < len(lines):
-        line = lines[i]
+    depth = 0
+    following = False
+    for i, line in enumerate(path.read_text().splitlines(), 1):
         stripped = line.strip()
-        i += 1
         if stripped.startswith("#"):
             continue          # a comment may cite the historical mistake
-        if "default=" in line or re.match(r"^DEFAULT_[A-Z_]* *=", stripped):
+        if following:
             out.append((i, line))
-            depth = line.count("(") + line.count("[") - line.count(")") - line.count("]")
-            while depth > 0 and i < len(lines):
-                cont = lines[i]
-                i += 1
-                if not cont.strip().startswith("#"):
-                    out.append((i, cont))
-                depth += (cont.count("(") + cont.count("[")
-                          - cont.count(")") - cont.count("]"))
+        elif "default=" in line or re.match(r"^DEFAULT_[A-Z_]* *=", stripped):
+            out.append((i, line))
+            following = True
+        depth = max(0, depth + _delta(line))
+        if depth == 0:
+            following = False
     return out
 
 
