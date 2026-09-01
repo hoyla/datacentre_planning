@@ -324,11 +324,14 @@ def test_a_name_the_documents_call_applicant_and_adviser_alike_is_an_adviser():
     `applicant_of_record` answers "who is behind this scheme" and is the
     strongest claim on the panel; `advisers` says a firm acted for
     whoever is. Filing a tie as the applicant is therefore the expensive
-    way to be wrong, and the corpus agrees it is the wrong way: of the
-    34 names tied between the two families at or above the floor
-    (2026-09-01), every one is an adviser — "BUJ Architects", "Mr D
-    Chadwick, Chadwick Town Planning Limited", "Matthew Payne,
-    Consultant Engineer". Not one is an applicant.
+    way to be wrong, and the corpus agrees: of the ~36 names whose two
+    counts tie at or above the floor and at the name's own maximum
+    (measured twice, 2026-09-01), essentially all are advisers, agents
+    or case officers — "BUJ Architects", "Mr D Chadwick, Chadwick Town
+    Planning Limited", "Matthew Payne, Consultant Engineer" — with one
+    developer-shaped compound string the arguable exception, so the
+    direction rests on the cost asymmetry plus the overwhelming
+    majority, not on unanimity.
 
     The comment this replaces said ties went to the family declared
     first in `signal_families`, which is applicant. That order decides

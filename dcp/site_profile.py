@@ -1235,12 +1235,18 @@ DOCUMENT_NAME_FLOOR = 2
 # `party_applicant` is last because it is the strongest claim on the
 # panel — it answers "who is behind this scheme" — and a tie is the
 # documents failing to settle exactly that. The corpus says the same
-# thing: of the 34 names tied between applicant and adviser at or above
-# DOCUMENT_NAME_FLOOR (measured 2026-09-01), every one is an adviser —
-# "BUJ Architects", "Hannah Leary, Barton Willmore LLP", "Mr D Chadwick,
-# Chadwick Town Planning Limited", "Matthew Payne, Consultant Engineer".
-# Not one is an applicant. Applicant-wins-ties would file all 34 as the
-# applicant of record.
+# thing: of the ~36 names whose applicant and adviser counts tie at or
+# above DOCUMENT_NAME_FLOOR and at the name's own maximum (the ties
+# this order actually decides; 34 or 36 depending on how variants are
+# merged, measured twice on 2026-09-01), essentially all are advisers,
+# agents or case officers — "BUJ Architects", "Hannah Leary, Barton
+# Willmore LLP", "Mr D Chadwick, Chadwick Town Planning Limited",
+# "Matthew Payne, Consultant Engineer". The one arguable exception is
+# a developer-shaped compound string ("Stoford Developments Ltd,
+# Spetchley Developments"), so the direction rests on the cost
+# asymmetry plus the overwhelming majority, not on unanimity:
+# applicant-wins-ties would file ~35 advisers as the applicant of
+# record to protect one possible developer.
 #
 # `party_other` is last-but-one — below the three families that state a
 # side, above nothing. It is "named without a stated side", so it is the

@@ -2235,14 +2235,22 @@ Which he was depended on the plan.
 to the family declared first, which is applicant". Implementing it as
 written would have been wrong. The declaration order in
 `signal_families` decides which regex claims a raw label, which is a
-different question; and the corpus answers this one plainly. Of the 34
-names tied between applicant and adviser at or above
-`DOCUMENT_NAME_FLOOR`, **every one is an adviser** — "BUJ Architects",
-"Hannah Leary, Barton Willmore LLP", "Mr D Chadwick, Chadwick Town
-Planning Limited", "Matthew Payne, Consultant Engineer", "Ove Arup &
-Partners International Limited author". Not one is an applicant.
-Applicant-wins-ties would have filed all 34 as the applicant of record,
-which is the panel's strongest claim and the expensive way to be wrong.
+different question; and the corpus answers this one plainly. Of the
+~36 names whose applicant and adviser counts tie at or above
+`DOCUMENT_NAME_FLOOR` and at the name's own maximum — the ties the
+order actually decides; 34 or 36 depending on how spelling variants
+are merged, measured twice on 2026-09-01 — **essentially all are
+advisers, agents or case officers**: "BUJ Architects", "Hannah Leary,
+Barton Willmore LLP", "Mr D Chadwick, Chadwick Town Planning
+Limited", "Matthew Payne, Consultant Engineer", "Ove Arup & Partners
+International Limited author". The one arguable exception a re-probe
+found is a developer-shaped compound string, "Stoford Developments
+Ltd, Spetchley Developments" — so the direction rests on the cost
+asymmetry plus the overwhelming majority rather than on unanimity,
+and the first version of this entry claimed the stronger "every one",
+corrected here. Applicant-wins-ties would have filed ~35 advisers as
+the applicant of record, which is the panel's strongest claim and the
+expensive way to be wrong, to protect one possible developer.
 
 So `PARTY_FAMILY_TIE_ORDER` is stated where it can be read, weakest
 claim first — adviser, authority, applicant, other — with `party_other`
