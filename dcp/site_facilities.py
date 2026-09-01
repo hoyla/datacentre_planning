@@ -177,15 +177,19 @@ def require_held_snapshots(facilities: dict[str, dict],
 
     The operator-claims channel checks its quotes against these same
     files; a roster naming one that does not exist would assert a held
-    copy nobody can open.
+    copy nobody can open. A roster names the slug, never a filename —
+    the store is append-only and dated, so which file is current is
+    `capacity_claims.snapshot_path`'s answer and not this file's.
     """
+    from dcp.capacity_claims import snapshot_path
+
     missing = sorted({
         src["snapshot"]
         for entry in facilities.values()
         for f in entry["facilities"]
         for src in f.get("identity") or []
         if str(src.get("snapshot", "")).strip()
-        and not (snapshot_dir / f"{src['snapshot']}.txt").exists()})
+        and snapshot_path(src["snapshot"], snapshot_dir) is None})
     if missing:
         raise ValueError(
             "site_facilities.yaml names snapshots that are not held: "

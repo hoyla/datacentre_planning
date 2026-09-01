@@ -505,3 +505,71 @@ def test_the_real_file_marks_its_campus_components():
     rows = {r["parent"]: r for r in cc.reconcile_components()}
     assert "VIRTUS Stockley Park campus" in rows
     assert rows["VIRTUS Stockley Park campus"]["components"] >= 3
+
+
+# ---------------------------------------------------------------------------
+# The append-only snapshot store (WP-A of docs/HANDOVER_SNAPSHOT_CHAIN.md)
+#
+# The store was overwrite-in-place while the claims it evidences were
+# append-only, so a superseded reading pointed at a file no longer
+# containing its quote. These pin the two halves of the fix: one
+# resolver that answers "which file evidences this claim", and a
+# fetcher that adds a file only when something changed.
+
+def _snap(dirpath, name, digest="a" * 64, body="the page says 9 MW"):
+    (dirpath / name).write_text(
+        f"# url: https://example.com\n\n# fetched: 2026-08-30\n\n"
+        f"# sha256(html): {digest}\n\n## STRUCTURED\n\n(none)\n\n"
+        f"## VISIBLE TEXT\n\n{body}")
+    return dirpath / name
+
+
+def test_the_resolver_returns_the_newest_dated_snapshot(tmp_path):
+    _snap(tmp_path, "op-site.2026-08-20.txt")
+    newest = _snap(tmp_path, "op-site.2026-08-28.txt")
+    _snap(tmp_path, "op-site.2026-08-14.txt")
+    assert cc.snapshot_path("op-site", tmp_path) == newest
+
+
+def test_a_same_day_second_reading_sorts_after_the_first(tmp_path):
+    """`_2` and not `-2`: a dash sorts before the dot and would make the
+    day's second reading look older than its first."""
+    _snap(tmp_path, "op-site.2026-08-28.txt")
+    second = _snap(tmp_path, "op-site.2026-08-28_2.txt")
+    assert cc.snapshot_path("op-site", tmp_path) == second
+
+
+def test_the_resolver_falls_back_to_the_pre_migration_name(tmp_path):
+    legacy = _snap(tmp_path, "op-site.txt")
+    assert cc.snapshot_path("op-site", tmp_path) == legacy
+
+
+def test_a_dated_snapshot_beats_a_legacy_one(tmp_path):
+    _snap(tmp_path, "op-site.txt")
+    dated = _snap(tmp_path, "op-site.2026-08-28.txt")
+    assert cc.snapshot_path("op-site", tmp_path) == dated
+
+
+def test_the_resolver_does_not_answer_for_a_slug_it_holds_nothing_for(tmp_path):
+    _snap(tmp_path, "op-site.2026-08-28.txt")
+    assert cc.snapshot_path("op-other", tmp_path) is None
+
+
+def test_one_slug_is_not_matched_by_a_longer_one(tmp_path):
+    """`virtus-saunderton` and `virtus-saunderton-spec-sheet` are two
+    pages, and the glob must not confuse them."""
+    _snap(tmp_path, "op-site-spec-sheet.2026-09-01.txt")
+    mine = _snap(tmp_path, "op-site.2026-08-30.txt")
+    assert cc.snapshot_path("op-site", tmp_path) == mine
+    assert cc.snapshot_path("op-site-spec-sheet", tmp_path).name.startswith(
+        "op-site-spec-sheet.")
+
+
+def test_every_committed_snapshot_is_dated():
+    """The migration is complete, so the resolver's legacy fallback is
+    a review aid rather than something the store depends on."""
+    import re
+    stray = sorted(
+        p.name for p in cc.OPERATOR_SNAPSHOT_DIR.glob("*.txt")
+        if not re.search(r"\.\d{4}-\d{2}-\d{2}(_\d+)?\.txt$", p.name))
+    assert stray == []

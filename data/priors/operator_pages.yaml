@@ -73,9 +73,8 @@ pages:
       Sheet T2-01; claim match strong (name_and_operator). The page's
       datasheet names four facilities on one basis — LONDON15 9.5,
       LONDON16 22.5, LONDON17 16, LONDON18 30, "Campus Total of 78 MW"
-      — and is itself snapshotted since 2026-09-01
-      (operator_snapshots/virtus-saunderton-spec-sheet.txt), each figure
-      a matched claim. The PDF is not listed here as a second page: it
+      — and is itself snapshotted since 2026-09-01 (slug
+      virtus-saunderton-spec-sheet), each figure a matched claim. The PDF is not listed here as a second page: it
       is reachable as those claims' own source, and this prior records
       pages an audience reads rather than every document behind them.
   - site_key: PTNO-11891737

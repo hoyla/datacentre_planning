@@ -37,12 +37,20 @@ Standing disciplines (they all bit within the last day):
 
 ---
 
-## WP-A — Make the snapshot store append-only
+## WP-A — Make the snapshot store append-only — **DONE 2026-09-01**
+
+Built as specced, with one departure recorded below: the same-day
+suffix is `_2` and not `-2`, because `-` sorts *before* `.` and a
+`-2` name would have sorted ahead of the day's first reading —
+breaking the "lexicographic sort must equal chronological order"
+requirement stated in the same bullet. `_` sorts after `.` and keeps
+it. The resolver sorts on the parsed `(date, sequence)` rather than on
+the raw name, so the property holds however the store is filled.
 
 **Decided** (Luke, 2026-09-01; defect recorded in ROADMAP by PR #311):
 `capacity_claims` keeps every reading of a claim, but
-`scripts/fetch_operator_snapshots.py` writes one file per slug and
-overwrites it, so a superseded reading's evidence survives only in git
+`scripts/fetch_operator_snapshots.py` wrote one file per slug and
+overwrote it, so a superseded reading's evidence survived only in git
 (CyrusOne LON1, 8.72 → 9 MW). **Naming decided: `<slug>.<date>.txt`**
 — date over content-hash because these are reporter-facing evidence
 files heading for Drive, and a date sorts and means something where a
@@ -108,6 +116,18 @@ Build, in one branch:
 fetcher writes nothing new, all quote verification passes, and the
 suite is green (`pytest -m "not integration" -q`; 1,162 passed at last
 run).
+
+**Met.** All 81 files dated and none legacy, pinned by
+`test_every_committed_snapshot_is_dated`; the fetcher's skip decision
+is `held_digest` against `snapshot_path`, tested without a network;
+`verify_operator_quotes`, `green_claims.verify_quotes` and
+`require_held_snapshots` all pass against the migrated store; suite
+1,181 passed, 1 skipped (1,167 collected on `main` before this, so the
+15 new tests are the whole delta). **A re-run of the fetcher against
+the live pages has not been made** — it needs the network and would
+write a new dated file wherever a page has genuinely moved since
+2026-08-30, which is a fetch to run deliberately rather than as a
+test. The no-op property is asserted by test instead.
 
 ---
 

@@ -284,8 +284,19 @@ What operators publish about their own sites, snapshotted because a
 marketing page can change any day and a figure quoted in a published
 story has to be recoverable a year later. Each snapshot holds the page's
 visible text plus any JSON-LD or counter attributes, with the URL, fetch
-date and the sha256 of the HTML that produced it. Refresh with
+date and the sha256 of the bytes that produced it (HTML, or PDF where
+the operator publishes a spec sheet). Refresh with
 `scripts/fetch_operator_snapshots.py`.
+
+**Append-only, on this directory's own rule above, since 2026-09-01.**
+Files are named `<slug>.<YYYY-MM-DD>.txt` — a second change on one day
+takes `_2` — and a fetch that finds the bytes unchanged writes nothing
+at all. Until then this was the one store here that overwrote in place,
+while `capacity_claims` kept every reading of a claim: CyrusOne LON1 was
+read at 8.72 MW on 2026-08-20 and 9 MW on 2026-08-28, both rows standing
+and the 8.72 quote nowhere in the single held file. Never construct a
+snapshot path; `dcp.capacity_claims.snapshot_path` resolves a slug to
+the newest file held.
 
 **The weakest authority in the claims store**, and labelled so wherever
 it renders: marketing material, not an audited or regulatory disclosure,

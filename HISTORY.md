@@ -2009,6 +2009,69 @@ the four passes above.
 
 ---
 
+## The snapshot store becomes append-only (2026-09-01)
+
+The claims channel had kept every reading of a claim since it was built,
+and the evidence behind those readings had not. `capacity_claims` holds
+CyrusOne LON1 at 8.72 MW on 2026-08-20 and 9 MW on 2026-08-28 — both
+rows, deliberately, because an operator replacing a precise published
+figure with a round one is a fact about the disclosure. But
+`fetch_operator_snapshots.py` wrote one file per slug and overwrote it,
+so both rows named `cyrusone-lon1` and the file that name resolved to
+contained only the 9. The 8.72 quote survived in a commit message.
+
+**It was latent, and it was the wrong-document failure one layer up.**
+LON1 was the only claim with two readings and neither is matched, so
+nothing had yet rendered a claim its own evidence contradicts. What it
+blocked was the next step: syncing snapshots to Drive so that "our copy"
+means the same thing for a claim as it does for a document. Doing that
+first would have put an "our copy" link on a file that does not support
+the claim beside it — precisely what `document_drive_files` exists to
+prevent for documents, and for the same reason.
+
+Fixed on the shape the directory's own README had asserted all along:
+*never mutate a snapshot; a re-fetch adds a new dated file beside the
+old one.* The operator store was the one place under
+`data/external_sources/` that did not keep that rule.
+
+**Dated, not content-addressed** (Luke's call). A content hash makes an
+unchanged re-fetch a no-op for free, which is why the sha256 stays in
+the file header and is what the fetcher now compares against — but the
+name a reporter sees on Drive has to mean something, and a date sorts
+and reads where a hash does neither. So `<slug>.<YYYY-MM-DD>.txt`, with
+the hash doing the deduplication behind it.
+
+**One character of the naming was decided by sort order.** The spec's
+same-day suffix was `-2`; `-` sorts before `.`, so `slug.2026-09-01-2`
+would have sorted *ahead* of `slug.2026-09-01` and the day's second
+reading would have looked like the older one. `_` sorts after `.` and
+does not. The resolver sorts on the parsed date and sequence rather than
+on the raw string, so the property holds however the store is filled,
+and a test asserts the names a run produces come out in the order they
+were written.
+
+**The resolver is one function, because five call sites were the
+hazard.** "Which file evidences this claim" is now
+`capacity_claims.snapshot_path`, and the claims loader, both quote
+checks and the facility prior's held-copy rule all ask it. Nothing else
+in the repository constructs a snapshot path — checked by grep, and the
+reader reaches snapshots only through those modules. That is the
+`dcp/drive.py` lesson applied a second time: a rule about how to address
+something survives as a shared function, not as a thing to remember.
+
+The 81 committed files were renamed by `scripts/migrate_snapshot_names.py`
+from the `# fetched:` date each already carried, so the migration
+invented no dates and a file whose header could not be read would have
+been left alone and reported rather than stamped with today. `git mv`,
+so the history carries renames and the diff stays readable.
+
+Written as WP-A of `docs/HANDOVER_SNAPSHOT_CHAIN.md`. What remains
+there: the Drive sync, the reader and workbook links (which must resolve
+a claim to the snapshot that existed at its `as_at`, not to today's),
+the Iron Mountain capture, and the ladder-rung design document.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across

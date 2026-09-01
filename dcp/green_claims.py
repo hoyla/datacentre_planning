@@ -152,8 +152,10 @@ def _norm(text: str) -> str:
 
 def snapshot_url(snapshot: str, snapshot_dir: Path = SNAPSHOT_DIR) -> str:
     """The page a snapshot was taken from, from its `# url:` header."""
-    f = snapshot_dir / f"{snapshot}.txt"
-    if not f.exists():
+    from dcp.capacity_claims import snapshot_path
+
+    f = snapshot_path(snapshot, snapshot_dir)
+    if f is None:
         return ""
     for line in f.read_text(encoding="utf-8").splitlines()[:6]:
         if line.startswith("# url:"):
@@ -189,11 +191,13 @@ def load_claims(path: Path = CLAIMS_PATH) -> list[GreenClaim]:
 def verify_quotes(claims: list[GreenClaim] | None = None,
                   snapshot_dir: Path = SNAPSHOT_DIR) -> list[str]:
     """Every quote must still appear in its committed snapshot."""
+    from dcp.capacity_claims import snapshot_path
+
     problems = []
     for c in (claims if claims is not None else load_claims()):
-        f = snapshot_dir / f"{c.snapshot}.txt"
-        if not f.exists():
-            problems.append(f"{c.operator}: snapshot {c.snapshot}.txt is missing")
+        f = snapshot_path(c.snapshot, snapshot_dir)
+        if f is None:
+            problems.append(f"{c.operator}: snapshot {c.snapshot} is missing")
             continue
         if c.quote not in _norm(f.read_text(encoding="utf-8")):
             problems.append(

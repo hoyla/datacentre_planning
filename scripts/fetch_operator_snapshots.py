@@ -4,9 +4,21 @@ Operators publish capacity on their own websites, and those pages change
 without notice — a figure quoted in a published story has to be
 recoverable a year later. Each page is reduced to the two things a claim
 can be checked against (its visible text, and any JSON-LD or embedded
-JSON carrying figures) and written to a dated snapshot under
+JSON carrying figures) and written under
 data/external_sources/operator_snapshots/, with the fetch date and the
-sha256 of the HTML that produced it.
+sha256 of the bytes that produced it.
+
+**The store is append-only.** Until 2026-09-01 this wrote one file per
+slug and overwrote it, while `capacity_claims` kept every reading of a
+claim — so a superseded reading pointed at a file that no longer
+contained its quote (CyrusOne LON1, 8.72 MW then 9 MW eight days later;
+the 8.72 evidence survived only in git). Each fetch that changes
+anything now writes `<slug>.<YYYY-MM-DD>.txt` beside its predecessors,
+and an unchanged re-fetch writes nothing at all — the sha256 in the
+newest held file is compared with the bytes just served, so re-running
+the sweep is a byte-level no-op (principle 5) rather than 81 files with
+a new date on them. `dcp.capacity_claims.snapshot_path` is the one
+resolver every reader goes through; nothing else knows the naming.
 
 Deliberately not a scraper of every page an operator has: the URL list is
 curated, one page per named site, because the claims file is curated too
@@ -45,6 +57,10 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(ROOT))
+
+from dcp.capacity_claims import snapshot_path  # noqa: E402
+
 OUT = ROOT / "data" / "external_sources" / "operator_snapshots"
 
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -290,7 +306,52 @@ def structured(raw: str) -> list[str]:
     return out
 
 
-def snapshot(slug: str, url: str) -> Path:
+# The header the skip decision reads. Both spellings exist since PR #310,
+# when a PDF became a page like any other.
+_DIGEST_RE = re.compile(r"^# sha256\((?:html|pdf)\): ([0-9a-f]{64})$")
+
+
+def held_digest(path: Path | None) -> str | None:
+    """The sha256 a held snapshot records, or None if it records none.
+
+    None is never equal to a fresh digest, so an unreadable or
+    header-less file makes the fetcher write rather than skip: an
+    unrecognised file must not be mistaken for a match.
+    """
+    if path is None or not path.exists():
+        return None
+    for line in path.read_text(encoding="utf-8").splitlines()[:6]:
+        m = _DIGEST_RE.match(line)
+        if m:
+            return m.group(1)
+    return None
+
+
+def next_name(slug: str, day: str, out: Path) -> str:
+    """The filename a change fetched on `day` should be written to.
+
+    `_2` and not `-2` for a same-day second reading, because `_` sorts
+    after `.` and `-` sorts before it: with a dash the day's second
+    reading would sort ahead of its first and lexicographic order would
+    stop being chronological, which is the property the resolver and a
+    reporter reading `ls` both rely on.
+    """
+    name = f"{slug}.{day}.txt"
+    n = 1
+    while (out / name).exists():
+        n += 1
+        name = f"{slug}.{day}_{n}.txt"
+    return name
+
+
+def snapshot(slug: str, url: str, out: Path = OUT) -> Path | None:
+    """Fetch, and write a new dated snapshot only if anything changed.
+
+    Returns the file written, or None when the bytes served are the
+    bytes already held — the store is append-only, so a sweep over
+    unchanged pages must add nothing rather than restate 81 files under
+    a new date.
+    """
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=60) as r:
         raw_bytes = r.read()
@@ -298,9 +359,14 @@ def snapshot(slug: str, url: str) -> Path:
     # a re-fetch that returns a byte-identical document is visible as
     # such whichever kind it is.
     digest = hashlib.sha256(raw_bytes).hexdigest()
+    if held_digest(snapshot_path(slug, out)) == digest:
+        return None
+    # One reading of the clock, so the name and the header can never
+    # disagree about which day this was fetched on.
+    day = dt.datetime.now(dt.UTC).date().isoformat()
     if is_pdf(raw_bytes):
         head = [f"# url: {url}",
-                f"# fetched: {dt.datetime.now(dt.UTC).date().isoformat()}",
+                f"# fetched: {day}",
                 f"# sha256(pdf): {digest}",
                 "## STRUCTURED",
                 "(none — PDF)",
@@ -309,13 +375,13 @@ def snapshot(slug: str, url: str) -> Path:
     else:
         raw = raw_bytes.decode("utf-8", errors="replace")
         head = [f"# url: {url}",
-                f"# fetched: {dt.datetime.now(dt.UTC).date().isoformat()}",
+                f"# fetched: {day}",
                 f"# sha256(html): {digest}",
                 "## STRUCTURED",
                 "\n\n".join(structured(raw)) or "(none)",
                 "## VISIBLE TEXT",
                 visible_text(raw)]
-    dest = OUT / f"{slug}.txt"
+    dest = out / next_name(slug, day, out)
     dest.write_text("\n\n".join(head))
     return dest
 
@@ -324,8 +390,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", help="one operator key from PAGES")
     ap.add_argument("--slug", help="one page slug, to add or refresh a "
-                                   "single snapshot without rewriting its "
-                                   "neighbours' fetch dates")
+                                   "single snapshot without touching its "
+                                   "neighbours")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     keys = [args.only] if args.only else list(PAGES)
@@ -335,7 +401,10 @@ def main() -> int:
                 continue
             try:
                 p = snapshot(slug, url)
-                print(f"  {p.name:<34} {p.stat().st_size/1000:>6.1f} kB  {url}")
+                if p is None:
+                    print(f"  {slug:<34} {'unchanged':>9}     {url}")
+                else:
+                    print(f"  {p.name:<34} {p.stat().st_size/1000:>6.1f} kB  {url}")
             # One unreachable operator must not abort the sweep — a
             # failed page leaves its previous snapshot in place, and the
             # quote check will keep passing against it until someone

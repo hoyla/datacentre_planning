@@ -312,6 +312,58 @@ OPERATOR_CLAIMS_PATH = ROOT / "data" / "external_sources" / "operator-claims.yam
 OPERATOR_SNAPSHOT_DIR = ROOT / "data" / "external_sources" / "operator_snapshots"
 OPERATOR_SOURCE_KEY = "operator_website"
 
+# The snapshot store is append-only, and this is the one place that knows
+# what its filenames look like.
+#
+# It was not append-only until 2026-09-01: the fetcher wrote one file per
+# slug and overwrote it, while `capacity_claims` kept every reading of a
+# claim. CyrusOne LON1 is the case that showed it — 8.72 MW on
+# 2026-08-20, 9 MW on 2026-08-28, both rows standing, and the 8.72 quote
+# nowhere in the single held file. The evidence survived only in git,
+# which is luck rather than design, and it is the wrong-document failure
+# `document_drive_files` exists to prevent one layer up.
+#
+# `<slug>.<YYYY-MM-DD>.txt`: dated rather than content-addressed because
+# these are reporter-facing evidence files heading for Drive, and a date
+# sorts and means something where a hash does not. The sha256 stays in
+# the file header, which is what makes an unchanged re-fetch a no-op.
+#
+# A second change on one day takes `_2`, then `_3`. The separator is `_`
+# and not `-` so that lexicographic order stays chronological: `_` sorts
+# after `.`, where `-` sorts before it and would put the day's second
+# reading ahead of its first.
+_DATED_SNAPSHOT_RE = re.compile(r"\.(\d{4}-\d{2}-\d{2})(?:_(\d+))?\.txt$")
+
+
+def _snapshot_order(path: Path) -> tuple[str, int]:
+    """Sort key: the date in the name, then the same-day sequence.
+
+    A file that matches the glob but carries no parsable date sorts
+    below every dated one rather than winning by accident — the store
+    should never contain such a file, and if it does it must not be
+    served as the newest reading.
+    """
+    m = _DATED_SNAPSHOT_RE.search(path.name)
+    return (m.group(1), int(m.group(2) or 1)) if m else ("", 0)
+
+
+def snapshot_path(slug: str,
+                  snapshot_dir: Path = OPERATOR_SNAPSHOT_DIR) -> Path | None:
+    """The newest held snapshot for a slug, or None if none is held.
+
+    Every consumer resolves through here — the claims loader, both
+    quote checks and the facility prior's held-copy rule — so that
+    "which file evidences this claim" is answered in one place.
+    """
+    dated = sorted(snapshot_dir.glob(f"{slug}.*.txt"), key=_snapshot_order)
+    if dated:
+        return dated[-1]
+    # The pre-migration name. Kept so the 2026-09-01 rename is safe to
+    # review rather than load-bearing; the store holds none of these,
+    # and `test_every_committed_snapshot_is_dated` says so.
+    legacy = snapshot_dir / f"{slug}.txt"
+    return legacy if legacy.exists() else None
+
 
 def _norm_ws(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
@@ -327,9 +379,9 @@ def load_operator_claims(path: Path = OPERATOR_CLAIMS_PATH) -> list[FiledClaim]:
     out = []
     for c in cfg.get("claims", []):
         src = sources[c["source"]]
-        snap = OPERATOR_SNAPSHOT_DIR / f"{c['snapshot']}.txt"
+        snap = snapshot_path(c["snapshot"])
         url = ""
-        if snap.exists():
+        if snap is not None:
             m = re.search(r"^# url: (.+)$", snap.read_text(), re.MULTILINE)
             url = m.group(1).strip() if m else ""
         as_at = c.get("as_at")
@@ -386,9 +438,10 @@ def verify_operator_quotes(claims: list[FiledClaim] | None = None,
     claims = claims if claims is not None else load_operator_claims()
     problems = []
     for c in claims:
-        f = snapshot_dir / f"{c.attrs['snapshot']}.txt"
-        if not f.exists():
-            problems.append(f"{c.claim_name}: no snapshot {f.name}")
+        slug = c.attrs["snapshot"]
+        f = snapshot_path(slug, snapshot_dir)
+        if f is None:
+            problems.append(f"{c.claim_name}: no snapshot held for {slug}")
             continue
         if _norm_ws(c.quote) not in _norm_ws(f.read_text()):
             problems.append(
