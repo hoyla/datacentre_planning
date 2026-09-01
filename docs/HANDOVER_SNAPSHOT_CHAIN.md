@@ -1,12 +1,19 @@
 # Handover: the snapshot chain and its consumers
 
-> A plan over ROADMAP.md, not a second roadmap: written 2026-09-01 so
-> an Opus session can execute work whose design was settled in a Fable
-> session that ran short of credits. **ROADMAP.md stays the inbox** —
-> when a package lands, its ROADMAP item is updated in the same PR and
-> the package below gets a DONE marker; when all are landed or
-> abandoned, mark this file SPENT at the top the way
-> `docs/HANDOVER_OPUS5.md` is. Everything here was agreed with Luke on
+> **SPENT — do not work from this document.** All five packages landed
+> on 2026-09-01: WP-A (#319), WP-B (#320), WP-D (#321), WP-C (#324),
+> and WP-E — whose deliverable,
+> [PLAN_OPERATOR_RUNG.md](PLAN_OPERATOR_RUNG.md) (#326), now also
+> carries Luke's decisions on all seven points. **ROADMAP.md is the
+> inbox**; the live work this chain leads to — implementing the rung,
+> the 2.11 release, the 35-campus review — is carried there and in the
+> plan document. Kept as the record of how the packages were scoped
+> and what each measured.
+
+> *The original preamble, for the record:* a plan over ROADMAP.md, not
+> a second roadmap: written 2026-09-01 so an Opus session can execute
+> work whose design was settled in a Fable session that ran short of
+> credits. Everything here was agreed with Luke on
 > 2026-08-31/2026-09-01; where a package says "decided", do not
 > re-litigate it — the reasoning is in ROADMAP and the PR threads it
 > cites (#310–#316).
@@ -432,7 +439,7 @@ cited.
 
 ---
 
-## WP-E — The ladder-rung design document — **DONE 2026-09-01, decisions await Luke**
+## WP-E — The ladder-rung design document — **DONE 2026-09-01, decided the same day**
 
 **Met**: the proposal is
 [docs/PLAN_OPERATOR_RUNG.md](PLAN_OPERATOR_RUNG.md), ending in seven
