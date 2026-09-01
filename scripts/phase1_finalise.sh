@@ -92,6 +92,11 @@ step "drive sync"    $PY -u scripts/drive_sync.py --sync data/exports/drive_stag
 # that links documents, or everything uploaded for the first time falls
 # back to a register link.
 step "drive ids"     $PY scripts/record_drive_ids.py --verify-bytes
+# The claims channel's evidence, on the same rule: a capacity claim rests
+# on a snapshot of an operator's page, and "our copy" has to mean Drive
+# for it as it does for a document. Additive and cheap -- the snapshot
+# store is append-only, so there is no rename to chase.
+step "snapshot ids"  $PY scripts/sync_snapshots_drive.py
 step "google sheet"  $PY scripts/sheet_sync.py
 
 say "done — index.html has changed and needs a PR to deploy"

@@ -278,7 +278,7 @@ requests per five minutes, and the document endpoint 302s to a signed S3
 URL that expires in 60 seconds and rejects a request still carrying the
 Authorization header.
 
-## operator_snapshots/ and operator-claims.yaml
+## operator_snapshots/, operator-claims.yaml and operator_snapshots_drive.yaml
 
 What operators publish about their own sites, snapshotted because a
 marketing page can change any day and a figure quoted in a published
@@ -297,6 +297,14 @@ read at 8.72 MW on 2026-08-20 and 9 MW on 2026-08-28, both rows standing
 and the 8.72 quote nowhere in the single held file. Never construct a
 snapshot path; `dcp.capacity_claims.snapshot_path` resolves a slug to
 the newest file held.
+
+**And they are on Drive**, in `operator_snapshots` under the handover
+root, so "our copy" means the same thing for a capacity claim as for a
+planning document. `scripts/sync_snapshots_drive.py` uploads anything
+new (runbook step 11a) and records each file's Drive id in
+`operator_snapshots_drive.yaml` beside this file; `dcp/snapshot_drive.py`
+reads it. The id is recorded at upload and read back by key — nothing
+derives a location, for the reason `document_drive_files` exists.
 
 **The weakest authority in the claims store**, and labelled so wherever
 it renders: marketing material, not an audited or regulatory disclosure,

@@ -21,6 +21,33 @@ FOLDER_URL = f"https://drive.google.com/drive/folders/{FOLDER_ID}"
 SITES_FOLDER_ID = "1wSMSDEm8xhxXFtAmUPCO5VgBYtfhiJEW"
 SITES_URL = f"https://drive.google.com/drive/folders/{SITES_FOLDER_ID}"
 
+# The operator snapshots, beside `sites` rather than inside it: they are
+# a different evidence class — what an operator published about its own
+# facilities, held because a marketing page has no register behind it —
+# but the same promise. "Our copy" means Drive for a planning document,
+# and a reporter should not have to learn that it means a git repository
+# for the page a capacity claim rests on.
+#
+# Created 2026-09-01 by `scripts/sync_snapshots_drive.py --create-folder`,
+# which prints the id for pasting here rather than writing it. That is
+# deliberately two steps: creating a folder as a side effect of a sync is
+# how the duplicate archive above happened, so it has to be asked for
+# once, and this constant is what every later run addresses. The sync
+# `files.get`s it before uploading and stops on a 404 — it never falls
+# back to creating one.
+SNAPSHOTS_FOLDER_ID = "1NqIVr0y1aITvgAmQahatM3E4aCpBThlG"
+SNAPSHOTS_URL = f"https://drive.google.com/drive/folders/{SNAPSHOTS_FOLDER_ID}"
+
+
+def file_url(file_id: str) -> str:
+    """The viewer URL for a Drive file id.
+
+    One shape, in one place. `export_handover.py` and `export_duckdb.py`
+    each still build this string themselves; folding those in is their
+    own change rather than this one's.
+    """
+    return f"https://drive.google.com/file/d/{file_id}/view"
+
 # Encrypted database backups (scripts/backup_db.py). Deliberately NOT a
 # subfolder of the handover archive above: Drive sharing inherits
 # downward, and a pg_dump is the raw schema — Barbour's role-block

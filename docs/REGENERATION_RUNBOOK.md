@@ -617,6 +617,38 @@ A Drive id survives the file being moved or renamed on Drive. A derived
 path does not survive anything being renamed here. So the id is captured
 once, checked, and read back by key.
 
+### 11a. Put any new operator snapshots on Drive — before step 12
+
+```sh
+scripts/sync_snapshots_drive.py --dry-run
+scripts/sync_snapshots_drive.py
+```
+
+The claims channel's evidence is a committed snapshot of an operator's
+page, and "our copy" has to mean Drive for a claim the way it does for a
+document. This uploads any snapshot with no Drive id yet and records the
+id in `data/external_sources/operator_snapshots_drive.yaml`.
+
+**Cheap and additive.** The store is append-only, so a dated snapshot
+never changes after upload: there is no rename to chase and no prune to
+get wrong. A run with nothing new says so and stops.
+
+**Before step 12, not after**, for the same reason step 11 is: the build
+that publishes `index.html` reads the ledger, and a snapshot uploaded
+after it renders with no link to our copy until the next release.
+
+It never resolves a folder by name and never creates one as a side
+effect. `dcp.drive.SNAPSHOTS_FOLDER_ID` is the destination; a 404 on it
+stops the run rather than making a second folder. If that folder is ever
+genuinely lost, `--create-folder` makes a new one and prints the id to
+paste into `dcp/drive.py` — a deliberate two-step act, because creating
+a folder as a side effect of a sync is how a second copy of the whole
+archive came to exist.
+
+Every id is read back from Drive and its md5 checked against the local
+bytes before it is recorded. An upload that fails either check is
+reported and not written, and the script exits non-zero.
+
 ### 12. Rebuild the artefacts against the new ledger, and re-sync them
 
 **If a new notebook is being made, its URL must be in `dcp/drive.py`

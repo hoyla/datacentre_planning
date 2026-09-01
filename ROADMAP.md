@@ -1316,29 +1316,29 @@ field and is not publishable as it stands.
   workbook's own sheet. Deferred past 2.10 because the artefacts were
   built and diffed when it surfaced.
 
-- **Sync the snapshot store to Drive, then link it from the reader and
-  workbook.** Steps 2 and 3 of the chain opened on 2026-09-01 when Luke
-  asked about linking snapshots from the reader. **Step 1 — making the
-  store append-only — shipped the same day** (HISTORY, "The snapshot
-  store becomes append-only"); it was the blocker, because syncing a
-  store that overwrote in place would have put an "our copy" link on
-  evidence a claim no longer matched, which is the wrong-document
-  failure `document_drive_files` exists to prevent one layer up.
+- **Link the snapshots from the reader and workbook.** Step 3 of the
+  chain opened on 2026-09-01 when Luke asked about linking snapshots
+  from the reader. **Steps 1 and 2 shipped the same day** — the store
+  is append-only, and all 81 snapshots are on Drive under
+  `operator_snapshots` with their file ids in
+  `data/external_sources/operator_snapshots_drive.yaml` (HISTORY, "The
+  snapshot store becomes append-only" and "The snapshots reach Drive").
 
-  Drive is the right destination on Luke's point that "our copy" should
-  mean one thing to a reporter, and everything else in the handover
-  means Drive. Snapshots get their own folder beside `sites`,
-  addressed by ID and never by name, with a per-file Drive ID recorded
-  at upload on the `document_drive_files` precedent. Then each operator
-  and green claim renders a link to our copy beside the source URL it
-  already shows — resolving to the snapshot that existed at the claim's
-  `as_at` rather than to the newest, since the point of the append-only
-  store is that an older reading keeps its own evidence.
+  What is left: each operator and green claim renders a link to our
+  copy beside the source URL it already shows, exactly as a document
+  carries its Drive copy beside the register link. The resolution rule
+  is the part that needs care — **a claim links the snapshot that
+  existed at its `as_at`, not the newest one.** That is the whole point
+  of the append-only store: CyrusOne LON1 read 8.72 MW on 2026-08-20
+  and 9 MW on 2026-08-28, and the older reading's link has to reach the
+  older evidence or the link is worse than none. `dcp/snapshot_drive.py`
+  resolves a filename to a Drive URL today; picking the filename from a
+  claim's `as_at` is the piece to add, and it belongs beside
+  `capacity_claims.snapshot_path`.
 
-  The build spec for both, plus the Iron Mountain capture and the
-  ladder-rung document, is
-  [docs/HANDOVER_SNAPSHOT_CHAIN.md](docs/HANDOVER_SNAPSHOT_CHAIN.md)
-  — written for an executor session; ROADMAP stays the inbox.
+  Luke reviews the rendering before it ships. The spec is WP-C of
+  [docs/HANDOVER_SNAPSHOT_CHAIN.md](docs/HANDOVER_SNAPSHOT_CHAIN.md);
+  ROADMAP stays the inbox.
 
   **A latent trap noticed during the WP-A work, and not caused by it.**
   `dcp/site_facilities.py` defaults both its priors path and its
@@ -1353,6 +1353,12 @@ field and is not publishable as it stands.
   report clean. It is the shape HISTORY records as *nobody looked,
   stored as nothing there*. Two lines: resolve both defaults against
   the package root, as `capacity_claims` and `green_claims` already do.
+
+  **And the Drive viewer URL is built in three places.**
+  `export_handover.py` (twice) and `export_duckdb.py` each write
+  `https://drive.google.com/file/d/…/view` themselves.
+  `dcp.drive.file_url` now exists and the snapshot links use it; folding
+  the other three in is its own small change.
 
 - **The Pinpoint/Giant delta: get the manifest, compute it, put
   re-upload in the chain.** The bundle policy — what the reduction

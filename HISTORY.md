@@ -2065,10 +2065,70 @@ invented no dates and a file whose header could not be read would have
 been left alone and reported rather than stamped with today. `git mv`,
 so the history carries renames and the diff stays readable.
 
-Written as WP-A of `docs/HANDOVER_SNAPSHOT_CHAIN.md`. What remains
-there: the Drive sync, the reader and workbook links (which must resolve
-a claim to the snapshot that existed at its `as_at`, not to today's),
-the Iron Mountain capture, and the ladder-rung design document.
+Written as WP-A of `docs/HANDOVER_SNAPSHOT_CHAIN.md`, and WP-B — the
+Drive sync it unblocked — followed the same day (below). What remains
+there: the reader and workbook links, which must resolve a claim to the
+snapshot that existed at its `as_at` rather than to today's; the Iron
+Mountain capture; and the ladder-rung design document.
+
+---
+
+## The snapshots reach Drive (2026-09-01)
+
+WP-B, and it could only run because WP-A had run first. "Our copy" means
+Drive everywhere else in this handover — a planning document links the
+copy this project holds, with the council's register beside it — and a
+capacity claim's evidence did not. It meant a file in a git repository,
+which is not something a reporter checking a figure should have to know.
+
+**Nothing was uploaded while the store overwrote in place.** Syncing
+then would have put an "our copy" link on a file the claim beside it no
+longer matched: the wrong-document failure `document_drive_files` exists
+to prevent, one layer up, and the reason WP-B was blocked rather than
+merely later.
+
+**A committed ledger, not a table**, which was the one design choice the
+spec left open. `document_drive_files` is a table because a document is
+a database row and its id is the key. A snapshot is not: it is a file in
+this repository, cited by name from committed YAML — the claims file,
+the green-claims file, the facility prior. Its Drive id is a fact about
+a committed artefact, so it lives in git beside it, survives a database
+rebuilt from migrations, and arrives as a reviewable diff rather than as
+an invisible insert. `data/external_sources/operator_snapshots_drive.yaml`,
+read by `dcp/snapshot_drive.py`, keyed on the snapshot's own filename —
+not its slug, because the store is append-only and one slug has many
+readings.
+
+**Folder creation is an asked-for act, not a side effect.** The grant is
+`drive.file`, so a name query that finds nothing creates a duplicate;
+that is how a second copy of the whole archive once came to exist at My
+Drive root, both trees holding 429 site folders. So there is no name
+resolution in this script at all — a test asserts the source contains no
+`.folder(` and no `files().list`. `--create-folder` makes the folder,
+reads the created id back to prove it landed under the handover root,
+prints it, and stops; the id is pasted into `dcp.drive.SNAPSHOTS_FOLDER_ID`
+and every later run addresses that constant. A 404 on it stops the run.
+There is no fallback to creating one, ever.
+
+**Every id was verified before it was written.** Drive computes md5
+server-side, so each upload is read back and its md5 checked against the
+local bytes and its parent against the snapshots folder. An id failing
+either is reported and not recorded, on the same argument that took the
+`file://` anchors out of the reader: a link resolving to the wrong
+evidence is worse than no link.
+
+**Checked at the far side, not from the log** — the lesson this file
+already carries, applied. Listing the folder through the API: 81 files
+on Drive, 81 in the ledger, 81 held locally, no name in any one of the
+three missing from the other two, and every ledger id and md5 equal to
+what Drive reports and to the local bytes. The sync is in the chain as
+runbook step 11a rather than left to be remembered, and it runs before
+the build that publishes `index.html` for the same reason step 11 does.
+
+What remains is WP-C: rendering the link. The rule that needs care is
+that a claim links the snapshot that existed at its `as_at` — CyrusOne
+LON1's 2026-08-20 reading has to reach the 8.72 MW page, not the
+2026-08-28 one that says 9.
 
 ---
 
