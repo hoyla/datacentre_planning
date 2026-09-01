@@ -573,3 +573,34 @@ def test_every_committed_snapshot_is_dated():
         p.name for p in cc.OPERATOR_SNAPSHOT_DIR.glob("*.txt")
         if not re.search(r"\.\d{4}-\d{2}-\d{2}(_\d+)?\.txt$", p.name))
     assert stray == []
+
+
+# ---------------------------------------------------------------------------
+# The campus self-audits (WP-D, and the Saunderton gap it found)
+#
+# A campus total whose own breakdown checks it is the benchmark for when
+# a sum can ever be trusted, so the store has to be able to measure that
+# rather than leave it asserted in prose.
+
+def test_the_two_self_auditing_campuses_reconcile_against_their_own_rows():
+    rows = {r["parent"]: r for r in cc.reconcile_components()}
+    saunderton = rows["VIRTUS Saunderton Campus"]
+    assert saunderton["components"] == 4
+    assert saunderton["gap_mw"] == 0 and saunderton["reconciles"] is True
+    iron = rows["Iron Mountain London campus (Slough)"]
+    assert iron["components"] == 3
+    assert iron["parent_mw"] == 61 and iron["component_sum_mw"] == 60.7
+
+
+def test_a_facility_figure_from_a_second_page_is_not_a_component():
+    """Iron Mountain states LON-1 at 8.7 MW in the campus FAQ its 61 MW
+    total is built from, and 8.75 MW on the facility's own page. Both are
+    held — the divergence is the finding — but only the FAQ figure is a
+    component, or the building would be counted twice and the 60.7-vs-61
+    self-audit would break."""
+    by_name = {c.claim_name: c for c in cc.load_operator_claims()}
+    faq = by_name["Iron Mountain LON-1 (campus FAQ)"]
+    page = by_name["Iron Mountain LON-1 (facility page)"]
+    assert faq.attrs["component_of"] == "Iron Mountain London campus (Slough)"
+    assert page.attrs["component_of"] is None
+    assert (faq.value, page.value) == (8.7, 8.75)

@@ -342,23 +342,26 @@ sites:
       second campus whose own arithmetic checks itself: Iron Mountain
       states 61 MW for the campus and 8.7 + 27 + 25 = 60.7 across its
       three facilities, the 0.3 being rounding of the same kind as
-      Kao's 0.2 (Saunderton is the exact one). **None of those figures
-      is recorded here**, because no snapshot of ironmountain.com is
-      held and no Iron Mountain claim exists: the site's often-cited
-      capacities rest on pages this project cannot fetch, which
-      ROADMAP now records with the reason (a site-wide 429 bot block,
-      so a browser-assisted capture is the route, and then the
-      fetcher's own text extraction rather than the browser's, because
-      the figures sit inside a collapsed <details> accordion that
-      rendered text omits).
+      Kao's 0.2 (Saunderton is the exact one). **The pages are held as
+      of 2026-09-01** and every one of those figures is now a
+      quote-verified claim this roster references, so
+      reconcile_components() measures the campus rather than the
+      arithmetic sitting in prose.
 
-      **LON-1 is deliberately absent from the roster below.** Nothing
-      held names it: the planning record has Iron Mountain at 724-729
-      Dundee Road (Slough/P/02933/009) and data/priors/site_aliases.yaml
-      equates that address with LON-1, but that equation is a hand
-      adjudication rather than a document naming the facility, and the
-      operator's page that does name it is unsnapshotted. It joins the
-      roster when the pages are held.
+      **The three facilities each have both identity channels now**,
+      which is what this campus was the example of: LON-2 is named by
+      the planning record and has no operator page at all, while LON-1
+      and LON-3 have operator pages, and until the pages were held
+      only one channel covered any of them.
+
+      **The operator's pages disagree with each other, and the roster
+      keeps both readings rather than choosing.** LON-1 is 8.7 MW on
+      the campus FAQ and 8.75 MW on its own page; only the FAQ figure
+      is a component of the campus total, because it is the one that
+      total's own breakdown uses. Its area is worse: 17,000 m² on the
+      FAQ, 10,400 m² in its own prose and "14.000 square meters" in
+      its own stat block. Only the operator can say which is gross
+      building area and which is technical space.
 
       The alias entry for this site carried the campus's facility
       table in prose — addresses, capacities and the reconciliation —
@@ -366,9 +369,31 @@ sites:
       until 2026-09-01, when Luke had it migrated here. Its naming
       traps stay with the name (SL1 4PF covers 110 and 111 Buckingham
       Avenue and two other operators; Barbour's SL1 4PN for 111 is the
-      outlier against two sources), and the capacities went nowhere:
-      they await snapshots and claims, per the note above.
+      outlier against two sources).
     facilities:
+      - id: LON-1
+        identity:
+          - source: operator_roster
+            url: https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-1
+            snapshot: ironmountain-lon1
+            date: 2026-09-01
+            note: >-
+              The facility has a page of its own, which is what names
+              it. The planning record does not: Slough/P/02933/009 is
+              at 724-729 Dundee Road and site_aliases.yaml equates
+              that address with LON-1 by hand adjudication, which is
+              naming evidence for the site rather than a document
+              naming the facility.
+        attributions:
+          - kind: >-
+              total power capacity, the facility's own page — 8.75 MW
+              against the campus FAQ's 8.7, and not a component of the
+              campus total for that reason
+            claim: Iron Mountain LON-1 (facility page)
+          - kind: >-
+              the campus FAQ's figure for this facility, and the one
+              its 61 MW total is built from
+            claim: Iron Mountain LON-1 (campus FAQ)
       - id: LON-2
         identity:
           - source: planning_document
@@ -382,11 +407,40 @@ sites:
               (Lon-2)". The facility the operator publishes no page
               for is the one the planning record names outright, which
               is the argument for keeping both identity channels.
+          - source: operator_roster
+            url: https://www.ironmountain.com/en-gb/data-centers/locations/emea/london
+            snapshot: ironmountain-london-campus
+            date: 2026-09-01
+            note: >-
+              Named only in the campus page's FAQ; /lon-2 itself 404s.
+              The facility with no page of its own is the
+              best-evidenced of the three even so — its 27 MW is
+              stated in Iron Mountain's 2021 investor-relations
+              announcement, a communication to investors rather than a
+              location page, and dated.
+        attributions:
+          - kind: >-
+              announced capacity for a greenfield build, from the
+              campus FAQ; a component of the stated 61 MW campus total
+            claim: Iron Mountain LON-2 (campus FAQ)
       - id: LON-3
         identity:
           - source: barbour_title
             ptno: "12833153"
             title: LON 3 DATA CENTRE
+          - source: operator_roster
+            url: https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-3
+            snapshot: ironmountain-lon3
+            date: 2026-09-01
+            note: >-
+              Its own page states the same 25 MW as the campus FAQ —
+              the one figure the two pages agree on — but 5,200 square
+              meters against the FAQ's 5,220.
+        attributions:
+          - kind: >-
+              planned capacity, under construction for 2026, from the
+              campus FAQ; a component of the stated 61 MW campus total
+            claim: Iron Mountain LON-3 (campus FAQ)
 
   # ---- Hayes Bridge Retail Park (Colt LON6/7/8). No operator pages
   # exist for these facilities yet — the Colt tranche beyond London 4

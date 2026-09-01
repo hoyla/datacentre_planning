@@ -298,6 +298,16 @@ and the 8.72 quote nowhere in the single held file. Never construct a
 snapshot path; `dcp.capacity_claims.snapshot_path` resolves a slug to
 the newest file held.
 
+**A page a challenge blocks is harvested in a browser.**
+`fetch_operator_snapshots.py --slug <slug> --from-file <path>` stores
+bytes captured elsewhere through the same code a direct fetch uses, and
+writes `# obtained: browser` so the route is part of the record. The
+bytes must be what the server *sent*: content inside a collapsed
+`<details>` accordion is in the DOM and not in rendered text, so a
+browser's `innerText` omits it silently — which is how Iron Mountain's
+per-facility figures were once reported as published nowhere. Rules and
+the worked case: docs/PORTAL_NOTES.md.
+
 **And they are on Drive**, in `operator_snapshots` under the handover
 root, so "our copy" means the same thing for a capacity claim as for a
 planning document. `scripts/sync_snapshots_drive.py` uploads anything

@@ -231,6 +231,46 @@ sources:
       consult-east-havering, holds no megawatt figure at all —
       operator pages review, 2026-08-30).
 
+  - key: ironmountain_website
+    operator: Iron Mountain
+    snapshot_dir: operator_snapshots
+    note: >-
+      Three facilities on one Slough campus, and the survey's second
+      self-auditing operator after VIRTUS Saunderton: the campus page
+      states 61 MW and its own FAQ breaks that down as 8.7 + 27 + 25 =
+      60.7, the 0.3 being rounding of the same kind as Kao's 0.2.
+      An operator whose total and breakdown check each other is the
+      benchmark for when a campus figure can be trusted at all.
+
+      **The pages are held via a browser harvest** (`--from-file`).
+      ironmountain.com sits behind Vercel Attack Challenge Mode and
+      answers every scripted client 429, its own homepage included, so
+      no amount of backoff reaches it.
+
+      **The FAQ figures are in the raw HTML and not in rendered text**,
+      because they sit inside a collapsed `<details>` accordion. That
+      is why the capture must be the served bytes and why
+      `visible_text()` — which strips tags and evaluates no collapse
+      state — sees them where a browser's `innerText` does not.
+
+      **The pages disagree with each other, and that is the finding
+      rather than a defect to average away.** LON-1 is 8.7 MW on the
+      campus FAQ and 8.75 MW on its own page (printed once as
+      "8,75 MW"), and its area is 17,000 m² / 183,000 sq ft on the FAQ
+      against 10,400 m² / 112,000 sq ft in its own prose and "14.000
+      square meters" in its own stat block — three areas for one
+      building, a 63% divergence rather than a rounding. LON-3 is
+      5,220 m² on the FAQ and 5,200 m² on its own page. Only the
+      operator can say which is gross building area and which is
+      technical space.
+
+      **LON-2 has no page of its own** — /lon-2 404s — and is the
+      best-evidenced of the three even so: its 27 MW is stated in a
+      2021 Iron Mountain investor-relations announcement, "Iron
+      Mountain Expands EMEA Data Center Footprint With New 27 Megawatt
+      Facility Build in London", which is a communication to investors
+      rather than a location page and carries a date.
+
   - key: questpark_website
     operator: QuestPit
     snapshot_dir: operator_snapshots
@@ -411,6 +451,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-saunderton-spec-sheet
     claim_name: VIRTUS LONDON15 (Saunderton)
+    component_of: VIRTUS Saunderton Campus
     quantity_type: announced_capacity
     value: 9.5
     unit: MW
@@ -426,6 +467,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-saunderton-spec-sheet
     claim_name: VIRTUS LONDON16 (Saunderton)
+    component_of: VIRTUS Saunderton Campus
     quantity_type: announced_capacity
     value: 22.5
     unit: MW
@@ -437,6 +479,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-saunderton-spec-sheet
     claim_name: VIRTUS LONDON17 (Saunderton)
+    component_of: VIRTUS Saunderton Campus
     quantity_type: announced_capacity
     value: 16
     unit: MW
@@ -448,6 +491,7 @@ claims:
   - source: virtus_website
     snapshot: virtus-saunderton-spec-sheet
     claim_name: VIRTUS LONDON18 (Saunderton)
+    component_of: VIRTUS Saunderton Campus
     quantity_type: announced_capacity
     value: 30
     unit: MW
@@ -1325,6 +1369,103 @@ claims:
       Unmatched pending the Slough campus-scope decision — the corpus
       does not hold LONDON12 (operator pages review T3-05).
 
+  # --- Iron Mountain, one Slough campus of three facilities -------------
+  # The campus total and the FAQ breakdown that checks it. The two
+  # facility pages state their own figures, and where those differ from
+  # the FAQ they are separate claims rather than components, so nothing
+  # sums a building into its campus twice.
+
+  - source: ironmountain_website
+    snapshot: ironmountain-london-campus
+    claim_name: Iron Mountain London campus (Slough)
+    quantity_type: announced_capacity
+    value: 61
+    unit: MW
+    as_at: 2026-09-01
+    term: campus totals
+    stage: on completion of LON-3
+    quote: >-
+      Once completed, LON-3 will bring our campus totals to 61 MW across
+      40,200 square meters
+    note: >-
+      Self-auditing: the same page's FAQ gives 8.7 + 27 + 25 = 60.7
+      against this 61. The second campus in the survey whose own
+      breakdown checks its total, after VIRTUS Saunderton's exact
+      9.5 + 22.5 + 16 + 30 = 78.
+
+  - source: ironmountain_website
+    snapshot: ironmountain-london-campus
+    claim_name: Iron Mountain LON-1 (campus FAQ)
+    component_of: Iron Mountain London campus (Slough)
+    quantity_type: announced_capacity
+    value: 8.7
+    unit: MW
+    as_at: 2026-09-01
+    quote: LON-1 offers 17,000 square meters (183,000 square feet) and 8.7 MW
+    note: >-
+      LON-1's own page says 8.75 MW and gives a different area again;
+      both readings are held, and the divergence is recorded on the
+      facility-page claim below rather than resolved.
+
+  - source: ironmountain_website
+    snapshot: ironmountain-london-campus
+    claim_name: Iron Mountain LON-2 (campus FAQ)
+    component_of: Iron Mountain London campus (Slough)
+    quantity_type: announced_capacity
+    value: 27
+    unit: MW
+    as_at: 2026-09-01
+    stage: greenfield, built for hyperscale
+    quote: >-
+      LON-2 is a greenfield data center with 27 MW built for hyperscale
+      requirements
+    note: >-
+      The facility with no page of its own, and the best-evidenced of
+      the three. Iron Mountain's 2021 investor-relations announcement
+      states the same figure and dates the build: "Iron Mountain Expands
+      EMEA Data Center Footprint With New 27 Megawatt Facility Build in
+      London" (investors.ironmountain.com). A statement to investors is
+      a stronger authority than a location page, so this row's standing
+      is better than the operator_website source key alone implies.
+
+  - source: ironmountain_website
+    snapshot: ironmountain-london-campus
+    claim_name: Iron Mountain LON-3 (campus FAQ)
+    component_of: Iron Mountain London campus (Slough)
+    quantity_type: announced_capacity
+    value: 25
+    unit: MW
+    as_at: 2026-09-01
+    stage: under construction, planned for 2026
+    quote: >-
+      LON-3 is currently under construction, with a planned capacity of
+      25 MW and 5,220 square meters for 2026
+    note: >-
+      LON-3's own page states the same 25 MW — the one figure the two
+      pages agree on — but 5,200 square meters against this 5,220.
+
+  - source: ironmountain_website
+    snapshot: ironmountain-lon1
+    claim_name: Iron Mountain LON-1 (facility page)
+    quantity_type: announced_capacity
+    value: 8.75
+    unit: MW
+    as_at: 2026-09-01
+    term: total power capacity
+    quote: >-
+      LON-1 is a 10,400 square meter (approximately 112,000 square feet)
+      facility with four data halls and 8.75 MW of total power capacity
+    note: >-
+      Deliberately NOT a component of the campus total: the campus FAQ's
+      8.7 is the figure that total's own breakdown uses, and adding this
+      one beside it would double the building and break the 60.7-vs-61
+      self-audit. It is loaded because the operator's two pages state
+      different figures for one facility, which is the finding. The
+      same page prints "8,75 MW" once, and gives three areas for this
+      building between it and the FAQ — 17,000 m², 10,400 m² and
+      "14.000 square meters" in its own stat block.
+
+
 matches:
   - claim_name: Digital Realty LHR13 (Chessington, KT9 1SJ)
     site_id: 414
@@ -1909,6 +2050,79 @@ matches:
       Barbour record "VIRTUS DATA CENTRES - LONDON 11 DATA CENTRE" and
       LONDON11's own permit is already matched here. In the corpus's
       current campus scope, so matched (operator pages review T3-05).
+
+  # --- Iron Mountain's Slough campus, site 529 -------------------------
+  # The site is the campus by construction: the site 23 partition of
+  # 2026-08-28 drew the partition unit as the campus, and site 529 holds
+  # all three facilities — Dundee Road (LON-1), 110 Buckingham Avenue
+  # twice plus project 12468506 (LON-2), and project 12833153 "LON 3
+  # DATA CENTRE". So the campus total is matchable here in a way
+  # VIRTUS Slough's is not, where the site holds three of seven.
+
+  - claim_name: Iron Mountain London campus (Slough)
+    site_id: 529
+    method: name_and_operator
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      Site 529 is aliased "Iron Mountain London campus, Slough - LON-1,
+      LON-2, LON-3" and its live membership covers all three: the
+      Dundee Road application Iron Mountain's own page places LON-1 at,
+      two applications at 110 Buckingham Avenue of which
+      Slough/P/04829/030 names "Iron Mountain LON2" outright, and the
+      Barbour project titled "LON 3 DATA CENTRE". The campus this
+      figure describes and the site record are the same three
+      buildings, which is what makes a campus total matchable here.
+
+  - claim_name: Iron Mountain LON-1 (campus FAQ)
+    site_id: 529
+    method: name_and_operator
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      LON-1 is 724-729 Dundee Road, the former Credit Suisse facility
+      the campus FAQ describes as "originally a Credit Suisse facility";
+      Slough/P/02933/009 at that address is a live member of site 529.
+      The equation of the address with the facility name is the site's
+      own alias entry, made by hand and recorded there.
+
+  - claim_name: Iron Mountain LON-2 (campus FAQ)
+    site_id: 529
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      The planning record names this facility itself: Slough/P/04829/030
+      at 110 Buckingham Avenue carries "Iron Mountain LON2 110
+      Buckingham Avenue, Slough, Berkshire. SL1 4PF", with two further
+      documents on the same application reading "IRON MOUNTAIN DATA
+      CENTRE LON-2" and "At Iron Mountain Data Centre (Lon-2)". Both
+      applications are live members of site 529.
+
+  - claim_name: Iron Mountain LON-3 (campus FAQ)
+    site_id: 529
+    method: name_identity
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      Barbour project 12833153, titled "LON 3 DATA CENTRE", is a live
+      member of site 529, and Iron Mountain places LON-3 at 111
+      Buckingham Avenue beside LON-2 at 110. Note the postcode conflict
+      recorded in site_aliases.yaml — Barbour has 111 at SL1 4PN
+      against SL1 4PF from Iron Mountain and the Environment Agency's
+      permit URL — so the match rests on the name and the project, not
+      on the postcode.
+
+  - claim_name: Iron Mountain LON-1 (facility page)
+    site_id: 529
+    method: name_and_operator
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      The same facility as the campus-FAQ row above, on the same
+      evidence, from the operator's page for it. Held as a separate
+      claim because the two pages state different figures.
+
 
 considered:
   - claim_name: Union Park

@@ -92,3 +92,72 @@ def test_a_page_that_is_a_pdf_is_sniffed_not_taken_from_the_url():
     f = _fetcher()
     assert f.is_pdf(b"%PDF-1.7 ...") is True
     assert f.is_pdf(b"<!DOCTYPE html>") is False
+
+
+# ---------------------------------------------------------------------------
+# The browser-harvest route (WP-D). ironmountain.com sits behind Vercel
+# Attack Challenge Mode and answers every scripted client 429, so those
+# pages are captured in a browser and stored with --from-file. What has
+# to hold is that a harvested page goes through the SAME rendering as a
+# fetched one, and that the file records which route it came by.
+
+def test_a_harvested_page_and_a_fetched_one_render_identically(tmp_path):
+    f = _fetcher()
+    html = (b"<html><head><script type=\"application/ld+json\">"
+            b'{"a": 1}</script></head><body><details><summary>FAQ</summary>'
+            b"<p>LON-1 offers 8.7 MW</p></details></body></html>")
+    direct = f.render("https://x.test/p", html, "2026-09-01", "direct")
+    browser = f.render("https://x.test/p", html, "2026-09-01", "browser")
+    assert direct.replace("# obtained: direct", "# obtained: browser") == browser
+
+
+def test_collapsed_details_content_survives_the_extraction():
+    """The lesson the Iron Mountain capture is built on: content inside a
+    collapsed <details> is in the DOM but not in rendered text, so a
+    browser's innerText silently omits it. visible_text() strips tags and
+    evaluates no collapse state, which is why the harvest must be the
+    served bytes and the extraction must be this one."""
+    f = _fetcher()
+    html = (b"<html><body><details><summary>How big?</summary>"
+            b"<p>LON-1 offers 17,000 square meters and 8.7 MW</p>"
+            b"</details></body></html>")
+    out = f.render("https://x.test/p", html, "2026-09-01", "browser")
+    assert "17,000 square meters and 8.7 MW" in out
+
+
+def test_the_route_a_page_came_by_is_recorded(tmp_path):
+    f = _fetcher()
+    out = f.render("https://x.test/p", b"<p>hi</p>", "2026-09-01", "browser")
+    assert "# obtained: browser" in out
+
+
+def test_obtained_sits_below_the_digest_so_the_skip_still_works(tmp_path):
+    """`# obtained:` is last in the header on purpose: everything that
+    reads a fixed number of header lines reads them from the top, and a
+    digest pushed out of that window would make every re-fetch look
+    changed — a silent failure of the append-only store's no-op."""
+    f = _fetcher()
+    p = tmp_path / "op.2026-09-01.txt"
+    p.write_text(f.render("https://x.test/p", b"<p>hi</p>", "2026-09-01", "browser"))
+    import hashlib
+    assert f.held_digest(p) == hashlib.sha256(b"<p>hi</p>").hexdigest()
+
+
+def test_storing_the_same_harvested_bytes_twice_writes_once(tmp_path):
+    f = _fetcher()
+    html = b"<p>unchanged</p>"
+    first = f.store("op", "https://x.test/p", html, tmp_path, "browser")
+    again = f.store("op", "https://x.test/p", html, tmp_path, "browser")
+    assert first is not None and again is None
+    assert len(list(tmp_path.glob("*.txt"))) == 1
+
+
+def test_every_iron_mountain_page_is_registered_and_held():
+    """LON-2 is absent on purpose — /lon-2 404s, and its 27 MW is
+    published only in the campus FAQ and a 2021 investor announcement."""
+    from dcp.capacity_claims import snapshot_path
+    f = _fetcher()
+    slugs = [s for s, _ in f.PAGES["ironmountain"]]
+    assert slugs == ["ironmountain-london-campus", "ironmountain-lon1",
+                     "ironmountain-lon3"]
+    assert all(snapshot_path(s) is not None for s in slugs)

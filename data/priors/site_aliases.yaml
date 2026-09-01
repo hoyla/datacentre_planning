@@ -218,9 +218,10 @@ aliases:
       own naming (ironmountain.com …/london, …/london/lon-1,
       …/london/lon-3). The campus is not contiguous — Dundee Road is
       810 m from Buckingham Avenue — which is why the three-facility
-      name matters for finding it. No capacity is restated here; the
-      figures await snapshots and claims (ROADMAP, the Iron Mountain
-      entry under the campus-review section).
+      name matters for finding it. No capacity is restated here, and
+      none needs to be: the three pages have been held since
+      2026-09-01 and their figures are matched claims that
+      site_facilities.yaml references.
 
       Two traps this entry exists to stop. **SL1 4PF is not a
       discriminator**: it covers 110 and 111 Buckingham Avenue,

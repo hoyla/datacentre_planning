@@ -1,0 +1,207 @@
+# url: https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-3
+
+# fetched: 2026-09-01
+
+# sha256(html): f51357839d3682256f0b420a5a141fd93a45e69f2287808a4e3661953cf7cf50
+
+# obtained: browser
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@type": "Corporation",
+ "alternateName": "Iron Mountain",
+ "logo": "https://media.ironmountain.com/-/media/images/iron-mountain/icons/Global/logo-iron-mountain.svg?rev=8b582b0e4f844fbdb185c70b95e932d5&sc_lang=en",
+ "name": "Iron Mountain",
+ "sameAs": [
+  "https://www.facebook.com/ironmountain",
+  "https://twitter.com/ironmountain",
+  "https://www.youtube.com/user/ironmountain",
+  "https://www.linkedin.com/company/iron-mountain/"
+ ],
+ "url": "https://www.ironmountain.com/"
+}
+
+{
+ "@context": "https://schema.org/",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb",
+   "name": "Homepage",
+   "pageTitle": "Homepage",
+   "position": 0,
+   "url": "https://www.ironmountain.com/en-gb"
+  },
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb/data-centers",
+   "name": "Data centers",
+   "pageTitle": "Data centers",
+   "position": 1,
+   "url": "https://www.ironmountain.com/en-gb/data-centers"
+  },
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london",
+   "name": "London data centers",
+   "pageTitle": "London data centers",
+   "position": 2,
+   "url": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london"
+  },
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-3",
+   "name": "LON-3 data center",
+   "pageTitle": "LON-3 data center",
+   "position": 3,
+   "url": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-3"
+  }
+ ]
+}
+
+{
+ "@context": "https://schema.org/",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>LON-3 combines 25 MW of AI-ready infrastructure with strategic positioning in the Slough data center corridor, offering exceptional connectivity through the LINX exchange and dark fiber access to 100+ providers. The facility features comprehensive compliance certifications, 100% renewable energy, and BREEAM green building standards, backed by Iron Mountain's 75 years of security expertise.\n</p>"
+   },
+   "name": "What makes LON-3 unique compared to other London data centers?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>Iron Mountain operates multiple data centers across the UK, including LON-1 and LON-2 data centers on the same Slough Trading Estate campus as LON-3. Our UK data centres portfolio provides comprehensive colocation in London and throughout the United Kingdom. To explore our complete portfolio of UK data centres locations and colocation services, visit <a rel=\"noopener noreferrer\" href=\"http://ironmountain.com/en-gb/data-centers\" target=\"_blank\">ironmountain.com/en-gb/data-centers</a>.\n</p>"
+   },
+   "name": "What other data center facilities does Iron Mountain have in the United Kingdom?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>LON-3 provides 25 megawatts of critical IT capacity across 5,200 square meters (55,972 square feet) of data center space. The 2.5-acre campus features a three-story building with six data halls, all designed to support both CPU and GPU workloads with AI-ready power and cooling infrastructure.\n</p>"
+   },
+   "name": "What is the total capacity and size of LON-3?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>LON-3 maintains the industry's most comprehensive compliance program, including ISO 9001, ISO 14001, ISO 22301, ISO 27001, ISO 50001, ISO 14064, SOC 1, SOC 2, HITRUST, PCI-DSS, and BREEAM certifications. Physical security includes 24/7/365 on-site staff, biometric access controls, CCTV surveillance, and multi-layer perimeter security, all backed by Iron Mountain's seven decades of experience protecting confidential data.</p>"
+   },
+   "name": "What security and compliance measures are in place at LON-3?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>LON-3 is scheduled for phased opening later in 2026, with data halls becoming available soon. This staged approach allows customers to plan their deployments strategically and scale infrastructure as their requirements grow.\n</p>"
+   },
+   "name": "When will LON-3 be available for customer deployments?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>Visit our UK data centers page at <a rel=\"noopener noreferrer\" href=\"https://www.ironmountain.com/en-gb/data-centers\" target=\"_blank\">https://www.ironmountain.com/en-gb/data-centers</a> to explore our complete portfolio of facilities across the United Kingdom, including specifications, services, connectivity options, and UK colocation pricing for each location. Our team can provide detailed information about UK colocation options and alternative data centers outside of London to meet your specific requirements.\n</p>"
+   },
+   "name": "How can I learn more about Iron Mountain's data center locations in the UK?"
+  }
+ ]
+}
+
+## VISIBLE TEXT
+
+LON-3 Data Center | Slough Data Center | Iron Mountain United Kingdom United Kingdom Contact Us Call us: +44 (0) 1782 654 710 Login | Account Iron Mountain Connect SecureSync ReQuest Web Wisetek Returntek Portal What we do Who we are Resources Support Get Started Main menu What we do Asset Lifecycle Management ALM Overview ALM for End-User Devices ALM for Data Centre Assets ALM Certifications & Standards Data Centers Technology Platforms InSight DXP Agentic AI Content Management & Governance Intelligent Document Processing Digital Human Resources solution Pensions Data Enrichment solution Invoice Processing solution Services Information Governance Advisory Services Offsite Tape Vaulting Retention and Privacy Policy Management Scanning and Digitization Intelligent Business Process Management (iBPM) Solutions Records Storage and Management Offsite Records and Document Storage Culling and cataloguing Inventory Management & Reporting Secure Shredding Clean Start Overview Smart Reveal Smart Sort Smart Assign Compass Shop Supplies Warehousing and Logistics Warehousing solutions United Kingdom and Ireland sites Technology and Innovation View All Services Business Challenges Digital Transformation End-to-End Data Management Sustainability Industry Financial Services Overview Insurance Banking Digital Back Office Digital Trade Back Office Digitization of the Aviation Industry Law Firms Heritage Preservation Library and Archives Supply Chain Energy Entertainment 1 4 Public Sector Retail Small Businesses Who we are About Iron Mountain Overview Certifications and Awards Code of Ethics Leadership Our History Why Choose Iron Mountain Careers Investors Newsroom Partners Sustainability Resources Blogs and Articles Videos and Webinars Solution Guides Whitepaper Customer Success Stories Infographics View All Resources Support Customer Support Centre Customer self support portal Change your region & language North America Canada English Canada French United States English Middle East North Africa And Turkey Bahrain Arabic Bahrain English Egypt Arabic Egypt English Jordan Arabic Jordan English Kuwait Arabic Kuwait English Morocco French Oman Arabic Oman English Qatar Arabic Qatar English Saudi Arabia Arabic Saudi Arabia English Turkey Turkish United Arab Emirates Arabic United Arab Emirates English Latin America Brazil Portuguese Mexico Spanish Argentina Spanish Chile Single Language Colombia Spanish Peru Single Language Europe and Southern Africa Austria German Belgium Dutch Belgium French Bulgaria Bulgarian Croatia Croatian Cyprus English Czech Republic Czech Denmark Danish Estonia Estonian Finland Finnish France French Germany German Greece Greek Hungary Hungarian Ireland English Latvia Latvian Lesotho English Lithuania Lithuanian Netherlands Dutch Norway Norwegian Poland Polish Romania Romanian Serbia Serbian Slovakia Slovak South Africa English Spain Single Language Sweden Swedish Switzerland French Switzerland German Switzerland English Ukraine Ukrainian United Kingdom English Asia-Pacific and India Australia China - Hong Kong SAR Chinese China - Hong Kong SAR English China - Mainland 中国-中文 India Indonesia English Indonesia Indonesian Korea Korean Malaysia English New Zealand English Philippines English Singapore English Taiwan Chinese Thailand Thai Vietnam Vietnamese Homepage Data centers London data centers LON-3 data center London LON-3 data center 25 MW of AI-ready infrastructure across 5,200 square meters in London's premier Slough data center corridor - Opening 2026 Get Your Quote LON-3 Data Centers London Campus LON-1 LON-3 Contact us Iron Mountain London LON-3 data center 
+ Strategically positioned in the highly interconnected Slough data center corridor just west of the M25, Iron Mountain's LON-3 delivers 25 MW of AI-ready critical IT capacity across six GPU-ready data halls totaling 5,200 square meters (55,972 square feet). This three-story, highly secure facility will open later in 2026. Whether you're a hyperscale cloud provider, enterprise, or government agency, LON-3 provides the space, power, security, and compliance standards your organization demands. This carrier-neutral colocation facility offers connectivity to the LINX exchange and dark fiber access to hundreds of networks, clouds, and service providers. 
+ Download LON-3 brochure 25 MW Critical IT capacity 5,200 square meters (55,972 square feet) data center space
+ 100+ Network service providers accessible 2026 Phased opening Contact Us LON-3 photo & video gallery LON-3 LON-3 data center entrance LON-3 data center back view Iron Mountain Data Centers London campus aerial view London LON-3 data center site rendering 
+ Schedule Your On-Site Tour Why leading enterprises choose our London data center (LON-3) LON-3 data center overview Facility Specifications Services & Amenities Location World-Class Connectivity Industry-Leading Compliance 
+ Size: 5,200 square meters (55,972 square feet) of colocation space in a three-story facility on a secure 2.5-acre campus in the Slough data center corridor 
+ 6 x 870 square meter data halls (~4.1 MW per hall) 
+ Power: 25 MW of total critical IT capacity with GPU-ready power configurations 
+ Infrastructure: AI and hyperscale cloud ready infrastructure with BREEAM green building certification 
+ Deployment Options: Flexible colocation solutions for hyperscale, enterprise, and government workloads 
+ Campus: Secure 2.5-acre site in Slough Trading Estate, part of LON-1, LON-2, LON-3 campus 
+ Cooling: Flexible air and liquid cooling designs for high-density AI/ML workloads 
+ Uptime: 99.999% uptime SLA with redundant power and cooling systems 
+ Availability: 2026 opening allowing strategic deployment planning and scaling 
+ Matched by 100% renewable energy 
+ 
+ Security: Biometric access control systems with 24/7/365 on-site security and operations staff, multi-layer perimeter security, and CCTV surveillance with recording 
+ Smart Hands: Technical support services by experienced on-site professionals for equipment monitoring and maintenance 
+ Migration: Professional equipment deployment, installation coordination, and migration services for seamless transitions 
+ AI/ML Services: Pure AI/ML hosting and flexible hybrid AI deployment options with GPU-ready infrastructure 
+ Support: Customer portal access for service requests, account management, and 24/7 technical assistance 
+ Facilities: Shared work areas, meeting spaces, and professional amenities for customer convenience 
+ 
+ Service area: London, England; United Kingdom; EMEA region and beyond 
+ Distance: 2.5 km west of Slough town center; approximately 30 km from central London 
+ Airport: 12 km from London Heathrow Airport 
+ Location: Slough Trading Estate, Berkshire at the heart of the densely interconnected Slough data center corridor 
+ Strategic position west of the M25 motorway with excellent transport connectivity for colocation in London 
+ Access via M4 and M25 motorways for rapid connectivity across the UK and Europe 
+ Gateway to EMEA connectivity serving as an ideal data center location outside central London 
+ Proximity to London's major business and financial districts 
+ Adjacent to major European fiber routes and network infrastructure 
+ Access to a highly skilled technical workforce across the Greater London region 
+ Address: 111 Buckingham Avenue Slough, SL1 4PF, UK 
+ Network Infrastructure: 
+ 
+ LINX On-Site: Direct on-premises peering with London Internet Exchange (LINX) 
+ Carrier-Neutral Facility: 15 on-site carrier providers with access to every tier 1 global and regional carrier 
+ Diverse Entry Points: Multiple diverse fiber points of entry for maximum redundancy and resilience 
+ Fiber Infrastructure: Dark fiber access to 100+ network service providers, cloud platforms, and IT service providers via the Slough data hub 
+ Network-Rich Environment: Low-to-no latency access on major backbones with connectivity throughout the densely interconnected Slough corridor 
+ Cloud-Neutral: Open access to every leading cloud provider and service platform 
+ 
+
+ Network Services: 
+ 
+ Cloud On-Ramps: In-house access to 20+ SDNs and cloud on-ramps for seamless hybrid cloud connectivity 
+ Cross Connects: 16,000+ existing cross-connects across Iron Mountain's global footprint; 1,300+ customers available for potential interconnection 
+ Internet Exchanges: Connectivity to 14 Internet Exchanges for optimized routing and peering 
+ Global Reach: Part of Iron Mountain's interconnected global footprint covering three continents and 21 markets 
+ Metro Connectivity: Campus-wide connections across LON-1, LON-2, and LON-3 facilities on Slough Trading Estate 
+ Private Network Transport: Point-to-point connectivity options between Iron Mountain data centers (Campus | Metro | National | International) 
+ The industry's most comprehensive compliance program meeting the most stringent regulatory and industry standards
+ 
+ Global Standards (ISO Certifications): 
+ 
+ ISO 27001 (Information Security Management) 
+ ISO 9001 (Quality Management Systems) 
+ ISO 14001 (Environmental Management) 
+ ISO 22301 (Business Continuity Management) 
+ ISO 50001 (Energy Management Systems) 
+ ISO 14064 (Greenhouse Gas Accounting and Verification) 
+ 
+
+ Industry Standards: 
+ 
+ SOC 1 Type II certification for service organization controls 
+ SOC 2 Type II certification for trust services criteria 
+ PCI-DSS compliant infrastructure for payment card industry data security 
+ 
+
+ Sustainability Certifications: 
+ 
+ BREEAM green building certification for sustainable construction 
+ Dedicated renewables contracts (solar, tidal) to improve hour-by-hour clean energy (24/7 Carbon Free Energy) 
+ Want to learn more? Contact a data centre team member today! Join our growing customer base 
+ Iron Mountain Data Centers serves over 1,300 customers worldwide, including 95% of the Fortune 1000. Our London data center facility hosts enterprises across financial services, technology, healthcare, and media industries who rely on our carrier-neutral platform for their most critical infrastructure needs. Experience the same trusted partnership that has made Iron Mountain the preferred choice for highly regulated organizations requiring uncompromising security, compliance, and connectivity. 
+ Become a Customer Today Ready to experience the LON-3 advantage? 
+ Immediate next steps 
+ Schedule Site Tour Get Custom Quote 
+ Download Spec Sheet Frequently asked questions What makes LON-3 unique compared to other London data centers? LON-3 combines 25 MW of AI-ready infrastructure with strategic positioning in the Slough data center corridor, offering exceptional connectivity through the LINX exchange and dark fiber access to 100+ providers. The facility features comprehensive compliance certifications, 100% renewable energy, and BREEAM green building standards, backed by Iron Mountain's 75 years of security expertise.
+ What other data center facilities does Iron Mountain have in the United Kingdom? Iron Mountain operates multiple data centers across the UK, including LON-1 and LON-2 data centers on the same Slough Trading Estate campus as LON-3. Our UK data centres portfolio provides comprehensive colocation in London and throughout the United Kingdom. To explore our complete portfolio of UK data centres locations and colocation services, visit ironmountain.com/en-gb/data-centers .
+ What is the total capacity and size of LON-3? LON-3 provides 25 megawatts of critical IT capacity across 5,200 square meters (55,972 square feet) of data center space. The 2.5-acre campus features a three-story building with six data halls, all designed to support both CPU and GPU workloads with AI-ready power and cooling infrastructure.
+ What security and compliance measures are in place at LON-3? LON-3 maintains the industry's most comprehensive compliance program, including ISO 9001, ISO 14001, ISO 22301, ISO 27001, ISO 50001, ISO 14064, SOC 1, SOC 2, HITRUST, PCI-DSS, and BREEAM certifications. Physical security includes 24/7/365 on-site staff, biometric access controls, CCTV surveillance, and multi-layer perimeter security, all backed by Iron Mountain's seven decades of experience protecting confidential data. When will LON-3 be available for customer deployments? LON-3 is scheduled for phased opening later in 2026, with data halls becoming available soon. This staged approach allows customers to plan their deployments strategically and scale infrastructure as their requirements grow.
+ How can I learn more about Iron Mountain's data center locations in the UK? Visit our UK data centers page at https://www.ironmountain.com/en-gb/data-centers to explore our complete portfolio of facilities across the United Kingdom, including specifications, services, connectivity options, and UK colocation pricing for each location. Our team can provide detailed information about UK colocation options and alternative data centers outside of London to meet your specific requirements.
+ Contact us Follow: What we do Asset Lifecycle Management Data Centres Data and IT Security Digital Transformation Sustainability Solutions Workplace Evolution Industry solutions Entertainment Energy Financial Services Healthcare Law Firms Public Sector Small Business Solutions Who we are About Us Why Choose Iron Mountain Careers Certifications and Awards Partners Sustainability Quality Standards Anti-Slavery Statement Contact us Portal Login and Bill Pay Contact Sales Customer Support Call us at +44 (0) 1782 654 710 Resources Blogs and Articles Customer Success Stories Infographics Solution Guides Videos and Webinars Whitepapers View all resources Privacy notice Website terms and conditions Manage your privacy preferences © 2026 Iron Mountain, Inc.
