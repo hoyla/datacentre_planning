@@ -987,6 +987,41 @@ still to do:
 - **CyrusOne LON2 (Prologis Park, West Drayton) is a separate site**
   from the VIRTUS Prologis Park campus — they share an estate, not a
   scheme (sheet T4-02). A note for whenever that site is created.
+- **CyrusOne LON1 is in the corpus under Zenium's name, inside
+  VIRTUS's site, and wants a partition** (2026-09-01, Luke holding the
+  decision: "I will sort out the partitioning later"). Barbour project
+  `12216044` is `12 Liverpool Road` / `London One`, which is the
+  address CyrusOne publishes for LON1 — but it is a member of
+  `PTNO-12216044`, VIRTUS's Slough campus at 75 Buckingham Avenue,
+  joined on nothing but the shared SL1 4QZ postcode: all three Barbour
+  records in that site carry one identical coordinate, the postcode
+  centroid. It also lends the site its key and derived name, being the
+  lowest Ptno of the three. Ejecting it overturns
+  `site_partitions.yaml`'s `virtus-zenium-slough-campus`, which lists
+  it deliberately. The full evidence, and the acquisition question the
+  partition turns on, are the `considered:` entries in
+  `operator-claims.yaml` — do not re-derive them.
+- **Put the Zenium entities through the Companies House sweep.** The
+  partition above turns on who acquired what, and two files here
+  disagree: `site_partitions.yaml` says VIRTUS acquired the campus
+  from Zenium, `environment-agency-permit-operators.yaml` says
+  CyrusOne bought Zenium's UK estate. **Both can be right if the
+  estate was broken up and sold asset by asset** (Luke, 2026-09-01),
+  which is the hypothesis to test first, and the corporate shape is
+  consistent with it: the one Zenium company the corpus holds is
+  `ZENIUM UK2 LIMITED` — a numbered per-asset SPV — and the permits
+  "still stand in the Zenium companies' names", plural. A permit stays
+  put when a company's shares are sold and must be transferred when
+  the building alone is, so undisturbed permits across numbered SPVs
+  show the buildings changed hands as companies — which fits a
+  piecemeal break-up and fits one buyer taking every SPV equally well;
+  the filings, not the permits, say which.
+  **No Zenium appears in `companies-house-spvs.yaml` or
+  `organisation_aliases.yaml`**, so the sweep built for exactly this
+  class — single-asset SPVs, whose filings state the asset and its
+  owner by construction — has never been pointed at it. The numbering
+  bounds the set. Cheaper than the title register and it settles the
+  partition.
 
 ## Acquisition decisions waiting on a person
 
