@@ -413,7 +413,7 @@ def shortfall_lines(rows: list[tuple[str, str, int]],
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path,
-                    default=Path("data/exports/drive_staging"))
+                    default=release_mod.EXPORTS / "drive_staging")
     # Bump this with the phase. It is the current release, not phase 1's:
     # the artefacts are named for the phase that produced them, so that a
     # citation of the phase 1 workbook keeps resolving after phase 2
@@ -759,30 +759,29 @@ def main() -> None:
     # spreadsheets and no way to tell which one the reader.html agreed with.
     for old_artefact in out.glob("dc_build_handover_*.xlsx"):
         old_artefact.unlink()
-    release = Path(args.release_dir) if args.release_dir else (
-        release_mod.latest_release_dir(Path("data/exports/phase1_build")))
+    # Derived or explicit, never a named fallback, and never the
+    # exports directory at large: `current_release_dir` refuses when
+    # there is no release folder, which replaces both the `phase1_build`
+    # default and the glob that used to stand in for a missing folder —
+    # the three-dated-spreadsheets confusion the comment above records.
+    release = release_mod.current_release_dir(
+        Path(args.release_dir) if args.release_dir else None)
     if not args.release_dir:
         print(f"   release folder: {release} (newest; --release-dir overrides)")
     staged_root = []
-    if release.is_dir():
-        for f in sorted(release.iterdir()):
-            if f.suffix.lower() in (".xlsx", ".duckdb", ".html"):
-                # Drop the old entry first. `link_or_copy` skips a
-                # destination that already exists, which is right for the
-                # 46,000 content-hashed documents and wrong here: a
-                # regenerated artefact keeps its name. The workbook and
-                # reader survived only because their writers truncate the
-                # existing inode, so the hard link saw the new bytes —
-                # DuckDB replaces the file instead, and staging quietly
-                # kept pointing at a database eight hours out of date.
-                (out / f.name).unlink(missing_ok=True)
-                link_or_copy(f, out / f.name)
-                staged_root.append(f.name)
-    else:
-        workbooks = sorted(Path("data/exports").glob("dc_build_handover_*.xlsx"))
-        if workbooks:
-            shutil.copyfile(workbooks[-1], out / workbooks[-1].name)
-            staged_root.append(workbooks[-1].name)
+    for f in sorted(release.iterdir()):
+        if f.suffix.lower() in (".xlsx", ".duckdb", ".html"):
+            # Drop the old entry first. `link_or_copy` skips a
+            # destination that already exists, which is right for the
+            # 46,000 content-hashed documents and wrong here: a
+            # regenerated artefact keeps its name. The workbook and
+            # reader survived only because their writers truncate the
+            # existing inode, so the hard link saw the new bytes —
+            # DuckDB replaces the file instead, and staging quietly
+            # kept pointing at a database eight hours out of date.
+            (out / f.name).unlink(missing_ok=True)
+            link_or_copy(f, out / f.name)
+            staged_root.append(f.name)
     carried = carry_forward_released(final, out, staged_root)
     print("   root artefacts: " + (", ".join(staged_root) or "none")
           + (f"  (carried forward: {', '.join(carried)})" if carried else ""))

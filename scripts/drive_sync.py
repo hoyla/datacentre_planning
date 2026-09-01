@@ -47,13 +47,16 @@ CONFIG_DIR = Path.home() / ".config" / "datacentre_planning"
 CLIENT_SECRET = CONFIG_DIR / "client_secret.json"
 TOKEN_PATH = CONFIG_DIR / "drive_token.json"
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
-STATE_PATH = Path("data/exports/.drive_sync_state.json")
 
 # The one destination. Operator-supplied, and the same ID the workbook and
 # the reader link to, so there is a single place to change it and no way
-# for the three to disagree about where the archive lives.
+# for the three to disagree about where the archive lives. The ledger
+# comes from the same module for the same reason: three scripts read it,
+# and a relative path here once meant a sync run from anywhere but the
+# repository root would have started from nothing.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dcp.drive import FOLDER_ID as HANDOVER_FOLDER_ID  # noqa: E402
+from dcp.drive import SYNC_LEDGER as STATE_PATH  # noqa: E402
 
 
 def get_credentials():
@@ -107,8 +110,16 @@ class Sync:
         # record that makes syncs resumable and moves recognisable. API
         # calls happen OUTSIDE the lock — it guards memory, not network.
         self._lock = threading.RLock()
-        self.state: dict = (json.loads(STATE_PATH.read_text())
-                            if STATE_PATH.exists() else {"folders": {}, "files": {}})
+        if STATE_PATH.exists():
+            self.state: dict = json.loads(STATE_PATH.read_text())
+        else:
+            # Legitimate exactly once, on the first sync ever. Said out
+            # loud because a lost ledger looks identical and means every
+            # file goes up again beside the copy already on Drive.
+            print(f"no sync ledger at {STATE_PATH}: starting from nothing, "
+                  f"so every file in the tree will be uploaded",
+                  file=sys.stderr)
+            self.state = {"folders": {}, "files": {}}
         self._dirty = 0
 
     @property

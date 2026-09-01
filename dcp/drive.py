@@ -12,6 +12,8 @@ Import this. Do not retype the ID, and do not resolve the folder by name.
 
 from __future__ import annotations
 
+from dcp.release import EXPORTS
+
 FOLDER_ID = "1vKevmR1NSh3_9wnsYRMl0BA5os9oaoPT"
 FOLDER_URL = f"https://drive.google.com/drive/folders/{FOLDER_ID}"
 
@@ -37,6 +39,17 @@ SITES_URL = f"https://drive.google.com/drive/folders/{SITES_FOLDER_ID}"
 # back to creating one.
 SNAPSHOTS_FOLDER_ID = "1NqIVr0y1aITvgAmQahatM3E4aCpBThlG"
 SNAPSHOTS_URL = f"https://drive.google.com/drive/folders/{SNAPSHOTS_FOLDER_ID}"
+
+
+# The sync ledger: every folder and file the sync has created on Drive,
+# by path, so a re-run uploads only what changed and a rename reads as a
+# rename. Three scripts read it — the sync, the workbook export and the
+# sample verifier — and until 2026-09-02 each spelled its path itself,
+# relative to the working directory. From anywhere else the sync found
+# no ledger and would have started from nothing, re-uploading the whole
+# tree beside the copy already there: the duplicate-archive mechanism
+# described above, reached by a different door. One constant, absolute.
+SYNC_LEDGER = EXPORTS / ".drive_sync_state.json"
 
 
 def file_url(file_id: str) -> str:

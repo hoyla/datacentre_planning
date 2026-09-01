@@ -36,14 +36,16 @@ Standing disciplines:
   his to merge.
 
 Order: R1 first (the rung's verification reads the database), R2 next,
-R3/R5/R6 any time **but all before R4**, R4 last. R2 is the only large
-package.
+R3/R5/R6/R7 any time **but all before R4**, R4 last. R2 is the only
+large package.
 
 *Status, 2026-09-02: R1 run (claims 264 → 273, matched 80 → 94,
-verified against a build), R3 merged (#331) and its sweep-sibling
-merged behind it (#332), R2 built and open as #333 with Luke's
-rendering review the one part left. R5 and R6 below were found by
-#332's sweep and specced after it.*
+verified against a build); R2 merged (#333) with the rendering review
+passed; R3 merged (#331) and its sweep-sibling behind it (#332); R5
+merged (#335); R6 built and open as #336, verified — its five tests
+fail against the unfixed script, and the real 2.10-against-2.9 diff
+run from outside the repository root finds both priors files. R7
+below was found by #336's sweep and specced after it.*
 
 ---
 
@@ -275,6 +277,116 @@ rather than silently fixing or skipping it.
   about what is curated. Moving it touches the harvest flow and
   orphans the existing file, so this is a note for Luke rather than a
   fix: decide the location, then move it deliberately.
+
+---
+
+## WP-R7 — The release chain finds `data/exports` from the package root — **DONE 2026-09-02**
+
+Found by #336's sweep and named there rather than folded in, rightly:
+different module, different consumers, and it reaches the release chain
+itself. Verified 2026-09-02 by reading all three sites:
+
+- **`dcp/release.py` ~line 34: `EXPORTS = Path("data/exports")`.**
+  `release_dirs()` globs it, so from any other directory it returns
+  empty and `latest_release_dir()` returns `None`. Two consumers turn
+  that into a wrong answer rather than an error:
+  - **`scripts/export_reader.py` ~line 2473**: `--out` falls back to
+    `data/exports/phase1_build/reader.html` and `--phase` to `"1"`.
+    The reader is then stamped "phase 1" in its title, header and
+    database filename, and written into a folder several releases old
+    — **and the comment three lines above it already describes this
+    exact outcome**, having nearly shipped it during the 2.1
+    regeneration from a different cause.
+  - **`scripts/build_drive_staging.py` ~line 763**:
+    `latest_release_dir(Path("data/exports/phase1_build"))` silently
+    takes the phase-1 fallback, which is the "tree carries the previous
+    release's workbook and database" failure README warns about. It at
+    least prints the folder it chose.
+
+**The rule, stated so it can be vetoed rather than assumed.** #332's
+brief let output locations stay working-directory-relative, and for a
+one-off tool's `--out` that is right. `data/exports` is not that: the
+whole chain — `release_dirs()`, the phase derivation, the Drive sync
+ledger, the staging tree, the release diff — presumes it is *one*
+location, the repository's, and reads from it to decide what to build
+and where. **So for the release chain it resolves against the package
+root exactly as the priors do, with every `--out`/`--release-dir`
+override still honoured.** Genuine one-off tool outputs
+(`probe_user_agents`, `map_spot_check`, `export_notebook_bundle`'s
+defaults, `dcp/cli.py`'s `--out` defaults, `map.build_map`'s
+`output_dir`) are outside this package: name them, do not touch them.
+
+Build, in one branch:
+
+1. `ROOT = Path(__file__).resolve().parent.parent` in `dcp/release.py`
+   and `EXPORTS = ROOT / "data" / "exports"`. That alone stops the
+   wrong-directory case; the rest is what the sweep showed still sits
+   beside it.
+2. **The two fallbacks.** Express them through `release.EXPORTS`
+   rather than a literal, and then decide — **executor's choice,
+   stated in the PR** — whether a bare run with *no* release folder at
+   all (a fresh clone) should still default to phase "1", or refuse
+   until `--phase` is passed. The project's own phrase for the second
+   is that a phase is not a thing to guess; README's build chain
+   passes `--phase` explicitly anyway. Read
+   `tests/test_release_defaults.py` **in full first**: it asserts a
+   rule over the whole tree — no default may name a release — and
+   whatever it currently tolerates about these two fallbacks is the
+   constraint any rewrite must satisfy.
+3. **The Drive sync ledger is read by three scripts through three
+   relative literals** — `scripts/drive_sync.py` ~50 `STATE_PATH`,
+   `scripts/export_handover.py` ~361 `DRIVE_LEDGER`,
+   `scripts/verify_drive_sample.py` ~65 — for one file,
+   `data/exports/.drive_sync_state.json`. One constant, resolved
+   against the root, in the module that already owns Drive constants
+   (`dcp/drive.py`), and the three read it. Before changing them,
+   establish what each consumer does when the ledger is absent —
+   silent degrade or loud failure — and say which in the PR; the
+   silent ones are the point.
+4. `scripts/build_drive_staging.py` ~782 globs `Path("data/exports")`
+   for workbooks and ~416 defaults the staging dir relatively; both
+   through `release.EXPORTS`. `scripts/sheet_sync.py` ~57 names a
+   phase-1 workbook relatively — same treatment as the reader's
+   fallback in step 2.
+5. Trivial, same branch: `tests/test_chunking.py` ~7 loads
+   `Path("scripts/deepread_run.py")` relatively, so its collection
+   depends on the working directory — use the `Path(__file__)` form
+   `tests/test_release_diff.py` already uses.
+
+**Tests, each verified to fail against the unfixed code**: `EXPORTS`
+is absolute; `release_dirs()` returns the same set from a
+`monkeypatch.chdir` directory as from the root — **against a `tmp_path`
+exports tree built by the test and injected via monkeypatch, never the
+real one**, because `data/exports` is gitignored and CI has no release
+folders at all; the reader's and staging's derived defaults agree with
+`release.latest_release_dir()` from another directory; and no
+`Path("data/exports` literal remains in the release-chain scripts —
+the sweep kept as an assertion, R6's pattern.
+
+**Must land before R4**: R4 runs every one of these scripts, in order,
+and the first of them stamps the phase.
+
+**Met, and with one decision taken as the spec left open.** The two
+fallbacks refuse rather than guess: `release.current_release_dir()`
+and `release.current_phase()` stop with a message naming the flag to
+pass when no release folder exists, and `phase1_build`/phase "1" no
+longer appear anywhere as a default — nor does the staging build's
+exports-wide workbook glob that stood in for a missing folder, which
+its own comment recorded as the three-dated-spreadsheets confusion.
+The ledger is `dcp.drive.SYNC_LEDGER`, read by all three scripts; a
+sync starting from no ledger now says so on stderr, since a lost
+ledger and a first sync look identical and mean every file goes up
+again. Absent-ledger behaviour as measured: the sync silently started
+from nothing (the dangerous one), the workbook silently rendered
+blank Drive cells, the verifier raised. And the defaults test that
+should have caught all three fallbacks — `tests/test_release_defaults.py`
+— was itself working-directory-relative *and* read only the one line
+carrying `default=`, which every offender had stepped around by
+putting the named release on the next line; it now resolves against
+the root and follows a statement's continuation lines, verified to
+fail on the reintroduced fallbacks. Nine new tests in
+`tests/test_release_paths.py`, each shown to fail against the unfixed
+code, behaviour against an injected `tmp_path` exports tree.
 
 ---
 

@@ -31,7 +31,18 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-EXPORTS = Path("data/exports")
+# Resolved against the package root, never the working directory. Every
+# tool in the release chain reads this location to decide what to build
+# — the newest release folder, the phase it stamps, the Drive sync
+# ledger, the staging tree, the release diff — so it is one repository
+# location and not "wherever the command was run". Relative, a build
+# from any other directory found no release folder, fell through to
+# the phase-1 fallbacks below-stairs and stamped the reader "phase 1"
+# into a folder several releases old, reporting success (R7,
+# docs/HANDOVER_RUNG_RELEASE.md). Explicit --out/--release-dir flags
+# still win everywhere.
+ROOT = Path(__file__).resolve().parent.parent
+EXPORTS = ROOT / "data" / "exports"
 
 # `phase2.1_build` -> `2.1`. Anything else keeps its whole stem, so an
 # unconventional folder name degrades to something visible rather than
@@ -64,6 +75,51 @@ def latest_workbook(fallback: Path | None = None) -> Path | None:
         if books:
             return books[0]
     return fallback
+
+
+def current_release_dir(explicit: Path | None = None) -> Path:
+    """The release folder a tool should act on, or a refusal.
+
+    An explicit folder wins and must exist. Otherwise the newest release
+    folder — and if there is none, the tool stops and says so rather
+    than inventing one: a fresh checkout has no releases, and the phase
+    a reader stamps or the artefacts a staging tree carries are not
+    things to guess. The scripts used to fall back to `phase1_build`
+    here, which is correct for exactly one release and silently wrong
+    from the next onwards.
+    """
+    if explicit is not None:
+        if not explicit.is_dir():
+            raise SystemExit(
+                f"release folder {explicit} is not a directory; nothing "
+                f"to act on")
+        return explicit
+    latest = latest_release_dir()
+    if latest is None:
+        raise SystemExit(
+            f"no release folder (*_build) under {EXPORTS} to derive the "
+            f"current release from; pass the folder explicitly")
+    return latest
+
+
+def current_phase(explicit: str | None,
+                  release_dir: Path | None) -> str:
+    """The phase a tool should stamp, or a refusal.
+
+    Explicit wins; else the phase read from the release folder's name;
+    else stop. Never "1": the phase stamps the reader's title, its
+    header and the database's filename, and a default that names a
+    phase is right for one release and wrong for every later one.
+    """
+    if explicit:
+        return str(explicit)
+    derived = phase_of(release_dir)
+    if derived:
+        return derived
+    where = release_dir if release_dir is not None else EXPORTS
+    raise SystemExit(
+        f"cannot derive a phase from {where}; pass --phase explicitly "
+        f"(it stamps the title, the header and the database filename)")
 
 
 def phase_of(release_dir: Path | None) -> str | None:

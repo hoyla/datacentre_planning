@@ -53,8 +53,11 @@ CLIENT_SECRET = CONFIG_DIR / "client_secret.json"
 TOKEN_PATH = CONFIG_DIR / "sheets_token.json"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-DEFAULT_WORKBOOK = release.latest_workbook(
-    Path("data/exports/phase1_build/dc_handover_phase1.xlsx"))
+# The newest release's workbook, or None — in which case --workbook is
+# required and the script says so. Never a named fallback (2026-08-11:
+# a default naming phase 2's workbook would have written its numbers
+# into the Sheet people were working in, refreshed in place).
+DEFAULT_WORKBOOK = release.latest_workbook()
 
 # Anything Sheets would read as a formula. The exporter emits deliberate
 # =HYPERLINK() cells and those must stay live, but a council's own
@@ -211,6 +214,9 @@ def main() -> int:
         print(f"authorised; token cached at {TOKEN_PATH}")
         return 0
 
+    if args.workbook is None:
+        raise SystemExit(f"no release workbook found under {release.EXPORTS}; "
+                         f"pass --workbook")
     if not args.workbook.exists():
         raise SystemExit(f"no workbook at {args.workbook}")
     data = read_workbook(args.workbook)

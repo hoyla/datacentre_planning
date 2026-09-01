@@ -73,6 +73,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
 from dcp import db  # noqa: E402
+from dcp import drive as _drive  # noqa: E402
 from dcp import site_cohorts  # noqa: E402
 
 
@@ -358,7 +359,7 @@ _DECIDED_STATUS_RE = re.compile(
     r"withdraw|decided|granted|refus|approv|permit|reject|dismiss|"
     r"determin|disposed", re.I)
 
-DRIVE_LEDGER = Path("data/exports/.drive_sync_state.json")
+DRIVE_LEDGER = _drive.SYNC_LEDGER
 
 SITE_HEADERS = [
     # --- identity & links -------------------------------------------------
