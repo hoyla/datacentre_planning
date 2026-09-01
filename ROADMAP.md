@@ -731,14 +731,13 @@ tracked there.
   note above), and Bryn Coch and Waltham abstained with the test that
   would settle each written down. The matches load at the next
   `load_capacity_claims.py` run, per the runbook.
-- **State the exclusion in the cohort's own `limits`.** The issue names
-  this as the cheap, honest half and it is still not done: a sentence in
-  `at_least_100mw` saying a multi-facility campus may be absent because
-  its figures are per-facility and no defensible total exists. The
-  cohort registry is `dcp/site_cohorts.py`; `limits` is required and the
-  build fails without it, so this is an edit to existing text rather
-  than new machinery. Check how past limits-only edits treated
-  `rule_version` before changing it — limits prose is not the rule.
+- ~~**State the exclusion in the cohort's own `limits`.**~~ **Done
+  2026-08-31 evening** (commit 81d286f): `at_least_100mw.limits` in
+  `dcp/site_cohorts.py` now says a multi-facility campus can be absent
+  because its figures are per-facility and no defensible total exists,
+  Stockley example included, with `rule_version` untouched — limits
+  prose is not the rule. This item still read "still not done" a day
+  later; caught 2026-09-01 while the rung design read the cohort.
 - ~~**Measure how many sites the under-ranking actually affects**~~
   **Measured, 2026-08-31**, against the live corpus through
   `site_cohorts.load_inputs` (the ladder that actually feeds the
