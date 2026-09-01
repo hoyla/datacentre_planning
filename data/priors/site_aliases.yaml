@@ -22,6 +22,23 @@
 #   - site_key:  the live sites.site_key the alias attaches to
 #   - alias:     the name people use for the place
 #   - source:    where that name comes from — documentary, never taste
+#
+# What this file is NOT: a home for capacity figures (agreed with
+# Luke, 2026-09-01). This project keeps exactly one place where a
+# figure lives — the claims store, snapshot- or document-backed and
+# quote-verified — and one place where a campus's facility roster
+# lives, data/priors/site_facilities.yaml, which itself holds no
+# values and only references claims and documents. A megawatt may
+# appear HERE only as part of a name ("Manor Farm — 147MW Data
+# Centre") or inside a source note as naming evidence, because a
+# figure restated in prose is text nothing verifies: it cannot be
+# checked against a snapshot, and it keeps asserting a number the
+# source may have moved away from (CyrusOne's LON1 went 8.72 → 9 MW
+# under us; only the claims store noticed). If a source note starts
+# growing a facility TABLE — names, addresses, capacities — that is a
+# roster wearing prose, and it belongs in site_facilities.yaml: the
+# Iron Mountain entry below grew one before that file existed, and is
+# the standing example to migrate, not to copy.
 
 aliases:
   - site_key: SITE-Bassetlaw/22/01713/FUL
