@@ -397,9 +397,118 @@ three operators plus a fourth scheme: Telehouse (North Two, West 2,
 South), Global Switch (House, London South), Republic, and the Astoria
 Way change-of-use at E14 9FT. Luke: "It's three." Partitioning it into
 four creates **two new multi-facility campuses** each needing a scope
-decision. Global Switch may be the first constructible total in the
-corpus — two facilities, one operator, both figures `it_load`, 80 + 35 —
-which makes it the case that tests whether `total: sum` is ever safe.
+decision. Global Switch was proposed as the first constructible total
+in the corpus — two facilities, one operator, both figures `it_load`,
+80 + 35. **Tested against the corpus 2026-09-01 (Luke asked for it) and
+the premise does not hold.** Each building states two figures of
+different kinds, and the pair the hypothesis adds is the wrong one from
+each:
+
+| facility | figure | what the document calls it |
+|---|---|---|
+| London East (Global Switch House, `TowerHamlets/PA/24/01932/A1`) | **74** | the design: "Building Total 74MW", "74MW of IT capacity split across nine floors" |
+| | 80 | a ceiling: "upgraded to *feasibly accommodate up to* 80MW IT load" |
+| London South (`TowerHamlets/PA/21/02777/A1`) | **35** | the scheme: "a new build 35MW multi-story data centre, expanding on the existing Global Switch Ltd London East" |
+| | 30 | a floor: "shall provide *at least* 30MW IT power" |
+
+So 80 + 35 adds a feasibility ceiling to a scheme headline while each
+building's other figure goes unused; that one application alone carries
+nine distinct `it_load` values. It is still a better case than Stockley
+Park — one operator, one campus, every figure an IT load rather than an
+average against a milestone against a design capacity — so the question
+it tests is sharpened rather than answered: **which of a building's own
+figures is the one a campus total may add**, which is a judgement per
+facility, not arithmetic. Recording those four with their kinds is what
+a facility roster is for.
+
+**The site is not ready to carry one**: `PTNO-12058499` holds 21
+applications across five distinct buildings — Global Switch House, East
+India Dock House, Mulberry Place Town Hall, the Docklands Travelodge and
+1 Paul Julius Close — which is the partition this section already owes.
+
+**A design gap the test found, not yet built.** A site holding several
+operators' campuses cannot say so: `site_facilities.yaml` maps a site to
+a flat list of facilities, so Global Switch's two, Telehouse's three and
+Republic's would sit in one list with nothing recording which campus
+each belongs to — losing the distinction the four definitions draw. An
+optional `campus:` per facility would fix it. **Not added**: an unread
+field is a decision for the review rather than for the file, which is
+why PR #305 was closed.
+
+**Iron Mountain: the block is a bot block, the arithmetic was right,
+and the pages disagree with each other** (2026-09-01, after Luke asked
+which URL was being used and then found the passage two probes had
+missed).
+
+*Two wrong readings preceded this one and are worth keeping. The first
+said the pages were unreachable, on two 429s. The second said LON-2's
+27 MW was "published nowhere", having read the campus page through a
+browser. Both are the probe-that-could-not-see error, and this file's
+own figures were right the whole time.*
+
+**The URLs in `fetch_operator_snapshots.py` are correct.**
+`ironmountain.com` returns **429 site-wide, its own homepage
+included**, so this is a bot block wearing a rate limit's status code
+and **"retry with backoff" can never work** — the same shape as the
+Camden and Portsmouth 403s recorded elsewhere here.
+
+**Why a browser is the wrong instrument, which is the durable
+lesson.** The per-facility figures live in the campus page's FAQ,
+inside a collapsed `<details>` accordion. Collapsed `<details>`
+content is in the DOM but is *not* rendered text, so `innerText` — and
+therefore any browser-rendered capture — silently omits it, which is
+how the second wrong reading happened. `visible_text()` in the
+snapshot fetcher strips tags from the **raw HTML** and evaluates no
+collapse state, so **it would have captured the passage**. The
+snapshot format is right and the browser view is the narrower one;
+where a page hides figures behind accordions or tabs, prefer the
+HTML-stripping capture.
+
+**What the campus page states**, verbatim from that FAQ:
+
+> LON-1 offers 17,000 square meters (183,000 square feet) and 8.7 MW,
+> originally a Credit Suisse facility that has been upgraded to
+> current standards. LON-2 is a greenfield data center with 27 MW
+> built for hyperscale requirements. LON-3 is currently under
+> construction, with a planned capacity of 25 MW and 5,220 square
+> meters for 2026.
+
+So **8.7 + 27 + 25 = 60.7 against a stated 61 MW** — this file's
+figure all along, and a second self-auditing campus after Saunderton,
+its 0.3 being rounding of the same kind as Kao's 0.2.
+
+**LON-2's figure is corroborated outside the marketing channel**
+(Luke, 2026-09-01): Iron Mountain's own investor-relations
+announcement, *"Iron Mountain Expands EMEA Data Center Footprint With
+New 27 Megawatt Facility Build in London"* (2021,
+investors.ironmountain.com), states the 27 MW in a communication to
+investors and dates the build. That is a stronger authority than a
+location page, and it means the only facility with no page of its own
+is the best-evidenced of the three.
+
+**The new finding is that Iron Mountain's own pages contradict each
+other**, which only appeared because both were read:
+
+| | campus page FAQ | the facility's own page |
+|---|---|---|
+| LON-1 power | 8.7 MW | 8.75 MW (printed once as "8,75 MW") |
+| LON-1 area | 17,000 m² (183,000 sq ft) | 10,400 m² (112,000 sq ft) in prose, "14.000" in its stat block |
+| LON-3 area | 5,220 m² | 5,200 m² |
+
+Three areas for one building across two pages, and 183,000 against
+112,000 square feet is a 63% divergence rather than a rounding — the
+pages do not say whether one is gross building area and the other
+technical space, and only the operator can settle it. **LON-2 has no
+facility page at all** (404); it exists only in that FAQ paragraph and
+in the investor announcement.
+
+A roster is writable once the campus page and the two facility pages
+are snapshotted, which needs the browser-assisted route
+(`scripts/browser_receiver.py`, docs/PORTAL_NOTES.md) to get past the
+429 — and then the *fetcher's* text extraction rather than the
+browser's, per the lesson above. The prior's held-copy contract is
+what stops it being written from what is on a screen.
+
 Two substation applications at *Land to West of East India Dock House*
 belong to none of the four and are what raised #252.
 
