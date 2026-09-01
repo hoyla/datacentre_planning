@@ -317,6 +317,62 @@ sites:
               Adjudicated as both it_load and total_site from this one
               document; ROADMAP holds the resolution as outstanding.
 
+  # ---- Iron Mountain's Slough campus. The case where the two identity
+  # channels cover *different* facilities: the operator publishes pages
+  # for LON-1 and LON-3 and none for LON-2, while the planning record
+  # names LON-2 outright and never uses the other two codes. Neither
+  # channel alone rosters this campus.
+  - site_key: PTNO-12468506
+    note: >-
+      One site, one campus, three facilities — the clean shape, and a
+      second campus whose own arithmetic checks itself: Iron Mountain
+      states 61 MW for the campus and 8.7 + 27 + 25 = 60.7 across its
+      three facilities, the 0.3 being rounding of the same kind as
+      Kao's 0.2 (Saunderton is the exact one). **None of those figures
+      is recorded here**, because no snapshot of ironmountain.com is
+      held and no Iron Mountain claim exists: the site's often-cited
+      capacities rest on pages this project cannot fetch, which
+      ROADMAP now records with the reason (a site-wide 429 bot block,
+      so a browser-assisted capture is the route, and then the
+      fetcher's own text extraction rather than the browser's, because
+      the figures sit inside a collapsed <details> accordion that
+      rendered text omits).
+
+      **LON-1 is deliberately absent from the roster below.** Nothing
+      held names it: the planning record has Iron Mountain at 724-729
+      Dundee Road (Slough/P/02933/009) and data/priors/site_aliases.yaml
+      equates that address with LON-1, but that equation is a hand
+      adjudication rather than a document naming the facility, and the
+      operator's page that does name it is unsnapshotted. It joins the
+      roster when the pages are held.
+
+      That alias entry also carries this campus's facility table in
+      prose — addresses, capacities and the reconciliation — written
+      2026-08-28 when there was nowhere structured to put it. Whether
+      that prose is trimmed once this roster carries it is Luke's
+      call; the alias's naming traps (SL1 4PF covers 110 and 111
+      Buckingham Avenue and two other operators; Barbour's SL1 4PN for
+      111 is the outlier against two sources) belong there either way.
+    facilities:
+      - id: LON-2
+        identity:
+          - source: planning_document
+            application: Slough/P/04829/030
+            document_sha256: d21f48558310d658
+            note: >-
+              "Iron Mountain LON2 110 Buckingham Avenue, Slough,
+              Berkshire. SL1 4PF" (page 1). Two further documents on
+              the same application name it — "IRON MOUNTAIN DATA
+              CENTRE LON-2" and "At Iron Mountain Data Centre
+              (Lon-2)". The facility the operator publishes no page
+              for is the one the planning record names outright, which
+              is the argument for keeping both identity channels.
+      - id: LON-3
+        identity:
+          - source: barbour_title
+            ptno: "12833153"
+            title: LON 3 DATA CENTRE
+
   # ---- Hayes Bridge Retail Park (Colt LON6/7/8). No operator pages
   # exist for these facilities yet — the Colt tranche beyond London 4
   # is ROADMAP's "fifth operator tranche would be cheap" — so identity
