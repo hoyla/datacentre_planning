@@ -131,7 +131,21 @@ test. The no-op property is asserted by test instead.
 
 ---
 
-## WP-B — Sync the snapshot store to Drive
+## WP-B — Sync the snapshot store to Drive — **DONE 2026-09-01**
+
+Built as specced. The one open choice — new table or committed ledger —
+was settled as a **committed YAML ledger**,
+`data/external_sources/operator_snapshots_drive.yaml`, read by
+`dcp/snapshot_drive.py`. The reasoning: `document_drive_files` is a
+table because a document *is* a database row and its id is the key,
+where a snapshot is a file in this repository cited by name from
+committed YAML. Its Drive id is a fact about a committed artefact, so it
+travels with it in git, survives a database rebuilt from migrations, and
+is reviewable as a diff.
+
+Folder `1NqIVr0y1aITvgAmQahatM3E4aCpBThlG`, `operator_snapshots` under
+the handover root, in `dcp.drive.SNAPSHOTS_FOLDER_ID`. All 81 snapshots
+uploaded and verified; re-running uploads nothing.
 
 **Decided**: snapshots get their own folder on Drive beside `sites`
 (Luke's framing: evidence files journalists may need to look at, so
@@ -164,6 +178,13 @@ Constraints that are settled law here, not choices:
 **Done when**: every dated snapshot has a Drive ID recorded, re-running
 the sync uploads nothing, and the folder is visible under the handover
 root.
+
+**Met, and checked at the far side rather than from the log.** Listing
+the folder through the API: 81 files on Drive, 81 in the ledger, 81 held
+locally, no name in any one of the three absent from the other two, and
+every ledger id and md5 equal to what Drive reports and to the local
+bytes. `files.get` on the folder returns the handover root as its only
+parent. A second run reports "nothing to do".
 
 ---
 

@@ -1,0 +1,341 @@
+# Where each operator snapshot's copy lives on Drive.
+#
+# Written by scripts/sync_snapshots_drive.py, read by
+# dcp/snapshot_drive.py. Keyed on the snapshot's own filename,
+# because the store is append-only and a claim is evidenced by the
+# reading it was taken from rather than by the newest one.
+#
+# Every id here was read back from Drive after upload and its md5
+# checked against the local bytes. Do not hand-edit: an id that
+# resolves to the wrong file is a working link under a citation
+# naming different evidence, which is the failure this file and
+# document_drive_files both exist to make impossible.
+#
+# Entries are never removed. A dated snapshot does not change, so
+# its copy stays valid for as long as anything cites it.
+folder_id: 1NqIVr0y1aITvgAmQahatM3E4aCpBThlG
+files:
+  ada-docklands.2026-08-30.txt:
+    file_id: 1uSYda9K_mtRAPSjb8Dr4qPLVHHC0l2_s
+    md5: 060c4b166cc77013240f694d2e717f7c
+    uploaded: 2026-09-01
+  apatura-westerhill.2026-08-30.txt:
+    file_id: 1S-6ZqRoPGUt9ooG5OIfvpmNpNcgdIMlO
+    md5: bf0f5ff323dd8a907b0293f654b0d745
+    uploaded: 2026-09-01
+  ark-alliance-park.2026-08-30.txt:
+    file_id: 1tHdyE4j-Z_THqfB75IOmX4H--00BXe4z
+    md5: 465c15544ec067fb3d8e1bc8799325c9
+    uploaded: 2026-09-01
+  ark-cody-park.2026-08-30.txt:
+    file_id: 1t2rDzAq4LtNiVUIwqwiw1Q7LRVAVZS5O
+    md5: 728b78fe14f4e510f03b68bb1a09299f
+    uploaded: 2026-09-01
+  ark-elstree.2026-08-30.txt:
+    file_id: 1A1P3hXNejIoJ2GJCbz0keNn3RDlu2D-J
+    md5: 5fa83516369caf1e69a0281477e08402
+    uploaded: 2026-09-01
+  ark-longcross-park.2026-08-30.txt:
+    file_id: 1DRcNWrkd7kHIIXuQlIMLE-jiAIkwP2ya
+    md5: e8cef399ff1c3e5dbdc54efb0e079d5d
+    uploaded: 2026-09-01
+  ark-meridian-park.2026-08-30.txt:
+    file_id: 1wos2TySsBwi_VBscfSPYreS2cWHgkNyp
+    md5: 21f7b8ba46143093a0fe707f478ef575
+    uploaded: 2026-09-01
+  ark-spring-park.2026-08-30.txt:
+    file_id: 1vJuJkZyKGfhcUrsxqpxKjyt41voZp3Y_
+    md5: 1395fe578aca1f7bf5978a7283625b2c
+    uploaded: 2026-09-01
+  ark-union-park.2026-08-30.txt:
+    file_id: 1pw5jI6w-55F_XRkNJNZKPmtM63vjms5o
+    md5: 694bc0349cb3317add72d2f13bc820f4
+    uploaded: 2026-09-01
+  colt-london-4.2026-08-30.txt:
+    file_id: 1x8QZxZel0NhmGqpFqZS4N9mCSBTY9Yy6
+    md5: 80ce40449f4100f910ebfa954070a85f
+    uploaded: 2026-09-01
+  colt-london-6-7-8.2026-08-30.txt:
+    file_id: 14JbZ_qurHVgl3AjSFwt9K4i-Ggcce1Lk
+    md5: 4df18d2bb6ccc29c53b2c7247f7a135b
+    uploaded: 2026-09-01
+  consult-abbots-langley.2026-08-30.txt:
+    file_id: 1U5S2hD9S3N_8XjsUWM7ZBD_hwv9K0bhK
+    md5: 8dbb2fc259c2319f5332db0ab72094a8
+    uploaded: 2026-09-01
+  consult-apatura-freeport.2026-08-30.txt:
+    file_id: 1vAJmWTji0igsGPdOnQUSitlnXjdsrnNm
+    md5: 846985f23e83dbcdaaa43d34c7c086f1
+    uploaded: 2026-09-01
+  consult-apatura-ravenscraig.2026-08-30.txt:
+    file_id: 1GMozsUrbkmwSqJsfA8PsSH6RhJsefIOW
+    md5: e83a5eb8ee183c457790938880379d8e
+    uploaded: 2026-09-01
+  consult-cato-auchtertool.2026-08-30.txt:
+    file_id: 1gsdikEZe2MKFQ19HzvXgBGFMrtVfokuI
+    md5: a08cc0490338e15a6a4ef2d721c085ab
+    uploaded: 2026-09-01
+  consult-east-havering.2026-08-30.txt:
+    file_id: 1sDRKxqUyAcVwiqint2FMO67R0MM-es0j
+    md5: 406e07da364ed3a653793aca13ec1f6e
+    uploaded: 2026-09-01
+  consult-elsham-tech-park.2026-08-30.txt:
+    file_id: 1AlFc-p7H4ggVGcwDtxJtWAm5qKHebMaT
+    md5: 9746c82e0824a6bddcf2c5fb9bd2e786
+    uploaded: 2026-09-01
+  consult-humber-tech-park.2026-08-30.txt:
+    file_id: 12vlH4r1B1ZLuQXjIQTFigFevpzjCFz8S
+    md5: b3d9e8051846a51a418213ad376f6320
+    uploaded: 2026-09-01
+  consult-iver-heath-data-park.2026-08-30.txt:
+    file_id: 15-aRT2YY94YKR6pzhiV_28e2-6D1eWCT
+    md5: b47db572b18bc4e1b9602617ca9f5bd1
+    uploaded: 2026-09-01
+  consult-west-london-tech-park.2026-08-30.txt:
+    file_id: 1cMFGvbHJ-XMO4dgQo78BiKoqV7p-a2BO
+    md5: d8c7ecee82bc0999f55328d5bd8ddb92
+    uploaded: 2026-09-01
+  cyrusone-lon1.2026-08-30.txt:
+    file_id: 1CxeoHRviJSbsW5Lp_hZC0Ie5uMVuwUlS
+    md5: f491c9a3909199a85e72c5bd1caeca98
+    uploaded: 2026-09-01
+  cyrusone-lon2.2026-08-30.txt:
+    file_id: 12dsv-MBnAGd4FpArTfPa8I9m2cnq4A_D
+    md5: b6ee673163a26aaa35657a7ff69ca62c
+    uploaded: 2026-09-01
+  cyrusone-lon3.2026-08-30.txt:
+    file_id: 1ajt7WO-NgxG9FVn-LH-4s5UWfscnd3YX
+    md5: 76ec122747a6932bb5e644b6ceca9b3e
+    uploaded: 2026-09-01
+  cyrusone-lon4.2026-08-30.txt:
+    file_id: 1s5mH6wmuxhSD8er7XljfwOHbG0nRa6hM
+    md5: a1638c4d45dda1ca9d3ea0b194bc7efd
+    uploaded: 2026-09-01
+  cyrusone-lon5.2026-08-30.txt:
+    file_id: 1k6jhohWEcWLt6ixE50zNvdQ0XSrxbRfp
+    md5: d2046b16abc8a9b6893bf6ca71aa3f54
+    uploaded: 2026-09-01
+  cyrusone-lon6.2026-08-30.txt:
+    file_id: 1NviKoTrabbJ7AYru1omHIAjwbRqjFzel
+    md5: d2e6f409386f65d7708df90f885d5366
+    uploaded: 2026-09-01
+  digital-reef-projects.2026-08-30.txt:
+    file_id: 1QgnDhaU4Q1dtrFD8U5d8gANkC649WUbx
+    md5: 6fc61e94c262de71611c2f243a8922d0
+    uploaded: 2026-09-01
+  digitalrealty-lgw14.2026-08-30.txt:
+    file_id: 1sBRxp4v5mUzy8mgKepu1sfodE8RIV1O1
+    md5: 2fcc1c9e7268b7dd9fe202c468abe153
+    uploaded: 2026-09-01
+  digitalrealty-lgw15.2026-08-30.txt:
+    file_id: 1IqLsz6nD2suwiqTKbxNrMtfegg9yKSj8
+    md5: 9f0ffe68723f78bc2bb388015832a056
+    uploaded: 2026-09-01
+  digitalrealty-lgw16.2026-08-30.txt:
+    file_id: 1_9D1FZ5BCStatuItZFZATt2-rwNr5HJY
+    md5: 53256c868d2b163fbe7ee5f6fb857f26
+    uploaded: 2026-09-01
+  digitalrealty-lhr13.2026-08-30.txt:
+    file_id: 1xDq88hDty8YAcJEsYaIWfi1ALO9-l2c7
+    md5: 33fb66b23a61120acb100e28c95285b8
+    uploaded: 2026-09-01
+  digitalrealty-lhr17.2026-08-30.txt:
+    file_id: 1EirMnbbf2YK-AbEdCFN0iw0N8UtZwx7A
+    md5: 6e7efe488018179fb95796a4d8bb8fb2
+    uploaded: 2026-09-01
+  digitalrealty-lhr18.2026-08-30.txt:
+    file_id: 1tGf7dbkXe-bhZ5W_K66Q6XmwOe2pWRss
+    md5: bd1763be6b883b6a7b114c2b51292a8c
+    uploaded: 2026-09-01
+  digitalrealty-lhr19.2026-08-30.txt:
+    file_id: 1flQ16O1OUF8JW-AuNz_86RJNhN7wQK_B
+    md5: 75f8340495a503c90a59946ae84b44d3
+    uploaded: 2026-09-01
+  digitalrealty-lhr20.2026-08-30.txt:
+    file_id: 1_EeQ9Mjq6SiB3d12OBueoQkuDLJeiLJH
+    md5: 6dd68bd293a9eaa8ede7ef69fa5e60b1
+    uploaded: 2026-09-01
+  digitalrealty-lhr26.2026-08-30.txt:
+    file_id: 1OLzLwSqhhe_Eu9nXuCzRhGigzuruRbk1
+    md5: 839e4037a4b7c6771099d56c9abd0560
+    uploaded: 2026-09-01
+  digitalrealty-lhr27.2026-08-30.txt:
+    file_id: 1-2fSjtXm2YEDJTfPMRh4JnieU72NWjF-
+    md5: 916d1af6ce9f3a8a9a9fa919c342a517
+    uploaded: 2026-09-01
+  digitalrealty-lon1.2026-08-30.txt:
+    file_id: 1Xq6_XtwRPyMl0gcWIDkHlpy1OudWHh_v
+    md5: c8bc2e9aaf890435bbaa0e6457cf3a53
+    uploaded: 2026-09-01
+  digitalrealty-lon2.2026-08-30.txt:
+    file_id: 1Qo2FzlU-mMmUDu0n9AY59Qtj4vL8A3vr
+    md5: de01cc897b97f1aa09a25da40f9644fc
+    uploaded: 2026-09-01
+  digitalrealty-lon3.2026-08-30.txt:
+    file_id: 1FS9qCUol8jTBB_mlcXlsJOCa-bbLnRyn
+    md5: 9e44db05fa5c94e1a958c854a8e16a5c
+    uploaded: 2026-09-01
+  digitalrealty-london.2026-08-30.txt:
+    file_id: 1SQnN7j8siEUXzDXpZ7xuh8bnb1sR3K1j
+    md5: 0d6f1879e3cba371d5bd21e995a2f611
+    uploaded: 2026-09-01
+  globalswitch-london.2026-08-30.txt:
+    file_id: 1Hl2WIL9gaMzDkwT5wISr6oNLY7cEqv05
+    md5: 091f3279b7869af58ab2c6c6101c024d
+    uploaded: 2026-09-01
+  graemenicholls-cato.2026-08-30.txt:
+    file_id: 1SOHfEaGEVvLuAMEZjadgKXx6OPhZgu9e
+    md5: 8599b144a642ac1e3e43db5d183338b4
+    uploaded: 2026-09-01
+  greystoke-ai-growth-zone.2026-08-30.txt:
+    file_id: 1dGA6WaS-R62LOUPzpyFjemwg3h5YMY1J
+    md5: 4332e5b25a6acdc3a7de402115aafa8d
+    uploaded: 2026-09-01
+  greystoke-data-centres.2026-08-30.txt:
+    file_id: 1Wpl-U-YxxsRGdzIpx6iNnPM6YAP7b-Zq
+    md5: 5387827d15f81881ab5523427df1a4a6
+    uploaded: 2026-09-01
+  greystoke-home.2026-08-30.txt:
+    file_id: 1F5lKmEC6OLRkX6xlrBw6g9FeWcnaGYsl
+    md5: 8ccc8fd1b55901ffc2d457a95bf2f50a
+    uploaded: 2026-09-01
+  kao-harlow.2026-08-30.txt:
+    file_id: 1AdcXhz-t4J20ioQ392WpQ3OFGVw5Yaqz
+    md5: 1f2c30754edb912c8e13e383633adc96
+    uploaded: 2026-09-01
+  kao-manchester.2026-08-30.txt:
+    file_id: 1mbRsEhY9wCtafh5Hlu1-NzkPYDDerhj1
+    md5: 40eb4bd9f8bdf894f2e51aed90f8c0a5
+    uploaded: 2026-09-01
+  kao-northolt.2026-08-30.txt:
+    file_id: 17iUkYrgMAs-3nXhQ_7tjIlBkke4idfVB
+    md5: 0a76dfe7003df512739e1add4c21b6f4
+    uploaded: 2026-09-01
+  kao-slough.2026-08-30.txt:
+    file_id: 1tHRHY-F10B0WA-EbF8x_iBqrmuDn9t-w
+    md5: 3d9e3755612640fe988e4aad3c482364
+    uploaded: 2026-09-01
+  nlighten-london.2026-08-30.txt:
+    file_id: 1juqf6c3kSrfQwcYt9rp6sdGpi9ZUXHpe
+    md5: 4e159124904704669228a71c293ff8fb
+    uploaded: 2026-09-01
+  ntt-hemel-3.2026-08-30.txt:
+    file_id: 1f7uCel70zaURJwOAzKscRop_GGFYDNm0
+    md5: caefa110dfc1bd1d4c9a7a91f617799a
+    uploaded: 2026-09-01
+  ntt-london-1.2026-08-30.txt:
+    file_id: 1afjAeDY2DHY9WhIf1-S5_xuEI7ly1zSQ
+    md5: e50ed30bf6639f3654747b68f46a3e22
+    uploaded: 2026-09-01
+  pulsant-ln1.2026-08-30.txt:
+    file_id: 1_-9rCGgl2YQVNBWl6fSVFLiXv5JolbWf
+    md5: 4d896e5c895f3855c4bda2385cde7ec8
+    uploaded: 2026-09-01
+  pulsant-ne1.2026-08-30.txt:
+    file_id: 1hfg7soraS0-cffKeR9KUYUhVQ9AIveox
+    md5: 4f1297b17c65190de21d070b7651bfe5
+    uploaded: 2026-09-01
+  pulsant-ne2.2026-08-30.txt:
+    file_id: 1j_m1wX807fMk4VwzyaO9Qr47OtwHltih
+    md5: c381d1ae6d61f6affdaf205489760e0f
+    uploaded: 2026-09-01
+  pulsant-nw1.2026-08-30.txt:
+    file_id: 1jwxeYBE1r0dGWRfl__hi8T8EGYF8pW-O
+    md5: d157b42d74958660df1fa38e334f357b
+    uploaded: 2026-09-01
+  pulsant-sc1.2026-08-30.txt:
+    file_id: 1SHvxsbl3FU3a7MbaZL6WpDl4Vmj-s1wO
+    md5: aaa3fbee0c380ee4c1a1f3d34c5e4d7e
+    uploaded: 2026-09-01
+  pulsant-sc2.2026-08-30.txt:
+    file_id: 1GiLMZAgkcdT0i4I9V-RIXWvFbVhpHDrq
+    md5: 249911ba51697a402289e40d03601e1e
+    uploaded: 2026-09-01
+  pulsant-sc3.2026-08-30.txt:
+    file_id: 1pP4-qRZux6s_Slg4VUCCsR6Axm6VMrnc
+    md5: c8bceee235c5d09ec0103b4790f004e1
+    uploaded: 2026-09-01
+  pulsant-se1.2026-08-30.txt:
+    file_id: 1jrjTEE0hI4TA-dM1nhtW1jv4lkzyIvGf
+    md5: 301dec3ac874573b7a524010fb38c09a
+    uploaded: 2026-09-01
+  pulsant-se2.2026-08-30.txt:
+    file_id: 17VOWN7P1HGsf1aoeXj-MCFRjo67-mxc4
+    md5: bceeaee1d3e86e62c38c9c3fb34d261c
+    uploaded: 2026-09-01
+  pulsant-se3.2026-08-30.txt:
+    file_id: 19sKZbkE2imRFR6vh5qkJ4-U8F0J2w_Ii
+    md5: 42da2131e1eab91b1aca2b79452a1986
+    uploaded: 2026-09-01
+  pulsant-se4.2026-08-30.txt:
+    file_id: 1qmvBMUnCb78IOH3XJH3bZO3YptZBvCHh
+    md5: e96202d42f955b896d737f220ba30ac3
+    uploaded: 2026-09-01
+  pulsant-se5.2026-08-30.txt:
+    file_id: 1X_Xxl0ECnwucvVKd08A82M3U59xVT-N-
+    md5: 112247a7a4da1025ea66721f9e61b195
+    uploaded: 2026-09-01
+  pulsant-wm1.2026-08-30.txt:
+    file_id: 1NXn7eszSRPNyMXdNA9JCsAf0nKLr637U
+    md5: 1aa963bd878196300eda95c6634770bf
+    uploaded: 2026-09-01
+  pulsant-yh1.2026-08-30.txt:
+    file_id: 1SNZp4TC59XQ9Y4X2Y7IRRTYGNedKXOn1
+    md5: 12474aea0d9733f6649b0a419dc628af
+    uploaded: 2026-09-01
+  puredc-brent-cross.2026-08-30.txt:
+    file_id: 1s1UKwnTlFb15tDwAaJgwxw6MNaqpHhvr
+    md5: dfddecadec96de703a9c582238a2a40f
+    uploaded: 2026-09-01
+  puredc-park-royal.2026-08-30.txt:
+    file_id: 1QV5fTETH21sXGYCUVwQPafvv1W-eAuWV
+    md5: f09eee1749ec26f5fa3646ea9b6d9aee
+    uploaded: 2026-09-01
+  qts-cambois.2026-08-30.txt:
+    file_id: 1kuabk6Dez-Bh7ZU2hs862lles6CRp_Fo
+    md5: 29f3c5760ae4de1103c515487b7f0fbd
+    uploaded: 2026-09-01
+  questpark-home-of-production.2026-08-30.txt:
+    file_id: 1IRa9jR5GuNL0ps84TvqHGDKIxhIcpZBx
+    md5: 9319bff8ac83f3151daccba6f74f3756
+    uploaded: 2026-09-01
+  stellium-1.2026-08-30.txt:
+    file_id: 10vAqOPXcXLgwLdStIWschpq6WgtkDdUn
+    md5: 742273cb37b447c3c2a4cca9c149704b
+    uploaded: 2026-09-01
+  vantage-cardiff.2026-08-30.txt:
+    file_id: 15Mj2W2rfupLCQdcSRfjbsWhjeNk66ZUZ
+    md5: 68b953036d421fd3ff8a3baa700c5700
+    uploaded: 2026-09-01
+  vantage-london-i.2026-08-30.txt:
+    file_id: 1d61x0jZV9TjnCGXviD8_6cD14yAuf2Mf
+    md5: c8e6be10dd9d59fc3058c50dc8fbd4e2
+    uploaded: 2026-09-01
+  virtus-enfield.2026-08-30.txt:
+    file_id: 13UCXx0x05qfL19cojWGQ3EAK1BKowmyR
+    md5: f5b3be12fde848f0f8c88a3f10c1f82c
+    uploaded: 2026-09-01
+  virtus-hayes.2026-08-30.txt:
+    file_id: 1vr154cu7eH78ccc6nVGrEvjCQrWnh62U
+    md5: badfbe654dfbe61dbe74fc0d0a83c4eb
+    uploaded: 2026-09-01
+  virtus-saunderton-spec-sheet.2026-09-01.txt:
+    file_id: 1_lSCLJ-C5FYE6sxyvrdBF69rQ8zv9GwO
+    md5: fd0cd74854576c053e781f574fadba0c
+    uploaded: 2026-09-01
+  virtus-saunderton.2026-08-30.txt:
+    file_id: 1XTdCXK0Yqh6Tmn57uW4LDTI-ABL-kwmq
+    md5: 377dcaf1a7ea3e27be322455cc18365c
+    uploaded: 2026-09-01
+  virtus-slough-campus.2026-08-30.txt:
+    file_id: 1amJ2gfBu_iVXqmUD4oaJMmNGMyZ3siXy
+    md5: b3cee218dc559efb7ef4b19604ab416c
+    uploaded: 2026-09-01
+  virtus-slough-london10.2026-08-30.txt:
+    file_id: 1HXwAnr3bqZBCyFKWEcYWku-M_F4-PDZp
+    md5: 5fde6988ed30960efc014ac2a235850a
+    uploaded: 2026-09-01
+  virtus-stockley-park.2026-08-30.txt:
+    file_id: 1--VSdCAh32Yj43_E4Oq1JaFqCIw5hQ7z
+    md5: 515fc05b793a16dbe003475a9cd6f13a
+    uploaded: 2026-09-01

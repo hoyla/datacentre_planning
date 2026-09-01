@@ -146,6 +146,7 @@ scripts/export_reader.py   --out data/exports/phase2_build/reader.html \
 scripts/build_drive_staging.py        # assemble the Drive tree
 scripts/drive_sync.py --sync data/exports/drive_staging --prune
 scripts/record_drive_ids.py --verify-bytes   # where each document landed, by id
+scripts/sync_snapshots_drive.py       # the claims channel's evidence, and its ids
 scripts/sheet_sync.py                 # refresh the Sheet, keeping its formatting
 ```
 
@@ -197,6 +198,16 @@ lookup either finds nothing, silently dropping a link, or finds the
 neighbouring file: a working link to the wrong document, under a
 citation naming a different one. A Drive ID survives a file being moved
 or renamed; a derived path survives nothing being renamed here.
+
+**And it reaches the claims channel's evidence.** An operator's page has
+no register behind it, so a capacity claim rests on a snapshot of the
+page as it read on the day the figure was taken — held here, append-only
+and dated, and since 2026-09-01 on Drive too, in `operator_snapshots`
+under the handover root. `scripts/sync_snapshots_drive.py` uploads and
+records each file's ID in
+`data/external_sources/operator_snapshots_drive.yaml`, so "our copy"
+means Drive for a claim exactly as it does for a document rather than
+meaning a file in this repository.
 
 **Documents link to our copy first, with the register beside it.** A
 council can withdraw a document from its register, renumber it, move the
