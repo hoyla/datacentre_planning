@@ -397,9 +397,50 @@ three operators plus a fourth scheme: Telehouse (North Two, West 2,
 South), Global Switch (House, London South), Republic, and the Astoria
 Way change-of-use at E14 9FT. Luke: "It's three." Partitioning it into
 four creates **two new multi-facility campuses** each needing a scope
-decision. Global Switch may be the first constructible total in the
-corpus — two facilities, one operator, both figures `it_load`, 80 + 35 —
-which makes it the case that tests whether `total: sum` is ever safe.
+decision. Global Switch was proposed as the first constructible total
+in the corpus — two facilities, one operator, both figures `it_load`,
+80 + 35. **Tested against the corpus 2026-09-01 (Luke asked for it) and
+the premise does not hold.** Each building states two figures of
+different kinds, and the pair the hypothesis adds is the wrong one from
+each:
+
+| facility | figure | what the document calls it |
+|---|---|---|
+| London East (Global Switch House, `TowerHamlets/PA/24/01932/A1`) | **74** | the design: "Building Total 74MW", "74MW of IT capacity split across nine floors" |
+| | 80 | a ceiling: "upgraded to *feasibly accommodate up to* 80MW IT load" |
+| London South (`TowerHamlets/PA/21/02777/A1`) | **35** | the scheme: "a new build 35MW multi-story data centre, expanding on the existing Global Switch Ltd London East" |
+| | 30 | a floor: "shall provide *at least* 30MW IT power" |
+
+So 80 + 35 adds a feasibility ceiling to a scheme headline while each
+building's other figure goes unused; that one application alone carries
+nine distinct `it_load` values. It is still a better case than Stockley
+Park — one operator, one campus, every figure an IT load rather than an
+average against a milestone against a design capacity — so the question
+it tests is sharpened rather than answered: **which of a building's own
+figures is the one a campus total may add**, which is a judgement per
+facility, not arithmetic. Recording those four with their kinds is what
+a facility roster is for.
+
+**The site is not ready to carry one**: `PTNO-12058499` holds 21
+applications across five distinct buildings — Global Switch House, East
+India Dock House, Mulberry Place Town Hall, the Docklands Travelodge and
+1 Paul Julius Close — which is the partition this section already owes.
+
+**A design gap the test found, not yet built.** A site holding several
+operators' campuses cannot say so: `site_facilities.yaml` maps a site to
+a flat list of facilities, so Global Switch's two, Telehouse's three and
+Republic's would sit in one list with nothing recording which campus
+each belongs to — losing the distinction the four definitions draw. An
+optional `campus:` per facility would fix it. **Not added**: an unread
+field is a decision for the review rather than for the file, which is
+why PR #305 was closed.
+
+**Iron Mountain cannot be tested at all yet** (re-probed 2026-09-01,
+two requests three seconds apart, both **HTTP 429**). Its 61 MW
+calibration case — 8.7 + 27 + 25 against a stated 61 — still rests on
+pages this project does not hold, exactly as recorded under Parked. The
+facility prior refuses the roster for that reason, which is its
+held-copy contract working rather than an obstacle.
 Two substation applications at *Land to West of East India Dock House*
 belong to none of the four and are what raised #252.
 
