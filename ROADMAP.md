@@ -1430,20 +1430,6 @@ field and is not publishable as it stands.
   claims tables carry no such column, so a reporter working from the
   database still reaches only the source URL.
 
-  **A latent trap noticed during the WP-A work, and not caused by it.**
-  `dcp/site_facilities.py` defaults both its priors path and its
-  snapshot directory to paths *relative to the working directory*, and
-  `load_facilities` returns `{}` when its file is absent rather than
-  raising. Measured 2026-09-01: from the repository root it loads 6
-  sites; from anywhere else it loads **0**, and every guard downstream
-  then passes — `require_live` has no keys to check and
-  `require_held_snapshots` finds no snapshot missing. So the facility
-  layer would silently vanish from a build run from the wrong
-  directory, and the two guards written to make that impossible would
-  report clean. It is the shape HISTORY records as *nobody looked,
-  stored as nothing there*. Two lines: resolve both defaults against
-  the package root, as `capacity_claims` and `green_claims` already do.
-
   **And the Drive viewer URL is built in three places.**
   `export_handover.py` (twice) and `export_duckdb.py` each write
   `https://drive.google.com/file/d/…/view` themselves.

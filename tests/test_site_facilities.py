@@ -211,3 +211,44 @@ def test_the_planning_reference_is_a_content_hash_not_a_drive_id():
 
 def test_a_missing_file_loads_empty(tmp_path):
     assert sf.load_facilities(tmp_path / "absent.yaml") == {}
+
+
+def test_the_defaults_are_absolute_so_a_build_cannot_lose_the_layer():
+    """Both defaults resolve against the package root, not the cwd.
+
+    The mechanism is pinned rather than the site count, which grows.
+    A relative default is invisible from inside the module: the loader
+    returns {} for an absent file by design, so the layer disappears
+    and every guard downstream then passes with nothing to check.
+    """
+    assert sf.FACILITIES_PATH.is_absolute()
+    assert sf.SNAPSHOT_DIR.is_absolute()
+
+
+def test_the_prior_loads_the_same_from_another_working_directory(
+        tmp_path, monkeypatch):
+    """The failure this is for: a build run from anywhere else.
+
+    Measured before the fix — six sites from the repository root, zero
+    from elsewhere, with `require_live` and `require_held_snapshots`
+    both passing vacuously over the empty result.
+    """
+    from_root = sf.load_facilities()
+    assert from_root, "the committed prior is not empty"
+
+    monkeypatch.chdir(tmp_path)
+    assert set(sf.load_facilities()) == set(from_root)
+    sf.require_held_snapshots(sf.load_facilities())
+
+
+def test_an_empty_load_cannot_satisfy_require_live(tmp_path, monkeypatch):
+    """The vacuous pass is the reason the relative default mattered.
+
+    `require_live` checks the keys it is handed against the live set,
+    so a load that returned nothing agreed with *any* corpus — including
+    one holding none of these sites. From another directory it must now
+    raise, exactly as it does from the root.
+    """
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(ValueError, match="not live"):
+        sf.require_live(sf.load_facilities(), set())
