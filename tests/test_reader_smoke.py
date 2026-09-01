@@ -33,6 +33,7 @@ fixture would not exercise the real markup.
 
 from __future__ import annotations
 
+import os
 import pathlib
 import re
 
@@ -666,8 +667,24 @@ def test_every_our_copy_link_names_a_snapshot_this_repository_holds(built_reader
         f"{stray[:3]} — a claim must link its own evidence or nothing")
 
     # And the positive half, so a build that resolved nothing at all
-    # cannot pass by rendering no links. 80 of the 81 committed operator
-    # claims resolve, and each is rendered on more than one surface.
+    # cannot pass by rendering no links — the check above is vacuous on
+    # an empty set.
+    #
+    # **Only against a reader this code built.** CI drives the committed
+    # `index.html`, which is a *released* artefact: it predates this
+    # feature and correctly carries no our-copy links, so a count
+    # asserted there measures the age of the release rather than the
+    # behaviour of the code, and fails every PR until the next build is
+    # published. That is how this test failed on its first CI run.
+    # The released page still gets the stray check above, which is the
+    # half that must never fail on bytes about to be served.
+    #
+    # What covers the gap in CI: `test_snapshot_drive.py` asserts every
+    # committed claim resolves to a ledgered file, and that the three
+    # reader surfaces call the helper — neither needs a build.
+    if os.environ.get("READER_HTML"):
+        pytest.skip("READER_HTML names a reader built earlier; a link "
+                    "count belongs to a build made from this code")
     assert len(hrefs) > 50, (
         f"only {len(hrefs)} claims offer our copy of the page they were "
         f"read from; the store holds 84 snapshots behind 81 operator "

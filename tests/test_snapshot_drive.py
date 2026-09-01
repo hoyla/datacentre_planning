@@ -352,3 +352,41 @@ def test_every_committed_operator_claim_links_to_its_own_snapshot():
                 if not sd.copy_url(c.attrs["snapshot"], c.as_at, c.quote,
                                    ledger=led)]
     assert unlinked == []
+
+
+def test_every_reader_surface_that_renders_a_claim_offers_our_copy():
+    """The wiring, asserted from the source rather than from a build.
+
+    The built-page test can only check bytes it is given, and CI gives
+    it the committed `index.html` — a released artefact that predates
+    this feature. So the guard against a call site being dropped has to
+    be one that needs no build, on `test_release_defaults.py`'s pattern:
+    assert the rule over the tree.
+
+    Three surfaces render a claim's source line, and each one was wired
+    by hand; a fourth added later without the helper would show a claim
+    with no route to its evidence, and nothing else would say so.
+    """
+    import re
+    src = (ROOT / "scripts" / "export_reader.py").read_text()
+    calls = len(re.findall(r"\bour_copy\(", src))
+    assert calls >= 4, (
+        f"export_reader.py calls our_copy {calls} times; the site claims "
+        f"panel, the Operators tab and the green-claims table each need "
+        f"it, beside its own definition")
+    assert 'class="oursnap"' in src, (
+        "the our-copy anchor carries a class the built-page test greps "
+        "for; renaming it silently blinds that test")
+
+
+def test_the_workbook_offers_our_copy_on_both_claim_sheets():
+    """Same rule, the other artefact. The workbook has no build-and-drive
+    test at all, so this is the only thing standing between a dropped
+    column and a reporter working from the xlsx with no route back."""
+    src = (ROOT / "scripts" / "export_handover.py").read_text()
+    assert src.count("Our copy (Drive)") >= 4, (
+        "each of Capacity claims and Figures by audience needs the "
+        "column in its header and an entry in the data dictionary")
+    assert src.count("sdrive.copy_url(") >= 2, (
+        "both sheets must resolve the link rather than one inheriting "
+        "the other's")
