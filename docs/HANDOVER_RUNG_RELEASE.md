@@ -390,7 +390,17 @@ code, behaviour against an injected `tmp_path` exports tree.
 
 ---
 
-## WP-R4 — Release 2.11
+## WP-R4 — Release 2.11 — **run 2026-09-01/02, release PR pending**
+
+*Steps 0–13a run from `main` in order; the account, the numbers and
+the two guards that caught the release's own tooling are in HISTORY
+("v2.11 — the operator rung, and the release the guards earned").
+What the run added to the chain: step 4a (readings submitted once the
+corpus settles, collected before step 12, `--model gpt-5` always) and
+the adjacent-power tree (#338). Left for Luke: merge the candidate PR,
+merge the release PR carrying `index.html`, run `cloudrun/deploy.sh`,
+upload Pinpoint tranche 5, delete the nine retired sites' sources from
+the notebook, and the reporting-team note.*
 
 **The process is [REGENERATION_RUNBOOK.md](REGENERATION_RUNBOOK.md),
 read in full, traps and already-done sections included.** This package

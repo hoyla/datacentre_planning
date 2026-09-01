@@ -13,11 +13,14 @@ corroboration pass runs and are deliberately not restated here —
 `scripts/corpus_stats.py` prints them, and each release states the
 boundary it was stamped at.
 
-**The base is 2.10, released** (HISTORY). Artefacts in
-`data/exports/phase2.10_build/`; `data/exports/phase2.10_prior/` is
-the release-diff baseline, deliberately not named `*_build` so
-`release.release_dirs()` ignores it. Everything shipped on 2026-08-30
-evening renders at the next build.
+**2.11 is built and awaits its release PR** (2026-09-01/02; HISTORY,
+"v2.11 — the operator rung, and the release the guards earned").
+Artefacts in `data/exports/phase2.11_build/`, diffed against
+`phase2.10_build`, synced to Drive with the sample verified, the Sheet
+refreshed in place; `index.html` ships in the release PR and
+`cloudrun/deploy.sh` publishes it on Luke's go. 2.10 remains the
+released base until then. Everything shipped on 2026-08-30 evening
+and since renders in it.
 
 **2.11 is the site / facility / campus effort** (Luke, 2026-08-31,
 redefining it: "the focus of 2.11 has evolved into the effort to make
@@ -1530,9 +1533,24 @@ field and is not publishable as it stands.
   would mark Camden's 23 live-but-challenged applications as dead.
 
   **Deferred past 2.10 by Luke, 2026-08-28, and recorded here so the
-  work does not need re-deriving.** The 26, as probed on that date —
-  a host that answers again later is a fix, not a regression, so
-  re-probe before acting rather than trusting this list:
+  work does not need re-deriving.** Re-probed 2026-09-01 before the
+  2.11 build, over 205 hosts behind 1,967 linked applications, with
+  `truststore` injected so incomplete certificate chains do not read
+  as dead (a first pass without it reported forty-odd "dead" hosts
+  that were nothing of the kind — the probe could not see): **16
+  dead** (the ten below that still resolve nowhere or time out, plus
+  Dundee's idoxwam host on a handshake timeout, Worcester, Wychavon and
+  Wokingham resetting the connection, Leeds timing out, and Selby on
+  an **expired certificate**), **5 challenged** (Camden and Portsmouth
+  as before; Sefton, South Oxfordshire and Vale of White Horse newly
+  answering 403 to a scripted HEAD), and nine other non-2xx answers
+  (Birmingham 503, Epping Forest 404, South Tyneside 500, Barnsley 405
+  to HEAD, Neath Port Talbot, Rhondda Cynon Taf and Newport 404). The
+  resets and timeouts may be transient or bot-shaped; the DNS failures
+  and the expired certificate are not. Still deferred; the 26, as
+  probed on 2026-08-28 — a host that answers again later is a fix, not
+  a regression, so re-probe before acting rather than trusting this
+  list:
 
     publicaccess.wycombe.gov.uk — Wycombe/08/05740/FULEA, Wycombe/22/06872/VCDN, Wycombe/24/07967/OUT, Wycombe/25/06079/MINAMD, Wycombe/25/06382/MINAMD
     planning.stoke.gov.uk — Stoke/65328/FUL, Stoke/65376/FUL, Stoke/65426/FUL, Stoke/65465/FUL

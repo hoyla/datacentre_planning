@@ -2443,6 +2443,95 @@ run, and those defaults were named and left alone.
 
 ---
 
+## v2.11 — the operator rung, and the release the guards earned (2026-09-01/02)
+
+Built and released across the evening of 1 September and the morning
+after, from a corpus that had moved a long way since 2.10 was stamped
+on 30 August: **501 sites** (508 rows in the reader with pre-planning),
+**1,978 applications**, 60,142 documents, 1,378,147 findings. The
+theme, as ROADMAP redefined 2.11 on 31 August, is *what a site's power
+figure means* — and the release carries the answer end to end.
+
+**What is in it.** The re-gate's 14,111 reinstated findings with their
+adjudication, correction, generation and label-audit passes; the
+machine readings re-run on `gpt-5`/`reading-1.4` (figure rate up 54%);
+the adjacent-power relationship table in place of membership (#252),
+and the reader's "Adjacent power" box; the operator-pages fold, typed
+standing, and `component_of`; the append-only snapshot store, its Drive
+copies and the 166 "our copy" links (WP-A to WP-C); Iron Mountain's
+roster and the five-campus reconciliation (WP-D); the NESO triage's
+five matches; and **the operator rung** (#333), decided on all seven
+points and built in a day — eight cells change, `at_least_100mw` goes
+42 → 44 gaining Stockley Park and Vantage Cardiff, and every one of the
+eight says on the row what it stands on and what the planning record
+says instead.
+
+**The chain, as run.** Steps 0 to 4 were no-ops or nearly — the
+materialise stamped 501 sites and changed none, the adjudication tail
+was empty, corrections zero, generation nothing to ask, the label audit
+one finding — which is the 31 August work having already been paid
+for. The readings were submitted the moment the corpus settled and
+collected before the final build (**47 sites, 0 withheld, 0
+unparseable**; the runbook gained step 4a for it, and the warning that
+the script's default model is not the one the readings run on). Backup
+verified and uploaded. The sync: **43 uploaded, 450 updated, 930
+moved, 0 failed, 303 pruned** — the 930 moves being the point of the
+next paragraph. Thirty sampled documents verified through to Drive
+with the right bytes under the right parent.
+
+**The staging guard fired, correctly, and adjacent power got a home.**
+The first staging build since #252 vetoed the class from membership
+found **743 held documents across 28 adjacent-power applications**
+with nowhere to go — all on Drive, four cited by machine readings —
+and a `--prune` sync would have binned them. They now sit under
+`adjacent_power/` beside `sites/` and `operator_snapshots/` (Luke:
+"next to, rather than inside, sites"), each folder's `_index.md`
+naming the sites the scheme stands beside and how that is known; the
+guard counts them as staged only once the build has written them, and
+the recorder and the verifier read the folder name from the builder
+(#338). The sync then recognised every one of them, and KLON-03's
+documents merged into Kao Harlow, as **moves** — md5 for md5 — so
+nothing was re-uploaded and no Drive id changed. The four citations
+never broke.
+
+**The release diff was the largest since 2.7 and was read, not
+counted.** Every FELL but one was the 30 August corpus movement 2.10
+predates: nine site keys gone (eight #252 retirements, the Kao merge),
+56 adjacent-power memberships out, the party and application counts
+following. The one that needed work — 168 site panels losing at least
+one link — split 21 adjacent-power departures (436 links) from 147
+others (2,039 links), and the 147 were the readings re-read: the
+machine-reading box halved on those sites while citation density held
+corpus-wide (2.78 → 2.74 links per thousand characters, the same
+"p.N · ref" form, the boxes 3.5% shorter in total). Shorter readings,
+not unlinked ones. The "Only adjacent power" filter control went with
+the class it filtered.
+
+**Two guards caught the release's own tooling, which is what they are
+for.** The step-10 verifier reported 30 of 30 sampled documents as
+never uploaded while the sync had just cached 57,109 of them: R7 had
+made the verifier's staging default absolute against a ledger keyed
+repository-relative, and its exact-string lookup could not see the
+match the recorder made on the path's tail (#339). And the dead-host
+probe's first pass reported forty-odd dead hosts that were nothing of
+the kind — incomplete certificate chains the adapters handle with
+`truststore` and a bare `urllib` does not; with it injected, 16 dead
+and 5 challenged, recorded in ROADMAP against the 28 August list.
+Both are the shape this file keeps recording: a probe that cannot see
+what it is looking for, reported as absence.
+
+**Also carried.** The runbook's "two known contradicted sites" named
+West London for a month after the export-limit rule removed it;
+Ferrybridge C has stood in its place since at least 28 August (grid
+100 MW equalling storage 100 MW — a battery connection typed as the
+data centre's, most likely, and a person's row). Pinpoint tranche 5 is
+five files across three sites — the corpus barely moved in documents,
+which is the release's shape. The notebook needed nothing added: the
+only sites new since 2.10 are the two procedural singletons the #252
+chain stranded, outside the datacentre-only export.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across
