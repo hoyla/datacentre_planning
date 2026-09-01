@@ -5,7 +5,9 @@ it read on the day a figure was taken from it — and a reporter checking
 a claim should reach that copy the same way they reach a planning
 document: a Drive link beside the source URL, not an instruction to
 clone a repository. This module answers "which Drive file is this
-snapshot", and nothing else.
+snapshot" — and, for one claim at a time, "which Drive file is the
+evidence *this reading* was taken from", which is a narrower question
+and the one a link has to get right.
 
 **By id, never by derivation.** The same rule as
 `document_drive_files`, and for the same reason: a derived location
@@ -83,6 +85,47 @@ def url_for(filename: str, ledger: dict[str, dict] | None = None) -> str:
     ledger = load_ledger() if ledger is None else ledger
     meta = ledger.get(filename)
     return drive.file_url(meta["file_id"]) if meta else ""
+
+
+def copy_url(slug: str,
+             as_at=None,
+             quote: str = "",
+             snapshot_dir: Path | None = None,
+             ledger: dict[str, dict] | None = None) -> str | None:
+    """The Drive link for one claim's own evidence, or None.
+
+    **The quote is the discriminator, not the date.** A date rule alone
+    would have linked CyrusOne LON1's superseded 8.72 MW reading to the
+    file that reads 9 MW: a working link, under a citation naming a
+    different figure, which is the exact failure `document_drive_files`
+    exists to prevent one layer up. So a claim links the nearest held
+    file *in which its own quote appears*, and links nothing otherwise.
+
+    None in three cases, all of them the same refusal: no candidate file
+    contains the quote, the claim carries no quote to check, or the file
+    that does contain it has no Drive id recorded. A guessed link is
+    worse than no link — the reporter cannot tell one from the other,
+    and the source URL beside it is still there.
+
+    The gate's own normaliser does the comparing, so a link is offered
+    on exactly the terms `verify_operator_quotes` admits a claim on.
+    """
+    from dcp.capacity_claims import (OPERATOR_SNAPSHOT_DIR, _norm_ws,
+                                     snapshot_candidates)
+
+    want = _norm_ws(str(quote or ""))
+    if not want:
+        return None
+    where = OPERATOR_SNAPSHOT_DIR if snapshot_dir is None else snapshot_dir
+    candidates = snapshot_candidates(str(slug or ""), as_at, where)
+    if not candidates:
+        return None
+    ledger = load_ledger() if ledger is None else ledger
+    for path in candidates:
+        if want in _norm_ws(path.read_text(encoding="utf-8")):
+            meta = ledger.get(path.name)
+            return drive.file_url(meta["file_id"]) if meta else None
+    return None
 
 
 def unsynced(snapshot_dir: Path, ledger: dict[str, dict] | None = None) -> list[Path]:

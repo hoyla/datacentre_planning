@@ -1372,29 +1372,53 @@ field and is not publishable as it stands.
   workbook's own sheet. Deferred past 2.10 because the artefacts were
   built and diffed when it surfaced.
 
-- **Link the snapshots from the reader and workbook.** Step 3 of the
-  chain opened on 2026-09-01 when Luke asked about linking snapshots
-  from the reader. **Steps 1 and 2 shipped the same day** — the store
-  is append-only, and all 81 snapshots are on Drive under
-  `operator_snapshots` with their file ids in
-  `data/external_sources/operator_snapshots_drive.yaml` (HISTORY, "The
-  snapshot store becomes append-only" and "The snapshots reach Drive").
+- ~~**Link the snapshots from the reader and workbook.**~~ **All three
+  steps shipped 2026-09-01**, the day Luke asked about linking
+  snapshots from the reader: the store is append-only, every snapshot
+  is on Drive under `operator_snapshots` with its file id in
+  `data/external_sources/operator_snapshots_drive.yaml`, and the claims
+  now render the link (HISTORY, "The snapshot store becomes
+  append-only", "The snapshots reach Drive" and "A claim links its own
+  evidence"). Kept here for the resolution rule, which is not what this
+  item predicted, and for the two follow-ons below.
 
-  What is left: each operator and green claim renders a link to our
-  copy beside the source URL it already shows, exactly as a document
-  carries its Drive copy beside the register link. The resolution rule
-  is the part that needs care — **a claim links the snapshot that
-  existed at its `as_at`, not the newest one.** That is the whole point
-  of the append-only store: CyrusOne LON1 read 8.72 MW on 2026-08-20
-  and 9 MW on 2026-08-28, and the older reading's link has to reach the
-  older evidence or the link is worse than none. `dcp/snapshot_drive.py`
-  resolves a filename to a Drive URL today; picking the filename from a
-  claim's `as_at` is the piece to add, and it belongs beside
-  `capacity_claims.snapshot_path`.
+  **Step 3 shipped 2026-09-01** (HISTORY, "A claim links its own
+  evidence"). Each operator and green claim renders a link to our copy
+  beside the source URL it already shows, on five surfaces: the site
+  panel's claims box, the Operators tab, the green-claims table, and
+  the workbook's Capacity claims and Figures by audience sheets. The
+  emphasis is deliberately the mirror of a document's — the published
+  page stays the primary link because it is what a story cites, and our
+  copy is the labelled second.
 
-  Luke reviews the rendering before it ships. The spec is WP-C of
+  **The resolution rule turned out to be the quote, not the date**, and
+  that is the correction this item most needed. It was written here as
+  *a claim links the snapshot that existed at its `as_at`*, which is
+  necessary and not sufficient: the store holds no file for a reading
+  taken before it became append-only, so CyrusOne LON1's 8.72 MW row —
+  which carries no `as_at` at all, and which stands in
+  `capacity_claims` only rather than in `operator-claims.yaml` — would
+  have fallen through any date rule onto the 2026-08-30 file that
+  reads 9 MW. Those two facts about the row were read off the database
+  rather than taken from the spec, which asserted an `as_at` of
+  2026-08-20 that the row does not carry. A claim now links the
+  nearest held file *in which its own verbatim quote appears*, on the
+  gate's own whitespace normalisation, and links nothing otherwise. As
+  built: `capacity_claims.snapshot_candidates` orders the store around a
+  reading's date and `snapshot_drive.copy_url` picks the file the quote
+  is actually in. 80 of the 81 operator rows in the database resolve;
+  the one that does not is that 8.72 MW row, which is what the design
+  is for. Every committed YAML claim resolves — the two populations
+  differ, because the YAML holds current readings only and the ghost
+  row is in the database alone.
+
+  Luke reviews the rendering before it ships. The spec was WP-C of
   [docs/HANDOVER_SNAPSHOT_CHAIN.md](docs/HANDOVER_SNAPSHOT_CHAIN.md);
   ROADMAP stays the inbox.
+
+  **Not done here, and named rather than folded in**: the DuckDB's
+  claims tables carry no such column, so a reporter working from the
+  database still reaches only the source URL.
 
   **A latent trap noticed during the WP-A work, and not caused by it.**
   `dcp/site_facilities.py` defaults both its priors path and its

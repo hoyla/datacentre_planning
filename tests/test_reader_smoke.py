@@ -33,6 +33,7 @@ fixture would not exercise the real markup.
 
 from __future__ import annotations
 
+import os
 import pathlib
 import re
 
@@ -632,3 +633,60 @@ def test_no_link_in_the_built_page_points_at_a_filesystem(built_reader):
         f"corpus holds 52,908 documents and the reader cites thousands, "
         f"so this looks like the map failed to build rather than a page "
         f"that genuinely cites nothing")
+
+
+@pytest.mark.integration
+def test_every_our_copy_link_names_a_snapshot_this_repository_holds(built_reader):
+    """The same check as the one above, for the claims channel.
+
+    A claim's "our copy" link is resolved from the claim's own quote
+    against the append-only snapshot store, then from the file's
+    recorded Drive id. Both halves can fail silently: a resolution that
+    picked the wrong file would render a link that works and shows
+    evidence for a different figure, and a file with no ledger entry
+    would render nothing at all. So this reads the built bytes and
+    asserts the property — every rendered our-copy href names a file id
+    in the committed ledger — rather than trusting the helper, which
+    cannot see a call site that resolved by hand.
+    """
+    import urllib.parse
+
+    from dcp import snapshot_drive as sd
+    html = pathlib.Path(urllib.parse.urlparse(built_reader).path).read_text()
+    hrefs = re.findall(r'<a class="oursnap" href="([^"]+)"', html)
+    ids = {m["file_id"] for m in sd.load_ledger().values()}
+    stray = sorted({h for h in hrefs
+                    if not re.fullmatch(
+                        r"https://drive\.google\.com/file/d/([^/]+)/view", h)
+                    or re.fullmatch(
+                        r"https://drive\.google\.com/file/d/([^/]+)/view",
+                        h).group(1) not in ids})
+    assert not stray, (
+        f"{len(stray)} our-copy links do not name a snapshot in "
+        f"data/external_sources/operator_snapshots_drive.yaml, e.g. "
+        f"{stray[:3]} — a claim must link its own evidence or nothing")
+
+    # And the positive half, so a build that resolved nothing at all
+    # cannot pass by rendering no links — the check above is vacuous on
+    # an empty set.
+    #
+    # **Only against a reader this code built.** CI drives the committed
+    # `index.html`, which is a *released* artefact: it predates this
+    # feature and correctly carries no our-copy links, so a count
+    # asserted there measures the age of the release rather than the
+    # behaviour of the code, and fails every PR until the next build is
+    # published. That is how this test failed on its first CI run.
+    # The released page still gets the stray check above, which is the
+    # half that must never fail on bytes about to be served.
+    #
+    # What covers the gap in CI: `test_snapshot_drive.py` asserts every
+    # committed claim resolves to a ledgered file, and that the three
+    # reader surfaces call the helper — neither needs a build.
+    if os.environ.get("READER_HTML"):
+        pytest.skip("READER_HTML names a reader built earlier; a link "
+                    "count belongs to a build made from this code")
+    assert len(hrefs) > 50, (
+        f"only {len(hrefs)} claims offer our copy of the page they were "
+        f"read from; the store holds 84 snapshots behind 81 operator "
+        f"claims and six green claims, so this looks like resolution "
+        f"failed rather than a corpus that genuinely cites nothing")

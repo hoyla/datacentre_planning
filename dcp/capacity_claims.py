@@ -365,6 +365,58 @@ def snapshot_path(slug: str,
     return legacy if legacy.exists() else None
 
 
+# A slug names a file, so it may not reach outside the store or carry
+# glob metacharacters. Every locator in `capacity_claims` is fed through
+# here — the NESO register's "row 47", a filing's "page 12" — and those
+# resolve to nothing by design rather than by luck, because a slug is
+# what an operator claim carries and nothing else does. The guard is for
+# the shapes a glob would read as a pattern instead of a name.
+_SLUG_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+
+def snapshot_candidates(slug: str,
+                        as_at: date | None = None,
+                        snapshot_dir: Path = OPERATOR_SNAPSHOT_DIR) -> list[Path]:
+    """Held snapshots for a slug, nearest a reading's date first.
+
+    `snapshot_path` answers "what does this page say now", which is what
+    the quote gates want. This answers a different question: **which
+    held file evidences a particular reading**, which is the one a link
+    beside a claim has to get right. The store is append-only and a
+    claim is a row in it, so one slug has many files and each claim
+    belongs to one of them.
+
+    The order is directional rather than symmetric. First the files that
+    existed when the reading was taken, newest first — that is the
+    evidence the reading was actually made against. Then the later ones,
+    oldest first, because a reading routinely predates the next
+    re-fetch: CyrusOne LON1's current 9 MW is dated 2026-08-28 against a
+    snapshot of 2026-08-30, and the page had not changed between them.
+    With no `as_at` the whole store is offered newest first, which is
+    what a claim asserting the current page means.
+
+    Order alone never decides the link — the caller checks each
+    candidate for the claim's own quote — so this is a search order and
+    not an answer. The legacy undated name sorts last, where it can only
+    ever be a fallback.
+    """
+    if not _SLUG_RE.match(str(slug or "")):
+        return []
+    dated = sorted(snapshot_dir.glob(f"{slug}.*.txt"), key=_snapshot_order)
+    dated = [p for p in dated if _DATED_SNAPSHOT_RE.search(p.name)]
+    if as_at is None:
+        out = list(reversed(dated))
+    else:
+        stamp = as_at.isoformat()
+        before = [p for p in dated if _snapshot_order(p)[0] <= stamp]
+        after = [p for p in dated if _snapshot_order(p)[0] > stamp]
+        out = list(reversed(before)) + after
+    legacy = snapshot_dir / f"{slug}.txt"
+    if legacy.exists():
+        out.append(legacy)
+    return out
+
+
 def _norm_ws(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
@@ -532,7 +584,7 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
                m.method, m.confidence, m.evidence,
                cl.attrs->>'operator', cl.attrs->>'operator_term',
                cl.value_original, cl.unit_original, cl.stage,
-               cl.attrs->>'component_of'
+               cl.attrs->>'component_of', cl.attrs->>'quote'
         FROM capacity_claim_matches m
         JOIN capacity_claims cl ON cl.id = m.claim_id
         JOIN sites s ON s.id = m.site_id
@@ -541,7 +593,8 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
     out: dict[str, list[dict]] = {}
     for (key, name, mw, qty, point, conn_date, as_at, src, url, locator,
          method, confidence, evidence, operator, term,
-         value_original, unit_original, stage, component_of) in cur.fetchall():
+         value_original, unit_original, stage, component_of,
+         quote) in cur.fetchall():
         out.setdefault(key, []).append({
             "claim_name": name, "value_mw": mw, "quantity_type": qty,
             "connection_point": point, "connection_date": conn_date,
@@ -551,6 +604,12 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
             "operator": operator, "operator_term": term,
             "value_original": value_original, "unit_original": unit_original,
             "stage": stage, "component_of": component_of,
+            # The verbatim span the figure was read from. Carried here
+            # because it is what resolves this reading to the snapshot
+            # it was taken from: the store is append-only, so a slug and
+            # a date are not enough to say which file a link may point
+            # at (dcp/snapshot_drive.copy_url).
+            "quote": quote,
         })
     return out
 
@@ -566,7 +625,7 @@ def load_claim_rows(cur) -> list[dict]:
                cl.attrs->>'existing_connection_date',
                cl.as_at, cl.source_key, cl.source_url, cl.source_locator,
                s.site_key, s.display_name,
-               m.method, m.confidence, m.evidence
+               m.method, m.confidence, m.evidence, cl.attrs->>'quote'
         FROM capacity_claims cl
         LEFT JOIN capacity_claim_matches m
                ON m.claim_id = cl.id AND m.retired_at IS NULL
@@ -575,7 +634,7 @@ def load_claim_rows(cur) -> list[dict]:
     cols = ("claim_name", "value_mw", "quantity_type", "connection_point",
             "connection_date", "as_at", "source_key", "source_url",
             "source_locator", "site_key", "site_name",
-            "method", "confidence", "evidence")
+            "method", "confidence", "evidence", "quote")
     rows = [dict(zip(cols, r)) for r in cur.fetchall()]
     # A matched claim names its site in the workbook sheet and the
     # reader's claims table, both of which the alias covers. Unmatched
