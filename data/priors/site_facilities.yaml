@@ -23,7 +23,21 @@
 #     claim_name) OR a planning document (by `document_sha256`, the
 #     content address the document store itself uses) — never both,
 #     never neither, and never a value of its own. No megawatt is
-#     restated here.
+#     restated here, and the loader rejects one mechanically.
+#
+# That last rule is the load-bearing one (agreed with Luke,
+# 2026-09-01), and it is what stops this file and its neighbours
+# becoming competing sources of truth: a figure lives in exactly ONE
+# place — the claims store, snapshot- or document-backed and
+# quote-verified — and this file only points at it. A value copied
+# into a second file is a value that keeps being asserted after its
+# source moves (CyrusOne's LON1 went 8.72 → 9 MW in eight days;
+# the claims store holds both readings, and any copy elsewhere would
+# still say 8.72 with nothing to check it against). The same division
+# runs the other way: site_aliases.yaml answers what a place is
+# called and why, and its notes may cite figures as naming evidence,
+# but a facility ROSTER — facilities enumerated, with or without
+# figures — lives here alone.
 #
 # Every reference is to something held, not merely to a URL. An
 # operator roster names the snapshot in
