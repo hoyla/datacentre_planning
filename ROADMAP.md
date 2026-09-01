@@ -435,12 +435,50 @@ optional `campus:` per facility would fix it. **Not added**: an unread
 field is a decision for the review rather than for the file, which is
 why PR #305 was closed.
 
-**Iron Mountain cannot be tested at all yet** (re-probed 2026-09-01,
-two requests three seconds apart, both **HTTP 429**). Its 61 MW
-calibration case — 8.7 + 27 + 25 against a stated 61 — still rests on
-pages this project does not hold, exactly as recorded under Parked. The
-facility prior refuses the roster for that reason, which is its
-held-copy contract working rather than an obstacle.
+**Iron Mountain: the block is not what this file said, and the
+calibration case is weaker than it said** (2026-09-01, after Luke
+asked which URL was being used — the question was the useful part).
+
+*A first pass here recorded "cannot be tested at all", on two 429s.
+That was the probe-that-could-not-see error again: a 429 from a
+scripted client says nothing about whether a page exists.*
+
+**The URLs in `fetch_operator_snapshots.py` are correct.** What is
+wrong is the diagnosis: `ironmountain.com` returns **429 site-wide**,
+its own homepage included, so this is a bot block wearing a rate
+limit's status code and **"retry with backoff" can never work** — the
+same shape as the Camden and Portsmouth 403s this file already warns
+are challenges rather than dead hosts. A real browser reads every page
+straight away, so the route is the browser-assisted one this project
+already has (`scripts/browser_receiver.py`, docs/PORTAL_NOTES.md), not
+a gentler HTTP client.
+
+**What the pages actually say**, read 2026-09-01:
+
+| page | states |
+|---|---|
+| London campus | "Our campus features three facilities — LON-1, LON-2, and LON-3", **61 MW** total, 40,200 m² |
+| LON-1 | **8.75 MW**, 10,400 m², four data halls, former banking facility |
+| LON-3 | **25 MW** critical IT capacity, 5,200 m², six halls, opening 2026 |
+| LON-2 | **404 — no page exists**, though the campus page names it |
+
+So **this is not the self-auditing case this file has been calling
+it.** The published per-facility figures reach 33.75 MW of a stated
+61; the ~27 MW this file attributes to LON-2 is published nowhere on
+Iron Mountain's site, and subtracting it out of the campus total would
+be our arithmetic, not their disclosure. Iron Mountain is a *partial*
+roster of the Stockley Park kind — three facilities named, two
+disclosing — and **Saunderton remains the only campus whose own
+arithmetic checks itself**. Where this file's "8.7 + 27 + 25 = 60.7"
+came from needs establishing before it is repeated; LON-1's page gives
+8.75, not 8.7, and prints it once as "8,75 MW", which is a
+transcription hazard of its own. That page also contradicts itself on
+floor area — 10,400 m² in prose against "14.000" in its stat block,
+where the shared 112,000 sq ft equals the former.
+
+A roster is therefore writable once the three pages are snapshotted
+through the browser route, and not before: the prior's held-copy
+contract is what stops it being written from what is on this screen.
 Two substation applications at *Land to West of East India Dock House*
 belong to none of the four and are what raised #252.
 
