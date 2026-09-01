@@ -28,6 +28,18 @@ Some pages render capacity only through JavaScript counters that read "0"
 in the raw HTML (Ark's Webflow counters, Kao's Elementor blocks); their
 real values sit in attributes, which is why those are captured too.
 
+**A page a bot block will not serve is harvested in a browser.**
+`--from-file` stores raw bytes captured elsewhere through exactly the
+code a direct fetch uses, so the format cannot fork; `# obtained:`
+records which route the file came by. Two rules travel with it. The
+bytes must be what the server *sent* — never a browser's rendered text,
+because content inside a collapsed `<details>` accordion is in the DOM
+and not in `innerText`, and capturing that way produced a wrong
+"published nowhere" finding about Iron Mountain on 2026-09-01. And the
+URL comes from `PAGES` rather than the command line, so a snapshot
+always names a page this project curated. Route and rules:
+docs/PORTAL_NOTES.md.
+
 **A PDF is a page here too.** Operators publish their per-facility
 figures in spec sheets as often as in HTML, and until 2026-08-31 this
 fetcher decoded every response as text and so could not hold one —
@@ -59,7 +71,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
-from dcp.capacity_claims import snapshot_path  # noqa: E402
+from dcp.capacity_claims import snapshot_path
 
 OUT = ROOT / "data" / "external_sources" / "operator_snapshots"
 
@@ -135,9 +147,17 @@ PAGES: dict[str, list[tuple[str, str]]] = {
     # 8.7 + 27 + 25 = 60.7 against a stated 61 MW. The rarest thing in
     # this survey — an operator whose total and breakdown check each
     # other (Luke, 2026-08-28).
+    # Behind Vercel Attack Challenge Mode, so every direct fetch returns
+    # 429 with `x-vercel-mitigated: challenge` — the whole host, its own
+    # homepage included. Held via --from-file, per this module's
+    # browser-harvest note. LON-2 has no page: it 404s, and the campus
+    # FAQ plus a 2021 investor-relations announcement are the only
+    # places its 27 MW is published.
     "ironmountain": [
         ("ironmountain-london-campus",
          "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london"),
+        ("ironmountain-lon1",
+         "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-1"),
         ("ironmountain-lon3",
          "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-3"),
     ],
@@ -320,7 +340,11 @@ def held_digest(path: Path | None) -> str | None:
     """
     if path is None or not path.exists():
         return None
-    for line in path.read_text(encoding="utf-8").splitlines()[:6]:
+    # Ten lines, not six: the header has grown once already, and a
+    # digest that scrolls out of the window would make every re-fetch
+    # look changed — a silent failure of the no-op property rather than
+    # a loud one.
+    for line in path.read_text(encoding="utf-8").splitlines()[:10]:
         m = _DIGEST_RE.match(line)
         if m:
             return m.group(1)
@@ -344,30 +368,23 @@ def next_name(slug: str, day: str, out: Path) -> str:
     return name
 
 
-def snapshot(slug: str, url: str, out: Path = OUT) -> Path | None:
-    """Fetch, and write a new dated snapshot only if anything changed.
+def render(url: str, raw_bytes: bytes, day: str, obtained: str) -> str:
+    """The snapshot file's text, from the bytes an operator served.
 
-    Returns the file written, or None when the bytes served are the
-    bytes already held — the store is append-only, so a sweep over
-    unchanged pages must add nothing rather than restate 81 files under
-    a new date.
+    Separated from the fetch so a page held by a browser harvest goes
+    through exactly this code rather than a second implementation of
+    the format. Whoever fetched it, the file is built the same way, and
+    `# obtained:` records which route it came by — the same provenance
+    the document store keeps per document, and the reason it is last in
+    the header: everything that reads a fixed number of header lines
+    reads them from the top.
     """
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        raw_bytes = r.read()
-    # The hash names what was hashed: the bytes the operator served, so
-    # a re-fetch that returns a byte-identical document is visible as
-    # such whichever kind it is.
     digest = hashlib.sha256(raw_bytes).hexdigest()
-    if held_digest(snapshot_path(slug, out)) == digest:
-        return None
-    # One reading of the clock, so the name and the header can never
-    # disagree about which day this was fetched on.
-    day = dt.datetime.now(dt.UTC).date().isoformat()
     if is_pdf(raw_bytes):
         head = [f"# url: {url}",
                 f"# fetched: {day}",
                 f"# sha256(pdf): {digest}",
+                f"# obtained: {obtained}",
                 "## STRUCTURED",
                 "(none — PDF)",
                 "## VISIBLE TEXT",
@@ -377,13 +394,41 @@ def snapshot(slug: str, url: str, out: Path = OUT) -> Path | None:
         head = [f"# url: {url}",
                 f"# fetched: {day}",
                 f"# sha256(html): {digest}",
+                f"# obtained: {obtained}",
                 "## STRUCTURED",
                 "\n\n".join(structured(raw)) or "(none)",
                 "## VISIBLE TEXT",
                 visible_text(raw)]
+    return "\n\n".join(head)
+
+
+def store(slug: str, url: str, raw_bytes: bytes, out: Path,
+          obtained: str) -> Path | None:
+    """Write a new dated snapshot, or nothing if the bytes are unchanged.
+
+    The store is append-only, so a sweep over unchanged pages must add
+    nothing rather than restate 81 files under a new date.
+    """
+    # The hash names what was hashed: the bytes the operator served, so
+    # a re-fetch that returns a byte-identical document is visible as
+    # such whichever kind it is.
+    if held_digest(snapshot_path(slug, out)) == hashlib.sha256(
+            raw_bytes).hexdigest():
+        return None
+    # One reading of the clock, so the name and the header can never
+    # disagree about which day this was fetched on.
+    day = dt.datetime.now(dt.UTC).date().isoformat()
     dest = out / next_name(slug, day, out)
-    dest.write_text("\n\n".join(head))
+    dest.write_text(render(url, raw_bytes, day, obtained))
     return dest
+
+
+def snapshot(slug: str, url: str, out: Path = OUT) -> Path | None:
+    """Fetch the page and store it. None if nothing changed."""
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        raw_bytes = r.read()
+    return store(slug, url, raw_bytes, out, "direct")
 
 
 def main() -> int:
@@ -392,8 +437,32 @@ def main() -> int:
     ap.add_argument("--slug", help="one page slug, to add or refresh a "
                                    "single snapshot without touching its "
                                    "neighbours")
+    ap.add_argument("--from-file", type=Path,
+                    help="store a page harvested in a browser instead of "
+                         "fetching it. Requires --slug; the URL comes from "
+                         "PAGES, so the snapshot names the page this "
+                         "project curated rather than whatever was typed. "
+                         "Must be the RAW bytes the server sent — never a "
+                         "browser's rendered text.")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
+
+    if args.from_file:
+        if not args.slug:
+            ap.error("--from-file needs --slug, so the URL is the curated one")
+        urls = {slug: url for pages in PAGES.values() for slug, url in pages}
+        if args.slug not in urls:
+            ap.error(f"{args.slug} is not a registered page; add it to PAGES "
+                     f"first, so a snapshot always has a curated URL behind it")
+        p = store(args.slug, urls[args.slug], args.from_file.read_bytes(),
+                  OUT, "browser")
+        if p is None:
+            print(f"  {args.slug:<34} {'unchanged':>9}")
+        else:
+            print(f"  {p.name:<34} {p.stat().st_size/1000:>6.1f} kB  "
+                  f"{urls[args.slug]}")
+        return 0
+
     keys = [args.only] if args.only else list(PAGES)
     for k in keys:
         for slug, url in PAGES[k]:

@@ -19,6 +19,41 @@ Two rules learned the hard way, and they are not optional:
   "no documents" converts our access failure into a false claim about a
   council.
 
+A third rule, added 2026-09-01 and not specific to registers:
+
+- **Harvest the bytes the server sent, never the browser's rendered
+  text.** `innerText` omits anything inside a collapsed `<details>`
+  accordion — the content is in the DOM and not in the rendering — and
+  it omits it silently. Same-origin `fetch(url, {credentials:'include'})`
+  inside the page returns the served response body, which is what the
+  receiver should be given. This is not theoretical: reading Iron
+  Mountain's campus page through rendered text produced a wrong
+  "published nowhere" finding about a figure that was in the HTML all
+  along.
+
+  Note the loopback receiver needs a browser that permits `fetch` to
+  `http://127.0.0.1` from an HTTPS page. Chrome does, because loopback
+  is a potentially-trustworthy origin. Some embedded browsers block it
+  outright, and then the harvest has to run in Chrome.
+
+## Operator pages behind a challenge — not a register, same problem
+
+`scripts/fetch_operator_snapshots.py --slug <slug> --from-file <path>`
+stores a page captured this way through exactly the code a direct fetch
+uses, so the snapshot format cannot fork, and writes `# obtained:
+browser` in the header so the route is part of the record. The URL comes
+from the script's own `PAGES` rather than the command line, so a
+snapshot always names a page this project curated.
+
+**ironmountain.com** is the worked case. Every scripted client gets
+`HTTP 429` — the whole host, its own homepage included — carrying
+`x-vercel-mitigated: challenge` and an `x-vercel-challenge-token`. That
+is Vercel Attack Challenge Mode, not a rate limit, so backoff can never
+reach it and no header profile helps: a current Chrome UA, the full
+`sec-ch-ua` / `Sec-Fetch-*` set and the exact UA of a passing browser
+were each tried and each got 429. The campus page, `lon-1` and `lon-3`
+are held; `lon-2` 404s and has no page to hold.
+
 ## Coventry — `planandregulatory.coventry.gov.uk` (28 applications)
 
 AWS WAF. Scripted clients get `HTTP 202` with an empty body; a challenged

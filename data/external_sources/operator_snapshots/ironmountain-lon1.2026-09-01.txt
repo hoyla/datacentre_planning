@@ -1,0 +1,201 @@
+# url: https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-1
+
+# fetched: 2026-09-01
+
+# sha256(html): 0a5cf122d34ad95dc75109c6c63d55483f53c0c2bac0bac94c9ddaf621e609fc
+
+# obtained: browser
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@type": "Corporation",
+ "alternateName": "Iron Mountain",
+ "logo": "https://media.ironmountain.com/-/media/images/iron-mountain/icons/Global/logo-iron-mountain.svg?rev=8b582b0e4f844fbdb185c70b95e932d5&sc_lang=en",
+ "name": "Iron Mountain",
+ "sameAs": [
+  "https://www.facebook.com/ironmountain",
+  "https://twitter.com/ironmountain",
+  "https://www.youtube.com/user/ironmountain",
+  "https://www.linkedin.com/company/iron-mountain/"
+ ],
+ "url": "https://www.ironmountain.com/"
+}
+
+{
+ "@context": "https://schema.org/",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb",
+   "name": "Homepage",
+   "pageTitle": "Homepage",
+   "position": 0,
+   "url": "https://www.ironmountain.com/en-gb"
+  },
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb/data-centers",
+   "name": "Data centers",
+   "pageTitle": "Data centers",
+   "position": 1,
+   "url": "https://www.ironmountain.com/en-gb/data-centers"
+  },
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london",
+   "name": "London data centers",
+   "pageTitle": "London data centers",
+   "position": 2,
+   "url": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london"
+  },
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-1",
+   "name": "LON-1 data center",
+   "pageTitle": "LON-1 data center",
+   "position": 3,
+   "url": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london/lon-1"
+  }
+ ]
+}
+
+{
+ "@context": "https://schema.org/",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>LON-1 was originally built to Fortune 1000 banking standards for Credit Suisse, providing infrastructure reliability and security that exceeds typical colocation facilities. The facility combines this banking-grade foundation with extensive upgrades, carrier-neutral connectivity to 15+ on-site providers, direct LINX exchange access, and a strategic location in the heart of the Slough data center corridor\u2014one of Europe's most densely interconnected network hubs. This heritage makes LON-1 an ideal location for financial services organizations that require the highest levels of physical security, operational resilience, and regulatory compliance for their mission-critical infrastructure.\n</p>"
+   },
+   "name": "What makes LON-1 unique among London area data centers? "
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>Iron Mountain operates two additional london facilities (LON-2 and LON-3), along with data centers in Amsterdam, Frankfurt, and Madrid. This European footprint enables customers to deploy distributed architectures with consistent service levels, private network connectivity between facilities, and access to our full portfolio of colocation, connectivity, and cloud services. Visit <a rel=\"noopener noreferrer\" href=\"https://www.ironmountain.com/en-gb/data-centers\" target=\"_blank\" data-clickable-id=\"richtext-anchor-link\" data-clickable-href=\"https://www.ironmountain.com/en-gb/data-centers\" data-clickable-text=\"our UK data centres page\">our UK data centres page</a> to explore all locations.\n</p>"
+   },
+   "name": "What other data center facilities does Iron Mountain operate in the UK and Europe?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>LON-1 is a 10,400 square meter (approximately 112,000 square feet) facility with four data halls and 8.75 MW of total power capacity. The facility provides flexible deployment options from individual colocation cabinets to dedicated cages on traditional raised floor infrastructure. Power delivery features N+1 block redundancy to ensure continuous operations.\n</p>"
+   },
+   "name": "How much power and space is available at LON-1? "
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>LON-1 implements multi-layered physical security, including two-factor access (badge + PIN) to enter the facility and three-factor authentication (badge + PIN + biometrics) to access data halls through security vestibules. The facility maintains comprehensive compliance certifications, including SOC 2 Type II, SOC 3, PCI-DSS, HITRUST, and multiple ISO standards (27001, 22301, 50001, 14001, 45001). All security and compliance controls are regularly audited to ensure they meet the rigorous standards required by financial services, healthcare, and other regulated industries.</p>"
+   },
+   "name": "What security and compliance measures are in place at LON-1?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>Iron Mountain Data Centers is committed to environmental responsibility and helping customers achieve their sustainability objectives. LON-1 holds ISO 14001 (Environmental Management) and ISO 50001 (Energy Management) certifications. Customers can access our Green Power Pass program to report renewable energy usage and carbon reductions based on Iron Mountain's renewable energy contracts. As a top 10 EPA Green Power Partner in tech/telecom and signatory to the Renewable Energy Buyers Principles, we're invested in sustainable operations across our global portfolio.\n</p>"
+   },
+   "name": "How does LON-1 support sustainability and environmental goals?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>LON-1 offers extensive carrier-neutral connectivity, including 15 on-site carriers, direct connectivity to the LINX internet exchange, and dark fiber access to over 100 additional network service providers, cloud platforms, and IT service providers. The facility supports IP transit with redundant upstream providers, 10Gb and 100Gb metro wave services, campus cross-connects, and private network transport to other Iron Mountain data centers. With less than 1ms latency to the LD4 carrier hotel, LON-1 provides optimal access to cloud on-ramps from major providers including AWS, Azure, and Google Cloud.\n</p>"
+   },
+   "name": "What connectivity options are available at your London data centre (LON-1)? "
+  }
+ ]
+}
+
+## VISIBLE TEXT
+
+LON-1 London Data Center | London Colocation | Iron Mountain United Kingdom United Kingdom Contact Us Call us: +44 (0) 1782 654 710 Login | Account Iron Mountain Connect SecureSync ReQuest Web Wisetek Returntek Portal What we do Who we are Resources Support Get Started Main menu What we do Asset Lifecycle Management ALM Overview ALM for End-User Devices ALM for Data Centre Assets ALM Certifications & Standards Data Centers Technology Platforms InSight DXP Agentic AI Content Management & Governance Intelligent Document Processing Digital Human Resources solution Pensions Data Enrichment solution Invoice Processing solution Services Information Governance Advisory Services Offsite Tape Vaulting Retention and Privacy Policy Management Scanning and Digitization Intelligent Business Process Management (iBPM) Solutions Records Storage and Management Offsite Records and Document Storage Culling and cataloguing Inventory Management & Reporting Secure Shredding Clean Start Overview Smart Reveal Smart Sort Smart Assign Compass Shop Supplies Warehousing and Logistics Warehousing solutions United Kingdom and Ireland sites Technology and Innovation View All Services Business Challenges Digital Transformation End-to-End Data Management Sustainability Industry Financial Services Overview Insurance Banking Digital Back Office Digital Trade Back Office Digitization of the Aviation Industry Law Firms Heritage Preservation Library and Archives Supply Chain Energy Entertainment 1 4 Public Sector Retail Small Businesses Who we are About Iron Mountain Overview Certifications and Awards Code of Ethics Leadership Our History Why Choose Iron Mountain Careers Investors Newsroom Partners Sustainability Resources Blogs and Articles Videos and Webinars Solution Guides Whitepaper Customer Success Stories Infographics View All Resources Support Customer Support Centre Customer self support portal Change your region & language North America Canada English Canada French United States English Middle East North Africa And Turkey Bahrain Arabic Bahrain English Egypt Arabic Egypt English Jordan Arabic Jordan English Kuwait Arabic Kuwait English Morocco French Oman Arabic Oman English Qatar Arabic Qatar English Saudi Arabia Arabic Saudi Arabia English Turkey Turkish United Arab Emirates Arabic United Arab Emirates English Latin America Brazil Portuguese Mexico Spanish Argentina Spanish Chile Single Language Colombia Spanish Peru Single Language Europe and Southern Africa Austria German Belgium Dutch Belgium French Bulgaria Bulgarian Croatia Croatian Cyprus English Czech Republic Czech Denmark Danish Estonia Estonian Finland Finnish France French Germany German Greece Greek Hungary Hungarian Ireland English Latvia Latvian Lesotho English Lithuania Lithuanian Netherlands Dutch Norway Norwegian Poland Polish Romania Romanian Serbia Serbian Slovakia Slovak South Africa English Spain Single Language Sweden Swedish Switzerland French Switzerland German Switzerland English Ukraine Ukrainian United Kingdom English Asia-Pacific and India Australia China - Hong Kong SAR Chinese China - Hong Kong SAR English China - Mainland 中国-中文 India Indonesia English Indonesia Indonesian Korea Korean Malaysia English New Zealand English Philippines English Singapore English Taiwan Chinese Thailand Thai Vietnam Vietnamese Homepage Data centers London data centers LON-1 data center London LON-1 data center Former banking data center in Slough's premier corridor built for enterprise-grade colocation with LINX connectivity Get Your Quote LON-1 Data Centers London Campus LON-1 LON-3 Contact us Iron Mountain London LON-1 data center 
+ Located in the densely interconnected Slough data center corridor just west of the M25, LON-1 delivers enterprise-grade colocation with the reliability and security standards originally built for Fortune 1000 banking operations. This former banking data center facility has been extensively upgraded to offer 10,400 square meters (112,000 square feet) of space across four data halls with 8,75 MW of power capacity and N+1 block redundancy. LON-1 offers carrier-neutral, cloud-neutral connectivity, providing direct access to the LINX internet exchange, 15 on-site carriers, and dark fiber connections to over 100 network service providers, cloud platforms, and IT service providers. 
+ Download LON-1 brochure 14.000 square meters (112,000 square feet) 8.75 MW total power capacity 4.5 Acres Campus size Dual Fibre Links On-site network providers Contact Us LON-1 photo & video gallery LON-1 Virtual Tour Video London data center hall: LON-1 has 10,400 m2 and 8.75 MW of total capacity to meet your London colocation needs. London data center racks: With densities of up to 20 kW, data center racks are ideal for hyperconverged infrastructure and cloud. London data center generator yard: Our highly secure LON-1 data center offers multiple infrastructure designs, market-leading PUE and is concurrently maintainable. London data center lobby: Secure lobby entrance, offices, conference rooms and break rooms are all available at our London data center. Slough data center & london colocation entrance gates: LON-1 has secure check points to ensure our data center and guests are safe, secure and welcomed. London Data Center (LON-1) Floor Plan: LON-1's floor plan includes 6 data halls as well as a loading dock, office space, secure lobby and more. 
+ Schedule Your On-Site Tour Why leading enterprises choose our London data center (LON-1) LON-1 data center overview Facility Specifications Services & Amenities Location World-Class Connectivity Industry-Leading Compliance 
+ Size: 10,400 square meters (112,000 square feet) facility with four data halls on secure 4.5-acre campus in Slough data center corridor 
+ Power: 8.75 MW of total power capacity with N+1 block redundancy 
+ Infrastructure: Built to Fortune 1000 banking specifications with traditional raised floor construction 
+ Deployment Options: Colocation cabinets, dedicated cages and private suites for enterprise configurations 
+ Campus: Secure 4.5-acre site in Berkshire with diverse fiber entry points 
+ Cooling: N+1 block redundant cooling systems for continuous operations 
+ Utility: Slough Heat and Power 
+ Former Credit Suisse facility extensively upgraded and extended for enterprise requirements 
+ Diverse power feeds 
+ Potential for high-density configurations up to 15 kW (upon review) 
+ Matched by 100% renewable energy 
+ 
+ Security: Three-factor access (badge + PIN + biometrics) to data center floors with 24/7/365 on-site monitoring 
+ Smart Hands: Remote support services by skilled local professionals 
+ Migration: Professional equipment deployment and installation coordination services 
+ NOC Support: Customer portal access for service requests and account management 
+ Facilities: Shared work areas, complimentary conference rooms, guest Wi-Fi, and refreshment facilities 
+ Logistics: Secure equipment staging, delivery coordination, and temporary storage services 
+ Building Access: Two-factor facility access (badge + PIN) with 24/7/365 availability 
+ Loading: Industrial loading docks with lift gates accommodating box trucks to articulated lorries 
+ 
+ Service area: London, England; United Kingdom; EMEA region and beyond 
+ Distance: 30 km from central London 
+ Carrier Hotel: Coriander Ave, Poplar, London E14 2AA, UK & 2 Buckingham Ave, Slough SL1 4NB, UK 
+ Latency: Less than 1ms latency to LD4 carrier hotel 
+ Airport: <15 minutes from Heathrow Airport 
+ Location: Slough, Berkshire in the heart of the Slough data center corridor 
+ Strategic position west of M25 motorway with excellent transport connectivity 
+ Access via M4 and M25 motorways for rapid connectivity 
+ One of Europe's most densely interconnected data center corridors 
+ Proximity to London's major business and financial districts 
+ Adjacent to major European fiber routes and network infrastructure 
+ Access to skilled technical workforce across the Greater London region 
+ Address: 724-729 Dundee Road, Slough, SL1 4JU, UK 
+ Network Infrastructure: 
+ 
+ LINX On-Site: Direct connectivity to London Internet Exchange (LINX) 
+ Carrier-Neutral Facility: 15+ carriers, including BT Group, Cogent, Colt, euNetworks, GTT Communications, Hurricane Electric, Arelion, and Zayo 
+ Diverse Entry Points: Multiple fiber entry points with diverse routing paths for maximum redundancy 
+ Fiber Infrastructure: Multiple fiber providers, including C&W Communications, Verizon, Virgin Media, Vodafone, and Zayo 
+ Network-Rich Environment: Dark fiber access to 100+ network service providers, cloud platforms, and IT service providers 
+ 
+ Network Services: 
+ 
+ Cloud On-Ramps: Less than 1ms latency to LD4 carrier hotel connecting to major cloud providers (AWS, Microsoft Azure, Google Cloud) 
+ Cross Connects: Secure campus-wide connections to ecosystem of carriers, partners, and customers in Meet-Me-Rooms 
+ Direct Internet Access (DIA) & IP Transit: Redundant paths to multiple upstream providers, including Arelion, Lumen & Zayo, with burstable service supporting BGP and TCP/IP v4 or v6 
+ Metro Waves: Dedicated, diverse optical 10Gb and 100Gb waves to regional interconnection points 
+ Virtual Cross Connects/Private Network Transport: Point-to-point L2 connectivity between Iron Mountain data centers (Campus | Metro | National | International) 
+ Peering: Optimize network traffic and reduce costs through direct LINX exchange connections 
+ Comprehensive certifications meeting the most stringent regulatory and industry standards 
+ Global Standards (ISO Certifications): 
+ 
+ ISO 27001 (Information Security Management) 
+ ISO 50001 (Energy Management Systems) 
+ ISO 14001 (Environmental Management) 
+ ISO 45001 (Occupational Health & Safety) 
+ ISO 22301 (Business Continuity) 
+ 
+ Industry Standards: 
+ 
+ SOC 2 Type II certification for service organization controls 
+ SOC 3 certification for trust services criteria 
+ PCI-DSS certification for payment card industry data security 
+ HITRUST certification 
+ Want to learn more? Contact a data centre team member today! Join our growing customer base 
+ Iron Mountain Data Centers serves over 1,300 customers worldwide, including 95% of the Fortune 1000. Our London data center facility hosts enterprises across financial services, technology, healthcare, and media industries who rely on our carrier-neutral platform for their most critical infrastructure needs. Experience the same trusted partnership that has made Iron Mountain the preferred choice for highly regulated organizations requiring uncompromising security, compliance, and connectivity. 
+ Become a Customer Today Ready to experience the LON-1 advantage? 
+ Immediate next steps 
+ Schedule Site Tour Get Custom Quote 
+ Download Spec Sheet Frequently asked questions What makes LON-1 unique among London area data centers? LON-1 was originally built to Fortune 1000 banking standards for Credit Suisse, providing infrastructure reliability and security that exceeds typical colocation facilities. The facility combines this banking-grade foundation with extensive upgrades, carrier-neutral connectivity to 15+ on-site providers, direct LINX exchange access, and a strategic location in the heart of the Slough data center corridor—one of Europe's most densely interconnected network hubs. This heritage makes LON-1 an ideal location for financial services organizations that require the highest levels of physical security, operational resilience, and regulatory compliance for their mission-critical infrastructure.
+ What other data center facilities does Iron Mountain operate in the UK and Europe? Iron Mountain operates two additional london facilities (LON-2 and LON-3), along with data centers in Amsterdam, Frankfurt, and Madrid. This European footprint enables customers to deploy distributed architectures with consistent service levels, private network connectivity between facilities, and access to our full portfolio of colocation, connectivity, and cloud services. Visit our UK data centres page to explore all locations.
+ How much power and space is available at LON-1? LON-1 is a 10,400 square meter (approximately 112,000 square feet) facility with four data halls and 8.75 MW of total power capacity. The facility provides flexible deployment options from individual colocation cabinets to dedicated cages on traditional raised floor infrastructure. Power delivery features N+1 block redundancy to ensure continuous operations.
+ What security and compliance measures are in place at LON-1? LON-1 implements multi-layered physical security, including two-factor access (badge + PIN) to enter the facility and three-factor authentication (badge + PIN + biometrics) to access data halls through security vestibules. The facility maintains comprehensive compliance certifications, including SOC 2 Type II, SOC 3, PCI-DSS, HITRUST, and multiple ISO standards (27001, 22301, 50001, 14001, 45001). All security and compliance controls are regularly audited to ensure they meet the rigorous standards required by financial services, healthcare, and other regulated industries. How does LON-1 support sustainability and environmental goals? Iron Mountain Data Centers is committed to environmental responsibility and helping customers achieve their sustainability objectives. LON-1 holds ISO 14001 (Environmental Management) and ISO 50001 (Energy Management) certifications. Customers can access our Green Power Pass program to report renewable energy usage and carbon reductions based on Iron Mountain's renewable energy contracts. As a top 10 EPA Green Power Partner in tech/telecom and signatory to the Renewable Energy Buyers Principles, we're invested in sustainable operations across our global portfolio.
+ What connectivity options are available at your London data centre (LON-1)? LON-1 offers extensive carrier-neutral connectivity, including 15 on-site carriers, direct connectivity to the LINX internet exchange, and dark fiber access to over 100 additional network service providers, cloud platforms, and IT service providers. The facility supports IP transit with redundant upstream providers, 10Gb and 100Gb metro wave services, campus cross-connects, and private network transport to other Iron Mountain data centers. With less than 1ms latency to the LD4 carrier hotel, LON-1 provides optimal access to cloud on-ramps from major providers including AWS, Azure, and Google Cloud.
+ Contact us Follow: What we do Asset Lifecycle Management Data Centres Data and IT Security Digital Transformation Sustainability Solutions Workplace Evolution Industry solutions Entertainment Energy Financial Services Healthcare Law Firms Public Sector Small Business Solutions Who we are About Us Why Choose Iron Mountain Careers Certifications and Awards Partners Sustainability Quality Standards Anti-Slavery Statement Contact us Portal Login and Bill Pay Contact Sales Customer Support Call us at +44 (0) 1782 654 710 Resources Blogs and Articles Customer Success Stories Infographics Solution Guides Videos and Webinars Whitepapers View all resources Privacy notice Website terms and conditions Manage your privacy preferences © 2026 Iron Mountain, Inc.

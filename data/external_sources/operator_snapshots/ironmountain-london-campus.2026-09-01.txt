@@ -1,0 +1,155 @@
+# url: https://www.ironmountain.com/en-gb/data-centers/locations/emea/london
+
+# fetched: 2026-09-01
+
+# sha256(html): 297665c383f03454367d6ec2b551eca149813ad95e19f870fd24c0c5e28348a1
+
+# obtained: browser
+
+## STRUCTURED
+
+{
+ "@context": "https://schema.org",
+ "@type": "Corporation",
+ "alternateName": "Iron Mountain",
+ "logo": "https://media.ironmountain.com/-/media/images/iron-mountain/icons/Global/logo-iron-mountain.svg?rev=8b582b0e4f844fbdb185c70b95e932d5&sc_lang=en",
+ "name": "Iron Mountain",
+ "sameAs": [
+  "https://www.facebook.com/ironmountain",
+  "https://twitter.com/ironmountain",
+  "https://www.youtube.com/user/ironmountain",
+  "https://www.linkedin.com/company/iron-mountain/"
+ ],
+ "url": "https://www.ironmountain.com/"
+}
+
+{
+ "@context": "https://schema.org/",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb",
+   "name": "Homepage",
+   "pageTitle": "Homepage",
+   "position": 0,
+   "url": "https://www.ironmountain.com/en-gb"
+  },
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb/data-centers",
+   "name": "Data centers",
+   "pageTitle": "Data centers",
+   "position": 1,
+   "url": "https://www.ironmountain.com/en-gb/data-centers"
+  },
+  {
+   "@type": "ListItem",
+   "item": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london",
+   "name": "London data centers",
+   "pageTitle": "London data centers",
+   "position": 2,
+   "url": "https://www.ironmountain.com/en-gb/data-centers/locations/emea/london"
+  }
+ ]
+}
+
+{
+ "@context": "https://schema.org/",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>London, specifically the Slough corridor, represents one of Europe's most strategic data center markets due to its exceptional connectivity density. Slough hosts one of Europe's largest network ecosystems with direct access to LINX peering, over 100 network and cloud providers, and proximity to major subsea cable landing stations. The area west of the M25 combines this connectivity advantage with abundant power, land availability for expansion, and lower operating costs compared to central London - all while maintaining low-latency access to the City of London and UK markets.</p>"
+   },
+   "name": "What makes the London colocation and data center market unique? "
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>Slough has established itself as the prime United Kingdom data center corridor, offering critical advantages over central London: greater power availability to support high-density deployments, larger facility footprints enabling campus-scale operations, proximity to fiber routes and peering exchanges, and cost efficiencies - all while delivering sub-2-millisecond latency to central London. The concentration of data center providers and carriers in Slough creates a network-rich ecosystem that actually provides superior connectivity options compared to locations within the M25.</p>"
+   },
+   "name": "Why choose Slough over central London for data center operations?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>For London colocation, Iron Mountain operates three data center facilities in the greater London area, all located on our Slough campus. LON-1 offers 17,000 square meters (183,000 square feet) and 8.7 MW, originally a Credit Suisse facility that has been upgraded to current standards. LON-2 is a greenfield data center with 27 MW built for hyperscale requirements. LON-3 is currently under construction, with a planned capacity of 25 MW and 5,220 square meters for 2026. Together, these facilities can be deployed individually or in combination to support redundancy, disaster recovery, and campus-wide expansion strategies.\n</p>"
+   },
+   "name": "How many facilities does Iron Mountain operate in the London area?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>Today, our London campus delivers a total power capacity of 36 megawatts across more than 35,000 square meters (376,700 square feet) of data center space. This substantial capacity enables deployments ranging from individual racks to multi-megawatt hyperscale environments. Once completed, LON-3 will bring our campus totals to 61 MW across 40,200 square meters to support long-term growth requirements.</p>"
+   },
+   "name": "What is the total capacity available across your London data centers?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>Iron Mountain's London data centers maintain comprehensive compliance certifications including ISO 27001 (information security), ISO 9001 (quality management), ISO 14001 (environmental management), ISO 22301 (business continuity), HITRUST,, PCI-DSS, SOC 2 Type II, and SOC 3. Additionally, LON-1 is now ISO 45001 (Health & Safety Management)  certified. As an industry leader trusted by some of the world's most highly regulated organizations, we provide documentation and support to help customers meet their audit and regulatory requirements, including GDPR compliance.\n</p>"
+   },
+   "name": "What compliance certifications do your London facilities maintain?"
+  },
+  {
+   "@type": "Question",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<p>Beyond London colocation, Iron Mountain operates data centers across key European markets. Visit our <a rel=\"noopener noreferrer\" href=\"https://www.ironmountain.com/en-gb/data-centers\" target=\"_blank\">UK data centres page</a> to explore our full European portfolio, including facilities in Amsterdam and other strategic locations within the FLAP-D corridor (Frankfurt, London, Amsterdam, Paris, Dublin). Our global footprint enables multi-site strategies, disaster recovery planning, and geographic distribution across Europe and beyond.</p>"
+   },
+   "name": "What other Iron Mountain data center locations are available in Europe?"
+  }
+ ]
+}
+
+## VISIBLE TEXT
+
+London Data Centers | United Kingdom Data Centers | Iron Mountain United Kingdom United Kingdom Contact Us Call us: +44 (0) 1782 654 710 Login | Account Iron Mountain Connect SecureSync ReQuest Web Wisetek Returntek Portal What we do Who we are Resources Support Get Started Main menu What we do Asset Lifecycle Management ALM Overview ALM for End-User Devices ALM for Data Centre Assets ALM Certifications & Standards Data Centers Technology Platforms InSight DXP Agentic AI Content Management & Governance Intelligent Document Processing Digital Human Resources solution Pensions Data Enrichment solution Invoice Processing solution Services Information Governance Advisory Services Offsite Tape Vaulting Retention and Privacy Policy Management Scanning and Digitization Intelligent Business Process Management (iBPM) Solutions Records Storage and Management Offsite Records and Document Storage Culling and cataloguing Inventory Management & Reporting Secure Shredding Clean Start Overview Smart Reveal Smart Sort Smart Assign Compass Shop Supplies Warehousing and Logistics Warehousing solutions United Kingdom and Ireland sites Technology and Innovation View All Services Business Challenges Digital Transformation End-to-End Data Management Sustainability Industry Financial Services Overview Insurance Banking Digital Back Office Digital Trade Back Office Digitization of the Aviation Industry Law Firms Heritage Preservation Library and Archives Supply Chain Energy Entertainment 1 4 Public Sector Retail Small Businesses Who we are About Iron Mountain Overview Certifications and Awards Code of Ethics Leadership Our History Why Choose Iron Mountain Careers Investors Newsroom Partners Sustainability Resources Blogs and Articles Videos and Webinars Solution Guides Whitepaper Customer Success Stories Infographics View All Resources Support Customer Support Centre Customer self support portal Change your region & language North America Canada English Canada French United States English Middle East North Africa And Turkey Bahrain Arabic Bahrain English Egypt Arabic Egypt English Jordan Arabic Jordan English Kuwait Arabic Kuwait English Morocco French Oman Arabic Oman English Qatar Arabic Qatar English Saudi Arabia Arabic Saudi Arabia English Turkey Turkish United Arab Emirates Arabic United Arab Emirates English Latin America Brazil Portuguese Mexico Spanish Argentina Spanish Chile Single Language Colombia Spanish Peru Single Language Europe and Southern Africa Austria German Belgium Dutch Belgium French Bulgaria Bulgarian Croatia Croatian Cyprus English Czech Republic Czech Denmark Danish Estonia Estonian Finland Finnish France French Germany German Greece Greek Hungary Hungarian Ireland English Latvia Latvian Lesotho English Lithuania Lithuanian Netherlands Dutch Norway Norwegian Poland Polish Romania Romanian Serbia Serbian Slovakia Slovak South Africa English Spain Single Language Sweden Swedish Switzerland French Switzerland German Switzerland English Ukraine Ukrainian United Kingdom English Asia-Pacific and India Australia China - Hong Kong SAR Chinese China - Hong Kong SAR English China - Mainland 中国-中文 India Indonesia English Indonesia Indonesian Korea Korean Malaysia English New Zealand English Philippines English Singapore English Taiwan Chinese Thailand Thai Vietnam Vietnamese Homepage Data centers London data centers EMEA Region London data centers Secure, scalable data center infrastructure in Europe's premier connectivity hub serving the UK, EMEA, and global markets Get Your Quote Data Centers Data Centers Contact us Iron Mountain London data centers 
+ Iron Mountain's London data center campus is located in Slough, the United Kingdom's data center interconnection hub, with close proximity to major peering exchanges and one of Europe's largest network ecosystems. Our campus features three facilities — LON-1, LON-2, and LON-3 — strategically positioned in the heart of the Slough data center corridor west of the M25. With more than 40,200 square meters (432,000 square feet) and 61 megawatts of power capacity, our London campus delivers the scale, security, and connectivity that demanding enterprises require. 
+ Explore Our Facilites 3 Data center facilities 61 MW Total power capacity 40,200+ Square meters (432,000+ square feet) 100+ Network & cloud connections Contact Us Our London data center network highlights Watch Overview 
+ Schedule Your On-Site Tour 
+ The strategic advantage of colocation in London, England 
+ Strategic advantages that power business success in the United Kingdom and European markets 
+ 
+ 
+ Europe's Largest Network Ecosystem 
+ Slough is the United Kingdom’s premier data center corridor. Our London campus provides access to LINX (London Internet Exchange) peering, fiber to 100+ networks & clouds, and subsea cable access. Architect low-latency, redundant solutions for UK and global traffic across Europe, North America, and Asia-Pacific. 
+ 
+ 
+ World's Second-Largest Data Center Market 
+ London is Europe's transatlantic hub and the world’s 2nd largest data center market. With 1GW+ capacity and 300MW+ in development, scale is unmatched. The Slough region benefits from streamlined regulations and strategic positioning, allowing for a thriving ecosystem of connectivity, power and network density to support your UK and global enterprise operations. 
+ Flexible, Scalable Infrastructure 
+ Deploy data center capacity on your terms. Our London campus offers flexible options from cabinets and cages to data halls and more, enabling you to scale as you grow. With substantial power and space for redundancy and disaster recovery, build a tailored infrastructure solution that evolves with your business. 
+ 
+Download European Market Guide
+ 
+ Our London data center portfolio London LON-1 data center 
+ Learn More London LON-3 data center 
+ Learn More Want to learn more? Contact a data centre team member today! Trusted by industry leaders 
+ Join Fortune 100 companies, hyperscale cloud providers, and growing enterprises who trust Iron Mountain Data Centers for their mission-critical infrastructure in London. Iron Mountain's London data center campus serves a diverse community of enterprises, financial institutions, cloud providers, and technology innovators. 
+ Become a Customer Today 
+ Customer success stories 
+ Pinnacol 
+ 
+ The challenge: 
+ After evaluating their data center's infrastructure, maintenance and operating costs, and the limited ability for the facility to support redundant power without significant cost and effort, Pinnacol's Informational Services group found the data center to be outdated and inefficient. 
+ The results: 
+ Pinnacol increased security, redundancy, power, connectivity and reliability. The colocation data center scaled to meet shifting needs, even post-contract signature. Greater energy efficiency also lead to greater cost efficiency than staying in-house.
+ 
+ 
+ In their words: 
+ 
+ “We aren't their largest client but we're treated like we are. They go the extra mile to make sure we get exactly what we need when we need it.” Infrastructure and Cloud Services Manager, Pinnacol Assurance 
+ 
+ Learn More Ready to experience the London advantage? 
+ Discover how Iron Mountain's London data centers can power your digital infrastructure strategy. 
+ Schedule Site Tour Get Custom Quote Frequently asked questions What makes the London colocation and data center market unique? London, specifically the Slough corridor, represents one of Europe's most strategic data center markets due to its exceptional connectivity density. Slough hosts one of Europe's largest network ecosystems with direct access to LINX peering, over 100 network and cloud providers, and proximity to major subsea cable landing stations. The area west of the M25 combines this connectivity advantage with abundant power, land availability for expansion, and lower operating costs compared to central London - all while maintaining low-latency access to the City of London and UK markets. Why choose Slough over central London for data center operations? Slough has established itself as the prime United Kingdom data center corridor, offering critical advantages over central London: greater power availability to support high-density deployments, larger facility footprints enabling campus-scale operations, proximity to fiber routes and peering exchanges, and cost efficiencies - all while delivering sub-2-millisecond latency to central London. The concentration of data center providers and carriers in Slough creates a network-rich ecosystem that actually provides superior connectivity options compared to locations within the M25. How many facilities does Iron Mountain operate in the London area? For London colocation, Iron Mountain operates three data center facilities in the greater London area, all located on our Slough campus. LON-1 offers 17,000 square meters (183,000 square feet) and 8.7 MW, originally a Credit Suisse facility that has been upgraded to current standards. LON-2 is a greenfield data center with 27 MW built for hyperscale requirements. LON-3 is currently under construction, with a planned capacity of 25 MW and 5,220 square meters for 2026. Together, these facilities can be deployed individually or in combination to support redundancy, disaster recovery, and campus-wide expansion strategies.
+ What is the total capacity available across your London data centers? Today, our London campus delivers a total power capacity of 36 megawatts across more than 35,000 square meters (376,700 square feet) of data center space. This substantial capacity enables deployments ranging from individual racks to multi-megawatt hyperscale environments. Once completed, LON-3 will bring our campus totals to 61 MW across 40,200 square meters to support long-term growth requirements. What compliance certifications do your London facilities maintain? Iron Mountain's London data centers maintain comprehensive compliance certifications including ISO 27001 (information security), ISO 9001 (quality management), ISO 14001 (environmental management), ISO 22301 (business continuity), HITRUST,, PCI-DSS, SOC 2 Type II, and SOC 3. Additionally, LON-1 is now ISO 45001 (Health & Safety Management) certified. As an industry leader trusted by some of the world's most highly regulated organizations, we provide documentation and support to help customers meet their audit and regulatory requirements, including GDPR compliance.
+ What other Iron Mountain data center locations are available in Europe? Beyond London colocation, Iron Mountain operates data centers across key European markets. Visit our UK data centres page to explore our full European portfolio, including facilities in Amsterdam and other strategic locations within the FLAP-D corridor (Frankfurt, London, Amsterdam, Paris, Dublin). Our global footprint enables multi-site strategies, disaster recovery planning, and geographic distribution across Europe and beyond. Contact us Follow: What we do Asset Lifecycle Management Data Centres Data and IT Security Digital Transformation Sustainability Solutions Workplace Evolution Industry solutions Entertainment Energy Financial Services Healthcare Law Firms Public Sector Small Business Solutions Who we are About Us Why Choose Iron Mountain Careers Certifications and Awards Partners Sustainability Quality Standards Anti-Slavery Statement Contact us Portal Login and Bill Pay Contact Sales Customer Support Call us at +44 (0) 1782 654 710 Resources Blogs and Articles Customer Success Stories Infographics Solution Guides Videos and Webinars Whitepapers View all resources Privacy notice Website terms and conditions Manage your privacy preferences © 2026 Iron Mountain, Inc.

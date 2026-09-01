@@ -2132,6 +2132,74 @@ LON1's 2026-08-20 reading has to reach the 8.72 MW page, not the
 
 ---
 
+## Iron Mountain's pages are held, and the benchmark campus was not being measured (2026-09-01)
+
+WP-D. The campus this project cites as its second self-auditing
+operator — 61 MW stated, 8.7 + 27 + 25 = 60.7 across its own three
+facilities — rested on pages nobody held. ROADMAP had the figures and
+the reason they were uncitable; what it did not have was a copy.
+
+**The block is Vercel Attack Challenge Mode, which is why backoff was
+never going to work.** Every scripted client gets `HTTP 429` from the
+whole host, its own homepage included, carrying
+`x-vercel-mitigated: challenge`. Four header profiles were tried — the
+fetcher's own UA, a current Chrome UA, the full `sec-ch-ua` and
+`Sec-Fetch-*` set, and the exact UA of a browser that passes — and all
+four got 429. The answer was an instrument change, not patience.
+
+**The harvest is generalised rather than one-off.**
+`fetch_operator_snapshots.py --from-file` stores bytes captured in a
+browser through exactly the `render()` a direct fetch uses, so the
+snapshot format cannot fork, and writes `# obtained: browser` in the
+header — the same provenance the document store keeps per document.
+`# obtained:` sits *below* the digest deliberately: everything that
+reads a fixed number of header lines reads from the top, and a digest
+pushed out of that window would have made every re-fetch look changed,
+silently breaking the append-only store's no-op property.
+
+**Two rules travel with it, both in docs/PORTAL_NOTES.md.** Harvest the
+bytes the server sent, never the browser's rendered text — content
+inside a collapsed `<details>` accordion is in the DOM and not in the
+rendering, which is exactly how these figures were once reported as
+published nowhere. And the URL comes from the script's curated `PAGES`
+rather than the command line, so a snapshot always names a page this
+project chose.
+
+**What it produced**: three pages held (`lon-2` 404s and has none),
+five quote-verified claims, five matches to site 529 — the site holds
+all three facilities, so unlike VIRTUS Slough its campus total is
+matchable — and an `operator_roster` identity for each facility beside
+its planning or Barbour one. LON-1's own page says 8.75 MW where the
+campus FAQ says 8.7; both are held and only the FAQ figure is a
+component, or the building would be counted twice and the self-audit
+would break. The three areas that page gives for one building —
+17,000 m², 10,400 m², "14.000 square meters" — are recorded as a
+divergence for the operator to settle, never averaged.
+
+**And the benchmark was not being measured.** VIRTUS Saunderton is the
+campus this project calls the exact self-audit, the standard for when a
+sum can be trusted at all, and the one WP-E is meant to design against.
+Its four facility claims carried no `component_of`, so
+`reconcile_components()` had never included it — the arithmetic was
+asserted in three prose files and computed nowhere. Fixed here, since
+WP-D's own outcome was stated as "Iron Mountain beside Saunderton". The
+five campuses now report:
+
+| campus | stated | its own rows | gap |
+|---|---|---|---|
+| VIRTUS Saunderton | 78.0 | 78.0 | 0 |
+| Iron Mountain London | 61.0 | 60.7 | 0.3 |
+| Kao Harlow | 71.0 | 71.2 | −0.2 |
+| VIRTUS Slough | 145.5 | 132.2 | 13.3 |
+| VIRTUS Stockley Park | 112.5 | 72.5 | 40.0 |
+
+A gap is not an error: Stockley's is a denominator (two of five
+facilities disclose nothing), Slough's is a question for the operator,
+and Kao's and Iron Mountain's are integer totals over decimal
+facilities.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across

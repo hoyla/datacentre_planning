@@ -215,7 +215,31 @@ release diff, and Luke has seen the rendering before it ships.
 
 ---
 
-## WP-D — Hold Iron Mountain's pages, then let its roster carry figures
+## WP-D — Hold Iron Mountain's pages, then let its roster carry figures — **DONE 2026-09-01**
+
+Three pages held (campus, `lon-1`, `lon-3`; `lon-2` 404s as expected),
+five quote-verified claims, five matches to site 529, and all three
+facilities carrying an `operator_roster` identity.
+`reconcile_components()` reports the campus at 61 vs 60.7.
+
+Two things the spec did not anticipate:
+
+- **`ironmountain-lon1` was not a registered slug.** The spec said the
+  three pages were "slugs the fetcher already registers"; only the
+  campus and `lon-3` were. Added to `PAGES`.
+- **Saunderton was not reconciling either.** ROADMAP calls it the exact
+  self-audit and this document names it as WP-E's benchmark, but its
+  four facility claims carried no `component_of`, so it never appeared
+  in `reconcile_components()` at all. Fixed here, because WP-D's own
+  stated outcome is "Iron Mountain beside Saunderton as self-auditing"
+  and that could not be true while Saunderton was absent. It now
+  reports 78.0 vs 78.0, exact.
+
+The harvest route is generalised rather than one-off:
+`fetch_operator_snapshots.py --from-file` stores browser-captured bytes
+through the same `render()` a direct fetch uses, and records
+`# obtained: browser` in the header. docs/PORTAL_NOTES.md carries the
+rules.
 
 Independent of A–C. All context: ROADMAP "Iron Mountain: the block is
 a bot block" (search that phrase — the FAQ passage is quoted there
@@ -250,6 +274,12 @@ verbatim), plus the site_facilities Iron Mountain entry and PR #314.
 **Done when**: three snapshots held, claims loaded and verified,
 roster attributions in, `reconcile_components()` reports the campus,
 and the site_facilities note no longer says the figures are uncitable.
+
+**Met, all five.** `verify_operator_quotes`, `validate_operator`,
+`require_held_snapshots` and `require_known_claims` all clean; the
+site_facilities note now records the pages as held and carries the
+page-versus-page divergence rather than the reason nothing could be
+cited.
 
 ---
 

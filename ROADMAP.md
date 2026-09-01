@@ -502,12 +502,23 @@ technical space, and only the operator can settle it. **LON-2 has no
 facility page at all** (404); it exists only in that FAQ paragraph and
 in the investor announcement.
 
-A roster is writable once the campus page and the two facility pages
-are snapshotted, which needs the browser-assisted route
-(`scripts/browser_receiver.py`, docs/PORTAL_NOTES.md) to get past the
-429 — and then the *fetcher's* text extraction rather than the
-browser's, per the lesson above. The prior's held-copy contract is
-what stops it being written from what is on a screen.
+**Held, and the roster written, 2026-09-01.** The three pages were
+captured through the browser-assisted route
+(`scripts/browser_receiver.py`, docs/PORTAL_NOTES.md) and stored by
+`fetch_operator_snapshots.py --from-file`, so the *fetcher's* text
+extraction produced the snapshot rather than the browser's, per the
+lesson above — which is what the prior's held-copy contract was
+protecting. What that turned into: five quote-verified claims (the
+61 MW campus total, its three FAQ components, and LON-1's divergent
+8.75 from its own page), five matches to site 529, and every one of
+the three facilities carrying an `operator_roster` identity beside its
+planning or Barbour one. `reconcile_components()` now measures the
+campus at 61 against 60.7.
+
+*The block is Vercel Attack Challenge Mode — the 429 carries
+`x-vercel-mitigated: challenge` — which is why backoff can never
+reach it and why the answer was an instrument change rather than
+patience.*
 
 Two substation applications at *Land to West of East India Dock House*
 belong to none of the four and are what raised #252.
@@ -917,12 +928,22 @@ still to do:
   ladder rung has to answer the same question — a campus total and a
   facility figure are different rungs, not two readings of one — and
   `capacity_claims.reconcile_components()` is the measurement to
-  design against. As it stands: Saunderton exact (once PR #310 lands),
-  Stockley 112.5 against 72.5 because two of five facilities disclose
-  nothing, Slough 145.5 against 132.2, and Kao 71.0 against 71.2,
-  which is an integer campus figure over decimal facilities rather
-  than a disagreement. A gap is never an error — Slough's is a
-  question for the operator, Stockley's is a denominator.
+  design against. As measured 2026-09-01, and it now measures five
+  campuses rather than four: Saunderton 78.0 against 78.0 exact,
+  Iron Mountain 61.0 against 60.7, Kao 71.0 against 71.2, Slough
+  145.5 against 132.2, and Stockley 112.5 against 72.5 because two of
+  five facilities disclose nothing. A gap is never an error —
+  Slough's is a question for the operator, Stockley's is a
+  denominator, and Kao's and Iron Mountain's are integer campus
+  figures over decimal facilities.
+
+  *Saunderton was asserted exact here from 2026-08-31 and was not being
+  measured: its four facility claims carried no `component_of`, so the
+  benchmark campus never entered `reconcile_components()` at all. Found
+  and fixed on 2026-09-01 while building the Iron Mountain roster
+  against it. A number quoted in three prose files and computed nowhere
+  is the class this file's own rule about computed statistics exists
+  for.*
 
 - **Design the ladder rung and the cohort-admission rule** — whether
   and how a first-party operator figure fills the declared-power cell
@@ -2328,10 +2349,11 @@ None is abandoned; each is a known, scoped piece of work.
   claims; HISTORY, "The operator pages day"). Colt is no longer
   blocked: Tudor Works and Hayes Bridge Retail Park are their own
   sites as of 2026-08-27 and the London 4 claim is matched, so a Colt
-  tranche (London 5–8) now has records to land on. Iron Mountain's two
-  pages 429 and have never had a snapshot despite the survey citing
-  their figures — retry with backoff, or the 61 MW calibration case
-  rests on pages we do not hold.
+  tranche (London 5–8) now has records to land on. ~~Iron Mountain's
+  pages have never had a snapshot~~ — **held 2026-09-01** via the
+  browser harvest, so the 61 MW calibration case now rests on pages
+  this project holds, and `--from-file` is the route for the next
+  operator a challenge page blocks.
 - **Multimodal pass over drawings.** Rejected in v1 and still rejected:
   PDFs are overwhelmingly text-layered, and concealed plant will not be
   in the drawings. Revisit only for a specific application where both
