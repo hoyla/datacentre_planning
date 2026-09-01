@@ -1341,14 +1341,16 @@ field and is not publishable as it stands.
   claim the copy does not support: the wrong-document failure
   `document_drive_files` exists to prevent, one layer up.
 
-  Order: make the snapshot store append-only (a file per fetch that
-  changed anything, dated or content-addressed — content-addressing
-  also makes an unchanged re-fetch a no-op, principle 5); then sync to
-  Drive beside `sites`; then link it from the reader and workbook as
-  our copy, beside the source URL, exactly as documents carry our copy
-  beside the register. The naming scheme is a decision for Luke: 84
-  claim references and the facility prior's rosters point at these
-  slugs.
+  Order: make the snapshot store append-only; then sync to Drive
+  beside `sites`; then link it from the reader and workbook as our
+  copy, beside the source URL, exactly as documents carry our copy
+  beside the register. **Naming decided (Luke, 2026-09-01):
+  `<slug>.<date>.txt`**, sha256 staying in the header and the fetcher
+  skipping the write when content is unchanged, so a re-fetch is a
+  no-op (principle 5). The build spec for all three steps, plus the
+  Iron Mountain capture and the ladder-rung document, is
+  [docs/HANDOVER_SNAPSHOT_CHAIN.md](docs/HANDOVER_SNAPSHOT_CHAIN.md)
+  — written for an executor session; ROADMAP stays the inbox.
 
 - **The Pinpoint/Giant delta: get the manifest, compute it, put
   re-upload in the chain.** The bundle policy — what the reduction
