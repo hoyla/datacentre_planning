@@ -2251,8 +2251,11 @@ returns nothing where no candidate contains the quote, and nothing
 where the winning file has no ledger entry, because the neighbouring
 file is different evidence rather than a fallback.
 
-**80 of the 81 committed operator claims resolve, and the one that does
-not is the 8.72 MW row.** All six green claims resolve. The reader
+**80 of the 81 operator rows in the database resolve, and the one that
+does not is the 8.72 MW row — which exists in the database only.** The
+committed YAML holds 89 operator claims and every one resolves, nine of
+them (the Saunderton and Iron Mountain facility claims) awaiting the
+next `load_capacity_claims.py` run. All six green claims resolve. The reader
 renders 166 links across the three surfaces; the workbook fills 80 of
 264 claim rows and 37 of 118 audience rows, the blanks being register
 entries and filed accounts, which are published documents with

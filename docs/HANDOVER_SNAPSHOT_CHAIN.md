@@ -322,8 +322,10 @@ block for site 529 (Iron Mountain) or CyrusOne LON1's site in the PR
 so that review has something to look at.
 
 **Met on the build; the review is Luke's and is the one part left.**
-80 of the 81 committed operator claims and all six green claims
-resolve, on all five surfaces; the release diff against a build of
+80 of the 81 operator rows in the database and all six green claims
+resolve, on all five surfaces — every committed YAML claim resolves,
+the unresolved row being the database-only 8.72 MW ghost; the release
+diff against a build of
 `main` shows site-panel links 69,082 → 69,125, two workbook columns
 and two dictionary entries added, nothing fallen. Full account in
 HISTORY, "A claim links its own evidence".

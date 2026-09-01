@@ -1371,9 +1371,11 @@ field and is not publishable as it stands.
   gate's own whitespace normalisation, and links nothing otherwise. As
   built: `capacity_claims.snapshot_candidates` orders the store around a
   reading's date and `snapshot_drive.copy_url` picks the file the quote
-  is actually in. 80 of the 81 committed operator claims resolve; the
-  one that does not is that 8.72 MW row, which is what the design is
-  for.
+  is actually in. 80 of the 81 operator rows in the database resolve;
+  the one that does not is that 8.72 MW row, which is what the design
+  is for. Every committed YAML claim resolves — the two populations
+  differ, because the YAML holds current readings only and the ghost
+  row is in the database alone.
 
   Luke reviews the rendering before it ships. The spec was WP-C of
   [docs/HANDOVER_SNAPSHOT_CHAIN.md](docs/HANDOVER_SNAPSHOT_CHAIN.md);
