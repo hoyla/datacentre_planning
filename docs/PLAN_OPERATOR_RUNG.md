@@ -1,11 +1,14 @@
 # The operator rung — how a first-party figure may fill the declared-power cell
 
-> **Status: proposal for decision. Nothing here is implemented.** This
-> is WP-E of [HANDOVER_SNAPSHOT_CHAIN.md](HANDOVER_SNAPSHOT_CHAIN.md),
-> executing the standing decision of 2026-08-30 — *typed standing, not
-> equal standing* — and it ends in decision points that are Luke's.
-> Every measurement in it was made against the live corpus on
-> 2026-09-01, with the module or query named; re-measure before
+> **Status: decided (Luke, 2026-09-01) — see the answers on each
+> decision point at the end. Nothing is implemented yet**; the
+> rendering-dependent decisions (2 and 4) are conditionally decided,
+> with Luke's real verdict reserved for the rendered page, as with
+> WP-C. This is WP-E of
+> [HANDOVER_SNAPSHOT_CHAIN.md](HANDOVER_SNAPSHOT_CHAIN.md), executing
+> the standing decision of 2026-08-30 — *typed standing, not equal
+> standing*. Every measurement in it was made against the live corpus
+> on 2026-09-01, with the module or query named; re-measure before
 > implementing, because the corpus moves.
 
 The question: whether, and how, a figure an operator publishes about
@@ -293,37 +296,75 @@ vocabulary and is tracked in ROADMAP; nothing here admits it.
 - Re-reading anything: the rung consumes claims that exist, matched
   and snapshot-backed.
 
-## Decision points
+## Decision points — decided, Luke, 2026-09-01
 
 1. **Does the rung exist at the default position** — operator-stated
    campus figure between the disclosed rungs and the grid rung,
    filling the cell only where planning's best is grid, standby or
    floorspace? Effect today: East Havering 580 → 600, Westerhill
    150 → 300. *Recommended: yes.*
+
+   **Decided: yes.**
 2. **May a campus-scope adjudication displace a disclosed planning
    figure** — the Stockley/Cardiff class, hand-entered, claim named
    by `claim_name` + `as_at`, evidence written? Effect today: two
    sites. *Recommended: yes, and this is the part that actually
    answers #250.*
+
+   **Decided: yes, conditional on the rendering** — "so long as we
+   make an effort in the user interface to make this clear to
+   readers". A reader must see that the planning record's own figure
+   is smaller and narrower, not merely that a number exists; the
+   basis line carrying planning's own figure is a requirement, not a
+   styling choice, and Luke reviews the rendering before it ships.
 3. **Does `at_least_100mw` admit on the rung**, with the count
    printed and `limits` updated? Effect today: +2 members.
    *Recommended: yes.*
+
+   **Decided: yes.**
 4. **What the weight class is called and how the cell reads** — a new
    `w-operator` class at Medium, cell text "Operator-stated campus
    figure", basis line naming the operator's own term, the `as_at`,
    and the planning record's own best figure. *Recommended as
    drafted; the rendering is yours to adjust.*
+
+   **Decided: proceed as proposed**, with Luke's real verdict
+   reserved for the rendered page — "I'll probably respond properly
+   once I've seen it." The rendering review settles 2 and 4
+   together.
 5. **Which quantity kinds are rung-eligible** — `announced_capacity`
    only, with operator `grid_connection` figures staying panel-only,
    or should an operator grid figure be allowed to feed the existing
    grid rung? *Recommended: `announced_capacity` only, until a case
    needs otherwise.*
+
+   **Decided: as recommended.**
 6. **The Pulsant class** — Operators-tab-only as recommended, or a
    new declared row class for operating facilities with no planning
    record? *Recommended: Operators-tab-only, revisited if the
    journalism needs the rows.*
+
+   **Decided: Operators-tab-only today, and explicitly expected to
+   be revisited — not a settled boundary.** Luke's reasoning,
+   recorded because it names the principle: authority belongs to
+   sources, not to the planning register as such. "Getting the
+   Barbour stuff into the corpus was useful, even before we managed
+   to match (most of) them to planning applications. So we may judge
+   other sources to be authoritative also. But not yet." A named
+   candidate trigger: the NESO EIR reply (due ~10 September 2026) —
+   "if our EIR to NESO comes back with lots of granular details
+   about datacentre projects that we haven't got planning
+   applications for, we would believe them." When a source earns
+   that standing, the route is the one this document sketches: a new
+   row class with its own declared basis, never quiet admission
+   through the existing one.
 7. **Sequencing** — the displacement entries (decision 2) are also
    the first outputs of the 35-campus review, so implementing the
    rung before the review means the review's confirm-the-roster pass
    lands directly into a mechanism that renders it. *Recommended:
    rung first, review entries as they come.*
+
+   **Decided: agreed** — and extended: 2.11 may release once WP-E is
+   implemented, before the full 35-campus review, whose remaining
+   entries render as they land. The review was never a release gate;
+   an unreviewed campus keeps today's behaviour.
