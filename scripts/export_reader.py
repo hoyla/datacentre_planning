@@ -2470,11 +2470,15 @@ def main() -> int:
     # during the 2.1 regeneration these defaulted to phase1_build and
     # "1", so the front page would have been stamped "phase 1 release"
     # and written into a folder two releases old. See dcp/release.py.
+    # And never a named fallback either: with no release folder to
+    # derive from, both are required and the script says so, rather
+    # than stamping "phase 1" and writing beside a two-year-old build.
     _rel = release.latest_release_dir()
     ap.add_argument("--out", type=Path,
-                    default=(_rel / "reader.html") if _rel
-                            else Path("data/exports/phase1_build/reader.html"))
-    ap.add_argument("--phase", default=release.phase_of(_rel) or "1",
+                    default=(_rel / "reader.html") if _rel else None,
+                    help="where to write the reader; defaults to the newest "
+                         "release folder, and is required when there is none")
+    ap.add_argument("--phase", default=None,
                     help="stamps the title, the header and the database "
                          "filename; defaults to the newest release folder's "
                          "phase, so starting a NEW phase means passing it")
@@ -2489,6 +2493,10 @@ def main() -> int:
                     help="build without the machine readings, for a release "
                          "made before the sample has been reviewed")
     args = ap.parse_args()
+    args.phase = release.current_phase(args.phase, _rel)
+    if args.out is None:
+        ap.error(f"no release folder under {release.EXPORTS} to write "
+                 f"into; pass --out")
 
     hv = _handover()
     from dcp import capacity_claims as ccl

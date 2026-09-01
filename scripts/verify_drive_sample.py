@@ -60,10 +60,11 @@ from dotenv import load_dotenv  # noqa: E402
 load_dotenv(ROOT / ".env")
 
 from dcp import db  # noqa: E402
-from dcp.drive import FOLDER_ID  # noqa: E402
+from dcp import release  # noqa: E402
+from dcp.drive import FOLDER_ID, SYNC_LEDGER  # noqa: E402
 
-STATE_PATH = Path("data/exports/.drive_sync_state.json")
-DEFAULT_STAGING = Path("data/exports/drive_staging")
+STATE_PATH = SYNC_LEDGER
+DEFAULT_STAGING = release.EXPORTS / "drive_staging"
 
 
 def _load_script(name: str):

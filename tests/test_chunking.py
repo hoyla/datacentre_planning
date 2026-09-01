@@ -4,7 +4,8 @@ import importlib.util
 from pathlib import Path
 
 _spec = importlib.util.spec_from_file_location(
-    "deepread_run", Path("scripts/deepread_run.py"))
+    "deepread_run",
+    Path(__file__).resolve().parent.parent / "scripts" / "deepread_run.py")
 dr = importlib.util.module_from_spec(_spec)
 import sys; sys.modules["deepread_run"] = dr
 _spec.loader.exec_module(dr)
