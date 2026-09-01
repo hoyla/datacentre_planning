@@ -360,13 +360,14 @@ sites:
       operator's page that does name it is unsnapshotted. It joins the
       roster when the pages are held.
 
-      That alias entry also carries this campus's facility table in
-      prose — addresses, capacities and the reconciliation — written
-      2026-08-28 when there was nowhere structured to put it. Whether
-      that prose is trimmed once this roster carries it is Luke's
-      call; the alias's naming traps (SL1 4PF covers 110 and 111
-      Buckingham Avenue and two other operators; Barbour's SL1 4PN for
-      111 is the outlier against two sources) belong there either way.
+      The alias entry for this site carried the campus's facility
+      table in prose — addresses, capacities and the reconciliation —
+      from 2026-08-28, when there was nowhere structured to put it,
+      until 2026-09-01, when Luke had it migrated here. Its naming
+      traps stay with the name (SL1 4PF covers 110 and 111 Buckingham
+      Avenue and two other operators; Barbour's SL1 4PN for 111 is the
+      outlier against two sources), and the capacities went nowhere:
+      they await snapshots and claims, per the note above.
     facilities:
       - id: LON-2
         identity:
