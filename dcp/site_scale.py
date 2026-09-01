@@ -204,6 +204,11 @@ BASIS_NOTE = {
                        "attribute to this development.",
     "floor_area": "Derived from floor area — an indication of physical "
                   "scale, NOT a power capacity.",
+    "operator_claim": "Derived from a figure the operator publishes about "
+                      "its own campus — a first-party statement to "
+                      "customers, NOT a disclosure to the planning "
+                      "authority. The Sites sheet's power caveat names the "
+                      "planning record's own position for this site.",
     "description": "Inferred from the application description only; no "
                    "capacity or area figure available.",
     "none": "No scale evidence found in the documents held.",
@@ -322,6 +327,44 @@ DISCLOSED_BASES = ("Disclosed IT load", "Disclosed total site demand",
                    "Grid connection capacity", "Standby generation capacity")
 
 
+# The operator rung's basis string, kept out of DISCLOSED_BASES above
+# on purpose: a first-party campus figure is published to customers,
+# not disclosed to a planning authority, so it must not join a count
+# compared against Ofgem's queue or a chart headed "from the site's
+# documents". It is not a floorspace estimate either — filing it there
+# would call an operator's own statement this project's arithmetic —
+# so every consumer that splits figures by provenance carries it as a
+# third class. See docs/PLAN_OPERATOR_RUNG.md.
+OPERATOR_BASIS = "Operator-stated campus figure"
+
+# The two rungs a first-party figure may never displace on its own.
+# Anything below them — a connection, standby plant, a floorspace
+# estimate, or no figure at all — is reached only if this rung is
+# empty, which is what "a rung between the disclosed rungs and the
+# grid rung" means mechanically. Displacing a stated load needs a hand
+# adjudication naming the claim (campus_scope.yaml).
+STATED_LOAD_BASES = ("Disclosed IT load", "Disclosed total site demand")
+
+
+@dataclass(frozen=True)
+class OperatorClaim:
+    """A first-party campus figure, already matched and quote-verified.
+
+    Carried rather than looked up so the ladder stays a pure function:
+    eligibility is `capacity_claims.rung_claim`'s job and displacement
+    is `campus_scope`'s, and both are decided before this is called.
+    """
+    value_mw: float
+    claim_name: str
+    operator: str = ""
+    operator_term: str = ""
+    as_at: str = ""
+    # A sentence the scope adjudication supplies for this site — the
+    # facility roster's denominator, the wrinkle it must carry
+    # unresolved. Written by a person, never computed.
+    note: str = ""
+
+
 @dataclass(frozen=True)
 class PowerEstimate:
     """A rankable figure plus everything needed to read it honestly."""
@@ -340,12 +383,20 @@ def _round_sensibly(mw: float) -> float:
     return float(round(mw / 10) * 10)
 
 
-def power_estimate(*, it_load_mw=None, total_site_mw=None,
-                   grid_mw=None, generation_mw=None,
-                   floorspace_sqm=None, has_documents=True,
-                   prose_held: int | None = None,
-                   prose_read: int | None = None) -> PowerEstimate:
-    """Best available capacity for ranking, with its qualifications.
+def _planning_estimate(*, it_load_mw=None, total_site_mw=None,
+                       grid_mw=None, generation_mw=None,
+                       floorspace_sqm=None, has_documents=True,
+                       prose_held: int | None = None,
+                       prose_read: int | None = None) -> PowerEstimate:
+    """The ladder over the planning record alone, with no claims in it.
+
+    Separated from `power_estimate` so the operator rung can state what
+    the planning record's own best figure is — which decision 2 of
+    docs/PLAN_OPERATOR_RUNG.md requires on the page, not as styling —
+    and so anything that needs the planning-only answer can ask for it
+    directly rather than inferring it from an absence.
+
+    Best available capacity for ranking, with its qualifications.
 
     Preference order runs from what the documents say about the building's
     own load down to what can be inferred from its size. Each step down is
@@ -445,3 +496,83 @@ def power_estimate(*, it_load_mw=None, total_site_mw=None,
         None, "No capacity disclosed", "None",
         "The documents read for this site disclose neither a capacity "
         "figure nor a building floorspace.")
+
+
+def _planning_silence(planning: PowerEstimate) -> str:
+    """Whose silence the empty planning record represents.
+
+    Luke, 2026-09-01, deciding that the rung fires on an empty ladder:
+    keep the read-and-silent versus documents-not-held distinction "in
+    the caveat, not in whether the rung fires". A reader must not take
+    our acquisition gap for the operator's reticence, which is the
+    no-dash rule — our silence is not their silence — applied to the
+    sentence that now sits under a first-party figure.
+    """
+    if planning.basis == "No documents held":
+        return ("no planning documents have been obtained for this site, so "
+                "the planning record is silent because of a gap in this "
+                "project's collection rather than in the applicant's "
+                "disclosure")
+    if planning.basis == "Not yet analysed":
+        return ("this site's documents are held but not yet analysed, so the "
+                "planning record has not been asked")
+    if "read in full" in planning.caveat:
+        return ("the readable documents held for this site were read in full "
+                "and disclose no capacity figure at all")
+    if planning.basis == "No capacity disclosed":
+        return ("the documents read so far disclose no capacity figure, and "
+                "reading is incomplete")
+    return f"the planning record's own best figure is {planning.basis.lower()}"
+
+
+def power_estimate(*, it_load_mw=None, total_site_mw=None,
+                   grid_mw=None, generation_mw=None,
+                   floorspace_sqm=None, has_documents=True,
+                   prose_held: int | None = None,
+                   prose_read: int | None = None,
+                   operator_claim: OperatorClaim | None = None,
+                   operator_displaces: bool = False) -> PowerEstimate:
+    """The ladder, with the operator rung in it.
+
+    The rung sits between the disclosed rungs and the grid rung
+    (docs/PLAN_OPERATOR_RUNG.md, decision 1), so it is reached by any
+    site whose planning record does not state a load of its own —
+    including one that states nothing at all, because a rung inserted
+    at a position catches everything that would otherwise fall past it
+    (Luke, 2026-09-01). Displacing a *stated* load needs a hand
+    adjudication naming the claim, which is `operator_displaces`
+    (decision 2); nothing computes it.
+
+    `operator_claim` is already matched, quote-verified, top-level and
+    sole — `capacity_claims.rung_claim` decides that, and passing one
+    here is the caller asserting it did.
+    """
+    planning = _planning_estimate(
+        it_load_mw=it_load_mw, total_site_mw=total_site_mw, grid_mw=grid_mw,
+        generation_mw=generation_mw, floorspace_sqm=floorspace_sqm,
+        has_documents=has_documents, prose_held=prose_held,
+        prose_read=prose_read)
+    if operator_claim is None:
+        return planning
+    if not operator_displaces and planning.basis in STATED_LOAD_BASES:
+        return planning
+
+    who = operator_claim.operator or "the operator"
+    term = (f", which it calls \u201c{operator_claim.operator_term}\u201d"
+            if operator_claim.operator_term else "")
+    dated = (f", as at {operator_claim.as_at}" if operator_claim.as_at else "")
+    # Only the leading character: "Disclosed IT load" must not become
+    # "disclosed it load".
+    _basis = planning.basis[:1].lower() + planning.basis[1:]
+    against = (f"The planning record's own best figure is {_basis} of "
+               f"{planning.value_mw:g} MW."
+               if planning.value_mw is not None else
+               f"On the planning record, {_planning_silence(planning)}.")
+    note = f" {operator_claim.note}" if operator_claim.note else ""
+    return PowerEstimate(
+        float(operator_claim.value_mw), OPERATOR_BASIS, "Medium",
+        f"Published by {who} about its own facilities{term}{dated}, and held "
+        f"here as a dated snapshot. A statement to customers, not to the "
+        f"planning authority: an operator states capacity in order to sell "
+        f"it, and a marketing page can be rewritten without notice. "
+        f"{against}{note}")

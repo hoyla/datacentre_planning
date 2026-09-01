@@ -53,7 +53,7 @@ from typing import Callable
 import yaml
 
 from dcp import site_profile
-from dcp import site_scale
+from dcp import campus_scope, capacity_claims, site_scale
 
 ROOT = Path(__file__).resolve().parent.parent
 CHECKS_PATH = ROOT / "data" / "priors" / "cohort_checks.yaml"
@@ -226,6 +226,13 @@ class Inputs:
     # shows it above the threshold. Defaulted so the rules that do not
     # need it can still be exercised with hand-built inputs.
     floorspace: dict[str, float] = field(default_factory=dict)
+    # The operator rung's inputs, read by the scale cohort alone and
+    # defaulted for the same reason `floorspace` is: a rule exercised
+    # with hand-built inputs must not have to supply them. Empty means
+    # no site has an eligible first-party claim, which is the corpus's
+    # own state for all but a handful.
+    claims: dict[str, list[dict]] = field(default_factory=dict)
+    displacements: dict = field(default_factory=dict)
 
 
 def load_inputs(conn) -> Inputs:
@@ -254,9 +261,12 @@ def load_inputs(conn) -> Inputs:
                                   float(rating) if rating else None))
     generation = {k: site_profile.generation_figure(v)
                   for k, v in gen_rows.items()}
+    with conn.cursor() as cur:
+        claims = capacity_claims.load_site_claims(cur)
     return Inputs(sites, figures, site_profile.load_coverage_detail(conn),
                   pending, generators, generation,
-                  site_scale.load_site_floorspace(conn))
+                  site_scale.load_site_floorspace(conn),
+                  claims, campus_scope.load_displacements())
 
 
 # ---------------------------------------------------------------------------
@@ -462,10 +472,12 @@ def at_least_100mw(inp: Inputs) -> CohortResult:
     A site with no figure is not a member. That is not a claim it is
     smaller than 100 MW — see `limits`.
     """
-    members, inferred = [], 0
+    members, inferred, on_operator = [], 0, 0
     for key in inp.sites:
         f = inp.figures.get(key, {})
         cov = inp.coverage.get(key, {})
+        _claim, _displaces = capacity_claims.rung_inputs(
+            key, inp.claims.get(key, []), inp.displacements)
         est = site_scale.power_estimate(
             it_load_mw=f.get("it_load_mw"),
             total_site_mw=f.get("total_site_mw"),
@@ -474,20 +486,28 @@ def at_least_100mw(inp: Inputs) -> CohortResult:
             floorspace_sqm=inp.floorspace.get(key),
             has_documents=bool(cov.get("held")),
             prose_held=cov.get("prose_held"),
-            prose_read=cov.get("prose_read"))
+            prose_read=cov.get("prose_read"),
+            operator_claim=_claim, operator_displaces=_displaces)
         if est.value_mw is None or est.value_mw < 100:
             continue
         if est.confidence == "Indicative":
             inferred += 1
+        if est.basis == site_scale.OPERATOR_BASIS:
+            on_operator += 1
         members.append(Member(key, {
             "power_mw": round(est.value_mw, 1),
             "basis": est.basis,
             "confidence": est.confidence or ""}))
-    notes = ()
+    notes: tuple[str, ...] = ()
     if inferred:
-        notes = (f"{inferred} of these {len(members)} are here on a figure "
-                 f"inferred from floorspace rather than disclosed. Each row "
-                 f"carries its basis and confidence.",)
+        notes += (f"{inferred} of these {len(members)} are here on a figure "
+                  f"inferred from floorspace rather than disclosed. Each row "
+                  f"carries its basis and confidence.",)
+    if on_operator:
+        notes += (f"{on_operator} of these {len(members)} stand on an "
+                  f"operator-stated campus figure rather than on the "
+                  f"planning record. Every row says so, and names the "
+                  f"planning record's own figure beside it.",)
     return CohortResult(tuple(members), notes=notes)
 
 
@@ -619,9 +639,14 @@ REGISTRY: tuple[Cohort, ...] = (
         definition=(
             "The best available capacity for the site reaches 100 MW. Best "
             "available is the same ladder the sites table ranks on: a "
-            "disclosed IT load or total site demand first, then a contracted "
-            "grid connection or a standby-implied figure, and last a figure "
-            "inferred from floorspace. The 100 MW line is the industry's "
+            "disclosed IT load or total site demand first, then a campus "
+            "figure the operator publishes about its own facilities, then a "
+            "contracted grid connection or a standby-implied figure, and "
+            "last a figure inferred from floorspace. An operator figure may "
+            "also stand above a disclosed one, but only where a hand "
+            "adjudication has recorded that the planning figure describes a "
+            "single facility of the campus and has named the claim that "
+            "replaces it. The 100 MW line is the industry's "
             "own, not this project's: IBM's working definition of a "
             "hyperscale data centre puts it at 100 MW or more "
             "(https://www.ibm.com/think/topics/hyperscale-data-center). The "
@@ -641,15 +666,21 @@ REGISTRY: tuple[Cohort, ...] = (
             "exists: where the documents disclose different kinds of quantity "
             "for different facilities — an average operational load, a "
             "commissioning milestone, a design capacity — nothing can be "
-            "summed, and the site ranks on its largest single figure. "
-            "Stockley Park's five facilities rank on one 24 MW commissioning "
-            "milestone. This is also the one cohort whose membership can "
+            "summed, and the site ranks on its largest single figure. Where "
+            "the operator publishes a campus figure and a hand adjudication "
+            "has accepted it, the site ranks on that figure instead, "
+            "labelled, with the planning record's own figure named beside "
+            "it — which is how Stockley Park's five facilities now rank on "
+            "VIRTUS's own 112.5 MW rather than on the 24 MW commissioning "
+            "milestone of one of them. A campus with no such adjudication "
+            "keeps the older behaviour. This is also the one cohort whose "
+            "membership can "
             "rest on arithmetic — a floorspace estimate is this project's "
             "inference, not an applicant's disclosure, and it is the weakest "
             "class of figure in the release; the count of members standing "
             "on one is printed beside this rule, and every row says which "
             "basis put it there."),
-        order=5, rule_version="2026-08-25.1",
+        order=5, rule_version="2026-09-01.1",
         compute=at_least_100mw),
 )
 

@@ -103,15 +103,46 @@ campuses:
   - site_key: PTNO-12489438
     projects: 4
     proposed: co_located
-    scope: unreviewed
-    total: unreviewed
+    scope: distinct_facilities
+    total: withhold
     barbour_titles:
       - MICROSOFT - IMPERIAL PARK DATA CENTRE
       - MICROSOFT  IMPERIAL PARK DATA CENTRE - CIVIL W
       - NEXT GENERATION DATA - DATA CENTRE THREE (DC3)
       - NEXT GENERATION DATA PROJECT DELTA
+    power_cell:
+      operator_claim: Vantage Cardiff campus
+      expected_value_mw: 148.0
+      note: >-
+        The 67.2 MW is one application's figure for the data halls at a
+        site holding four projects across two operators' names.
     reason: |
-      Not yet reviewed.
+      The same shape as Stockley Park and the other half of issue
+      #250's measurement: a campus ranked on one of its schemes.
+
+      The planning figure is 67.2 MW, and it is one application's.
+      `Newport/23/0323` states "Data halls, containing the servers
+      where data is processed and stored (total capacity ~67.2
+      megawatts)" — a single scheme on a site that holds four Barbour
+      projects across two operators' names, Microsoft's Imperial Park
+      records and Next Generation Data's DC3 and Project Delta. The
+      site also carries a 60 MW total_site and 50.44 MW of generation,
+      so again no two of its figures are the same kind of quantity.
+
+      Vantage acquired Next Generation Data, and its own campus page
+      places the campus at Imperial Park, Celtic Way — both in the
+      site's planning record — and states 148 MW of critical IT load
+      across it, matching also on the CWL1 facility code. That is one
+      operator describing one campus on one basis.
+
+      `total: withhold` for the same reason as Stockley: the planning
+      figures cannot be summed, and nothing here sums them. The cell
+      takes the operator's campus figure and the basis line names the
+      67.2 MW it stands above.
+
+      Evidence for the match is in `operator-claims.yaml` (strong,
+      name_and_place, Luke at operator pages review T3-04). This was
+      issue #250's headline unmatched claim.
 
   - site_key: PTNO-11310969
     projects: 3
@@ -200,14 +231,59 @@ campuses:
   - site_key: PTNO-12301553
     projects: 3
     proposed: needs_a_look
-    scope: unreviewed
-    total: unreviewed
+    scope: distinct_facilities
+    total: withhold
     barbour_titles:
       - VIRTUS DATA CENTRES - LONDON 5 DATA CENTRE
       - VIRTUS DATA CENTRES - LONDON 7 DATA CENTRE
       - VIRTUS DATA CENTRES - LONDON 8 DATA CENTRE
+    power_cell:
+      operator_claim: VIRTUS Stockley Park campus
+      expected_value_mw: 112.5
+      note: >-
+        VIRTUS's roster lists five facilities here and states megawatts
+        for three of them, on one basis.
     reason: |
-      Not yet reviewed.
+      The site is the campus this whole question was raised from (issue
+      #247): five facilities built over at least seven years, and the
+      24 MW the table showed is one of them.
+
+      Why the planning figure is narrower rather than weaker. The 24 MW
+      is a genuine disclosure at High confidence, from a document
+      titled *VIRTUS LONDON7*: "We expect Data halls 1, 2, 3, 4, 6, 7,
+      10 to be handed over to the client by the end of 2021 ... power
+      capacity of 24MW". That is a commissioning milestone for one
+      building. The site also holds a 22 MW total_site and 46.2 MW of
+      generation, so its own figures are three quantity kinds and no
+      two are addable — which is the corpus norm here, not an
+      exception: 29 of these 35 sites hold two or more kinds.
+
+      No campus total is constructible from the planning record, and
+      none is attempted. `total: withhold` is that decision. What the
+      cell takes instead is VIRTUS's own campus figure, published on
+      one basis across the campus it names — the comparability the
+      planning documents never gave this site.
+
+      The finding survives the displacement and is the reason to keep
+      the basis line: no document has ever stated this campus's load on
+      a common basis, and the planning system did not require one.
+
+      Carried unresolved, deliberately. The 24 MW comes from a document
+      titled LONDON7, but VIRTUS's own roster puts 24 on LONDON5 and
+      32.5 on LONDON7 — possibly the right number on the wrong
+      building. Only a document or the operator can settle it, and the
+      displacement does not depend on which building the 24 belongs to.
+      Held on both attributions in `site_facilities.yaml`.
+
+      Two of the five disclose nothing at all ("Bespoke design"), which
+      is why `reconcile_components()` reads 112.5 against 72.5 summed:
+      a denominator, not an error. And the roster page's own prose says
+      "four facilities" against a list of five — quote the list, never
+      the count.
+
+      Evidence for the match itself is in `operator-claims.yaml`
+      (strong, name_identity, verified by Luke at operator pages review
+      T1-08).
 
   - site_key: PTNO-12513167
     projects: 3

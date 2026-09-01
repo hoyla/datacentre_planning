@@ -1,10 +1,10 @@
 # The operator rung — how a first-party figure may fill the declared-power cell
 
-> **Status: decided (Luke, 2026-09-01) — see the answers on each
-> decision point at the end. Nothing is implemented yet**; the
-> rendering-dependent decisions (2 and 4) are conditionally decided,
-> with Luke's real verdict reserved for the rendered page, as with
-> WP-C. This is WP-E of
+> **Status: decided (Luke, 2026-09-01) and built (PR #333) — see the
+> answers on each decision point at the end, including the
+> empty-ladder extension to decision 1 and the value pin that
+> replaced decision 2's date pin. The rendering review that decisions
+> 2 and 4 were conditional on passed on 2026-09-02.** This is WP-E of
 > [HANDOVER_SNAPSHOT_CHAIN.md](HANDOVER_SNAPSHOT_CHAIN.md), executing
 > the standing decision of 2026-08-30 — *typed standing, not equal
 > standing*. Every measurement in it was made against the live corpus
@@ -304,7 +304,19 @@ vocabulary and is tracked in ROADMAP; nothing here admits it.
    floorspace? Effect today: East Havering 580 → 600, Westerhill
    150 → 300. *Recommended: yes.*
 
-   **Decided: yes.**
+   **Decided: yes — and extended to the empty ladder** (Luke,
+   2026-09-01, deciding a case this point's enumeration had not
+   reached: three sites hold an eligible first-party figure while
+   their planning record states nothing at all). The rung fires there
+   too — a rung inserted at a position catches everything that would
+   otherwise fall past it — with the read-and-silent versus
+   documents-not-held distinction kept **in the caveat, not in
+   whether the rung fires**: coverage is stated beside a figure here,
+   never encoded in whether one ranks, and our silence must never
+   read as the operator's. That took the build from the four
+   predicted cells to eight, adding Saunderton, Kao's KLON-06 and
+   CyrusOne LON3 (the fourth extra, Kao Harlow, was WP-R1 loading
+   `component_of` an hour before the measurement).
 2. **May a campus-scope adjudication displace a disclosed planning
    figure** — the Stockley/Cardiff class, hand-entered, claim named
    by `claim_name` + `as_at`, evidence written? Effect today: two
@@ -317,6 +329,19 @@ vocabulary and is tracked in ROADMAP; nothing here admits it.
    is smaller and narrower, not merely that a number exists; the
    basis line carrying planning's own figure is a requirement, not a
    styling choice, and Luke reviews the rendering before it ships.
+
+   **One departure from this point's mechanism, made in the build and
+   kept**: the pin is `claim_name` + `expected_value_mw`, not
+   `claim_name` + `as_at` — five of the eligible committed claims,
+   Vantage Cardiff's among them, carry no `as_at` at all (measured
+   2026-09-01), so the date pin was unenforceable on the very site it
+   was written for. A value pin holds whether or not a reading is
+   dated and fails in the direction that matters: the operator's
+   figure moved, so the adjudication has not been made about the new
+   one.
+
+   **The rendering condition is met** (Luke, 2026-09-02, on the built
+   page: "It looks exactly as I imagined").
 3. **Does `at_least_100mw` admit on the rung**, with the count
    printed and `limits` updated? Effect today: +2 members.
    *Recommended: yes.*
@@ -332,6 +357,14 @@ vocabulary and is tracked in ROADMAP; nothing here admits it.
    reserved for the rendered page — "I'll probably respond properly
    once I've seen it." The rendering review settles 2 and 4
    together.
+
+   **Settled: the review passed** (Luke, 2026-09-02: "It looks
+   exactly as I imagined"). One rendering choice made in the build
+   and approved with it: the provenance charts went from two classes
+   to three, because an operator figure filed under either "from the
+   site's documents" or "estimated from floorspace" would be false on
+   the chart whose subject is provenance — a scoped revision of the
+   two-way ruling from issue #151, approved by Luke the same day.
 5. **Which quantity kinds are rung-eligible** — `announced_capacity`
    only, with operator `grid_connection` figures staying panel-only,
    or should an operator grid figure be allowed to feed the existing

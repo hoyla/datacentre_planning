@@ -1058,6 +1058,7 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
 .mw .w-stated{font-weight:700}                       /* disclosed by the applicant */
 .mw .w-implied{font-weight:500;color:var(--mut)}     /* a connection, or standby-implied */
 .mw .w-modelled{font-weight:400;color:var(--mut)}    /* arithmetic on floorspace */
+.mw .w-operator{font-weight:600;font-style:italic}   /* the operator's own campus figure */
 .mw .w-none{font-weight:400;color:var(--mut)}
 #tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){min-width:152px}
                                                         /* External power indicators */
@@ -1439,7 +1440,7 @@ figure.chart rect:hover{opacity:1}
 figure.chart rect.hl{opacity:.42}
 figure.chart .ax{stroke:var(--line)}
 figure.chart .xl,figure.chart .yl{fill:var(--mut);font-size:12px}
-/* A stack of two parts, and the pies, in one palette: brand for what an
+/* A stack of three parts, and the pies, in one palette: brand for what an
    applicant stated, slate for what this project worked out, and the
    external tiers in the same green/amber/slate the row pills use, so a
    colour means the same thing in a chart as it does in the table. */
@@ -1450,6 +1451,10 @@ figure.chart rect.s-est,figure.chart .s-est{fill:var(--machine)}
    muted register the Power MW column gives their figures. */
 figure.chart .s-grid{fill:#5b7d9c}
 figure.chart .s-standby{fill:#9c8a5b}
+/* A first-party campus figure: its own colour, because it is neither
+   what an applicant stated to the authority nor this project's
+   arithmetic, and the chart about provenance must not imply it is. */
+figure.chart .s-operator{fill:#7a5b9c}
 figure.chart .s-none{fill:#dcdcdc}
 figure.chart .s-strong{fill:#1d6b38}
 figure.chart .s-prob{fill:#c74600}
@@ -1465,6 +1470,7 @@ figure.chart path:hover,figure.chart circle:hover{opacity:1}
 .legend .s-est,.legend .s-tent{background:var(--machine)}
 .legend .s-grid{background:#5b7d9c}
 .legend .s-standby{background:#9c8a5b}
+.legend .s-operator{background:#7a5b9c}
 .legend .s-none{background:#dcdcdc}
 .legend .s-strong{background:#1d6b38}
 .legend .s-prob{background:#c74600}
@@ -2545,6 +2551,17 @@ def main() -> int:
         # roster naming a snapshot nobody has is a provenance claim with
         # nothing behind it.
         _sfac.require_held_snapshots(_facilities)
+        # The campus-scope adjudications (issue #250). Only the reviewed
+        # entries carrying a `power_cell` change a number, and each is a
+        # decision that an operator's campus figure ranks a site above
+        # the planning figure describing one of its facilities. Same
+        # liveness contract; the claim check runs once the claims are
+        # loaded, below.
+        from dcp import campus_scope as _csc
+        _scopes = _csc.load_scopes()
+        _csc.require_live(_scopes,
+                          {r[0] for r in site_rows} | _preplanning_keys)
+        displacements = _csc.load_displacements()
 
         def _shown(key, name):
             """A site's name as it should read.
@@ -2716,6 +2733,12 @@ def main() -> int:
         # states, and the divergence between the two is the finding.
         claims_by_site = ccl.load_site_claims(cur)
         n_claims_total = len(ccl.load_claim_rows(cur))
+        # A displacement pins the claim's value, so a republished figure
+        # stops the build rather than silently re-ranking a site: the
+        # adjudication was made about the figure it names. Not an as_at
+        # pin — five committed operator claims carry no as_at at all,
+        # Vantage Cardiff's among them (measured 2026-09-01).
+        _csc.require_claims_unmoved(displacements, claims_by_site)
 
         # A figure adjudicated as somebody else's must not appear in this
         # list looking like the site's own. Ten of them did: the panel
@@ -3290,11 +3313,15 @@ def main() -> int:
         p_held = _cd.get("prose_held", held)
         p_read = _cd.get("prose_read", read)
         apps = apps_by_site.get(key, [])
+        _rung_claim, _rung_displaces = ccl.rung_inputs(
+            key, claims_by_site.get(key, []), displacements)
         est = scale.power_estimate(it_load_mw=it, total_site_mw=tot, grid_mw=grid,
                                    generation_mw=gen,
                                    floorspace_sqm=site_floorspace.get(key),
                                    has_documents=bool(docs),
-                                   prose_held=p_held, prose_read=p_read)
+                                   prose_held=p_held, prose_read=p_read,
+                                   operator_claim=_rung_claim,
+                                   operator_displaces=_rung_displaces)
         cap_key, cap_label = site_profile.capacity_status(
             pre_application=(n_apps or 0) == 0, docs_held=p_held, docs_read=p_read,
             power_value_mw=est.value_mw, power_basis=est.basis)
@@ -3314,6 +3341,14 @@ def main() -> int:
         capacity_shape.append({
             "mw": est.value_mw,
             "stated": bool(est.value_mw) and est.basis in scale.DISCLOSED_BASES,
+            # Three provenances, not two. An operator's campus figure is
+            # neither "from the site's documents" nor this project's
+            # arithmetic on a floor area, and filing it under either
+            # would be false on the chart whose whole subject is where a
+            # figure comes from — the #151 failure in a third costume.
+            "prov": ("operator" if est.basis == scale.OPERATOR_BASIS else
+                     "stated" if est.basis in scale.DISCLOSED_BASES else
+                     "estimated"),
             "claim": ("strong" if "strong" in _tiers else
                       "probable" if "probable" in _tiers else
                       "tentative" if "tentative" in _tiers else "")})
@@ -4060,13 +4095,20 @@ def main() -> int:
         # legible ON the figure, and "I'd do it with weight and a mark
         # rather than colour alone (colour vanishes the moment someone
         # sorts)". So the ladder in site_scale.power_estimate reads as
-        # three weights and one glyph: a disclosed figure is stated in
-        # full, a connection or standby-implied figure is lighter, and a
+        # four weights and one glyph: a disclosed figure is stated in
+        # full, a connection or standby-implied figure is lighter, a
         # floorspace estimate carries "≈" because it is arithmetic on an
-        # area rather than anything anyone published.
-        _wclass = {"High": "w-stated", "Medium": "w-implied",
-                   "Low": "w-implied", "Indicative": "w-modelled"}.get(
-                       est.confidence or "", "w-implied")
+        # area rather than anything anyone published, and an operator's
+        # own campus figure is italic — published, but to customers
+        # rather than to the planning authority.
+        # Keyed on the basis first, because the rung is Medium and a
+        # Medium grid connection is not the same kind of figure: one is
+        # a first-party statement, the other headroom we read off an
+        # application. Confidence carries the rest, as it always did.
+        _wclass = ("w-operator" if est.basis == scale.OPERATOR_BASIS else
+                   {"High": "w-stated", "Medium": "w-implied",
+                    "Low": "w-implied", "Indicative": "w-modelled"}.get(
+                        est.confidence or "", "w-implied"))
         _mark = "≈" if est.confidence == "Indicative" else ""
         mw_cell = ((f"<span class='fig {_wclass}'>{_mark}{mw}</span>"
                     f"<span class='q'>{esc(est.basis)}"
@@ -4826,16 +4868,18 @@ def main() -> int:
     # from the picture — they are stacked on top of the stated ones and
     # named, so the shape of the corpus is visible without the weakest
     # class of figure being mistaken for a disclosure (Luke, 2026-08-25).
-    band_split = {b[0]: {"stated": 0, "estimated": 0} for b in BANDS}
+    band_split = {b[0]: {"stated": 0, "operator": 0, "estimated": 0}
+                  for b in BANDS}
     for row in capacity_shape:
         v = row["mw"]
         if not v:
             continue
         for lab, lo, hi in BANDS:
             if lo <= v < hi:
-                band_split[lab]["stated" if row["stated"] else "estimated"] += 1
+                band_split[lab][row["prov"]] += 1
                 break
     _n_stated = sum(b["stated"] for b in band_split.values())
+    _n_oper = sum(b["operator"] for b in band_split.values())
     _n_est = sum(b["estimated"] for b in band_split.values())
     chart_bands = stacked_bars(
         [(b[0], band_split[b[0]]) for b in BANDS],
@@ -4845,9 +4889,13 @@ def main() -> int:
         f"stated load, a grid connection or standby plant sized to the load — the pie "
         f"beside this separates those. An estimate is this project's arithmetic on "
         f"a floor area, never a figure anybody published, and it is the weakest class in "
-        f"the release: usable as a sense of scale, never as a quoted number. Partly-read "
+        f"the release: usable as a sense of scale, never as a quoted number. A third "
+        f"part names the {_n_oper} sites ranked on a figure their operator publishes "
+        f"about its own campus, which is neither of those things — a first-party "
+        f"statement to customers rather than to the planning authority. Partly-read "
         f"sites can move up a band as reading continues.",
         [("stated", "From the site's documents", "s-stated"),
+         ("operator", "Operator-stated campus figure", "s-operator"),
          ("estimated", "Estimated from floorspace", "s-est")])
 
     # The same population as the bands, split by provenance instead of
@@ -4860,19 +4908,23 @@ def main() -> int:
     _n_tot = power_basis_counts.get("Disclosed total site demand", 0)
     _n_grid = power_basis_counts.get("Grid connection capacity", 0)
     _n_standby = power_basis_counts.get("Standby generation capacity", 0)
+    _n_operator_basis = power_basis_counts.get(scale.OPERATOR_BASIS, 0)
     chart_basis = pie(
         [("Stated as the site's own load", _n_it + _n_tot, "s-stated"),
          ("Grid connection capacity", _n_grid, "s-grid"),
          ("Standby generation capacity", _n_standby, "s-standby"),
+         ("Operator-stated campus figure", _n_operator_basis, "s-operator"),
          ("Estimated from floorspace", _n_est, "s-est")],
         "Where a site's own figure comes from",
-        f"The {_n_stated + _n_est} sites carrying any capacity figure — the same sites "
-        f"the chart above bands by size, split here by what each figure rests on. A "
-        f"stated load is the applicant's own number; a grid connection is headroom "
-        f"rather than consumption; standby capacity is inferred from plant sized to "
-        f"carry the load; a floorspace estimate is this project's arithmetic. The other "
-        f"{n_sites - _n_stated - _n_est} sites carry none — their documents are unread, "
-        f"or disclose nothing and give no floor area to work from.")
+        f"The {_n_stated + _n_oper + _n_est} sites carrying any capacity figure — the "
+        f"same sites the chart above bands by size, split here by what each figure "
+        f"rests on. A stated load is the applicant's own number; a grid connection is "
+        f"headroom rather than consumption; standby capacity is inferred from plant "
+        f"sized to carry the load; an operator-stated campus figure is published by "
+        f"the operator about its own facilities and is not in the planning record at "
+        f"all; a floorspace estimate is this project's arithmetic. The other "
+        f"{n_sites - _n_stated - _n_oper - _n_est} sites carry none — their documents "
+        f"are unread, or disclose nothing and give no floor area to work from.")
 
     # And of the sites whose applications say nothing, how many are
     # described by something outside the planning system.

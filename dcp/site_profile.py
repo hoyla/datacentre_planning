@@ -29,6 +29,8 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from dcp import site_scale
+
 # ---------------------------------------------------------------------------
 # EIA status
 # ---------------------------------------------------------------------------
@@ -773,6 +775,20 @@ def capacity_status(*, pre_application: bool, docs_held: int, docs_read: int,
     if pre_application:
         return ("pre_application",
                 "Pre-application — no public planning material exists yet")
+    # Before the documents test, because an operator's published figure
+    # is knowledge that does not come from documents at all: a site we
+    # hold nothing for can still carry one, and calling that "No
+    # documents held" would hide a figure the row is ranked on.
+    #
+    # The label asserts only what is true wherever the rung fires. It
+    # deliberately does NOT say the documents disclose nothing: under a
+    # scope adjudication the rung stands above a figure the documents do
+    # state (Stockley Park's 24 MW). Which kind of planning silence — or
+    # which planning figure — sits beneath it is the caveat's job, and
+    # `site_scale.power_estimate` writes it per site.
+    if power_basis == site_scale.OPERATOR_BASIS:
+        return ("operator_stated",
+                "Capacity published by the operator about its own campus")
     if docs_held == 0:
         return ("no_documents", "No documents held")
     if power_value_mw is not None:

@@ -24,9 +24,14 @@ Six sheets, in the order a new reader meets them:
   (currently NESO's Existing Agreements Register), one row per claim as
   the source states it. Where a claim is matched to a site the match is
   a hand-adjudicated inference and its confidence, method and written
-  evidence are columns. The Sites sheet's power columns remain
-  planning-derived only; a register figure never becomes a site's
-  number.
+  evidence are columns. A register figure never becomes a site's
+  number. One narrow class of claim does reach the Sites sheet's power
+  columns since 2026-09-01: a figure an operator publishes about its
+  own campus, where the match is strong or probable and the site holds
+  exactly one such claim, renders as "Operator-stated campus figure"
+  with the planning record's own position named in the caveat beside
+  it (docs/PLAN_OPERATOR_RUNG.md). Third-party aggregates and the
+  registers stay out.
 - **Provenance** — run metadata plus the corpus-level statement of known
   retrieval gaps, so the coverage caveats live in the deliverable rather
   than in a covering email.
@@ -561,9 +566,12 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "Distinct triage verdicts across member applications (v1 rubric)."),
     ("Sites", "Power MW (best available)",
      "One rankable capacity figure per site. Falls back through disclosed "
-     "IT load, total site power, grid connection, on-site generation, "
+     "IT load, total site power, a campus figure the operator publishes "
+     "about its own facilities, grid connection, on-site generation, "
      "then a floor-area inference — losing authority at each step. The "
-     "three columns to its right say which step and how much to trust it."),
+     "three columns to its right say which step and how much to trust "
+     "it. The operator step is the one figure here that is not from the "
+     "planning record: see the entry below."),
     ("Sites", "External power indicators",
      "Whether this site has a live match in the Capacity claims sheet, "
      "and the strongest confidence tier among its matches: 'strong', "
@@ -576,7 +584,16 @@ DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Where the power columns come from, and what not to compare",
      "Every power column on this sheet is read from the site's own "
      "planning documents and adjudicated as describing this site — the "
-     "applicant's stated figures, not anyone else's estimate of them. "
+     "applicant's stated figures, not anyone else's estimate of them — "
+     "with one labelled exception. Where a site's own planning record "
+     "does not state a load, or where a hand adjudication has recorded "
+     "that the figure it states describes a single facility of a "
+     "campus, the Power MW column may instead carry a figure the "
+     "operator publishes about that campus. Those rows read "
+     "\"Operator-stated campus figure\" in Power basis, and their Power "
+     "caveat names what the planning record says instead. Nothing else "
+     "crosses: no register figure and no filed-accounts figure reaches "
+     "this sheet. "
      "The Capacity claims sheet holds a different class of number "
      "entirely: grid registers, accounts filed at Companies House, and "
      "operators' own websites, each measuring a different quantity with "
@@ -1244,6 +1261,15 @@ def main() -> None:
         # names in their own columns — the derived name the record
         # generates, and the curated alias where one exists. A dead key
         # in the priors fails the build, per the loader's contract.
+        # The operator rung's two inputs, loaded once and passed to the
+        # same resolver the reader and the cohorts use, so the three
+        # artefacts cannot disagree about which sites it ranks — the 2.2
+        # lesson, when the reader and the workbook differed on 43 sites
+        # because only one of them called the ladder.
+        from dcp import campus_scope as _csc
+        site_claims = ccl.load_site_claims(cur)
+        displacements = _csc.load_displacements()
+
         from dcp import site_aliases as _sal
         _site_aliases = _sal.load_aliases()
         # Pre-planning rows carry aliases too, and their pseudo keys are
@@ -1252,6 +1278,13 @@ def main() -> None:
         _barbour_keys = {f"PTNO-{r[0]}" for r in cur.fetchall()}
         _sal.require_live(_site_aliases,
                           {r[0] for r in site_rows} | _barbour_keys)
+        # Same contract for the campus-scope adjudications, and the same
+        # value pin: a republished operator figure stops the build here
+        # exactly as it does in the reader, so the two artefacts cannot
+        # ship a different answer about which figure ranks a site.
+        _csc.require_live(_csc.load_scopes(),
+                          {r[0] for r in site_rows} | _barbour_keys)
+        _csc.require_claims_unmoved(displacements, site_claims)
         # What kind of site each row is (issue #159), derived from both
         # generations of triage verdict. Never an ejection: every site
         # keeps its row, and the column is what lets a reporter filter
@@ -1434,18 +1467,23 @@ def main() -> None:
         _cd = cov_detail.get(key, {})
         p_held = _cd.get("prose_held", held)
         p_read = _cd.get("prose_read", read)
+        _rung_claim, _rung_displaces = ccl.rung_inputs(
+            key, site_claims.get(key, []), displacements)
         est = scale.power_estimate(
             it_load_mw=it_load_mw, total_site_mw=total_site_mw,
             grid_mw=grid_mw, generation_mw=gen_mw,
             floorspace_sqm=site_floorspace.get(key),
             has_documents=bool(docs),
-            prose_held=p_held, prose_read=p_read)
+            prose_held=p_held, prose_read=p_read,
+            operator_claim=_rung_claim, operator_displaces=_rung_displaces)
         agg_figures.append((est.basis, est.value_mw,
                             p_held > 0 and p_read >= p_held))
 
         if est.value_mw is not None:
             band_key, band_label = scale.scale_from_mw(est.value_mw)
-            basis = ("stated_capacity" if est.confidence in ("High", "Medium")
+            basis = ("operator_claim" if est.basis == scale.OPERATOR_BASIS
+                     else "stated_capacity"
+                     if est.confidence in ("High", "Medium")
                      else "floor_area" if est.basis.startswith("Estimated")
                      else "stated_capacity")
         else:
@@ -1800,6 +1838,9 @@ def main() -> None:
         ("Headline figure is estimated from floorspace "
          "(an inference, not a disclosure)",
          n_by_basis.pop(("Estimated from floorspace", None), 0)),
+        ("Headline figure is one the operator publishes about its own "
+         "campus (not in the planning record)",
+         n_by_basis.pop((scale.OPERATOR_BASIS, None), 0)),
         ("Readable documents read in full; no capacity or floorspace "
          "disclosed — for a datacentre, itself notable",
          n_by_basis.pop(("No capacity disclosed", True), 0)),
@@ -1953,9 +1994,13 @@ def main() -> None:
     # where a hand-adjudicated match attaches it to a site the match's
     # confidence, method and written evidence are columns — the match is
     # our inference, so its reasoning ships with it. Deliberately a
-    # separate sheet: the Sites sheet's power columns stay
-    # planning-derived only, and the divergence between a register figure
-    # and a planning figure for the same site is a finding, not an error.
+    # separate sheet: no register figure reaches the Sites sheet's power
+    # columns, and the divergence between a register figure and a
+    # planning figure for the same site is a finding, not an error. The
+    # one exception is first-party and labelled — an operator's own
+    # campus figure may rank a site through the ladder's operator rung,
+    # which is why that basis exists rather than the figure arriving
+    # unmarked (docs/PLAN_OPERATOR_RUNG.md).
     ws = _sheet("Capacity claims", [
         "Register entry", "MW", "Quantity", "Connection point",
         "Connection date", "Register as at", "Register row",

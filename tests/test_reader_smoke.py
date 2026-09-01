@@ -690,3 +690,47 @@ def test_every_our_copy_link_names_a_snapshot_this_repository_holds(built_reader
         f"read from; the store holds 84 snapshots behind 81 operator "
         f"claims and six green claims, so this looks like resolution "
         f"failed rather than a corpus that genuinely cites nothing")
+
+
+def test_every_operator_rung_cell_is_labelled_in_the_built_page(built_reader):
+    """A first-party campus figure must never render as a planning one.
+
+    The rung puts a number a marketing page published into the column a
+    reporter sorts, so the label is not styling — decision 2 of
+    docs/PLAN_OPERATOR_RUNG.md is conditional on a reader being able to
+    see what the figure is and what the planning record says instead.
+    This reads the built bytes rather than trusting the mapping, which
+    cannot see a call site that classed a cell by hand.
+
+    Both halves, as `test_every_our_copy_link...` does above: no
+    `w-operator` cell may carry any other basis label, and the two
+    adjudicated displacements must actually be there — checked only
+    against a reader this code built, because the committed
+    `index.html` is a released artefact predating the feature and a
+    count asserted there measures the age of the release.
+    """
+    import urllib.parse
+
+    from dcp import campus_scope, site_scale
+
+    html = pathlib.Path(urllib.parse.urlparse(built_reader).path).read_text()
+    cells = re.findall(
+        r"<span class='fig (w-[a-z]+)'>[^<]*</span><span class='q'>([^<]*)",
+        html)
+    mislabelled = sorted({(w, q) for w, q in cells
+                          if (w == "w-operator")
+                          != (q == site_scale.OPERATOR_BASIS)})
+    assert not mislabelled, (
+        f"the operator weight class and its basis label disagree on "
+        f"{len(mislabelled)} cells, e.g. {mislabelled[:3]} — a first-party "
+        f"figure styled as a planning disclosure, or the reverse")
+
+    if os.environ.get("READER_HTML"):
+        pytest.skip("READER_HTML names a reader built earlier; the "
+                    "displacements belong to a build made from this code")
+    n = sum(1 for w, _q in cells if w == "w-operator")
+    assert n >= len(campus_scope.load_displacements()), (
+        f"only {n} operator-rung cells rendered, against "
+        f"{len(campus_scope.load_displacements())} adjudicated "
+        f"displacements alone — a build that ranked none of them would "
+        f"pass the check above vacuously")

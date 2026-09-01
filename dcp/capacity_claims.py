@@ -614,6 +614,74 @@ def load_site_claims(cur) -> dict[str, list[dict]]:
     return out
 
 
+# ---------------------------------------------------------------------------
+# The operator rung's eligibility test
+# ---------------------------------------------------------------------------
+
+# A first-party statement, in the operator's own voice, about its own
+# facilities. Third-party aggregates and the registers stay
+# tier-and-count (Luke, 2026-08-20 and 2026-08-30: typed standing, not
+# equal standing), so nothing but this source may reach the cell.
+RUNG_SOURCE_KEY = "operator_website"
+
+# Decision 5: `announced_capacity` only. An operator's own
+# `grid_connection` figure stays panel-only rather than feeding the
+# existing grid rung, until a case needs otherwise.
+RUNG_QUANTITY_TYPE = "announced_capacity"
+
+# A `tentative` match is "a lead, not an attribution" in the matches
+# files' own words, and must never rank a site.
+RUNG_CONFIDENCE = ("strong", "probable")
+
+
+def rung_claim(site_claims: list[dict]) -> dict | None:
+    """The one operator claim that may fill a site's power cell, or None.
+
+    Every guard in docs/PLAN_OPERATOR_RUNG.md's "The proposal", in one
+    place so that no consumer can apply four of the five. Returns the
+    claim dict as `load_site_claims` produced it.
+
+    The last guard is the one with a name attached. **More than one
+    distinct eligible claim on a site means panel-only** — the Global
+    Switch lesson (2026-09-01): its two buildings each state figures of
+    several kinds, and which of a building's own figures a campus total
+    may add is a judgement per facility, not arithmetic. A site holding
+    two campus claims has no arithmetic that can pick between them
+    either, so it keeps today's behaviour until a person says which.
+
+    Components are excluded before the count, so a campus total sitting
+    above its own facility figures is one claim and not five. That is
+    why this could not be written before `component_of` was loaded:
+    until then Kao Harlow held five apparently-competing claims.
+    """
+    rows = [c for c in site_claims
+            if c.get("source_key") == RUNG_SOURCE_KEY
+            and c.get("quantity_type") == RUNG_QUANTITY_TYPE
+            and c.get("confidence") in RUNG_CONFIDENCE
+            and not c.get("component_of")
+            and c.get("value_mw") is not None]
+    # The append-only fold: one reading per claim, the latest. A claim
+    # with no `as_at` is not "oldest" — it is undated, which several
+    # committed claims are (Vantage Cardiff among them, measured
+    # 2026-09-01) — so it loses only to a reading that carries a date,
+    # and ties break on the claim's own name for determinism.
+    latest: dict[str, dict] = {}
+    for c in sorted(rows, key=lambda c: str(c.get("claim_name") or "")):
+        name = c["claim_name"]
+        prev = latest.get(name)
+        if prev is None or _as_at_key(c) >= _as_at_key(prev):
+            latest[name] = c
+    if len(latest) != 1:
+        return None
+    return next(iter(latest.values()))
+
+
+def _as_at_key(claim: dict):
+    """Sort key that puts an undated reading below any dated one."""
+    as_at = claim.get("as_at")
+    return (as_at is not None, str(as_at or ""))
+
+
 def load_claim_rows(cur) -> list[dict]:
     """Every claim, with its live match where one exists — the workbook
     sheet's rows. Unmatched claims are most of the register and belong in
@@ -779,3 +847,37 @@ def validate_matches(claims: list[Claim], matches: list[Match]) -> list[str]:
             problems.append(f"row {m.excel_row}: matched more than once")
         seen_rows.add(m.excel_row)
     return problems
+
+
+def rung_inputs(site_key: str, site_claims: list[dict],
+                displacements: dict | None = None):
+    """The two arguments `site_scale.power_estimate` needs for the rung.
+
+    One function, because three consumers read the ladder — the reader,
+    the workbook and `site_cohorts` — and the 2.2 lesson was that when
+    only one of them applied a rule the two artefacts disagreed about
+    43 sites. Anything that ranks a site calls this; nothing reimplements
+    the guards.
+
+    Returns `(OperatorClaim | None, displaces: bool)`.
+    """
+    from dcp.site_scale import OperatorClaim
+
+    claim = rung_claim(site_claims)
+    if claim is None:
+        return None, False
+    d = (displacements or {}).get(site_key)
+    # A displacement names one claim. If the site's sole eligible claim
+    # is a different one, the adjudication is not about this figure and
+    # must not licence it over a stated load — `require_claims_unmoved`
+    # will already have said so at build time, and this is the arm that
+    # keeps a stale pin from silently displacing the wrong claim.
+    displaces = bool(d and d.claim_name == claim["claim_name"])
+    return OperatorClaim(
+        value_mw=float(claim["value_mw"]),
+        claim_name=claim["claim_name"],
+        operator=str(claim.get("operator") or ""),
+        operator_term=str(claim.get("operator_term") or ""),
+        as_at=str(claim.get("as_at") or ""),
+        note=(d.note if displaces and d.note else ""),
+    ), displaces
