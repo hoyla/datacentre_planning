@@ -36,7 +36,16 @@ from __future__ import annotations
 
 from pathlib import Path
 
-PAGES_PATH = Path("data/priors/operator_pages.yaml")
+# Resolved against the package root, never the working directory. A
+# relative default plus `load_pages`' empty-on-absent return is a
+# silent disappearance: run a build from anywhere but the repository
+# root and every operator and consultation link drops off the site
+# pages, while `require_live` — written to stop a link silently
+# ceasing to apply — has no keys to check and passes over the empty
+# result.
+# Same form as capacity_claims and green_claims, for the same reason.
+ROOT = Path(__file__).resolve().parent.parent
+PAGES_PATH = ROOT / "data" / "priors" / "operator_pages.yaml"
 
 KINDS = ("corporate", "consultation")
 

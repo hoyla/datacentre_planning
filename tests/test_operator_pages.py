@@ -97,3 +97,43 @@ def test_link_text_states_the_audience_and_only_needed_labels():
 
 def test_missing_file_is_an_empty_prior(tmp_path):
     assert op.load_pages(tmp_path / "absent.yaml") == {}
+
+
+def test_the_priors_path_is_absolute_so_a_build_cannot_lose_the_links():
+    """The path resolves against the package root, not the cwd.
+
+    The mechanism is pinned rather than the number of pages, which
+    grows. A relative default is invisible from inside the module:
+    `load_pages` returns {} for an absent file by design, so from
+    another directory every link vanishes and nothing complains.
+    """
+    assert op.PAGES_PATH.is_absolute()
+
+
+def test_the_prior_loads_the_same_from_another_working_directory(
+        tmp_path, monkeypatch):
+    """The failure this is for: a build run from anywhere else.
+
+    Asserts the key *set* against a live read rather than a count, so
+    curation can add pages without flaking the test.
+    """
+    from_root = op.load_pages()
+    assert from_root, "the committed prior is not empty"
+
+    monkeypatch.chdir(tmp_path)
+    assert set(op.load_pages()) == set(from_root)
+
+
+def test_an_empty_load_cannot_satisfy_require_live(tmp_path, monkeypatch):
+    """The vacuous pass is the reason the relative default mattered.
+
+    `require_live` checks the keys it is handed, so a load that
+    returned nothing agreed with *any* corpus. The guard written to
+    stop one link silently ceasing to apply was reporting clean while
+    every link silently ceased to apply — and the operator's own
+    account of a scheme is what drops off the page. From another
+    directory it must now raise, exactly as it does from the root.
+    """
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(ValueError, match="not live"):
+        op.require_live(op.load_pages(), set())

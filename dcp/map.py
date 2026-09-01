@@ -35,7 +35,22 @@ from pathlib import Path
 from dcp import db, worklist
 
 
-OSM_BUNDLED = Path("data/priors/osm/uk_power_plants.geojson")
+# Resolved against the package root, never the working directory, and
+# `INFERRED_COORDS_PATH` is shared with dcp/reader.py so the two call
+# sites cannot drift. Three of the four readers behind these constants
+# return empty for an absent file rather than raising — only
+# `build_map` below raises on a missing OSM layer, while
+# `reader._load_plants_for_viewer` returns [] and
+# `_load_inferred_coords` returns {} — so a build run from anywhere
+# but the repository root silently loses the reader's power-station
+# overlay and every coordinate prior. The coordinate priors are what
+# stop a wrong provider pin merging unrelated campuses: Barbour places
+# the Wapseys Wood scheme 8.5 km from the address on its own record,
+# inside another cluster's radius (HISTORY, 2026-08-25).
+# Same form as capacity_claims and green_claims, for the same reason.
+ROOT = Path(__file__).resolve().parent.parent
+OSM_BUNDLED = ROOT / "data" / "priors" / "osm" / "uk_power_plants.geojson"
+INFERRED_COORDS_PATH = ROOT / "data" / "priors" / "inferred_coords.yaml"
 
 # Plant-source buckets used for layer grouping and marker colouring. Order
 # matters: the first matching bucket wins per feature. Buckets are journalism-
@@ -188,7 +203,7 @@ def _row_to_point(
     )
 
 
-def _load_inferred_coords(path: Path) -> dict[str, dict]:
+def _load_inferred_coords(path: Path = INFERRED_COORDS_PATH) -> dict[str, dict]:
     """Load data/priors/inferred_coords.yaml. Returns an empty dict when
     the file is missing — inferred-coord backfill is optional."""
     if not path.exists():
@@ -622,7 +637,7 @@ def build_map(
 
     with db.connect() as conn:
         data = worklist.fetch(conn, model=model)
-    inferred = _load_inferred_coords(Path("data/priors/inferred_coords.yaml"))
+    inferred = _load_inferred_coords()
     points: list[WorklistPoint] = []
     for rank, row in enumerate(data.rows, 1):
         wp = _row_to_point(row, rank, inferred=inferred)

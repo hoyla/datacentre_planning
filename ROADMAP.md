@@ -1436,6 +1436,26 @@ field and is not publishable as it stands.
   `dcp.drive.file_url` now exists and the snapshot links use it; folding
   the other three in is its own small change.
 
+  **And the same relative-path trap survives in `dcp/sites.py`, where
+  it is worst.** `build_clusters` defaults `data_dir` to
+  `Path("data")`, so from anywhere but the repository root both
+  `_load_inferred_coords` and `_load_site_partitions` return empty.
+  Measured 2026-09-01: from the root, 29 `ref` pins, 2 `ptno` pins,
+  476 partitioned applications and 34 partitioned projects; from
+  `/tmp`, none of each. `scripts/materialise_sites.py` and
+  `scripts/split_union_park_ite.py` both call it without `data_dir`.
+  The two guards beside those loads — unknown Ptno, unknown
+  partitioned record — check only the keys they are handed, so both
+  pass over the empty result and the run re-merges the campuses the
+  priors exist to keep apart while reporting clean. That is the
+  Wapseys Wood pin back, and here it changes site keys rather than a
+  display name. Noticed while resolving the same defect in
+  `site_aliases`, `operator_pages` and `map`/`reader`, and
+  deliberately not folded into that change. The fix is the same one
+  line, `ROOT = Path(__file__).resolve().parent.parent`, but
+  `data_dir` is a threaded parameter rather than a module constant —
+  four test modules pass it explicitly — so it is its own change.
+
 - **The Pinpoint/Giant delta: get the manifest, compute it, put
   re-upload in the chain.** The bundle policy — what the reduction
   drops and why, decided by Luke 2026-08-28 — now lives in the

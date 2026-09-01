@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import datetime as dt
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 import pytest
 
@@ -166,3 +167,88 @@ def test_render_kml_escapes_xml_special_chars_in_ref(tmp_path):
                        generated_at=dt.datetime(2026, 5, 15))
     # If escaping is broken, ElementTree will refuse to parse.
     ET.fromstring(out.read_text())
+
+
+# ---------------------------------------------------------------------------
+# Priors paths — resolved against the package root, never the cwd
+# ---------------------------------------------------------------------------
+
+
+def test_the_priors_paths_are_absolute_so_a_build_cannot_lose_the_layers():
+    """Both constants resolve against the package root, not the cwd.
+
+    The mechanism is pinned rather than any count of plants or pins,
+    both of which grow. A relative default is invisible from inside
+    the module: three of the four readers behind these constants
+    return empty for an absent file, so from another directory the
+    layer is simply not there and nothing says so.
+    """
+    assert map_mod.OSM_BUNDLED.is_absolute()
+    assert map_mod.INFERRED_COORDS_PATH.is_absolute()
+
+
+def test_the_coordinate_priors_load_the_same_from_another_working_directory(
+        tmp_path, monkeypatch):
+    """The failure this is for: a build run from anywhere else.
+
+    The priors are what stop a wrong provider pin merging unrelated
+    campuses — Barbour places the Wapseys Wood scheme 8.5 km from the
+    address on its own record, inside another cluster's radius
+    (HISTORY, 2026-08-25). Losing them silently puts those pins back.
+    Asserts the ref *set* against a live read, not a count.
+    """
+    # Read through an explicitly-built absolute path rather than the
+    # new constant, so the demonstration below still runs against a
+    # module that has not been fixed.
+    prior = (Path(map_mod.__file__).resolve().parent.parent
+             / "data" / "priors" / "inferred_coords.yaml")
+    from_root = map_mod._load_inferred_coords(prior)
+    assert from_root, "the committed prior is not empty"
+
+    monkeypatch.chdir(tmp_path)
+    # The historical call shape, kept to show what it did rather than
+    # only that it is gone: a path relative to the working directory
+    # finds no file, and the loader's empty-on-absent return means
+    # nobody downstream can tell that from a corpus with no priors.
+    assert map_mod._load_inferred_coords(
+        Path("data/priors/inferred_coords.yaml")) == {}
+    assert set(map_mod._load_inferred_coords()) == set(from_root)
+
+
+def test_the_reader_keeps_its_power_station_overlay_from_another_directory(
+        tmp_path, monkeypatch):
+    """`_load_plants_for_viewer` returns [] for an absent file.
+
+    So the reader — the front door — would have rendered its map with
+    the entire power-station overlay missing and no error raised. Only
+    `map.build_map` raises on a missing OSM layer; the reader's own
+    loader is silent, which is why the constant had to move.
+    """
+    from dcp import reader as reader_mod
+
+    from_root = reader_mod._load_plants_for_viewer()
+    assert from_root, "the committed OSM layer is not empty"
+
+    monkeypatch.chdir(tmp_path)
+    assert len(reader_mod._load_plants_for_viewer()) == len(from_root)
+
+
+def test_the_map_and_the_reader_share_one_coordinate_prior_constant():
+    """The two call sites cannot drift, because there is one path.
+
+    Both `map.build_map` and `reader._build_entry` used to name
+    `data/priors/inferred_coords.yaml` in their own `Path(...)` literal,
+    so a change to one would have left the other pointing elsewhere.
+    The source assertion is the direct form of that requirement:
+    prose cannot stop a literal being reintroduced, and this can.
+    """
+    import inspect
+
+    default = inspect.signature(
+        map_mod._load_inferred_coords).parameters["path"].default
+    assert default is map_mod.INFERRED_COORDS_PATH
+
+    for mod in (map_mod, __import__("dcp.reader", fromlist=["reader"])):
+        source = inspect.getsource(mod)
+        assert 'Path("data/priors/inferred_coords.yaml")' not in source, (
+            f"{mod.__name__} builds its own path to the coordinate prior")

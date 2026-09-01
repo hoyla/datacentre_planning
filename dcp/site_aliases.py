@@ -19,7 +19,19 @@ from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 
-ALIASES_PATH = Path("data/priors/site_aliases.yaml")
+# Resolved against the package root, never the working directory. A
+# relative default plus `load_aliases`' empty-on-absent return is a
+# silent disappearance: run a build from anywhere but the repository
+# root and no alias applies, while `require_live` — written to stop
+# exactly that — has no keys to check and passes over the empty
+# result. The misleading derived name would come back in front of
+# reporters with nothing to say it had happened, which is the
+# regression this file exists to prevent. `_cached_aliases` makes it
+# stickier: whichever directory the first caller ran from is then
+# frozen for the process.
+# Same form as capacity_claims and green_claims, for the same reason.
+ROOT = Path(__file__).resolve().parent.parent
+ALIASES_PATH = ROOT / "data" / "priors" / "site_aliases.yaml"
 
 
 def load_aliases(path: Path = ALIASES_PATH) -> dict[str, str]:
