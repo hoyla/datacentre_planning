@@ -2128,7 +2128,10 @@ the build that publishes `index.html` for the same reason step 11 does.
 What remains is WP-C: rendering the link. The rule that needs care is
 that a claim links the snapshot that existed at its `as_at` — CyrusOne
 LON1's 2026-08-20 reading has to reach the 8.72 MW page, not the
-2026-08-28 one that says 9.
+2026-08-28 one that says 9. *That rule was necessary and not
+sufficient, and the entry below says why: the 8.72 MW page is not held
+at all, so a date rule would have landed the row on the 9 MW file it
+contradicts. The quote is what discriminates.*
 
 ---
 
@@ -2197,6 +2200,83 @@ A gap is not an error: Stockley's is a denominator (two of five
 facilities disclose nothing), Slough's is a question for the operator,
 and Kao's and Iron Mountain's are integer totals over decimal
 facilities.
+
+---
+
+## A claim links its own evidence (2026-09-01)
+
+WP-C, and the last of the snapshot chain. An operator's capacity claim
+rests on a marketing page with no register behind it, so the copy this
+project holds *is* the evidence — and until today a reporter could only
+reach it by cloning a repository. Each operator and green claim now
+carries a Drive link to that copy beside the source URL it already
+showed, on five surfaces: the site panel's claims box, the Operators
+tab, the green-claims table, and the workbook's Capacity claims and
+Figures by audience sheets.
+
+**Led by the other link than a document's, deliberately.** A planning
+document's title links our copy and the register comes second, because
+councils withdraw documents. A claim's published page stays the primary
+link, because it is what a story cites; our copy is the labelled
+second. Same pair, opposite emphasis, and the reason is which one can
+be taken away.
+
+**The rule turned out to be the quote, not the date — and the spec said
+the date.** WP-B's entry above closes by saying a claim must link the
+snapshot that existed at its `as_at`. That is necessary and it is not
+sufficient, and CyrusOne LON1 is why. Its superseded 8.72 MW reading is
+still a row in `capacity_claims`, because the content key includes the
+value and the date; the file it was read from is *not* held, because it
+was overwritten before the store became append-only three weeks later.
+So the whole point of the date rule — the older reading reaching the
+older evidence — cannot be met for that row, and a date rule would have
+landed it on the 2026-08-30 file that reads 9 MW: a working link, under
+a citation naming a different figure, which is the failure
+`document_drive_files` exists to prevent one layer up. **Two further
+things the spec did not have, both read off the database rather than
+reasoned about**: the row carries no `as_at` at all, so it would have
+taken the newest-first arm; and the reading is not in
+`operator-claims.yaml` either, which holds current readings only.
+
+So a claim links **the nearest held file in which its own verbatim
+quote appears**, whitespace-normalised as the gate normalises, and
+links nothing otherwise. The date still orders the search —
+`snapshot_candidates` offers the files that existed when the reading
+was taken, newest first, then the later ones oldest first, because a
+reading routinely predates the next re-fetch — but the quote decides.
+`snapshot_drive.copy_url` is the one helper every surface calls; it
+returns nothing where no candidate contains the quote, and nothing
+where the winning file has no ledger entry, because the neighbouring
+file is different evidence rather than a fallback.
+
+**80 of the 81 committed operator claims resolve, and the one that does
+not is the 8.72 MW row.** All six green claims resolve. The reader
+renders 166 links across the three surfaces; the workbook fills 80 of
+264 claim rows and 37 of 118 audience rows, the blanks being register
+entries and filed accounts, which are published documents with
+permanent locations of their own and no snapshot behind them. A
+register locator is "row 47" and a filing's is "page 12", so they
+resolve to nothing by construction rather than by exclusion — and the
+resolver refuses a locator that is not slug-shaped, so nothing is ever
+matched by a glob reading a locator as a pattern.
+
+**The guard was shown to fail on both shapes of the bug it is for.** A
+built-page test asserts every rendered our-copy href names a file id in
+the committed ledger. Against the real build it passes; against the
+same page with one id altered it fails, and against the same page with
+every our-copy link stripped it fails on the positive half. That is the
+`test_no_link_in_the_built_page_points_at_a_filesystem` pattern, which
+exists because 401 dead links shipped in 2.8 while every unit test
+passed.
+
+**Diffed against a build of `main` rather than against 2.10**, which is
+the comparison that isolates a change: site-panel links 69,082 →
+69,125, two workbook columns added, two dictionary entries added,
+nothing fell. Against 2.10 several counts fall, and every one of them
+is corpus movement since that release.
+
+The DuckDB's claims tables are deliberately not touched, and are on
+ROADMAP as their own change.
 
 ---
 

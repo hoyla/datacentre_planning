@@ -188,7 +188,7 @@ parent. A second run reports "nothing to do".
 
 ---
 
-## WP-C — Link snapshots from the reader and workbook
+## WP-C — Link snapshots from the reader and workbook — **DONE 2026-09-01, rendering awaits Luke**
 
 **Decided in shape, Luke reviews the rendering**: each operator claim
 (and green claim) renders a link to *our copy* — the Drive snapshot —
@@ -313,6 +313,42 @@ its quote verifies in, counts verified in the release diff, and Luke
 has seen the rendering before it ships — include the rendered claim
 block for site 529 (Iron Mountain) or CyrusOne LON1's site in the PR
 so that review has something to look at.
+
+**Met on the build; the review is Luke's and is the one part left.**
+80 of the 81 committed operator claims and all six green claims
+resolve, on all five surfaces; the release diff against a build of
+`main` shows site-panel links 69,082 → 69,125, two workbook columns
+and two dictionary entries added, nothing fallen. Full account in
+HISTORY, "A claim links its own evidence".
+
+Three premises this spec stated that the code and the database did not
+bear out, recorded because each changed what was built:
+
+- **The resolution rule is the quote, and the date only orders the
+  search.** The spec has this right in its own body — it is the "why
+  the quote is part of it" paragraph — but the framing it inherited
+  from ROADMAP was date-first, and the difference is not academic: the
+  spec's worked example does not behave as the spec says.
+- **The superseded CyrusOne LON1 reading carries no `as_at`.** The
+  spec says `as_at` 2026-08-20; the row's `as_at` is NULL, so it takes
+  the no-date arm and is offered the whole store newest-first. It
+  still links nothing, because no held file contains its quote — which
+  is the point, and is why the quote rule survives a wrong premise
+  about the date.
+- **That reading is not in `operator-claims.yaml` at all**, only in
+  `capacity_claims`. So the YAML-level test asserts every committed
+  claim resolves, and the ghost row is pinned by a fixture test
+  instead.
+
+One extension beyond the spec's step 3, same shape and same purpose:
+`operator_disclosure.load_divergences` gained `cl.as_at` as well as
+the quote it already selected, because the "Figures by audience" sheet
+is built from it and would otherwise have resolved without a date
+while its four sibling surfaces resolved with one.
+
+**Out of scope and still open**, as the spec directed: the DuckDB's
+claims tables, `site_facilities.py`'s relative-path defaults, and the
+two exporters' hand-built viewer URLs. All three are on ROADMAP.
 
 ---
 

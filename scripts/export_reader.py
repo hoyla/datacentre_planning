@@ -57,6 +57,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
 from dcp import release  # noqa: E402
+from dcp import snapshot_drive as _snapshot_drive  # noqa: E402
 from dcp import spans  # noqa: E402
 from dcp import db  # noqa: E402
 from dcp import deepread_select  # noqa: E402
@@ -563,6 +564,47 @@ def doc_link(url, label: str, drive_url: str = "") -> str:
         return (f'<a href="{esc(u)}" target="_blank" rel="noopener">'
                 f'{esc(label)}</a>')
     return esc(label)
+
+
+_SNAPSHOT_LEDGER: dict | None = None
+
+
+def our_copy(c: dict) -> str:
+    """`<a>our copy</a>` for a claim, or "" — the claims channel's
+    half of `doc_link`.
+
+    Same pair as a document's, led by the other one. A document's title
+    links our Drive copy and the register comes second, because councils
+    withdraw documents. A claim's published page stays the primary link,
+    because it is the thing a published story cites; our copy is the
+    labelled second, because a marketing page has no register behind it
+    and can be rewritten without notice — which is exactly what CyrusOne
+    LON1 did between two readings.
+
+    Empty rather than a guess wherever resolution fails. Most claims
+    here are not operator claims at all — a NESO row, a filing — and
+    their locator names a row or a page rather than a snapshot, so they
+    resolve to nothing by construction. `load_site_claims` calls that
+    column `source_locator` and the operator tab's loaders call it
+    `locator`; both are the same column.
+
+    The separator is the caller's, because the three surfaces punctuate
+    differently: a run-on provenance line, a ` · `-joined list, and a
+    table cell.
+    """
+    # The ledger once, not once per claim: it is parsed YAML and this is
+    # called several hundred times a build, which measured at two
+    # seconds of a twenty-seven-second build for nothing.
+    global _SNAPSHOT_LEDGER
+    if _SNAPSHOT_LEDGER is None:
+        _SNAPSHOT_LEDGER = _snapshot_drive.load_ledger()
+    url = _snapshot_drive.copy_url(
+        c.get("source_locator") or c.get("locator"),
+        c.get("as_at"), c.get("quote") or "", ledger=_SNAPSHOT_LEDGER)
+    if not url:
+        return ""
+    return (f'<a class="oursnap" href="{esc(url)}" target="_blank" '
+            f'rel="noopener">our copy</a>')
 
 
 def trim(text, n: int) -> str:
@@ -3783,7 +3825,8 @@ def main() -> int:
                        + (f", as at {_as_at.day} {_as_at:%B %Y}"
                           if _as_at else "")
                        + (f", {esc(c['source_locator'])}"
-                          if c["source_locator"] else ""))
+                          if c["source_locator"] else "")
+                       + (f" · {_ourcopy}" if (_ourcopy := our_copy(c)) else ""))
                 _claim_rows.append(
                     f'<div class="claim">{head}'
                     f'<p class="help">{conf} · {src}</p>'
@@ -5107,6 +5150,10 @@ def main() -> int:
             url = c.get("source_url")
             bits.append(f'<a href="{esc(url)}" target="_blank" rel="noopener">'
                         f'{esc(title)}</a>' if url else esc(title))
+            # Only the external claims: a planning row's own copy is the
+            # document link above, already resolved by Drive file id.
+            if _copy := our_copy(c):
+                bits.append(_copy)
         if c.get("locator"):
             bits.append(esc(c["locator"]))
         _as = c.get("as_at")
@@ -5276,6 +5323,12 @@ def main() -> int:
         if r.claim.source_url:
             quoted = (f'<a href="{esc(r.claim.source_url)}" rel="nofollow noopener" '
                       f'target="_blank">{quoted}</a>')
+        # And our copy of the page it was taken from. A green claim
+        # carries no `as_at` — it asserts the page as it reads now — so
+        # it takes the newest-first arm, and its own quote still decides
+        # which file the link may point at.
+        _green_copy = our_copy({"locator": r.claim.snapshot,
+                                "quote": r.claim.quote})
         # Every site the row is built from, reachable. Site KEYS rather
         # than names (Luke, 2026-08-28): names mix curated aliases in
         # sentence case with raw Barbour titles in capitals, which reads
@@ -5300,7 +5353,12 @@ def main() -> int:
             sitecell = '<span class="q">none in this corpus</span>'
         return (f'<tr><td>{esc(r.claim.operator)}</td>'
                 f'<td><q>{quoted}</q>'
-                f'<span class="q">{esc(r.claim.gloss)}</span></td>'
+                # One muted line under the quote, not two: `.q` is a
+                # block, so a separate span would put a bare "·" at the
+                # start of a line of its own.
+                f'<span class="q">{esc(r.claim.gloss)}'
+                + (f' · {_green_copy}' if _green_copy else "")
+                + '</span></td>'
                 f'<td>{sitecell}</td>'
                 f'<td>{fuels}</td>'
                 f'<td>{esc(r.generation_use) if r.fuels else _unknown_use(r)}</td>'

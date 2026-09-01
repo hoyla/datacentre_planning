@@ -908,6 +908,20 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "register figure is never copied into the Sites sheet: where it "
      "diverges from the planning-derived figure for the same site, the "
      "divergence is the story."),
+    ("Capacity claims", "Our copy (Drive)",
+     "Where a claim rests on a page this project holds, the snapshot of "
+     "that page as it read on the day the figure was taken. The source "
+     "URL beside it stays the citable link — a published story cites "
+     "the operator's own page, not a Drive folder — and this is the "
+     "durable one, because a marketing page has no register behind it "
+     "and can be rewritten without notice: CyrusOne's LON1 figure went "
+     "from 8.72 MW to 9 MW in eight days with no announcement. Each "
+     "claim links the snapshot its own verbatim quote appears in, so a "
+     "superseded reading reaches the evidence it was taken from rather "
+     "than today's page. Blank where the claim has no snapshot behind "
+     "it — register rows and filed accounts are published documents "
+     "with their own permanent locations — or where no held snapshot "
+     "contains the quote, in which case no link is offered at all."),
     ("Operator disclosure", "All columns",
      "One row per operator, counting the figures it has stated to each "
      "of five audiences: the planning authority (the site's own "
@@ -944,6 +958,15 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "adjudication of the application documents and are marked "
      "'(planning-derived)' in the confidence column, because there is "
      "no external match to score."),
+    ("Figures by audience", "Our copy (Drive)",
+     "The snapshot of the page a figure was published on, held here and "
+     "dated. Planning-derived rows leave it blank because their "
+     "'Source' column already opens our copy of the document; the "
+     "column is the same promise kept for the four external audiences, "
+     "whose sources can be rewritten in place. Resolved from each "
+     "row's own verbatim quote, so a figure a page has since changed "
+     "links the reading it was taken from and not the current one. See "
+     "the Capacity claims sheet's entry for the same column."),
     ("Figures by audience", "Same quantity, different audience?",
      "Marks the narrow comparison where a gap really is a gap: one "
      "site, one quantity, more than one audience. Elsewhere a "
@@ -1205,6 +1228,7 @@ def main() -> None:
 
     from dcp import capacity_claims as ccl
     from dcp import operator_disclosure as od
+    from dcp import snapshot_drive as sdrive
     from dcp import consumption_context as cc
     from dcp import external_aggregates as extagg
     from dcp import organisations
@@ -1936,10 +1960,24 @@ def main() -> None:
         "Register entry", "MW", "Quantity", "Connection point",
         "Connection date", "Register as at", "Register row",
         "Matched site", "Match confidence", "Match method",
-        "Match evidence", "Source", "Source URL"])
+        "Match evidence", "Source", "Source URL", "Our copy (Drive)"])
     with db.connect() as conn, conn.cursor() as cur:
         claim_rows = ccl.load_claim_rows(cur)
+    # The snapshot ledger once for both sheets, not once per row: it is
+    # parsed YAML, and re-reading it per claim measured at two seconds
+    # of a twenty-second build for nothing.
+    snap_ledger = sdrive.load_ledger()
+    n_claim_copies = 0
     for c in claim_rows:
+        # Our copy of the page the figure was read from, where the claim
+        # rests on a held snapshot. Resolved from the claim's own quote
+        # rather than from its slug and date: the store keeps every
+        # reading of a page, so a superseded reading must reach the file
+        # it was taken from or reach nothing. Register rows and filings
+        # have no snapshot and get a blank.
+        _copy = sdrive.copy_url(c["source_locator"], c["as_at"], c["quote"],
+                                ledger=snap_ledger)
+        n_claim_copies += 1 if _copy else 0
         ws.append([
             c["claim_name"], c["value_mw"],
             ccl.QUANTITY_LABELS.get(c["quantity_type"], c["quantity_type"]),
@@ -1949,10 +1987,11 @@ def main() -> None:
             c["site_name"] or c["site_key"],
             c["confidence"], c["method"], c["evidence"],
             ccl.SOURCE_TITLES.get(c["source_key"], c["source_key"]),
-            c["source_url"]])
+            c["source_url"],
+            _hyperlink(_copy, "Open our copy")])
     for col, width in (("A", 40), ("B", 9), ("C", 24), ("D", 40), ("E", 14),
                        ("F", 14), ("G", 12), ("H", 44), ("I", 14), ("J", 22),
-                       ("K", 90), ("L", 34), ("M", 48)):
+                       ("K", 90), ("L", 34), ("M", 48), ("N", 18)):
         ws.column_dimensions[col].width = width
     for row in ws.iter_rows(min_row=2):
         for c in row:
@@ -1960,7 +1999,8 @@ def main() -> None:
                 c.alignment = Alignment(wrap_text=True, vertical="top")
     n_claim_matches = sum(1 for c in claim_rows if c["confidence"])
     print(f"  Capacity claims: {len(claim_rows)} claims, "
-          f"{n_claim_matches} matched to sites")
+          f"{n_claim_matches} matched to sites, "
+          f"{n_claim_copies} linked to our snapshot")
 
     # ---- Operator disclosure ------------------------------------------------
     # The same companies, across every audience the store holds. Computed
@@ -2014,10 +2054,17 @@ def main() -> None:
         "Site", "Audience", "Figure", "Unit", "Quantity",
         "Published as", "Named in the source as", "Match confidence",
         "Same quantity, different audience?",
-        "Source", "Where in the source", "What the source says"])
+        "Source", "Our copy (Drive)", "Where in the source",
+        "What the source says"])
     for d in op_divs:
         lfl = {q["quantity_type"] for q in d.get("like_for_like", [])}
         for c in d["claims"]:
+            # The planning rows' Source column is already our Drive copy
+            # of the document (see `_doc_links` above), so this column is
+            # the same promise kept for the other four audiences: the
+            # page as it read when the figure was taken.
+            _copy = sdrive.copy_url(c.get("locator"), c.get("as_at"),
+                                    c.get("quote"), ledger=snap_ledger)
             ws.append([
                 d["site"], dict(
                     (k, lbl) for k, lbl, _ in od.AUDIENCES).get(
@@ -2027,11 +2074,12 @@ def main() -> None:
                 c["confidence"] or "(planning-derived)",
                 "yes" if c["quantity_type"] in lfl else "",
                 _hyperlink(c.get("source_url"), "Open the source"),
+                _hyperlink(_copy, "Open our copy"),
                 c.get("locator") or "—",
                 c.get("quote") or "—"])
     for col, width in (("A", 46), ("B", 24), ("C", 10), ("D", 8), ("E", 20),
                        ("F", 26), ("G", 40), ("H", 18), ("I", 16),
-                       ("J", 18), ("K", 20), ("L", 70)):
+                       ("J", 18), ("K", 18), ("L", 20), ("M", 70)):
         ws.column_dimensions[col].width = width
     print(f"  Operator disclosure: {len(op_rows)} operators, "
           f"{len(op_divs)} sites told more than one audience")

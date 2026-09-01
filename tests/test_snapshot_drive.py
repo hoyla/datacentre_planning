@@ -14,6 +14,8 @@ from pathlib import Path
 
 import pytest
 
+from datetime import date as dt_date
+
 from dcp import drive
 from dcp import snapshot_drive as sd
 
@@ -233,3 +235,120 @@ def test_every_recorded_snapshot_is_one_this_repository_holds():
     from dcp.capacity_claims import OPERATOR_SNAPSHOT_DIR
     held = {p.name for p in OPERATOR_SNAPSHOT_DIR.glob("*.txt")}
     assert set(sd.load_ledger()) <= held
+
+
+# ---------------------------------------------------------------------------
+# The link a claim gets (WP-C)
+#
+# The whole reason this is not a date lookup: `capacity_claims` keeps
+# every reading of a page and the store keeps every reading of the page
+# itself, and the two do not line up. A link resolved by slug and date
+# alone would put CyrusOne LON1's superseded 8.72 MW row against the file
+# that reads 9 MW — a working link, under a citation naming a different
+# figure. The claim's own verbatim quote is what decides.
+
+def _held(dirpath, name, body):
+    (dirpath / name).write_text(
+        f"# url: https://example.com\n\n# fetched: 2026-08-30\n\n"
+        f"## VISIBLE TEXT\n\n{body}")
+    return dirpath / name
+
+
+def _led(**files):
+    return {name: {"file_id": fid, "md5": "m", "uploaded": "2026-09-01"}
+            for name, fid in files.items()}
+
+
+def test_a_claim_links_the_file_its_own_quote_is_in(tmp_path):
+    import datetime as dt
+    _held(tmp_path, "op-site.2026-08-20.txt", "reads 8.72 MW IT capacity")
+    _held(tmp_path, "op-site.2026-08-30.txt", "reads 9 MW IT capacity")
+    led = _led(**{"op-site.2026-08-20.txt": "OLD", "op-site.2026-08-30.txt": "NEW"})
+    assert sd.copy_url("op-site", dt.date(2026, 8, 28), "9 MW IT capacity",
+                       snapshot_dir=tmp_path, ledger=led) == drive.file_url("NEW")
+
+
+def test_a_superseded_reading_reaches_the_older_file(tmp_path):
+    """The 8.72 MW row is dated before the re-fetch that replaced the
+    figure, and the older snapshot is still held: it links there, not to
+    the page that now contradicts it."""
+    import datetime as dt
+    _held(tmp_path, "op-site.2026-08-20.txt", "reads 8.72 MW IT capacity")
+    _held(tmp_path, "op-site.2026-08-30.txt", "reads 9 MW IT capacity")
+    led = _led(**{"op-site.2026-08-20.txt": "OLD", "op-site.2026-08-30.txt": "NEW"})
+    assert sd.copy_url("op-site", dt.date(2026, 8, 20), "8.72 MW IT capacity",
+                       snapshot_dir=tmp_path, ledger=led) == drive.file_url("OLD")
+
+
+def test_a_reading_whose_evidence_is_no_longer_held_gets_no_link(tmp_path):
+    """The case that matters, and the corpus's own: the 8.72 MW row
+    predates the append-only store, so the file it was read from was
+    overwritten and only the 9 MW snapshot survives. No candidate
+    contains its quote, so it links nothing — a claim never borrows its
+    neighbour's evidence."""
+    _held(tmp_path, "op-site.2026-08-30.txt", "reads 9 MW IT capacity")
+    led = _led(**{"op-site.2026-08-30.txt": "NEW"})
+    assert sd.copy_url("op-site", None, "8.72 MW Total Megawatts IT Capacity",
+                       snapshot_dir=tmp_path, ledger=led) is None
+
+
+def test_the_quote_is_matched_whitespace_blind(tmp_path):
+    """Snapshots are extracted text, where a line break carries no
+    meaning — the same normalisation the quote gate admits a claim on,
+    so a link is offered on exactly the terms the claim was accepted."""
+    _held(tmp_path, "op-site.2026-08-30.txt",
+              "reads 9 MW\n   Total  IT Capacity today")
+    led = _led(**{"op-site.2026-08-30.txt": "NEW"})
+    assert sd.copy_url("op-site", None, "9 MW Total IT Capacity",
+                       snapshot_dir=tmp_path, ledger=led) == drive.file_url("NEW")
+
+
+def test_a_file_with_no_drive_id_gets_no_link_rather_than_a_neighbours(tmp_path):
+    """A snapshot fetched since the last sync has no copy on Drive. The
+    honest rendering is the source URL alone — and specifically not the
+    next candidate, which would be a link to different evidence."""
+    _held(tmp_path, "op-site.2026-08-20.txt", "reads 8.72 MW IT capacity")
+    _held(tmp_path, "op-site.2026-08-30.txt", "reads 8.72 MW IT capacity")
+    led = _led(**{"op-site.2026-08-30.txt": "NEW"})
+    assert sd.copy_url("op-site", dt_date(2026, 8, 20), "8.72 MW IT capacity",
+                       snapshot_dir=tmp_path, ledger=led) is None
+
+
+def test_a_claim_with_no_snapshot_behind_it_gets_no_link(tmp_path):
+    """Register rows and filed accounts are most of the claims store.
+    Their locator names a row or a page, not a slug."""
+    _held(tmp_path, "op-site.2026-08-30.txt", "reads 9 MW IT capacity")
+    led = _led(**{"op-site.2026-08-30.txt": "NEW"})
+    assert sd.copy_url("row 47", None, "9 MW IT capacity",
+                       snapshot_dir=tmp_path, ledger=led) is None
+    assert sd.copy_url("op-other", None, "9 MW IT capacity",
+                       snapshot_dir=tmp_path, ledger=led) is None
+
+
+def test_a_claim_with_no_quote_gets_no_link(tmp_path):
+    """Nothing to check the file against is nothing to link on. The 119
+    register claims are exactly this case."""
+    _held(tmp_path, "op-site.2026-08-30.txt", "reads 9 MW IT capacity")
+    led = _led(**{"op-site.2026-08-30.txt": "NEW"})
+    assert sd.copy_url("op-site", None, "", snapshot_dir=tmp_path, ledger=led) is None
+    assert sd.copy_url("op-site", None, None, snapshot_dir=tmp_path, ledger=led) is None
+
+
+def test_every_committed_operator_claim_links_to_its_own_snapshot():
+    """Against the real store and the real ledger, so this measures the
+    artefacts rather than a fixture.
+
+    The YAML holds current readings only, so every one of them resolves.
+    The superseded 8.72 MW reading is not here — it is a row in
+    `capacity_claims`, kept because the table's content key includes the
+    value and the date, and the file it was read from was overwritten
+    before the store became append-only. It is the case
+    `test_a_reading_whose_evidence_is_no_longer_held_gets_no_link`
+    stands for, and a build renders it with no link.
+    """
+    from dcp import capacity_claims as cc
+    led = sd.load_ledger()
+    unlinked = [c.claim_name for c in cc.load_operator_claims()
+                if not sd.copy_url(c.attrs["snapshot"], c.as_at, c.quote,
+                                   ledger=led)]
+    assert unlinked == []
