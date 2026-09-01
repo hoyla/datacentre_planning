@@ -64,6 +64,26 @@ DOCUMENTS_SQL = """
     JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
     ORDER BY a.id, s.site_key, d.fetched_at, d.id"""
 
+# And the other class the builder stages: adjacent-power applications,
+# which since #252 have no site membership and since 2026-09-02 sit
+# under `adjacent_power/` beside `sites/`. Without this their ids were
+# never recorded, so after a prune the reader would have kept linking
+# the binned copies under the sites they used to belong to.
+ADJACENT_DOCUMENTS_SQL = """
+    WITH latest AS (
+      SELECT DISTINCT ON (application_id) application_id, verdict
+        FROM triage ORDER BY application_id, inserted_at DESC)
+    SELECT a.id, a.application_ref,
+           d.id, d.url, d.kind, d.content_sha256, d.bytes_path, d.fetched_at
+    FROM documents d
+    JOIN applications a ON a.id = d.application_id
+    JOIN latest l ON l.application_id = a.id
+    WHERE l.verdict = 'adjacent_power'
+      AND d.bytes_path IS NOT NULL
+      AND NOT EXISTS (SELECT 1 FROM site_members m
+                       WHERE m.application_id = a.id AND m.retired_at IS NULL)
+    ORDER BY a.id, d.fetched_at, d.id"""
+
 
 def _load(name: str):
     spec = importlib.util.spec_from_file_location(
@@ -142,12 +162,39 @@ def main() -> int:
                                  (hit["id"], hit.get("md5") or "",
                                   hit.get("path") or ""))
 
+        # The adjacent-power tree, through the same naming function.
+        with conn.cursor() as cur:
+            cur.execute(ADJACENT_DOCUMENTS_SQL)
+            adj_rows = cur.fetchall()
+        adj_by_app: dict[int, list] = defaultdict(list)
+        adj_ref: dict[int, str] = {}
+        for app_id, ref, doc_id, url, kind, sha, bp, ft in adj_rows:
+            adj_by_app[app_id].append((doc_id, (url, kind, sha, bp, ft)))
+            adj_ref[app_id] = ref
+        n_adjacent = 0
+        for app_id in sorted(adj_by_app):
+            named = bds.document_filenames(adj_ref[app_id],
+                                           [r[1] for r in adj_by_app[app_id]])
+            for (doc_id, _row), (_sha, _src, relpath, _u, _kind,
+                                 exists) in zip(adj_by_app[app_id], named):
+                if not exists or not relpath:
+                    unstaged += 1
+                    continue
+                hit = by_tail.get(f"{bds.ADJACENT_DIR}/{relpath}")
+                if not hit:
+                    unstaged += 1
+                    continue
+                if found.setdefault(doc_id, (hit["id"], hit.get("md5") or "",
+                                             hit.get("path") or "")) is not None:
+                    n_adjacent += 1
+
         # The bytes check. Off by default because it reads the whole
         # corpus; on, it is the thing that makes a wrong id impossible
         # rather than merely unobserved.
         rejected = []
         if args.verify_bytes:
             paths = {r[4]: r[8] for r in rows}
+            paths.update({r[2]: r[6] for r in adj_rows})
             for doc_id in sorted(found):
                 fid, want, spath = found[doc_id]
                 bp = paths.get(doc_id)
@@ -164,6 +211,7 @@ def main() -> int:
 
         print(f"ledger entries with an id : {len(by_tail):,}")
         print(f"documents matched to a copy: {len(found):,}")
+        print(f"  under adjacent_power/    : {n_adjacent:,}")
         print(f"  already recorded         : {len(found) - len(fresh):,}")
         print(f"  to record                : {len(fresh):,}")
         print(f"staged nowhere yet         : {unstaged:,}")

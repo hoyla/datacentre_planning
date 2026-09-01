@@ -70,8 +70,8 @@ class FakeCursor:
 
 # Everything a triage verdict has been or could be, plus the absence of
 # one. Exactly one of these means "left out on purpose".
-VERDICTS = ["dc_build", "data_centre", "adjacent", "unrelated", "unknown",
-            "not_dc", "unclear", "", bds.UNTRIAGED]
+VERDICTS = ["dc_build", "data_centre", "adjacent", "adjacent_power",
+            "unrelated", "unknown", "not_dc", "unclear", "", bds.UNTRIAGED]
 
 
 @pytest.mark.parametrize("verdict", VERDICTS, ids=lambda v: v or "(empty)")
@@ -339,3 +339,80 @@ def test_a_staged_document_never_uploaded_fails_the_verifier(tmp_path):
             "exists": True, "path": staged}
     problems = vds.check_document(item, {}, svc=None)
     assert problems and "NOT IN THE UPLOAD LEDGER" in problems[0]
+
+
+# ---------------------------------------------------------------------------
+# Adjacent power: staged beside sites, never excused (2026-09-02)
+# ---------------------------------------------------------------------------
+#
+# Issue #252 removed the `adjacent_power` class from site membership, and
+# the first staging build after it found 744 held documents across 28
+# applications with nowhere to go. They now sit under `adjacent_power/`
+# beside `sites/`. Three properties are pinned: the class is staged, not
+# tolerated; the shortfall counts it as staged only when this build wrote
+# it; and the recorder and the verifier read the same folder name, so a
+# document filed there gets its Drive id recorded and can be sampled.
+
+
+def test_adjacent_power_is_not_an_excuse_for_an_unstaged_document():
+    """An adjacent-power application that reached the shortfall was NOT
+    written under adjacent_power/, and that is a failure, not a class
+    the tree leaves out on purpose."""
+    lines, failed = bds.shortfall_lines([("adjacent_power", "Leeds/18/00742/FU", 52)])
+    assert failed
+    assert any("52" in l for l in lines)
+
+
+def test_the_shortfall_drops_only_the_adjacent_applications_this_build_wrote():
+    rows = [("adjacent_power", "Leeds/18/00742/FU", 52),
+            ("adjacent_power", "Bradford/24/02647/VOC", 89),
+            ("not_dc", "Council/25/00002/FUL", 3)]
+    cur = FakeCursor([rows])
+    kept = bds.unstaged_documents(cur, staged_adjacent={"Leeds/18/00742/FU"})
+    assert ("adjacent_power", "Leeds/18/00742/FU", 52) not in kept
+    assert ("adjacent_power", "Bradford/24/02647/VOC", 89) in kept, \
+        "an adjacent application the build did not write stays a shortfall"
+    assert ("not_dc", "Council/25/00002/FUL", 3) in kept
+    # And with nothing written, nothing is dropped.
+    assert bds.unstaged_documents(FakeCursor([rows])) == rows
+
+
+def test_adjacent_power_is_staged_beside_sites_with_its_relationships(tmp_path):
+    src = tmp_path / "raw"
+    src.mkdir()
+    (src / "a.pdf").write_bytes(b"%PDF a")
+    (src / "b.pdf").write_bytes(b"%PDF b")
+    apps = [(7, "Leeds/18/00742/FU", "https://example/leeds", "Decided",
+             "2018-02-01", "2018-06-01", "Substation for the park"),
+            (8, "Empty/00/0001", None, None, None, None, None)]
+    docs_by_app = {7: [("https://example/a", "Decision Notice", "a" * 64, str(src / "a.pdf"), None),
+                       ("https://example/b", "Site Plan", "b" * 64, str(src / "b.pdf"), None)]}
+    related = {7: [("PTNO-12885139", "SKELTON GRANGE - MICROSOFT", "discovery", 812.0)]}
+    out = tmp_path / "staging.building"
+    staged, n = bds.stage_adjacent_power(out, apps, docs_by_app, related)
+    assert staged == {"Leeds/18/00742/FU"}, "an application with nothing held is not staged"
+    assert n == 2
+    folder = out / bds.ADJACENT_DIR / bds.app_dir_name("Leeds/18/00742/FU")
+    assert (folder / "001 - Decision Notice.pdf").read_bytes() == b"%PDF a"
+    assert (folder / "002 - Site Plan.pdf").exists()
+    index = (folder / "_index.md").read_text()
+    assert "SKELTON GRANGE" in index and "discovery" in index and "812 m" in index
+    assert "not a site member" in index
+    assert (out / bds.ADJACENT_DIR / "_README.md").exists()
+    assert not (out / "sites").exists(), "nothing of this goes under sites/"
+
+
+def test_the_recorder_and_the_verifier_read_the_adjacent_folder_by_the_builders_name():
+    """One folder name, in the module that owns the layout. A recorder
+    that could not find the folder would leave 744 documents linking
+    the binned copies under the sites they used to belong to."""
+    for name in ("record_drive_ids", "verify_drive_sample"):
+        src = (ROOT / "scripts" / f"{name}.py").read_text()
+        assert "bds.ADJACENT_DIR" in src, f"{name} does not read the folder name from the builder"
+        assert "adjacent_power" in src
+
+
+def test_a_verdict_vocabulary_now_names_the_staged_class():
+    assert bds.ADJACENT_VERDICT == "adjacent_power"
+    assert bds.ADJACENT_DIR == "adjacent_power"
+    assert bds.ADJACENT_VERDICT != bds.TOLERATED_VERDICT

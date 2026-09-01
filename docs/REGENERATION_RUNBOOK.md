@@ -445,6 +445,22 @@ If it fails, the fix is upstream — step 0, or a triage verdict — not a
 flag. `--allow-stale-site-map` exists for the map guard and takes a
 reason you can state out loud.
 
+**Adjacent power is staged beside the sites, not excused** (2026-09-02).
+Issue #252 removed the `adjacent_power` class from site membership on
+2026-08-30, and the first staging build after it — the 2.11 run —
+found 744 held documents across 28 such applications with nowhere to
+go, four of them cited by a machine reading. They now go under
+`adjacent_power/<application>/` at the tree root, next to `sites/` and
+`operator_snapshots/` (Luke: "next to, rather than inside, sites"),
+each folder's `_index.md` naming the sites the scheme stands beside
+and how that is known. The shortfall counts them as staged only once
+the build has actually written them, so an adjacent-power application
+that failed to stage still fails the run; `record_drive_ids.py` and
+`verify_drive_sample.py` read the folder name from the builder, so
+those documents get their ids recorded and can be sampled like any
+other. A pass now prints an `adjacent power: N applications, M
+documents` line beside the site count.
+
 The per-site findings CSV carries four adjudication columns (*whose
 figure is this?*, quantity type, adjudicated MW, quantity note). Built
 before step 2, those columns carry uncorrected verdicts — a battery
