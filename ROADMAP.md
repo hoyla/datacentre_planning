@@ -1361,8 +1361,12 @@ field and is not publishable as it stands.
   *a claim links the snapshot that existed at its `as_at`*, which is
   necessary and not sufficient: the store holds no file for a reading
   taken before it became append-only, so CyrusOne LON1's 8.72 MW row —
-  which carries no `as_at` at all — would have fallen through any date
-  rule onto the 2026-08-30 file that reads 9 MW. A claim now links the
+  which carries no `as_at` at all, and which stands in
+  `capacity_claims` only rather than in `operator-claims.yaml` — would
+  have fallen through any date rule onto the 2026-08-30 file that
+  reads 9 MW. Those two facts about the row were read off the database
+  rather than taken from the spec, which asserted an `as_at` of
+  2026-08-20 that the row does not carry. A claim now links the
   nearest held file *in which its own verbatim quote appears*, on the
   gate's own whitespace normalisation, and links nothing otherwise. As
   built: `capacity_claims.snapshot_candidates` orders the store around a

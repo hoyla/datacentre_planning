@@ -235,12 +235,19 @@ trusting; line numbers drift.*
   import the resolver from `capacity_claims`.
 
 **The resolution rule, and why the quote is part of it.** A pure date
-rule is not enough. The superseded CyrusOne LON1 reading (8.72 MW,
-`as_at` 2026-08-20) still stands as a `capacity_claims` row, the store
-holds only the 2026-08-30 file that reads 9 MW, and any date-only
-fallback would link the 8.72 row to evidence stating 9 — the
-working-link-to-the-wrong-evidence failure this whole chain exists to
-prevent. The discriminator is the claim's own verbatim quote, which is
+rule is not enough. The superseded CyrusOne LON1 reading (8.72 MW)
+still stands as a `capacity_claims` row and **carries no `as_at` at
+all**; it is in that table only, not in `operator-claims.yaml`, which
+holds current readings. The store holds only the 2026-08-30 file that
+reads 9 MW. So any date-only fallback would link the 8.72 row to
+evidence stating 9 — the working-link-to-the-wrong-evidence failure
+this whole chain exists to prevent. *(This paragraph read `as_at`
+2026-08-20 until the row was checked against the database on
+2026-09-01; corrected here rather than below, because a wrong figure
+left standing with its correction ninety lines down is the thing
+AGENTS rule 1 is about.)*
+
+The discriminator is the claim's own verbatim quote, which is
 in `attrs->>'quote'` on every operator and green claim: **a claim
 links the file nearest its `as_at` in which its quote actually
 appears, whitespace-normalised both sides as the gate does, and links
@@ -321,24 +328,27 @@ resolve, on all five surfaces; the release diff against a build of
 and two dictionary entries added, nothing fallen. Full account in
 HISTORY, "A claim links its own evidence".
 
-Three premises this spec stated that the code and the database did not
-bear out, recorded because each changed what was built:
+**The worked example was wrong; the rule was right.** The spec's
+bolded rule — a claim links the file nearest its `as_at` in which its
+quote actually appears, and links nothing otherwise — is exactly what
+was built, and the candidate order with it. What did not hold is the
+CyrusOne LON1 example that rule rests on, in two ways, both read off
+the database rather than reasoned about. **The paragraph itself is
+corrected above**; this is what the corrections changed:
 
-- **The resolution rule is the quote, and the date only orders the
-  search.** The spec has this right in its own body — it is the "why
-  the quote is part of it" paragraph — but the framing it inherited
-  from ROADMAP was date-first, and the difference is not academic: the
-  spec's worked example does not behave as the spec says.
-- **The superseded CyrusOne LON1 reading carries no `as_at`.** The
-  spec says `as_at` 2026-08-20; the row's `as_at` is NULL, so it takes
-  the no-date arm and is offered the whole store newest-first. It
-  still links nothing, because no held file contains its quote — which
-  is the point, and is why the quote rule survives a wrong premise
-  about the date.
+- **The row carries no `as_at`**, where the spec said 2026-08-20. So
+  it takes the no-date arm and is offered the whole store
+  newest-first, not the 2026-08-20 neighbourhood the example implies.
+  It still links nothing, because no held file contains its quote —
+  which is the point, and is why the rule survives a wrong premise
+  about its own example.
 - **That reading is not in `operator-claims.yaml` at all**, only in
   `capacity_claims`. So the YAML-level test asserts every committed
   claim resolves, and the ghost row is pinned by a fixture test
-  instead.
+  instead — the shape of the tests, not just their fixtures, follows
+  from this.
+
+ROADMAP carried the same rule date-first, and is corrected there.
 
 One extension beyond the spec's step 3, same shape and same purpose:
 `operator_disclosure.load_divergences` gained `cl.as_at` as well as

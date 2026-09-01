@@ -2221,10 +2221,12 @@ link, because it is what a story cites; our copy is the labelled
 second. Same pair, opposite emphasis, and the reason is which one can
 be taken away.
 
-**The rule turned out to be the quote, not the date — and the spec said
-the date.** WP-B's entry above closes by saying a claim must link the
-snapshot that existed at its `as_at`. That is necessary and it is not
-sufficient, and CyrusOne LON1 is why. Its superseded 8.72 MW reading is
+**The rule turned out to be the quote, not the date.** WP-C's own spec
+had this right — its bolded rule is the nearest file *in which the
+quote appears* — but the entry above and ROADMAP both stated it
+date-first, and the spec's worked example was wrong in a way that
+mattered. A date rule is necessary and it is not sufficient, and
+CyrusOne LON1 is why. Its superseded 8.72 MW reading is
 still a row in `capacity_claims`, because the content key includes the
 value and the date; the file it was read from is *not* held, because it
 was overwritten before the store became append-only three weeks later.
