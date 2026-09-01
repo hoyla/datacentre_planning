@@ -430,3 +430,78 @@ def test_claims_insert_is_idempotent_and_matches_retire_not_delete(db_conn):
             "FROM capacity_claim_matches WHERE claim_id = %s", (claim_id,))
         live, total = cur.fetchone()
         assert (live, total) == (1, 2)
+
+
+# ---------------------------------------------------------------------------
+# component_of: which realm a figure belongs to (issue #247)
+# ---------------------------------------------------------------------------
+
+def _claim(name, value, parent=None):
+    from dcp.capacity_claims import FiledClaim
+    return FiledClaim(
+        source_key="operator_website", company_name="X", company_number="",
+        claim_name=name, quantity_type="announced_capacity", value=value,
+        unit="MW", stage=None, as_at=None, locator="snap", quote="q",
+        url="https://example.com", company_level=False,
+        # A real held snapshot so the quote check runs rather than
+        # raising; these fixtures test the component rules, and the
+        # quote rule has its own tests above.
+        attrs={"component_of": parent, "snapshot": "cyrusone-lon1"})
+
+
+def test_a_component_naming_no_claim_fails():
+    from dcp import capacity_claims as cc
+    problems = cc.validate_operator(
+        [_claim("Facility A", 10, parent="No Such Campus")], [])
+    assert any("names no claim" in p for p in problems)
+
+
+def test_a_component_naming_itself_fails():
+    from dcp import capacity_claims as cc
+    problems = cc.validate_operator([_claim("A", 10, parent="A")], [])
+    assert any("names itself" in p for p in problems)
+
+
+def test_components_do_not_nest():
+    from dcp import capacity_claims as cc
+    problems = cc.validate_operator([
+        _claim("Campus", 100),
+        _claim("Building", 40, parent="Campus"),
+        _claim("Floor", 10, parent="Building")], [])
+    assert any("do not nest" in p for p in problems)
+
+
+def test_reconciliation_reports_and_never_fails():
+    """An operator whose arithmetic does not close is a finding, not an
+    error — VIRTUS Slough states 145.5 against 132.2 of its own rows."""
+    from dcp import capacity_claims as cc
+    rows = cc.reconcile_components([
+        _claim("Campus", 100),
+        _claim("A", 60, parent="Campus"),
+        _claim("B", 25, parent="Campus")])
+    assert len(rows) == 1
+    r = rows[0]
+    assert r["components"] == 2 and r["component_sum_mw"] == 85
+    assert r["gap_mw"] == 15 and r["reconciles"] is False
+    # A gap raises nothing and is reported by no validator.
+    problems = cc.validate_operator([
+        _claim("Campus", 100), _claim("A", 60, parent="Campus")], [])
+    assert not [p for p in problems if "component" in p]
+
+
+def test_an_exact_campus_reconciles():
+    from dcp import capacity_claims as cc
+    rows = cc.reconcile_components([
+        _claim("Campus", 78),
+        _claim("A", 9.5, parent="Campus"), _claim("B", 22.5, parent="Campus"),
+        _claim("C", 16, parent="Campus"), _claim("D", 30, parent="Campus")])
+    assert rows[0]["reconciles"] is True and rows[0]["gap_mw"] == 0
+
+
+def test_the_real_file_marks_its_campus_components():
+    """Every VIRTUS and Kao facility figure in the file names the campus
+    total it is part of, so nothing sums a component into its parent."""
+    from dcp import capacity_claims as cc
+    rows = {r["parent"]: r for r in cc.reconcile_components()}
+    assert "VIRTUS Stockley Park campus" in rows
+    assert rows["VIRTUS Stockley Park campus"]["components"] >= 3

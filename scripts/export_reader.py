@@ -3738,6 +3738,13 @@ def main() -> int:
                 # An operator's own word for the quantity is evidence, so
                 # it is shown instead of ours where one exists.
                 _qty = c["operator_term"] or qty
+                # And which realm the figure describes, where the source
+                # itself says: a facility inside a campus total is not a
+                # second opinion on that campus, and must never be added
+                # to it.
+                if c.get("component_of"):
+                    _qty += (" <span class='help'>· one facility within "
+                             f"{esc(c['component_of'])}</span>")
                 _entry = {"neso_ea_register": "register entry",
                           "ea_permit": "permitted at"}.get(
                               c["source_key"], "for")
@@ -4028,11 +4035,25 @@ def main() -> int:
         # into one "highest" number would launder that distinction away.
         _tier_rank = {"strong": 3, "probable": 2, "tentative": 1}
         if site_claims:
-            best = max(site_claims, key=lambda c: _tier_rank[c["confidence"]])
-            _n = len(site_claims)
+            # A campus total and the facility figures inside it are one
+            # source itemised, not several sources agreeing, so the
+            # components do not swell the count on a row someone scans
+            # and sorts — the same reason this cell shows a tier and
+            # never a megawatt. They are named in the tooltip and shown
+            # in full in the panel below. Where a site holds components
+            # whose parent is matched elsewhere (VIRTUS's Slough rows,
+            # whose campus claim covers a wider scope than this site),
+            # the components are all there is and they are counted.
+            _counted = [c for c in site_claims
+                        if not c.get("component_of")] or site_claims
+            best = max(_counted, key=lambda c: _tier_rank[c["confidence"]])
+            _n = len(_counted)
             ind_label = best["confidence"] + (f" ×{_n}" if _n > 1 else "")
-            ind_title = "; ".join(f"{c['claim_name']} ({c['confidence']})"
-                                  for c in site_claims)
+            ind_title = "; ".join(
+                f"{c['claim_name']} ({c['confidence']}"
+                + (", part of " + c["component_of"] if c.get("component_of")
+                   else "") + ")"
+                for c in site_claims)
             ind_class = {"strong": "known", "probable": "unknown",
                          "tentative": "tentative"}[best["confidence"]]
             ind_cell = (f'<span class="tag {ind_class}" title="{esc(ind_title)}">'
