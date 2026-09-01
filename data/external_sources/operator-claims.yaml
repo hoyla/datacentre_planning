@@ -399,6 +399,64 @@ claims:
       now says 78 MW of IT load, which supports that reading: the two
       numbers are different quantities, not a contradiction.
 
+  # --- The Saunderton spec sheet, read 2026-09-01 ------------------------
+  # The campus page's own PDF (published 2026-04-15, "v2" in its path),
+  # snapshotted once the fetcher could hold a PDF at all. It is the only
+  # source in this survey whose per-facility figures sum exactly to the
+  # campus total it states — 9.5 + 22.5 + 16 + 30 = 78 — which is the
+  # benchmark for when a campus sum can ever be trusted (ROADMAP, #247).
+  # The four rows are held individually for that reason. They are
+  # components of the campus claim above, never additions to it: the two
+  # readings describe one campus and must never be summed together.
+  - source: virtus_website
+    snapshot: virtus-saunderton-spec-sheet
+    claim_name: VIRTUS LONDON15 (Saunderton)
+    quantity_type: announced_capacity
+    value: 9.5
+    unit: MW
+    term: IT load
+    stage: one of four facilities in the stated campus total
+    as_at: 2026-09-01
+    quote: LONDON15 9.5 MW
+    note: >-
+      Listed under "Power" beneath the heading "Campus Total of 78 MW",
+      and the campus total is stated elsewhere on the same sheet as
+      "78MW of IT load" — which is where these rows get their basis.
+      The four sum to the stated total exactly.
+  - source: virtus_website
+    snapshot: virtus-saunderton-spec-sheet
+    claim_name: VIRTUS LONDON16 (Saunderton)
+    quantity_type: announced_capacity
+    value: 22.5
+    unit: MW
+    term: IT load
+    stage: one of four facilities in the stated campus total
+    as_at: 2026-09-01
+    quote: LONDON16 22.5 MW
+    note: Component of the stated 78 MW campus total; see LONDON15.
+  - source: virtus_website
+    snapshot: virtus-saunderton-spec-sheet
+    claim_name: VIRTUS LONDON17 (Saunderton)
+    quantity_type: announced_capacity
+    value: 16
+    unit: MW
+    term: IT load
+    stage: one of four facilities in the stated campus total
+    as_at: 2026-09-01
+    quote: LONDON17 16 MW
+    note: Component of the stated 78 MW campus total; see LONDON15.
+  - source: virtus_website
+    snapshot: virtus-saunderton-spec-sheet
+    claim_name: VIRTUS LONDON18 (Saunderton)
+    quantity_type: announced_capacity
+    value: 30
+    unit: MW
+    term: IT load
+    stage: one of four facilities in the stated campus total
+    as_at: 2026-09-01
+    quote: LONDON18 30 MW
+    note: Component of the stated 78 MW campus total; see LONDON15.
+
   - source: kao_website
     snapshot: kao-harlow
     claim_name: Kao Data Harlow campus
@@ -1324,6 +1382,62 @@ matches:
       CENTRE - 4 VIRTUS DATA CENTRES" (Buckinghamshire), which names both
       the place and the operator, and VIRTUS's figure is "across four
       separate data centres" against the site record's four.
+
+  - claim_name: VIRTUS LONDON15 (Saunderton)
+    site_id: 1
+    method: campus_roster_and_operator
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      VIRTUS's Saunderton spec sheet rosters LONDON15 as one of the four
+      facilities making up its Saunderton campus; site 1 is "SAUNDERTON
+      DATA CENTRE - 4 VIRTUS DATA CENTRES" (Buckinghamshire), which names
+      the place, the operator and the same count of four. 9.5 MW is this
+      facility's share of the campus total, not a second campus figure —
+      it must never be added to the "VIRTUS Saunderton Campus" claim,
+      which the same sheet's own arithmetic shows these four rows sum to.
+
+  - claim_name: VIRTUS LONDON16 (Saunderton)
+    site_id: 1
+    method: campus_roster_and_operator
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      VIRTUS's Saunderton spec sheet rosters LONDON16 as one of the four
+      facilities making up its Saunderton campus; site 1 is "SAUNDERTON
+      DATA CENTRE - 4 VIRTUS DATA CENTRES" (Buckinghamshire), which names
+      the place, the operator and the same count of four. 22.5 MW is this
+      facility's share of the campus total, not a second campus figure —
+      it must never be added to the "VIRTUS Saunderton Campus" claim,
+      which the same sheet's own arithmetic shows these four rows sum to.
+
+  - claim_name: VIRTUS LONDON17 (Saunderton)
+    site_id: 1
+    method: campus_roster_and_operator
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      VIRTUS's Saunderton spec sheet rosters LONDON17 as one of the four
+      facilities making up its Saunderton campus; site 1 is "SAUNDERTON
+      DATA CENTRE - 4 VIRTUS DATA CENTRES" (Buckinghamshire), which names
+      the place, the operator and the same count of four. 16 MW is this
+      facility's share of the campus total, not a second campus figure —
+      it must never be added to the "VIRTUS Saunderton Campus" claim,
+      which the same sheet's own arithmetic shows these four rows sum to.
+
+  - claim_name: VIRTUS LONDON18 (Saunderton)
+    site_id: 1
+    method: campus_roster_and_operator
+    confidence: strong
+    matched_by: hand:claude-opus-5:2026-09-01
+    evidence: >-
+      VIRTUS's Saunderton spec sheet rosters LONDON18 as one of the four
+      facilities making up its Saunderton campus; site 1 is "SAUNDERTON
+      DATA CENTRE - 4 VIRTUS DATA CENTRES" (Buckinghamshire), which names
+      the place, the operator and the same count of four. 30 MW is this
+      facility's share of the campus total, not a second campus figure —
+      it must never be added to the "VIRTUS Saunderton Campus" claim,
+      which the same sheet's own arithmetic shows these four rows sum to.
 
   - claim_name: Kao Data Harlow campus
     site_id: 34

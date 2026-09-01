@@ -1013,7 +1013,8 @@ reportable.
 gives a sourced count of facilities, so "three of five facilities
 disclose" has a citable five. VIRTUS's Saunderton datasheet also
 self-audits: 9.5 + 22.5 + 16 + 30 against a stated "Campus Total of
-78 MW", exact — the benchmark for when a sum can ever be trusted. Its
+78 MW", exact — the benchmark for when a sum can ever be trusted, and
+snapshotted and loaded as four matched claims on 2026-09-01. Its
 Slough campus states 145.5 MW against 132.2 summed from its own seven
 rows, which is a discrepancy worth putting to the operator.
 
@@ -1034,9 +1035,12 @@ application had already told the council.
 **Limits.** Coverage is whatever the operator chose to publish, so
 absence proves nothing about a site. Figures are undated unless the page
 dates them. A page can restate a campus total that overlaps another
-claim, so these must never be summed across pages. And the fetcher takes
-HTML only — VIRTUS's Saunderton datasheet PDF is unsnapshotted, so its
-per-facility figures are not yet citable.
+claim, so these must never be summed across pages — the Saunderton
+facility rows are held as components of the campus total beside it, and
+adding the five together would double the campus. The fetcher took HTML
+only until 2026-09-01; it now sniffs and extracts PDFs, which is what
+made VIRTUS's Saunderton spec sheet — and with it the survey's only
+self-auditing campus arithmetic — citable at all.
 
 ---
 

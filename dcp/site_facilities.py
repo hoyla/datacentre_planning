@@ -21,9 +21,22 @@ of its store is a figure that can move under us (the CyrusOne 8.72 →
 9 lesson).
 
 The contract matches the other priors: an entry naming a site key
-that is not live **fails the build**, and a claim reference that
-matches nothing in the claims files fails validation — a dangling
-reference is the dead-key failure one level down.
+that is not live **fails the build**, and a reference that resolves to
+nothing — a claim, a snapshot — fails validation. A dangling reference
+is the dead-key failure one level down.
+
+**Every reference here is to a held copy, not only to a URL**, because
+provenance that depends on a live web page is provenance with an
+expiry date. An `operator_roster` identity names the snapshot this
+project holds as well as the url it was taken from; a
+`planning_document` identity names the document's **content hash**
+(sha256, first 16 — the same address the document store uses for its
+filenames), never a Drive file id. The hash is the durable key and the
+Drive id is a fact about one upload of it: `documents.content_sha256`
+joins to `document_drive_files`, which is where the reader already
+gets the link it renders. So the chain a reporter walks is
+hash -> document -> Drive copy, resolved at render time from the
+recorded id rather than derived from a path.
 
 Scope decisions — whether a campus's figures ever roll up, what its
 table cell shows — live in `data/priors/campus_scope.yaml`, never
@@ -43,8 +56,13 @@ IDENTITY_SOURCES = ("operator_roster", "planning_document", "barbour_title")
 
 # What each identity source must carry to be citable.
 _IDENTITY_REQUIRED = {
-    "operator_roster": ("url", "date"),
-    "planning_document": ("application", "document"),
+    # A url alone is not a source of record: marketing pages change
+    # without notice and no register stands behind them, so the held
+    # snapshot is named too.
+    "operator_roster": ("url", "date", "snapshot"),
+    "planning_document": ("application", "document_sha256"),
+    # A Barbour project record, which is held in the database rather
+    # than fetched, so there is nothing to snapshot.
     "barbour_title": ("ptno", "title"),
 }
 
@@ -119,7 +137,7 @@ def load_facilities(path: Path = FACILITIES_PATH) -> dict[str, dict]:
                         f"no kind — what kind of quantity, in the source's "
                         f"own terms")
                 has_claim = bool(str(a.get("claim", "")).strip())
-                has_doc = bool(str(a.get("document", "")).strip())
+                has_doc = bool(str(a.get("document_sha256", "")).strip())
                 if has_claim == has_doc:
                     raise ValueError(
                         f"site_facilities.yaml: {key}/{fid} attribution must "
@@ -149,6 +167,30 @@ def require_live(facilities: dict[str, dict], live_keys: set[str]) -> None:
             + ", ".join(unknown)
             + " — repoint or remove the entry rather than letting the "
               "roster silently stop applying")
+
+
+def require_held_snapshots(facilities: dict[str, dict],
+                           snapshot_dir: Path = Path(
+                               "data/external_sources/operator_snapshots"),
+                           ) -> None:
+    """Every roster snapshot must be a file this project holds.
+
+    The operator-claims channel checks its quotes against these same
+    files; a roster naming one that does not exist would assert a held
+    copy nobody can open.
+    """
+    missing = sorted({
+        src["snapshot"]
+        for entry in facilities.values()
+        for f in entry["facilities"]
+        for src in f.get("identity") or []
+        if str(src.get("snapshot", "")).strip()
+        and not (snapshot_dir / f"{src['snapshot']}.txt").exists()})
+    if missing:
+        raise ValueError(
+            "site_facilities.yaml names snapshots that are not held: "
+            + ", ".join(missing)
+            + " — run scripts/fetch_operator_snapshots.py --slug <slug>")
 
 
 def require_known_claims(facilities: dict[str, dict],

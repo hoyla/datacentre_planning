@@ -32,6 +32,7 @@ def _entry(**overrides) -> dict:
                 "source": "operator_roster",
                 "url": "https://example.com/campus",
                 "date": "2026-08-30",
+                "snapshot": "example-campus",
             }],
             "attributions": [{
                 "kind": "announced capacity",
@@ -108,7 +109,7 @@ def test_a_restated_value_is_rejected(tmp_path):
 
 def test_an_attribution_needs_exactly_one_reference(tmp_path):
     e = _entry()
-    e["facilities"][0]["attributions"][0]["document"] = "abc123"
+    e["facilities"][0]["attributions"][0]["document_sha256"] = "abc123"
     e["facilities"][0]["attributions"][0]["application"] = "X/1"
     with pytest.raises(ValueError, match="exactly one"):
         sf.load_facilities(_write(tmp_path, {"sites": [e]}))
@@ -122,7 +123,7 @@ def test_an_attribution_needs_exactly_one_reference(tmp_path):
 def test_a_document_attribution_names_its_application(tmp_path):
     e = _entry()
     e["facilities"][0]["attributions"][0] = {
-        "kind": "design capacity", "document": "abc123"}
+        "kind": "design capacity", "document_sha256": "abc123"}
     with pytest.raises(ValueError, match="names no application"):
         sf.load_facilities(_write(tmp_path, {"sites": [e]}))
 
@@ -169,6 +170,43 @@ def test_an_attribution_without_a_kind_fails(tmp_path):
     del e["facilities"][0]["attributions"][0]["kind"]
     with pytest.raises(ValueError, match="no kind"):
         sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_an_operator_roster_must_name_its_snapshot(tmp_path):
+    """A url alone is not a source of record: the page can change and
+    no register stands behind it."""
+    e = _entry()
+    del e["facilities"][0]["identity"][0]["snapshot"]
+    with pytest.raises(ValueError, match="missing snapshot"):
+        sf.load_facilities(_write(tmp_path, {"sites": [e]}))
+
+
+def test_an_unheld_snapshot_fails_loudly():
+    with pytest.raises(ValueError, match="not held"):
+        sf.require_held_snapshots({"PTNO-1": {"facilities": [{
+            "id": "X",
+            "identity": [{"source": "operator_roster",
+                          "url": "https://example.com",
+                          "date": "2026-08-30",
+                          "snapshot": "no-such-snapshot"}],
+        }], "note": ""}})
+
+
+def test_every_snapshot_the_real_file_names_is_held():
+    sf.require_held_snapshots(sf.load_facilities())
+
+
+def test_the_planning_reference_is_a_content_hash_not_a_drive_id():
+    """The durable address is the hash; the Drive id is a fact about
+    one upload of it, and lives in document_drive_files."""
+    stockley = sf.load_facilities()["PTNO-12301553"]
+    hashes = [src["document_sha256"]
+              for f in stockley["facilities"]
+              for src in f.get("identity") or []
+              if src["source"] == "planning_document"]
+    assert hashes, "the worked case cites planning documents"
+    for h in hashes:
+        assert len(h) == 16 and all(c in "0123456789abcdef" for c in h), h
 
 
 def test_a_missing_file_loads_empty(tmp_path):
