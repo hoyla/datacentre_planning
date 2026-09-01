@@ -36,6 +36,17 @@ import math
 from collections import defaultdict
 from pathlib import Path
 
+# `build_clusters`' data directory resolves against the package root,
+# never the working directory. Both loaders below return empty for an
+# absent file, and both guards beside them check only the keys they are
+# handed — so a relative default makes a run from anywhere else load no
+# priors, raise nothing, and re-merge the campuses the partitions exist
+# to keep apart, changing site keys while reporting clean. Same form as
+# site_facilities, map and site_aliases, for the same reason; here the
+# default is a parameter's rather than a module constant's, so callers
+# passing `data_dir` explicitly are untouched.
+ROOT = Path(__file__).resolve().parent.parent
+
 
 def hav_km(lat1, lon1, lat2, lon2) -> float:
     r = 6371.0
@@ -104,7 +115,7 @@ def _load_site_partitions(data_dir: Path) -> tuple[dict[str, str], dict[str, str
 
 
 def build_clusters(conn, *, radius_km: float = 1.0,
-                   data_dir: Path = Path("data"),
+                   data_dir: Path = ROOT / "data",
                    family_skips_not_dc: bool = True) -> list[dict]:
     """Cluster the dc_build universe into sites.
 
