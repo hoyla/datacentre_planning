@@ -50,7 +50,16 @@ from __future__ import annotations
 
 from pathlib import Path
 
-FACILITIES_PATH = Path("data/priors/site_facilities.yaml")
+# Resolved against the package root, never the working directory. A
+# relative default plus `load_facilities`' empty-on-absent return is a
+# silent disappearance: run a build from anywhere but the repository
+# root and the facility layer loads nothing, while `require_live` has
+# no keys to check and `require_held_snapshots` finds no snapshot
+# missing — both guards written to make that impossible report clean.
+# Same form as capacity_claims and green_claims, for the same reason.
+ROOT = Path(__file__).resolve().parent.parent
+FACILITIES_PATH = ROOT / "data" / "priors" / "site_facilities.yaml"
+SNAPSHOT_DIR = ROOT / "data" / "external_sources" / "operator_snapshots"
 
 IDENTITY_SOURCES = ("operator_roster", "planning_document", "barbour_title")
 
@@ -170,8 +179,7 @@ def require_live(facilities: dict[str, dict], live_keys: set[str]) -> None:
 
 
 def require_held_snapshots(facilities: dict[str, dict],
-                           snapshot_dir: Path = Path(
-                               "data/external_sources/operator_snapshots"),
+                           snapshot_dir: Path = SNAPSHOT_DIR,
                            ) -> None:
     """Every roster snapshot must be a file this project holds.
 
