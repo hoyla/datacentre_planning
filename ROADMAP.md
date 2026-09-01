@@ -1185,6 +1185,40 @@ field and is not publishable as it stands.
   workbook's own sheet. Deferred past 2.10 because the artefacts were
   built and diffed when it surfaced.
 
+- **The snapshot store is mutable while the claims it evidences are
+  append-only** (found 2026-09-01, answering Luke's question about
+  linking snapshots from the reader). `capacity_claims` keeps every
+  reading — CyrusOne LON1 at 8.72 MW on 2026-08-20 and 9 MW on
+  2026-08-28, both rows, on purpose — but
+  `fetch_operator_snapshots.py` writes one file per slug and
+  overwrites it, so both rows carry `source_locator: cyrusone-lon1`
+  and **the 8.72 quote is not in that file**. Measured: `grep` finds
+  no "8.72" in the held snapshot. The evidence survives only in git
+  (commit 74e0873, "CyrusOne's estate places LON3, and its LON1 figure
+  moved under us"), which is luck being relied on rather than a
+  design.
+
+  **Latent, not live**: LON1 is the only claim with two readings and
+  neither is matched, so nothing renders a claim its own snapshot
+  contradicts. It bites the first time a *matched* claim is re-read,
+  and re-fetching is routine.
+
+  **This blocks syncing snapshots to Drive**, which is otherwise the
+  right destination — Luke's point that "our copy" should mean one
+  thing to a reporter, and everything else in the handover means
+  Drive. Syncing as things stand would put an "our copy" link on a
+  claim the copy does not support: the wrong-document failure
+  `document_drive_files` exists to prevent, one layer up.
+
+  Order: make the snapshot store append-only (a file per fetch that
+  changed anything, dated or content-addressed — content-addressing
+  also makes an unchanged re-fetch a no-op, principle 5); then sync to
+  Drive beside `sites`; then link it from the reader and workbook as
+  our copy, beside the source URL, exactly as documents carry our copy
+  beside the register. The naming scheme is a decision for Luke: 84
+  claim references and the facility prior's rosters point at these
+  slugs.
+
 - **The Pinpoint/Giant delta: get the manifest, compute it, put
   re-upload in the chain.** The bundle policy — what the reduction
   drops and why, decided by Luke 2026-08-28 — now lives in the
