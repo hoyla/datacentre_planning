@@ -131,9 +131,20 @@ PAGES: dict[str, list[tuple[str, str]]] = {
         ("colt-london-4", "https://www.coltdatacentres.net/en-GB/our-locations/data-centre-locations-europe/london-4"),
         ("colt-london-6-7-8", "https://www.coltdatacentres.net/en-GB/our-locations/data-centre-locations-europe/london-6-7-8"),
     ],
+    # NTT moved its pages between 2026-08-30 and 2026-09-02: the old
+    # /services/data-centers/ paths answer 200 with a "New 404" body, and
+    # the two snapshots taken that day hold exactly that (which is why no
+    # NTT claim existed until 2026-09-02, and why `snapshot` now refuses
+    # an error page). The London overview page carries the Gyron lineage
+    # ("formerly operating as Gyron") and the roster of six.
     "ntt": [
-        ("ntt-london-1", "https://services.global.ntt/en-us/services/data-centers/emea/london-1-data-center"),
-        ("ntt-hemel-3", "https://services.global.ntt/en-us/services/data-centers/emea/hemel-hempstead-3-data-center"),
+        ("ntt-london", "https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/london-data-centers"),
+        ("ntt-london-1", "https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/london-1-data-center"),
+        ("ntt-hemel-2", "https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/hemel-hempstead-2-data-center"),
+        ("ntt-hemel-3", "https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/hemel-hempstead-3-data-center"),
+        ("ntt-hemel-4", "https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/hemel-hempstead-4-data-center"),
+        ("ntt-slough-2", "https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/slough-2-data-center"),
+        ("ntt-slough-3", "https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/slough-3-data-center"),
     ],
     "vantage": [
         ("vantage-cardiff", "https://vantage-dc.com/data-center-locations/emea/cardiff-united-kingdom/"),
@@ -423,11 +434,51 @@ def store(slug: str, url: str, raw_bytes: bytes, out: Path,
     return dest
 
 
+class ErrorPage(Exception):
+    """The server answered 200 with a page that says the page is gone."""
+
+
+# What a "not found" page says about itself, in its title or its first
+# words. Deliberately narrow: a data-centre page that happens to mention
+# an error code deep in its body is not an error page, and a real one
+# announces itself at the top.
+_ERROR_PAGE = re.compile(
+    r"\b(?:404|page not found|not found|no longer available)\b", re.I)
+
+
+def looks_like_error_page(raw_bytes: bytes) -> bool:
+    """A soft 404: HTTP 200 carrying a not-found page.
+
+    `urlopen` raises on a real 404, so the only way an error page reaches
+    the store is a server that answers 200 with one — which NTT's did on
+    2026-08-30 for two pages, and the fetcher wrote both as snapshots
+    ("New 404" is the whole visible text). A claim can never quote such
+    a page, but an unreviewed one sits there as evidence that the
+    operator publishes nothing, which is the wrong finding. So the title
+    and the first words of the visible text are checked, and a match is
+    refused rather than stored.
+    """
+    if is_pdf(raw_bytes):
+        return False
+    raw = raw_bytes.decode("utf-8", errors="replace")
+    title = re.search(r"<title[^>]*>(.*?)</title>", raw, re.I | re.S)
+    if title and _ERROR_PAGE.search(html.unescape(title.group(1))):
+        return True
+    return bool(_ERROR_PAGE.search(visible_text(raw)[:80]))
+
+
 def snapshot(slug: str, url: str, out: Path = OUT) -> Path | None:
-    """Fetch the page and store it. None if nothing changed."""
+    """Fetch the page and store it. None if nothing changed.
+
+    Raises ErrorPage rather than storing a not-found page served as 200,
+    so the sweep reports it as FAILED and the previous snapshot stands.
+    """
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=60) as r:
         raw_bytes = r.read()
+    if looks_like_error_page(raw_bytes):
+        raise ErrorPage(f"{url} answered 200 with a not-found page; "
+                        f"not stored")
     return store(slug, url, raw_bytes, out, "direct")
 
 

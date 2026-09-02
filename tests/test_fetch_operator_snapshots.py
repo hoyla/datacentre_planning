@@ -161,3 +161,39 @@ def test_every_iron_mountain_page_is_registered_and_held():
     assert slugs == ["ironmountain-london-campus", "ironmountain-lon1",
                      "ironmountain-lon3"]
     assert all(snapshot_path(s) is not None for s in slugs)
+
+
+def test_a_not_found_page_served_as_200_is_refused():
+    """NTT's moved pages answered 200 with a 'New 404' body on 2026-08-30
+    and two such bodies were stored as snapshots — so no NTT claim
+    existed while the operator published six pages of figures."""
+    f = _fetcher()
+    soft = b"<html><head><title>New 404</title></head><body>New 404 Industries</body></html>"
+    assert f.looks_like_error_page(soft)
+    titled = b"<html><head><title>Page not found | NTT</title></head><body>Sorry</body></html>"
+    assert f.looks_like_error_page(titled)
+
+
+def test_a_real_page_mentioning_an_error_code_in_its_body_is_kept():
+    f = _fetcher()
+    real = (b"<html><head><title>Slough 3 Data Center | NTT</title></head><body>"
+            b"<h1>Slough 3 Data Center</h1><p>2.7MW of critical IT load</p>"
+            b"<p>Our support line answers within 404 seconds.</p></body></html>")
+    assert not f.looks_like_error_page(real)
+    assert not f.looks_like_error_page(b"%PDF-1.4 404 not found")
+
+
+def test_every_ntt_page_is_registered_and_held():
+    """The six facilities NTT lists for London, plus the overview page
+    that carries the Gyron lineage — each held once at a live path."""
+    f = _fetcher()
+    from dcp.capacity_claims import snapshot_path
+    slugs = [slug for slug, url in f.PAGES["ntt"]]
+    assert slugs == ["ntt-london", "ntt-london-1", "ntt-hemel-2", "ntt-hemel-3",
+                     "ntt-hemel-4", "ntt-slough-2", "ntt-slough-3"]
+    for slug, url in f.PAGES["ntt"]:
+        assert "/services-and-products/global-data-centers/" in url, slug
+        held = snapshot_path(slug)
+        assert held is not None and held.exists(), slug
+        text = held.read_text()
+        assert not f.looks_like_error_page(text.encode()), slug

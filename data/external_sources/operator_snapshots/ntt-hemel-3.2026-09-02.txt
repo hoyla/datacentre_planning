@@ -1,0 +1,4486 @@
+# url: https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/hemel-hempstead-3-data-center
+
+# fetched: 2026-09-02
+
+# sha256(html): 339640e61e6560b2ed841eb23d3f7a894a51cf42a53112a827a56981b293ec97
+
+# obtained: direct
+
+## STRUCTURED
+
+(none)
+
+## VISIBLE TEXT
+
+Hemel Hempstead 3 Data Center | NTT 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ nonce for GTM var 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+
+ 
+ Access Client Portal 
+ 
+ 
+
+ 
+
+ 
+ 
+
+
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+ 
+ Industries
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Industries 
+ 
+ Make your digital transformation a reality 
+ 
+ View Industries 
+ 
+
+ 
+ 
+ Industries 
+ 
+ 
+ 
+ Automotive
+ 
+ 
+ 
+ 
+ Banking and Financial Services
+ 
+ 
+ 
+ 
+ Education and Research
+ 
+ 
+ 
+ 
+ Energy, Utilities and Natural Resources
+ 
+ 
+ 
+ 
+ Healthcare
+ 
+ 
+ 
+ 
+ Insurance
+ 
+ 
+ 
+ 
+ Life Sciences
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Manufacturing
+ 
+ 
+ 
+ 
+ Private Equity
+ 
+ 
+ 
+ 
+ Public Sector and Education
+ 
+ 
+ 
+ 
+ Retail and Consumer Packaged Goods
+ 
+ 
+ 
+ 
+ Telco, Media and Technology
+ 
+ 
+ 
+ 
+ Travel, Transportation and Logistics
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ Featured services
+ 
+ 
+ 
+ 
+ Edge 
+ 
+ Edge Compute Services
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 2026 Global AI Report: A Playbook for AI Leaders 
+ Why AI strategy is your business strategy: The acceleration toward an AI-native state. Explore executive insights from AI leaders. 
+ Access the playbook 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ Services 
+ 
+ Leverage our capabilities to accelerate your business transformation. 
+ 
+ View all services and products 
+ 
+ 
+
+ 
+ 
+ 
+ AI
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ AI 
+
+ 
+ 
+ 
+ AI Consulting
+ 
+ 
+ 
+ 
+ AI Studio
+ 
+ 
+ 
+ 
+ Private and Sovereign AI
+ 
+ 
+ 
+ 
+ AI Workforce Transformation
+ 
+ 
+ 
+ 
+ Edge AI and Physical AI
+ 
+ 
+ 
+ 
+ AI Solutions
+ 
+ 
+ 
+ 
+ View AI
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Application Services
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Application Services 
+
+ 
+ 
+ 
+ Application and Mainframe Modernization
+ 
+ 
+ 
+ 
+ Application Development
+ 
+ 
+ 
+ 
+ Application Management
+ 
+ 
+ 
+ 
+ Product-Centric Development
+ 
+ 
+ 
+ 
+ Quality Engineering and Assurance
+ 
+ 
+ 
+ 
+ Strategy, Architecture and Portfolio Management Services
+ 
+ 
+ 
+ 
+ Sustainable Development and Innovation
+ 
+ 
+ 
+ 
+ View Application Services
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Business Process Services
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Business Process Services 
+
+ 
+ 
+ 
+ Business Support Processes
+ 
+ 
+ 
+ 
+ Customer Services and Interaction Management
+ 
+ 
+ 
+ 
+ Industry-Specific Processes
+ 
+ 
+ 
+ 
+ View Business Process Services
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Cloud
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Cloud 
+
+ 
+ 
+ 
+ Cloud Architecture and Modernization
+ 
+ 
+ 
+ 
+ Cloud Optimization
+ 
+ 
+ 
+ 
+ Cloud Platforms
+ 
+ 
+ 
+ 
+ Cloud Strategy and Transformation
+ 
+ 
+ 
+ 
+ View Cloud
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Connectivity
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Connectivity 
+
+ 
+ 
+ 
+ Data Center Connectivity
+ 
+ 
+ 
+ 
+ Enterprise Internet Services
+ 
+ 
+ 
+ 
+ Global Cellular Connectivity
+ 
+ 
+ 
+ 
+ Global IP Network
+ 
+ 
+ 
+ 
+ View Connectivity
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Consulting
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Consulting 
+
+ 
+ 
+ 
+ Business Operations Agility
+ 
+ 
+ 
+ 
+ Business Strategy and Execution
+ 
+ 
+ 
+ 
+ Digital Business Enablement
+ 
+ 
+ 
+ 
+ Organization and Talent Management
+ 
+ 
+ 
+ 
+ Supply Chain Consulting
+ 
+ 
+ 
+ 
+ Technology Strategy and Innovation
+ 
+ 
+ 
+ 
+ View Consulting
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ CX and Digital Products
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ CX and Digital Products 
+
+ 
+ 
+ 
+ CX Strategy
+ 
+ 
+ 
+ 
+ XD and Digital Products
+ 
+ 
+ 
+ 
+ Marketing and Commerce
+ 
+ 
+ 
+ 
+ Customer Experience and Omnichannel
+ 
+ 
+ 
+ 
+ View CX and Digital Products
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Cybersecurity
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Cybersecurity 
+
+ 
+ 
+ 
+ Enterprise Cyber Resilience
+ 
+ 
+ 
+ 
+ Risk Management and Compliance
+ 
+ 
+ 
+ 
+ Cybersecurity Solutions
+ 
+ 
+ 
+ 
+ View Cybersecurity
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Data and Analytics
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Data and Analytics 
+
+ 
+ 
+ 
+ Intelligent Solutions
+ 
+ 
+ 
+ 
+ Data Strategy and Program
+ 
+ 
+ 
+ 
+ Data Engineering and Platforms
+ 
+ 
+ 
+ 
+ Data Governance and Management
+ 
+ 
+ 
+ 
+ Data Visualization and Business Decision
+ 
+ 
+ 
+ 
+ AI Consulting
+ 
+ 
+ 
+ 
+ View Data and Analytics
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Digital Workplace
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Digital Workplace 
+
+ 
+ 
+ 
+ Employee Collaboration
+ 
+ 
+ 
+ 
+ Employee Experience Enablement
+ 
+ 
+ 
+ 
+ Modern Workplace Strategy
+ 
+ 
+ 
+ 
+ Workplace Device Support
+ 
+ 
+ 
+ 
+ Workplace Management Platform
+ 
+ 
+ 
+ 
+ Workplace Omnichannel Support
+ 
+ 
+ 
+ 
+ View Digital Workplace
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Edge
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Edge 
+
+ 
+ 
+ 
+ Private 5G
+ 
+ 
+ 
+ 
+ Global Cellular Connectivity
+ 
+ 
+ 
+ 
+ Edge Compute
+ 
+ 
+ 
+ 
+ Enterprise IoT
+ 
+ 
+ 
+ 
+ View Edge
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Enterprise Networking
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Enterprise Networking 
+
+ 
+ 
+ 
+ Global Network Services
+ 
+ 
+ 
+ 
+ Managed Network Services
+ 
+ 
+ 
+ 
+ View Enterprise Networking
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Enterprise Application Platforms
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Enterprise Application Platforms 
+
+ 
+ 
+ 
+ Supply Chain Management
+ 
+ 
+ 
+ 
+ Customer Experience and Relationship Management (CRM)
+ 
+ 
+ 
+ 
+ Enterprise Resource Planning (ERP)
+ 
+ 
+ 
+ 
+ Project and Portfolio Management Platforms
+ 
+ 
+ 
+ 
+ Human Capital Management Platforms
+ 
+ 
+ 
+ 
+ Application Integration Platforms
+ 
+ 
+ 
+ 
+ View Enterprise Application Platforms
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Global Data Centers
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Global Data Centers 
+
+ 
+ 
+ 
+ Global data center locations
+ 
+ 
+ 
+ 
+ Colocation
+ 
+ 
+ 
+ 
+ Data Center Implementation and Management
+ 
+ 
+ 
+ 
+ View Global Data Centers
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Infrastructure Solutions
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Infrastructure Solutions 
+
+ 
+ 
+ 
+ Secure Networking Solutions
+ 
+ 
+ 
+ 
+ Cybersecurity Solutions
+ 
+ 
+ 
+ 
+ Hybrid Data Center Solutions
+ 
+ 
+ 
+ 
+ Digital Workplace and CX Solutions
+ 
+ 
+ 
+ 
+ Infrastructure Advisory
+ 
+ 
+ 
+ 
+ Strategic Sourcing
+ 
+ 
+ 
+ 
+ Professional Services
+ 
+ 
+ 
+ 
+ Software-defined Infrastructure Services
+ 
+ 
+ 
+ 
+ Global Field Services
+ 
+ 
+ 
+ 
+ Adoption Services
+ 
+ 
+ 
+ 
+ View Infrastructure Solutions
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Sustainability Services
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Sustainability Services 
+
+ 
+ 
+ 
+ Climate and Nature Services
+ 
+ 
+ 
+ 
+ Corporate Sustainability Services
+ 
+ 
+ 
+ 
+ Smart in Sustainability
+ 
+ 
+ 
+ 
+ Sustainable IT Services
+ 
+ 
+ 
+ 
+ Sustainable Value Chain Services
+ 
+ 
+ 
+ 
+ View Sustainability Services
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Accelerate outcomes with agentic AI 
+ Optimize workflows and get results with NTT DATA's Smart AI AgentTM Ecosystem 
+ Create your roadmap 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Insights
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ Insights 
+ 
+ Explore how technology shapes businesses, industries and societies. 
+ 
+ Insights 
+ 
+ 
+
+ 
+ 
+ 
+ Insights
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Insights
+ 
+ Insights 
+
+ 
+ 
+ 
+ Blog
+ 
+ 
+ 
+ 
+ Case studies
+ 
+ 
+ 
+ 
+ Featured insights
+ 
+ 
+ 
+ 
+ Announcements
+ 
+ 
+ 
+ 
+ Events
+ 
+ 
+ 
+ 
+ Reports
+ 
+ 
+ 
+ 
+ Digital resources
+ 
+ 
+ 
+ 
+ Insights
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ Recent Insights 
+ 
+ 
+ 
+ The Future of Networking in 2025 and Beyond 
+ 
+ 
+ 
+ 
+ 
+ Using the cloud to cut costs needs the right approach 
+ When organizations focus on transformation, a move to the cloud can deliver cost savings – but they often need expert advice to help them along their journey 
+ 
+ 
+ 
+ 
+ Make zero trust security work for your organization 
+ Make zero trust security work for your organization across hybrid work environments. 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Insights
+ 
+ 
+
+ 
+ 
+ 
+ Reports
+ 
+ 
+ 
+ 
+ Digital resources
+ 
+ 
+ 
+ 
+ Expert Round-Up
+ 
+ 
+ 
+ 
+ Insights & Resources
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 2026 Global AI Report: A Playbook for AI Leaders 
+ Why AI strategy is your business strategy: The acceleration toward an AI-native state. Explore executive insights from AI leaders. 
+ Access the playbook 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ About us
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Discover how we accelerate your business transformation 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ About us
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ About us 
+
+ 
+ 
+ 
+ Leadership 
+ 
+ 
+ 
+ 
+ Newsroom
+ 
+ 
+ 
+ 
+ Locations
+ 
+ 
+ 
+ 
+ Our partners
+ 
+ 
+ 
+ 
+ Industries
+ 
+ 
+ 
+ 
+ Innovation
+ 
+ 
+ 
+ 
+ Diversity, equity and inclusion
+ 
+ 
+ 
+ 
+ Ignite tomorrow, today.
+ 
+ 
+ 
+ 
+ View about us page
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ CLIENT STORIES 
+ 
+ 
+ 
+ Liantis 
+ Over time, Liantis – an established HR company in Belgium – had built up data islands and isolated solutions as part of their legacy system. 
+ 
+ 
+ 
+ 
+ Randstad 
+ We ensured that Randstad’s migration to Genesys Cloud CX had no impact on availability, ensuring an exceptional user experience for clients and talent. 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Sustainability
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ Sustainability 
+
+ 
+ 
+ 
+ View Sustainability
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ CLIENT STORIES 
+ 
+ 
+ 
+ Liantis 
+ Over time, Liantis – an established HR company in Belgium – had built up data islands and isolated solutions as part of their legacy system. 
+ 
+ 
+ 
+ 
+ Randstad 
+ We ensured that Randstad’s migration to Genesys Cloud CX had no impact on availability, ensuring an exceptional user experience for clients and talent. 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 2026 Global AI Report: A Playbook for AI Leaders 
+ Why AI strategy is your business strategy: The acceleration toward an AI-native state. Explore executive insights from AI leaders. 
+ Access the playbook 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ Careers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ Industries
+ 
+ 
+ 
+ 
+ Services
+ 
+ 
+ 
+ 
+ Insights
+ 
+ 
+ 
+ 
+ Solutions
+ 
+ 
+ 
+ 
+ Careers
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ {{selectedLanguage}} 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Global – English
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Global – Deutsch
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Middle East and Africa (MEA) – English 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Kenya
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Saudi Arabia
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ South Africa
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Asia Pacific
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Australia
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Hong Kong
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ India
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Indonesia
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Malaysia
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ New Zealand
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Philippines
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Singapore
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ South Korea
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Taiwan
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Thailand
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Vietnam
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Global (EN)
+ 
+ 
+
+ 
+ 
+
+ 
+
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 1 && !languageSelectorActive,
+ 'primary-mega-nav-mobile--level2': navigationLevel > 2,
+ 'primary-mega-nav-mobile--lang-selector': languageSelectorActive }"
+ >
+ 
+ 
+ 1" aria-label="Back"> 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+ 
+ Industries
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Industries 
+ 
+ Make your digital transformation a reality 
+ 
+ View Industries 
+ 
+
+ 
+ 
+ Industries 
+ 
+ 
+ 
+ Automotive
+ 
+ 
+ 
+ 
+ Banking and Financial Services
+ 
+ 
+ 
+ 
+ Education and Research
+ 
+ 
+ 
+ 
+ Energy, Utilities and Natural Resources
+ 
+ 
+ 
+ 
+ Healthcare
+ 
+ 
+ 
+ 
+ Insurance
+ 
+ 
+ 
+ 
+ Life Sciences
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Manufacturing
+ 
+ 
+ 
+ 
+ Private Equity
+ 
+ 
+ 
+ 
+ Public Sector and Education
+ 
+ 
+ 
+ 
+ Retail and Consumer Packaged Goods
+ 
+ 
+ 
+ 
+ Telco, Media and Technology
+ 
+ 
+ 
+ 
+ Travel, Transportation and Logistics
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ Featured services
+ 
+ 
+ 
+ 
+ Edge 
+ 
+ Edge Compute Services
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 2026 Global AI Report: A Playbook for AI Leaders 
+ Why AI strategy is your business strategy: The acceleration toward an AI-native state. Explore executive insights from AI leaders. 
+ Access the playbook 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Services
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ Services 
+ 
+ Leverage our capabilities to accelerate your business transformation. 
+ 
+ View all services and products 
+ 
+ 
+
+ 
+ 
+ 
+ AI
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ AI 
+
+ 
+ 
+ 
+ AI Consulting
+ 
+ 
+ 
+ 
+ AI Studio
+ 
+ 
+ 
+ 
+ Private and Sovereign AI
+ 
+ 
+ 
+ 
+ AI Workforce Transformation
+ 
+ 
+ 
+ 
+ Edge AI and Physical AI
+ 
+ 
+ 
+ 
+ AI Solutions
+ 
+ 
+ 
+ 
+ View AI
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Application Services
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Application Services 
+
+ 
+ 
+ 
+ Application and Mainframe Modernization
+ 
+ 
+ 
+ 
+ Application Development
+ 
+ 
+ 
+ 
+ Application Management
+ 
+ 
+ 
+ 
+ Product-Centric Development
+ 
+ 
+ 
+ 
+ Quality Engineering and Assurance
+ 
+ 
+ 
+ 
+ Strategy, Architecture and Portfolio Management Services
+ 
+ 
+ 
+ 
+ Sustainable Development and Innovation
+ 
+ 
+ 
+ 
+ View Application Services
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Business Process Services
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Business Process Services 
+
+ 
+ 
+ 
+ Business Support Processes
+ 
+ 
+ 
+ 
+ Customer Services and Interaction Management
+ 
+ 
+ 
+ 
+ Industry-Specific Processes
+ 
+ 
+ 
+ 
+ View Business Process Services
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Cloud
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Cloud 
+
+ 
+ 
+ 
+ Cloud Architecture and Modernization
+ 
+ 
+ 
+ 
+ Cloud Optimization
+ 
+ 
+ 
+ 
+ Cloud Platforms
+ 
+ 
+ 
+ 
+ Cloud Strategy and Transformation
+ 
+ 
+ 
+ 
+ View Cloud
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Connectivity
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Connectivity 
+
+ 
+ 
+ 
+ Data Center Connectivity
+ 
+ 
+ 
+ 
+ Enterprise Internet Services
+ 
+ 
+ 
+ 
+ Global Cellular Connectivity
+ 
+ 
+ 
+ 
+ Global IP Network
+ 
+ 
+ 
+ 
+ View Connectivity
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Consulting
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Consulting 
+
+ 
+ 
+ 
+ Business Operations Agility
+ 
+ 
+ 
+ 
+ Business Strategy and Execution
+ 
+ 
+ 
+ 
+ Digital Business Enablement
+ 
+ 
+ 
+ 
+ Organization and Talent Management
+ 
+ 
+ 
+ 
+ Supply Chain Consulting
+ 
+ 
+ 
+ 
+ Technology Strategy and Innovation
+ 
+ 
+ 
+ 
+ View Consulting
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ CX and Digital Products
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ CX and Digital Products 
+
+ 
+ 
+ 
+ CX Strategy
+ 
+ 
+ 
+ 
+ XD and Digital Products
+ 
+ 
+ 
+ 
+ Marketing and Commerce
+ 
+ 
+ 
+ 
+ Customer Experience and Omnichannel
+ 
+ 
+ 
+ 
+ View CX and Digital Products
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Cybersecurity
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Cybersecurity 
+
+ 
+ 
+ 
+ Enterprise Cyber Resilience
+ 
+ 
+ 
+ 
+ Risk Management and Compliance
+ 
+ 
+ 
+ 
+ Cybersecurity Solutions
+ 
+ 
+ 
+ 
+ View Cybersecurity
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Data and Analytics
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Data and Analytics 
+
+ 
+ 
+ 
+ Intelligent Solutions
+ 
+ 
+ 
+ 
+ Data Strategy and Program
+ 
+ 
+ 
+ 
+ Data Engineering and Platforms
+ 
+ 
+ 
+ 
+ Data Governance and Management
+ 
+ 
+ 
+ 
+ Data Visualization and Business Decision
+ 
+ 
+ 
+ 
+ AI Consulting
+ 
+ 
+ 
+ 
+ View Data and Analytics
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Digital Workplace
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Digital Workplace 
+
+ 
+ 
+ 
+ Employee Collaboration
+ 
+ 
+ 
+ 
+ Employee Experience Enablement
+ 
+ 
+ 
+ 
+ Modern Workplace Strategy
+ 
+ 
+ 
+ 
+ Workplace Device Support
+ 
+ 
+ 
+ 
+ Workplace Management Platform
+ 
+ 
+ 
+ 
+ Workplace Omnichannel Support
+ 
+ 
+ 
+ 
+ View Digital Workplace
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Edge
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Edge 
+
+ 
+ 
+ 
+ Private 5G
+ 
+ 
+ 
+ 
+ Global Cellular Connectivity
+ 
+ 
+ 
+ 
+ Edge Compute
+ 
+ 
+ 
+ 
+ Enterprise IoT
+ 
+ 
+ 
+ 
+ View Edge
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Enterprise Networking
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Enterprise Networking 
+
+ 
+ 
+ 
+ Global Network Services
+ 
+ 
+ 
+ 
+ Managed Network Services
+ 
+ 
+ 
+ 
+ View Enterprise Networking
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Enterprise Application Platforms
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Enterprise Application Platforms 
+
+ 
+ 
+ 
+ Supply Chain Management
+ 
+ 
+ 
+ 
+ Customer Experience and Relationship Management (CRM)
+ 
+ 
+ 
+ 
+ Enterprise Resource Planning (ERP)
+ 
+ 
+ 
+ 
+ Project and Portfolio Management Platforms
+ 
+ 
+ 
+ 
+ Human Capital Management Platforms
+ 
+ 
+ 
+ 
+ Application Integration Platforms
+ 
+ 
+ 
+ 
+ View Enterprise Application Platforms
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Global Data Centers
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Global Data Centers 
+
+ 
+ 
+ 
+ Global data center locations
+ 
+ 
+ 
+ 
+ Colocation
+ 
+ 
+ 
+ 
+ Data Center Implementation and Management
+ 
+ 
+ 
+ 
+ View Global Data Centers
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Infrastructure Solutions
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Infrastructure Solutions 
+
+ 
+ 
+ 
+ Secure Networking Solutions
+ 
+ 
+ 
+ 
+ Cybersecurity Solutions
+ 
+ 
+ 
+ 
+ Hybrid Data Center Solutions
+ 
+ 
+ 
+ 
+ Digital Workplace and CX Solutions
+ 
+ 
+ 
+ 
+ Infrastructure Advisory
+ 
+ 
+ 
+ 
+ Strategic Sourcing
+ 
+ 
+ 
+ 
+ Professional Services
+ 
+ 
+ 
+ 
+ Software-defined Infrastructure Services
+ 
+ 
+ 
+ 
+ Global Field Services
+ 
+ 
+ 
+ 
+ Adoption Services
+ 
+ 
+ 
+ 
+ View Infrastructure Solutions
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Sustainability Services
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Services
+ 
+ Sustainability Services 
+
+ 
+ 
+ 
+ Climate and Nature Services
+ 
+ 
+ 
+ 
+ Corporate Sustainability Services
+ 
+ 
+ 
+ 
+ Smart in Sustainability
+ 
+ 
+ 
+ 
+ Sustainable IT Services
+ 
+ 
+ 
+ 
+ Sustainable Value Chain Services
+ 
+ 
+ 
+ 
+ View Sustainability Services
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Accelerate outcomes with agentic AI 
+ Optimize workflows and get results with NTT DATA's Smart AI AgentTM Ecosystem 
+ Create your roadmap 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Insights
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ Insights 
+ 
+ Explore how technology shapes businesses, industries and societies. 
+ 
+ Insights 
+ 
+ 
+
+ 
+ 
+ 
+ Insights
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Insights
+ 
+ Insights 
+
+ 
+ 
+ 
+ Blog
+ 
+ 
+ 
+ 
+ Case studies
+ 
+ 
+ 
+ 
+ Featured insights
+ 
+ 
+ 
+ 
+ Announcements
+ 
+ 
+ 
+ 
+ Events
+ 
+ 
+ 
+ 
+ Reports
+ 
+ 
+ 
+ 
+ Digital resources
+ 
+ 
+ 
+ 
+ Insights
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ Recent Insights 
+ 
+ 
+ 
+ The Future of Networking in 2025 and Beyond 
+ 
+ 
+ 
+ 
+ 
+ Using the cloud to cut costs needs the right approach 
+ When organizations focus on transformation, a move to the cloud can deliver cost savings – but they often need expert advice to help them along their journey 
+ 
+ 
+ 
+ 
+ Make zero trust security work for your organization 
+ Make zero trust security work for your organization across hybrid work environments. 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ Insights
+ 
+ 
+
+ 
+ 
+ 
+ Reports
+ 
+ 
+ 
+ 
+ Digital resources
+ 
+ 
+ 
+ 
+ Expert Round-Up
+ 
+ 
+ 
+ 
+ Insights & Resources
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 2026 Global AI Report: A Playbook for AI Leaders 
+ Why AI strategy is your business strategy: The acceleration toward an AI-native state. Explore executive insights from AI leaders. 
+ Access the playbook 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ About us
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Discover how we accelerate your business transformation 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ About us
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ About us 
+
+ 
+ 
+ 
+ Leadership 
+ 
+ 
+ 
+ 
+ Newsroom
+ 
+ 
+ 
+ 
+ Locations
+ 
+ 
+ 
+ 
+ Our partners
+ 
+ 
+ 
+ 
+ Industries
+ 
+ 
+ 
+ 
+ Innovation
+ 
+ 
+ 
+ 
+ Diversity, equity and inclusion
+ 
+ 
+ 
+ 
+ Ignite tomorrow, today.
+ 
+ 
+ 
+ 
+ View about us page
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ CLIENT STORIES 
+ 
+ 
+ 
+ Liantis 
+ Over time, Liantis – an established HR company in Belgium – had built up data islands and isolated solutions as part of their legacy system. 
+ 
+ 
+ 
+ 
+ Randstad 
+ We ensured that Randstad’s migration to Genesys Cloud CX had no impact on availability, ensuring an exceptional user experience for clients and talent. 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Sustainability
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ Sustainability 
+
+ 
+ 
+ 
+ View Sustainability
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ CLIENT STORIES 
+ 
+ 
+ 
+ Liantis 
+ Over time, Liantis – an established HR company in Belgium – had built up data islands and isolated solutions as part of their legacy system. 
+ 
+ 
+ 
+ 
+ Randstad 
+ We ensured that Randstad’s migration to Genesys Cloud CX had no impact on availability, ensuring an exceptional user experience for clients and talent. 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 2026 Global AI Report: A Playbook for AI Leaders 
+ Why AI strategy is your business strategy: The acceleration toward an AI-native state. Explore executive insights from AI leaders. 
+ Access the playbook 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ Careers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ Contact us
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+ Hemel Hempstead 3 Data Center 
+ With a maximum IT load of 20MW, Hemel Hempstead 3 offers complete solutions for your IT and network systems 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Home
+ 
+ 
+ 
+ 
+ 
+ 
+ Services and products
+ 
+ 
+ 
+ 
+ 
+ 
+ Global Data Centers
+ 
+ 
+ 
+ 
+ 
+ 
+ Global data center locations
+ 
+ 
+ 
+ 
+ 
+ 
+ EMEA
+ 
+ 
+ 
+ 
+ 
+ Hemel Hempstead 3 Data Center
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ {{anchor.title}} 
+ 
+ 
+ 
+
+ Overview 
+ 
+
+ 
+
+ 
+ Secure and flexible London space built to your specifications 
+ Our Hemel Hempstead 3 Data Center belongs to seven existing data centers we currently operate in Hemel Hempstead, Slough and Dagenham. With a total of 8,900+m ² of data center server space and a maximum of 20MW of IT load, Hemel Hempstead 3 offers complete solutions for housing your IT and network in a secure, high availability environment. 
+ 
+ 
+ Download the data sheet 
+ 
+ Request a quote 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ Campus, Spring Way, Hemel Hempstead, HP2 7TN, United Kingdom Contact number: +44 20 8016 9118 
+ 
+ Email us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Schedule a tour 
+ 
+ Take a look inside Hemel Hempstead 3 Data Center and get all your questions answered. 
+ 
+ Request a tour 
+ 
+
+ 
+ 
+ 
+
+
+ Specifications 
+ 
+ 
+ 
+ Specifications 
+ 
+ 
+ 
+ 
+ Power 
+ 20MW of critical IT load, dual dedicated 11,000V (HV) grid connections (2N) and dedicated 2N redundant HV substations on-site. 
+
+ 
+ 
+ 
+ 
+ 
+ Connectivity 
+ Carrier-neutral, carrier mix from global Tier 1 supplier to regional supplier and redundant Carrier-Meet-Me-Rooms. 
+
+ 
+ 
+ 
+ 
+ 
+ Cooling 
+ Primary cooling infrastructure, centrally managed and linked to the building management system (BMS), room air conditioning units and regulated humidity. 
+
+ 
+ 
+ 
+ 
+ 
+ Security 
+ 24/7 on-site security, proximity cards to authorize access levels including man trap access, biometric identification  and external and internal IP CCTV system. 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download the Hemel Hempstead 3 data sheet 
+ Learn how our Hemel Hempstead 3 Data Center can provide complete solutions for housing your IT and network systems in a secure, high-availability environment. 
+ 
+ Download now 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+Why Hemel Hempstead 
+ 
+ Hemel Hempstead is part of the Greater London Urban Area and has attracted many businesses due to its proximity to London and excellent connectivity links, with easy access to the UK motorway network and London airports. As well as being connected to other NTT data centers in the future, the facility will also be connected to major carrier hubs in both Slough and the Docklands. 
+ Contact us 
+ 
+
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Insights 
+ 
+ 
+ 
+ 
+ Related insights and resources 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Discover our Hemel Hempstead 3 Data Center 
+ Download the brochure 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ On-demand episodes of our DCD London 1 Broadcast 
+ Register to watch now 
+ 
+ 
+ 
+ Global Data Centers 
+ 
+ 
+ 
+ 
+ Our global data center platform 
+ Read more 
+ 
+ 
+ 
+ Global Data Centers 
+ 
+ 
+ 
+ 
+ Building data centers for a more sustainable tomorrow 
+ Read more 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ startItem && itemCount > rowLength" v-on:click="previousCard()" class="related-insights-collection__backward-btn"> 
+ rowLength" v-on:click="nextCard()" class="related-insights-collection__forward-btn"> 
+ 
+ 
+ 
+
+
+ Contact us 
+
+ 
+ 
+ 
+ 
+ 
+ We’re here to help! 
+ 
+ 
+ Speak with an expert about our data center solutions and discover how we can help drive your organization forward. 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ Name 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ Surname 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Business email 
+ 
+
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ Job title 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Afghanistan 
+ Aland Islands 
+ Albania 
+ Algeria 
+ American Samoa 
+ Andorra 
+ Angola 
+ Anguilla 
+ Antarctica 
+ Antigua and Barbuda 
+ Argentina 
+ Armenia 
+ Aruba 
+ Australia 
+ Austria 
+ Azerbaijan 
+ Bahamas 
+ Bahrain 
+ Bangladesh 
+ Barbados 
+ Belarus 
+ Belgium 
+ Belize 
+ Benin 
+ Bermuda 
+ Bhutan 
+ Bolivia 
+ Bonaire Sint Eustatius and Saba 
+ Bosnia-Herzegovina 
+ Botswana 
+ Bouvet Island 
+ Brazil 
+ British Indian Ocean Territory 
+ British Virgin Islands 
+ Brunei 
+ Bulgaria 
+ Burkina Faso 
+ Burundi 
+ Cambodia 
+ Cameroon 
+ Canada 
+ Cape Verde 
+ Cayman Islands 
+ Central African Republic 
+ Chad 
+ Chile 
+ China 
+ Christmas Island 
+ Colombia 
+ Comoros 
+ Congo 
+ Cook Islands 
+ Costa Rica 
+ Cote dIvoire 
+ Croatia 
+ Cuba 
+ Cyprus 
+ Czech Republic 
+ Denmark 
+ Djibouti 
+ Dominica 
+ Dominican Republic 
+ East Timor 
+ Ecuador 
+ Egypt 
+ El Salvador 
+ Equatorial Guinea 
+ Eritrea 
+ Estonia 
+ Eswatini 
+ Ethiopia 
+ Falkland Islands 
+ Faroe Islands 
+ Fiji 
+ Finland 
+ France 
+ French Guiana 
+ French Polynesia 
+ French Southern Territories 
+ Gabon 
+ Gambia 
+ Georgia 
+ Germany 
+ Ghana 
+ Gibraltar 
+ Greece 
+ Greenland 
+ Grenada 
+ Guadeloupe 
+ Guam 
+ Guatemala 
+ Guernsey 
+ Guinea 
+ Guinea-Bissau 
+ Guyana 
+ Haiti 
+ Heard and McDonald Islands 
+ Honduras 
+ Hong Kong 
+ Hungary 
+ Iceland 
+ India 
+ Indonesia 
+ Iran 
+ Iraq 
+ Ireland 
+ Isle of Man 
+ Israel 
+ Italy 
+ Ivory Coast 
+ Jamaica 
+ Japan 
+ Jersey 
+ Jordan 
+ Kazakhstan 
+ Kenya 
+ Kiribati 
+ Kosovo 
+ Kuwait 
+ Kyrgyzstan 
+ Latvia 
+ Lebanon 
+ Lesotho 
+ Liberia 
+ Libya 
+ Liechtenstein 
+ Lithuania 
+ Luxembourg 
+ Malaysia 
+ Maldives 
+ Malta 
+ Mauritius 
+ Mexico 
+ Micronesia 
+ Midway Island 
+ Moldova 
+ Morocco 
+ Mozambique 
+ Myanmar 
+ Namibia 
+ Netherlands 
+ New Zealand 
+ Nigeria 
+ North Macedonia 
+ Norway 
+ Palestine 
+ Paraguay 
+ Philippines 
+ Pitcairn Islands 
+ Poland 
+ Portugal 
+ Qatar 
+ Romania 
+ Russia 
+ Rwanda 
+ Saint Barthelemy 
+ Saint Kitts and Nevis 
+ Saint Martin 
+ Saudi Arabia 
+ Serbia 
+ Singapore 
+ Sint Maarten 
+ Slovakia 
+ Slovenia 
+ South Africa 
+ South Korea 
+ South Sandwich Islands 
+ Spain 
+ Sri Lanka 
+ Swaziland 
+ Sweden 
+ Switzerland 
+ Syria 
+ Taiwan 
+ Tanzania 
+ Thailand 
+ Tunisia 
+ Turkey 
+ Turkish Republic of Northern Cyprus 
+ Uganda 
+ United Arab Emirates 
+ United Kingdom 
+ United States 
+ United States Virgin Islands 
+ Vatican City 
+ Vietnam 
+ Wake Island 
+ Zambia 
+ Zimbabwe 
+ 
+ 
+ Country
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+
+ Contact number 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ Company 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Americas 
+ APAC 
+ EMEA 
+ India 
+ 
+ 
+ Which data center region are you interested in learning more about? 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ Americas 
+
+
+ 
+
+ 
+ 
+
+ 
+ 
+ Ashburn Virginia
+ 
+ 
+
+ 
+ 
+ Chicago Illinois
+ 
+ 
+
+ 
+ 
+ Dallas Texas
+ 
+ 
+
+ 
+ 
+ Hillsboro Oregon
+ 
+ 
+
+ 
+ 
+ Sacramento California
+ 
+ 
+
+ 
+ 
+ Santa Clara California
+ 
+ 
+
+ 
+ 
+ Phoenix Arizona
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ APAC 
+
+
+ 
+
+ 
+ 
+
+ 
+ 
+ Financial Data Center Hong Kong
+ 
+ 
+
+ 
+ 
+ Osaka Japan
+ 
+ 
+
+ 
+ 
+ Tai Po Hong Kong
+ 
+ 
+
+ 
+ 
+ Tokyo Japan
+ 
+ 
+
+ 
+ 
+ Jakarta Indonesia
+ 
+ 
+
+ 
+ 
+ Cyberjaya Malaysia
+ 
+ 
+
+ 
+ 
+ Serangoon Singapore
+ 
+ 
+
+ 
+ 
+ Bangkok Thailand
+ 
+ 
+
+ 
+ 
+ Ho Chi Minh City Vietnam
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ EMEA 
+
+
+ 
+
+ 
+ 
+
+ 
+ 
+ Berlin Germany
+ 
+ 
+
+ 
+ 
+ Frankfurt Germany
+ 
+ 
+
+ 
+ 
+ Munich Germany
+ 
+ 
+
+ 
+ 
+ Amsterdam Netherlands
+ 
+ 
+
+ 
+ 
+ Madrid Spain
+ 
+ 
+
+ 
+ 
+ Zurich Switzerland
+ 
+ 
+
+ 
+ 
+ London United Kingdom
+ 
+ 
+
+ 
+ 
+ Johannesburg South Africa
+ 
+ 
+
+ 
+ 
+ Vienna Austria
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+ India 
+
+
+ 
+
+ 
+ 
+
+ 
+ 
+ Bengaluru India
+ 
+ 
+
+ 
+ 
+ Chennai India
+ 
+ 
+
+ 
+ 
+ Mumbai India
+ 
+ 
+
+ 
+ 
+ Noida India
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ I’d like to receive email updates and other communications from NTT DATA related to digital transformation.
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+ 
+ 
+ Briefly describe your data center location requirements * 
+ 
+ 
+ 
+ 
+
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+
+ 
+ 
+
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Industries 
+ 
+ 
+ 
+ 
+ SERVICES 
+ 
+ 
+ 
+ 
+ Insights 
+ 
+ 
+ 
+ 
+ About NTT DATA 
+ 
+ 
+ 
+ 
+ Careers 
+ 
+ 
+ 
+ 
+ Legal 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ LinkedIn 
+ 
+ 
+ Facebook 
+ 
+ 
+ Twitter 
+ 
+ 
+ YouTube 
+ 
+ 
+ Instagram 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Contact us 
+ 
+ 
+ Privacy 
+ 
+ 
+ Terms of use 
+ 
+ 
+ Cookie preferences 
+ 
+ 
+ Unsubscribe 
+ 
+ 
+ Sitemap 
+ 
+ 
+ Enforce my privacy rights 
+ 
+ 
+ Manage my communication preference 
+ 
+ 
+ Careers 
+ 
+ 
+ Company information - NTT Ltd. 
+ 
+
+ 
+ Copyright © 2025 NTT DATA Inc.

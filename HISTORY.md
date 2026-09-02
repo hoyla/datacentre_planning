@@ -3256,3 +3256,30 @@ encoding and traversal variants that once bypassed the middleware
 entirely. Cloud Run, added the same day, serves the same page behind
 Guardian sign-in and changes only when its script is run — the first
 release where publishing and merging are two separate acts.
+
+## NTT's pages, actually fetched (2026-09-02)
+
+Luke, driving Street View along Slough's trading estate, saw NTT's
+signage and asked whether NTT was in the corpus. Three of its four UK
+locations were — Dagenham, London Colney, and Hemel Hempstead under
+Gyron's name, the one NTT stopped using — and the fourth, Slough 2 and
+3 at 665-670 Ajax Avenue, was nowhere but the Environment Agency
+register. On the way the claims channel turned out to hold **no NTT
+claim at all**: the two NTT URLs registered on 2026-08-30 had moved,
+NTT's server answered 200 with a "New 404" body, and the fetcher stored
+both bodies as snapshots (of 84 held, the only two). An unreviewed
+error page sat as evidence that the operator publishes nothing, which
+is the wrong finding. `fetch_operator_snapshots.py` now refuses a page
+whose title or first words say not-found (`looks_like_error_page`; a
+real 404 already raised), the seven live pages — the London overview
+with its "formerly operating as Gyron" line and the six facilities —
+are registered and held, and the two dead snapshots stay in the store
+as what was served that day. Nine claims and six matches followed:
+London 1 at 64 MW full build-out with its 32 MW first building as a
+component and an 80 MVA substation; Hemel Hempstead 2, 3 and 4 at 5.8,
+20 and 12 MW, matched `probable` to Gyron's estate-scale site record,
+which also holds the address on Amazon's Hemel permit and is now a
+partition candidate; Slough 2 and 3 at 1.8 and 2.7 MW, unmatched
+because no site exists. Two questions for the operator travel with
+them: Hemel 2's page says "one of seven data centers we operate in the
+area" where the overview lists three, and NTT's own permit says four.

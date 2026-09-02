@@ -280,6 +280,28 @@ sources:
       Long-term capability" on a secured connection — not a built or
       announced IT capacity, and the quantity type records it so.
 
+  - key: ntt_website
+    operator: NTT Global Data Centers
+    snapshot_dir: operator_snapshots
+    note: >-
+      Six London-area facility pages plus the overview that lists them
+      (LON1, HH2, HH3, HH4, SL2, SL3) and carries the lineage — "with
+      over 20 years of experience in the UK market formerly operating as
+      Gyron" — which is why the Hemel Hempstead campus sits in this
+      corpus under Gyron's name and a search for NTT never found it.
+      Figures are uniformly "critical IT load", per facility, with no
+      campus totals and no dates; London 1 states both its first
+      building (32MW) and its full build-out (64MW). Two things to hold
+      against it. Hemel Hempstead 2's page says the facility "is one of
+      seven data centers we operate in the area" where the overview lists
+      three; and NTT's own Environment Agency permit for Hemel describes
+      "64 emergency standby generators across four sites". Which count is
+      right is a question for the operator. **The pages were unreachable
+      until 2026-09-02**: the two URLs registered on 2026-08-30 answered
+      200 with a "New 404" body, both were stored as snapshots, and no
+      NTT claim existed while the operator published six pages of
+      figures. The fetcher now refuses such a page.
+
 claims:
   # --- Ark, per campus ---------------------------------------------------
   - source: ark_website
@@ -1473,6 +1495,137 @@ claims:
       "14.000 square meters" in its own stat block.
 
 
+  # ---- NTT Global Data Centers (formerly Gyron), read 2026-09-02
+  - source: ntt_website
+    snapshot: ntt-london-1
+    claim_name: NTT London 1 (Dagenham)
+    quantity_type: announced_capacity
+    value: 64
+    unit: MW
+    as_at: 2026-09-02
+    term: critical IT load once fully built out
+    stage: fully built out
+    quote: 64MW of critical IT load once fully built out
+    note: >-
+      The campus figure, on the operator's page for its Yew Tree Avenue,
+      RM10 7FZ site. The first building's 32MW is the component below.
+      An 80MVA on-site substation is stated beside it and is recorded as
+      the grid figure.
+
+  - source: ntt_website
+    snapshot: ntt-london-1
+    claim_name: NTT London 1 (Dagenham) — first building
+    component_of: "NTT London 1 (Dagenham)"
+    quantity_type: announced_capacity
+    value: 32
+    unit: MW
+    as_at: 2026-09-02
+    term: critical IT load
+    stage: operational
+    quote: 32MW of critical IT load
+
+  - source: ntt_website
+    snapshot: ntt-london-1
+    claim_name: NTT London 1 (Dagenham) — grid supply
+    quantity_type: grid_connection
+    value: 80
+    unit: MVA
+    as_at: 2026-09-02
+    term: on-site substation delivering 80MVA of power
+    stage: operational
+    quote: on-site substation delivering 80MVA of power
+
+  - source: ntt_website
+    snapshot: ntt-hemel-2
+    claim_name: NTT Hemel Hempstead 2
+    quantity_type: announced_capacity
+    value: 5.8
+    unit: MW
+    as_at: 2026-09-02
+    term: critical IT load
+    stage: operational
+    quote: 5.8MW of critical IT load
+    note: >-
+      150 Maylands Avenue, HP2 7DF — one of the four postcodes NTT's own
+      Hemel permit (EPR/BP3800PZ) is issued to.
+
+  - source: ntt_website
+    snapshot: ntt-hemel-3
+    claim_name: NTT Hemel Hempstead 3
+    quantity_type: announced_capacity
+    value: 20
+    unit: MW
+    as_at: 2026-09-02
+    term: critical IT load
+    stage: operational
+    quote: 20MW of critical IT load
+    note: >-
+      "Campus, Spring Way, HP2 7TN" — the postcode and the name of the
+      Barbour record the site is keyed on (Gyron's "The Campus, Maylands
+      Avenue, HP2 7TN").
+
+  - source: ntt_website
+    snapshot: ntt-hemel-4
+    claim_name: NTT Hemel Hempstead 4
+    quantity_type: announced_capacity
+    value: 12
+    unit: MW
+    as_at: 2026-09-02
+    term: critical IT load
+    stage: will offer
+    quote: 12MW of critical IT load
+    note: >-
+      1 Blossom Way, HP2 4ZB, stated in the future tense ("will offer a
+      maximum IT load of 12MW"). The same postcode as Amazon's Hemel
+      permit address, 3A Blossom Way, which the permit-matches file left
+      unmatched inside this same site record — two operators in one
+      record is the site-23 shape, and is on the ROADMAP.
+
+  - source: ntt_website
+    snapshot: ntt-hemel-4
+    claim_name: NTT Hemel Hempstead 4 — grid supply
+    quantity_type: grid_connection
+    value: 60
+    unit: MVA
+    as_at: 2026-09-02
+    term: on-site substation delivering 60MVA of power
+    stage: will offer
+    quote: on-site substation delivering 60MVA of power
+
+  - source: ntt_website
+    snapshot: ntt-slough-2
+    claim_name: NTT Slough 2
+    quantity_type: announced_capacity
+    value: 1.8
+    unit: MW
+    as_at: 2026-09-02
+    term: critical IT load
+    stage: operational
+    quote: 1.8MW of critical IT load
+    note: >-
+      670 Ajax Avenue, Slough Trading Estate, SL1 4BG. **Unmatched: no
+      site.** The corpus holds no application and no Barbour project at
+      665-670 Ajax Avenue; the nearest record is Segro's GB One shell at
+      650-660 (PTNO-12602383), the same postcode, which is not this
+      building. The Environment Agency register holds NTT's permit at
+      665-670 (EPR/YP3633QA, 2022) with no document and so no figure.
+      A pre-window building — Gyron's Slough estate — visible only
+      through the operator and the permit register (ROADMAP, Coverage
+      gaps; the unsited-claims layer is the durable home).
+
+  - source: ntt_website
+    snapshot: ntt-slough-3
+    claim_name: NTT Slough 3
+    quantity_type: announced_capacity
+    value: 2.7
+    unit: MW
+    as_at: 2026-09-02
+    term: critical IT load
+    stage: operational
+    quote: 2.7MW of critical IT load
+    note: >-
+      665 Ajax Avenue, SL1 4BG. Unmatched for the reason on Slough 2.
+
 matches:
   - claim_name: Digital Realty LHR13 (Chessington, KT9 1SJ)
     site_id: 414
@@ -2147,6 +2300,73 @@ matches:
       evidence, from the operator's page for it. Held as a separate
       claim because the two pages state different figures.
 
+
+  - claim_name: NTT London 1 (Dagenham)
+    site_id: 42
+    method: name_and_place
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-09-02
+    evidence: >-
+      NTT's page gives "Yew Tree Avenue, RM10 7FZ, Dagenham"; site 42 is
+      Barbour's "NTT COMMUNICATIONS DATA CENTRE", client NTT Europe, at
+      "Former Sanofi Aventis, Yewtree Avenue, Dagenham", with the
+      Barking application for the same land. NTT's Dagenham permit
+      (EPR/CP3902LV, RM10 7FZ) is matched to the same site in
+      environment-agency-permit-matches.yaml. No other record competes.
+
+  - claim_name: NTT London 1 (Dagenham) — grid supply
+    site_id: 42
+    method: name_and_place
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-09-02
+    evidence: The same page and address as the capacity claim above.
+
+  - claim_name: NTT Hemel Hempstead 2
+    site_id: 11
+    method: name_and_postcode
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-09-02
+    evidence: >-
+      Site 11 is Barbour's "GYRON LIMITED - NEW DATA CENTRE AND STORAGE
+      FACILITY", client Gyron Internet Limited, at The Campus, Maylands
+      Avenue, HP2 7TN, with seven Dacorum applications across Maylands
+      Avenue, Spring Way, Finway Road and Blossom Way; NTT's own overview
+      page says it was "formerly operating as Gyron". HH2's 150 Maylands
+      Avenue, HP2 7DF, is one of the four postcodes NTT's Hemel permit
+      (EPR/BP3800PZ) is issued to. Probable rather than strong because
+      the site record is estate-scale and also holds the address of
+      Amazon's Hemel permit (3A Blossom Way), so it does not describe one
+      operator's campus alone.
+
+  - claim_name: NTT Hemel Hempstead 3
+    site_id: 11
+    method: name_and_postcode
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-09-02
+    evidence: >-
+      "Campus, Spring Way, HP2 7TN" is the Barbour record's own postcode
+      and name (The Campus); the site holds Dacorum/4/01399/13/MFA at
+      "Campus Spring Way". Probable for the shared-record reason on HH2.
+
+  - claim_name: NTT Hemel Hempstead 4
+    site_id: 11
+    method: name_and_postcode
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-09-02
+    evidence: >-
+      1 Blossom Way, HP2 4ZB; the site holds Dacorum/21/04714/SCE and
+      Dacorum/26/00152/FUL at 3A Blossom Way, HP2 4ZB. Probable for the
+      shared-record reason on HH2, sharpened here: 3A is the address on
+      Amazon's permit, so which of the Blossom Way applications is NTT's
+      and which is Amazon's is exactly the question a partition of site
+      11 would answer.
+
+  - claim_name: NTT Hemel Hempstead 4 — grid supply
+    site_id: 11
+    method: name_and_postcode
+    confidence: probable
+    matched_by: hand:claude-fable-5:2026-09-02
+    evidence: The same page and address as the capacity claim above.
 
 considered:
   - claim_name: Union Park
