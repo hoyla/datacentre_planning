@@ -49,9 +49,10 @@ from dotenv import load_dotenv  # noqa: E402
 load_dotenv(ROOT / ".env")
 
 from dcp import db  # noqa: E402
+from dcp.adjudication_routes import consequential_finding_ids  # noqa: E402
+from dcp.adjudication_routes import PROMPT_VERSION  # noqa: E402  (power-1.0, the rubric both routes share)
 
 MODEL = "claude-sonnet-5+subagent"
-PROMPT_VERSION = "power-1.0"          # identical rubric to the API run
 SHARD_DIR = ROOT / "data" / "adjudication_shards"
 
 TO_MW = {"mw": 1.0, "megawatt": 1.0, "megawatts": 1.0, "mwe": 1.0,
@@ -101,15 +102,12 @@ def load_consequential(conn, include_refinements: bool = False) -> list[dict]:
     adjudicators for no reason but queue latency. Opt-in, so the default
     discipline stands.
     """
+    # The consequential set is one rule, shared with the long-tail
+    # script's guard (dcp/adjudication_routes.py), so the two routes
+    # cannot disagree about which figures are whose.
+    consequential = consequential_finding_ids(conn, PROMPT_VERSION)
     with conn.cursor() as cur:
         cur.execute("""
-            WITH capped AS (
-              SELECT DISTINCT m.site_id
-              FROM power_adjudication pa
-              JOIN findings f ON f.id = pa.finding_id
-              JOIN site_members m ON m.application_id = f.application_id
-                                 AND m.retired_at IS NULL
-              WHERE pa.verdict = 'site_capacity')
             SELECT DISTINCT f.application_id, a.application_ref,
                    coalesce(a.description, ''), f.id, f.document_id,
                    f.signal_type, f.value_number, f.value_unit,
@@ -121,14 +119,14 @@ def load_consequential(conn, include_refinements: bool = False) -> list[dict]:
             JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
             WHERE f.value_number IS NOT NULL
               AND lower(f.value_unit) = ANY(%s)
-              AND (%s OR m.site_id NOT IN (SELECT site_id FROM capped))
+              AND (%s OR f.id = ANY(%s))
               AND NOT EXISTS (
                     SELECT 1 FROM power_adjudication p
                     WHERE p.finding_id = f.id
                       AND p.prompt_version = %s)
             ORDER BY f.application_id, f.value_number DESC""",
             (list(TO_MW) + list(APPARENT), include_refinements,
-             PROMPT_VERSION))
+             sorted(consequential), PROMPT_VERSION))
         rows = cur.fetchall()
 
     apps: dict[int, dict] = {}

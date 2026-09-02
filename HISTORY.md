@@ -3333,3 +3333,22 @@ nothing is lost. What it opens is on the ROADMAP under the page's
 weight: the one-file rule that shaped a 33.5 MB reader, 29 MB of it the
 508 site pages rendered inline, was written for a copy that opened from
 a Drive folder, and that copy no longer exists.
+
+## Adjudication by consequence, now in code (2026-09-02)
+
+Creek Way's first read produced two power figures on a site that had
+never carried an adjudicated capacity, and they went to the long-tail
+GPT-5 batch because the runbook's step 1 named only that script. Luke
+caught it — "don't we send adjudications to Sonnet subtasks?" — and the
+record already said so: power adjudication is split by consequence,
+the Sonnet subagent route for figures that can set a headline number,
+the batch for the tail. The batch's one request was left uncollected
+and its state file set aside with the reason, the Sonnet route
+adjudicated both figures (site_capacity, 2.055 MW cooling and 2.055 MW
+building services, neither a ceiling), and the rule moved into
+`dcp/adjudication_routes.py`, read by both scripts: the long tail now
+holds the consequential set, names it, and sends it only under
+`--include-consequential`. The runbook's step 1 says which route first.
+Luke's point stands wider than the script: who is responsible for a
+single site's adjudication has to be written where the work is done,
+not only where the decision was made.

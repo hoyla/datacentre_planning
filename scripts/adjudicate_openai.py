@@ -48,6 +48,8 @@ from dotenv import load_dotenv  # noqa: E402
 load_dotenv(ROOT / ".env")
 
 from dcp import db  # noqa: E402
+from dcp.adjudication_routes import (consequential_finding_ids,  # noqa: E402
+                                     split_by_consequence)
 
 _spec = importlib.util.spec_from_file_location(
     "adjudicate_power", ROOT / "scripts" / "adjudicate_power.py")
@@ -148,9 +150,26 @@ def build_jsonl(apps: list[dict], model: str,
 
 
 def do_submit(model: str, effort: str | None, dry_run: bool,
-              rate_in: float, rate_out: float) -> None:
+              rate_in: float, rate_out: float,
+              include_consequential: bool = False) -> None:
     with db.connect() as conn:
         apps = load_tail(conn)
+        consequential = consequential_finding_ids(conn, PROMPT_VERSION)
+    # Split by consequence, not preference (dcp/adjudication_routes.py):
+    # a figure on a site with no adjudicated capacity can set that
+    # site's headline number and belongs to the Sonnet subagent route.
+    # Held here, named, and never sent unless the caller says so.
+    apps, held = split_by_consequence(apps, consequential)
+    if held:
+        n_held = sum(len(a["figures"]) for a in held)
+        print(f"held {n_held} figure(s) on {len(held)} application(s) whose "
+              f"site carries no adjudicated capacity — the consequential "
+              f"set, for scripts/adjudicate_subagent.py --prepare:")
+        for a in held:
+            print(f"    {a['ref']}: {len(a['figures'])} figure(s)")
+        if include_consequential:
+            print("  --include-consequential: sending them here anyway")
+            apps = apps + held
     lines, meta = build_jsonl(apps, model, effort)
     n_fig = sum(len(a["figures"]) for a in apps)
     in_tok = sum(len(l) for l in lines) / 4
@@ -273,6 +292,11 @@ def main() -> int:
                     choices=["minimal", "low", "medium", "high"])
     ap.add_argument("--rate-in", type=float, default=1.25)
     ap.add_argument("--rate-out", type=float, default=10.0)
+    ap.add_argument("--include-consequential", action="store_true",
+                    help="send figures on sites with no adjudicated "
+                         "capacity here too, instead of holding them for "
+                         "the subagent route. Deliberate, and worth a "
+                         "line in HISTORY saying why.")
     args = ap.parse_args()
     if args.collect:
         do_collect()
@@ -281,7 +305,8 @@ def main() -> int:
         # contradictory pair is the one that does not spend money.
         do_submit(args.model, args.reasoning_effort,
                   dry_run=args.dry_run or not args.submit,
-                  rate_in=args.rate_in, rate_out=args.rate_out)
+                  rate_in=args.rate_in, rate_out=args.rate_out,
+                  include_consequential=args.include_consequential)
     else:
         ap.error("pass --dry-run, --submit or --collect")
     return 0
