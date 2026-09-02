@@ -1285,11 +1285,18 @@ claims:
     term: IT load
     quote: With 145.5MW of IT load
     note: >-
-      Deliberately unmatched. VIRTUS's campus is LONDON3, 4, 9, 10, 11,
-      12 and 19; the corpus's Slough site holds LONDON3, 10 and 11.
-      Matching the seven-facility total to the three-facility site
-      would assert a scope the campus review has not decided (operator
-      pages review T3-05; campus_scope.yaml).
+      Matched 2026-09-02 on the campus-scope decision (campus_scope.yaml,
+      PTNO-12216044, Luke): VIRTUS's campus is LONDON3, 4, 9, 10, 11, 12
+      and 19; the corpus's Slough site holds LONDON3, 10 and 11, and
+      LONDON4, 9, 12 and 19 are nowhere in the corpus. The figure ranks
+      the site as VIRTUS's, for VIRTUS's scope, with the coverage stated
+      on the row. It was held unmatched from 2026-08-30 until the review
+      decided the scope (operator pages review T3-05). **Internal
+      discrepancy, a question for the operator:** 145.5 exceeds the
+      seven facility rows summed (132.2) by 13.3 MW, which is LONDON11's
+      own figure to the decimal. The arithmetic is ours; how VIRTUS
+      arrived at its total is not inferred from it. The claimed figure
+      is kept as claimed.
 
   - source: virtus_website
     snapshot: virtus-slough-campus
@@ -2026,6 +2033,23 @@ matches:
       LONDON6 on VIRTUS's Stockley Park campus roster; site 37's
       planning record names LONDON5-LONDON8 across its Hillingdon
       stems. Operator pages review T1-08.
+
+  - claim_name: "VIRTUS Slough campus (VIRTUS's own scope)"
+    site_id: 525
+    method: name_identity
+    confidence: strong
+    matched_by: hand:luke+claude-fable-5:2026-09-02
+    evidence: >-
+      The campus-scope review of 2026-09-02 (campus_scope.yaml,
+      PTNO-12216044) decided that VIRTUS's own campus figure ranks this
+      site: the site is aliased "VIRTUS Slough campus" and holds
+      LONDON3, LONDON10 and LONDON11 on the records themselves, VIRTUS
+      places all three on this campus, and the four facilities the
+      roster names beyond them (LONDON4, 9, 12, 19) have no planning
+      record anywhere in the corpus — a coverage gap, not a competing
+      site. The planning record states no load, so nothing is displaced;
+      the cell carries the figure as VIRTUS's, for VIRTUS's scope, with
+      three-of-seven coverage stated beside it.
 
   - claim_name: VIRTUS LONDON3 (Slough)
     site_id: 525

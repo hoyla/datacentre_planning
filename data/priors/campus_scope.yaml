@@ -183,14 +183,72 @@ campuses:
   - site_key: PTNO-12216044
     projects: 3
     proposed: co_located
-    scope: unreviewed
-    total: unreviewed
+    scope: distinct_facilities
+    total: withhold
     barbour_titles:
       - VIRTUS DATA CENTRES - LONDON 11 DATA CENTRE
       - VIRTUS DATA CENTRES - LONDON 3 DATA CENTRE
       - ZENIUM - DATA CENTRE - FIT-OUT
+    power_cell:
+      operator_claim: "VIRTUS Slough campus (VIRTUS's own scope)"
+      expected_value_mw: 145.5
+      note: >-
+        VIRTUS's own campus figure for seven facilities, of which three
+        have a planning record here and none has a planning document
+        held; the planning record states no load at all.
     reason: |
-      Not yet reviewed.
+      Reviewed by Luke with Claude, 2026-09-02 — the first of the
+      rostered campuses, and a different shape from Stockley Park: there
+      is no roster-against-planning-record confirmation to do, because
+      the planning record for this campus is three Barbour catalogue
+      records and one document-less 2018 outline (Slough/T/138, LONDON10
+      at 75 Buckingham Avenue). The roster is the only evidence there is.
+
+      **Distinct facilities**, on the operator's own listing: VIRTUS's
+      Slough campus page (snapshot virtus-slough-campus, 2026-08-30)
+      names LONDON3, 4, 9, 10, 11, 12 and 19, each with an IT load on one
+      basis — 7.2, 26.6, 24, 6.6, 13.3, 21 and 33.5 MW — and a campus
+      total of 145.5 MW. The site holds LONDON3 (Barbour 12277044),
+      LONDON11 (12575087) and LONDON10 (Slough/T/138, joined 2026-08-28 on
+      the Companies House charge naming 75 Buckingham Avenue). **LONDON4,
+      9, 12 and 19 are nowhere in the corpus**: no application, no
+      Barbour record, no SPV in the Companies House sweep, no permit of
+      their own (the campus permit EPR/BP3945QX is one permit for the
+      estate at 180.5 MWth; LONDON11 has its own, EPR/DP3348QS, 72 MWth);
+      the other Slough site records were checked and are Cyxtera, Virgin
+      Media, Equinix, CyrusOne and two unattributed warehouses. VIRTUS's
+      page gives no addresses. So the sourced denominator is three of
+      seven, and the four are a coverage gap, not a scope question.
+
+      **Total: withhold.** Summing is never right here — the operator
+      states its own total, and the components are its itemisation
+      (component_of on each facility claim).
+
+      **The operator's figure ranks the site** (the power_cell above),
+      under the rung's empty-ladder extension: the planning record
+      states nothing, so nothing is displaced; the cell says the figure
+      is VIRTUS's, for its scope, with no planning figure. The
+      alternative — leaving the campus claim unmatched because the site
+      holds three of seven — was rejected as the #250 failure exactly: a
+      145.5 MW campus absent from the hyperscale answer because four
+      buildings were never fetched. Saunderton is the precedent (ranks
+      on the operator's figure with no planning document at all).
+
+      **A question for the operator, carried as a note on the claim:**
+      145.5 exceeds the seven rows summed (132.2) by 13.3 MW, which is
+      LONDON11's own figure to the decimal. That is the arithmetic and
+      it is ours; how VIRTUS arrived at its total is not inferred from
+      it (Luke, 2026-09-02: "we'll keep their claimed figure, but not
+      decide how they came to it"). The claimed figure stands as
+      claimed; the discrepancy is recorded, not explained.
+
+      **Independent of the key question.** The site's key project,
+      Zenium's "London One" fit-out at 12 Liverpool Road (12216044), is
+      probably CyrusOne's LON1, which publishes that address; Luke holds
+      that partition ("I will sort out the partitioning later"). This
+      scope decision does not turn on it — LONDON3, 10 and 11 are VIRTUS
+      on the records themselves — and would survive the record being
+      ejected, though the site key would change.
 
   - site_key: PTNO-12232573
     projects: 3

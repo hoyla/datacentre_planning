@@ -276,9 +276,13 @@ class TestScopePrior:
 
     def test_the_real_displacements_load(self):
         d = csc.load_displacements()
-        assert set(d) == {"PTNO-12301553", "PTNO-12489438"}
+        assert set(d) == {"PTNO-12301553", "PTNO-12489438", "PTNO-12216044"}
         assert d["PTNO-12301553"].expected_value_mw == 112.5
         assert d["PTNO-12489438"].expected_value_mw == 148.0
+        # VIRTUS Slough, reviewed 2026-09-02: the planning record states
+        # nothing, so this one fills an empty ladder rather than
+        # displacing a figure.
+        assert d["PTNO-12216044"].expected_value_mw == 145.5
 
     def test_a_dead_site_key_fails_the_build(self):
         with pytest.raises(ValueError, match="not live"):
@@ -372,8 +376,11 @@ class TestCohortAdmission:
     cannot flake it.
     """
 
-    # (site_key, planning it_load, the claim's MW) — measured live.
-    CASES = {"PTNO-12301553": (24.0, 112.5), "PTNO-12489438": (67.2, 148.0)}
+    # (site_key, planning it_load, the claim's MW) — measured live. VIRTUS
+    # Slough (2026-09-02) has no planning figure at all: the empty-ladder
+    # case, where the rung fills rather than displaces.
+    CASES = {"PTNO-12301553": (24.0, 112.5), "PTNO-12489438": (67.2, 148.0),
+             "PTNO-12216044": (None, 145.5)}
 
     def _inputs(self, with_rung: bool):
         from dcp import site_cohorts as sc
@@ -410,7 +417,8 @@ class TestCohortAdmission:
         from dcp import site_cohorts as sc
         notes = sc.at_least_100mw(self._inputs(with_rung=True)).notes
         assert any("operator-stated campus figure" in n for n in notes)
-        assert any(n.startswith("2 of these 2") for n in notes)
+        n_cases = len(self.CASES)
+        assert any(n.startswith(f"{n_cases} of these {n_cases}") for n in notes)
 
 
 def test_the_cohort_rule_version_moved_with_the_membership_change():

@@ -113,9 +113,13 @@ sites:
   # ---- VIRTUS Slough. The operator rosters seven facilities where
   # the site record claims three (sheet T3-05) — the widest known gap
   # between a campus claim and a site's planning record, and an open
-  # campus_scope question. VIRTUS's own campus figure (145.5 MW) is
-  # 13.3 MW above its own seven rows summed, a discrepancy worth
-  # putting to the operator (ROADMAP, #247).
+  # campus_scope question — decided 2026-09-02 (distinct facilities;
+  # the operator's figure ranks the site; see campus_scope.yaml).
+  # VIRTUS's own campus figure (145.5 MW) is 13.3 MW above its own
+  # seven rows summed, and 13.3 is LONDON11's figure to the decimal.
+  # The arithmetic is ours; how VIRTUS reached its total is not
+  # inferred from it. A question for the operator, recorded on the
+  # campus claim.
   - site_key: PTNO-12216044
     facilities:
       - id: LONDON3

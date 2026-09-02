@@ -34,7 +34,7 @@ verbatim gate's whitespace fix and re-gate, which ran on 2026-08-31 so
 that the campus work reads a corpus holding the recovered figures
 (HISTORY, "The re-gate reinstated the findings the gate had wrongly
 rejected"). **What carries forward** is the rest of that section: #248,
-the 35-campus review (33 entries still `unreviewed`), #247's general
+the 35-campus review (32 entries still `unreviewed`), #247's general
 case — a campus with no published roster still shows one building's
 figure — and the partitions the review owes. The over-merged site
 records still hold the Premier Park and DataVita claims under
@@ -827,11 +827,13 @@ tracked there.
   **the invisible class is exactly two sites** — VIRTUS Stockley Park
   (ranks 24.0 MW against the operator's 112.5) and Vantage Cardiff
   (67.2 against 148), both already matched, snapshotted, first-party
-  claims. **A third joins when its scope question resolves**: VIRTUS
-  Slough ranks on nothing while its campus page's 145.5 MW sits in
-  the store unmatched — correctly, because the site claims three
-  facilities and VIRTUS rosters seven, the open question in
-  `campus_scope.yaml`. The register channel adds zero line-crossers,
+  claims. **The third joined on 2026-09-02**, when the scope question
+  resolved: VIRTUS Slough had ranked on nothing while its campus page's
+  145.5 MW sat in the store unmatched, because the site claims three
+  facilities and VIRTUS rosters seven; the review decided the
+  operator's figure ranks the site with three-of-seven coverage stated
+  beside it (the "Actions still open" entry below, and
+  `campus_scope.yaml`). The register channel adds zero line-crossers,
   so tier-and-count costs it nothing. Eight more sites sit at
   60–100 MW (London Digital Park 89, Telehouse North Two 80, Brent
   Cross 75, Longcross 73.6, Premier Park 72, Cardiff 67.2, Cody Park
@@ -1096,10 +1098,22 @@ still to do:
 
 ### Actions still open from the review sheet
 
-- **VIRTUS Slough campus scope**: VIRTUS rosters LONDON3, 4, 9, 10,
-  11, 12 and 19 as its Slough campus; `PTNO-12216044` currently claims
-  three of them. A `campus_scope.yaml` question, and the operator
-  channel's first direct input to the 35-campus review above.
+- ~~**VIRTUS Slough campus scope**~~ — **decided 2026-09-02** (Luke,
+  with the roster and the planning record put side by side; the entry
+  in `campus_scope.yaml` carries the evidence). Distinct facilities,
+  total withheld, and VIRTUS's own 145.5 MW ranks the site under the
+  rung's empty-ladder extension, since the planning record states no
+  load: three Barbour records and a document-less 2018 outline. Two
+  things came out of it. **LONDON4, 9, 12 and 19 are nowhere in the
+  corpus** — no application, no Barbour record, no SPV, no permit of
+  their own — which is a coverage item (below) rather than a scope
+  question. And **VIRTUS's stated total exceeds its own seven rows by
+  exactly LONDON11's figure** (145.5 − 132.2 = 13.3). The arithmetic
+  is ours and stops there — how VIRTUS reached its total is not
+  inferred from it (Luke); the claimed figure is kept as claimed and
+  the question is for the operator, recorded on the claim. The match loads at the next
+  `load_capacity_claims.py`; the site joins `at_least_100mw` at the next
+  build (44 → 45).
 - ~~**Vantage ↔ Next Generation Data organisation alias**~~ (Luke's
   question on sheet T3-04) — **assessed 2026-08-31 and not written**:
   no organisation-name field anywhere in the corpus contains "Next
@@ -1377,6 +1391,18 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **Four of VIRTUS's seven Slough facilities have no planning record
+  in the corpus** (found 2026-09-02 in the first campus-scope review).
+  LONDON4 (26.6 MW), LONDON9 (24), LONDON12 (21) and LONDON19 (33.5)
+  are on VIRTUS's own campus page and nowhere else we hold: no
+  application, no Barbour record, no SPV in the Companies House sweep,
+  no permit of their own (the campus permit EPR/BP3945QX covers the
+  estate at 180.5 MWth). VIRTUS's page gives no addresses, so the
+  first step is finding the buildings — the Slough Trading Estate is
+  SEGRO's, and a landlord-side or title search may be quicker than the
+  register — then the register sweep for each. 105 MW of operator-
+  stated IT load with no planning paperwork behind it in this dataset,
+  on the estate the corpus covers most densely.
 - **Elsham Wolds states three power figures that do not reconcile with
   each other** (found 2026-08-31, and verified against the cached page
   text rather than taken from the reading that surfaced it). The Energy
