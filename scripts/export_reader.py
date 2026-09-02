@@ -1506,8 +1506,15 @@ figure.chart path:hover,figure.chart circle:hover{opacity:1}
 figure.pie .piebody{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 figure.pie svg{width:140px;flex:0 0 140px}
 figure.pie .legend{flex-direction:column;gap:5px;margin:0;min-width:180px}
-a.dlink{margin-left:5px;font-weight:400;color:var(--mut);text-decoration:none;
-  font-size:13px;border:1px solid var(--line);border-radius:50%;padding:0 4px}
+/* A circle, by construction: the same fixed width and height, the glyph
+   centred inside. As an inline element its height came from the
+   heading's line box and its width from padding, so in the 12px
+   uppercase headings it drew taller than wide (Luke, 2026-09-02). Sized
+   to the narrower dimension it had, not widened. */
+a.dlink{display:inline-block;width:15px;height:15px;box-sizing:border-box;
+  line-height:13px;padding:0;text-align:center;vertical-align:middle;
+  margin-left:5px;font-weight:400;font-size:11px;letter-spacing:0;
+  color:var(--mut);text-decoration:none;border:1px solid var(--line);border-radius:50%}
 a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
 /* Start here, from §2 of the design brief rather than from my own head:
    content and a 380px sidebar, 48px apart; cards are white with a 4px

@@ -53,3 +53,13 @@ def test_the_sites_tables_four_columns_are_centred_and_the_site_cell_is_not():
     assert "td:nth-child(6){text-align:center" not in SRC
     # the other two tables keep their alignment: widths yes, centring no
     assert re.search(r"#tbl-(?:apps|energy)[^{}]*\{[^}]*text-align:center", SRC) is None
+
+
+def test_the_dictionary_marker_is_a_circle_by_construction():
+    """Equal fixed width and height, the glyph centred: an inline marker
+    took its height from the heading's line box and drew as an oval."""
+    rule = re.search(r"a\.dlink\{([^}]*)\}", SRC).group(1)
+    w = re.search(r"(?<![a-z-])width:(\d+)px", rule).group(1)
+    h = re.search(r"(?<![a-z-])height:(\d+)px", rule).group(1)
+    assert w == h, (w, h)
+    assert "display:inline-block" in rule and "text-align:center" in rule and "border-radius:50%" in rule
