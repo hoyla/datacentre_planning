@@ -814,8 +814,22 @@ sends the reporter to a stale corpus.
 ```sh
 scripts/export_reader.py   --out data/exports/<build>/reader.html --phase <N> --publish index.html
 scripts/export_handover.py --out data/exports/<build>/dc_handover_phase<N>.xlsx
+scripts/export_duckdb.py   --out data/exports/<build>/dc_phase<N>.duckdb
+scripts/build_drive_staging.py          # re-link the root artefacts — see below
 scripts/drive_sync.py --sync data/exports/drive_staging
 ```
+
+**Rebuild all three, and re-stage before the second sync** (learned at
+2.12, 2026-09-02). The database carries the Drive-link columns too, so
+it is rebuilt with the reader and the workbook. And the staging tree
+holds the root artefacts as hard links into the release folder: the
+workbook writer truncates its file in place, so the staged link sees
+the new bytes on its own, but **the DuckDB writer replaces the file**,
+which leaves the staged link pointing at the old inode — the trap step
+9's own comment records. Re-running `build_drive_staging.py` re-links
+both (a minute; the tree is rebuilt clean and nothing else moves),
+and the second sync then updates exactly two files at the root — which
+is what it reported at 2.12, and what to expect.
 
 The reader prints what it found on the way past:
 
