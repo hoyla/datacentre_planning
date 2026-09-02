@@ -998,6 +998,33 @@ table{border-collapse:separate;border-spacing:0;width:100%;min-width:1390px;
 #tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2){min-width:180px}   /* Who's behind it */
 #tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3){min-width:200px}   /* Signals */
 #tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4){min-width:172px}   /* Power on record */
+/* Who's behind it, Signals it matches, Power MW and External power
+   indicators are centred, heading and cells alike (Luke, 2026-09-02,
+   recorded in DESIGN_CONFORMANCE). The site cell and the reading bar
+   stay left-aligned: one is prose and the other is a gauge. */
+#tbl-sites th:nth-child(2),#tbl-sites td:nth-child(2),
+#tbl-sites th:nth-child(3),#tbl-sites td:nth-child(3),
+#tbl-sites th:nth-child(4),#tbl-sites td:nth-child(4),
+#tbl-sites th:nth-child(5),#tbl-sites td:nth-child(5){text-align:center}
+/* Sort indicator, from the Guardian Source design system's table
+   (design_handoff_datacentre_reader/guardian-source-design-system-sorting-tables,
+   Table.prompt.md), on every sortable table — Sites, Applications and
+   Energy projects, the three `wire()` binds. No separate sort icon
+   exists in the set: the indicator is the small single chevron pair,
+   drawn at 10px after the label with a 6px gap. Unsorted: both chevrons
+   stacked 2px apart at 32% opacity. Ascending: the up chevron alone at
+   full opacity and the label in the brand colour; descending: the down
+   chevron alone. Colour is the whole active signal — no tint, underline
+   or box. State is the <th>'s aria-sort, which the click handler keeps.
+   This replaced a page-wide `th:after` "↕" hint (Luke, 2026-09-02),
+   which had also decorated headings nothing sorted. */
+#tbl-sites th,#tbl-apps th,#tbl-energy th{cursor:pointer}
+.sortglyph{display:inline-flex;flex-direction:column;gap:2px;
+  margin-left:6px;vertical-align:middle;opacity:.32;line-height:0}
+.sortglyph svg{display:block;width:10px;height:5.4px}
+th[aria-sort="ascending"],th[aria-sort="descending"]{color:var(--brand)}
+th[aria-sort="ascending"] .sortglyph,th[aria-sort="descending"] .sortglyph{opacity:1}
+th[aria-sort="ascending"] .sortglyph .dn,th[aria-sort="descending"] .sortglyph .up{display:none}
 
 /* The site cell answers "what is this" on its own: the name, then where
    it is and what it is called in this dataset, then what the applicant
@@ -1107,7 +1134,7 @@ th{background:var(--bg);cursor:pointer;white-space:nowrap;font-weight:600;
    2026-08-27). The heading's ?-link already abuts its last word, so the
    non-breaking space chains word, link and glyph into one unbreakable
    tail. */
-th:after{content:"\\00a0↕";color:var(--mut);font-size:12px;opacity:.55}
+/* (The "↕" hint that stood here was replaced by the chevrons above.) */
 tr.site{cursor:pointer}
 tr.site:hover{background:rgba(127,127,127,.06)}
 /* An open row and its panel share a background and a left edge, so it is
@@ -1479,8 +1506,15 @@ figure.chart path:hover,figure.chart circle:hover{opacity:1}
 figure.pie .piebody{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 figure.pie svg{width:140px;flex:0 0 140px}
 figure.pie .legend{flex-direction:column;gap:5px;margin:0;min-width:180px}
-a.dlink{margin-left:5px;font-weight:400;color:var(--mut);text-decoration:none;
-  font-size:13px;border:1px solid var(--line);border-radius:50%;padding:0 4px}
+/* A circle, by construction: the same fixed width and height, the glyph
+   centred inside. As an inline element its height came from the
+   heading's line box and its width from padding, so in the 12px
+   uppercase headings it drew taller than wide (Luke, 2026-09-02). Sized
+   to the narrower dimension it had, not widened. */
+a.dlink{display:inline-block;width:15px;height:15px;box-sizing:border-box;
+  line-height:13px;padding:0;text-align:center;vertical-align:middle;
+  margin-left:5px;font-weight:400;font-size:11px;letter-spacing:0;
+  color:var(--mut);text-decoration:none;border:1px solid var(--line);border-radius:50%}
 a.dlink:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
 /* Start here, from §2 of the design brief rather than from my own head:
    content and a 380px sidebar, 48px apart; cards are white with a 4px
@@ -1654,7 +1688,12 @@ footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px s
 .tip{display:inline-flex;align-items:center;justify-content:center;width:15px;
   height:15px;margin-left:5px;border-radius:50%;border:1px solid var(--line);
   color:var(--mut);font-size:10.5px;cursor:help;position:relative;vertical-align:1px}
-.tip .tiptext{display:none;position:absolute;bottom:20px;left:-8px;width:290px;
+/* Opens below the "?" and grows leftwards from it (issue #301). It opened
+   upward and to the right, and the one place it is used is the right-hand
+   end of a bar pinned under the masthead: the box ran off the viewport's
+   right edge and up behind the masthead, unreadable. Below, right-anchored,
+   it has the whole bar's width to land in. */
+.tip .tiptext{display:none;position:absolute;top:20px;right:-8px;width:290px;
   background:var(--bg);border:1px solid #999;border-radius:0;padding:8px 10px;
   font-size:13.5px;line-height:1.45;color:var(--fg);
   z-index:8;text-align:left;cursor:auto}
@@ -1672,6 +1711,19 @@ footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px s
    sign for "this is about the evidence, not the development". */
 .mcount{color:var(--mut)}
 """
+
+# The Guardian Source design system's small single chevrons
+# (ChevronUpSingleSmall / ChevronDownSingleSmall, 14 x 7.549 in a 24-box),
+# drawn inline so the reader stays one file with no external asset. Both
+# are present in every sortable heading; the CSS shows the pair, or one.
+SORTGLYPH = (
+    '<span class="sortglyph" aria-hidden="true">'
+    '<svg class="up" viewBox="0 0 14 7.549"><path d="M 0.9 7.549 L 7.015 2.542 '
+    'L 13.1 7.544 L 14 6.649 L 7.351 0 L 6.649 0 L 0 6.649 L 0.9 7.549 Z" '
+    'fill="currentColor"/></svg>'
+    '<svg class="dn" viewBox="0 0 14 7.549"><path d="M 13.1 0 L 6.985 5.007 '
+    'L 0.9 0.005 L 0 0.9 L 6.649 7.549 L 7.346 7.549 L 14 0.9 L 13.1 0 Z" '
+    'fill="currentColor"/></svg></span>')
 
 MAP_JS = """
 /* A slippy map in about a hundred lines, rather than a mapping library.
@@ -2423,7 +2475,14 @@ function wire(sel){
   document.querySelectorAll(sel+' > thead th').forEach((th,i)=>th.addEventListener('click',()=>{
     const tb=th.closest('table').tBodies[0];
     const num=th.dataset.num==='1', dir=th.dataset.dir==='asc'?-1:1;
+    // The design system's three states and nothing else: the active
+    // column flips asc/desc, a different column starts ascending, and
+    // the <th> carries aria-sort so the indicator and a screen reader
+    // read the same state.
+    th.closest('tr').querySelectorAll('th').forEach(o=>{
+      if(o!==th){delete o.dataset.dir; if(o.hasAttribute('aria-sort')) o.setAttribute('aria-sort','none');}});
     th.dataset.dir=dir===1?'asc':'desc';
+    th.setAttribute('aria-sort', dir===1?'ascending':'descending');
     const pairs=[]; let cur=null;
     [...tb.rows].forEach(r=>{
       if(r.classList.contains('detail')&&cur){pairs[pairs.length-1][1]=r;}
@@ -2438,6 +2497,17 @@ function wire(sel){
   }));
 }
 wire('#tbl-sites'); wire('#tbl-apps'); wire('#tbl-energy');
+// Issue #301, the other half: a click on a help "?" gave it focus, and
+// focus kept the tooltip open until something else took it — nothing in
+// the table is focusable, so it stayed open while the pointer was
+// anywhere below. A press anywhere outside it, or the pointer leaving
+// it, drops the focus; keyboard and touch users still open it by focus.
+document.addEventListener('pointerdown', e=>{
+  const a=document.activeElement, t=a&&a.closest?a.closest('.tip'):null;
+  if(t&&!t.contains(e.target)) t.blur();
+});
+document.querySelectorAll('.tip').forEach(t=>t.addEventListener('mouseleave',()=>{
+  if(document.activeElement===t) t.blur();}));
 apply(); sticky(); fromHash(); paintWhoBar(); addEventListener('load', ()=>{sticky(); fromHash();});
 
 // A column heading explains itself: jump to its dictionary entry.
@@ -6293,15 +6363,15 @@ def main() -> int:
 
 <section id="view-sites" class="view">
 <table id="tbl-sites"><thead><tr>
- <th>{dl("Sites","Site name","Site")}</th>
- <th>{dl("Sites","End user (Barbour); Applicant of record (Barbour); "
-          "Advisers (Barbour)","Who's behind it")}</th>
- <th data-num="1">{dl("Signals","Cohort","Signals it matches")}</th>
- <th data-num="1">{dl("Sites","Power MW (best available)","Power MW")}</th>
- <th data-num="1">{dl("Sites","External power indicators",
-                       "External power indicators")}</th>
- <th data-num="1">{dl("Sites","Documents held / Documents analysed",
-                      "Reading, and its floor")}</th>
+ <th aria-sort="none">{dl("Sites","Site name","Site")}{SORTGLYPH}</th>
+ <th aria-sort="none">{dl("Sites","End user (Barbour); Applicant of record (Barbour); "
+          "Advisers (Barbour)","Who's behind it")}{SORTGLYPH}</th>
+ <th data-num="1" aria-sort="none">{dl("Signals","Cohort","Signals it matches")}{SORTGLYPH}</th>
+ <th data-num="1" aria-sort="none">{dl("Sites","Power MW (best available)","Power MW")}{SORTGLYPH}</th>
+ <th data-num="1" aria-sort="none">{dl("Sites","External power indicators",
+                       "External power indicators")}{SORTGLYPH}</th>
+ <th data-num="1" aria-sort="none">{dl("Sites","Documents held / Documents analysed",
+                      "Reading, and its floor")}{SORTGLYPH}</th>
 </tr></thead><tbody>{''.join(body)}</tbody></table>
 <!-- The handoff's footnote, kept although the view it distinguished is
      gone: with one table it is no longer "neither view drops a row" but
@@ -6316,20 +6386,20 @@ def main() -> int:
 <section id="view-apps" class="view">
 <div class="controls"><span class="count">{len(app_rows):,} applications. The document count
  links to that application's folder on Drive; Source opens the council's own register.</span></div>
-<table id="tbl-apps"><thead><tr><th>Reference</th><th>Council</th><th>Status</th>
- <th>Received</th><th>{dl("Applications","Verdict (latest) / confidence / model / reasoning","Verdict")}</th>
- <th data-num="1">{dl("Applications","Drive folder","Documents")}</th>
- <th data-num="1">{dl("Sites","Verified findings","Findings")}</th>
- <th>{dl("Applications","Portal URL","Source")}</th><th>Proposal</th></tr></thead>
+<table id="tbl-apps"><thead><tr><th aria-sort="none">Reference{SORTGLYPH}</th><th aria-sort="none">Council{SORTGLYPH}</th><th aria-sort="none">Status{SORTGLYPH}</th>
+ <th aria-sort="none">Received{SORTGLYPH}</th><th aria-sort="none">{dl("Applications","Verdict (latest) / confidence / model / reasoning","Verdict")}{SORTGLYPH}</th>
+ <th data-num="1" aria-sort="none">{dl("Applications","Drive folder","Documents")}{SORTGLYPH}</th>
+ <th data-num="1" aria-sort="none">{dl("Sites","Verified findings","Findings")}{SORTGLYPH}</th>
+ <th aria-sort="none">{dl("Applications","Portal URL","Source")}{SORTGLYPH}</th><th aria-sort="none">Proposal{SORTGLYPH}</th></tr></thead>
 <tbody>{''.join(approws_all)}</tbody></table></section>
 
 <section id="view-energy" class="view">
 <div class="controls"><span class="count">{len(nsip)} nationally significant energy projects,
  nearest datacentre site first. Metadata only — no project documents fetched.</span></div>
-<table id="tbl-energy"><thead><tr><th>Project</th>
- <th>{dl("Energy projects","All columns","Stated capacity")}</th><th>Type</th>
- <th>Stage</th><th>Applicant</th><th>Region</th><th data-num="1">Nearest site</th>
- <th>Source</th><th>Description</th></tr></thead>
+<table id="tbl-energy"><thead><tr><th aria-sort="none">Project{SORTGLYPH}</th>
+ <th aria-sort="none">{dl("Energy projects","All columns","Stated capacity")}{SORTGLYPH}</th><th aria-sort="none">Type{SORTGLYPH}</th>
+ <th aria-sort="none">Stage{SORTGLYPH}</th><th aria-sort="none">Applicant{SORTGLYPH}</th><th aria-sort="none">Region{SORTGLYPH}</th><th data-num="1" aria-sort="none">Nearest site{SORTGLYPH}</th>
+ <th aria-sort="none">Source{SORTGLYPH}</th><th aria-sort="none">Description{SORTGLYPH}</th></tr></thead>
 <tbody>{''.join(h for _, h in energyrows)}</tbody></table></section>
 
 <section id="view-map" class="view">
