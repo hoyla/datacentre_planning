@@ -244,12 +244,34 @@ What survives it here:
   Medway and MedwayOne) and one alias key dies (`SITE-Bassetlaw/22/
   01713/FUL`). `family+project` adds ten more applications (159, 360
   figures, 5,105 documents) and seven more shrinking sites; the three
-  all-`not_dc` sites become `barbour_only` rather than vanishing. Of
-  the 149, 107 are procedural paperwork on a `not_dc` parent and only
-  two name a data centre at all — both Leeds's conversion *of* a data
-  centre to offices, which `not_dc` describes correctly; what leaves
-  with figures is batteries, energy centres, substations and mixed-use
-  outlines. The default stays `off` until the mode is chosen.
+  all-`not_dc` sites become `barbour_only` rather than vanishing.
+
+  **And the veto is the wrong instrument** (Luke's question, same day:
+  do the mixed-use outlines definitely include no data centres? They do
+  not). By *description*, only two of the 149 name a data centre. By
+  their own *documents*, **27 do, across 772 findings**: Google's
+  Waltham Cross reserved matters (`Broxbourne/07/23/0361/RM`, 195
+  findings in 31 documents) and its variation whose decision notice
+  names the data centre's supply; the Houghton Regis North reserved
+  matters and discharges, whose outline's uses include a data centre;
+  Kingsnorth's outline, whose energy statement plans for "energy
+  intensive uses, such as data centres" and which is the parent
+  permission of the data-centre applications; Heatherwood's hybrid,
+  unread. A reserved matters on a data-centre outline reads as
+  `not_dc` by construction, because triage saw the description and the
+  description does not say. So the family door's admission of `not_dc`
+  is doing useful work exactly where the invisibility flags said the
+  documents were the only fix, and vetoing there would eject the Google
+  reserved matters. **The default stays `off`.** The harm is real and
+  the fix belongs elsewhere: at the figure (a `not_dc` member's figures
+  do not stand as a site's capacity, and a site is not keyed on a
+  `not_dc` application — Kingsnorth's key is its outline), or at the
+  verdict (re-triage the 27 whose documents contradict their
+  description, append-only, which corrects membership through the
+  universe rule with no veto at all). The batteries and energy centres
+  with figures — West Burton 500 MW, Watford Bypass 170, Highland 200,
+  MidKent 249, Camden and Bristol — are the ones a figure-level rule
+  would catch, and none of them has a document naming a data centre.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
 - **The class has a Drive home since 2026-09-02** — `adjacent_power/`
