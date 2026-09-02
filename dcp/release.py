@@ -134,3 +134,24 @@ def phase_of(release_dir: Path | None) -> str | None:
         return None
     m = _PHASE_RE.match(release_dir.name)
     return m.group(1) if m else None
+
+
+# Suffixes of a published artefact at the Drive tree root. The root
+# accumulates these on purpose — phase 1's workbook has to keep
+# resolving after phase 2 ships beside it — so the staging builder
+# carries them across a rebuild and `drive_sync.py --prune` declines to
+# bin them. Everything else at the root is regenerated or dropped, and
+# since 2026-09-02 that includes the reader: nobody read it on Drive
+# (Luke), git holds every release's index.html and the container image
+# holds the one deployed, so it is not staged and a copy already on
+# Drive is pruned like any other file. The workbook and the database
+# stay (Luke, the same evening: "should definitely stay" — they are what
+# the team's R user works from, and Drive is where that person finds them).
+RELEASED_SUFFIXES = (".xlsx", ".duckdb")
+
+
+def is_released_root_artefact(rel: str, root_dir) -> bool:
+    """True for a file at the tree root whose suffix marks a release."""
+    from pathlib import Path as _P
+    q = _P(rel)
+    return q.parent == _P(root_dir) and q.suffix.lower() in RELEASED_SUFFIXES

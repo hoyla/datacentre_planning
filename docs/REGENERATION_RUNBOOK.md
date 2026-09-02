@@ -561,11 +561,17 @@ before step 2, those columns carry uncorrected verdicts — a battery
 rating labelled as this site's generation, in the artefact most likely
 to be opened in Excel and sorted by the biggest number.
 
-**And after step 7**, because this script copies the release's workbook,
-database and reader into the Drive root. Run before them and the root
-gets the previous release's artefacts beside the current release's
-per-site files, which is how a reader ends up with a workbook and a
-reader that disagree. The dependency is on `--release-dir`, which no
+**And after step 7**, because this script copies the release's workbook
+and database into the Drive root. Run before them and the root gets the
+previous release's artefacts beside the current release's per-site
+files, which is how a reader ends up with a workbook and a database
+that disagree. **The reader is no longer copied** (2026-09-02): nobody
+opened it on Drive (Luke), git holds every release's `index.html` and
+the container image holds the one deployed, so the only copy Drive ever
+had is now a stale one — `drive_sync.py --prune` bins it at the next
+sync, because the root exemption keeps released suffixes only
+(`dcp.release.RELEASED_SUFFIXES`), not anything that happens to sit at
+the root. The workbook and the database stay. The dependency is on `--release-dir`, which no
 longer names a phase: it defaults to the most recently written
 `data/exports/*_build` and prints which one it chose. (It did default to
 a hardcoded `phase2_build`; `tests/test_release_defaults.py` now forbids

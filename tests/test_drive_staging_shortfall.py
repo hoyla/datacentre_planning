@@ -506,3 +506,20 @@ def test_the_shortfall_drops_whatever_this_build_wrote_under_adjacent_power():
         FakeCursor([rows]),
         staged_adjacent={"Leeds/18/00742/FU", "Hillingdon/75111/APP/2023/2544"})
     assert kept == [("not_dc", "Council/25/00002/FUL", 3)]
+
+
+def test_the_reader_is_not_a_released_artefact_and_is_never_staged():
+    """Since 2026-09-02 the reader lives in git and the container only:
+    nobody read it on Drive, and a stale copy beside a current workbook
+    is the disagreement the root exists to prevent. One rule for the
+    builder and the prune, so the two cannot drift apart."""
+    from dcp import release
+    assert ".html" not in release.RELEASED_SUFFIXES
+    assert bds.RELEASED_SUFFIXES is release.RELEASED_SUFFIXES
+    src = (ROOT / "scripts" / "build_drive_staging.py").read_text()
+    assert '".html"' not in src, "the root-staging loop names .html again"
+    root = Path("/tmp/drive_staging")
+    assert release.is_released_root_artefact("/tmp/drive_staging/dc_phase2.11.duckdb", root)
+    assert release.is_released_root_artefact("/tmp/drive_staging/dc_handover_phase2.11.xlsx", root)
+    assert not release.is_released_root_artefact("/tmp/drive_staging/reader.html", root)
+    assert not release.is_released_root_artefact("/tmp/drive_staging/sites/x/y.xlsx", root)
