@@ -535,7 +535,18 @@ the build has actually written them, so an adjacent-power application
 that failed to stage still fails the run; `record_drive_ids.py` and
 `verify_drive_sample.py` read the folder name from the builder, so
 those documents get their ids recorded and can be sampled like any
-other. A pass now prints an `adjacent power: N applications, M
+other. **Which applications belong there is decided once**, in
+`dcp.adjacent_power.staged_applications`, and read by the builder, the
+recorder and the verifier alike — the three carried their own copies of
+the rule until 2026-09-02 and the copies agreed with each other while
+disagreeing with the materialise (#349). The rule also brings a scheme's
+own paperwork with it: a discharge, amendment or variation whose parent
+is an adjacent-power application and which is in no site is filed
+beside its parent, its index naming the parent and the sites the parent
+stands beside. Triage calls such paperwork `not_dc`, correctly, and the
+shortfall used to read that as "excluded by decision" while the parent
+had a folder — Union Park's four discharges and one at Hallen, 50
+documents. A pass now prints an `adjacent power: N applications, M
 documents` line beside the site count, and a `zero-byte documents
 in the tree` line naming any document held as an empty file — three are
 known, from before the fetch guard existed, and a fourth is news (see

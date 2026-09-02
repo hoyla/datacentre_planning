@@ -2756,6 +2756,44 @@ chain stranded, outside the datacentre-only export.
 
 ---
 
+## Adjacent power takes its own paperwork with it (2026-09-02)
+
+The second of the three pieces of work the `not_dc` resolution produced
+(ROADMAP, the `not_dc` item). Which applications sit under
+`adjacent_power/` on Drive was decided in three places — the staging
+build, the id recorder and the sample verifier each carried its own
+query — and #349 had just shown what that costs. It is decided once now,
+in `dcp.adjacent_power.staged_applications`, and the three read it; a
+test refuses any of them re-deriving the class from the verdict.
+
+**What the shared rule adds.** A scheme's own paperwork. A discharge of
+a substation consent's conditions, an amendment to its layout, a
+variation of its hours is triaged `not_dc` by the rubric, and correctly:
+it is not a data centre and its description ties it to nothing but its
+parent. But the family door refuses `adjacent_power` (#252), so the
+child was admitted to no site, its verdict put it in the shortfall's
+"excluded by decision", and it sat in no folder while its parent had
+one. The rule reads the reference instead of the verdict — `associated_id`,
+else a three-segment reference in the description, through the same
+extractor the clusterer uses — and files the child beside its parent,
+its `_index.md` naming the parent and listing the sites the parent
+stands beside, since the relationship table has rows for the scheme and
+none for its discharges. Measured against the live corpus: **38
+applications, 946 documents** — the 33 the verdict already covered, and
+five pieces of paperwork: Union Park's four discharges of the
+`75111/APP/2022/1007` site-clearance permission and one discharge at
+Hallen, 50 documents that had no Drive home.
+
+The shortfall guard now drops whatever this build wrote under
+`adjacent_power/` whatever its verdict, so a staged `not_dc` discharge
+is no longer reported as held-but-not-staged. Three integration tests
+pin the rule — a discharge is staged with its scheme and a stray
+`not_dc` is not; a member of a live site is never adjacent power's; an
+application holding no documents is not listed — and the staging test
+pins the child's index.
+
+---
+
 ## Four small fixes (2026-09-02)
 
 Asked for by Luke on reading the stale-content audit, each closing a
