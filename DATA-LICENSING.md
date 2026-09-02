@@ -121,6 +121,29 @@ to attribution and to the register's own re-use conditions
 GSS codes used for `councils.gss_code` and `council_aliases` follow the
 ONS Office for National Statistics convention (OGL v3.0).
 
+### postcodes.io (postcode centroids, used by hand from 2026-09-02)
+
+[postcodes.io](https://postcodes.io) is a free, open-source postcode
+lookup; its README says it serves the ONS Postcode Directory, Ordnance
+Survey Open Names and the Scottish Postcode Directory. The service's
+own code is MIT; the *data* it returns is those sources' data under
+their licences — the ONS Postcode Directory is published under the
+Open Government Licence v3.0 with an attribution statement its user
+guide requires wherever the data is reproduced, naming Ordnance Survey
+(Crown copyright and database right), Royal Mail (copyright and
+database right) and the Office for National Statistics (Crown copyright
+and database right), each with the year of the release used. Take the
+exact wording and year from the ONSPD release on the ONS geoportal at
+the time of publication.
+
+Used so far only by hand: the postcode centroids that placed
+ServerChoice's Stevenage address and the Slough Trading Estate
+postcodes on 2026-09-02 (ROADMAP, Coverage gaps and the partition item)
+came from its API. Any published output that carries a postcodes.io
+centroid — the public feed's overlay on the ROADMAP is the intended one
+— reproduces the attribution above and credits postcodes.io by name,
+which is the courtesy its maintainers ask.
+
 ---
 
 ## Data licensing on outputs
