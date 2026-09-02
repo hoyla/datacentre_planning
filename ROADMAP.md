@@ -1950,6 +1950,53 @@ here rather than applied from the build lane.
   unlocatable sites, the councils not covered, the pre-window buildings
   the unsited-claims layer is for (NTT Slough, Equinix LD5, ServerChoice
   Stevenage), and that a permitted scheme is not a built one.
+- **"Near a postcode" in the reader, specified and not built** (Luke and
+  the session, 2026-09-02, the evening of the reader callout). The
+  internal counterpart of the public lookup above, for triaging callout
+  responses. Decided: it is a control in the **shared filter bar**, not
+  a box on the map — the 2.3 redesign removed the map's own search,
+  100 MW toggle and cohort select so that one bar serves the table and
+  the map (HISTORY), and a map-only control would put that duplication
+  back. A postcode and a radius; the table filters to sites within the
+  radius, gains a distance column and sorts by it; the map honours the
+  same visible set, as it already does, and centres on the centroid.
+  **Sector precision** ("SL1 4", about 1 km; Luke: "we don't need house
+  addresses"): roughly 11,000 sector centroids derived in the pipeline
+  from the ONS Postcode Directory — mean of the live postcodes per
+  sector, a committed data file naming the directory release — a few
+  hundred kilobytes in the page, no API at build time or lookup time,
+  so the build stays a function of its inputs and the control works
+  offline. Attribution is the directory's (DATA-LICENSING, postcodes.io
+  section). Three things the build must carry: a `near:` part in the
+  hash state, which the handoff's state model does not have, so a
+  DESIGN_CONFORMANCE entry as a departure Luke chose; the control added
+  where `release_diff` reads the bar, or the guard reports it wrongly
+  (HISTORY, "a guard that stops guarding"); and the count line saying
+  how many sites cannot be placed — 67 unlocatable today — because a
+  proximity filter silently narrows the corpus in a way the table never
+  does. Sits inside a release candidate when Luke says so.
+- **The reader's weight is its inline site pages, and the one-file rule
+  that shaped it has lost its reason** (measured 2026-09-02).
+  `index.html` is 33.5 MB; the sites view is 29.3 MB, of which the 508
+  site pages rendered inline are about 29 MB (a median of 57 kB each);
+  the map points are 0.5 MB and everything else under 4 MB. Every visit
+  downloads all 508 pages so that one can be opened. The rule that
+  forced this — one self-contained file that opens from a Drive folder,
+  offline — has no reader left: "no one reads the reader on Google
+  Drive" (Luke, 2026-09-02); the container's nginx serves a directory
+  and only its content-security policy (`connect-src`) stands between
+  the page and a companion file. **Two decisions put to Luke, not yet
+  taken:** stop copying the reader into the Drive root at release (git
+  and the container image hold every release; the workbook and DuckDB
+  copies are a separate question nobody has asked), and retire the
+  one-file rule in favour of the two that still matter — no code nobody
+  here has read, and a build that is a function of its inputs across
+  every file it writes. Then the split that pays: the shell (table,
+  map, filters, signals) at three or four megabytes, and a site's page
+  fetched when opened. A real refactor of the export — `release_diff`,
+  the conformance tests and the determinism check all read one file
+  today — for its own release, not the next candidate. The Dockerfile
+  comment still says "~17MB raw"; the page has nearly doubled since.
 - **Pipeline upload of the search bundles to Drive.** The shape is
   decided (Luke, 2026-08-29, measured rather than inherited): never
   write into a folder the pipeline did not create; always create a
