@@ -36,6 +36,37 @@ A third rule, added 2026-09-01 and not specific to registers:
   is a potentially-trustworthy origin. Some embedded browsers block it
   outright, and then the harvest has to run in Chrome.
 
+## The manual inbox — documents obtained by hand
+
+`data/raw/manual/` is the staging area for anything the adapters could
+not fetch: a bulk zip downloaded through a browser, files sent by an
+authority, a portal that blocks scripts. `scripts/ingest_inbox.py`
+content-hashes each file into the single document store, records it
+with the provenance a hand download can honestly carry (the
+application's portal page plus the council's own filename), regenerates
+the manifest, and empties the folder — so a non-empty inbox always
+means work outstanding. Two folder layouts resolve: one folder per
+application named after its reference with `_` or `:` for `/`
+(`Havering_P0384.15`), or a council folder holding one folder per
+reference (`Havering/P0384.15`); a trailing `(PTNO-…)` annotation is
+ignored. A folder that does not resolve to exactly one application is
+left in place and named, never guessed.
+
+**A page capture is not a document.** A portal page printed to PDF for
+an application that lists no documents is evidence of *absence*.
+Dropping it in the inbox would file it as that application's one
+document and invert the finding. `scripts/record_portal_check.py`
+records the check instead — an append-only `acquisition_outcome` row
+under the `browser_probe` route with who checked, when and what they
+saw — and files the capture under `data/raw/manual_bundles/` with the
+other hand-obtained material, naming the path in the row. Melville Gate
+(`Midlothian/07/00051/FUL`, 2026-09-02) is the worked case: the Idox
+adapter had recorded `none_published` on 8 August as
+"no_documents_or_unparseable", which is two findings in one string;
+Luke's check on the page settles which. A capture of a page that *does*
+list documents may go in with them, under a filename that says what it
+is — Creek Way's `OcellaWeb.pdf` was renamed to say so before ingest.
+
 ## Operator pages behind a challenge — not a register, same problem
 
 `scripts/fetch_operator_snapshots.py --slug <slug> --from-file <path>`
