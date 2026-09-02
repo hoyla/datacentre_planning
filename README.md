@@ -6,13 +6,13 @@ the planning system records but does not collect: how much power these
 sites will draw, what generation they propose on site, how they will be
 cooled, and who is behind them.
 
-**What it holds :** at the 2.11 boundary (2026-09-01), 501 sites plus
-7 known only at pre-planning stage, 1,978 in-scope planning
-applications and 60,142 documents from council registers — every
-document whose application is in a live site is staged for Drive, and
-step 9 of the runbook prints what is not and why — plus a layer of
-nationally significant energy projects for adjacency (197 at the 2.9
-boundary; it moves as the Section 35 watcher runs). 
+**What it holds :** at the 2.12 boundary (2026-09-02), 500 sites plus
+7 known only at pre-planning stage, 1,999 in-scope planning
+applications and 60,156 documents from council registers — every
+document whose application is in a live site is staged for Drive
+(57,559 at 2.12), and step 9 of the runbook prints what is not and why
+— plus a layer of nationally significant energy projects for adjacency
+(197 at the 2.9 boundary; it moves as the Section 35 watcher runs). 
 _Last updated 2 September 2026_
 
 The output is a handover package, not a live service: a reader, a
