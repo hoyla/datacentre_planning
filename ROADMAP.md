@@ -272,6 +272,25 @@ What survives it here:
   with figures — West Burton 500 MW, Watford Bypass 170, Highland 200,
   MidKent 249, Camden and Bristol — are the ones a figure-level rule
   would catch, and none of them has a document naming a data centre.
+
+  **The clearest case is DC01 at South Mimms** (Luke's worry, same
+  day: whatever happens to `Hertsmere/23/1049/OUT`, `PTNO-12809263` is
+  unambiguously a data centre). It is, and nothing here can change
+  that: the class is settled by the Barbour title and by six
+  `new_build` members, and a `not_dc` member never lowers a class, so
+  the veto question and the class question are independent. And
+  `23/1049/OUT` is neither a stray neighbour nor a data-centre
+  application — it is the same land's earlier B8 warehouse outline,
+  granted with **condition 33 restricting use as a data centre**, and
+  `Hertsmere/25/1668/VOC` (`new_build`, a member) is the application
+  removing that condition, citing `23/1049/OUT` as its parent. The
+  family door admitted the warehouse permission because the
+  data-centre scheme's own paperwork names it; `not_dc` describes the
+  application as filed correctly; its eight adjudicated figures carry
+  no megawatt value, so nothing ranks on it; and the reader's
+  Applications tab shows the verdict beside the row. That is the door
+  and the verdict both doing their jobs on one site, and the veto
+  would have ejected the permission the scheme is converting.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
 - **The class has a Drive home since 2026-09-02** — `adjacent_power/`
