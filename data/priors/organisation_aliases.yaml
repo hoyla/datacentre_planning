@@ -688,3 +688,86 @@ groups:
             note: >-
               Greystoke land is the sole PSC for HTP Ltd on companies house
             date: 2026-08-30
+
+  - group: NTT Global Data Centers
+    note: >-
+      One operator under four names, and the reason a search for "NTT"
+      found Dagenham and London Colney but not Hemel Hempstead
+      (2026-09-02): the Hemel campus is filed under Gyron, which NTT
+      bought and rebranded — its own London page says "with over 20
+      years of experience in the UK market formerly operating as Gyron".
+      Barbour writes the client three ways across the three sites
+      (NTT Europe at Dagenham, Gyron Internet Limited at Hemel, the LON2-A
+      SPV at London Colney) and the Environment Agency permit holder is a
+      fourth, NTT Global Data Centers EMEA UK Ltd, on all three of its
+      permits. The LON2-A SPV is already `confirmed` under group NTT in
+      companies-house-spvs.yaml; the rest are proposed here for the
+      release checkpoint. The PSC of the LON2-A vehicle, NTT Global Data
+      Centers Asset Management Limited (14112272), is recorded as the
+      parent because it is the one number on a filing this project holds;
+      the group's ultimate parent is NTT DATA, not asserted here.
+    company_number: "14112272"
+    members:
+      - name: NTT Europe
+        relation: same_organisation
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12344772"
+            note: >-
+              Client of record on "NTT COMMUNICATIONS DATA CENTRE" (Former
+              Sanofi Aventis, Yewtree Avenue, Dagenham) and on its phase 2
+              fit-out, 12649981; client URL www.eu.ntt.com. NTT's own page
+              for the same site is "London 1 Data Center", Yew Tree Avenue,
+              RM10 7FZ (operator_snapshots/ntt-london-1.2026-09-02.txt).
+            date: 2026-09-02
+            site_key: PTNO-12344772
+      - name: Gyron Internet Limited
+        relation: trading_name_of
+        status: proposed
+        evidence:
+          - source: barbour
+            ref: "12063929"
+            note: >-
+              Client of record on "GYRON LIMITED - NEW DATA CENTRE AND
+              STORAGE FACILITY", The Campus, Maylands Avenue, Hemel
+              Hempstead, HP2 7TN; client URL www.gyron.net.
+            date: 2026-09-02
+            site_key: PTNO-12063929
+          - source: operator_website
+            ref: https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/london-data-centers
+            quote: with over 20 years of experience in the UK market formerly operating as Gyron
+            note: >-
+              Snapshot operator_snapshots/ntt-london.2026-09-02.txt. NTT's
+              Hemel Hempstead 3 page gives "Campus, Spring Way, HP2 7TN" —
+              the Barbour record's own postcode and name.
+            date: 2026-09-02
+      - name: NTT Global Data Centers Lon2-A Limited
+        relation: spv_of
+        status: proposed
+        company_number: "16122721"
+        evidence:
+          - source: companies_house
+            ref: "16122721"
+            note: >-
+              NTT GLOBAL DATA CENTERS LON2-A LTD, incorporated 2024-12-09;
+              PSC NTT Global Data Centers Asset Management Limited
+              (14112272), 75-100% of shares. Barbour client of record on
+              "NTT LON2-A ? 56MW DATA CENTRE" (12914925); already confirmed
+              under group NTT in companies-house-spvs.yaml.
+            date: 2026-09-02
+            site_key: PTNO-12914925
+      - name: NTT Global Data Centers EMEA UK Ltd
+        relation: subsidiary_of
+        status: proposed
+        evidence:
+          - source: document
+            ref: EPR/BP3800PZ
+            note: >-
+              Environment Agency permit holder (as NTT GLOBAL DATA CENTERS
+              EMEA UK LTD) on the Hemel Hempstead permit, on the Dagenham
+              permit EPR/CP3902LV and on the Slough permit EPR/YP3633QA
+              (environment-agency-permit-documents.json). Matched in
+              environment-agency-permit-matches.yaml at Dagenham; held
+              under `considered` at Hemel.
+            date: 2026-09-02
