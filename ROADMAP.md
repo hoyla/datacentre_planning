@@ -1658,6 +1658,24 @@ here rather than applied from the build lane.
   holding a previous release must be emptied or replaced, and the new
   notebook's URL must reach `NOTEBOOK_URL` before step 12.
 
+- **The materialise leaves membership rows unretired when it retires
+  a site** (found 2026-09-02 while verifying the reader's adjacent-power
+  links; 65 rows on 63 applications, measured). `dcp/sites.py` retires a
+  site that no longer emerges from the clustering and does not touch its
+  `site_members`, so a row on a dead site still reads `retired_at IS
+  NULL`. Where the application is also a member of a live site nothing
+  is affected. Where it is not — four adjacent-power applications
+  retired with their sites by #252, 144 documents — every "membership-
+  less" test read it as a member: not staged under `adjacent_power/`,
+  in no live site's folder, and its old folders pruned at 2.11, so the
+  documents had **no Drive home** until the three queries (the staging
+  build, the id recorder, the sample verifier) were taught to require a
+  live site (PR #346; pinned by a test over all three). They return at
+  the next staging build and sync. The durable fix is in the materialise
+  — retire the rows with the site, as the revive path already retires
+  stale ones — and it is a data change to make deliberately, with the
+  65 rows listed first.
+
 - **`drive_sync.py`: the batching half is still open** (the
   concurrency half closed 2026-08-29 — `--workers` now defaults to 12;
   HISTORY). The Drive batch endpoint takes 100 calls per request,

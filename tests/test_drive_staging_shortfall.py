@@ -430,3 +430,41 @@ def test_the_verifier_keys_the_ledger_the_way_the_sync_writes_it():
     assert vds.ledger_key(ROOT / rel) == rel
     assert vds.ledger_key(Path(rel)) == rel
     assert vds.ledger_key(Path("/elsewhere/tree/x.pdf")) == "/elsewhere/tree/x.pdf"
+
+
+# ---------------------------------------------------------------------------
+# "No membership" means no membership on a LIVE site
+# ---------------------------------------------------------------------------
+
+# The materialise retires a site that no longer emerges from the clustering
+# and leaves its `site_members` rows unretired (65 such rows on 63
+# applications, measured 2026-09-02). An adjacent-power application whose
+# only membership was on a site retired by #252 therefore looked like a
+# member, was not staged under `adjacent_power/`, was in no live site's
+# folder either, and its documents had no Drive home — four applications,
+# 144 documents, their old site folders already pruned at 2.11. Three
+# scripts carry the membership test and the three must agree, so the rule
+# is pinned over all of them.
+
+import re as _re
+
+_LIVE_SITE_CLAUSE = _re.compile(
+    r"NOT EXISTS\s*\(\s*SELECT 1 FROM site_members m\s+"
+    r"JOIN sites s ON s\.id = m\.site_id\s+"
+    r"WHERE m\.application_id = \w+\.(?:id|application_id)\s+"
+    r"AND m\.retired_at IS NULL\s+AND s\.retired_at IS NULL\s*\)",
+    _re.S)
+
+
+@pytest.mark.parametrize("module, attr", [
+    ("build_drive_staging", "ADJACENT_SQL"),
+    ("record_drive_ids", "ADJACENT_DOCUMENTS_SQL"),
+    ("verify_drive_sample", "IN_UNIVERSE_SQL"),
+])
+def test_an_adjacent_application_is_membership_less_only_if_no_live_site_holds_it(module, attr):
+    mod = bds if module == "build_drive_staging" else _load(module)
+    sql = getattr(mod, attr)
+    assert _LIVE_SITE_CLAUSE.search(sql), (
+        f"{module}.{attr} tests membership without joining sites: a row on "
+        f"a retired site would count as a membership and the application "
+        f"would be staged nowhere")

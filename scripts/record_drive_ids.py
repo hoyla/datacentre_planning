@@ -81,7 +81,9 @@ ADJACENT_DOCUMENTS_SQL = """
     WHERE l.verdict = 'adjacent_power'
       AND d.bytes_path IS NOT NULL
       AND NOT EXISTS (SELECT 1 FROM site_members m
-                       WHERE m.application_id = a.id AND m.retired_at IS NULL)
+                        JOIN sites s ON s.id = m.site_id
+                       WHERE m.application_id = a.id
+                         AND m.retired_at IS NULL AND s.retired_at IS NULL)
     ORDER BY a.id, d.fetched_at, d.id"""
 
 

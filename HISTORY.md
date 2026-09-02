@@ -2797,6 +2797,23 @@ count — the datacentre-classed rows of the sites list it sits above —
 and names where the other classes are, so a question the notebook does
 not answer reads as out of scope rather than as absence.
 
+**And a fifth, which verifying the third found.** Postgres was up, so
+the reader was built from the branch: 61 adjacent-power boxes, all
+linking the class folder, 20 of 45 entries linking their own — and of
+the 25 that did not, two held documents. Both are members of sites #252
+retired on 2026-08-30, and the materialise retires a site without
+retiring its `site_members` rows (65 such rows on 63 applications). So
+the staging build's "no live membership" test saw a live row on a dead
+site, did not stage them under `adjacent_power/`, no live site's folder
+held them either, and the 2.11 prune had already binned their old site
+folders: **four applications, 144 documents, with no Drive home** — the
+two university leads among them. The three queries that carry the test
+(`build_drive_staging`, `record_drive_ids`, `verify_drive_sample`) now
+require the site to be live, a test pins the clause over all three, and
+the corrected query stages 33 applications against 28. The documents
+return at the next staging build and sync; the durable fix, retiring
+member rows with their site, is on the ROADMAP as a data change.
+
 ---
 
 ## How this project is worked on

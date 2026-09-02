@@ -513,7 +513,11 @@ Issue #252 removed the `adjacent_power` class from site membership on
 found 744 held documents across 28 such applications with nowhere to
 go, four of them cited by a machine reading. They now go under
 `adjacent_power/<application>/` at the tree root, next to `sites/` and
-`operator_snapshots/` (Luke: "next to, rather than inside, sites"),
+`operator_snapshots/` (Luke: "next to, rather than inside, sites") —
+"no membership" meaning no membership *on a live site*, since a
+membership row on a site the materialise has retired stays unretired
+and read as a membership until 2026-09-02, which left four
+applications' documents with no Drive home at all —
 each folder's `_index.md` naming the sites the scheme stands beside
 and how that is known. The shortfall counts them as staged only once
 the build has actually written them, so an adjacent-power application
