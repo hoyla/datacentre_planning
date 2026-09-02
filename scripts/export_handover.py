@@ -75,6 +75,8 @@ from dcp import adjudication_gate  # noqa: E402
 from dcp import db  # noqa: E402
 from dcp import drive as _drive  # noqa: E402
 from dcp import site_cohorts  # noqa: E402
+from dcp import adjacent_power as _adj  # noqa: E402
+from dcp import origin  # noqa: E402
 
 
 SITE_SQL = """
@@ -476,6 +478,17 @@ ENERGY_HEADERS = [
 
 # One row per column. This is journalist-facing text: it states what the
 # data contains and how it was derived, never how to use it.
+# The applications we hold documents for and deliberately show nowhere:
+# triaged not_dc, in no live site, not adjacent power or its paperwork.
+# Listed rather than housed (Luke, 2026-09-02): the exclusion is stated,
+# every row says why we hold it, and a reporter can ask for one.
+EXCLUDED_HEADERS = [
+    "Application ref", "Council", "Latest verdict", "Earlier verdict (v1)",
+    "Why we hold it", "Discovery tags", "Documents held", "Findings",
+    "Findings naming a data centre", "Nearest live site", "Nearest site name",
+    "Distance to nearest site (m)", "Description", "Portal URL",
+]
+
 DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Site key",
      "Stable identifier for the site; also the prefix of its Drive folder "
@@ -761,6 +774,41 @@ DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Parties source",
      "Which of the two sources this row's parties came from: the Barbour "
      "project record, the documents, both, or neither."),
+    ("Excluded applications", "Application ref; Council; Latest verdict; Earlier verdict (v1)",
+     "One row per application whose documents this project holds and shows "
+     "nowhere else: its latest dc_build verdict is not_dc, it is a member of "
+     "no live site, and it is neither an adjacent-power scheme nor the "
+     "paperwork of one (dcp/adjacent_power.py decides that class). The "
+     "exclusion is a decision and this sheet is its record — measured on "
+     "2026-09-02, most of these are power schemes within 2.5 km of a site "
+     "that the adjacency layer cannot see, because it admits only "
+     "adjacent_power verdicts within 1 km; the rest are housing, mixed-use "
+     "and keyword false positives. 'Earlier verdict (v1)' is the first "
+     "rubric's label where one exists (DC, adjacent, unrelated, unknown)."),
+    ("Excluded applications", "Why we hold it; Discovery tags",
+     "How the application entered the corpus, as the route labels the "
+     "reader uses (keyword search, spatial search near a site, energy "
+     "search near a site, Barbour) and as the raw discovered_via tags, "
+     "which name the site or record each sweep ran outward from. An "
+     "application is here because a sweep found it, and the sweep is why."),
+    ("Excluded applications", "Documents held; Findings; Findings naming a data centre",
+     "What we hold on it: documents with bytes in the store, verified "
+     "findings the deep read extracted, and how many of those findings "
+     "quote a passage naming a data centre. That last figure is the "
+     "re-triage signal: a not_dc application whose own documents keep "
+     "mentioning data centres was judged on a description that could not "
+     "see them (the Wychavon B1/B2/B8 outline, ten such findings)."),
+    ("Excluded applications", "Nearest live site; Nearest site name; Distance to nearest site (m)",
+     "The nearest site in the universe by straight-line distance between "
+     "pins, in metres, and empty where the application carries no "
+     "coordinates. Proximity is a candidate for the adjacency review, not "
+     "a claim: a battery 1,600 m from a campus is beside it in the sense the "
+     "energy sweep intended and in no sense the corpus can yet defend."),
+    ("Excluded applications", "Description; Portal URL",
+     "The application's description as the register gives it, cut at 400 "
+     "characters, and a link to its page on the council's register. The "
+     "documents themselves are held in the store and are not on Drive: "
+     "ask, and one can be staged."),
     ("Parties", "site_key; role; organisation; source; source ref",
      "One row per organisation per role per site — the long form the "
      "Sites columns summarise. 'role' is end user, applicant, operator, "
@@ -2154,6 +2202,91 @@ def main() -> None:
         ws.column_dimensions[col].width = width
     print(f"  Operator disclosure: {len(op_rows)} operators, "
           f"{len(op_divs)} sites told more than one audience")
+
+    # ---- Excluded applications --------------------------------------------
+    # Held, triaged not_dc, in no live site, not adjacent power or its
+    # paperwork: the set the staging build's shortfall guard tolerates
+    # "by decision". Listed here so the decision is stated and a reporter
+    # can ask for one. Same shared rule for the adjacent class as the
+    # staging build, so this sheet and the Drive tree cannot disagree
+    # about what is where.
+    ws = _sheet("Excluded applications", EXCLUDED_HEADERS)
+    with db.connect() as conn, conn.cursor() as cur:
+        adjacent_ids = list(_adj.staged_applications(cur))
+        cur.execute("""
+            WITH per_rubric AS (
+              SELECT DISTINCT ON (application_id,
+                                  coalesce(raw_response->>'rubric','v1'))
+                     application_id,
+                     coalesce(raw_response->>'rubric','v1') AS rubric, verdict
+              FROM triage
+              ORDER BY application_id, 2, inserted_at DESC),
+            latest AS (
+              SELECT application_id,
+                     max(verdict) FILTER (WHERE rubric = 'dc_build') AS dc_build,
+                     max(verdict) FILTER (WHERE rubric = 'v1') AS v1
+              FROM per_rubric GROUP BY application_id),
+            located AS (
+              SELECT a.id AS application_id,
+                     (a.raw_metadata->>'location_y')::float AS lat,
+                     (a.raw_metadata->>'location_x')::float AS lon
+              FROM applications a
+              WHERE a.raw_metadata->>'location_x' IS NOT NULL
+                AND a.raw_metadata->>'location_y' IS NOT NULL),
+            dist AS (
+              SELECT p.application_id, s.site_key, s.display_name,
+                     6371000 * 2 * asin(sqrt(
+                       power(sin(radians((p.lat - s.latitude) / 2)), 2)
+                       + cos(radians(s.latitude)) * cos(radians(p.lat))
+                         * power(sin(radians((p.lon - s.longitude) / 2)), 2))) AS m
+              FROM located p
+              JOIN sites s ON s.retired_at IS NULL AND s.latitude IS NOT NULL),
+            nearest AS (
+              SELECT DISTINCT ON (application_id) application_id, site_key,
+                     display_name, m
+              FROM dist ORDER BY application_id, m)
+            SELECT a.application_ref, l.dc_build, l.v1,
+                   array_to_string(a.discovered_via, ','), a.discovered_via,
+                   (SELECT count(*) FROM documents d
+                     WHERE d.application_id = a.id AND d.bytes_path IS NOT NULL),
+                   (SELECT count(*) FROM findings f WHERE f.application_id = a.id),
+                   (SELECT count(*) FROM findings f WHERE f.application_id = a.id
+                     AND f.evidence_text ~* 'data ?cent|datacentre|data hall'),
+                   n.site_key, n.display_name, n.m,
+                   left(coalesce(a.description, ''), 400), a.url
+            FROM applications a
+            JOIN latest l ON l.application_id = a.id
+            LEFT JOIN nearest n ON n.application_id = a.id
+            WHERE l.dc_build = 'not_dc'
+              AND NOT EXISTS (SELECT 1 FROM site_members m
+                                JOIN sites s ON s.id = m.site_id
+                               WHERE m.application_id = a.id
+                                 AND m.retired_at IS NULL
+                                 AND s.retired_at IS NULL)
+              AND EXISTS (SELECT 1 FROM documents d
+                           WHERE d.application_id = a.id
+                             AND d.bytes_path IS NOT NULL)
+              AND NOT (a.id = ANY(%s))
+            ORDER BY n.m NULLS LAST, a.application_ref""", (adjacent_ids,))
+        excluded_rows = cur.fetchall()
+    for (ref, dc_build, v1, tags_text, tags, n_docs_x, n_find, n_dc,
+         near_key, near_name, near_m, desc, url) in excluded_rows:
+        ws.append([ref, ref.split("/", 1)[0], dc_build or "", v1 or "",
+                   "; ".join(origin.routes_for(tags or [])), tags_text,
+                   n_docs_x, n_find, n_dc, near_key or "", near_name or "",
+                   int(round(near_m)) if near_m is not None else "", desc,
+                   _hyperlink(url, "register") if url else ""])
+    for col, width in (("A", 40), ("B", 22), ("C", 14), ("D", 14), ("E", 34),
+                       ("F", 40), ("G", 10), ("H", 10), ("I", 12), ("J", 34),
+                       ("K", 40), ("L", 12), ("M", 80), ("N", 12)):
+        ws.column_dimensions[col].width = width
+    for row in ws.iter_rows(min_row=2):
+        row[12].alignment = Alignment(wrap_text=True, vertical="top")
+    print(f"  Excluded applications: {len(excluded_rows)} held, triaged "
+          f"not_dc, in no site and not adjacent power — "
+          f"{sum(r[5] for r in excluded_rows):,} documents, "
+          f"{sum(1 for r in excluded_rows if r[7])} whose documents name a "
+          f"data centre")
 
     # ---- Provenance --------------------------------------------------------
     ws = _sheet("Provenance", ["Field", "Value"])
