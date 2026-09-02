@@ -121,6 +121,19 @@ _FILTERBAR_RE = re.compile(
     r'<div id="filterbar"[^>]*>(.*?)\n</div>', re.S)
 
 
+# A control's count is corpus, not shape: "Only datacentres (428)" and
+# "Only datacentres (427)" are the same control after a site retires.
+# Compared with the count in, the 2.12 diff reported the control REMOVED
+# and then added — a wolf cry of exactly the kind this guard must not
+# make, because the next one gets read past.
+_CONTROL_COUNT_RE = re.compile(r"\s*\(\d[\d,]*\)\s*$")
+
+
+def control_label(raw: str) -> str:
+    """A filter control's identity: its label with any trailing count removed."""
+    return _CONTROL_COUNT_RE.sub("", html.unescape(raw).strip())
+
+
 def reader_shape(path: Path) -> ReaderShape:
     src = path.read_text(encoding="utf-8")
     shape = ReaderShape()
@@ -135,13 +148,13 @@ def reader_shape(path: Path) -> ReaderShape:
     bar = _FILTERBAR_RE.search(src)
     if bar:
         body = bar.group(1)
-        shape.controls = ([html.unescape(o).strip() for o in _OPTION_RE.findall(body)]
-                          + [html.unescape(c).strip() for c in _CHECKBOX_RE.findall(body)])
+        shape.controls = ([control_label(o) for o in _OPTION_RE.findall(body)]
+                          + [control_label(c) for c in _CHECKBOX_RE.findall(body)])
     for view, body in views:
         shape.rows_per_view[view] = len(_ROW_RE.findall(body))
         if view == "sites" and not bar:
-            shape.controls = ([html.unescape(o).strip() for o in _OPTION_RE.findall(body)]
-                              + [html.unescape(c).strip() for c in _CHECKBOX_RE.findall(body)])
+            shape.controls = ([control_label(o) for o in _OPTION_RE.findall(body)]
+                              + [control_label(c) for c in _CHECKBOX_RE.findall(body)])
         if view == "dict":
             shape.dictionary_entries = len(_DICT_ENTRY_RE.findall(body))
     shape.site_keys = set(_SITE_RE.findall(src))
