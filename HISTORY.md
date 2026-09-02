@@ -3443,3 +3443,10 @@ generation-understated.
 the sectors committed, the control for 2.13 so that the diff stays
 readable and a person sees it first); the site-11 partition; the
 unsited-claims layer; the public feed.
+
+**Released the same evening.** Candidate #373 reviewed and merged,
+release #374 carrying `index.html` byte-identical to the step-12
+build, deployed at 21:26 as Cloud Run revision `dc-reader-00008-drr`
+with anonymous requests verified redirected to sign-in on every probed
+path, and the EdgeOne signpost probe clean: 22 paths refused, forged
+cookie rejected. 2.12 is the base.
