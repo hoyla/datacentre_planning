@@ -101,3 +101,36 @@ def test_the_family_door_admits_not_dc_by_default_and_refuses_it_when_told(db_co
 
     with pytest.raises(ValueError):
         sites.build_clusters(db_conn, data_dir=tmp_path, not_dc_veto="sometimes")
+
+
+@pytest.mark.integration
+def test_the_family_door_unites_an_unlocated_not_dc_node_with_the_member_that_admitted_it(db_conn, tmp_path):
+    """Admission without union is meaningless for a node with no
+    coordinates: the spatial pass cannot glue it, so it fell out as a
+    singleton — 14 unlocated reserved matters on a data-centre outline
+    were excluded from every artefact while their located siblings were
+    members (2026-09-02). An admitting edge now unites."""
+    a1 = _seed_app(db_conn, A1, 51.5011, -0.4070)
+    a2 = _seed_app(db_conn, A2, None, None, verdict="not_dc",
+                   description=f"Reserved matters following outline {A1}")
+    clusters = sites.build_clusters(db_conn, data_dir=tmp_path)
+    by_site = {c["site_key"]: {a["id"] for a in c["apps"]} for c in clusters}
+    assert len(by_site) == 1, by_site
+    assert {a1, a2} <= next(iter(by_site.values())), \
+        "the unlocated not_dc reserved matters joins its outline's site"
+
+
+@pytest.mark.integration
+def test_a_not_dc_node_does_not_bridge_two_datacentre_sites(db_conn, tmp_path):
+    """The reason `family_skips_not_dc` exists: a mixed-use master plan
+    must not weld two data-centre sites together. A not_dc node cited by
+    both stays admitted by one edge only, so the two sites remain two."""
+    a1 = _seed_app(db_conn, A1, 51.5011, -0.4070)
+    a3 = _seed_app(db_conn, "Testing/24/1003/FUL", 55.0, -3.0)   # far away
+    bridge = _seed_app(db_conn, "Testing/24/1004/OUT", None, None, verdict="not_dc",
+                       description=f"Master plan referenced by {A1} and Testing/24/1003/FUL")
+    clusters = sites.build_clusters(db_conn, data_dir=tmp_path)
+    sites_of = {a["id"]: c["site_key"] for c in clusters for a in c["apps"]}
+    assert sites_of[a1] != sites_of[a3], "two far-apart data-centre sites stay two"
+    assert bridge in sites_of, "the master plan is admitted"
+    assert sites_of[bridge] in (sites_of[a1], sites_of[a3]), "and joins exactly one of them"

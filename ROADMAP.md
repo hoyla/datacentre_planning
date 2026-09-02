@@ -317,12 +317,21 @@ What survives it here:
   rather than housed. The work, each its own change with a dry-run
   count first:
 
-  - **The family door unites what it admits** (`dcp/sites.py`), so
-    coordinates stop deciding whether a `not_dc` reserved matters on a
-    data-centre outline is a member — the 15, 2,130 documents. To be
-    dry-run against the 2026-08-06 bridge measurement before adoption,
-    because uniting through `not_dc` is what `family_skips_not_dc` was
-    measured to prevent.
+  - ~~**The family door unites what it admits**~~ — **built and
+    dry-run 2026-09-02** (PR #351): an edge that admits a node also
+    unites it with the node that admitted it, whatever the verdict, and
+    every later edge between that node and another admitted one is
+    still skipped, so a `not_dc` master plan joins exactly one site and
+    cannot weld two together (pinned by a test). Against the live
+    corpus: **21 applications join, 2,344 documents; nothing leaves; no
+    site retires, appears or changes key; no two sites merge.** The 15
+    measured, plus six the same rule finds — two VIRTUS stem-37977
+    applications join Stockley Park, Longcross's two Surrey Heath
+    parent permissions join Longcross — and one application *moves*:
+    `Northumberland/21/03631/NONMAT`, the substation amendment carrying
+    the 99.9 MW offshore-wind figure, leaves Cambois for the Blyth
+    substation partition it cites, which is what the 2.7 partition
+    intended and did not reach. It applies at the next materialise.
   - **Adjacent power takes its own paperwork with it**: a discharge,
     amendment or variation whose parent is an `adjacent_power`
     application and which is in no site stages under `adjacent_power/`

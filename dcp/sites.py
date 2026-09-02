@@ -335,6 +335,21 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             other = by_ref.get(f"{council}/{cand}".upper()) or by_ref.get(cand.upper())
             if other is not None and other["id"] != a["id"]:
                 fam_edges.append((a["id"], other["id"], source))
+    # The edges through which the family door admitted a node. Admission
+    # used to be all the door did: the union below skips any edge with a
+    # `not_dc` end (`family_skips_not_dc`), so an admitted `not_dc` node
+    # was left to the spatial pass to glue in — and one with no
+    # coordinates became a singleton and silently dropped out. Measured
+    # 2026-09-02: 15 applications holding 2,130 documents, 14 of them
+    # unlocated reserved matters citing an outline that is a member,
+    # excluded from every artefact by an accident of geocoding while
+    # their located siblings were members. So an edge that admits a node
+    # also unites it with the node that admitted it, whatever the
+    # verdict. Bridging is not reopened: a `not_dc` node is admitted by
+    # exactly one edge — the first processed — and every later edge
+    # between it and another admitted node is still skipped, so two
+    # datacentre clusters cannot merge through it.
+    admitting_edges: set[tuple[int, int]] = set()
     for x, y, _src in fam_edges:
         if x in node_ids or y in node_ids:
             # The adjacent_power veto holds here too: a family reference
@@ -343,10 +358,15 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             # would otherwise pull the vetoed record straight back into
             # membership. This expansion exists to admit *untriaged*
             # paperwork a family knows about, not to overrule a verdict.
-            if _door_admits(x):
+            admitted_here = False
+            if x not in node_ids and _door_admits(x):
                 node_ids.add(x)
-            if _door_admits(y):
+                admitted_here = True
+            if y not in node_ids and _door_admits(y):
                 node_ids.add(y)
+                admitted_here = True
+            if admitted_here:
+                admitting_edges.add((x, y))
 
     uf = _UF()
     for nid in node_ids:
@@ -389,7 +409,7 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             # housing parent), which a verdict test cannot distinguish from
             # procedural on a datacentre parent. That needs the parent link
             # itself — see ROADMAP, typed `parent_ref` column.
-            if family_skips_not_dc and (
+            if family_skips_not_dc and (x, y) not in admitting_edges and (
                     by_id[x]["verdict"] == "not_dc"
                     or by_id[y]["verdict"] == "not_dc"):
                 continue
