@@ -2855,6 +2855,30 @@ claim unmatched because the site holds three of seven — was named as
 the #250 failure exactly: a 145.5 MW campus absent from the hyperscale
 answer for a reason about our records. Saunderton was the precedent.
 
+**Corrected the same evening, on the addresses** (Luke, from
+Datacenters.com and Google Maps; each checked against what this
+project can cite). The review had said LONDON4, 9, 12 and 19 were
+nowhere in the corpus, having searched by VIRTUS's names. By address,
+two are here under other names in other site records: LONDON9 is
+`Slough/T/135`, "Single building for data centre development", Fullers
+Logistics Ltd, 470-475 Malton Avenue, the sole application of Segro's
+Malton Avenue site, its coordinates thirty-five metres from Google's
+"Virtus London 9" pin; LONDON11 and LONDON12 are 580-581 Ipswich Road,
+Barbour project 12522787 in Segro's Ipswich Road site, while LONDON11's
+own Barbour record sits in the Liverpool Road site on a postcode
+centroid. LONDON3 and LONDON4 share 14 Liverpool Road, unheld; LONDON19
+has no directory page and no location. So VIRTUS's one campus spans
+three site records under two landlords' names — a name search across
+a landlord's records has the rebrand blind spot exactly — and the
+question that came out is a partition, not a coverage gap: the Iron
+Mountain rule says one campus, one site; the capacity model's own
+definition says a campus is a claim about sites. Luke's to decide; the
+145.5 stands meanwhile. And the directory earned its standing on the
+way: it places LONDON10 at Iron Mountain's 110 Buckingham Avenue
+against a charge and an application at 75, and its megawatts are not
+the operator's, so its addresses are leads recorded with what
+corroborates them and nothing more.
+
 **Two findings travelled out of it.** VIRTUS's stated total exceeds its
 own seven rows summed by 13.3 MW, and 13.3 is LONDON11's figure to the
 decimal. The temptation to conclude VIRTUS counted LONDON11 twice was

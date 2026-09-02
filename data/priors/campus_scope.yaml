@@ -210,15 +210,27 @@ campuses:
       basis — 7.2, 26.6, 24, 6.6, 13.3, 21 and 33.5 MW — and a campus
       total of 145.5 MW. The site holds LONDON3 (Barbour 12277044),
       LONDON11 (12575087) and LONDON10 (Slough/T/138, joined 2026-08-28 on
-      the Companies House charge naming 75 Buckingham Avenue). **LONDON4,
-      9, 12 and 19 are nowhere in the corpus**: no application, no
-      Barbour record, no SPV in the Companies House sweep, no permit of
-      their own (the campus permit EPR/BP3945QX is one permit for the
-      estate at 180.5 MWth; LONDON11 has its own, EPR/DP3348QS, 72 MWth);
-      the other Slough site records were checked and are Cyxtera, Virgin
-      Media, Equinix, CyrusOne and two unattributed warehouses. VIRTUS's
-      page gives no addresses. So the sourced denominator is three of
-      seven, and the four are a coverage gap, not a scope question.
+      the Companies House charge naming 75 Buckingham Avenue).
+
+      **Corrected the same evening, on the addresses.** The review first
+      said LONDON4, 9, 12 and 19 were nowhere in the corpus, having
+      searched by VIRTUS's names. Luke then found the buildings on
+      Datacenters.com and Google Maps, and by address two of them ARE
+      here, under other names and in other site records: LONDON9 is
+      Slough/T/135 ("Single building for data centre development",
+      Fullers Logistics Ltd, 470-475 Malton Avenue), the sole
+      application of PTNO-12409629, Segro's Malton Avenue site; LONDON11
+      and LONDON12 are 580-581 Ipswich Road, Barbour project 12522787,
+      held in PTNO-12355161, Segro's Ipswich Road site — while LONDON11's
+      own Barbour record sits here on a postcode centroid. LONDON3 and
+      LONDON4 share 14 Liverpool Road, next to the Zenium record at 12,
+      with no application or record held. LONDON19 has no directory page
+      and no location anyone can cite. So the campus VIRTUS calls one
+      spans three of this project's site records, under two landlords'
+      names, and the sourced denominator is not three of seven but
+      "three here, two in Segro's Malton Avenue and Ipswich Road sites,
+      one at 14 Liverpool Road unheld, one unlocated". That is the
+      partition question below, not a coverage gap alone.
 
       **Total: withhold.** Summing is never right here — the operator
       states its own total, and the components are its itemisation
@@ -241,6 +253,22 @@ campuses:
       it (Luke, 2026-09-02: "we'll keep their claimed figure, but not
       decide how they came to it"). The claimed figure stands as
       claimed; the discrepancy is recorded, not explained.
+
+      **The partition question this raises, for Luke.** The Iron
+      Mountain rule (2026-08-28) is that the partition unit is the
+      campus, not the building, drawn with the operator's own page as the
+      source — LON-1 and LON-3, 232 m apart, are one partition because
+      Iron Mountain calls them one campus. By that rule VIRTUS's seven
+      facilities on four streets are one site, and Segro's Malton Avenue
+      site (LONDON9) and the 580-581 Ipswich Road project (LONDON11/12)
+      join this one. The counter-consideration is the definition the
+      capacity model wrote down on 2026-08-30: a campus is an operator's
+      own aggregation of facilities, a claim about sites and never a
+      redefinition of one, and the site must stay derivable from the
+      planning record — which today derives three sites. Until that is
+      decided, this entry's 145.5 stands as VIRTUS's figure for VIRTUS's
+      scope, and the coverage statement on the row should read "three
+      here, three in other site records or unheld, one unlocated".
 
       **Independent of the key question.** The site's key project,
       Zenium's "London One" fit-out at 12 Liverpool Road (12216044), is

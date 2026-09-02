@@ -1114,9 +1114,22 @@ still to do:
   exactly LONDON11's figure** (145.5 − 132.2 = 13.3). The arithmetic
   is ours and stops there — how VIRTUS reached its total is not
   inferred from it (Luke); the claimed figure is kept as claimed and
-  the question is for the operator, recorded on the claim. The match loads at the next
-  `load_capacity_claims.py`; the site joins `at_least_100mw` at the next
-  build (44 → 45).
+  the question is for the operator, recorded on the claim. The match
+  loads at the next `load_capacity_claims.py`; the site joins
+  `at_least_100mw` at the next build (44 → 45).
+- **The VIRTUS Slough partition** (raised the same evening, once the
+  facilities were located — see the coverage item). VIRTUS's seven
+  facilities sit on four streets across three of this project's site
+  records: this one (LONDON3, 4, 10 and the LONDON11 Barbour record),
+  Segro's Malton Avenue site (`PTNO-12409629`, LONDON9) and Segro's
+  Ipswich Road site (`PTNO-12355161`, the 580-581 building, LONDON11
+  and 12). The Iron Mountain rule — the partition unit is the campus,
+  drawn with the operator's page as the source — says they are one
+  site; the capacity model's definition — a campus is a claim about
+  sites, never a redefinition of one — says the planning record derives
+  three. Luke's decision, and the scope entry's coverage line, the
+  alias and the roster all follow it. Until then the 145.5 stands as
+  VIRTUS's figure for VIRTUS's scope.
 - ~~**Vantage ↔ Next Generation Data organisation alias**~~ (Luke's
   question on sheet T3-04) — **assessed 2026-08-31 and not written**:
   no organisation-name field anywhere in the corpus contains "Next
@@ -1394,18 +1407,27 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **Four of VIRTUS's seven Slough facilities have no planning record
-  in the corpus** (found 2026-09-02 in the first campus-scope review).
-  LONDON4 (26.6 MW), LONDON9 (24), LONDON12 (21) and LONDON19 (33.5)
-  are on VIRTUS's own campus page and nowhere else we hold: no
-  application, no Barbour record, no SPV in the Companies House sweep,
-  no permit of their own (the campus permit EPR/BP3945QX covers the
-  estate at 180.5 MWth). VIRTUS's page gives no addresses, so the
-  first step is finding the buildings — the Slough Trading Estate is
-  SEGRO's, and a landlord-side or title search may be quicker than the
-  register — then the register sweep for each. 105 MW of operator-
-  stated IT load with no planning paperwork behind it in this dataset,
-  on the estate the corpus covers most densely.
+- **VIRTUS's Slough campus spans three of this project's site records,
+  and two of its facilities have no record at all** (found 2026-09-02;
+  the review first said four were "nowhere in the corpus", searching by
+  VIRTUS's names, and Luke's address search corrected it the same
+  evening). By address: LONDON9 is `Slough/T/135` at 470-475 Malton
+  Avenue, the sole application of `PTNO-12409629`, Segro's Malton
+  Avenue site; LONDON11 and LONDON12 are 580-581 Ipswich Road, Barbour
+  12522787 in `PTNO-12355161`, Segro's Ipswich Road site; LONDON3 and
+  LONDON4 share 14 Liverpool Road, next to the Zenium record, with no
+  application or record held; LONDON19 has no location anyone can
+  cite. **A name search across a landlord's records has the same blind
+  spot as one across a rebrand** — the register says Segro and Fullers
+  Logistics where the operator says VIRTUS — and the facility
+  locations in `site_facilities.yaml` are now the join. What remains:
+  the partition decision (under "Actions still open"), the register
+  sweep at 14 Liverpool Road (a spatial query at 51.5230, -0.6219
+  through the PlanIt adapter finds any application there), and
+  LONDON19's address. Directory addresses are leads, not sources:
+  Datacenters.com places LONDON10 at Iron Mountain's 110 Buckingham
+  Avenue against a Companies House charge and the building's own
+  application at 75.
 - **Elsham Wolds states three power figures that do not reconcile with
   each other** (found 2026-08-31, and verified against the cached page
   text rather than taken from the reading that surfaced it). The Energy
