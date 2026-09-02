@@ -153,6 +153,26 @@ centroid — the public feed's overlay on the ROADMAP is the intended one
 — reproduces the attribution above and credits postcodes.io by name,
 which is the courtesy its maintainers ask.
 
+### ONS Postcode Directory (`data/external_sources/postcode_sectors.json`)
+
+The reader's "near a postcode" control works at sector precision from
+centroids this repository derives itself, directly from the ONS
+Postcode Directory (ONSPD) on the Open Geography portal rather than
+through postcodes.io — the primary source, a CSV rather than a
+database, and the same attribution. The download (a ~235 MB zip, one
+CSV per postcode area) lives under `data/raw/onspd/`, gitignored like
+the rest of `data/raw/`; `scripts/derive_postcode_sectors.py` reduces
+it to one row per sector — the unweighted mean of its live postcodes'
+positions, with the count — and the committed JSON names the edition,
+the source URL, the rule and the attribution string, so a reader of
+the file can see what it is without this page. The ONSPD is published
+under the Open Government Licence v3.0 with an attribution its user
+guide requires wherever the data is reproduced; the derived file
+carries it verbatim, with the edition's year, and any page that
+renders a sector centroid renders it too. Editions are quarterly
+(February, May, August, November); re-derive from the current one at
+a release that touches the control, and say which in the file.
+
 ---
 
 ## Data licensing on outputs
