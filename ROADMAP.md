@@ -332,18 +332,26 @@ What survives it here:
     the 99.9 MW offshore-wind figure, leaves Cambois for the Blyth
     substation partition it cites, which is what the 2.7 partition
     intended and did not reach. It applies at the next materialise.
-  - **Adjacent power takes its own paperwork with it**: a discharge,
-    amendment or variation whose parent is an `adjacent_power`
-    application and which is in no site stages under `adjacent_power/`
-    beside its parent — the Union Park four, 44 documents — through one
-    function the staging build, the id recorder and the sample verifier
-    all call, so the three cannot disagree again (#349).
-  - **An "Excluded applications" sheet in the workbook**: reference,
-    verdict, why we hold it (`discovered_via`), documents held, nearest
-    site and distance — so the exclusion is stated and a reporter can
-    ask for one, the reverse of "easy to remove what they can see".
-    Needs a new Sheet at the next release, since `sheet_sync` cannot add
-    a tab.
+  - ~~**Adjacent power takes its own paperwork with it**~~ — **built
+    2026-09-02, PR #352.** `dcp.adjacent_power.staged_applications`
+    decides the class once and the staging build, the id recorder and
+    the sample verifier read it; a test refuses any of them re-deriving
+    it from the verdict. Measured: 38 applications, 946 documents — the
+    33 the verdict covered plus five pieces of paperwork, Union Park's
+    four discharges and one at Hallen, 50 documents that had no Drive
+    home. They gain one at the next staging build and sync.
+  - ~~**An "Excluded applications" sheet in the workbook**~~ — **built
+    2026-09-02, PR #353**: reference, both rubrics' verdicts, why we
+    hold it (route labels and the raw `discovered_via` tags), documents
+    held, findings, findings naming a data centre, nearest live site and
+    distance, description and register link; five dictionary entries,
+    and the adjacent class excluded through the same shared rule as the
+    staging build. Built against the live database: 73 rows, 3,995
+    documents, 16 whose documents name a data centre — fifteen of the
+    rows leave when the next materialise re-homes the family-tied
+    applications. **The next release must create the tab in the Sheet by
+    hand or make a new Sheet** (`sheet_sync` cannot add a tab; runbook
+    step 13).
   - **Re-triage where the documents contradict the verdict**:
     `Wychavon/19/01060/OUT` and the two London Legacy conversions
     (`LondonLegacy/18/00103/FUL`, `21/00027/FUL`), append-only.
