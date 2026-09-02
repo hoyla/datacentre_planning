@@ -290,7 +290,7 @@ aliases:
       Derived name: "SLOUGH TRADING ESTATE - LD14 DATA CENTRE".
 
   - site_key: PTNO-12216044
-    alias: VIRTUS Slough campus - LONDON3, 10 and 11 in the planning record; VIRTUS also rosters LONDON4, 9, 12 and 19, unlocated
+    alias: VIRTUS Slough campus - LONDON3, 4, 9, 10, 11, 12 and 19, on Liverpool Road, Malton Avenue, Buckingham Avenue and Ipswich Road (LONDON19 unlocated)
     source: |
       Three Barbour projects at SL1 4QZ: Zenium's "London One" fit-out
       at 12 Liverpool Road, and VIRTUS LONDON 3 and LONDON 11. Permit
@@ -307,15 +307,23 @@ aliases:
       only Liverpool Road, which is why this alias no longer says so.
 
       Renamed 2026-09-02 after the campus-scope review (campus_scope.yaml,
-      Luke). VIRTUS's own campus page rosters seven facilities — LONDON3,
-      4, 9, 10, 11, 12 and 19 — of which the planning record holds three;
-      the other four have no application, Barbour record, SPV or permit
-      of their own anywhere in the corpus (ROADMAP, Coverage gaps). The
-      alias names all seven so that a search for any of them lands here,
-      and says which three the record holds so that it does not assert a
-      building at this site that nobody has placed — Stockley Park's
-      alias names LONDON6 and LONDON14 because both sit on the site's own
-      stems; these four are unlocated. "Formerly Zenium" was dropped: the
+      Luke), and again the same evening once the facilities were located
+      (site_facilities.yaml, `location`). VIRTUS's own campus page rosters
+      seven facilities — LONDON3, 4, 9, 10, 11, 12 and 19. The morning's
+      review had said the record held three and the other four were
+      nowhere in the corpus; that was a search by VIRTUS's names, and by
+      address two of the four were here under the landlord's: LONDON9 is
+      Slough/T/135 at 470-475 Malton Avenue, formerly the sole member of
+      "Malton Avenue, Slough - Data Centre (Segro)", PTNO-12409629, whose
+      alias this paragraph absorbs; LONDON11 and LONDON12 are 580-581
+      Ipswich Road, Barbour 12522787, formerly in Segro's Ipswich Road
+      site. Both joined this site on the Iron Mountain rule (Luke,
+      2026-09-02; site_partitions.yaml). The alias names all seven and
+      the four streets so that a search for any of them lands here, and
+      says LONDON19 is unlocated so that it does not assert a building
+      nobody has placed; LONDON3 and LONDON4 share 14 Liverpool Road,
+      where nothing is held (ROADMAP, Coverage gaps). "Formerly Zenium"
+      was dropped: the
       Zenium record is probably CyrusOne's LON1 (operator-claims.yaml,
       considered), the partition and permit-operators files disagree
       about who bought Zenium's estate, and the derived name keeps the
@@ -323,20 +331,15 @@ aliases:
       nobody has established.
 
   - site_key: PTNO-12355161
-    alias: Ipswich Road, Slough - Data Centres (Segro)
+    alias: 535-546 Ipswich Road, Slough - Data Centre (Segro)
     source: |
-      Segro's two Ipswich Road buildings, 535-546 (SL1 4EP) and
-      580-581 (SL1 4EQ), adjacent postcodes 200 m apart on one street.
+      Segro's 535-546 Ipswich Road building (SL1 4EP): Slough/t/131 and
+      the Barbour shell-and-core at the same numbers. Until 2026-09-02
+      the alias said "Data Centres" and covered 580-581 (SL1 4EQ) too,
+      200 m along the street; that building is VIRTUS LONDON11 and
+      LONDON12 and moved to the VIRTUS Slough campus (site_partitions.yaml).
       Derived name: "SEGRO  535-546 IPSWICH ROAD - DATA CENTRE SHELL &
       CORE".
-
-  - site_key: PTNO-12409629
-    alias: Malton Avenue, Slough - Data Centre (Segro)
-    source: |
-      Slough/T/135 is a "Single building for data centre development"
-      at 470-475 Malton Avenue; Barbour's project is Segro's data
-      centre at the same numbers. Derived name: "SEGRO PLC  MALTON
-      AVENUE - DATA CENTRE".
 
   - site_key: PTNO-12602383
     alias: 650-660 Ajax Avenue, Slough - GB One (GTR)

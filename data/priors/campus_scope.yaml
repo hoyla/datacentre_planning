@@ -181,7 +181,7 @@ campuses:
       Not yet reviewed.
 
   - site_key: PTNO-12216044
-    projects: 3
+    projects: 5
     proposed: co_located
     scope: distinct_facilities
     total: withhold
@@ -189,6 +189,8 @@ campuses:
       - VIRTUS DATA CENTRES - LONDON 11 DATA CENTRE
       - VIRTUS DATA CENTRES - LONDON 3 DATA CENTRE
       - ZENIUM - DATA CENTRE - FIT-OUT
+      - SEGRO PLC  MALTON AVENUE - DATA CENTRE
+      - 580-581 IPSWICH ROAD - DATA CENTRE
     power_cell:
       operator_claim: "VIRTUS Slough campus (VIRTUS's own scope)"
       expected_value_mw: 145.5
@@ -254,21 +256,26 @@ campuses:
       decide how they came to it"). The claimed figure stands as
       claimed; the discrepancy is recorded, not explained.
 
-      **The partition question this raises, for Luke.** The Iron
-      Mountain rule (2026-08-28) is that the partition unit is the
-      campus, not the building, drawn with the operator's own page as the
-      source — LON-1 and LON-3, 232 m apart, are one partition because
-      Iron Mountain calls them one campus. By that rule VIRTUS's seven
-      facilities on four streets are one site, and Segro's Malton Avenue
-      site (LONDON9) and the 580-581 Ipswich Road project (LONDON11/12)
-      join this one. The counter-consideration is the definition the
-      capacity model wrote down on 2026-08-30: a campus is an operator's
-      own aggregation of facilities, a claim about sites and never a
-      redefinition of one, and the site must stay derivable from the
-      planning record — which today derives three sites. Until that is
-      decided, this entry's 145.5 stands as VIRTUS's figure for VIRTUS's
-      scope, and the coverage statement on the row should read "three
-      here, three in other site records or unheld, one unlocated".
+      **The partition, decided the same evening.** The Iron Mountain
+      rule (2026-08-28) is that the partition unit is the campus, not
+      the building, drawn with the operator's own page as the source —
+      LON-1 and LON-3, 232 m apart, are one partition because Iron
+      Mountain calls them one campus. Luke applied it here ("Iron
+      Mountain's rule applies", 2026-09-02): Segro's Malton Avenue site
+      (LONDON9, Slough/T/135 and Barbour 12409629) and the 580-581
+      Ipswich Road project (LONDON11/12, Barbour 12522787) joined this
+      one, which is why this entry now lists five projects. The
+      counter-consideration — the capacity model's definition of
+      2026-08-30, that a campus is a claim about sites and never a
+      redefinition of one, with the site derivable from the planning
+      record — is met rather than overridden: a partition is exactly the
+      hand-adjudicated boundary, with its evidence written down, that
+      keeps a site derivable, and the landlord's name on a record is not
+      a different scheme. So the row's coverage reads "five here, two
+      unheld: LONDON3 and LONDON4 share 14 Liverpool Road with nothing
+      filed there, LONDON19 is unlocated". The 145.5 stands as VIRTUS's
+      figure for VIRTUS's scope, unchanged by the merge — the site's
+      planning record still states no total.
 
       **Independent of the key question.** The site's key project,
       Zenium's "London One" fit-out at 12 Liverpool Road (12216044), is
@@ -517,17 +524,6 @@ campuses:
     barbour_titles:
       - NTT COMMUNICATIONS DATA CENTRE
       - NTT COMMUNICATIONS DATA CENTRE - PHASE 2 FIT O
-    reason: |
-      Not yet reviewed.
-
-  - site_key: PTNO-12355161
-    projects: 2
-    proposed: needs_a_look
-    scope: unreviewed
-    total: unreviewed
-    barbour_titles:
-      - 580-581 IPSWICH ROAD - DATA CENTRE
-      - SEGRO  535-546 IPSWICH ROAD - DATA CENTRE SHEL
     reason: |
       Not yet reviewed.
 

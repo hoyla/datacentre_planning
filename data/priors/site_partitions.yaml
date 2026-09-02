@@ -996,12 +996,35 @@ partitions:
       it the nearest candidate for an Amazon campus; the charge shows
       the building is VIRTUS's, so that reading is withdrawn and
       Amazon's Slough facility remains unplaced.
+
+      Extended 2026-09-02 (Luke: "Iron Mountain's rule applies") to the
+      two buildings the planning record holds under the landlord's
+      names. VIRTUS's own campus page rosters seven facilities on four
+      streets; by address (site_facilities.yaml, `location`), LONDON9 is
+      Slough/T/135 at 470-475 Malton Avenue — a "Single building for
+      data centre development" filed by Fullers Logistics, Barbour's
+      SEGRO PLC MALTON AVENUE - DATA CENTRE at the same numbers, the
+      application's own coordinates thirty-five metres from the "Virtus
+      London 9" map pin — and LONDON11 and LONDON12 are 580-581 Ipswich
+      Road, Barbour 12522787, at the postcode LONDON11's permit is issued
+      to. The rule is the one drawn for Iron Mountain above: the
+      partition unit is the campus, with the operator's page as the
+      source, and the register naming Segro and Fullers where the
+      operator says VIRTUS is the landlord's name, not a different
+      scheme. The Malton Avenue partition that held Slough/T/135 and
+      12409629 is retired into this one; 12522787 leaves the Ipswich
+      Road partition, which keeps Segro's 535-546 building. LONDON3 and
+      LONDON4 share 14 Liverpool Road with nothing held there, and
+      LONDON19 is unlocated (ROADMAP, Coverage gaps).
     applications:
       - Slough/T/138              # LONDON10, 75 Buckingham Avenue
+      - Slough/T/135              # LONDON9, 470-475 Malton Avenue
     projects:
       - "12216044"                # ZENIUM - DATA CENTRE - FIT-OUT
       - "12277044"                # VIRTUS - LONDON 3
       - "12575087"                # VIRTUS - LONDON 11
+      - "12409629"                # SEGRO PLC MALTON AVENUE (LONDON9)
+      - "12522787"                # 580-581 IPSWICH ROAD (LONDON11/12)
 
   - name: galvin-road-672-slough
     reason: |
@@ -1090,25 +1113,19 @@ partitions:
 
   - name: ipswich-road-segro-slough
     reason: |
-      SEGRO's Ipswich Road buildings — 535-546 (SL1 4EP) and 580-581
-      (SL1 4EQ), adjacent postcodes on one street, 200 m apart.
-      Slough/t/131 is the detached data centre building at 535-546.
+      SEGRO's 535-546 Ipswich Road building (SL1 4EP): Slough/t/131 is
+      the detached data centre building there, and Barbour's project is
+      the shell-and-core at the same numbers. Until 2026-09-02 this
+      partition also held 580-581 Ipswich Road (12522787), 200 m along
+      the street at the adjacent postcode; that building is VIRTUS
+      LONDON11 and LONDON12 by address and permit postcode, and moved to
+      virtus-zenium-slough-campus above. This partition keeps the two
+      apart the way it always did — the spatial radius alone would
+      re-merge them.
     applications:
       - Slough/t/131
     projects:
       - "12355161"                # SEGRO 535-546 IPSWICH ROAD
-      - "12522787"                # 580-581 IPSWICH ROAD
-
-  - name: malton-avenue-segro-slough
-    reason: |
-      470-475 Malton Avenue, SL1 4QU. Slough/T/135 is a "Single
-      building for data centre development" at the Fullers Logistics
-      address, and Barbour's PTNO-12409629 is SEGRO's Malton Avenue
-      data centre at the same numbers.
-    applications:
-      - Slough/T/135
-    projects:
-      - "12409629"
 
   - name: buckingham-avenue-84-virgin-media
     reason: |
