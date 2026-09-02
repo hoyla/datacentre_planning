@@ -131,6 +131,15 @@ sites:
   # The arithmetic is ours; how VIRTUS reached its total is not
   # inferred from it. A question for the operator, recorded on the
   # campus claim.
+  #
+  # Locations, 2026-09-02 (Luke, from Datacenters.com and Google Maps,
+  # each then checked against what this project can cite): LONDON3 and
+  # LONDON4 share 14 Liverpool Road; LONDON9 is Slough/T/135 at 470-475
+  # Malton Avenue, held in the Segro Malton Avenue site; LONDON11 and
+  # LONDON12 are 580-581 Ipswich Road, Barbour 12522787, held in the
+  # Segro Ipswich Road site; LONDON10 is 75 Buckingham Avenue and the
+  # directory's "110" is Iron Mountain's. LONDON19 has no directory page
+  # and no location this project can cite: not yet found.
   - site_key: PTNO-12216044
     facilities:
       - id: LONDON3
@@ -139,6 +148,23 @@ sites:
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
             snapshot: virtus-slough-campus
             date: 2026-08-30
+        location:
+          address: 14 Liverpool Road, Slough Trading Estate, Slough
+          postcode: SL1 4PF
+          lat: 51.5230231
+          lon: -0.6219015
+          source: >-
+            Directory lead, corroborated by a map pin and by nothing this
+            project can cite: Datacenters.com lists "Virtus London 3" and
+            "Virtus London 4" at 14 Liverpool Rd, Slough SL1 4PF (read by
+            hand 2026-09-02; the site's terms forbid scraping and
+            derivative use, so nothing is copied from it beyond this
+            address), and Google Maps places "Virtus London 3 & 4" at the
+            coordinates given (Luke, 2026-09-02). No planning application,
+            Barbour record or permit at this address is held; the Barbour
+            record for LONDON 3 (12277044) carries the SL1 4QZ postcode
+            centroid, not a building.
+          date: 2026-09-02
         attributions:
           - kind: announced capacity, operator's basis
             claim: VIRTUS LONDON3 (Slough)
@@ -148,6 +174,19 @@ sites:
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
             snapshot: virtus-slough-campus
             date: 2026-08-30
+        location:
+          address: 14 Liverpool Road, Slough Trading Estate, Slough
+          postcode: SL1 4PF
+          lat: 51.5230231
+          lon: -0.6219015
+          source: >-
+            As LONDON3 — Datacenters.com and Google Maps place LONDON3 and
+            LONDON4 in one building at 14 Liverpool Road (2026-09-02). The
+            directory states 27.0 MW total power and 24 MW IT load for
+            this facility against VIRTUS's own 26.6 MW, which is why no
+            directory figure is ever a source here. No record of this
+            building anywhere in the corpus.
+          date: 2026-09-02
         attributions:
           - kind: announced capacity, operator's basis
             claim: VIRTUS LONDON4 (Slough)
@@ -157,6 +196,26 @@ sites:
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
             snapshot: virtus-slough-campus
             date: 2026-08-30
+        location:
+          address: 470-475 Malton Avenue, Slough Trading Estate, Slough
+          postcode: SL1 4QU
+          lat: 51.519218
+          lon: -0.619381
+          source: >-
+            The planning register, corroborated twice over. Slough/T/135
+            ("Single building for data centre development", Fullers
+            Logistics Ltd, 470-475 Malton Avenue, SL1 4QU, permitted 2018)
+            gives this address and these coordinates; Google Maps places
+            "Virtus London 9" at 51.51905, -0.61904, thirty-five metres
+            away; Datacenters.com lists it at 470 Malton Ave, SL1 4QT
+            (2026-09-02). **That application sits in a different site
+            record**, PTNO-12409629 ("SEGRO PLC MALTON AVENUE - DATA
+            CENTRE", aliased "Malton Avenue, Slough - Data Centre
+            (Segro)"), under the landlord's and the previous occupier's
+            names — which is how the review of 2026-09-02 came to say
+            LONDON9 was nowhere in the corpus. Whether that site joins the
+            VIRTUS campus is a partition question (ROADMAP).
+          date: 2026-09-02
         attributions:
           - kind: announced capacity, operator's basis
             claim: VIRTUS LONDON9 (Slough)
@@ -178,6 +237,12 @@ sites:
             for the building, Slough/T/138, at SL1 4PN (site_partitions.yaml,
             virtus-zenium-slough-campus, Luke 2026-08-28).
           date: 2026-09-02
+          note: >-
+            Datacenters.com places "Virtus London 10" at 110 Buckingham
+            Ave, SL1 4PF (read 2026-09-02) — which is Iron Mountain's
+            building (PTNO-12468506). The charge and the application
+            outrank a directory; kept at 75, and the contradiction is the
+            standing reason a directory address is a lead and not a source.
         attributions:
           - kind: announced capacity, operator's basis
             claim: VIRTUS LONDON10 (75 Buckingham Avenue, Slough)
@@ -188,12 +253,19 @@ sites:
             snapshot: virtus-slough-campus
             date: 2026-08-30
         location:
+          address: 580-581 Ipswich Road, Slough Trading Estate, Slough
           postcode: SL1 4HA
           source: >-
             Environment Agency permit EPR/DP3348QS, held by VIRTUS LONDON 11
             LIMITED (72 MWth), issued at SL1 4HA (site_partitions.yaml,
-            virtus-zenium-slough-campus). Postcode only: the permit's
-            street address has not been read into this file.
+            virtus-zenium-slough-campus); Datacenters.com lists LONDON11 and
+            LONDON12 at 580 Ipswich Rd, SL1 4HA (read by hand 2026-09-02);
+            and the corpus holds Barbour project 12522787, "580-581 IPSWICH
+            ROAD - DATA CENTRE", at 51.519831, -0.628135 — in a different
+            site record, PTNO-12355161 (Segro's Ipswich Road site). The
+            Barbour record for LONDON 11 itself (12575087) carries the
+            SL1 4QZ postcode centroid and sits in the Liverpool Road site,
+            which is how one building came to be two records in two sites.
           date: 2026-09-02
         attributions:
           - kind: announced capacity, operator's basis
@@ -204,6 +276,16 @@ sites:
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
             snapshot: virtus-slough-campus
             date: 2026-08-30
+        location:
+          address: 580-581 Ipswich Road, Slough Trading Estate, Slough
+          postcode: SL1 4HA
+          source: >-
+            Datacenters.com lists LONDON12 with LONDON11 at 580 Ipswich Rd,
+            SL1 4HA (read by hand 2026-09-02), the building Barbour project
+            12522787 records in PTNO-12355161. Directory lead corroborated
+            by LONDON11's permit postcode only; no source names LONDON12 at
+            this address directly.
+          date: 2026-09-02
         attributions:
           - kind: announced capacity, operator's basis
             claim: VIRTUS LONDON12 (Slough)

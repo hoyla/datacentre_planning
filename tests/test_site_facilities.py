@@ -317,5 +317,7 @@ def test_the_real_file_seeds_slough_london10_with_its_source():
     l10 = rows[("PTNO-12216044", "LONDON10")]
     assert l10["location_status"] == "recorded"
     assert l10["postcode"] == "SL1 4PN" and "Companies House" in l10["location_source"]
-    assert rows[("PTNO-12216044", "LONDON4")]["location_status"] == "not yet found" \
-        if ("PTNO-12216044", "LONDON4") in rows else True
+    # LONDON9 is placed by the planning register itself (Slough/T/135's
+    # own address and coordinates); LONDON19 is the one nobody can place.
+    assert "Slough/T/135" in rows[("PTNO-12216044", "LONDON9")]["location_source"]
+    assert rows[("PTNO-12216044", "LONDON19")]["location_status"] == "not yet found"

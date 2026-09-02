@@ -156,7 +156,22 @@ Commercial, but publishes a free
 ### Not worth pursuing
 
 Cloudscene, PeeringDB and datacenters.com are connectivity directories
-with no capacity data. CBRE, JLL, Knight Frank, Savills and Cushman &
+with no capacity data. **Datacenters.com's addresses are another
+matter** (2026-09-02, Luke): it lists a street address for every
+VIRTUS facility, and two of them resolved buildings the corpus held
+under a landlord's name (LONDON9 at 470-475 Malton Avenue, LONDON11/12
+at 580-581 Ipswich Road). Three cautions, each measured. Its terms
+forbid scraping, aggregation and derivative use, so it is read by hand
+and only an address is recorded, with attribution, as a lead. Its
+power figures are not the operator's — 27.0 MW total and 24 MW IT
+load for LONDON4 against VIRTUS's own 26.6, 6.0 against 6.6 for
+LONDON10 — so nothing numeric is ever taken from it. And it is wrong
+sometimes: it places LONDON10 at 110 Buckingham Avenue, which is Iron
+Mountain's building, against a Companies House charge and the
+building's own planning application at 75. So a directory address
+goes into `site_facilities.yaml`'s `location` block only with a
+source that says what corroborates it, and "corroborated by a map pin
+only" is written where that is the truth. CBRE, JLL, Knight Frank, Savills and Cushman &
 Wakefield publish free quarterly European reports with MW take-up —
 citable, aggregate, London-skewed. Structure Research, Synergy,
 datacenterHawk, Uptime and DCD Intelligence are all paid.
