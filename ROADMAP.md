@@ -231,8 +231,151 @@ What survives it here:
   sites entirely, and needs a dry-run materialise first so what leaves
   is seen before it goes. Hallen's was the first instance noticed
   (2026-08-30) and left with #252's retirements.
+
+  **The dry run exists** (2026-09-02): `scripts/materialise_sites.py
+  --dry-run --not-dc-veto family|family+project`, and the preflight now
+  names every application that would leave the universe. Measured:
+  under `family`, **149 applications leave** (27 carrying 335
+  site-capacity figures; 4,452 documents, which leave the Drive tree at
+  the next staging build), **17 sites are re-keyed** because their
+  lead application was the `not_dc` one (Kingsnorth `SITE-Medway/MC/21/
+  0979` becomes `SITE-Medway/MC/24/0220`), 26 surviving sites shrink,
+  **3 hand-matched claims need re-pointing** (West Burton Data Centre;
+  Medway and MedwayOne) and one alias key dies (`SITE-Bassetlaw/22/
+  01713/FUL`). `family+project` adds ten more applications (159, 360
+  figures, 5,105 documents) and seven more shrinking sites; the three
+  all-`not_dc` sites become `barbour_only` rather than vanishing.
+
+  **And the veto is the wrong instrument** (Luke's question, same day:
+  do the mixed-use outlines definitely include no data centres? They do
+  not). By *description*, only two of the 149 name a data centre. By
+  their own *documents*, **27 do, across 772 findings**: Google's
+  Waltham Cross reserved matters (`Broxbourne/07/23/0361/RM`, 195
+  findings in 31 documents) and its variation whose decision notice
+  names the data centre's supply; the Houghton Regis North reserved
+  matters and discharges, whose outline's uses include a data centre;
+  Kingsnorth's outline, whose energy statement plans for "energy
+  intensive uses, such as data centres" and which is the parent
+  permission of the data-centre applications; Heatherwood's hybrid,
+  unread. A reserved matters on a data-centre outline reads as
+  `not_dc` by construction, because triage saw the description and the
+  description does not say. So the family door's admission of `not_dc`
+  is doing useful work exactly where the invisibility flags said the
+  documents were the only fix, and vetoing there would eject the Google
+  reserved matters. **The default stays `off`.** The harm is real and
+  the fix belongs elsewhere: at the figure (a `not_dc` member's figures
+  do not stand as a site's capacity, and a site is not keyed on a
+  `not_dc` application — Kingsnorth's key is its outline), or at the
+  verdict (re-triage the 27 whose documents contradict their
+  description, append-only, which corrects membership through the
+  universe rule with no veto at all). The batteries and energy centres
+  with figures — West Burton 500 MW, Watford Bypass 170, Highland 200,
+  MidKent 249, Camden and Bristol — are the ones a figure-level rule
+  would catch, and none of them has a document naming a data centre.
+
+  **The clearest case is DC01 at South Mimms** (Luke's worry, same
+  day: whatever happens to `Hertsmere/23/1049/OUT`, `PTNO-12809263` is
+  unambiguously a data centre). It is, and nothing here can change
+  that: the class is settled by the Barbour title and by six
+  `new_build` members, and a `not_dc` member never lowers a class, so
+  the veto question and the class question are independent. And
+  `23/1049/OUT` is neither a stray neighbour nor a data-centre
+  application — it is the same land's earlier B8 warehouse outline,
+  granted with **condition 33 restricting use as a data centre**, and
+  `Hertsmere/25/1668/VOC` (`new_build`, a member) is the application
+  removing that condition, citing `23/1049/OUT` as its parent. The
+  family door admitted the warehouse permission because the
+  data-centre scheme's own paperwork names it; `not_dc` describes the
+  application as filed correctly; its eight adjudicated figures carry
+  no megawatt value, so nothing ranks on it; and the reader's
+  Applications tab shows the verdict beside the row. That is the door
+  and the verdict both doing their jobs on one site, and the veto
+  would have ejected the permission the scheme is converting.
+
+  **Resolved with Luke, 2026-09-02, after asking whether the residue
+  belongs in the corpus at all.** It does. `not_dc` means "not a data
+  centre and no documentary tie to one in its own paperwork"; it does
+  not mean irrelevant. Measured: of the 76 `not_dc` applications
+  holding documents and in no live site (4,012 documents — the set the
+  staging build's shortfall excludes "by decision"), 15 cite or are
+  cited by a live site member and are excluded only because they have
+  no coordinates (the family door admits them, `family_skips_not_dc`
+  stops the union, and an unlocated node cannot be glued spatially);
+  4 are Union Park's own condition discharges whose parent is the
+  `adjacent_power` site-clearance permission #252 vetoed; and of the
+  57 that remain, **44 are power schemes within 2.5 km of a live site**
+  — batteries, generators, energy centres and their condition details,
+  three at the site pin itself — labelled `not_dc` because rule 3 of
+  the rubric makes adjacency a matter of documentary evidence and their
+  descriptions carry none. Only 13 are not power schemes, and those
+  include two former data centres being converted to other uses and the
+  Wychavon B1/B2/B8 outline whose documents name a data centre ten
+  times. The genuinely unrelated set is about ten applications.
+
+  **So: no `not_dc/` folder.** Membership decides `sites/`,
+  relationship decides `adjacent_power/`, and the residue is *listed*
+  rather than housed. The work, each its own change with a dry-run
+  count first:
+
+  - ~~**The family door unites what it admits**~~ — **built and
+    dry-run 2026-09-02** (PR #351): an edge that admits a node also
+    unites it with the node that admitted it, whatever the verdict, and
+    every later edge between that node and another admitted one is
+    still skipped, so a `not_dc` master plan joins exactly one site and
+    cannot weld two together (pinned by a test). Against the live
+    corpus: **21 applications join, 2,344 documents; nothing leaves; no
+    site retires, appears or changes key; no two sites merge.** The 15
+    measured, plus six the same rule finds — two VIRTUS stem-37977
+    applications join Stockley Park, Longcross's two Surrey Heath
+    parent permissions join Longcross — and one application *moves*:
+    `Northumberland/21/03631/NONMAT`, the substation amendment carrying
+    the 99.9 MW offshore-wind figure, leaves Cambois for the Blyth
+    substation partition it cites, which is what the 2.7 partition
+    intended and did not reach. It applies at the next materialise.
+  - **Adjacent power takes its own paperwork with it**: a discharge,
+    amendment or variation whose parent is an `adjacent_power`
+    application and which is in no site stages under `adjacent_power/`
+    beside its parent — the Union Park four, 44 documents — through one
+    function the staging build, the id recorder and the sample verifier
+    all call, so the three cannot disagree again (#349).
+  - **An "Excluded applications" sheet in the workbook**: reference,
+    verdict, why we hold it (`discovered_via`), documents held, nearest
+    site and distance — so the exclusion is stated and a reporter can
+    ask for one, the reverse of "easy to remove what they can see".
+    Needs a new Sheet at the next release, since `sheet_sync` cannot add
+    a tab.
+  - **Re-triage where the documents contradict the verdict**:
+    `Wychavon/19/01060/OUT` and the two London Legacy conversions
+    (`LondonLegacy/18/00103/FUL`, `21/00027/FUL`), append-only.
+  - **The adjacency review**, below under #252, which is where the 44
+    belong.
+
+  The figure-level rule — a `not_dc` member's figures do not stand as a
+  site's capacity, and a `SITE-` key is not derived from a `not_dc`
+  application — is the remaining half of the original item and is still
+  to design.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
+- **44 power schemes within 2.5 km of a live site carry `not_dc` and
+  are invisible to the adjacency layer** (measured 2026-09-02 while
+  asking what a `not_dc` residue is worth; the working is in the
+  `not_dc` item above). The relationship table admits only
+  applications already verdicted `adjacent_power`, and its proximity
+  rows stop at 1 km, so a 49.99 MW gas peaking plant 2.1 km from the
+  North Weald site, two batteries 1.6 km from Yorkshire Energy Park and
+  an energy centre's condition details at a site's own pin are seen by
+  neither. **Two reviews, Luke's, as future items:** first, the 44 as
+  candidates for `adjacent_power` — many probably are, and a `not_dc`
+  verdict on a battery beside a data centre is the rubric working
+  (adjacency by evidence, not description) rather than a judgement that
+  it is unrelated; second, **the definition of "adjacent" itself** —
+  whether proximity within the energy sweep's 2.5 km band should reach
+  the relationship table as a counted candidate whatever the verdict,
+  the way #252 already treats 1 km rows, and whether "adjacent" should
+  turn on evidence, distance, or the kind of plant. Until then the sub-
+  50 MW pattern beside data-centre sites (Kingsnorth, Yorkshire Energy
+  Park; the 855-finding signal under Phase 3) has a lead list nobody
+  renders: those 44, by distance.
 - **The class has a Drive home since 2026-09-02** — `adjacent_power/`
   beside `sites/`, one folder per application with an `_index.md`
   naming the sites it stands beside. Found by the 2.11 staging build,
