@@ -12,7 +12,7 @@ those two, which were the documents it kept duplicating.)
 
 ---
 
-## State — the base is 2.11, released; figures move, so read stamps, not this file
+## State — the base is 2.11, released, with the 2.12 candidate built; figures move, so read stamps, not this file
 
 Current state lives in two places, deliberately not here: the
 [ROADMAP](../ROADMAP.md) header for the corpus counts, and
@@ -357,7 +357,12 @@ its panel as withheld with the reason rather than rendering a stale
 reading — the same path a gate refusal takes, and re-runs are no-ops.
 If it names sites, either re-submit them (a bare `--submit` will pick
 them up, their hash having moved) and collect again before step 12, or
-let the marker stand for this release and say so in step 15.
+let the marker stand for this release and say so in step 15. **A bare
+`--submit` will not pick up a site that is partly read** — the
+read-in-full rule defers it before the hash is even compared, and on
+2026-09-02 all three sites the check named were deferred that way (two
+with unread documents, one with none left). Read their documents
+first; the readings pass then takes them on its own.
 
 ### 5. Look at what moved
 

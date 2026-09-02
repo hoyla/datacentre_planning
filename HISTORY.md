@@ -3377,3 +3377,69 @@ holds the consequential set, names it, and sends it only under
 Luke's point stands wider than the script: who is responsible for a
 single site's adjudication has to be written where the work is done,
 not only where the decision was made.
+## v2.12 — the corpus release the evening earned (2026-09-02)
+
+Twenty-two PRs had merged since 2.11 shipped that morning, and none
+of them reached the data and visuals teams until something rendered.
+So the candidate is the corpus as it stood at the end of the day:
+VIRTUS Slough one site on the Iron Mountain rule, with Segro's Malton
+Avenue record retired into it and 580-581 Ipswich Road moved across
+(#359, #360); membership settled, sixty-five stale member rows retired
+with their sites and the `not_dc` residue named on its own workbook
+sheet rather than hidden (#349–#355); the operator rung's first real
+test at Slough, where the operator's 145.5 MW ranks a site whose
+planning record states no total (#356); facility locations as far as
+anyone can cite them, with a Facilities sheet to see them in (#357,
+#358); NTT's six pages actually fetched after two dead snapshots had
+silenced the operator entirely, nine claims and six matches (#361), the
+organisation under its four names (#362), and Slough 2 and 3 recorded
+as buildings the corpus does not hold (#363); adjacent power taking its
+own paperwork into its own Drive tree (#352); Creek Way's fourteen
+documents obtained by hand and read for the first time, with two
+figures adjudicated by the consequential route after the long tail had
+taken them by mistake (#368, #369); and the reader leaving Drive (#367),
+the postcode sectors derived for the control that is not yet built
+(#370), and the Sites table's cosmetics — centred columns, the design
+system's chevrons, round markers, and a tooltip that no longer opens
+off-screen (#372, closing #301).
+
+**Run as the runbook says, with three things worth recording.** The
+materialise retired one site and no more, verified by a set diff of the
+rebuilt clusters against live membership: two clusters changed, 498
+did not. The first read of Creek Way went through the GPT-5 batch in
+five minutes for fourteen documents; its two figures then went to the
+wrong adjudicator because the runbook named only one, which is why
+`dcp/adjudication_routes.py` exists (#369). And the diff against 2.11
+explained every line, twice: at step 8, the retirement, two panels whose
+Drive links lagged the ledger until the step-12 rebuild, an amendment
+that moved to its parent's site through the family door, and a
+detector counting a control's number as its identity (#371); at step
+12, the retirement again and six panels with fewer links, every one of
+them a site whose machine reading changed that evening — three re-read
+under their moved inputs and citing fewer documents, three withheld as
+stale — which is the readings mechanism, not a link that broke.
+
+**What the release carries.** Five hundred sites, 1,999 applications,
+57,559 documents held, 45 sites at or above 100 MW (44 → 45, the
+Slough figure), 282 capacity claims with 101 matched, 2,561 Drive ids
+recorded for documents that reached Drive tonight and 2,376 uploaded,
+nine machine readings refreshed for the sites whose inputs moved and
+three withheld as stale by the freshness check — West London
+Technology Park, the Mary Somerville Data Centre and the A41 Watford
+Bypass. A re-submit run straight after found nothing to read, and the
+reason is the read-in-full rule rather than a fault: a site's reading
+is refreshed only once its prose is read in full, and these three are
+deferred as partly read — 20 of West London's 955 documents and 61 of
+Watford Bypass's 349 have no read-log row, and Mary Somerville now
+holds no documents at all, its application having moved on. So the
+2.13 path is the first read of those documents, then the readings
+pass, which will pick them up on its own; the runbook's step 4a said a
+bare `--submit` would, and now says when it will not. Seven of Creek Way's quotes failed the verbatim
+gate and are not escalated. The step-5 reports came back as the
+runbook expects: Ferrybridge C and Watford Bypass contradicted, five
+generation-understated.
+
+**Not in it, by decision.** The "near a postcode" control (specified,
+the sectors committed, the control for 2.13 so that the diff stays
+readable and a person sees it first); the site-11 partition; the
+unsited-claims layer; the public feed.
