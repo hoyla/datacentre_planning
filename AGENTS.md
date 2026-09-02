@@ -111,6 +111,7 @@ Read these **before** touching the area, in the order given.
 | Regenerating or releasing anything | [docs/REGENERATION_RUNBOOK.md](docs/REGENERATION_RUNBOOK.md) **in full**, including its Traps and its already-done sections |
 | Acquisition, portals, a council that returns nothing | [docs/PORTAL_NOTES.md](docs/PORTAL_NOTES.md), ARCHITECTURE §3 |
 | Reading documents — deciding **which reader** gets the work | [ARCHITECTURE.md](ARCHITECTURE.md) §3, "Reading at scale", which carries the standing policy on what reads first and what only ever reads second. Settle this before touching any runner |
+| Choosing, changing or defaulting a **model** for any reading or adjudication task | [docs/MODELS.md](docs/MODELS.md) — the decisions in force, what is still open, and the comparison each rests on — then ARCHITECTURE "Which model runs which task" for the roster |
 | Operating the Studio, once that policy says to | [docs/MAC_STUDIO.md](docs/MAC_STUDIO.md) — the machine's operating manual, **not** the policy on which reader to use |
 | The database, backups, restores | [docs/BACKUP.md](docs/BACKUP.md) |
 | Adjudication rules or corrections | [docs/RULES_AUDIT.md](docs/RULES_AUDIT.md) — and use its method: write down the domain fact a rule asserts, then check that fact against HISTORY, ROADMAP and the corpus |

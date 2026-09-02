@@ -47,178 +47,26 @@ its preliminary. The reason is sequencing, measured 2026-08-31: of the
 over. Hand-adjudicating campus scopes against a corpus still missing
 them means redoing some of that adjudication when they land.
 
-**A note for the next release, and it is smaller than it looks:**
-`mr.PROMPT_VERSION` is now `reading-1.3` (PR #241), and `_already()` in
-`scripts/machine_reading_openai.py` keys on it — and on `input_hash`,
-which the 2026-08-30 membership changes moved for dozens of sites. **The
-next `--submit` re-reads all ~359 sites.**
+**Model choices.** The decisions in force, the comparisons behind them
+and the measurement lessons are in [docs/MODELS.md](docs/MODELS.md);
+the roster with counts is ARCHITECTURE's "Which model runs which
+task"; the terra experiment of 2026-08-31 and the return to
+`gpt-5`/`reading-1.4` are HISTORY. What is still to decide, each
+detailed under "Open" in that file:
 
-**Measured 2026-08-31, from the batch output files and confirmed against
-the OpenAI console: that costs about $34.** The 2026-08-29 batch is the
-clean anchor — 182 sites, alone overnight, **$16.98** for 15,817,922
-input and 1,439,745 output tokens, the console's day total matching the
-output files to the token. Per site: 71,865 in, 8,228 out, of which
-**5,849 is reasoning** (71% of output, and invisible in the stored
-reading, which is why it cannot be estimated from what is on disk).
-
-*This corrects "roughly 15M input tokens" for a full run, which was
-this batch's own figure — 182 sites — mistaken for all 358. A full run
-is about 26M in and 3M out.*
-
-**The machine readings move to gpt-5.6-terra** (Luke, 2026-08-31), which
-is the decision that makes that re-read worth running. It is the model
-choice recorded on 2026-08-28 for future work, applied at a phase
-boundary rather than mid-phase, which is what that decision said to do.
-`--model` now defaults to it.
-
-**The evidence, from six sites read on both models at the same reasoning
-effort** — and note the prompts differed: gpt-5 at `reading-1.2`
-against terra at `reading-1.3`. *The figure-naming half of this was
-overturned by the full run; see "What the full terra run measured"
-below. The rest stands.* Terra names figures where gpt-5 names
-categories: on Amazon
-Didcot it sets "a 150MVA substation" against "192MW IT load and 288MW
-gross power capacity", where gpt-5 describes the same tension without a
-number in it. It is better calibrated about absence, tying silence to
-the structured facts rather than reporting "no figures in the pages".
-It flags naming discrepancies as discrepancies — Ark Data Centres
-against ARK Continuity, Greystoke Land against Elsham Tech Park. And it
-catches the conditional green claim ("renewable diesel is expected only
-subject to availability") that the seed-case walkthrough named a Tier-1
-signal.
-
-**One concrete difference**: on Elsham Wolds terra surfaced an
-Operational Power Demand of 84 MW on a page gpt-5's reading of the same
-site never reached. That is a point in terra's favour — it read a table
-the other model did not — but it is a smaller point than it first looked,
-because the 84 MW turns out to be an inconsistency inside the
-applicant's own arithmetic rather than anything that unsettles the site's
-well-corroborated 1,000 MW. The decision rests on the pattern above, not
-on that one catch.
-
-**What gpt-5 did better, so it is not lost:** more comprehensive
-descriptive coverage (site areas, GIA breakdowns, ramp-up schedules), a
-permission-history question terra missed on Didcot, and one
-quantity-type catch — a structured fact recording `energy_storage:
-50 MW` from a sentence about generation. **Check on the full run whether
-terra flags quantity-type errors at all**; if it does not, that is a
-real loss against a real gain.
-
-**Answered, and in terra's favour** (2026-08-31, full run). It flags
-them well: on Elsham it caught four in one reading — figures typed as
-energy storage on a quote stating a generation limit, on-site generation
-taken from a hypothetical biomass plant's *fuel* requirement, per-unit
-engine output and thermal fuel input both typed as whole-site
-generation — where gpt-5 at `reading-1.2` caught one. That gain is real
-and is not what the decision below turns on.
-
-**Cost: about $59 against gpt-5's $33.** Terra reasons roughly 2.3×
-harder (~13,300 reasoning tokens per site against 5,849) while producing
-6% *less* visible output. The "half the output tokens" figure from the
-2026-08-28 comparison does not transfer — that was 60 deep-read
-documents at `gpt-5:low`, and a machine reading emits a fixed-schema
-document whose length the schema largely sets.
-
-**What the full terra run measured, and why the readings go back to
-gpt-5.** Run 2026-08-31: 346 sites on `gpt-5.6-terra`/`reading-1.4`, collected
-clean (346 stored, 0 withheld, 0 unparseable). `reading-1.4` added the
-instruction to flag figures whose quantity type contradicts their own
-quote — Luke's suggestion, and it works, as the answer above records.
-
-**But terra states far fewer power figures.** Over the 344 sites read by
-both models: 0.89 figures per site against gpt-5's 2.75, and 21.8% of
-sites carrying any figure against 33.1%. It is not reading less — it
-produced *more* quotes per site than either gpt-5 arm. It shifted from
-stating figures to quoting text around them.
-
-**Three arms on 17 sites, `medium` effort throughout, which separates
-model from prompt:**
-
-| arm | items | quotes | power figures | sites with one |
-|---|---|---|---|---|
-| gpt-5 / `reading-1.2` | 21.00 | 34.18 | 6.65 | 65% |
-| gpt-5 / `reading-1.4` | 21.18 | 35.41 | **8.53** | 65% |
-| terra / `reading-1.4` | 16.88 | 36.59 | **2.18** | 53% |
-
-So `reading-1.4` *helped* gpt-5 — 6.65 → 8.53 — and on Didcot took it
-from 2 distinct figures to 15, **including the `150MVA` and `192MW` this
-section credits to terra as its advantage.** At the same prompt, gpt-5
-states about four times terra's figures. On Elsham, gpt-5 states the
-1,000 MW campus load in four places and terra in none.
-
-**Terra is erratic here rather than simply worse, which matters for what
-to do next.** Same model, `reading-1.3` → `1.4`, six sites: Didcot 8 → 0,
-Watford 6 → 0, Elsham 6 → 2 (losing the 1,000 MW headline it *did* state
-under 1.3), but Union Park 0 → 10 and Yorkshire 0 → 3. Twenty figures
-became fifteen. Terra's prompt-to-prompt variance on this axis is nearly
-as large as its gap to gpt-5, so "terra is worse at figures" overstates
-a stable property that the data does not show.
-
-**Why this was urgent rather than academic.** `LATEST_SQL` renders the
-newest reading per site whatever version made it — deliberately, so a
-re-read the gate refuses shows as withheld rather than falling back.
-After the collect, **331 of 363 sites would have rendered terra**. The
-append-only store preserves the history; it does not protect the page.
-Nothing reached a reader: no build ran between the collect and the fix.
-
-**Decided (Luke, 2026-08-31): re-run on `gpt-5`/`reading-1.4`** — the
-best arm measured on every column, and the only one keeping the new
-prompt's flagging without the figure loss. ~$33. Not a reversal of the
-terra decision so much as its deferral: gpt-5 is legacy at OpenAI, so
-this buys correctness now, not a durable answer.
-
-**Done, 2026-08-31 evening. 331 requests, 0 failed, collected clean.**
-What the reader renders now: **349 sites on `gpt-5`/`reading-1.4`**, 13
-still on `reading-1.2` (no new input to read), and one on terra —
-`SITE-CentralBedfordshire/CB/23/02827/DOC`, which the batch did not
-cover and which is the one site where the regression stands. Two
-readings were withheld by the guard for the right reason: *"the site's
-inputs changed between submission and collection"*
-(`SITE-EastDunbartonshire/TP/ED/25/0245`,
-`SITE-Hillingdon/39707/APP/2021/4456`). They re-read on the next run.
-
-**And the outcome beats both arms it was chosen between.** Across the
-361 rendered readings: **4.23 power figures per site, 40% of sites
-carrying at least one** — against terra's 0.89 and 21.8%, and against
-the `reading-1.2` baseline's 2.75 and 33.1%. So the prompt change is
-worth more than the model change was: it lifted the figure rate 54%
-above where the corpus stood before either was tried. That is the
-measurement the A/B below should be scored against, not the old
-baseline.
-
-**Worth doing before terra is tried again** (Luke proposed it; not
-scheduled): an A/B of two or three prompts on terra, scored against
-sites where it demonstrably lost figures — Didcot, Watford, Elsham — and
-where `reading-1.3` gives a baseline to beat. The hypothesis is specific:
-`reading-1.4`'s flagging instruction directs terra toward challenging
-figures rather than reporting them. Name what to state (each site's
-headline capacity, with unit and scope) rather than saying figures
-matter, and score both directions — figures recovered *and*
-quantity-type flags retained — since the two may trade against each
-other.
-
-**And the decision has an answer that was not obvious** (established
-2026-08-31): *most of that spend buys very little, because the problem
-reading-1.3 was raised for is already fixed without re-reading.* Every
-stored reading is `reading-1.2`. The defect PR #241 addressed was
-quotes copied from the structured facts citing an application reference
-and rendering as unlinked text — and the same PR shipped
-`mreading.figure_sources`, which resolves those to their document
-**at export time, from whatever readings are stored**, by matching the
-quote to the finding it was copied from. So a 1.2 reading already
-renders with its citations linked. What a re-read additionally buys is
-the model citing the document natively, and the sixteen cases
-`figure_sources` drops because the text stands as evidence on more than
-one document and picking one would assert a source.
-
-So **be discerning rather than re-reading 358 sites**. Three cuts, in
-order of defensibility: sites whose `input_hash` has actually moved
-(their stored reading describes a different document set, which is a
-real staleness rather than a version-string one); sites where citations
-are still unlinked after `figure_sources` has run; and the
-datacentre-classed subset rather than the whole 359. Measure each
-before spending — the first is the one that genuinely invalidates a
-reading.
+- **A prompt A/B on terra before it is tried again for the readings**
+  (Luke proposed it 2026-08-31; unscheduled). Scored on the sites where
+  terra demonstrably lost figures, in both directions — figures
+  recovered *and* quantity-type flags retained — and against the
+  `reading-1.4` outcome, not the old baseline.
+- **A durable machine-reading model.** `gpt-5` is legacy at OpenAI; the
+  return to it was a deferral.
+- **Whether the script's `--model` default follows the decision.** It
+  is still `gpt-5.6-terra`; the runbook says pass `--model gpt-5` every
+  time. One line, Luke's call.
+- **`gpt-5.6-sol` as a deep reader**, untested.
+- **Which reader re-extracts what the local model read** (Phase 3,
+  below): the 2026-08-28 choice is the default position, not a decision.
 
 ## Changes waiting for a re-read they cannot justify on their own
 
@@ -245,6 +93,19 @@ currently on the table needs it.** The gate fix applies to future reads
 and recovers past ones offline; the re-gate reads nothing; adjudication
 is tier 1. Say which tier a parked item needs, so a cheap one is not
 held behind an expensive one's threshold.
+
+**Scoping a machine-reading re-read, when one is warranted** (established
+2026-08-31). Three cuts, in order of defensibility, each measured before
+spending: sites whose `input_hash` has moved — their stored reading
+describes a different document set, the one real staleness rather than a
+version-string one, and the cut a bare `--submit` already applies
+because `_already()` keys on the hash; sites whose citations are still
+unlinked after `mreading.figure_sources` has run — it resolves quotes
+copied from the structured facts to their document at export time, so
+an older reading already renders linked and a re-read buys the model
+citing natively plus the cases `figure_sources` drops because the text
+stands on more than one document; and the datacentre-classed subset
+rather than the whole.
 
 **One downstream cost the re-gate does create, and it is tier 1.** A
 recovered finding carrying a capacity figure reaches a site's power
