@@ -1082,8 +1082,7 @@ def _drive_folder_map() -> dict[str, str]:
         parent, _, name = key.partition("/")
         if parent != root:
             continue
-        out[_norm_key(name.split(" — ")[0])] = (
-            f"https://drive.google.com/drive/folders/{fid}")
+        out[_norm_key(name.split(" — ")[0])] = _drive.folder_url(fid)
     return out
 
 
@@ -1119,7 +1118,7 @@ def _drive_document_map(conn) -> dict[int, str]:
             SELECT DISTINCT ON (document_id) document_id, file_id
             FROM document_drive_files
             ORDER BY document_id, recorded_at DESC, id DESC""")
-        return {doc_id: f"https://drive.google.com/file/d/{fid}/view"
+        return {doc_id: _drive.file_url(fid)
                 for doc_id, fid in cur.fetchall()}
 
 
@@ -1159,7 +1158,34 @@ def _drive_application_map() -> dict[tuple[str, str], str]:
         parent, _, name = key.partition("/")
         site_key = site_key_by_id.get(parent)
         if site_key:
-            out[(site_key, name)] = f"https://drive.google.com/drive/folders/{fid}"
+            out[(site_key, name)] = _drive.folder_url(fid)
+    return out
+
+
+def _drive_adjacent_map() -> dict[str, str]:
+    """folder-name form of an adjacent-power application's ref -> Drive URL.
+
+    The adjacent-power schemes (issue #252) are staged under
+    `adjacent_power/` beside `sites/`, one folder per application, named
+    as a site's application folders are — so `clean_ref(ref)` is the key
+    here too. Same contract as the maps above: read-only, and absent
+    means not yet synced, so the caller leaves the link out rather than
+    building a URL that may 404.
+    """
+    if not DRIVE_LEDGER.exists():
+        return {}
+    try:
+        folders = json.loads(DRIVE_LEDGER.read_text()).get("folders", {})
+    except Exception:
+        return {}
+    roots = {v for k, v in folders.items() if k.endswith("/adjacent_power")}
+    if not roots:
+        return {}
+    out: dict[str, str] = {}
+    for key, fid in folders.items():
+        parent, _, name = key.partition("/")
+        if parent in roots:
+            out[name] = _drive.folder_url(fid)
     return out
 
 
@@ -1209,8 +1235,7 @@ def _drive_findings_map() -> dict[str, str]:
         if not Path(path).exists():
             continue
         folder = PurePosixPath(path).parent.name
-        out[_norm_key(folder.split(" — ")[0])] = (
-            f"https://drive.google.com/file/d/{fid}/view")
+        out[_norm_key(folder.split(" — ")[0])] = _drive.file_url(fid)
     return out
 
 

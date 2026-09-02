@@ -30,7 +30,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).parent.parent
 load_dotenv(ROOT / ".env")
 
-from dcp import corpus_stats, db  # noqa: E402
+from dcp import corpus_stats, db, repo  # noqa: E402
 
 
 def _render_markdown(
@@ -43,6 +43,7 @@ def _render_markdown(
     signals: dict,
     documents: dict,
     findings: dict,
+    zero_byte: list[dict] | None = None,
 ) -> str:
     lines: list[str] = []
     lines.append(f"# Corpus statistics — generated {generated_at.date().isoformat()}")
@@ -171,6 +172,18 @@ def _render_markdown(
         f"- **Applications with at least one document on file:** "
         f"{documents['apps_with_docs']}."
     )
+    if zero_byte is not None:
+        # Held but empty: a document row standing for bytes that are not
+        # there. Three arrived before the fetch guard existed and cannot
+        # be re-fetched (HISTORY, 2.8); a fourth would appear here.
+        lines.append(
+            f"- **Documents held as zero-byte files:** {len(zero_byte)}"
+            + (" — held but empty, unreadable by construction; each "
+               "counts above as a document fetched." if zero_byte else ".")
+        )
+        for row in zero_byte:
+            lines.append(f"  - `{row['application_ref']}` · {row['kind'] or 'unknown kind'}"
+                         f" · `{row['bytes_path']}`")
     lines.append("")
 
     # --- Findings ---
@@ -225,10 +238,12 @@ def main() -> int:
     generated_at = dt.datetime.now()
     with db.connect() as conn:
         stats = corpus_stats.collect(conn, model=args.model)
+        zero_byte = repo.zero_byte_documents(conn, ROOT)
 
     md = _render_markdown(
         model=args.model,
         generated_at=generated_at,
+        zero_byte=zero_byte,
         **stats,
     )
 

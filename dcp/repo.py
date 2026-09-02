@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 from typing import Any
 
 from psycopg2.extensions import connection as PgConnection
@@ -252,6 +253,50 @@ def check_document_body(body: bytes | None, *, url: str) -> None:
         raise EmptyDocumentBody(
             f"portal served a zero-length body for {url}"
         )
+
+
+def zero_byte_files(root: Path) -> list[Path]:
+    """Every regular file under `root` holding no bytes.
+
+    The corpus-wide form of the guard above — `find -size -1c` over the
+    store, as ROADMAP put it. The guard stops a fourth empty document
+    arriving; this is what notices the three that arrived before it
+    existed (HISTORY, 2.8), and would notice a fourth that came by a
+    path nobody guarded. `build_drive_staging.py` runs it over the tree
+    it just wrote — hard links into the store, so sweeping the tree is
+    sweeping the store — and prints the result every release;
+    `scripts/corpus_stats.py` reports the database's view through
+    `zero_byte_documents`.
+    """
+    root = Path(root)
+    return sorted(p for p in root.rglob("*")
+                  if p.is_file() and p.stat().st_size == 0)
+
+
+def zero_byte_documents(conn: PgConnection, root: Path) -> list[dict[str, Any]]:
+    """Documents whose recorded `bytes_path` resolves to an empty file.
+
+    The database's view of the same fact: a row in `documents` standing
+    for bytes that are not there. A relative `bytes_path` resolves
+    against `root`, the package root, never the working directory.
+    """
+    root = Path(root)
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT d.id, a.application_ref, d.kind, d.bytes_path, d.url
+            FROM documents d
+            JOIN applications a ON a.id = d.application_id
+            WHERE d.bytes_path IS NOT NULL""")
+        rows = cur.fetchall()
+    out: list[dict[str, Any]] = []
+    for doc_id, ref, kind, bytes_path, url in rows:
+        path = Path(bytes_path)
+        if not path.is_absolute():
+            path = root / bytes_path
+        if path.exists() and path.stat().st_size == 0:
+            out.append({"document_id": doc_id, "application_ref": ref,
+                        "kind": kind, "bytes_path": bytes_path, "url": url})
+    return out
 
 
 def record_document(

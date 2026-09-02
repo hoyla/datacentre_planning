@@ -67,6 +67,7 @@ from dcp.drive import WORKBOOK_SHEET_URL  # noqa: E402
 from dcp.drive import SITES_URL  # noqa: E402
 from dcp.drive import NOTEBOOK_URL  # noqa: E402
 from dcp.drive import PINPOINT_URL  # noqa: E402
+from dcp.drive import ADJACENT_POWER_URL  # noqa: E402
 
 # Statuses meaning "we have not looked yet", as against "they disclosed
 # nothing" — the distinction the page is built around.
@@ -2995,6 +2996,7 @@ def main() -> int:
     drive = hv._drive_folder_map()
     drive_apps = hv._drive_application_map()
     drive_csv = hv._drive_findings_map()
+    drive_adj = hv._drive_adjacent_map()
     n_apps_total = len(cover)
     n_docs = sum(c[0] for c in cover)
     # For the coverage sidebar (§2): how the applications divide on
@@ -4067,6 +4069,9 @@ def main() -> int:
                 + (f' · <a href="{esc(_aurl)}" target="_blank" '
                    f'rel="noopener">register</a>'
                    if _aurl and str(_aurl).startswith("http") else '')
+                + (f' · <a href="{esc(drive_adj[hv.clean_ref(_ref)])}" '
+                   f'target="_blank" rel="noopener">our copy</a>'
+                   if hv.clean_ref(_ref) in drive_adj else '')
                 + (f' · {_dist / 1000:.2f} km' if _dist is not None else '')
                 + f'<br>{esc(trim(_desc, 180))}'
                 + f'<br><span class="help">{esc(_evid)}</span></li>'
@@ -4086,7 +4091,11 @@ def main() -> int:
                 'fleet — stands beside this site rather than belonging '
                 'to it: its capacity could serve many purposes and is '
                 'not this site’s demand. Each entry records how '
-                'the connection is known.</p>'
+                'the connection is known. Their documents are held on '
+                f'Drive under <a href="{ADJACENT_POWER_URL}" '
+                'target="_blank" rel="noopener">adjacent_power</a>, '
+                'beside the site folders; an entry links its own folder '
+                'once that folder has been synced.</p>'
                 + (f'<ul class="adjlist">{_items}</ul>' if _items else '')
                 + _prox_note + '</div>')
         hay = " ".join(str(x or "").lower() for x in
@@ -6155,11 +6164,17 @@ def main() -> int:
     folders</a></p></div>
   <div class="part"><p class="kind">Gemini Notebook</p>
    <h3>Interrogate planning summaries on Notebook</h3>
-   <p class="what">Every site's report and its full findings table, one document per site,
+   <p class="what">The report and full findings table of every site this reader classes
+    as a datacentre — {rendered_classes[sclass.DATACENTRE]:,} of the
+    {sum(rendered_classes.values()):,} rows in its sites list — one document per site,
     loaded into a notebook you can question in plain language — "which sites mention gas
     turbines?", "who is the agent on the Slough applications?". It answers from these
     documents and cites the site it drew each answer from. What it holds is <b>this
-    project's summaries</b> of the corpus, not the council documents themselves.</p>
+    project's summaries</b> of the corpus, not the council documents themselves. The
+    other classes — disguise suspects, procedural-only and adjacent-power sites, and
+    schemes with no planning record — are in the site folders on Drive and in Pinpoint,
+    not here: a question about one of them gets nothing back from the notebook, which
+    is not the same as there being nothing.</p>
    <p class="when"><b>Reach for it when</b> the question spans sites and you would otherwise
     be opening folders one at a time. Check anything you intend to publish against the site
     row or the document itself — the notebook is a way in, not a source.

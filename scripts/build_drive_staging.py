@@ -113,7 +113,7 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-from dcp import db, extract, signals  # noqa: E402
+from dcp import db, extract, repo, signals  # noqa: E402
 from dcp import release as release_mod  # noqa: E402
 
 BAD = re.compile(r'[<>:"/\\|?*\x00-\x1f]+')
@@ -938,6 +938,22 @@ def main() -> None:
           f"per-site CSVs -> {final if not args.limit else out}")
     print(f"   adjacent power: {len(staged_adjacent)} applications, "
           f"{n_adj_docs} documents under {ADJACENT_DIR}/, beside sites/")
+
+    # A zero-byte document is a failed fetch stored before the guard
+    # existed (HISTORY, 2.8): three are known, none can be re-fetched,
+    # and nothing downstream tells "held and empty" from "held and
+    # silent". The tree is hard links into the store, so sweeping it is
+    # sweeping the store — and this runs every release, so a fourth would
+    # announce itself here rather than in somebody's export.
+    tree = final if not args.limit else out
+    empties = repo.zero_byte_files(tree)
+    print(f"   zero-byte documents in the tree: {len(empties)}"
+          + (" — held but empty, unreadable by construction:"
+             if empties else ""))
+    for path in empties[:10]:
+        print(f"     {path.relative_to(tree)}")
+    if len(empties) > 10:
+        print(f"     … and {len(empties) - 10:,} more")
 
     # What is NOT in the tree, said out loud, every run. The 2026-08-21
     # sync reported 50,406 candidates, 0 failed and 0 skipped over a tree
