@@ -40,6 +40,22 @@ SITES_URL = f"https://drive.google.com/drive/folders/{SITES_FOLDER_ID}"
 SNAPSHOTS_FOLDER_ID = "1NqIVr0y1aITvgAmQahatM3E4aCpBThlG"
 SNAPSHOTS_URL = f"https://drive.google.com/drive/folders/{SNAPSHOTS_FOLDER_ID}"
 
+# The adjacent-power schemes — substations, energy centres, standby
+# fleets consented in their own right — beside `sites` rather than inside
+# any site's folder, since issue #252 took the class out of site
+# membership (2026-08-30) and the 2.11 staging build found 744 held
+# documents with nowhere to go (2026-09-02). One folder per application,
+# each with an `_index.md` naming the sites the scheme stands beside.
+#
+# Created by the sync itself as a child of the root, so the id was read
+# back from the sync ledger (`SYNC_LEDGER`, key `<root>/adjacent_power`)
+# on 2026-09-02 and pinned here the way `SITES_FOLDER_ID` is: the reader
+# links the class as a whole, and a link is addressed by id, never by
+# name.
+ADJACENT_POWER_FOLDER_ID = "1uYTW6qRhekflqonDUHJj_ddSmRb1gQYX"
+ADJACENT_POWER_URL = (
+    f"https://drive.google.com/drive/folders/{ADJACENT_POWER_FOLDER_ID}")
+
 
 # The sync ledger: every folder and file the sync has created on Drive,
 # by path, so a re-run uploads only what changed and a rename reads as a
@@ -134,8 +150,12 @@ PHASE1_ARCHIVE_URL = (
     f"https://drive.google.com/drive/folders/{PHASE1_ARCHIVE_FOLDER_ID}")
 
 # The Gemini Notebook, built by hand from scripts/export_notebook_bundle.py
-# — one document per site, the site report with that site's findings
-# tabulated beneath it.
+# — one document per **datacentre-classed** site (the default since 2.10;
+# `--classes all` puts the other classes back), the site report with that
+# site's findings tabulated beneath it. The disguise suspects, the
+# procedural-only and adjacent-power sites and the no-planning-record
+# rows are on Drive, in Pinpoint, in the workbook and in the reader, and
+# not in the notebook.
 #
 # **New notebook for 2.10, created empty by Luke on 2026-08-28.** A
 # notebook's URL is fixed at creation and does not change as sources are

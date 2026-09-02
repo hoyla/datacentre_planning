@@ -1708,14 +1708,6 @@ here rather than applied from the build lane.
   constraint stands: parallelise the API calls, never the ledger
   writes.
 
-- **Where the offline reading-freshness check belongs in the release
-  chain** (the checks themselves shipped 2026-08-27; HISTORY). It is
-  not yet in the runbook, because rebuilding every input to re-hash it
-  costs ~35 minutes against a ten-minute build, and whether it runs
-  per release or per batch is an editorial call, not a build one. The
-  cheap half — `load_latest(live_only=True)` dropping readings whose
-  site key retired — runs every build already.
-
 - **Four editorial questions from the signal-family repair** (the
   repair itself — the missing-family backfill across 557,747 OpenAI
   and 49,039 local findings, and the snake_case token-boundary fix —

@@ -12,14 +12,14 @@ those two, which were the documents it kept duplicating.)
 
 ---
 
-## State — the base is 2.10, released; figures move, so read stamps, not this file
+## State — the base is 2.11, released; figures move, so read stamps, not this file
 
 Current state lives in two places, deliberately not here: the
 [ROADMAP](../ROADMAP.md) header for the corpus counts, and
 `scripts/corpus_stats.py` for the figures that move while the
 corroboration pass runs. Release runs themselves are recorded in
-[HISTORY](../HISTORY.md) — v2.7, the 2.9 evening, v2.10 — including
-each run's debrief. What stays in this section is only what remains
+[HISTORY](../HISTORY.md) — v2.7, the 2.9 evening, v2.10, v2.11 —
+including each run's debrief. What stays in this section is only what remains
 true between releases.
 
 **The deploy is `cloudrun/deploy.sh` — not a merge.** This document
@@ -113,9 +113,11 @@ The order is not cosmetic. Two steps must precede the artefacts or the
 handover ships wrong numbers, and one of them is enforced in code.
 
 The numbers now run in the order the steps run in: 0 to 15, top to
-bottom, with the search bundles at 13a — added 2026-08-29 because being
+bottom, with three lettered steps inserted where their timing demands:
+4a (the machine readings, 2026-09-01), 11a (the operator snapshots,
+2026-09-01) and 13a (the search bundles, added 2026-08-29 because being
 "off the chain, optional" is how the notebook went three releases stale
-and Pinpoint four. They did not until 2026-08-26, when the chain read 0, 1–4, 7, 5,
+and Pinpoint four). They did not until 2026-08-26, when the chain read 0, 1–4, 7, 5,
 6, 8, 9 and a reader had to hold the map in their head — which HISTORY
 records catching a bug for exactly once, and is not a system. Only 0, 1,
 2 and 7 kept their old numbers; anything citing another number from
@@ -300,6 +302,31 @@ one the readings run on: at the same prompt it states about a quarter of the
 figures, and `LATEST_SQL` would render it. A bare `--submit` would
 reintroduce that regression on every site whose inputs moved.
 
+**Then, once the collect is in, check that every rendered reading still
+describes its site** — per release, decided 2026-09-02, which closes
+the ROADMAP's question of whether this runs per release or per batch:
+
+```sh
+scripts/verify_reading_freshness.py --dry-run   # names the stale sites, writes nothing
+scripts/verify_reading_freshness.py             # marks them withheld, append-only
+```
+
+`--collect` compares each site's input hash at collection with the one
+it was submitted under, and until this step nothing checked again
+afterwards — so a reading collected on Monday still rendered on Friday
+against documents that arrived on Wednesday. The script rebuilds every
+site's input and re-hashes it, which costs about 8 seconds a site and
+~35 minutes for the corpus (measured 2026-08-27); that is why it is a
+step here and not a build-time guard, and why the build's own check is
+liveness alone (`load_latest(live_only=True)`). A site whose input has
+moved gets a new row under the model tag `freshness-check`, carrying
+the current hash, no reading and a withheld reason, so the reader shows
+its panel as withheld with the reason rather than rendering a stale
+reading — the same path a gate refusal takes, and re-runs are no-ops.
+If it names sites, either re-submit them (a bare `--submit` will pick
+them up, their hash having moved) and collect again before step 12, or
+let the marker stand for this release and say so in step 15.
+
 ### 5. Look at what moved
 
 ```sh
@@ -381,14 +408,18 @@ themselves into something other than pages, and 17,724 findings cite one
 of those divisions.
 
 ```sh
-scripts/export_handover.py --out data/exports/phase2.1_build/dc_handover_phase2.1.xlsx
-scripts/export_duckdb.py   --out data/exports/phase2.1_build/dc_phase2.1.duckdb
-scripts/export_reader.py   --out data/exports/phase2.1_build/reader.html \
-                           --phase 2.1 --publish index.html
+scripts/export_handover.py --out data/exports/phase<N>_build/dc_handover_phase<N>.xlsx
+scripts/export_duckdb.py   --out data/exports/phase<N>_build/dc_phase<N>.duckdb
+scripts/export_reader.py   --out data/exports/phase<N>_build/reader.html \
+                           --phase <N> --publish index.html
 ```
 
-**Pass `--phase 2`.** The title, header, stamp and the database's own
-filename in the reader all read from it; the default is still 1.
+**Pass `--phase` for a new release.** The title, header, stamp and the
+database's own filename in the reader all read from it. Since the R7
+change of 2026-09-01 it defaults to the newest release folder's phase
+rather than to 1 (which used to stamp the front page "phase 1 release"),
+and when you are building the *next* release the newest folder is the
+previous one, so the default is wrong by exactly one step.
 
 **Name the artefacts for the phase that produced them.** Phase 1
 published `dc_handover_phase1.xlsx` and `dc_phase1.duckdb` into this same
@@ -410,7 +441,7 @@ skipped they stop rather than shipping.
 ### 8. Diff against the last release — BEFORE anything is deployed
 
 ```sh
-scripts/release_diff.py data/exports/<new_build> --against data/exports/phase2.2_build
+scripts/release_diff.py data/exports/<new_build> --against data/exports/<previous_build>
 ```
 
 It counts what a reader can reach — links per site panel, rows per view,
@@ -490,7 +521,10 @@ that failed to stage still fails the run; `record_drive_ids.py` and
 `verify_drive_sample.py` read the folder name from the builder, so
 those documents get their ids recorded and can be sampled like any
 other. A pass now prints an `adjacent power: N applications, M
-documents` line beside the site count.
+documents` line beside the site count. The folder's Drive id is
+`dcp.drive.ADJACENT_POWER_FOLDER_ID`, read back from the sync ledger on
+2026-09-02, so anything that links the class as a whole addresses it by
+id, the way `sites/` and `operator_snapshots/` are.
 
 The per-site findings CSV carries four adjudication columns (*whose
 figure is this?*, quantity type, adjudicated MW, quantity note). Built
@@ -575,7 +609,7 @@ never deleted, so a wrong prune is a restore from the bin rather than a
 re-upload of 70GB.
 
 ```sh
-scripts/verify_drive_sample.py --sample 30 --phase 2.10   # the current phase
+scripts/verify_drive_sample.py --sample 30 --phase <N>   # the release you are shipping
 ```
 
 That is the check, now a script rather than a described intention.
@@ -952,6 +986,17 @@ The script verifies the live deployment refuses anonymous access before
 declaring success, so a failure there is the gate holding rather than
 the deploy failing.
 
+**What runs automatically, and what does not** (as of 2026-09-02).
+`.github/workflows/checks.yml` runs on every push to every branch: the
+no-database test suite, the two browser suites driving the committed
+`index.html`, and the middleware tests. It publishes nothing and holds
+no secret. No workflow deploys — the "publish button" (build, probe,
+then wait for Luke's approval in a GitHub Environment) is designed on
+the ROADMAP under Smaller things and is not built — so the deploy is
+this step, by hand, every release. The one-time IAP wiring is
+[cloudrun/CLOUDRUN.md](../cloudrun/CLOUDRUN.md); the script never
+touches it.
+
 Then the EdgeOne signpost. The probe still earns its place, but what
 it proves has changed: not that a gate refuses content, but that the
 redirect serves none. A deployment that serves nothing cannot leak the
@@ -980,7 +1025,8 @@ Say what moved, what is still a floor, and that disagreements between
 readers are kept rather than resolved. The reader's front page carries
 the caveats; the note should point at them rather than restate them.
 
-For this release specifically, three things belong in that note:
+Each release writes its own list at this step. The three that phase 2
+carried are kept as the shape of what belongs there:
 
 - **Coverage is now stated over prose.** If anyone saw the earlier "78%"
   or "201 of 455 sites not fully read", those counted drawings the deep
@@ -996,35 +1042,18 @@ For this release specifically, three things belong in that note:
 
 ---
 
-## Still outstanding after the phase 2 release — Luke's, not the runner's
+## Still outstanding — Luke's, not the runner's
 
-- **Build and upload the notebook bundle.** The bundle directory is
-  **absent from this checkout** — checked 2026-08-28. The earlier note
-  claiming "506 documents sit in `data/exports/notebook_bundle/`" was
-  not wrong when written: it was built on Luke's previous laptop, and
-  the directory is gitignored, so it did not travel. Whether those 506
-  were uploaded to the notebook before the machine changed is not
-  recorded anywhere and cannot be determined from here — ask before
-  assuming the step is outstanding. Rebuild it with
-  `scripts/export_notebook_bundle.py`, which reads the Drive staging tree
-  (2,131 markdown files present) and writes locally only.
-
-  **Build it AFTER step 9 rebuilds the staging tree, never before.** The
-  bundle is welded from the report prose that step 9 generates, so
-  building it against the previous release's staging produces a bundle
-  that looks current and is not.
-
-  **A new notebook needs its URL in `dcp/drive.py` before step 12**,
-  the build that publishes `index.html`. The full order is at the stop
-  in step 12 (Luke, 2026-08-28).
-
-  The Gemini Notebook is linked from the reader (`dcp/drive.py`
-  NOTEBOOK_URL) and holds whichever bundle was last uploaded by hand —
-  shared with the reporting team 2026-08-11, so roughly three releases
-  behind. Nothing in the chain refreshes it; the upload is manual.
-- **The Google Sheet is still titled `DC_handover_v2_phase1`.** Renaming
-  it is safe: `sheet_sync.py` resolves the spreadsheet by the id in
-  `WORKBOOK_SHEET_URL` and only prints the title. The **tab** names are
+- ~~**Build and upload the notebook bundle.**~~ Step 13a of the chain
+  since 2026-08-29. The 2.10 notebook was created empty on 2026-08-28
+  and filled from the rebuilt bundle; 2.11 needed nothing added. What
+  stays true: the upload is Luke's and manual, and a new notebook's URL
+  must be in `dcp/drive.py` before step 12.
+- **The Google Sheet's title.** Written of the phase-1 Sheet, which was
+  titled `DC_handover_v2_phase1`; 2.8 replaced the Sheet
+  (`WORKBOOK_SHEET_URL` in `dcp/drive.py`), so check the current one's
+  title before acting. Renaming is safe: `sheet_sync.py` resolves the
+  spreadsheet by id and only prints the title. The **tab** names are
   matched against the workbook's sheet names and must not change.
 - **`dc_handover_phase1.xlsx` is not in the phase 1 archive folder** with
   its database; it is in a third folder. Both are untrashed and keep
@@ -1033,11 +1062,6 @@ For this release specifically, three things belong in that note:
   truncates its inode, so rebuilding under the phase 1 name overwrote it
   through the staging hard link. The Drive copy is the only one left,
   which is why `--prune` exempts the tree root.
-- **A backup postdating the corrections has not been taken.** The most
-  recent verified dump predates them. Two adjudication rows changed and
-  the rule that changed them is in `correct_adjudications.py`, so it is
-  reproducible rather than fragile — but the next `backup_db.py` should
-  not be skipped.
 
 ---
 
@@ -1116,12 +1140,17 @@ For this release specifically, three things belong in that note:
 scripts/export_notebook_bundle.py            # -> data/exports/notebook_bundle/
 ```
 
-Not part of the release. It writes a local folder for hand-uploading to
-a Gemini Notebook and touches nothing else — not Drive, not the
-database, not the staging tree it reads.
+Step 13a of the chain since 2026-08-29. It writes a local folder for
+hand-uploading to a Gemini Notebook and touches nothing else — not
+Drive, not the database, not the staging tree it reads. **It exports
+datacentre-classed sites only by default** (`--classes all` for the
+rest), which is what pays for the per-document word budget; the
+disguise suspects, the procedural-only and adjacent-power sites and the
+no-planning-record rows stay on Drive, in Pinpoint, in the workbook and
+in the reader, and are not in the notebook.
 
-One document per site: the site report as written, then that site's
-findings as a markdown table beneath it. The Drive tree keeps them
+One document per datacentre-classed site: the site report as written,
+then that site's findings as a markdown table beneath it. The Drive tree keeps them
 apart, which is right for a folder and wrong for a notebook — 429 sites
 would arrive as 726 sources against a 600 limit, and a CSV uploaded as a
 source reads poorly.
