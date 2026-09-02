@@ -17,16 +17,12 @@ Findings and adjudication counts move while the corroboration pass
 runs and are deliberately not restated here — `scripts/corpus_stats.py`
 prints them, and each release states the boundary it was stamped at.
 
-**The base is 2.11, released** (Luke, 2026-09-02, PR #341; HISTORY,
-"v2.11 — the operator rung, and the release the guards earned").
-**The 2.12 candidate is built** (the evening of 2026-09-02; HISTORY,
-"v2.12 — the corpus release the evening earned"): artefacts in
-`data/exports/phase2.12_build/`, diffed against 2.11 with every line
-explained, synced to Drive with 2,561 ids recorded, the Sheet's two
-new tabs filled. It becomes the base when its release PR carries
-`index.html` after Luke's review; until then 2.11 is what Cloud Run
-serves, and `data/exports/phase2.11_build/` is the baseline the
-candidate's diff was read against. **Left for 2.13 by the freshness
+**The base is 2.12, released** (Luke, 2026-09-02, candidate #373 and
+release #374; HISTORY, "v2.12 — the corpus release the evening
+earned"). Artefacts in `data/exports/phase2.12_build/`, which is the
+baseline the next build's release diff is read against; Cloud Run
+serves it as revision `dc-reader-00008-drr`, deployed 21:26 the same
+evening with the IAP gate verified and the EdgeOne probe clean. **Left for 2.13 by the freshness
 check**: three readings withheld as stale and deferred as partly read
 — West London Technology Park (20 of 955 documents unread), the A41
 Watford Bypass (61 of 349), and the Mary Somerville Data Centre, which

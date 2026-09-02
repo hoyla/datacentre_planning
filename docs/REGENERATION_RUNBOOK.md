@@ -12,7 +12,7 @@ those two, which were the documents it kept duplicating.)
 
 ---
 
-## State — the base is 2.11, released, with the 2.12 candidate built; figures move, so read stamps, not this file
+## State — the base is 2.12, released; figures move, so read stamps, not this file
 
 Current state lives in two places, deliberately not here: the
 [ROADMAP](../ROADMAP.md) header for the corpus counts, and
