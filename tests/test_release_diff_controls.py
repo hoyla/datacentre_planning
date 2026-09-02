@@ -43,3 +43,15 @@ def test_reader_shape_uses_the_stripped_label(tmp_path):
     shape = rd.reader_shape(f)
     assert "Only datacentres" in shape.controls
     assert not any("(427)" in c or "(197)" in c for c in shape.controls)
+
+
+def test_the_bars_text_inputs_are_controls_named_by_id(tmp_path):
+    rd = _rd()
+    page = ('<div id="filterbar"><div class="controls">'
+            '<input type="search" id="q" placeholder="Search…">'
+            '<input type="search" id="near" placeholder="Near a postcode, e.g. SL1 4BG">'
+            '<select><option value="">All sites</option></select></div>\n</div>'
+            '<div id="filterbar-home" hidden></div>')
+    f = tmp_path / "reader.html"; f.write_text(page)
+    shape = rd.reader_shape(f)
+    assert "input#q" in shape.controls and "input#near" in shape.controls

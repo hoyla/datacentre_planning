@@ -3450,3 +3450,34 @@ build, deployed at 21:26 as Cloud Run revision `dc-reader-00008-drr`
 with anonymous requests verified redirected to sign-in on every probed
 path, and the EdgeOne signpost probe clean: 22 paths refused, forged
 cookie rejected. 2.12 is the base.
+
+## Near a postcode, built (2026-09-02/03)
+
+Luke asked for it the evening the Guardian's reader callout went out,
+kept it out of 2.12 on the session's advice so the release diff stayed
+readable and a person saw it first, and asked for it the moment 2.12
+was live. Built as specified: a second search-shaped box and a radius
+select beside the search input in the shared filter bar — the 2.3
+redesign removed the map's own controls so that one bar serves the
+table and the map, and a map-only box would have put that back — at
+sector precision from the 11,088 centroids derived from the August
+2026 ONS Postcode Directory (#370) and embedded in the page, so no
+lookup leaves it and the build stays a function of its inputs. "SL1
+4BG" resolves to sector SL1 4, about a kilometre; an outward code
+alone to the mean of its sectors; nonsense says "no such postcode
+sector" beside the count rather than emptying the table silently.
+Survivors reorder nearest first and carry their straight-line distance
+at the head of the row's grey line — not a new column, so the table
+keeps its shape and the diff its column count — and go back in their
+own order when the box clears. A site with no coordinate cannot be
+placed, is not shown, and is counted beside the count string, because
+to a reader "nothing near your postcode" reads as "no data centre".
+The state travels in the hash as `near:` and `km:`, "See on map"
+frames the radius rather than the survivors, a jump to one site clears
+it like the other filters, and the release diff now reads the bar's
+text inputs by id so the control is tracked. The directory's
+attribution renders beside the map's tile credit and in the
+methodology's sources. Driven headlessly on a scratch build and by a
+smoke test in CI: SL1 4BG within 5 km keeps the Slough Trading Estate's
+sites nearest first, states what cannot be placed, and restores the
+table on clearing.

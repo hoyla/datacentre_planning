@@ -734,3 +734,46 @@ def test_every_operator_rung_cell_is_labelled_in_the_built_page(built_reader):
         f"{len(campus_scope.load_displacements())} adjudicated "
         f"displacements alone — a build that ranked none of them would "
         f"pass the check above vacuously")
+
+
+def test_near_a_postcode_filters_orders_and_states_what_it_cannot_place(page):
+    """The control decided on 2026-09-02 at sector precision: SL1 4BG is
+    the Slough Trading Estate, so a small radius keeps the estate's sites
+    and drops the rest, the survivors come nearest first, the hash carries
+    it, and clearing it puts everything back."""
+    _reset(page)
+    page.fill("#near", "")
+    before, total = _count_text(page)
+    page.fill("#near", "SL1 4BG")
+    page.select_option("#nearkm", "5")
+    page.wait_for_timeout(200)
+    shown, _ = _count_text(page)
+    assert 0 < shown < before, (shown, before)
+    text = page.locator("#n").inner_text()
+    assert "cannot be placed" in text
+    assert "near:SL1%204BG" in page.url or "near:SL1 4BG" in page.url
+    assert "km:5" in page.url
+    kms = page.evaluate(
+        "() => [...document.querySelectorAll('#tbl-sites tr.site')]"
+        ".filter(r => r.style.display !== 'none')"
+        ".map(r => [parseFloat(r.dataset.km), r.querySelector('.skey .dist').hidden])")
+    assert kms and all(k <= 5 for k, _ in kms), kms[:5]
+    assert kms == sorted(kms), "survivors are not nearest first"
+    assert not any(hidden for _, hidden in kms), "a survivor's distance is not shown"
+    # an outward code alone resolves to the mean of its sectors
+    page.fill("#near", "SL1")
+    page.wait_for_timeout(200)
+    shown_out, _ = _count_text(page)
+    assert shown_out > 0
+    # nonsense says so rather than showing nothing silently
+    page.fill("#near", "ZZ99 9ZZ")
+    page.wait_for_timeout(200)
+    assert "no such postcode sector" in page.locator("#n").inner_text()
+    page.fill("#near", "")
+    page.wait_for_timeout(200)
+    after, _ = _count_text(page)
+    assert after == before
+    assert "near:" not in page.url
+    first = page.evaluate("() => document.querySelector('#tbl-sites tr.site').dataset.key")
+    original = page.evaluate("() => rows[0].dataset.key")
+    assert first == original, "rows were not put back in their own order"

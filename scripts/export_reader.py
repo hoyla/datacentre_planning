@@ -832,6 +832,10 @@ h2.sec:first-child{margin-top:0}
 input,select{font:inherit;font-size:15px;padding:9px 12px;border:1px solid #999;
   border-radius:4px;background:var(--bg);color:var(--fg)}
 input[type=search]{width:300px;min-width:0}
+/* "Near a postcode" — a second search-shaped box in the shared bar, and the
+   distance it puts at the head of a row's grey line while it is on. */
+#near{width:230px}
+.skey .dist{font-weight:700;color:var(--brand);margin-right:4px}
 select{width:auto}
 .count{color:var(--mut);font-size:14px;margin-left:auto}
 button.toggle{font:inherit;font-size:14px;padding:7px 14px;border:1px solid #999;
@@ -1896,6 +1900,7 @@ function showMap(siteKey, energyRef){
     document.getElementById('ms').checked=true;
     setWho(''); setCohort('');
     document.getElementById('q').value='';
+    document.getElementById('near').value='';
     document.getElementById('f').value='all';
     document.getElementById('o').value='';
     apply();
@@ -2014,6 +2019,13 @@ function seeAllOnMap(){
   // apply() told it. This frames the view around what is on it.
   show('map', true);
   const plotted=MAPPTS.filter(p=>p.k==='s'&&p.vis);
+  if(NEAR){
+    // The circle the table was filtered by, as the frame: its bounding
+    // box, so the reader sees the radius and not just the survivors.
+    const d=NEAR.km/111, dl=NEAR.km/(111*Math.cos(NEAR.lat*Math.PI/180));
+    soon(()=>{ map.userMoved=true; fitTo([{lat:NEAR.lat-d,lon:NEAR.lon-dl},{lat:NEAR.lat+d,lon:NEAR.lon+dl}]); });
+    return;
+  }
   soon(()=>{ if(plotted.length){ map.userMoved=true; fitTo(plotted); } else drawMap(); });
 }
 
@@ -2232,14 +2244,17 @@ function fromHash(){
     // filters are not the sender's — and the default filter hides
     // sites under 100 MW.
     goSite(h.slice(5));
-  } else if(h.startsWith('who:')||h.startsWith('cohort:')){
+  } else if(h.startsWith('who:')||h.startsWith('cohort:')||h.startsWith('near:')){
     // A filtered table, sent as a link. The tab comes first so the
     // rows exist to be filtered.
     show('sites', true);
     who=''; cohort='';
+    document.getElementById('near').value='';
     for(const part of h.split(';')){
       if(part.startsWith('who:')) who=part.slice(4);
       else if(part.startsWith('cohort:')) cohort=part.slice(7);
+      else if(part.startsWith('near:')) document.getElementById('near').value=part.slice(5);
+      else if(part.startsWith('km:')) document.getElementById('nearkm').value=part.slice(3);
     }
     paintChips(); apply(); sticky(); filterHash();
   } else if(TABS.includes(h)){
@@ -2345,9 +2360,61 @@ const rows=[...document.querySelectorAll('tr.site')];
 const q=document.getElementById('q'),f=document.getElementById('f'),
       o=document.getElementById('o'),n=document.getElementById('n'),
       sc=document.getElementById('sc');
+/* "Near a postcode" (ROADMAP, decided 2026-09-02). A control in the
+   shared bar, not on the map: the 2.3 redesign removed the map's own
+   controls so that one bar serves the table and the map. Sector
+   precision — "SL1 4BG" resolves to sector "SL1 4", about a kilometre,
+   and an outward code alone to the mean of its sectors — from centroids
+   embedded below as SECTORS, so no lookup leaves the page. The distance
+   is straight-line from the sector's centre to the site's own
+   coordinate; a site with no coordinate cannot be placed, is not shown,
+   and is counted beside the count string so the narrowing is visible. */
+let NEAR=null;   // {label, lat, lon, km} while a postcode is on
+function sectorKey(text){
+  const t=(text||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  const m=t.match(/^([A-Z]{1,2}[0-9][A-Z0-9]?)(?:([0-9])([A-Z]{2})?)?$/);
+  if(!m) return null;
+  return m[2] ? m[1]+' '+m[2] : m[1];
+}
+function resolveNear(text){
+  const k=sectorKey(text); if(!k) return null;
+  if(SECTORS[k]) return {label:k, lat:SECTORS[k][0], lon:SECTORS[k][1]};
+  let la=0, lo=0, cnt=0;
+  for(const s in SECTORS){ if(s.startsWith(k+' ')){ la+=SECTORS[s][0]; lo+=SECTORS[s][1]; cnt++; } }
+  return cnt ? {label:k, lat:la/cnt, lon:lo/cnt} : null;
+}
+function kmBetween(a,b,c,d){
+  const R=6371, r=Math.PI/180, x=(c-a)*r, y=(d-b)*r;
+  const h=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+// Rows are re-ordered by distance while a postcode is on, and put back
+// in their own order when it goes — the detail row travels with its
+// site, found by walking the body rather than assumed to be next.
+let nearOrdered=false;
+function orderRows(byKm){
+  const tb=document.querySelector('#tbl-sites tbody');
+  const pairs=[]; let cur=null;
+  [...tb.rows].forEach(r=>{
+    if(r.classList.contains('detail')&&cur){pairs[pairs.length-1][1]=r;}
+    else {pairs.push([r,null]); cur=r;}
+  });
+  pairs.sort((a,b)=>byKm
+    ? (parseFloat(a[0].dataset.km)||1e9)-(parseFloat(b[0].dataset.km)||1e9)
+    : rows.indexOf(a[0])-rows.indexOf(b[0]));
+  pairs.forEach(([r,d])=>{tb.appendChild(r); if(d) tb.appendChild(d);});
+}
 function apply(){
   const s=q.value.toLowerCase().trim(), mode=f.value, org=o.value,
         kind=sc.value; let shown=0;
+  const nearText=(document.getElementById('near').value||'').trim();
+  let unplaced=0, badNear=false;
+  NEAR=null;
+  if(nearText){
+    const r=resolveNear(nearText);
+    if(r) NEAR={...r, km:parseFloat(document.getElementById('nearkm').value)||10};
+    else badNear=true;
+  }
   // Rows that pass everything EXCEPT the cohort chip. The chips count
   // against this, so the number beside each one is what that chip would
   // leave from where the reader is standing — which is what the help
@@ -2368,6 +2435,13 @@ function apply(){
     // kind chosen every row is present, adjacency and suspects
     // included, which is the corpus as collected.
     if(ok&&kind)             ok=r.dataset.class===kind;
+    if(ok&&NEAR){
+      const la=parseFloat(r.dataset.lat), lo=parseFloat(r.dataset.lon);
+      if(isNaN(la)||isNaN(lo)){ ok=false; unplaced++; delete r.dataset.km; }
+      else { const d=kmBetween(NEAR.lat,NEAR.lon,la,lo); r.dataset.km=d.toFixed(1); ok=d<=NEAR.km; }
+    }
+    const dist=r.querySelector('.skey .dist');
+    if(dist){ if(NEAR&&ok){ dist.textContent=r.dataset.km+' km ·'; dist.hidden=false; } else dist.hidden=true; }
     if(ok) base.push(r);
     if(ok&&cohort)           ok=('|'+r.dataset.cohorts+'|').indexOf('|'+cohort+'|')>=0;
     r.style.display=ok?'':'none';
@@ -2383,6 +2457,12 @@ function apply(){
   n.textContent = cohort
     ? shown.toLocaleString()+' of '+inCohort.toLocaleString()+' sites in this cohort'
     : shown.toLocaleString()+' of '+rows.length.toLocaleString()+' sites';
+  // The narrowing a postcode causes is said beside the count: a site with
+  // no coordinate is not near anything, and silence would read as absence.
+  if(NEAR&&unplaced) n.textContent+=' · '+unplaced.toLocaleString()+' cannot be placed';
+  if(badNear) n.textContent+=' · no such postcode sector';
+  if(NEAR){ orderRows(true); nearOrdered=true; }
+  else if(nearOrdered){ orderRows(false); nearOrdered=false; }
   paintChipCounts(base);
   // Nothing to project is not a map worth opening. And the label says
   // "all" only when it means it (Luke, 2026-08-25): the link opens what
@@ -2408,6 +2488,8 @@ function filterHash(){
   const parts=[];
   if(who) parts.push('who:'+encodeURIComponent(who));
   if(cohort) parts.push('cohort:'+encodeURIComponent(cohort));
+  if(NEAR){ parts.push('near:'+encodeURIComponent(document.getElementById('near').value.trim()));
+            parts.push('km:'+NEAR.km); }
   history.replaceState(null,'', parts.length ? '#'+parts.join(';') : '#sites');
 }
 // The number beside each chip, recomputed against the rows that pass
@@ -2469,7 +2551,8 @@ function openCohort(k){
   return false;
 }
 
-[q,f,o,sc].forEach(el=>el.addEventListener('input',apply));
+[q,f,o,sc,document.getElementById('near'),document.getElementById('nearkm')]
+  .forEach(el=>el.addEventListener('input',()=>{apply(); filterHash();}));
 document.getElementById('seemap').addEventListener('click', seeAllOnMap);
 function wire(sel){
   document.querySelectorAll(sel+' > thead th').forEach((th,i)=>th.addEventListener('click',()=>{
@@ -4248,7 +4331,7 @@ def main() -> int:
 
         rendered_classes[site_classes[key].key] += 1
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
- data-known="{1 if known else 0}"
+ data-known="{1 if known else 0}" data-lat="{lat if lat else ''}" data-lon="{lon if lon else ''}"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="{est.value_mw or ''}"
  data-prov="{1 if is_prov else 0}" data-origin="{esc('|'.join(org))}"
  data-who="{esc(who['filter_key'])}" data-cohorts="{esc('|'.join(cohorts_of_site.get(key, ())))}"
@@ -4257,7 +4340,7 @@ def main() -> int:
  '' if site_classes[key].is_datacentre else
  f'<span class="classbadge" title="{esc(site_classes[key].display_description)}">'
  f'{esc(site_classes[key].label)}</span>'}{esc(trim(_shown(key, name), 84))}</span>
- <span class="skey">{esc(' · '.join([x for x in [key, trim(addr, 74), ', '.join(councils or [])] if x]))}</span>
+ <span class="skey"><span class="dist" hidden></span>{esc(' · '.join([x for x in [key, trim(addr, 74), ', '.join(councils or [])] if x]))}</span>
  <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}{
  '' if descriptive else ' — the register holds no description of the development itself, only procedural applications'}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
@@ -4483,12 +4566,13 @@ def main() -> int:
         body.append(f"""<tr class="site" data-key="{esc(key)}" data-hay="{esc(hay)}"
  data-known="0"
  data-near="{esc(near[0]['name'] if near else '')}" data-mw="" data-prov="0"
+ data-lat="{plat if plat else ''}" data-lon="{plon if plon else ''}"
  data-origin="Barbour ABI" data-who="{esc(who['filter_key'])}" data-cohorts=""
  data-class="{esc(_pcls.key)}">
 <td class="sitecell" data-v="{esc(_shown(key, title))}"><span class="sname">{
  '' if _pcls.is_datacentre else
  f'<span class="classbadge" title="{esc(_pcls.display_description)}">{esc(_pcls.label)}</span>'}{esc(trim(_shown(key, title), 84))}</span>
- <span class="skey">{esc(' · '.join([x for x in [key, trim(address or '', 74), authority or ''] if x]))}</span>
+ <span class="skey"><span class="dist" hidden></span>{esc(' · '.join([x for x in [key, trim(address or '', 74), authority or ''] if x]))}</span>
  <span class="sprop">{esc(trim(summary, 230)) or NO_DESCRIPTION}</span></td>
 <td data-v="{esc(who['sort'])}">{who['cell']}</td>
 <td class="sigcell" data-v="0"><span class="q">no signals</span></td>
@@ -5118,6 +5202,17 @@ def main() -> int:
         mp["vis"] = True
         mp["sel"] = False
     map_payload = json.dumps(map_points, separators=(",", ":"))
+    # "Near a postcode" (ROADMAP, decided 2026-09-02 at sector precision):
+    # one centroid per postcode sector, derived from the ONS Postcode
+    # Directory by scripts/derive_postcode_sectors.py and committed with
+    # its edition and attribution (DATA-LICENSING). Only the coordinates
+    # are embedded — a few hundred kilobytes — so the control works
+    # offline and the build stays a function of its inputs.
+    _sec = json.loads((Path(__file__).resolve().parent.parent / "data" / "external_sources"
+                       / "postcode_sectors.json").read_text())
+    sectors_payload = json.dumps({k: [v[0], v[1]] for k, v in _sec["sectors"].items()},
+                                 separators=(",", ":"))
+    onspd_edition, onspd_attribution = _sec["edition"], _sec["attribution"]
     # §8c. The map marks a cohort rather than filtering to one: the point
     # is to see where its sites sit among the rest, which a subset
     # cannot show. Registry order, like the chips.
@@ -5594,6 +5689,10 @@ def main() -> int:
    dataset, identified down to its planning references.</li>
   <li><b>The Planning Inspectorate's</b> national infrastructure register, for the energy
    layer.</li>
+  <li><b>The ONS Postcode Directory</b> ({esc(onspd_edition)}), reduced to one centroid per
+   postcode sector for the &ldquo;near a postcode&rdquo; control: the unweighted mean of a
+   sector&rsquo;s live postcodes&rsquo; positions, so a lookup is placed to about a kilometre and
+   never to a house. {esc(onspd_attribution)}.</li>
  </ul>
  <p class="m">Applications cluster into sites by explicit record links, family references and
  spatial proximity. Dense urban clusters merge conservatively, so the site count is a lower
@@ -6032,6 +6131,13 @@ def main() -> int:
 <div id="filterbar" hidden>
 <div class="controls">
  <input type="search" id="q" placeholder="Search site, council, address, applicant, proposal…">
+ <input type="search" id="near" placeholder="Near a postcode, e.g. SL1 4BG" autocomplete="postal-code"
+  title="Sites within the chosen distance of a postcode sector. SL1 4BG is placed at the centre of sector SL1 4 — about a kilometre — and an outward code alone (SL1) at the centre of its sectors.">
+ <select id="nearkm" title="Straight-line distance from the postcode sector&#x27;s centre">
+  <option value="5">within 5 km</option>
+  <option value="10" selected>within 10 km</option>
+  <option value="25">within 25 km</option>
+ </select>
  <select id="f">
   <option value="all">All sites</option>
   <option value="power">Only sites with a power figure</option>
@@ -6424,7 +6530,8 @@ def main() -> int:
    where you click.</p>
   <p class="help attrib">Tiles © <a href="https://www.openstreetmap.org/copyright"
    target="_blank" rel="noopener">OpenStreetMap</a> contributors. Sites without
-   coordinates are absent.</p>
+   coordinates are absent. Postcode sectors from the ONS Postcode Directory
+   ({esc(onspd_edition)}): {esc(onspd_attribution)}.</p>
  </aside>
  <div id="mapview">
   <div id="maptiles"></div><div id="mappins"></div>
@@ -6453,7 +6560,8 @@ def main() -> int:
  contact details are excluded throughout. Distances are straight-line, to the nearest site we
  hold coordinates for. A blank stated capacity on an energy project means its PINS page states
  none.</footer>
-<script>const MAPPTS={map_payload};</script>
+<script>const MAPPTS={map_payload};
+const SECTORS={sectors_payload};</script>
 <script>{MAP_JS}{JS}initMap();</script></body></html>"""
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
