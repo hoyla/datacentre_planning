@@ -2756,6 +2756,45 @@ chain stranded, outside the datacentre-only export.
 
 ---
 
+## Membership settled before the campus review (2026-09-02)
+
+The first materialise after #351 and #352, run by Luke from an
+up-to-date main after a dry run that matched the measured shape line
+for line: `sites_new 0, sites_updated 501, sites_retired 0,
+sites_revived 0, members 2,245, members_retired_with_site 65`. The
+universe went from 1,978 to **1,999 applications** in the same 501
+sites — the 21 the family door now unites with the member that admitted
+them (most of them Houghton Regis North's unlocated reserved matters,
+two VIRTUS stem-37977 applications into Stockley Park, Longcross's two
+Surrey Heath parent permissions) — and one application moved: the
+Blyth substation amendment carrying the 99.9 MW offshore-wind figure
+left Cambois for the substation partition it cites, which the 2.7
+partition intended and could not reach while family edges through
+`not_dc` were skipped. The 65 membership rows left live on sites
+retired since 6 August went with their sites, the class behind #349.
+No key changed, so nothing keyed on a site — `campus_scope.yaml`,
+`site_facilities.yaml`, the aliases, the operator pages — moved under
+the campus review that follows.
+
+Verified against the database afterwards rather than read off the
+summary: 501 live sites; 1,999 application and 246 project memberships
+live; zero stale rows; the named joiners in the sites predicted; the
+unsited `not_dc` set holding documents down from 76 applications and
+4,012 documents to 61 and 1,701, of which five are adjacent power's
+paperwork under #352's rule, leaving 56 for the workbook's Excluded
+applications sheet. What follows automatically: the six sites whose
+membership moved re-read at the next step 4a, and the paperwork, the
+four #349 applications and the 21 joiners get their Drive folders at the
+next staging build and sync.
+
+Why now rather than with the next release: the campus review writes
+files keyed on site keys, and a materialise that could re-key sites had
+to land first or the curation would be redone. It could not re-key
+anything, as the dry run showed, but knowing that is the point of
+running it before rather than after.
+
+---
+
 ## The workbook names what it leaves out (2026-09-02)
 
 The third piece of the `not_dc` resolution. The staging build's
