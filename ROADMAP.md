@@ -1412,6 +1412,52 @@ field and is not publishable as it stands.
   addresses are leads, not sources: Datacenters.com places LONDON10 at
   Iron Mountain's 110 Buckingham Avenue against a Companies House charge
   and the building's own application at 75.
+- **NTT's Slough 2 and Slough 3 have no planning record** (2026-09-02;
+  Luke saw the signage on Street View). NTT's own pages put them at 670
+  and 665 Ajax Avenue, SL1 4BG, at 1.8 and 2.7 MW of critical IT load
+  — Gyron's old Slough estate, small and pre-window. The corpus holds
+  no application and no Barbour project there; the nearest record is
+  Segro's GB One shell at 650-660, the same postcode, a different
+  building. The Environment Agency register holds NTT's permit at
+  665-670 (EPR/YP3633QA, 2022) with no document and so no figure, now
+  listed under `considered` in `environment-agency-permit-matches.yaml`
+  rather than left untested. The claims are loaded unmatched
+  (`operator-claims.yaml`, NTT Slough 2 and 3) and are the first rows
+  of the unsited-claims layer below. NTT's other three UK locations are
+  held — Dagenham, London Colney, and Hemel Hempstead under Gyron's
+  name — which is the same blind spot as Segro's for VIRTUS, and the
+  reason `organisation_aliases.yaml` now carries NTT's four names.
+- **ServerChoice's Stevenage data centre** (2026-09-02, Luke). The
+  operator's site lists three facilities. Harlow ("the largest DC
+  campus in the UK, 43 MVA to site, 160,000 sqft") matches Kao Data's
+  campus by every figure and ServerChoice's chief executive is quoted
+  on Kao's own page, so that one is a reseller's page for a site the
+  corpus holds (`PTNO-12240972`) — a red herring, as Luke said, though
+  the tenancy is not confirmed from a primary source. London is a
+  Farringdon building of "91,000 sqft spread over 4 floors" with no
+  address on the page, a tenancy in someone else's building, whose not
+  established. Stevenage is the real one: "Opened in 2008", "New data
+  halls opening 2021", at or near the company's address at Unit H,
+  Gateway 1000, Whittle Way, SG1 2FP. Nothing in the corpus is at that
+  address; the nearest record is GSK's security fence 470 m away, and
+  the eight Stevenage applications held are GSK's, MBDA's and
+  Fujitsu's. A spatial sweep at SG1 2FP (51.8887, -0.2047) would say
+  whether the 2021 halls were filed under the landlord's name; the
+  2008 building predates the window either way.
+- **A durable home for operator-claimed facilities with no planning
+  record** — the unsited-claims layer. Today these live in three places
+  as prose or sheet rows: the operator-pages sheet's tier-four rows,
+  the permit file's `considered` block (Equinix LD5 and LD11x, Amazon's
+  Slough plant, Woking, Narborough, Stockley Park's 470 MWth), and this
+  list. None reaches the reader or the workbook, so a reporter cannot
+  see "the operator says there is a building here and we have no
+  planning record". Design in `docs/PLAN_UNSITED_CLAIMS.md`: claims,
+  not sites; every row with its identity source, snapshot and date, an
+  address with what corroborates it, and a `why_absent` that is tested
+  or marked untested; fed by the operator snapshots, the unmatched
+  permits with their grid references, and directories as leads only;
+  rendered as a workbook sheet and a reader section with counts by
+  reason; doubling as the queue for register sweeps.
 - **Elsham Wolds states three power figures that do not reconcile with
   each other** (found 2026-08-31, and verified against the cached page
   text rather than taken from the reading that surfaced it). The Energy
@@ -2288,6 +2334,23 @@ None is abandoned; each is a known, scoped piece of work.
   and puts SL1 4PF on 110. Postcode is a matching key, so one of the
   two is wrong and the conflict has to be resolved rather than
   averaged.
+
+  **Site 11 is the next partition candidate** (2026-09-02, found while
+  matching NTT's Hemel Hempstead pages). `PTNO-12063929` is Gyron's
+  estate-scale record — "GYRON LIMITED - NEW DATA CENTRE AND STORAGE
+  FACILITY", The Campus, Maylands Avenue — holding seven Dacorum
+  applications across Maylands Avenue, Spring Way, Finway Road and
+  Blossom Way plus Amazon's Barbour project at 45 Maylands Avenue
+  (12700933). NTT's own pages place Hemel Hempstead 2, 3 and 4 at 150
+  Maylands Avenue HP2 7DF, Campus, Spring Way HP2 7TN, and 1 Blossom
+  Way HP2 4ZB; Amazon's Hemel permit (222 MWth, held under
+  `considered`) is at 3A Blossom Way, HP2 4ZB. Two operators on one
+  street in one record is the site-23 shape exactly, and it is why
+  NTT's three Hemel claims are matched `probable`, not strong. The
+  Iron Mountain rule applies: draw NTT's campus from its own pages,
+  and what is left is Amazon's — or the same building under a tenant's
+  permit, which is the question a partition would have to answer
+  first.
 - **Requests outstanding, and three drafted awaiting Luke's send.**
   NESO and Ofgem were written to on 2026-08-12 and replies are due
   around 10 September. The three never-sent requests are now drafted in
