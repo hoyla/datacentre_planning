@@ -135,8 +135,10 @@ IN_UNIVERSE_SQL = """
      WHERE d.bytes_path IS NOT NULL
        AND l.verdict = 'adjacent_power'
        AND NOT EXISTS (SELECT 1 FROM site_members m
+                          JOIN sites s ON s.id = m.site_id
                         WHERE m.application_id = d.application_id
-                          AND m.retired_at IS NULL)
+                          AND m.retired_at IS NULL
+                          AND s.retired_at IS NULL)
 """
 
 # The sampled documents, plus every sibling in the same application:

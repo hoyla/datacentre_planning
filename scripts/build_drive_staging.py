@@ -359,6 +359,15 @@ UNTRIAGED = "(not triaged)"
 ADJACENT_VERDICT = "adjacent_power"
 ADJACENT_DIR = "adjacent_power"
 
+# "No membership" means no membership ON A LIVE SITE. The materialise
+# retires a site that no longer emerges from the clustering but leaves
+# its `site_members` rows unretired, so an application whose only
+# membership is on a retired site looked like a member here, was not
+# staged under `adjacent_power/`, is in no live site's folder either,
+# and its documents had no Drive home at all — four applications, 144
+# documents, found 2026-09-02 while verifying the reader's new links,
+# their old site folders already pruned. `record_drive_ids.py` and
+# `verify_drive_sample.py` carry the same clause; the three must agree.
 ADJACENT_SQL = f"""
     WITH latest AS (
       SELECT DISTINCT ON (application_id) application_id, verdict
@@ -369,8 +378,10 @@ ADJACENT_SQL = f"""
       JOIN latest l ON l.application_id = a.id
      WHERE l.verdict = '{ADJACENT_VERDICT}'
        AND NOT EXISTS (SELECT 1 FROM site_members m
+                          JOIN sites s ON s.id = m.site_id
                         WHERE m.application_id = a.id
-                          AND m.retired_at IS NULL)
+                          AND m.retired_at IS NULL
+                          AND s.retired_at IS NULL)
        AND EXISTS (SELECT 1 FROM documents d
                     WHERE d.application_id = a.id
                       AND d.bytes_path IS NOT NULL)
