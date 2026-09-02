@@ -113,6 +113,7 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
+from dcp import adjacent_power as _adj  # noqa: E402
 from dcp import db, extract, repo, signals  # noqa: E402
 from dcp import release as release_mod  # noqa: E402
 
@@ -359,32 +360,23 @@ UNTRIAGED = "(not triaged)"
 ADJACENT_VERDICT = "adjacent_power"
 ADJACENT_DIR = "adjacent_power"
 
-# "No membership" means no membership ON A LIVE SITE. The materialise
-# retires a site that no longer emerges from the clustering but leaves
-# its `site_members` rows unretired, so an application whose only
-# membership is on a retired site looked like a member here, was not
-# staged under `adjacent_power/`, is in no live site's folder either,
-# and its documents had no Drive home at all — four applications, 144
-# documents, found 2026-09-02 while verifying the reader's new links,
-# their old site folders already pruned. `record_drive_ids.py` and
-# `verify_drive_sample.py` carry the same clause; the three must agree.
-ADJACENT_SQL = f"""
-    WITH latest AS (
-      SELECT DISTINCT ON (application_id) application_id, verdict
-        FROM triage ORDER BY application_id, inserted_at DESC)
+# WHICH applications belong here is decided once, in
+# `dcp.adjacent_power.staged_applications`, and read by this script, by
+# `record_drive_ids.py` and by `verify_drive_sample.py`. Each used to
+# carry its own copy of the rule, and on 2026-09-02 the copies agreed
+# with each other and disagreed with the materialise about what "a
+# member" meant — four applications' documents with no Drive home
+# (#349). The shared rule also brings in a scheme's own paperwork: a
+# discharge or amendment whose parent is an adjacent-power application
+# is triaged `not_dc` (it is not a data centre and its text ties it only
+# to its parent), so by verdict it fell to the shortfall's "excluded by
+# decision" while its parent had a folder. Union Park's four discharges,
+# 44 documents, until this landed.
+ADJACENT_APPS_SQL = """
     SELECT a.id, a.application_ref, a.url, a.status,
            a.date_received, a.date_decided, a.description
       FROM applications a
-      JOIN latest l ON l.application_id = a.id
-     WHERE l.verdict = '{ADJACENT_VERDICT}'
-       AND NOT EXISTS (SELECT 1 FROM site_members m
-                          JOIN sites s ON s.id = m.site_id
-                        WHERE m.application_id = a.id
-                          AND m.retired_at IS NULL
-                          AND s.retired_at IS NULL)
-       AND EXISTS (SELECT 1 FROM documents d
-                    WHERE d.application_id = a.id
-                      AND d.bytes_path IS NOT NULL)
+     WHERE a.id = ANY(%s)
      ORDER BY a.application_ref
 """
 
@@ -417,17 +409,23 @@ scheme stands beside and why.
 
 
 def stage_adjacent_power(out: Path, apps, docs_by_app,
-                         related) -> tuple[set[str], int]:
-    """Stage every membership-less adjacent-power application.
+                         related, why=None) -> tuple[set[str], int]:
+    """Stage every application that belongs under `adjacent_power/`.
 
-    `apps` are `ADJACENT_SQL` rows, `docs_by_app` the same document
-    rows the site loop uses (so `document_filenames` numbers them
-    identically, and `record_drive_ids.py` and `verify_drive_sample.py`
-    derive the same names), `related` the `RELATED_SQL` rows keyed by
-    application id. Returns the references staged and the document
+    `apps` are `ADJACENT_APPS_SQL` rows for the ids
+    `dcp.adjacent_power.staged_applications` returned, `docs_by_app` the
+    same document rows the site loop uses (so `document_filenames`
+    numbers them identically, and `record_drive_ids.py` and
+    `verify_drive_sample.py` derive the same names), `related` the
+    `RELATED_SQL` rows keyed by application id, and `why` that
+    function's dict — a scheme's own paperwork names its parent in its
+    index and lists the sites the parent stands beside, since the
+    relationship table has rows for the parent and none for a discharge
+    of its conditions. Returns the references staged and the document
     count; an application with nothing held is skipped and not counted
     as staged, so the shortfall guard still sees it.
     """
+    why = why or {}
     root = out / ADJACENT_DIR
     staged: set[str] = set()
     n_docs = 0
@@ -441,13 +439,28 @@ def stage_adjacent_power(out: Path, apps, docs_by_app,
                  f"Source: {url or 'obtained by hand'}", ""]
         if desc:
             index += [f"> {desc.strip()[:600]}", ""]
-        index += [f"- **Status:** {status or 'unknown'}"
-                  f"  |  received {received or '—'}"
-                  f"  |  decided {decided or '—'}",
-                  "- **Adjacent power, not a site member:** this scheme's "
-                  "capacity is not any site's demand; see the reader's "
-                  "'Adjacent power' box on the sites below.", ""]
-        rel = related.get(app_id, [])
+        info = why.get(app_id) or {}
+        parent_ref = info.get("parent_ref")
+        if parent_ref:
+            index += [f"- **Status:** {status or 'unknown'}"
+                      f"  |  received {received or '—'}"
+                      f"  |  decided {decided or '—'}",
+                      f"- **Paperwork of an adjacent-power scheme, not a "
+                      f"site member:** a discharge, amendment or variation "
+                      f"of `{parent_ref}` (folder `{app_dir_name(parent_ref)}` "
+                      f"beside this one). Triage calls it `not_dc` because "
+                      f"it is not a data centre and its text ties it only "
+                      f"to that parent; it is filed here so the scheme's "
+                      f"paperwork stays with the scheme.", ""]
+            rel = related.get(info.get("parent_id"), [])
+        else:
+            index += [f"- **Status:** {status or 'unknown'}"
+                      f"  |  received {received or '—'}"
+                      f"  |  decided {decided or '—'}",
+                      "- **Adjacent power, not a site member:** this scheme's "
+                      "capacity is not any site's demand; see the reader's "
+                      "'Adjacent power' box on the sites below.", ""]
+            rel = related.get(app_id, [])
         if rel:
             index.append("Stands beside:")
             for key, name, basis, dist in rel:
@@ -504,8 +517,11 @@ def unstaged_documents(cur, staged_adjacent=frozenset()) -> list[tuple[str, str,
     absence from it is not on purpose.
     """
     cur.execute(UNSTAGED_SQL)
+    # Anything this build wrote under adjacent_power/ is staged, whatever
+    # its verdict: a scheme's own discharges are `not_dc` and were being
+    # reported as "held but not staged" while sitting in the tree.
     return [(v, ref, n) for v, ref, n in cur.fetchall()
-            if not (v == ADJACENT_VERDICT and ref in staged_adjacent)]
+            if ref not in staged_adjacent]
 
 
 def shortfall_lines(rows: list[tuple[str, str, int]],
@@ -887,14 +903,15 @@ def main() -> None:
     n_adj_docs = 0
     if not args.limit:
         with db.connect() as conn, conn.cursor() as cur:
-            cur.execute(ADJACENT_SQL)
+            adjacent_why = _adj.staged_applications(cur)
+            cur.execute(ADJACENT_APPS_SQL, (list(adjacent_why),))
             adjacent_apps = cur.fetchall()
             cur.execute(RELATED_SQL)
             related: dict[int, list] = defaultdict(list)
             for app_id, key, name, basis, dist in cur.fetchall():
                 related[app_id].append((key, name, basis, dist))
         staged_adjacent, n_adj_docs = stage_adjacent_power(
-            out, adjacent_apps, docs_by_app, related)
+            out, adjacent_apps, docs_by_app, related, why=adjacent_why)
 
     # Root artefacts. Three things and no more: the documents, the
     # workbook, and the database. The explanatory material — README,

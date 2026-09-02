@@ -219,6 +219,104 @@ def relations(conn, *, proximity_km: float = PROXIMITY_KM) -> list[Relation]:
     return out
 
 
+# ---------------------------------------------------------------------------
+# What belongs under `adjacent_power/` on Drive
+# ---------------------------------------------------------------------------
+
+STAGED_VERDICT_SQL = """
+WITH v AS ({verdict_sql})
+SELECT a.id, a.application_ref
+FROM applications a
+JOIN v ON v.application_id = a.id
+WHERE v.verdict = 'adjacent_power'
+  AND NOT EXISTS (SELECT 1 FROM site_members m
+                    JOIN sites s ON s.id = m.site_id
+                   WHERE m.application_id = a.id
+                     AND m.retired_at IS NULL AND s.retired_at IS NULL)
+  AND EXISTS (SELECT 1 FROM documents d
+               WHERE d.application_id = a.id AND d.bytes_path IS NOT NULL)
+ORDER BY a.application_ref
+""".format(verdict_sql=VERDICT_SQL)
+
+# Every application that is in no live site and holds documents, with the
+# two fields a family reference can live in. The paperwork of an
+# adjacent-power scheme — a conditions discharge, a non-material
+# amendment, a variation — is triaged `not_dc` by the rubric (it is not a
+# data centre and its description ties it to nothing but its parent), so
+# it is found by reading the reference, never the verdict.
+UNSITED_SQL = """
+SELECT a.id, a.application_ref, a.raw_metadata->>'associated_id',
+       left(coalesce(a.description, ''), 600)
+FROM applications a
+WHERE NOT EXISTS (SELECT 1 FROM site_members m
+                    JOIN sites s ON s.id = m.site_id
+                   WHERE m.application_id = a.id
+                     AND m.retired_at IS NULL AND s.retired_at IS NULL)
+  AND EXISTS (SELECT 1 FROM documents d
+               WHERE d.application_id = a.id AND d.bytes_path IS NOT NULL)
+"""
+
+
+def staged_applications(cur) -> dict[int, dict]:
+    """The applications whose documents belong under `adjacent_power/`.
+
+    One implementation for the three scripts that have to agree on it —
+    `build_drive_staging.py`, which writes the tree; `record_drive_ids.py`,
+    which records where each file landed; `verify_drive_sample.py`, whose
+    sample frame must cover every document the builder stages. On
+    2026-09-02 each carried its own copy of the rule and the copies
+    disagreed with the materialise about what "a member" meant, which
+    left four applications' documents with no Drive home (#349).
+
+    Two classes, both requiring no membership of a live site and at least
+    one document with bytes:
+
+    - **verdict**: the latest dc_build verdict is `adjacent_power`. The
+      scheme itself — a substation, an energy centre, a battery.
+    - **paperwork of one**: any other application whose family reference
+      (`associated_id`, else a three-segment reference in its
+      description) names a verdict-class application. A discharge of the
+      substation consent's conditions, an amendment to its layout. The
+      rubric calls these `not_dc`, correctly — they are not data centres
+      and their text ties them only to their parent — and the shortfall
+      guard used to treat that verdict as "excluded by decision", so
+      Union Park's four discharges (44 documents) sat in no folder while
+      their parent had one.
+
+    Returns `{application_id: {"ref", "why", "parent_id", "parent_ref"}}`,
+    `why` being `"verdict"` or `"paperwork"`.
+    """
+    from dcp.sources.planit import _extract_candidate_refs
+
+    cur.execute(STAGED_VERDICT_SQL)
+    out: dict[int, dict] = {
+        app_id: {"ref": ref, "why": "verdict", "parent_id": None,
+                 "parent_ref": None}
+        for app_id, ref in cur.fetchall()}
+    by_ref = {info["ref"].upper(): app_id for app_id, info in out.items()}
+    if not by_ref:
+        return out
+
+    cur.execute(UNSITED_SQL)
+    for app_id, ref, assoc, desc in cur.fetchall():
+        if app_id in out:
+            continue
+        cands = _extract_candidate_refs(assoc) if assoc else []
+        if not cands and desc:
+            cands = [c for c in _extract_candidate_refs(desc)
+                     if c.count("/") >= 2]
+        council = ref.split("/", 1)[0].upper()
+        for cand in cands:
+            parent = (by_ref.get(f"{council}/{cand}".upper())
+                      or by_ref.get(cand.upper()))
+            if parent is not None and parent != app_id:
+                out[app_id] = {"ref": ref, "why": "paperwork",
+                               "parent_id": parent,
+                               "parent_ref": out[parent]["ref"]}
+                break
+    return out
+
+
 def materialise(conn, *, proximity_km: float = PROXIMITY_KM) -> dict:
     """Write the relationships, retiring rows that no longer hold.
 

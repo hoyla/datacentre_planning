@@ -46,6 +46,7 @@ from pathlib import Path, PurePosixPath
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from dcp import adjacent_power as _adj  # noqa: E402
 from dcp import db  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -64,26 +65,21 @@ DOCUMENTS_SQL = """
     JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
     ORDER BY a.id, s.site_key, d.fetched_at, d.id"""
 
-# And the other class the builder stages: adjacent-power applications,
-# which since #252 have no site membership and since 2026-09-02 sit
-# under `adjacent_power/` beside `sites/`. Without this their ids were
-# never recorded, so after a prune the reader would have kept linking
-# the binned copies under the sites they used to belong to.
+# And the other class the builder stages: the applications under
+# `adjacent_power/` beside `sites/` — the schemes #252 took out of
+# membership and, since 2026-09-02, their own paperwork. Which
+# applications those are is decided once, in
+# `dcp.adjacent_power.staged_applications`, so this script cannot record
+# a different tree from the one the builder wrote. Without this their
+# ids were never recorded, so after a prune the reader would have kept
+# linking the binned copies under the sites they used to belong to.
 ADJACENT_DOCUMENTS_SQL = """
-    WITH latest AS (
-      SELECT DISTINCT ON (application_id) application_id, verdict
-        FROM triage ORDER BY application_id, inserted_at DESC)
     SELECT a.id, a.application_ref,
            d.id, d.url, d.kind, d.content_sha256, d.bytes_path, d.fetched_at
     FROM documents d
     JOIN applications a ON a.id = d.application_id
-    JOIN latest l ON l.application_id = a.id
-    WHERE l.verdict = 'adjacent_power'
+    WHERE a.id = ANY(%s)
       AND d.bytes_path IS NOT NULL
-      AND NOT EXISTS (SELECT 1 FROM site_members m
-                        JOIN sites s ON s.id = m.site_id
-                       WHERE m.application_id = a.id
-                         AND m.retired_at IS NULL AND s.retired_at IS NULL)
     ORDER BY a.id, d.fetched_at, d.id"""
 
 
@@ -166,7 +162,8 @@ def main() -> int:
 
         # The adjacent-power tree, through the same naming function.
         with conn.cursor() as cur:
-            cur.execute(ADJACENT_DOCUMENTS_SQL)
+            cur.execute(ADJACENT_DOCUMENTS_SQL,
+                        (list(_adj.staged_applications(cur)),))
             adj_rows = cur.fetchall()
         adj_by_app: dict[int, list] = defaultdict(list)
         adj_ref: dict[int, str] = {}

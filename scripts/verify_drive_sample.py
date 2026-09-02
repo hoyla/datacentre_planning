@@ -59,6 +59,7 @@ from dotenv import load_dotenv  # noqa: E402
 
 load_dotenv(ROOT / ".env")
 
+from dcp import adjacent_power as _adj  # noqa: E402
 from dcp import db  # noqa: E402
 from dcp import release  # noqa: E402
 from dcp.drive import FOLDER_ID, SYNC_LEDGER  # noqa: E402
@@ -112,16 +113,14 @@ def parent_chain(svc, file_id: str, stop_at: str, limit: int = 8) -> list[str]:
 
 # Every document we hold that the builder is supposed to stage: one whose
 # application has a live site membership, or — since 2026-09-02 — one
-# whose application is an adjacent-power scheme with no membership,
-# staged under `adjacent_power/` beside `sites/`. The complement of this
-# set is what `build_drive_staging.py` counts and refuses on; between
-# them the two cover every document with bytes on disk. A frame that
-# left the adjacent class out could never see one of its documents go
-# missing, which is the reason this script samples the universe at all.
+# whose application belongs under `adjacent_power/` beside `sites/`,
+# which `dcp.adjacent_power.staged_applications` decides for the builder,
+# the recorder and this script alike. The complement of this set is what
+# `build_drive_staging.py` counts and refuses on; between them the two
+# cover every document with bytes on disk. A frame that left the adjacent
+# class out could never see one of its documents go missing, which is
+# the reason this script samples the universe at all.
 IN_UNIVERSE_SQL = """
-    WITH latest AS (
-      SELECT DISTINCT ON (application_id) application_id, verdict
-        FROM triage ORDER BY application_id, inserted_at DESC)
     SELECT d.id
       FROM documents d
       JOIN site_members m ON m.application_id = d.application_id
@@ -131,14 +130,8 @@ IN_UNIVERSE_SQL = """
     UNION
     SELECT d.id
       FROM documents d
-      JOIN latest l ON l.application_id = d.application_id
      WHERE d.bytes_path IS NOT NULL
-       AND l.verdict = 'adjacent_power'
-       AND NOT EXISTS (SELECT 1 FROM site_members m
-                          JOIN sites s ON s.id = m.site_id
-                        WHERE m.application_id = d.application_id
-                          AND m.retired_at IS NULL
-                          AND s.retired_at IS NULL)
+       AND d.application_id = ANY(%s)
 """
 
 # The sampled documents, plus every sibling in the same application:
@@ -165,7 +158,7 @@ DETAIL_SQL = """
 
 def sample_universe(cur, n: int,
                     rng: random.Random) -> tuple[list[int], int]:
-    cur.execute(IN_UNIVERSE_SQL)
+    cur.execute(IN_UNIVERSE_SQL, (list(_adj.staged_applications(cur)),))
     ids = [r[0] for r in cur.fetchall()]
     return sorted(rng.sample(ids, min(n, len(ids)))), len(ids)
 

@@ -307,12 +307,15 @@ def test_the_verifier_samples_the_universe_not_the_ledger():
     class of failure this check exists for.
     """
     vds = _load("verify_drive_sample")
-    cur = FakeCursor([[(11,), (22,), (33,)]])
+    # The frame first asks the shared rule which applications sit under
+    # adjacent_power/ (one query when the verdict class is empty), then
+    # samples the universe.
+    cur = FakeCursor([[], [(11,), (22,), (33,)]])
     import random
     ids, universe = vds.sample_universe(cur, 2, random.Random(0))
     assert universe == 3 and len(ids) == 2
     assert set(ids) <= {11, 22, 33}
-    sql = cur.executed[0][0]
+    sql = cur.executed[-1][0]
     assert "FROM documents" in sql
     assert "site_members" in sql, (
         "the frame must be documents the builder is supposed to stage")
@@ -433,38 +436,73 @@ def test_the_verifier_keys_the_ledger_the_way_the_sync_writes_it():
 
 
 # ---------------------------------------------------------------------------
-# "No membership" means no membership on a LIVE site
+# One rule decides what is under adjacent_power/, and three scripts read it
 # ---------------------------------------------------------------------------
 
-# The materialise retires a site that no longer emerges from the clustering
-# and leaves its `site_members` rows unretired (65 such rows on 63
-# applications, measured 2026-09-02). An adjacent-power application whose
-# only membership was on a site retired by #252 therefore looked like a
-# member, was not staged under `adjacent_power/`, was in no live site's
-# folder either, and its documents had no Drive home — four applications,
-# 144 documents, their old site folders already pruned at 2.11. Three
-# scripts carry the membership test and the three must agree, so the rule
-# is pinned over all of them.
-
-import re as _re
-
-_LIVE_SITE_CLAUSE = _re.compile(
-    r"NOT EXISTS\s*\(\s*SELECT 1 FROM site_members m\s+"
-    r"JOIN sites s ON s\.id = m\.site_id\s+"
-    r"WHERE m\.application_id = \w+\.(?:id|application_id)\s+"
-    r"AND m\.retired_at IS NULL\s+AND s\.retired_at IS NULL\s*\)",
-    _re.S)
+# Three scripts have to agree on which applications sit under
+# `adjacent_power/`: the builder writes the tree, the recorder records
+# where each file landed, the verifier's sample frame must cover every
+# document the builder stages. On 2026-09-02 each carried its own copy of
+# the rule; the copies agreed with each other and disagreed with the
+# materialise about what "a member" meant, and four applications'
+# documents had no Drive home (#349). The rule now lives once, in
+# `dcp.adjacent_power.staged_applications`, and this pins that all three
+# read it and none re-derives it from the verdict.
 
 
-@pytest.mark.parametrize("module, attr", [
-    ("build_drive_staging", "ADJACENT_SQL"),
-    ("record_drive_ids", "ADJACENT_DOCUMENTS_SQL"),
-    ("verify_drive_sample", "IN_UNIVERSE_SQL"),
-])
-def test_an_adjacent_application_is_membership_less_only_if_no_live_site_holds_it(module, attr):
-    mod = bds if module == "build_drive_staging" else _load(module)
-    sql = getattr(mod, attr)
-    assert _LIVE_SITE_CLAUSE.search(sql), (
-        f"{module}.{attr} tests membership without joining sites: a row on "
-        f"a retired site would count as a membership and the application "
-        f"would be staged nowhere")
+@pytest.mark.parametrize("module", ["build_drive_staging", "record_drive_ids",
+                                    "verify_drive_sample"])
+def test_the_adjacent_class_is_decided_once_and_read_three_times(module):
+    src = (ROOT / "scripts" / f"{module}.py").read_text()
+    assert "staged_applications(" in src, \
+        f"{module} must read the adjacent class from dcp.adjacent_power"
+    body = src[src.index("import"):]
+    assert "l.verdict = 'adjacent_power'" not in body, \
+        f"{module} re-derives the adjacent class from the verdict instead " \
+        f"of reading the shared rule"
+
+
+def test_the_shared_rule_requires_a_live_site_for_membership():
+    from dcp import adjacent_power as ap
+    for sql in (ap.STAGED_VERDICT_SQL, ap.UNSITED_SQL):
+        assert "JOIN sites s ON s.id = m.site_id" in sql and \
+               "s.retired_at IS NULL" in sql, \
+            "a membership row on a retired site must not count as a membership"
+
+
+def test_a_schemes_own_paperwork_is_staged_beside_it_and_names_its_parent(tmp_path):
+    src = tmp_path / "raw"
+    src.mkdir()
+    (src / "p.pdf").write_bytes(b"%PDF parent")
+    (src / "c.pdf").write_bytes(b"%PDF child")
+    apps = [(7, "Hillingdon/75111/APP/2022/1007", "https://x/parent", "Decided", None, None,
+             "Site clearance and substation"),
+            (9, "Hillingdon/75111/APP/2023/2544", "https://x/child", "Decided", None, None,
+             "Details pursuant to condition 12 of 75111/APP/2022/1007")]
+    docs_by_app = {7: [("https://x/p", "Decision Notice", "a" * 64, str(src / "p.pdf"), None)],
+                   9: [("https://x/c", "Condition Details", "b" * 64, str(src / "c.pdf"), None)]}
+    related = {7: [("PTNO-12511337", "UNION PARK", "discovery", 120.0)]}
+    why = {7: {"ref": apps[0][1], "why": "verdict", "parent_id": None, "parent_ref": None},
+           9: {"ref": apps[1][1], "why": "paperwork", "parent_id": 7,
+               "parent_ref": apps[0][1]}}
+    out = tmp_path / "staging.building"
+    staged, n = bds.stage_adjacent_power(out, apps, docs_by_app, related, why=why)
+    assert staged == {apps[0][1], apps[1][1]} and n == 2
+    child = out / bds.ADJACENT_DIR / bds.app_dir_name(apps[1][1])
+    index = (child / "_index.md").read_text()
+    assert "Paperwork of an adjacent-power scheme" in index
+    assert apps[0][1] in index, "the child's index names its parent"
+    assert "UNION PARK" in index, "and inherits the sites the parent stands beside"
+    assert (child / "001 - Condition Details.pdf").read_bytes() == b"%PDF child"
+
+
+def test_the_shortfall_drops_whatever_this_build_wrote_under_adjacent_power():
+    """A scheme's own discharge is `not_dc`; staged under adjacent_power/
+    it must not be reported as held-but-not-staged."""
+    rows = [("adjacent_power", "Leeds/18/00742/FU", 52),
+            ("not_dc", "Hillingdon/75111/APP/2023/2544", 26),
+            ("not_dc", "Council/25/00002/FUL", 3)]
+    kept = bds.unstaged_documents(
+        FakeCursor([rows]),
+        staged_adjacent={"Leeds/18/00742/FU", "Hillingdon/75111/APP/2023/2544"})
+    assert kept == [("not_dc", "Council/25/00002/FUL", 3)]
