@@ -2756,6 +2756,33 @@ chain stranded, outside the datacentre-only export.
 
 ---
 
+## The workbook names what it leaves out (2026-09-02)
+
+The third piece of the `not_dc` resolution. The staging build's
+shortfall guard tolerates `not_dc` as "excluded by decision", and until
+now the decision had no record a reporter could read: the applications
+whose documents this project holds and shows nowhere — not in a site,
+not under `adjacent_power/`, not in the reader, Pinpoint or the notebook
+— were a count in a build log. Luke's instinct was "keep it or regret
+it"; the measurement said the residue is mostly power schemes within
+2.5 km of a site that the adjacency layer cannot see, plus a handful of
+housing schemes and keyword false positives, and that none of it should
+go to Drive. So it is listed instead. **Excluded applications** is one
+row per such application: reference, both rubrics' verdicts, why we hold
+it (the reader's route labels and the raw `discovered_via` tags, which
+name the site each sweep ran outward from), documents held, findings,
+findings whose quote names a data centre (the re-triage signal that
+caught the Wychavon outline), the nearest live site and its distance,
+the description and the register link. The adjacent class is excluded
+through `dcp.adjacent_power.staged_applications`, the same rule the
+staging build uses, so the sheet and the Drive tree cannot disagree
+about what is where. Four dictionary entries explain it; a test holds
+the columns and the dictionary to each other. The Sheet needs the tab
+created by hand, or a new Sheet, at the next release — the runbook's
+step 13 says so.
+
+---
+
 ## Adjacent power takes its own paperwork with it (2026-09-02)
 
 The second of the three pieces of work the `not_dc` resolution produced
