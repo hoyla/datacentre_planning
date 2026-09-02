@@ -2795,6 +2795,55 @@ running it before rather than after.
 
 ---
 
+## The first campus reviewed: VIRTUS Slough (2026-09-02)
+
+The 35-campus review began with the one the operator channel had put a
+question to. Luke had the time for one; VIRTUS Slough was the natural
+first because its scope question was already open, its roster names
+seven facilities against the site's three, and settling it unlocks the
+third rung displacement #250 had predicted.
+
+**It was a different shape from Stockley Park.** The revised method —
+confirm the operator's roster against the planning record, facility by
+facility — assumed a planning record to confirm against. Slough's is
+three Barbour catalogue records and one document-less 2018 outline
+(Slough/T/138, LONDON10 at 75 Buckingham Avenue): no documents held, no
+adjudicated figure, a power cell reading "no documents held". The roster
+was the only evidence there was. VIRTUS's campus page states an IT load
+for each of LONDON3, 4, 9, 10, 11, 12 and 19 on one basis, and a campus
+total of 145.5 MW. Three of the seven have a planning record here. The
+other four are nowhere in the corpus — no application, no Barbour
+record, no SPV, no permit of their own — and the other Slough site
+records were checked in case they were these buildings under another
+name (Cyxtera, Virgin Media, Equinix, CyrusOne, two warehouses). So the
+sourced denominator #247 asked for is three of seven, and the four are a
+coverage gap of 105 MW of operator-stated load on the estate the corpus
+covers most densely.
+
+**Decided** (Luke): `distinct_facilities`, `total: withhold`, and
+VIRTUS's own figure ranks the site — a `power_cell` on the entry
+pinning the claim at 145.5, under the rung's empty-ladder extension,
+since there is no planning figure to displace. The cell reads as
+VIRTUS's, for VIRTUS's scope, with three-of-seven coverage and "no
+planning document held" beside it. The alternative — leaving the campus
+claim unmatched because the site holds three of seven — was named as
+the #250 failure exactly: a 145.5 MW campus absent from the hyperscale
+answer for a reason about our records. Saunderton was the precedent.
+
+**Two findings travelled out of it.** VIRTUS's stated total exceeds its
+own seven rows summed by 13.3 MW, and 13.3 is LONDON11's figure to the
+decimal. The temptation to conclude VIRTUS counted LONDON11 twice was
+named and declined (Luke: "we'll keep their claimed figure, but not
+decide how they came to it") — the arithmetic is ours, the explanation
+would be a guess, and the claimed figure stands as claimed with the
+discrepancy recorded as a question for the operator. And the site's key project, Zenium's "London One" at 12
+Liverpool Road, is probably CyrusOne's LON1; the entry says the scope
+decision does not turn on it and would survive its ejection, key change
+and all. Luke also asked, on the way, where a facility's address should
+live — the roster file, with a source, is the answer (ROADMAP).
+
+---
+
 ## The workbook names what it leaves out (2026-09-02)
 
 The third piece of the `not_dc` resolution. The staging build's
