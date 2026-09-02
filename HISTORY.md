@@ -2872,8 +2872,15 @@ three site records under two landlords' names — a name search across
 a landlord's records has the rebrand blind spot exactly — and the
 question that came out is a partition, not a coverage gap: the Iron
 Mountain rule says one campus, one site; the capacity model's own
-definition says a campus is a claim about sites. Luke's to decide; the
-145.5 stands meanwhile. And the directory earned its standing on the
+definition says a campus is a claim about sites. **Decided the same
+evening: Iron Mountain's rule applies (Luke).** The partition
+`virtus-zenium-slough-campus` now names Slough/T/135 and Barbour
+12409629 (LONDON9) and 12522787 (LONDON11/12); the Malton Avenue
+partition and Segro's Malton Avenue site retire into it, Segro's
+Ipswich Road site keeps 535-546 and Slough/t/131 and is aliased for
+that one building, and the merged site keeps its key because 12216044
+is the lowest Barbour number in it. The 145.5 stands, now for a site
+that holds five of the seven. And the directory earned its standing on the
 way: it places LONDON10 at Iron Mountain's 110 Buckingham Avenue
 against a charge and an application at 75, and its megawatts are not
 the operator's, so its addresses are leads recorded with what

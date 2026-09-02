@@ -122,10 +122,14 @@ sites:
             claim: KLON-04 (Harlow)
 
   # ---- VIRTUS Slough. The operator rosters seven facilities where
-  # the site record claims three (sheet T3-05) — the widest known gap
+  # the site record named three (sheet T3-05) — the widest known gap
   # between a campus claim and a site's planning record, and an open
   # campus_scope question — decided 2026-09-02 (distinct facilities;
-  # the operator's figure ranks the site; see campus_scope.yaml).
+  # the operator's figure ranks the site; see campus_scope.yaml). The
+  # same evening two more were found by address under the landlord's
+  # names and partitioned in on the Iron Mountain rule (LONDON9 at
+  # Malton Avenue, LONDON11/12 at 580-581 Ipswich Road), so the site
+  # holds five; LONDON4 and LONDON19 are the two with no record.
   # VIRTUS's own campus figure (145.5 MW) is 13.3 MW above its own
   # seven rows summed, and 13.3 is LONDON11's figure to the decimal.
   # The arithmetic is ours; how VIRTUS reached its total is not
@@ -208,13 +212,13 @@ sites:
             gives this address and these coordinates; Google Maps places
             "Virtus London 9" at 51.51905, -0.61904, thirty-five metres
             away; Datacenters.com lists it at 470 Malton Ave, SL1 4QT
-            (2026-09-02). **That application sits in a different site
-            record**, PTNO-12409629 ("SEGRO PLC MALTON AVENUE - DATA
-            CENTRE", aliased "Malton Avenue, Slough - Data Centre
-            (Segro)"), under the landlord's and the previous occupier's
-            names — which is how the review of 2026-09-02 came to say
-            LONDON9 was nowhere in the corpus. Whether that site joins the
-            VIRTUS campus is a partition question (ROADMAP).
+            (2026-09-02). That application sat in a different site
+            record until the same evening — PTNO-12409629, "SEGRO PLC
+            MALTON AVENUE - DATA CENTRE", under the landlord's and the
+            previous occupier's names, which is how the review of
+            2026-09-02 came to say LONDON9 was nowhere in the corpus. It
+            joined this site on the Iron Mountain rule (Luke;
+            site_partitions.yaml, virtus-zenium-slough-campus).
           date: 2026-09-02
         attributions:
           - kind: announced capacity, operator's basis
@@ -261,8 +265,9 @@ sites:
             virtus-zenium-slough-campus); Datacenters.com lists LONDON11 and
             LONDON12 at 580 Ipswich Rd, SL1 4HA (read by hand 2026-09-02);
             and the corpus holds Barbour project 12522787, "580-581 IPSWICH
-            ROAD - DATA CENTRE", at 51.519831, -0.628135 — in a different
-            site record, PTNO-12355161 (Segro's Ipswich Road site). The
+            ROAD - DATA CENTRE", at 51.519831, -0.628135 — in Segro's
+            Ipswich Road site until 2026-09-02, when it joined this one
+            on the Iron Mountain rule (site_partitions.yaml). The
             Barbour record for LONDON 11 itself (12575087) carries the
             SL1 4QZ postcode centroid and sits in the Liverpool Road site,
             which is how one building came to be two records in two sites.
@@ -282,7 +287,8 @@ sites:
           source: >-
             Datacenters.com lists LONDON12 with LONDON11 at 580 Ipswich Rd,
             SL1 4HA (read by hand 2026-09-02), the building Barbour project
-            12522787 records in PTNO-12355161. Directory lead corroborated
+            12522787 records, in this site since the partition of the same
+            evening (site_partitions.yaml). Directory lead corroborated
             by LONDON11's permit postcode only; no source names LONDON12 at
             this address directly.
           date: 2026-09-02
