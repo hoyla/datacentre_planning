@@ -57,6 +57,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dcp.drive import FOLDER_ID as HANDOVER_FOLDER_ID  # noqa: E402
 from dcp.drive import SYNC_LEDGER as STATE_PATH  # noqa: E402
+from dcp.release import is_released_root_artefact
 
 
 def get_credentials():
@@ -334,10 +335,16 @@ class Sync:
         # leave the local build directory as soon as the next release is
         # built, which to a path-based prune is indistinguishable from a
         # rename — so the prune does not look at them at all.
+        # "At the root" is not enough on its own: the reader sat there
+        # until 2026-09-02 under a name regenerated every release, and
+        # a root-wide exemption would keep the last copy on Drive for
+        # ever beside a workbook it no longer agrees with. The rule is
+        # the suffix, shared with the staging builder (dcp/release.py).
         kept_root = [rel for rel in tracked
-                     if Path(rel).parent == root_dir and not Path(rel).exists()]
+                     if not Path(rel).exists()
+                     and is_released_root_artefact(rel, root_dir)]
         gone = [rel for rel in tracked
-                if not Path(rel).exists() and Path(rel).parent != root_dir]
+                if not Path(rel).exists() and rel not in kept_root]
         if kept_root:
             print(f"prune: keeping {len(kept_root)} released artefact(s) at the "
                   f"tree root that are no longer built locally — "

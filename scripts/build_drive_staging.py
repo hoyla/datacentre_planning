@@ -8,8 +8,9 @@ source of truth, and the tree is rebuilt rather than edited.
 
     drive_staging/
     ├── dc_handover_phase<N>.xlsx     (each release's, side by side)
-    ├── dc_phase<N>.duckdb
-    ├── reader.html                   (always the current release)
+    ├── dc_phase<N>.duckdb            (the reader is not here: since
+    │                                  2026-09-02 it lives only in git and
+    │                                  the Cloud Run container)
     ├── adjacent_power/               (power schemes beside sites, not in them)
     │   ├── _README.md
     │   └── <application_ref>/
@@ -194,11 +195,10 @@ def link_or_copy(src: Path, dst: Path) -> None:
 # The clean rebuild
 # ---------------------------------------------------------------------------
 
-# Suffixes of a published artefact. The root accumulates these on purpose
-# and `drive_sync.py --prune` already declines to touch the tree root for
-# the same reason: phase 1's workbook has to keep resolving after phase 2
-# ships beside it. Everything else at the root is regenerated or dropped.
-RELEASED_SUFFIXES = (".xlsx", ".duckdb")
+# Suffixes of a published artefact — one rule, shared with the prune in
+# `drive_sync.py`, so the builder and the sync cannot disagree about what
+# a release is. The reader is deliberately not one (dcp/release.py).
+from dcp.release import RELEASED_SUFFIXES  # noqa: E402
 
 
 def carry_forward_released(old_root: Path, new_root: Path,
@@ -939,8 +939,14 @@ def main() -> None:
     if not args.release_dir:
         print(f"   release folder: {release} (newest; --release-dir overrides)")
     staged_root = []
+    # The workbook and the database, and not the reader: it went to the
+    # root until 2026-09-02 as "always the current release", and nobody
+    # opened it there (Luke) — the container serves it and git holds
+    # every release's copy. A stale reader.html beside a current workbook
+    # is the disagreement this step exists to prevent, so the prune bins
+    # the one Drive already has.
     for f in sorted(release.iterdir()):
-        if f.suffix.lower() in (".xlsx", ".duckdb", ".html"):
+        if f.suffix.lower() in RELEASED_SUFFIXES:
             # Drop the old entry first. `link_or_copy` skips a
             # destination that already exists, which is right for the
             # 46,000 content-hashed documents and wrong here: a

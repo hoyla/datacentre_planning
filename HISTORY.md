@@ -3314,3 +3314,22 @@ partition candidate; Slough 2 and 3 at 1.8 and 2.7 MW, unmatched
 because no site exists. Two questions for the operator travel with
 them: Hemel 2's page says "one of seven data centers we operate in the
 area" where the overview lists three, and NTT's own permit says four.
+
+## The reader leaves Drive (2026-09-02)
+
+"No one reads the reader on Google Drive" (Luke), and "no one would
+care" if it stopped going there. So it stops: `build_drive_staging.py`
+stages the released suffixes only — the workbook and the database,
+which "should definitely stay": they are what the team's R user works
+from, and Drive is where that person finds them — and the rule is one
+constant in
+`dcp.release` shared with `drive_sync.py --prune`, whose root exemption
+had kept *anything* at the root that was no longer built locally, and
+would have kept the last reader.html on Drive for ever beside a
+workbook it no longer agreed with. It now keeps released suffixes and
+bins the rest, so the stale copy goes at the next sync. Git holds every
+release's `index.html` and the container image holds the one deployed;
+nothing is lost. What it opens is on the ROADMAP under the page's
+weight: the one-file rule that shaped a 33.5 MB reader, 29 MB of it the
+508 site pages rendered inline, was written for a copy that opened from
+a Drive folder, and that copy no longer exists.

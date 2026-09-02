@@ -1985,13 +1985,17 @@ here rather than applied from the build lane.
   offline — has no reader left: "no one reads the reader on Google
   Drive" (Luke, 2026-09-02); the container's nginx serves a directory
   and only its content-security policy (`connect-src`) stands between
-  the page and a companion file. **Two decisions put to Luke, not yet
-  taken:** stop copying the reader into the Drive root at release (git
-  and the container image hold every release; the workbook and DuckDB
-  copies are a separate question nobody has asked), and retire the
-  one-file rule in favour of the two that still matter — no code nobody
-  here has read, and a build that is a function of its inputs across
-  every file it writes. Then the split that pays: the shell (table,
+  the page and a companion file. **Decided the same evening:** the
+  reader is no longer copied into the Drive root at release (Luke: "no
+  one would care"; built — `build_drive_staging.py` stages released
+  suffixes only, and the prune bins the copy Drive has), and the
+  workbook and DuckDB copies "should definitely stay" (they are what
+  the team's R user works from). With no Drive
+  reader, the one-file rule has no reason left in the record; it is
+  retired as a constraint the day the split below is built, in favour
+  of the two rules that still matter — no code nobody here has read,
+  and a build that is a function of its inputs across every file it
+  writes. Then the split that pays: the shell (table,
   map, filters, signals) at three or four megabytes, and a site's page
   fetched when opened. A real refactor of the export — `release_diff`,
   the conformance tests and the determinism check all read one file

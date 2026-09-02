@@ -287,8 +287,7 @@ def check_artefacts(ledger: dict, svc, phase: str | None) -> tuple[int, int]:
         # root since before this check existed, and phase 2's joined
         # them; that is worth reporting and is not a reason to hold a
         # release that put its own files in the right place.
-        current = phase is None or f"phase{phase}" in local.name \
-            or local.name == "reader.html"
+        current = phase is None or f"phase{phase}" in local.name
         mark = ("FAIL" if problems and current
                 else "note" if problems else "ok  ")
         if problems and current:
