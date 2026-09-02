@@ -114,10 +114,25 @@ def _load_site_partitions(data_dir: Path) -> tuple[dict[str, str], dict[str, str
     return app_part, proj_part
 
 
+NOT_DC_VETO_MODES = ("off", "family", "family+project")
+
+
 def build_clusters(conn, *, radius_km: float = 1.0,
                    data_dir: Path = ROOT / "data",
-                   family_skips_not_dc: bool = True) -> list[dict]:
+                   family_skips_not_dc: bool = True,
+                   not_dc_veto: str = "off") -> list[dict]:
     """Cluster the dc_build universe into sites.
+
+    `not_dc_veto` decides whether an application whose latest dc_build
+    verdict is `not_dc` may be ADMITTED through the two documentary
+    doors that ignore the universe test: the family expansion
+    ("family") and, additionally, a Barbour project link
+    ("family+project"). "off" is the behaviour to 2026-09-02, under
+    which 159 live members carried a `not_dc` verdict the universe rule
+    would never have admitted — 29 of them carrying 360 adjudicated
+    site-capacity figures — because both doors vetoed `adjacent_power`
+    alone. Measured that day; the choice is Luke's and is made from a
+    dry run of each mode (ROADMAP, the `not_dc` item).
 
     Returns a list of cluster dicts:
       {"apps": [{id, ref, desc, lat, lon, coord_source, verdict, joined_via}],
@@ -262,6 +277,23 @@ def build_clusters(conn, *, radius_km: float = 1.0,
         if name:
             partition[("P", p["id"])] = name
 
+    if not_dc_veto not in NOT_DC_VETO_MODES:
+        raise ValueError(f"not_dc_veto must be one of {NOT_DC_VETO_MODES}, "
+                         f"not {not_dc_veto!r}")
+    veto_family = not_dc_veto in ("family", "family+project")
+    veto_project = not_dc_veto == "family+project"
+
+    def _door_admits(aid: int, *, project: bool = False) -> bool:
+        """Whether a documentary door may admit an application the
+        universe test did not. `adjacent_power` is always refused
+        (issue #252); `not_dc` is refused when the veto says so."""
+        verdict = by_id[aid]["verdict"]
+        if verdict == "adjacent_power":
+            return False
+        if verdict == "not_dc" and (veto_project if project else veto_family):
+            return False
+        return True
+
     dc_apps = [a for a in apps if a["in_universe"]]
     # A project-linked application joins its project's cluster whatever
     # triage made of it — Barbour's linkage is documentary evidence the
@@ -273,7 +305,7 @@ def build_clusters(conn, *, radius_km: float = 1.0,
     # discarded — dcp/adjacent_power.py records it as a documentary
     # (cohort) relationship to the project's site.
     linked_ids = {aid for _pid, aid in links
-                  if aid in by_id and by_id[aid]["verdict"] != "adjacent_power"}
+                  if aid in by_id and _door_admits(aid, project=True)}
     node_ids = {a["id"] for a in dc_apps} | linked_ids
 
     # Family edges: an application naming another application's reference.
@@ -311,9 +343,9 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             # would otherwise pull the vetoed record straight back into
             # membership. This expansion exists to admit *untriaged*
             # paperwork a family knows about, not to overrule a verdict.
-            if by_id[x]["verdict"] != "adjacent_power":
+            if _door_admits(x):
                 node_ids.add(x)
-            if by_id[y]["verdict"] != "adjacent_power":
+            if _door_admits(y):
                 node_ids.add(y)
 
     uf = _UF()
@@ -490,9 +522,11 @@ def preflight(conn, clusters: list[dict]) -> dict:
     """
     keys = {c["site_key"] for c in clusters}
     app_to_key, proj_to_key = {}, {}
+    app_refs: set[str] = set()
     for c in clusters:
         for a in c["apps"]:
             app_to_key[a["id"]] = c["site_key"]
+            app_refs.add(a["ref"])
         for p in c["projects"]:
             proj_to_key[p["id"]] = c["site_key"]
 
@@ -529,9 +563,38 @@ def preflight(conn, clusters: list[dict]) -> dict:
                     "method": method, "members_move_to": dests,
                 })
 
+        # Applications that are live members today and in no cluster
+        # tomorrow: they leave the universe, and every figure, document
+        # and finding on them leaves the site with them. Retiring a site
+        # is visible; a member quietly dropping from a site that survives
+        # is not, which is why it is listed here by name.
+        cur.execute("""
+            SELECT a.application_ref, s.site_key
+            FROM site_members m
+            JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+            JOIN applications a ON a.id = m.application_id
+            WHERE m.retired_at IS NULL
+            ORDER BY s.site_key, a.application_ref""")
+        live_members = cur.fetchall()
+        leaving = [(ref, key) for ref, key in live_members
+                   if ref not in app_refs]
+        # Membership rows still live on sites already retired. The
+        # materialise used to retire the site and leave these standing,
+        # so a row on a dead site read `retired_at IS NULL` to every
+        # "is this a member" test — which is how four adjacent-power
+        # applications' documents lost their Drive home (2026-09-02).
+        # `materialise` now retires them; this says how many.
+        cur.execute("""
+            SELECT count(*) FROM site_members m
+            JOIN sites s ON s.id = m.site_id
+            WHERE s.retired_at IS NOT NULL AND m.retired_at IS NULL""")
+        stale_member_rows = cur.fetchone()[0]
+
     return {"new": sorted(keys - known),
             "retiring": [k for _sid, k in retiring],
-            "orphaned_claims": orphaned}
+            "orphaned_claims": orphaned,
+            "leaving": leaving,
+            "stale_member_rows": stale_member_rows}
 
 
 def materialise(conn, clusters: list[dict], *, radius_km: float = 1.0) -> dict:
@@ -595,4 +658,21 @@ def materialise(conn, clusters: list[dict], *, radius_km: float = 1.0) -> dict:
             WHERE retired_at IS NULL AND NOT (site_key = ANY(%s))
             RETURNING site_key""", (sorted(seen_keys),))
         summary["sites_retired"] = len(cur.fetchall())
+        # A retired site's membership rows retire with it. Until
+        # 2026-09-02 they did not, so a row on a dead site still read
+        # `retired_at IS NULL` to every query asking "is this application
+        # a member of something" — 65 such rows on 63 applications, and
+        # four adjacent-power applications whose only membership was on a
+        # #252-retired site were staged nowhere and lost their Drive
+        # copies to the 2.11 prune. This sweeps every retired site, not
+        # only this run's, so the legacy rows go with the first run after
+        # the fix. The revive path above already re-inserts a member on
+        # its way back, so nothing is lost by retiring here.
+        cur.execute("""
+            UPDATE site_members m SET retired_at=now()
+            FROM sites s
+            WHERE s.id = m.site_id AND s.retired_at IS NOT NULL
+              AND m.retired_at IS NULL
+            RETURNING m.id""")
+        summary["members_retired_with_site"] = len(cur.fetchall())
     return summary

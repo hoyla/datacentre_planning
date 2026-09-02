@@ -148,10 +148,21 @@ gap.
 Run it after anything that changes the universe — a discovery sweep, new
 triage verdicts, new project links, an edit to
 `data/priors/site_partitions.yaml` — and before the exports. It is
-idempotent, prints what it would change before changing it, and stops
-rather than orphaning a hand-adjudicated capacity claim (re-point the
-claim in `data/external_sources/*.yaml`, run
-`scripts/load_capacity_claims.py`, then re-run this).
+idempotent, prints what it would change before changing it — the sites
+that appear and retire, **every application that would leave the
+universe** (since 2026-09-02: a member quietly dropping from a site that
+survives is invisible otherwise), and the membership rows still live on
+already-retired sites, which it now retires — and stops rather than
+orphaning a hand-adjudicated capacity claim (re-point the claim in
+`data/external_sources/*.yaml`, run `scripts/load_capacity_claims.py`,
+then re-run this).
+
+**`--not-dc-veto off|family|family+project`** decides whether an
+application triage calls `not_dc` may be admitted through the family
+door, or through a Barbour project link as well. `off` is the behaviour
+to 2026-09-02 and the default until Luke chooses; the ROADMAP's `not_dc`
+item carries the dry-run figures for each mode. Do not change the mode
+inside a release without re-pointing the claims the dry run names.
 
 `build_drive_staging.py` now refuses to build when this step is
 outstanding — it compares `max(sites.materialised_at)` against the

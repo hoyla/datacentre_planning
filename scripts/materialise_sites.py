@@ -43,10 +43,18 @@ def main() -> int:
                     help="Proceed even though adjudicated capacity claims "
                          "would lose their site. Only with a plan to "
                          "re-point them in the same sitting.")
+    ap.add_argument("--not-dc-veto", choices=sites.NOT_DC_VETO_MODES,
+                    default="off",
+                    help="whether a not_dc application may be admitted "
+                         "through the family door (family) or through a "
+                         "Barbour project link as well (family+project); "
+                         "off is the behaviour to 2026-09-02. Dry-run each "
+                         "before choosing — see ROADMAP, the not_dc item")
     args = ap.parse_args()
 
     with db.connect() as conn:
-        clusters = sites.build_clusters(conn, radius_km=args.radius_km)
+        clusters = sites.build_clusters(conn, radius_km=args.radius_km,
+                                        not_dc_veto=args.not_dc_veto)
         by_class = Counter(c["classification"] for c in clusters)
         napps = sum(len(c["apps"]) for c in clusters)
         nproj = sum(len(c["projects"]) for c in clusters)
@@ -60,6 +68,16 @@ def main() -> int:
               f"retire {len(pre['retiring'])}.")
         for key in pre["retiring"]:
             print(f"  retire  {key}")
+        if pre["leaving"]:
+            print(f"\n{len(pre['leaving'])} application(s) leave the "
+                  f"universe — live members today, in no cluster after:")
+            for ref, key in pre["leaving"][:25]:
+                print(f"  leaves  {ref:44} from {key}")
+            if len(pre["leaving"]) > 25:
+                print(f"  ... and {len(pre['leaving']) - 25} more")
+        if pre["stale_member_rows"]:
+            print(f"\n{pre['stale_member_rows']} membership row(s) are still "
+                  f"live on already-retired sites; this run retires them.")
 
         if pre["orphaned_claims"]:
             print(f"\n{len(pre['orphaned_claims'])} adjudicated capacity "

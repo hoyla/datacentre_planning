@@ -231,6 +231,25 @@ What survives it here:
   sites entirely, and needs a dry-run materialise first so what leaves
   is seen before it goes. Hallen's was the first instance noticed
   (2026-08-30) and left with #252's retirements.
+
+  **The dry run exists** (2026-09-02): `scripts/materialise_sites.py
+  --dry-run --not-dc-veto family|family+project`, and the preflight now
+  names every application that would leave the universe. Measured:
+  under `family`, **149 applications leave** (27 carrying 335
+  site-capacity figures; 4,452 documents, which leave the Drive tree at
+  the next staging build), **17 sites are re-keyed** because their
+  lead application was the `not_dc` one (Kingsnorth `SITE-Medway/MC/21/
+  0979` becomes `SITE-Medway/MC/24/0220`), 26 surviving sites shrink,
+  **3 hand-matched claims need re-pointing** (West Burton Data Centre;
+  Medway and MedwayOne) and one alias key dies (`SITE-Bassetlaw/22/
+  01713/FUL`). `family+project` adds ten more applications (159, 360
+  figures, 5,105 documents) and seven more shrinking sites; the three
+  all-`not_dc` sites become `barbour_only` rather than vanishing. Of
+  the 149, 107 are procedural paperwork on a `not_dc` parent and only
+  two name a data centre at all — both Leeds's conversion *of* a data
+  centre to offices, which `not_dc` describes correctly; what leaves
+  with figures is batteries, energy centres, substations and mixed-use
+  outlines. The default stays `off` until the mode is chosen.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
 - **The class has a Drive home since 2026-09-02** — `adjacent_power/`
