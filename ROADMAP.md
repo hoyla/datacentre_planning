@@ -1920,6 +1920,36 @@ here rather than applied from the build lane.
   register-vs-planning comparison this family fed.
 ## Smaller things
 
+- **A public feed: Barbour-stripped site summaries as GeoJSON, with a
+  postcode overlay for a "plans near you" lookup** (Luke, 2026-09-02,
+  the evening the Guardian's reader callout on planned data centres
+  went out — "a missed opportunity this time"). Probably just another
+  export format, beside the workbook, DuckDB and bundles. What it is:
+  one feature per site that stands on at least one planning
+  application — 480 of the 500 live sites do; 21 are Barbour-only and
+  are omitted — with the coordinate taken from the site's own
+  application rather than Barbour's (the 153 `both` sites take
+  Barbour's today by preference; the 252 `ours_only` sites already
+  place themselves), a name and address from the application, council,
+  status and decision date, the power figure with its standing tier
+  and never a raw external MW, and the public register links so every
+  feature drills to its source. **The stripping is a design choice,
+  not a licensing necessity**: Barbour's position, as Luke reported it
+  later the same evening ("apparently"; second-hand, the written terms
+  unchanged here — DATA-LICENSING), is that a citation in the reporting
+  satisfies them. A public site profile still leaves out the Barbour
+  titles, project numbers and role blocks, because they are the working
+  record rather than the story a reader clicks through to; the credit
+  goes in the reporting either way. The postcode side is a postcodes.io
+  overlay — centroid per postcode, or their API at lookup time — under
+  the attribution its sources require (DATA-LICENSING, postcodes.io).
+  The lookup itself is the visuals desk's pattern on the Guardian's
+  stack; our piece is the feed and its methodology note. **The note
+  must say what the feed does not contain**, because to a reader
+  "nothing near your postcode" reads as "no data centre": the 67
+  unlocatable sites, the councils not covered, the pre-window buildings
+  the unsited-claims layer is for (NTT Slough, Equinix LD5, ServerChoice
+  Stevenage), and that a permitted scheme is not a built one.
 - **Pipeline upload of the search bundles to Drive.** The shape is
   decided (Luke, 2026-08-29, measured rather than inherited): never
   write into a folder the pipeline did not create; always create a
