@@ -1688,7 +1688,12 @@ footer{padding:20px 22px 34px;color:var(--mut);font-size:13.5px;border-top:1px s
 .tip{display:inline-flex;align-items:center;justify-content:center;width:15px;
   height:15px;margin-left:5px;border-radius:50%;border:1px solid var(--line);
   color:var(--mut);font-size:10.5px;cursor:help;position:relative;vertical-align:1px}
-.tip .tiptext{display:none;position:absolute;bottom:20px;left:-8px;width:290px;
+/* Opens below the "?" and grows leftwards from it (issue #301). It opened
+   upward and to the right, and the one place it is used is the right-hand
+   end of a bar pinned under the masthead: the box ran off the viewport's
+   right edge and up behind the masthead, unreadable. Below, right-anchored,
+   it has the whole bar's width to land in. */
+.tip .tiptext{display:none;position:absolute;top:20px;right:-8px;width:290px;
   background:var(--bg);border:1px solid #999;border-radius:0;padding:8px 10px;
   font-size:13.5px;line-height:1.45;color:var(--fg);
   z-index:8;text-align:left;cursor:auto}
@@ -2492,6 +2497,17 @@ function wire(sel){
   }));
 }
 wire('#tbl-sites'); wire('#tbl-apps'); wire('#tbl-energy');
+// Issue #301, the other half: a click on a help "?" gave it focus, and
+// focus kept the tooltip open until something else took it — nothing in
+// the table is focusable, so it stayed open while the pointer was
+// anywhere below. A press anywhere outside it, or the pointer leaving
+// it, drops the focus; keyboard and touch users still open it by focus.
+document.addEventListener('pointerdown', e=>{
+  const a=document.activeElement, t=a&&a.closest?a.closest('.tip'):null;
+  if(t&&!t.contains(e.target)) t.blur();
+});
+document.querySelectorAll('.tip').forEach(t=>t.addEventListener('mouseleave',()=>{
+  if(document.activeElement===t) t.blur();}));
 apply(); sticky(); fromHash(); paintWhoBar(); addEventListener('load', ()=>{sticky(); fromHash();});
 
 // A column heading explains itself: jump to its dictionary entry.
