@@ -156,6 +156,44 @@ What the session measured, per document unless stated:
 phases; stay on gpt-5 for the acquisition phase in progress; luna
 rejected despite the yield. Recorded under Decisions above.
 
+#### Re-measured 2026-09-02 with `scripts/compare_readers.py`
+
+The database was up, so the tool the paragraph above names was run:
+`--models openai:gpt-5.6-terra openai:gpt-5.6-luna claude-sonnet-5
+openai:gpt-5:low openai:gpt-5 mlx:Qwen3.6-35B-A3B-4bit`. Its
+definitions differ from the session's — per-document yield is over the
+**21 documents all six read**, not the 60, and the gate-fail rate is
+over each model's **entire run** as logged at read time, before the
+2026-08-31 gate fix, so it overstates every model's invention by the
+whitespace artefacts — which is why the two tables corroborate each
+other's ranking rather than reproduce each other's digits.
+
+| model | documents read | findings on the shared 21 | per document | gate fails | fail rate | parse fails |
+|---|---|---|---|---|---|---|
+| `openai:gpt-5.6-luna` | 60 | 875 | 41.7 | 103 | 3.4% | 0 |
+| `openai:gpt-5.6-terra` | 60 | 544 | 25.9 | 36 | 1.9% | 0 |
+| `openai:gpt-5:low` | 14,204 | 472 | 22.5 | 12,215 | 2.9% | 8 |
+| `claude-sonnet-5` | 18,044 | 312 | 14.9 | 9,803 | 2.8% | 16 |
+| `openai:gpt-5` | 60 | 153 | 7.3 | 6 | 0.9% | 18 |
+| `mlx:Qwen3.6-35B-A3B-4bit` | 33,104 | 120 | 5.7 | 33,860 | 9.4% | 1,060 |
+
+What it confirms: the yield order — luna, terra, gpt-5:low, Sonnet, the
+local reader last — is the session's, and luna's gate-fail rate is
+nearly twice terra's, the whitespace observation above seen from the
+other side. What it adds is **agreement**, which the session did not
+measure. Of the distinct quantitative figures (same document, same
+value, same unit) in the shared documents, terra and gpt-5:low both
+found 51 of 173 (29%); terra and Sonnet 40 of 161 (25%); terra and
+luna 59 of 254 (23%), **139 of them found by luna alone** — the
+"extra of the wrong kind" the session recorded, now as a count. Every
+pair involving the local reader agrees on 6–19%.
+
+`openai:gpt-5` in that table is the first live run of 2026-08-10 with
+no reasoning-effort suffix — 692 findings over the 60 documents, 29% of
+its requests answering nothing at all (the escalate script's docstring)
+— not the `gpt-5:low` reader in use, so its 7.3 per document against
+22.5 is the effort setting, not the model.
+
 **Two measurement lessons outlived it.** All three serious readers
 invent at about the same rate — roughly 1% of findings — so the raw
 gate rate does not rank them. And the gate rate was actively
