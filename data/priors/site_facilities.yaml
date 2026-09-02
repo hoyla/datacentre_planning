@@ -48,6 +48,17 @@
 # `document_drive_files` for the Drive link the reader renders, so a
 # re-upload changes the id without touching anything written here.
 #
+# A facility may carry a `location` block — address, postcode, lat/lon
+# — with `source` and `date` required and at least one of the three
+# given (Luke, 2026-09-02: the addresses helped the campus decisions and
+# wanted a home where they can be seen in a list; the workbook's
+# Facilities sheet is that list). It is filled piecemeal as an
+# authoritative address is met — a Companies House charge naming the
+# building, a permit's site address, the operator's own page — so an
+# absent block means "not yet found", never "nowhere", and the sheet
+# says so. A location with no source is a guess and the loader rejects
+# it.
+#
 # What listing a facility asserts: that the named source counts it as
 # part of the campus associated with this site. It does NOT assert the
 # site's planning record contains it — which facilities a site holds,
@@ -155,6 +166,18 @@ sites:
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
             snapshot: virtus-slough-campus
             date: 2026-08-30
+        location:
+          address: 75 Buckingham Avenue, Slough Trading Estate, Slough
+          postcode: SL1 4PN
+          source: >-
+            Companies House charge against VIRTUS LONDON 10 LIMITED
+            (11619901), created 14 April 2020 in favour of Standard
+            Chartered Bank (Hong Kong), over "land and building known as
+            london 10, 75 buckingham avenue trading estate, slough,
+            berkshire, SL1", title BK410987; and the planning application
+            for the building, Slough/T/138, at SL1 4PN (site_partitions.yaml,
+            virtus-zenium-slough-campus, Luke 2026-08-28).
+          date: 2026-09-02
         attributions:
           - kind: announced capacity, operator's basis
             claim: VIRTUS LONDON10 (75 Buckingham Avenue, Slough)
@@ -164,6 +187,14 @@ sites:
             url: https://virtusdatacentres.com/locations/uk/london/slough-campus
             snapshot: virtus-slough-campus
             date: 2026-08-30
+        location:
+          postcode: SL1 4HA
+          source: >-
+            Environment Agency permit EPR/DP3348QS, held by VIRTUS LONDON 11
+            LIMITED (72 MWth), issued at SL1 4HA (site_partitions.yaml,
+            virtus-zenium-slough-campus). Postcode only: the permit's
+            street address has not been read into this file.
+          date: 2026-09-02
         attributions:
           - kind: announced capacity, operator's basis
             claim: VIRTUS LONDON11 (Slough)

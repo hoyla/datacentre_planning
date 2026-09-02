@@ -252,3 +252,70 @@ def test_an_empty_load_cannot_satisfy_require_live(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(ValueError, match="not live"):
         sf.require_live(sf.load_facilities(), set())
+
+
+
+# ---------------------------------------------------------------------------
+# Where a facility is, with the source that says so (2026-09-02)
+# ---------------------------------------------------------------------------
+
+def _located(**loc) -> dict:
+    fac = _entry()["facilities"][0]
+    fac["location"] = loc
+    return _entry(facilities=[fac])
+
+
+def test_a_location_needs_a_source_and_a_date(tmp_path):
+    p = _write(tmp_path, {"sites": [_located(address="1 Example Road")]})
+    with pytest.raises(ValueError, match="missing source, date"):
+        sf.load_facilities(p)
+
+
+def test_a_location_must_say_where(tmp_path):
+    p = _write(tmp_path, {"sites": [_located(source="a charge", date="2026-09-02")]})
+    with pytest.raises(ValueError, match="says nothing about where"):
+        sf.load_facilities(p)
+
+
+def test_one_coordinate_without_the_other_fails(tmp_path):
+    p = _write(tmp_path, {"sites": [_located(source="s", date="2026-09-02", lat=51.5)]})
+    with pytest.raises(ValueError, match="one coordinate without the other"):
+        sf.load_facilities(p)
+
+
+def test_swapped_coordinates_are_caught(tmp_path):
+    p = _write(tmp_path, {"sites": [_located(source="s", date="2026-09-02",
+                                             lat=-0.62, lon=51.52)]})
+    with pytest.raises(ValueError, match="not in the UK"):
+        sf.load_facilities(p)
+
+
+def test_an_unknown_location_key_fails(tmp_path):
+    p = _write(tmp_path, {"sites": [_located(source="s", date="2026-09-02",
+                                             postcode="SL1 4PN", mw=6.6)]})
+    with pytest.raises(ValueError, match="unknown keys"):
+        sf.load_facilities(p)
+
+
+def test_a_postcode_alone_with_its_source_is_enough(tmp_path):
+    p = _write(tmp_path, {"sites": [_located(source="permit EPR/X", date="2026-09-02",
+                                             postcode="SL1 4HA")]})
+    loaded = sf.load_facilities(p)
+    assert loaded["PTNO-1"]["facilities"][0]["location"]["postcode"] == "SL1 4HA"
+
+
+def test_rows_say_not_yet_found_rather_than_leaving_a_blank(tmp_path):
+    p = _write(tmp_path, {"sites": [_entry()]})
+    rows = sf.facility_rows(sf.load_facilities(p))
+    assert rows[0]["location_status"] == "not yet found"
+    assert rows[0]["address"] == "" and rows[0]["claims"] == ["EXAMPLE LONDON7"]
+
+
+def test_the_real_file_seeds_slough_london10_with_its_source():
+    rows = {(r["site_key"], r["facility"]): r
+            for r in sf.facility_rows(sf.load_facilities())}
+    l10 = rows[("PTNO-12216044", "LONDON10")]
+    assert l10["location_status"] == "recorded"
+    assert l10["postcode"] == "SL1 4PN" and "Companies House" in l10["location_source"]
+    assert rows[("PTNO-12216044", "LONDON4")]["location_status"] == "not yet found" \
+        if ("PTNO-12216044", "LONDON4") in rows else True

@@ -77,6 +77,7 @@ from dcp import drive as _drive  # noqa: E402
 from dcp import site_cohorts  # noqa: E402
 from dcp import adjacent_power as _adj  # noqa: E402
 from dcp import origin  # noqa: E402
+from dcp import site_facilities as _sfac  # noqa: E402
 
 
 SITE_SQL = """
@@ -489,6 +490,19 @@ EXCLUDED_HEADERS = [
     "Distance to nearest site (m)", "Description", "Portal URL",
 ]
 
+# The facility roster as a list: one row per facility a source names on
+# a campus, with where we believe it is and what figure it carries.
+# Read from data/priors/site_facilities.yaml through its loader, so the
+# sheet cannot say what the file does not; figures are joined from the
+# claims store by claim name, never copied into the roster.
+FACILITY_HEADERS = [
+    "Site key", "Site name", "Facility", "Named by", "Location status",
+    "Address", "Postcode", "Latitude", "Longitude", "Location source",
+    "Location date", "Location note", "Figure (MW)", "Figure kind",
+    "Figure claim", "Claim as at", "Planning-document attributions",
+    "Site note",
+]
+
 DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Site key",
      "Stable identifier for the site; also the prefix of its Drive folder "
@@ -774,6 +788,41 @@ DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Parties source",
      "Which of the two sources this row's parties came from: the Barbour "
      "project record, the documents, both, or neither."),
+    ("Facilities", "Site key; Site name; Facility; Named by",
+     "One row per facility in data/priors/site_facilities.yaml — the hand-"
+     "curated roster of the buildings a campus comprises, each with the "
+     "source that names it (an operator's own campus page held as a dated "
+     "snapshot, a planning document by content hash, or a Barbour project "
+     "title). Listing a facility asserts that the named source counts it as "
+     "part of the campus associated with the site, not that the site's "
+     "planning record contains it; which facilities a site holds is "
+     "campus_scope.yaml's decision. Six campuses at 2026-09-02, filled as "
+     "the 35-campus review proceeds."),
+    ("Facilities", "Location status; Address; Postcode; Latitude; Longitude; Location source; Location date; Location note",
+     "Where this project currently believes the facility is, with the "
+     "source that says so — a Companies House charge naming the building, a "
+     "permit's site address, the operator's page — and the date it was "
+     "recorded. Filled piecemeal as authoritative addresses are met, so "
+     "'not yet found' is the honest reading of an empty row: work not done, "
+     "never a building that does not exist. A location with no source is "
+     "refused by the loader. Operators' campus pages mostly give no "
+     "addresses (VIRTUS's Slough page names seven facilities and locates "
+     "none), which is why this column exists at all."),
+    ("Facilities", "Figure (MW); Figure kind; Figure claim; Claim as at",
+     "The figure the roster attributes to the facility, read from the "
+     "claims store by the claim's name at the time of the build — never "
+     "copied into the roster file, so it moves when the operator's page "
+     "does and the pin in campus_scope.yaml catches it. 'Figure kind' is the "
+     "attribution's own words for what kind of quantity it is (announced "
+     "capacity on the operator's basis; IT load as a component of a stated "
+     "campus total). A facility can carry more than one claim; each is a "
+     "row's own list, semicolon-separated."),
+    ("Facilities", "Planning-document attributions; Site note",
+     "Where a planning document names the facility, the application and the "
+     "document's content hash — Stockley Park's LONDON7 milestone is the "
+     "worked case, a planning figure and an operator figure on one building "
+     "held side by side and unresolved. 'Site note' is the roster entry's "
+     "own note where it has one (Saunderton: the self-auditing campus)."),
     ("Excluded applications", "Application ref; Council; Latest verdict; Earlier verdict (v1)",
      "One row per application whose documents this project holds and shows "
      "nowhere else: its latest dc_build verdict is not_dc, it is a member of "
@@ -2202,6 +2251,49 @@ def main() -> None:
         ws.column_dimensions[col].width = width
     print(f"  Operator disclosure: {len(op_rows)} operators, "
           f"{len(op_divs)} sites told more than one audience")
+
+    # ---- Facilities -------------------------------------------------------
+    # The roster as a list. Read through the loader, so a malformed file
+    # fails the export the way it fails the reader build; figures come
+    # from the claims store by name, folded to the latest reading.
+    ws = _sheet("Facilities", FACILITY_HEADERS)
+    _fac = _sfac.load_facilities()
+    _fac_rows = _sfac.facility_rows(_fac)
+    with db.connect() as conn, conn.cursor() as cur:
+        cur.execute("""
+            SELECT DISTINCT ON (claim_name) claim_name, value_mw, as_at
+            FROM capacity_claims
+            ORDER BY claim_name, as_at DESC NULLS LAST, inserted_at DESC""")
+        _claim_latest = {name: (mw, as_at) for name, mw, as_at in cur.fetchall()}
+    _site_name = {r[0]: r[2] for r in site_rows}
+    _n_located = 0
+    for fr in _fac_rows:
+        figs = [_claim_latest.get(c, (None, None)) for c in fr["claims"]]
+        ws.append([
+            fr["site_key"], _site_name.get(fr["site_key"], fr["site_key"]),
+            fr["facility"], fr["named_by"], fr["location_status"],
+            fr["address"], fr["postcode"],
+            fr["lat"] if fr["lat"] is not None else "",
+            fr["lon"] if fr["lon"] is not None else "",
+            fr["location_source"], fr["location_date"], fr["location_note"],
+            "; ".join("" if mw is None else f"{float(mw):g}" for mw, _ in figs),
+            "; ".join(fr["claim_kinds"]),
+            "; ".join(fr["claims"]),
+            "; ".join("" if d is None else str(d) for _, d in figs),
+            fr["document_attributions"], fr["site_note"],
+        ])
+        _n_located += fr["location_status"] == "recorded"
+    for col, width in (("A", 20), ("B", 44), ("C", 12), ("D", 60), ("E", 14),
+                       ("F", 44), ("G", 10), ("H", 10), ("I", 10), ("J", 70),
+                       ("K", 12), ("L", 40), ("M", 12), ("N", 34), ("O", 44),
+                       ("P", 12), ("Q", 40), ("R", 60)):
+        ws.column_dimensions[col].width = width
+    for row in ws.iter_rows(min_row=2):
+        for cell in (row[3], row[9], row[11], row[16], row[17]):
+            if cell.value:
+                cell.alignment = Alignment(wrap_text=True, vertical="top")
+    print(f"  Facilities: {len(_fac_rows)} facilities across {len(_fac)} "
+          f"campuses, {_n_located} with a recorded location")
 
     # ---- Excluded applications --------------------------------------------
     # Held, triaged not_dc, in no live site, not adjacent power or its

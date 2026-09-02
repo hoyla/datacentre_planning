@@ -664,8 +664,11 @@ ingest), Stockley Park (the
 LONDON5/LONDON7 wrinkle held unresolved on both attributions) and
 Hayes (LON6/7/8 on Barbour titles, a third identity-source kind the
 build vocabulary carries). The reader build validates liveness
-and held copies; nothing renders from the prior yet — "3 of 5
-facilities disclose" is a later consumer. The ladder rung was designed
+and held copies; the workbook's **Facilities** sheet renders the roster
+as a list since 2026-09-02, each facility with where we believe it is
+and the source that says so (filled piecemeal — Luke), while the
+reader's "3 of 5 facilities disclose" basis line is still a later
+consumer. The ladder rung was designed
 and built on 2026-09-01 ([docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md))
 and reads the claims and `campus_scope.yaml`, not this prior.
 
