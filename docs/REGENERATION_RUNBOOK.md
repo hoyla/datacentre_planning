@@ -174,6 +174,27 @@ gets passed rather than read.
 
 ### 1. Collect the adjudication batch
 
+**Two routes, split by consequence — decide which before submitting
+anything** (ARCHITECTURE, "Which model runs which task"; docs/MODELS.md;
+the rule itself is `dcp/adjudication_routes.py`). A figure on a site
+that carries no adjudicated capacity can set that site's headline
+number, so it goes to the Sonnet subagent route, the same model as the
+primary pass:
+
+```sh
+scripts/adjudicate_subagent.py --prepare --shards 1   # the consequential set
+#   … one Claude Code subagent per shard, model sonnet, the rubric from
+#   scripts/adjudicate_power.py plus the script's EXTRA_GUIDANCE …
+scripts/adjudicate_subagent.py --ingest && scripts/adjudicate_subagent.py --report
+```
+
+Everything else is the long tail and goes to the OpenAI batch below.
+Since 2026-09-02 `adjudicate_openai.py` **holds** the consequential set
+and names it rather than sending it — that evening Creek Way's two
+figures, its first ever, went to the batch because this step named only
+the batch, and the batch had to be set aside uncollected. Run the
+subagent route first; the batch then sees nothing to hold.
+
 ```sh
 scripts/adjudicate_openai.py --collect
 ```
