@@ -203,10 +203,10 @@ What survives it here:
   naming the sites it stands beside. Found by the 2.11 staging build,
   the first after the veto: 744 held documents across 28 applications
   had nowhere to go and a `--prune` sync would have binned them, four
-  of them cited by machine readings. What is *not* done: the reader's
-  "Adjacent power" box links each entry's register page only; linking
-  the Drive folder from there is a small follow-on, the same shape as
-  the site-folder links.
+  of them cited by machine readings. Since 2026-09-02 the reader's
+  "Adjacent power" box links the class's Drive folder
+  (`dcp.drive.ADJACENT_POWER_FOLDER_ID`, read back from the sync ledger)
+  and each entry its own folder once synced, beside the register link.
 - Hayes Bridge's doubled N+N 300 (the "Not in an issue" note below)
   still stands.
 
@@ -1349,11 +1349,9 @@ field and is not publishable as it stands.
   claims tables carry no such column, so a reporter working from the
   database still reaches only the source URL.
 
-  **And the Drive viewer URL is built in three places.**
-  `export_handover.py` (twice) and `export_duckdb.py` each write
-  `https://drive.google.com/file/d/…/view` themselves.
-  `dcp.drive.file_url` now exists and the snapshot links use it; folding
-  the other three in is its own small change.
+  ~~**And the Drive viewer URL is built in three places.**~~ Folded
+  into `dcp.drive.file_url` / `folder_url` / `file_url_sql` on
+  2026-09-02, and `tests/test_drive_url_one_shape.py` refuses a fourth.
 
 - **26 applications link to a register host that no longer answers,
   and they would ship in 2.10 that way** (probed 2026-08-28: every host
@@ -1611,9 +1609,11 @@ worst available failure mode.
 What remains (the fetch guard is done and test-pinned; the corpus
 sweep re-run 2026-08-27 still finds exactly the three):
 
-1. **A durable home for the sweep** — corpus_stats, or a test over the
-   store (`find -size -1c` is the whole check) — so a fourth empty
-   document would announce itself.
+1. ~~**A durable home for the sweep**~~ — **done 2026-09-02**:
+   `repo.zero_byte_files` is the check, the staging build runs it over
+   the tree it just wrote and prints what it found every release, and
+   `scripts/corpus_stats.py` reports the database's view of the same
+   fact. A fourth empty document announces itself at step 9.
 2. **Say so in the artefacts.** Where a document is held but empty,
    the site report and the coverage detail should show it as
    unavailable from the source rather than as read — the same honesty
@@ -1657,47 +1657,6 @@ here rather than applied from the build lane.
   resolved by name. One step stays manual whatever happens: a notebook
   holding a previous release must be emptied or replaced, and the new
   notebook's URL must reach `NOTEBOOK_URL` before step 12.
-
-- **The Start Here page's Gemini Notebook card claims more than the
-  notebook holds.** The card says "Every site's report and its full
-  findings table, one document per site". Since PR #230 that is not
-  true: `export_notebook_bundle.py` exports only sites classed
-  `datacentre`, 428 of the 512 in the staging tree. Left out are 48
-  disguise suspects, 23 procedural-only sites, 9 adjacent-power sites
-  and 4 with no planning record.
-
-  **The premise, stated because the card is asserting it either way.**
-  The filter is not an editorial judgement about what is worth reading;
-  it is what pays for a smaller per-document word budget. Gemini
-  Notebook takes 600 sources and rejects sources that are too large, and
-  at 2.10's size those two limits could not both be met with every site
-  in. The measured cost of *not* filtering is one step of budget —
-  450,000 words a document rather than 300,000 — because the 84
-  excluded sites are only 4.9% of the words.
-
-  **Why it needs saying on the card rather than in the methodology.**
-  The absent class that matters is the disguise suspects, whose own
-  description is "no application here is stated as a datacentre, and at
-  least one could not be ruled out — kept for exactly that reason". A
-  reporter who asks the notebook about large unnamed single-use
-  buildings gets nothing back, and nothing reads as *there are none*.
-  That is the same failure as a dash in a table: our silence presenting
-  as theirs. The card immediately below it makes the gap worse by
-  contrast — Pinpoint holds **all** sites' source documents, so the two
-  cards now differ in coverage as well as in kind, and the page says
-  only the latter.
-
-  **What to change.** In `scripts/export_reader.py`, the Gemini Notebook
-  card's `what` paragraph (find it by the sentence quoted above — a line
-  number here goes stale with every edit): replace "Every site's
-  report" with a statement of the actual scope, and name where the rest
-  can be found — the site folders and Pinpoint both hold them. The
-  count should be generated, not typed: the reader already computes
-  `site_classes` via `sclass.compute_all` and tallies
-  `rendered_classes`, so the number of datacentre-classed sites is
-  already in hand at build time and will follow the corpus.
-
-  Raised by Luke 2026-08-29, the day the filter landed.
 
 - **`drive_sync.py`: the batching half is still open** (the
   concurrency half closed 2026-08-29 — `--workers` now defaults to 12;

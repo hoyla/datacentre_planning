@@ -749,13 +749,18 @@ class TestTheDatabaseOffersOurCopy:
 
     def test_the_documents_table_carries_a_drive_link(self):
         src = pathlib.Path("scripts/export_duckdb.py").read_text()
-        q = src[src.index('"documents": """'):]
+        # An f-string since 2026-09-02, so the URL shape comes from
+        # dcp.drive rather than being spelled here.
+        q = src[src.index('"documents": f"""'):]
         q = q[:q.index('""",')]
         assert "drive_url" in q, \
             "the database must offer the copy we hold, not only the " \
             "register URL that may no longer resolve"
         assert "document_drive_files" in q, \
             "the link must come from the recorded file id, not a path"
+        assert "_drive.file_url_sql(" in q, \
+            "the URL's shape lives in dcp.drive; the export must not " \
+            "spell it"
 
     def test_the_note_says_which_url_is_which(self):
         """Two URL columns is a trap unless the note distinguishes them."""

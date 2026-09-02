@@ -14,14 +14,41 @@ from __future__ import annotations
 
 from dcp.release import EXPORTS
 
+# One shape for a Drive URL, in one place. Three scripts used to spell
+# the file form themselves and two maps the folder form;
+# `tests/test_drive_url_one_shape.py` refuses a fourth. A URL built from
+# the id keeps resolving after the file or folder is moved or renamed on
+# Drive, which is the reason this module addresses Drive by id at all.
+FILE_URL_PREFIX = "https://drive.google.com/file/d/"
+FILE_URL_SUFFIX = "/view"
+FOLDER_URL_PREFIX = "https://drive.google.com/drive/folders/"
+
+
+def file_url(file_id: str) -> str:
+    """The viewer URL for a Drive file id."""
+    return f"{FILE_URL_PREFIX}{file_id}{FILE_URL_SUFFIX}"
+
+
+def folder_url(folder_id: str) -> str:
+    """The URL that opens a Drive folder by id."""
+    return f"{FOLDER_URL_PREFIX}{folder_id}"
+
+
+def file_url_sql(file_id_expr: str) -> str:
+    """`file_url` as a SQL expression over a column or expression holding
+    the id, for the export that builds its table in the database rather
+    than in Python (`export_duckdb.py`). Same two constants, so the two
+    cannot drift."""
+    return f"'{FILE_URL_PREFIX}' || {file_id_expr} || '{FILE_URL_SUFFIX}'"
+
 FOLDER_ID = "1vKevmR1NSh3_9wnsYRMl0BA5os9oaoPT"
-FOLDER_URL = f"https://drive.google.com/drive/folders/{FOLDER_ID}"
+FOLDER_URL = f"{FOLDER_URL_PREFIX}{FOLDER_ID}"
 
 # The per-site document tree inside the handover folder. Linking the root
 # lands a reader among the workbook and the database with the documents
 # one more click away; this opens the folders themselves.
 SITES_FOLDER_ID = "1wSMSDEm8xhxXFtAmUPCO5VgBYtfhiJEW"
-SITES_URL = f"https://drive.google.com/drive/folders/{SITES_FOLDER_ID}"
+SITES_URL = f"{FOLDER_URL_PREFIX}{SITES_FOLDER_ID}"
 
 # The operator snapshots, beside `sites` rather than inside it: they are
 # a different evidence class — what an operator published about its own
@@ -38,7 +65,7 @@ SITES_URL = f"https://drive.google.com/drive/folders/{SITES_FOLDER_ID}"
 # `files.get`s it before uploading and stops on a 404 — it never falls
 # back to creating one.
 SNAPSHOTS_FOLDER_ID = "1NqIVr0y1aITvgAmQahatM3E4aCpBThlG"
-SNAPSHOTS_URL = f"https://drive.google.com/drive/folders/{SNAPSHOTS_FOLDER_ID}"
+SNAPSHOTS_URL = f"{FOLDER_URL_PREFIX}{SNAPSHOTS_FOLDER_ID}"
 
 # The adjacent-power schemes — substations, energy centres, standby
 # fleets consented in their own right — beside `sites` rather than inside
@@ -53,8 +80,7 @@ SNAPSHOTS_URL = f"https://drive.google.com/drive/folders/{SNAPSHOTS_FOLDER_ID}"
 # links the class as a whole, and a link is addressed by id, never by
 # name.
 ADJACENT_POWER_FOLDER_ID = "1uYTW6qRhekflqonDUHJj_ddSmRb1gQYX"
-ADJACENT_POWER_URL = (
-    f"https://drive.google.com/drive/folders/{ADJACENT_POWER_FOLDER_ID}")
+ADJACENT_POWER_URL = f"{FOLDER_URL_PREFIX}{ADJACENT_POWER_FOLDER_ID}"
 
 
 # The sync ledger: every folder and file the sync has created on Drive,
@@ -68,15 +94,6 @@ ADJACENT_POWER_URL = (
 SYNC_LEDGER = EXPORTS / ".drive_sync_state.json"
 
 
-def file_url(file_id: str) -> str:
-    """The viewer URL for a Drive file id.
-
-    One shape, in one place. `export_handover.py` and `export_duckdb.py`
-    each still build this string themselves; folding those in is their
-    own change rather than this one's.
-    """
-    return f"https://drive.google.com/file/d/{file_id}/view"
-
 # Encrypted database backups (scripts/backup_db.py). Deliberately NOT a
 # subfolder of the handover archive above: Drive sharing inherits
 # downward, and a pg_dump is the raw schema — Barbour's role-block
@@ -86,7 +103,7 @@ def file_url(file_id: str) -> str:
 # unshared, and the dumps are encrypted anyway so that a mis-share still
 # leaks nothing.
 BACKUP_FOLDER_ID = "12-X9peqr2rm6SRndV7Q75A5HSwRJaheM"
-BACKUP_FOLDER_URL = f"https://drive.google.com/drive/folders/{BACKUP_FOLDER_ID}"
+BACKUP_FOLDER_URL = f"{FOLDER_URL_PREFIX}{BACKUP_FOLDER_ID}"
 
 # The workbook converted to a *native* Google Sheet, so it opens in a
 # browser rather than downloading — and, unlike an .xlsx opened in Drive's
@@ -147,7 +164,7 @@ WORKBOOK_SHEET_URL_PHASE21 = (
 # a citation resolves wherever the file has been filed.
 PHASE1_ARCHIVE_FOLDER_ID = "1udCAR_bD5ghLO4qJOBThXqmSPSlzb3wT"
 PHASE1_ARCHIVE_URL = (
-    f"https://drive.google.com/drive/folders/{PHASE1_ARCHIVE_FOLDER_ID}")
+    f"{FOLDER_URL_PREFIX}{PHASE1_ARCHIVE_FOLDER_ID}")
 
 # The Gemini Notebook, built by hand from scripts/export_notebook_bundle.py
 # — one document per **datacentre-classed** site (the default since 2.10;

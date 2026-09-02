@@ -2756,6 +2756,49 @@ chain stranded, outside the datacentre-only export.
 
 ---
 
+## Four small fixes (2026-09-02)
+
+Asked for by Luke on reading the stale-content audit, each closing a
+ROADMAP item that had been open since August.
+
+**A Drive URL is built in one place.** `export_handover.py` spelled the
+file form twice and the folder form twice, `export_duckdb.py` the file
+form in SQL, `sync_snapshots_drive.py` the folder form in a print — six
+correct copies of two strings, each free to drift. `dcp.drive` now
+carries `file_url`, `folder_url` and `file_url_sql` over two constants,
+and `tests/test_drive_url_one_shape.py` asserts the rule over every file
+under `scripts/` and `dcp/`, the way the release-defaults test does.
+
+**The zero-byte sweep has a durable home.** Three empty documents sit in
+the store from before the fetch guard existed, and nothing since 2.8 had
+looked for a fourth except by hand. `repo.zero_byte_files` is the check
+— `find -size -1c` over a tree — and `build_drive_staging.py` runs it
+over the tree it just wrote, which is hard links into the store, and
+prints what it found beside its other counts every release;
+`scripts/corpus_stats.py` reports the database's view of the same fact
+through `repo.zero_byte_documents`. "Say so in the artefacts" — the site
+report and coverage detail showing an empty document as unavailable
+rather than read — stays on the ROADMAP.
+
+**The reader's "Adjacent power" box links our copies.** Since #252 the
+class's documents live under `adjacent_power/` beside `sites/` on Drive
+(the 2.11 staging build's finding). The folder's id is pinned in
+`dcp/drive.py` as `ADJACENT_POWER_FOLDER_ID`, read back from the sync
+ledger rather than typed; the box links it, and each entry links its own
+application folder once synced, beside the register link it already
+carried, through `_drive_adjacent_map` on the same contract as the site
+maps.
+
+**The notebook card says what the notebook holds.** It said "Every
+site's report and its full findings table"; since 2.10 the bundle
+exports datacentre-classed sites only, which is what pays for the
+per-document word budget. The card now states the scope with a computed
+count — the datacentre-classed rows of the sites list it sits above —
+and names where the other classes are, so a question the notebook does
+not answer reads as out of scope rather than as absence.
+
+---
+
 ## How this project is worked on
 
 Kept here rather than in a handover, because it has been true across

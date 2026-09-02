@@ -521,7 +521,10 @@ that failed to stage still fails the run; `record_drive_ids.py` and
 `verify_drive_sample.py` read the folder name from the builder, so
 those documents get their ids recorded and can be sampled like any
 other. A pass now prints an `adjacent power: N applications, M
-documents` line beside the site count. The folder's Drive id is
+documents` line beside the site count, and a `zero-byte documents
+in the tree` line naming any document held as an empty file — three are
+known, from before the fetch guard existed, and a fourth is news (see
+`repo.zero_byte_files`). The folder's Drive id is
 `dcp.drive.ADJACENT_POWER_FOLDER_ID`, read back from the sync ledger on
 2026-09-02, so anything that links the class as a whole addresses it by
 id, the way `sites/` and `operator_snapshots/` are.

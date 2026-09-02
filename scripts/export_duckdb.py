@@ -42,6 +42,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from dcp import adjudication_gate  # noqa: E402
 from dcp import db, signals  # noqa: E402
+from dcp import drive as _drive  # noqa: E402
 from dcp import operator_disclosure  # noqa: E402
 from dcp import organisations  # noqa: E402
 from dcp import site_class  # noqa: E402
@@ -123,10 +124,9 @@ TABLES: dict[str, str] = {
     # portal, and 512 rows carry a `file://` path naming the machine
     # that ingested them, which resolves for nobody. `bytes_path` is
     # local to the pipeline and is provenance, not a link.
-    "documents": """
+    "documents": f"""
         SELECT a.application_ref, d.kind, d.content_sha256, d.bytes_path,
-               'https://drive.google.com/file/d/' || ddf.file_id || '/view'
-                 AS drive_url,
+               {_drive.file_url_sql('ddf.file_id')} AS drive_url,
                d.url AS source_url,
                CASE WHEN d.url LIKE 'file://%' THEN 'by hand'
                     WHEN d.url LIKE '%#%' THEN 'by hand via browser'

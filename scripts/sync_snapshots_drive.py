@@ -201,7 +201,7 @@ def main() -> int:
         fid = create_folder(svc, retry)
         print(f"\ncreated {FOLDER_NAME} under the handover root")
         print(f"  folder id : {fid}")
-        print(f"  url       : https://drive.google.com/drive/folders/{fid}")
+        print(f"  url       : {drive.folder_url(fid)}")
         print("\nPaste that into dcp/drive.SNAPSHOTS_FOLDER_ID, then re-run "
               "without --create-folder.")
         return 0
