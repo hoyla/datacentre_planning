@@ -3334,6 +3334,31 @@ weight: the one-file rule that shaped a 33.5 MB reader, 29 MB of it the
 508 site pages rendered inline, was written for a copy that opened from
 a Drive folder, and that copy no longer exists.
 
+## Two hand-obtained records, and the tools they needed (2026-09-02)
+
+Luke, preparing the release, had downloaded Creek Way's documents by
+hand — `Havering/P0384.15`, the 2015 outline for a data centre at
+Rainham, thirteen PDFs the Ocella adapter had recorded on 8 August as
+`none_published` because it could not parse the page — and had checked
+Melville Gate's Idox page (`Midlothian/07/00051/FUL`) and found it
+lists no documents, printing both pages to PDF as proof. The inbox
+could take neither as it stood. It resolved only top-level folders
+named `Council_ref`, and his layout was `Council/ref (PTNO-…)`; and it
+would have filed the Midlothian printout as that application's one
+document, inverting the finding. `ingest_inbox.py` now resolves both
+layouts and ignores a trailing annotation, and appends a `fetched`
+outcome on the `manual` route when it ingests, because without that
+row the fold went on saying the register publishes nothing while the
+application held fourteen files. `record_portal_check.py` is new: an
+append-only `acquisition_outcome` row for a check made by hand, on the
+`browser_probe` route the August rows used, with who checked, when,
+what they saw, and the page capture filed under `manual_bundles/` and
+named in the row. Creek Way holds fourteen documents (the register page
+among them, under a name that says what it is) and reads at the next
+corpus reading; Melville Gate's `none_published` is now a person's,
+with the page it rests on, rather than an adapter's "no documents or
+unparseable". PORTAL_NOTES carries the inbox's rules.
+
 ## Adjudication by consequence, now in code (2026-09-02)
 
 Creek Way's first read produced two power figures on a site that had

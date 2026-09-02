@@ -1967,7 +1967,13 @@ here rather than applied from the build lane.
   hundred kilobytes in the page, no API at build time or lookup time,
   so the build stays a function of its inputs and the control works
   offline. Attribution is the directory's (DATA-LICENSING, postcodes.io
-  section). Three things the build must carry: a `near:` part in the
+  section). **The sector file exists** (2026-09-02, later the same
+  evening): `data/external_sources/postcode_sectors.json`, derived by
+  `scripts/derive_postcode_sectors.py` from the August 2026 edition —
+  5,458,179 directory rows, 1,837,452 terminated and 25,593 unpositioned
+  skipped, 11,088 sectors, 354 kB — carrying the edition, the rule and
+  the attribution string. What remains is the control itself, for 2.13.
+  Three things the build must carry: a `near:` part in the
   hash state, which the handoff's state model does not have, so a
   DESIGN_CONFORMANCE entry as a departure Luke chose; the control added
   where `release_diff` reads the bar, or the guard reports it wrongly
