@@ -845,10 +845,14 @@ continuing:
 - **A tab in the workbook that the Sheet does not have.** It is skipped,
   because a tab created by the API arrives unformatted; create it by
   hand once, format it, and it is then kept. **The next release meets
-  this**: the workbook gained an *Excluded applications* tab on
+  this twice**: the workbook gained an *Excluded applications* tab on
   2026-09-02 (the not_dc applications held and shown nowhere else, with
-  why each is held), so either create that tab in the Sheet by hand
-  before step 13 or make a new Sheet, as 2.2 and 2.8 did for theirs.
+  why each is held) and a *Facilities* tab the same day (the campus
+  rosters with each facility's location as far as we know it, filled
+  piecemeal), so either create both tabs in the Sheet by hand before
+  step 13 or make a new Sheet, as 2.2 and 2.8 did for theirs. A tab
+  created empty is filled by the first sync, header and all; format it
+  afterwards.
 - **Reordered columns.** A move is a delete plus an insert, which
   discards the formatting of the column moved, so the reconciliation
   declines it and names the columns instead. The values would still be

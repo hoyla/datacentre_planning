@@ -2795,6 +2795,31 @@ running it before rather than after.
 
 ---
 
+## Where a facility is, with the source that says so (2026-09-02)
+
+Reviewing VIRTUS Slough, Luke found that looking the buildings up on a
+map helped the decision, and asked whether `site_facilities.yaml` was
+the right place to record where each facility is and whether the
+addresses could be seen in a list. It is, on the roster's own contract:
+a facility may now carry a `location` block — address, postcode,
+coordinates — with `source` and `date` required and at least one of the
+three given, and the loader refuses a location with no source the way it
+refuses an attribution with a value. Filled piecemeal as authoritative
+addresses are met, so an absent block means "not yet found", never
+"nowhere", and the workbook's new **Facilities** sheet says exactly
+that: one row per facility, named by its source, its location status,
+the figure the roster attributes to it read from the claims store by
+name at build time (never copied), and the planning-document
+attributions where a document names the building. Seeded with the two
+Slough locations the repository already had sources for — LONDON10 at
+75 Buckingham Avenue from the Companies House charge, LONDON11's
+postcode from its permit — and nothing else, because the pushback on
+the way to this was that operators' campus pages mostly give no
+addresses at all, so most rows will read "not yet found" for a while,
+and that is the coverage gap made visible rather than a blank.
+
+---
+
 ## The first campus reviewed: VIRTUS Slough (2026-09-02)
 
 The 35-campus review began with the one the operator channel had put a
