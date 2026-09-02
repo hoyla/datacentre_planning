@@ -193,9 +193,44 @@ What survives it here:
   `Hillingdon/71554/APP/2025/2436`, each the paperwork of a vetoed
   energy scheme, stranded because family edges cannot see typed
   parents.
-- **The `not_dc` live-member leak**: membership does not track verdict
-  changes, and figures can stand on members whose latest verdict is
-  `not_dc` (Hallen's did). Small, verdict-tracking in kind.
+- **The `not_dc` live-member leak is neither small nor about verdict
+  tracking** (measured 2026-09-02 against the live database, with the
+  clusterer's own rubric fold). **159 live members** carry a latest
+  verdict of `not_dc` that the clusterer's universe rule would not
+  admit, across **50 sites**; 17 sites are *keyed* on such an
+  application (Kingsnorth among them, 162 of its adjudicated figures
+  standing on `Medway/MC/21/0979`); 3 sites hold no in-universe member
+  at all (Keele's Innovation Centre, the Metaswitch headquarters, the
+  Curzon Building — each a Barbour project whose only linked
+  application is `not_dc`); **29 of the members carry 360
+  `site_capacity` figures**, and on two sites the largest load or grid
+  figure rests on one — the British Museum energy centre and the
+  Gardiner Haskins energy centre in Bristol, both showing a figure from
+  an application triage says is not a data centre.
+
+  **The mechanism is admission, not staleness.** Every one of the 159
+  verdicts predates the 2026-09-01 materialise, so membership is not
+  failing to follow a verdict change. `dcp/sites.py` admits them
+  deliberately through two doors that veto only `adjacent_power`: a
+  project link (10 of them), and the family expansion, which adds both
+  ends of every family edge touching an admitted node whatever triage
+  said — 79 have a direct reference to or from an in-universe member,
+  the other 70 arrive through chains between `not_dc` applications.
+  The comment on that code says the expansion exists to admit
+  *untriaged* paperwork, not to overrule a verdict; it overrules
+  `not_dc` on every pass, and nothing downstream stops a `not_dc`
+  member's figure standing as the site's.
+
+  **The pending action is a decision, Luke's**, between two shapes:
+  keep the members (a conditions discharge on an energy-centre parent
+  belongs with its family) but stop a `not_dc` member's figures from
+  standing as a site's capacity — which fixes the two headline figures
+  and leaves the 17 keyed sites and the 3 empty ones as they are; or
+  veto `not_dc` at the family door as `adjacent_power` is vetoed, which
+  ejects up to 149 members, changes site keys, may drop the three
+  sites entirely, and needs a dry-run materialise first so what leaves
+  is seen before it goes. Hallen's was the first instance noticed
+  (2026-08-30) and left with #252's retirements.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
 - **The class has a Drive home since 2026-09-02** — `adjacent_power/`
