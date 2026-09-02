@@ -3359,6 +3359,24 @@ corpus reading; Melville Gate's `none_published` is now a person's,
 with the page it rests on, rather than an adapter's "no documents or
 unparseable". PORTAL_NOTES carries the inbox's rules.
 
+## Adjudication by consequence, now in code (2026-09-02)
+
+Creek Way's first read produced two power figures on a site that had
+never carried an adjudicated capacity, and they went to the long-tail
+GPT-5 batch because the runbook's step 1 named only that script. Luke
+caught it — "don't we send adjudications to Sonnet subtasks?" — and the
+record already said so: power adjudication is split by consequence,
+the Sonnet subagent route for figures that can set a headline number,
+the batch for the tail. The batch's one request was left uncollected
+and its state file set aside with the reason, the Sonnet route
+adjudicated both figures (site_capacity, 2.055 MW cooling and 2.055 MW
+building services, neither a ceiling), and the rule moved into
+`dcp/adjudication_routes.py`, read by both scripts: the long tail now
+holds the consequential set, names it, and sends it only under
+`--include-consequential`. The runbook's step 1 says which route first.
+Luke's point stands wider than the script: who is responsible for a
+single site's adjudication has to be written where the work is done,
+not only where the decision was made.
 ## v2.12 — the corpus release the evening earned (2026-09-02)
 
 Twenty-two PRs had merged since 2.11 shipped that morning, and none
@@ -3408,7 +3426,15 @@ recorded for documents that reached Drive tonight and 2,376 uploaded,
 nine machine readings refreshed for the sites whose inputs moved and
 three withheld as stale by the freshness check — West London
 Technology Park, the Mary Somerville Data Centre and the A41 Watford
-Bypass — which a re-read already in flight will replace at 2.13. Seven of Creek Way's quotes failed the verbatim
+Bypass. A re-submit run straight after found nothing to read, and the
+reason is the read-in-full rule rather than a fault: a site's reading
+is refreshed only once its prose is read in full, and these three are
+deferred as partly read — 20 of West London's 955 documents and 61 of
+Watford Bypass's 349 have no read-log row, and Mary Somerville now
+holds no documents at all, its application having moved on. So the
+2.13 path is the first read of those documents, then the readings
+pass, which will pick them up on its own; the runbook's step 4a said a
+bare `--submit` would, and now says when it will not. Seven of Creek Way's quotes failed the verbatim
 gate and are not escalated. The step-5 reports came back as the
 runbook expects: Ferrybridge C and Watford Bypass contradicted, five
 generation-understated.

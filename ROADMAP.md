@@ -26,7 +26,13 @@ explained, synced to Drive with 2,561 ids recorded, the Sheet's two
 new tabs filled. It becomes the base when its release PR carries
 `index.html` after Luke's review; until then 2.11 is what Cloud Run
 serves, and `data/exports/phase2.11_build/` is the baseline the
-candidate's diff was read against. Cloud Run serves
+candidate's diff was read against. **Left for 2.13 by the freshness
+check**: three readings withheld as stale and deferred as partly read
+— West London Technology Park (20 of 955 documents unread), the A41
+Watford Bypass (61 of 349), and the Mary Somerville Data Centre, which
+now holds no documents at all; the first read of those documents comes
+before the readings pass, which then takes them on its own (HISTORY,
+v2.12). Cloud Run serves
 whatever `index.html` `cloudrun/deploy.sh` was last run against — the
 deploy is the script, not the merge.
 
