@@ -9,6 +9,10 @@ reader), **1,978 applications** in the site universe, **60,142
 documents** — the counts 2.11 was stamped at (HISTORY, 2026-09-01/02),
 unchanged since the evening of 2026-08-30, whose falls were deliberate
 (the Kao merge, the adjacent-power chain, the pre-planning dedup).
+Membership moved once since: the materialise of 2026-09-02 took the
+universe to **1,999 applications** in the same 501 sites (HISTORY,
+"Membership settled before the campus review"); the next build renders
+it.
 Findings and adjudication counts move while the corroboration pass
 runs and are deliberately not restated here — `scripts/corpus_stats.py`
 prints them, and each release states the boundary it was stamped at.
@@ -331,7 +335,15 @@ What survives it here:
     `Northumberland/21/03631/NONMAT`, the substation amendment carrying
     the 99.9 MW offshore-wind figure, leaves Cambois for the Blyth
     substation partition it cites, which is what the 2.7 partition
-    intended and did not reach. It applies at the next materialise.
+    intended and did not reach. **Materialised by Luke on 2026-09-02**
+    (HISTORY, "Membership settled before the campus review"): 501 sites
+    updated, none new, retired or revived; 2,245 member rows (1,999
+    applications, 246 projects); the 65 stale rows retired. Verified
+    afterwards: the joiners are members, the Blyth amendment sits in its
+    partition, and the unsited `not_dc` set with documents fell from 76
+    applications to 61 (56 once #352's rule files the five pieces of
+    paperwork). The six affected sites re-read at the next step 4a; the
+    documents re-home at the next staging build and sync.
   - ~~**Adjacent power takes its own paperwork with it**~~ — **built
     2026-09-02, PR #352.** `dcp.adjacent_power.staged_applications`
     decides the class once and the staging build, the id recorder and
