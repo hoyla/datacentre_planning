@@ -32,6 +32,9 @@ workbook, a queryable database, and the source documents themselves.
   it is actually working. Which reader gets which work is ARCHITECTURE's
   standing policy, not this file's; the local model is never a first
   read.
+- [docs/MODELS.md](docs/MODELS.md) — which model reads what, and
+  why: the comparisons that were run, the decisions made on them, and
+  the ones still open. The roster with counts is ARCHITECTURE's.
 - [docs/BACKUP.md](docs/BACKUP.md) — the database is the part that
   cannot be re-fetched. How it is dumped, encrypted, verified and
   rehearsed, and where the copies live.

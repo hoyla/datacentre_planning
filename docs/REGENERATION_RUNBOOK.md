@@ -295,8 +295,8 @@ only the step-12 build needs the readings in the database, because
 that is the one that publishes `index.html`.
 
 **Pass `--model gpt-5` every time.** The script's default is
-`gpt-5.6-terra`, and ROADMAP records why that model is not the one the
-readings run on: at the same prompt it states about a quarter of the
+`gpt-5.6-terra`, and docs/MODELS.md records why that model is not the
+one the readings run on: at the same prompt it states about a quarter of the
 figures, and `LATEST_SQL` would render it. A bare `--submit` would
 reintroduce that regression on every site whose inputs moved.
 

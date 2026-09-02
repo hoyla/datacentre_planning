@@ -40,7 +40,9 @@ regeneration runbook
 ### Which model runs which task
 
 Row counts measured 2026-08-31; they move, so read them as proportions
-rather than current figures. What does not move is the routing.
+rather than current figures. What does not move is the routing. Why
+each task runs where it does — the comparisons, the decisions taken on
+them and what is still open — is [docs/MODELS.md](docs/MODELS.md).
 
 | Task | Model | Route | Versioned by |
 |---|---|---|---|

@@ -1811,6 +1811,52 @@ strategy reports are the genuine portal refusals. What was
 deliberately deferred — Union Park's 157, Gilmorehill's 491 — stays on
 the ROADMAP with the resume commands.
 
+## Six models on the validation cohort (2026-08-28)
+
+Written up on 2026-09-02, when the model discussion moved out of
+ROADMAP into `docs/MODELS.md` and this comparison turned out never to
+have been recorded in the repository at all — the decision it produced
+had lived in a session's notes for five days. The figures are that
+session's. What corroborates them here is `data/openai_measured_usage.json`
+(126 requests each for `openai:gpt-5.6-luna` and `openai:gpt-5.6-terra`
+over identical input, with terra at 1,210 output tokens a request) and
+the roster counts in ARCHITECTURE; `scripts/compare_readers.py`
+re-measures the rest against the database.
+
+Five readers on the 60-document validation cohort (the gpt-5 variants
+had reached 21 of the 60): `gpt-5:low`, `gpt-5.6-terra`, `gpt-5.6-luna`,
+`claude-sonnet-5` and the local `mlx:Qwen3.6-35B-A3B-4bit`; `gpt-5.6-sol`
+stalled at 124 of 126 requests and was never collected. **Terra beat
+`gpt-5:low` outright** — level on the power families (3.9 against 4.0
+findings per document), half the output tokens (1,210 against ~2,194
+per request), half the label-splitting (24 against 51 quotes carrying
+two or more signal types). **Luna was rejected despite the highest raw
+yield** (49.5 findings per document — 1.58× overall but only 1.25× on
+the power families): the extra was site identity, consultants, bat
+roosts and ground gas, 69% of its findings carried a signal type used
+nowhere else in the cohort, and it duplicated facts under
+near-identical labels. **Sonnet found half the power material** (2.0
+against 4.0) and was the most disciplined reader by every quality
+measure. The local model was last, at 7.4 findings per document.
+
+**Decided** (Luke): Sonnet and terra are the model choices for future
+deep-read phases, and the phase in progress stays on gpt-5 — "we should
+stick to gpt5 for consistency in this acquisition phase." A corpus read
+by two models is a corpus whose coverage differences are partly an
+artefact of which model saw which document, and this comparison had
+just measured that effect at 2.0 against 4.0. A better model is a
+reason to plan the next phase, not to switch inside one.
+
+**Two measurement lessons outlived it.** All three serious readers
+invent at about the same rate, roughly 1% of findings, so the raw gate
+rate does not rank them. And the gate rate was actively misleading:
+63% of luna's rejections were whitespace artefacts against 37% of
+Sonnet's, because a model that tidies broken PDF text was penalised
+against one that copies `d ata centres` verbatim. The same day's
+measurement of the gate over a 900-rejection sample (~37%) became the
+gate fix (PR #295) and the re-gate (PR #298), measured corpus-wide
+three days later at 29.8% of rejections.
+
 ## v2.10 (2026-08-29/30)
 
 Rebuilt in place across the 29th and 30th — Drive and the Google
@@ -2006,6 +2052,86 @@ a section whose own header said it should read "no LINKED web fonts".
 **And `site_aliases.yaml` got its entry here** (PR #287), having been
 built on 2026-08-27 and never written up — the omission that cost two of
 the four passes above.
+
+---
+
+## Terra read every site, and the readings went back to gpt-5 (2026-08-31)
+
+Moved here from ROADMAP on 2026-09-02; the tables, the cost derivation
+and the open items are `docs/MODELS.md`. This is the record of what
+happened.
+
+**The move** (PR #296, Luke's decision on quality). Six sites read on
+both models at the same reasoning effort — gpt-5 at `reading-1.2`,
+terra at `reading-1.3` — showed terra naming figures where gpt-5 named
+categories, tying silence to the structured facts rather than
+reporting "no figures in the pages", flagging naming discrepancies as
+discrepancies, and catching a conditional green claim. It applied the
+2026-08-28 model choice at a phase boundary, which is what that
+decision said to do, and two parked changes rode on the re-read it
+implied — the accumulation rule working as designed: `GATE_VERSION` to
+`gate-2.1` (the squash's 25-character guard, which main was already
+running under the old version string) and `PROMPT_VERSION` to
+`reading-1.4`, which added one duty — name any adjudicated figure whose
+quantity type contradicts its own quote, Luke's suggestion, validated
+on the six sites first. The script's default `--model` became terra.
+
+**The full run — 346 sites, collected clean: 346 stored, 0 withheld, 0
+unparseable — contradicted the pilot.** Over the 344 sites both models
+had read, terra stated 0.89 power figures per site against gpt-5's
+2.75, and 21.8% of sites carried any figure against 33.1%. It was not
+reading less — it produced more quotes per site than either gpt-5 arm —
+it had shifted from stating figures to quoting the text around them.
+Three arms on 17 sites at `medium` effort separated model from prompt:
+`reading-1.4` *helped* gpt-5 (6.65 → 8.53 figures per site, and on
+Didcot from 2 distinct figures to 15, including the `150MVA` and
+`192MW` the pilot had credited to terra), while terra on the same
+prompt stated 2.18. On Elsham gpt-5 stated the 1,000 MW campus load in
+four places and terra in none. But terra was erratic rather than simply
+worse — `reading-1.3` → `1.4` on six sites took Didcot 8 → 0 and
+Watford 6 → 0 while Union Park went 0 → 10 — so its prompt-to-prompt
+variance was nearly as large as its gap to gpt-5, which is why what
+survives is a prompt A/B rather than a verdict. In terra's favour, the
+pilot's open question was answered: it flags quantity-type errors well,
+four in one Elsham reading where gpt-5 at `reading-1.2` caught one.
+
+**Why it was urgent.** `LATEST_SQL` renders the newest reading per
+site whatever version made it — deliberately, so a re-read the gate
+refuses shows as withheld rather than falling back — and after the
+collect 331 of 363 sites would have rendered terra. The append-only
+store preserves the history; it does not protect the page. Nothing
+reached a reader: no build ran between the collect and the fix.
+
+**Decided** (Luke, PR #304): re-run on `gpt-5`/`reading-1.4`, the best
+arm on every column and the only one keeping the new prompt's flagging
+without the figure loss — about $33 against terra's $59, terra
+reasoning roughly 2.3× harder for 6% less visible output. A deferral of
+the terra decision rather than a reversal: gpt-5 is legacy at OpenAI,
+so this bought correctness rather than a durable answer.
+
+**Done the same evening — 331 requests, 0 failed — and the outcome
+beat both arms it was chosen between:** 4.23 power figures per site
+and 40% of sites carrying one across the 361 rendered readings, against
+terra's 0.89 / 21.8% and the `reading-1.2` baseline's 2.75 / 33.1%. The
+prompt change was worth more than the model change: it lifted the
+figure rate 54% above where the corpus stood before either was tried,
+and any A/B is to be scored against that, not the old baseline. What
+rendered: 349 sites on `gpt-5`/`reading-1.4`, 13 still on `reading-1.2`
+with no new input to read, one on terra
+(`SITE-CentralBedfordshire/CB/23/02827/DOC`, which the batch did not
+cover), and two withheld by the guard for the right reason — the
+site's inputs changed between submission and collection. The sample
+cache learned to key on the model as well as the prompt (PR #303): six
+sites held terra answers at `reading-1.4`, and a gpt-5 run would have
+re-used every one and recorded gpt-5 as their author.
+
+**Cost, measured from the batch files and confirmed against the OpenAI
+console.** The 2026-08-29 batch — 182 sites alone overnight — cost
+$16.98 for 15,817,922 input and 1,439,745 output tokens; per site
+71,865 in and 8,228 out, of which 5,849 was reasoning, invisible in
+the stored reading. A full run is about 26M in and 3M out, about $34
+on gpt-5, correcting an earlier "roughly 15M input tokens" that was
+this batch's own figure mistaken for a full run.
 
 ---
 
