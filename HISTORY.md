@@ -1768,6 +1768,19 @@ existed all along, defaulting to 1; the default is now 12, after a
 58,799-file sync spent 9h16m reaching 54% because nobody passed the
 flag. Batching and an atomic ledger write remain open.
 
+**The search bundles' delta became computable, and the bundles joined
+the chain** (2026-08-28/29; recorded here 2026-09-02 when the ROADMAP
+item closed). The Pinpoint/Giant bundle last uploaded on 2026-08-12 had
+its `_manifest.csv` — one row per bundled file with sha256, site, kind,
+tier and action — on the previous laptop; retrieved 2026-08-28 to
+`data/exports/pinpoint_bundle/`, it lets `export_pinpoint_bundle.py
+--already-uploaded` build only what Pinpoint does not already hold,
+with the deliberate exclusions separable from the genuine gap. The
+notebook, Pinpoint and Giant bundles then became runbook step 13a
+(Luke, 2026-08-29): they had been "off the chain, optional, local",
+which is how the notebook came to be three releases stale and the
+search tools four. Tranche 5 shipped with 2.11.
+
 **The three Section 35 sites are no longer empty** (verified
 2026-08-30). The ROADMAP had recorded Quest Park, Dartford and the
 Wapseys stub at 0 documents and 0 findings each — a named site with no
@@ -2052,6 +2065,91 @@ a section whose own header said it should read "no LINKED web fonts".
 **And `site_aliases.yaml` got its entry here** (PR #287), having been
 built on 2026-08-27 and never written up — the omission that cost two of
 the four passes above.
+
+---
+
+## The re-gate reinstated the findings the gate had wrongly rejected (2026-08-31)
+
+Moved here from ROADMAP on 2026-09-02, where it had stood as three
+items — the gate fix, the machine-reading gate's squash and the
+re-gate — with a DONE block appended to the third while the first still
+said the re-gate had not run.
+
+**The finding.** pypdf splits words at line breaks and around units,
+so a page's cached text reads "acro ss the site", "d ata centres",
+"940 µ g/m 3"; a model that quotes the passage correctly then fails a
+gate comparing it against the broken text. A 900-rejection sample on
+2026-08-28 put the loss at ~37%. Measured corpus-wide on 2026-08-31
+over every one of the 50,517 `quote_failed_verification*` escalations
+with cached page text: **29.8% were correct quotes** — 68.8% genuinely
+absent under any normalisation, which is the gate working; 1.4%
+already passing the normaliser's newer dash, glue and quote rules; 0.1%
+on a page out of range — and 36.4% among the 1,144 rejections carrying
+a numeric power unit. Median recovered length 122 characters, first
+percentile 26, so the guard was set at 25: the 20-to-24 band is
+repeated single-word labels ("GENERATORS GENERATORS") that verify
+almost nothing, and excluding them costs 0.7% of recoveries.
+
+**The fix** (PR #295): `verify_findings.fragments_present` falls back to
+a whitespace-blind comparison behind that minimum-length guard, every
+reader routes through it, and 14 tests hold it. The machine-reading
+gate's squash — whitespace-blind since gate-1.2 with no minimum at all
+— took the same guard as `gate-2.1` (PR #296), riding on the model move
+that re-read every site anyway.
+
+**The provenance question answered itself from the record.** An
+earlier version of the item called the reinstated rows' model tag a
+decision for a person, on the false premise that the prompt version in
+force was lost. `deepread_log` carries `(document_id, model,
+prompt_version)` for every read: 50,556 of the 50,565 escalations
+resolve to exactly one pair, nine do not, and `prompt_version` is `1.0`
+on every reader. So a recovered row carries the pair that produced it.
+A synthetic `regate/<reader>` tag was rejected twice over — it would
+assert a model that never read the document, and `model` and
+`prompt_version` are in the `ON CONFLICT` content key, so it would make
+every row permanently un-deduplicable against a genuine re-read, the
+mechanism behind the 20,377 duplicates that predate the unique index.
+Separability came from a new column instead: migration 033 adds
+`findings.gate_version`, NULL for existing rows and set for re-gated
+ones, matching what `site_machine_readings` already recorded.
+
+**The write** (PR #298, `scripts/regate_escalations.py`). Dry run:
+15,679 recoverable — more than the 15,042 measured earlier, because the
+script searches the runners' own candidate order (the claimed page, its
+neighbours, then the other pages sent) and never a page the model was
+not shown; 34,877 stay absent under the fixed gate; 9 dropped as
+unattributable. By original reader: 6,501 `openai:gpt-5:minimal`, 4,404
+`openai:gpt-5:low`, 2,726 `claude-sonnet-5`, 1,965
+`mlx:Qwen3.6-35B-A3B-4bit`, 83 `openai:gpt-5.6-terra`. **14,111
+inserted; 1,568 already present** — findings a later successful read
+had also produced, which the content key deduped on the true pair and
+which the synthetic tag would have duplicated. Findings stood at
+1,378,147 afterwards, the cohort separable on `gate_version =
+'gate-2.1'`.
+
+**Downstream, run in the same pass: under $6, and less churn than
+predicted.** The power-unit tail was 385 after dedup, not the 416
+measured before it; the adjudication batch ran 843 figures across 73
+requests with nothing truncated, `correct_adjudications.py` fixed 14
+(one `thermal_not_electrical`, six thermal-output-with-no-electrical,
+seven `export_limit_not_connection`) and re-ran clean, and generation
+added 51 with 2 correctly refused on span verification. The label
+audit's cap analysis held — the reader renders the top 40 findings per
+site and 91% of sites were already at the cap, so rendered moved
+13,679 → 13,684, displacement not accumulation — but its churn estimate
+did not: 270 findings across 7 requests, 269 verdicts, **47 flagged as
+misfiled, 17.5% against the corpus baseline of 18%**. The reinstated
+rows are no worse filed than what was already on the pages, which is
+the null result the worry about the local reader's 1,965 recoveries
+needed.
+
+**Why it ran before the campus work.** Of the 50,565 quote-failure
+rows, 15,111 carried a numeric value and 1,207 a numeric value with a
+power unit, concentrated in `on_site_power_generation`,
+`grid_connection` and `grid_connection_capacity` — the families the
+facility prior and the campus-scope review reason over. Adjudicating
+campus scopes against a corpus still missing them would have meant
+redoing some of that adjudication when they landed.
 
 ---
 

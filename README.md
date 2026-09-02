@@ -6,13 +6,14 @@ the planning system records but does not collect: how much power these
 sites will draw, what generation they propose on site, how they will be
 cooled, and who is behind them.
 
-**What it holds :** at the 2.9 boundary (2026-08-27), 499 sites
-plus 25 known only at pre-planning stage, 2,034 in-scope planning
-applications, 57,001 documents from council registers — 53,049 of them
-staged for Drive at that boundary, the rest belonging to applications
-reviewed and found not to be data centres — and a layer of 197
-nationally significant energy projects for adjacency. 
-_Last updated 27 August 2026_
+**What it holds :** at the 2.11 boundary (2026-09-01), 501 sites plus
+7 known only at pre-planning stage, 1,978 in-scope planning
+applications and 60,142 documents from council registers — every
+document whose application is in a live site is staged for Drive, and
+step 9 of the runbook prints what is not and why — plus a layer of
+nationally significant energy projects for adjacency (197 at the 2.9
+boundary; it moves as the Section 35 watcher runs). 
+_Last updated 2 September 2026_
 
 The output is a handover package, not a live service: a reader, a
 workbook, a queryable database, and the source documents themselves.
@@ -113,7 +114,11 @@ raise.
   comparison in which a disagreement is the finding, **has not been
   produced**. ROADMAP holds the live fraction; it moves.
 - Document corpus on the local filesystem, mirrored to Google Drive by
-  site and application.
+  site and application, with two classes beside the sites rather than
+  inside them: `adjacent_power/` (substations and energy centres that
+  stand beside a site without belonging to it) and `operator_snapshots/`
+  (the pages capacity claims rest on). Every folder is addressed by its
+  id in [dcp/drive.py](dcp/drive.py).
 - The published reader is one self-contained HTML file — no CDN, no
   build step, no runtime dependency beyond map tiles.
 
@@ -157,7 +162,9 @@ The artefacts carry the phase that produced them, and each release lands
 beside its predecessor on Drive rather than on top of it, so a citation
 of the phase 1 workbook keeps resolving. `--phase` is not cosmetic: the
 title, the header, the stamp and the database's own filename in the
-reader all read from it, and it still defaults to 1.
+reader all read from it. It defaults to the newest release folder's
+phase, which when building the next release is the previous one — so a
+new release passes it.
 
 **The exports must run before `build_drive_staging.py`**, which copies
 the release into the Drive root. Built the other way round, the tree

@@ -6,46 +6,35 @@ re-proposing them — is in [HISTORY.md](HISTORY.md).
 
 Current state: **501 sites** (plus 7 pre-planning; 508 rows in the
 reader), **1,978 applications** in the site universe, **60,142
-documents** — counts as at 2026-08-30 evening; the falls that day were
-deliberate (HISTORY: the Kao merge, the adjacent-power chain, the
-pre-planning dedup). Findings and adjudication counts move while the
-corroboration pass runs and are deliberately not restated here —
-`scripts/corpus_stats.py` prints them, and each release states the
-boundary it was stamped at.
+documents** — the counts 2.11 was stamped at (HISTORY, 2026-09-01/02),
+unchanged since the evening of 2026-08-30, whose falls were deliberate
+(the Kao merge, the adjacent-power chain, the pre-planning dedup).
+Findings and adjudication counts move while the corroboration pass
+runs and are deliberately not restated here — `scripts/corpus_stats.py`
+prints them, and each release states the boundary it was stamped at.
 
 **The base is 2.11, released** (Luke, 2026-09-02, PR #341; HISTORY,
 "v2.11 — the operator rung, and the release the guards earned").
-Artefacts in `data/exports/phase2.11_build/`; the release-diff
-baseline for the next build is `phase2.10_build` until 2.11 is
-superseded, then this one. Cloud Run serves whatever `index.html`
-`cloudrun/deploy.sh` was last run against — the deploy is the script,
-not the merge.
+Artefacts in `data/exports/phase2.11_build/`, which is the baseline
+the next build's release diff is read against. Cloud Run serves
+whatever `index.html` `cloudrun/deploy.sh` was last run against — the
+deploy is the script, not the merge.
 
-**2.11 is the site / facility / campus effort** (Luke, 2026-08-31,
+**2.11 was the site / facility / campus effort** (Luke, 2026-08-31,
 redefining it: "the focus of 2.11 has evolved into the effort to make
-sense of the site/facility/campus issues"). It is the capacity-model
-section below — #247, #250 and #248, the facility prior, the
-ladder-rung design and the 35-campus review — and it is where the
-output is wrong on the page now rather than merely absent: #247
-corrects live output, and #250's failure is invisible by construction,
-a campus dropping out of `at_least_100mw` for a reason about our data.
-It also unblocks other work, since the over-merged site records are
-what hold the Premier Park and DataVita claims under `considered:`.
-
-*Of those, the ladder rung shipped on 2026-09-01 and closed #250's two
-measured cases; #247's facility prior is built and now consumed;
-#248 and the 35-campus review are still open.*
-
-**One thing runs before it, and it is a dependency rather than a rival:
-the verbatim gate's whitespace fix and re-gate** (under Coverage gaps).
-That item used to be described here as the key part of 2.11 and is now
-its preliminary. The reason is sequencing, measured 2026-08-31: of the
-50,565 quote-failure escalations, 15,111 carry a numeric value and
-**1,207 carry a numeric value with a power unit**, concentrated in
-`on_site_power_generation`, `grid_connection` and
-`grid_connection_capacity` — the families the facility work reasons
-over. Hand-adjudicating campus scopes against a corpus still missing
-them means redoing some of that adjudication when they land.
+sense of the site/facility/campus issues") — the capacity-model section
+below. What it shipped: the ladder rung, which closed #250's two
+measured cases; #247's facility prior, built and consumed; the
+adjacent-power relationship (#252); and, as its preliminary, the
+verbatim gate's whitespace fix and re-gate, which ran on 2026-08-31 so
+that the campus work reads a corpus holding the recovered figures
+(HISTORY, "The re-gate reinstated the findings the gate had wrongly
+rejected"). **What carries forward** is the rest of that section: #248,
+the 35-campus review (33 entries still `unreviewed`), #247's general
+case — a campus with no published roster still shows one building's
+figure — and the partitions the review owes. The over-merged site
+records still hold the Premier Park and DataVita claims under
+`considered:`.
 
 **Model choices.** The decisions in force, the comparisons behind them
 and the measurement lessons are in [docs/MODELS.md](docs/MODELS.md);
@@ -107,12 +96,13 @@ citing natively plus the cases `figure_sources` drops because the text
 stands on more than one document; and the datacentre-classed subset
 rather than the whole.
 
-**One downstream cost the re-gate does create, and it is tier 1.** A
+**One downstream cost the re-gate did create, and it was tier 1.** A
 recovered finding carrying a capacity figure reaches a site's power
-panel only through `power_adjudication`, so the 416 recoveries with a
-numeric power unit would join the adjudication tail and want a batch —
-runbook step 1, the same collect-and-submit as any other. Cheap, but it
-is work the re-gate implies rather than work it avoids.
+panel only through `power_adjudication`, so the recoveries with a
+numeric power unit joined the adjudication tail — 385 figures after
+dedup, one batch, under $6 all in (HISTORY, 2026-08-31). Work a
+re-gate implies rather than work it avoids, and the precedent for the
+next one.
 
 **Accumulating now:**
 
@@ -222,7 +212,10 @@ What survives it here:
 
 ### 2. #247 — a campus load figure from one building is shown as the site's
 
-Stockley Park displays 24 MW. That figure is ours and correctly cited —
+Stockley Park displayed 24 MW until the operator rung displaced it on
+2026-09-01 — it now ranks on VIRTUS's 112.5 MW campus figure, labelled,
+and the general case below is unchanged for every campus without a
+published roster. The 24 is ours and correctly cited —
 but it is a **commissioning milestone**, from a document titled *VIRTUS
 LONDON7*: "We expect Data halls 1, 2, 3, 4, 6, 7, 10 to be handed over
 to the client by the end of 2021 … power capacity of 24MW". VIRTUS
@@ -472,9 +465,11 @@ self-auditing roster in the file — see the same day's spec-sheet
 ingest), Stockley Park (the
 LONDON5/LONDON7 wrinkle held unresolved on both attributions) and
 Hayes (LON6/7/8 on Barbour titles, a third identity-source kind the
-build vocabulary carries). The reader build validates liveness;
-nothing renders from the prior yet — "3 of 5 facilities disclose" is
-a later consumer, and the ladder rung is WP4's design question.
+build vocabulary carries). The reader build validates liveness
+and held copies; nothing renders from the prior yet — "3 of 5
+facilities disclose" is a later consumer. The ladder rung was designed
+and built on 2026-09-01 ([docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md))
+and reads the claims and `campus_scope.yaml`, not this prior.
 
 ### 3. #250 — a campus ranked on one facility falls below a line it would clear
 
@@ -710,7 +705,10 @@ nearest precedent for where the line sits.
 - **`at_least_100mw` admitting a campus on a summed figure.** Not
   rejected outright but parked: it needs #250's matching work first,
   because an operator's published campus figure may make the question
-  moot.
+  moot. **It did, for rostered campuses** — the operator rung
+  (2026-09-01) admits a published campus figure, labelled, with no
+  summing; what stays parked is the campus with no roster, which is the
+  35-campus review's residue.
 
 ### How to continue the 35-campus review
 
@@ -746,9 +744,11 @@ which facilities the site holds, which the roster names beyond it, and
 whether a total is constructible. Start with the campuses whose
 rosters landed as snapshot-backed claims: VIRTUS Stockley Park and
 Slough, Kao Harlow, Ark's parks, the CyrusOne pairs. Global Switch
-(80 + 35, both `it_load`, both planning-sourced) remains the first
-`total: sum` test case; sites with no published roster keep the
-one-at-a-time method.
+was the first `total: sum` test case and failed it on 2026-09-01 (#247
+above: each building states two `it_load` figures of different kinds,
+74/80 and 35/30, and 80 + 35 adds the wrong one from each), so it now
+tests the sharper question — which of a building's own figures a total
+may add; sites with no published roster keep the one-at-a-time method.
 
 ### Traps this work hit, recorded so the next session does not
 
@@ -871,10 +871,11 @@ still to do:
   Slough's scope resolves, which is still open in
   `campus_scope.yaml`.
 
-  Still open: the `w-operator` rendering is Luke's to review, and
-  decision 6 (the Pulsant class) is explicitly expected to be
-  revisited rather than settled — the audiences finding those pages
-  belong to is counted in the design document (39 pages, 29 corporate,
+  The `w-operator` rendering review passed on 2026-09-02
+  (PLAN_OPERATOR_RUNG.md). Still open: decision 6 (the Pulsant class),
+  explicitly expected to be revisited rather than settled — the
+  audiences finding those pages belong to is counted in the design
+  document (39 pages, 29 corporate,
   10 consultation, 5 sites holding both, five for five
   corporate-states and consultation-silent).
 - **The review sheet stays the tracker for its "not yet" rows**
@@ -901,8 +902,13 @@ still to do:
   11, 12 and 19 as its Slough campus; `PTNO-12216044` currently claims
   three of them. A `campus_scope.yaml` question, and the operator
   channel's first direct input to the 35-campus review above.
-- **Vantage ↔ Next Generation Data organisation alias** — Luke's
-  question on sheet T3-04; `organisation_aliases.yaml` is the place.
+- ~~**Vantage ↔ Next Generation Data organisation alias**~~ (Luke's
+  question on sheet T3-04) — **assessed 2026-08-31 and not written**:
+  no organisation-name field anywhere in the corpus contains "Next
+  Generation Data"; it survives only in three Barbour project titles
+  whose projects already name Vantage as client and end user, so a
+  member keyed on it would match nothing (HISTORY, the NESO triage
+  entry).
 - **The Cato architect's site states 600 MW**
   (graemenicholls.com/cato-data-centre, snapshotted) — a claims lead
   from a source kind the claims channel does not yet name: neither
@@ -1137,19 +1143,19 @@ The sweep itself is built and its findings recorded
 (EXTERNAL_DATA_SOURCES §6; mappings in `companies-house-spvs.yaml`
 and `companies-house-ownership.yaml`). Still open:
 
-5. **Sites 59 and 5 still block the Premier Park and DataVita
+1. **Sites 59 and 5 still block the Premier Park and DataVita
    matches.** Premier Park's £147.8m and the DataVita figures stay
    under `considered:` in `companies-house-claims.yaml` because their
    site records are over-merged clusters (and DataVita's needs a
    person to establish which building the figure describes). Union
    Park's four claims were unblocked by the site 61 split and matched
    on 2026-08-27.
-6. **Eleven names could not be resolved to a company**, listed under
+2. **Eleven names could not be resolved to a company**, listed under
    `unresolved:` in `companies-house-spvs.yaml` — including "Avalon DC
    Limited" and "BGO Code Propco Limited", both of which are somebody's
    applicant of record and neither of which exists on the register.
    Worth a person's eye rather than another search.
-7. **Confirm the proposed alias-group members.** The sweep resolved
+3. **Confirm the proposed alias-group members.** The sweep resolved
    names to numbers with evidence; folding the confirmed ones into
    `data/priors/organisation_aliases.yaml` is a person's decision at a
    release checkpoint, not a session's.
@@ -1349,21 +1355,6 @@ field and is not publishable as it stands.
   `dcp.drive.file_url` now exists and the snapshot links use it; folding
   the other three in is its own small change.
 
-- **The Pinpoint/Giant delta: get the manifest, compute it, put
-  re-upload in the chain.** The bundle policy — what the reduction
-  drops and why, decided by Luke 2026-08-28 — now lives in the
-  runbook (step 13a); what remains here is the work. The last upload
-  was 2026-08-12 and thousands of documents have arrived since
-  (measure, don't quote). Luke still has the uploaded bundle's
-  `_manifest.csv` on the previous laptop — one row per bundled file
-  with sha256, site, kind, tier and action — so `manifest.sha256`
-  against `documents.content_sha256` gives exactly what Pinpoint and
-  Giant hold and, by omission, what they do not, with the deliberate
-  exclusions separable from the genuine gap. **Get that file off the
-  old laptop before it becomes the thing nobody can find** — the
-  corpus has moved on, so re-running the script cannot reproduce the
-  uploaded bundle. Then fold re-upload into the release chain rather
-  than leaving it to be remembered.
 - **26 applications link to a register host that no longer answers,
   and they would ship in 2.10 that way** (probed 2026-08-28: every host
   the reader links to, 208 of them behind 2,033 linked applications).
@@ -1457,225 +1448,14 @@ field and is not publishable as it stands.
   members and anchor agree and the check sails past. It flags 7 sites,
   none of them this one.
 
-- **The gate fix shipped 2026-08-31; the re-gate that reinstates the
-  findings has not.** `scripts/verify_findings.fragments_present` now
-  falls back to a whitespace-blind comparison behind a minimum-length
-  guard, every reader routes through it, and 14 tests hold it. **What
-  it recovers, measured corpus-wide rather than sampled: 15,042 of the
-  50,517 rejections that have cached page text (29.8%), of which 416
-  carry a numeric value with a power unit.** Those findings are still
-  discarded until someone runs the re-gate — see below.
-
-- **The unguarded squash in the machine-reading gate.** `dcp/machine_
-  reading.quote_in_text` has compared page and quote with all whitespace
-  removed since gate-1.2, with no minimum length — so a very short quote
-  can verify against almost any page. The findings gate gained the same
-  relaxation on 2026-08-31 *with* a 25-character guard, and the honest
-  way to adopt it here is to bump `GATE_VERSION`, because `_already()`
-  keys on it. That marks all ~359 sites for a re-read at roughly 15M
-  input tokens, which is not worth spending on its own. Parked under
-  "Changes waiting for a re-read they cannot justify on their own"; the
-  fix is one line, routing the squash through
-  `verify_findings.fragments_present`.
-
-- **About 30% of the verbatim gate's rejections are correct quotes,
-  lost to whitespace artefacts in the extracted text — 15,042
-  findings** (measured 2026-08-31 over every one of the 50,517
-  `quote_failed_verification*` escalations that has cached page text,
-  matched against the claimed page. **This supersedes the 2026-08-28
-  estimate of ~37% and ~17,000**, which came from a random sample of
-  900; corpus-wide, page-scoped and with the guard applied, it is
-  29.8%. The rate is higher in the families this project is about:
-  36.4% of the 1,144 rejections carrying a numeric power unit.) The
-  premise, which the code already half-accepts:
-  pypdf splits words at line breaks and around units, so the page text
-  says "acro ss the site", "d ata centres", "c ooling", "sust ainable",
-  "940 µ g/m 3", "600m 3". A model that quotes the passage correctly
-  then fails a gate comparing it against the broken text.
-  `verify_findings._PLURAL_SPLIT_RE` already repairs exactly this, but
-  only for a trailing `s` after a 4+ letter word — one letter of
-  twenty-six — and its own comment names the cases it does not cover
-  ("energ y generation", "centr e of").
-
-  Classified against the cached page text, all 50,517: **68.8%
-  genuinely absent** under any normalisation (the gate working —
-  paraphrase or invention), **29.8% recovered** by the new gate, 1.4%
-  which pass the current normaliser already (it gained its dash, glue
-  and quote rules after those rejections were logged), 0.1% on a page
-  out of range. Median recovered length is 122 characters and the first
-  percentile is 26, so these are not short fragments matching by
-  accident — and the guard is set at 25 characters precisely because
-  the 20-to-24 band that remains is dominated by repeated single-word
-  labels ("GENERATORS GENERATORS", "Substation Substation") that verify
-  almost nothing. Excluding them costs 0.7% of recoveries.
-
-  Two reasons this is worth doing before more reading is bought.
-  First, the loss is silent: a rejected finding is counted as a failed
-  gate, which reads as the model behaving badly rather than as
-  evidence discarded. Second, **recovery is free** — the escalation
-  log carries the whole finding payload beside its sha and page, so
-  the rejected quotes can be re-gated offline and reinstated without
-  re-spending a penny of API budget. The fix — a whitespace-insensitive
-  containment test with a minimum-length guard, plus generalising the
-  split repair beyond `s` — is done.
-
-  **What remains is the re-gate. Its provenance question is settled**
-  (agreed with Luke, 2026-08-31), and it turned out to be answerable
-  from the record rather than by judgement — an earlier version of this
-  item called it a decision for a person, on the false premise that the
-  prompt version in force at the time was lost.
-
-  **It is not lost.** `deepread_log` carries `(document_id, model,
-  prompt_version)` for every read, so the pair is recoverable by joining
-  on the document and the reader the escalation reason names. Measured
-  over all 50,565 quote-failure escalations: **50,556 resolve to exactly
-  one pair; nine do not.** And `prompt_version` is `1.0` on every reader
-  and all 98,000-plus log rows, so there was no ambiguity to adjudicate.
-
-  **So a recovered row carries the original pair, recovered from the
-  log.** That model, under that prompt, produced the finding; the gate
-  wrongly rejected it. A synthetic `regate/<reader>` tag would assert a
-  model that never read the document, and — the stronger objection —
-  `model` and `prompt_version` are both in the `ON CONFLICT` content
-  key, so a synthetic tag makes the row permanently un-deduplicable
-  against a genuine re-read. That is how 20,377 duplicates happened
-  before the unique index existed.
-
-  **Separability comes from a new column, not from falsifying the
-  model.** `site_machine_readings` already carries `gate_version`,
-  because which gate admitted a reading is part of how it came to exist;
-  `findings` has no equivalent, so nothing records which gate admitted
-  any finding and the 2026-08-31 gate change is invisible in the data.
-  **Add `gate_version` to `findings`** — NULL for existing rows, set for
-  re-gated ones. Honest provenance and a countable, isolable, retirable
-  cohort at once, and it closes a gap that exists whether or not the
-  re-gate runs.
-
-  **Both details are handled in the implementation:** the rows whose
-  reason-family matches more than one model tag (`openai:gpt-5:minimal`
-  against `:low`) resolve by nearest `completed_at` to the escalation's
-  timestamp; the nine that resolve to nothing are dropped, because a
-  finding whose read cannot be identified should not be reinstated on a
-  guess.
-
-  **DONE — written 2026-08-31**, with the whole downstream chain run in
-  the same pass. `scripts/regate_escalations.py` and migration 033,
-  which adds `findings.gate_version`.
-
-  **14,111 inserted; 1,568 already present.** That second number is the
-  provenance decision paying off rather than a curiosity: those findings
-  had also been produced by a later successful read, and the content key
-  deduped them on the true `(model, prompt_version)`. The synthetic
-  `regate/<reader>` tag rejected above would have made every one of them
-  a permanent duplicate — the mechanism behind the 20,377 duplicates
-  that predate the index. Findings now stand at 1,378,147, with the
-  cohort separable on `gate_version='gate-2.1'`.
-
-  **What it cost downstream: under $6, and less churn than predicted.**
-  The power-unit tail was 385, not the 416 measured pre-dedup. The
-  adjudication batch ran 843 figures across 73 requests with nothing
-  truncated, `correct_adjudications.py` fixed 14 (one
-  `thermal_not_electrical`, six thermal-output-with-no-electrical, seven
-  `export_limit_not_connection`) and re-ran clean, and generation added
-  51 with 2 correctly refused on span verification.
-
-  **The label audit's cap prediction held; its churn estimate did not.**
-  Rendered moved 13,679 → 13,684 — a net five rows against a 14,280
-  ceiling — which is the displacement-not-accumulation the cap analysis
-  predicted. But the churn was 270 findings across 7 requests, not the
-  substantial re-audit implied when this item was written. 269 verdicts
-  stored, 47 flagged as misfiled: **17.5%, against the corpus baseline
-  of 18%**. So the reinstated findings are no worse filed than what was
-  already on the pages — which is the answer to the worry that opened
-  this item, and it is a null result worth keeping.
-
-  **The dry run: 15,679 recoverable** of 50,565 escalations carrying a
-  usable finding. 34,877 remain absent under the fixed gate — the gate
-  being right — and 9 are dropped as unattributable. By the model that
-  originally read the document: 6,501 `openai:gpt-5:minimal`, 4,404
-  `openai:gpt-5:low`, 2,726 `claude-sonnet-5`, 1,965
-  `mlx:Qwen3.6-35B-A3B-4bit`, 83 `openai:gpt-5.6-terra`. All would carry
-  `gate_version = 'gate-2.1'`.
-
-  *15,679 rather than the 15,042 measured earlier: that figure searched
-  the claimed page alone, where the script uses the runners' own
-  candidate order — the claimed page, its neighbours, then the other
-  pages sent to the model. The larger number is the right one, and a
-  quote is still never searched in a page the model was not shown.*
-
-  *The two blocks below are the assessment made before the write, kept
-  because the reasoning is what justified running the chain in one pass
-  — and because one of its two predictions was wrong in a useful way.
-  Both are answered by the outcome above.*
-
-  **Two things to weigh before `--write`.** The reinstated rows have not
-  been through the label audit, which holds 18,209 verdicts under
-  `gpt-5/label-1.0`, last run 2026-08-28 (14,143 `fits`, 3,271
-  `does_not_fit`, 515 `unclear`, 280 `not_a_finding`) — and 1,965 of the
-  recoveries come from the local reader, which HISTORY measures
-  misfiling families at 28.4% against Sonnet's 11.3%. A recovered row
-  carries the label its reader gave it, and the dry run's own sample
-  shows one already: a site area of "approximately 2 hectares" filed as
-  `grid_connection`. That is the reader's error rather than the gate's,
-  and `finding_label_audit` is the machinery for it — but the audit
-  wants re-running over the new rows. And 416 of the recoveries carry a
-  numeric power unit, so they join the adjudication tail and want a
-  batch: the $20–40 tier.
-
-  **Which makes the audit part of this job rather than a later one**
-  (measured 2026-08-31). The audit's cohort is the reader's own
-  `FINDINGS_SQL` — the top 40 findings per site — and that currently
-  renders 13,679 findings across 357 sites, of which 326 (91%) are
-  already at the cap. The ceiling is 14,280, so the 15,679 reinstated
-  rows can add at most ~600 slots; every other effect they have is to
-  displace something already on a page. What they displace it on is
-  length: within a family the order is adjudicated-as-this-site's first,
-  then `length(value_text) DESC`, then id. So the specific risk is a
-  long misfiled reinstatement evicting a correct shorter finding — the
-  same ranking whose earlier version put a landscape paragraph labelled
-  `it_load` at the top of a site's evidence four times over — and the
-  audit is the only machinery that looks at whether a family fits its
-  text. Run it in the same pass as the write, before the build.
-
-  The re-run is incremental: `do_batch` skips every finding already
-  audited under the same `(model, prompt_version)`, so the ask is only
-  the rows that newly render, and `--batch` without `--submit` prices it
-  first. Keep the pair on `gpt-5`/`label-1.0` — the skip is keyed on it,
-  so moving the audit to `gpt-5.6-terra` alongside the reading switch
-  would quietly re-audit all 18,209.
-
-  **The preliminary to 2.11, and its first work** (Luke, 2026-08-28
-  scheduled it as 2.11's key part; 2026-08-31 he redefined 2.11 as the
-  site/facility/campus effort, which makes this the thing that runs
-  first). It costs no API spend: the escalation log
-  (`data/deepread_escalations.jsonl`) carries the whole finding under a
-  `finding` key beside its sha and `claimed_page`, so the rejected
-  quotes are re-gated offline and reinstated. The gate fix landed on
-  2026-08-31; **the re-gate did not, so the 15,042 are still
-  discarded** — the half of "do them together" that is outstanding.
-
-  **Why it precedes the campus work rather than competing with it**
-  (measured 2026-08-31 over the whole escalation log, not a sample):
-  50,565 quote-failure rows, of which 15,111 carry a numeric value and
-  **1,207 carry a numeric value with a power unit** (MW, kW, MVA, kVA,
-  MWth). The largest discarded signal types are
-  `on_site_power_generation` (1,865 rows, 854 numeric), `grid_connection`
-  (847, 430) and `grid_connection_capacity` (458, 429) — the families
-  the facility prior and the campus-scope review reason over. At the
-  ~37% recovery rate measured on the 900-row sample that is of the order
-  of 450 capacity figures, so adjudicating campuses first means
-  adjudicating against a corpus that is still missing them.
-
-  **First thing to measure**, because it either confirms that number or
-  shrinks it: whether the ~37% recovery rate holds for the power-family
-  subset specifically. The 900-row sample was drawn at random across all
-  rejections and the rate may differ by family.
-
-  **Not** an explanation of the PARSE FAIL energy-report gap recorded
-  elsewhere: `read_state = 'parse_failed'` means the model's JSON
-  response was truncated and salvaged, which is unrelated to how the
-  PDF extracted. Whether the whitespace-artefact rate also differs by
-  document class is a separate, unmeasured question.
+- **The verbatim gate's whitespace fix and the re-gate both ran on
+  2026-08-31 and shipped in 2.11** (HISTORY, "The re-gate reinstated
+  the findings the gate had wrongly rejected"). One question survives
+  unmeasured: whether the whitespace-artefact rejection rate differs by
+  document class. It is **not** the PARSE FAIL energy-report gap
+  recorded elsewhere — `read_state = 'parse_failed'` means the model's
+  JSON came back truncated and was salvaged, unrelated to how the PDF
+  extracted.
 
 - **Equinix's UK estate is largely absent from the corpus: three of
   fifteen facilities have a planning record** (measured 2026-08-28
@@ -1731,9 +1511,11 @@ order of effort:
    application exists. Our universe starts at submission, so this class
    is structurally invisible. Decide whether pre-planning entries become
    first-class universe members or a separate watch table.
-3. **Section 35 Directions / NSIP discovery.** The energy layer is
-   ingested, but a data centre attaching itself to an NSIP power project
-   is still invisible on both sides of the join. Xlinks'
+3. **NSIP-to-campus association.** The Section 35 half of this item
+   shipped on 2026-08-25 — the watcher finds directions the week they
+   publish (HISTORY) — but the energy layer is ingested and a data
+   centre attaching itself to an NSIP power project is still invisible
+   on both sides of the join. Xlinks'
    Morocco–UK interconnector lands at Alverdiscott, which is plausibly
    *why* a data campus is proposed there. An NSIP spans hundreds of
    kilometres and many authorities, which the 1 km clustering rule
@@ -1906,7 +1688,8 @@ here rather than applied from the build lane.
   only the latter.
 
   **What to change.** In `scripts/export_reader.py`, the Gemini Notebook
-  card's `what` paragraph (around line 5832): replace "Every site's
+  card's `what` paragraph (find it by the sentence quoted above — a line
+  number here goes stale with every edit): replace "Every site's
   report" with a statement of the actual scope, and name where the rest
   can be found — the site folders and Pinpoint both hold them. The
   count should be generated, not typed: the reader already computes
@@ -1924,14 +1707,6 @@ here rather than applied from the build lane.
   atomic before anyone relies on killing a sync safely. The design
   constraint stands: parallelise the API calls, never the ledger
   writes.
-
-- **Where the offline reading-freshness check belongs in the release
-  chain** (the checks themselves shipped 2026-08-27; HISTORY). It is
-  not yet in the runbook, because rebuilding every input to re-hash it
-  costs ~35 minutes against a ten-minute build, and whether it runs
-  per release or per batch is an editorial call, not a build one. The
-  cheap half — `load_latest(live_only=True)` dropping readings whose
-  site key retired — runs every build already.
 
 - **Four editorial questions from the signal-family repair** (the
   repair itself — the missing-family backfill across 557,747 OpenAI
@@ -2007,14 +1782,20 @@ here rather than applied from the build lane.
   the obvious way to use the column. Either store distinct pages or make
   the ambiguity impossible to misread; do it before a consumer needs it,
   not after one has published from it.
-- **Improve the automated test surface.** The suite is good at internal
-  consistency and blind to two things, and almost every defect found on
-  2026-08-11 sat in one of the gaps. Worth doing properly rather than
-  adding a test per bug — the recurring shape of these is *fixed the
-  symptom, missed the cause*.
+- **Improve the automated test surface.** When this was written the
+  suite was good at internal consistency and blind to three things, and
+  almost every defect found on 2026-08-11 sat in one of the gaps. Two
+  of the three are closed — `tests/test_reader_smoke.py` drives the
+  built reader in a browser, and CI drives the committed one on every
+  push (HISTORY, 2026-08-27); `tests/test_build_determinism.py` builds
+  the reader twice against a Postgres snapshot and asserts the two are
+  identical apart from the stamp (HISTORY, 2.8). The third is open.
+  Worth doing properly rather than adding a test per bug — the
+  recurring shape of these is *fixed the symptom, missed the cause*.
 
-  **Nothing drives the built artefact.** The reader's card links did
-  nothing in a shipped release; a chip took its own flex column and
+  ~~**Nothing drives the built artefact.**~~ *Closed by
+  `test_reader_smoke.py`; the paragraph stays as the reason it exists.*
+  The reader's card links did nothing in a shipped release; a chip took its own flex column and
   squashed the map into a third of the width; an energy checkbox went
   dead inside a projection. All three were invisible in review and
   obvious within seconds of opening the page. A build-and-drive smoke
@@ -2032,7 +1813,9 @@ here rather than applied from the build lane.
   (above) is the better fix, and the test is what stops the next one
   being hardcoded.
 
-  **A build is not yet asserted to be a function of its inputs.** Two
+  ~~**A build is not yet asserted to be a function of its inputs.**~~
+  *Closed by `test_build_determinism.py`; the trap below is why it is
+  an integration test against the real corpus.* Two
   builds of one database differed on 42 lines until 2026-08-22 (HISTORY:
   *A build has to be a function of its inputs*), and they now differ only
   on the generation timestamp. Nothing holds that. The check is cheap and
