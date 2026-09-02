@@ -1933,9 +1933,14 @@ here rather than applied from the build lane.
   place themselves), a name and address from the application, council,
   status and decision date, the power figure with its standing tier
   and never a raw external MW, and the public register links so every
-  feature drills to its source. No Barbour title, Ptno, role block or
-  coordinate anywhere in it, so it needs credit for nothing of
-  Barbour's (DATA-LICENSING). The postcode side is a postcodes.io
+  feature drills to its source. **The stripping is a design choice,
+  not a licensing necessity**: Barbour's position, as Luke reported it
+  later the same evening ("apparently"; second-hand, the written terms
+  unchanged here — DATA-LICENSING), is that a citation in the reporting
+  satisfies them. A public site profile still leaves out the Barbour
+  titles, project numbers and role blocks, because they are the working
+  record rather than the story a reader clicks through to; the credit
+  goes in the reporting either way. The postcode side is a postcodes.io
   overlay — centroid per postcode, or their API at lookup time — under
   the attribution its sources require (DATA-LICENSING, postcodes.io).
   The lookup itself is the visuals desk's pattern on the Guardian's

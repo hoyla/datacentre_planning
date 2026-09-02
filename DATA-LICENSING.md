@@ -60,6 +60,15 @@ preserved in `raw_metadata`.
 - The role blocks carry named-individual contact details; they are held
   for reporting purposes under the Guardian editorial code and must not
   appear in published artefacts or tracked files.
+- **Position reported 2026-09-02** (Luke, second-hand — "apparently";
+  no written terms have changed in this file): Barbour are content with
+  a citation in the reporting. So a public-facing output does not have
+  to be Barbour-free to be publishable; it has to credit Barbour ABI.
+  The two rules above stand as written until the licence text says
+  otherwise: the workbook and its rows are not redistributed, and the
+  role blocks never appear. The ROADMAP's public feed strips Barbour
+  fields as a design choice for a reader-facing profile, not because
+  this section requires it.
 
 ### OpenStreetMap (`data/priors/osm/uk_power_plants.geojson`)
 
