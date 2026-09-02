@@ -290,7 +290,7 @@ aliases:
       Derived name: "SLOUGH TRADING ESTATE - LD14 DATA CENTRE".
 
   - site_key: PTNO-12216044
-    alias: VIRTUS Slough campus - London 3, London 10 and London 11 (formerly Zenium)
+    alias: VIRTUS Slough campus - LONDON3, 10 and 11 in the planning record; VIRTUS also rosters LONDON4, 9, 12 and 19, unlocated
     source: |
       Three Barbour projects at SL1 4QZ: Zenium's "London One" fit-out
       at 12 Liverpool Road, and VIRTUS LONDON 3 and LONDON 11. Permit
@@ -305,6 +305,22 @@ aliases:
       Companies House charge naming "london 10, 75 buckingham avenue"
       against VIRTUS LONDON 10 LIMITED — so the campus is no longer
       only Liverpool Road, which is why this alias no longer says so.
+
+      Renamed 2026-09-02 after the campus-scope review (campus_scope.yaml,
+      Luke). VIRTUS's own campus page rosters seven facilities — LONDON3,
+      4, 9, 10, 11, 12 and 19 — of which the planning record holds three;
+      the other four have no application, Barbour record, SPV or permit
+      of their own anywhere in the corpus (ROADMAP, Coverage gaps). The
+      alias names all seven so that a search for any of them lands here,
+      and says which three the record holds so that it does not assert a
+      building at this site that nobody has placed — Stockley Park's
+      alias names LONDON6 and LONDON14 because both sit on the site's own
+      stems; these four are unlocated. "Formerly Zenium" was dropped: the
+      Zenium record is probably CyrusOne's LON1 (operator-claims.yaml,
+      considered), the partition and permit-operators files disagree
+      about who bought Zenium's estate, and the derived name keeps the
+      word searchable without the alias asserting a corporate history
+      nobody has established.
 
   - site_key: PTNO-12355161
     alias: Ipswich Road, Slough - Data Centres (Segro)
