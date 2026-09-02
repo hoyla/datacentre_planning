@@ -19,8 +19,14 @@ prints them, and each release states the boundary it was stamped at.
 
 **The base is 2.11, released** (Luke, 2026-09-02, PR #341; HISTORY,
 "v2.11 — the operator rung, and the release the guards earned").
-Artefacts in `data/exports/phase2.11_build/`, which is the baseline
-the next build's release diff is read against. Cloud Run serves
+**The 2.12 candidate is built** (the evening of 2026-09-02; HISTORY,
+"v2.12 — the corpus release the evening earned"): artefacts in
+`data/exports/phase2.12_build/`, diffed against 2.11 with every line
+explained, synced to Drive with 2,561 ids recorded, the Sheet's two
+new tabs filled. It becomes the base when its release PR carries
+`index.html` after Luke's review; until then 2.11 is what Cloud Run
+serves, and `data/exports/phase2.11_build/` is the baseline the
+candidate's diff was read against. Cloud Run serves
 whatever `index.html` `cloudrun/deploy.sh` was last run against — the
 deploy is the script, not the merge.
 

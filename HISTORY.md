@@ -3358,3 +3358,62 @@ among them, under a name that says what it is) and reads at the next
 corpus reading; Melville Gate's `none_published` is now a person's,
 with the page it rests on, rather than an adapter's "no documents or
 unparseable". PORTAL_NOTES carries the inbox's rules.
+
+## v2.12 — the corpus release the evening earned (2026-09-02)
+
+Twenty-two PRs had merged since 2.11 shipped that morning, and none
+of them reached the data and visuals teams until something rendered.
+So the candidate is the corpus as it stood at the end of the day:
+VIRTUS Slough one site on the Iron Mountain rule, with Segro's Malton
+Avenue record retired into it and 580-581 Ipswich Road moved across
+(#359, #360); membership settled, sixty-five stale member rows retired
+with their sites and the `not_dc` residue named on its own workbook
+sheet rather than hidden (#349–#355); the operator rung's first real
+test at Slough, where the operator's 145.5 MW ranks a site whose
+planning record states no total (#356); facility locations as far as
+anyone can cite them, with a Facilities sheet to see them in (#357,
+#358); NTT's six pages actually fetched after two dead snapshots had
+silenced the operator entirely, nine claims and six matches (#361), the
+organisation under its four names (#362), and Slough 2 and 3 recorded
+as buildings the corpus does not hold (#363); adjacent power taking its
+own paperwork into its own Drive tree (#352); Creek Way's fourteen
+documents obtained by hand and read for the first time, with two
+figures adjudicated by the consequential route after the long tail had
+taken them by mistake (#368, #369); and the reader leaving Drive (#367),
+the postcode sectors derived for the control that is not yet built
+(#370), and the Sites table's cosmetics — centred columns, the design
+system's chevrons, round markers, and a tooltip that no longer opens
+off-screen (#372, closing #301).
+
+**Run as the runbook says, with three things worth recording.** The
+materialise retired one site and no more, verified by a set diff of the
+rebuilt clusters against live membership: two clusters changed, 498
+did not. The first read of Creek Way went through the GPT-5 batch in
+five minutes for fourteen documents; its two figures then went to the
+wrong adjudicator because the runbook named only one, which is why
+`dcp/adjudication_routes.py` exists (#369). And the diff against 2.11
+explained every line, twice: at step 8, the retirement, two panels whose
+Drive links lagged the ledger until the step-12 rebuild, an amendment
+that moved to its parent's site through the family door, and a
+detector counting a control's number as its identity (#371); at step
+12, the retirement again and six panels with fewer links, every one of
+them a site whose machine reading changed that evening — three re-read
+under their moved inputs and citing fewer documents, three withheld as
+stale — which is the readings mechanism, not a link that broke.
+
+**What the release carries.** Five hundred sites, 1,999 applications,
+57,559 documents held, 45 sites at or above 100 MW (44 → 45, the
+Slough figure), 282 capacity claims with 101 matched, 2,561 Drive ids
+recorded for documents that reached Drive tonight and 2,376 uploaded,
+nine machine readings refreshed for the sites whose inputs moved and
+three withheld as stale by the freshness check — West London
+Technology Park, the Mary Somerville Data Centre and the A41 Watford
+Bypass — which a re-read already in flight will replace at 2.13. Seven of Creek Way's quotes failed the verbatim
+gate and are not escalated. The step-5 reports came back as the
+runbook expects: Ferrybridge C and Watford Bypass contradicted, five
+generation-understated.
+
+**Not in it, by decision.** The "near a postcode" control (specified,
+the sectors committed, the control for 2.13 so that the diff stays
+readable and a person sees it first); the site-11 partition; the
+unsited-claims layer; the public feed.
