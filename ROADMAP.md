@@ -1402,6 +1402,26 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
+- **Five documents are held in formats nothing can read, and two were
+  fetched as nothing at all** (2026-09-03, found while clearing the
+  readings backlog). Eleven documents have no text cache and cannot
+  get one under the current extractor: four PDFs pypdf refuses to open
+  ("Invalid object in /Pages"), five whose format has no loader — two
+  `.docx` with valid zip magic, one `.xls`, one `.rtf`, one `.pdf`
+  whose bytes are not a PDF — and two whose fetched file is zero
+  bytes, at `PTNO-12817834` and `SITE-Ealing/200958CONS`. None holds a
+  site out of the machine readings, which is why this is a gap and not
+  a blocker. **The `.docx` pair is the cheap half**: the sniffing
+  tests already say 255 corpus documents arrive mis-named as Word
+  files, so a loader that reads them is worth writing, and
+  `tests/test_extract_formats.py` is where its contract goes. The two
+  zero-byte files are an acquisition question — the corpus claims a
+  document it does not hold, so they want a re-fetch and, if the
+  portal still serves nothing, an `acquisition_outcome` row saying so
+  rather than a permanent silent gap. The four corrupt PDFs are
+  probably genuinely unreadable; worth one look at whether the bytes
+  match what the portal serves before accepting that.
+
 - **Two of VIRTUS's seven Slough facilities have no record at all**
   (2026-09-02). The campus is one site now — the partition was extended
   on the Iron Mountain rule the evening the facilities were located
