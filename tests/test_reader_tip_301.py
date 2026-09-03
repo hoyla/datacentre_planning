@@ -14,7 +14,10 @@ SRC = (Path(__file__).resolve().parent.parent / "scripts" / "export_reader.py").
 
 
 def test_the_tooltip_opens_below_and_grows_leftwards():
-    rule = re.search(r"\.tip \.tiptext\{([^}]*)\}", SRC).group(1)
+    # The base rule, at the start of its line: the map sidebar's override
+    # for the chips' "?" (which stands at the left edge there and must open
+    # rightwards) is a longer selector and is not the rule this issue fixed.
+    rule = re.search(r"^\.tip \.tiptext\{([^}]*)\}", SRC, re.M).group(1)
     assert "position:absolute" in rule and "top:20px" in rule and "right:-8px" in rule
     assert "bottom:" not in rule and "left:" not in rule
 

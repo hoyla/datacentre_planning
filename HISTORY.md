@@ -3450,3 +3450,148 @@ build, deployed at 21:26 as Cloud Run revision `dc-reader-00008-drr`
 with anonymous requests verified redirected to sign-in on every probed
 path, and the EdgeOne signpost probe clean: 22 paths refused, forged
 cookie rejected. 2.12 is the base.
+
+## The bar gives the table its space back (2026-09-03)
+
+Luke, an hour after the postcode box landed on localhost: "I wonder if
+we're loading the top of the site page with too much and reducing the
+amount of space for 'real content'." Measured at 1440 × 900 before
+anything changed: masthead 45, tabs 49, the controls 131 because the
+new box had pushed "Any origin" onto a second line, the chips and their
+help paragraph 104, so the table's head began at 329 px and the first
+site at 380 — two-fifths of the window above the first row. The three
+menus were 343, 279 and 201 px wide for closed labels of 47, 95 and
+63, because a native select is as wide as its widest option: "All
+sites" was paying for "Only where reading or acquisition is
+incomplete". His first question was whether a select could be as wide
+as its label until opened — it can, by `field-sizing: content` where
+supported and a measured width elsewhere — and his answer to the
+answer was to shorten the options instead, one label per line,
+applied verbatim: "Sites with power figure", "Fully read sites",
+"Incompletely acquired/read sites", "Sites whose figures may rise",
+"Sites near national energy projects"; the classes without their
+"Only" ("Datacentres (427)", "Disguise suspects (48)", "Procedural
+only (26)", "No planning record (6)"); "Nearby energy search" and
+"Operator watchlist" among the origins. The class and origin labels
+are single-sourced in `dcp`, so the rename shows wherever a class or
+an origin is named — row, methodology, workbook — not only in the
+menu. Abbreviation alone was measured as 184 px, short of the 210 the
+bar needed at 1440, and it turned out to be enough: the six controls
+fit on one line there with the count and map link on a second, the
+menus at 263, 186 and 184 px. The paragraph under the chips, two lines
+on every visit for people who read it once, went behind the bar's own
+"?" — the same text, opening leftwards from the row's end on the table
+and rightwards in the map's sidebar, where the icon stands at the left
+edge and a leftward box would have been off-screen ("Agreed on putting
+the labels paragraph into a help icon"). After: the controls 113, the
+chips 50, the table's head at 257 px and the first site at 309 — the
+table gets a fifth of the window back. Recorded in DESIGN_CONFORMANCE
+as a departure; the labels have a source test of their own, and the
+issue-#301 test now anchors to the base tooltip rule so the sidebar's
+override does not trip it.
+
+Label-fit sizing — a select as wide as its chosen label until opened —
+was demonstrated on a scratch copy before being declined: choosing the
+longest option moved the boxes to its right by 169 px and re-wrapped
+the bar, which is the movement Luke was worried about, so the choice
+was abbreviation ("OK, let's just use abbreviation"). The postcode
+box's placeholder lost its example — "Near a postcode", not "Near a
+postcode, e.g. SL1 4BG": "people don't need to know how to write a
+postcode", and since the parser reads a typed sector the example was
+teaching a form that no longer matters — and the box is sized to the
+label, 150 px rather than 230. At 1440 px the six controls and the
+count now share the first line and only the map link and its "?" sit
+on a second; the whole bar on one line needs 1,563 px.
+
+"Oh god it's so agonisingly close to fitting on our standard laptop
+screen width now." Three more cuts, none to his labels: the search
+input at 230 px rather than the handoff's 300 (its placeholder was
+already clipped at 300; "Search site, council, applicant…" fits at
+230 and the full list is the box's title), the radius reading "10 km"
+beside "Near a postcode" rather than "within 10 km", and the gap
+between controls, which the handoff does not give, at 10 px rather
+than 14. The whole bar now needs 1,418 px: one line at 1,440, where
+the controls stand 73 px tall and the first site row starts at 269 px
+against 380 at the start of the morning; two lines still at 1,280.
+The conformance test that asserted the handoff's 300 px moved with the
+departure and cites the row that records it.
+
+Three more from Luke, and a fourth he found by looking: the search
+box's placeholder is his "Search site, council, address etc", with a
+title that lists everything the search actually matches — site name
+and key, address, council, proposal, applicant, operator, end user,
+advisers, organisations named in the documents, cooling method,
+nearest energy project, application references; the map link reads
+"See on map" whether or not anything is filtered ("The 'all' isn't
+necessary" — the count beside it already says, and the 2026-08-25
+rule that put "all" there only when it meant it retires); and its
+"?" follows it at 5 px as the column headers' do, where the row's gap
+plus the icon's own margin had made 15. Then the placeholder lost its
+last letter to "a lot of unusable space on the right": a search input
+reserves room for its clear button while empty — Chromium hides the
+button with visibility, not display — so the box is 230 px and the
+button is hidden with display while the placeholder shows, appearing
+with something to clear. The bar needs 1,398 px now. Luke, on the
+standard Guardian laptop: it goes to two lines only when "N cannot be
+placed" lengthens the count, "and I'm OK with that".
+
+## Near a postcode, built (2026-09-02/03)
+
+Luke asked for it the evening the Guardian's reader callout went out,
+kept it out of 2.12 on the session's advice so the release diff stayed
+readable and a person saw it first, and asked for it the moment 2.12
+was live. Built as specified: a second search-shaped box and a radius
+select beside the search input in the shared filter bar — the 2.3
+redesign removed the map's own controls so that one bar serves the
+table and the map, and a map-only box would have put that back — at
+sector precision from the 11,088 centroids derived from the August
+2026 ONS Postcode Directory (#370) and embedded in the page, so no
+lookup leaves it and the build stays a function of its inputs. "SL1
+4BG" resolves to sector SL1 4, about a kilometre; an outward code
+alone to the mean of its sectors; nonsense says "no such postcode
+sector" beside the count rather than emptying the table silently.
+Survivors reorder nearest first and carry their straight-line distance
+at the head of the row's grey line — not a new column, so the table
+keeps its shape and the diff its column count — and go back in their
+own order when the box clears. A site with no coordinate cannot be
+placed, is not shown, and is counted beside the count string, because
+to a reader "nothing near your postcode" reads as "no data centre".
+The state travels in the hash as `near:` and `km:`, "See on map"
+frames the radius rather than the survivors, a jump to one site clears
+it like the other filters, and the release diff now reads the bar's
+text inputs by id so the control is tracked. The directory's
+attribution renders beside the map's tile credit and in the
+methodology's sources. Driven headlessly on a scratch build and by a
+smoke test in CI: SL1 4BG within 5 km keeps the Slough Trading Estate's
+sites nearest first, states what cannot be placed, and restores the
+table on clearing.
+
+**Two defects from the first hour on localhost (Luke, 2026-09-03):**
+"I don't think a full postcode actually works — you have to enter a
+district." The full postcode did work; two other things did not, and
+together they looked like that. The parser read a typed sector, "SL1
+4", as a district SL14 that does not exist — the regex took the digit
+into the outward code because the space had been stripped before the
+match — so the precision the control claims was the one input it
+could not read; and a postcode typed on the Map tab filtered the pins
+without moving the map, which left 22 survivors as a dot among 197
+energy rings at the country's zoom. Now the space is the parse, a
+lone trailing letter is a postcode mid-keystroke, an unspaced "SL14"
+falls back to sector 4 of SL1 when no such district exists, and a
+postcode typed or arrived at while the map is the view on screen
+frames the radius the way "See on map" does, once per postcode and
+radius, returning to the plotted set when it clears. The parser is
+exercised under node from the page's own source, the map framing in
+the smoke test.
+
+The first CI run on the branch failed twice for one reason: CI drives
+the committed `index.html`, the 2.12 release, which has no postcode
+box and keeps the handoff's 300 px search input. The near smoke test
+waited thirty seconds for a `#near` that was not there, and the
+conformance test asserted 230 px of a page that had never been
+crowded. Both now feature-detect the box rather than key off
+`READER_HTML`: without it the smoke test skips, saying the page
+predates the control, and the conformance test expects the handoff's
+300 — so a scratch build of this code is still driven in full, and
+the released page is asserted as what it is. The behaviour reaches CI
+proper with the release that carries the control.

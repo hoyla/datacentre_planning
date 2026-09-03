@@ -111,6 +111,10 @@ _ROW_RE = re.compile(r'<tr[\s>]')
 _SECTION_RE = re.compile(r'<h2\b[^>]*\bclass="sec"')
 _BOX_RE = re.compile(r'<h4>')
 _OPTION_RE = re.compile(r'<option[^>]*>([^<]*)')
+# A text control in the bar is a control too: the search box, and since
+# 2026-09-02 the "near a postcode" box. Named by id, so a placeholder
+# rewording is not a removal.
+_INPUT_RE = re.compile(r'<input type="search" id="([a-z]+)"')
 _CHECKBOX_RE = re.compile(r'<label[^>]*><input type="checkbox"[^>]*>\s*([^<]+)')
 _STAMP_RE = re.compile(r'<div class="sub">(.*?)</div>', re.DOTALL)
 _STAMP_NUM_RE = re.compile(r'([\d,]+)\s+([a-z][a-z ]+?)(?:\s*·|\s*$)')
@@ -149,7 +153,8 @@ def reader_shape(path: Path) -> ReaderShape:
     if bar:
         body = bar.group(1)
         shape.controls = ([control_label(o) for o in _OPTION_RE.findall(body)]
-                          + [control_label(c) for c in _CHECKBOX_RE.findall(body)])
+                          + [control_label(c) for c in _CHECKBOX_RE.findall(body)]
+                          + ["input#" + i for i in _INPUT_RE.findall(body)])
     for view, body in views:
         shape.rows_per_view[view] = len(_ROW_RE.findall(body))
         if view == "sites" and not bar:

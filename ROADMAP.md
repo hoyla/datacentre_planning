@@ -1958,8 +1958,16 @@ here rather than applied from the build lane.
   unlocatable sites, the councils not covered, the pre-window buildings
   the unsited-claims layer is for (NTT Slough, Equinix LD5, ServerChoice
   Stevenage), and that a permitted scheme is not a built one.
-- **"Near a postcode" in the reader, specified and not built** (Luke and
-  the session, 2026-09-02, the evening of the reader callout). The
+- ~~**"Near a postcode" in the reader, specified and not built**~~ — **built
+  the same night, for 2.13** (HISTORY, "Near a postcode, built"): the
+  control in the shared bar, sector precision from the embedded
+  centroids, survivors nearest first with their distance at the head of
+  the row's grey line, the hash carrying `near:` and `km:`, the count
+  string naming the sites that cannot be placed, "See on map" framing
+  the radius, the release diff reading the new input, and a browser
+  test driving SL1 4BG end to end. The specification, kept for the
+  record (Luke and the session, 2026-09-02, the evening of the reader
+  callout): the
   internal counterpart of the public lookup above, for triaging callout
   responses. Decided: it is a control in the **shared filter bar**, not
   a box on the map — the 2.3 redesign removed the map's own search,

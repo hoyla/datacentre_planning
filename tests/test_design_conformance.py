@@ -319,7 +319,26 @@ def test_filter_bar_and_chips_match_section_four(page):
     assert search["padding"] == "9px 12px"
     assert search["borderTopColor"] == "rgb(153, 153, 153)"
     assert search["borderRadius"] == "4px"
-    assert search["width"] == "300px"
+    # 230, not the handoff's 300 — the departure DESIGN_CONFORMANCE records
+    # under "Shorter menu options": with the postcode box in the bar the
+    # row needed 1,563 px at 300 and wrapped on a 1,440 px laptop. A page
+    # built before the postcode box (the committed 2.12 index.html that CI
+    # drives) has no crowding to answer and keeps the handoff's 300, so
+    # the box's presence decides which figure is the right one.
+    has_near = page.locator("#near").count() > 0
+    assert search["width"] == ("230px" if has_near else "300px")
+    if has_near:
+        # An empty search input's clear button is hidden by display, not
+        # by visibility, so the placeholder is not clipped by a button that
+        # is not there (Luke, 2026-09-03). Chromium reports the
+        # pseudo-element's stock display through getComputedStyle whatever
+        # the sheet says, so the check is that the rule is in the sheet;
+        # the page shows it works.
+        rules = page.evaluate("""() => [...document.styleSheets]
+            .flatMap(s => { try { return [...s.cssRules]; } catch (e) { return []; } })
+            .filter(r => r.selectorText && r.selectorText.includes('search-cancel-button'))
+            .map(r => r.cssText)""")
+        assert any("placeholder-shown" in r and "display: none" in r for r in rules), rules
 
     off = css_of(page, "#cohortchips .chip[data-cohort]", "backgroundColor",
                  "color", "borderTopColor", "fontSize", "padding",
