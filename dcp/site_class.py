@@ -137,7 +137,9 @@ CLASS_DESCRIPTIONS = {
         "reached either way."),
 }
 
-# The same classes as the object of a "show me only…" control. Kept
+# The same classes as the options of the "Any kind of site" menu — the
+# menu's default says it narrows, so the options do not (Luke,
+# 2026-09-03: shorter options, a narrower box). Kept
 # beside the labels so the reader cannot drift into its own vocabulary
 # for classes defined here.
 # What a catalogue-decided datacentre says about itself. The ordinary
@@ -149,11 +151,11 @@ CATALOGUE_DESCRIPTION = (
     "by any planning application in the corpus.")
 
 CLASS_FILTER_LABELS = {
-    DATACENTRE: "Only datacentres",
-    DISGUISE_SUSPECT: "Only disguise suspects",
-    ADJACENT_POWER: "Only adjacent power",
-    PROCEDURAL_ONLY: "Only procedural-only sites",
-    BARBOUR_ONLY: "Only sites with no planning record",
+    DATACENTRE: "Datacentres",
+    DISGUISE_SUSPECT: "Disguise suspects",
+    ADJACENT_POWER: "Adjacent power",
+    PROCEDURAL_ONLY: "Procedural only",
+    BARBOUR_ONLY: "No planning record",
 }
 
 CLASS_ERROR_HINT = (

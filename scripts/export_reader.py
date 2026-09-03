@@ -1628,6 +1628,10 @@ tr.breakdown>td{color:var(--mut)}
 #filterbar.down-the-side .chips{flex-direction:column;align-items:stretch;
   gap:6px;padding:12px 16px}
 #filterbar.down-the-side .chips .chip{width:100%;text-align:center}
+/* Down the side the chips stack full-width and the "?" stands at the
+   left edge, so its box opens rightwards there rather than off-screen. */
+#filterbar.down-the-side .chips .tip{align-self:flex-start;margin:2px 0 0 4px}
+#filterbar.down-the-side .chips .tip .tiptext{left:-8px;right:auto;width:250px}
 #filterbar.down-the-side .chips .help{flex-basis:auto;font-size:12.5px;
   margin-top:6px}
 #filterbar.down-the-side .chk{font-size:13.5px}
@@ -5707,7 +5711,7 @@ def main() -> int:
  <ul class="m">
   <li><b>Keyword search</b> across council planning registers via the PlanIt index —
    datacentre language in the application description.</li>
-  <li><b>Operator watch-list</b> — searches for named developers, operators and advisers.</li>
+  <li><b>Operator watchlist</b> — searches for named developers, operators and advisers.</li>
   <li><b>Spatial sweeps</b> around known sites, which catch the substations, grid connections
    and enabling works that never mention a datacentre.</li>
   <li><b>Family links</b> — the parents and children of applications already held.</li>
@@ -6172,11 +6176,11 @@ def main() -> int:
  </select>
  <select id="f">
   <option value="all">All sites</option>
-  <option value="power">Only sites with a power figure</option>
-  <option value="known">Only fully-read sites</option>
-  <option value="unknown">Only where reading or acquisition is incomplete</option>
-  <option value="prov">Only sites whose figures may rise</option>
-  <option value="energy">Only sites near a national energy project</option>
+  <option value="power">Sites with power figure</option>
+  <option value="known">Fully read sites</option>
+  <option value="unknown">Incompletely acquired/read sites</option>
+  <option value="prov">Sites whose figures may rise</option>
+  <option value="energy">Sites near national energy projects</option>
  </select>
  <select id="sc">
   <option value="">Any kind of site</option>
@@ -6221,12 +6225,17 @@ def main() -> int:
  <button type="button" class="chip clearchip" id="clearcohort" hidden
   onclick="setCohort('')">Clear</button>
  {cohort_chips}
- <span class="help">Each chip is a named rule over the adjudicated figures, with its
+ <!-- The paragraph that explained the chips sat under them on every
+      visit, two lines tall, for people who read it once (Luke,
+      2026-09-03: "loading the top of the site page with too much").
+      It is the same text, behind the bar's own "?" pattern. -->
+ <span class="tip" tabindex="0" role="note" aria-label="What the chips are">?<span
+  class="tiptext">Each chip is a named rule over the adjudicated figures, with its
   definition and limits on the <a href="#signals" onclick="show('signals');return false">Signals</a>
   tab. The count is the number of sites the chip would leave <em>from what is on
   screen now</em>, so it falls as the filters above narrow the set; the cohort's
   own size is the one on the Signals tab. The table and the map show the same
-  filtered set — these controls belong to both.</span>
+  filtered set — these controls belong to both.</span></span>
 </div>
 </div>
 

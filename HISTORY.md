@@ -3451,6 +3451,45 @@ with anonymous requests verified redirected to sign-in on every probed
 path, and the EdgeOne signpost probe clean: 22 paths refused, forged
 cookie rejected. 2.12 is the base.
 
+## The bar gives the table its space back (2026-09-03)
+
+Luke, an hour after the postcode box landed on localhost: "I wonder if
+we're loading the top of the site page with too much and reducing the
+amount of space for 'real content'." Measured at 1440 × 900 before
+anything changed: masthead 45, tabs 49, the controls 131 because the
+new box had pushed "Any origin" onto a second line, the chips and their
+help paragraph 104, so the table's head began at 329 px and the first
+site at 380 — two-fifths of the window above the first row. The three
+menus were 343, 279 and 201 px wide for closed labels of 47, 95 and
+63, because a native select is as wide as its widest option: "All
+sites" was paying for "Only where reading or acquisition is
+incomplete". His first question was whether a select could be as wide
+as its label until opened — it can, by `field-sizing: content` where
+supported and a measured width elsewhere — and his answer to the
+answer was to shorten the options instead, one label per line,
+applied verbatim: "Sites with power figure", "Fully read sites",
+"Incompletely acquired/read sites", "Sites whose figures may rise",
+"Sites near national energy projects"; the classes without their
+"Only" ("Datacentres (427)", "Disguise suspects (48)", "Procedural
+only (26)", "No planning record (6)"); "Nearby energy search" and
+"Operator watchlist" among the origins. The class and origin labels
+are single-sourced in `dcp`, so the rename shows wherever a class or
+an origin is named — row, methodology, workbook — not only in the
+menu. Abbreviation alone was measured as 184 px, short of the 210 the
+bar needed at 1440, and it turned out to be enough: the six controls
+fit on one line there with the count and map link on a second, the
+menus at 263, 186 and 184 px. The paragraph under the chips, two lines
+on every visit for people who read it once, went behind the bar's own
+"?" — the same text, opening leftwards from the row's end on the table
+and rightwards in the map's sidebar, where the icon stands at the left
+edge and a leftward box would have been off-screen ("Agreed on putting
+the labels paragraph into a help icon"). After: the controls 113, the
+chips 50, the table's head at 257 px and the first site at 309 — the
+table gets a fifth of the window back. Recorded in DESIGN_CONFORMANCE
+as a departure; the labels have a source test of their own, and the
+issue-#301 test now anchors to the base tooltip rule so the sidebar's
+override does not trip it.
+
 ## Near a postcode, built (2026-09-02/03)
 
 Luke asked for it the evening the Guardian's reader callout went out,

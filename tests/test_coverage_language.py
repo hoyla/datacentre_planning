@@ -132,7 +132,7 @@ class TestOriginRoutes:
     def test_more_specific_prefixes_win(self):
         """'energy_national:' must not be swallowed by a looser rule."""
         assert origin.routes_for(
-            ["energy_national:PTNO-12548129"]) == ["Energy search near a site"]
+            ["energy_national:PTNO-12548129"]) == ["Nearby energy search"]
 
     def test_repeated_routes_collapse_but_distinct_ones_are_kept(self):
         got = origin.routes_for(["dc_keyword", "dc_keyword", "barbour:1"])
