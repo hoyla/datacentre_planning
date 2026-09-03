@@ -2438,22 +2438,66 @@ None is abandoned; each is a known, scoped piece of work.
   two is wrong and the conflict has to be resolved rather than
   averaged.
 
-  **Site 11 is the next partition candidate** (2026-09-02, found while
-  matching NTT's Hemel Hempstead pages). `PTNO-12063929` is Gyron's
+  **Site 11 is the next partition candidate, and its anatomy is now
+  measured** (found 2026-09-02 while matching NTT's Hemel Hempstead
+  pages; taken apart 2026-09-03). `PTNO-12063929` is Gyron's
   estate-scale record — "GYRON LIMITED - NEW DATA CENTRE AND STORAGE
   FACILITY", The Campus, Maylands Avenue — holding seven Dacorum
-  applications across Maylands Avenue, Spring Way, Finway Road and
-  Blossom Way plus Amazon's Barbour project at 45 Maylands Avenue
-  (12700933). NTT's own pages place Hemel Hempstead 2, 3 and 4 at 150
-  Maylands Avenue HP2 7DF, Campus, Spring Way HP2 7TN, and 1 Blossom
-  Way HP2 4ZB; Amazon's Hemel permit (222 MWth, held under
-  `considered`) is at 3A Blossom Way, HP2 4ZB. Two operators on one
-  street in one record is the site-23 shape exactly, and it is why
-  NTT's three Hemel claims are matched `probable`, not strong. The
-  Iron Mountain rule applies: draw NTT's campus from its own pages,
-  and what is left is Amazon's — or the same building under a tenant's
-  permit, which is the question a partition would have to answer
-  first.
+  applications and two Barbour projects, Gyron's (12063929) and
+  Amazon's at 45 Maylands Avenue (12700933). Its centre is 51.7611,
+  -0.4364 with a 1 km radius and its members span 1.9 km.
+
+  Who filed each, counted from the applications' own documents
+  (`findings` where the signal names an applicant):
+
+  | application | position | applicant in the documents |
+  |---|---|---|
+  | `Dacorum/4/01399/13/MFA` Campus, Spring Way HP2 7UP | 51.7616, -0.4366 | Gyron Internet ×33 |
+  | `Dacorum/24/02039/MOA` 45 Maylands Ave (Blue Box Storage) HP2 7DF | 51.7617, -0.4388 | Northtree Investment Management ×53 |
+  | `Dacorum/21/04714/SCE` 3A Blossom Way | 51.7560, -0.4358 | none recorded |
+  | `Dacorum/26/00152/FUL` 3A Blossom Way HP2 4ZB | 51.7559, -0.4344 | Amazon ×7 |
+  | `Dacorum/26/00267/MFA` Plot 3 Maylands Ave HP2 4FQ | 51.7548, -0.4378 | Amazon ×74 |
+  | `Dacorum/4/00203/18/FUL` 4 Finway Road HP2 7PT, two gas engines | 51.7715, -0.4408 | Heddon Development / AGR Renewables ×3 |
+  | `Dacorum/19/02504/ROC` 4 Finway Road, varying the above | 51.7715, -0.4406 | none recorded |
+
+  Four parties, not two, and three geographic groups. The five
+  southern and middle records are mutually within 1 km — a legitimate
+  spatial blob a partition has to divide. **The Finway Road pair is
+  not**: it is 1.09 km from the nearest application and 1.19 km from
+  Gyron's project, and it reaches the cluster through a single edge to
+  Amazon's Barbour coordinate, 0.96 km away, with the family reference
+  in `19/02504/ROC` carrying its sibling. So a gas-engine consent by a
+  third party sits inside an NTT campus record on one Barbour
+  coordinate's 40 metres of slack.
+
+  NTT's own pages place Hemel Hempstead 2, 3 and 4 at 150 Maylands
+  Avenue HP2 7DF, Campus, Spring Way HP2 7TN, and 1 Blossom Way HP2
+  4ZB; Amazon's Hemel permit (222 MWth, held under `considered`) is at
+  3A Blossom Way, HP2 4ZB. Four NTT claims totalling 37.8 MW of
+  critical IT load are matched to site 11 as `probable`.
+
+  **The partition the evidence supports**, on the Iron Mountain rule
+  (a campus is what the operator's own pages say it is):
+
+  1. `gyron-spring-way-hemel` — `Dacorum/4/01399/13/MFA` and Barbour
+     12063929. NTT's Hemel 3 by its own address.
+  2. `amazon-blossom-way-hemel` — `Dacorum/26/00267/MFA`,
+     `Dacorum/26/00152/FUL`, `Dacorum/21/04714/SCE` and Barbour
+     12700933.
+  3. `northtree-45-maylands-hemel` — `Dacorum/24/02039/MOA`. A
+     different applicant on its own outline; Barbour puts Amazon at
+     the same street number, which is the landlord-and-tenant question
+     the unsited-claims note also raises.
+  4. `finway-road-gas-engines-hemel` — `Dacorum/4/00203/18/FUL` and
+     `Dacorum/19/02504/ROC`. Third-party generation 1.1 km north.
+
+  **Two things to settle before it is written.** Whether NTT's Hemel 4
+  at 1 Blossom Way and Amazon's permit at 3A Blossom Way are two
+  buildings or one under a tenant's permit — if one, group 2 is NTT's
+  and the claims follow it. And whether the Finway Road pair is a site
+  of its own or adjacent power to whichever campus it serves, which
+  decides between a fourth partition and an `adjacent_power` record.
+  Both need a person; neither can be read off the corpus.
 - **Requests outstanding, and three drafted awaiting Luke's send.**
   NESO and Ofgem were written to on 2026-08-12 and replies are due
   around 10 September. The three never-sent requests are now drafted in

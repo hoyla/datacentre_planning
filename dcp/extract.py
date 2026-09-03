@@ -54,6 +54,7 @@ import dataclasses
 import datetime as dt
 import json
 import logging
+import os
 import re
 from pathlib import Path
 from typing import Iterable
@@ -126,8 +127,55 @@ def cached_engine(cache: Path) -> str | None:
 
 
 def is_stale_cache(cache: Path) -> bool:
-    """True if this cache records a failure to load rather than a result."""
+    """True if this cache records a failure to load rather than a result.
+
+    Deliberately narrow: an unparseable cache is corrupt, which is a
+    different fact from "no loader ran" and has its own test. A cache
+    that is EMPTY rather than corrupt — the zero-byte file a write that
+    died on an unencodable character used to leave — is a re-extraction
+    question, and `extract_text_corpus.partition` asks it by size.
+    """
     return cache.exists() and cached_engine(cache) in STALE_ENGINES
+
+
+# A PDF's font mapping can hand pypdf a lone surrogate — half of a
+# character pair, valid inside a Python string and not encodable as
+# UTF-8. Two 26MB appeal bundles for the West London Technology Park
+# carried one at the same offset, and writing their caches raised
+# UnicodeEncodeError *after* `write_text` had truncated the file. The
+# result was a zero-byte cache, which `partition` reads as an extracted
+# document (staleness is only checked for non-PDFs, and only by reading
+# the engine), so nothing ever retried them: two prose documents held
+# a 937-document site out of the machine readings for a month.
+#
+# Both halves are fixed here. The text is stripped of lone surrogates
+# before it is serialised — they carry no character, so nothing is lost
+# that was ever readable — and the file is written under a temporary
+# name and `os.replace`d, which either happens or does not. A failure
+# now leaves the previous cache standing instead of a truncated one.
+_LONE_SURROGATE = re.compile(r"[\ud800-\udfff]")
+
+
+def strip_surrogates(value):
+    """Recursively drop unpaired surrogates from strings in a payload."""
+    if isinstance(value, str):
+        return _LONE_SURROGATE.sub("", value)
+    if isinstance(value, list):
+        return [strip_surrogates(v) for v in value]
+    if isinstance(value, dict):
+        return {k: strip_surrogates(v) for k, v in value.items()}
+    return value
+
+
+def write_cache(cache: Path, payload: dict) -> None:
+    """Serialise a cache payload atomically, surviving unencodable text."""
+    text = json.dumps(strip_surrogates(payload), ensure_ascii=False)
+    tmp = cache.with_suffix(cache.suffix + f".{os.getpid()}.tmp")
+    try:
+        tmp.write_text(text, encoding="utf-8")
+        os.replace(tmp, cache)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def extract_pdf(bytes_path: Path) -> list[str]:
@@ -913,7 +961,7 @@ def extract_document(
         pagination=pagination,
     )
     cache.parent.mkdir(parents=True, exist_ok=True)
-    cache.write_text(json.dumps({
+    write_cache(cache, {
         "sha": doc.sha,
         "bytes_path": str(doc.bytes_path),
         "pages": doc.pages,
@@ -921,7 +969,7 @@ def extract_document(
         "extracted_at": doc.extracted_at,
         "ocr_pages": list(doc.ocr_pages),
         "pagination": doc.pagination,
-    }, ensure_ascii=False))
+    })
     return doc
 
 

@@ -3595,3 +3595,77 @@ predates the control, and the conformance test expects the handoff's
 300 — so a scratch build of this code is still driven in full, and
 the released page is asserted as what it is. The behaviour reaches CI
 proper with the release that carries the control.
+
+## The readings' backlog was four documents, not eighty-one (2026-09-03)
+
+2.12 left three sites with readings the freshness check had withheld,
+and the note said the cause was 20 unread documents at the West London
+Technology Park and 61 at the A41 Watford Bypass. Both figures were
+held-minus-read across every document, and the rule that defers a site
+is about **prose**: graphical documents are skipped by design and
+repetitive classes are sampled, so neither holds a site back. Measured
+against `load_coverage_detail`, the real gap was two prose documents
+each, and Mary Somerville needed nothing at all. Four documents, and
+each of the three sites was blocked for a different reason.
+
+**West London: two 26MB appeal bundles behind a zero-byte cache.**
+`extract_document` wrote its cache with `write_text`, which truncates
+the file before it encodes. Both bundles carry a lone surrogate — half
+a character pair, out of a PDF font mapping — about 162,000 characters
+in, so the UTF-8 encode raised and left an empty file. `partition`
+reads a cache that exists as an extracted document (staleness is only
+checked for non-PDFs, and only by parsing the engine out), so nothing
+retried them from 6 August. The write now strips lone surrogates and
+goes through a temporary file and `os.replace`; `partition` treats a
+zero-byte cache as stale for any format, by size rather than by parse.
+`is_stale_cache` keeps its narrow meaning, because corrupt is not "no
+loader ran" and its own test says so. Four zero-byte caches existed
+corpus-wide; all four re-extracted, to 822, 822, 220 and 39 pages, and
+the two bundles then read as 839 findings.
+
+**Watford Bypass: two photographs with no words in them.** Tesseract
+read both JPEGs as blank in August. A document with no text is never
+sent to a reader, and a document never sent leaves no log row, so it
+counts as unread prose for ever — the state `no_text` exists for
+exactly this and `--record-no-text` writes it. Run over the cohort: 243
+documents, held on 7 sites, every one of which had these as its only
+prose gap. Six became fully read on the spot; the seventh was West
+London, waiting on its bundles. So the readings had been missing seven
+sites, not one, and for a month.
+
+**Mary Somerville: nothing to read, correctly.** Its only planning
+application left the site on 30 August and what remains is a Barbour
+project, which holds no documents. The site is `barbour_only` and its
+withheld reading is the right answer until a planning record appears.
+
+Sites fully read: 352 before, 356 after, of 360 with prose. What is
+left is one zero-byte *source* file at PTNO-12817834 and one document
+at SITE-Ealing/200958CONS — a fetch that produced nothing, which is an
+acquisition question, not an extraction one — and two Renfrewshire
+sites holding a single graphical document each. A separate tail of 11
+documents has no cache at all: 4 PDFs pypdf cannot open, 5 in formats
+with no loader (.docx, .xls, .rtf), and 2 whose bytes are zero. None
+of them holds a site back, and the .docx pair is worth a loader.
+
+## Creek Way's seven rejected quotes are rejected correctly (2026-09-03)
+
+2.12 shipped with seven of Creek Way's findings held out by the
+verbatim gate and unescalated. Replayed against the current gate and
+the current cached text, all seven still fail, and none is a power
+figure: three parties from a drawing's title block, an ecology
+percentage, two flood-risk references and a flood-zone definition.
+
+The cause is one thing in six of the seven, and it is worth naming
+because it will recur on every scanned application. All three documents
+are OCR (`pypdf+tesseract`, every page), and the model quoted what the
+page *means* rather than what the OCR *says*. The closest miss is 98.4%
+similar: the page reads "Tne Havering Borough Council Strategic Flood
+Risk Assessment", the model wrote "The". Another drops a drawing
+number that sits between two lines of a title block ("e + m design
+partnership **2477/23** Architects and Planning Consultants"). One
+quotes a sentence whose first half is on the previous page. Each is a
+faithful reading and a false quote, and the gate is right to refuse
+them: a quote that has been silently corrected cannot be checked
+against the source by a reporter, which is the whole point of holding
+it. They stay rejected, and `deepread_escalations.jsonl` keeps them
+with their documents.

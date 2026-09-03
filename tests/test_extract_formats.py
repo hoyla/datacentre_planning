@@ -21,6 +21,7 @@ that the library will accept.
 from __future__ import annotations
 
 import io
+import json
 import zipfile
 from pathlib import Path
 
@@ -347,3 +348,63 @@ def test_bytesio_workbook_is_not_a_path_dependency():
     reopened = openpyxl.load_workbook(buf, read_only=True, data_only=True)
     assert [c.value for c in next(reopened.worksheets[0].rows)] == \
         ["Total IT load", "96 MW"]
+
+
+# ---------------------------------------------------------------------------
+# The cache write survives text it cannot encode (2026-09-03)
+# ---------------------------------------------------------------------------
+
+def test_a_lone_surrogate_is_dropped_rather_than_killing_the_write(tmp_path):
+    """A PDF's font mapping can hand pypdf half of a character pair.
+
+    Two 26MB appeal bundles for the West London Technology Park carried
+    one at the same offset. `write_text` truncated the file, then the
+    UTF-8 encode raised, and the zero-byte cache that was left read as an
+    extracted document — so two prose documents held a 937-document site
+    out of the machine readings until 2026-09-03.
+    """
+    cache = tmp_path / "doc.pages.json"
+    extract.write_cache(cache, {"pages": ["fine", "half \ud835 a pair"],
+                                "engine": "pypdf"})
+    got = json.loads(cache.read_text())
+    assert got["pages"] == ["fine", "half  a pair"]
+    assert got["engine"] == "pypdf"
+
+
+def test_the_cache_write_is_atomic_and_leaves_no_temporary_behind(tmp_path):
+    """A write that dies must leave the previous cache standing."""
+    cache = tmp_path / "doc.pages.json"
+    extract.write_cache(cache, {"pages": ["first"], "engine": "pypdf"})
+
+    class Unserialisable:
+        pass
+
+    with pytest.raises(TypeError):
+        extract.write_cache(cache, {"pages": [Unserialisable()]})
+    assert json.loads(cache.read_text())["pages"] == ["first"]
+    assert [p.name for p in tmp_path.iterdir()] == ["doc.pages.json"]
+
+
+def test_a_zero_byte_cache_is_re_extracted_whatever_the_format(tmp_path, monkeypatch):
+    """`partition` must not read a died write as an extracted document.
+
+    Staleness by engine is checked only for non-PDFs, because reading the
+    engine parses the whole payload; a zero-byte file is checked by size,
+    which is cheap enough for every format. Four such files existed when
+    this was found, two of them the West London Technology Park's.
+    """
+    import scripts.extract_text_corpus as etc
+
+    monkeypatch.setattr(extract, "RAW_TEXT_ROOT", tmp_path)
+    empty = extract.cache_path_for("documents", "Chiltern/PL/24", "a" * 40)
+    empty.parent.mkdir(parents=True, exist_ok=True)
+    empty.write_text("")
+    full = extract.cache_path_for("documents", "Chiltern/PL/24", "b" * 40)
+    full.write_text('{"pages": ["text"], "engine": "pypdf"}')
+
+    docs = [("Chiltern/PL/24", "a" * 40, "/x/bundle.pdf", "Appeal"),
+            ("Chiltern/PL/24", "b" * 40, "/x/other.pdf", "Appeal")]
+    todo, stale, done = etc.partition(docs)
+    assert [d[1] for d in todo] == ["a" * 40]
+    assert stale == {"a" * 40}, "a re-extraction must force past the dead cache"
+    assert [d[1] for d in done] == ["b" * 40]
