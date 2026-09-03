@@ -3596,6 +3596,36 @@ predates the control, and the conformance test expects the handoff's
 the released page is asserted as what it is. The behaviour reaches CI
 proper with the release that carries the control.
 
+## A withheld reading is not a reading (2026-09-03)
+
+Accounting for the readings after the backlog cleared, three sites had
+a withheld row as their latest. None was a fault: two belong to sites
+retired on 27 August, so the rows are history for records that no
+longer exist, and the third is Mary Somerville, which holds no
+documents. Exactly one live site carries a withheld reading, and it
+is right to.
+
+The accounting turned up a trap that had not yet caught anything.
+When the collector finds that a site's input changed between
+submission and collection, it withholds the reading — correctly, since
+what was read no longer exists — and stores the row against the
+**rebuilt** input's hash, which nothing has read. `_already` skips a
+site when any row carries its current hash, so a site whose documents
+then settle at that hash would never be read again, and nothing would
+say so: the reader renders a withheld reading, which reads as a
+judgement about the site rather than as a queue that cannot advance.
+Eleven live sites have been withheld this way and all eleven hold a
+live reading now, because their inputs moved again and produced a hash
+no row carried. So: latent, with eleven near misses and no victim.
+
+`_already` now discounts a row withheld for that reason, and only that
+reason — a reading the GATE refused is a verdict on content the model
+did read, and re-reading the same input would re-spend on every run
+for an answer already refused. The reason string became a constant so
+the collector and the skip cannot drift apart, which a test asserts.
+The dry run after the change reports nothing to read, because there is
+nothing: 357 sites read under their current input, 3 deferred, and the
+three deferred are the memberless sites above.
 ## The readings' backlog was four documents, not eighty-one (2026-09-03)
 
 2.12 left three sites with readings the freshness check had withheld,
