@@ -360,9 +360,23 @@ them up, their hash having moved) and collect again before step 12, or
 let the marker stand for this release and say so in step 15. **A bare
 `--submit` will not pick up a site that is partly read** — the
 read-in-full rule defers it before the hash is even compared, and on
-2026-09-02 all three sites the check named were deferred that way (two
-with unread documents, one with none left). Read their documents
-first; the readings pass then takes them on its own.
+2026-09-02 all three sites the check named were deferred that way.
+Read their documents first; the readings pass then takes them on its
+own.
+
+**The gap is measured over PROSE, not over documents held.** 2.12's
+note recorded that backlog as "20 of West London's 955 documents and
+61 of Watford Bypass's 349"; both were held-minus-read over every
+document, and the rule compares `prose_read` with `prose_held` from
+`site_profile.load_coverage_detail`. The real gap was two prose
+documents each — four in total, not eighty-one, and worth an hour
+rather than a day. Take the figure from the coverage detail before
+quoting it or planning around it.
+
+**One withheld reading is expected and permanent** — Mary Somerville,
+which holds no documents. See "Expected, and not a fault" below before
+investigating a withheld panel, and filter to live sites before
+counting them: two of the rows belong to sites retired on 2026-08-27.
 
 ### 5. Look at what moved
 
@@ -389,6 +403,10 @@ documents). You are looking for:
 - The null-capacity sweep prints **PROVISIONAL** and refuses to give a
   quotable number while any candidate figure is unadjudicated. If it
   still says that after step 2, step 1 did not finish.
+- **Seven gate failures on `Havering/P0384.15`** (Creek Way) are
+  permanent and correct — OCR'd scans where the model cleaned the text
+  it quoted. See "Expected, and not a fault" below; they need no
+  action, and re-gating will not pass them.
 
 ### 6. Back up before rebuilding
 
@@ -1177,6 +1195,80 @@ carried are kept as the shape of what belongs there:
   "this page" badge as "everything is on the screen in front of you" and
   missed the other tabs entirely; the badge now says "this web portal"
   and each named component is a link.
+
+## Expected, and not a fault — do not investigate these again
+
+Each of these looks like a defect in a report, a count or the reader,
+and each has been taken apart once. The answer is here so nobody
+spends the afternoon again. Anything NOT on this list is new.
+
+- **One withheld machine reading: Mary Somerville
+  (`PTNO-12843110`).** Its only planning application,
+  `Edinburgh/18/00199/FUL`, left the site on 2026-08-30; what remains
+  is a Barbour project, which holds no documents, so the site is
+  `barbour_only` and there is nothing to read. The reading it does
+  carry was written on 2026-08-28 from 32 documents that are no longer
+  its own, which is why the freshness check withheld it, correctly.
+  The readings pass will never take it: sites are selected only if
+  they hold a document with bytes, and the read-in-full rule defers a
+  site with no prose. It leaves this list when a planning record
+  appears for the scheme, or when the site is retired. **Do not read
+  its withheld panel as a fault, and do not try to re-read it.**
+
+- **Counting withheld readings without filtering to live sites reports
+  three, not one.** Two of the three belong to sites retired on
+  2026-08-27 — `SITE-EastDunbartonshire/TP/ED/25/0245` and
+  `SITE-Hillingdon/39707/APP/2021/4456`, both `unlocatable`, both with
+  no live member — so their rows are history for records that no
+  longer exist. `site_machine_readings` is keyed by `site_key` and has
+  no liveness of its own; the build's own accessor gets this right
+  (`load_latest(conn, live_only=True)`), and a hand query must join
+  `sites` and test `retired_at IS NULL`. Both were mistaken for sites
+  locked out of the queue on 2026-09-03, which is the whole reason
+  this bullet exists.
+
+- **Eleven live sites carry a historical `inputs changed between
+  submission and collection` withholding, and all eleven hold a live
+  reading now.** The reason is infrastructure, not a judgement: the
+  site's documents moved while the batch was in flight. `_already()`
+  discounts such a row since 2026-09-03, so a site cannot be skipped
+  because of one. Only the LATEST row per site matters — read it
+  through the fold, never by counting rows.
+
+- **Seven of Creek Way's findings are permanently rejected by the
+  verbatim gate (`Havering/P0384.15`).** They sit in
+  `data/deepread_escalations.jsonl` and will appear in any
+  gate-failure tally for that application: three parties from a
+  drawing's title block (document 67143), an ecology percentage
+  (67145), two flood-risk references and a flood-zone definition
+  (67146). None is a power figure. All three documents are scans read
+  by `pypdf+tesseract`, and in six of the seven the model quoted what
+  the page *means* rather than what the OCR *says* — the closest miss
+  is 98.4% similar, the page reading "Tne Havering Borough Council
+  Strategic Flood Risk Assessment" where the model wrote "The";
+  another drops a drawing number sitting between two lines of a title
+  block; one quotes a sentence whose first half is on the previous
+  page. Replayed against the current gate and the current cached text
+  on 2026-09-03: all seven still fail, and they should. A quote that
+  has been silently corrected cannot be checked against the source by
+  a reporter, which is the point of holding it. `regate_escalations.py`
+  will never pass them, because the gate is not what is wrong. **The
+  only thing that would change the answer is a re-read producing
+  verbatim quotes** — worth having if the same three documents ever
+  matter to a story, and not worth a pass of its own.
+
+- **Coverage will not reach 100% of sites, and the remainder is not a
+  backlog.** As of 2026-09-03, 356 of 360 sites with prose are read in
+  full. Of the four: one document at `PTNO-12817834` and one at
+  `SITE-Ealing/200958CONS` were fetched as **zero-byte files**, so the
+  corpus claims a document it does not hold — an acquisition question,
+  not an extraction one — and two Renfrewshire sites
+  (`SITE-Renfrewshire/20/0204/PP`, `/20/0228/PP`) hold a single
+  graphical document each and therefore no prose at all. Separately,
+  11 documents have no text cache and cannot get one: four PDFs pypdf
+  cannot open, five in formats with no loader (`.docx`, `.xls`,
+  `.rtf`), and the two zero-byte files. None of them holds a site
+  back. The `.docx` pair is worth a loader and is on the ROADMAP.
 
 ## Decisions outstanding — Luke's, not the runner's
 
