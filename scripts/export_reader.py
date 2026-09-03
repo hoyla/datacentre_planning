@@ -834,12 +834,19 @@ input,select{font:inherit;font-size:15px;padding:9px 12px;border:1px solid #999;
 /* 230, not the handoff's 300: with the postcode box and its radius in the
    bar, the whole row — count and map link included — needs 1,563 px at
    300 and the map link wrapped on a 1,440 px laptop. The placeholder
-   was already clipped at 300; the shorter one fits at 230, the full
-   list is the title. The 10 px gap is ours (the handoff gives none),
-   and the radius reads "10 km" beside "Near a postcode" (Luke,
-   2026-09-03: "so agonisingly close to fitting on our standard laptop
-   screen width"). */
+   was already clipped at 300; "Search site, council, address etc" is
+   Luke's and fits at 230, and the full list is the title. The 10 px
+   gap is ours (the handoff gives none), and the radius reads "10 km"
+   beside "Near a postcode" (Luke, 2026-09-03: "so agonisingly close to
+   fitting on our standard laptop screen width"). */
 input[type=search]{width:230px;min-width:0}
+/* A search input reserves room for its clear button even while it is
+   empty — Chromium hides the button with visibility, not display — so
+   the placeholder lost its last letter to 40 px of blank on the right
+   (Luke, 2026-09-03: "a lot of unusable space"). No text, no button:
+   the placeholder gets the room, and the button appears with something
+   to clear. */
+input[type=search]:placeholder-shown::-webkit-search-cancel-button{display:none}
 /* "Near a postcode" — a second search-shaped box in the shared bar, and the
    distance it puts at the head of a row's grey line while it is on. Sized
    to its placeholder: the example postcode came out of it (Luke,
@@ -849,6 +856,10 @@ input[type=search]{width:230px;min-width:0}
 .skey .dist{font-weight:700;color:var(--brand);margin-right:4px}
 select{width:auto}
 .count{color:var(--mut);font-size:14px;margin-left:auto}
+/* In the bar the "?" follows its link at 5 px, as the column headers'
+   do after their text: the row's 10 px gap plus the icon's own 5 px
+   margin had put it 15 px away (Luke, 2026-09-03). */
+.controls .tip{margin-left:-5px}
 button.toggle{font:inherit;font-size:14px;padding:7px 14px;border:1px solid #999;
   border-radius:999px;background:var(--bg);color:var(--brand);cursor:pointer;
   transition:background .13s,border-color .13s,color .13s}
@@ -2510,12 +2521,14 @@ function apply(){
   if(NEAR){ orderRows(true); nearOrdered=true; }
   else if(nearOrdered){ orderRows(false); nearOrdered=false; }
   paintChipCounts(base);
-  // Nothing to project is not a map worth opening. And the label says
-  // "all" only when it means it (Luke, 2026-08-25): the link opens what
-  // is on screen, so while anything is filtered it is not all of them.
+  // Nothing to project is not a map worth opening. The label used to say
+  // "all" while nothing was filtered (Luke, 2026-08-25: "all" only when it
+  // means it) and "See on map" otherwise; now it is "See on map" always
+  // (Luke, 2026-09-03: "The 'all' isn't necessary") — the count beside it
+  // already says whether the set is everything, and the shorter label is
+  // 20 px the bar needs on a laptop.
   const seemap=document.getElementById('seemap');
   seemap.disabled = shown===0;
-  seemap.textContent = (shown===rows.length) ? 'See all on map' : 'See on map';
   // The map is the same set, drawn differently. It is told here rather
   // than deciding for itself, so the two views cannot disagree about
   // what is filtered.
@@ -6177,8 +6190,8 @@ def main() -> int:
 <span id="filterbar-home" hidden></span>
 <div id="filterbar" hidden>
 <div class="controls">
- <input type="search" id="q" placeholder="Search site, council, applicant…"
-  title="Search by site, council, address, applicant or proposal">
+ <input type="search" id="q" placeholder="Search site, council, address etc"
+  title="Searches the site name and key, address, council, proposal, applicant, operator, end user, advisers, organisations named in the documents, cooling method, nearest energy project and application references">
  <input type="search" id="near" placeholder="Near a postcode" autocomplete="postal-code"
   title="Sites within the chosen distance of a postcode sector. SL1 4BG is placed at the centre of sector SL1 4 — about a kilometre — and an outward code alone (SL1) at the centre of its sectors.">
  <select id="nearkm" title="Straight-line distance from the postcode sector&#x27;s centre">
@@ -6203,8 +6216,8 @@ def main() -> int:
  <select id="o"><option value="">Any origin</option>
   {''.join(f'<option value="{esc(o)}">{esc(o)}</option>' for o in origin_opts)}</select>
  <span class="count" id="n"></span>
- <button type="button" id="seemap" class="linkish">See all on map</button><!--
- label set by apply(): "all" only while nothing is filtered --><span
+ <button type="button" id="seemap" class="linkish">See on map</button><!--
+ disabled by apply() while nothing is on screen --><span
   class="tip" tabindex="0" role="note" aria-label="Why the map may show fewer sites
  than the table">?<span class="tiptext">The map can only show sites with a recorded
  location. {n_no_coords} of {n_sites} sites have none — usually because the council

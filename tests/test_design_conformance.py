@@ -323,6 +323,16 @@ def test_filter_bar_and_chips_match_section_four(page):
     # under "Shorter menu options": with the postcode box in the bar the
     # row needed 1,563 px at 300 and wrapped on a 1,440 px laptop.
     assert search["width"] == "230px"
+    # An empty search input's clear button is hidden by display, not by
+    # visibility, so the placeholder is not clipped by a button that is
+    # not there (Luke, 2026-09-03). Chromium reports the pseudo-element's
+    # stock display through getComputedStyle whatever the sheet says, so
+    # the check is that the rule is in the sheet; the page shows it works.
+    rules = page.evaluate("""() => [...document.styleSheets]
+        .flatMap(s => { try { return [...s.cssRules]; } catch (e) { return []; } })
+        .filter(r => r.selectorText && r.selectorText.includes('search-cancel-button'))
+        .map(r => r.cssText)""")
+    assert any("placeholder-shown" in r and "display: none" in r for r in rules), rules
 
     off = css_of(page, "#cohortchips .chip[data-cohort]", "backgroundColor",
                  "color", "borderTopColor", "fontSize", "padding",

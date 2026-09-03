@@ -3516,6 +3516,25 @@ against 380 at the start of the morning; two lines still at 1,280.
 The conformance test that asserted the handoff's 300 px moved with the
 departure and cites the row that records it.
 
+Three more from Luke, and a fourth he found by looking: the search
+box's placeholder is his "Search site, council, address etc", with a
+title that lists everything the search actually matches — site name
+and key, address, council, proposal, applicant, operator, end user,
+advisers, organisations named in the documents, cooling method,
+nearest energy project, application references; the map link reads
+"See on map" whether or not anything is filtered ("The 'all' isn't
+necessary" — the count beside it already says, and the 2026-08-25
+rule that put "all" there only when it meant it retires); and its
+"?" follows it at 5 px as the column headers' do, where the row's gap
+plus the icon's own margin had made 15. Then the placeholder lost its
+last letter to "a lot of unusable space on the right": a search input
+reserves room for its clear button while empty — Chromium hides the
+button with visibility, not display — so the box is 230 px and the
+button is hidden with display while the placeholder shows, appearing
+with something to clear. The bar needs 1,398 px now. Luke, on the
+standard Guardian laptop: it goes to two lines only when "N cannot be
+placed" lengthens the count, "and I'm OK with that".
+
 ## Near a postcode, built (2026-09-02/03)
 
 Luke asked for it the evening the Guardian's reader callout went out,

@@ -16,7 +16,7 @@ behaviours, not the pixels:
 - every tab button shows its view and hides the others;
 - a site row opens, its panel shows, and the address bar names it;
 - every filter control changes the count, the count matches the rows
-  actually visible, and "See all on map" reports the same set;
+  actually visible, and "See on map" reports the same set;
 - deep links land — a `#site-` link opens that site with the filters
   cleared, a `#dict-` link opens the dictionary;
 - a map card's link navigates (the 2.1 regression);
