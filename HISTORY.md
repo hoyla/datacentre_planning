@@ -3583,3 +3583,15 @@ frames the radius the way "See on map" does, once per postcode and
 radius, returning to the plotted set when it clears. The parser is
 exercised under node from the page's own source, the map framing in
 the smoke test.
+
+The first CI run on the branch failed twice for one reason: CI drives
+the committed `index.html`, the 2.12 release, which has no postcode
+box and keeps the handoff's 300 px search input. The near smoke test
+waited thirty seconds for a `#near` that was not there, and the
+conformance test asserted 230 px of a page that had never been
+crowded. Both now feature-detect the box rather than key off
+`READER_HTML`: without it the smoke test skips, saying the page
+predates the control, and the conformance test expects the handoff's
+300 — so a scratch build of this code is still driven in full, and
+the released page is asserted as what it is. The behaviour reaches CI
+proper with the release that carries the control.
