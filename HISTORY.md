@@ -3481,3 +3481,21 @@ methodology's sources. Driven headlessly on a scratch build and by a
 smoke test in CI: SL1 4BG within 5 km keeps the Slough Trading Estate's
 sites nearest first, states what cannot be placed, and restores the
 table on clearing.
+
+**Two defects from the first hour on localhost (Luke, 2026-09-03):**
+"I don't think a full postcode actually works — you have to enter a
+district." The full postcode did work; two other things did not, and
+together they looked like that. The parser read a typed sector, "SL1
+4", as a district SL14 that does not exist — the regex took the digit
+into the outward code because the space had been stripped before the
+match — so the precision the control claims was the one input it
+could not read; and a postcode typed on the Map tab filtered the pins
+without moving the map, which left 22 survivors as a dot among 197
+energy rings at the country's zoom. Now the space is the parse, a
+lone trailing letter is a postcode mid-keystroke, an unspaced "SL14"
+falls back to sector 4 of SL1 when no such district exists, and a
+postcode typed or arrived at while the map is the view on screen
+frames the radius the way "See on map" does, once per postcode and
+radius, returning to the plotted set when it clears. The parser is
+exercised under node from the page's own source, the map framing in
+the smoke test.

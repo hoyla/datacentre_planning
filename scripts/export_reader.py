@@ -2019,14 +2019,32 @@ function seeAllOnMap(){
   // apply() told it. This frames the view around what is on it.
   show('map', true);
   const plotted=MAPPTS.filter(p=>p.k==='s'&&p.vis);
-  if(NEAR){
-    // The circle the table was filtered by, as the frame: its bounding
-    // box, so the reader sees the radius and not just the survivors.
-    const d=NEAR.km/111, dl=NEAR.km/(111*Math.cos(NEAR.lat*Math.PI/180));
-    soon(()=>{ map.userMoved=true; fitTo([{lat:NEAR.lat-d,lon:NEAR.lon-dl},{lat:NEAR.lat+d,lon:NEAR.lon+dl}]); });
-    return;
-  }
+  if(NEAR){ nearFramed=nearState(); soon(frameNear); return; }
   soon(()=>{ if(plotted.length){ map.userMoved=true; fitTo(plotted); } else drawMap(); });
+}
+// The circle the table was filtered by, as the frame: its bounding box,
+// so the reader sees the radius and not just the survivors.
+function frameNear(){
+  if(!NEAR) return;
+  const d=NEAR.km/111, dl=NEAR.km/(111*Math.cos(NEAR.lat*Math.PI/180));
+  map.userMoved=true;
+  fitTo([{lat:NEAR.lat-d,lon:NEAR.lon-dl},{lat:NEAR.lat+d,lon:NEAR.lon+dl}]);
+}
+// A postcode typed while the map is the view on screen frames the map
+// as "See on map" would from the table — otherwise the survivors were a
+// dot among 197 energy rings at the country's zoom, and the control
+// looked as if it had found nothing (Luke, 2026-09-03). The map moves
+// once per postcode-and-radius, never for the other filters, and goes
+// back to the plotted set when the postcode is cleared.
+let nearFramed='';
+function nearState(){ return NEAR ? NEAR.label+'|'+NEAR.km : ''; }
+function frameForNear(){
+  const nf=nearState();
+  if(nf===nearFramed || !map.el) return;
+  nearFramed=nf;
+  if(NEAR){ soon(frameNear); return; }
+  const plotted=MAPPTS.filter(p=>p.k==='s'&&p.vis);
+  if(plotted.length) soon(()=>{ map.userMoved=true; fitTo(plotted); });
 }
 
 /* How much chrome is pinned above the scrolling content. Three layers
@@ -2225,6 +2243,7 @@ function show(v, quiet){
   // The map sizes itself from its container, which has no dimensions
   // while the tab is hidden — so it has to draw once it is on screen.
   if(v==='map' && typeof drawMap==='function' && map.el) soon(drawMap);
+  if(v==='map' && typeof frameForNear==='function') frameForNear();
   // The tab lives in the URL so a refresh returns to where you were, the
   // back button steps between tabs, and a dictionary entry can be linked.
   if(!quiet && location.hash !== '#'+v) history.pushState(null,'','#'+v);
@@ -2370,18 +2389,30 @@ const q=document.getElementById('q'),f=document.getElementById('f'),
    coordinate; a site with no coordinate cannot be placed, is not shown,
    and is counted beside the count string so the narrowing is visible. */
 let NEAR=null;   // {label, lat, lon, km} while a postcode is on
+// The space a person types is the parse: "SL1 4" is sector 4 of SL1,
+// which the first version read as a district SL14 (Luke, 2026-09-03 —
+// the sector is the precision the control claims, and typing one
+// found nothing). A single trailing letter is a postcode still being
+// typed, and reads as its sector rather than as nonsense.
 function sectorKey(text){
-  const t=(text||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-  const m=t.match(/^([A-Z]{1,2}[0-9][A-Z0-9]?)(?:([0-9])([A-Z]{2})?)?$/);
+  const t=(text||'').toUpperCase().replace(/[^A-Z0-9 ]/g,'').replace(/ +/g,' ').trim();
+  const m=t.match(/^([A-Z]{1,2}[0-9][A-Z0-9]?) ?(?:([0-9])([A-Z]{0,2}))?$/);
   if(!m) return null;
   return m[2] ? m[1]+' '+m[2] : m[1];
 }
-function resolveNear(text){
-  const k=sectorKey(text); if(!k) return null;
+function lookupSector(k){
   if(SECTORS[k]) return {label:k, lat:SECTORS[k][0], lon:SECTORS[k][1]};
   let la=0, lo=0, cnt=0;
   for(const s in SECTORS){ if(s.startsWith(k+' ')){ la+=SECTORS[s][0]; lo+=SECTORS[s][1]; cnt++; } }
   return cnt ? {label:k, lat:la/cnt, lon:lo/cnt} : null;
+}
+function resolveNear(text){
+  const k=sectorKey(text); if(!k) return null;
+  const r=lookupSector(k); if(r) return r;
+  // "SL14" with no space is read as a district first; when no such
+  // district exists, it is the sector the person left the space out of.
+  const m=k.match(/^([A-Z]{1,2}[0-9][A-Z]?)([0-9])$/);
+  return m ? lookupSector(m[1]+' '+m[2]) : null;
 }
 function kmBetween(a,b,c,d){
   const R=6371, r=Math.PI/180, x=(c-a)*r, y=(d-b)*r;
@@ -2475,6 +2506,7 @@ function apply(){
   // what is filtered.
   VISIBLE_SITES = visible;
   if(typeof mapFilter==='function' && map.el) mapFilter();
+  if(document.getElementById('view-map').classList.contains('on')) frameForNear();
 }
 // Who's behind it. One organisation at a time — the chips answer "show
 // me this operator's sites", and a multi-select would answer a question

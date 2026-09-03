@@ -55,3 +55,60 @@ def test_the_state_travels_in_the_hash_and_the_count_names_the_unplaced():
 def test_the_map_frames_the_radius_and_the_rows_reorder_by_distance():
     assert "const d=NEAR.km/111" in SRC and "fitTo([{lat:NEAR.lat-d" in SRC
     assert "function orderRows(byKm)" in SRC and "orderRows(true)" in SRC and "orderRows(false)" in SRC
+
+
+def _js_parser() -> str:
+    """The parser as the page ships it, sectorKey through resolveNear."""
+    start = SRC.index("function sectorKey(")
+    end = SRC.index("function kmBetween(")
+    return SRC[start:end]
+
+
+def test_the_parser_reads_a_typed_sector_and_a_postcode_still_being_typed(tmp_path):
+    """Luke, 2026-09-03: "SL1 4" found nothing — the first parser read it as
+    a district SL14. The space a person types is the parse; a lone trailing
+    letter is a postcode mid-keystroke, not nonsense; and an unspaced
+    "SL14" falls back to sector 4 of SL1 when no district SL14 exists."""
+    import shutil
+    import subprocess
+
+    node = shutil.which("node")
+    if not node:
+        import pytest
+        pytest.skip("node is not installed; the parser is exercised in test_reader_smoke")
+    sectors = {"SL1 4": [51.52, -0.61], "SL1 3": [51.51, -0.60], "SW1A 1": [51.50, -0.14]}
+    cases = ["SL1 4BG", "sl1 4bg", "SL14BG", "SL1 4", "SL1  4", "SL1 4B", "SL14", "SL1",
+             "SW1A 1AA", "SW1A", "ZZ99 9ZZ", "SL", "", "SL1-4BG"]
+    script = (f"const SECTORS={json.dumps(sectors)};\n{_js_parser()}\n"
+              f"const out={{}};for(const c of {json.dumps(cases)})"
+              "{const r=resolveNear(c);out[c]=[sectorKey(c), r&&r.label, r&&+r.lat.toFixed(3)];}"
+              "process.stdout.write(JSON.stringify(out));")
+    js = tmp_path / "parser.js"
+    js.write_text(script)
+    got = json.loads(subprocess.run([node, str(js)], check=True, capture_output=True, text=True).stdout)
+    mean_lat = round((51.52 + 51.51) / 2, 3)
+    assert got["SL1 4BG"] == ["SL1 4", "SL1 4", 51.52]
+    assert got["sl1 4bg"] == ["SL1 4", "SL1 4", 51.52]
+    assert got["SL14BG"] == ["SL1 4", "SL1 4", 51.52]
+    assert got["SL1 4"] == ["SL1 4", "SL1 4", 51.52], "a typed sector is the sector"
+    assert got["SL1  4"] == ["SL1 4", "SL1 4", 51.52]
+    assert got["SL1 4B"] == ["SL1 4", "SL1 4", 51.52], "one trailing letter is mid-typing"
+    assert got["SL14"] == ["SL14", "SL1 4", 51.52], "no district SL14, so sector 4 of SL1"
+    assert got["SL1"] == ["SL1", "SL1", mean_lat], "an outward code is the mean of its sectors"
+    assert got["SW1A 1AA"] == ["SW1A 1", "SW1A 1", 51.5]
+    assert got["SW1A"] == ["SW1A", "SW1A", 51.5]
+    assert got["ZZ99 9ZZ"] == ["ZZ99 9", None, None]
+    assert got["SL"] == [None, None, None]
+    assert got[""] == [None, None, None]
+    assert got["SL1-4BG"] == ["SL1 4", "SL1 4", 51.52]
+
+
+def test_a_postcode_frames_the_map_when_the_map_is_the_view_on_screen():
+    """The survivors were a dot among 197 energy rings at the country's
+    zoom, so a postcode typed on the map looked as if it found nothing."""
+    assert "function frameForNear(" in SRC and "function frameNear(" in SRC
+    apply_body = SRC[SRC.index("function apply(){"):SRC.index("function filterHash(")]
+    assert "frameForNear()" in apply_body, "apply() does not frame the map for a postcode"
+    show_body = SRC[SRC.index("function show(v, quiet){"):SRC.index("const TABS=VIEWS;")]
+    assert "frameForNear()" in show_body, "arriving on the map with a postcode set does not frame it"
+    assert "nearFramed=nearState()" in SRC, "See on map does not record what it framed"

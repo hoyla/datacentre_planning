@@ -765,6 +765,23 @@ def test_near_a_postcode_filters_orders_and_states_what_it_cannot_place(page):
     page.wait_for_timeout(200)
     shown_out, _ = _count_text(page)
     assert shown_out > 0
+    # a typed sector is the sector (Luke, 2026-09-03: it read as district SL14)
+    page.fill("#near", "SL1 4")
+    page.wait_for_timeout(200)
+    assert "no such postcode sector" not in page.locator("#n").inner_text()
+    assert _count_text(page)[0] == shown
+    # on the map, the postcode frames the view: the radius, not the country
+    page.click("#tab-map")
+    page.wait_for_timeout(300)
+    assert page.evaluate("() => map.z") >= 10, "the map stayed at the country's zoom"
+    page.fill("#near", "")
+    page.wait_for_timeout(300)
+    assert page.evaluate("() => map.z") <= 7, "clearing the postcode did not frame the plotted set"
+    page.fill("#near", "SL1 4BG")
+    page.wait_for_timeout(300)
+    assert page.evaluate("() => map.z") >= 10, "a postcode typed on the map did not frame it"
+    page.click("#tab-sites")
+    page.wait_for_timeout(200)
     # nonsense says so rather than showing nothing silently
     page.fill("#near", "ZZ99 9ZZ")
     page.wait_for_timeout(200)
