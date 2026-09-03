@@ -86,9 +86,13 @@ def partition(docs: list[tuple]) -> tuple[list[tuple], set[str], list[tuple]]:
     1,119 documents present as extracted-and-empty when nothing has read
     them. Those are re-read, with `force` so the stale cache is replaced.
 
-    Only non-PDFs are checked for staleness. Reading the engine means
-    parsing the cache payload, which holds the document's whole text, and
-    a PDF cache never carries a stale engine.
+    Reading the engine means parsing the cache payload, which holds the
+    document's whole text, so it is only worth doing where a stale engine
+    is possible — the non-PDF formats. A PDF is checked by size alone,
+    which is cheap and catches the failure that prompted this: a write
+    that died on an unencodable character left a zero-byte cache, and a
+    zero-byte cache was read as an extracted document for a month
+    (2026-09-03; `extract.write_cache` is now atomic).
     """
     todo: list[tuple] = []
     stale: set[str] = set()
@@ -96,10 +100,11 @@ def partition(docs: list[tuple]) -> tuple[list[tuple], set[str], list[tuple]]:
     for d in docs:
         ref, sha, bytes_path = d[0], d[1], d[2]
         cache = extract.cache_path_for("documents", ref, sha)
+        is_pdf = str(bytes_path).lower().endswith(".pdf")
         if not cache.exists():
             todo.append(d)
-        elif (not str(bytes_path).lower().endswith(".pdf")
-                and extract.is_stale_cache(cache)):
+        elif cache.stat().st_size == 0 or (
+                not is_pdf and extract.is_stale_cache(cache)):
             stale.add(sha)
             todo.append(d)
         else:
