@@ -17,13 +17,14 @@ Findings and adjudication counts move while the corroboration pass
 runs and are deliberately not restated here — `scripts/corpus_stats.py`
 prints them, and each release states the boundary it was stamped at.
 
-**The base is 2.13, built 2026-09-03 and awaiting its release PR.**
-Artefacts in `data/exports/phase2.13_build/`, which becomes the
-baseline the next build's release diff is read against. Cloud Run
-serves whatever `index.html` `cloudrun/deploy.sh` was last run
-against — the deploy is the script, not the merge — so until that
-script runs, the revision serving readers is 2.12's
-`dc-reader-00008-drr`.
+**The base is 2.13, released and deployed** (2026-09-03: candidate
+#382, release #383 carrying `index.html`, deployed the same evening as
+Cloud Run revision `dc-reader-00009-5j9` serving 100% of traffic, with
+IAP gating verified and the EdgeOne probe clean — 22 paths refused,
+forged cookie rejected). Artefacts in `data/exports/phase2.13_build/`,
+which is the baseline the next build's release diff is read against.
+Cloud Run serves whatever `index.html` `cloudrun/deploy.sh` was last
+run against — the deploy is the script, not the merge.
 
 **What 2.13 carries** (HISTORY, "v2.13"): the "near a postcode"
 control and the filter bar refitted to a laptop screen (#377); the

@@ -3763,3 +3763,14 @@ and Medway — and Ealing was never one of them; its gap was a document
 since read. Corrected here and in the ROADMAP, with the error kept
 visible, because a register nobody can trust is worse than no
 register.
+
+**Released the same evening.** Luke reviewed the page on localhost
+before the release PR was opened — "Reader looks fine" — and confirmed
+no new notebook, so step 12's stop did not apply. Candidate #382
+carried the record, release #383 the `index.html` byte-identical to
+`data/exports/phase2.13_build/reader.html`, and `cloudrun/deploy.sh`
+put it live as revision `dc-reader-00009-5j9` at 100% of traffic. IAP
+gating verified on every probed path, and `probe_gate.sh` against the
+EdgeOne signpost passed: 22 paths refused, forged session cookie
+rejected. Steps 13a and 15 — the Pinpoint and Giant bundles, and
+telling the reporting team — are Luke's.
