@@ -833,8 +833,11 @@ input,select{font:inherit;font-size:15px;padding:9px 12px;border:1px solid #999;
   border-radius:4px;background:var(--bg);color:var(--fg)}
 input[type=search]{width:300px;min-width:0}
 /* "Near a postcode" — a second search-shaped box in the shared bar, and the
-   distance it puts at the head of a row's grey line while it is on. */
-#near{width:230px}
+   distance it puts at the head of a row's grey line while it is on. Sized
+   to its placeholder: the example postcode came out of it (Luke,
+   2026-09-03: "people don't need to know how to write a postcode"), and
+   the longest thing typed into it, SW1A 1AA, is narrower than the label. */
+#near{width:150px}
 .skey .dist{font-weight:700;color:var(--brand);margin-right:4px}
 select{width:auto}
 .count{color:var(--mut);font-size:14px;margin-left:auto}
@@ -6167,7 +6170,7 @@ def main() -> int:
 <div id="filterbar" hidden>
 <div class="controls">
  <input type="search" id="q" placeholder="Search site, council, address, applicant, proposal…">
- <input type="search" id="near" placeholder="Near a postcode, e.g. SL1 4BG" autocomplete="postal-code"
+ <input type="search" id="near" placeholder="Near a postcode" autocomplete="postal-code"
   title="Sites within the chosen distance of a postcode sector. SL1 4BG is placed at the centre of sector SL1 4 — about a kilometre — and an outward code alone (SL1) at the centre of its sectors.">
  <select id="nearkm" title="Straight-line distance from the postcode sector&#x27;s centre">
   <option value="5">within 5 km</option>

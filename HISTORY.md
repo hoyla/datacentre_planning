@@ -3490,6 +3490,19 @@ as a departure; the labels have a source test of their own, and the
 issue-#301 test now anchors to the base tooltip rule so the sidebar's
 override does not trip it.
 
+Label-fit sizing — a select as wide as its chosen label until opened —
+was demonstrated on a scratch copy before being declined: choosing the
+longest option moved the boxes to its right by 169 px and re-wrapped
+the bar, which is the movement Luke was worried about, so the choice
+was abbreviation ("OK, let's just use abbreviation"). The postcode
+box's placeholder lost its example — "Near a postcode", not "Near a
+postcode, e.g. SL1 4BG": "people don't need to know how to write a
+postcode", and since the parser reads a typed sector the example was
+teaching a form that no longer matters — and the box is sized to the
+label, 150 px rather than 230. At 1440 px the six controls and the
+count now share the first line and only the map link and its "?" sit
+on a second; the whole bar on one line needs 1,563 px.
+
 ## Near a postcode, built (2026-09-02/03)
 
 Luke asked for it the evening the Guardian's reader callout went out,

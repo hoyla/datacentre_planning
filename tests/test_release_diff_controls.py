@@ -49,7 +49,7 @@ def test_the_bars_text_inputs_are_controls_named_by_id(tmp_path):
     rd = _rd()
     page = ('<div id="filterbar"><div class="controls">'
             '<input type="search" id="q" placeholder="Search…">'
-            '<input type="search" id="near" placeholder="Near a postcode, e.g. SL1 4BG">'
+            '<input type="search" id="near" placeholder="Near a postcode">'
             '<select><option value="">All sites</option></select></div>\n</div>'
             '<div id="filterbar-home" hidden></div>')
     f = tmp_path / "reader.html"; f.write_text(page)
