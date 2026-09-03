@@ -17,20 +17,28 @@ Findings and adjudication counts move while the corroboration pass
 runs and are deliberately not restated here — `scripts/corpus_stats.py`
 prints them, and each release states the boundary it was stamped at.
 
-**The base is 2.12, released** (Luke, 2026-09-02, candidate #373 and
-release #374; HISTORY, "v2.12 — the corpus release the evening
-earned"). Artefacts in `data/exports/phase2.12_build/`, which is the
-baseline the next build's release diff is read against; Cloud Run
-serves it as revision `dc-reader-00008-drr`, deployed 21:26 the same
-evening with the IAP gate verified and the EdgeOne probe clean. **Left for 2.13 by the freshness
-check**: three readings withheld as stale and deferred as partly read
-— West London Technology Park (20 of 955 documents unread), the A41
-Watford Bypass (61 of 349), and the Mary Somerville Data Centre, which
-now holds no documents at all; the first read of those documents comes
-before the readings pass, which then takes them on its own (HISTORY,
-v2.12). Cloud Run serves
-whatever `index.html` `cloudrun/deploy.sh` was last run against — the
-deploy is the script, not the merge.
+**The base is 2.13, built 2026-09-03 and awaiting its release PR.**
+Artefacts in `data/exports/phase2.13_build/`, which becomes the
+baseline the next build's release diff is read against. Cloud Run
+serves whatever `index.html` `cloudrun/deploy.sh` was last run
+against — the deploy is the script, not the merge — so until that
+script runs, the revision serving readers is 2.12's
+`dc-reader-00008-drr`.
+
+**What 2.13 carries** (HISTORY, "v2.13"): the "near a postcode"
+control and the filter bar refitted to a laptop screen (#377); the
+extraction-cache fix and the readings backlog it had been hiding, four
+documents rather than the eighty-one the note claimed, with 243
+wordless documents given the verdict they lacked and seven sites freed
+(#378); the readings queue's latent skip closed (#379); and the
+runbook's "Expected, and not a fault" register, so the standing
+anomalies are investigated once (#380, #381).
+
+**Left for 2.13 by the freshness check, and now done**: the three
+withheld readings are resolved — West London Technology Park and the
+A41 Watford Bypass were re-read on 2026-09-03, and Mary Somerville
+holds no documents, so its withheld reading is correct and permanent
+(the register says so).
 
 **2.11 was the site / facility / campus effort** (Luke, 2026-08-31,
 redefining it: "the focus of 2.11 has evolved into the effort to make
@@ -1402,23 +1410,30 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **Five documents are held in formats nothing can read, and two were
-  fetched as nothing at all** (2026-09-03, found while clearing the
-  readings backlog). Eleven documents have no text cache and cannot
-  get one under the current extractor: four PDFs pypdf refuses to open
-  ("Invalid object in /Pages"), five whose format has no loader — two
-  `.docx` with valid zip magic, one `.xls`, one `.rtf`, one `.pdf`
-  whose bytes are not a PDF — and two whose fetched file is zero
-  bytes, at `PTNO-12817834` and `SITE-Ealing/200958CONS`. None holds a
-  site out of the machine readings, which is why this is a gap and not
-  a blocker. **The `.docx` pair is the cheap half**: the sniffing
+- **A Word loader closes the last prose gap in the corpus**
+  (2026-09-03, found while clearing the readings backlog; figures
+  re-measured at the 2.13 release). Eleven documents have no text
+  cache and cannot get one under the current extractor: four PDFs
+  pypdf refuses to open ("Invalid object in /Pages"), five whose
+  format has no loader — two `.docx` with valid zip magic, one `.xls`,
+  one `.rtf`, one `.pdf` whose bytes are not a PDF — and two of the
+  three whose fetched file is zero bytes. Ten of the eleven hold no
+  site back. **The eleventh is the whole remaining gap**: document
+  39292 on `Wakefield/23/01043/FUL`, a `.docx` consultee comment, is
+  the single outstanding prose document in the corpus and the only
+  reason `PTNO-12817834` is not read in full. With it, 357 of 360
+  sites with prose are complete; the other two are Renfrewshire sites
+  holding one graphical document each, which have no prose to read.
+  **The `.docx` pair is the cheap half**: the sniffing
   tests already say 255 corpus documents arrive mis-named as Word
   files, so a loader that reads them is worth writing, and
   `tests/test_extract_formats.py` is where its contract goes. The two
   zero-byte files are an acquisition question — the corpus claims a
   document it does not hold, so they want a re-fetch and, if the
   portal still serves nothing, an `acquisition_outcome` row saying so
-  rather than a permanent silent gap. The four corrupt PDFs are
+  rather than a permanent silent gap. There are three, named by every
+  staging build: `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
+  `Medway/MC/21/0979`. The four corrupt PDFs are
   probably genuinely unreadable; worth one look at whether the bytes
   match what the portal serves before accepting that.
 

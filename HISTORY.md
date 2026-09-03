@@ -3700,3 +3700,66 @@ the collector and the skip cannot drift apart, which a test asserts.
 The dry run after the change reports nothing to read, because there is
 nothing: 357 sites read under their current input, 3 deferred, and the
 three deferred are the memberless sites above.
+
+## v2.13 — the release that cleared what 2.12 left (2026-09-03)
+
+Luke, mid-afternoon: "I'd like to publish 2.13 asap, so I think the
+partition questions will have to wait." So the release is the day's
+work rather than a new push: the reader's "near a postcode" control
+and the filter bar refitted so the whole thing fits a 1,440 px laptop
+on one line (#377), the extraction-cache fix and the readings backlog
+it had been hiding (#378), the readings queue's latent skip (#379),
+and the runbook's "Expected, and not a fault" register with the day's
+entries put back in the order they happened (#380, #381). Site 11's
+partition and its two open questions wait for 2.14.
+
+**The chain ran clean, and most of it had nothing to do.** Steps 1, 2
+and 3 were empty — no figure awaited adjudication in either route, no
+adjudication needed correcting under any of the twelve rules, and the
+generation pass had 2,705 answers for 2,582 figures. The label audit
+asked about two findings and flagged one. The readings needed no
+submission: the dry run rebuilt and re-hashed every site's input and
+found nothing moved, which is the same comparison the freshness check
+makes (Luke accepted the substitution for this run). Step 5 reported
+what the runbook says to expect — two contradicted sites, Ferrybridge
+C and the A41 Watford Bypass, both known, and five
+generation-understated — and the null-capacity sweep gave a quotable
+number rather than PROVISIONAL.
+
+**What the release carries.** Five hundred sites (507 rendered, with
+the seven pre-planning records), 1,999 applications, 197 energy
+projects, 57,559 documents staged and 58,543 carrying a Drive id, 282
+capacity claims with 101 matched across 51 site panels, 357 machine
+readings rendered and one withheld — Mary Somerville, correctly and
+permanently — and 2,391 findings moved to the family the audit says
+fits, with 208 withheld as not findings at all. Coverage: **357 of
+360 sites with prose are read in full**, the last gap being a single
+`.docx` consultee comment the extractor has no loader for.
+
+**The diff against 2.12 had one FELL line and it was ours.** Eleven
+filter controls gone, fifteen added: the renamed menu options, the
+three radius choices and the postcode box. Findings rose by 877,
+which is exactly what the two recovered appeal bundles and the
+Wakefield document contributed; links across site panels rose 570;
+every one of the 507 panels kept every link it had.
+
+**Two things worth keeping from the run.** The second pass at step 12
+came out content-identical to the first, verified by diffing the two
+builds with the timestamp stripped — because the sync created no
+folder and no new file id, so the ledger the reader reads had not
+moved. That is a property of this release, not a reason to skip the
+step: the reader *does* read `.drive_sync_state.json`, through
+`export_handover._drive_folder_map`, for every site folder and
+per-site CSV link. I claimed the opposite mid-run, on a grep for the
+filename across the builder scripts that could not see the indirect
+read, and would have written that into the runbook had Luke not asked
+whether it was definitely true. The second sync then updated exactly
+two files at the root, which is what the runbook predicts.
+
+And the register was wrong within hours of being written: it said two
+documents had been fetched as zero-byte files and named
+`SITE-Ealing/200958CONS` as one. There are three — Wakefield, Warwick
+and Medway — and Ealing was never one of them; its gap was a document
+since read. Corrected here and in the ROADMAP, with the error kept
+visible, because a register nobody can trust is worse than no
+register.

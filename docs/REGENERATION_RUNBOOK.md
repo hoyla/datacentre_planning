@@ -1258,17 +1258,31 @@ spends the afternoon again. Anything NOT on this list is new.
   matter to a story, and not worth a pass of its own.
 
 - **Coverage will not reach 100% of sites, and the remainder is not a
-  backlog.** As of 2026-09-03, 356 of 360 sites with prose are read in
-  full. Of the four: one document at `PTNO-12817834` and one at
-  `SITE-Ealing/200958CONS` were fetched as **zero-byte files**, so the
-  corpus claims a document it does not hold — an acquisition question,
-  not an extraction one — and two Renfrewshire sites
-  (`SITE-Renfrewshire/20/0204/PP`, `/20/0228/PP`) hold a single
-  graphical document each and therefore no prose at all. Separately,
-  11 documents have no text cache and cannot get one: four PDFs pypdf
-  cannot open, five in formats with no loader (`.docx`, `.xls`,
-  `.rtf`), and the two zero-byte files. None of them holds a site
-  back. The `.docx` pair is worth a loader and is on the ROADMAP.
+  backlog.** Measured at the 2.13 release, 2026-09-03: **357 of 360**
+  sites with prose are read in full. The other three are two
+  Renfrewshire sites (`SITE-Renfrewshire/20/0204/PP`, `/20/0228/PP`)
+  holding a single graphical document each, so they have no prose at
+  all, and `PTNO-12817834`, whose single outstanding prose document is
+  a `.docx` — document 39292 on `Wakefield/23/01043/FUL` — that the
+  extractor has no loader for. **A Word loader would close the last
+  prose gap in the corpus.**
+
+  Separately, 11 documents have no text cache and cannot get one: four
+  PDFs pypdf refuses to open, five whose format has no loader (two
+  `.docx`, one `.xls`, one `.rtf`, one `.pdf` whose bytes are not a
+  PDF), and two of the three zero-byte files below. None holds a site
+  back.
+
+  **Three documents were fetched as zero-byte files** and the staging
+  build names them on every run: `Wakefield/23/00100/S7301` (on
+  `PTNO-12817834`), `Warwick/W/23/1025` and `Medway/MC/21/0979`. The
+  corpus claims a document it does not hold, which is an acquisition
+  question, not an extraction one; all three carry a `no_text` verdict
+  so none holds a site back. *(An earlier version of this entry said
+  there were two and named `SITE-Ealing/200958CONS` as one of them.
+  Both were wrong — Ealing's gap was a document since read — and the
+  error is kept here because the register is only worth anything if it
+  is right.)*
 
 ## Decisions outstanding — Luke's, not the runner's
 
