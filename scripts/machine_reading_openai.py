@@ -98,14 +98,37 @@ def _context(conn):
             site_cohorts.compute_all(conn))
 
 
+# A reading withheld because the site changed under it was never a
+# reading of THIS input: the collector rebuilds the input, finds a
+# different hash, and stores the row against the new hash — the one it
+# has not read. `_already` then matches that hash and skips the site on
+# every later run, so a site whose documents settle at exactly the hash
+# the withheld row carries is never read again.
+#
+# Latent when found (2026-09-03), not yet suffered: 11 live sites have
+# been withheld this way and all 11 hold a live reading now, because
+# their inputs moved again and produced a hash no row carried. Nothing
+# would have said so if one had stuck — the reader renders a withheld
+# reading, which reads as a judgement about the site rather than as a
+# queue that cannot advance.
+#
+# Deliberately only this reason. A reading withheld by the GATE is a
+# verdict on content the model actually read, and re-reading the same
+# input would re-spend on every run for a result the gate has already
+# refused once. This one is infrastructure, and re-reading is the fix.
+INPUTS_MOVED = ("the site's inputs changed between submission "
+                "and collection")
+
+
 def _already(conn, site_key: str, model: str, input_hash: str) -> bool:
     with conn.cursor() as cur:
         cur.execute("""SELECT 1 FROM site_machine_readings
                        WHERE site_key = %s AND model = %s
                          AND prompt_version = %s AND input_hash = %s
-                         AND gate_version = %s""",
+                         AND gate_version = %s
+                         AND coalesce(withheld_reason, '') <> %s""",
                     (site_key, model, mr.PROMPT_VERSION, input_hash,
-                     mr.GATE_VERSION))
+                     mr.GATE_VERSION, INPUTS_MOVED))
         return cur.fetchone() is not None
 
 
@@ -454,8 +477,7 @@ def do_collect() -> None:
                                          cohorts=cohorts)
                 expected = state["sites"].get(key, {}).get("input_hash")
                 if inp.input_hash != expected:
-                    verdict = mr.GateResult(False, "the site's inputs changed "
-                                                   "between submission and collection")
+                    verdict = mr.GateResult(False, INPUTS_MOVED)
                 else:
                     verdict = mr.gate(reading, inp)
                 _store(conn, inp, model, reading, verdict)
