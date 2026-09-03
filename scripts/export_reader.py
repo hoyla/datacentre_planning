@@ -826,12 +826,20 @@ details.banner-d>summary:hover{text-decoration:underline}
 details.banner-d>div{margin-top:9px}
 h2.sec{font-size:23px;line-height:1.18;font-weight:700;margin:36px 0 10px}
 h2.sec:first-child{margin-top:0}
-.controls{display:flex;gap:14px;flex-wrap:wrap;padding:14px 20px;align-items:center;
+.controls{display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px;align-items:center;
   border-bottom:1px solid var(--line);position:sticky;top:var(--nav-h,41px);
   background:var(--bg);z-index:8}
 input,select{font:inherit;font-size:15px;padding:9px 12px;border:1px solid #999;
   border-radius:4px;background:var(--bg);color:var(--fg)}
-input[type=search]{width:300px;min-width:0}
+/* 230, not the handoff's 300: with the postcode box and its radius in the
+   bar, the whole row — count and map link included — needs 1,563 px at
+   300 and the map link wrapped on a 1,440 px laptop. The placeholder
+   was already clipped at 300; the shorter one fits at 230, the full
+   list is the title. The 10 px gap is ours (the handoff gives none),
+   and the radius reads "10 km" beside "Near a postcode" (Luke,
+   2026-09-03: "so agonisingly close to fitting on our standard laptop
+   screen width"). */
+input[type=search]{width:230px;min-width:0}
 /* "Near a postcode" — a second search-shaped box in the shared bar, and the
    distance it puts at the head of a row's grey line while it is on. Sized
    to its placeholder: the example postcode came out of it (Luke,
@@ -6169,13 +6177,14 @@ def main() -> int:
 <span id="filterbar-home" hidden></span>
 <div id="filterbar" hidden>
 <div class="controls">
- <input type="search" id="q" placeholder="Search site, council, address, applicant, proposal…">
+ <input type="search" id="q" placeholder="Search site, council, applicant…"
+  title="Search by site, council, address, applicant or proposal">
  <input type="search" id="near" placeholder="Near a postcode" autocomplete="postal-code"
   title="Sites within the chosen distance of a postcode sector. SL1 4BG is placed at the centre of sector SL1 4 — about a kilometre — and an outward code alone (SL1) at the centre of its sectors.">
  <select id="nearkm" title="Straight-line distance from the postcode sector&#x27;s centre">
-  <option value="5">within 5 km</option>
-  <option value="10" selected>within 10 km</option>
-  <option value="25">within 25 km</option>
+  <option value="5">5 km</option>
+  <option value="10" selected>10 km</option>
+  <option value="25">25 km</option>
  </select>
  <select id="f">
   <option value="all">All sites</option>

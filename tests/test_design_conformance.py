@@ -319,7 +319,10 @@ def test_filter_bar_and_chips_match_section_four(page):
     assert search["padding"] == "9px 12px"
     assert search["borderTopColor"] == "rgb(153, 153, 153)"
     assert search["borderRadius"] == "4px"
-    assert search["width"] == "300px"
+    # 230, not the handoff's 300 — the departure DESIGN_CONFORMANCE records
+    # under "Shorter menu options": with the postcode box in the bar the
+    # row needed 1,563 px at 300 and wrapped on a 1,440 px laptop.
+    assert search["width"] == "230px"
 
     off = css_of(page, "#cohortchips .chip[data-cohort]", "backgroundColor",
                  "color", "borderTopColor", "fontSize", "padding",

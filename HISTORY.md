@@ -3503,6 +3503,19 @@ label, 150 px rather than 230. At 1440 px the six controls and the
 count now share the first line and only the map link and its "?" sit
 on a second; the whole bar on one line needs 1,563 px.
 
+"Oh god it's so agonisingly close to fitting on our standard laptop
+screen width now." Three more cuts, none to his labels: the search
+input at 230 px rather than the handoff's 300 (its placeholder was
+already clipped at 300; "Search site, council, applicant…" fits at
+230 and the full list is the box's title), the radius reading "10 km"
+beside "Near a postcode" rather than "within 10 km", and the gap
+between controls, which the handoff does not give, at 10 px rather
+than 14. The whole bar now needs 1,418 px: one line at 1,440, where
+the controls stand 73 px tall and the first site row starts at 269 px
+against 380 at the start of the morning; two lines still at 1,280.
+The conformance test that asserted the handoff's 300 px moved with the
+departure and cites the row that records it.
+
 ## Near a postcode, built (2026-09-02/03)
 
 Luke asked for it the evening the Guardian's reader callout went out,
