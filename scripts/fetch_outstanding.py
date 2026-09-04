@@ -44,7 +44,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from dcp import db, repo  # noqa: E402
-from dcp.acquisition_outcome import SETTLED, classify_outcome  # noqa: E402
+from dcp.acquisition_outcome import SETTLED, classify_outcome, record  # noqa: E402
 from dcp.sources import (agile, arcus, idox, ni_planning, ocella,  # noqa: E402
                          salesforce_pr)
 
@@ -126,16 +126,6 @@ def deadline(seconds: int):
     finally:
         signal.alarm(0)
         signal.signal(signal.SIGALRM, previous)
-
-
-def record(conn, app_id: int, outcome: str, adapter: str,
-           detail: str | None = None, found: int = 0) -> None:
-    with conn.cursor() as cur:
-        cur.execute("""INSERT INTO acquisition_outcome
-                       (application_id, outcome, adapter, detail, documents_found)
-                       VALUES (%s,%s,%s,%s,%s)""",
-                    (app_id, outcome, adapter, detail, found))
-    conn.commit()
 
 
 def main() -> int:
