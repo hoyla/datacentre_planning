@@ -63,6 +63,22 @@ def parse_portal_url(url: str) -> tuple[str, str] | None:
     return None
 
 
+class UnrecognisedListing(RuntimeError):
+    """The document endpoint answered, and the answer was not a listing.
+
+    Not the same fact as "this application has no documents", and the
+    difference is the whole of principle 1: an empty list settles an
+    application as `none_published` and takes it out of the queue for
+    good, so a body we could not read must never arrive as one. The
+    endpoint has been seen to answer 200 with a non-list body, and
+    `data if isinstance(data, list) else []` turned every one of those
+    into a settled negative with nothing held to justify it.
+
+    `dcp.acquisition_outcome` states the same rule for Newport's
+    docstore, where the identical `or []` cost 17 applications.
+    """
+
+
 class AgileClient:
     """Polite JSON-API client. Reuses the Idox client's delay/backoff
     behaviour (same politeness contract) and resolves per-council client
@@ -105,10 +121,21 @@ class AgileClient:
         return data[0] if isinstance(data, list) else data
 
     def documents(self, slug: str, app_id: str) -> list[dict]:
+        """The document list, or `[]` where the register holds none.
+
+        A body that is not a list raises rather than reading as empty:
+        see `UnrecognisedListing`. An empty list is a real answer and
+        passes through, because that is a register saying so.
+        """
         r = self._http.get(f"{PLANNING_API}/application/{app_id}/document",
                            headers=self._headers(slug))
         data = r.json()
-        return data if isinstance(data, list) else []
+        if not isinstance(data, list):
+            raise UnrecognisedListing(
+                f"{PLANNING_API}/application/{app_id}/document answered "
+                f"{r.status_code} with {type(data).__name__}: "
+                f"{str(data)[:200]!r}")
+        return data
 
     def document_bytes(self, slug: str, doc_hash: str) -> httpx.Response:
         # The tenant headers are required on the download too — without
@@ -151,6 +178,15 @@ def fetch_documents_for_application(
 
     try:
         docs = client.documents(slug, app_id)
+    except UnrecognisedListing as exc:
+        # Retryable, deliberately: `errors` keeps this out of the settled
+        # arm of `classify_outcome`, so the application stays queued
+        # rather than being recorded as a register that publishes
+        # nothing.
+        summary["error_class"] = "unrecognised_listing"
+        summary["errors"] += 1
+        log.warning("agile listing unrecognised (%s): %s", application_ref, exc)
+        return summary
     except httpx.HTTPStatusError as exc:
         summary["error_class"] = ("not_found" if exc.response.status_code == 404
                                   else f"http_{exc.response.status_code}")

@@ -323,7 +323,18 @@ def listing_live(conn, *, client, application_ref: str, url: str,
             if parsed is None:
                 return Listing(status="error", detail="not an Agile portal URL")
             slug, app_id = parsed
-            docs = client.documents(slug, app_id)
+            try:
+                docs = client.documents(slug, app_id)
+            except agile.UnrecognisedListing as exc:
+                # Same rule as the docstore below: the register was not
+                # read, so it must not be recorded as empty. A downloader
+                # can shrug at a body it cannot parse; a measurement
+                # cannot, because "offered nothing" is the claim being
+                # measured.
+                return Listing(source="live", status="blocked",
+                               url=f"agile:{slug}/{app_id}/document",
+                               detail=f"listing endpoint answered with a "
+                                      f"non-list body: {exc}"[:400])
             offered = [{"url": agile.document_url(d["documentHash"]),
                         "filename": d.get("fileName") or d.get("name"),
                         "kind": d.get("documentType") or d.get("type")}

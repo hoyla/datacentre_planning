@@ -138,6 +138,13 @@ def list_documents(client: _idox.IdoxClient, *, api_base: str,
     except json.JSONDecodeError:
         log.warning("aifusion: unparseable index for %s", case_id)
         return None
+    # A JSON object without the index's own key is not an index holding
+    # no documents: `_flatten`'s `or []` would read one as the other, and
+    # `no_documents` is settled-eligible. Same rule as the bare "OK" body
+    # above — the narrower door to it.
+    if not isinstance(payload, dict) or "documentsByType" not in payload:
+        log.warning("aifusion: index for %s carried no documentsByType", case_id)
+        return None
     return _flatten(payload)
 
 

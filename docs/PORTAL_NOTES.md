@@ -195,6 +195,25 @@ results page.
 Coverage: 26 of 37 hold documents; the `T/` and `SMI/` series genuinely
 hold none.
 
+**One exception to that sentence, found 2026-09-04** while checking what
+the Agile adapter had settled. Eleven Slough applications carry a settled
+`none_published` from the Agile API. Ten are the `T/` and `SMI/` series
+above, so the note covers them. The eleventh is **`Slough/P/20054/000`**,
+a `P/` reference holding nothing while its own sibling `P/20054/001`
+holds ten — the `P/` series is the one that does live in the legacy
+store, so this is the shape of an application whose documents were never
+asked for there. Worth one run of `scripts/fetch_slough_legacy.py`
+against that reference before the null is trusted; nobody has, and the
+verdict is settled so no sweep will revisit it on its own.
+
+**The Agile API can answer 200 with a body that is not a listing** — the
+tenant-header failure returns `{"message": "Client has not beeing
+selected"}` [sic] with a 200. Until 2026-09-04 the adapter read any
+non-list body as an empty list, which is a settled `none_published`:
+`AgileClient.documents()` now raises `UnrecognisedListing` instead, so
+the application stays queued. An empty *list* is still a real answer and
+still settles, because on this register it is usually true.
+
 ## Northern Ireland — planningregister.planningsystemni.gov.uk (whole nation)
 
 No browser needed after all, despite the Next.js front end: the pages
