@@ -35,6 +35,25 @@ from __future__ import annotations
 SETTLED = ("none_published", "portal_blocked", "login_required", "no_adapter")
 
 
+def record(conn, app_id: int, outcome: str, adapter: str,
+           detail: str | None = None, found: int = 0) -> None:
+    """Append one attempt's verdict. Never an update: the fold is the
+    latest row per application, and the history is the audit trail.
+
+    Lives here beside `classify_outcome` and `SETTLED` for the reason
+    those two do — a fetcher that decides a verdict and a fetcher that
+    writes one must not drift apart. It was copied verbatim into
+    `fetch_outstanding.py` and `relist_refetch.py`; a third copy was
+    what prompted the move.
+    """
+    with conn.cursor() as cur:
+        cur.execute("""INSERT INTO acquisition_outcome
+                       (application_id, outcome, adapter, detail, documents_found)
+                       VALUES (%s,%s,%s,%s,%s)""",
+                    (app_id, outcome, adapter, detail, found))
+    conn.commit()
+
+
 def classify_outcome(summary: dict) -> tuple[str, str | None]:
     """The outcome for one fetch attempt, and the detail to record with it.
 

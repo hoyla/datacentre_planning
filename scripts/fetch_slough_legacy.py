@@ -44,10 +44,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from dcp import db, repo  # noqa: E402
+from dcp.acquisition_outcome import classify_outcome, record  # noqa: E402
 from dcp.sources import idox as _idox  # noqa: E402
 
 log = logging.getLogger("slough_legacy")
 
+ADAPTER = "slough_legacy"
 BASE = "https://www.sbcplanning.co.uk"
 SEARCH_PAGE = f"{BASE}/plansearch.php"
 SEARCH = f"{BASE}/search.php"
@@ -64,18 +66,67 @@ COHORT = """
 """
 
 PDF_RE = re.compile(r'/sbcp/[^"\']+?\.pdf', re.I)
+# What the store prints when the search ran and matched nothing. This is
+# the positive evidence that separates "the register holds none" from
+# "the search did not happen" — the distinction the whole file turns on,
+# since the first is a settled verdict about a council and the second is
+# our own failure. Verified against both responses on 2026-09-04.
+NO_RESULTS_RE = re.compile(r"No results found", re.I)
+# Present on any answer from the search, hit or miss.
+SEARCHED_RE = re.compile(r"Searching Planning Applications for", re.I)
+
+
+class UnrecognisedSearchPage(RuntimeError):
+    """The store answered, and the answer was not a search result.
+
+    Never read as an empty register: an empty PDF list is what a changed
+    form, a dropped session or a maintenance page looks like too, and
+    `no_documents` is a settled verdict. Same rule the Agile adapter
+    took on 2026-09-04, and the same one `acquisition_outcome` records
+    for Newport's docstore.
+    """
 
 
 def search_documents(client: httpx.Client, reference: str) -> list[str]:
-    """Absolute PDF URLs the legacy search returns for a reference."""
+    """Absolute PDF URLs the legacy search returns for a reference.
+
+    `[]` means the store searched and found nothing, on its own words.
+    A page that is neither a result nor a stated miss raises.
+    """
     r = client.post(SEARCH, data={"st": reference, "DBName": "planapp",
                                   "Searchfield": "Number",
                                   "plannsearch": "Search for number"},
                     headers={"Referer": SEARCH_PAGE})
     r.raise_for_status()
     # 'scaling.pdf' is a help document linked on every results page.
-    return sorted({urljoin(BASE, p) for p in PDF_RE.findall(r.text)
+    urls = sorted({urljoin(BASE, p) for p in PDF_RE.findall(r.text)
                    if "scaling" not in p.lower()})
+    if urls:
+        return urls
+    if NO_RESULTS_RE.search(r.text) and SEARCHED_RE.search(r.text):
+        return []
+    raise UnrecognisedSearchPage(
+        f"{SEARCH} answered {r.status_code} with {len(r.text)} bytes carrying "
+        f"neither a document link nor 'No results found' for {reference!r}")
+
+
+def _record(conn, app_id: int, summary: dict, *, dry_run: bool,
+            note: str | None = None) -> None:
+    """Write this application's verdict, through the shared rule.
+
+    `classify_outcome` decides it, so this route cannot invent a verdict
+    the adapters would not award; `ADAPTER` names the route so the fold
+    shows where the check came from rather than attributing it to the
+    Agile register that reports these empty.
+    """
+    outcome, detail = classify_outcome(summary)
+    if note:
+        detail = f"{detail} — {note}" if detail else note
+    if dry_run:
+        log.info("        would record %s (%s)", outcome, detail)
+        return
+    record(conn, app_id, outcome, ADAPTER, detail,
+           found=summary.get("downloaded") or 0)
 
 
 def main() -> int:
@@ -113,15 +164,40 @@ def main() -> int:
             short = ref.split("/", 1)[1]
             try:
                 urls = search_documents(client, short)
+            except UnrecognisedSearchPage as exc:
+                # Retryable, and deliberately not settled: see the class.
+                log.error("[%d/%d] %s unrecognised search page: %s",
+                          i, len(targets), ref, exc)
+                totals["errors"] += 1
+                _record(conn, app_id, {"errors": 1, "links_found": 0,
+                                       "error_class": "unrecognised_search_page"},
+                        dry_run=args.dry_run)
+                continue
             except Exception as exc:
                 log.error("[%d/%d] %s search failed: %s", i, len(targets), ref, exc)
                 totals["errors"] += 1
+                _record(conn, app_id, {"errors": 1, "links_found": 0,
+                                       "error_class": type(exc).__name__},
+                        dry_run=args.dry_run)
                 continue
             time.sleep(args.delay)
             if not urls:
                 totals["empty"] += 1
                 log.info("[%d/%d] %-22s no documents in the legacy store",
                          i, len(targets), short)
+                # The store said "No results found" in its own words, so
+                # this is a checked empty and belongs in the acquisition
+                # record. Until 2026-09-04 it was logged and lost, which
+                # is why the eleven `T/`, `SMI/` and `P/20054/000` nulls
+                # lived in PORTAL_NOTES prose while the record still
+                # showed the Agile adapter's coerced empty.
+                _record(conn, app_id,
+                        {"links_found": 0, "downloaded": 0,
+                         "skipped_existing": 0, "errors": 0,
+                         "error_class": "no_documents"},
+                        dry_run=args.dry_run,
+                        note="legacy store searched and answered "
+                             "'No results found'")
                 continue
             if args.dry_run:
                 log.info("[%d/%d] %-22s %d documents", i, len(targets), short, len(urls))
@@ -170,6 +246,10 @@ def main() -> int:
                              "downloaded": stored, "skipped_existing": skipped,
                              "errors": failed})
             totals["apps"] += 1
+            _record(conn, app_id,
+                    {"links_found": len(urls), "downloaded": stored,
+                     "skipped_existing": skipped, "errors": failed},
+                    dry_run=args.dry_run)
             log.info("[%d/%d] %-22s found=%d new=%d held=%d err=%d | total %d",
                      i, len(targets), short, len(urls), stored, skipped, failed,
                      totals["stored"])
