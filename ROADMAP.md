@@ -208,11 +208,14 @@ What survives it here:
   neighbouring site (a discharge citing the substation consent it
   discharges against) and that documentary tie is recorded nowhere;
   only the three Barbour-linked records carry a cohort row.
-- **Two procedural singletons stand as tracked warts of the typed
-  `parent_ref` gap**: `Barnet/26/0696/CON` and
+- **Two procedural singletons stand as tracked warts of the
+  relation-table gap** (Smaller things; the item was a typed
+  `parent_ref` column until 2026-09-04): `Barnet/26/0696/CON` and
   `Hillingdon/71554/APP/2025/2436`, each the paperwork of a vetoed
-  energy scheme, stranded because family edges cannot see typed
-  parents.
+  energy scheme, stranded because family edges cannot see typed parents.
+  Both have been staged under `adjacent_power/` since #352 re-extracted
+  their references; what they still lack is a relationship row, so
+  re-measure this before quoting it.
 - **The `not_dc` live-member leak is neither small nor about verdict
   tracking** (measured 2026-09-02 against the live database, with the
   clusterer's own rubric fold). **159 live members** carry a latest
@@ -890,6 +893,16 @@ multiplication (defensible, needs a label) versus something looser. The
 generation cohort's existing exclusion of per-unit ratings is the
 nearest precedent for where the line sits.
 
+**The target shape, once they are classified** (2026-09-04): a computed
+figure carries its derivation beside it — the source finding or evidence
+references, the operation (a unit count times a rating; a sum of stated
+components), the operands with their units, and a derivation version —
+and renders on the `w-modelled` rung with the ≈ glyph, distinct from a
+figure a document states. Existing rows stay untouched; the derivation
+is a record beside the finding, the way an adjudication is. Which
+operations are admissible is the decision the classification informs,
+not one to take before it.
+
 ### Approaches tried and rejected, so they are not re-proposed
 
 - **Summing a campus's figures into a total.** Rejected twice, for two
@@ -1190,6 +1203,57 @@ both shipped since, so the old section title ("Deferred to 2.9") had
 aged into a lie. Each is scoped; what blocks each is a decision, not
 work.
 
+- **An empty document list carries two facts, and the adapters return
+  it as one — the re-fetch below cannot settle anything until they
+  don't** (measured 2026-09-04, after an external review proposed typed
+  parse outcomes). Idox, Ocella, Arcus and NI set
+  `no_documents_or_unparseable` whenever `len(links) == 0` — Idox from
+  three indistinguishable `return []` paths, any table or none — and
+  since the 2026-08-09 tightening `acquisition_outcome` refuses to
+  settle that, so it lands as `error` and is re-fetched on every sweep
+  with no exit but a hand-written row. **Live: 37 in-universe
+  applications holding no documents sit in that loop (31 Idox, 6
+  Arcus); 99 more are settled `none_published` on the same detail from
+  2026-08-08 (90 Idox, 9 Ocella), 52 of them the refusal pages below;
+  and `withdrawn_from_view` has no settled mapping either, so 7 more
+  are retried for ever for the same reason.** The label has sat on both
+  sides of the bug — it wrongly settled before the 9th and wrongly
+  refuses to settle since — and the reader prints it verbatim as an
+  application's reason for holding nothing.
+
+  **Two adapters have the opposite defect, and it is the one this
+  project fears.** Agile's `documents()` returns `[]` for any 200 body
+  that is not a JSON list, and NI's `or []` does the same for a null
+  `supportingDocuments`, so an error object served with a 200 reads as
+  `no_documents` and *settles* as `none_published`: nobody looked,
+  stored as nothing there, in the seventh costume. Both are one-line
+  fixes — raise on the unexpected shape, and relabel NI's genuinely
+  empty list, which it reaches only after decoding the JSON and
+  rejecting a null body, as the recognised empty it is.
+
+  The distinction is not new here. `scripts/fetch_newport_docstore.py`
+  returns `None` for a page that did not parse and `[]` for an empty
+  store, and says why in its docstring — then throws the difference away
+  one function later with `or []`. `dcp/relist_audit.py` classifies
+  `blocked` against `empty_listing` on the pages' own refusal wording
+  and a byte floor (migration 029: "the register is UNMEASURED"). Both
+  are on the audit path only. **The rule: a parser returns a recognised
+  empty on positive evidence only** — for Idox, `table#Documents`
+  present with at most a header row, or the tab strip's `Documents (0)`
+  / `nodocuments` marker, both visible in the one captured fixture —
+  never on "no links matched"; refusal wording or a body under the floor
+  is `access_refused`, mapped to a settled class (`login_required` or
+  `portal_blocked`, both of which already have reader copy — Luke's
+  call); anything else keeps the retryable label. One family at a time,
+  against captured pages of all three kinds — populated, empty, refused
+  — and the pages exist: every listing fetched is in `source_snapshots`,
+  and none is committed as a fixture yet, so capturing a Selby refusal
+  and a confirmed empty tab is the first act. Order: the Agile and NI
+  one-liners; Idox, lifting `relist_audit`'s markers and floor into the
+  fetch path and mapping `withdrawn_from_view`; Ocella and Arcus after,
+  each with its own fixture pair. `tests/test_idox.py` pins the
+  conflation ("must return [] without raising") and changes with it.
+
 - **Re-fetch the 52 applications whose `none_published` was awarded on a
   page that refused.** Established 2026-08-26 without touching a portal,
   by re-reading the documents-tab HTML the original fetch had already
@@ -1206,7 +1270,10 @@ work.
   a decision about the acquisition record, which is why nothing has
   touched them. `no_documents_or_unparseable` is itself a conflated
   name — the adapter sets it whenever `len(links) == 0`, whether the
-  page was a register or a refusal.
+  page was a register or a refusal. **And re-fetching with today's
+  adapter can settle only a page that now serves documents**; one that
+  still refuses lands as `error` and joins the loop above, which is why
+  the typed outcome comes first.
 
 - **The browser-routed residue: 24 NEC, 3 Northgate, ~14 bespoke** (as
   probed 2026-08-27; the "31 browser-routed" notes they replaced had
@@ -1351,12 +1418,12 @@ work.
   disagreement is the finding; the comparison is the deliverable.
 - **Water adjudication**, once reading is complete — whether the sites
   disclosing consumption support anything firmer than the cooling method
-  reported today. **119 sites as at the 2.1 boundary**, and the number
-  has moved twice: HISTORY records 93 at phase 1 and the data dictionary
-  said 76 through phase 2, both measured before the reading that
-  followed them. Three hardcoded figures for one quantity, drifting
-  apart — measure it at the time rather than quoting any of them, and
-  see the note below about making it computed.
+  reported today. **169 sites under the profile's own predicate on
+  2026-09-04**, against 119 at the 2.1 boundary, 76 in the dictionary
+  through phase 2 and 93 at phase 1 — four figures for one quantity,
+  each measured before the reading that followed it and none computed.
+  Measure at the time rather than quoting any of them; the item under
+  Smaller things makes it computed.
 
 ## The scheme SPVs at Companies House
 
@@ -1942,6 +2009,28 @@ sweep re-run 2026-08-27 still finds exactly the three):
    the coverage split already applies to drawings and sampled
    objection letters.
 
+   **The durable form is a predicate, not a re-stat** (2026-09-04): the
+   three rows carry `content_sha256 = EMPTY_SHA256`, the constant the
+   fetch guard already compares against — verified against the
+   database, exactly three, the Warwick, Wakefield and Medway files —
+   so the two coverage queries in `dcp/site_profile.py` can flag a
+   held-empty document and keep it out of `docs_held` and `prose_held`
+   with one condition, and the reader's coverage detail and the site
+   report's "Documents held" line say "unavailable from the source"
+   from that. `repo.zero_byte_documents` keeps the filesystem stat as
+   the cross-check. **Considered and not adopted, the same day**: an
+   external review's split of `documents` into a listed record, an
+   acquisition attempt and a held content object. Listed against held
+   is already first-class at the application grain —
+   `document_listing_audit` names every offered and missing URL — and
+   attempts likewise (`acquisition_outcome`); what was missing is one
+   condition at the document grain, and a three-table split for three
+   rows would re-point the 99 places that count `documents`. The one
+   table that might earn its place later is a per-URL offers table, and
+   only if per-URL retry state becomes a recurring need; today
+   `relist_refetch.py` re-derives it from the audit's `missing` set on
+   each run, and that is fine.
+
 Worth raising with the three councils as well: a listed document that
 downloads as nothing is a public-access failure independent of this
 investigation.
@@ -2075,32 +2164,76 @@ here rather than applied from the build lane.
   holding a previous release must be emptied or replaced, and the new
   notebook's URL must reach `NOTEBOOK_URL` before step 12.
 
-- **The materialise leaves membership rows unretired when it retires
-  a site** (found 2026-09-02 while verifying the reader's adjacent-power
-  links; 65 rows on 63 applications, measured). `dcp/sites.py` retires a
-  site that no longer emerges from the clustering and does not touch its
-  `site_members`, so a row on a dead site still reads `retired_at IS
-  NULL`. Where the application is also a member of a live site nothing
-  is affected. Where it is not — four adjacent-power applications
-  retired with their sites by #252, 144 documents — every "membership-
-  less" test read it as a member: not staged under `adjacent_power/`,
-  in no live site's folder, and its old folders pruned at 2.11, so the
-  documents had **no Drive home** until the three queries (the staging
-  build, the id recorder, the sample verifier) were taught to require a
-  live site (PR #346; pinned by a test over all three). They return at
-  the next staging build and sync. The durable fix is in the materialise
-  — retire the rows with the site, as the revive path already retires
-  stale ones — and it is a data change to make deliberately, with the
-  65 rows listed first.
+- ~~**The materialise leaves membership rows unretired when it retires
+  a site**~~ — **closed 2026-09-02, the day it was opened**, and this
+  item stood open for two days after while the capacity-model section
+  above already recorded the same 65 rows retired. Found while verifying
+  the reader's adjacent-power links: `dcp/sites.py` retired a site and
+  left its `site_members`, so a row on a dead site still read
+  `retired_at IS NULL`, and four adjacent-power applications retired
+  with their sites by #252 — 144 documents — were staged nowhere, in no
+  live site's folder, their old folders pruned at 2.11. PR #349 (**not
+  #346, as this item said**) taught the three queries — the staging
+  build, the id recorder, the sample verifier — to require a live site,
+  pinned by a test over all three; PR #351 put the durable fix in the
+  materialise, retiring every live membership on a retired site, all
+  retired sites and not only the run's own, so it was the backfill as
+  well as the guard. It reports `members_retired_with_site`;
+  `preflight()` counts `stale_member_rows`;
+  `tests/test_membership_doors.py` pins both. Luke's materialise that
+  afternoon retired the 65 (HISTORY, "Membership settled before the
+  campus review"); re-measured 2026-09-04, zero live rows on retired
+  sites. The three live-site predicates stay as defence in depth. **One
+  query still tests the member row alone** — `UNSTAGED_SQL` in
+  `build_drive_staging.py`, the shortfall counter — correct only because
+  the materialise now retires the rows, and its test checks for the
+  substring `retired_at IS NULL` rather than the join, so it would not
+  see the regression. A one-line follow-up.
 
-- **`drive_sync.py`: the batching half is still open** (the
-  concurrency half closed 2026-08-29 — `--workers` now defaults to 12;
-  HISTORY). The Drive batch endpoint takes 100 calls per request,
-  which would beat any number of threads, and the ledger's own write
-  is still a non-atomic `write_text` every 50 changes — worth making
-  atomic before anyone relies on killing a sync safely. The design
-  constraint stands: parallelise the API calls, never the ledger
-  writes.
+- **`drive_sync.py`'s ledger write is neither atomic nor ordered, and
+  nothing stops a second process** (separated from the batching item
+  2026-09-04, because a durability fix should not wait behind a
+  performance one). `Sync.save()` serialises the state under the ledger
+  lock, releases it, then `write_text`s the final path. A kill mid-write
+  leaves truncated JSON, which the next sync loads with a bare
+  `json.loads` and dies on — the workbook export, the id recorder, the
+  sample verifier and the ledger rebuild read the same file. And two
+  workers can pass the fifty-change gate in one order and finish their
+  writes in the other, so **an older snapshot silently overwrites a
+  newer one**; the lost entries are files re-uploaded beside their Drive
+  copies next run, which is the duplicate-archive mechanism
+  `dcp/drive.py` exists to prevent. The concurrent-write test pins the
+  in-memory dict against mutation during iteration and asserts after a
+  final uncontended save, so it can see neither hazard. Under
+  `drive.file` the ledger is the only record of what the tool created;
+  `scripts/rebuild_drive_ledger.py` rebuilds a *lost* one from
+  `files.list`, which does not help a *partial* one that under-describes
+  Drive without announcing it.
+
+  The fix is the pattern this repo already keeps for its other resume
+  files (`relist_refetch.py`'s `_save_state`, `export_duckdb`'s
+  `.building`, the staging build's swap): inside the lock, serialise,
+  write a sibling temp file, flush and fsync, `os.replace` it onto the
+  ledger, and release only after — one write every fifty changes, so
+  holding the lock across it costs nothing and the comment that the lock
+  "guards memory, not network" stays true. Plus a lock file held for the
+  whole sync, and a refusal — never a merge — when it is already held.
+  Two readers still spell the ledger's path themselves
+  (`record_drive_ids.py`, `rebuild_drive_ledger.py`) outside the
+  `SYNC_LEDGER` constant `tests/test_release_paths.py` enforces; fold
+  them in the same change. Checks: interrupt a write before the replace
+  and the previous ledger still parses; force two saves to complete in
+  reverse order and the newest state is on disk; start a second sync
+  against the same ledger and it refuses before any API call; keep the
+  existing concurrent test and validate every entry after the forced
+  save. `prune()` reads and mutates the state outside the lock, safe
+  only because it runs after the pool closes — say so in a comment
+  before batching moves anything.
+- **`drive_sync.py`: the batching half** (the concurrency half closed
+  2026-08-29 — `--workers` now defaults to 12; HISTORY). The Drive batch
+  endpoint takes 100 calls per request, which would beat any number of
+  threads. The design constraint stands: parallelise the API calls,
+  never the ledger writes — and the ledger item above lands first.
 
 - **Four editorial questions from the signal-family repair** (the
   repair itself — the missing-family backfill across 557,747 OpenAI
@@ -2155,27 +2288,157 @@ here rather than applied from the build lane.
   calibrated on — but with different signal matching from the original,
   so this is a flag and nothing more. Reproduce the original criteria
   from git history first, then re-run, then decide.
-- **Make the data dictionary's corpus statistics computed.** The count of
-  sites disclosing water consumption exists as three hardcoded figures
-  written at three moments — HISTORY 93, the dictionary 76, live 119 —
-  and only the last is true. One function taking a connection, called by
-  both exporters, kills the class. Until then, measure before quoting any
-  dictionary statistic.
+- **Make the corpus statistics the artefacts quote computed** (opened
+  2026-08-11; re-measured 2026-09-04, when an external review found the
+  same defect and this item's own inventory turned out to be stale). The
+  count of sites disclosing water consumption is typed by hand in three
+  shipping places and computed in none: **"only 93 sites"** in the
+  reader's front-page caveat and in the workbook's *Water figures*
+  release row, both copied from the phase-1 HISTORY sentence of
+  2026-08-09; and **"119 of 429 sites"** in the dictionary's *Water
+  evidence* entry, which `export_reader` renders into the same page as
+  the 93. So one published HTML file states both, about a scroll apart.
+  The 76 this item used to attribute to the dictionary survives only in
+  a comment in `dcp/site_profile.py`. **Under the profile's own
+  predicate — `COOLING_TEXTS_SQL` with `CONSUMPTION_SIGNAL_RE`, live
+  sites and live memberships — the figure on 2026-09-04 was 169 of 500
+  live sites**, so every published number is wrong and replacing 93 with
+  119 would have swapped one stale number for another.
 
-- **Promote `associated_id` to a typed `applications.parent_ref`
-  column.** Parent-backfill confirmed the field is reliable; a typed
-  column makes family navigation a join rather than JSONB extraction.
-- **`deepread_log.pages_sent` counts a page once per chunk, not once.** A
-  page split across chunks is recorded once per chunk it appears in, so
-  the array is a send log rather than a set of pages: document 52945 has
-  148 entries for 32 distinct pages, and 21 rows currently hold more
-  entries than `pages_total`. Nothing divides by it today — the runners
-  only write it, and the log line's `[148/32 pages]` is the sole visible
-  symptom — so this is latent rather than wrong. It becomes wrong the
-  moment any coverage figure is computed from `array_length`, which is
-  the obvious way to use the column. Either store distinct pages or make
-  the ambiguity impossible to misread; do it before a consumer needs it,
-  not after one has published from it.
+  The fix is one aggregate, not a corrected literal: a function in
+  `dcp.corpus_stats` — which today stops at the findings layer and is
+  imported by neither exporter — returning the numerator, the
+  denominator it applies to and the percentage, computed at build under
+  exactly the per-site predicate the site panels use, and interpolated
+  by both exporters so the caveat, the release row and the dictionary
+  entry cannot disagree. Then the test that stops the next one: a rule
+  over the generated-prose templates in both exporters refusing a
+  literal corpus count, on the `tests/test_release_defaults.py` pattern
+  — a rule over the tree, verified by reintroducing the bug. External
+  figures (Ofgem's queue, NESO's rows) are quotations and stay literal.
+
+  **The class is a dozen, not one.** The reader's methodology prose also
+  types "twenty-two largest figures, all twenty-two" three separate
+  times, "116 figures rested on a quote carrying no unit", "1,667
+  adjudicated generation figures", "43 site rows" on floor-area
+  estimates, "855 findings across 51 sites" (also typed in this file),
+  "47 sites … median 0.75"; the dictionary types "53 sites" for the
+  1.71 kW/m² calibration (its own item above), "six campuses" and "28
+  applications behind bot protection" — the last two countable today
+  from `site_facilities.yaml` and `KNOWN_BLOCKED_HOSTS`. Each becomes
+  computed, or becomes a dated quotation with its date in the sentence;
+  the test is what finds the next one.
+
+- **An application-relation table, in place of a scalar `parent_ref`.**
+  From 2026-05-12 until 2026-09-04 this item read "promote
+  `associated_id` to a typed `applications.parent_ref` column …
+  family navigation a join rather than JSONB extraction". It predates
+  the recipe this file arrived at on 2026-08-30 for the same disease —
+  do not sharpen the container, add the missing relation with its
+  evidence (#252, `site_adjacent_power`) — and a scalar cannot hold what
+  the field holds. PlanIt's `associated_id` is free text carrying zero
+  or more references beside commentary: `EPF/1165/22(Outline
+  EPF/1136/19)` and `1331/APP/2020/3388 A1/A3/A4/B1/B8/D1/D2
+  1331/APP/2017/1883` are the extractor's own worked examples, and
+  Saunderton's `22/06872/VCDN 08/05740/FULEA` in `tests/test_backfill.py`
+  is the 2008 parent the backfill exists to recover. A scalar would have
+  to choose one, and would drop the outline the master-plan note in
+  `dcp/sites.py` says it needs. "Parent-backfill confirmed the field is
+  reliable" was a claim about resolution, not about cardinality.
+
+  **What the gap costs today, measured 2026-09-04.** Six callers share
+  the one tokenizer, `planit._extract_candidate_refs`, and feed it four
+  different inputs — the backfill mines the full description only when
+  told to and only for three `app_type`s; the clusterer's family pass
+  mines 400 characters of it whenever `associated_id` yields nothing;
+  the adjacent-power staging rule mines 600; the Barbour scripts mine
+  none. So the family edges, the staged adjacent-power paperwork and the
+  Barbour family links are **three slightly different graphs nobody has
+  diffed**, and which token resolved to which application, by which
+  route, is re-derived at every materialise and written nowhere. That is
+  what the warts above are made of: the family-reference tie "recorded
+  nowhere"; the two procedural singletons, staged under
+  `adjacent_power/` by #352's re-extraction since 2026-09-02 but still
+  without a relationship row — re-measure that item before quoting it;
+  and the master-plan conflation `dcp/sites.py` names in its own
+  comment.
+
+  **The shape**, on migration 032's contract, materialised from the
+  extractor, one tier: one row per (citing application, field, token) —
+  the token exactly as extracted, the field it came from
+  (`associated_id` or the description), the resolved application or
+  null, the resolution route (council-prefixed or bare, the
+  `project_applications.match_method` precedent), the extractor version
+  so a regex change is a new generation rather than an overwrite, and
+  `materialised_at` / `retired_at` with a partial unique index over live
+  rows. **No relation-kind column**: the field cannot say parent from
+  sibling from outline, the citing record's `app_type` already sits in
+  `raw_metadata`, and a kind written now would be invented. A null
+  target is not silence; it is the parent backfill's worklist.
+  `raw_metadata.associated_id` is never touched. A hand-curated tier
+  comes when it is needed — the Ealing discharge whose slashless parent
+  the description miner cannot read is handled by a partition today, and
+  would become a `manual` row with its evidence, on the priors contract
+  that fails the run on an unknown reference.
+
+  **Staged, because relationship resolution moves site keys, membership,
+  Drive paths and release diffs.** Materialise the table in runbook step
+  0 beside today's extraction; print the unresolved and ambiguous rows
+  as a report; give `build_clusters` an edge-source switch and run
+  `materialise_sites.py --dry-run` under both. `preflight()` already
+  names new keys, retiring keys, leaving applications and orphaned
+  claims; **it does not report an application that moves between two
+  surviving sites**, and that `moved` list is the one thing "build both
+  ways and diff" needs that this repo lacks — three lines, since the
+  query already holds both keys. No consumer switches until the two runs
+  show identical keys and membership, or every difference is explained;
+  the first diff will surface the 400/600/full window drift, which is
+  the explained half. Then the family tie is `site_adjacent_power`'s
+  fourth basis by a join — a vetoed record citing, or cited by, a live
+  member of a site — with 032's CHECK admitting `family` and its rank
+  among the tiers a decision (documentary, so above proximity); the two
+  singletons attach through it; and the triage prompt's raw-string line
+  can name resolved references instead. Worth its own plan document, the
+  way the operator rung and the unsited-claims layer had one.
+- **`deepread_log.pages_sent` counts a page once per chunk, not once**
+  (opened 2026-08-12; re-measured 2026-09-04). Migration 007 defines the
+  column as "1-based physical page numbers sent to the model"; the
+  runners write a send log. `chunk_pages` resets its page list at every
+  flush, so a page split across chunks is appended once per chunk, and
+  `deepread_run.py` flattens the chunk lists straight into the column;
+  the two batch builders carry the same comprehension, and the agent and
+  retry runners inherit their value — six writers, one defect. Document
+  52945's local-model row holds 148 entries for 32 distinct pages
+  against a `pages_total` of 32; its gpt-5 row is clean. **Grown since
+  August: 714 rows hold more entries than `pages_total`, against the 21
+  measured then, and 929 of 98,708 hold a page more than once.**
+
+  Two things the August note did not say. **The canonical form already
+  exists in the same function** — `sent_set` is what the escalation
+  JSONL records, and `regate_escalations.py` reads the JSONL and never
+  the column, so the two records of "which pages the model saw" already
+  disagree, and the fix is to make the column match the JSONL rather
+  than invent a third convention. And **the list is not write-only**:
+  the verbatim gate's fallback loop walks the un-deduplicated `sent`,
+  re-scanning a split page once per chunk on exactly the
+  million-character worksheets where it costs most.
+
+  **The rule: `pages_sent` is the sorted set of physical page numbers,
+  everywhere it is written** — the three places that build it.
+  Historical rows stay as they are, the audit record of those runs; no
+  consumer reads the column back from the database today (no
+  `array_length`, no `cardinality`, no `len()` but the log line), so a
+  future one treats an existing array as a set. A per-chunk send log, if
+  ever wanted, gets its own name. Checks: a synthetic page split into
+  several chunks yields `pages_sent == [1]`; two ordinary pages plus one
+  split page yield a sorted unique list; `len(pages_sent) <=
+  pages_total` on every new row; the gate still recovers a quote on
+  every selected page; and the progress line reads distinct pages over
+  pages *selected* — its denominator today is the document's total
+  pages, so `[148/32 pages]` was wrong in both halves.
+  `tests/test_chunking.py` asserts `nums == [1]` per chunk for a split
+  page, which is correct and stays; it is the flatten that must
+  deduplicate.
 - **Improve the automated test surface.** When this was written the
   suite was good at internal consistency and blind to three things, and
   almost every defect found on 2026-08-11 sat in one of the gaps. Two
@@ -2201,7 +2464,8 @@ here rather than applied from the build lane.
   **Nothing asserts that a stated number matches the data it describes.**
   The count of sites disclosing water consumption existed as three
   hardcoded figures written at three moments — 93, 76 and 119 — and
-  every one passed. Same for the findings-inflation percentage. A test
+  every one passed. A fourth, 169, measured 2026-09-04, shows the drift
+  continuing while the item stayed open. Same for the findings-inflation percentage. A test
   that recomputes each statistic the dictionary quotes and compares it
   to the string would make that class impossible; making them computed
   (above) is the better fix, and the test is what stops the next one

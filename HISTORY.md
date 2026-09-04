@@ -3763,3 +3763,73 @@ and Medway — and Ealing was never one of them; its gap was a document
 since read. Corrected here and in the ROADMAP, with the error kept
 visible, because a register nobody can trust is worse than no
 register.
+
+---
+
+## An external root-cause review, and what it changed (2026-09-04)
+
+A read-only review of the repository (supplied by Luke, dated
+2026-09-02) asked which mechanisms treat symptoms rather than causes.
+Checked claim by claim against the code, the live database and this
+record before anything moved.
+
+**Three of its five proposals were already ROADMAP items** — the
+computed corpus statistics (2026-08-11), `pages_sent` (2026-08-12) and
+the atomic ledger write (2026-08-30) — so its value was what it added to
+each, and in two cases it understated the item it had found. The
+dictionary's "119 of 429" ships beside the reader's "only 93" **on one
+page**, because `export_reader` renders the dictionary, and the live
+figure under the site profile's own predicate is 169 of 500. The
+deduplicated `pages_sent` already exists in the runner as `sent_set`,
+reaches the escalation JSONL, and never reaches the column — so the two
+records of which pages a model saw already disagree, and the rows
+holding a page more than once have gone 21 → 714 since August while the
+item sat open. And the ledger's unlocked write can lose a newer snapshot
+to an older one silently, not only tear the file.
+
+**Its "already implemented" finding was right**: the
+membership-retirement item was closed by #351 the day it was opened, and
+ROADMAP carried it open for two days while recording the same 65 rows
+retired four hundred lines earlier. It also mis-cited its own PR (#346
+for #349). Both corrected.
+
+**Its relation-table argument was won**, and replaces a v1-era line for
+a scalar `applications.parent_ref` that this project's own 2026-08-30
+recipe had overtaken: do not sharpen the container, add the missing
+relation with its evidence. Checking it found the sharper reason the
+review did not have — six callers share one reference tokenizer and feed
+it four different inputs (full description, 400 characters, 600, none),
+so the family edges, the staged adjacent-power paperwork and the Barbour
+family links are three slightly different graphs nobody has diffed.
+
+**Its typed-outcome proposal went in ahead of the re-fetch decision it
+turns out to gate** — re-fetching a page that still refuses can only
+produce `error` under today's adapter — having missed that this repo
+holds the distinction twice already on the audit path
+(`fetch_newport_docstore.py`'s `None` against `[]`, and
+`relist_audit.py`'s `blocked` against `empty_listing`). Checking it
+found the opposite defect live in two adapters: Agile returns an empty
+list for any 200 body that is not a JSON list, NI for a null document
+field, and both then *settle* as `none_published` — nobody looked,
+stored as nothing there, in a seventh costume.
+
+**Declined**: the three-way split of `documents` into listed record,
+acquisition attempt and held content object — listed against held is
+already first-class at the application grain, and the one missing
+document-grain marker turns out to be the empty body's own hash, which
+the fetch guard already carries; its framing of the `not_dc` choice as
+open between three vetoes, resolved on 2026-09-02 (the veto is the wrong
+instrument); and its report of stale comments in
+`tests/test_drive_staging_shortfall.py`, of which there are none — the
+block is written in the past tense and is accurate.
+
+Its list of mechanisms that should remain — the priors, the append-only
+stores, the refusal gates, the browser route, refusing to infer campus
+totals from unlike figures — matched this file's own
+approaches-tried-and-rejected record and needed nothing.
+
+The review document is **not committed**, and `docs/` carries the check
+rather than the claim: a restated inventory is the thing that goes
+stale, and two of the review's own figures were stale on arrival — the
+ROADMAP item it quoted for the water count had itself drifted, naming a
+76 that now survives only in a code comment.
