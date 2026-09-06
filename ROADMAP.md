@@ -1313,12 +1313,14 @@ work.
   Southend 2, Chelmsford 1 and Reigate 1 — the page's own API, found by
   watching it; 407 documents across the eight. **Neath's one after
   that** (`scripts/fetch_neath_docstore.py`): two documents. That
-  leaves **5**: Bedford 2 — the store lists fourteen files for
-  `24/02188/FUL` as plain `OpenDocument` links, then put a CAPTCHA in
-  front of the first download (2026-09-06, PORTAL_NOTES); a person
-  with a browser, or a much slower client, is the way in, not a script
-  around the gate — and Brighton 3, whose register serves 212 bytes on
-  every tab and has no External Documents link to follow.
+  leaves **3**: Brighton's, whose register serves 212 bytes on every
+  tab and has no External Documents link to follow. Bedford's two went
+  by hand the same evening: the store lists its files as plain
+  `OpenDocument` links, then put a CAPTCHA in front of the first
+  download (PORTAL_NOTES), so Luke saved them from a browser into the
+  manual inbox and `ingest_inbox.py` filed them under `manual` —
+  `24/02188/FUL` 15 of 15, `26/00355/MAO` 50 of 51 (the CIL question
+  form would not download; the manifest names it).
   106 of the 128 settled
   verdicts carry the detail `no_documents_or_unparseable` and every one
   was written on **2026-08-08**, before the mapping was tightened on the

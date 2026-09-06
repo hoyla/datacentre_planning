@@ -351,11 +351,18 @@ four shapes:
   invalid input from this client IP address, error code: 338, number
   of attempts left: 5".
   That is a CAPTCHA, which this project does not work around; the
-  gate is the council's, and two Bedford applications stay unfetched
-  (`24/02188/FUL`, `26/00355/MAO`) unless a person opens the fourteen
-  links in a browser or the gate proves to be a burst limit that a
-  slower client stays under — untested, and not to be tested by
-  hammering it. Recorded 2026-09-06.
+  gate is the council's. So the two Bedford applications went by hand
+  the same evening: Luke opened the links in a browser (the gate lets
+  a person through), saved into `data/raw/manual/`, and
+  `scripts/ingest_inbox.py` filed them under the `manual` route —
+  `24/02188/FUL` 15 of 15, `26/00355/MAO` 50 of 51, the CIL question
+  form refusing to download. Two notes for next time: the inbox wants
+  one folder per application (`Bedford_26_00355_MAO`), and filenames
+  with a single dot before the extension (`V12.pdf`) came down in a
+  separate batch from the double-dot ones (`V11..pdf`), which is how
+  fifteen were missed on the first pass. Whether the gate is a burst
+  limit a slower client stays under is untested, and not to be tested
+  by hammering it.
 - **Neath Port Talbot** (`appsportal2.npt.gov.uk/ords/idocs12/f?p=Planning:2:0::NO::P2_REFERENCE:<ref>`,
   Oracle APEX): a results table, paged "1 - N of N", with direct
   `maps.npt.gov.uk/iDocsPublic/ShowDocument.aspx?id=<n>` links served
