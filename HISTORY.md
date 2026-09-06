@@ -4202,6 +4202,23 @@ any site stays out.
 
 ---
 
+## An error with documents held stays queued (2026-09-06)
+
+The Selby fetch found it. At the spacing the host's 429s had driven the
+client to — 45 seconds — the 900-second budget fits about twenty
+requests, and three applications in a row timed out after storing 34,
+17 and 18 documents of registers that list more. Each was recorded
+`error`, "exceeded 900s", none found; and the queue admitted an
+application holding documents only when its outcome was `partial`, so
+the three had left the queue for good, unfinished. Measured across the
+corpus: thirteen live members in that state, nine of them behind a host
+that had refused a whole run (Swindon, Tower Hamlets, Slough's Agile),
+holding up to 389 documents each and never to be tried again. The
+predicate now reads `partial` or `error`: holding documents settles
+nothing while the last attempt did not finish. Seeded test, verified by
+reintroduction. The Selby sweep restarted at Luke's suggestion with a
+30-second opening interval and a budget to match.
+
 ## Exeter College is a teaching building, excluded by exception (2026-09-06)
 
 The second refused page reviewed after Selby was Exeter's, and it was
