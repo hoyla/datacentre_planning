@@ -131,11 +131,43 @@ def _is_idox_url(url: str) -> bool:
     return "applicationDetails.do" in url
 
 
+# Registers that moved house, keyVals intact. Selby District Council was
+# abolished on 1 April 2023 and its Public Access register was folded
+# into North Yorkshire's; `public.selby.gov.uk` now answers with an
+# expired certificate and, behind it, "Permission Denied" on every
+# documents tab — which the adapter read on 2026-08-08 as a register
+# publishing nothing, and settled 18 applications on. The same
+# `applicationDetails.do?keyVal=…` resolves on the successor host with
+# its documents (six of six sampled on 2026-09-06: 10, 10, 6, 6, 60 and
+# 81). PlanIt still records the old URL, and `applications.url` keeps
+# what PlanIt said (principle 3); the rewrite happens where a request is
+# built and where a link is rendered, and nowhere else. A fact about the
+# world, held once — the `dcp/drive.py` shape.
+SUCCESSOR_HOSTS: dict[str, str] = {
+    "public.selby.gov.uk": "publicaccess.northyorks.gov.uk",
+}
+
+
+def successor_url(url: str | None) -> str | None:
+    """The URL to request or link, with a retired register's host
+    replaced by its successor's. Everything else — path, keyVal, the
+    activeTab — is the same on both, which is what makes this a host
+    swap and not a migration."""
+    if not url:
+        return url
+    parsed = urllib.parse.urlparse(url)
+    host = (parsed.netloc or "").lower()
+    if host not in SUCCESSOR_HOSTS:
+        return url
+    return urllib.parse.urlunparse(parsed._replace(netloc=SUCCESSOR_HOSTS[host]))
+
+
 def _documents_tab_url(application_url: str) -> str:
     """Translate the summary-tab URL we have on hand into the documents-tab URL.
-    Idfdox accepts an `activeTab` query parameter; we replace it (or append it
-    if missing). Any other params on the URL are preserved."""
-    parsed = urllib.parse.urlparse(application_url)
+    Idox accepts an `activeTab` query parameter; we replace it (or append it
+    if missing). Any other params on the URL are preserved. A retired host
+    is swapped for its successor first (`SUCCESSOR_HOSTS`)."""
+    parsed = urllib.parse.urlparse(successor_url(application_url))
     qs = dict(urllib.parse.parse_qsl(parsed.query, keep_blank_values=True))
     qs["activeTab"] = "documents"
     new_q = urllib.parse.urlencode(qs)

@@ -61,6 +61,7 @@ from dcp import snapshot_drive as _snapshot_drive  # noqa: E402
 from dcp import spans  # noqa: E402
 from dcp import db  # noqa: E402
 from dcp import deepread_select  # noqa: E402
+from dcp.sources import idox as _idox  # noqa: E402
 
 from dcp.drive import FOLDER_URL as DRIVE_ROOT  # noqa: E402
 from dcp.drive import WORKBOOK_SHEET_URL  # noqa: E402
@@ -526,6 +527,25 @@ def why_empty(held: int = 0, read: int = 0) -> str:
     return '<span class="q">not in the documents</span>'
 
 
+def register_url(url):
+    """The register link to render: a retired host swapped for its
+    successor (`idox.SUCCESSOR_HOSTS`), everything else as recorded. A
+    link to `public.selby.gov.uk` fails on an expired certificate and
+    then refuses; the same page on North Yorkshire's register answers.
+    The recorded URL stays in the database and the workbook as the
+    source gave it; this is only what a person clicks."""
+    return _idox.successor_url(url) or url
+
+
+def moved_from(url) -> str:
+    """" · moved from <old host>" beside a rewritten register link, or ""."""
+    new = _idox.successor_url(url)
+    if not url or new == url:
+        return ""
+    from urllib.parse import urlparse
+    return f'<span class="q"> · moved from {esc(urlparse(url).netloc)}</span>'
+
+
 def doc_link(url, label: str, drive_url: str = "") -> str:
     """A document's title, linked to our copy, and to the register too.
 
@@ -558,7 +578,7 @@ def doc_link(url, label: str, drive_url: str = "") -> str:
         out = (f'<a href="{esc(drive_url)}" target="_blank" rel="noopener">'
                f'{esc(label)}</a>')
         if fetchable:
-            out += (f'<span class="q"> · <a href="{esc(u)}" target="_blank" '
+            out += (f'<span class="q"> · <a href="{esc(register_url(u))}" target="_blank" '
                     f'rel="noopener">register</a></span>')
         return out
     if fetchable:
@@ -3655,7 +3675,8 @@ def main() -> int:
 
         approws = []
         for a in sorted(apps, key=lambda x: str(x[5] or ""), reverse=True):
-            portal = (f'<a href="{esc(a[12])}" target="_blank" rel="noopener">register</a>'
+            portal = (f'<a href="{esc(register_url(a[12]))}" target="_blank" rel="noopener">register</a>'
+                      f'{moved_from(a[12])}'
                       if a[12] and not str(a[12]).startswith("file://")
                       else '<span class="q">no register link</span>')
             durl = hv._drive_application_url(drive_apps, key, a[1])
@@ -3747,10 +3768,10 @@ def main() -> int:
                         parts.append(f'<a href="{esc(_drive)}" target="_blank" '
                                      f'rel="noopener">document</a>')
                         if _reg:
-                            parts.append(f'<a href="{esc(_reg)}" target="_blank" '
+                            parts.append(f'<a href="{esc(register_url(_reg))}" target="_blank" '
                                          f'rel="noopener">register</a>')
                     elif _reg:
-                        parts.append(f'<a href="{esc(_reg)}" target="_blank" '
+                        parts.append(f'<a href="{esc(register_url(_reg))}" target="_blank" '
                                      f'rel="noopener">document</a>')
                     if parts:
                         pg = f", p. {f_page}" if f_page else ""
@@ -4301,7 +4322,7 @@ def main() -> int:
         if _adj:
             _items = "".join(
                 f'<li><b>{esc(_ref)}</b>'
-                + (f' · <a href="{esc(_aurl)}" target="_blank" '
+                + (f' · <a href="{esc(register_url(_aurl))}" target="_blank" '
                    f'rel="noopener">register</a>'
                    if _aurl and str(_aurl).startswith("http") else '')
                 + (f' · <a href="{esc(drive_adj[hv.clean_ref(_ref)])}" '
@@ -4898,7 +4919,8 @@ def main() -> int:
 
     approws_all = []
     for r in sorted(app_rows, key=lambda x: (x[3] or "", x[1] or "")):
-        portal = (f'<a href="{esc(r[12])}" target="_blank" rel="noopener">register</a>'
+        portal = (f'<a href="{esc(register_url(r[12]))}" target="_blank" rel="noopener">register</a>'
+                  f'{moved_from(r[12])}'
                   if r[12] and not str(r[12]).startswith("file://") else "—")
         durl = hv._drive_application_url(drive_apps, r[0], r[1])
         docs_cell = (f'<a href="{esc(durl)}" target="_blank" rel="noopener">{r[13] or 0}</a>'

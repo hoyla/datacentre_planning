@@ -4142,3 +4142,32 @@ nothing are chased in different places, and the dash-replacement work
 of 2.8 had already named four kinds of blank for the same reason. The
 cohort's `limits` line says the same, with `rule_version` untouched, as
 limits prose is not the rule. Six tests pin the clause and its reach.
+
+---
+
+## Selby's register had moved, not closed (2026-09-06)
+
+Luke, shown that Selby's documents tab answers "Permission Denied"
+behind an expired certificate, pointed at
+`publicaccess.northyorks.gov.uk/online-applications/`. Selby District
+Council was abolished on 1 April 2023 and its Idox register folded into
+North Yorkshire's, keyVals intact: the same `applicationDetails.do`
+page resolves there with its documents — ten for the application that
+had been the worked example of a refusal, and 10, 6, 6, 60 and 81 for
+five more chosen at random. The corpus held **70 Selby applications and
+not one document**, across six live sites, 19 of them on Eggborough
+Power Station's two data centres and one on Drax. The 1 September
+dead-host probe had recorded the expired certificate; nobody had asked
+what was behind it. Hackney in reverse: Hackney dropped its history,
+North Yorkshire kept Selby's.
+
+`idox.SUCCESSOR_HOSTS` holds the swap, once, the way `dcp/drive.py`
+holds a folder id. `_documents_tab_url` applies it where a request is
+built, the queue keys its per-host client on the host actually
+requested, and the reader's five register-link sites go through one
+helper that renders the successor with "moved from public.selby.gov.uk"
+beside it — while `applications.url` keeps what PlanIt said, since the
+source value is never rewritten. A test refuses any register link in
+the reader that bypasses the helper, the class of dead link 2.8 shipped
+401 of. Selby is the only host in the corpus from a council abolished
+in 2023, so this is one migration, not a mechanism looking for work.
