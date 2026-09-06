@@ -1463,8 +1463,8 @@ work.
   2026-09-04**, against 119 at the 2.1 boundary, 76 in the dictionary
   through phase 2 and 93 at phase 1 — four figures for one quantity,
   each measured before the reading that followed it and none computed.
-  Measure at the time rather than quoting any of them; the item under
-  Smaller things makes it computed.
+  Computed since 2026-09-06 (`site_profile.water_disclosure`); the
+  item under Smaller things has the account.
 
 ## The scheme SPVs at Companies House
 
@@ -2329,9 +2329,25 @@ here rather than applied from the build lane.
   calibrated on — but with different signal matching from the original,
   so this is a flag and nothing more. Reproduce the original criteria
   from git history first, then re-run, then decide.
-- **Make the corpus statistics the artefacts quote computed** (opened
+- ~~**Make the corpus statistics the artefacts quote computed**~~ —
+  **the water count is computed since 2026-09-06, and the rest of the
+  class is now a test's worklist.** `dcp.site_profile.water_disclosure`
+  is the one function, beside the per-site predicate it must agree with;
+  the reader's caveat, the workbook's release row and the dictionary
+  entry (a placeholder `dictionary()` fills at build) all interpolate
+  it, and `scripts/corpus_stats.py` prints it with the rest.
+  `tests/test_prose_counts_are_computed.py` refuses a literal count of
+  sites, documents, findings, applications or figures in either
+  exporter's generated prose, verified by reintroducing both literals;
+  the six that remain are named in its `ALLOWED` list, which fails if
+  one is fixed without being struck, so it can only shrink. What the
+  rule cannot see is stated in its docstring: a number written in words
+  ("twenty-two largest figures", three times over) and a count more
+  than one word from its noun ("1,667 adjudicated on-site generation
+  figures"). Those, the six, and the workbook's "six campuses" are what
+  is left of this item. The account as it stood before the fix (opened
   2026-08-11; re-measured 2026-09-04, when an external review found the
-  same defect and this item's own inventory turned out to be stale). The
+  same defect and this item's own inventory turned out to be stale): the
   count of sites disclosing water consumption is typed by hand in three
   shipping places and computed in none: **"only 93 sites"** in the
   reader's front-page caveat and in the workbook's *Water figures*
@@ -2505,8 +2521,10 @@ here rather than applied from the build lane.
   **Nothing asserts that a stated number matches the data it describes.**
   The count of sites disclosing water consumption existed as three
   hardcoded figures written at three moments — 93, 76 and 119 — and
-  every one passed. A fourth, 169, measured 2026-09-04, shows the drift
-  continuing while the item stayed open. Same for the findings-inflation percentage. A test
+  every one passed. A fourth, 169, measured 2026-09-04, showed the drift
+  continuing while the item stayed open; since 2026-09-06 the count is
+  computed and `tests/test_prose_counts_are_computed.py` is the test this
+  paragraph asked for. Same for the findings-inflation percentage. A test
   that recomputes each statistic the dictionary quotes and compares it
   to the string would make that class impossible; making them computed
   (above) is the better fix, and the test is what stops the next one

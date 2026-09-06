@@ -2727,6 +2727,11 @@ def main() -> int:
     from dcp import signals as sig
     from dcp import site_profile, site_scale as scale
 
+    # The one computed form of a number three surfaces used to type by
+    # hand (dcp.site_profile.water_disclosure); the caveat below and the
+    # dictionary both read it from here.
+    with db.connect() as _wconn:
+        water = site_profile.water_disclosure(_wconn)
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute(hv.SITE_SQL); site_rows = cur.fetchall()
         # Curated display names (issue #169): where an alias exists it
@@ -5230,7 +5235,7 @@ def main() -> int:
 
     dict_ids = {(sh, c): _slug(sh, c) for sh, c, _ in hv.DICTIONARY}
     dict_html, current = [], None
-    for sheet, col, desc in hv.DICTIONARY:
+    for sheet, col, desc in hv.dictionary(water=water):
         if sheet != current:
             current = sheet
             dict_html.append(f'<h2 class="sec" id="dict-{esc(sheet.lower().replace(" ","-"))}">'
@@ -6508,7 +6513,7 @@ def main() -> int:
  to the development itself are used, and each carries its basis and confidence.</p>
  <p><b>Figures from partly-read sites are floors.</b> See the note above: they can rise.</p>
  <p><b>Water is reported as cooling method, not volume.</b> The water findings are dominated
- by drainage and flood engineering every development produces; only 93 sites disclose
+ by drainage and flood engineering every development produces; only {water['sites']:,} of {water['of']:,} sites disclose
  anything about consumption. A volume would imply a precision the applications do not
  contain — and that silence is itself worth reporting.</p>
  <!-- Luke, 2026-08-25: both blocks are cautionary, so they read as one
