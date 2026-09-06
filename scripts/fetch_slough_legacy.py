@@ -44,7 +44,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from dcp import db, repo  # noqa: E402
-from dcp.acquisition_outcome import classify_outcome, record  # noqa: E402
+from dcp.acquisition_outcome import SETTLED, classify_outcome, record  # noqa: E402
 from dcp.sources import idox as _idox  # noqa: E402
 
 log = logging.getLogger("slough_legacy")
@@ -121,7 +121,11 @@ def _record(conn, app_id: int, summary: dict, *, dry_run: bool,
     """
     outcome, detail = classify_outcome(summary)
     if note:
-        detail = f"{detail} — {note}" if detail else note
+        # The reader prints this verbatim beside "No documents held". A
+        # settled verdict's class says nothing its outcome column does
+        # not, so the note stands alone; a retryable one keeps its class,
+        # which is the only thing that says why it will be tried again.
+        detail = note if outcome in SETTLED else (f"{detail} — {note}" if detail else note)
     if dry_run:
         log.info("        would record %s (%s)", outcome, detail)
         return
