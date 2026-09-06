@@ -218,6 +218,32 @@ non-list body as an empty list, which is a settled `none_published`:
 the application stays queued. An empty *list* is still a real answer and
 still settles, because on this register it is usually true.
 
+## Selby — register moved to North Yorkshire (70 applications)
+
+Selby District Council was abolished on 1 April 2023 and its Idox Public
+Access register was folded into North Yorkshire's. `public.selby.gov.uk`
+now answers with an **expired certificate** and, behind it, "Error —
+Permission Denied. You do not have permission to view the page" on every
+documents tab, served with HTTP 200 and full council chrome — which the
+adapter read on 2026-08-08 as a register publishing nothing, and settled
+18 applications on. PlanIt still records the old URL.
+
+The same page resolves on the successor, **keyVals intact**:
+
+    https://publicaccess.northyorks.gov.uk/online-applications/applicationDetails.do?keyVal=<KEY>&activeTab=documents
+
+Six of six sampled on 2026-09-06 answered with documents (10, 10, 6, 6,
+60 and 81), read by the Idox parser unchanged. The corpus held 70 Selby
+applications and not one document, across six live sites — 19 of them
+on Eggborough Power Station's two data centres, plus Drax. Selby is the
+only host in the corpus from a council abolished in 2023.
+
+`idox.SUCCESSOR_HOSTS` holds the swap; `_documents_tab_url` and the
+reader's register links apply it, `applications.url` keeps what PlanIt
+said, and the reader shows "moved from public.selby.gov.uk" beside the
+link. The 18 verdicts are superseded by the fetch's own rows, never
+edited.
+
 ## Northern Ireland — planningregister.planningsystemni.gov.uk (whole nation)
 
 No browser needed after all, despite the Next.js front end: the pages

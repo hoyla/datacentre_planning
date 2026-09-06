@@ -1270,7 +1270,14 @@ work.
   permission to view the page"* with **HTTP 200** and full site chrome,
   so a scraper sees an ordinary page with no document links; 3 are
   Brighton returning 212-byte bodies, also with a 200. Selby alone is 18,
-  then Exeter, Derby and Doncaster at 5 each. 106 of the 128 settled
+  then Exeter, Derby and Doncaster at 5 each. **Selby's 18 are not
+  refusals but a move** (2026-09-06, Luke's pointer): the council was
+  abolished in 2023 and its register lives on at
+  `publicaccess.northyorks.gov.uk` with keyVals intact and documents
+  behind them — 70 Selby applications held nothing, six live sites,
+  Eggborough and Drax among them. `idox.SUCCESSOR_HOSTS` carries the
+  swap (PORTAL_NOTES); the fetch over the 70 supersedes the 18. That
+  leaves 34 genuine refused pages for the review by hand. 106 of the 128 settled
   verdicts carry the detail `no_documents_or_unparseable` and every one
   was written on **2026-08-08**, before the mapping was tightened on the
   9th — after which the same condition produced `error` instead. So the
@@ -1825,7 +1832,8 @@ field and is not publishable as it stands.
   dead** (the ten below that still resolve nowhere or time out, plus
   Dundee's idoxwam host on a handshake timeout, Worcester, Wychavon and
   Wokingham resetting the connection, Leeds timing out, and Selby on
-  an **expired certificate**), **5 challenged** (Camden and Portsmouth
+  an **expired certificate** — which turned out to be a register that
+  moved to North Yorkshire in 2023, see PORTAL_NOTES), **5 challenged** (Camden and Portsmouth
   as before; Sefton, South Oxfordshire and Vale of White Horse newly
   answering 403 to a scripted HEAD), and nine other non-2xx answers
   (Birmingham 503, Epping Forest 404, South Tyneside 500, Barnsley 405

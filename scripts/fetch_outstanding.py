@@ -74,6 +74,13 @@ ORDER BY a.application_ref
 """
 
 
+def host_matches(url: str | None, host: str) -> bool:
+    """The recorded host — what PlanIt wrote, before any successor
+    swap — equals `host`, case-insensitively."""
+    from urllib.parse import urlparse
+    return bool(url) and (urlparse(url).hostname or "").lower() == host.lower()
+
+
 def _campaign():
     spec = importlib.util.spec_from_file_location(
         "dc_campaign", Path(__file__).parent / "fetch_dc_campaign.py")
@@ -137,6 +144,11 @@ def main() -> int:
     p.add_argument("--recheck", action="append", default=[],
                    choices=list(SETTLED),
                    help="also revisit applications already settled this way")
+    p.add_argument("--host", default=None,
+                   help="only applications whose RECORDED register host is this "
+                        "(e.g. public.selby.gov.uk), so a register that moved can "
+                        "be re-fetched on its own rather than with every settled "
+                        "empty in the corpus")
     p.add_argument("--min-free-gb", type=float, default=15.0)
     # The adapters' default ladder (4 tries, 60s doubling) is right for a
     # single application and wrong for a sweep: a host that is simply down
@@ -159,6 +171,9 @@ def main() -> int:
     with db.connect() as conn, conn.cursor() as cur:
         cur.execute(OUTSTANDING_SQL, (args.recheck,))
         rows = cur.fetchall()
+    if args.host:
+        rows = [r for r in rows if host_matches(r[2], args.host)]
+        log.info("scoped to recorded host %s: %d applications", args.host, len(rows))
 
     listings = salesforce_pr.load_listings()
     plan: dict[str, list] = {}
@@ -203,7 +218,9 @@ def main() -> int:
         return arcus.ArcusClient(delay_seconds=args.delay, **rt)
     clients: dict[tuple, object] = {}
     def client_for(fam, url):
-        key = (fam, (urlparse(url).hostname or "").lower())
+        # One client per host the request actually goes to: a retired
+        # register's applications share the successor's backoff.
+        key = (fam, (urlparse(idox.successor_url(url) or url).hostname or "").lower())
         if key not in clients:
             clients[key] = make(fam)
         return clients[key]
@@ -242,7 +259,7 @@ def main() -> int:
             per_host = defaultdict(deque)
             for f in handled:
                 for t in plan.get(f, []):
-                    per_host[(urlparse(t[2]).hostname or "").lower()].append((f, *t))
+                    per_host[(urlparse(idox.successor_url(t[2]) or t[2]).hostname or "").lower()].append((f, *t))
             todo, queues = [], list(per_host.values())
             while queues:
                 for q in list(queues):
