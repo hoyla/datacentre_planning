@@ -4269,6 +4269,17 @@ four hosts to it, and the table-agreement test now spans both store
 modules. Eight applications, 407 documents. Six refused pages remain:
 Bedford's two, Neath's one, and Brighton's three with nothing to follow.
 
+## Neath's two documents, from the iDocs store (2026-09-06)
+
+The smallest of the evening's stores: an Oracle APEX results page with
+direct `ShowDocument` links, paged "1 - N of N". `scripts/fetch_neath_docstore.py`
+on the same pattern as the others — the count present and matching
+the rows, or unrecognised and retryable — with the captured page as a
+fixture; the audit and the refetch route the host to it, and the
+store-script loaders in both are now one helper. One application, two
+documents: an EIA screening request for land at Margam and its
+decision. Five refused pages remain — Bedford's two and Brighton's three.
+
 ## An error with documents held stays queued (2026-09-06)
 
 The Selby fetch found it. At the spacing the host's 429s had driven the

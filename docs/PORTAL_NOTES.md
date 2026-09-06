@@ -341,9 +341,13 @@ four shapes:
   (`24 02188 FUL APP FORM..pdf`, …) with one opaque
   `/<base64>.html` link per row. Two applications. Not built yet.
 - **Neath Port Talbot** (`appsportal2.npt.gov.uk/ords/idocs12/f?p=Planning:2:0::NO::P2_REFERENCE:<ref>`,
-  Oracle APEX): a results table with direct
-  `maps.npt.gov.uk/iDocsPublic/ShowDocument.aspx?id=<n>` links — two
-  documents for `P2024/0791`. One application. Not built yet.
+  Oracle APEX): a results table, paged "1 - N of N", with direct
+  `maps.npt.gov.uk/iDocsPublic/ShowDocument.aspx?id=<n>` links served
+  to a plain GET (`Application/pdf`, 504 KB). **Built the same
+  evening** — `scripts/fetch_neath_docstore.py`, the count present and
+  matching the rows or the page is unrecognised; two documents for
+  `P2024/0791`, the EIA screening request and its decision. The audit
+  and the refetch route `planningonline.npt.gov.uk` to it.
 
 ## Selby — register moved to North Yorkshire (70 applications)
 

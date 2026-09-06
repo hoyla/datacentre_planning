@@ -1311,12 +1311,11 @@ work.
   across ten applications. **Civica the same evening**
   (`scripts/fetch_civica_docstore.py`, PORTAL_NOTES): Gateshead 4,
   Southend 2, Chelmsford 1 and Reigate 1 — the page's own API, found by
-  watching it; 407 documents across the eight. That leaves **6**, in
-  two shapes not yet built and one with nothing to follow: Bedford 2
-  (a server-rendered table with opaque per-file links); Neath 1
-  (Oracle APEX with direct `ShowDocument` links — two documents, the
-  smallest job); and Brighton 3, whose register serves 212 bytes on
-  every tab and has no External Documents link to follow.
+  watching it; 407 documents across the eight. **Neath's one after
+  that** (`scripts/fetch_neath_docstore.py`): two documents. That
+  leaves **5**: Bedford 2 (a server-rendered table with opaque
+  per-file links, not yet built) and Brighton 3, whose register serves
+  212 bytes on every tab and has no External Documents link to follow.
   106 of the 128 settled
   verdicts carry the detail `no_documents_or_unparseable` and every one
   was written on **2026-08-08**, before the mapping was tightened on the

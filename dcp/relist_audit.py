@@ -68,7 +68,7 @@ SUPPORTED = ("idox", "ocella", "agile", "arcus", "aifusion", "salesforce_pr",
              "newport_docstore", "doncaster_docstore", "adurworthing_docstore",
              "horsham_docstore", "huntingdonshire_docstore", "midsussex_docstore",
              "gateshead_docstore", "chelmsford_docstore", "reigate_docstore",
-             "southend_docstore")
+             "southend_docstore", "neath_docstore")
 
 # Newport's Idox install serves an error page on its documents tab and
 # publishes the documents from a separate store. Auditing it as Idox
@@ -91,20 +91,31 @@ DOCSTORE_HOSTS = {
     "publicaccess.chelmsford.gov.uk": "chelmsford_docstore",
     "planning.reigate-banstead.gov.uk": "reigate_docstore",
     "publicaccess.southend.gov.uk": "southend_docstore",
+    # Neath Port Talbot's iDocs store (scripts/fetch_neath_docstore.py).
+    "planningonline.npt.gov.uk": "neath_docstore",
 }
 DOCSTORE_FAMILIES = tuple(DOCSTORE_HOSTS.values())
 
 
-def _civica_module():
-    """The Civica store script, loaded the same way (see `_newport_module`)."""
+def _script_module(name: str):
+    """A store script under scripts/, loaded the way `_newport_module` is."""
     import importlib.util
     from pathlib import Path
-    path = Path(__file__).resolve().parent.parent / "scripts" \
-        / "fetch_civica_docstore.py"
-    spec = importlib.util.spec_from_file_location("civica_docstore", path)
+    path = Path(__file__).resolve().parent.parent / "scripts" / f"{name}.py"
+    spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+def _civica_module():
+    """The Civica store script (four councils; `STORES` names them)."""
+    return _script_module("fetch_civica_docstore")
+
+
+def _neath_module():
+    """Neath Port Talbot's iDocs store script (one council)."""
+    return _script_module("fetch_neath_docstore")
 
 
 def _newport_module():
@@ -373,6 +384,19 @@ def listing_live(conn, *, client, application_ref: str, url: str,
                         "kind": d.get("documentType") or d.get("type")}
                        for d in docs if d.get("documentHash")]
             return _api_listing(offered, url=f"agile:{slug}/{app_id}/document")
+
+        if family == "neath_docstore":
+            neath = _neath_module()
+            url_ = neath.listing_url(application_ref.split("/", 1)[1])
+            body = client.get(url_).text
+            try:
+                docs = neath.parse_listing(body)
+            except neath.UnrecognisedListing as exc:
+                return Listing(source="live", url=url_, status="blocked",
+                               detail=f"iDocs results page did not parse: {exc}"[:400])
+            offered = [{"url": d["url"], "filename": None, "kind": d["kind"]}
+                       for d in docs]
+            return _api_listing(offered, url=url_)
 
         if family in DOCSTORE_FAMILIES and application_ref.split("/", 1)[0] in _civica_module().STORES:
             civica = _civica_module()

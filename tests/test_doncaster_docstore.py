@@ -71,6 +71,7 @@ def test_the_store_table_and_the_audit_agree_on_every_council():
     civica = ra._civica_module()
     assert not set(newport.STORES) & set(civica.STORES), "a council is on one module"
     from_stores = {f"{c.lower()}_docstore" for c in (*newport.STORES, *civica.STORES)}
+    from_stores.add(ra._neath_module().ADAPTER)      # one council, its own script
     from_hosts = set(ra.DOCSTORE_HOSTS.values())
     assert from_stores == from_hosts
     assert from_stores <= set(ra.SUPPORTED)
