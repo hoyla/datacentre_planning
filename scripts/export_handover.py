@@ -503,6 +503,31 @@ FACILITY_HEADERS = [
     "Site note",
 ]
 
+# A dictionary entry may carry a corpus statistic only as a placeholder
+# that `dictionary()` fills at build time from the one function that
+# computes it. The *Water evidence* entry said "119 of 429 sites" as a
+# literal from 2026-08-11 to 2026-09-06, a scroll away from the front
+# page's "93", while the live figure was 169 of 500; a column definition
+# is stable, a corpus count is not, and the two must not share a string.
+DICTIONARY_PLACEHOLDERS = ("{water_sites}", "{water_of}")
+
+
+def dictionary(*, water: dict) -> list[tuple[str, str, str]]:
+    """`DICTIONARY` with its corpus statistics filled in.
+
+    Both renderers — the workbook's Read me sheet and the reader's data
+    dictionary — call this, never `DICTIONARY` itself, so the number a
+    reader sees is the number the build measured. A targeted replace
+    rather than `str.format`, because entries may carry literal braces.
+    """
+    filled = []
+    for sheet, col, desc in DICTIONARY:
+        desc = (desc.replace("{water_sites}", f"{water['sites']:,}")
+                    .replace("{water_of}", f"{water['of']:,}"))
+        filled.append((sheet, col, desc))
+    return filled
+
+
 DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Site key",
      "Stable identifier for the site; also the prefix of its Drive folder "
@@ -741,10 +766,10 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "a count of findings — not a volume. The water and cooling finding "
      "families are large but dominated by flood and drainage engineering "
      "that every development produces (rainfall depths, pipe runs, design "
-     "discharge rates). Filtered to consumption and abstraction, only 119 of "
-     "429 sites disclose anything at all. That silence is itself a finding: "
-     "no volume is published here because the applications do not contain "
-     "one."),
+     "discharge rates). Filtered to consumption and abstraction, only "
+     "{water_sites} of {water_of} sites disclose anything at all. That "
+     "silence is itself a finding: no volume is published here because the "
+     "applications do not contain one."),
     ("Sites", "EIA status (from documents)",
      "Environmental Impact Assessment status stated in the documents "
      "themselves (screening/scoping/ES submitted), precedence-ordered so "
@@ -1488,6 +1513,7 @@ def main() -> None:
     with db.connect() as conn:
         site_profiles = site_profile.load_site_profiles(conn)
         coverage = site_profile.load_coverage(conn)
+        water = site_profile.water_disclosure(conn)
         # Prose counts drive the caveats; total counts stay for display.
         # The workbook and the reader must agree on which rows are
         # provisional, so both read this from site_profile rather than
@@ -1539,7 +1565,7 @@ def main() -> None:
 
     # ---- Read me ---------------------------------------------------------
     ws = _sheet("Read me", ["Sheet", "Column", "What it contains and how it was derived"])
-    for row in DICTIONARY:
+    for row in dictionary(water=water):
         ws.append(list(row))
     ws.column_dimensions["A"].width = 16
     ws.column_dimensions["B"].width = 44
@@ -2413,9 +2439,10 @@ def main() -> None:
          f"corpus for corroboration ({n_second:,} documents so far)."),
         ("Water figures", "Deliberately not published as volumes. The water "
          "and cooling findings are dominated by drainage and flood "
-         "engineering; only 93 sites disclose anything about consumption. "
-         "'Cooling method' is reported instead, being both better evidenced "
-         "and the thing that determines water demand."),
+         f"engineering; only {water['sites']:,} of {water['of']:,} sites "
+         "disclose anything about consumption. 'Cooling method' is reported "
+         "instead, being both better evidenced and the thing that determines "
+         "water demand."),
         ("Generated at (UTC)", dt.datetime.now(dt.timezone.utc)
                                  .isoformat(timespec="seconds")),
         ("Pipeline commit", _git_commit()),

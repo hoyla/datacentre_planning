@@ -209,6 +209,17 @@ def findings(conn) -> dict:
     }
 
 
+def water(conn) -> dict:
+    """Sites disclosing water consumption or abstraction, of live sites.
+
+    Computed in `dcp.site_profile.water_disclosure`, beside the per-site
+    predicate it must agree with; surfaced here so the standalone
+    statistics block prints it with the rest and nobody types it.
+    """
+    from dcp import site_profile
+    return site_profile.water_disclosure(conn)
+
+
 def collect(conn, *, model: str) -> dict:
     """One-shot bundle of all corpus statistics. Used by both the standalone
     script and the export header so the numbers stay consistent.
@@ -220,4 +231,5 @@ def collect(conn, *, model: str) -> dict:
         "signals": signals_in_worklist(conn, model=model),
         "documents": documents(conn),
         "findings": findings(conn),
+        "water": water(conn),
     }

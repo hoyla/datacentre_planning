@@ -44,6 +44,7 @@ def _render_markdown(
     documents: dict,
     findings: dict,
     zero_byte: list[dict] | None = None,
+    water: dict | None = None,
 ) -> str:
     lines: list[str] = []
     lines.append(f"# Corpus statistics — generated {generated_at.date().isoformat()}")
@@ -216,6 +217,27 @@ def _render_markdown(
         "*what was looked at*, not of the worklist universe."
     )
     lines.append("")
+
+    # --- Water ---
+    if water:
+        lines.append("## Water")
+        lines.append("")
+        lines.append(
+            "Sites whose documents disclose water consumption or abstraction "
+            "— a count of sites, never a volume; the water and cooling "
+            "families are dominated by drainage engineering, and "
+            "`dcp.site_profile.CONSUMPTION_SIGNAL_RE` is what separates "
+            "consumption from it. Computed by "
+            "`dcp.site_profile.water_disclosure`, which both exporters "
+            "interpolate; this is the number the reader's caveat and the "
+            "workbook's dictionary state."
+        )
+        lines.append("")
+        lines.append(
+            f"- **Sites disclosing consumption or abstraction:** "
+            f"{water['sites']:,} of {water['of']:,} live sites ({water['pct']}%)."
+        )
+        lines.append("")
 
     return "\n".join(lines)
 
