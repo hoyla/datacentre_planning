@@ -55,6 +55,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 # and a relative path here once meant a sync run from anywhere but the
 # repository root would have started from nothing.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from dcp import drive as _drive  # noqa: E402
 from dcp.drive import FOLDER_ID as HANDOVER_FOLDER_ID  # noqa: E402
 from dcp.drive import SYNC_LEDGER as STATE_PATH  # noqa: E402
 from dcp.release import is_released_root_artefact
@@ -111,16 +112,16 @@ class Sync:
         # record that makes syncs resumable and moves recognisable. API
         # calls happen OUTSIDE the lock — it guards memory, not network.
         self._lock = threading.RLock()
-        if STATE_PATH.exists():
-            self.state: dict = json.loads(STATE_PATH.read_text())
-        else:
+        if not STATE_PATH.exists():
             # Legitimate exactly once, on the first sync ever. Said out
             # loud because a lost ledger looks identical and means every
-            # file goes up again beside the copy already on Drive.
+            # file goes up again beside the copy already on Drive. A
+            # ledger that exists and will not parse is a different case
+            # and is refused (dcp.drive.read_ledger), never read as absent.
             print(f"no sync ledger at {STATE_PATH}: starting from nothing, "
                   f"so every file in the tree will be uploaded",
                   file=sys.stderr)
-            self.state = {"folders": {}, "files": {}}
+        self.state: dict = _drive.read_ledger(STATE_PATH)
         self._dirty = 0
 
     @property
@@ -140,15 +141,24 @@ class Sync:
         self._creds = None
 
     def save(self, force: bool = False) -> None:
+        """Checkpoint the ledger every fifty changes, or now.
+
+        Serialised AND written under the lock. Until 2026-09-06 the lock
+        was released between the two, so two workers could pass the gate
+        in one order and finish their writes in the other, and an older
+        snapshot overwrote a newer one silently; and the write was a
+        `write_text` in place, so a kill mid-way left truncated JSON.
+        One write per fifty changes costs nothing to hold the lock
+        across, and the comment above — the lock guards memory, not
+        network — stays true: no API call happens here.
+        """
         with self._lock:
             self._dirty += 1
-            if force or self._dirty >= 50:
-                payload = json.dumps(self.state)
-                self._dirty = 0
-            else:
+            if not (force or self._dirty >= 50):
                 return
-        STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-        STATE_PATH.write_text(payload)
+            payload = json.dumps(self.state)
+            self._dirty = 0
+            _drive.write_ledger(STATE_PATH, payload)
 
     # Server-side pushback: the API is reachable and saying "not now".
     _API_TRANSIENT = ("429", "500", "502", "503", "rateLimit",
@@ -326,8 +336,12 @@ class Sync:
         Drive bin rather than a re-upload of 70GB.
         """
         prefix = str(root_dir)
-        tracked = [rel for rel in self.state["files"]
-                   if rel == prefix or rel.startswith(prefix + "/")]
+        # Under the lock, though prune runs after the pool has closed:
+        # the ordering is a fact about main(), not about this method,
+        # and batching may one day move it.
+        with self._lock:
+            tracked = [rel for rel in self.state["files"]
+                       if rel == prefix or rel.startswith(prefix + "/")]
         # Release artefacts sit at the top level of the tree and are the
         # one thing here that accumulates on purpose. Phase 1 published
         # `dc_handover_phase1.xlsx`; phase 2 publishes its own alongside,
@@ -376,9 +390,11 @@ class Sync:
             print("prune: --dry-run, nothing trashed")
             return counts
         for rel in gone:
-            fid = self.state["files"][rel].get("id")
+            with self._lock:
+                fid = self.state["files"][rel].get("id")
             if not fid:
-                del self.state["files"][rel]
+                with self._lock:
+                    del self.state["files"][rel]
                 counts["already gone"] += 1
                 continue
             try:
@@ -392,7 +408,8 @@ class Sync:
                     counts["failed"] += 1
                     print(f"  PRUNE FAILED {rel}: {str(exc)[:140]}")
                     continue
-            del self.state["files"][rel]
+            with self._lock:
+                del self.state["files"][rel]
             self.save()
         self.save(force=True)
         return counts
@@ -465,6 +482,10 @@ def main() -> None:
         print("nothing to do — pass --sync DIR")
         return
 
+    # One process over one ledger, from here to exit — before the ledger
+    # is loaded and before the first API call, so a second sync is
+    # refused rather than merged. Flock releases with the process.
+    _drive.acquire_ledger_lock(STATE_PATH)
     sync = Sync(svc, credentials=creds)
     # Resolving the destination by name is how a second, parallel copy of
     # the whole archive came to exist. The handover folder was created by

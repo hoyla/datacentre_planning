@@ -3917,3 +3917,52 @@ claim that aifusion and salesforce were "distinct in name only" was
 wrong the same way — both already made the distinction. One adapter had
 the hole. Both texts are corrected in place with the error kept
 visible.*
+
+---
+
+## The ledger is written to be kept (2026-09-06)
+
+Under `drive.file` the sync ledger is the only record of what the sync
+created — it drives move detection and pruning, and the id recorder and
+the sample verifier read it — and `Sync.save()` wrote it in the one way
+this repository's other resume files had already stopped using:
+serialise under the lock, release, `write_text` in place. Two hazards,
+neither yet observed, both real. A kill mid-write left truncated JSON,
+which the next run died on. And two workers could pass the fifty-change
+gate in one order and finish their writes in the other, so an older
+snapshot silently overwrote a newer one — the lost entries being files
+re-uploaded beside their Drive copies, the duplicate-archive mechanism
+`dcp/drive.py` exists to prevent. Nothing at all stopped two
+`drive_sync.py` processes loading one snapshot into two memories. The
+concurrent test could see none of it, asserting after a final
+uncontended save when the last write is always whole.
+
+**One writer, one lock, one reader, beside the one constant.**
+`dcp.drive.write_ledger` writes a temporary sibling, flushes, fsyncs,
+and `os.replace`s it — the contract `export_duckdb`'s `.building` and
+the staging build's swap already kept. `Sync.save()` serialises *and*
+writes under its lock, which costs nothing across one write per fifty
+changes and keeps the comment true that the lock guards memory, not
+network. `acquire_ledger_lock` is a flock held for the life of the
+process, taken in `main()` after the argument checks and before the
+ledger is loaded or the API called, so a second sync is refused with
+the holder's pid rather than merged; flock releases with the process,
+so a dead run locks nobody out. `read_ledger` refuses a ledger that
+exists and will not parse, with the rebuild script named, because a
+sync that starts from nothing beside a corrupt ledger re-uploads the
+archive beside itself. `prune()` reads and mutates the state under the
+lock, which its ordering after the pool made safe and batching may one
+day move. And the id recorder and the ledger rebuild, which had gone on
+spelling the ledger's path themselves outside the 2026-09-02 fold, read
+`SYNC_LEDGER`; the rebuild takes the same lock and uses the same writer.
+
+**Verified by reintroducing the bug.** With the unlocked in-place write
+put back, four of the twelve new tests fail: the interrupted write no
+longer leaves the previous ledger intact, the write is no longer one
+replace, another thread can take the lock mid-write, and the source no
+longer routes through the one writer. The concurrent
+test now checks every one of its 1,600 entries rather than their count,
+and that the temporary sibling is gone.
+
+Batching — the other half of the item this split from — stays open, and
+lands on this.

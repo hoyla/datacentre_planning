@@ -2231,10 +2231,24 @@ here rather than applied from the build lane.
   substring `retired_at IS NULL` rather than the join, so it would not
   see the regression. A one-line follow-up.
 
-- **`drive_sync.py`'s ledger write is neither atomic nor ordered, and
-  nothing stops a second process** (separated from the batching item
-  2026-09-04, because a durability fix should not wait behind a
-  performance one). `Sync.save()` serialises the state under the ledger
+- ~~**`drive_sync.py`'s ledger write is neither atomic nor ordered, and
+  nothing stops a second process**~~ — **done 2026-09-06.**
+  `dcp.drive.write_ledger` replaces the file atomically (temp sibling,
+  fsync, `os.replace`), `Sync.save()` serialises and writes under its
+  lock so two checkpoints cannot finish in reverse order,
+  `dcp.drive.acquire_ledger_lock` refuses a second process with the
+  holder's pid before the ledger is loaded or the API called,
+  `read_ledger` refuses a corrupt ledger rather than starting from
+  nothing beside it, `prune()` touches the state under the lock, and
+  the id recorder and the ledger rebuild read `SYNC_LEDGER` instead of
+  spelling the path. Twelve tests reach the mechanism — an interrupted
+  write leaves the previous ledger intact; no other thread can take the
+  lock during a write; a second holder is refused and named; a corrupt
+  ledger is refused — verified by reintroducing the unlocked in-place
+  write, which fails four of them; the concurrent test now validates
+  every entry. The account as it stood (separated from the batching
+  item 2026-09-04, because a durability fix should not wait behind a
+  performance one): `Sync.save()` serialises the state under the ledger
   lock, releases it, then `write_text`s the final path. A kill mid-write
   leaves truncated JSON, which the next sync loads with a bare
   `json.loads` and dies on — the workbook export, the id recorder, the

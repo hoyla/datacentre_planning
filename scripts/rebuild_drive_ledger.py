@@ -41,8 +41,10 @@ from dotenv import load_dotenv
 
 load_dotenv(ROOT / ".env")
 
+from dcp import drive as _drive  # noqa: E402
+from dcp.drive import SYNC_LEDGER as STATE_PATH  # noqa: E402
+
 FOLDER_MIME = "application/vnd.google-apps.folder"
-STATE_PATH = ROOT / "data" / "exports" / ".drive_sync_state.json"
 
 
 def _service():
@@ -164,8 +166,11 @@ def main() -> int:
         # with the sync's, and silently re-does the whole tree.
         ledger_files[_key(local)] = {"md5": md5, "id": hit["id"]}
 
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(
+    # The same lock and the same writer as the sync: a rebuild while a
+    # sync runs would hand two processes one ledger, and a torn rebuild
+    # is worse than none.
+    _drive.acquire_ledger_lock(args.out)
+    _drive.write_ledger(args.out, json.dumps(
         {"folders": ledger_folders, "files": ledger_files}))
     print(f"\nwrote {args.out}")
     print(f"  {len(ledger_folders):,} folders, {len(ledger_files):,} files")
