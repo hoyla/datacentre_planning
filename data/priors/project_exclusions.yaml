@@ -1,0 +1,62 @@
+# Barbour projects excluded from clustering, by exception and with the
+# evidence written down.
+#
+# A Barbour project anchors a site on its own (`barbour_only`), and a
+# project title naming a data centre settles the site's class
+# (`dcp/site_class.py`, the title rule). Both are right almost always,
+# and wrong when the title is a building's name rather than its use:
+# Exeter College's "Digital & Data Centre" is a teaching block, Use
+# Class D1 (F1 today), and it stood as a data-centre site holding six
+# applications that triage had correctly called `not_dc` — admitted
+# through the project-link door, which does not consult the verdict.
+#
+# **By exception, never by rule** (Luke, 2026-09-06). Seven
+# Barbour-anchored sites hold nothing but `not_dc`/`procedural`
+# applications; some are teaching buildings and some are data centres
+# whose paperwork happens to be discharges, and nothing in the record
+# tells them apart except reading each one. So an entry here is a
+# decision about ONE project, with the evidence that decided it, and
+# the presence of one entry says nothing about the other six.
+#
+# Contract, the `site_aliases.yaml` one: an entry naming a project the
+# corpus does not hold FAILS the build, because a typo would silently
+# leave a false site standing. An excluded project anchors nothing and
+# joins nothing, and its paperwork leaves with it: from the applications
+# it linked, every application reached along family references whose
+# own verdict is `not_dc` or `procedural`. A `procedural` discharge is in
+# the universe on the premise that its parent is a data centre's
+# permission, and the entry here says it is not; left in, Exeter's one
+# discharge re-anchored the same six applications as a new site keyed on
+# a sibling (measured 2026-09-06). An application with a substantive
+# verdict of its own is neither taken nor walked through: it stays,
+# with its own paperwork, whatever project once linked its parent. The project's row stays in `projects`
+# untouched (principle 3), and the workbook's Excluded applications
+# sheet lists what leaves.
+#
+# Each entry:
+#   - ptno:     Barbour's project number, as in `projects.external_ref`
+#   - title:    Barbour's title, verbatim, so the entry reads on its own
+#   - reason:   one line a reporter can quote
+#   - evidence: where the reason comes from — the application's own
+#               description, the use class, who confirmed it and when
+#   - date:     the day the decision was made
+
+exclusions:
+
+  - ptno: "12425966"
+    title: "EXETER COLLEGE  HELE BUILDING - DIGITAL & DATA CENTRE"
+    reason: "A teaching building, not a data centre: Exeter College's Institute of Technology block."
+    evidence: |
+      The parent application, Exeter/19/0330/FUL, describes "a three
+      storey extension to the southern elevation of the existing Hele
+      Building to deliver a new Digital and Data Centre (Institute of
+      Technology) (Use Class D1)" — D1 being non-residential
+      institutions, F1 under the 2020 order. Triage called all five
+      substantive applications `not_dc` and the sixth `procedural`; the
+      site existed only because this project anchored it and the
+      project-link door admitted its paperwork. Found 2026-09-06 while
+      reviewing the refused-page acquisition verdicts (the council's
+      documents live on exeter.gov.uk's related-documents page, 89 of
+      them; see PORTAL_NOTES). Confirmed by Luke the same day: "it
+      would be Use Class F1 nowadays".
+    date: 2026-09-06

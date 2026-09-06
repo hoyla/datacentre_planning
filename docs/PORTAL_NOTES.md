@@ -218,6 +218,31 @@ non-list body as an empty list, which is a settled `none_published`:
 the application stays queued. An empty *list* is still a real answer and
 still settles, because on this register it is usually true.
 
+## Exeter — Idox refuses the documents tab; the council's own page serves them (7 applications)
+
+`publicaccess.exeter.gov.uk`'s summary tab is public, and its documents
+tab answers HTTP 200 with "Error — Permission Denied … restricted to
+specific users" whether or not a session cookie from the summary page
+is carried. That is the council's setting, not a block: Exeter is still
+Exeter, and no successor host exists. The 8 August fetch read it as a
+register publishing nothing and settled five applications on it.
+
+The documents are published elsewhere, the Newport shape:
+
+    https://exeter.gov.uk/planning-services/permissions-and-applications/related-documents/?appref=<ref>
+
+lists every document under its correspondence type — 89 for
+`19/0330/FUL` — as `onclick="window.open('https://planningdocs.exeter.gov.uk/servlets/direct/<token>/2/<id>/1/1/AS_PDF_FILE', …)"`,
+and a plain GET on that servlet URL returns the PDF (7.9 MB,
+`application/pdf`, `%PDF-1.4`), no session, no browser. An adapter is
+the Newport docstore's shape: parse the `window.open` URLs, GET each,
+store under the register's own filename. Not built, because six of the
+seven Exeter applications are Exeter College's Hele Building, excluded
+by exception on 2026-09-06 (`data/priors/project_exclusions.yaml`); the
+seventh, `24/1536/OUT`, an energy-centre outline in no site, waits with
+the adjacency review. The route is recorded here so the next Exeter
+application does not start from "Permission Denied".
+
 ## Selby — register moved to North Yorkshire (70 applications)
 
 Selby District Council was abolished on 1 April 2023 and its Idox Public

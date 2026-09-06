@@ -96,6 +96,32 @@ def _load_inferred_coords(
     return by_ref, by_ptno
 
 
+def _load_project_exclusions(data_dir: Path) -> dict[str, str]:
+    """ptno -> reason, from `data/priors/project_exclusions.yaml`.
+
+    A Barbour project a person has read and excluded, by exception and
+    with its evidence in the file: it anchors no site and joins none.
+    Empty when the file is absent. Validation — every entry must name a
+    project the corpus holds — happens in `build_clusters`, where the
+    projects are in hand, and fails the run as the other priors do.
+    """
+    import yaml
+    path = data_dir / "priors" / "project_exclusions.yaml"
+    if not path.exists():
+        return {}
+    payload = yaml.safe_load(path.read_text()) or {}
+    out: dict[str, str] = {}
+    for e in payload.get("exclusions") or []:
+        ptno = str(e["ptno"]).strip()
+        for field in ("reason", "evidence", "date"):
+            if not str(e.get(field) or "").strip():
+                raise ValueError(f"project_exclusions.yaml: {ptno} has no {field}")
+        if ptno in out:
+            raise ValueError(f"project_exclusions.yaml: duplicate entry for {ptno}")
+        out[ptno] = str(e["reason"]).strip()
+    return out
+
+
 def _load_site_partitions(data_dir: Path) -> tuple[dict[str, str], dict[str, str]]:
     """Hand-adjudicated campus boundaries: application_ref → partition
     name and Barbour Ptno → partition name. Empty when the priors file
@@ -115,6 +141,71 @@ def _load_site_partitions(data_dir: Path) -> tuple[dict[str, str], dict[str, str
 
 
 NOT_DC_VETO_MODES = ("off", "family", "family+project")
+
+
+def _family_edges(apps: list[dict], by_ref: dict[str, dict]) -> list[tuple[int, int, str]]:
+    """Family edges: an application naming another application's reference.
+
+    `associated_id` is the clean signal, but many portals leave it empty
+    and put the parent reference in the description instead — "Discharge
+    of condition 20 (Travel Plan) on application P21/S0274/FUL". Without
+    mining descriptions those applications cluster as singletons, which
+    is how a Didcot condition-discharge ended up with its own "site"
+    while its parent sat in the Amazon campus cluster.
+
+    The description fallback fires only when `associated_id` is empty,
+    and demands a stricter reference shape (3+ segments), mirroring the
+    parent-backfill pass in dcp/sources/planit.py — dates like "1/2024"
+    and use-class strings like "B1/B8" would otherwise create false
+    links, and a false family edge silently merges two unrelated sites.
+    """
+    from dcp.sources.planit import _extract_candidate_refs
+
+    fam_edges = []
+    for a in apps:
+        council = a["ref"].split("/", 1)[0]
+        cands = _extract_candidate_refs(a["assoc"]) if a["assoc"] else []
+        source = "associated_id"
+        if not cands and a.get("desc"):
+            cands = [c for c in _extract_candidate_refs(a["desc"])
+                     if c.count("/") >= 2]
+            source = "description"
+        for cand in cands:
+            other = by_ref.get(f"{council}/{cand}".upper()) or by_ref.get(cand.upper())
+            if other is not None and other["id"] != a["id"]:
+                fam_edges.append((a["id"], other["id"], source))
+    return fam_edges
+
+
+def _paperwork_of(seed: set[int], fam_edges: list[tuple[int, int, str]],
+                  by_id: dict[int, dict]) -> set[int]:
+    """The applications an excluded project's paperwork consists of.
+
+    Starting from the applications the project linked, walk the family
+    graph through nodes whose own verdict is `not_dc` or `procedural`
+    and return every node reached, seeds included, that carries one of
+    those verdicts. A `procedural` discharge is in the universe on the
+    premise that its parent permission is a data centre's, and a person
+    has just said this one's is not; a `not_dc` sibling was only ever
+    admitted by the family door on the same premise. A node with a
+    substantive verdict is neither taken nor walked through: an
+    application that is a data centre on its own account stays whatever
+    project once linked its parent, and so does its own paperwork.
+    """
+    neighbours: dict[int, set[int]] = {}
+    for x, y, _src in fam_edges:
+        neighbours.setdefault(x, set()).add(y)
+        neighbours.setdefault(y, set()).add(x)
+    taken: set[int] = set()
+    frontier = [s for s in seed if s in by_id]
+    while frontier:
+        nid = frontier.pop()
+        if nid in taken or by_id[nid]["verdict"] not in ("not_dc", "procedural"):
+            continue
+        taken.add(nid)
+        frontier.extend(neighbours.get(nid, ()))
+    return taken
+
 
 
 def build_clusters(conn, *, radius_km: float = 1.0,
@@ -141,7 +232,6 @@ def build_clusters(conn, *, radius_km: float = 1.0,
        "site_key": str, "display_name": str|None,
        "lat": float|None, "lon": float|None, "coord_source": str|None}
     """
-    from dcp.sources.planit import _extract_candidate_refs
 
     inferred, inferred_proj = _load_inferred_coords(data_dir)
 
@@ -252,6 +342,21 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             p["lat"], p["lon"] = inferred_proj[str(p["ptno"])]
             p["coord_inferred"] = True
 
+    # A project a person has excluded anchors nothing and joins nothing,
+    # and its paperwork leaves with it once the family edges exist to
+    # say what that paperwork is (below, `_paperwork_of`). Unknown Ptno:
+    # the same failure as the pins, for the same reason.
+    excluded = _load_project_exclusions(data_dir)
+    unknown_excl = set(excluded) - {str(p["ptno"]) for p in projects}
+    if unknown_excl:
+        raise ValueError(
+            "project_exclusions.yaml names Barbour projects not in the corpus: "
+            + ", ".join(sorted(unknown_excl)))
+    excluded_ids = {p["id"] for p in projects if str(p["ptno"]) in excluded}
+    excluded_links = {aid for pid, aid in links if pid in excluded_ids}
+    projects = [p for p in projects if p["id"] not in excluded_ids]
+    links = [(pid, aid) for pid, aid in links if pid not in excluded_ids]
+
     by_id = {a["id"]: a for a in apps}
     by_ref = {a["ref"].upper(): a for a in apps}
 
@@ -294,6 +399,22 @@ def build_clusters(conn, *, radius_km: float = 1.0,
             return False
         return True
 
+    fam_edges = _family_edges(apps, by_ref)
+    if excluded_links:
+        # An excluded project's paperwork leaves with it. Left in, the
+        # one `procedural` discharge of Exeter College's extension —
+        # in the universe because a discharge is presumed to be a data
+        # centre's — re-anchored the same six applications as a new site
+        # keyed on the parent, and the exclusion had changed a title for
+        # a key (measured 2026-09-06). Only the project's direct link
+        # was a link; the other five cite the parent's reference, so the
+        # walk follows the family edges.
+        taken = _paperwork_of(excluded_links, fam_edges, by_id)
+        apps = [a for a in apps if a["id"] not in taken]
+        by_id = {a["id"]: a for a in apps}
+        by_ref = {a["ref"].upper(): a for a in apps}
+        fam_edges = [e for e in fam_edges if e[0] not in taken and e[1] not in taken]
+
     dc_apps = [a for a in apps if a["in_universe"]]
     # A project-linked application joins its project's cluster whatever
     # triage made of it — Barbour's linkage is documentary evidence the
@@ -308,33 +429,6 @@ def build_clusters(conn, *, radius_km: float = 1.0,
                   if aid in by_id and _door_admits(aid, project=True)}
     node_ids = {a["id"] for a in dc_apps} | linked_ids
 
-    # Family edges: an application naming another application's reference.
-    #
-    # `associated_id` is the clean signal, but many portals leave it empty
-    # and put the parent reference in the description instead — "Discharge
-    # of condition 20 (Travel Plan) on application P21/S0274/FUL". Without
-    # mining descriptions those applications cluster as singletons, which
-    # is how a Didcot condition-discharge ended up with its own "site"
-    # while its parent sat in the Amazon campus cluster.
-    #
-    # The description fallback fires only when `associated_id` is empty,
-    # and demands a stricter reference shape (3+ segments), mirroring the
-    # parent-backfill pass in dcp/sources/planit.py — dates like "1/2024"
-    # and use-class strings like "B1/B8" would otherwise create false
-    # links, and a false family edge silently merges two unrelated sites.
-    fam_edges = []
-    for a in apps:
-        council = a["ref"].split("/", 1)[0]
-        cands = _extract_candidate_refs(a["assoc"]) if a["assoc"] else []
-        source = "associated_id"
-        if not cands and a.get("desc"):
-            cands = [c for c in _extract_candidate_refs(a["desc"])
-                     if c.count("/") >= 2]
-            source = "description"
-        for cand in cands:
-            other = by_ref.get(f"{council}/{cand}".upper()) or by_ref.get(cand.upper())
-            if other is not None and other["id"] != a["id"]:
-                fam_edges.append((a["id"], other["id"], source))
     # The edges through which the family door admitted a node. Admission
     # used to be all the door did: the union below skips any edge with a
     # `not_dc` end (`family_skips_not_dc`), so an admitted `not_dc` node
