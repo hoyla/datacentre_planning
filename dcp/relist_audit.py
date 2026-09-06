@@ -65,7 +65,8 @@ SKIP_HOSTS: dict[str, str] = {
 # is recorded `no_adapter` — an honest gap, and a cheap one to close
 # later since only the listing half is needed.
 SUPPORTED = ("idox", "ocella", "agile", "arcus", "aifusion", "salesforce_pr",
-             "newport_docstore", "doncaster_docstore")
+             "newport_docstore", "doncaster_docstore", "adurworthing_docstore",
+             "horsham_docstore", "huntingdonshire_docstore", "midsussex_docstore")
 
 # Newport's Idox install serves an error page on its documents tab and
 # publishes the documents from a separate store. Auditing it as Idox
@@ -78,6 +79,10 @@ NEWPORT_HOST = "publicaccess.newport.gov.uk"
 DOCSTORE_HOSTS = {
     NEWPORT_HOST: "newport_docstore",
     "planning.doncaster.gov.uk": "doncaster_docstore",
+    "planning.adur-worthing.gov.uk": "adurworthing_docstore",
+    "public-access.horsham.gov.uk": "horsham_docstore",
+    "publicaccess.huntingdonshire.gov.uk": "huntingdonshire_docstore",
+    "pa.midsussex.gov.uk": "midsussex_docstore",
 }
 DOCSTORE_FAMILIES = tuple(DOCSTORE_HOSTS.values())
 

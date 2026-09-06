@@ -1303,11 +1303,19 @@ work.
   route in PORTAL_NOTES. **Doncaster's five the same afternoon**: its
   External Documents tab links to Newport's document module under
   another host, 197 documents, and the Newport script now carries a
-  store table (PORTAL_NOTES). That leaves **19**: Gateshead 4,
-  Brighton 3 (the 212-byte bodies), Southend, Bedford and Horsham 2
-  each, and six singletons (Huntingdonshire, Mid Sussex, Neath,
-  Reigate, Chelmsford, Adur & Worthing). Each Idox one is checked for an
-  External Documents tab first. 106 of the 128 settled
+  store table (PORTAL_NOTES). **Then the External Documents tab of
+  every remaining Idox register, in one pass** (2026-09-06, PORTAL_NOTES
+  "The External Documents tab"): all but Brighton link off-host. Adur &
+  Worthing, Horsham, Huntingdonshire and Mid Sussex are the Public
+  Access module again — four rows in the store table, 417 documents
+  across ten applications. That leaves **14**, in three shapes not yet
+  built: Civica "Planning Documents" for Gateshead 4, Southend 2,
+  Chelmsford 1 and Reigate 1 (an API-filled page; the endpoint is the
+  work); Bedford 2 (a server-rendered table with opaque per-file
+  links); Neath 1 (Oracle APEX with direct `ShowDocument` links — two
+  documents, the smallest job); and Brighton 3, whose register serves
+  212 bytes on every tab and has no External Documents link to follow.
+  106 of the 128 settled
   verdicts carry the detail `no_documents_or_unparseable` and every one
   was written on **2026-08-08**, before the mapping was tightened on the
   9th — after which the same condition produced `error` instead. So the

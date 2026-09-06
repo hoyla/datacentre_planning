@@ -300,6 +300,39 @@ store and not the tab; the refetch handles both. Captured listing in
 `tests/fixtures/doncaster/`. The third council on this module gets a
 row in `STORES`, not a script.
 
+## The External Documents tab, read across every refused Idox register (2026-09-06)
+
+After Derby and Doncaster, one GET of `activeTab=externalDocuments` on
+one application per remaining council with a refused documents tab.
+Every one but Brighton (212 bytes on every tab) links off-host, in
+four shapes:
+
+- **The Public Access document module** (Newport's, `RunThirdPartySearch?FileSystemId=…&FOLDER1_REF=…`,
+  `var model` page, `ViewDocument?id=<guid>`): Adur & Worthing (`docs.adur-worthing.gov.uk`, `DA`),
+  Horsham (`iawpa.horsham.gov.uk`, `DH`), Huntingdonshire (`docs.huntingdonshire.gov.uk`, `PS`),
+  Mid Sussex (`padocs.midsussex.gov.uk`, `DM`). The Newport parser read
+  all four captured pages unchanged — 24, 37, 14 and 80 documents — so
+  each is a row in `fetch_newport_docstore.STORES` and an entry in
+  `relist_audit.DOCSTORE_HOSTS`. Ten applications, 417 documents
+  listed, across the four.
+- **Civica "Planning Documents"** (`…/planning/planning-documents?SDescription=<ref>`):
+  Gateshead (`myserviceplanning.gateshead.gov.uk`), Chelmsford
+  (`planning.chelmsford.gov.uk`), Reigate & Banstead
+  (`dmdocs.reigate-banstead.gov.uk`), Southend
+  (`publicedrms.southend.gov.uk`). The page is an empty shell that
+  loads `civica/Bundles/civica.loader.js` and fills the document list
+  by API; the listing needs the endpoint the script calls. Not built
+  yet — nine applications (Gateshead 4, Southend 2, Chelmsford 1,
+  Reigate 1, and Southend's second).
+- **Bedford** (`edrms.bedford.gov.uk/SearchResults.aspx?appNumber=<ref>`,
+  "Objective" planning): a server-rendered table naming each file
+  (`24 02188 FUL APP FORM..pdf`, …) with one opaque
+  `/<base64>.html` link per row. Two applications. Not built yet.
+- **Neath Port Talbot** (`appsportal2.npt.gov.uk/ords/idocs12/f?p=Planning:2:0::NO::P2_REFERENCE:<ref>`,
+  Oracle APEX): a results table with direct
+  `maps.npt.gov.uk/iDocsPublic/ShowDocument.aspx?id=<n>` links — two
+  documents for `P2024/0791`. One application. Not built yet.
+
 ## Selby — register moved to North Yorkshire (70 applications)
 
 Selby District Council was abolished on 1 April 2023 and its Idox Public

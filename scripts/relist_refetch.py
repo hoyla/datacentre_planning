@@ -100,7 +100,8 @@ def _is_report(kind: str | None) -> bool:
 
 
 HANDLED = ("idox", "ocella", "agile", "arcus", "aifusion", "salesforce_pr",
-           "newport_docstore", "doncaster_docstore")
+           "newport_docstore", "doncaster_docstore", "adurworthing_docstore",
+           "horsham_docstore", "huntingdonshire_docstore", "midsussex_docstore")
 
 
 def _newport_module():
@@ -211,9 +212,8 @@ def _run_shard(host: str, targets: list[Target], *, args, state: dict,
             src = {}
             for t in targets:
                 if t.adapter not in src:
-                    name = {"salesforce_pr": "salesforce",
-                            "newport_docstore": "idox",
-                            "doncaster_docstore": "idox"}.get(t.adapter, t.adapter)
+                    name = ("idox" if t.adapter.endswith("_docstore")
+                            else {"salesforce_pr": "salesforce"}.get(t.adapter, t.adapter))
                     src[t.adapter] = repo.ensure_source(
                         conn, name=name, kind="council",
                         base_url=f"(per-council {name} host)")
