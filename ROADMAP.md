@@ -1292,9 +1292,17 @@ work.
   on its own related-documents page, 89 for the parent application — the
   Newport shape, route in PORTAL_NOTES. Not fetched, because the site
   they belong to is Exeter College's teaching block, excluded by
-  exception the same day. That leaves 29 genuine refused pages for the
-  review by hand: Newport's 17 (the docstore case), Derby, Doncaster,
-  and the singletons. 106 of the 128 settled
+  exception the same day. That left 29 genuine refused pages for the
+  review by hand. **Doncaster's five** (2026-09-06): the register's
+  External Documents tab links to Newport's document module under
+  another host — 197 documents — and the Newport script now carries a
+  store table (PORTAL_NOTES). The remainder is Derby 5, Gateshead 4,
+  Brighton 3 (the 212-byte bodies), Southend, Bedford and Horsham 2
+  each, and six singletons (Huntingdonshire, Mid Sussex, Neath,
+  Reigate, Chelmsford, Adur & Worthing); Newport's 17 are the docstore
+  class, a different listing status, and were never among the 29. Each
+  Idox one is checked for an External Documents tab first. 106 of the
+  128 settled
   verdicts carry the detail `no_documents_or_unparseable` and every one
   was written on **2026-08-08**, before the mapping was tightened on the
   9th — after which the same condition produced `error` instead. So the
