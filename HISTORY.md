@@ -4220,6 +4220,19 @@ listing as a fixture. The general lesson is recorded in PORTAL_NOTES:
 `externalDocuments` is an Idox tab, and the first place to look when a
 documents tab refuses. 24 refused pages remain.
 
+## Doncaster runs Newport's document store (2026-09-06)
+
+Another refused register, and one that needed no new route. Luke:
+"Doncaster works the same way" — its External Documents tab links to
+`necdm.doncaster.gov.uk`, the Public Access document module Newport
+publishes from, under `FileSystemId=DP`. The Newport parser read the
+captured page unchanged. So the Newport script gained a `STORES` table
+keyed by council prefix, with a refusal for a council it does not know,
+and the listing audit and the refetch route both councils through it;
+run from the script, the outcome is now recorded through
+`classify_outcome` under `<council>_docstore`, which the Newport script
+never did. 197 documents across five applications.
+
 ## An error with documents held stays queued (2026-09-06)
 
 The Selby fetch found it. At the spacing the host's 429s had driven the

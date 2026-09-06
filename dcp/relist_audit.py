@@ -65,14 +65,21 @@ SKIP_HOSTS: dict[str, str] = {
 # is recorded `no_adapter` — an honest gap, and a cheap one to close
 # later since only the listing half is needed.
 SUPPORTED = ("idox", "ocella", "agile", "arcus", "aifusion", "salesforce_pr",
-             "newport_docstore")
+             "newport_docstore", "doncaster_docstore")
 
 # Newport's Idox install serves an error page on its documents tab and
 # publishes the documents from a separate store. Auditing it as Idox
 # reads "the register offers nothing" over 42 applications that hold
 # 700-odd documents — a measured zero where the truth is that the
-# listing is somewhere else.
+# listing is somewhere else. Doncaster is the same module behind the
+# same kind of refusal (2026-09-06): five live applications, 197
+# documents in the store, "Permission Denied" on the tab.
 NEWPORT_HOST = "publicaccess.newport.gov.uk"
+DOCSTORE_HOSTS = {
+    NEWPORT_HOST: "newport_docstore",
+    "planning.doncaster.gov.uk": "doncaster_docstore",
+}
+DOCSTORE_FAMILIES = tuple(DOCSTORE_HOSTS.values())
 
 
 def _newport_module():
@@ -116,10 +123,11 @@ def listing_family(url: str | None) -> str | None:
     """
     if not url:
         return None
-    # Before the Idox test: Newport's URL is Idox-shaped and its
-    # documents tab is not where its documents are.
-    if NEWPORT_HOST in url:
-        return "newport_docstore"
+    # Before the Idox test: these URLs are Idox-shaped and their
+    # documents tab is not where their documents are.
+    for host, family in DOCSTORE_HOSTS.items():
+        if host in url:
+            return family
     if idox._is_idox_url(url):
         return "idox"
     if ocella._is_ocella_url(url):
@@ -341,10 +349,11 @@ def listing_live(conn, *, client, application_ref: str, url: str,
                        for d in docs if d.get("documentHash")]
             return _api_listing(offered, url=f"agile:{slug}/{app_id}/document")
 
-        if family == "newport_docstore":
+        if family in DOCSTORE_FAMILIES:
             newport = _newport_module()
+            council = newport.council_of(application_ref)
             folder_ref = application_ref.split("/", 1)[1]
-            url_ = newport.search_url(folder_ref)
+            url_ = newport.search_url(folder_ref, council)
             body = client.get(url_).text
             docs = newport.parse_doc_list(body)
             if docs is None:
@@ -355,7 +364,7 @@ def listing_live(conn, *, client, application_ref: str, url: str,
                 return Listing(source="live", url=url_, status="blocked",
                                detail="docstore page carried no `var model`; "
                                       "the listing did not parse")
-            offered = [{"url": f"{newport.VIEW_URL}?id={guid}",
+            offered = [{"url": newport.view_url(guid, council),
                         "filename": None, "kind": kind}
                        for guid, kind in docs]
             return _api_listing(offered, url=url_)

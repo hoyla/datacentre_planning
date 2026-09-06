@@ -274,6 +274,32 @@ URL as provenance. The captured listing is `tests/fixtures/derby/`.
 The `externalDocuments` tab is an Idox feature, not Derby's: it is the
 first place to look on any Idox register whose documents tab refuses.
 
+## Doncaster — Newport's document store, second council (5 applications)
+
+`planning.doncaster.gov.uk`'s Idox documents tab refuses with an HTTP
+200 ("Permission Denied"), and five live applications — a gas-engine
+station, a cabin data centre, two battery schemes and a BESS — were
+settled `none_published` on it on 8 August. The register's *External
+Documents* tab (Luke, 2026-09-06: "Doncaster works the same way") links to
+
+    https://necdm.doncaster.gov.uk/PublicAccess_LIVE/SearchResult/RunThirdPartySearch?FileSystemId=DP&FOLDER1_REF=<ref>
+
+which is Newport's store to the letter — the Public Access document
+module, the listing embedded as `var model = {...}` with a `Guid` per
+document, each served by `Document/ViewDocument?id=<guid>` to a plain
+GET — under a different host and file system id. The Newport parser
+read the captured page unchanged: 16 documents for `19/01957/FUL`; 30,
+12, 53 and 86 for the other four, 197 in all.
+
+`scripts/fetch_newport_docstore.py` now carries a `STORES` table
+(council prefix → host, FileSystemId) and picks the store from the
+reference; `--council Doncaster --all-missing --dry-run` lists what the
+store holds. The listing audit routes `planning.doncaster.gov.uk` to
+`doncaster_docstore` as it routes Newport, so a re-list measures the
+store and not the tab; the refetch handles both. Captured listing in
+`tests/fixtures/doncaster/`. The third council on this module gets a
+row in `STORES`, not a script.
+
 ## Selby — register moved to North Yorkshire (70 applications)
 
 Selby District Council was abolished on 1 April 2023 and its Idox Public

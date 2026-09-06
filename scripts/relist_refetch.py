@@ -100,7 +100,7 @@ def _is_report(kind: str | None) -> bool:
 
 
 HANDLED = ("idox", "ocella", "agile", "arcus", "aifusion", "salesforce_pr",
-           "newport_docstore")
+           "newport_docstore", "doncaster_docstore")
 
 
 def _newport_module():
@@ -212,7 +212,8 @@ def _run_shard(host: str, targets: list[Target], *, args, state: dict,
             for t in targets:
                 if t.adapter not in src:
                     name = {"salesforce_pr": "salesforce",
-                            "newport_docstore": "idox"}.get(t.adapter, t.adapter)
+                            "newport_docstore": "idox",
+                            "doncaster_docstore": "idox"}.get(t.adapter, t.adapter)
                     src[t.adapter] = repo.ensure_source(
                         conn, name=name, kind="council",
                         base_url=f"(per-council {name} host)")
@@ -277,10 +278,11 @@ def _run_shard(host: str, targets: list[Target], *, args, state: dict,
                     elif t.adapter == "salesforce_pr":
                         s = salesforce_pr.fetch_documents_for_application(
                             client=client_for("idox"), listings=listings, **kw)
-                    elif t.adapter == "newport_docstore":
-                        # Newport's URL is Idox-shaped and its documents
-                        # are not on the documents tab; its fetcher takes
-                        # the reference and finds them in the docstore.
+                    elif t.adapter.endswith("_docstore"):
+                        # Newport's and Doncaster's URLs are Idox-shaped
+                        # and their documents are not on the documents
+                        # tab; the fetcher takes the reference and finds
+                        # them in the council's store.
                         newport = _newport_module()
                         s = newport.fetch_one(conn, client_for("idox"),
                                               ref=t.ref)

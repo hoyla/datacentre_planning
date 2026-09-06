@@ -1300,7 +1300,10 @@ work.
   the council's document server, which lists and serves everything —
   62 documents across six applications, the sixth being one Idox had
   called "withdrawn from view"; `scripts/fetch_derby_docstore.py`,
-  route in PORTAL_NOTES. That leaves **24**: Doncaster 5, Gateshead 4,
+  route in PORTAL_NOTES. **Doncaster's five the same afternoon**: its
+  External Documents tab links to Newport's document module under
+  another host, 197 documents, and the Newport script now carries a
+  store table (PORTAL_NOTES). That leaves **19**: Gateshead 4,
   Brighton 3 (the 212-byte bodies), Southend, Bedford and Horsham 2
   each, and six singletons (Huntingdonshire, Mid Sussex, Neath,
   Reigate, Chelmsford, Adur & Worthing). Each Idox one is checked for an
