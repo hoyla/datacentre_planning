@@ -4202,6 +4202,24 @@ any site stays out.
 
 ---
 
+## Derby's documents, from the council's own store (2026-09-06)
+
+The third refused register reviewed. Derby's Idox documents tab refuses
+with an HTTP 200, as Exeter's does, and five live applications — two
+small data-centre compounds with their discharge and a variation, and
+the former Celanese site's energy-centre reserved matters — had been
+settled `none_published` on that page since 8 August. Luke found the
+door on the register itself: the *External Documents* tab links to
+`docs.derby.gov.uk/padocumentserver`, a listing headed "Documents found
+N" whose rows download to a plain GET. A sixth application Idox had
+called "withdrawn from view" is listed there like any other. 62
+documents across the six. `scripts/fetch_derby_docstore.py` on the
+Newport/Slough-legacy pattern — typed listing, verdict through
+`classify_outcome`, its own adapter name in the fold — with the captured
+listing as a fixture. The general lesson is recorded in PORTAL_NOTES:
+`externalDocuments` is an Idox tab, and the first place to look when a
+documents tab refuses. 24 refused pages remain.
+
 ## Doncaster runs Newport's document store (2026-09-06)
 
 Another refused register, and one that needed no new route. Luke:

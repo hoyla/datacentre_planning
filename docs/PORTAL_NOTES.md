@@ -243,6 +243,37 @@ seventh, `24/1536/OUT`, an energy-centre outline in no site, waits with
 the adjacency review. The route is recorded here so the next Exeter
 application does not start from "Permission Denied".
 
+## Derby — Idox refuses the documents tab; the External Documents tab names the council's store (6 applications)
+
+`eplanning.derby.gov.uk`'s documents tab answers HTTP 200 with
+"Permission Denied … restricted to specific users" — the Exeter shape —
+and the 8 August fetch settled five live applications as
+`none_published` on it; a sixth, `18/01557/NONM`, had been recorded
+`withdrawn_from_view`. The register itself says where the documents
+are: its *External Documents* tab
+(`applicationDetails.do?activeTab=externalDocuments&keyVal=…`, Luke's
+pointer, 2026-09-06) links to
+
+    https://docs.derby.gov.uk/padocumentserver/index.html?caseref=<ref>
+
+a page whose script loads `MainTable.aspx?caseref=<ref>`: a table of
+type, description, published date and document id, headed "Documents
+found N", with each row opening `DownloadDocument.aspx?docid=<id>` —
+which serves the PDF to a plain GET, no session, no browser
+(`application/pdf`, 110 KB for the first covering letter). 62 documents
+across the six: 12, 6, 4, 13 and 23 for the five refused, 4 for the one
+"withdrawn from view", which the store lists like any other.
+
+`scripts/fetch_derby_docstore.py` is the route, on the Newport docstore
+and Slough legacy pattern: the listing is typed (the count present and
+matching the rows, or the page is unrecognised and stays retryable), the
+verdict comes from `classify_outcome` under the adapter `derby_docstore`,
+and bytes land in the standard per-application layout with the download
+URL as provenance. The captured listing is `tests/fixtures/derby/`.
+
+The `externalDocuments` tab is an Idox feature, not Derby's: it is the
+first place to look on any Idox register whose documents tab refuses.
+
 ## Doncaster — Newport's document store, second council (5 applications)
 
 `planning.doncaster.gov.uk`'s Idox documents tab refuses with an HTTP
