@@ -223,7 +223,19 @@ def relations(conn, *, proximity_km: float = PROXIMITY_KM) -> list[Relation]:
 # What belongs under `adjacent_power/` on Drive
 # ---------------------------------------------------------------------------
 
-STAGED_VERDICT_SQL = """
+# "Holds at least one document with bytes" — the clause that separates
+# what is STAGED (a Drive folder needs files) from what is IN THE CLASS
+# (the fetch queue needs the ones with no files yet). Since #252 took
+# adjacent power out of membership, the queue's "live member" test no
+# longer reached the class at all: fifteen adjacent-power applications
+# held nothing and would never have been tried again, and a scheme
+# discovered today would get a verdict, a relationship row and no fetch.
+# One rule, two readings, chosen by `held_only`.
+HELD_CLAUSE = """
+  AND EXISTS (SELECT 1 FROM documents d
+               WHERE d.application_id = a.id AND d.bytes_path IS NOT NULL)"""
+
+_STAGED_VERDICT_BASE = """
 WITH v AS ({verdict_sql})
 SELECT a.id, a.application_ref
 FROM applications a
@@ -232,11 +244,8 @@ WHERE v.verdict = 'adjacent_power'
   AND NOT EXISTS (SELECT 1 FROM site_members m
                     JOIN sites s ON s.id = m.site_id
                    WHERE m.application_id = a.id
-                     AND m.retired_at IS NULL AND s.retired_at IS NULL)
-  AND EXISTS (SELECT 1 FROM documents d
-               WHERE d.application_id = a.id AND d.bytes_path IS NOT NULL)
-ORDER BY a.application_ref
-""".format(verdict_sql=VERDICT_SQL)
+                     AND m.retired_at IS NULL AND s.retired_at IS NULL)""".format(verdict_sql=VERDICT_SQL)
+STAGED_VERDICT_SQL = _STAGED_VERDICT_BASE + HELD_CLAUSE + "\nORDER BY a.application_ref\n"
 
 # Every application that is in no live site and holds documents, with the
 # two fields a family reference can live in. The paperwork of an
@@ -244,21 +253,21 @@ ORDER BY a.application_ref
 # amendment, a variation — is triaged `not_dc` by the rubric (it is not a
 # data centre and its description ties it to nothing but its parent), so
 # it is found by reading the reference, never the verdict.
-UNSITED_SQL = """
+_UNSITED_BASE = """
 SELECT a.id, a.application_ref, a.raw_metadata->>'associated_id',
        left(coalesce(a.description, ''), 600)
 FROM applications a
 WHERE NOT EXISTS (SELECT 1 FROM site_members m
                     JOIN sites s ON s.id = m.site_id
                    WHERE m.application_id = a.id
-                     AND m.retired_at IS NULL AND s.retired_at IS NULL)
-  AND EXISTS (SELECT 1 FROM documents d
-               WHERE d.application_id = a.id AND d.bytes_path IS NOT NULL)
-"""
+                     AND m.retired_at IS NULL AND s.retired_at IS NULL)"""
+UNSITED_SQL = _UNSITED_BASE + HELD_CLAUSE + "\n"
 
 
-def staged_applications(cur) -> dict[int, dict]:
-    """The applications whose documents belong under `adjacent_power/`.
+def staged_applications(cur, *, held_only: bool = True) -> dict[int, dict]:
+    """The applications whose documents belong under `adjacent_power/` —
+    or, with `held_only=False`, the class itself, files or no files,
+    which is what the fetch queue has to reach.
 
     One implementation for the three scripts that have to agree on it —
     `build_drive_staging.py`, which writes the tree; `record_drive_ids.py`,
@@ -288,7 +297,10 @@ def staged_applications(cur) -> dict[int, dict]:
     """
     from dcp.sources.planit import _extract_candidate_refs
 
-    cur.execute(STAGED_VERDICT_SQL)
+    verdict_sql = STAGED_VERDICT_SQL if held_only else \
+        _STAGED_VERDICT_BASE + "\nORDER BY a.application_ref\n"
+    unsited_sql = UNSITED_SQL if held_only else _UNSITED_BASE + "\n"
+    cur.execute(verdict_sql)
     out: dict[int, dict] = {
         app_id: {"ref": ref, "why": "verdict", "parent_id": None,
                  "parent_ref": None}
@@ -297,7 +309,7 @@ def staged_applications(cur) -> dict[int, dict]:
     if not by_ref:
         return out
 
-    cur.execute(UNSITED_SQL)
+    cur.execute(unsited_sql)
     for app_id, ref, assoc, desc in cur.fetchall():
         if app_id in out:
             continue

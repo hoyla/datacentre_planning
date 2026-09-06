@@ -396,6 +396,16 @@ What survives it here:
   to design.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
+- ~~**The fetch queue stopped reaching the class when #252 took it out
+  of membership**~~ — **found and closed 2026-09-06**, on Luke's
+  question of what made the Selby power schemes different from the
+  adjacent-power applications already acquired. The queue's scope was
+  "live member of a live site", so from 2026-08-30 an adjacent-power
+  scheme discovered today got a verdict, a relationship row, a Drive
+  folder rule and no fetch; fifteen held nothing and would never have
+  been tried again. `staged_applications(held_only=False)` is the class
+  without the documents clause the staging build needs, and the queue's
+  scope is "live member, or in that class". Two seeded tests.
 - **44 power schemes within 2.5 km of a live site carry `not_dc` and
   are invisible to the adjacency layer** (measured 2026-09-02 while
   asking what a `not_dc` residue is worth; the working is in the

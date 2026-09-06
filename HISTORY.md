@@ -4171,3 +4171,31 @@ source value is never rewritten. A test refuses any register link in
 the reader that bypasses the helper, the class of dead link 2.8 shipped
 401 of. Selby is the only host in the corpus from a council abolished
 in 2023, so this is one migration, not a mechanism looking for work.
+
+---
+
+## The queue reaches adjacent power again (2026-09-06)
+
+Luke, told that 42 of Selby's 70 applications would not be fetched
+because they are `not_dc`, asked what made them different from the
+adjacent-power applications the project had acquired before. The
+answer was the verdict — the rubric gives `adjacent` only for a stated
+tie, and a battery beside Eggborough whose description does not name
+the data centre reads `not_dc`, the class the ROADMAP's 44-review is
+for — but asking it found something else. #252 took `adjacent_power`
+out of membership on 2026-08-30, and the fetch queue's scope was "live
+member of a live site". From that day the queue could not reach the
+class: fifteen adjacent-power applications held nothing and would
+never have been tried again, and a substation discovered today would
+have got a verdict, a relationship row and a Drive folder rule, and no
+fetch. Not a decision anyone made; the consequence nobody followed.
+
+`dcp.adjacent_power.staged_applications` was already the one rule for
+the class, for the three scripts that put its documents on Drive; it
+requires at least one document held, because a folder needs files. It
+gains `held_only=False` — the same two queries without that clause —
+and the queue's scope becomes "live member, or in that class". The
+membership half of the scope also gains the `sites` join it lacked,
+the UNSTAGED_SQL shape again. Two seeded tests: the class lists a scheme
+holding nothing, and the queue takes it while a stray `not_dc` outside
+any site stays out.

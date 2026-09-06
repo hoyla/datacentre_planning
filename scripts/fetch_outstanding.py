@@ -44,6 +44,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from dcp import db, repo  # noqa: E402
+from dcp import adjacent_power as _adj  # noqa: E402
 from dcp.acquisition_outcome import SETTLED, classify_outcome, record  # noqa: E402
 from dcp.sources import (agile, arcus, idox, ni_planning, ocella,  # noqa: E402
                          salesforce_pr)
@@ -54,10 +55,15 @@ log = logging.getLogger("fetch_outstanding")
 # so what settles an application and what awards a settled verdict cannot
 # drift apart. `--recheck` names one explicitly when a revisit is intended.
 
+# Scope: a live member of a live site, OR in the adjacent-power class
+# (`dcp.adjacent_power.staged_applications(held_only=False)` — the
+# scheme's own verdict, or the paperwork of one). The membership test
+# used to be the whole scope, so after #252 took adjacent power out of
+# membership the queue stopped reaching it: a substation discovered today
+# got a verdict and a relationship row and was never fetched.
 OUTSTANDING_SQL = """
 SELECT a.id, a.application_ref, a.url
 FROM applications a
-JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
 LEFT JOIN LATERAL (
     SELECT outcome FROM acquisition_outcome ao
     -- Insertion order, not checked_at, matching application_acquisition.
@@ -65,11 +71,15 @@ LEFT JOIN LATERAL (
     -- was written to correct.
     WHERE ao.application_id = a.id ORDER BY ao.id DESC LIMIT 1) o ON true
 WHERE a.url IS NOT NULL
+  AND (EXISTS (SELECT 1 FROM site_members m
+                 JOIN sites s ON s.id = m.site_id
+                WHERE m.application_id = a.id
+                  AND m.retired_at IS NULL AND s.retired_at IS NULL)
+       OR a.id = ANY(%s))
   AND (NOT EXISTS (SELECT 1 FROM documents d WHERE d.application_id = a.id)
        OR o.outcome = 'partial')
   AND (o.outcome IS NULL OR o.outcome IN ('error', 'partial')
        OR o.outcome = ANY(%s))
-GROUP BY a.id, a.application_ref, a.url
 ORDER BY a.application_ref
 """
 
@@ -169,8 +179,13 @@ def main() -> int:
 
     camp = _campaign()
     with db.connect() as conn, conn.cursor() as cur:
-        cur.execute(OUTSTANDING_SQL, (args.recheck,))
+        adjacent = _adj.staged_applications(cur, held_only=False)
+        cur.execute(OUTSTANDING_SQL, (list(adjacent), args.recheck))
         rows = cur.fetchall()
+    n_adj = sum(1 for r in rows if r[0] in adjacent)
+    if n_adj:
+        log.info("%d of these are adjacent-power schemes or their paperwork, "
+                 "in no site", n_adj)
     if args.host:
         rows = [r for r in rows if host_matches(r[2], args.host)]
         log.info("scoped to recorded host %s: %d applications", args.host, len(rows))
