@@ -767,7 +767,7 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "families are large but dominated by flood and drainage engineering "
      "that every development produces (rainfall depths, pipe runs, design "
      "discharge rates). Filtered to consumption and abstraction, only "
-     "{water_sites} of {water_of} sites disclose anything at all. That "
+     "{water_sites} of the {water_of} sites read disclose anything at all. That "
      "silence is itself a finding: no volume is published here because the "
      "applications do not contain one."),
     ("Sites", "EIA status (from documents)",
@@ -2439,8 +2439,8 @@ def main() -> None:
          f"corpus for corroboration ({n_second:,} documents so far)."),
         ("Water figures", "Deliberately not published as volumes. The water "
          "and cooling findings are dominated by drainage and flood "
-         f"engineering; only {water['sites']:,} of {water['of']:,} sites "
-         "disclose anything about consumption. 'Cooling method' is reported "
+         f"engineering; only {water['sites']:,} of the {water['of']:,} sites "
+         "read disclose anything about consumption. 'Cooling method' is reported "
          "instead, being both better evidenced and the thing that determines "
          "water demand."),
         ("Generated at (UTC)", dt.datetime.now(dt.timezone.utc)

@@ -2353,7 +2353,11 @@ here rather than applied from the build lane.
   is the one function, beside the per-site predicate it must agree with;
   the reader's caveat, the workbook's release row and the dictionary
   entry (a placeholder `dictionary()` fills at build) all interpolate
-  it, and `scripts/corpus_stats.py` prints it with the rest.
+  it, and `scripts/corpus_stats.py` prints it with the rest. **The
+  denominator is the sites read, not all live sites** (Luke,
+  2026-09-06, on the sanity check that followed the fix): a site
+  holding nothing read cannot have disclosed, so "169 of 500" had been
+  calling 142 sites silent that nobody had looked at; it is 169 of 358.
   `tests/test_prose_counts_are_computed.py` refuses a literal count of
   sites, documents, findings, applications or figures in either
   exporter's generated prose, verified by reintroducing both literals;
