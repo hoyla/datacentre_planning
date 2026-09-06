@@ -2224,12 +2224,10 @@ here rather than applied from the build lane.
   `tests/test_membership_doors.py` pins both. Luke's materialise that
   afternoon retired the 65 (HISTORY, "Membership settled before the
   campus review"); re-measured 2026-09-04, zero live rows on retired
-  sites. The three live-site predicates stay as defence in depth. **One
-  query still tests the member row alone** — `UNSTAGED_SQL` in
-  `build_drive_staging.py`, the shortfall counter — correct only because
-  the materialise now retires the rows, and its test checks for the
-  substring `retired_at IS NULL` rather than the join, so it would not
-  see the regression. A one-line follow-up.
+  sites. The three live-site predicates stay as defence in depth. ~~One
+  query still tested the member row alone~~ — `UNSTAGED_SQL`, the
+  shortfall counter, gained the `sites` join on 2026-09-06 and its test
+  asserts the join rather than a substring.
 
 - ~~**`drive_sync.py`'s ledger write is neither atomic nor ordered, and
   nothing stops a second process**~~ — **done 2026-09-06.**

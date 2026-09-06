@@ -127,7 +127,16 @@ def test_the_shortfall_is_computed_from_the_universe_not_from_the_tree():
     sql = bds.UNSTAGED_SQL
     assert "FROM documents" in sql
     assert "NOT EXISTS" in sql and "site_members" in sql
-    assert "retired_at IS NULL" in sql
+    # Both halves of "a member": the row is live AND its site is live.
+    # Until 2026-09-06 this asserted only that the substring
+    # `retired_at IS NULL` appeared somewhere, which the member-row test
+    # alone satisfied — so a membership on a retired site counted as
+    # staged, and the check was right only because the materialise had
+    # started retiring member rows with their sites (#351). The other
+    # three staging queries carried the join since #349; this one did
+    # not, and the shortfall counter is the guard the whole build reads.
+    assert "JOIN sites s ON s.id = m.site_id" in sql
+    assert "m.retired_at IS NULL" in sql and "s.retired_at IS NULL" in sql
 
 
 # ---------------------------------------------------------------------------
