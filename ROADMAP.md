@@ -1286,8 +1286,15 @@ work.
   `publicaccess.northyorks.gov.uk` with keyVals intact and documents
   behind them — 70 Selby applications held nothing, six live sites,
   Eggborough and Drax among them. `idox.SUCCESSOR_HOSTS` carries the
-  swap (PORTAL_NOTES); the fetch over the 70 supersedes the 18. That
-  leaves 34 genuine refused pages for the review by hand. 106 of the 128 settled
+  swap (PORTAL_NOTES); the fetch over the 70 supersedes the 18. **And
+  Exeter's five are not refusals either** (2026-09-06): the Idox
+  documents tab is restricted, but the council publishes every document
+  on its own related-documents page, 89 for the parent application — the
+  Newport shape, route in PORTAL_NOTES. Not fetched, because the site
+  they belong to is Exeter College's teaching block, excluded by
+  exception the same day. That leaves 29 genuine refused pages for the
+  review by hand: Newport's 17 (the docstore case), Derby, Doncaster,
+  and the singletons. 106 of the 128 settled
   verdicts carry the detail `no_documents_or_unparseable` and every one
   was written on **2026-08-08**, before the mapping was tightened on the
   9th — after which the same condition produced `error` instead. So the
@@ -1401,7 +1408,19 @@ work.
   about real rows: that a Barbour project title naming a data centre
   settles the class (21 sites), and that `pre_application` and
   `enabling_works` count as datacentre-positive. Both are one constant
-  each in `dcp/site_class.py` to revisit.
+  each in `dcp/site_class.py` to revisit. **The title rule has its first
+  worked false positive** (2026-09-06): Exeter College's "Digital &
+  Data Centre" is a teaching block, Use Class D1, whose six
+  applications triage had correctly called `not_dc`/`procedural` — the
+  project-link door admitted them and the title settled the class.
+  Excluded by exception in `data/priors/project_exclusions.yaml`, with
+  the evidence; the file's own header says why exception and not rule.
+  Seven Barbour-anchored sites hold nothing but `not_dc`/`procedural`
+  applications (Heatherwood, Keele's IC7, Shield House, Metaswitch, the
+  Curzon Building, Cody Park south, Exeter College), and they are not
+  one kind of thing: Cody Park south is a data centre whose paperwork is
+  discharges, Heatherwood's hybrid is the one whose documents may name
+  a data centre. Each wants reading, not a rule.
 
 
 

@@ -4199,3 +4199,47 @@ membership half of the scope also gains the `sites` join it lacked,
 the UNSTAGED_SQL shape again. Two seeded tests: the class lists a scheme
 holding nothing, and the queue takes it while a stray `not_dc` outside
 any site stays out.
+
+---
+
+## Exeter College is a teaching building, excluded by exception (2026-09-06)
+
+The second refused page reviewed after Selby was Exeter's, and it was
+two things at once. The Idox documents tab is restricted — "Permission
+Denied … restricted to specific users", HTTP 200, with or without a
+session — but the summary tab is public, and Luke pointed at the
+council's own related-documents page, which lists 89 documents for the
+parent application as `window.open` links to a servlet that serves the
+PDF to a plain GET. Newport's shape exactly; the route is in
+PORTAL_NOTES for the next Exeter application.
+
+And the site the five belong to is not a data centre. The parent
+application's own description says so — "a new Digital and Data Centre
+(Institute of Technology) (Use Class D1)" — and triage had read it
+right, calling five of the six `not_dc` and one `procedural`. The site
+existed because Barbour project 12425966, titled *Exeter College Hele
+Building — Digital & Data Centre*, anchored it, the project-link door
+admitted the paperwork whatever triage said, and the title rule settled
+the class. Luke: "it would be Use Class F1 nowadays."
+
+**Excluded by exception, not by rule.** Seven Barbour-anchored sites
+hold nothing but `not_dc`/`procedural` applications, and they are not
+one kind of thing — Cody Park's south site is a data centre whose
+paperwork is condition discharges, Heatherwood's hybrid is the one whose
+documents may name a data centre — so nothing in the record tells them
+apart except reading each. `data/priors/project_exclusions.yaml` is one
+entry per decision with the evidence that made it, on the
+`site_aliases` contract: an unknown Ptno fails the build. An excluded
+project anchors nothing and joins nothing, and its paperwork leaves
+with it. The first cut removed only the project and its one linked
+application, and the dry run showed the other five re-forming as a
+site keyed on a sibling: the one `procedural` discharge is in the
+universe on the presumption that a discharge is a data centre's, and
+the family door admitted its `not_dc` siblings through it — the
+exclusion had changed a title for a key. So the rule walks the family
+references from the linked applications through every node whose own
+verdict is `not_dc` or `procedural` and takes those; a substantive
+verdict is neither taken nor walked through. The dry run then reads
+"retire PTNO-12425966, six leave, add 0". The project's row stays
+untouched. Two seeded tests, one with the discharge reaching the site
+only through its family reference, as at Exeter.
