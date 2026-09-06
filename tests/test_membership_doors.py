@@ -134,3 +134,31 @@ def test_a_not_dc_node_does_not_bridge_two_datacentre_sites(db_conn, tmp_path):
     assert sites_of[a1] != sites_of[a3], "two far-apart data-centre sites stay two"
     assert bridge in sites_of, "the master plan is admitted"
     assert sites_of[bridge] in (sites_of[a1], sites_of[a3]), "and joins exactly one of them"
+
+
+A3 = "Testing/24/1003/FUL"
+
+
+@pytest.mark.integration
+def test_preflight_names_an_application_that_moves_between_surviving_sites(db_conn, tmp_path):
+    """Neither `retiring` nor `leaving` sees this: the site survives, the
+    application stays in the universe, and yet its documents change
+    folder, its findings change page and the site it left may change
+    key. "Build the clusters both ways and diff" — the relation-table
+    rollout's precondition — needed this list and had nothing."""
+    a1 = _seed_app(db_conn, A1, 51.5011, -0.4070)
+    a2 = _seed_app(db_conn, "Testing/24/1002/FUL", 53.4808, -2.2426)   # Manchester
+    a3 = _seed_app(db_conn, A3, 53.4810, -2.2420)                      # beside a2
+    clusters = sites.build_clusters(db_conn, data_dir=tmp_path)
+    sites.materialise(db_conn, clusters)
+    db_conn.commit()
+    pre = sites.preflight(db_conn, clusters)
+    assert pre["moved"] == [], "nothing moves on a re-run of the same clusters"
+
+    # A3 is re-indexed with a corrected pin, beside A1 instead of A2.
+    _seed_app(db_conn, A3, 51.5012, -0.4072)
+    clusters = sites.build_clusters(db_conn, data_dir=tmp_path)
+    pre = sites.preflight(db_conn, clusters)
+    assert pre["moved"] == [(A3, "SITE-Testing/24/1002/FUL", f"SITE-{A1}")]
+    assert pre["retiring"] == [] and pre["leaving"] == [], \
+        "a move is not a retirement and not a departure"
