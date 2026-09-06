@@ -66,7 +66,9 @@ SKIP_HOSTS: dict[str, str] = {
 # later since only the listing half is needed.
 SUPPORTED = ("idox", "ocella", "agile", "arcus", "aifusion", "salesforce_pr",
              "newport_docstore", "doncaster_docstore", "adurworthing_docstore",
-             "horsham_docstore", "huntingdonshire_docstore", "midsussex_docstore")
+             "horsham_docstore", "huntingdonshire_docstore", "midsussex_docstore",
+             "gateshead_docstore", "chelmsford_docstore", "reigate_docstore",
+             "southend_docstore")
 
 # Newport's Idox install serves an error page on its documents tab and
 # publishes the documents from a separate store. Auditing it as Idox
@@ -83,8 +85,26 @@ DOCSTORE_HOSTS = {
     "public-access.horsham.gov.uk": "horsham_docstore",
     "publicaccess.huntingdonshire.gov.uk": "huntingdonshire_docstore",
     "pa.midsussex.gov.uk": "midsussex_docstore",
+    # Civica "Planning Documents" (scripts/fetch_civica_docstore.py), the
+    # same refusal on the tab and a different store behind it.
+    "public.gateshead.gov.uk": "gateshead_docstore",
+    "publicaccess.chelmsford.gov.uk": "chelmsford_docstore",
+    "planning.reigate-banstead.gov.uk": "reigate_docstore",
+    "publicaccess.southend.gov.uk": "southend_docstore",
 }
 DOCSTORE_FAMILIES = tuple(DOCSTORE_HOSTS.values())
+
+
+def _civica_module():
+    """The Civica store script, loaded the same way (see `_newport_module`)."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).resolve().parent.parent / "scripts" \
+        / "fetch_civica_docstore.py"
+    spec = importlib.util.spec_from_file_location("civica_docstore", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def _newport_module():
@@ -353,6 +373,23 @@ def listing_live(conn, *, client, application_ref: str, url: str,
                         "kind": d.get("documentType") or d.get("type")}
                        for d in docs if d.get("documentHash")]
             return _api_listing(offered, url=f"agile:{slug}/{app_id}/document")
+
+        if family in DOCSTORE_FAMILIES and application_ref.split("/", 1)[0] in _civica_module().STORES:
+            civica = _civica_module()
+            council = civica.council_of(application_ref)
+            url_ = civica.api(council, "doc/list")
+            try:
+                docs = civica.list_documents(client, council, application_ref)
+            except civica.UnrecognisedListing as exc:
+                # The store answered, but not with a measurement of this
+                # case: the wrong case, no count, a body that is not the
+                # page's JSON. Blocked, not empty.
+                return Listing(source="live", url=url_, status="blocked",
+                               detail=f"Civica store listing did not parse: {exc}"[:400])
+            offered = [{"url": civica.document_url(council, d["docno"]),
+                        "filename": d["filename"], "kind": d["kind"]}
+                       for d in docs]
+            return _api_listing(offered, url=url_)
 
         if family in DOCSTORE_FAMILIES:
             newport = _newport_module()

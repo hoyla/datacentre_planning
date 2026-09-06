@@ -4250,6 +4250,25 @@ Reigate, Southend), Bedford's Objective table, Neath's APEX — recorded
 in PORTAL_NOTES with what each needs; 14 refused pages remain, none of
 them now a mystery.
 
+## Civica's Planning Documents page, read by its own API (2026-09-06)
+
+Four of the refused registers — Gateshead, Chelmsford, Reigate &
+Banstead, Southend — link to a Civica page that is an empty shell
+filled by script. Watching the page's own requests in a browser gave
+the three calls: a case search by reference, a document list by the
+case's key, and a page-stream download by document number; all
+session-free, all identical across the four. Two things the shape
+demanded: the search endpoint answers a search it does not understand
+with the whole register, so the parser trusts a result only when
+exactly one case says the reference back — the guessed payloads that
+returned a plausible-looking case were returning someone else's; and
+the list is trusted only when its rows match its own `RowCount`.
+`scripts/fetch_civica_docstore.py`, outcomes under `<council>_docstore`,
+captured JSON as fixtures; the listing audit and the refetch route the
+four hosts to it, and the table-agreement test now spans both store
+modules. Eight applications, 407 documents. Six refused pages remain:
+Bedford's two, Neath's one, and Brighton's three with nothing to follow.
+
 ## An error with documents held stays queued (2026-09-06)
 
 The Selby fetch found it. At the spacing the host's 429s had driven the
