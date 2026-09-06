@@ -444,6 +444,23 @@ def chunk_pages(pages: list[str], selected: list[int],
 # ---------------------------------------------------------------------------
 
 
+
+def pages_sent_from(chunks) -> list[int]:
+    """The physical pages a document's chunks put in front of the model,
+    each once, sorted — what `deepread_log.pages_sent` is defined as.
+
+    Every writer of the column calls this. A page split across several
+    chunks (an oversized worksheet, a scanned sheet) appears in each
+    chunk's own page list, and flattening those lists wrote it once per
+    chunk: document 52945 carried 148 entries for 32 pages, 714 rows held
+    more entries than `pages_total`, and the progress line printed
+    `[148/32 pages]`. Migration 007 says "page numbers"; the escalation
+    JSONL already recorded the set; the column now matches it. Rows
+    written before 2026-09-06 stay as they are, so a reader of the
+    column treats an array as a set.
+    """
+    return sorted({n for nums, _text in chunks for n in nums})
+
 def escalate(**payload) -> None:
     ESCALATION_PATH.parent.mkdir(parents=True, exist_ok=True)
     payload["ts"] = time.strftime("%Y-%m-%dT%H:%M:%S")
@@ -516,7 +533,6 @@ def verify_findings(row: dict, findings: list[dict],
     """
     values: list[tuple] = []
     failed = 0
-    sent_set = set(sent)
     if True:
         for f in findings:
             quote = (f.get("evidence_text") or "").strip()
@@ -536,7 +552,7 @@ def verify_findings(row: dict, findings: list[dict],
                 escalate(reason="quote_failed_verification",
                          application_ref=row["application_ref"],
                          sha=row["sha"], document_id=row["document_id"],
-                         claimed_page=page, pages_sent=sorted(sent_set),
+                         claimed_page=page, pages_sent=sent,
                          finding=f)
                 continue
             num = f.get("value_number")
@@ -937,7 +953,7 @@ def process_document(sink: Sink, row: dict, *, max_chars: int,
                  pages_selected=len(selected),
                  chars_selected=sum(len(pages[i]) for i in selected))
     chunks = chunk_pages(pages, selected, max_chars)
-    sent = [n for nums, _t in chunks for n in nums]
+    sent = pages_sent_from(chunks)
 
     t0 = time.time()
     verified: list[tuple] = []
@@ -989,7 +1005,7 @@ def process_document(sink: Sink, row: dict, *, max_chars: int,
     return (f"{inserted} findings"
             + (f", {failed} failed gate" if failed else "")
             + (", PARSE FAIL" if parse_failed else "")
-            + f"  [{len(sent)}/{len(pages)} pages, {elapsed:.0f}s]")
+            + f"  [{len(sent)}/{len(selected)} pages, {elapsed:.0f}s]")
 
 
 TIER_ORDER = {"A": 0, "B": 1, "C": 2, "skip": 3}

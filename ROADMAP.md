@@ -2479,8 +2479,16 @@ here rather than applied from the build lane.
   singletons attach through it; and the triage prompt's raw-string line
   can name resolved references instead. Worth its own plan document, the
   way the operator rung and the unsited-claims layer had one.
-- **`deepread_log.pages_sent` counts a page once per chunk, not once**
-  (opened 2026-08-12; re-measured 2026-09-04). Migration 007 defines the
+- ~~**`deepread_log.pages_sent` counts a page once per chunk, not once**~~
+  — **done 2026-09-06.** `deepread_run.pages_sent_from(chunks)` is the
+  one writer — the sorted set — and the runner, both batch builders and
+  the escalation JSONL call it, so the column and the JSONL agree; the
+  gate's fallback loop walks the set, so a split page is scanned once;
+  the progress line divides by pages *selected*. Historical rows stay
+  as written and are read as sets. Pinned by
+  `tests/test_pages_sent_is_a_set.py`, including that no writer
+  flattens for itself; `test_chunking`'s per-chunk `[1]` stands. The
+  account as it stood (opened 2026-08-12; re-measured 2026-09-04): Migration 007 defines the
   column as "1-based physical page numbers sent to the model"; the
   runners write a send log. `chunk_pages` resets its page list at every
   flush, so a page split across chunks is appended once per chunk, and

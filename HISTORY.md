@@ -4041,3 +4041,31 @@ document with a `read` log row — 358 today, so 169 of 358, 47% — the
 three surfaces say "of the N sites read", and the integration test
 asserts the denominator is smaller than the live count, so the
 distinction cannot be lost by a later simplification.
+
+---
+
+## `pages_sent` is a set (2026-09-06)
+
+The third code follow-up from the root-cause review, and the one the
+review understated least. Migration 007 defines the column as "1-based
+physical page numbers sent to the model"; `chunk_pages` resets its page
+list at every flush, so a split page sat in each chunk's list, and the
+runner flattened the lists into the column — 148 entries for 32 pages on
+document 52945, 714 rows over `pages_total` by 2026-09-04 against 21 in
+August, and a progress line that was wrong in both halves, its
+denominator being the document's total pages rather than those
+selected. The deduplicated form already existed eleven lines above the
+write that ignored it, as the set the escalation JSONL recorded, so the
+two records of what a model saw disagreed; and the gate's fallback loop
+walked the duplicated list, re-scanning a split page once per chunk on
+exactly the worksheets where it cost most.
+
+One writer now, `pages_sent_from(chunks)`, which the runner, both batch
+builders and the JSONL call — the agent and retry runners inherit the
+builders' value, so six writers become one. Historical rows stay as they
+are, the audit record of those runs; nothing reads the column back from
+the database yet, and whatever first does treats an array as a set. Eight
+tests pin the set, the gate finding a quote on a split page through it,
+the progress denominator, and that no writer flattens for itself;
+`test_chunking`'s per-chunk `[1]` stands, because each chunk naming its
+page is the provenance marker and was never the defect.
