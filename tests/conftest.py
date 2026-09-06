@@ -103,6 +103,14 @@ def _ensure_test_database() -> None:
                 cur.execute(
                     (MIGRATIONS_DIR / "009_signal_family.sql").read_text())
                 conn.commit()
+            # Migration 010 — acquisition_outcome, the per-attempt verdict
+            # the fetch queue's scope reads (2026-09-06: the queue's SQL
+            # could not be tested here without it).
+            cur.execute("SELECT to_regclass('public.acquisition_outcome')")
+            if cur.fetchone()[0] is None:
+                cur.execute(
+                    (MIGRATIONS_DIR / "010_acquisition_outcome.sql").read_text())
+                conn.commit()
             # Migration 021 — capacity_claims + capacity_claim_matches.
             cur.execute("SELECT to_regclass('public.capacity_claims')")
             if cur.fetchone()[0] is None:
@@ -199,7 +207,7 @@ def db_conn(integration_db: str):
                 "colocated_candidates, findings, triage, documents, "
                 "applications, source_snapshots, council_aliases, "
                 "capacity_claim_matches, capacity_claims, site_members, "
-                "power_adjudication, deepread_log, "
+                "power_adjudication, deepread_log, acquisition_outcome, "
                 "sites RESTART IDENTITY CASCADE"
             )
         conn.commit()
