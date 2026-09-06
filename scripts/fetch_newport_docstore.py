@@ -50,6 +50,12 @@ from dcp.sources import idox  # noqa: E402
 STORES = {
     "Newport": ("https://documents.newport.gov.uk", "PL"),
     "Doncaster": ("https://necdm.doncaster.gov.uk", "DP"),
+    # 2026-09-06: the External Documents tab of every refused Idox
+    # register was read; these four name this module.
+    "AdurWorthing": ("https://docs.adur-worthing.gov.uk", "DA"),
+    "Horsham": ("https://iawpa.horsham.gov.uk", "DH"),
+    "Huntingdonshire": ("https://docs.huntingdonshire.gov.uk", "PS"),
+    "MidSussex": ("https://padocs.midsussex.gov.uk", "DM"),
 }
 
 STORE = STORES["Newport"][0]

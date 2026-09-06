@@ -61,3 +61,18 @@ def test_the_refetch_handles_both_stores():
     src = (ROOT / "scripts" / "relist_refetch.py").read_text()
     assert '"doncaster_docstore"' in src
     assert 't.adapter.endswith("_docstore")' in src
+
+
+def test_the_store_table_and_the_audit_agree_on_every_council():
+    """Every council in STORES has an audit host routed to
+    `<council>_docstore`, and every such family is supported by the audit
+    and handled by the refetch — a row added to one table and not the
+    others would fetch from the store and audit the refusing tab."""
+    from_stores = {f"{c.lower()}_docstore" for c in newport.STORES}
+    from_hosts = set(ra.DOCSTORE_HOSTS.values())
+    assert from_stores == from_hosts
+    assert from_stores <= set(ra.SUPPORTED)
+    src = (ROOT / "scripts" / "relist_refetch.py").read_text()
+    for fam in from_stores:
+        assert f'"{fam}"' in src
+    assert len(newport.STORES) == 6

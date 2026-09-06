@@ -4233,6 +4233,23 @@ run from the script, the outcome is now recorded through
 `classify_outcome` under `<council>_docstore`, which the Newport script
 never did. 197 documents across five applications.
 
+## The External Documents tab, read across the refused registers (2026-09-06)
+
+Derby and Doncaster made it a rule and the rule was cheap to apply:
+one GET of the External Documents tab per remaining council with a
+refused Idox documents tab, eleven in all. Ten link off-host; Brighton
+serves 212 bytes on every tab. Four of the ten are the Public Access
+document module Newport and Doncaster publish from, and the Newport
+parser read each captured page unchanged — so Adur & Worthing, Horsham,
+Huntingdonshire and Mid Sussex became rows in the store table, with a
+test that the table, the audit's host map and the refetch's handled
+list name the same councils. Ten applications, 417 documents listed,
+fetched the same evening. The other six councils are three shapes —
+Civica's API-filled "Planning Documents" (Gateshead, Chelmsford,
+Reigate, Southend), Bedford's Objective table, Neath's APEX — recorded
+in PORTAL_NOTES with what each needs; 14 refused pages remain, none of
+them now a mystery.
+
 ## An error with documents held stays queued (2026-09-06)
 
 The Selby fetch found it. At the spacing the host's 429s had driven the
