@@ -3980,8 +3980,12 @@ this repository's other resume files had already stopped using:
 serialise under the lock, release, `write_text` in place. Two hazards,
 neither yet observed, both real. A kill mid-write left truncated JSON,
 which the next run died on. And two workers could pass the fifty-change
-gate in one order and finish their writes in the other, so an older
-snapshot silently overwrote a newer one — the lost entries being files
+gate in one order and finish their writes in the other, so the file
+fell up to fifty entries behind memory until the next checkpoint. That
+one is bounded, and the first version of this entry put it on the same
+footing as the torn write; it is not. It cost anything only if the run
+then died inside that window, since the final forced save writes the
+whole state — the entries a death there would lose being files
 re-uploaded beside their Drive copies, the duplicate-archive mechanism
 `dcp/drive.py` exists to prevent. Nothing at all stopped two
 `drive_sync.py` processes loading one snapshot into two memories. The

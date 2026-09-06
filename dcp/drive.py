@@ -103,9 +103,11 @@ ADJACENT_POWER_URL = f"{FOLDER_URL_PREFIX}{ADJACENT_POWER_FOLDER_ID}"
 # and `Sync.save()` used to `write_text` it in place, outside the lock
 # that guards the state it serialises: a kill mid-write left truncated
 # JSON, and two workers could pass the checkpoint in one order and
-# finish their writes in the other, so an older snapshot silently
-# overwrote a newer one — the lost entries being files re-uploaded
-# beside their Drive copies next run. `write_ledger` replaces the file
+# finish their writes in the other, so the file fell up to fifty
+# entries behind memory until the next checkpoint — bounded, and
+# costing anything only if the run died inside that window, since the
+# final forced save writes the whole state; the torn write is the one
+# any kill hits. `write_ledger` replaces the file
 # atomically; `acquire_ledger_lock` refuses a second process rather
 # than letting two mutable ledgers race; `read_ledger` refuses a
 # corrupt one rather than starting from nothing beside it.

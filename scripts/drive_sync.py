@@ -145,9 +145,11 @@ class Sync:
 
         Serialised AND written under the lock. Until 2026-09-06 the lock
         was released between the two, so two workers could pass the gate
-        in one order and finish their writes in the other, and an older
-        snapshot overwrote a newer one silently; and the write was a
-        `write_text` in place, so a kill mid-way left truncated JSON.
+        in one order and finish their writes in the other, leaving the
+        file up to fifty entries behind memory until the next checkpoint
+        — bounded, and only costly if the run died in that window; and
+        the write was a `write_text` in place, so a kill mid-way left
+        truncated JSON, which is the hazard any kill hits.
         One write per fifty changes costs nothing to hold the lock
         across, and the comment above — the lock guards memory, not
         network — stays true: no API call happens here.

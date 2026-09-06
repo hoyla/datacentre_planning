@@ -9,11 +9,15 @@ state under its lock, released the lock, then `write_text`ed the file in
 place. Two hazards, neither observed yet, both real: a kill mid-write
 left truncated JSON, which the next run died on; and two workers could
 pass the fifty-change gate in one order and finish their writes in the
-other, so an older snapshot silently overwrote a newer one — the lost
-entries becoming files re-uploaded beside their Drive copies, the
-duplicate-archive mechanism `dcp/drive.py` exists to prevent. And
-nothing at all stopped two `drive_sync.py` processes loading one
-snapshot into two memories.
+other, so an older snapshot overwrote a newer one and the ledger on
+disk fell up to fifty entries behind the state in memory until the next
+checkpoint. That one is bounded: it cost anything only if the run then
+died inside that window, since the final forced save writes the whole
+state — the torn write is the hazard any kill hits, and the entries a
+death inside the window would lose are files re-uploaded beside their
+Drive copies next run, the duplicate-archive mechanism `dcp/drive.py`
+exists to prevent. And nothing at all stopped two `drive_sync.py`
+processes loading one snapshot into two memories.
 
 The existing concurrent test could see none of it: it asserts after a
 final uncontended save, when the last write is always whole. These

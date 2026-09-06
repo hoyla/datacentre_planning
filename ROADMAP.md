@@ -2254,8 +2254,12 @@ here rather than applied from the build lane.
   `json.loads` and dies on — the workbook export, the id recorder, the
   sample verifier and the ledger rebuild read the same file. And two
   workers can pass the fifty-change gate in one order and finish their
-  writes in the other, so **an older snapshot silently overwrites a
-  newer one**; the lost entries are files re-uploaded beside their Drive
+  writes in the other, so **the file falls up to fifty entries behind
+  memory until the next checkpoint** — bounded, and costly only if the
+  run dies inside that window, since the final forced save writes the
+  whole state (a proportion the first version of this item did not
+  draw; the torn write is the hazard any kill hits). The entries a
+  death there would lose are files re-uploaded beside their Drive
   copies next run, which is the duplicate-archive mechanism
   `dcp/drive.py` exists to prevent. The concurrent-write test pins the
   in-memory dict against mutation during iteration and asserts after a
