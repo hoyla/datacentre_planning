@@ -4069,3 +4069,28 @@ tests pin the set, the gate finding a quote on a split page through it,
 the progress denominator, and that no writer flattens for itself;
 `test_chunking`'s per-chunk `[1]` stands, because each chunk naming its
 page is the provenance marker and was never the defect.
+
+---
+
+## A held but empty document says so (2026-09-06)
+
+The last of the zero-byte item. Three documents in the store are empty
+files — Wakefield's s106, Warwick's and Medway's consultee responses —
+served as zero bytes by the councils' own portals and faithfully stored
+before the fetch guard existed. The sweep finds them every release and
+`corpus_stats.py` counts them, but on the page they were folded into
+"unreadable" with corrupt PDFs and blank scans, and a site report said
+"Documents held: 14" as if all fourteen could be read. Those are
+different things to chase: a corrupt file is a question for the
+extractor, an empty one is a question for the council.
+
+The root-cause review had proposed splitting `documents` three ways to
+carry the distinction; the check found the marker already existed — the
+empty body's sha256, the constant `repo.check_document_body` refuses on
+the way in — so it is one condition in the coverage query. The split
+gains an `empty` bucket, kept out of `prose_held` and apart from
+`prose_unreadable`; the reader's bar tooltip and on-page line name it
+("held but empty: unavailable from the source"); the site report's
+*Documents held* line says how many and why. A seeded integration test
+holds the bucket against a read document, an unreadable one and an
+empty one in one site, and reintroducing the fold fails it.

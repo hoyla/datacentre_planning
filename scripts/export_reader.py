@@ -3874,7 +3874,8 @@ def main() -> int:
         _rword = ("Complete" if _done else
                   "Figures are floors" if p_read else "Nothing published")
         _unread_able = _cd.get("prose_unreadable", 0)
-        _skipped = held - p_held - _unread_able
+        _empty = _cd.get("empty", 0)
+        _skipped = held - p_held - _unread_able - _empty
         _bartitle = (f"{p_read} of {p_held} readable documents read"
                      + (f"; {_skipped} of the {held} held are drawings or "
                         f"sampled by design" if _skipped else "")
@@ -3882,7 +3883,10 @@ def main() -> int:
                      # document we hold and cannot read is a fact about
                      # the source, and a reporter may want to chase it.
                      + (f"; {_unread_able} yielded no readable text and "
-                        f"cannot be analysed" if _unread_able else ""))
+                        f"cannot be analysed" if _unread_able else "")
+                     + (f"; {_empty} held as an empty file — the register "
+                        f"served zero bytes, so it is unavailable from the "
+                        f"source" if _empty else ""))
         state_html = (
             f'<span class="rbar" title="{esc(_bartitle)}">'
             f'<span class="rbar-fill {_rstate}" '
@@ -3899,6 +3903,9 @@ def main() -> int:
             + (f'<span class="statebit"><span class="q">'
                f'{_unread_able:,} more held, and unreadable</span></span>'
                if _unread_able else '')
+            + (f'<span class="statebit"><span class="q">'
+               f'{_empty:,} held but empty: unavailable from the source</span></span>'
+               if _empty else '')
             + (f'<span class="statebit"><span class="q">'
                f'{_skipped:,} drawings or sampled by design</span></span>'
                if _skipped else '')

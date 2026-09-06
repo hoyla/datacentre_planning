@@ -795,7 +795,12 @@ def main() -> None:
                 report.append(f"- **Environmental subjects (description):** "
                               + "; ".join(env))
             report.append(f"- **Portal page:** {url or '—'}")
+            n_empty = sum(1 for d in app_docs if d[2] == repo.EMPTY_SHA256)
             report.append(f"- **Documents held:** {len(app_docs)}"
+                          + (f" (of which {n_empty} held as an empty file: "
+                             f"the register served zero bytes, so it is "
+                             f"unavailable from the source, not read)"
+                             if n_empty else "")
                           + (f" — see `{clean(ref.replace('/', '_'), 60)}/`"
                              if app_docs else ""))
             report.append("")
