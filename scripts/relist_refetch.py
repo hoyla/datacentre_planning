@@ -72,7 +72,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from dcp import db, repo  # noqa: E402
-from dcp.acquisition_outcome import classify_outcome  # noqa: E402
+from dcp.acquisition_outcome import classify_outcome, record  # noqa: E402
 from dcp.sources import agile, aifusion, arcus, idox, ocella, salesforce_pr  # noqa: E402
 
 log = logging.getLogger("relist_refetch")
@@ -171,16 +171,6 @@ def _save_state(state: dict) -> None:
     tmp = STATE_PATH.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
     tmp.replace(STATE_PATH)
-
-
-def record(conn, app_id: int, outcome: str, adapter: str,
-           detail: str | None = None, found: int = 0) -> None:
-    with conn.cursor() as cur:
-        cur.execute("""INSERT INTO acquisition_outcome
-                       (application_id, outcome, adapter, detail, documents_found)
-                       VALUES (%s,%s,%s,%s,%s)""",
-                    (app_id, outcome, adapter, detail, found))
-    conn.commit()
 
 
 # --------------------------------------------------------------------
