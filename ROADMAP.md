@@ -78,6 +78,29 @@ detailed under "Open" in that file:
 - **Which reader re-extracts what the local model read** (Phase 3,
   below): the 2026-08-28 choice is the default position, not a decision.
 
+## 1,811 documents acquired on 2026-09-06 that nothing has read
+
+The refused-page review (HISTORY, "An evening on the refused pages")
+put documents on 63 applications that held nothing that morning —
+1,811 of them, on 29 live sites, **28 of which held no document at
+all before**: Selby 621 across 28 applications (Eggborough, Drax and
+the Selby power cluster), Chelmsford 218, Mid Sussex 218, Doncaster
+194, Horsham 160, Reigate 89, Gateshead 68, Bedford 65, Derby 62,
+Brighton 46, Southend 30, Adur & Worthing 24, Huntingdonshire 14,
+Neath 2. Selby's final pass over its four part-read applications
+(three timed out on the first run, one partial) was still running when
+this was written; measure before quoting.
+
+This is not a re-read and does not wait behind the policy below: these
+are unread documents on sites whose profile today says "no documents"
+or "not read". They go through the ordinary pipeline in order —
+extract, the deep-read batch for the new documents (the corpus-job
+rule: readings are a corpus job, not a site job), the machine-reading
+for the 28 sites that never had one, Drive staging — and then a release
+candidate, diffed against 2.13 with the previous-release check, because
+28 site profiles change from "nothing held" to something. Twenty-eight
+sites' worth of "read in full" is the number to re-measure first.
+
 ## Changes waiting for a re-read they cannot justify on their own
 
 **The policy** (Luke, 2026-08-31). A full re-read has to clear one of
@@ -1286,7 +1309,12 @@ work.
   `publicaccess.northyorks.gov.uk` with keyVals intact and documents
   behind them — 70 Selby applications held nothing, six live sites,
   Eggborough and Drax among them. `idox.SUCCESSOR_HOSTS` carries the
-  swap (PORTAL_NOTES); the fetch over the 70 supersedes the 18. **And
+  swap (PORTAL_NOTES); the fetch over the 70 supersedes the 18 — run
+  the same day in three passes (the first at the default spacing hit
+  429s and three 900-second timeouts; the second at 30 seconds took
+  310 minutes for 22 applications and 532 documents; the third covers
+  the four part-read): 621 documents across 28 Selby applications by
+  the evening. **And
   Exeter's five are not refusals either** (2026-09-06): the Idox
   documents tab is restricted, but the council publishes every document
   on its own related-documents page, 89 for the parent application — the
@@ -1351,10 +1379,11 @@ work.
   none of them by itself:
   - *Timed out mid-register, 2026-09-06*: `Selby/2019/1343/EIA` (34
     held), `Selby/2022/1105/FULM` (17), `Selby/2023/0285/FULM` (18) —
-    the 900-second budget at 45-second spacing. One more `--host
-    public.selby.gov.uk` pass after the restarted sweep finishes, with
-    `--delay 30 --app-timeout 7200`; the sweep that was running when
-    #403 opened loaded the old predicate and will not reach them.
+    the 900-second budget at 45-second spacing. The `--host
+    public.selby.gov.uk --delay 30 --app-timeout 7200` pass over them
+    (plus `ZG2024/1270/DOC`, `partial` at 4 of 5) started 20:55 the
+    same evening, after the restarted sweep had finished its 22; check
+    their latest outcome rows before calling them done.
   - *Host refused a whole run, 2026-08-26/28*: `Swindon/S/21/0518`
     (204 held), `Swindon/S/21/1760` (172), `Swindon/S/23/1422` (14),
     `Swindon/S/OUT/24/1427` (302) — `persistent_5xx` and "refused 3 in
@@ -1368,7 +1397,7 @@ work.
   - *Parser returned nothing on a page that had something,
     2026-08-28*: `Selby/ZG2023/1213/DOC` (4 held,
     `no_documents_or_unparseable`) — the conflated label's item above;
-    now on the North Yorkshire register, so the Selby pass covers it.
+    **done**: the 30-second Selby sweep fetched it first, 15 documents.
   Done when each of the thirteen carries a `fetched`, `partial` with a
   named remainder, or a settled outcome dated after this entry. The
   list is the query: live member of a live site, at least one

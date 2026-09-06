@@ -4280,6 +4280,48 @@ store-script loaders in both are now one helper. One application, two
 documents: an EIA screening request for land at Margam and its
 decision. Five refused pages remain — Bedford's two and Brighton's three.
 
+## An evening on the refused pages (2026-09-06)
+
+The refused-page item began the afternoon with 48 `blocked` listings —
+Idox documents tabs answering "Permission Denied" with an HTTP 200, and
+Brighton's 212-byte bodies — settled as "nothing published" since 8
+August. By the end of the evening every one of them held documents or
+was excluded by exception, and the route was the same each time: the
+register's own *External Documents* tab, which Luke found on Derby and
+which names where the council actually publishes. Seven PRs (#402–#409)
+and three hand-fetched councils:
+
+| route | councils | applications | documents |
+|---|---|---|---|
+| register moved (`SUCCESSOR_HOSTS`) | Selby → North Yorkshire | 28 | 621 |
+| council document server, own script | Derby | 6 | 62 |
+| Public Access module (Newport's, a `STORES` row each) | Doncaster, Adur & Worthing, Horsham, Huntingdonshire, Mid Sussex | 15 | 610 |
+| Civica "Planning Documents", by its own API | Gateshead, Chelmsford, Reigate & Banstead, Southend | 8 | 405 |
+| Oracle APEX, direct links | Neath Port Talbot | 1 | 2 |
+| by hand, through a CAPTCHA (Bedford) and an Incapsula gate (Brighton) | Bedford, Brighton | 5 | 111 |
+| excluded by exception | Exeter College | 6 | — |
+
+1,811 documents on 63 applications and 29 live sites, 28 of which held
+no document that morning. Measured from `documents.fetched_at`; Selby's
+final pass over four part-read applications was still running.
+
+Three things the evening taught, beyond the routes. **A refusal on the
+documents tab is never evidence about the documents**: seven councils,
+1,000-plus documents, not one "Permission Denied" that meant "nothing
+published" — which settles the Idox refusal-class question the review
+left open (a refusal stays retryable, and the External Documents tab is
+checked first). **The queue had been dropping timed-out applications
+that held part of a register** (#403): thirteen live members, found
+because three Selby applications hit the 900-second budget at the
+spacing the host's 429s had driven the client to. **A store's own
+count is the only thing that makes an empty list a measurement**: the
+Civica search endpoint answers a payload it does not understand with
+the whole register, and the first two guessed bodies returned a
+plausible case that was someone else's. And a smaller one for the
+inbox: Luke saves into `data/raw/manual/` and the filing into
+per-application folders is ours to do — three false starts before that
+was said out loud.
+
 ## An error with documents held stays queued (2026-09-06)
 
 The Selby fetch found it. At the spacing the host's 429s had driven the
