@@ -76,8 +76,16 @@ WHERE a.url IS NOT NULL
                 WHERE m.application_id = a.id
                   AND m.retired_at IS NULL AND s.retired_at IS NULL)
        OR a.id = ANY(%s))
+  -- Holding documents settles nothing while the last attempt did not
+  -- finish. An application that timed out after storing some of its
+  -- documents is recorded `error` with none found (the adapter never
+  -- returned a summary), and until 2026-09-06 the documents it had
+  -- stored kept it out of this queue for good: thirteen live members,
+  -- nine of them behind a host that refused a whole run, three of
+  -- them Selby applications the same afternoon, holding
+  -- 34, 17 and 18 documents of registers that list more.
   AND (NOT EXISTS (SELECT 1 FROM documents d WHERE d.application_id = a.id)
-       OR o.outcome = 'partial')
+       OR o.outcome IN ('partial', 'error'))
   AND (o.outcome IS NULL OR o.outcome IN ('error', 'partial')
        OR o.outcome = ANY(%s))
 ORDER BY a.application_ref
