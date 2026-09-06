@@ -202,9 +202,13 @@ above, so the note covers them. The eleventh is **`Slough/P/20054/000`**,
 a `P/` reference holding nothing while its own sibling `P/20054/001`
 holds ten — the `P/` series is the one that does live in the legacy
 store, so this is the shape of an application whose documents were never
-asked for there. Worth one run of `scripts/fetch_slough_legacy.py`
-against that reference before the null is trusted; nobody has, and the
-verdict is settled so no sweep will revisit it on its own.
+asked for there. **Run on 2026-09-04**: the store answered "No results
+found" for it and for the other ten, with six references known to hold
+legacy documents returning their exact corpus counts as the control
+that the search could see. All eleven now carry that check in
+`acquisition_outcome` on the `slough_legacy` route — the script records
+its own checks since PR #387 — so the sentence above rests on the record
+rather than on this note.
 
 **The Agile API can answer 200 with a body that is not a listing** — the
 tenant-header failure returns `{"message": "Client has not beeing

@@ -3808,10 +3808,12 @@ produce `error` under today's adapter — having missed that this repo
 holds the distinction twice already on the audit path
 (`fetch_newport_docstore.py`'s `None` against `[]`, and
 `relist_audit.py`'s `blocked` against `empty_listing`). Checking it
-found the opposite defect live in two adapters: Agile returns an empty
-list for any 200 body that is not a JSON list, NI for a null document
-field, and both then *settle* as `none_published` — nobody looked,
-stored as nothing there, in a seventh costume.
+found the opposite defect live in one adapter, not the two this entry
+first named: Agile returned an empty list for any 200 body that was not
+a JSON list and *settled* it as `none_published` — nobody looked, stored
+as nothing there, in a seventh costume. NI was written beside it and
+does not belong there; its label never settles, so it errs the other
+way. Corrected 2026-09-06, on building the fix (below).
 
 **Declined**: the three-way split of `documents` into listed record,
 acquisition attempt and held content object — listed against held is
@@ -3833,3 +3835,75 @@ rather than the claim: a restated inventory is the thing that goes
 stale, and two of the review's own figures were stale on arrival — the
 ROADMAP item it quoted for the water count had itself drifted, naming a
 76 that now survives only in a code comment.
+
+---
+
+## An unrecognised body is not an empty register (2026-09-04, merged 2026-09-06)
+
+The first code follow-up from the root-cause review, and it turned out
+to be one adapter rather than two. `AgileClient.documents()` ended
+`data if isinstance(data, list) else []`, so any 200 body that was not
+a list arrived as an empty listing; empty sets `no_documents`, which
+`acquisition_outcome` settles, so the application became
+`none_published` — out of the queue for good, and rendered as a council
+that publishes nothing. The Agile API answers 200 with
+`{"message": "Client has not beeing selected"}` when the tenant headers
+are wrong, which is exactly that body. It is the shape this record
+already carried for Newport, where the identical `or []` cost 17
+applications and is why `no_documents_in_store` is refused a settled
+verdict; Agile had the same coercion feeding a class that *is* allowed
+to settle. Fixed in PR #386: `documents()` raises `UnrecognisedListing`
+with the body it could not read, the fetch path records it with an
+error so it stays queued, and the relist audit returns `blocked` for
+the reason its Newport branch already gives. aifusion had the narrower
+door — a JSON object without `documentsByType` reaching `_flatten`'s
+`or []` — closed the same way. An empty *list* still settles.
+
+**Measured before changing anything, and the measurement is the story.**
+Twelve applications sat settled behind the coercion, eleven of them
+Slough, two of those — `T/135` and `T/138` — the applications the VIRTUS
+Slough campus review rests on. PORTAL_NOTES already recorded the `T/`
+and `SMI/` series as genuinely empty via the legacy store, which
+independently corroborated ten. The eleventh, `Slough/P/20054/000`, was
+a `P/` reference holding nothing while its sibling held ten, and `P/` is
+the series that lives in the legacy store. Luke asked what running the
+store against it would change, then to run it, then to record what it
+found.
+
+**The legacy store said no, in its own words, and the probe was shown
+able to see first.** Six references known to hold legacy documents
+returned 10, 2, 6, 10, 8 and 10 — the corpus counts exactly — before
+the eleven empties were believed. Every one answered "No results found
+(searching for *ref* in Planning Number)". LD14's place in the "Read in
+full, and silent on capacity" cohort stands.
+
+**And the script that found this had never recorded a check.**
+`fetch_slough_legacy.py` wrote no `acquisition_outcome` row for a find
+or a miss, so the search left no trace: the record still showed the
+Agile adapter's coerced empty, and the fact that the store had been
+searched survived in PORTAL_NOTES prose alone. PR #387 makes it record
+its own verdict, through `classify_outcome` so this route cannot award
+one the adapters would not, on a `slough_legacy` route rather than
+`browser_probe`, which would have called a scripted search a check by
+hand. Recording it needed the same distinction as the Agile fix, since
+an empty PDF list is also what a changed form or a maintenance page
+looks like — so `[]` is returned only on the store's stated miss, and
+anything else raises and stays retryable. `record()` had been copied
+verbatim into two scripts; a third copy is what moved it to
+`dcp.acquisition_outcome`, beside the rule that decides what it writes.
+Run once the change landed: eleven rows, verdict unchanged, provenance
+not.
+
+**What the check exposed is on the ROADMAP under the acquisition tail.**
+Coverage is documents over documents, so an application that yielded
+none is invisible to it: nine sites read 100% complete while holding
+one, five of them in the 152-site cohort. LD14 was right by luck, and
+nothing on its page could have said why.
+
+*Correction, made while building the fix: the review entry above and the
+ROADMAP bullet it produced said Agile* and *NI carried this defect. NI's
+label never settles, so it errs the other way; and the review's own
+claim that aifusion and salesforce were "distinct in name only" was
+wrong the same way — both already made the distinction. One adapter had
+the hole. Both texts are corrected in place with the error kept
+visible.*
