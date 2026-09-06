@@ -1308,6 +1308,40 @@ work.
   still refuses lands as `error` and joins the loop above, which is why
   the typed outcome comes first.
 
+- **Thirteen live members whose last attempt ended in `error` while
+  they hold documents — never re-queued until #403, each to be
+  revisited** (measured 2026-09-06; Luke asked for the list to be kept).
+  The queue admitted an application holding documents only when its
+  outcome was `partial`, so these had left it for good with their
+  registers part-read. #403 makes `error` re-queue too; this list is
+  the check that each one is then actually finished, because three
+  distinct causes sit behind the one outcome and re-queueing settles
+  none of them by itself:
+  - *Timed out mid-register, 2026-09-06*: `Selby/2019/1343/EIA` (34
+    held), `Selby/2022/1105/FULM` (17), `Selby/2023/0285/FULM` (18) —
+    the 900-second budget at 45-second spacing. One more `--host
+    public.selby.gov.uk` pass after the restarted sweep finishes, with
+    `--delay 30 --app-timeout 7200`; the sweep that was running when
+    #403 opened loaded the old predicate and will not reach them.
+  - *Host refused a whole run, 2026-08-26/28*: `Swindon/S/21/0518`
+    (204 held), `Swindon/S/21/1760` (172), `Swindon/S/23/1422` (14),
+    `Swindon/S/OUT/24/1427` (302) — `persistent_5xx` and "refused 3 in
+    a row"; `TowerHamlets/PA/18/03061/A1` (97), `PA/20/01480/A1` (48),
+    `PA/21/02182` (389), `PA/21/02182/A1` (389) — "refused 3 in a
+    row"; `Slough/P/19953/004` (146) — Agile "refused 3 times". These
+    are the biggest registers in the list and were mid-acquisition
+    when the host closed; whether the host is open again is a probe
+    (AGENTS.md rule 4), and a host that still refuses needs the
+    per-host outcome, not another `error`.
+  - *Parser returned nothing on a page that had something,
+    2026-08-28*: `Selby/ZG2023/1213/DOC` (4 held,
+    `no_documents_or_unparseable`) — the conflated label's item above;
+    now on the North Yorkshire register, so the Selby pass covers it.
+  Done when each of the thirteen carries a `fetched`, `partial` with a
+  named remainder, or a settled outcome dated after this entry. The
+  list is the query: live member of a live site, at least one
+  `documents` row, and the latest `acquisition_outcome` row (by id,
+  not `checked_at`) reading `error`.
 - **The browser-routed residue: 24 NEC, 3 Northgate, ~14 bespoke** (as
   probed 2026-08-27; the "31 browser-routed" notes they replaced had
   aged past their premise and are recorded in the dissolution
