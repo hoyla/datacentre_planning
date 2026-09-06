@@ -101,7 +101,17 @@ def _is_report(kind: str | None) -> bool:
 
 HANDLED = ("idox", "ocella", "agile", "arcus", "aifusion", "salesforce_pr",
            "newport_docstore", "doncaster_docstore", "adurworthing_docstore",
-           "horsham_docstore", "huntingdonshire_docstore", "midsussex_docstore")
+           "horsham_docstore", "huntingdonshire_docstore", "midsussex_docstore",
+           "gateshead_docstore", "chelmsford_docstore", "reigate_docstore",
+           "southend_docstore")
+
+
+def _civica_module():
+    path = Path(__file__).resolve().parent / "fetch_civica_docstore.py"
+    spec = importlib.util.spec_from_file_location("civica_docstore", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def _newport_module():
@@ -279,13 +289,23 @@ def _run_shard(host: str, targets: list[Target], *, args, state: dict,
                         s = salesforce_pr.fetch_documents_for_application(
                             client=client_for("idox"), listings=listings, **kw)
                     elif t.adapter.endswith("_docstore"):
-                        # Newport's and Doncaster's URLs are Idox-shaped
-                        # and their documents are not on the documents
-                        # tab; the fetcher takes the reference and finds
-                        # them in the council's store.
-                        newport = _newport_module()
-                        s = newport.fetch_one(conn, client_for("idox"),
-                                              ref=t.ref)
+                        # These URLs are Idox-shaped and their documents
+                        # are not on the documents tab; the fetcher takes
+                        # the reference and finds them in the council's
+                        # store — Civica's for the four on that module,
+                        # the Public Access module otherwise.
+                        civica = _civica_module()
+                        if t.ref.split("/", 1)[0] in civica.STORES:
+                            import httpx
+                            with httpx.Client(headers={"User-Agent": civica.UA},
+                                              follow_redirects=True, timeout=120) as cc:
+                                s = civica.fetch_one(conn, cc, app_id=t.app_id, ref=t.ref,
+                                                     data_dir=Path("data"),
+                                                     delay=args.delay, dry_run=False)
+                        else:
+                            newport = _newport_module()
+                            s = newport.fetch_one(conn, client_for("idox"),
+                                                  ref=t.ref)
                     else:
                         s = {"error_class": "no_adapter", "links_found": 0,
                              "downloaded": 0, "skipped_existing": 0,

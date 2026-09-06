@@ -321,9 +321,21 @@ four shapes:
   (`dmdocs.reigate-banstead.gov.uk`), Southend
   (`publicedrms.southend.gov.uk`). The page is an empty shell that
   loads `civica/Bundles/civica.loader.js` and fills the document list
-  by API; the listing needs the endpoint the script calls. Not built
-  yet — nine applications (Gateshead 4, Southend 2, Chelmsford 1,
-  Reigate 1, and Southend's second).
+  by API. **Built the same evening** — `scripts/fetch_civica_docstore.py`,
+  the API found by watching the page's own requests: `POST
+  Handler.ashx/keyobject/search` with `{"refType": "GFPlanning",
+  "searchFields": {"SDescription": "<ref>"}}` gives the case's
+  `KeyNumber`; `POST Handler.ashx/doc/list` with it gives
+  `CompleteDocument[]` and `RowCount`; `GET
+  Handler.ashx/Doc/pagestream?cd=download&pdf=false&docno=<DocNo>`
+  serves the file. All session-free; all four councils carry the same
+  `APIUrl` and RefType in their shell page. Two guards the shape
+  demands: the search endpoint answers a search it does not understand
+  with the *whole register*, so a result is trusted only when exactly
+  one case says the reference back; and the list is trusted only when
+  its rows match `RowCount`. Eight applications, 407 documents
+  (Chelmsford's `25/01716/FUL` 219, Reigate's 89, Gateshead's `DC/25/00366/FUL` 52).
+  Captured search and list JSON in `tests/fixtures/civica/`.
 - **Bedford** (`edrms.bedford.gov.uk/SearchResults.aspx?appNumber=<ref>`,
   "Objective" planning): a server-rendered table naming each file
   (`24 02188 FUL APP FORM..pdf`, …) with one opaque
