@@ -2231,17 +2231,35 @@ here rather than applied from the build lane.
   substring `retired_at IS NULL` rather than the join, so it would not
   see the regression. A one-line follow-up.
 
-- **`drive_sync.py`'s ledger write is neither atomic nor ordered, and
-  nothing stops a second process** (separated from the batching item
-  2026-09-04, because a durability fix should not wait behind a
-  performance one). `Sync.save()` serialises the state under the ledger
+- ~~**`drive_sync.py`'s ledger write is neither atomic nor ordered, and
+  nothing stops a second process**~~ — **done 2026-09-06.**
+  `dcp.drive.write_ledger` replaces the file atomically (temp sibling,
+  fsync, `os.replace`), `Sync.save()` serialises and writes under its
+  lock so two checkpoints cannot finish in reverse order,
+  `dcp.drive.acquire_ledger_lock` refuses a second process with the
+  holder's pid before the ledger is loaded or the API called,
+  `read_ledger` refuses a corrupt ledger rather than starting from
+  nothing beside it, `prune()` touches the state under the lock, and
+  the id recorder and the ledger rebuild read `SYNC_LEDGER` instead of
+  spelling the path. Twelve tests reach the mechanism — an interrupted
+  write leaves the previous ledger intact; no other thread can take the
+  lock during a write; a second holder is refused and named; a corrupt
+  ledger is refused — verified by reintroducing the unlocked in-place
+  write, which fails four of them; the concurrent test now validates
+  every entry. The account as it stood (separated from the batching
+  item 2026-09-04, because a durability fix should not wait behind a
+  performance one): `Sync.save()` serialises the state under the ledger
   lock, releases it, then `write_text`s the final path. A kill mid-write
   leaves truncated JSON, which the next sync loads with a bare
   `json.loads` and dies on — the workbook export, the id recorder, the
   sample verifier and the ledger rebuild read the same file. And two
   workers can pass the fifty-change gate in one order and finish their
-  writes in the other, so **an older snapshot silently overwrites a
-  newer one**; the lost entries are files re-uploaded beside their Drive
+  writes in the other, so **the file falls up to fifty entries behind
+  memory until the next checkpoint** — bounded, and costly only if the
+  run dies inside that window, since the final forced save writes the
+  whole state (a proportion the first version of this item did not
+  draw; the torn write is the hazard any kill hits). The entries a
+  death there would lose are files re-uploaded beside their Drive
   copies next run, which is the duplicate-archive mechanism
   `dcp/drive.py` exists to prevent. The concurrent-write test pins the
   in-memory dict against mutation during iteration and asserts after a

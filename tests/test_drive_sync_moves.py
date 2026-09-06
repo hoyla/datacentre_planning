@@ -248,3 +248,10 @@ def test_concurrent_ledger_writes_survive_a_racing_save(tmp_path, monkeypatch):
     import json
     on_disk = json.loads((tmp_path / "state.json").read_text())
     assert len(on_disk["files"]) == 8 * 200
+    # Every entry, not only the count: a torn or reverted write would
+    # show here as a missing key or a stale value, which a count of the
+    # final uncontended save cannot see.
+    for n in range(8):
+        for i in range(200):
+            assert on_disk["files"][f"t{n}/f{i}"] == {"md5": "x", "id": str(i)}
+    assert not (tmp_path / "state.json.tmp").exists(), "the temp sibling is replaced, never left"
