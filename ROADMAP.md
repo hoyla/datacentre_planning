@@ -1222,15 +1222,22 @@ work.
   refuses to settle since — and the reader prints it verbatim as an
   application's reason for holding nothing.
 
-  **Two adapters have the opposite defect, and it is the one this
-  project fears.** Agile's `documents()` returns `[]` for any 200 body
-  that is not a JSON list, and NI's `or []` does the same for a null
-  `supportingDocuments`, so an error object served with a 200 reads as
-  `no_documents` and *settles* as `none_published`: nobody looked,
-  stored as nothing there, in the seventh costume. Both are one-line
-  fixes — raise on the unexpected shape, and relabel NI's genuinely
-  empty list, which it reaches only after decoding the JSON and
-  rejecting a null body, as the recognised empty it is.
+  **One adapter had the opposite defect, the one this project fears
+  — fixed 2026-09-04, PR #386.** Agile's `documents()` returned `[]`
+  for any 200 body that was not a JSON list, so an error object served
+  with a 200 read as `no_documents` and *settled* as `none_published`:
+  nobody looked, stored as nothing there, in the seventh costume. It
+  now raises `UnrecognisedListing`, the fetch path records it as
+  retryable, and the relist audit returns `blocked`, as its Newport
+  branch already did. **An earlier version of this bullet said NI had
+  the same hole; it does not.** NI's `or []` labels a null
+  `supportingDocuments` `no_documents_or_unparseable`, which never
+  settles, so it errs the *other* way and retries for ever. Relabelling
+  its genuinely empty list — reached only after decoding the JSON and
+  rejecting a null body — as the recognised empty it is would *create*
+  a settled path, which is why it is its own change with its own
+  evidence rather than a one-liner folded in here. aifusion and
+  salesforce already made the distinction.
 
   The distinction is not new here. `scripts/fetch_newport_docstore.py`
   returns `None` for a page that did not parse and `[]` for an empty
@@ -1249,10 +1256,11 @@ work.
   against captured pages of all three kinds — populated, empty, refused
   — and the pages exist: every listing fetched is in `source_snapshots`,
   and none is committed as a fixture yet, so capturing a Selby refusal
-  and a confirmed empty tab is the first act. Order: the Agile and NI
-  one-liners; Idox, lifting `relist_audit`'s markers and floor into the
-  fetch path and mapping `withdrawn_from_view`; Ocella and Arcus after,
-  each with its own fixture pair. `tests/test_idox.py` pins the
+  and a confirmed empty tab is the first act. Order: Agile, done; the
+  NI relabel, on its own evidence; Idox, lifting `relist_audit`'s
+  markers and floor into the fetch path and mapping
+  `withdrawn_from_view`; Ocella and Arcus after, each with its own
+  fixture pair. `tests/test_idox.py` pins the
   conflation ("must return [] without raising") and changes with it.
 
 - **Re-fetch the 52 applications whose `none_published` was awarded on a
@@ -1333,6 +1341,38 @@ work.
   checking `document_listing_audit`.** A count of held documents is a
   floor until the site's applications are measured and their
   shortfall is either refetched or stated.
+- **A site reads "read in full" whatever its unfetched applications
+  hold** (found 2026-09-04 while checking what the Agile adapter had
+  settled; re-measured 2026-09-06). Coverage is documents read over
+  documents held (`site_profile.DEEPREAD_COVERAGE_SQL`), so an
+  application that yielded no documents contributes to neither side
+  and cannot lower the fraction: a site is 10 of 10 whether its second
+  application was checked and found empty, refused, unreadable by any
+  adapter, or never tried. **Seventeen applications across nine sites
+  sit in that blind spot today** — nine settled `none_published`, eight
+  `no_adapter` — and **five of the nine sites are in the published
+  cohort "Read in full, and silent on capacity"** (152 sites), whose
+  claim inherits the gap. LD14 at Slough Trading Estate is the worked
+  case: 623 findings, no capacity figure, 10 of 10 read, and its second
+  application — the EIA screening request, exactly the class that would
+  state the generator ratings the page's own machine reading asks
+  for — settled empty on the Agile adapter's coerced `[]` until the
+  legacy store was searched on 2026-09-04 and said so in its own words.
+  The number was right; nothing on the page could have said why. Two of
+  the nine are Hillingdon and St Albans sites whose unfetched
+  applications sit on portals with no adapter, which is a different
+  kind of not-knowing from a checked empty and should read as one.
+
+  The fix is not in the fraction, which is honest about documents. It
+  is a second clause beside it — applications holding no documents, by
+  settled class: checked and empty, refused, behind a login, no adapter
+  — so "read in full" says what was read *and* what was never there to
+  read, the way the coverage split already names drawings and sampled
+  classes and the dash-replacement work named four kinds of blank. The
+  cohort's `limits` line carries the same clause. Re-measure rather
+  than re-quote: the query is the settled classes on
+  `acquisition_outcome`, folded to the latest row, joined to
+  `load_coverage`.
 - **Two site-classification rules deserve a reporter's eye** (the
   mechanism itself shipped — issue #159, PR #178, HISTORY 2026-08-27).
   Each was decided in the building and changes what the list asserts

@@ -11,8 +11,10 @@ read in full — before anything was accepted, and re-verified on
 2026-09-04 against the corpus as 2.13 left it.
 
 **The ROADMAP and HISTORY edits it produced are applied**; where each one
-landed is indexed below rather than restated. **The code follow-ups are
-not started** — they are listed at the end, each its own change.
+landed is indexed below rather than restated. **Of the code follow-ups,
+the first is done and a second the check produced is done with it**
+(PRs #386 and #387); the rest are listed at the end, each its own
+change.
 
 What this file is for, once those land: the measurements, the items
 declined with their reasons, and the record of what a careful outside
@@ -36,7 +38,9 @@ items are **understated**: the water number is wrong in three shipping
 places rather than two, and the deduplicated `pages_sent` already exists
 in the runner. Its typed-outcome proposal is sound but missed that this
 repository holds the distinction twice already on the audit path — and
-checking it found the opposite defect live in two adapters. Its
+checking it found the opposite defect live in one adapter, Agile (an
+earlier version of this paragraph said two; NI's label never settles).
+Its
 document-split proposal is **declined**: the marker it wants is already
 the empty body's own hash. Its `not_dc` section is behind the record. Its
 "should remain" list matches HISTORY's rejected-approaches record exactly
@@ -217,13 +221,19 @@ against `empty_listing` on the pages' own refusal wording and a byte
 floor, with migration 029's "the register is UNMEASURED". Both are on
 the audit path only.
 
-**Two adapters carry the opposite defect, live.** Agile's `documents()`
-returns `[]` for any 200 body that is not a JSON list, and NI's `or []`
-does the same for a null `supportingDocuments` — so an error object
-served with a 200 reads as `no_documents` and **settles** as
-`none_published`. Nobody looked, stored as nothing there, which is the
-failure this project fears most and has recorded in six costumes. Both
-are one-line fixes.
+**One adapter carried the opposite defect, live — fixed in PR #386.**
+Agile's `documents()` returned `[]` for any 200 body that was not a JSON
+list, so an error object served with a 200 read as `no_documents` and
+**settled** as `none_published`. Nobody looked, stored as nothing there,
+which is the failure this project fears most and has recorded in six
+costumes. *This section first said two adapters and named NI beside
+Agile. That was wrong: NI's `or []` feeds `no_documents_or_unparseable`,
+which never settles, so NI errs the other way — it retries for ever —
+and relabelling it would create a settled path rather than close one.
+Building the fix is what found the error; the correction is kept
+visible here because the review's own claim that aifusion and
+salesforce were "distinct in name only" was wrong in the same
+direction, and both are recorded as such.*
 
 **And it gates the existing decision item.** Re-fetching the 52 refused
 pages with today's adapter can settle only a page that now serves
@@ -389,12 +399,22 @@ matches HISTORY's approaches-tried-and-rejected section already.
 
 ## The code follow-ups the edits set up
 
-Each its own branch off main, one change each, **none started**. Ordered
-by what the evidence says is most urgent rather than by size.
+Each its own branch off main, one change each. Ordered by what the
+evidence says is most urgent rather than by size.
 
-1. **Agile raises on a non-list body; NI relabels its genuine empty as
-   `no_documents`.** Two lines, two tests. This is the live false-null
-   path — "nobody looked" settling as "nothing there".
+1. ~~**Agile raises on a non-list body.**~~ **Done, PR #386.** The live
+   false-null path — "nobody looked" settling as "nothing there" — and
+   the one adapter that had it. Building it found that the NI half of
+   this item was wrong: NI's label never settles, so its relabel would
+   *create* a settled path and is its own change, on its own evidence.
+1a. ~~**The legacy store records its own checks.**~~ **Done, PR #387**,
+   and not on this list until the check above was run: the script that
+   searched the store wrote no outcome row for a find or a miss, so the
+   eleven Slough nulls lived in PORTAL_NOTES prose while the record
+   showed the Agile adapter's coerced empty. It now records through
+   `classify_outcome` on a `slough_legacy` route, returns empty only on
+   the store's stated "No results found", and `record()` moved to
+   `dcp.acquisition_outcome` rather than gain a third copy.
 2. **`pages_sent` deduplicates** at the three builders, plus the
    log-line denominator and tests. `tests/test_chunking.py` untouched.
 3. **The ledger writes atomically** under the lock, takes a lock file,
