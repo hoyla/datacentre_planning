@@ -924,6 +924,50 @@ NO_DOCUMENT_REASONS: dict[str, str] = {
 }
 
 
+# One phrase per settled class, for the clause beside a site's coverage
+# fraction. The fraction is documents read over documents held, so an
+# application that yielded no documents contributes to neither side and
+# cannot lower it: a site reads 10 of 10 whether its second application
+# was checked and found empty, refused, behind a login, on a portal
+# nothing here can read, or never tried. Nine sites read 100% complete
+# on 2026-09-06 while holding such an application, five of them in the
+# "Read in full, and silent on capacity" cohort. The fraction stays
+# honest about documents; this clause says what was never there to
+# read, by the kind of not-knowing it is.
+NO_DOCUMENTS_PHRASE: dict[str, str] = {
+    "none_published": "checked and empty",
+    "portal_blocked": "refused by the portal",
+    "login_required": "behind a login",
+    "no_adapter": "on a portal not yet readable",
+    "error": "retrieval failed, will retry",
+    "untried": "not yet retrieved",
+}
+_NO_DOCUMENTS_ORDER = ("none_published", "portal_blocked", "login_required",
+                       "no_adapter", "error", "untried")
+
+
+def no_documents_clause(outcomes) -> str:
+    """"N applications hold no documents: 2 checked and empty, 1 not yet
+    retrieved" — or "" when every application holds something.
+
+    `outcomes` is the latest acquisition outcome per document-less
+    application, None where none was ever recorded. Counted by settled
+    class in a fixed order so two builds of one corpus say it the same
+    way, and never folded into one number: the classes are different
+    kinds of not-knowing, and a reporter chases each somewhere else.
+    """
+    counts: dict[str, int] = {}
+    for o in outcomes:
+        key = o if o in NO_DOCUMENTS_PHRASE else "untried"
+        counts[key] = counts.get(key, 0) + 1
+    n = sum(counts.values())
+    if not n:
+        return ""
+    parts = [f"{counts[k]} {NO_DOCUMENTS_PHRASE[k]}" for k in _NO_DOCUMENTS_ORDER if k in counts]
+    noun = "application holds" if n == 1 else "applications hold"
+    return f"{n} {noun} no documents: " + ", ".join(parts)
+
+
 def no_documents_reason(outcomes) -> tuple[str, str]:
     """(short label, explanation) for a site holding no documents.
 

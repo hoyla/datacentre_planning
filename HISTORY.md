@@ -4116,3 +4116,29 @@ only: a project moving between sites is a Barbour-linkage question, not
 a family-edge one. A seeded test re-indexes an application with a
 corrected pin beside another site and asserts it is named as moved and
 not as retiring or leaving.
+
+---
+
+## Coverage names what was never there to read (2026-09-06)
+
+The last of the review's follow-ups that did not need a decision. The
+coverage fraction is documents read over documents held, so an
+application that yielded no documents contributes to neither side and
+cannot lower it — a site read 10 of 10 whether its second application
+was checked and found empty, refused, behind a login, on a portal
+nothing here can read, or never tried. Nine sites read 100% complete
+while holding such an application, five of them in the 152-site "Read
+in full, and silent on capacity" cohort, whose claim inherited the gap.
+LD14 was the worked case, found when the Agile adapter's settled
+empties were checked: the number was right, and nothing on the page
+could have said why.
+
+The fraction is left alone; it is honest about documents. Beside it,
+`site_profile.no_documents_clause` names the document-less applications
+by the kind of not-knowing each is — "2 applications hold no documents:
+1 checked and empty, 1 not yet retrieved" — in a fixed order and never
+folded into one number, since a refusal and a council that publishes
+nothing are chased in different places, and the dash-replacement work
+of 2.8 had already named four kinds of blank for the same reason. The
+cohort's `limits` line says the same, with `rule_version` untouched, as
+limits prose is not the rule. Six tests pin the clause and its reach.

@@ -3909,6 +3909,16 @@ def main() -> int:
             + (f'<span class="statebit"><span class="q">'
                f'{_skipped:,} drawings or sampled by design</span></span>'
                if _skipped else '')
+            # What was never there to read. The fraction counts
+            # documents, so an application that yielded none cannot
+            # lower it; without this a site reads "read in full" whether
+            # its other application was checked and found empty or never
+            # obtained at all (ROADMAP, the acquisition tail, 2026-09-06).
+            + ((lambda _clause: f'<span class="statebit"><span class="q">'
+                f'{esc(_clause)}</span></span>' if _clause else '')(
+                    site_profile.no_documents_clause(
+                        [(empty_reasons.get(a[1]) or (None,))[0]
+                         for a in apps if not (a[13] or 0)])))
             + f'<span class="statebit"><span class="tag '
               f'{"known" if known else "unknown"}">{esc(cap_label)}</span></span>')
 

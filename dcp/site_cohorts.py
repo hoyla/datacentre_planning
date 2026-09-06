@@ -537,7 +537,13 @@ REGISTRY: tuple[Cohort, ...] = (
             "A figure can also be present and not yet adjudicated, in which "
             "case the site is excluded here until it is. Sites with a "
             "floor-area estimate are in this cohort: an estimate is this "
-            "project's inference, not the applicant's disclosure."),
+            "project's inference, not the applicant's disclosure. And "
+            "'read in full' is a claim about the documents held: an "
+            "application that yielded no documents — checked and empty, "
+            "refused, behind a login, on a portal not yet readable — "
+            "contributes nothing to either side of the fraction and "
+            "cannot lower it, so a site can be here while one of its "
+            "applications was never obtained. The site page names them."),
         order=1, rule_version="2026-08-23.1",
         compute=read_in_full_silent),
     Cohort(
