@@ -2470,12 +2470,11 @@ here rather than applied from the build lane.
   Drive paths and release diffs.** Materialise the table in runbook step
   0 beside today's extraction; print the unresolved and ambiguous rows
   as a report; give `build_clusters` an edge-source switch and run
-  `materialise_sites.py --dry-run` under both. `preflight()` already
-  names new keys, retiring keys, leaving applications and orphaned
-  claims; **it does not report an application that moves between two
-  surviving sites**, and that `moved` list is the one thing "build both
-  ways and diff" needs that this repo lacks — three lines, since the
-  query already holds both keys. No consumer switches until the two runs
+  `materialise_sites.py --dry-run` under both. `preflight()` names new
+  keys, retiring keys, leaving applications, orphaned claims and — since
+  2026-09-06 — applications that **move** between two surviving sites,
+  which is the one list "build both ways and diff" needs and had lacked;
+  the dry run prints it. No consumer switches until the two runs
   show identical keys and membership, or every difference is explained;
   the first diff will surface the 400/600/full window drift, which is
   the explained half. Then the family tie is `site_adjacent_power`'s

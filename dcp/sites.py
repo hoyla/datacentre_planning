@@ -536,9 +536,11 @@ def preflight(conn, clusters: list[dict]) -> dict:
     itself, because re-pointing the match needs the same human judgement
     that made it.
 
-    Returns {"new": [...], "retiring": [...], "orphaned_claims": [...]},
-    where an orphaned claim carries the site it would lose, the cluster
-    its members move to, and enough of the claim to identify it.
+    Returns {"new": [...], "retiring": [...], "orphaned_claims": [...],
+    "leaving": [...], "moved": [...], "stale_member_rows": n}, where an
+    orphaned claim carries the site it would lose, the cluster its
+    members move to, and enough of the claim to identify it, and a moved
+    application carries the key it leaves and the key it joins.
     """
     keys = {c["site_key"] for c in clusters}
     app_to_key, proj_to_key = {}, {}
@@ -589,15 +591,27 @@ def preflight(conn, clusters: list[dict]) -> dict:
         # is visible; a member quietly dropping from a site that survives
         # is not, which is why it is listed here by name.
         cur.execute("""
-            SELECT a.application_ref, s.site_key
+            SELECT a.id, a.application_ref, s.site_key
             FROM site_members m
             JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
             JOIN applications a ON a.id = m.application_id
             WHERE m.retired_at IS NULL
             ORDER BY s.site_key, a.application_ref""")
         live_members = cur.fetchall()
-        leaving = [(ref, key) for ref, key in live_members
+        leaving = [(ref, key) for _aid, ref, key in live_members
                    if ref not in app_refs]
+        # Applications that are live members today and members of a
+        # DIFFERENT surviving site tomorrow. Neither list above sees
+        # them: the site is not retiring, the application is not
+        # leaving, and yet its documents change folder, its findings
+        # change page and the site it left may change key. This is the
+        # one thing "build the clusters both ways and diff" needs that
+        # nothing here reported until 2026-09-06 — the relation-table
+        # work (ROADMAP) switches no consumer until this list is empty
+        # or explained. Applications only: a project moving between
+        # sites is a Barbour linkage question, not a family-edge one.
+        moved = [(ref, key, app_to_key[aid]) for aid, ref, key in live_members
+                 if aid in app_to_key and app_to_key[aid] != key]
         # Membership rows still live on sites already retired. The
         # materialise used to retire the site and leave these standing,
         # so a row on a dead site read `retired_at IS NULL` to every
@@ -614,6 +628,7 @@ def preflight(conn, clusters: list[dict]) -> dict:
             "retiring": [k for _sid, k in retiring],
             "orphaned_claims": orphaned,
             "leaving": leaving,
+            "moved": moved,
             "stale_member_rows": stale_member_rows}
 
 

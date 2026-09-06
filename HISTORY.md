@@ -4094,3 +4094,25 @@ gains an `empty` bucket, kept out of `prose_held` and apart from
 *Documents held* line says how many and why. A seeded integration test
 holds the bucket against a read document, an unreadable one and an
 empty one in one site, and reintroducing the fold fails it.
+
+---
+
+## The preflight names what moves (2026-09-06)
+
+`sites.preflight()` said what a materialise would add, retire, orphan
+and drop. It did not say what would *move*: an application that is a
+live member today and a member of a different surviving site tomorrow.
+Neither list sees that — the site is not retiring, the application is
+not leaving — and yet its documents change folder, its findings change
+page and the site it left may change key. The Blyth substation
+amendment did exactly this on 2026-09-02 and was found by reading the
+sites afterwards. The relation-table rollout (ROADMAP) switches no
+consumer until the clusters built both ways show identical keys and
+membership, and "identical membership" was unmeasurable without this.
+
+`preflight()` returns `moved` — reference, the key it leaves, the key it
+joins — and the dry run prints it beside the leavers. Applications
+only: a project moving between sites is a Barbour-linkage question, not
+a family-edge one. A seeded test re-indexes an application with a
+corrected pin beside another site and asserts it is named as moved and
+not as retiring or leaving.

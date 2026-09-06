@@ -75,6 +75,14 @@ def main() -> int:
                 print(f"  leaves  {ref:44} from {key}")
             if len(pre["leaving"]) > 25:
                 print(f"  ... and {len(pre['leaving']) - 25} more")
+        if pre["moved"]:
+            print(f"\n{len(pre['moved'])} application(s) move between "
+                  f"surviving sites — documents change folder, findings "
+                  f"change page:")
+            for ref, old, new in pre["moved"][:25]:
+                print(f"  moves   {ref:44} {old} -> {new}")
+            if len(pre["moved"]) > 25:
+                print(f"  ... and {len(pre['moved']) - 25} more")
         if pre["stale_member_rows"]:
             print(f"\n{pre['stale_member_rows']} membership row(s) are still "
                   f"live on already-retired sites; this run retires them.")
