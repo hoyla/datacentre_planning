@@ -337,9 +337,23 @@ four shapes:
   (Chelmsford's `25/01716/FUL` 219, Reigate's 89, Gateshead's `DC/25/00366/FUL` 52).
   Captured search and list JSON in `tests/fixtures/civica/`.
 - **Bedford** (`edrms.bedford.gov.uk/SearchResults.aspx?appNumber=<ref>`,
-  "Objective" planning): a server-rendered table naming each file
-  (`24 02188 FUL APP FORM..pdf`, …) with one opaque
-  `/<base64>.html` link per row. Two applications. Not built yet.
+  "Objective" planning): a server-rendered table naming each file —
+  fourteen for `24/02188/FUL` (`24 02188 FUL APP FORM..pdf`, the
+  decision notice and officer's report, drawings V01–V06, the
+  consultation list, an environmental-health response) — each a
+  single-quoted `href='https://edrms.bedford.gov.uk/OpenDocument.aspx?id=<token>&name=<file>'`,
+  plus one `PlanningBrowse.aspx?id=<token>` folder link. (The opaque
+  `/<base64>.html` link on the page is not a document: a plain GET
+  answers 404 "Blocked".) **Behind a validation gate**: the fifth
+  request of the evening — the first `OpenDocument` GET — and every
+  request since answers a 1 KB "User validation required" page asking
+  for the text in an image, "due to the detection of invalid traffic".
+  That is a CAPTCHA, which this project does not work around; the
+  gate is the council's, and two Bedford applications stay unfetched
+  (`24/02188/FUL`, `26/00355/MAO`) unless a person opens the fourteen
+  links in a browser or the gate proves to be a burst limit that a
+  slower client stays under — untested, and not to be tested by
+  hammering it. Recorded 2026-09-06.
 - **Neath Port Talbot** (`appsportal2.npt.gov.uk/ords/idocs12/f?p=Planning:2:0::NO::P2_REFERENCE:<ref>`,
   Oracle APEX): a results table, paged "1 - N of N", with direct
   `maps.npt.gov.uk/iDocsPublic/ShowDocument.aspx?id=<n>` links served
