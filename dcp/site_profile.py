@@ -624,17 +624,21 @@ def generation_figure(rows) -> GenerationFigure:
 # "design discharge rate 3.6 l/s for a 30-year event", attenuation volumes.
 #
 # Filtered to figures that describe what a facility would actually consume,
-# it collapses to 119 of 429 sites (76 when this was written on 2026-08-10;
-# the phase 2.1 reading raised it). Building a "water use MW-equivalent"
-# column on that would imply a precision the documents do not contain, and
-# would invite exactly the comparison it cannot support.
+# it collapses to about a third of live sites — `water_disclosure()` below
+# is the one place that count is computed, and every artefact that states
+# it interpolates that. It has been typed by hand before: 93 at phase 1,
+# 76 on 2026-08-10, 119 at 2.1, all three still on published pages on
+# 2026-09-04 when the live figure was 169 of 500. Building a "water use
+# MW-equivalent" column on any of them would imply a precision the
+# documents do not contain, and would invite exactly the comparison it
+# cannot support.
 #
 # So two honest things are reported instead. Cooling METHOD is categorical
-# and reasonably covered (119 sites) — and it is the question that actually
-# determines water demand, since an air-cooled hall and an evaporative one
-# differ by orders of magnitude. And the *absence* is reported as a finding
-# in its own right: that only 28% of sites disclose anything about water
-# consumption is itself worth a reporter's attention.
+# and reasonably covered — and it is the question that actually determines
+# water demand, since an air-cooled hall and an evaporative one differ by
+# orders of magnitude. And the *absence* is reported as a finding in its
+# own right: that most sites disclose nothing about water consumption is
+# itself worth a reporter's attention.
 
 # Methods are counted, never reduced to one. An energy statement that
 # compares adiabatic against air-cooled before choosing mentions both, and
@@ -696,6 +700,38 @@ WHERE s.retired_at IS NULL
        OR f.value_text ~* 'cool|chiller|adiabatic|immersion')
 GROUP BY s.site_key
 """
+
+# The corpus-wide roll-up of the per-site query above, as one statement
+# over the same rows, so the number the front page states and the number
+# each site panel is built from cannot come apart.
+WATER_DISCLOSURE_SQL = f"""
+WITH per_site AS ({COOLING_TEXTS_SQL})
+SELECT (SELECT count(*) FROM per_site WHERE consumption_findings > 0) AS sites,
+       (SELECT count(*) FROM sites WHERE retired_at IS NULL)            AS of_sites
+"""
+
+
+def water_disclosure(conn) -> dict:
+    """How many live sites disclose water consumption or abstraction, of
+    how many — `{"sites": n, "of": m, "pct": p}`.
+
+    The one place this statistic is computed. It reached three published
+    surfaces as three hand-typed numbers written at three moments — 93
+    in the reader's front-page caveat and the workbook's release row,
+    119 of 429 in the data dictionary, on one page a scroll apart — and
+    every one was wrong when measured on 2026-09-04 (169 of 500). Both
+    exporters interpolate this; `tests/test_prose_counts_are_computed.py`
+    refuses a literal count in their generated prose so the class cannot
+    return. The predicate is `COOLING_TEXTS_SQL`'s, live sites and live
+    memberships, with `CONSUMPTION_SIGNAL_RE` deciding what counts as
+    consumption rather than drainage — exactly what the per-site panel
+    uses, by construction.
+    """
+    with conn.cursor() as cur:
+        cur.execute(WATER_DISCLOSURE_SQL, (CONSUMPTION_SIGNAL_RE.pattern,))
+        sites, of_sites = cur.fetchone()
+    return {"sites": int(sites), "of": int(of_sites),
+            "pct": round(100 * sites / of_sites) if of_sites else 0}
 
 
 # ---------------------------------------------------------------------------

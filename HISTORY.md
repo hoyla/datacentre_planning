@@ -3920,6 +3920,57 @@ visible.*
 
 ---
 
+## The water count is computed, and a test polices the class (2026-09-06)
+
+The one number on the published page that was false. "Only 93 sites
+disclose anything about consumption" stood in the reader's front-page
+caveat and the workbook's release row, copied from this file's phase-1
+sentence of 2026-08-09; "only 119 of 429 sites" stood in the data
+dictionary, which the reader renders onto the same page a scroll away;
+and under the site profile's own predicate the figure was 169 of 500.
+Three moments, three numbers, one quantity, and every one had passed a
+full test run, because nothing asserted that a number in prose matched
+the data it described — the determinism test would have kept a wrong
+constant byte for byte. ROADMAP had carried the item since 2026-08-11,
+with an inventory that had itself gone stale (it named a 76 the
+dictionary no longer said).
+
+**One function, beside the predicate it must agree with.**
+`site_profile.water_disclosure(conn)` is the per-site query
+`COOLING_TEXTS_SQL` counted, as one statement over the same rows with
+`CONSUMPTION_SIGNAL_RE` deciding what is consumption rather than
+drainage — so the number the front page states and the number each site
+panel is built from cannot come apart, and an integration test asserts
+the roll-up equals the per-site rows recounted rather than assuming it.
+`corpus_stats.collect` carries it and `scripts/corpus_stats.py` prints
+it. Both exporters interpolate it: the caveat and the release row as
+f-strings, and the dictionary through a placeholder — a column
+definition is stable and a corpus count is not, so `DICTIONARY` holds
+`{water_sites} of {water_of}` and `dictionary(water=…)` fills it at
+build, with a test that neither renderer touches the template directly.
+
+**The test is worth more than the fix.** `tests/test_prose_counts_are_computed.py`
+walks every string constant in both exporters — f-string literal parts
+included, docstrings, SQL and the stylesheet's commentary excluded, each
+exclusion stated — and refuses a literal count of sites, documents,
+findings, applications or figures. Verified by reintroducing both
+literals in scratch copies: each is caught. The six remaining literals
+are in its `ALLOWED` list with what each is, and a second test fails if
+any of them is fixed without being struck, so the list is a worklist
+that can only shrink. Its blind spots are in its docstring rather than
+left to be discovered: a number in words, and a count more than one
+word from its noun.
+
+The scan found the class the review described and nothing more: the
+three water literals, the five methodology counts ROADMAP already
+named, the dictionary's calibration count, and the release row's
+Coventry count. What it flagged beyond those were false positives of
+three shapes — `SELECT 1 FROM documents`, `2015 and sites`, and the
+stylesheet's worked examples — and each is now a named exclusion with
+its reason, which is how a guard stays a guard.
+
+---
+
 ## The ledger is written to be kept (2026-09-06)
 
 Under `drive.file` the sync ledger is the only record of what the sync
