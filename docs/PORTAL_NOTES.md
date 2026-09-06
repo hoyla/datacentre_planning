@@ -304,8 +304,15 @@ row in `STORES`, not a script.
 
 After Derby and Doncaster, one GET of `activeTab=externalDocuments` on
 one application per remaining council with a refused documents tab.
-Every one but Brighton (212 bytes on every tab) links off-host, in
-four shapes:
+Every one but Brighton links off-host, in four shapes (Brighton's
+212 bytes are an **Imperva Incapsula** gate — a page whose only content
+is a script from `/_Incapsula_Resource` that sets a cookie in a real
+browser and reloads, so any client that does not run it sees an empty
+body with a 200. Coventry's class, not worked around; Luke fetched the
+three applications from a browser into the manual inbox the same
+evening — 7, 6 and 33 documents — filed under `manual`. The three
+`blocked` audit rows for 212-byte bodies were right to call the
+register unmeasured):
 
 - **The Public Access document module** (Newport's, `RunThirdPartySearch?FileSystemId=…&FOLDER1_REF=…`,
   `var model` page, `ViewDocument?id=<guid>`): Adur & Worthing (`docs.adur-worthing.gov.uk`, `DA`),
@@ -337,9 +344,34 @@ four shapes:
   (Chelmsford's `25/01716/FUL` 219, Reigate's 89, Gateshead's `DC/25/00366/FUL` 52).
   Captured search and list JSON in `tests/fixtures/civica/`.
 - **Bedford** (`edrms.bedford.gov.uk/SearchResults.aspx?appNumber=<ref>`,
-  "Objective" planning): a server-rendered table naming each file
-  (`24 02188 FUL APP FORM..pdf`, …) with one opaque
-  `/<base64>.html` link per row. Two applications. Not built yet.
+  "Objective" planning): a server-rendered table naming each file —
+  fourteen for `24/02188/FUL` (`24 02188 FUL APP FORM..pdf`, the
+  decision notice and officer's report, drawings V01–V06, the
+  consultation list, an environmental-health response) — each a
+  single-quoted `href='https://edrms.bedford.gov.uk/OpenDocument.aspx?id=<token>&name=<file>'`,
+  plus one `PlanningBrowse.aspx?id=<token>` folder link. (The opaque
+  `/<base64>.html` link on the page is not a document: a plain GET
+  answers 404 "Blocked".) **Behind a validation gate**: the fifth
+  request of the evening — the first `OpenDocument` GET — and every
+  request since answers a 1 KB "User validation required" page asking
+  for the text in an image — "validation needed due to the detection of
+  invalid input from this client IP address, error code: 338, number
+  of attempts left: 5".
+  That is a CAPTCHA, which this project does not work around; the
+  gate is the council's. So the two Bedford applications went by hand
+  the same evening: Luke opened the links in a browser (the gate lets
+  a person through), saved into `data/raw/manual/`, and
+  `scripts/ingest_inbox.py` filed them under the `manual` route —
+  `24/02188/FUL` 15 of 15, `26/00355/MAO` 50 of 51 — the CIL question
+  form's `OpenDocument` link fails in a browser too, a dozen attempts,
+  so that one is dead at the store, not gated; the latest outcome row
+  under `manual` says so. Two notes for next time: the inbox wants
+  one folder per application (`Bedford_26_00355_MAO`), and filenames
+  with a single dot before the extension (`V12.pdf`) came down in a
+  separate batch from the double-dot ones (`V11..pdf`), which is how
+  fifteen were missed on the first pass. Whether the gate is a burst
+  limit a slower client stays under is untested, and not to be tested
+  by hammering it.
 - **Neath Port Talbot** (`appsportal2.npt.gov.uk/ords/idocs12/f?p=Planning:2:0::NO::P2_REFERENCE:<ref>`,
   Oracle APEX): a results table, paged "1 - N of N", with direct
   `maps.npt.gov.uk/iDocsPublic/ShowDocument.aspx?id=<n>` links served
