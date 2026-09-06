@@ -2044,11 +2044,19 @@ sweep re-run 2026-08-27 still finds exactly the three):
    the tree it just wrote and prints what it found every release, and
    `scripts/corpus_stats.py` reports the database's view of the same
    fact. A fourth empty document announces itself at step 9.
-2. **Say so in the artefacts.** Where a document is held but empty,
-   the site report and the coverage detail should show it as
-   unavailable from the source rather than as read — the same honesty
-   the coverage split already applies to drawings and sampled
-   objection letters.
+2. ~~**Say so in the artefacts.**~~ **Done 2026-09-06.** The coverage
+   split carries an `empty` bucket — `content_sha256` equal to the empty
+   body's hash, the constant the fetch guard refuses on the way in, so
+   no filesystem stat — kept out of `prose_held` and apart from
+   "unreadable", which is a file that has bytes and yields no text. The
+   reader's coverage bar and its on-page line say "held but empty:
+   unavailable from the source"; the site report's *Documents held* line
+   says how many and why. Pinned by a seeded integration test and the
+   source assertions in `tests/test_held_but_empty.py`. As it stood:
+   where a document is held but empty, the site report and the coverage
+   detail should show it as unavailable from the source rather than as
+   read — the same honesty the coverage split already applies to
+   drawings and sampled objection letters.
 
    **The durable form is a predicate, not a re-stat** (2026-09-04): the
    three rows carry `content_sha256 = EMPTY_SHA256`, the constant the

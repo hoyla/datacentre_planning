@@ -998,9 +998,20 @@ def load_coverage(conn) -> dict[str, tuple[int, int]]:
         return {k: (held, read) for k, held, read in cur.fetchall()}
 
 
-COVERAGE_DETAIL_SQL = """
+# A held document whose body is zero bytes: the portal answered 200 with
+# an empty file and the fetch faithfully stored it (three exist, all from
+# before the fetch guard). The hash of the empty body is what identifies
+# one — the same constant `repo.check_document_body` refuses on the way
+# in — so no filesystem stat is needed to say so. Kept apart from
+# "unreadable", which is a document that has bytes and yields no text:
+# an empty file is unavailable from the source, and that is a different
+# thing to chase.
+from dcp.repo import EMPTY_SHA256 as EMPTY_BODY_SHA256  # noqa: E402
+
+COVERAGE_DETAIL_SQL = f"""
 SELECT s.site_key, d.id, d.kind, (r.document_id IS NOT NULL) AS was_read,
-       (u.document_id IS NOT NULL) AS unreadable
+       (u.document_id IS NOT NULL) AS unreadable,
+       (d.content_sha256 = '{EMPTY_BODY_SHA256}') AS empty
 FROM sites s
 JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
 JOIN documents d ON d.application_id = sm.application_id
@@ -1043,7 +1054,9 @@ def load_coverage_detail(conn) -> dict[str, dict[str, int]]:
     deep-read is actually for.
 
     Keys per site: `held`, `read`, `prose_held`, `prose_read`,
-    `graphical`, `sampled_held`, `sampled_read`, `prose_unreadable`.
+    `graphical`, `sampled_held`, `sampled_read`, `prose_unreadable`,
+    `empty` — the last being documents held as zero bytes, unavailable
+    from the source rather than unreadable, and never in `prose_held`.
     """
     from dcp.deepread_select import classify_kind
 
@@ -1051,7 +1064,7 @@ def load_coverage_detail(conn) -> dict[str, dict[str, int]]:
     seen: set[tuple[str, int]] = set()
     with conn.cursor() as cur:
         cur.execute(COVERAGE_DETAIL_SQL)
-        for key, doc_id, kind, was_read, unreadable in cur.fetchall():
+        for key, doc_id, kind, was_read, unreadable, empty in cur.fetchall():
             # One application can belong to more than one site; a document
             # counts once per site, never twice within one.
             if (key, doc_id) in seen:
@@ -1060,11 +1073,17 @@ def load_coverage_detail(conn) -> dict[str, dict[str, int]]:
             c = out.setdefault(key, {"held": 0, "read": 0, "prose_held": 0,
                                      "prose_read": 0, "graphical": 0,
                                      "sampled_held": 0, "sampled_read": 0,
-                                     "prose_unreadable": 0})
+                                     "prose_unreadable": 0, "empty": 0})
             tier, _ = classify_kind(kind)
             c["held"] += 1
             c["read"] += bool(was_read)
-            if tier == "skip":
+            if empty:
+                # Held, and there is nothing in it to read or to fail to
+                # read: the portal served zero bytes. Said as its own
+                # thing, before any tier, because a reporter chases it
+                # at the council, not in the file.
+                c["empty"] += 1
+            elif tier == "skip":
                 c["graphical"] += 1
             elif tier == "C":
                 c["sampled_held"] += 1
