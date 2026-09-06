@@ -117,6 +117,34 @@ class TestWhatGetsRecorded:
         assert mod.ADAPTER == "slough_legacy"
 
 
+class TestWhatTheDetailSays:
+    """The reader renders the detail verbatim beside "No documents held",
+    so what is written here reaches a reporter."""
+
+    def _capture(self, monkeypatch):
+        captured = {}
+        monkeypatch.setattr(mod, "record",
+                            lambda conn, app_id, outcome, adapter, detail, found=0:
+                            captured.update(outcome=outcome, adapter=adapter, detail=detail))
+        return captured
+
+    def test_a_settled_verdict_carries_the_note_alone(self, monkeypatch):
+        got = self._capture(monkeypatch)
+        mod._record(None, 1, {"links_found": 0, "downloaded": 0, "skipped_existing": 0,
+                              "errors": 0, "error_class": "no_documents"},
+                    dry_run=False, note="legacy store searched and answered 'No results found'")
+        assert got["outcome"] == "none_published"
+        assert got["detail"] == "legacy store searched and answered 'No results found'"
+        assert "no_documents" not in got["detail"]
+
+    def test_a_retryable_verdict_keeps_the_class_that_explains_the_retry(self, monkeypatch):
+        got = self._capture(monkeypatch)
+        mod._record(None, 1, {"links_found": 0, "errors": 1,
+                              "error_class": "unrecognised_search_page"}, dry_run=False)
+        assert got["outcome"] == "error"
+        assert got["detail"] == "unrecognised_search_page"
+
+
 class TestTheWriterIsShared:
     def test_the_scripts_import_the_writer_rather_than_copying_it(self):
         """It was copied verbatim into two scripts; a third copy is what
