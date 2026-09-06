@@ -1341,9 +1341,14 @@ work.
   checking `document_listing_audit`.** A count of held documents is a
   floor until the site's applications are measured and their
   shortfall is either refetched or stated.
-- **A site reads "read in full" whatever its unfetched applications
-  hold** (found 2026-09-04 while checking what the Agile adapter had
-  settled; re-measured 2026-09-06). Coverage is documents read over
+- ~~**A site reads "read in full" whatever its unfetched applications
+  hold**~~ — **done 2026-09-06.** `site_profile.no_documents_clause`
+  names a site's document-less applications by settled class, in a
+  fixed order and never as one number; the site page renders it beside
+  the coverage fraction, and the cohort's `limits` line carries the
+  same clause with `rule_version` untouched. The fraction itself is
+  unchanged. The account as it stood (found 2026-09-04 while checking
+  what the Agile adapter had settled; re-measured 2026-09-06): Coverage is documents read over
   documents held (`site_profile.DEEPREAD_COVERAGE_SQL`), so an
   application that yielded no documents contributes to neither side
   and cannot lower the fraction: a site is 10 of 10 whether its second
