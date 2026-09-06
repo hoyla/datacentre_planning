@@ -48,9 +48,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from dcp import adjacent_power as _adj  # noqa: E402
 from dcp import db  # noqa: E402
+from dcp.drive import SYNC_LEDGER as LEDGER  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-LEDGER = ROOT / "data" / "exports" / ".drive_sync_state.json"
 
 # The documents an id can be recorded for: everything staged, which is
 # everything whose application has a live site row. The same rule

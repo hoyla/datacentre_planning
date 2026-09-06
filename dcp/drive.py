@@ -12,6 +12,11 @@ Import this. Do not retype the ID, and do not resolve the folder by name.
 
 from __future__ import annotations
 
+import fcntl
+import json
+import os
+from pathlib import Path
+
 from dcp.release import EXPORTS
 
 # One shape for a Drive URL, in one place. Three scripts used to spell
@@ -85,13 +90,139 @@ ADJACENT_POWER_URL = f"{FOLDER_URL_PREFIX}{ADJACENT_POWER_FOLDER_ID}"
 
 # The sync ledger: every folder and file the sync has created on Drive,
 # by path, so a re-run uploads only what changed and a rename reads as a
-# rename. Three scripts read it — the sync, the workbook export and the
-# sample verifier — and until 2026-09-02 each spelled its path itself,
-# relative to the working directory. From anywhere else the sync found
-# no ledger and would have started from nothing, re-uploading the whole
-# tree beside the copy already there: the duplicate-archive mechanism
-# described above, reached by a different door. One constant, absolute.
+# rename. Five scripts read it — the sync, the workbook export, the id
+# recorder, the sample verifier and the ledger rebuild — and until
+# 2026-09-02 each spelled its path itself, relative to the working
+# directory. From anywhere else the sync found no ledger and would have
+# started from nothing, re-uploading the whole tree beside the copy
+# already there: the duplicate-archive mechanism described above,
+# reached by a different door. One constant, absolute.
+#
+# And one writer, one lock, one reader, since 2026-09-06. Under
+# `drive.file` this file is the only record of what the sync created,
+# and `Sync.save()` used to `write_text` it in place, outside the lock
+# that guards the state it serialises: a kill mid-write left truncated
+# JSON, and two workers could pass the checkpoint in one order and
+# finish their writes in the other, so the file fell up to fifty
+# entries behind memory until the next checkpoint — bounded, and
+# costing anything only if the run died inside that window, since the
+# final forced save writes the whole state; the torn write is the one
+# any kill hits. `write_ledger` replaces the file
+# atomically; `acquire_ledger_lock` refuses a second process rather
+# than letting two mutable ledgers race; `read_ledger` refuses a
+# corrupt one rather than starting from nothing beside it.
 SYNC_LEDGER = EXPORTS / ".drive_sync_state.json"
+
+
+def write_ledger(path, payload: str) -> None:
+    """Replace the ledger with `payload` in one indivisible step.
+
+    Written to a sibling under a temporary name, flushed and fsynced,
+    then `os.replace`d — which either happens or does not, so a reader
+    never sees a torn file and an interrupted write leaves the previous
+    ledger exactly as it was. The same contract `export_duckdb`'s
+    `.building` and the staging build's swap already keep; the ledger was
+    the resume file in this repository that did not.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    with tmp.open("w", encoding="utf-8") as fh:
+        fh.write(payload)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+    try:
+        dfd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(dfd)
+        finally:
+            os.close(dfd)
+    except OSError:
+        pass  # the rename is durable on its own for our purposes
+
+
+def read_ledger(path) -> dict:
+    """The ledger as a dict, or the empty ledger if the file is absent.
+
+    A file that exists and does not parse is refused with a message,
+    never treated as absent: a sync that starts from nothing beside a
+    corrupt ledger re-uploads the whole archive beside itself. The
+    previous copy is what to restore; `scripts/rebuild_drive_ledger.py`
+    is the route when there is none.
+    """
+    path = Path(path)
+    if not path.exists():
+        return {"folders": {}, "files": {}}
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        raise SystemExit(
+            f"the sync ledger at {path} is not valid JSON ({exc}); refusing "
+            f"to start from nothing beside it, which would re-upload the "
+            f"archive. Restore the last good copy, or rebuild it with "
+            f"scripts/rebuild_drive_ledger.py") from exc
+
+
+class LedgerLocked(SystemExit):
+    """Another process holds the ledger."""
+
+
+class LedgerLock:
+    """An exclusive, inter-process lock on the ledger, held for the life
+    of the process that took it.
+
+    `Sync`'s `threading.RLock` guards its own workers; nothing guarded
+    two `drive_sync.py` processes, which would each load the same
+    snapshot into separate memory and let the last writer discard the
+    other's whole run. Taken before any API call and never merged: a
+    second sync is refused, with the holder's pid, and told to wait.
+    """
+
+    def __init__(self, path):
+        self.path = Path(path).with_name(Path(path).name + ".lock")
+        self._fd: int | None = None
+
+    def acquire(self) -> LedgerLock:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        fd = os.open(self.path, os.O_RDWR | os.O_CREAT, 0o644)
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            holder = ""
+            try:
+                holder = os.read(fd, 64).decode("ascii", "replace").strip()
+            except OSError:
+                pass
+            os.close(fd)
+            raise LedgerLocked(
+                f"another sync holds the ledger lock {self.path}"
+                + (f" (pid {holder})" if holder else "")
+                + "; refusing to run two syncs over one ledger — wait for "
+                  "it to finish, or if it is dead, remove the lock file")
+        os.ftruncate(fd, 0)
+        os.write(fd, str(os.getpid()).encode("ascii"))
+        self._fd = fd
+        return self
+
+    def release(self) -> None:
+        if self._fd is not None:
+            fcntl.flock(self._fd, fcntl.LOCK_UN)
+            os.close(self._fd)
+            self._fd = None
+
+    def __enter__(self):
+        return self.acquire()
+
+    def __exit__(self, *exc):
+        self.release()
+
+
+def acquire_ledger_lock(path=None) -> LedgerLock:
+    """Take the ledger lock for the rest of the process, or exit saying
+    who holds it. Flock releases with the process, so a run that dies
+    does not leave the next one locked out."""
+    return LedgerLock(path or SYNC_LEDGER).acquire()
 
 
 # Encrypted database backups (scripts/backup_db.py). Deliberately NOT a

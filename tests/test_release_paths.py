@@ -112,7 +112,7 @@ def test_the_phase_is_explicit_or_read_from_the_folder_never_guessed(
 
 
 def test_the_sync_ledger_is_one_absolute_path_under_exports():
-    """Three scripts read it; one constant, resolved against the root.
+    """Five scripts read it; one constant, resolved against the root.
 
     From another directory the sync found no ledger and would have
     started from nothing — every file uploaded again beside the copy
