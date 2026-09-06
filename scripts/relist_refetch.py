@@ -103,15 +103,23 @@ HANDLED = ("idox", "ocella", "agile", "arcus", "aifusion", "salesforce_pr",
            "newport_docstore", "doncaster_docstore", "adurworthing_docstore",
            "horsham_docstore", "huntingdonshire_docstore", "midsussex_docstore",
            "gateshead_docstore", "chelmsford_docstore", "reigate_docstore",
-           "southend_docstore")
+           "southend_docstore", "neath_docstore")
 
 
-def _civica_module():
-    path = Path(__file__).resolve().parent / "fetch_civica_docstore.py"
-    spec = importlib.util.spec_from_file_location("civica_docstore", path)
+def _script_module(name: str):
+    path = Path(__file__).resolve().parent / f"{name}.py"
+    spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+def _civica_module():
+    return _script_module("fetch_civica_docstore")
+
+
+def _neath_module():
+    return _script_module("fetch_neath_docstore")
 
 
 def _newport_module():
@@ -295,13 +303,16 @@ def _run_shard(host: str, targets: list[Target], *, args, state: dict,
                         # store — Civica's for the four on that module,
                         # the Public Access module otherwise.
                         civica = _civica_module()
-                        if t.ref.split("/", 1)[0] in civica.STORES:
+                        council = t.ref.split("/", 1)[0]
+                        store = (civica if council in civica.STORES
+                                 else _neath_module() if council == "Neath" else None)
+                        if store is not None:
                             import httpx
-                            with httpx.Client(headers={"User-Agent": civica.UA},
+                            with httpx.Client(headers={"User-Agent": store.UA},
                                               follow_redirects=True, timeout=120) as cc:
-                                s = civica.fetch_one(conn, cc, app_id=t.app_id, ref=t.ref,
-                                                     data_dir=Path("data"),
-                                                     delay=args.delay, dry_run=False)
+                                s = store.fetch_one(conn, cc, app_id=t.app_id, ref=t.ref,
+                                                    data_dir=Path("data"),
+                                                    delay=args.delay, dry_run=False)
                         else:
                             newport = _newport_module()
                             s = newport.fetch_one(conn, client_for("idox"),
