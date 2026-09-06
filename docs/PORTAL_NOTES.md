@@ -355,8 +355,10 @@ four shapes:
   the same evening: Luke opened the links in a browser (the gate lets
   a person through), saved into `data/raw/manual/`, and
   `scripts/ingest_inbox.py` filed them under the `manual` route —
-  `24/02188/FUL` 15 of 15, `26/00355/MAO` 50 of 51, the CIL question
-  form refusing to download. Two notes for next time: the inbox wants
+  `24/02188/FUL` 15 of 15, `26/00355/MAO` 50 of 51 — the CIL question
+  form's `OpenDocument` link fails in a browser too, a dozen attempts,
+  so that one is dead at the store, not gated; the latest outcome row
+  under `manual` says so. Two notes for next time: the inbox wants
   one folder per application (`Bedford_26_00355_MAO`), and filenames
   with a single dot before the extension (`V12.pdf`) came down in a
   separate batch from the double-dot ones (`V11..pdf`), which is how
