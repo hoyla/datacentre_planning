@@ -1313,8 +1313,12 @@ work.
   Southend 2, Chelmsford 1 and Reigate 1 — the page's own API, found by
   watching it; 407 documents across the eight. **Neath's one after
   that** (`scripts/fetch_neath_docstore.py`): two documents. That
-  leaves **3**: Brighton's, whose register serves 212 bytes on every
-  tab and has no External Documents link to follow. Bedford's two went
+  leaves **none**. Brighton's three were the last: the register's
+  212-byte bodies are an Imperva Incapsula gate (PORTAL_NOTES), so they
+  went by hand too — 7, 6 and 33 documents under `manual`, the same
+  evening. Of the 48 blocked listings this item began with, every
+  application now holds documents except the six of Exeter College's,
+  excluded by exception. Bedford's two went
   by hand the same evening: the store lists its files as plain
   `OpenDocument` links, then put a CAPTCHA in front of the first
   download (PORTAL_NOTES), so Luke saved them from a browser into the

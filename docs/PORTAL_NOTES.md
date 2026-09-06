@@ -304,8 +304,15 @@ row in `STORES`, not a script.
 
 After Derby and Doncaster, one GET of `activeTab=externalDocuments` on
 one application per remaining council with a refused documents tab.
-Every one but Brighton (212 bytes on every tab) links off-host, in
-four shapes:
+Every one but Brighton links off-host, in four shapes (Brighton's
+212 bytes are an **Imperva Incapsula** gate — a page whose only content
+is a script from `/_Incapsula_Resource` that sets a cookie in a real
+browser and reloads, so any client that does not run it sees an empty
+body with a 200. Coventry's class, not worked around; Luke fetched the
+three applications from a browser into the manual inbox the same
+evening — 7, 6 and 33 documents — filed under `manual`. The three
+`blocked` audit rows for 212-byte bodies were right to call the
+register unmeasured):
 
 - **The Public Access document module** (Newport's, `RunThirdPartySearch?FileSystemId=…&FOLDER1_REF=…`,
   `var model` page, `ViewDocument?id=<guid>`): Adur & Worthing (`docs.adur-worthing.gov.uk`, `DA`),
