@@ -495,8 +495,10 @@ UNSTAGED_SQL = f"""
       LEFT JOIN latest l ON l.application_id = a.id
      WHERE d.bytes_path IS NOT NULL
        AND NOT EXISTS (SELECT 1 FROM site_members m
+                          JOIN sites s ON s.id = m.site_id
                         WHERE m.application_id = a.id
-                          AND m.retired_at IS NULL)
+                          AND m.retired_at IS NULL
+                          AND s.retired_at IS NULL)
      GROUP BY 1, 2
      ORDER BY 1, 3 DESC, 2
 """
