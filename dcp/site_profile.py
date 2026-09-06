@@ -624,7 +624,7 @@ def generation_figure(rows) -> GenerationFigure:
 # "design discharge rate 3.6 l/s for a 30-year event", attenuation volumes.
 #
 # Filtered to figures that describe what a facility would actually consume,
-# it collapses to about a third of live sites — `water_disclosure()` below
+# it collapses to under half of the sites read — `water_disclosure()` below
 # is the one place that count is computed, and every artefact that states
 # it interpolates that. It has been typed by hand before: 93 at phase 1,
 # 76 on 2026-08-10, 119 at 2.1, all three still on published pages on
@@ -707,13 +707,26 @@ GROUP BY s.site_key
 WATER_DISCLOSURE_SQL = f"""
 WITH per_site AS ({COOLING_TEXTS_SQL})
 SELECT (SELECT count(*) FROM per_site WHERE consumption_findings > 0) AS sites,
-       (SELECT count(*) FROM sites WHERE retired_at IS NULL)            AS of_sites
+       (SELECT count(DISTINCT s.id)
+          FROM sites s
+          JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
+          JOIN documents d ON d.application_id = sm.application_id
+          JOIN deepread_log l ON l.document_id = d.id AND l.read_state = 'read'
+         WHERE s.retired_at IS NULL)                                    AS of_sites
 """
 
 
 def water_disclosure(conn) -> dict:
-    """How many live sites disclose water consumption or abstraction, of
-    how many — `{"sites": n, "of": m, "pct": p}`.
+    """How many sites disclose water consumption or abstraction, of the
+    sites read — `{"sites": n, "of": m, "pct": p}`.
+
+    The denominator is live sites holding at least one read document,
+    not all live sites (Luke, 2026-09-06). A site holding nothing, or
+    nothing yet read, cannot have disclosed and cannot be counted as
+    silent: "nobody looked" is not "nothing there", which is this
+    project's oldest rule. On 2026-09-06 that was 169 of 358 (47%)
+    against 169 of 500 (34%) — 142 sites the smaller number had been
+    calling silent.
 
     The one place this statistic is computed. It reached three published
     surfaces as three hand-typed numbers written at three moments — 93

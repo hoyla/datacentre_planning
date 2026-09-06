@@ -6513,7 +6513,7 @@ def main() -> int:
  to the development itself are used, and each carries its basis and confidence.</p>
  <p><b>Figures from partly-read sites are floors.</b> See the note above: they can rise.</p>
  <p><b>Water is reported as cooling method, not volume.</b> The water findings are dominated
- by drainage and flood engineering every development produces; only {water['sites']:,} of {water['of']:,} sites disclose
+ by drainage and flood engineering every development produces; only {water['sites']:,} of the {water['of']:,} sites read disclose
  anything about consumption. A volume would imply a precision the applications do not
  contain — and that silence is itself worth reporting.</p>
  <!-- Luke, 2026-08-25: both blocks are cautionary, so they read as one

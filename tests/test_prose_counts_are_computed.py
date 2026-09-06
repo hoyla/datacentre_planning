@@ -169,7 +169,7 @@ class TestTheWaterCountIsOneNumber:
         assert "{water_sites}" in raw[0] and "{water_of}" in raw[0]
         filled = [d for s, c, d in hv.dictionary(water={"sites": 169, "of": 500, "pct": 34})
                   if c == "Water evidence"]
-        assert "only 169 of 500 sites disclose" in filled[0]
+        assert "only 169 of the 500 sites read disclose" in filled[0]
         assert "{water_" not in filled[0]
 
     def test_the_renderers_use_the_filled_dictionary_not_the_template(self):
@@ -189,16 +189,79 @@ class TestTheWaterCountIsOneNumber:
 
 
 @pytest.mark.integration
-def test_the_aggregate_agrees_with_the_per_site_rows(db_conn):
-    """The roll-up is the per-site query counted, so the front page and
-    the site panels cannot disagree — asserted rather than assumed."""
+def test_the_aggregate_counts_disclosure_over_the_sites_read(db_conn):
+    """The roll-up is the per-site query counted, and its denominator is
+    the sites read, not the sites that exist — asserted on a seeded
+    corpus rather than recounted from a live one.
+
+    The first version of this test recounted `db_conn`'s corpus and
+    compared; `db_conn` is the truncated test database, so it compared
+    0 with 0 and passed without testing anything. Three sites: one whose
+    read document carries a consumption finding, one whose read document
+    carries drainage findings only, one holding nothing read. A site that
+    has disclosed nothing because nobody read it is not silent, and the
+    denominator must not say it is (Luke, 2026-09-06).
+    """
+    from dcp import repo
     from dcp import site_profile as sp
+
+    source_id = repo.ensure_source(db_conn, name="planit", kind="aggregator",
+                                   base_url="https://x")
+
+    def app(ref):
+        return repo.upsert_application(
+            db_conn, source_id=source_id,
+            app={"name": ref, "description": "data centre",
+                 "location_y": 51.5, "location_x": -0.1},
+            discovered_via=["test"])
+
+    def site(key, app_id):
+        with db_conn.cursor() as cur:
+            cur.execute("INSERT INTO sites (site_key, classification, radius_km, "
+                        "materialised_at) VALUES (%s, 'ours_only', 1.0, now()) "
+                        "RETURNING id", (key,))
+            site_id = cur.fetchone()[0]
+            cur.execute("INSERT INTO site_members (site_id, application_id, joined_via, "
+                        "materialised_at) VALUES (%s, %s, 'singleton', now())",
+                        (site_id, app_id))
+        return site_id
+
+    def read_document(app_id, sha):
+        with db_conn.cursor() as cur:
+            cur.execute("INSERT INTO documents (application_id, url, content_sha256, "
+                        "bytes_path, fetched_at) VALUES (%s, %s, %s, 'x.pdf', now()) "
+                        "RETURNING id", (app_id, f"https://x/{sha}.pdf", sha))
+            doc_id = cur.fetchone()[0]
+            cur.execute("INSERT INTO deepread_log (document_id, application_id, model, "
+                        "prompt_version, tier, read_state, pages_total, pages_sent) "
+                        "VALUES (%s, %s, 'fake', '1.0', 'A', 'read', 1, '{1}')",
+                        (doc_id, app_id))
+        return doc_id
+
+    def finding(app_id, doc_id, signal_type):
+        with db_conn.cursor() as cur:
+            cur.execute("INSERT INTO findings (application_id, document_id, model, "
+                        "signal_family, signal_type, value_text) "
+                        "VALUES (%s, %s, 'fake', 'water', %s, 'x')",
+                        (app_id, doc_id, signal_type))
+
+    a1, a2, a3 = app("Testing/24/2001/FUL"), app("Testing/24/2002/FUL"), app("Testing/24/2003/FUL")
+    site("SITE-discloses", a1); site("SITE-drainage-only", a2); site("SITE-nothing-read", a3)
+    d1 = read_document(a1, "a" * 64)
+    finding(a1, d1, "water_consumption_estimate")     # matches CONSUMPTION_SIGNAL_RE
+    finding(a1, d1, "surface_water_discharge_rate")   # does not
+    d2 = read_document(a2, "b" * 64)
+    finding(a2, d2, "surface_water_discharge_rate")
+    db_conn.commit()
+
     agg = sp.water_disclosure(db_conn)
+    assert agg == {"sites": 1, "of": 2, "pct": 50}, agg
+
     with db_conn.cursor() as cur:
         cur.execute(sp.COOLING_TEXTS_SQL, (sp.CONSUMPTION_SIGNAL_RE.pattern,))
-        rows = cur.fetchall()
+        per_site = {row[0]: row[2] for row in cur.fetchall()}
         cur.execute("SELECT count(*) FROM sites WHERE retired_at IS NULL")
         live = cur.fetchone()[0]
-    assert agg["sites"] == sum(1 for r in rows if r[2])
-    assert agg["of"] == live
-    assert 0 <= agg["sites"] <= agg["of"]
+    assert per_site == {"SITE-discloses": 1, "SITE-drainage-only": 0}
+    assert agg["sites"] == sum(1 for n in per_site.values() if n)
+    assert live == 3 and agg["of"] < live, "nothing-read is not silent"

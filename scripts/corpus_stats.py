@@ -235,7 +235,7 @@ def _render_markdown(
         lines.append("")
         lines.append(
             f"- **Sites disclosing consumption or abstraction:** "
-            f"{water['sites']:,} of {water['of']:,} live sites ({water['pct']}%)."
+            f"{water['sites']:,} of the {water['of']:,} sites read ({water['pct']}%)."
         )
         lines.append("")
 

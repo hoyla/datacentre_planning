@@ -3968,3 +3968,23 @@ Coventry count. What it flagged beyond those were false positives of
 three shapes — `SELECT 1 FROM documents`, `2015 and sites`, and the
 stylesheet's worked examples — and each is now a named exclusion with
 its reason, which is how a guard stays a guard.
+
+---
+
+## The water count's denominator is the sites read (2026-09-06)
+
+The sanity check Luke asked for after the day's fixes turned up one I
+should have caught while making it. "Only 169 of 500 sites disclose
+anything about consumption" counted the 142 live sites holding no read
+document as silent — sites that never could have disclosed. That is
+"nobody looked" stored as "nothing there", on the front page, in the
+sentence whose next clause says the applications do not contain a
+volume. The original "119 of 429" had the same denominator (429 was all
+live sites on 2026-08-11, the number of site folders on Drive in the
+duplicate-archive episode), so computing it faithfully reproduced the
+framing's fault along with its number. Luke's call: of the sites read.
+`water_disclosure`'s denominator is now live sites holding at least one
+document with a `read` log row — 358 today, so 169 of 358, 47% — the
+three surfaces say "of the N sites read", and the integration test
+asserts the denominator is smaller than the live count, so the
+distinction cannot be lost by a later simplification.
