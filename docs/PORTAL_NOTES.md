@@ -347,7 +347,9 @@ four shapes:
   answers 404 "Blocked".) **Behind a validation gate**: the fifth
   request of the evening — the first `OpenDocument` GET — and every
   request since answers a 1 KB "User validation required" page asking
-  for the text in an image, "due to the detection of invalid traffic".
+  for the text in an image — "validation needed due to the detection of
+  invalid input from this client IP address, error code: 338, number
+  of attempts left: 5".
   That is a CAPTCHA, which this project does not work around; the
   gate is the council's, and two Bedford applications stay unfetched
   (`24/02188/FUL`, `26/00355/MAO`) unless a person opens the fourteen
