@@ -61,13 +61,13 @@ from dcp import snapshot_drive as _snapshot_drive  # noqa: E402
 from dcp import spans  # noqa: E402
 from dcp import db  # noqa: E402
 from dcp import deepread_select  # noqa: E402
-from dcp.sources import idox as _idox  # noqa: E402
 
 from dcp.drive import FOLDER_URL as DRIVE_ROOT  # noqa: E402
 from dcp.drive import WORKBOOK_SHEET_URL  # noqa: E402
 from dcp.drive import SITES_URL  # noqa: E402
 from dcp.drive import NOTEBOOK_URL  # noqa: E402
 from dcp.drive import PINPOINT_URL  # noqa: E402
+from dcp.sources import idox as _idox  # noqa: E402
 from dcp.drive import ADJACENT_POWER_URL  # noqa: E402
 
 # Statuses meaning "we have not looked yet", as against "they disclosed
