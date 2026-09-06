@@ -594,7 +594,7 @@ def build_jsonl(rows: list[dict], model: str, max_chars: int,
             **{k: row[k] for k in ("document_id", "application_id",
                                    "application_ref", "sha", "kind", "tier")},
             "pages_total": len(pages),
-            "pages_sent": [n for nums, _t in chunks for n in nums],
+            "pages_sent": _dr.pages_sent_from(chunks),
             "n_chunks": len(chunks),
         }
         for i, (_nums, text) in enumerate(chunks):
