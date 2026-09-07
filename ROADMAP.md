@@ -2465,24 +2465,54 @@ None is abandoned; each is a known, scoped piece of work.
 
   What the split leaves, each its own item:
 
-  - **The 3A Blossom Way building's own permission chain is not held.**
-    Amazon's Learning Lab application cites it in full — Prologis's
-    2019 consent `4/01922/19/MFA` (21,726 sqm of flexible
-    B1c/B2/B8), the S.73 variation `22/01067/ROC` that made it "an 18m
-    high data centre at 3a Blossom Way", and the amendment
-    `24/00914/NMA` — and the corpus holds none of the three, nor the
-    condition discharges the screening report lists. The largest
-    building on the site is in the corpus only as its neighbours'
-    paperwork. **Probe to run** (AGENTS.md rule 4 — named here, not
-    yet run): PlanIt by reference for the three, and a spatial sweep
-    at the permit's grid reference (51.7559, -0.4350, 300 m), which
-    would also say whether anything was ever filed for 1 Blossom Way.
+  - **The 3A Blossom Way building's own permission chain is not held,
+    and PlanIt has it: 18 records** (probed 2026-09-07 at Luke's
+    request — by reference and spatially at both addresses; one 429
+    on the way, so the quota is real). Prologis's 2019 consent
+    `4/01922/19/MFA` (21,726 sqm of flexible B1c/B2/B8), the S.73
+    variation `22/01067/ROC` that made it "an 18m high data centre at
+    3a Blossom Way", the amendment `24/00914/NMA`, eleven condition
+    discharges and NMAs from 2020 to 2026 (including `24/00402/DRC`
+    at "Land North Breakspear Way"), `26/01087/FUL` — eight condenser
+    units "in connection with the adjacent Data Centre", May 2026 —
+    `26/00922/DRC`, the 2015 retail outline `4/01132/15/MOA` for the
+    same land, and **`StAlbans/5/2021/3548`**, a screening opinion in
+    the neighbouring district for "Data Centre At 3A Blossom Way":
+    the new substation and MV supply line the Arup report describes,
+    filed where the line runs. The largest building on the site is in
+    the corpus only as its neighbours' paperwork. Ingest them (the
+    id_match route `scripts/ingest_barbour_gap_apps.py` uses, then
+    fetch, triage, first read), **adding each to
+    `amazon-3a-blossom-way-hemel` before the materialise** — the
+    partition file's maintenance duty — or the radius will put them
+    wherever it likes.
+  - **NTT Hemel Hempstead 3's own family is not held either: 18
+    records at "Campus, Spring Way"** from the same probe — the three
+    2013 demolitions, `4/00377/14/FUL` **"Power compound"** (2014,
+    the follow-on generation pattern under "Coverage gaps"), the
+    security gatehouse, the link road, five discharges and NMAs, and
+    `4/01905/17/NMA` at "The Campus Data Centre, Maylands Avenue".
+    Same ingest, into `ntt-hemel-hempstead-3-spring-way`.
+  - **1 Blossom Way has never had a data-centre application, and 150
+    Maylands Avenue has no application at all.** Everything PlanIt
+    holds within 450 m of the Amazon permit was read: at 1 Blossom Way
+    there are two records, illuminated signs on the building
+    (`4/03214/18/ADV`, December 2018) and a bin store (`25/00577/FUL`,
+    2025). The building is a unit of Prologis's Maylands Gateway
+    masterplan — `4/00064/17/MFA`, 54,714 sqm of flexible B1c/B2/B8,
+    with `4/02214/17/ROC`, `4/01116/19/ROC` and some twenty discharges
+    behind it, none held — so NTT's Hemel 4 is the B8-shell
+    invisibility case exactly: a data centre the register never
+    names. Within 300 m of 150 Maylands Avenue no record carries that
+    address; the building predates the window. Both stay unsited on
+    a probe that could see, which is the honest form of the row.
   - **NTT Hemel Hempstead 4 is unsited.** 12 MW and a 60 MVA
-    substation on NTT's page, "will offer", at 1 Blossom Way; no
-    application at that address; the only trace in the corpus is the
-    "second, unrelated data centre currently under construction" in
-    Prologis's December 2021 screening report. Retired from site 11
-    with the reason on the row; a seed for the unsited-claims layer.
+    substation on NTT's page, "will offer" (an existing site, Luke),
+    at 1 Blossom Way; no data-centre application at that address (the
+    probe above); the only trace in the corpus is the "second,
+    unrelated data centre currently under construction" in Prologis's
+    December 2021 screening report. Retired from site 11 with the
+    reason on the row; a seed for the unsited-claims layer.
   - **The Finway Road pair is a site now, and the adjacency question
     stands.** Two 2.5 MW gas engines (Heddon Development / AGR
     Renewables, 2018, varied 2019), verdict `unknown` on both, 1.1 km

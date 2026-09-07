@@ -4800,6 +4800,21 @@ file nor the register says so, and the site is recorded as
 Northtree's. The partition is unaffected: everyone agrees it is a
 separate site.
 
+**The probe, run the same evening once Luke asked for it.** PlanIt by
+reference and spatially at both addresses (with one 429 honoured on
+the way). The 3A building's chain is there in full — 18 records from
+the 2015 retail outline through the 2019 consent, the S.73, eleven
+discharges, the 2024 amendment and May 2026's eight condenser units,
+plus a St Albans screening opinion for the substation and supply line
+— and NTT Hemel 3's own family is there too, 18 records at "Campus,
+Spring Way" including a 2014 "Power compound". Neither family is held;
+both are listed in ROADMAP for ingest, each into its partition first.
+And the two unsited buildings stay unsited on a probe that could see:
+1 Blossom Way carries only a 2018 sign application and a 2025 bin
+store — the building is a unit of Prologis's 2017 Maylands Gateway
+masterplan, a B8 shell the register never calls a data centre — and no
+record within 300 m carries 150 Maylands Avenue at all.
+
 **Left, in ROADMAP:** the 3A building's own applications and any
 record at 1 Blossom Way, with the probe named and not run (rule 4);
 the Finway Road engines as a standalone `unknown`-verdict site whose
