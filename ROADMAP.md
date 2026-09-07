@@ -2388,7 +2388,7 @@ None is abandoned; each is a known, scoped piece of work.
   and it works at corridor scale: the site 61 split (ten campuses,
   2026-08-27, see Phase 2 above and HISTORY) is the worked example to
   copy. **Site 23 is done** — eleven campuses, 2026-08-28 — **and site
-  11** — four records, 2026-09-07, below — which leaves 5 and 59.
+  11** — five records, 2026-09-07, below — which leaves 5 and 59.
 
   **Site 37 was examined and needs no partition** (2026-08-28), which
   is worth recording because it was briefly listed as a target here on
@@ -2414,7 +2414,7 @@ None is abandoned; each is a known, scoped piece of work.
   warns about — reference stems and the applicant of record in the documents
   as the boundary evidence, every member assigned so nothing is left
   to spatial chance. Sites 5 and 59 are what remain (23 was done on
-  2026-08-28, eleven campuses; 11 on 2026-09-07, four records), and
+  2026-08-28, eleven campuses; 11 on 2026-09-07, five records), and
   the permits carry their evidence.
 
   **The partition unit is the campus, not the building** (Luke,
@@ -2439,7 +2439,7 @@ None is abandoned; each is a known, scoped piece of work.
   two is wrong and the conflict has to be resolved rather than
   averaged.
 
-  **Site 11 is done — four records, 2026-09-07.** Luke settled the
+  **Site 11 is done — five records, 2026-09-07.** Luke settled the
   question the 2026-09-03 anatomy had left open: NTT's Hemel Hempstead
   4 at 1 Blossom Way and Amazon's building at 3A Blossom Way are
   separate buildings in Prologis Park (3A is the one Prologis markets
@@ -2449,10 +2449,14 @@ None is abandoned; each is a known, scoped piece of work.
   not one campus but three distinct sites, 2, 3 and 4. With that,
   and the documents read (HISTORY, "Site 11 becomes four"),
   `PTNO-12063929` is NTT Hemel Hempstead 3 alone (the record filed
-  under Gyron, the company NTT acquired), `PTNO-12700933` is Amazon
-  (3A Blossom Way and LHR608 at Plot 3, Maylands Avenue, with the
-  222 MWth permit now matched `strong`), `SITE-Dacorum/24/02039/MOA`
-  is Northtree's Blue Box outline, and `SITE-Dacorum/19/02504/ROC` is
+  under Gyron, the company NTT acquired), `SITE-Dacorum/21/04714/SCE`
+  is Amazon's existing building at 3A Blossom Way (the 222 MWth permit
+  now matched `strong`), `PTNO-12700933` is Amazon's proposed LHR608
+  at Plot 3, Maylands Avenue — its own record because Amazon gives the
+  two no common designation (Luke), and "LHR" is the airport prefix
+  most data-centre customers use, never on its own evidence of Amazon
+  — `SITE-Dacorum/24/02039/MOA` is Northtree's Blue Box outline, and
+  `SITE-Dacorum/19/02504/ROC` is
   the Finway Road gas engines — in no partition, because the only edge
   that had ever joined them to the record was a spatial one to
   Barbour's misplaced pin for Amazon. The Barbour record's address is

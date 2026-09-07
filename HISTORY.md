@@ -4774,7 +4774,18 @@ structure, DC6 being shown let and DC5 still advertised, which the
 planning file does not say either way. What "LHR608 at Plot 3" is —
 Amazon's own code for its second, proposed building on Plot 3,
 Maylands Avenue, from that application's documents — is in the
-partition reason; whether it stays in one site with 3A is his call.
+partition reason. **His call, later the same day: it stands alone.**
+Amazon gives the two buildings no common designation, so neither does
+the record; the Amazon partition became two, `SITE-Dacorum/21/04714/
+SCE` for the existing 3A building (the permit re-pointed to it, since
+the permit describes that building) and `PTNO-12700933` for Plot 3.
+Five records from site 11, 503 live sites. And a correction to a
+sentence in the report rather than the repo: "LHR" is not an Amazon
+convention but the airport-prefix habit of most data-centre customers
+— Vantage's LHR11/12 and Digital Realty's LHR17 are already in this
+corpus — so a code with that prefix is never, on its own, evidence of
+whose building it is; LHR608 is Amazon's because Amazon's own
+application says so.
 
 **And one thing he had wrong, settled at Companies House rather than
 argued.** He described 45 Maylands Avenue as "Northtree (NTT)". The

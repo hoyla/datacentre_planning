@@ -633,12 +633,13 @@ sites:
           - kind: maximum IT load, operator's basis
             claim: NTT Hemel Hempstead 3
 
-  - site_key: PTNO-12700933
+  - site_key: SITE-Dacorum/21/04714/SCE
     note: >-
-      Amazon Web Services in Prologis Park Hemel Hempstead: the existing
-      building at 3A Blossom Way and the proposed LHR608 at Plot 3,
-      Maylands Avenue. Amazon publishes no facility page and no figure;
-      the only external figure is the permit's thermal input.
+      Amazon Web Services' existing building at 3A Blossom Way,
+      Prologis Park Hemel Hempstead. Amazon publishes no facility page
+      and no figure; the only external figure is the permit's thermal
+      input. Amazon's proposed Plot 3 building is its own record
+      (PTNO-12700933), the two having no common designation from Amazon.
     facilities:
       - id: 3A Blossom Way (Prologis DC5/DC6)
         identity:
@@ -670,6 +671,14 @@ sites:
         attributions:
           - kind: permitted standby generation, thermal input of 33 generators
             claim: Hemel Hempstead Data Centre (EPR/BP3546QP)
+
+  - site_key: PTNO-12700933
+    note: >-
+      Amazon's proposed second building in Prologis Park Hemel
+      Hempstead, at Plot 3, Maylands Avenue — its own record because
+      Amazon gives it and 3A Blossom Way no common designation (Luke,
+      2026-09-07). No external figure yet.
+    facilities:
       - id: LHR608 (Plot 3, Maylands Avenue)
         identity:
           - source: planning_document
@@ -679,8 +688,12 @@ sites:
               Amazon Data Services UK Limited's own application; its
               response to the Environment Agency is headed "LHR608" and
               its due-diligence report is titled "Amazon Web Services -
-              LHR608 Ski-Lodge". Undecided at 2026-09-07; no IT load
-              stated in a form the claims store can hold.
+              LHR608 Ski-Lodge". The identity rests on the applicant's
+              name in those documents, not on the prefix: "LHR" is the
+              airport-code convention most data-centre customers use
+              (Vantage and Digital Realty among them). Undecided at
+              2026-09-07; no IT load stated in a form the claims store
+              can hold.
           - source: barbour_title
             ptno: "12700933"
             title: AMAZON DATA SERVICES  MAYLANDS AVENUE - DATA CENTRE
