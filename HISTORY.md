@@ -4820,3 +4820,89 @@ record at 1 Blossom Way, with the probe named and not run (rule 4);
 the Finway Road engines as a standalone `unknown`-verdict site whose
 adjacency question joins the 44; the Northtree operator question; and
 the document folders that move at the next Drive staging build.
+
+## The Hemel families are ingested, and one of them corroborates a permit (2026-09-07)
+
+Luke, on the probe's result: "let's get those 36". So the two families
+the site 11 review found absent were fetched by reference, and the
+building whose permission chain the corpus had only ever seen quoted in
+its neighbour's paperwork is now in the corpus on its own terms.
+
+**The route, which is new and now has a script.**
+`scripts/ingest_planit_refs.py` takes a list of application references
+and fetches each by PlanIt `id_match`, snapshotting every lookup and
+tagging each application `ref_ingest:<cohort>`. The alternative — a
+spatial sweep — returns the neighbourhood (507 records within 450 m of
+one Hemel address) and choosing from it is a judgement that belongs in
+a prior rather than in a filter; a reference list is that judgement
+already made. It resumes through PlanIt's quota, which was needed: the
+36 lookups took three 429 windows and about 40 minutes, at the server's
+own Retry-After.
+
+**36 references, 29 admitted, 326 documents, 4,556 findings.** The
+triage sweep put 29 of the 36 in the universe in 90 seconds; the fetch
+took 48 minutes on Dacorum's Idox at five seconds a request; extraction
+found 6,019 pages, 127 needing OCR, six documents unreadable; the first
+read (`gpt-5` at low effort, the tag every first read since August has
+carried) returned 4,556 findings from 228 documents in 9.3 minutes for
+about $10 at list rates, with 49 quotes refused by the verbatim gate —
+1.1%, half the post-fix baseline.
+
+**The seven not admitted are the invisibility pattern, not a failure.**
+`4/01922/19/MFA` — the permission the building actually stands on —
+reads `not_dc` on its own description, because in 2019 it was 21,726
+sqm of flexible B1c/B2/B8 floorspace and only the 2022 S.73 made it a
+data centre. It enters through the family door, which is that door
+doing exactly the job the `not_dc` item in ROADMAP describes. The other
+six are two sign applications, a temporary car park and its variation,
+a demolition, and a 2015 retail outline for the same land.
+`4/00377/14/FUL` "Power compound" is triaged `adjacent_power`, so it
+relates to four Hemel sites rather than belonging to one — nearest at
+208 m, NTT's Hemel 3 — which is #252 working as designed and the
+follow-on generation pattern this project records under coverage gaps,
+in the register at last.
+
+**What the chain says.** The S.73's own documents describe "32 double
+stacked containerised generators … and an additional smaller generator
+to cover non-critical loads" — 33 machines, which is exactly the fleet
+Amazon's Environment Agency permit EPR/BP3546QP declares at 222 MWth.
+**A permit that had no planning record now has one, and the two agree
+on the count**, which is the first time in this corpus that a permitted
+standby fleet and a planning record have been read against each other
+at the same building. The same documents give the building a 132/33 kV
+substation compound — the transmission-voltage connection that
+`StAlbans/5/2021/3548`, a screening opinion in the neighbouring
+district, was filed for.
+
+**Six figures adjudicated, and the discipline held.** The Sonnet
+subagent route took them because the site carried no adjudicated
+capacity. The 529 MW and the 50 MW in Amazon's planning statement are
+its own renewable portfolio and a wind farm it buys the output of;
+both were kept out of the site's capacity, as `market_context` and
+`comparator`. A 120 kW boiler rating and an MCPD 1 MW exemption
+threshold went to `unclear`. Only the per-unit generator ratings stand,
+labelled per-unit in their own reasoning — 33 machines at 2.4 MW is
+~79 MW of standby plant, and that multiplication is #248's business,
+not an adjudicator's.
+
+**Two consequences for the site records.** The 3A site was re-keyed
+`SITE-Dacorum/20/01580/DRC`, because a site key is its first member
+reference alphabetically and the ingest moved that from the 2021
+screening request to a condition discharge; the permit match was
+re-pointed in the same sitting, the old row retired with the reason,
+and the alias and roster followed. And the fetch queue taught the
+script a lesson worth keeping: it admits only live site members, so a
+fetch run before the triage sweep finds nothing to do, which is what
+happened on the first attempt. The script's own next-steps note now
+puts triage and materialise first.
+
+**A lead the documents opened, and the probe is named rather than
+run.** The 2019 transport assessment says "in July 2019, a Resolution
+to Grant was passed by DBC for the construction of a Data Centre on the
+existing Park (Unit 4 (DC1))". That is a different building from 3A,
+consented before it, and no application within 450 m of the Amazon
+permit carries a data-centre description in 2019 — so the corpus does
+not hold it. Whether it is NTT's Hemel Hempstead 4 at 1 Blossom Way is
+exactly the question Luke's warning about Prologis's numbering says not
+to assume: a wider sweep of the park reading descriptions rather than
+addresses is the way to answer it, and it is in ROADMAP unrun.

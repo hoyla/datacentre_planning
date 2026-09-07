@@ -2465,40 +2465,75 @@ None is abandoned; each is a known, scoped piece of work.
 
   What the split leaves, each its own item:
 
-  - **The 3A Blossom Way building's own permission chain is not held,
-    and PlanIt has it: 18 records** (probed 2026-09-07 at Luke's
-    request — by reference and spatially at both addresses; one 429
-    on the way, so the quota is real). Prologis's 2019 consent
-    `4/01922/19/MFA` (21,726 sqm of flexible B1c/B2/B8), the S.73
-    variation `22/01067/ROC` that made it "an 18m high data centre at
-    3a Blossom Way", the amendment `24/00914/NMA`, eleven condition
-    discharges and NMAs from 2020 to 2026 (including `24/00402/DRC`
-    at "Land North Breakspear Way"), `26/01087/FUL` — eight condenser
-    units "in connection with the adjacent Data Centre", May 2026 —
-    `26/00922/DRC`, the 2015 retail outline `4/01132/15/MOA` for the
-    same land, and **`StAlbans/5/2021/3548`**, a screening opinion in
-    the neighbouring district for "Data Centre At 3A Blossom Way":
-    the new substation and MV supply line the Arup report describes,
-    filed where the line runs. The largest building on the site is in
-    the corpus only as its neighbours' paperwork. Ingest them (the
-    id_match route `scripts/ingest_barbour_gap_apps.py` uses, then
-    fetch, triage, first read), **adding each to
-    `amazon-3a-blossom-way-hemel` before the materialise** — the
-    partition file's maintenance duty — or the radius will put them
-    wherever it likes.
-  - **NTT Hemel Hempstead 3's own family is not held either: 18
-    records at "Campus, Spring Way"** from the same probe — the three
-    2013 demolitions, `4/00377/14/FUL` **"Power compound"** (2014,
-    the follow-on generation pattern under "Coverage gaps"), the
-    security gatehouse, the link road, five discharges and NMAs, and
-    `4/01905/17/NMA` at "The Campus Data Centre, Maylands Avenue".
-    Same ingest, into `ntt-hemel-hempstead-3-spring-way`.
+  - **Both missing families are ingested, and what is left is one
+    document and a re-read of the site** (2026-09-07, on Luke's
+    instruction after the probe). 36 references fetched from PlanIt by
+    `id_match` with `scripts/ingest_planit_refs.py`, every one listed
+    in its partition entry, triaged, fetched and first-read: the 3A
+    Blossom Way chain (Prologis's 2019 consent `4/01922/19/MFA`, the
+    S.73 `22/01067/ROC` that made it a data centre, the 2024 amendment
+    `24/00914/NMA`, their discharges, May 2026's condenser units, the
+    2015 retail outline) and NTT Hemel Hempstead 3's own family (four
+    2013 demolitions, `4/00377/14/FUL` "Power compound", the
+    gatehouse, the link road, the discharges). 326 documents, 29 of
+    the 36 admitted to the universe. **What remains: the St Albans
+    screening opinion** for the substation and medium-voltage
+    connection serving 3A — `StAlbans/5/2021/3548`, held as an
+    application with no adapter for that portal, so its documents are
+    a browser or manual job.
+  - **What the 3A chain says, now that it is here.** The S.73 that
+    made the building a data centre (`22/01067/ROC`) describes **"32
+    double stacked containerised generators … and an additional
+    smaller generator"** — 33, which is exactly the fleet Amazon's
+    permit EPR/BP3546QP declares at 222 MWth, so a permit that had no
+    planning record now has one, and the two agree on the count. It
+    also gives the building its **132/33 kV substation compound**, the
+    grid connection at transmission voltage that `StAlbans/5/2021/3548`
+    was filed for. Six power figures were adjudicated by the Sonnet
+    subagent route: the 529 MW and 50 MW in the planning statement are
+    Amazon's own renewable portfolio and a wind farm it buys from,
+    correctly held out of the site's capacity; only the per-unit
+    generator ratings stand, labelled per-unit. A fleet figure for the
+    site is a `not_dc`-adjacent question of its own — 33 machines at a
+    stated 2.4 MW each is ~79 MW of standby plant, which is a
+    multiplication this project does not make silently (#248).
+  - **A data centre consented in July 2019 that the corpus still does
+    not hold** (found in the ingested documents, 2026-09-07). The
+    transport assessment for `4/01922/19/MFA`, written for Prologis in
+    August 2019, says: "in July 2019, a Resolution to Grant was passed
+    by DBC for the construction of a Data Centre on the existing Park
+    (**Unit 4 (DC1)**)", and later "the change at Unit 4 (DC1) to a
+    Data Centre". That is a different building from 3A, and no
+    application within 450 m of the Amazon permit carries a
+    data-centre description in 2019. Prologis's own unit numbering is
+    the thread — and the caution Luke gave about Prologis's DC
+    numbering not matching an operator's applies here in reverse, so
+    do not assume Unit 4 is NTT's Hemel 4 at 1 Blossom Way. **Probe to
+    run:** a wider spatial sweep of the park (1 km at 51.7559,
+    -0.4350) reading descriptions rather than addresses, and the
+    Dacorum register for a mid-2019 committee resolution. It may give
+    1 Blossom Way the record the address search could not find.
+  - **Seven of the 36 are outside the universe, and the reason is the
+    finding.** `4/01922/19/MFA`, the permission the building actually
+    stands on, reads `not_dc` on its own description — 21,726 sqm of
+    flexible B1c/B2/B8 floorspace, which is what a data centre looks
+    like before a variation says otherwise — and enters only through
+    the family door. The other six are two sign applications, a
+    temporary car park and its variation, a demolition, and the 2015
+    retail outline. `4/00377/14/FUL` "Power compound" is triaged
+    `adjacent_power` and so relates to four Hemel sites rather than
+    belonging to one, nearest at 208 m: #252 working as designed, and
+    the follow-on generation pattern this file records under coverage
+    gaps, in the register at last.
   - **1 Blossom Way has never had a data-centre application, and 150
-    Maylands Avenue has no application at all.** Everything PlanIt
-    holds within 450 m of the Amazon permit was read: at 1 Blossom Way
-    there are two records, illuminated signs on the building
-    (`4/03214/18/ADV`, December 2018) and a bin store (`25/00577/FUL`,
-    2025). The building is a unit of Prologis's Maylands Gateway
+    Maylands Avenue has no application at all** (the same probe).
+    Everything PlanIt holds within 450 m of the Amazon permit was
+    read: at 1 Blossom Way there are two records, illuminated signs on
+    the building (`4/03214/18/ADV`, December 2018) and a bin store
+    (`25/00577/FUL`, 2025). **Read that as being about the address, not
+    the building** — the Unit 4 (DC1) item above is the reason: a data
+    centre was consented on this park in July 2019 under a description
+    and an address this search did not reach. The building is a unit of Prologis's Maylands Gateway
     masterplan — `4/00064/17/MFA`, 54,714 sqm of flexible B1c/B2/B8,
     with `4/02214/17/ROC`, `4/01116/19/ROC` and some twenty discharges
     behind it, none held — so NTT's Hemel 4 is the B8-shell
