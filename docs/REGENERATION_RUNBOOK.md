@@ -399,7 +399,12 @@ documents). You are looking for:
   typed as the data centre's and is a person's row); more than that
   means something new to read.
 - **generation-understated** — a single machine's rating standing in for
-  a fleet. Five known.
+  a fleet. Six known since 2026-09-07: the sixth is Redhill Data Centre
+  (`PTNO-12828779`), read for the first time that day, whose 3.1 MW is
+  "8No 3100kW 11kV generators" and is typed `per_generator` with a unit
+  count of eight by the generation adjudication, so the site page
+  already labels it. The report flags it because the rollup figure is
+  the per-unit rating, which is what the flag is for.
 - The null-capacity sweep prints **PROVISIONAL** and refuses to give a
   quotable number while any candidate figure is unadjudicated. If it
   still says that after step 2, step 1 did not finish.
@@ -1259,7 +1264,9 @@ spends the afternoon again. Anything NOT on this list is new.
 
 - **Coverage will not reach 100% of sites, and the remainder is not a
   backlog.** Measured at the 2.13 release, 2026-09-03: **357 of 360**
-  sites with prose are read in full. The other three are two
+  sites with prose are read in full; re-measured 2026-09-07 after the
+  refused-pages read, which brought 29 more sites into the count:
+  **385 of 388**. The other three are the same three: two
   Renfrewshire sites (`SITE-Renfrewshire/20/0204/PP`, `/20/0228/PP`)
   holding a single graphical document each, so they have no prose at
   all, and `PTNO-12817834`, whose single outstanding prose document is
@@ -1267,11 +1274,21 @@ spends the afternoon again. Anything NOT on this list is new.
   extractor has no loader for. **A Word loader would close the last
   prose gap in the corpus.**
 
-  Separately, 11 documents have no text cache and cannot get one: four
+  Separately, 12 documents have no text cache and cannot get one: four
   PDFs pypdf refuses to open, five whose format has no loader (two
   `.docx`, one `.xls`, one `.rtf`, one `.pdf` whose bytes are not a
-  PDF), and two of the three zero-byte files below. None holds a site
-  back.
+  PDF), two of the three zero-byte files below, and — since 2026-09-07
+  — document 67747 on `Selby/ZG2024/0549/FULM` (Springfield Farm,
+  `SITE-Selby/2022/0813/SCN`), 26.8 MB of bytes that are not a PDF,
+  served that way by North Yorkshire's register under a filename that
+  says so itself: *"…Flood_Risk_Assessment_SUPERSEDED_File_is_corrupted_and_will_not_open…"*.
+  The superseding flood-risk assessment (document 67646, February 2025
+  Issue 6) is held and read. The corrupt copy carries a `not_extracted`
+  row under `openai:gpt-5:low`, written by hand through
+  `deepread_run.log_document` because the batch path has no flag for
+  it, so the coverage split counts it as unreadable rather than unread.
+  Without that row it would have deferred Springfield Farm's machine
+  reading for ever. None of the twelve holds a site back.
 
   **Three documents were fetched as zero-byte files** and the staging
   build names them on every run: `Wakefield/23/00100/S7301` (on
