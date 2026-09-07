@@ -2378,6 +2378,37 @@ here rather than applied from the build lane.
   holding a previous release must be emptied or replaced, and the new
   notebook's URL must reach `NOTEBOOK_URL` before step 12.
 
+- **The Pinpoint bundle's two skip predicates disagree, and the wrong
+  one wins — 755 documents are outstanding** (measured 2026-09-07,
+  building tranche 7; HISTORY). `--already-uploaded` skips on the
+  source content hash, which is right across releases;
+  `jobs = [j for j in jobs if j[0] not in done_paths]` then skips on
+  the staging *path*, which is right only inside one interrupted
+  sweep, and it runs second. Across releases the path is not stable —
+  `NNN - kind.pdf` renumbers every later document when an application
+  gains one — so a document whose path was converted under different
+  content survives the first filter and is dropped by the second. At
+  2.14 the plan said 2,734 to convert, 1,979 were processed, and
+  re-planning against the new manifest reported the other **755 still
+  outstanding** (0.4 GB); 554 of them are visible as a size change
+  against the journal alone, across 359 sites, so the count is a floor
+  established two ways. **This grows every release that adds documents
+  to applications the bundle already carries**, and it is silent: the
+  run's own arithmetic is the only place the gap shows.
+
+  The fix is not simply keying the resume on the sha — that is the
+  change to reason about rather than apply, because the journal's job
+  is to make an interrupted two-hour sweep resumable and a sha key
+  changes what "already covered" means mid-sweep. **Whatever is built,
+  the check is cheap and belongs in the script**: a build that ends by
+  re-planning itself and refusing to report success while anything is
+  outstanding, on the pattern the manifest/`files/` shortfall check
+  already uses (`!! N files are in the manifest but not in files/`).
+  Until then the runbook says to re-run `--plan` by hand. The 755 are
+  not lost — they are in Drive and on the site pages; what cannot see
+  them is Pinpoint and Giant, which is a completeness claim two search
+  tools currently make wrongly.
+
 - ~~**The materialise leaves membership rows unretired when it retires
   a site**~~ — **closed 2026-09-02, the day it was opened**, and this
   item stood open for two days after while the capacity-model section

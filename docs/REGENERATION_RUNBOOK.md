@@ -943,6 +943,24 @@ scripts/export_pinpoint_bundle.py \
     --already-uploaded data/exports/pinpoint_bundle/_manifest.csv --jobs 12
 ```
 
+**The build is part of the run; the upload is Luke's** (2026-09-07,
+after the bundles went two releases stale while on the chain). Both
+commands are local: they spend no API budget, reach no external
+service and publish nothing, so there is no reason for the runner to
+stop short of them. What needs a person is the *upload* — the Pinpoint
+tranche, the notebook's folders of 50, and emptying a notebook that
+holds a previous release. Leave the built tranche sitting in `upload/`
+and say so at step 15; do not leave the release with no tranche built.
+
+The distinction matters because the step was created to stop exactly
+this. 13a exists because being "off the chain, optional" is how the
+notebook went three releases stale and Pinpoint four (Luke,
+2026-08-29) — and putting it on the chain while assigning the whole
+step to a person reproduced the same staleness within two releases:
+tranche 6 shipped with 2.12 on 2026-09-02 and nothing was built for
+2.13 or 2.14 until 2026-09-07. Visible on the list is not the same as
+run.
+
 **What the Pinpoint/Giant bundle contains, and why — the standing
 policy** (moved here from the ROADMAP 2026-08-30; the decisions are
 Luke's, 2026-08-28). Both tools take the same input, and it is **not**
@@ -950,11 +968,16 @@ the Drive `sites` folder: it is the derivative bundle from
 `export_pinpoint_bundle.py`. Pinpoint has no folders — the namespace
 is flat and zipped uploads are unsupported — so structure is discarded
 by design and each filename carries `<site> — <application> — ` in
-front of it. The bundle is a reduction, 130.6GB in 50,615 files down
-to ~64GB in 42,647, under Pinpoint's 100GB-per-user quota:
+front of it. The bundle is a reduction: **161.5 GB in 62,298 staging
+files down to 53,187 bundled at 75.1 GB, under Pinpoint's
+100GB-per-user quota** (measured at 2.14, 2026-09-07; it was 130.6GB
+in 50,615 down to ~64GB in 42,647 when this policy was written). The
+figures move every release and the run prints them — read the run, do
+not quote these:
 
-- **Drawings are dropped deliberately — for Giant too** (5,536 files,
-  9.5GB). Not a contradiction with `extract_text_corpus.py`, which
+- **Drawings are dropped deliberately — for Giant too** (7,202 files,
+  14.7 GB at 2.14; 5,536 and 9.5GB when this was written). Not a
+  contradiction with `extract_text_corpus.py`, which
   extracts every drawing because plant layouts carry specifications
   prose never states: the two tools want different things. Giant's
   value is a hit *in context* with somewhere meaningful to jump to,
@@ -967,7 +990,8 @@ to ~64GB in 42,647, under Pinpoint's 100GB-per-user quota:
   either page to explain why, would be worse. This means the drawings
   question is **one decision governing both** and must be revisited
   for both together or not at all.
-- **Exact duplicates are removed by content hash** (2,432 files), and
+- **Exact duplicates are removed by content hash** (2,765 files at
+  2.14; 2,432 when this was written), and
   **types are sniffed rather than trusted**, which recovered ~450
   files including 237 Outlook messages of kind *Consultee Comment* —
   tier A, the class the methodology says disclosures live in.
@@ -1036,9 +1060,25 @@ export; of the 512, 428 are classed as datacentres.
 **The Pinpoint bundle takes `--already-uploaded`**, pointing at the
 manifest of what is already linked into Pinpoint. It skips those
 documents before conversion — the manifest alone is enough, so the
-previous bundle's 64GB does not need to be on disk — and numbers what
-remains into fresh tranches after the highest the manifest records. At
-2.10 that was tranche 4.
+previous bundle's tens of gigabytes do not need to be on disk — and
+numbers what remains into fresh tranches after the highest the manifest
+records. Tranche 4 shipped with 2.10, 5 with 2.11, 6 with 2.12 and 7
+with 2.14; 2.13 needed none.
+
+**Two skip predicates run, and the wrong one wins — check the residue
+before calling a tranche complete.** `--already-uploaded` skips on the
+source content hash, which is right across releases. The journal's
+resume then skips on the *staging path*, which is right only within one
+interrupted sweep, and it runs second. A document whose path was
+converted under different content is therefore dropped by the second
+after surviving the first: at 2.14 the plan said 2,734 files to convert
+and 1,979 were processed, and re-planning against the new manifest
+reported the missing **755** still outstanding (0.4 GB). The cause is
+the tree's own numbering — `NNN - kind.pdf` shifts for every later
+document when an application gains one — so a release that adds
+documents to existing applications leaves a residue. **Re-run `--plan`
+after every build**; a complete tranche reports `= 0 files to convert`.
+The fix is ROADMAP's, under Smaller things.
 
 **Note that this command reads the file it overwrites.** The run writes
 `_manifest.csv` at the end, so a crash after that write destroys the

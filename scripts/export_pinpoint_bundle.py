@@ -2,10 +2,13 @@
 """Flatten the staging tree into a Pinpoint-shaped bundle, under quota.
 
 Pinpoint for Professionals gives one user 100GB across every collection
-they own. The staging tree is 130.6GB in 50,615 files, so the corpus does
-not fit and cannot be split its way into fitting. This produces a
-derivative bundle that does: measured 42,647 files at ~64GB, leaving
-~36GB of headroom.
+they own. The staging tree does not fit and cannot be split its way into
+fitting, so this produces a derivative bundle that does. The two sizes
+both move every release and this run prints its own — at 2.14
+(2026-09-07) the tree was 161.5GB in 62,298 files and the bundle 75.1GB
+in 53,187, leaving ~25GB of headroom; when this was first written they
+were 130.6GB in 50,615 and ~64GB in 42,647. The headroom is shrinking at
+roughly 3GB a release, which is a decision due before it is a problem.
 
 **Pinpoint has no folders.** Zipped uploads are unsupported and the
 namespace is flat, so `sites/<site>/<application>/NNN - kind.pdf` arrives
@@ -17,12 +20,14 @@ over the whole corpus that lands at a 122-character median and a
 
 Four reductions, in the order they run:
 
-1. **Drawings are dropped** (5,536 files, 9.5GB). `classify_kind` calls
+1. **Drawings are dropped** (7,202 files, 14.7GB at 2.14; 5,536 and
+   9.5GB when written). `classify_kind` calls
    them tier `skip` because they carry no extractable prose, and Pinpoint
    is a full-text index. Note this applies to *every* file, not just
    PDFs: `009 - PLAN.jpg` is as much a drawing as `009 - PLAN.pdf`, and
    an earlier pass that tiered only PDFs let 30MB of plans through.
-2. **Exact duplicates are dropped** (2,432 files, 7.7GB), confirmed by
+2. **Exact duplicates are dropped** (2,765 files, 8.8GB at 2.14; 2,432
+   and 7.7GB when written), confirmed by
    content hash rather than by name or size. The same document is
    routinely filed against several applications for one site. In Drive
    that redundancy is correct — each application folder stands alone —
@@ -824,7 +829,7 @@ def main() -> None:
     # Documents already in Pinpoint are dropped here, before conversion,
     # rather than at tranche time. Skipping late would still recompress
     # 42,000 PDFs to produce files nobody uploads, and would need the
-    # previous bundle's 64GB on disk to recognise them as cached — the
+    # whole previous bundle on disk to recognise them as cached — the
     # manifest alone cannot do that, because "cached" means the output
     # file exists. Keyed on the source content hash, not the staging
     # path, because paths move: today's British Museum partition renamed
@@ -875,6 +880,18 @@ def main() -> None:
     # is append-only and one line per input file: re-running reads it,
     # skips what it already covers, and spends the remaining budget on
     # the rest. Deleting it forces a full rebuild.
+    #
+    # KNOWN HOLE, measured at 2.14 (2026-09-07): "what it already
+    # covers" is keyed on the staging PATH, which is only right inside
+    # one interrupted sweep. Across releases the path is not stable —
+    # `NNN - kind.pdf` renumbers every later document when an
+    # application gains one — so a path converted under different
+    # content is skipped here after surviving the sha-keyed
+    # --already-uploaded filter above. 755 documents fell through at
+    # 2.14. Re-run --plan after a build: a complete tranche reports
+    # `= 0 files to convert`. The fix is ROADMAP's, under Smaller
+    # things; do not silently widen this to a sha key without reading
+    # what that does to an interrupted sweep's resume.
     journal_path = args.out / "_journal.jsonl"
     done_paths = read_journal(journal_path)
     rows = [r for group in done_paths.values() for r in group]
@@ -992,8 +1009,8 @@ def main() -> None:
     # overwrites its own input. That is fine when it succeeds and fatal
     # when it does not: the 2026-08-29 run died after the write, taking
     # the record of tranches 1-3 with it. Keep the old one first — it is
-    # 23MB against a 64GB bundle, and it is the only place the tranche a
-    # document went out in is written down.
+    # tens of megabytes against a bundle of tens of gigabytes, and it is
+    # the only place the tranche a document went out in is written down.
     if manifest.exists():
         shutil.copy2(manifest, manifest.with_suffix(".csv.prev"))
     with open(manifest, "w", newline="", encoding="utf-8") as fh:
