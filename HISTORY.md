@@ -4673,3 +4673,236 @@ shipped, which is this file's business. The campus-scope count was
 wrong in three places at once: the header said 32 `unreviewed`, the
 #250 section said 33, and the file holds **31**. Re-measured rather
 than reconciled.
+
+## Site 11 becomes four (2026-09-07)
+
+Luke settled the question the 2026-09-03 anatomy of `PTNO-12063929`
+had left for a person: NTT's Hemel Hempstead 4 at 1 Blossom Way and
+Amazon's building at 3A Blossom Way are **separate buildings** in
+Prologis Park — 3A is the one Prologis markets as DC5/DC6, a single
+structure (Prologis's DC5 brochure, CBRE's listing GB-Plus-513880; the
+park's own "DC4" units are not data centres and are not NTT's Hemel 4,
+whatever the number suggests) — and NTT's several Hemel Hempstead
+sites — Hemel Hempstead 2, 3 and 4 — are three distinct sites, not a
+campus: NTT's pages give each its own address and call none of them a
+campus. 45 Maylands Avenue, the former Blue Box Storage, is close to
+the park but a separate entity again, and an NTT project by Luke's
+account; the planning file names Northtree Investment Management, and
+Companies House, checked the same day, says Northtree is not NTT —
+see the correction at the end of this entry.
+
+**Then the documents, which sharpened it twice.** Amazon's Learning
+Lab application at 3A (`Dacorum/26/00152/FUL`, submitted for Amazon
+Web Services) describes "the existing Data Centre at 3A Blossom Way"
+and its permission chain — Prologis's 2019 consent `4/01922/19/MFA`
+for flexible B1c/B2/B8 floorspace, the S.73 variation `22/01067/ROC`
+that made it "an 18m high data centre at 3a Blossom Way", the 2024
+amendment `24/00914/NMA` — none of which the corpus holds; the
+building is here only as its neighbours' paperwork. Prologis's
+December 2021 screening request (`21/04714/SCE`, 4.8 ha at the
+southern end of the park, access from Blossom Way) is that building's
+chain, and its "second, unrelated data centre currently under
+construction" in the park is the only trace of NTT's Hemel 4. Amazon's
+`26/00267/MFA` is a second building, LHR608 at Plot 3, Maylands
+Avenue, HP2 4FQ, west of the avenue, whose documents put the 3A
+building east of it and its 222 MWth permit 117 m north-east. And
+Barbour's Amazon record (12700933) links to the Plot 3 application by
+planning reference while carrying Northtree's address, "Blue Box
+Storage, 45 Maylands Avenue" — the misplaced pin that had welded
+Northtree's outline and the Finway Road gas engines into Gyron's
+record, since the gas engines' only edge into it was a spatial one to
+that pin.
+
+On the other side, the 2013 Spring Way application (`4/01399/13/MFA`)
+gives Gyron Internet Ltd's own address as **150 Maylands Avenue, HP2
+7DF** — NTT's address for Hemel Hempstead 2 — on its form and both
+decision notices, so Hemel 2 is the existing building beside the land
+the 2013 permission covers, and Hemel 3 is that land by NTT's own
+"Campus, Spring Way". The 45 Maylands file names Northtree Investment
+Management as applicant and landowner in 53 findings, Blue Box Storage
+as occupier, no operator, and places "Gyron Campus Data Centre" 150 m
+to its east.
+
+**Drawn, preflighted, materialised.** Three partitions in
+`site_partitions.yaml` (`ntt-hemel-hempstead-3-spring-way`,
+`amazon-prologis-park-hemel`, `northtree-45-maylands-hemel`), the
+Finway Road pair deliberately in none of them, and a `ptno:` override
+in `inferred_coords.yaml` putting Amazon's pin at Plot 3's own grid
+reference (507935 207392, from its Tier 1 assessment). The dry run:
+3 new sites, 0 retiring, 6 moves — all of them site 11's — and 0
+orphaned claims, because the Gyron-named record keeps its key.
+Materialised: **502 live sites**. `PTNO-12063929` is NTT Hemel
+Hempstead 3 (one application, one project); `PTNO-12700933` (site 546) is Amazon's
+three applications and project; `SITE-Dacorum/24/02039/MOA` (548) is
+Northtree; `SITE-Dacorum/19/02504/ROC` (547) is the two gas-engine
+applications, keyed on the variation because it sorts first.
+
+**Cashed the same sitting.** Amazon's Hemel permit (EPR/BP3546QP, 222
+MWth, 33 generators) is matched `strong` to site 546 — holder,
+address, grid reference and the site's own documents name one
+building, and it is the first of the permits held under `considered`
+for an estate-scale record to graduate to a match; the considered
+entry keeps its SETTLED coda, and NTT's four-site permit stays there.
+The four NTT Hemel matches to site 11 were retired with reasons on the
+rows (`retired_reason`): Hemel 3 re-matched to the same site on the
+narrower evidence, still `probable` because the 2013 papers do not
+name it; Hemel 2, Hemel 4 and Hemel 4's 60 MVA substation moved to
+`considered` as unsited claims, the seeds `docs/PLAN_UNSITED_CLAIMS.md`
+now lists. Rosters and locations in `site_facilities.yaml` — Hemel 3
+on NTT's page; 3A Blossom Way and LHR608 on Amazon's own documents,
+the permit's grid reference and Barbour's title — with the permit as
+the 3A building's one attribution, which needed the facilities test to
+count the permit register among the claims files it resolves against.
+Aliases for both (the NTT name that a search had never found, and
+Amazon's real addresses over Barbour's wrong one); the campus-scope
+entry for site 11 recorded as reviewed by partition —
+`distinct_facilities`, `withhold`, no campus claim to displace with —
+leaving **30 of the file's 34 entries unreviewed**.
+
+**Corrected within the hour, on Luke's reading of the first draft.**
+The first cut had grouped Hemel 2 with Hemel 3 on one record called
+"Gyron's Campus", taking the word from the 2013 planning record and
+Barbour's title — exactly the grouping he had said NTT do not make,
+and the Iron Mountain rule run backwards: the operator's own pages
+define the campus, and a planning record's name for a piece of land
+does not. Hemel 2 came off the record, the partition and alias were
+renamed to Hemel 3, and "Gyron" is now only ever the name the record
+was filed under. Two things he added and the file could not have
+supplied: Hemel 4 is an existing site, though NTT's page still says
+"will offer"; and Amazon is probably in the DC6 half of the DC5/DC6
+structure, DC6 being shown let and DC5 still advertised, which the
+planning file does not say either way. What "LHR608 at Plot 3" is —
+Amazon's own code for its second, proposed building on Plot 3,
+Maylands Avenue, from that application's documents — is in the
+partition reason. **His call, later the same day: it stands alone.**
+Amazon gives the two buildings no common designation, so neither does
+the record; the Amazon partition became two, `SITE-Dacorum/21/04714/
+SCE` for the existing 3A building (the permit re-pointed to it, since
+the permit describes that building) and `PTNO-12700933` for Plot 3.
+Five records from site 11, 503 live sites. And a correction to a
+sentence in the report rather than the repo: "LHR" is not an Amazon
+convention but the airport-prefix habit of most data-centre customers
+— Vantage's LHR11/12 and Digital Realty's LHR17 are already in this
+corpus — so a code with that prefix is never, on its own, evidence of
+whose building it is; LHR608 is Amazon's because Amazon's own
+application says so.
+
+**And one thing he had wrong, settled at Companies House rather than
+argued.** He described 45 Maylands Avenue as "Northtree (NTT)". The
+register says otherwise: Northtree Investment Management Ltd
+(12951131, SIC 66300, fund management, incorporated 2020) is
+controlled by two individuals holding 25–50% each, has no NTT entity
+among its officers or controllers, and wholly owns Northtree DC 4 Ltd
+(15933304, 2024) — an independent investment manager with a numbered
+data-centre SPV. The similarity is the sound of the name. If NTT is
+the intended tenant of the 45 Maylands scheme, neither the planning
+file nor the register says so, and the site is recorded as
+Northtree's. The partition is unaffected: everyone agrees it is a
+separate site.
+
+**The probe, run the same evening once Luke asked for it.** PlanIt by
+reference and spatially at both addresses (with one 429 honoured on
+the way). The 3A building's chain is there in full — 18 records from
+the 2015 retail outline through the 2019 consent, the S.73, eleven
+discharges, the 2024 amendment and May 2026's eight condenser units,
+plus a St Albans screening opinion for the substation and supply line
+— and NTT Hemel 3's own family is there too, 18 records at "Campus,
+Spring Way" including a 2014 "Power compound". Neither family is held;
+both are listed in ROADMAP for ingest, each into its partition first.
+And the two unsited buildings stay unsited on a probe that could see:
+1 Blossom Way carries only a 2018 sign application and a 2025 bin
+store — the building is a unit of Prologis's 2017 Maylands Gateway
+masterplan, a B8 shell the register never calls a data centre — and no
+record within 300 m carries 150 Maylands Avenue at all.
+
+**Left, in ROADMAP:** the 3A building's own applications and any
+record at 1 Blossom Way, with the probe named and not run (rule 4);
+the Finway Road engines as a standalone `unknown`-verdict site whose
+adjacency question joins the 44; the Northtree operator question; and
+the document folders that move at the next Drive staging build.
+
+## The Hemel families are ingested, and one of them corroborates a permit (2026-09-07)
+
+Luke, on the probe's result: "let's get those 36". So the two families
+the site 11 review found absent were fetched by reference, and the
+building whose permission chain the corpus had only ever seen quoted in
+its neighbour's paperwork is now in the corpus on its own terms.
+
+**The route, which is new and now has a script.**
+`scripts/ingest_planit_refs.py` takes a list of application references
+and fetches each by PlanIt `id_match`, snapshotting every lookup and
+tagging each application `ref_ingest:<cohort>`. The alternative — a
+spatial sweep — returns the neighbourhood (507 records within 450 m of
+one Hemel address) and choosing from it is a judgement that belongs in
+a prior rather than in a filter; a reference list is that judgement
+already made. It resumes through PlanIt's quota, which was needed: the
+36 lookups took three 429 windows and about 40 minutes, at the server's
+own Retry-After.
+
+**36 references, 29 admitted, 326 documents, 4,556 findings.** The
+triage sweep put 29 of the 36 in the universe in 90 seconds; the fetch
+took 48 minutes on Dacorum's Idox at five seconds a request; extraction
+found 6,019 pages, 127 needing OCR, six documents unreadable; the first
+read (`gpt-5` at low effort, the tag every first read since August has
+carried) returned 4,556 findings from 228 documents in 9.3 minutes for
+about $10 at list rates, with 49 quotes refused by the verbatim gate —
+1.1%, half the post-fix baseline.
+
+**The seven not admitted are the invisibility pattern, not a failure.**
+`4/01922/19/MFA` — the permission the building actually stands on —
+reads `not_dc` on its own description, because in 2019 it was 21,726
+sqm of flexible B1c/B2/B8 floorspace and only the 2022 S.73 made it a
+data centre. It enters through the family door, which is that door
+doing exactly the job the `not_dc` item in ROADMAP describes. The other
+six are two sign applications, a temporary car park and its variation,
+a demolition, and a 2015 retail outline for the same land.
+`4/00377/14/FUL` "Power compound" is triaged `adjacent_power`, so it
+relates to four Hemel sites rather than belonging to one — nearest at
+208 m, NTT's Hemel 3 — which is #252 working as designed and the
+follow-on generation pattern this project records under coverage gaps,
+in the register at last.
+
+**What the chain says.** The S.73's own documents describe "32 double
+stacked containerised generators … and an additional smaller generator
+to cover non-critical loads" — 33 machines, which is exactly the fleet
+Amazon's Environment Agency permit EPR/BP3546QP declares at 222 MWth.
+**A permit that had no planning record now has one, and the two agree
+on the count**, which is the first time in this corpus that a permitted
+standby fleet and a planning record have been read against each other
+at the same building. The same documents give the building a 132/33 kV
+substation compound — the transmission-voltage connection that
+`StAlbans/5/2021/3548`, a screening opinion in the neighbouring
+district, was filed for.
+
+**Six figures adjudicated, and the discipline held.** The Sonnet
+subagent route took them because the site carried no adjudicated
+capacity. The 529 MW and the 50 MW in Amazon's planning statement are
+its own renewable portfolio and a wind farm it buys the output of;
+both were kept out of the site's capacity, as `market_context` and
+`comparator`. A 120 kW boiler rating and an MCPD 1 MW exemption
+threshold went to `unclear`. Only the per-unit generator ratings stand,
+labelled per-unit in their own reasoning — 33 machines at 2.4 MW is
+~79 MW of standby plant, and that multiplication is #248's business,
+not an adjudicator's.
+
+**Two consequences for the site records.** The 3A site was re-keyed
+`SITE-Dacorum/20/01580/DRC`, because a site key is its first member
+reference alphabetically and the ingest moved that from the 2021
+screening request to a condition discharge; the permit match was
+re-pointed in the same sitting, the old row retired with the reason,
+and the alias and roster followed. And the fetch queue taught the
+script a lesson worth keeping: it admits only live site members, so a
+fetch run before the triage sweep finds nothing to do, which is what
+happened on the first attempt. The script's own next-steps note now
+puts triage and materialise first.
+
+**A lead the documents opened, and the probe is named rather than
+run.** The 2019 transport assessment says "in July 2019, a Resolution
+to Grant was passed by DBC for the construction of a Data Centre on the
+existing Park (Unit 4 (DC1))". That is a different building from 3A,
+consented before it, and no application within 450 m of the Amazon
+permit carries a data-centre description in 2019 — so the corpus does
+not hold it. Whether it is NTT's Hemel Hempstead 4 at 1 Blossom Way is
+exactly the question Luke's warning about Prologis's numbering says not
+to assume: a wider sweep of the park reading descriptions rather than
+addresses is the way to answer it, and it is in ROADMAP unrun.

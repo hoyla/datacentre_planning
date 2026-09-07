@@ -1158,3 +1158,179 @@ partitions:
     applications:
       - Slough/T/137
 
+
+  # ---- Site 11, Hemel Hempstead: four parties on one Barbour pin ----
+  # PTNO-12063929 held NTT's Hemel Hempstead 3 (filed under Gyron, the
+  # name NTT stopped using when it acquired the company), Amazon's two
+  # Prologis Park buildings, the Blue Box outline at 45 Maylands Avenue
+  # and a third party's gas engines, welded by the 1 km radius and by
+  # Barbour giving Amazon's record the Blue Box address. Drawn
+  # 2026-09-07 after Luke settled the open question (ROADMAP, site 11):
+  # NTT's Hemel Hempstead 4 at 1 Blossom Way and Amazon's building at
+  # 3A are separate buildings in Prologis Park, and NTT's Hemel
+  # Hempstead sites — 2, 3 and 4 — are distinct sites, not a campus,
+  # however the 2013 planning record names its land; Amazon's two
+  # buildings are likewise two records, having no common designation
+  # from Amazon (Luke, later the same day). The Finway Road
+  # gas engines (Dacorum/4/00203/18/FUL and 19/02504/ROC) are
+  # deliberately in no partition: they reached the record through a
+  # single spatial edge to the misplaced Barbour pin, and with that pin
+  # partitioned they stand as their own record.
+
+  - name: ntt-hemel-hempstead-3-spring-way
+    reason: |
+      NTT Hemel Hempstead 3, Spring Way, HP2 7TN — an existing site,
+      not in Prologis Park and not part of Hemel Hempstead 2 (Luke,
+      2026-09-07). The planning record is the 2013 permission
+      (Dacorum/4/01399/13/MFA, applicant Gyron Internet Ltd, "mixed use
+      development including headquarters office building, data storage
+      facility" at "Campus, Spring Way") and the Barbour record linked
+      to it (12063929), which keeps the site key; both carry Gyron's
+      name because NTT acquired Gyron and stopped using it ("formerly
+      operating as Gyron", NTT's London overview). The record's own
+      word "Campus" describes that land and nothing wider. NTT's Hemel
+      Hempstead 2 at 150 Maylands Avenue, HP2 7DF — the address Gyron
+      gave as its own on the 2013 form — is a separate existing site
+      with no application held, and Hemel 4 in Prologis Park is a
+      third; neither is in this partition. Part of the four-way site
+      11 split.
+
+      **The rest of the family was ingested on 2026-09-07** (PlanIt
+      id_match, tagged `ref_ingest:hemel_spring_way`) and is listed
+      here for the same maintenance reason: the four 2013 demolitions
+      that cleared the land, `4/00377/14/FUL` "Power compound", the
+      gatehouse, the link road, the discharges and amendments of the
+      2013 permission, and `4/01905/17/NMA`, whose address line —
+      "The Campus Data Centre, Maylands Avenue, HP2 7TN" — is the
+      register calling the building what it is.
+    applications:
+      - Dacorum/4/00044/13/DEM
+      - Dacorum/4/00635/13/DEM
+      - Dacorum/4/01067/13/DEM
+      - Dacorum/4/01399/13/MFA
+      - Dacorum/4/01686/13/DEM
+      - Dacorum/4/00375/14/FUL
+      - Dacorum/4/00377/14/FUL
+      - Dacorum/4/00496/14/FUL
+      - Dacorum/4/00571/14/DRC
+      - Dacorum/4/00630/14/NMA
+      - Dacorum/4/03535/14/NMA
+      - Dacorum/4/01572/15/DRC
+      - Dacorum/4/02522/15/FUL
+      - Dacorum/4/03671/15/DRC
+      - Dacorum/4/00675/16/ADV
+      - Dacorum/4/02003/16/DRC
+      - Dacorum/4/00217/17/ROC
+      - Dacorum/4/01905/17/NMA
+      - Dacorum/20/03080/DRC
+    projects:
+      - "12063929"              # GYRON LIMITED - NEW DATA CENTRE AND STORAGE FACILITY
+
+  - name: amazon-3a-blossom-way-hemel
+    reason: |
+      Amazon Web Services' existing building at 3A Blossom Way, HP2
+      4ZB, in Prologis Park — the structure Prologis markets as DC5 and
+      DC6, one building, DC6 shown let and DC5 still advertised, so
+      Amazon is probably in the DC6 half (Luke, 2026-09-07, from
+      Prologis's and CBRE's DC5 brochures). Prologis's 2019 consent for
+      flexible B1c/B2/B8 floorspace (4/01922/19/MFA) became a data
+      centre under the S.73 variation 22/01067/ROC and the 2024
+      amendment 24/00914/NMA. None of those three is held, but
+      Dacorum/26/00152/FUL's own documents cite all three, describe
+      "the existing Data Centre at 3A Blossom Way" whose Learning Lab
+      it is, and are submitted on behalf of Amazon Web Services;
+      Amazon's permit EPR/BP3546QP (222 MWth, 33 generators) is issued
+      at the same address. Dacorum/21/04714/SCE is Prologis's December
+      2021 EIA screening for "Data Centre at 3A Blossom Way" — the same
+      building's chain; the "second, unrelated data centre currently
+      under construction" it mentions is NTT's Hemel Hempstead 4 at
+      1 Blossom Way, a different building with no record here. Amazon's
+      proposed second building at Plot 3, 250 m west across Maylands
+      Avenue, is its own record below: Amazon gives the two no common
+      designation, so neither does this file (Luke, 2026-09-07).
+
+      **The chain itself was ingested on 2026-09-07** (PlanIt id_match,
+      `scripts/ingest_planit_refs.py`, tagged
+      `ref_ingest:hemel_3a_blossom_way`) and every reference is listed
+      here, because the partition file's maintenance duty is the only
+      thing that keeps a new application out of whichever neighbouring
+      site is in radius. Two of the twenty carry an address that is not
+      3A and belong all the same, on their own text:
+      `21/04489/DRC` reads "Land At Maylands Court And Wood Lane End"
+      but discharges conditions of `4/01922/19/MFA` and sits at the 3A
+      coordinate, and `24/00402/DRC` at "Land North Breakspear Way,
+      HP2 4ZB" discharges the S.73. `StAlbans/5/2021/3548` is a
+      different council's screening opinion for the substation and
+      medium-voltage connection serving this building — filed where the
+      line runs, and titled "Data Centre At 3A Blossom Way".
+      `4/01132/15/MOA`, a 2015 retail outline at the same address, is
+      the land's own history and is here so the site holds what the
+      register holds rather than only what suits.
+    applications:
+      - Dacorum/4/01132/15/MOA
+      - Dacorum/4/01922/19/MFA
+      - Dacorum/20/01580/DRC
+      - Dacorum/20/01581/DRC
+      - Dacorum/21/00017/DRC
+      - Dacorum/21/00018/DRC
+      - Dacorum/21/00738/DRC
+      - Dacorum/21/02997/NMA
+      - Dacorum/21/03329/ADV
+      - Dacorum/21/04071/DRC
+      - Dacorum/21/04489/DRC
+      - Dacorum/21/04714/SCE
+      - Dacorum/22/01067/ROC
+      - Dacorum/22/03020/DRC
+      - Dacorum/24/00402/DRC
+      - Dacorum/24/00914/NMA
+      - Dacorum/26/00152/FUL
+      - Dacorum/26/00922/DRC
+      - Dacorum/26/01087/FUL
+      - StAlbans/5/2021/3548
+
+  - name: amazon-plot-3-maylands-hemel
+    reason: |
+      Amazon's proposed second building in Prologis Park:
+      Dacorum/26/00267/MFA, a full application by Amazon Data Services
+      UK Limited (undecided, February 2026) for a data centre at Plot 3,
+      Maylands Avenue, HP2 4FQ, grid 507935 207392, the northern of two
+      plots west of the avenue. Its own documents call it LHR608 ("LHR"
+      is the airport-prefix convention most data-centre customers use,
+      not Amazon's alone — Vantage and Digital Realty use it too; the
+      attribution here rests on the applicant's name, not the prefix)
+      and place the 3A building "east of the site and Maylands Avenue",
+      with Amazon's permit 117 m north-east. Barbour 12700933 links to
+      this application by planning reference and travels with it,
+      keeping the PTNO key; its address, "Blue Box Storage, 45
+      Maylands Avenue", is Northtree's site 800 m north and is wrong —
+      the pin is overridden in inferred_coords.yaml. A separate record
+      from 3A Blossom Way because Amazon gives the two no common
+      designation (Luke, 2026-09-07).
+    applications:
+      - Dacorum/26/00267/MFA
+    projects:
+      - "12700933"              # AMAZON DATA SERVICES  MAYLANDS AVENUE - DATA CENTRE
+
+  - name: northtree-45-maylands-hemel
+    reason: |
+      Northtree Investment Management's outline for a data centre on
+      the Blue Box Storage site, 45 Maylands Avenue, HP2 7DF
+      (Dacorum/24/02039/MOA; the applicant and landowner in 53
+      findings, Blue Box Storage the current occupier). Not in Prologis
+      Park and a separate entity from both NTT's Hemel Hempstead 3
+      150 m east — its own landscape appraisal: "Further to the east
+      the most prominent building is a Data Centre Facility (Gyron
+      Campus Data Centre)" — and Amazon's buildings 800 m south (Luke,
+      2026-09-07, who describes it as an NTT project with no facility
+      number yet). The planning file names only Northtree, and
+      Companies House says Northtree is not NTT: Northtree Investment
+      Management Ltd (12951131, SIC 66300) is controlled by two
+      individuals, no NTT entity among its officers or controllers,
+      and wholly owns Northtree DC 4 Ltd (15933304, 2024) — an
+      independent investment manager with a data-centre development
+      arm. If NTT is the intended operator, that is not in the file.
+      The Barbour record carrying this address belongs to Amazon's
+      Plot 3 application, not to this one, which is how the radius
+      welded the three together.
+    applications:
+      - Dacorum/24/02039/MOA

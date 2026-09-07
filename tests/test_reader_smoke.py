@@ -717,9 +717,17 @@ def test_every_operator_rung_cell_is_labelled_in_the_built_page(built_reader):
     cells = re.findall(
         r"<span class='fig (w-[a-z]+)'>[^<]*</span><span class='q'>([^<]*)",
         html)
+    # The capture stops at the next tag, and a provisional figure puts
+    # one there: the basis is followed by `<span class='prov'>· may
+    # rise</span>`, so the text captured ends in a space. Comparing it
+    # unstripped made this test fail the first time an operator-rung
+    # site was also provisional (NTT Hemel Hempstead 3, 2026-09-07,
+    # when ingesting its own planning family left one prose document
+    # unread) — a label the page renders correctly, failed by the probe
+    # rather than by the page.
     mislabelled = sorted({(w, q) for w, q in cells
                           if (w == "w-operator")
-                          != (q == site_scale.OPERATOR_BASIS)})
+                          != (q.strip() == site_scale.OPERATOR_BASIS)})
     assert not mislabelled, (
         f"the operator weight class and its basis label disagree on "
         f"{len(mislabelled)} cells, e.g. {mislabelled[:3]} — a first-party "

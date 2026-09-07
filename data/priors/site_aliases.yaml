@@ -542,3 +542,44 @@ aliases:
      
       
       
+
+  - site_key: PTNO-12063929
+    alias: NTT Hemel Hempstead 3, Spring Way (filed under Gyron)
+    source: |
+      The derived name is Barbour's title for the 2013 scheme, filed by
+      Gyron Internet Ltd — the company NTT acquired and the name it
+      stopped using: "with over 20 years of experience in the UK market
+      formerly operating as Gyron" (NTT's London overview, snapshot
+      ntt-london.2026-09-02) — which is why a search for NTT never
+      found this site (organisation_aliases.yaml, NTT group). NTT's own
+      page puts Hemel Hempstead 3 at "Campus, Spring Way, HP2 7TN", the
+      record's address. NTT's Hemel Hempstead 2 (150 Maylands Avenue)
+      and 4 (1 Blossom Way) are separate sites with no record here
+      (Luke, 2026-09-07). Own record since the site 11 partition.
+
+  - site_key: PTNO-12700933
+    alias: Amazon LHR608, Plot 3 Maylands Avenue, Prologis Park Hemel Hempstead
+    source: |
+      Barbour's title reads "AMAZON DATA SERVICES  MAYLANDS AVENUE" and
+      its address is "Blue Box Storage, 45 Maylands Avenue" — a
+      different site, Northtree's, 800 m north (inferred_coords.yaml).
+      The record's one application is Dacorum/26/00267/MFA, Amazon Data
+      Services UK Limited's full application at Plot 3, Maylands
+      Avenue, HP2 4FQ, whose own documents call the building LHR608.
+      Own record since the site 11 partition, 2026-09-07; separate from
+      Amazon's existing 3A Blossom Way building because Amazon gives
+      the two no common designation (Luke).
+
+  - site_key: SITE-Dacorum/20/01580/DRC
+    alias: Amazon, 3A Blossom Way, Prologis Park Hemel Hempstead (Prologis DC5/DC6)
+    source: |
+      The derived name is a condition discharge's address line, which
+      names no operator: the key is the site's first member reference
+      alphabetically, and ingesting the building's own permission chain
+      on 2026-09-07 moved it from the 2021 screening request to
+      `20/01580/DRC`. Dacorum/26/00152/FUL, submitted on
+      behalf of Amazon Web Services, describes "the existing Data
+      Centre at 3A Blossom Way", and Amazon's permit EPR/BP3546QP is
+      issued at 3A Blossom Way, HP2 4ZB. Prologis markets the structure
+      as DC5 and DC6, one building (Luke, 2026-09-07). Own record since
+      the site 11 partition.

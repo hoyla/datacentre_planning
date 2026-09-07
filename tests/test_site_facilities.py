@@ -66,9 +66,14 @@ def test_the_worked_case_holds_its_conflict_unresolved():
 
 def test_every_claim_reference_in_the_real_file_resolves():
     from dcp import capacity_claims as cc
+    from dcp import ea_permits as ea
     known = {c.claim_name for c in cc.load_operator_claims()}
     known |= {c.claim_name for c in cc.load_register_demand_claims()}
     known |= {c.claim_name for c in cc.load_ch_claims()}
+    # The permit register is the fourth claims file: a facility may
+    # attribute its permitted standby fleet (Amazon at 3A Blossom Way,
+    # 2026-09-07), and the permit claim lives there and nowhere else.
+    known |= {c.claim_name for c in ea.load_ea_claims()}
     sf.require_known_claims(sf.load_facilities(), known)
 
 

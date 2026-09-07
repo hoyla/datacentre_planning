@@ -473,15 +473,38 @@ campuses:
       Not yet reviewed.
 
   - site_key: PTNO-12063929
-    projects: 2
+    projects: 1
     proposed: co_located
-    scope: unreviewed
-    total: unreviewed
+    scope: distinct_facilities
+    total: withhold
     barbour_titles:
-      - AMAZON DATA SERVICES  MAYLANDS AVENUE - DATA C
       - GYRON LIMITED - NEW DATA CENTRE AND STORAGE FA
     reason: |
-      Not yet reviewed.
+      Reviewed 2026-09-07, and the review was a partition rather than a
+      scope decision: the two projects were two operators — NTT's
+      Hemel Hempstead 3, filed under Gyron's name, and Amazon's
+      Prologis Park buildings — plus the 45 Maylands Avenue outline and
+      a third party's gas engines, held together by the 1 km radius and
+      by Barbour giving Amazon's record the Blue Box address. Luke
+      settled the one open question (NTT's Hemel Hempstead 4 at
+      1 Blossom Way and Amazon's 3A are separate buildings; NTT's Hemel
+      Hempstead 2, 3 and 4 are distinct sites, not a campus) and the
+      site became four (site_partitions.yaml, the three Hemel entries;
+      Finway Road stands alone). This record is now Hemel Hempstead 3
+      alone, one Barbour project, so it no longer belongs to the
+      multi-project population; the entry stays as the record of the
+      review.
+
+      **Distinct facilities**, in the only sense left: the record holds
+      one facility, Hemel Hempstead 3, on NTT's own page
+      (site_facilities.yaml); Hemel 2 and 4 are separate sites with no
+      record here, and are not counted against this one.
+
+      **Total: withhold.** There is nothing to sum, NTT states no
+      figure that spans its Hemel sites, and the planning record states
+      no load at all — the site ranks on the operator rung's Hemel 3
+      claim or on nothing. No power_cell: there is no campus claim to
+      displace with.
 
   - site_key: PTNO-12104907
     projects: 2
