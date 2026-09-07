@@ -12,6 +12,14 @@ counts move while the corroboration pass runs and are deliberately not
 restated here — `scripts/corpus_stats.py` prints them, and each
 release states the boundary it was stamped at.
 
+**The corpus has moved since that stamp and the next build will show
+it** (measured 2026-09-07 evening, after the Hemel work): **503 live
+sites**, **2,022 applications** in the site universe, **62,559
+documents**. Four sites are new — three from the site 11 partition and
+one from ingesting 3A Blossom Way's own permission chain — and one
+site was re-keyed, so `release_diff` will report site churn that is
+this work rather than a regression.
+
 **The base is 2.14, released and deployed** (2026-09-07: candidate
 #412, release #413 carrying `index.html`, live as Cloud Run revision
 `dc-reader-00010-8g4` at 100% of traffic; HISTORY, "v2.14"). Artefacts
@@ -1445,6 +1453,17 @@ field and is not publishable as it stands.
   probably genuinely unreadable; worth one look at whether the bytes
   match what the portal serves before accepting that.
 
+  **Re-measured 2026-09-07 evening, after the Hemel ingest: 388 of 390
+  live sites with prose are read in full**, and the denominator moved
+  because the site 11 partition and the 3A ingest added records. The
+  two short are the same defect twice: Wakefield's `.docx` on
+  `PTNO-12817834`, and now a risk register held as an `.xls` on
+  `Dacorum/4/00571/14/DRC`, which keeps NTT Hemel Hempstead 3
+  (`PTNO-12063929`) below read-in-full and marks its figure "may rise"
+  in the reader. **One loader closes both**, which raises the value of
+  the cheap half of this item. Re-measure rather than quoting either
+  figure: the accessor is `site_profile.load_coverage_detail`.
+
 - **Two of VIRTUS's seven Slough facilities have no record at all**
   (2026-09-02). The campus is one site now — the partition was extended
   on the Iron Mountain rule the evening the facilities were located
@@ -1918,6 +1937,69 @@ here rather than applied from the build lane.
   the site's connection is. Settle it by hand, then re-check the
   Operators tab's like-for-like, which still quotes the
   register-vs-planning comparison this family fed.
+## A site's own status, which nothing yet states (#257)
+
+Luke's question, open since it was raised and **not represented
+anywhere else in this file**, which is why it is its own section:
+"Obviously a site will have multiple applications, and the status of
+each can be variable, so we can't just lift this information from the
+applications. But if there is any way we could state if the data
+centre(s) at the site are pre-planning, applications submitted,
+application approved, application rejected, operational, or whatever,
+it'd be very helpful."
+
+**What exists is not this.** `dcp/site_class.py` derives what *kind of
+record* a site is (`datacentre`, `disguise suspect`, `adjacent power`,
+`procedural only`, `no planning record`) from its members' triage
+verdicts. `site_profile.capacity_status` and `acquisition_status`
+describe how far *we* have got with a site, not how far the scheme
+has. The reader shows each application's own `status` in the
+Applications tab, which is the raw material and the reason the
+question is hard: one site holds a refused outline, an approved
+variation and an undecided reserved matters at once, and the site's
+status is not any of them.
+
+**The trap to design against, on this project's own evidence.** A
+consent is not a building: the corpus holds permitted schemes never
+built, and the 3A Blossom Way case shows the opposite too — a building
+operating as a data centre whose own permission says B8 floorspace, so
+"approved" would have been true and useless for years while the
+register called it a warehouse. Barbour's `Stage` field
+(`Detail Planning`, `Detail Approval / Subcontract Awarded`) is a
+second opinion from the construction side and is already held on the
+project rows; the operator pages state "operational" or "will offer"
+for the facilities they name. Three channels, none authoritative
+alone, which is the same shape as the capacity model — so the answer
+is probably a stated status with its source named, never a computed
+one presented flat.
+
+**Worth scoping before building**, and the first cut is cheap: measure
+how many live sites have a single unambiguous latest decision across
+their members, and how many do not. That number decides whether this
+is a derivation with exceptions or a hand-adjudicated prior.
+
+## Two smaller open issues, so this file holds all of them
+
+- **Hackney: did its register really lose the old applications?**
+  (#400, Luke). The acquisition half is under the browser-routed
+  residue above — the host refuses connections and the register has
+  moved. The *coverage* half is the question the issue actually asks
+  and it is not the same one: whether Hackney's old applications are
+  gone from the register or merely unfound by us. Settle it against
+  whatever register answers today, not against the dead host.
+- **Stop deploying to EdgeOne** (#391, Luke: "We can leave the
+  redirect in place, but we don't need to repeatedly deploy to
+  EdgeOne"). Since 2026-08-26 the middleware is a pure redirect that
+  publishes nothing, so every rebuild of it is work for an artefact
+  that never changes. **Establish first where the repeated deploy
+  comes from**, because the runbook does not ask for one — step 14
+  only *probes* EdgeOne, and that probe still earns its place by
+  proving the redirect serves nothing. The likely answer is the
+  platform's own git integration rebuilding on each push to `main`,
+  which is a setting in Luke's EdgeOne dashboard rather than anything
+  in this repository. Deleting the deployment is a separate decision
+  again, once colleagues' saved links have drained.
+
 ## Smaller things
 
 - **A public feed: Barbour-stripped site summaries as GeoJSON, with a
@@ -2449,9 +2531,11 @@ None is abandoned; each is a known, scoped piece of work.
   not one campus but three distinct sites, 2, 3 and 4. With that,
   and the documents read (HISTORY, "Site 11 becomes four"),
   `PTNO-12063929` is NTT Hemel Hempstead 3 alone (the record filed
-  under Gyron, the company NTT acquired), `SITE-Dacorum/21/04714/SCE`
+  under Gyron, the company NTT acquired), `SITE-Dacorum/20/01580/DRC`
   is Amazon's existing building at 3A Blossom Way (the 222 MWth permit
-  now matched `strong`), `PTNO-12700933` is Amazon's proposed LHR608
+  now matched `strong`; the key moved from the 2021 screening request
+  when the building's own permission chain was ingested, because a
+  site key is its first member reference alphabetically), `PTNO-12700933` is Amazon's proposed LHR608
   at Plot 3, Maylands Avenue — its own record because Amazon gives the
   two no common designation (Luke), and "LHR" is the airport prefix
   most data-centre customers use, never on its own evidence of Amazon
@@ -2465,9 +2549,9 @@ None is abandoned; each is a known, scoped piece of work.
 
   What the split leaves, each its own item:
 
-  - **Both missing families are ingested, and what is left is one
-    document and a re-read of the site** (2026-09-07, on Luke's
-    instruction after the probe). 36 references fetched from PlanIt by
+  - **Both missing families are ingested; one document and one
+    spreadsheet are what is left** (2026-09-07, on Luke's instruction
+    after the probe). 36 references fetched from PlanIt by
     `id_match` with `scripts/ingest_planit_refs.py`, every one listed
     in its partition entry, triaged, fetched and first-read: the 3A
     Blossom Way chain (Prologis's 2019 consent `4/01922/19/MFA`, the
@@ -2480,7 +2564,10 @@ None is abandoned; each is a known, scoped piece of work.
     screening opinion** for the substation and medium-voltage
     connection serving 3A — `StAlbans/5/2021/3548`, held as an
     application with no adapter for that portal, so its documents are
-    a browser or manual job.
+    a browser or manual job. And the Hemel 3 site is one document short
+    of read in full: `4/00571/14/DRC` holds a risk register as an
+    `.xls`, which is the loader gap under "Coverage gaps worth
+    closing" — a second site now waits on it.
   - **What the 3A chain says, now that it is here.** The S.73 that
     made the building a data centre (`22/01067/ROC`) describes **"32
     double stacked containerised generators … and an additional
@@ -2513,6 +2600,14 @@ None is abandoned; each is a known, scoped piece of work.
     -0.4350) reading descriptions rather than addresses, and the
     Dacorum register for a mid-2019 committee resolution. It may give
     1 Blossom Way the record the address search could not find.
+  - **The next release has to carry all of this into Drive, and one
+    part of it moves rather than arrives.** The 326 new documents want
+    staging and `record_drive_ids.py`; the four new sites want folders;
+    and the 3A site's own folder is a **rename**, because its key
+    changed — so the staging build needs `drive_sync.py --prune` or
+    Drive keeps the old name beside the new one, which is the standing
+    trap in this file's Drive section. Nothing is lost either way; the
+    cost of forgetting is a duplicate tree.
   - **Seven of the 36 are outside the universe, and the reason is the
     finding.** `4/01922/19/MFA`, the permission the building actually
     stands on, reads `not_dc` on its own description — 21,726 sqm of

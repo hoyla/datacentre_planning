@@ -4890,7 +4890,11 @@ not an adjudicator's.
 reference alphabetically and the ingest moved that from the 2021
 screening request to a condition discharge; the permit match was
 re-pointed in the same sitting, the old row retired with the reason,
-and the alias and roster followed. And the fetch queue taught the
+and the alias and roster followed. The count stays at **503 live
+sites** — one key arrives, one retires — and the corpus stands at
+2,022 applications and 62,559 documents against the 1,993 and 62,241
+the 2.14 build was stamped at, which is what the next release's diff
+will show. And the fetch queue taught the
 script a lesson worth keeping: it admits only live site members, so a
 fetch run before the triage sweep finds nothing to do, which is what
 happened on the first attempt. The script's own next-steps note now
@@ -4906,3 +4910,11 @@ not hold it. Whether it is NTT's Hemel Hempstead 4 at 1 Blossom Way is
 exactly the question Luke's warning about Prologis's numbering says not
 to assume: a wider sweep of the park reading descriptions rather than
 addresses is the way to answer it, and it is in ROADMAP unrun.
+
+**And one measurement worth keeping, because it moved the denominator.**
+Coverage is now **388 of 390 live sites with prose read in full**: the
+partition and the ingest added records, and the two short sites are the
+same defect twice — Wakefield's `.docx` and, new tonight, a risk
+register held as an `.xls` on `Dacorum/4/00571/14/DRC`, which keeps NTT
+Hemel Hempstead 3 below read-in-full and marks its figure "may rise" on
+the page. One loader closes both.
