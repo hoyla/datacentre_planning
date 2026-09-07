@@ -4293,7 +4293,7 @@ and three hand-fetched councils:
 
 | route | councils | applications | documents |
 |---|---|---|---|
-| register moved (`SUCCESSOR_HOSTS`) | Selby → North Yorkshire | 28 | 621 |
+| register moved (`SUCCESSOR_HOSTS`) | Selby → North Yorkshire | 28 | 895 |
 | council document server, own script | Derby | 6 | 62 |
 | Public Access module (Newport's, a `STORES` row each) | Doncaster, Adur & Worthing, Horsham, Huntingdonshire, Mid Sussex | 15 | 610 |
 | Civica "Planning Documents", by its own API | Gateshead, Chelmsford, Reigate & Banstead, Southend | 8 | 405 |
@@ -4301,9 +4301,11 @@ and three hand-fetched councils:
 | by hand, through a CAPTCHA (Bedford) and an Incapsula gate (Brighton) | Bedford, Brighton | 5 | 111 |
 | excluded by exception | Exeter College | 6 | — |
 
-1,811 documents on 63 applications and 29 live sites, 28 of which held
-no document that morning. Measured from `documents.fetched_at`; Selby's
-final pass over four part-read applications was still running.
+2,085 documents on 63 applications and 29 live sites, 28 of which held
+no document that morning. Measured from `documents.fetched_at` the
+next morning, after Selby's final pass over its four part-read
+applications had finished at 23:48 with 291 more (the EIA alone 193,
+against 34 held when the 900-second budget cut it off).
 
 Three things the evening taught, beyond the routes. **A refusal on the
 documents tab is never evidence about the documents**: seven councils,
