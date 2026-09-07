@@ -570,11 +570,14 @@ aliases:
       Amazon's existing 3A Blossom Way building because Amazon gives
       the two no common designation (Luke).
 
-  - site_key: SITE-Dacorum/21/04714/SCE
+  - site_key: SITE-Dacorum/20/01580/DRC
     alias: Amazon, 3A Blossom Way, Prologis Park Hemel Hempstead (Prologis DC5/DC6)
     source: |
-      The derived name is the 2021 screening request's address line,
-      which names no operator. Dacorum/26/00152/FUL, submitted on
+      The derived name is a condition discharge's address line, which
+      names no operator: the key is the site's first member reference
+      alphabetically, and ingesting the building's own permission chain
+      on 2026-09-07 moved it from the 2021 screening request to
+      `20/01580/DRC`. Dacorum/26/00152/FUL, submitted on
       behalf of Amazon Web Services, describes "the existing Data
       Centre at 3A Blossom Way", and Amazon's permit EPR/BP3546QP is
       issued at 3A Blossom Way, HP2 4ZB. Prologis markets the structure

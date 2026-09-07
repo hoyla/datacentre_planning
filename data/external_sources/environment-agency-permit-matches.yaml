@@ -273,20 +273,26 @@ matches:
 # result is not the same thing as an untested one.
   # --- Hemel Hempstead, matched once site 11 was partitioned -----------
   - claim_name: Hemel Hempstead Data Centre (EPR/BP3546QP)
-    site_id: 549
+    site_id: 550
     method: operator_identity
     confidence: strong
     matched_by: hand:claude-fable-5:2026-09-07
     evidence: >-
       The permit is held by AMAZON DATA SERVICES UK LIMITED at 3A Blossom
-      Way, HP2 4ZB (grid 508120 207510). Site 549 —
-      SITE-Dacorum/21/04714/SCE, Amazon's existing 3A Blossom Way
-      building, its own record since the 2026-09-07 partition of site
-      11 — holds Dacorum/26/00152/FUL at 3A Blossom Way, HP2 4ZB,
+      Way, HP2 4ZB (grid 508120 207510). Site 550 —
+      SITE-Dacorum/20/01580/DRC, Amazon's existing 3A Blossom Way
+      building: its own record since the 2026-09-07 partition of site
+      11, re-keyed the same day when the building's own permission chain
+      was ingested (the key is the first member reference
+      alphabetically, which is now a condition discharge; the alias
+      carries the name). It holds Dacorum/26/00152/FUL at 3A Blossom Way, HP2 4ZB,
       submitted on behalf of Amazon Web Services for a Learning Lab "in
       connection with the adjacent Data Centre" and describing "the
       existing Data Centre at 3A Blossom Way", and Prologis's 2021
-      screening for "Data Centre at 3A Blossom Way". Amazon's own
+      screening for "Data Centre at 3A Blossom Way" — and, since the
+      2026-09-07 ingest, the permission chain itself, 18 applications:
+      Prologis's 2019 consent, the S.73 variation that made it a data
+      centre, the 2024 amendment and their discharges. Amazon's own
       application for its separate Plot 3 building 250 m west
       (Dacorum/26/00267/MFA, PTNO-12700933) cites this permit as the
       installation "117m northeast operated by Amazon Data Services UK
@@ -297,7 +303,7 @@ matches:
       and no other site competes for it. The permit describes the
       existing building — Prologis's consent as varied by 22/01067/ROC,
       none of whose own applications is held — not the proposed Plot 3
-      building, which is why it moved with 3A when the two were split
+      building, and why it moved with 3A when the two were split
       (the first match, to PTNO-12700933 while both buildings shared a
       record, is retired with that reason).
 
@@ -384,7 +390,8 @@ considered:
       SETTLED for Amazon's permit, 2026-09-07: site 11 was partitioned
       into four (site_partitions.yaml, the three Hemel entries), the 3A
       Blossom Way applications now sit in SITE-Dacorum/21/04714/SCE
-      (site 549), and the permit is matched to it above. NTT's permit stays here: it
+      (site 550, keyed SITE-Dacorum/20/01580/DRC since the chain was
+      ingested), and the permit is matched to it above. NTT's permit stays here: it
       covers four sites at four postcodes (HP2 7UP, 7SU, 7DF, 7EQ), of
       which NTT's Hemel 3 record (filed under Gyron) holds one, and a
       multi-site figure

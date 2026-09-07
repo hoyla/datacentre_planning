@@ -633,7 +633,7 @@ sites:
           - kind: maximum IT load, operator's basis
             claim: NTT Hemel Hempstead 3
 
-  - site_key: SITE-Dacorum/21/04714/SCE
+  - site_key: SITE-Dacorum/20/01580/DRC
     note: >-
       Amazon Web Services' existing building at 3A Blossom Way,
       Prologis Park Hemel Hempstead. Amazon publishes no facility page

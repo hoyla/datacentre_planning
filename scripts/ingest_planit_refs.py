@@ -25,8 +25,10 @@ Two duties the caller owns, not this script:
      new application with no family edge cannot spatially join a
      partition and will land in whichever unpartitioned site is in
      radius.
-  2. Fetch, triage and read them (fetch_outstanding.py, catalogue_sweep.py,
-     deepread_escalate_openai.py --cohort first_read).
+  2. Triage, materialise, fetch and read them — **in that order**. The
+     fetch queue admits an application only once it is a live site
+     member, and membership follows the triage verdict, so a fetch run
+     before the sweep silently finds nothing to do.
 
 Idempotent and resumable: each lookup is served from `source_snapshots`
 when already captured, so a re-run after a 429 wall costs nothing for
@@ -174,13 +176,14 @@ def main() -> int:
 
     print(f"\nSummary: {summary}")
     if not args.dry_run and summary["ingested"]:
-        print("\nNext, and in this order:\n"
+        print("\nNext, and in this order — the fetch queue admits only\n"
+              "live site members, so triage and materialise come first:\n"
               "  1. add every new ref to its entry in "
               "data/priors/site_partitions.yaml\n"
-              "  2. scripts/fetch_outstanding.py --dry-run, then for real\n"
-              "  3. scripts/catalogue_sweep.py   (dc_build triage)\n"
-              "  4. scripts/deepread_escalate_openai.py --cohort first_read\n"
-              "  5. scripts/materialise_sites.py --dry-run, then for real")
+              "  2. scripts/catalogue_sweep.py   (dc_build triage)\n"
+              "  3. scripts/materialise_sites.py --dry-run, then for real\n"
+              "  4. scripts/fetch_outstanding.py --dry-run, then for real\n"
+              "  5. scripts/deepread_escalate_openai.py --cohort first_read")
     return 0
 
 

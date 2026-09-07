@@ -1194,8 +1194,35 @@ partitions:
       with no application held, and Hemel 4 in Prologis Park is a
       third; neither is in this partition. Part of the four-way site
       11 split.
+
+      **The rest of the family was ingested on 2026-09-07** (PlanIt
+      id_match, tagged `ref_ingest:hemel_spring_way`) and is listed
+      here for the same maintenance reason: the four 2013 demolitions
+      that cleared the land, `4/00377/14/FUL` "Power compound", the
+      gatehouse, the link road, the discharges and amendments of the
+      2013 permission, and `4/01905/17/NMA`, whose address line —
+      "The Campus Data Centre, Maylands Avenue, HP2 7TN" — is the
+      register calling the building what it is.
     applications:
+      - Dacorum/4/00044/13/DEM
+      - Dacorum/4/00635/13/DEM
+      - Dacorum/4/01067/13/DEM
       - Dacorum/4/01399/13/MFA
+      - Dacorum/4/01686/13/DEM
+      - Dacorum/4/00375/14/FUL
+      - Dacorum/4/00377/14/FUL
+      - Dacorum/4/00496/14/FUL
+      - Dacorum/4/00571/14/DRC
+      - Dacorum/4/00630/14/NMA
+      - Dacorum/4/03535/14/NMA
+      - Dacorum/4/01572/15/DRC
+      - Dacorum/4/02522/15/FUL
+      - Dacorum/4/03671/15/DRC
+      - Dacorum/4/00675/16/ADV
+      - Dacorum/4/02003/16/DRC
+      - Dacorum/4/00217/17/ROC
+      - Dacorum/4/01905/17/NMA
+      - Dacorum/20/03080/DRC
     projects:
       - "12063929"              # GYRON LIMITED - NEW DATA CENTRE AND STORAGE FACILITY
 
@@ -1221,9 +1248,45 @@ partitions:
       proposed second building at Plot 3, 250 m west across Maylands
       Avenue, is its own record below: Amazon gives the two no common
       designation, so neither does this file (Luke, 2026-09-07).
+
+      **The chain itself was ingested on 2026-09-07** (PlanIt id_match,
+      `scripts/ingest_planit_refs.py`, tagged
+      `ref_ingest:hemel_3a_blossom_way`) and every reference is listed
+      here, because the partition file's maintenance duty is the only
+      thing that keeps a new application out of whichever neighbouring
+      site is in radius. Two of the twenty carry an address that is not
+      3A and belong all the same, on their own text:
+      `21/04489/DRC` reads "Land At Maylands Court And Wood Lane End"
+      but discharges conditions of `4/01922/19/MFA` and sits at the 3A
+      coordinate, and `24/00402/DRC` at "Land North Breakspear Way,
+      HP2 4ZB" discharges the S.73. `StAlbans/5/2021/3548` is a
+      different council's screening opinion for the substation and
+      medium-voltage connection serving this building — filed where the
+      line runs, and titled "Data Centre At 3A Blossom Way".
+      `4/01132/15/MOA`, a 2015 retail outline at the same address, is
+      the land's own history and is here so the site holds what the
+      register holds rather than only what suits.
     applications:
+      - Dacorum/4/01132/15/MOA
+      - Dacorum/4/01922/19/MFA
+      - Dacorum/20/01580/DRC
+      - Dacorum/20/01581/DRC
+      - Dacorum/21/00017/DRC
+      - Dacorum/21/00018/DRC
+      - Dacorum/21/00738/DRC
+      - Dacorum/21/02997/NMA
+      - Dacorum/21/03329/ADV
+      - Dacorum/21/04071/DRC
+      - Dacorum/21/04489/DRC
       - Dacorum/21/04714/SCE
+      - Dacorum/22/01067/ROC
+      - Dacorum/22/03020/DRC
+      - Dacorum/24/00402/DRC
+      - Dacorum/24/00914/NMA
       - Dacorum/26/00152/FUL
+      - Dacorum/26/00922/DRC
+      - Dacorum/26/01087/FUL
+      - StAlbans/5/2021/3548
 
   - name: amazon-plot-3-maylands-hemel
     reason: |
