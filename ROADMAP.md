@@ -6,53 +6,36 @@ re-proposing them — is in [HISTORY.md](HISTORY.md).
 
 Current state: **499 sites** (plus 7 pre-planning; 506 rows in the
 reader), **1,993 applications** in the site universe, **62,241
-documents** — the counts the 2.14 candidate build was stamped at on
-2026-09-07 (HISTORY, "The refused pages are read"). Down from 2.13's
-500 and 1,999 by Exeter College's exclusion (HISTORY, 2026-09-06), up
-2,085 documents from the refused-page review, all read.
-Findings and adjudication counts move while the corroboration pass
-runs and are deliberately not restated here — `scripts/corpus_stats.py`
-prints them, and each release states the boundary it was stamped at.
+documents** — the counts the 2.14 build was stamped at on 2026-09-07
+(HISTORY, "The refused pages are read"). Findings and adjudication
+counts move while the corroboration pass runs and are deliberately not
+restated here — `scripts/corpus_stats.py` prints them, and each
+release states the boundary it was stamped at.
 
-**The base is 2.13, released and deployed** (2026-09-03: candidate
-#382, release #383 carrying `index.html`, deployed the same evening as
-Cloud Run revision `dc-reader-00009-5j9` serving 100% of traffic, with
-IAP gating verified and the EdgeOne probe clean — 22 paths refused,
-forged cookie rejected). Artefacts in `data/exports/phase2.13_build/`,
-which is the baseline the next build's release diff is read against.
-Cloud Run serves whatever `index.html` `cloudrun/deploy.sh` was last
-run against — the deploy is the script, not the merge.
+**The base is 2.14, released and deployed** (2026-09-07: candidate
+#412, release #413 carrying `index.html`, live as Cloud Run revision
+`dc-reader-00010-8g4` at 100% of traffic; HISTORY, "v2.14"). Artefacts
+in `data/exports/phase2.14_build/`, which is the baseline the next
+build's release diff is read against. Cloud Run serves whatever
+`index.html` `cloudrun/deploy.sh` was last run against — the deploy is
+the script, not the merge.
 
-**What 2.13 carries** (HISTORY, "v2.13"): the "near a postcode"
-control and the filter bar refitted to a laptop screen (#377); the
-extraction-cache fix and the readings backlog it had been hiding, four
-documents rather than the eighty-one the note claimed, with 243
-wordless documents given the verdict they lacked and seven sites freed
-(#378); the readings queue's latent skip closed (#379); and the
-runbook's "Expected, and not a fault" register, so the standing
-anomalies are investigated once (#380, #381).
+**Outstanding from 2.14**, each detailed in its own section below: the
+Eggborough discharge site carries the power station's own 2,500 MW as
+a site's on-site generation, which is the `not_dc` figure-level rule
+and the adjacency review in one place; Pinpoint and Giant are **755
+documents short** and silently so; step 15, telling the reporting
+team, has not been done; and the notebook bundle has not been built
+since 2.12.
 
-**Left for 2.13 by the freshness check, and now done**: the three
-withheld readings are resolved — West London Technology Park and the
-A41 Watford Bypass were re-read on 2026-09-03, and Mary Somerville
-holds no documents, so its withheld reading is correct and permanent
-(the register says so).
-
-**2.11 was the site / facility / campus effort** (Luke, 2026-08-31,
-redefining it: "the focus of 2.11 has evolved into the effort to make
-sense of the site/facility/campus issues") — the capacity-model section
-below. What it shipped: the ladder rung, which closed #250's two
-measured cases; #247's facility prior, built and consumed; the
-adjacent-power relationship (#252); and, as its preliminary, the
-verbatim gate's whitespace fix and re-gate, which ran on 2026-08-31 so
-that the campus work reads a corpus holding the recovered figures
-(HISTORY, "The re-gate reinstated the findings the gate had wrongly
-rejected"). **What carries forward** is the rest of that section: #248,
-the 35-campus review (32 entries still `unreviewed`), #247's general
-case — a campus with no published roster still shows one building's
-figure — and the partitions the review owes. The over-merged site
-records still hold the Premier Park and DataVita claims under
-`considered:`.
+**What carries forward from the site / facility / campus effort** (2.11,
+which Luke redefined on 2026-08-31 as "the effort to make sense of the
+site/facility/campus issues"; what it shipped is in HISTORY): #248,
+the 35-campus review — **31 of the 35 entries are still `unreviewed`**,
+measured 2026-09-07 — #247's general case, where a campus with no
+published roster still shows one building's figure, and the partitions
+the review owes. The over-merged site records still hold the Premier
+Park and DataVita claims under `considered:`.
 
 **Model choices.** The decisions in force, the comparisons behind them
 and the measurement lessons are in [docs/MODELS.md](docs/MODELS.md);
@@ -75,53 +58,30 @@ detailed under "Open" in that file:
 - **Which reader re-extracts what the local model read** (Phase 3,
   below): the 2026-08-28 choice is the default position, not a decision.
 
-## 2,085 documents acquired on 2026-09-06 that nothing has read
+## What the refused-page read left for a person
 
-The refused-page review (HISTORY, "An evening on the refused pages")
-put documents on 63 applications that held nothing that morning —
-2,085 of them, on 29 live sites, **28 of which held no document at
-all before**: Selby 895 across 28 applications (Eggborough, Drax and
-the Selby power cluster), Chelmsford 218, Mid Sussex 218, Doncaster
-194, Horsham 160, Reigate 89, Gateshead 68, Bedford 65, Derby 62,
-Brighton 46, Southend 30, Adur & Worthing 24, Huntingdonshire 14,
-Neath 2. Selby's final pass over its four part-read applications
-(three timed out on the first run, one partial) finished at 23:48 —
-291 more documents, the EIA alone 193 — and the figures above include
-it (measured 2026-09-07 morning).
-
-This is not a re-read and does not wait behind the policy below: these
-are unread documents on sites whose profile today says "no documents"
-or "not read". They go through the ordinary pipeline in order —
-extract, the deep-read batch for the new documents (the corpus-job
-rule: readings are a corpus job, not a site job), the machine-reading
-for the 28 sites that never had one, Drive staging — and then a release
-candidate, diffed against 2.13 with the previous-release check, because
-28 site profiles change from "nothing held" to something. Twenty-eight
-sites' worth of "read in full" is the number to re-measure first.
-
-**Done 2026-09-07** (HISTORY, "The refused pages are read"): extracted,
-read on `gpt-5:low` (1,844 documents, 36,858 findings), adjudicated by
-consequence (501 figures through the Sonnet route, two through the
-batch), the generation and label passes run, and re-measured: **all 29
-sites read in full, 385 of 388 corpus-wide**, the three the runbook's
-register names still the three. What the read left for a person:
+The 2,085 documents the refused-page review put on 29 sites were
+extracted, read and adjudicated on 2026-09-07 and shipped in 2.14 —
+all 29 read in full, 385 of 388 corpus-wide (HISTORY, "The refused
+pages are read"). Two things it surfaced are still open, and one is
+the sharpest instance the corpus holds of a rule this file has been
+carrying unbuilt:
 
 - **`SITE-Selby/ZG2023/1213/DOC` carries 2,500 MW of on-site
   generation that is the Eggborough gas-fired station's own.** The
   site is keyed on the station's DCO discharge, a `not_dc` application
   admitted through its `procedural` sibling, and the figure is
   adjudicated correctly for the application it belongs to. It is the
-  figure-level rule (a `not_dc` member's figures standing as a site's,
-  under the `not_dc` item in the capacity-model section) and the
-  adjacency review (the record has no `site_adjacent_power` row to
+  **figure-level rule** (a `not_dc` member's figures standing as a
+  site's — the `not_dc` item in the capacity-model section) and the
+  **adjacency review** (the record has no `site_adjacent_power` row to
   `PTNO-12784626`, the data centres on the same station's land) in one
   new place. The generation adjudication types the plant, so the
-  ladder's generation rung will not rank the site on it.
+  ladder's generation rung does not rank the site on it — the figure
+  stands on the page rather than in the ranking, which is the whole
+  distinction the figure-level rule has to draw.
 - **Redhill Data Centre is the sixth generation-understated site**
   (runbook step 5; it was five), labelled per-unit on the page.
-- **The Selby power cluster's batteries are typed `other`, 284 of the
-  354 `site_capacity` verdicts**, so the correction step had nothing to
-  demote for the first time; none ranks a site.
 
 ## Changes waiting for a re-read they cannot justify on their own
 
@@ -172,13 +132,10 @@ next one.
 
 **Accumulating now:**
 
-- ~~**The guard on the machine-reading gate's squash**~~ and
-  ~~**`reading-1.3`**~~ — **both enacted 2026-08-31**, riding on the
-  move to terra, which re-reads every site anyway. `GATE_VERSION` is now
-  `gate-2.1`. This is the accumulation rule working as designed: park a
-  change that cannot justify a re-read on its own, then land it with one
-  that can. **The list is empty; check it is still empty before the
-  submit runs**, because a change landing after that has missed the
+- **Nothing but `power-1.1` below.** The two changes that were parked
+  here went in on 2026-08-31 riding on the move to terra (HISTORY);
+  `GATE_VERSION` is `gate-2.1`. **Check the list is still empty before
+  a submit runs**, because a change landing after that has missed the
   boat.
 - **`power-1.1`** (tier 1, ~$20–40, so it does *not* need to wait for
   the others). Committed but inert and unvalidated; the 229-figure
@@ -190,8 +147,10 @@ change landed after the submit starts has missed the boat and waits for
 the next one.
 
 **The Phase 3 corroboration read is roughly 60% through its 48,191
-in-scope documents** (the 2.1 prose read completed 2026-08-11;
-HISTORY). Two numbers belong beside coverage claims: 4,204 documents
+in-scope documents** — a figure measured at the 2.1 boundary on
+2026-08-11 (HISTORY) and **not re-measured since**, while the corpus
+has taken on 2,085 documents at 2.14 alone. Re-measure it before it is
+quoted anywhere a reader will see. Two numbers belong beside coverage claims: 4,204 documents
 in the repetitive classes are sampled at one in five by policy, not
 backlog, and 231 are held but contain no words at all, confirmed blank
 by two independent OCR engines. Every capacity figure that existed at
@@ -386,49 +345,6 @@ What survives it here:
   rather than housed. The work, each its own change with a dry-run
   count first:
 
-  - ~~**The family door unites what it admits**~~ — **built and
-    dry-run 2026-09-02** (PR #351): an edge that admits a node also
-    unites it with the node that admitted it, whatever the verdict, and
-    every later edge between that node and another admitted one is
-    still skipped, so a `not_dc` master plan joins exactly one site and
-    cannot weld two together (pinned by a test). Against the live
-    corpus: **21 applications join, 2,344 documents; nothing leaves; no
-    site retires, appears or changes key; no two sites merge.** The 15
-    measured, plus six the same rule finds — two VIRTUS stem-37977
-    applications join Stockley Park, Longcross's two Surrey Heath
-    parent permissions join Longcross — and one application *moves*:
-    `Northumberland/21/03631/NONMAT`, the substation amendment carrying
-    the 99.9 MW offshore-wind figure, leaves Cambois for the Blyth
-    substation partition it cites, which is what the 2.7 partition
-    intended and did not reach. **Materialised by Luke on 2026-09-02**
-    (HISTORY, "Membership settled before the campus review"): 501 sites
-    updated, none new, retired or revived; 2,245 member rows (1,999
-    applications, 246 projects); the 65 stale rows retired. Verified
-    afterwards: the joiners are members, the Blyth amendment sits in its
-    partition, and the unsited `not_dc` set with documents fell from 76
-    applications to 61 (56 once #352's rule files the five pieces of
-    paperwork). The six affected sites re-read at the next step 4a; the
-    documents re-home at the next staging build and sync.
-  - ~~**Adjacent power takes its own paperwork with it**~~ — **built
-    2026-09-02, PR #352.** `dcp.adjacent_power.staged_applications`
-    decides the class once and the staging build, the id recorder and
-    the sample verifier read it; a test refuses any of them re-deriving
-    it from the verdict. Measured: 38 applications, 946 documents — the
-    33 the verdict covered plus five pieces of paperwork, Union Park's
-    four discharges and one at Hallen, 50 documents that had no Drive
-    home. They gain one at the next staging build and sync.
-  - ~~**An "Excluded applications" sheet in the workbook**~~ — **built
-    2026-09-02, PR #353**: reference, both rubrics' verdicts, why we
-    hold it (route labels and the raw `discovered_via` tags), documents
-    held, findings, findings naming a data centre, nearest live site and
-    distance, description and register link; five dictionary entries,
-    and the adjacent class excluded through the same shared rule as the
-    staging build. Built against the live database: 73 rows, 3,995
-    documents, 16 whose documents name a data centre — fifteen of the
-    rows leave when the next materialise re-homes the family-tied
-    applications. **The next release must create the tab in the Sheet by
-    hand or make a new Sheet** (`sheet_sync` cannot add a tab; runbook
-    step 13).
   - **Re-triage where the documents contradict the verdict**:
     `Wychavon/19/01060/OUT` and the two London Legacy conversions
     (`LondonLegacy/18/00103/FUL`, `21/00027/FUL`), append-only.
@@ -441,16 +357,6 @@ What survives it here:
   to design.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
-- ~~**The fetch queue stopped reaching the class when #252 took it out
-  of membership**~~ — **found and closed 2026-09-06**, on Luke's
-  question of what made the Selby power schemes different from the
-  adjacent-power applications already acquired. The queue's scope was
-  "live member of a live site", so from 2026-08-30 an adjacent-power
-  scheme discovered today got a verdict, a relationship row, a Drive
-  folder rule and no fetch; fifteen held nothing and would never have
-  been tried again. `staged_applications(held_only=False)` is the class
-  without the documents clause the staging build needs, and the queue's
-  scope is "live member, or in that class". Two seeded tests.
 - **44 power schemes within 2.5 km of a live site carry `not_dc` and
   are invisible to the adjacency layer** (measured 2026-09-02 while
   asking what a `not_dc` residue is worth; the working is in the
@@ -528,9 +434,10 @@ bases". Rejected: showing no number, which drops the site out of sorting
 and out of `at_least_100mw`.
 
 **`data/priors/campus_scope.yaml` (merged, PR #251) lists all 35
-multi-project sites**, every entry `unreviewed`, with a deliberately
-crude `proposed` classification that decides nothing and failed to place
-17 of them. The four kinds are distinct facilities, phases of one
+multi-project sites**, **31 of them still `unreviewed`** as of
+2026-09-07 — the four decided are `distinct_facilities` — with a
+deliberately crude `proposed` classification that decides nothing and
+failed to place 17 of them. The four kinds are distinct facilities, phases of one
 scheme, a masterplan beside its own components, and co-located
 operators — and summing is right in at most one.
 
@@ -862,67 +769,28 @@ could move a site across the line" is true of 29. The remaining
 operator-channel 35 are mostly the sheet's "not yet" and keyless rows,
 tracked there.
 
-**What is left on #250, now the triage has run:**
+**What is left on #250.** The triage's outcomes, the cohort's `limits`
+prose and the under-ranking itself all closed between 2026-08-31 and
+2026-09-02 (HISTORY, "The roadmap is cleared of what it had already
+finished"). Stockley Park, Vantage Cardiff and VIRTUS Slough rank on
+the operator rung. **What is not closed is the general case**: a campus
+with no published roster, or one whose scope nobody has adjudicated,
+keeps today's behaviour and stays invisible for the reason this section
+describes. The 31 `unreviewed` entries in `campus_scope.yaml` are that
+residue.
 
-- ~~**Write the outcomes.**~~ **Done, 2026-08-31.** Every one of the
-  106 examined rows now carries an outcome in
-  `neso-ea-register-matches.yaml`: five new matches (Cato and Quest
-  Park at `strong`; the two Bro Tathan rows and Cottam Giga at
-  `probable`), an addendum on the 2026-08-20 class entry recording the
-  two overturns and the Ratcliffe upholding, and `considered` entries
-  for everything else — the 19 GECs held apart, 36 rows naming their
-  own non-data-centre technology, 17 whose name identifies nothing
-  (the four "Power Park" rows and CEG LP2 at Culham JET flagged inside
-  that entry), four new coverage leads, the five Relode "Power Park"
-  rows identified as a third hub-portfolio family (see the outcome
-  note above), and Bryn Coch and Waltham abstained with the test that
-  would settle each written down. **Loaded 2026-09-01**: the five
-  matches and nine operator claims are in the database, and
-  `component_of` reached the store with them.
-- ~~**The under-ranking itself.**~~ **Closed 2026-09-01 by the
-  operator rung** (the item under "Operator pages and typed standing"
-  has the account). Both invisible sites now rank on their operator's
-  own campus figure, labelled: Stockley Park 24 → 112.5 and Vantage
-  Cardiff 67.2 → 148, and `at_least_100mw` gains exactly those two.
-  What is *not* closed is the general case — a campus with no
-  published roster, or one whose scope nobody has adjudicated, keeps
-  today's behaviour and stays invisible for the reason this section
-  describes. The 33 remaining `unreviewed` entries in
-  `campus_scope.yaml` are that residue.
-- ~~**State the exclusion in the cohort's own `limits`.**~~ **Done
-  2026-08-31 evening** (commit 81d286f): `at_least_100mw.limits` in
-  `dcp/site_cohorts.py` now says a multi-facility campus can be absent
-  because its figures are per-facility and no defensible total exists,
-  Stockley example included, with `rule_version` untouched — limits
-  prose is not the rule. This item still read "still not done" a day
-  later; caught 2026-09-01 while the rung design read the cohort.
-- ~~**Measure how many sites the under-ranking actually affects**~~
-  **Measured, 2026-08-31**, against the live corpus through
-  `site_cohorts.load_inputs` (the ladder that actually feeds the
-  ranking) and `capacity_claims.load_site_claims`, folded to the
-  latest reading per claim. Of the 35 multi-project sites in
-  `campus_scope.yaml`: **8 already rank at or above 100 MW**, and
-  **the invisible class is exactly two sites** — VIRTUS Stockley Park
-  (ranks 24.0 MW against the operator's 112.5) and Vantage Cardiff
-  (67.2 against 148), both already matched, snapshotted, first-party
-  claims. **The third joined on 2026-09-02**, when the scope question
-  resolved: VIRTUS Slough had ranked on nothing while its campus page's
-  145.5 MW sat in the store unmatched, because the site claims three
-  facilities and VIRTUS rosters seven; the review decided the
-  operator's figure ranks the site with three-of-seven coverage stated
-  beside it (the "Actions still open" entry below, and
-  `campus_scope.yaml`). The register channel adds zero line-crossers,
-  so tier-and-count costs it nothing. Eight more sites sit at
-  60–100 MW (London Digital Park 89, Telehouse North Two 80, Brent
-  Cross 75, Longcross 73.6, Premier Park 72, Cardiff 67.2, Cody Park
-  60, former Akzo Nobel 60) — for all but Cardiff no operator campus
-  figure of 100 MW or more exists, so a ladder rung would not inflate
-  the cohort. Five of the 35 rank on nothing at all. And **29 of the
-  35 hold adjudicated figures of two or more quantity kinds** — the
-  Stockley incomparability is the corpus norm, which is the
-  measurement backing #247's facility-prior direction over any
-  summing. Re-measure rather than re-quote; the numbers move with the
-  corpus.
+Two measurements from that work stand behind #247 and #248 below and
+are worth keeping (2026-08-31, against `site_cohorts.load_inputs` and
+`capacity_claims.load_site_claims`; re-measure rather than re-quote).
+**Eight of the 35 multi-project sites sit at 60–100 MW** — London
+Digital Park 89, Telehouse North Two 80, Brent Cross 75, Longcross
+73.6, Premier Park 72, Cardiff 67.2, Cody Park 60, former Akzo Nobel
+60 — and for all but Cardiff no operator campus figure of 100 MW or
+more exists, so a ladder rung would not inflate the cohort. Five of the
+35 rank on nothing at all. And **29 of the 35 hold adjudicated figures
+of two or more quantity kinds**, so the Stockley incomparability is the
+corpus norm rather than one campus's quirk — which is the measurement
+backing #247's facility-prior direction over any summing.
 
 ### 4. #248 — a figure we assemble is not a figure a source states
 
@@ -1000,11 +868,12 @@ not one to take before it.
 
 ### How to continue the 35-campus review
 
-`data/priors/campus_scope.yaml` holds every multi-project site with
-`scope: unreviewed`. Nothing reads it, so an unreviewed site keeps
-today's behaviour — the largest single figure, framed as a floor. A
-reviewed entry sets `scope` and `total` and carries a `reason` written
-as evidence, the way `site_partitions.yaml` entries do.
+`data/priors/campus_scope.yaml` holds every multi-project site;
+**31 of the 35 still carry `scope: unreviewed`** (2026-09-07 — count it
+rather than quoting this). Nothing reads an unreviewed entry, so such a
+site keeps today's behaviour — the largest single figure, framed as a
+floor. A reviewed entry sets `scope` and `total` and carries a `reason`
+written as evidence, the way `site_partitions.yaml` entries do.
 
 Luke's method, and it worked: **take them one at a time and discuss
 each**, because they are not one kind of thing and the classifier
@@ -1119,53 +988,24 @@ still to do:
   is the class this file's own rule about computed statistics exists
   for.*
 
-- ~~**Design the ladder rung and the cohort-admission rule**~~ —
-  **designed and built 2026-09-01**; the design of record is
+- **The rung is built; decision 6 and the Stockley wrinkle are what is
+  left of it.** The design of record is
   [docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md), decided by
-  Luke on all seven points, and decisions 1 to 5 are implemented.
-  `site_scale.OPERATOR_BASIS` is the rung, `capacity_claims.rung_claim`
-  its eligibility, `campus_scope.yaml` its displacement adjudications,
-  and all three consumers read it through `capacity_claims.rung_inputs`
-  so the reader, the workbook and the cohort cannot disagree. **Eight
-  sites-table cells change and nothing falls**; `at_least_100mw` goes
-  42 → 44, gaining Stockley Park and Vantage Cardiff.
+  Luke on all seven points, decisions 1 to 5 implemented on 2026-09-01
+  and the `w-operator` rendering review passed 2026-09-02 (HISTORY).
+  **Decision 6, the Pulsant class, is explicitly expected to be
+  revisited rather than settled** — the audiences those pages belong to
+  are counted in the design document (39 pages, 29 corporate, 10
+  consultation, 5 sites holding both, five for five corporate-states
+  and consultation-silent).
 
-  **The rung also fires where the planning record states nothing at
-  all** (Luke, 2026-09-01, deciding a question the seven decision
-  points had not reached: a rung inserted at a position catches
-  everything that would otherwise fall past it). That adds Saunderton,
-  Kao's KLON-06 at Slough and CyrusOne LON3 to the two floorspace
-  sites the design predicted. The read-and-silent versus
-  documents-not-held distinction is kept **in the caveat, not in
-  whether the rung fires** — coverage is stated beside a figure here,
-  never encoded in whether one ranks.
+  **The Stockley wrinkle is unresolved and travels with the
+  displacement rather than being fixed by it**: VIRTUS puts 24 MW on
+  LONDON5 and 32.5 on LONDON7, so the 24 the table showed — from a
+  document titled LONDON7 — may be the right number on the wrong
+  building. Held unresolved on both attributions in
+  `site_facilities.yaml` and stated in the scope entry's own reason.
 
-  **Two counts moved for a reason worth recording**: the design
-  predicted four changed cells and the build produced eight. Three
-  extra are the empty-ladder decision above; the fourth is Kao Data
-  Harlow, and it was WP-R1 of the same handover that caused it —
-  `component_of` reached the database an hour before this was
-  measured, so a site that had looked like five competing claims
-  became one campus total and passed the sole-claim guard. A
-  prediction made before its own dependency ran.
-
-  **The Stockley wrinkle travels with the displacement and is not
-  resolved by it**: VIRTUS puts 24 MW on LONDON5 and 32.5 on LONDON7,
-  so the 24 the table showed — from a document titled LONDON7 — may be
-  the right number on the wrong building. Held unresolved on both
-  attributions in `site_facilities.yaml` and stated in the scope
-  entry's own reason; the displacement does not depend on which
-  building it belongs to. A third displacement joins when VIRTUS
-  Slough's scope resolves, which is still open in
-  `campus_scope.yaml`.
-
-  The `w-operator` rendering review passed on 2026-09-02
-  (PLAN_OPERATOR_RUNG.md). Still open: decision 6 (the Pulsant class),
-  explicitly expected to be revisited rather than settled — the
-  audiences finding those pages belong to is counted in the design
-  document (39 pages, 29 corporate,
-  10 consultation, 5 sites holding both, five for five
-  corporate-states and consultation-silent).
 - **The review sheet stays the tracker for its "not yet" rows**
   (`data/operator_pages_review/operator_pages_review.xlsx`): two
   unconfirmed identifications (nLighten Hoddesdon, Digital Realty
@@ -1174,41 +1014,15 @@ still to do:
   the standing example of facilities that will only ever rank on the
   operator rung, because legacy colocation fit-outs leave no planning
   application to hold.
-- ~~**The VIRTUS Saunderton datasheet PDF is unsnapshotted**~~ —
-  **done 2026-09-01.** `fetch_operator_snapshots.py` sniffs the PDF
-  magic bytes and extracts text with pypdf, so a spec sheet is a page
-  like any other; the sheet is snapshotted and its four facility
-  figures are claims, matched, quote-verified. The rung can have them.
-  What the sheet gives that no HTML page in the survey does: its path
-  carries a publication date and a version marker
-  (`.../2026/04/15/...-v2.pdf`), so the disclosure is dated by its
-  own source rather than only by our read.
-
 ### Actions still open from the review sheet
 
-- ~~**VIRTUS Slough campus scope**~~ — **decided 2026-09-02** (Luke,
-  with the roster and the planning record put side by side; the entry
-  in `campus_scope.yaml` carries the evidence). Distinct facilities,
-  total withheld, and VIRTUS's own 145.5 MW ranks the site under the
-  rung's empty-ladder extension, since the planning record states no
-  load: three Barbour records and a document-less 2018 outline. Two
-  things came out of it. **LONDON4, 9, 12 and 19 are nowhere in the
-  corpus** — no application, no Barbour record, no SPV, no permit of
-  their own — which is a coverage item (below) rather than a scope
-  question. And **VIRTUS's stated total exceeds its own seven rows by
-  exactly LONDON11's figure** (145.5 − 132.2 = 13.3). The arithmetic
-  is ours and stops there — how VIRTUS reached its total is not
-  inferred from it (Luke); the claimed figure is kept as claimed and
-  the question is for the operator, recorded on the claim. The match
-  loads at the next `load_capacity_claims.py`; the site joins
-  `at_least_100mw` at the next build (44 → 45).
-- ~~**Vantage ↔ Next Generation Data organisation alias**~~ (Luke's
-  question on sheet T3-04) — **assessed 2026-08-31 and not written**:
-  no organisation-name field anywhere in the corpus contains "Next
-  Generation Data"; it survives only in three Barbour project titles
-  whose projects already name Vantage as client and end user, so a
-  member keyed on it would match nothing (HISTORY, the NESO triage
-  entry).
+- **VIRTUS's stated Slough total exceeds its own seven rows by exactly
+  LONDON11's figure** (145.5 − 132.2 = 13.3). The scope itself was
+  decided 2026-09-02 and the site ranks on the operator rung
+  (HISTORY); what stays open is the arithmetic, which is ours and
+  stops there. How VIRTUS reached its total is not inferred from it
+  (Luke); the claimed figure is kept as claimed and **the question is
+  for the operator**, recorded on the claim.
 - **The Cato architect's site states 600 MW**
   (graemenicholls.com/cato-data-centre, snapshotted) — a claims lead
   from a source kind the claims channel does not yet name: neither
@@ -1318,77 +1132,30 @@ work.
   fixture pair. `tests/test_idox.py` pins the
   conflation ("must return [] without raising") and changes with it.
 
-- **Re-fetch the 52 applications whose `none_published` was awarded on a
-  page that refused.** Established 2026-08-26 without touching a portal,
-  by re-reading the documents-tab HTML the original fetch had already
-  snapshotted: 49 are Idox serving *"Permission Denied — You do not have
-  permission to view the page"* with **HTTP 200** and full site chrome,
-  so a scraper sees an ordinary page with no document links; 3 are
-  Brighton returning 212-byte bodies, also with a 200. Selby alone is 18,
-  then Exeter, Derby and Doncaster at 5 each. **Selby's 18 are not
-  refusals but a move** (2026-09-06, Luke's pointer): the council was
-  abolished in 2023 and its register lives on at
-  `publicaccess.northyorks.gov.uk` with keyVals intact and documents
-  behind them — 70 Selby applications held nothing, six live sites,
-  Eggborough and Drax among them. `idox.SUCCESSOR_HOSTS` carries the
-  swap (PORTAL_NOTES); the fetch over the 70 supersedes the 18 — run
-  the same day in three passes (the first at the default spacing hit
-  429s and three 900-second timeouts; the second at 30 seconds took
-  310 minutes for 22 applications and 532 documents; the third, 166
-  minutes for the four part-read, 291 more): **895 documents across 28
-  Selby applications** by midnight. **And
-  Exeter's five are not refusals either** (2026-09-06): the Idox
-  documents tab is restricted, but the council publishes every document
-  on its own related-documents page, 89 for the parent application — the
-  Newport shape, route in PORTAL_NOTES. Not fetched, because the site
-  they belong to is Exeter College's teaching block, excluded by
-  exception the same day. That left 29 genuine refused pages for the
-  review by hand — an earlier version of this sentence counted Newport's
-  17 among them; they are the docstore class, a different listing
-  status, and were never in the 29. **Derby's five came next**
-  (2026-09-06): the register's own *External Documents* tab links to
-  the council's document server, which lists and serves everything —
-  62 documents across six applications, the sixth being one Idox had
-  called "withdrawn from view"; `scripts/fetch_derby_docstore.py`,
-  route in PORTAL_NOTES. **Doncaster's five the same afternoon**: its
-  External Documents tab links to Newport's document module under
-  another host, 197 documents, and the Newport script now carries a
-  store table (PORTAL_NOTES). **Then the External Documents tab of
-  every remaining Idox register, in one pass** (2026-09-06, PORTAL_NOTES
-  "The External Documents tab"): all but Brighton link off-host. Adur &
-  Worthing, Horsham, Huntingdonshire and Mid Sussex are the Public
-  Access module again — four rows in the store table, 417 documents
-  across ten applications. **Civica the same evening**
-  (`scripts/fetch_civica_docstore.py`, PORTAL_NOTES): Gateshead 4,
-  Southend 2, Chelmsford 1 and Reigate 1 — the page's own API, found by
-  watching it; 407 documents across the eight. **Neath's one after
-  that** (`scripts/fetch_neath_docstore.py`): two documents. That
-  leaves **none**. Brighton's three were the last: the register's
-  212-byte bodies are an Imperva Incapsula gate (PORTAL_NOTES), so they
-  went by hand too — 7, 6 and 33 documents under `manual`, the same
-  evening. Of the 48 blocked listings this item began with, every
-  application now holds documents except the six of Exeter College's,
-  excluded by exception. Bedford's two went
-  by hand the same evening: the store lists its files as plain
-  `OpenDocument` links, then put a CAPTCHA in front of the first
-  download (PORTAL_NOTES), so Luke saved them from a browser into the
-  manual inbox and `ingest_inbox.py` filed them under `manual` —
-  `24/02188/FUL` 15 of 15, `26/00355/MAO` 50 of 51 — the CIL question
-  form's link is dead at the store, a dozen browser attempts; an
-  outcome row says so.
-  106 of the 128 settled
-  verdicts carry the detail `no_documents_or_unparseable` and every one
-  was written on **2026-08-08**, before the mapping was tightened on the
-  9th — after which the same condition produced `error` instead. So the
-  population is bounded and historical, not a live leak. The verdicts
-  are settled, so re-fetching means writing new outcome rows over them:
-  a decision about the acquisition record, which is why nothing has
-  touched them. `no_documents_or_unparseable` is itself a conflated
-  name — the adapter sets it whenever `len(links) == 0`, whether the
-  page was a register or a refusal. **And re-fetching with today's
-  adapter can settle only a page that now serves documents**; one that
-  still refuses lands as `error` and joins the loop above, which is why
-  the typed outcome comes first.
+- **The 52 refused pages are fetched; what is left is the settled
+  verdicts they were awarded under.** Every application the item began
+  with now holds documents except Exeter College's six, excluded by
+  exception — Selby's register had moved rather than closed, Exeter,
+  Derby, Doncaster and the rest served their documents from an
+  External Documents tab or a council document store, Civica and Neath
+  by their own APIs, Brighton and Bedford by hand through the manual
+  inbox (all 2026-09-06; HISTORY, "An evening on the refused pages"
+  and the six entries around it, with the routes in PORTAL_NOTES).
+
+  **The decision that remains is about the acquisition record, not the
+  documents.** 106 of the 128 settled verdicts carry the detail
+  `no_documents_or_unparseable` and every one was written on
+  **2026-08-08**, before the mapping was tightened on the 9th — after
+  which the same condition produced `error` instead. The population is
+  bounded and historical, not a live leak. The verdicts are settled, so
+  correcting them means writing new outcome rows over them, which is
+  why nothing has touched them: `no_documents_or_unparseable` is a
+  conflated name — the adapter sets it whenever `len(links) == 0`,
+  whether the page was a register or a refusal — and the reader prints
+  it verbatim as an application's reason for holding nothing. **The
+  typed outcome above comes first**, because re-fetching with today's
+  adapter can settle only a page that now serves documents; one that
+  still refuses lands as `error` and joins that loop.
 
 - **Thirteen live members whose last attempt ended in `error` while
   they hold documents — never re-queued until #403, each to be
@@ -1483,43 +1250,6 @@ work.
   checking `document_listing_audit`.** A count of held documents is a
   floor until the site's applications are measured and their
   shortfall is either refetched or stated.
-- ~~**A site reads "read in full" whatever its unfetched applications
-  hold**~~ — **done 2026-09-06.** `site_profile.no_documents_clause`
-  names a site's document-less applications by settled class, in a
-  fixed order and never as one number; the site page renders it beside
-  the coverage fraction, and the cohort's `limits` line carries the
-  same clause with `rule_version` untouched. The fraction itself is
-  unchanged. The account as it stood (found 2026-09-04 while checking
-  what the Agile adapter had settled; re-measured 2026-09-06): Coverage is documents read over
-  documents held (`site_profile.DEEPREAD_COVERAGE_SQL`), so an
-  application that yielded no documents contributes to neither side
-  and cannot lower the fraction: a site is 10 of 10 whether its second
-  application was checked and found empty, refused, unreadable by any
-  adapter, or never tried. **Seventeen applications across nine sites
-  sit in that blind spot today** — nine settled `none_published`, eight
-  `no_adapter` — and **five of the nine sites are in the published
-  cohort "Read in full, and silent on capacity"** (152 sites), whose
-  claim inherits the gap. LD14 at Slough Trading Estate is the worked
-  case: 623 findings, no capacity figure, 10 of 10 read, and its second
-  application — the EIA screening request, exactly the class that would
-  state the generator ratings the page's own machine reading asks
-  for — settled empty on the Agile adapter's coerced `[]` until the
-  legacy store was searched on 2026-09-04 and said so in its own words.
-  The number was right; nothing on the page could have said why. Two of
-  the nine are Hillingdon and St Albans sites whose unfetched
-  applications sit on portals with no adapter, which is a different
-  kind of not-knowing from a checked empty and should read as one.
-
-  The fix is not in the fraction, which is honest about documents. It
-  is a second clause beside it — applications holding no documents, by
-  settled class: checked and empty, refused, behind a login, no adapter
-  — so "read in full" says what was read *and* what was never there to
-  read, the way the coverage split already names drawings and sampled
-  classes and the dash-replacement work named four kinds of blank. The
-  cohort's `limits` line carries the same clause. Re-measure rather
-  than re-quote: the query is the settled classes on
-  `acquisition_outcome`, folded to the latest row, joined to
-  `load_coverage`.
 - **Two site-classification rules deserve a reporter's eye** (the
   mechanism itself shipped — issue #159, PR #178, HISTORY 2026-08-27).
   Each was decided in the building and changes what the list asserts
@@ -1692,10 +1422,15 @@ field and is not publishable as it stands.
   site back. **The Wakefield one is the whole remaining gap**: document
   39292 on `Wakefield/23/01043/FUL`, a `.docx` consultee comment, is
   the single outstanding prose document in the corpus and the only
-  reason `PTNO-12817834` is not read in full. With it, 385 of 388
-  sites with prose would be complete (357 of 360 at 2.13; the refused-pages
-  read of 2026-09-07 added 29 sites, all read in full); the other two are Renfrewshire sites
-  holding one graphical document each, which have no prose to read.
+  reason `PTNO-12817834` is not read in full. **With it the figure goes
+  to 386 of 388**, not the 385 an earlier version of this sentence
+  claimed: 2.14 already stands at 385 of 388 (it was 357 of 360 at
+  2.13, and the refused-page read added 29 sites, all read in full), so
+  the three outstanding are Wakefield's and two Renfrewshire sites
+  holding one graphical document each. **The Renfrewshire pair can
+  never complete** — they hold no prose to read — so 386 is the ceiling
+  unless the denominator itself is wrong, which is worth one look:
+  a site with no prose has no business in a prose-coverage denominator.
   **The `.docx` pair is the cheap half**: the sniffing
   tests already say 255 corpus documents arrive mis-named as Word
   files, so a loader that reads them is worth writing, and
@@ -1895,57 +1630,13 @@ field and is not publishable as it stands.
   workbook's own sheet. Deferred past 2.10 because the artefacts were
   built and diffed when it surfaced.
 
-- ~~**Link the snapshots from the reader and workbook.**~~ **All three
-  steps shipped 2026-09-01**, the day Luke asked about linking
-  snapshots from the reader: the store is append-only, every snapshot
-  is on Drive under `operator_snapshots` with its file id in
-  `data/external_sources/operator_snapshots_drive.yaml`, and the claims
-  now render the link (HISTORY, "The snapshot store becomes
-  append-only", "The snapshots reach Drive" and "A claim links its own
-  evidence"). Kept here for the resolution rule, which is not what this
-  item predicted, and for the two follow-ons below.
-
-  **Step 3 shipped 2026-09-01** (HISTORY, "A claim links its own
-  evidence"). Each operator and green claim renders a link to our copy
-  beside the source URL it already shows, on five surfaces: the site
-  panel's claims box, the Operators tab, the green-claims table, and
-  the workbook's Capacity claims and Figures by audience sheets. The
-  emphasis is deliberately the mirror of a document's — the published
-  page stays the primary link because it is what a story cites, and our
-  copy is the labelled second.
-
-  **The resolution rule turned out to be the quote, not the date**, and
-  that is the correction this item most needed. It was written here as
-  *a claim links the snapshot that existed at its `as_at`*, which is
-  necessary and not sufficient: the store holds no file for a reading
-  taken before it became append-only, so CyrusOne LON1's 8.72 MW row —
-  which carries no `as_at` at all, and which stands in
-  `capacity_claims` only rather than in `operator-claims.yaml` — would
-  have fallen through any date rule onto the 2026-08-30 file that
-  reads 9 MW. Those two facts about the row were read off the database
-  rather than taken from the spec, which asserted an `as_at` of
-  2026-08-20 that the row does not carry. A claim now links the
-  nearest held file *in which its own verbatim quote appears*, on the
-  gate's own whitespace normalisation, and links nothing otherwise. As
-  built: `capacity_claims.snapshot_candidates` orders the store around a
-  reading's date and `snapshot_drive.copy_url` picks the file the quote
-  is actually in. 80 of the 81 operator rows in the database resolve;
-  the one that does not is that 8.72 MW row, which is what the design
-  is for. Every committed YAML claim resolves — the two populations
-  differ, because the YAML holds current readings only and the ghost
-  row is in the database alone.
-
-  Luke reviews the rendering before it ships. The spec was WP-C of
-  [docs/HANDOVER_SNAPSHOT_CHAIN.md](docs/HANDOVER_SNAPSHOT_CHAIN.md);
-  ROADMAP stays the inbox.
-
-  **Not done here, and named rather than folded in**: the DuckDB's
-  claims tables carry no such column, so a reporter working from the
-  database still reaches only the source URL.
-
-  ~~**And the Drive viewer URL is built in three places.**~~ Folded
-  into `dcp.drive.file_url` / `folder_url` / `file_url_sql` on
-  2026-09-02, and `tests/test_drive_url_one_shape.py` refuses a fourth.
+- **The DuckDB's claims tables carry no snapshot column.** The reader
+  and the workbook link our copy of an operator's page beside the
+  source URL on five surfaces, and a claim resolves to the nearest held
+  file its own verbatim quote appears in (all shipped 2026-09-01/02;
+  HISTORY). The database export was named rather than folded in at the
+  time and is still outstanding, so a reporter working from the DuckDB
+  reaches only the source URL.
 
 - **26 applications link to a register host that no longer answers,
   and they would ship in 2.10 that way** (probed 2026-08-28: every host
@@ -2201,49 +1892,11 @@ and one is an s106; on kind alone they are exactly the material the
 investigation is looking for, so "we hold it and it was silent" is the
 worst available failure mode.
 
-What remains (the fetch guard is done and test-pinned; the corpus
-sweep re-run 2026-08-27 still finds exactly the three):
-
-1. ~~**A durable home for the sweep**~~ — **done 2026-09-02**:
-   `repo.zero_byte_files` is the check, the staging build runs it over
-   the tree it just wrote and prints what it found every release, and
-   `scripts/corpus_stats.py` reports the database's view of the same
-   fact. A fourth empty document announces itself at step 9.
-2. ~~**Say so in the artefacts.**~~ **Done 2026-09-06.** The coverage
-   split carries an `empty` bucket — `content_sha256` equal to the empty
-   body's hash, the constant the fetch guard refuses on the way in, so
-   no filesystem stat — kept out of `prose_held` and apart from
-   "unreadable", which is a file that has bytes and yields no text. The
-   reader's coverage bar and its on-page line say "held but empty:
-   unavailable from the source"; the site report's *Documents held* line
-   says how many and why. Pinned by a seeded integration test and the
-   source assertions in `tests/test_held_but_empty.py`. As it stood:
-   where a document is held but empty, the site report and the coverage
-   detail should show it as unavailable from the source rather than as
-   read — the same honesty the coverage split already applies to
-   drawings and sampled objection letters.
-
-   **The durable form is a predicate, not a re-stat** (2026-09-04): the
-   three rows carry `content_sha256 = EMPTY_SHA256`, the constant the
-   fetch guard already compares against — verified against the
-   database, exactly three, the Warwick, Wakefield and Medway files —
-   so the two coverage queries in `dcp/site_profile.py` can flag a
-   held-empty document and keep it out of `docs_held` and `prose_held`
-   with one condition, and the reader's coverage detail and the site
-   report's "Documents held" line say "unavailable from the source"
-   from that. `repo.zero_byte_documents` keeps the filesystem stat as
-   the cross-check. **Considered and not adopted, the same day**: an
-   external review's split of `documents` into a listed record, an
-   acquisition attempt and a held content object. Listed against held
-   is already first-class at the application grain —
-   `document_listing_audit` names every offered and missing URL — and
-   attempts likewise (`acquisition_outcome`); what was missing is one
-   condition at the document grain, and a three-table split for three
-   rows would re-point the 99 places that count `documents`. The one
-   table that might earn its place later is a per-URL offers table, and
-   only if per-URL retry state becomes a recurring need; today
-   `relist_refetch.py` re-derives it from the audit's `missing` set on
-   each run, and that is fine.
+Both halves are done — the sweep has a durable home in
+`repo.zero_byte_files`, run by the staging build every release, and the
+coverage split carries an `empty` bucket keyed on `content_sha256`
+(2026-09-02, 2026-09-06; HISTORY). The corpus still holds exactly the
+three, and a fourth would announce itself at step 9.
 
 Worth raising with the three councils as well: a listed document that
 downloads as nothing is a public-access failure independent of this
@@ -2296,45 +1949,6 @@ here rather than applied from the build lane.
   unlocatable sites, the councils not covered, the pre-window buildings
   the unsited-claims layer is for (NTT Slough, Equinix LD5, ServerChoice
   Stevenage), and that a permitted scheme is not a built one.
-- ~~**"Near a postcode" in the reader, specified and not built**~~ — **built
-  the same night, for 2.13** (HISTORY, "Near a postcode, built"): the
-  control in the shared bar, sector precision from the embedded
-  centroids, survivors nearest first with their distance at the head of
-  the row's grey line, the hash carrying `near:` and `km:`, the count
-  string naming the sites that cannot be placed, "See on map" framing
-  the radius, the release diff reading the new input, and a browser
-  test driving SL1 4BG end to end. The specification, kept for the
-  record (Luke and the session, 2026-09-02, the evening of the reader
-  callout): the
-  internal counterpart of the public lookup above, for triaging callout
-  responses. Decided: it is a control in the **shared filter bar**, not
-  a box on the map — the 2.3 redesign removed the map's own search,
-  100 MW toggle and cohort select so that one bar serves the table and
-  the map (HISTORY), and a map-only control would put that duplication
-  back. A postcode and a radius; the table filters to sites within the
-  radius, gains a distance column and sorts by it; the map honours the
-  same visible set, as it already does, and centres on the centroid.
-  **Sector precision** ("SL1 4", about 1 km; Luke: "we don't need house
-  addresses"): roughly 11,000 sector centroids derived in the pipeline
-  from the ONS Postcode Directory — mean of the live postcodes per
-  sector, a committed data file naming the directory release — a few
-  hundred kilobytes in the page, no API at build time or lookup time,
-  so the build stays a function of its inputs and the control works
-  offline. Attribution is the directory's (DATA-LICENSING, postcodes.io
-  section). **The sector file exists** (2026-09-02, later the same
-  evening): `data/external_sources/postcode_sectors.json`, derived by
-  `scripts/derive_postcode_sectors.py` from the August 2026 edition —
-  5,458,179 directory rows, 1,837,452 terminated and 25,593 unpositioned
-  skipped, 11,088 sectors, 354 kB — carrying the edition, the rule and
-  the attribution string. What remains is the control itself, for 2.13.
-  Three things the build must carry: a `near:` part in the
-  hash state, which the handoff's state model does not have, so a
-  DESIGN_CONFORMANCE entry as a departure Luke chose; the control added
-  where `release_diff` reads the bar, or the guard reports it wrongly
-  (HISTORY, "a guard that stops guarding"); and the count line saying
-  how many sites cannot be placed — 67 unlocatable today — because a
-  proximity filter silently narrows the corpus in a way the table never
-  does. Sits inside a release candidate when Luke says so.
 - **The reader's weight is its inline site pages, and the one-file rule
   that shaped it has lost its reason** (measured 2026-09-02).
   `index.html` is 33.5 MB; the sites view is 29.3 MB, of which the 508
@@ -2409,87 +2023,6 @@ here rather than applied from the build lane.
   them is Pinpoint and Giant, which is a completeness claim two search
   tools currently make wrongly.
 
-- ~~**The materialise leaves membership rows unretired when it retires
-  a site**~~ — **closed 2026-09-02, the day it was opened**, and this
-  item stood open for two days after while the capacity-model section
-  above already recorded the same 65 rows retired. Found while verifying
-  the reader's adjacent-power links: `dcp/sites.py` retired a site and
-  left its `site_members`, so a row on a dead site still read
-  `retired_at IS NULL`, and four adjacent-power applications retired
-  with their sites by #252 — 144 documents — were staged nowhere, in no
-  live site's folder, their old folders pruned at 2.11. PR #349 (**not
-  #346, as this item said**) taught the three queries — the staging
-  build, the id recorder, the sample verifier — to require a live site,
-  pinned by a test over all three; PR #351 put the durable fix in the
-  materialise, retiring every live membership on a retired site, all
-  retired sites and not only the run's own, so it was the backfill as
-  well as the guard. It reports `members_retired_with_site`;
-  `preflight()` counts `stale_member_rows`;
-  `tests/test_membership_doors.py` pins both. Luke's materialise that
-  afternoon retired the 65 (HISTORY, "Membership settled before the
-  campus review"); re-measured 2026-09-04, zero live rows on retired
-  sites. The three live-site predicates stay as defence in depth. ~~One
-  query still tested the member row alone~~ — `UNSTAGED_SQL`, the
-  shortfall counter, gained the `sites` join on 2026-09-06 and its test
-  asserts the join rather than a substring.
-
-- ~~**`drive_sync.py`'s ledger write is neither atomic nor ordered, and
-  nothing stops a second process**~~ — **done 2026-09-06.**
-  `dcp.drive.write_ledger` replaces the file atomically (temp sibling,
-  fsync, `os.replace`), `Sync.save()` serialises and writes under its
-  lock so two checkpoints cannot finish in reverse order,
-  `dcp.drive.acquire_ledger_lock` refuses a second process with the
-  holder's pid before the ledger is loaded or the API called,
-  `read_ledger` refuses a corrupt ledger rather than starting from
-  nothing beside it, `prune()` touches the state under the lock, and
-  the id recorder and the ledger rebuild read `SYNC_LEDGER` instead of
-  spelling the path. Twelve tests reach the mechanism — an interrupted
-  write leaves the previous ledger intact; no other thread can take the
-  lock during a write; a second holder is refused and named; a corrupt
-  ledger is refused — verified by reintroducing the unlocked in-place
-  write, which fails four of them; the concurrent test now validates
-  every entry. The account as it stood (separated from the batching
-  item 2026-09-04, because a durability fix should not wait behind a
-  performance one): `Sync.save()` serialises the state under the ledger
-  lock, releases it, then `write_text`s the final path. A kill mid-write
-  leaves truncated JSON, which the next sync loads with a bare
-  `json.loads` and dies on — the workbook export, the id recorder, the
-  sample verifier and the ledger rebuild read the same file. And two
-  workers can pass the fifty-change gate in one order and finish their
-  writes in the other, so **the file falls up to fifty entries behind
-  memory until the next checkpoint** — bounded, and costly only if the
-  run dies inside that window, since the final forced save writes the
-  whole state (a proportion the first version of this item did not
-  draw; the torn write is the hazard any kill hits). The entries a
-  death there would lose are files re-uploaded beside their Drive
-  copies next run, which is the duplicate-archive mechanism
-  `dcp/drive.py` exists to prevent. The concurrent-write test pins the
-  in-memory dict against mutation during iteration and asserts after a
-  final uncontended save, so it can see neither hazard. Under
-  `drive.file` the ledger is the only record of what the tool created;
-  `scripts/rebuild_drive_ledger.py` rebuilds a *lost* one from
-  `files.list`, which does not help a *partial* one that under-describes
-  Drive without announcing it.
-
-  The fix is the pattern this repo already keeps for its other resume
-  files (`relist_refetch.py`'s `_save_state`, `export_duckdb`'s
-  `.building`, the staging build's swap): inside the lock, serialise,
-  write a sibling temp file, flush and fsync, `os.replace` it onto the
-  ledger, and release only after — one write every fifty changes, so
-  holding the lock across it costs nothing and the comment that the lock
-  "guards memory, not network" stays true. Plus a lock file held for the
-  whole sync, and a refusal — never a merge — when it is already held.
-  Two readers still spell the ledger's path themselves
-  (`record_drive_ids.py`, `rebuild_drive_ledger.py`) outside the
-  `SYNC_LEDGER` constant `tests/test_release_paths.py` enforces; fold
-  them in the same change. Checks: interrupt a write before the replace
-  and the previous ledger still parses; force two saves to complete in
-  reverse order and the newest state is on disk; start a second sync
-  against the same ledger and it refuses before any API call; keep the
-  existing concurrent test and validate every entry after the forced
-  save. `prune()` reads and mutates the state outside the lock, safe
-  only because it runs after the pool closes — say so in a comment
-  before batching moves anything.
 - **`drive_sync.py`: the batching half** (the concurrency half closed
   2026-08-29 — `--workers` now defaults to 12; HISTORY). The Drive batch
   endpoint takes 100 calls per request, which would beat any number of
@@ -2549,66 +2082,19 @@ here rather than applied from the build lane.
   calibrated on — but with different signal matching from the original,
   so this is a flag and nothing more. Reproduce the original criteria
   from git history first, then re-run, then decide.
-- ~~**Make the corpus statistics the artefacts quote computed**~~ —
-  **the water count is computed since 2026-09-06, and the rest of the
-  class is now a test's worklist.** `dcp.site_profile.water_disclosure`
-  is the one function, beside the per-site predicate it must agree with;
-  the reader's caveat, the workbook's release row and the dictionary
-  entry (a placeholder `dictionary()` fills at build) all interpolate
-  it, and `scripts/corpus_stats.py` prints it with the rest. **The
-  denominator is the sites read, not all live sites** (Luke,
-  2026-09-06, on the sanity check that followed the fix): a site
-  holding nothing read cannot have disclosed, so "169 of 500" had been
-  calling 142 sites silent that nobody had looked at; it is 169 of 358.
-  `tests/test_prose_counts_are_computed.py` refuses a literal count of
-  sites, documents, findings, applications or figures in either
-  exporter's generated prose, verified by reintroducing both literals;
-  the six that remain are named in its `ALLOWED` list, which fails if
-  one is fixed without being struck, so it can only shrink. What the
-  rule cannot see is stated in its docstring: a number written in words
-  ("twenty-two largest figures", three times over) and a count more
-  than one word from its noun ("1,667 adjudicated on-site generation
-  figures"). Those, the six, and the workbook's "six campuses" are what
-  is left of this item. The account as it stood before the fix (opened
-  2026-08-11; re-measured 2026-09-04, when an external review found the
-  same defect and this item's own inventory turned out to be stale): the
-  count of sites disclosing water consumption is typed by hand in three
-  shipping places and computed in none: **"only 93 sites"** in the
-  reader's front-page caveat and in the workbook's *Water figures*
-  release row, both copied from the phase-1 HISTORY sentence of
-  2026-08-09; and **"119 of 429 sites"** in the dictionary's *Water
-  evidence* entry, which `export_reader` renders into the same page as
-  the 93. So one published HTML file states both, about a scroll apart.
-  The 76 this item used to attribute to the dictionary survives only in
-  a comment in `dcp/site_profile.py`. **Under the profile's own
-  predicate — `COOLING_TEXTS_SQL` with `CONSUMPTION_SIGNAL_RE`, live
-  sites and live memberships — the figure on 2026-09-04 was 169 of 500
-  live sites**, so every published number is wrong and replacing 93 with
-  119 would have swapped one stale number for another.
-
-  The fix is one aggregate, not a corrected literal: a function in
-  `dcp.corpus_stats` — which today stops at the findings layer and is
-  imported by neither exporter — returning the numerator, the
-  denominator it applies to and the percentage, computed at build under
-  exactly the per-site predicate the site panels use, and interpolated
-  by both exporters so the caveat, the release row and the dictionary
-  entry cannot disagree. Then the test that stops the next one: a rule
-  over the generated-prose templates in both exporters refusing a
-  literal corpus count, on the `tests/test_release_defaults.py` pattern
-  — a rule over the tree, verified by reintroducing the bug. External
-  figures (Ofgem's queue, NESO's rows) are quotations and stay literal.
-
-  **The class is a dozen, not one.** The reader's methodology prose also
-  types "twenty-two largest figures, all twenty-two" three separate
-  times, "116 figures rested on a quote carrying no unit", "1,667
-  adjudicated generation figures", "43 site rows" on floor-area
-  estimates, "855 findings across 51 sites" (also typed in this file),
-  "47 sites … median 0.75"; the dictionary types "53 sites" for the
-  1.71 kW/m² calibration (its own item above), "six campuses" and "28
-  applications behind bot protection" — the last two countable today
-  from `site_facilities.yaml` and `KNOWN_BLOCKED_HOSTS`. Each becomes
-  computed, or becomes a dated quotation with its date in the sentence;
-  the test is what finds the next one.
+- **The corpus statistics the artefacts quote are computed; what is
+  left is what the test cannot see.** `dcp.site_profile.water_disclosure`
+  is the one function and `tests/test_prose_counts_are_computed.py`
+  refuses a literal count of sites, documents, findings, applications or
+  figures in either exporter's generated prose (2026-09-06; HISTORY).
+  **The residue is named in the test's own `ALLOWED` list** — six
+  literals, and the list fails if one is fixed without being struck, so
+  it can only shrink. Two shapes the rule cannot see are stated in its
+  docstring: a number written in words ("twenty-two largest figures",
+  three times over) and a count more than one word from its noun
+  ("1,667 adjudicated on-site generation figures"). Those, the six, and
+  the workbook's "six campuses" are what is left. External figures
+  (Ofgem's queue, NESO's rows) are quotations and stay literal.
 
 - **An application-relation table, in place of a scalar `parent_ref`.**
   From 2026-05-12 until 2026-09-04 this item read "promote
@@ -2680,100 +2166,14 @@ here rather than applied from the build lane.
   singletons attach through it; and the triage prompt's raw-string line
   can name resolved references instead. Worth its own plan document, the
   way the operator rung and the unsited-claims layer had one.
-- ~~**`deepread_log.pages_sent` counts a page once per chunk, not once**~~
-  — **done 2026-09-06.** `deepread_run.pages_sent_from(chunks)` is the
-  one writer — the sorted set — and the runner, both batch builders and
-  the escalation JSONL call it, so the column and the JSONL agree; the
-  gate's fallback loop walks the set, so a split page is scanned once;
-  the progress line divides by pages *selected*. Historical rows stay
-  as written and are read as sets. Pinned by
-  `tests/test_pages_sent_is_a_set.py`, including that no writer
-  flattens for itself; `test_chunking`'s per-chunk `[1]` stands. The
-  account as it stood (opened 2026-08-12; re-measured 2026-09-04): Migration 007 defines the
-  column as "1-based physical page numbers sent to the model"; the
-  runners write a send log. `chunk_pages` resets its page list at every
-  flush, so a page split across chunks is appended once per chunk, and
-  `deepread_run.py` flattens the chunk lists straight into the column;
-  the two batch builders carry the same comprehension, and the agent and
-  retry runners inherit their value — six writers, one defect. Document
-  52945's local-model row holds 148 entries for 32 distinct pages
-  against a `pages_total` of 32; its gpt-5 row is clean. **Grown since
-  August: 714 rows hold more entries than `pages_total`, against the 21
-  measured then, and 929 of 98,708 hold a page more than once.**
-
-  Two things the August note did not say. **The canonical form already
-  exists in the same function** — `sent_set` is what the escalation
-  JSONL records, and `regate_escalations.py` reads the JSONL and never
-  the column, so the two records of "which pages the model saw" already
-  disagree, and the fix is to make the column match the JSONL rather
-  than invent a third convention. And **the list is not write-only**:
-  the verbatim gate's fallback loop walks the un-deduplicated `sent`,
-  re-scanning a split page once per chunk on exactly the
-  million-character worksheets where it costs most.
-
-  **The rule: `pages_sent` is the sorted set of physical page numbers,
-  everywhere it is written** — the three places that build it.
-  Historical rows stay as they are, the audit record of those runs; no
-  consumer reads the column back from the database today (no
-  `array_length`, no `cardinality`, no `len()` but the log line), so a
-  future one treats an existing array as a set. A per-chunk send log, if
-  ever wanted, gets its own name. Checks: a synthetic page split into
-  several chunks yields `pages_sent == [1]`; two ordinary pages plus one
-  split page yield a sorted unique list; `len(pages_sent) <=
-  pages_total` on every new row; the gate still recovers a quote on
-  every selected page; and the progress line reads distinct pages over
-  pages *selected* — its denominator today is the document's total
-  pages, so `[148/32 pages]` was wrong in both halves.
-  `tests/test_chunking.py` asserts `nums == [1]` per chunk for a split
-  page, which is correct and stays; it is the flatten that must
-  deduplicate.
-- **Improve the automated test surface.** When this was written the
-  suite was good at internal consistency and blind to three things, and
-  almost every defect found on 2026-08-11 sat in one of the gaps. Two
-  of the three are closed — `tests/test_reader_smoke.py` drives the
-  built reader in a browser, and CI drives the committed one on every
-  push (HISTORY, 2026-08-27); `tests/test_build_determinism.py` builds
-  the reader twice against a Postgres snapshot and asserts the two are
-  identical apart from the stamp (HISTORY, 2.8). The third is open.
-  Worth doing properly rather than adding a test per bug — the
-  recurring shape of these is *fixed the symptom, missed the cause*.
-
-  ~~**Nothing drives the built artefact.**~~ *Closed by
-  `test_reader_smoke.py`; the paragraph stays as the reason it exists.*
-  The reader's card links did nothing in a shipped release; a chip took its own flex column and
-  squashed the map into a third of the width; an energy checkbox went
-  dead inside a projection. All three were invisible in review and
-  obvious within seconds of opening the page. A build-and-drive smoke
-  test — generate the reader, load it headless, click the things a
-  reporter clicks, assert what they do — would have caught every one.
-  It would also have caught the two prose definitions on one page, which
-  survived a full test run and was found by reading the output.
-
-  **Nothing asserts that a stated number matches the data it describes.**
-  The count of sites disclosing water consumption existed as three
-  hardcoded figures written at three moments — 93, 76 and 119 — and
-  every one passed. A fourth, 169, measured 2026-09-04, showed the drift
-  continuing while the item stayed open; since 2026-09-06 the count is
-  computed and `tests/test_prose_counts_are_computed.py` is the test this
-  paragraph asked for. Same for the findings-inflation percentage. A test
-  that recomputes each statistic the dictionary quotes and compares it
-  to the string would make that class impossible; making them computed
-  (above) is the better fix, and the test is what stops the next one
-  being hardcoded.
-
-  ~~**A build is not yet asserted to be a function of its inputs.**~~
-  *Closed by `test_build_determinism.py`; the trap below is why it is
-  an integration test against the real corpus.* Two
-  builds of one database differed on 42 lines until 2026-08-22 (HISTORY:
-  *A build has to be a function of its inputs*), and they now differ only
-  on the generation timestamp. Nothing holds that. The check is cheap and
-  the discipline already exists — diffing a build against the last
-  release — so a test that builds the reader twice against a fixed
-  snapshot and asserts the two are identical apart from the stamp would
-  close it. Note the trap found while fixing it: an integration test on a
-  small fixture does *not* catch this, because Postgres returns a handful
-  of tied rows in insertion order regardless. It has to be at scale, or
-  it has to read the query.
+- **Improve the automated test surface.** All three gaps this item
+  opened with are now closed by name — `tests/test_reader_smoke.py`
+  drives the built reader and CI drives the committed one on every
+  push, `tests/test_build_determinism.py` builds twice against a
+  Postgres snapshot, and `tests/test_prose_counts_are_computed.py`
+  refuses a hardcoded corpus count (HISTORY). What stays open is the
+  standard the next test is written to, because the recurring shape of
+  these defects is *fixed the symptom, missed the cause*.
 
   **The pattern to copy** is `tests/test_release_defaults.py`: it asserts
   a *rule* over the whole tree — no default may name a release — rather
@@ -2782,6 +2182,11 @@ here rather than applied from the build lane.
   counter-example worth understanding: it asserts the corrector and the
   gate agree, and nothing asserts either is right, which is how the
   thermal-output hole survived.
+
+  **Two traps recorded with them.** A determinism check has to run at
+  scale or read the query — on a small fixture Postgres returns tied
+  rows in insertion order regardless, so the bug hides. And a test
+  bound fitted to whatever the code returned tests nothing.
 
 - **The publish button.** The second of the two workflows sketched with
   Luke on 2026-08-26. The first — checks on every push — is built and
@@ -2927,8 +2332,12 @@ None is abandoned; each is a known, scoped piece of work.
   boundary without killing anything. Its 4,117 power figures are
   adjudicated as of 2026-08-26. What it has *not* produced is the
   deliverable: the corpus-wide comparison, where two models disagree and
-  the disagreement is the finding. That and water adjudication remain
-  the next release's work.
+  the disagreement is the finding. That and water adjudication were
+  called "the next release's work" before 2.11; four releases have
+  shipped since and neither has moved, which is a scheduling fact
+  rather than a technical one. The water *count* is computed
+  (2026-09-06); the adjudication — whether the disclosing sites support
+  anything firmer than the cooling method — is untouched.
 
 ### Longer-standing
 
@@ -3111,11 +2520,10 @@ None is abandoned; each is a known, scoped piece of work.
   claims; HISTORY, "The operator pages day"). Colt is no longer
   blocked: Tudor Works and Hayes Bridge Retail Park are their own
   sites as of 2026-08-27 and the London 4 claim is matched, so a Colt
-  tranche (London 5–8) now has records to land on. ~~Iron Mountain's
-  pages have never had a snapshot~~ — **held 2026-09-01** via the
-  browser harvest, so the 61 MW calibration case now rests on pages
-  this project holds, and `--from-file` is the route for the next
-  operator a challenge page blocks.
+  tranche (London 5–8) now has records to land on. Iron Mountain's
+  pages were held on 2026-09-01 via the browser harvest, so the 61 MW
+  calibration case rests on pages this project holds, and `--from-file`
+  is the route for the next operator a challenge page blocks.
 - **Multimodal pass over drawings.** Rejected in v1 and still rejected:
   PDFs are overwhelmingly text-layered, and concealed plant will not be
   in the drawings. Revisit only for a specific application where both
