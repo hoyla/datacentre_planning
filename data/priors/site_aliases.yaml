@@ -544,17 +544,18 @@ aliases:
       
 
   - site_key: PTNO-12063929
-    alias: NTT Hemel Hempstead 2 and 3 (Gyron Campus, Maylands Avenue)
+    alias: NTT Hemel Hempstead 3, Spring Way (filed under Gyron)
     source: |
-      The derived name is Barbour's title for Gyron's 2013 scheme, and
-      Gyron is the name NTT stopped using — "with over 20 years of
-      experience in the UK market formerly operating as Gyron" (NTT's
-      London overview, snapshot ntt-london.2026-09-02) — which is why a
-      search for NTT never found this site (organisation_aliases.yaml,
-      NTT group). NTT's own pages put Hemel Hempstead 3 at "Campus,
-      Spring Way, HP2 7TN" and Hemel Hempstead 2 at 150 Maylands
-      Avenue, Gyron's own address on the 2013 application. Since the
-      site 11 partition (2026-09-07) the record is this campus alone.
+      The derived name is Barbour's title for the 2013 scheme, filed by
+      Gyron Internet Ltd — the company NTT acquired and the name it
+      stopped using: "with over 20 years of experience in the UK market
+      formerly operating as Gyron" (NTT's London overview, snapshot
+      ntt-london.2026-09-02) — which is why a search for NTT never
+      found this site (organisation_aliases.yaml, NTT group). NTT's own
+      page puts Hemel Hempstead 3 at "Campus, Spring Way, HP2 7TN", the
+      record's address. NTT's Hemel Hempstead 2 (150 Maylands Avenue)
+      and 4 (1 Blossom Way) are separate sites with no record here
+      (Luke, 2026-09-07). Own record since the site 11 partition.
 
   - site_key: PTNO-12700933
     alias: Amazon Web Services, Prologis Park Hemel Hempstead (3A Blossom Way and Plot 3 Maylands Avenue)

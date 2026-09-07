@@ -2446,9 +2446,10 @@ None is abandoned; each is a known, scoped piece of work.
   as DC5/DC6, one structure; Prologis's own "DC4" units are not data
   centres and are not NTT's Hemel 4), and NTT's Hemel sites — in
   Prologis Park, on Maylands Avenue, and elsewhere in the town — are
-  not one campus. With that, and the documents read (HISTORY, "Site
-  11 becomes four"), `PTNO-12063929` is Gyron's Campus alone (NTT's
-  Hemel 2 and 3, by NTT's own addresses), `PTNO-12700933` is Amazon
+  not one campus but three distinct sites, 2, 3 and 4. With that,
+  and the documents read (HISTORY, "Site 11 becomes four"),
+  `PTNO-12063929` is NTT Hemel Hempstead 3 alone (the record filed
+  under Gyron, the company NTT acquired), `PTNO-12700933` is Amazon
   (3A Blossom Way and LHR608 at Plot 3, Maylands Avenue, with the
   222 MWth permit now matched `strong`), `SITE-Dacorum/24/02039/MOA`
   is Northtree's Blue Box outline, and `SITE-Dacorum/19/02504/ROC` is
@@ -2485,19 +2486,31 @@ None is abandoned; each is a known, scoped piece of work.
     own or adjacent power to whichever campus it serves is the same
     question as the 44 `not_dc` power schemes under the adjacency
     review above, and belongs there rather than to this partition.
-  - **45 Maylands Avenue is Northtree's on the record, not Gyron's.**
-    Luke described it as Gyron's (former Blue Box Storage); the
-    application's 72 documents name Northtree Investment Management as
-    applicant and landowner in 53 findings, Blue Box Storage as the
-    occupier, and no operator — and they place "Gyron Campus Data
-    Centre" 150 m to the east. A question for Luke rather than a
-    correction: if an operator is known for the Northtree scheme, it
-    is not in the planning file.
-  - **Hemel 2's match rests on an address, not an application.** 150
-    Maylands Avenue, HP2 7DF, is the address Gyron gave as its own on
-    the 2013 Campus application, so the building is on the same
-    owner's land beside the site's record — but no application for it
-    is held, and the match stays `probable` for that reason.
+  - **45 Maylands Avenue: Luke says an NTT project, the file says
+    Northtree.** Luke, 2026-09-07: an NTT scheme with no facility
+    number yet, since it does not yet exist. The application's 72
+    documents name Northtree Investment Management as applicant and
+    Northtree Real Estate Partners' nominees as landowner, Blue Box
+    Storage as occupier, and no operator. **Companies House says
+    Northtree is not NTT** (checked 2026-09-07): Northtree Investment
+    Management Ltd (12951131, SIC 66300, fund management) is
+    controlled by two individuals with no NTT entity among its
+    officers or controllers, and wholly owns Northtree DC 4 Ltd
+    (15933304, incorporated 2024) — an independent investment manager
+    with a numbered data-centre SPV, which is the shape the Companies
+    House sweep exists for. If NTT is the intended operator of the
+    45 Maylands scheme, nothing in the file or the register says so;
+    the partition stands either way, because Luke and the file agree
+    it is a separate site.
+  - **NTT Hemel Hempstead 2 is unsited too.** 150 Maylands Avenue,
+    HP2 7DF, an existing site NTT treats as separate from Hemel 3
+    (Luke), with no application held. It was briefly matched to the
+    Spring Way record on the address Gyron gave as its own on the 2013
+    form, and retired the same day. The unsited layer's "inside a live
+    site's radius fails the build" test would refuse both Hemel 2 and
+    Hemel 4, which are inside neighbouring sites' radii while being
+    nobody's record — a dense park breaks that heuristic, and the plan
+    should say so before the loader is built.
 - **Requests outstanding, and three drafted awaiting Luke's send.**
   NESO and Ofgem were written to on 2026-08-12 and replies are due
   around 10 September. The three never-sent requests are now drafted in

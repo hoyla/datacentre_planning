@@ -2321,27 +2321,6 @@ matches:
     matched_by: hand:claude-fable-5:2026-09-02
     evidence: The same page and address as the capacity claim above.
 
-  - claim_name: NTT Hemel Hempstead 2
-    site_id: 11
-    method: name_and_postcode
-    confidence: probable
-    matched_by: hand:claude-fable-5:2026-09-07
-    evidence: >-
-      Site 11 is Gyron's Campus alone since the 2026-09-07 partition
-      (site_partitions.yaml, gyron-campus-spring-way-hemel): Barbour's
-      "GYRON LIMITED - NEW DATA CENTRE AND STORAGE FACILITY" at The
-      Campus, Maylands Avenue, HP2 7TN, and Dacorum/4/01399/13/MFA,
-      Gyron Internet Ltd's 2013 permission at Campus, Spring Way. HH2's
-      address, 150 Maylands Avenue, HP2 7DF, is the address Gyron gave
-      as its own on that application's form and on both decision
-      notices, so HH2 is Gyron's existing building beside the Campus on
-      the same owner's land, and one of the four postcodes NTT's Hemel
-      permit (EPR/BP3800PZ) is issued to. Probable rather than strong
-      because no application for the HH2 building itself is held — the
-      site's record is the neighbouring 2013 scheme. Supersedes the
-      2026-09-02 match, whose evidence rested on the pre-partition
-      estate-scale record.
-
   - claim_name: NTT Hemel Hempstead 3
     site_id: 11
     method: name_and_postcode
@@ -2350,14 +2329,35 @@ matches:
     evidence: >-
       "Campus, Spring Way, HP2 7TN" is the Barbour record's own postcode
       and name (The Campus); the site holds Dacorum/4/01399/13/MFA at
-      "Campus Spring Way", the 2013 permission for Gyron's headquarters
-      and data storage facility. Since the 2026-09-07 partition the site
-      is that campus and nothing else. Probable rather than strong
-      because NTT's page does not name the 2013 scheme and the 2013
-      documents do not name Hemel Hempstead 3. Supersedes the 2026-09-02
-      match.
+      "Campus Spring Way", the 2013 permission for a headquarters
+      office and data storage facility filed by Gyron Internet Ltd, the
+      company NTT acquired. Since the 2026-09-07 partition
+      (site_partitions.yaml, ntt-hemel-hempstead-3-spring-way) the site
+      is that record and nothing else — Hemel Hempstead 2 and 4 are
+      separate NTT sites (Luke) and are not matched here. Probable
+      rather than strong because NTT's page does not name the 2013
+      scheme and the 2013 documents do not name Hemel Hempstead 3.
+      Supersedes the 2026-09-02 match.
 
 considered:
+  - claim_name: NTT Hemel Hempstead 2
+    reason: >-
+      Matched `probable` to site 11 on 2026-09-02 on the pre-partition
+      estate-scale record, re-matched on 2026-09-07 morning to the
+      partitioned record on the strength of an address, and **retired
+      the same day**: NTT treats Hemel Hempstead 2 — 150 Maylands
+      Avenue, HP2 7DF, an existing site — as separate from Hemel 3 at
+      Spring Way, not part of it (Luke, 2026-09-07), and the corpus
+      holds no application for the building. What the address does
+      establish is adjacency: 150 Maylands Avenue is the address Gyron
+      Internet Ltd gave as its own on the 2013 Campus application form
+      and both decision notices (documents b26a242f0ca7ed5e,
+      541fb50f20870f12), and HP2 7DF is one of the four postcodes NTT's
+      Hemel permit (EPR/BP3800PZ) is issued to. Unsited until a record
+      for the building is found; a seed for the unsited-claims layer,
+      and a case its "inside a live site's radius" test would wrongly
+      refuse.
+
   - claim_name: NTT Hemel Hempstead 4
     reason: >-
       Matched `probable` to site 11 on 2026-09-02 on the strength of a

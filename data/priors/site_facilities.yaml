@@ -594,40 +594,16 @@ sites:
             title: HAYES BRIDGE RETAIL PARK  LON7  LON8 DATA CENTRES & INNOVATION HUB
 
   # ---- Hemel Hempstead, after the site 11 partition (2026-09-07).
-  # NTT's pages give Hemel Hempstead 2, 3 and 4 separate addresses and
-  # call none of them a campus (Luke, 2026-09-07); HH4 at 1 Blossom Way
-  # has no record here and belongs to no site, so it is not listed.
+  # NTT's Hemel Hempstead 2, 3 and 4 are three distinct existing sites,
+  # not a campus (Luke, 2026-09-07); only Hemel 3 has a planning record
+  # here, so only it is listed. Hemel 2 (150 Maylands Avenue) and Hemel
+  # 4 (1 Blossom Way) are unsited claims in operator-claims.yaml.
   - site_key: PTNO-12063929
     note: >-
-      Gyron's Campus at Maylands Avenue / Spring Way. NTT publishes no
-      campus total; the two facilities stand on their own figures.
+      NTT Hemel Hempstead 3, on the record filed under Gyron's name
+      (NTT acquired Gyron). One facility; NTT publishes no total that
+      would apply.
     facilities:
-      - id: Hemel Hempstead 2
-        identity:
-          - source: operator_roster
-            url: https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/hemel-hempstead-2-data-center
-            snapshot: ntt-hemel-2
-            date: 2026-09-02
-            note: >-
-              No application for this building is held. Its address is
-              the one Gyron Internet Ltd gave as its own on the 2013
-              application form for the Campus next door
-              (Dacorum/4/01399/13/MFA, document b26a242f0ca7ed5e) and
-              on both decision notices.
-        location:
-          address: 150 Maylands Avenue, Hemel Hempstead
-          postcode: HP2 7DF
-          source: >-
-            NTT's own page (snapshot ntt-hemel-2, 2026-09-02);
-            corroborated by the 2013 application form and decision
-            notices for the Campus, which give Gyron Internet Ltd at
-            "150 Maylands Avenue, Hemel Hempstead, HP2 7DF", and by
-            NTT's permit EPR/BP3800PZ, issued to HP2 7DF among four
-            postcodes.
-          date: 2026-09-07
-        attributions:
-          - kind: critical IT load, operator's basis
-            claim: NTT Hemel Hempstead 2
       - id: Hemel Hempstead 3
         identity:
           - source: operator_roster
@@ -635,13 +611,14 @@ sites:
             snapshot: ntt-hemel-3
             date: 2026-09-02
             note: >-
-              The site's own planning record — Gyron's 2013 permission
-              for "headquarters office building, data storage facility"
-              at Campus, Spring Way — does not name Hemel Hempstead 3,
-              and NTT's page does not name the permission; the address
-              is the join.
+              The site's planning record — Gyron Internet Ltd's 2013
+              permission for "headquarters office building, data
+              storage facility" at Campus, Spring Way — does not name
+              Hemel Hempstead 3, and NTT's page does not name the
+              permission; the address is the join. "Campus" is the
+              record's name for this land, not an NTT grouping.
         location:
-          address: Campus, Spring Way, Hemel Hempstead
+          address: Spring Way, Hemel Hempstead
           postcode: HP2 7TN
           lat: 51.761604
           lon: -0.436647
@@ -673,9 +650,12 @@ sites:
               for Amazon Web Services, describes "the existing Data
               Centre at 3A Blossom Way" and its permission chain
               (4/01922/19/MFA, 22/01067/ROC, 24/00914/NMA), none of
-              which is held. Prologis markets the building as DC5/DC6,
-              one structure (Luke, 2026-09-07, from Prologis's and
-              CBRE's DC5 brochures).
+              which is held. Prologis markets the structure as DC5 and
+              DC6, one building; DC6 is shown let and DC5 still
+              advertised, so Amazon is probably in the DC6 half (Luke,
+              2026-09-07, from Prologis's and CBRE's DC5 brochures).
+              Which part of the 2019-consented building the data
+              centre occupies is not stated in the planning file.
         location:
           address: 3A Blossom Way, Prologis Park, Hemel Hempstead
           postcode: HP2 4ZB

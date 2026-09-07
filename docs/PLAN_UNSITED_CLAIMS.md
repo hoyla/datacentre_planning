@@ -19,6 +19,7 @@ was written down:
 | NTT Slough 2 and 3, 670 and 665 Ajax Avenue, 1.8 and 2.7 MW | nothing at 665-670; Segro's GB One shell at 650-660 is a different building | Gyron's estate, pre-window; the permit (2022) has no document |
 | ServerChoice Stevenage, opened 2008, new halls 2021, SG1 2FP | nothing; GSK's fence 470 m away | pre-window build; the 2021 halls untested (sweep at 51.8887, -0.2047) |
 | VIRTUS LONDON4 (14 Liverpool Road) and LONDON19 (unlocated) | nothing at 14 Liverpool Road | untested (sweep at 51.5230, -0.6219); LONDON19 has no address anyone can cite |
+| NTT Hemel Hempstead 2, 150 Maylands Avenue, HP2 7DF, 5.8 MW, existing (added 2026-09-07) | nothing for the building; the address is the one Gyron gave as its own on the 2013 Spring Way application next door | pre-window, probably; inside the Spring Way record's radius while being nobody's record — the radius test below would wrongly refuse it |
 | NTT Hemel Hempstead 4, 1 Blossom Way, HP2 4ZB, 12 MW "will offer" and a 60 MVA substation (added 2026-09-07) | nothing at 1 Blossom Way; Amazon's 3A Blossom Way is a different building (Luke), its own site since the site 11 split | landlord's name, probably — Prologis files for the park; the sweep at the Amazon permit's grid reference (51.7559, -0.4350) would say |
 
 And the ones already written down elsewhere, as prose:
@@ -120,7 +121,12 @@ priors that already work this way:
   requires `test` and `result`;
 - **a row whose coordinates fall inside a live site's radius fails the
   build** with the site key, because that is the moment it stopped
-  being unsited. This is the test that keeps the layer honest: the
+  being unsited. *Caveat found 2026-09-07 before anything was built: NTT's
+  Hemel 2 and Hemel 4 are unsited buildings standing inside other
+  records' 1 km radii (Spring Way's, Amazon's) in a dense park, so a
+  bare radius test would refuse the two rows the layer most needs.
+  The test wants an exemption a person writes, or a tighter radius,
+  before the loader exists.* This is the test that keeps the layer honest: the
   corpus grows, and a row that was true in September is false in
   October.
 

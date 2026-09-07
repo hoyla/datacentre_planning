@@ -481,30 +481,29 @@ campuses:
       - GYRON LIMITED - NEW DATA CENTRE AND STORAGE FA
     reason: |
       Reviewed 2026-09-07, and the review was a partition rather than a
-      scope decision: the two projects were two operators — Gyron's
-      Campus and Amazon's Prologis Park buildings — plus Northtree's
-      outline and a third party's gas engines, held together by the
-      1 km radius and by Barbour giving Amazon's record the Blue Box
-      address. Luke settled the one open question (NTT's Hemel
-      Hempstead 4 at 1 Blossom Way and Amazon's 3A are separate
-      buildings; NTT's Hemel sites are not one campus) and the site
-      became four (site_partitions.yaml, the three Hemel entries;
-      Finway Road stands alone). This record is now Gyron's Campus
+      scope decision: the two projects were two operators — NTT's
+      Hemel Hempstead 3, filed under Gyron's name, and Amazon's
+      Prologis Park buildings — plus the 45 Maylands Avenue outline and
+      a third party's gas engines, held together by the 1 km radius and
+      by Barbour giving Amazon's record the Blue Box address. Luke
+      settled the one open question (NTT's Hemel Hempstead 4 at
+      1 Blossom Way and Amazon's 3A are separate buildings; NTT's Hemel
+      Hempstead 2, 3 and 4 are distinct sites, not a campus) and the
+      site became four (site_partitions.yaml, the three Hemel entries;
+      Finway Road stands alone). This record is now Hemel Hempstead 3
       alone, one Barbour project, so it no longer belongs to the
       multi-project population; the entry stays as the record of the
       review.
 
-      **Distinct facilities**, on the operator's own pages: NTT lists
-      Hemel Hempstead 2 (150 Maylands Avenue, Gyron's own address on
-      the 2013 application) and Hemel Hempstead 3 (Campus, Spring Way)
-      with an IT load each and no campus total (site_facilities.yaml).
-      The site's planning record is the 2013 scheme for the Campus;
-      the HH2 building has no application here.
+      **Distinct facilities**, in the only sense left: the record holds
+      one facility, Hemel Hempstead 3, on NTT's own page
+      (site_facilities.yaml); Hemel 2 and 4 are separate sites with no
+      record here, and are not counted against this one.
 
-      **Total: withhold.** NTT states no campus figure and does not
-      describe these as a campus, and the planning record states no
-      load at all — the site ranks on the operator rung's per-facility
-      claims or on nothing. No power_cell: there is no campus claim to
+      **Total: withhold.** There is nothing to sum, NTT states no
+      figure that spans its Hemel sites, and the planning record states
+      no load at all — the site ranks on the operator rung's Hemel 3
+      claim or on nothing. No power_cell: there is no campus claim to
       displace with.
 
   - site_key: PTNO-12104907
