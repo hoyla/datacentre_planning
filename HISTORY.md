@@ -4500,3 +4500,73 @@ again because every site was re-read.
 release PR if the review passes. Steps 13a and 15 — the Pinpoint and
 Giant bundles, and telling the reporting team — and the deploy are
 Luke's.
+
+---
+
+## The search bundles ran for 2.14, and the resume that skipped 755 (2026-09-07)
+
+**Why there was no bundle, which is the part worth recording.** Nothing
+failed. Step 13a is on the chain but the whole step was a person's, so
+2.13 and 2.14 both ended with it left — the same sentence closes both
+release entries. The last build was **tranche 6, 2026-09-02 19:47–19:50,
+2,153 files across 2 sites**, which shipped with 2.12 and was itself
+never written down; the files on disk were the only record. So the step
+created on 2026-08-29 *because* being "off the chain, optional" is how
+the notebook went three releases stale and the search tools four had
+reproduced the same staleness within two releases, by a different route.
+Visible on the list is not the same as run.
+
+**The split, decided here:** the build is part of the run and the upload
+is Luke's. Both commands are local, spend no API budget and publish
+nothing; what needs a person is the tranche upload, the notebook's
+folders of 50 and emptying a notebook holding a previous release. The
+runbook's 13a says so now.
+
+**Tranche 7.** Measured with the script's own `--plan` before spending
+anything: 62,298 staging files at 161.5 GB, of which 49,597 were already
+uploaded, 7,202 drawings and 2,765 duplicates dropped by policy, leaving
+2,734 to convert. The build took 3½ minutes at 12 workers and produced
+**1,979 files, 2.2 GB, 29 sites** — 0.44 of its input, 1,353
+recompressed, 625 copied, one downscaled, no failures. The 29 sites are
+exactly the refused-page review's, Eggborough at 577 down to Tyn-y-Caeau
+Margam at 3, so the tranche is 2.14's work and nothing else; 2.13 had
+added no documents and needed no tranche. The manifest went 51,208 rows
+to 53,187, every earlier tranche's row intact. Quota after upload:
+**75.1 GB of Pinpoint's 100**, against the ~64 GB the policy was written
+at — roughly 3 GB a release, so the ceiling is a decision due before it
+is a problem.
+
+**2,734 planned against 1,979 processed, and the 755 that explains it.**
+The gap was not accepted as an accounting artefact. Re-planning against
+the new manifest reported **755 files still to convert** (0.4 GB), so
+they are outstanding rather than absorbed. The cause is two skip
+predicates that disagree: `--already-uploaded` skips on the source
+content hash, which is right across releases, and the journal's resume
+then skips on the staging *path*, which is right only inside one
+interrupted sweep — and it runs second. Across releases the path is not
+stable, because `NNN - kind.pdf` renumbers every later document when an
+application gains one, so a path converted under different content
+survives the hash filter and is dropped by the path one. Corroborated
+independently and cheaply: comparing each journalled row's
+`original_bytes` against the file now at that path — a stat, no
+hashing — finds **554 changed paths across 359 sites**, a floor under
+the 755 arrived at a second way.
+
+Nothing is lost: the 755 are in Drive and on their site pages. What
+cannot see them is Pinpoint and Giant, which is a completeness claim two
+search tools make wrongly, and it grows every release that adds
+documents to applications the bundle already carries. The fix is
+ROADMAP's, under Smaller things, and it is deliberately not "key the
+resume on the sha" — that changes what "already covered" means to an
+interrupted sweep, which is the journal's actual job. What the script
+should do either way is re-plan itself at the end and refuse to report
+success with anything outstanding, the way it already refuses when the
+manifest and `files/` disagree.
+
+**The trap for the next session.** The first measurement of this gap was
+by staging path — 19,232 files "missing" — and it was wrong. The
+script's own comment says why, four lines above the filter: the skip is
+keyed on the content hash *"not the staging path, because paths move:
+today's British Museum partition renamed a site folder and every path
+under it"*. Most of that 19,232 was documents Pinpoint already held
+under an older path. The right probe was the tool's own `--plan`.
