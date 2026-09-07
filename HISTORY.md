@@ -4503,6 +4503,31 @@ Luke's.
 
 ---
 
+## v2.14 — released and deployed (2026-09-07)
+
+The candidate is the entry above. Luke reviewed the page, then
+**candidate #412 merged at 11:47** (docs only: HISTORY, ROADMAP, the
+runbook's register) and **release #413 at 12:07**, carrying
+`index.html` byte-identical to `data/exports/phase2.14_build/
+reader.html`. `cloudrun/deploy.sh` put it live two minutes later as
+revision **`dc-reader-00010-8g4`** at 100% of traffic — verified
+against the service rather than taken from the release note:
+`gcloud run revisions list` shows it active, deployed 12:09:22 UTC.
+IAP gating verified on every probed path and `probe_gate.sh` clean
+against the EdgeOne signpost, 22 paths refused and the forged session
+cookie rejected.
+
+**2.14 is the base**, and `data/exports/phase2.14_build/` is the
+baseline the next release diff is read against.
+
+What it carries is the refused-page corpus: 2,085 documents on 29
+sites, 28 of which held nothing at all that morning, all read; 385 of
+388 sites with prose read in full. What it left for a person is the
+Eggborough discharge site carrying the station's own 2,500 MW, and
+Redhill as the sixth generation-understated site.
+
+---
+
 ## The search bundles ran for 2.14, and the resume that skipped 755 (2026-09-07)
 
 **Why there was no bundle, which is the part worth recording.** Nothing
@@ -4570,3 +4595,81 @@ keyed on the content hash *"not the staging path, because paths move:
 today's British Museum partition renamed a site folder and every path
 under it"*. Most of that 19,232 was documents Pinpoint already held
 under an older path. The right probe was the tool's own `--plan`.
+
+---
+
+## The roadmap is cleared of what it had already finished (2026-09-07)
+
+ROADMAP is meant to hold only what is still to do, and it had
+accumulated about eighteen items struck through and annotated **done**
+— a running record of completion sitting in the file whose job is the
+opposite. Luke asked for it made current after 2.14. This entry is the
+receipt: everything removed, with the substance HISTORY did not
+already carry, so nothing is lost by the deletion.
+
+**Already recorded elsewhere in this file, and simply removed.** The
+machine-reading gate's squash guard and `reading-1.3` (both enacted
+2026-08-31 on the move to terra, `GATE_VERSION` now `gate-2.1`); the
+family door uniting what it admits (#351) and the materialise since
+2026-09-02; adjacent power taking its own paperwork (#352); the fetch
+queue reaching the adjacent-power class again (2026-09-06); the
+`no_documents_clause` (2026-09-06); the snapshot chain's three steps
+and the folded Drive viewer URL (2026-09-01/02); the zero-byte sweep's
+durable home and the held-but-empty bucket (2026-09-02, 2026-09-06);
+"near a postcode" (2.13); the unretired membership rows (#349, #351);
+the ledger's atomic write and lock (2026-09-06); the computed water
+count (2026-09-06); `pages_sent` as a set (2026-09-06); the VIRTUS
+Saunderton datasheet snapshot and the VIRTUS Slough campus scope
+(2026-09-01/02); the Vantage ↔ Next Generation Data alias, assessed
+and not written (2026-08-31); Iron Mountain's pages held via the
+browser harvest, with `--from-file` as the route for the next operator
+a challenge page blocks (2026-09-01).
+
+**Substance that was only in ROADMAP, kept here.**
+
+- **#250's four closures.** The outcomes were written on 2026-08-31:
+  all 106 examined rows carry an outcome in
+  `neso-ea-register-matches.yaml` — five new matches (Cato and Quest
+  Park `strong`; two Bro Tathan rows and Cottam Giga `probable`), an
+  addendum recording the two overturns and the Ratcliffe upholding,
+  and `considered` entries for the rest, including the 19 GECs held
+  apart and the five Relode "Power Park" rows identified as a third
+  hub-portfolio family. Loaded 2026-09-01 with nine operator claims.
+  The cohort exclusion was stated in `at_least_100mw.limits`
+  (`dcp/site_cohorts.py`, commit 81d286f, 2026-08-31) with
+  `rule_version` untouched, because limits prose is not the rule —
+  and that item had read "still not done" for a day after it was done,
+  caught only when the rung design read the cohort. The under-ranking
+  measurement: of the 35 multi-project sites, 8 already ranked at or
+  above 100 MW and **the invisible class was exactly two** — Stockley
+  Park 24.0 against 112.5, Vantage Cardiff 67.2 against 148 — with
+  VIRTUS Slough joining on 2026-09-02 when its scope resolved. All
+  three now rank on the operator rung. **What is not closed** is the
+  general case, and it stays in ROADMAP: a campus with no published
+  roster keeps today's behaviour.
+
+- **The "Excluded applications" tab reached the Google Sheet.** The
+  workbook sheet shipped 2026-09-02 (#353) with the standing caution
+  that `sheet_sync` cannot add a tab, so the next release had to create
+  it by hand. It was: the 2.14 workbook carries thirteen sheets with
+  *Excluded applications* among them, and the 2.14 Sheet sync took
+  22,162 rows across thirteen tabs. The caution has been discharged and
+  leaves ROADMAP with it.
+
+- **Two of the three test-surface gaps have names.**
+  `tests/test_reader_smoke.py` drives the built reader in a browser and
+  CI drives the committed one on every push (2026-08-27);
+  `tests/test_build_determinism.py` builds twice against a Postgres
+  snapshot and asserts the two identical apart from the stamp (2.8).
+  The third — nothing asserts a stated number matches the data it
+  describes — is closed for corpus counts by
+  `tests/test_prose_counts_are_computed.py` (2026-09-06). What remains
+  of it is the named residue in that test's `ALLOWED` list and the
+  two shapes its rule cannot see, which stays in ROADMAP.
+
+**The header was rewritten to 2.14** — it had still opened "The base
+is 2.13" a day after 2.14 deployed, and carried what 2.13 and 2.11
+shipped, which is this file's business. The campus-scope count was
+wrong in three places at once: the header said 32 `unreviewed`, the
+#250 section said 33, and the file holds **31**. Re-measured rather
+than reconciled.
