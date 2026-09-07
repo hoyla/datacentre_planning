@@ -395,3 +395,21 @@ entries:
       borough, same verbatim description as
       Hertsmere/24/1152/OUTEI, whose portal pin the coordinates are
       (2026-08-29).
+
+  - ptno: "12700933"
+    lat: 51.754829
+    lon: -0.437692
+    source: |
+      Barbour's pin for "AMAZON DATA SERVICES  MAYLANDS AVENUE - DATA
+      CENTRE" is the postcode centroid of the address on the same
+      record, "Blue Box Storage, 45 Maylands Avenue, HP2 7DF" — which
+      is Northtree Investment Management's outline site
+      (Dacorum/24/02039/MOA), 800 m north of the application the
+      record itself links to by planning reference, Amazon's
+      Dacorum/26/00267/MFA at Plot 3, Maylands Avenue, HP2 4FQ. That
+      application's Tier 1 geo-environmental assessment centres the
+      site "on National Grid Reference Easting 507935, Northing
+      207392" (document cfe69edf37d82f19), which converts to the value
+      here. The misplaced pin is what glued Northtree's site and the
+      Finway Road gas engines into the Gyron record (site 11 split,
+      2026-09-07).

@@ -2325,50 +2325,66 @@ matches:
     site_id: 11
     method: name_and_postcode
     confidence: probable
-    matched_by: hand:claude-fable-5:2026-09-02
+    matched_by: hand:claude-fable-5:2026-09-07
     evidence: >-
-      Site 11 is Barbour's "GYRON LIMITED - NEW DATA CENTRE AND STORAGE
-      FACILITY", client Gyron Internet Limited, at The Campus, Maylands
-      Avenue, HP2 7TN, with seven Dacorum applications across Maylands
-      Avenue, Spring Way, Finway Road and Blossom Way; NTT's own overview
-      page says it was "formerly operating as Gyron". HH2's 150 Maylands
-      Avenue, HP2 7DF, is one of the four postcodes NTT's Hemel permit
-      (EPR/BP3800PZ) is issued to. Probable rather than strong because
-      the site record is estate-scale and also holds the address of
-      Amazon's Hemel permit (3A Blossom Way), so it does not describe one
-      operator's campus alone.
+      Site 11 is Gyron's Campus alone since the 2026-09-07 partition
+      (site_partitions.yaml, gyron-campus-spring-way-hemel): Barbour's
+      "GYRON LIMITED - NEW DATA CENTRE AND STORAGE FACILITY" at The
+      Campus, Maylands Avenue, HP2 7TN, and Dacorum/4/01399/13/MFA,
+      Gyron Internet Ltd's 2013 permission at Campus, Spring Way. HH2's
+      address, 150 Maylands Avenue, HP2 7DF, is the address Gyron gave
+      as its own on that application's form and on both decision
+      notices, so HH2 is Gyron's existing building beside the Campus on
+      the same owner's land, and one of the four postcodes NTT's Hemel
+      permit (EPR/BP3800PZ) is issued to. Probable rather than strong
+      because no application for the HH2 building itself is held — the
+      site's record is the neighbouring 2013 scheme. Supersedes the
+      2026-09-02 match, whose evidence rested on the pre-partition
+      estate-scale record.
 
   - claim_name: NTT Hemel Hempstead 3
     site_id: 11
     method: name_and_postcode
     confidence: probable
-    matched_by: hand:claude-fable-5:2026-09-02
+    matched_by: hand:claude-fable-5:2026-09-07
     evidence: >-
       "Campus, Spring Way, HP2 7TN" is the Barbour record's own postcode
       and name (The Campus); the site holds Dacorum/4/01399/13/MFA at
-      "Campus Spring Way". Probable for the shared-record reason on HH2.
-
-  - claim_name: NTT Hemel Hempstead 4
-    site_id: 11
-    method: name_and_postcode
-    confidence: probable
-    matched_by: hand:claude-fable-5:2026-09-02
-    evidence: >-
-      1 Blossom Way, HP2 4ZB; the site holds Dacorum/21/04714/SCE and
-      Dacorum/26/00152/FUL at 3A Blossom Way, HP2 4ZB. Probable for the
-      shared-record reason on HH2, sharpened here: 3A is the address on
-      Amazon's permit, so which of the Blossom Way applications is NTT's
-      and which is Amazon's is exactly the question a partition of site
-      11 would answer.
-
-  - claim_name: NTT Hemel Hempstead 4 — grid supply
-    site_id: 11
-    method: name_and_postcode
-    confidence: probable
-    matched_by: hand:claude-fable-5:2026-09-02
-    evidence: The same page and address as the capacity claim above.
+      "Campus Spring Way", the 2013 permission for Gyron's headquarters
+      and data storage facility. Since the 2026-09-07 partition the site
+      is that campus and nothing else. Probable rather than strong
+      because NTT's page does not name the 2013 scheme and the 2013
+      documents do not name Hemel Hempstead 3. Supersedes the 2026-09-02
+      match.
 
 considered:
+  - claim_name: NTT Hemel Hempstead 4
+    reason: >-
+      Matched `probable` to site 11 on 2026-09-02 on the strength of a
+      shared postcode — 1 Blossom Way, HP2 4ZB, against the site's two
+      applications at 3A Blossom Way — and **retired 2026-09-07**. Luke
+      settled the question the match had left open: 1 Blossom Way (NTT's
+      Hemel Hempstead 4) and 3A Blossom Way (Amazon's building, which
+      Prologis markets as DC5/DC6, one structure) are separate buildings
+      in Prologis Park, and NTT's Hemel sites are not a single campus.
+      Sources: NTT's own page (snapshot ntt-hemel-4), Prologis's DC5
+      brochure (prologis.co.uk/properties/south-east/building/gb000604-
+      prologis-park-hemel-hempstead-dc5) and CBRE's DC5 listing
+      (GB-Plus-513880); Amazon's permit EPR/BP3546QP is issued at 3A.
+      The 3A applications now sit in PTNO-12700933 (Amazon), and no
+      application at 1 Blossom Way is held — the "second, unrelated data
+      centre currently under construction" that Prologis's December 2021
+      screening report (Dacorum/21/04714/SCE) mentions is the only trace
+      of it. Unmatched until a record for 1 Blossom Way is fetched; a
+      seed for the unsited-claims layer (docs/PLAN_UNSITED_CLAIMS.md).
+      Do not confuse with Prologis's own "DC4" units, which are not data
+      centres.
+
+  - claim_name: NTT Hemel Hempstead 4 — grid supply
+    reason: >-
+      Retired 2026-09-07 with the capacity claim above, for the same
+      reason: the same page and address.
+
   - claim_name: Union Park
     reason: >-
       Matched to site 61 on 2026-08-20 and **retired 2026-08-21**. The

@@ -4673,3 +4673,92 @@ shipped, which is this file's business. The campus-scope count was
 wrong in three places at once: the header said 32 `unreviewed`, the
 #250 section said 33, and the file holds **31**. Re-measured rather
 than reconciled.
+
+## Site 11 becomes four (2026-09-07)
+
+Luke settled the question the 2026-09-03 anatomy of `PTNO-12063929`
+had left for a person: NTT's Hemel Hempstead 4 at 1 Blossom Way and
+Amazon's building at 3A Blossom Way are **separate buildings** in
+Prologis Park — 3A is the one Prologis markets as DC5/DC6, a single
+structure (Prologis's DC5 brochure, CBRE's listing GB-Plus-513880; the
+park's own "DC4" units are not data centres and are not NTT's Hemel 4,
+whatever the number suggests) — and NTT's several Hemel Hempstead
+sites are not one campus: NTT's pages give each its own address and
+call none of them a campus. 45 Maylands Avenue, the former Blue Box
+Storage, is close to the park but a separate entity again.
+
+**Then the documents, which sharpened it twice.** Amazon's Learning
+Lab application at 3A (`Dacorum/26/00152/FUL`, submitted for Amazon
+Web Services) describes "the existing Data Centre at 3A Blossom Way"
+and its permission chain — Prologis's 2019 consent `4/01922/19/MFA`
+for flexible B1c/B2/B8 floorspace, the S.73 variation `22/01067/ROC`
+that made it "an 18m high data centre at 3a Blossom Way", the 2024
+amendment `24/00914/NMA` — none of which the corpus holds; the
+building is here only as its neighbours' paperwork. Prologis's
+December 2021 screening request (`21/04714/SCE`, 4.8 ha at the
+southern end of the park, access from Blossom Way) is that building's
+chain, and its "second, unrelated data centre currently under
+construction" in the park is the only trace of NTT's Hemel 4. Amazon's
+`26/00267/MFA` is a second building, LHR608 at Plot 3, Maylands
+Avenue, HP2 4FQ, west of the avenue, whose documents put the 3A
+building east of it and its 222 MWth permit 117 m north-east. And
+Barbour's Amazon record (12700933) links to the Plot 3 application by
+planning reference while carrying Northtree's address, "Blue Box
+Storage, 45 Maylands Avenue" — the misplaced pin that had welded
+Northtree's outline and the Finway Road gas engines into Gyron's
+record, since the gas engines' only edge into it was a spatial one to
+that pin.
+
+On the other side, the 2013 Campus application (`4/01399/13/MFA`)
+gives Gyron Internet Ltd's own address as **150 Maylands Avenue, HP2
+7DF** — NTT's address for Hemel Hempstead 2 — on its form and both
+decision notices, so HH2 is Gyron's existing building beside the
+Campus on the same owner's land, and HH3 is the Campus by NTT's own
+"Campus, Spring Way". The Northtree file, for its part, names Northtree
+Investment Management as applicant and landowner in 53 findings, Blue
+Box Storage as occupier, no operator, and places "Gyron Campus Data
+Centre" 150 m to its east; Luke's description of it as Gyron's is a
+question back to him rather than a fact written down.
+
+**Drawn, preflighted, materialised.** Three partitions in
+`site_partitions.yaml` (`gyron-campus-spring-way-hemel`,
+`amazon-prologis-park-hemel`, `northtree-45-maylands-hemel`), the
+Finway Road pair deliberately in none of them, and a `ptno:` override
+in `inferred_coords.yaml` putting Amazon's pin at Plot 3's own grid
+reference (507935 207392, from its Tier 1 assessment). The dry run:
+3 new sites, 0 retiring, 6 moves — all of them site 11's — and 0
+orphaned claims, because Gyron's record keeps its key. Materialised:
+**502 live sites**. `PTNO-12063929` is Gyron's Campus (one
+application, one project); `PTNO-12700933` (site 546) is Amazon's
+three applications and project; `SITE-Dacorum/24/02039/MOA` (548) is
+Northtree; `SITE-Dacorum/19/02504/ROC` (547) is the two gas-engine
+applications, keyed on the variation because it sorts first.
+
+**Cashed the same sitting.** Amazon's Hemel permit (EPR/BP3546QP, 222
+MWth, 33 generators) is matched `strong` to site 546 — holder,
+address, grid reference and the site's own documents name one
+building, and it is the first of the permits held under `considered`
+for an estate-scale record to graduate to a match; the considered
+entry keeps its SETTLED coda, and NTT's four-site permit stays there.
+The four NTT Hemel matches to site 11 were retired with reasons on the
+rows (`retired_reason`): Hemel 2 and 3 re-matched to the same site on
+the narrower evidence, still `probable` because HH2's building has no
+application here and the 2013 papers do not name HH3; Hemel 4 and its
+60 MVA substation moved to `considered` as an unsited claim, the seed
+`docs/PLAN_UNSITED_CLAIMS.md` now lists. Rosters and locations for
+both campuses in `site_facilities.yaml` — HH2 and HH3 on NTT's pages
+with the 2013 form as corroboration; 3A Blossom Way and LHR608 on
+Amazon's own documents, the permit's grid reference and Barbour's
+title — with the permit as the 3A building's one attribution, which
+needed the facilities test to count the permit register among the
+claims files it resolves against. Aliases for both (the NTT name that
+a search had never found, and Amazon's real addresses over Barbour's
+wrong one); the campus-scope entry for site 11 recorded as reviewed by
+partition — `distinct_facilities`, `withhold`, no campus claim to
+displace with — leaving **30 of the file's 34 entries unreviewed**.
+
+**Left, in ROADMAP:** the 3A building's own applications and any
+record at 1 Blossom Way, with the probe named and not run (rule 4);
+the Finway Road engines as a standalone `unknown`-verdict site whose
+adjacency question joins the 44; the Northtree operator question; and
+the document folders that move at the next Drive staging build.

@@ -19,6 +19,7 @@ was written down:
 | NTT Slough 2 and 3, 670 and 665 Ajax Avenue, 1.8 and 2.7 MW | nothing at 665-670; Segro's GB One shell at 650-660 is a different building | Gyron's estate, pre-window; the permit (2022) has no document |
 | ServerChoice Stevenage, opened 2008, new halls 2021, SG1 2FP | nothing; GSK's fence 470 m away | pre-window build; the 2021 halls untested (sweep at 51.8887, -0.2047) |
 | VIRTUS LONDON4 (14 Liverpool Road) and LONDON19 (unlocated) | nothing at 14 Liverpool Road | untested (sweep at 51.5230, -0.6219); LONDON19 has no address anyone can cite |
+| NTT Hemel Hempstead 4, 1 Blossom Way, HP2 4ZB, 12 MW "will offer" and a 60 MVA substation (added 2026-09-07) | nothing at 1 Blossom Way; Amazon's 3A Blossom Way is a different building (Luke), its own site since the site 11 split | landlord's name, probably — Prologis files for the park; the sweep at the Amazon permit's grid reference (51.7559, -0.4350) would say |
 
 And the ones already written down elsewhere, as prose:
 

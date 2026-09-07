@@ -31,8 +31,8 @@ since 2.12.
 **What carries forward from the site / facility / campus effort** (2.11,
 which Luke redefined on 2026-08-31 as "the effort to make sense of the
 site/facility/campus issues"; what it shipped is in HISTORY): #248,
-the 35-campus review — **31 of the 35 entries are still `unreviewed`**,
-measured 2026-09-07 — #247's general case, where a campus with no
+the 35-campus review — **30 of its 34 entries are still `unreviewed`**,
+measured 2026-09-07 after site 11's review — #247's general case, where a campus with no
 published roster still shows one building's figure, and the partitions
 the review owes. The over-merged site records still hold the Premier
 Park and DataVita claims under `considered:`.
@@ -434,8 +434,9 @@ bases". Rejected: showing no number, which drops the site out of sorting
 and out of `at_least_100mw`.
 
 **`data/priors/campus_scope.yaml` (merged, PR #251) lists all 35
-multi-project sites**, **31 of them still `unreviewed`** as of
-2026-09-07 — the four decided are `distinct_facilities` — with a
+multi-project sites**, **30 of its 34 entries still `unreviewed`** as of
+2026-09-07 — the four decided are `distinct_facilities`, site 11's by
+partition — with a
 deliberately crude `proposed` classification that decides nothing and
 failed to place 17 of them. The four kinds are distinct facilities, phases of one
 scheme, a masterplan beside its own components, and co-located
@@ -776,7 +777,7 @@ finished"). Stockley Park, Vantage Cardiff and VIRTUS Slough rank on
 the operator rung. **What is not closed is the general case**: a campus
 with no published roster, or one whose scope nobody has adjudicated,
 keeps today's behaviour and stays invisible for the reason this section
-describes. The 31 `unreviewed` entries in `campus_scope.yaml` are that
+describes. The 30 `unreviewed` entries in `campus_scope.yaml` are that
 residue.
 
 Two measurements from that work stand behind #247 and #248 below and
@@ -869,7 +870,7 @@ not one to take before it.
 ### How to continue the 35-campus review
 
 `data/priors/campus_scope.yaml` holds every multi-project site;
-**31 of the 35 still carry `scope: unreviewed`** (2026-09-07 — count it
+**30 of the file's 34 entries still carry `scope: unreviewed`** (2026-09-07 — count it
 rather than quoting this). Nothing reads an unreviewed entry, so such a
 site keeps today's behaviour — the largest single figure, framed as a
 floor. A reviewed entry sets `scope` and `total` and carries a `reason`
@@ -2379,13 +2380,15 @@ None is abandoned; each is a known, scoped piece of work.
   1,430 MWth, fall inside site 23 alone, which is the only site record on
   the whole Slough Trading Estate. Site 5 holds Interxion, Global Switch and
   Telehouse; site 59 holds Vantage and Colt as well as Microsoft; site 11
-  holds Amazon and NTT. Each of these is listed under `considered`, with
-  the reason, in `environment-agency-permit-matches.yaml`. The mechanism
+  held Amazon and NTT until 2026-09-07. Each of these is listed under
+  `considered`, with the reason, in
+  `environment-agency-permit-matches.yaml`, and Amazon's Hemel permit
+  is the first of them to graduate from there to a match. The mechanism
   is `data/priors/site_partitions.yaml`, honoured by `dcp/sites.py`,
   and it works at corridor scale: the site 61 split (ten campuses,
   2026-08-27, see Phase 2 above and HISTORY) is the worked example to
-  copy. **Site 23 is now done** — eleven campuses, 2026-08-28 — which
-  leaves 5, 59 and 11.
+  copy. **Site 23 is done** — eleven campuses, 2026-08-28 — **and site
+  11** — four records, 2026-09-07, below — which leaves 5 and 59.
 
   **Site 37 was examined and needs no partition** (2026-08-28), which
   is worth recording because it was briefly listed as a target here on
@@ -2410,9 +2413,9 @@ None is abandoned; each is a known, scoped piece of work.
   evidence then refused, which is the trap the permit-matches file
   warns about — reference stems and the applicant of record in the documents
   as the boundary evidence, every member assigned so nothing is left
-  to spatial chance. Sites 5, 59 and 11 are what remain (23 was done
-  on 2026-08-28, eleven campuses), and the permits carry their
-  evidence.
+  to spatial chance. Sites 5 and 59 are what remain (23 was done on
+  2026-08-28, eleven campuses; 11 on 2026-09-07, four records), and
+  the permits carry their evidence.
 
   **The partition unit is the campus, not the building** (Luke,
   2026-08-28, with the operator's own pages as the source). Iron
@@ -2436,66 +2439,65 @@ None is abandoned; each is a known, scoped piece of work.
   two is wrong and the conflict has to be resolved rather than
   averaged.
 
-  **Site 11 is the next partition candidate, and its anatomy is now
-  measured** (found 2026-09-02 while matching NTT's Hemel Hempstead
-  pages; taken apart 2026-09-03). `PTNO-12063929` is Gyron's
-  estate-scale record — "GYRON LIMITED - NEW DATA CENTRE AND STORAGE
-  FACILITY", The Campus, Maylands Avenue — holding seven Dacorum
-  applications and two Barbour projects, Gyron's (12063929) and
-  Amazon's at 45 Maylands Avenue (12700933). Its centre is 51.7611,
-  -0.4364 with a 1 km radius and its members span 1.9 km.
+  **Site 11 is done — four records, 2026-09-07.** Luke settled the
+  question the 2026-09-03 anatomy had left open: NTT's Hemel Hempstead
+  4 at 1 Blossom Way and Amazon's building at 3A Blossom Way are
+  separate buildings in Prologis Park (3A is the one Prologis markets
+  as DC5/DC6, one structure; Prologis's own "DC4" units are not data
+  centres and are not NTT's Hemel 4), and NTT's Hemel sites — in
+  Prologis Park, on Maylands Avenue, and elsewhere in the town — are
+  not one campus. With that, and the documents read (HISTORY, "Site
+  11 becomes four"), `PTNO-12063929` is Gyron's Campus alone (NTT's
+  Hemel 2 and 3, by NTT's own addresses), `PTNO-12700933` is Amazon
+  (3A Blossom Way and LHR608 at Plot 3, Maylands Avenue, with the
+  222 MWth permit now matched `strong`), `SITE-Dacorum/24/02039/MOA`
+  is Northtree's Blue Box outline, and `SITE-Dacorum/19/02504/ROC` is
+  the Finway Road gas engines — in no partition, because the only edge
+  that had ever joined them to the record was a spatial one to
+  Barbour's misplaced pin for Amazon. The Barbour record's address is
+  wrong (it carries Northtree's), overridden in `inferred_coords.yaml`
+  and aliased; the raw row still reads "Blue Box Storage" on the page.
 
-  Who filed each, counted from the applications' own documents
-  (`findings` where the signal names an applicant):
+  What the split leaves, each its own item:
 
-  | application | position | applicant in the documents |
-  |---|---|---|
-  | `Dacorum/4/01399/13/MFA` Campus, Spring Way HP2 7UP | 51.7616, -0.4366 | Gyron Internet ×33 |
-  | `Dacorum/24/02039/MOA` 45 Maylands Ave (Blue Box Storage) HP2 7DF | 51.7617, -0.4388 | Northtree Investment Management ×53 |
-  | `Dacorum/21/04714/SCE` 3A Blossom Way | 51.7560, -0.4358 | none recorded |
-  | `Dacorum/26/00152/FUL` 3A Blossom Way HP2 4ZB | 51.7559, -0.4344 | Amazon ×7 |
-  | `Dacorum/26/00267/MFA` Plot 3 Maylands Ave HP2 4FQ | 51.7548, -0.4378 | Amazon ×74 |
-  | `Dacorum/4/00203/18/FUL` 4 Finway Road HP2 7PT, two gas engines | 51.7715, -0.4408 | Heddon Development / AGR Renewables ×3 |
-  | `Dacorum/19/02504/ROC` 4 Finway Road, varying the above | 51.7715, -0.4406 | none recorded |
-
-  Four parties, not two, and three geographic groups. The five
-  southern and middle records are mutually within 1 km — a legitimate
-  spatial blob a partition has to divide. **The Finway Road pair is
-  not**: it is 1.09 km from the nearest application and 1.19 km from
-  Gyron's project, and it reaches the cluster through a single edge to
-  Amazon's Barbour coordinate, 0.96 km away, with the family reference
-  in `19/02504/ROC` carrying its sibling. So a gas-engine consent by a
-  third party sits inside an NTT campus record on one Barbour
-  coordinate's 40 metres of slack.
-
-  NTT's own pages place Hemel Hempstead 2, 3 and 4 at 150 Maylands
-  Avenue HP2 7DF, Campus, Spring Way HP2 7TN, and 1 Blossom Way HP2
-  4ZB; Amazon's Hemel permit (222 MWth, held under `considered`) is at
-  3A Blossom Way, HP2 4ZB. Four NTT claims totalling 37.8 MW of
-  critical IT load are matched to site 11 as `probable`.
-
-  **The partition the evidence supports**, on the Iron Mountain rule
-  (a campus is what the operator's own pages say it is):
-
-  1. `gyron-spring-way-hemel` — `Dacorum/4/01399/13/MFA` and Barbour
-     12063929. NTT's Hemel 3 by its own address.
-  2. `amazon-blossom-way-hemel` — `Dacorum/26/00267/MFA`,
-     `Dacorum/26/00152/FUL`, `Dacorum/21/04714/SCE` and Barbour
-     12700933.
-  3. `northtree-45-maylands-hemel` — `Dacorum/24/02039/MOA`. A
-     different applicant on its own outline; Barbour puts Amazon at
-     the same street number, which is the landlord-and-tenant question
-     the unsited-claims note also raises.
-  4. `finway-road-gas-engines-hemel` — `Dacorum/4/00203/18/FUL` and
-     `Dacorum/19/02504/ROC`. Third-party generation 1.1 km north.
-
-  **Two things to settle before it is written.** Whether NTT's Hemel 4
-  at 1 Blossom Way and Amazon's permit at 3A Blossom Way are two
-  buildings or one under a tenant's permit — if one, group 2 is NTT's
-  and the claims follow it. And whether the Finway Road pair is a site
-  of its own or adjacent power to whichever campus it serves, which
-  decides between a fourth partition and an `adjacent_power` record.
-  Both need a person; neither can be read off the corpus.
+  - **The 3A Blossom Way building's own permission chain is not held.**
+    Amazon's Learning Lab application cites it in full — Prologis's
+    2019 consent `4/01922/19/MFA` (21,726 sqm of flexible
+    B1c/B2/B8), the S.73 variation `22/01067/ROC` that made it "an 18m
+    high data centre at 3a Blossom Way", and the amendment
+    `24/00914/NMA` — and the corpus holds none of the three, nor the
+    condition discharges the screening report lists. The largest
+    building on the site is in the corpus only as its neighbours'
+    paperwork. **Probe to run** (AGENTS.md rule 4 — named here, not
+    yet run): PlanIt by reference for the three, and a spatial sweep
+    at the permit's grid reference (51.7559, -0.4350, 300 m), which
+    would also say whether anything was ever filed for 1 Blossom Way.
+  - **NTT Hemel Hempstead 4 is unsited.** 12 MW and a 60 MVA
+    substation on NTT's page, "will offer", at 1 Blossom Way; no
+    application at that address; the only trace in the corpus is the
+    "second, unrelated data centre currently under construction" in
+    Prologis's December 2021 screening report. Retired from site 11
+    with the reason on the row; a seed for the unsited-claims layer.
+  - **The Finway Road pair is a site now, and the adjacency question
+    stands.** Two 2.5 MW gas engines (Heddon Development / AGR
+    Renewables, 2018, varied 2019), verdict `unknown` on both, 1.1 km
+    from the nearest data-centre record. Whether that is a site of its
+    own or adjacent power to whichever campus it serves is the same
+    question as the 44 `not_dc` power schemes under the adjacency
+    review above, and belongs there rather than to this partition.
+  - **45 Maylands Avenue is Northtree's on the record, not Gyron's.**
+    Luke described it as Gyron's (former Blue Box Storage); the
+    application's 72 documents name Northtree Investment Management as
+    applicant and landowner in 53 findings, Blue Box Storage as the
+    occupier, and no operator — and they place "Gyron Campus Data
+    Centre" 150 m to the east. A question for Luke rather than a
+    correction: if an operator is known for the Northtree scheme, it
+    is not in the planning file.
+  - **Hemel 2's match rests on an address, not an application.** 150
+    Maylands Avenue, HP2 7DF, is the address Gyron gave as its own on
+    the 2013 Campus application, so the building is on the same
+    owner's land beside the site's record — but no application for it
+    is held, and the match stays `probable` for that reason.
 - **Requests outstanding, and three drafted awaiting Luke's send.**
   NESO and Ofgem were written to on 2026-08-12 and replies are due
   around 10 September. The three never-sent requests are now drafted in

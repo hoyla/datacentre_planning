@@ -271,6 +271,32 @@ matches:
 
 # Permits examined and deliberately NOT matched. A tested-and-empty
 # result is not the same thing as an untested one.
+  # --- Hemel Hempstead, matched once site 11 was partitioned -----------
+  - claim_name: Hemel Hempstead Data Centre (EPR/BP3546QP)
+    site_id: 546
+    method: operator_identity
+    confidence: strong
+    matched_by: hand:claude-fable-5:2026-09-07
+    evidence: >-
+      The permit is held by AMAZON DATA SERVICES UK LIMITED at 3A Blossom
+      Way, HP2 4ZB (grid 508120 207510). Site 546 — PTNO-12700933, its
+      own record since the 2026-09-07 partition of site 11 — holds
+      Dacorum/26/00152/FUL at 3A Blossom Way, HP2 4ZB, submitted on
+      behalf of Amazon Web Services for a Learning Lab "in connection
+      with the adjacent Data Centre" and describing "the existing Data
+      Centre at 3A Blossom Way", and Dacorum/26/00267/MFA, Amazon Data
+      Services UK Limited's own application at Plot 3, Maylands Avenue,
+      whose air quality assessment cites this permit as the installation
+      "117m northeast operated by Amazon Data Services UK Ltd for Hemel
+      Hempstead Data Centre – Emergency Back-up". The permit's grid
+      reference is 40 m from the 3A application's portal coordinate.
+      Holder, address and the site's own documents name one building,
+      and no other site competes for it now that NTT's Campus and
+      Northtree's outline are their own records. The permit describes
+      the existing building — Prologis's consent as varied by
+      22/01067/ROC, none of whose own applications is held — not the
+      proposed Plot 3 building.
+
 considered:
   - claims:
       - Equinix Slough Campus Data Centre (EPR/LP3303PR)
@@ -351,6 +377,13 @@ considered:
       fleet to another's record. NTT's own permit is explicitly a
       multi-site figure ("64 emergency standby generators across four
       sites"), so it cannot describe a single site at all.
+      SETTLED for Amazon's permit, 2026-09-07: site 11 was partitioned
+      into four (site_partitions.yaml, the three Hemel entries), the 3A
+      Blossom Way applications now sit in PTNO-12700933 (site 546), and
+      the permit is matched to it above. NTT's permit stays here: it
+      covers four sites at four postcodes (HP2 7UP, 7SU, 7DF, 7EQ), of
+      which Gyron's Campus record holds one, and a multi-site figure
+      still cannot describe a single site.
 
   - claims:
       - LHR11/12 (EPR/YP3329SB)

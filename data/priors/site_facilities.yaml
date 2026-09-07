@@ -592,3 +592,128 @@ sites:
           - source: barbour_title
             ptno: "12837470"
             title: HAYES BRIDGE RETAIL PARK  LON7  LON8 DATA CENTRES & INNOVATION HUB
+
+  # ---- Hemel Hempstead, after the site 11 partition (2026-09-07).
+  # NTT's pages give Hemel Hempstead 2, 3 and 4 separate addresses and
+  # call none of them a campus (Luke, 2026-09-07); HH4 at 1 Blossom Way
+  # has no record here and belongs to no site, so it is not listed.
+  - site_key: PTNO-12063929
+    note: >-
+      Gyron's Campus at Maylands Avenue / Spring Way. NTT publishes no
+      campus total; the two facilities stand on their own figures.
+    facilities:
+      - id: Hemel Hempstead 2
+        identity:
+          - source: operator_roster
+            url: https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/hemel-hempstead-2-data-center
+            snapshot: ntt-hemel-2
+            date: 2026-09-02
+            note: >-
+              No application for this building is held. Its address is
+              the one Gyron Internet Ltd gave as its own on the 2013
+              application form for the Campus next door
+              (Dacorum/4/01399/13/MFA, document b26a242f0ca7ed5e) and
+              on both decision notices.
+        location:
+          address: 150 Maylands Avenue, Hemel Hempstead
+          postcode: HP2 7DF
+          source: >-
+            NTT's own page (snapshot ntt-hemel-2, 2026-09-02);
+            corroborated by the 2013 application form and decision
+            notices for the Campus, which give Gyron Internet Ltd at
+            "150 Maylands Avenue, Hemel Hempstead, HP2 7DF", and by
+            NTT's permit EPR/BP3800PZ, issued to HP2 7DF among four
+            postcodes.
+          date: 2026-09-07
+        attributions:
+          - kind: critical IT load, operator's basis
+            claim: NTT Hemel Hempstead 2
+      - id: Hemel Hempstead 3
+        identity:
+          - source: operator_roster
+            url: https://services.global.ntt/en-us/services-and-products/global-data-centers/global-locations/emea/hemel-hempstead-3-data-center
+            snapshot: ntt-hemel-3
+            date: 2026-09-02
+            note: >-
+              The site's own planning record — Gyron's 2013 permission
+              for "headquarters office building, data storage facility"
+              at Campus, Spring Way — does not name Hemel Hempstead 3,
+              and NTT's page does not name the permission; the address
+              is the join.
+        location:
+          address: Campus, Spring Way, Hemel Hempstead
+          postcode: HP2 7TN
+          lat: 51.761604
+          lon: -0.436647
+          source: >-
+            NTT's own page (snapshot ntt-hemel-3, 2026-09-02) for the
+            address and postcode; the coordinates are the portal's for
+            Dacorum/4/01399/13/MFA at "Campus Spring Way HP2 7UP", the
+            same land under Barbour's "The Campus, Maylands Avenue, HP2
+            7TN".
+          date: 2026-09-07
+        attributions:
+          - kind: maximum IT load, operator's basis
+            claim: NTT Hemel Hempstead 3
+
+  - site_key: PTNO-12700933
+    note: >-
+      Amazon Web Services in Prologis Park Hemel Hempstead: the existing
+      building at 3A Blossom Way and the proposed LHR608 at Plot 3,
+      Maylands Avenue. Amazon publishes no facility page and no figure;
+      the only external figure is the permit's thermal input.
+    facilities:
+      - id: 3A Blossom Way (Prologis DC5/DC6)
+        identity:
+          - source: planning_document
+            application: Dacorum/26/00152/FUL
+            document_sha256: b0ac7d462dce1366
+            note: >-
+              The Learning Lab's design and access statement, submitted
+              for Amazon Web Services, describes "the existing Data
+              Centre at 3A Blossom Way" and its permission chain
+              (4/01922/19/MFA, 22/01067/ROC, 24/00914/NMA), none of
+              which is held. Prologis markets the building as DC5/DC6,
+              one structure (Luke, 2026-09-07, from Prologis's and
+              CBRE's DC5 brochures).
+        location:
+          address: 3A Blossom Way, Prologis Park, Hemel Hempstead
+          postcode: HP2 4ZB
+          lat: 51.755854
+          lon: -0.434976
+          source: >-
+            Amazon's permit EPR/BP3546QP, issued at 3A Blossom Way, HP2
+            4ZB, grid reference 508120 207510 (converted); the portal's
+            coordinate for Dacorum/26/00152/FUL at the same address is
+            40 m away.
+          date: 2026-09-07
+        attributions:
+          - kind: permitted standby generation, thermal input of 33 generators
+            claim: Hemel Hempstead Data Centre (EPR/BP3546QP)
+      - id: LHR608 (Plot 3, Maylands Avenue)
+        identity:
+          - source: planning_document
+            application: Dacorum/26/00267/MFA
+            document_sha256: 15606910c9cd12f5
+            note: >-
+              Amazon Data Services UK Limited's own application; its
+              response to the Environment Agency is headed "LHR608" and
+              its due-diligence report is titled "Amazon Web Services -
+              LHR608 Ski-Lodge". Undecided at 2026-09-07; no IT load
+              stated in a form the claims store can hold.
+          - source: barbour_title
+            ptno: "12700933"
+            title: AMAZON DATA SERVICES  MAYLANDS AVENUE - DATA CENTRE
+        location:
+          address: Plot 3, Maylands Avenue, Hemel Hempstead
+          postcode: HP2 4FQ
+          lat: 51.754829
+          lon: -0.437692
+          source: >-
+            The application's Tier 1 geo-environmental assessment
+            (document cfe69edf37d82f19): "centred on National Grid
+            Reference Easting 507935, Northing 207392", converted.
+            Barbour's address for the linked record, "Blue Box Storage,
+            45 Maylands Avenue", is Northtree's site 800 m north and is
+            wrong (inferred_coords.yaml).
+          date: 2026-09-07
