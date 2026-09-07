@@ -4,15 +4,12 @@ What is still to do. Everything already built and decided — including
 the approaches tried and rejected, which are worth knowing before
 re-proposing them — is in [HISTORY.md](HISTORY.md).
 
-Current state: **501 sites** (plus 7 pre-planning; 508 rows in the
-reader), **1,978 applications** in the site universe, **60,142
-documents** — the counts 2.11 was stamped at (HISTORY, 2026-09-01/02),
-unchanged since the evening of 2026-08-30, whose falls were deliberate
-(the Kao merge, the adjacent-power chain, the pre-planning dedup).
-Membership moved once since: the materialise of 2026-09-02 took the
-universe to **1,999 applications** in the same 501 sites (HISTORY,
-"Membership settled before the campus review"); the next build renders
-it.
+Current state: **499 sites** (plus 7 pre-planning; 506 rows in the
+reader), **1,993 applications** in the site universe, **62,241
+documents** — the counts the 2.14 candidate build was stamped at on
+2026-09-07 (HISTORY, "The refused pages are read"). Down from 2.13's
+500 and 1,999 by Exeter College's exclusion (HISTORY, 2026-09-06), up
+2,085 documents from the refused-page review, all read.
 Findings and adjudication counts move while the corroboration pass
 runs and are deliberately not restated here — `scripts/corpus_stats.py`
 prints them, and each release states the boundary it was stamped at.
@@ -101,6 +98,30 @@ for the 28 sites that never had one, Drive staging — and then a release
 candidate, diffed against 2.13 with the previous-release check, because
 28 site profiles change from "nothing held" to something. Twenty-eight
 sites' worth of "read in full" is the number to re-measure first.
+
+**Done 2026-09-07** (HISTORY, "The refused pages are read"): extracted,
+read on `gpt-5:low` (1,844 documents, 36,858 findings), adjudicated by
+consequence (501 figures through the Sonnet route, two through the
+batch), the generation and label passes run, and re-measured: **all 29
+sites read in full, 385 of 388 corpus-wide**, the three the runbook's
+register names still the three. What the read left for a person:
+
+- **`SITE-Selby/ZG2023/1213/DOC` carries 2,500 MW of on-site
+  generation that is the Eggborough gas-fired station's own.** The
+  site is keyed on the station's DCO discharge, a `not_dc` application
+  admitted through its `procedural` sibling, and the figure is
+  adjudicated correctly for the application it belongs to. It is the
+  figure-level rule (a `not_dc` member's figures standing as a site's,
+  under the `not_dc` item in the capacity-model section) and the
+  adjacency review (the record has no `site_adjacent_power` row to
+  `PTNO-12784626`, the data centres on the same station's land) in one
+  new place. The generation adjudication types the plant, so the
+  ladder's generation rung will not rank the site on it.
+- **Redhill Data Centre is the sixth generation-understated site**
+  (runbook step 5; it was five), labelled per-unit on the page.
+- **The Selby power cluster's batteries are typed `other`, 284 of the
+  354 `site_capacity` verdicts**, so the correction step had nothing to
+  demote for the first time; none ranks a site.
 
 ## Changes waiting for a re-read they cannot justify on their own
 
@@ -1658,17 +1679,22 @@ field and is not publishable as it stands.
 
 - **A Word loader closes the last prose gap in the corpus**
   (2026-09-03, found while clearing the readings backlog; figures
-  re-measured at the 2.13 release). Eleven documents have no text
-  cache and cannot get one under the current extractor: four PDFs
+  re-measured at the 2.13 release). Eleven documents had no text
+  cache and could not get one under the current extractor: four PDFs
   pypdf refuses to open ("Invalid object in /Pages"), five whose
   format has no loader — two `.docx` with valid zip magic, one `.xls`,
   one `.rtf`, one `.pdf` whose bytes are not a PDF — and two of the
-  three whose fetched file is zero bytes. Ten of the eleven hold no
-  site back. **The eleventh is the whole remaining gap**: document
+  three whose fetched file is zero bytes. A twelfth joined on
+  2026-09-07: a second `.pdf` whose bytes are not a PDF, on Springfield
+  Farm, which the register itself labels corrupted and superseded — the
+  runbook's register has it, with the `not_extracted` row that keeps
+  it from deferring the site. Eleven of the twelve hold no
+  site back. **The Wakefield one is the whole remaining gap**: document
   39292 on `Wakefield/23/01043/FUL`, a `.docx` consultee comment, is
   the single outstanding prose document in the corpus and the only
-  reason `PTNO-12817834` is not read in full. With it, 357 of 360
-  sites with prose are complete; the other two are Renfrewshire sites
+  reason `PTNO-12817834` is not read in full. With it, 385 of 388
+  sites with prose would be complete (357 of 360 at 2.13; the refused-pages
+  read of 2026-09-07 added 29 sites, all read in full); the other two are Renfrewshire sites
   holding one graphical document each, which have no prose to read.
   **The `.docx` pair is the cheap half**: the sniffing
   tests already say 255 corpus documents arrive mis-named as Word

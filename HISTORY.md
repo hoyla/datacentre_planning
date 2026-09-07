@@ -4382,3 +4382,121 @@ verdict is neither taken nor walked through. The dry run then reads
 "retire PTNO-12425966, six leave, add 0". The project's row stays
 untouched. Two seeded tests, one with the discharge reaching the site
 only through its family reference, as at Exeter.
+
+## The refused pages are read (2026-09-07)
+
+The 2,085 documents the refused-page review put on 63 applications
+the evening before (above) went through the ordinary pipeline the
+next morning, in the order ROADMAP prescribed: extract, the first
+read, adjudication, the readings, the release chain.
+
+**Extraction: 2,084 of 2,085, and the one exception is the council's.**
+2,109 documents needed a cache — the 2,085 plus the standing tail of
+stale and uncacheable ones — and fourteen workers did them in eight
+minutes. Six were refused, every one of them a document fetched in May
+or August that the runbook's register already lists. The one new
+document with no cache is document 67747 on `Selby/ZG2024/0549/FULM`,
+26.8 MB of bytes that `file` calls data, served that way by North
+Yorkshire's register under a filename that says so itself:
+*SUPERSEDED_File_is_corrupted_and_will_not_open*. The superseding
+flood-risk assessment is held and read. The extractor left it
+uncached, correctly, and that would have deferred Springfield Farm's
+machine reading for ever — the coverage split counts a document
+unreadable only on a log row saying so — so it carries a
+`not_extracted` row under the first-read tag, written through
+`deepread_run.log_document` because the batch path has no flag for
+it. The register has the entry.
+
+**The first read: 1,844 documents in 13.4 minutes.** `first_read
+--since 2026-09-06` on `gpt-5` at low effort, the tag every first read
+since August has carried: 3,393 requests, 36,858 findings, 811 quotes
+refused by the verbatim gate (2.2%, the post-fix baseline), no request
+failed, no document parse-failed, four wordless documents given
+`no_text`. Measured at 3,165 input and 1,955 output tokens a request,
+$84 expected at list rates before the batch discount. All 29 sites
+holding the new documents then read in full; the corpus stands at 385
+of 388 sites with documents read in full, the other three the register's
+same three.
+
+**Adjudication by consequence, as the runbook says.** 501 power figures
+on 43 applications sat on sites carrying no adjudicated capacity, so
+they went to the Sonnet subagent route — six shards, one worker each,
+the rubric read verbatim from `scripts/adjudicate_power.py` — and two
+figures on one application went to the batch. Verdicts: 354
+`site_capacity`, 73 `unclear`, 40 `comparator`, 22 `policy_target`,
+12 `market_context`. Of the 354, 284 are typed `other`, which is the
+Selby power cluster's batteries — Springfield Farm's 240 MW BESS
+title-block quoted dozens of times, Eggborough's 500 MW — typed as
+storage exactly as the rubric asks and never as generation, which is
+why the correction step found nothing to demote for the first time.
+Sixteen sites gained a capacity figure. The largest is not a data
+centre's: `SITE-Selby/ZG2023/1213/DOC`, the Eggborough gas-fired
+generating station's DCO discharge, keyed on a `not_dc` application
+with one `procedural` sibling, now carries the station's own 2,500 MW
+as on-site generation — the application's own figure, adjudicated
+correctly, on a record that stands as a site through the procedural
+door and has no adjacency row to the data centre beside it. That is
+the figure-level rule and the adjacency review ROADMAP already holds,
+seen on a new site. The generation pass asked 21 new figures; the
+label audit asked 1,085 newly rendered findings and flagged 135.
+
+**Step 5 read as the runbook expects, plus one.** Two contradicted
+sites, Ferrybridge C and Watford Bypass, both known; the null-capacity
+sweep quotable, 147 fully-read sites stating no capacity; and six
+generation-understated against the five the runbook knew — the sixth
+Redhill Data Centre, whose 3.1 MW is one of "8No 3100kW" generators
+and is typed `per_generator` with its count, so the page labels it.
+
+**The readings re-read every site, and the reason was one key.** The
+dry run said 385 sites to read and none already read under their
+current input — not the 28 that had never had a reading plus the few
+dozen whose documents or figures moved. Before spending, the cause was
+established rather than assumed: rebuilding an untouched site's input
+with the `empty` bucket removed from its coverage dict reproduced its
+stored hash exactly. Commit a2104e6 of 2026-09-06 ("A held but empty
+document says so") had added that key to every site's coverage after
+the 2.13 readings were made, so every panel moved by one `empty: 0`.
+That is the accumulation rule doing what it did at 2.11 — a change
+that cannot justify a re-read on its own rides on one that can, and
+this one was warranted for at least 29 sites — at the runbook's
+measured full-pass cost of about $34, against the alternative of code
+that hides from the model a fact the page now states. Submitted on
+`gpt-5` at medium effort, `reading-1.4`, `gate-2.1`: 385 requests, none
+failed, **381 readings stored, 0 withheld by the gate, 4 unparseable**
+— all four older sites holding a 31 August reading, resubmitted on
+their own and stored at the second attempt, so 385 sites carry a
+reading made today. The freshness check named exactly those four and
+nothing else. Mary Somerville stays withheld, as the register says it
+must.
+
+**The release chain, steps 6 to 13, and the diff read rather than
+counted.** Backup verified and on Drive. The step-7 exports built
+`phase2.14_build`; the diff against 2.13 fell on exactly one thing,
+Exeter College's exclusion of the day before (one site, six
+applications, one project link), and rose where the day's work should
+show: findings 1,379,492 → 1,416,350, documents 60,156 → 62,241,
+cohort rows 245 → 261. The staging tree: 499 sites, 1,993
+applications, 59,644 documents, the 38 adjacent-power applications,
+the three known empty files named. The sync: **2,178 uploaded, 33
+updated, 0 failed, 1 pruned** (Exeter's site report); thirty sampled
+documents verified through to Drive; **2,085 file ids recorded with
+bytes checked, none refused**; no new snapshots. The step-12 rebuild
+against the new ledger renders **385 machine readings** — 120 sites
+with none, all document-less — and every cited document resolves to a
+Drive copy; the second sync updated exactly the two root artefacts,
+as the runbook predicts, and the Sheet took 22,162 rows across 13
+tabs with its formatting untouched.
+
+**The second diff's one new FELL line was the readings.** 174 site
+panels lost at least one link. Measured on the built pages rather
+than assumed: every one of the 174 lost links only inside its
+`<details class="box reading">`, none outside; the boxes rose from
+357 to 385 and their links from 20,515 to 21,791; citation density
+held at 5.79 links per thousand characters on both builds. Shorter
+readings on some sites, not links that broke — 2.11's finding, seen
+again because every site was re-read.
+
+`index.html` is byte-identical to the build and uncommitted, for the
+release PR if the review passes. Steps 13a and 15 — the Pinpoint and
+Giant bundles, and telling the reporting team — and the deploy are
+Luke's.
