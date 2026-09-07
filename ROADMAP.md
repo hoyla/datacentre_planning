@@ -78,18 +78,19 @@ detailed under "Open" in that file:
 - **Which reader re-extracts what the local model read** (Phase 3,
   below): the 2026-08-28 choice is the default position, not a decision.
 
-## 1,811 documents acquired on 2026-09-06 that nothing has read
+## 2,085 documents acquired on 2026-09-06 that nothing has read
 
 The refused-page review (HISTORY, "An evening on the refused pages")
 put documents on 63 applications that held nothing that morning —
-1,811 of them, on 29 live sites, **28 of which held no document at
-all before**: Selby 621 across 28 applications (Eggborough, Drax and
+2,085 of them, on 29 live sites, **28 of which held no document at
+all before**: Selby 895 across 28 applications (Eggborough, Drax and
 the Selby power cluster), Chelmsford 218, Mid Sussex 218, Doncaster
 194, Horsham 160, Reigate 89, Gateshead 68, Bedford 65, Derby 62,
 Brighton 46, Southend 30, Adur & Worthing 24, Huntingdonshire 14,
 Neath 2. Selby's final pass over its four part-read applications
-(three timed out on the first run, one partial) was still running when
-this was written; measure before quoting.
+(three timed out on the first run, one partial) finished at 23:48 —
+291 more documents, the EIA alone 193 — and the figures above include
+it (measured 2026-09-07 morning).
 
 This is not a re-read and does not wait behind the policy below: these
 are unread documents on sites whose profile today says "no documents"
@@ -1312,9 +1313,9 @@ work.
   swap (PORTAL_NOTES); the fetch over the 70 supersedes the 18 — run
   the same day in three passes (the first at the default spacing hit
   429s and three 900-second timeouts; the second at 30 seconds took
-  310 minutes for 22 applications and 532 documents; the third covers
-  the four part-read): 621 documents across 28 Selby applications by
-  the evening. **And
+  310 minutes for 22 applications and 532 documents; the third, 166
+  minutes for the four part-read, 291 more): **895 documents across 28
+  Selby applications** by midnight. **And
   Exeter's five are not refusals either** (2026-09-06): the Idox
   documents tab is restricted, but the council publishes every document
   on its own related-documents page, 89 for the parent application — the
@@ -1381,9 +1382,10 @@ work.
     held), `Selby/2022/1105/FULM` (17), `Selby/2023/0285/FULM` (18) —
     the 900-second budget at 45-second spacing. The `--host
     public.selby.gov.uk --delay 30 --app-timeout 7200` pass over them
-    (plus `ZG2024/1270/DOC`, `partial` at 4 of 5) started 20:55 the
-    same evening, after the restarted sweep had finished its 22; check
-    their latest outcome rows before calling them done.
+    (plus `ZG2024/1270/DOC`, `partial` at 4 of 5) ran 20:55–23:48 the
+    same evening: **all four `fetched`** — 193, 72, 81 and 5 held, no
+    429s at 30 seconds. Nine of the thirteen remain, all behind hosts
+    that refused a whole run.
   - *Host refused a whole run, 2026-08-26/28*: `Swindon/S/21/0518`
     (204 held), `Swindon/S/21/1760` (172), `Swindon/S/23/1422` (14),
     `Swindon/S/OUT/24/1427` (302) — `persistent_5xx` and "refused 3 in
