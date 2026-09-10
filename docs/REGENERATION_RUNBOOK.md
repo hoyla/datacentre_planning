@@ -164,6 +164,19 @@ to 2026-09-02 and the default until Luke chooses; the ROADMAP's `not_dc`
 item carries the dry-run figures for each mode. Do not change the mode
 inside a release without re-pointing the claims the dry run names.
 
+**The dry run also names every member whose figure standing would
+change** (migration 034, 2026-09-10): a `not_dc` member's adjudicated
+figures do not stand as its site's, and the standing is written to
+`site_members` here, from the latest dc_build verdict and
+`data/priors/not_dc_standing.yaml`. A member that stops counting moves
+no site, membership or claim, and yet changes its site's headline
+figure, cohorts and reading input — so the list is printed like the
+moves are, and a standing change is a reason to expect `release_diff`
+to report fallen figures and the readings pass to re-read those sites
+(step 4a: their input hashes move). An admission naming an application
+that is not a live member of the site it names fails the run, as the
+aliases do; repoint the entry rather than weakening it.
+
 `build_drive_staging.py` now refuses to build when this step is
 outstanding — it compares `max(sites.materialised_at)` against the
 newest `applications.first_seen_at` and `projects.first_seen_at` — so
@@ -1247,6 +1260,21 @@ Each of these looks like a defect in a report, a count or the reader,
 and each has been taken apart once. The answer is here so nobody
 spends the afternoon again. Anything NOT on this list is new.
 
+- **A site page saying "N further figures on M applications … are
+  not counted as this site's", a workbook row with a count in
+  "Capacity figures not counted", `release_diff` reporting a fallen
+  power figure on a site nothing was re-read for.** That is the
+  figure standing (migration 034, 2026-09-10): a member triage calls
+  `not_dc`, or a conditions discharge whose every parent is one, keeps
+  its membership and its figures render on its own application panel,
+  and no site-level rollup takes them. Eggborough's discharge site
+  reads "no capacity disclosed" beside its two discharges' 2,500 MW;
+  the British Museum's energy centre no longer gives the museum a
+  headline; Hannah Close and Gardiner Haskins show a floorspace
+  estimate the standby figure of a `not_dc` member had masked. The
+  Applications sheet's last column says which members count and why.
+  Not a missing adjudication, and not a member that left the site.
+
 - **One withheld machine reading: Mary Somerville
   (`PTNO-12843110`).** Its only planning application,
   `Edinburgh/18/00199/FUL`, left the site on 2026-08-30; what remains
@@ -1350,6 +1378,13 @@ spends the afternoon again. Anything NOT on this list is new.
   ground-truth set exists to test it against the known-bad cases first.
 - **Repository visibility.** The cohorts file, the DC01 lead and the
   operator watch-list sit in a public repo.
+- **The two admissions in `data/priors/not_dc_standing.yaml`**
+  (Kingsnorth's outline, Google's Waltham Cross reserved matters) were
+  entered on 2026-09-10 from the record's own evidence and await Luke's
+  confirmation; and **whether a `SITE-` key may derive from a `not_dc`
+  application** — eighteen do — is measured in ROADMAP's `not_dc` item
+  and is a decision about Drive renames, readings and the Sheet's
+  annotations, not a column.
 
 ## Traps, each of which cost time today
 

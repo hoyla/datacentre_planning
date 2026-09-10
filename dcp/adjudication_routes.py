@@ -29,11 +29,15 @@ def consequential_finding_ids(conn, prompt_version: str = PROMPT_VERSION) -> set
     with conn.cursor() as cur:
         cur.execute("""
             WITH capped AS (
+              -- Capacity that stands as the site's (migration 034): a
+              -- site whose only figure is a not_dc member's is a site
+              -- where a verdict still moves a headline.
               SELECT DISTINCT m.site_id
               FROM power_adjudication pa
               JOIN findings f ON f.id = pa.finding_id
               JOIN site_members m ON m.application_id = f.application_id
                                  AND m.retired_at IS NULL
+                                 AND m.figure_standing <> 'not_dc_excluded'
               WHERE pa.verdict = 'site_capacity')
             SELECT DISTINCT f.id
             FROM findings f

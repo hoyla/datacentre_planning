@@ -1,0 +1,98 @@
+# Applications triage calls `not_dc` whose figures may stand as their
+# site's capacity, by exception and with the evidence written down.
+#
+# A site's capacity figures are rolled up from every member the
+# clusterer admits, and the family door admits an application whatever
+# triage said. Since migration 034 a member whose latest dc_build
+# verdict is `not_dc` carries `figure_standing = not_dc_excluded`: it
+# stays in the site, its documents stay on Drive, its figures render on
+# its own application panel with their adjudication — and no site-level
+# rollup takes them. That is right for the Eggborough power station's
+# discharge, for West Burton's battery, for the British Museum's energy
+# centre: figures adjudicated correctly for the application they belong
+# to, which is not a data centre.
+#
+# It is wrong for the class the family door exists to admit. A reserved
+# matters on a data-centre outline, or the outline itself, reads
+# `not_dc` by construction — the description does not say, and triage
+# saw the description — while its documents are the data centre's own
+# paperwork and its figures the data centre's own. An entry here says so
+# for ONE application, with the evidence, and sets its standing to
+# `not_dc_admitted` at the next materialise.
+#
+# What an entry asserts: that this application's documents describe the
+# data centre at the named site, so a figure adjudicated `site_capacity`
+# on it describes that data centre. What it does not do: it does not
+# change the verdict (principle 3 — the verdict is the description's,
+# and stays), and it does not admit any figure that the adjudication
+# has not already attributed to the application.
+#
+# Procedural paperwork follows its parents: a conditions discharge whose
+# only family parents in the site are excluded `not_dc` applications is
+# excluded with them, and one whose parent is admitted here counts with
+# it. So admitting an outline admits its discharges; no entry is needed
+# for each.
+#
+# Contract, the `site_aliases.yaml` one: an entry naming an application
+# the corpus does not hold, or one that is not a live member of the
+# site it names, FAILS the materialise rather than silently not
+# applying — a site key moves when its cluster's anchor changes, and an
+# admission that quietly stopped applying would put the site back on
+# its largest excluded figure with nothing to say it had happened. An
+# entry naming an application whose verdict is not `not_dc` also fails:
+# it would be asserting something the rule never asks.
+#
+# Before adding an entry, run the findings test the record prescribes
+# (evidence_text ~* 'data ?cent|datacentre|data hall' on the
+# application) and read the top hits; a verdict is not the documents,
+# and neither is a description.
+#
+# Each entry:
+#   - application_ref: as in `applications.application_ref`
+#   - site_key:        the live site the application is a member of
+#   - reason:          one line a reporter can quote
+#   - evidence:        what in the documents and the register says so
+#   - date:            the day the decision was made
+#   - decided_by:      who, or which part of the record, decided it
+
+admissions:
+
+  - application_ref: "Medway/MC/21/0979"
+    site_key: "SITE-Medway/MC/21/0979"
+    reason: "Kingsnorth's outline permission: the parent of the site's data-centre applications, whose own documents plan for data-centre use."
+    evidence: |
+      The outline is for "flexible EG(iii)/B2/B8 use class" buildings,
+      which is why triage reads it `not_dc`. Its documents say more:
+      the development is "across Use Classes EG(iii), B2, B8 (non-data
+      centre, data centre ...)", the consultation material describes a
+      scheme "including a mixture of commercial, manufacturing and
+      industrial uses along with storage and distribution, data centre
+      and energy uses", and the energy statement plans "for more energy
+      intensive uses, such as data centres". 57 findings on the
+      application name a data centre (measured 2026-09-10). The site's
+      three data-centre applications — Medway/MC/24/0220, MC/24/0748 and
+      MC/24/2229 — each cite MC/21/0979 as their parent in
+      `associated_id`. Its 80 adjudicated figures are the site's grid,
+      generation and total-site statements, and the site is keyed on it.
+      ROADMAP's `not_dc` item (2026-09-02) records the case: "Kingsnorth's
+      outline, whose energy statement plans for 'energy intensive uses,
+      such as data centres' and which is the parent permission of the
+      data-centre applications."
+    date: 2026-09-10
+    decided_by: "the record (ROADMAP, the not_dc item, resolved with Luke 2026-09-02); entered by Claude 2026-09-10 against the corpus, for Luke's confirmation"
+
+  - application_ref: "Broxbourne/07/23/0361/RM"
+    site_key: "PTNO-12406644"
+    reason: "Google's Waltham Cross reserved matters: Phase 3 of the data-centre outline, filed as appearance, landscaping and layout."
+    evidence: |
+      "Reserved matters pursuant to planning permission 07/21/0447/F for
+      appearance, landscaping and layout for Phase 3 of outline planning
+      permission 07/18/1181/O" — a description that cannot name the use,
+      which is why triage reads it `not_dc`. 194 findings on the
+      application name a data centre (measured 2026-09-10; ROADMAP
+      recorded 195 in 31 documents on 2026-09-02, and names it as the
+      case the family door's admission of `not_dc` exists for). Its two
+      adjudicated figures are cooling figures, so the admission moves no
+      headline today; it records what the paperwork is.
+    date: 2026-09-10
+    decided_by: "the record (ROADMAP, the not_dc item, resolved with Luke 2026-09-02); entered by Claude 2026-09-10 against the corpus, for Luke's confirmation"

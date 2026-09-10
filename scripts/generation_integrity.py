@@ -101,6 +101,7 @@ def main() -> int:
                                AND m.retired_at IS NULL
             JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
             WHERE pa.verdict = 'site_capacity'
+              AND m.figure_standing <> 'not_dc_excluded'
               AND pa.quantity_type = 'onsite_generation'
             ORDER BY pa.value_mw DESC NULLS LAST""")
         rows = cur.fetchall()
@@ -116,7 +117,8 @@ def main() -> int:
             JOIN site_members m ON m.application_id = f.application_id
                                AND m.retired_at IS NULL
             JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
-            WHERE pa.verdict = 'site_capacity' GROUP BY 1""")
+            WHERE pa.verdict = 'site_capacity'
+              AND m.figure_standing <> 'not_dc_excluded' GROUP BY 1""")
         ratios = {k: (c, g) for k, c, g in cur.fetchall()}
 
     sites: dict[str, dict] = {}

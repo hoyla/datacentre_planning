@@ -225,6 +225,9 @@ def load_planning_figures(cur, site_ids,
                             AND sm.retired_at IS NULL
         JOIN sites s ON s.id = sm.site_id AND s.retired_at IS NULL
         WHERE sm.site_id = ANY(%s)
+          -- What the site told its authority, not what a not_dc member
+          -- told it about its own scheme (migration 034).
+          AND sm.figure_standing <> 'not_dc_excluded'
           AND pa.verdict = 'site_capacity'
           AND pa.value_mw IS NOT NULL
           AND pa.quantity_type IN ('it_load', 'total_site', 'grid_connection')

@@ -631,7 +631,8 @@ def main() -> None:
                    a.date_received, a.date_decided, a.description,
                    coalesce(l.verdict, '?'), l.confidence,
                    a.raw_metadata->'agile_parties',
-                   a.raw_metadata->'portal_status_observed'
+                   a.raw_metadata->'portal_status_observed',
+                   m.figure_standing
             FROM sites s
             JOIN site_members m ON m.site_id = s.id AND m.retired_at IS NULL
             JOIN applications a ON a.id = m.application_id
@@ -769,7 +770,7 @@ def main() -> None:
 
         for r in by_site[key]:
             (_, _, _, _, _, app_id, ref, url, status, received, decided,
-             desc, verdict, conf, parties, observed) = r
+             desc, verdict, conf, parties, observed, standing) = r
             n_apps += 1
             app_docs = docs_by_app.get(app_id, [])
             report.append(f"### {ref}")
@@ -854,7 +855,20 @@ def main() -> None:
                     whose,
                     qty or "",
                     f"{mw:g}" if mw is not None else "",
-                    unit_note or ""))
+                    unit_note or "",
+                    # Migration 034: a figure adjudicated as this
+                    # application's own is not thereby the site's. Blank
+                    # where the row is not a site_capacity figure, so the
+                    # column asks the question only where it applies.
+                    ("" if verdict != "site_capacity" else {
+                        "counts": "yes",
+                        "not_dc_excluded": "no — triage classes this application, "
+                                           "or the permission its paperwork "
+                                           "discharges, as not a data centre; the "
+                                           "figure is its own, not the site's",
+                        "not_dc_admitted": "yes — admitted by hand "
+                                           "(data/priors/not_dc_standing.yaml)",
+                    }.get(standing, ""))))
 
         folder.mkdir(parents=True, exist_ok=True)
         if site_csv_rows:
@@ -868,7 +882,8 @@ def main() -> None:
                             "signal type", "value", "number", "unit",
                             "verbatim quote", "extracted by",
                             "whose figure is this?", "quantity type",
-                            "adjudicated MW", "quantity note"])
+                            "adjudicated MW", "quantity note",
+                            "counts as this site's?"])
                 w.writerows(site_csv_rows)
             n_findings_csv += len(site_csv_rows)
             report.append(f"## Findings")

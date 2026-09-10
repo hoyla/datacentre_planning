@@ -328,6 +328,9 @@ JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id
 WHERE s.retired_at IS NULL
+  -- Migration 034: a not_dc member's figures are its own application's,
+  -- not the site's generation line.
+  AND sm.figure_standing <> 'not_dc_excluded'
   AND adj.verdict = 'site_capacity'
   AND adj.quantity_type = 'onsite_generation'
   AND adj.value_mw IS NOT NULL AND adj.value_mw > 0
@@ -1171,6 +1174,10 @@ JOIN site_members sm ON sm.application_id = f.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id
 WHERE s.retired_at IS NULL
+  -- Capacity-shaped, so the standing applies (migration 034): a power
+  -- station's discharge would otherwise lend its generator count and
+  -- fuel to the data centre beside it.
+  AND sm.figure_standing <> 'not_dc_excluded'
   AND (f.signal_type ~ 'generator' OR f.signal_type ~ 'fuel')
 GROUP BY s.site_key
 """

@@ -57,7 +57,11 @@ TABLES: dict[str, str] = {
         FROM sites s WHERE s.retired_at IS NULL""",
     "site_members": """
         SELECT s.site_key, a.application_ref, p.external_ref AS barbour_ptno,
-               m.joined_via
+               m.joined_via,
+               -- Whether the member's adjudicated figures stand as the
+               -- site's (migration 034): counts | not_dc_excluded |
+               -- not_dc_admitted, with the hand admission's reason.
+               m.figure_standing, m.standing_reason
         FROM site_members m
         JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
         LEFT JOIN applications a ON a.id = m.application_id
@@ -254,6 +258,21 @@ VIEWS: dict[str, str] = {
                                                                  AS excluded
           FROM site_members m
           JOIN power_adjudication pa ON pa.application_ref = m.application_ref
+          -- A not_dc member's figures do not stand as the site's
+          -- (migration 034); they are on its own rows in
+          -- power_adjudication, and counted in notc below.
+          WHERE m.figure_standing <> 'not_dc_excluded'
+          GROUP BY 1),
+        notc AS (
+          -- Figures adjudicated as their own application's capacity on
+          -- members triage classes as not a data centre: never in the
+          -- four columns above, counted here so their absence reads as
+          -- a decision rather than a gap.
+          SELECT m.site_key, count(*) AS n
+          FROM site_members m
+          JOIN power_adjudication pa ON pa.application_ref = m.application_ref
+          WHERE m.figure_standing = 'not_dc_excluded'
+            AND pa.verdict = 'site_capacity' AND pa.value_mw IS NOT NULL
           GROUP BY 1),
         verd AS (
           SELECT m.site_key, string_agg(DISTINCT t.verdict, ', ') AS v
@@ -273,6 +292,7 @@ VIEWS: dict[str, str] = {
                pwr.it_load_mw, pwr.total_site_mw,
                pwr.grid_connection_mw, pwr.onsite_generation_mw,
                coalesce(pwr.excluded, 0) AS power_figures_excluded,
+               coalesce(notc.n, 0) AS power_figures_not_counted,
                barb.v AS barbour_value_gbp,
                verd.v AS verdicts
         FROM sites s
@@ -280,6 +300,7 @@ VIEWS: dict[str, str] = {
         LEFT JOIN docs  ON docs.site_key  = s.site_key
         LEFT JOIN finds ON finds.site_key = s.site_key
         LEFT JOIN pwr   ON pwr.site_key   = s.site_key
+        LEFT JOIN notc  ON notc.site_key  = s.site_key
         LEFT JOIN verd  ON verd.site_key  = s.site_key
         LEFT JOIN barb  ON barb.site_key  = s.site_key""",
     "latest_verdict": """
@@ -479,6 +500,25 @@ def main() -> None:
                          "required in published output. Contact and role fields "
                          "deliberately not exported."),
         ("documents_note", "drive_url is our copy and the one to open — a register can withdraw a document, and 512 source_urls are file:// paths that resolve for nobody. source_url is where it came from, which is what a published citation needs. bytes_path is relative to the pipeline's data store. obtained records how each file was got."),
+        ("site_members_note", "figure_standing says whether a member's "
+                         "adjudicated figures stand as its site's. "
+                         "not_dc_excluded: the latest dc_build verdict is "
+                         "not a data centre, or the member is procedural "
+                         "paperwork whose every parent in the site is "
+                         "(standing_reason names them) — the member is in "
+                         "the site through a family reference or a project "
+                         "link, its "
+                         "figures are its own (a battery's, an energy "
+                         "centre's, a power station's), and site_overview's "
+                         "power columns do not take them; they are counted "
+                         "in power_figures_not_counted and stay on the "
+                         "application's rows in power_adjudication. "
+                         "not_dc_admitted: not a data centre by verdict, "
+                         "admitted for figures by a hand entry with evidence "
+                         "(standing_reason) because its documents are the "
+                         "data centre's own paperwork. Join site_members on "
+                         "application_ref before rolling any figure up to a "
+                         "site, and filter on it."),
         ("cohorts_note", "A cohort is a named rule over the adjudicated "
                          "figures — sites sharing a measurable property, "
                          "never a conclusion about them. cohort_definitions "

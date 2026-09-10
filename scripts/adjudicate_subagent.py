@@ -117,6 +117,9 @@ def load_consequential(conn, include_refinements: bool = False) -> list[dict]:
             JOIN site_members m ON m.application_id = f.application_id
                                AND m.retired_at IS NULL
             JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+            -- figure_standing: every member, deliberately. Whose figure
+            -- this is gets asked of every member's figures; the standing
+            -- decides afterwards whether the answer stands as the site's.
             WHERE f.value_number IS NOT NULL
               AND lower(f.value_unit) = ANY(%s)
               AND (%s OR f.id = ANY(%s))
@@ -231,6 +234,8 @@ def report() -> None:
             JOIN site_members m ON m.application_id=f.application_id
                                AND m.retired_at IS NULL
             JOIN sites s ON s.id=m.site_id AND s.retired_at IS NULL
+            -- figure_standing: every member — this counts what the route
+            -- stored, not what stands as a site's.
             WHERE pa.model=%s AND pa.verdict='site_capacity'""", (MODEL,))
         print(f"\nsites gaining a capacity figure: {cur.fetchone()[0]}")
         # Every promotion to site_capacity, for the hand check the probe
@@ -242,6 +247,8 @@ def report() -> None:
             JOIN site_members m ON m.application_id=f.application_id
                                AND m.retired_at IS NULL
             JOIN sites s ON s.id=m.site_id AND s.retired_at IS NULL
+            -- figure_standing: every member — a hand check wants every
+            -- promotion in front of it, whatever its standing.
             WHERE pa.model=%s AND pa.verdict='site_capacity'
             ORDER BY pa.value_mw DESC NULLS LAST LIMIT 25""", (MODEL,))
         print("\nlargest new site_capacity verdicts — CHECK THESE BY HAND:")

@@ -83,6 +83,21 @@ def main() -> int:
                 print(f"  moves   {ref:44} {old} -> {new}")
             if len(pre["moved"]) > 25:
                 print(f"  ... and {len(pre['moved']) - 25} more")
+        if pre["standing"]:
+            # A member whose figures stop (or start) counting changes what
+            # its site reports without any site, membership or claim
+            # moving, so it is named here like a move is. Migration 034.
+            stops = [s for s in pre["standing"] if s[3] == "not_dc_excluded"]
+            starts = [s for s in pre["standing"] if s[3] != "not_dc_excluded"]
+            print(f"\n{len(pre['standing'])} member(s) change figure standing "
+                  f"— {len(stops)} whose adjudicated figures stop standing as "
+                  f"their site's (triage calls the application, or the "
+                  f"permission its paperwork discharges, not a data centre), "
+                  f"{len(starts)} whose figures start or resume counting:")
+            for ref, key, old, new in pre["standing"][:40]:
+                print(f"  standing {ref:44} in {key}: {old} -> {new}")
+            if len(pre["standing"]) > 40:
+                print(f"  ... and {len(pre['standing']) - 40} more")
         if pre["stale_member_rows"]:
             print(f"\n{pre['stale_member_rows']} membership row(s) are still "
                   f"live on already-retired sites; this run retires them.")

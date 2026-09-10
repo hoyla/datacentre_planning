@@ -188,6 +188,10 @@ JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id
 WHERE s.retired_at IS NULL
+  -- A not_dc member's figures do not stand as the site's (migration
+  -- 034): the Eggborough station's 2,500 MW is its discharge's figure,
+  -- not the data centre's. Admitted members (the prior) still count.
+  AND sm.figure_standing <> 'not_dc_excluded'
   AND adj.verdict = 'site_capacity' AND adj.value_mw IS NOT NULL
 GROUP BY s.site_key
 """
@@ -200,6 +204,9 @@ FROM sites s
 JOIN site_members sm ON sm.site_id = s.id AND sm.retired_at IS NULL
 JOIN findings f ON f.application_id = sm.application_id
 WHERE s.retired_at IS NULL
+  -- A figure on a not_dc member could never become the site's, so it
+  -- does not hold the site's silence provisional either.
+  AND sm.figure_standing <> 'not_dc_excluded'
   AND lower(coalesce(f.value_unit, '')) IN ('mw', 'mva', 'gw', 'kva', 'kw')
   AND NOT EXISTS (SELECT 1 FROM power_adjudication pa
                   WHERE pa.finding_id = f.id)

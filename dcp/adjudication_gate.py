@@ -171,15 +171,18 @@ WITH tail AS (
     AND NOT EXISTS (SELECT 1 FROM power_adjudication p
                     WHERE p.finding_id = f.id)),
 site_of AS (
-  SELECT m.application_id, m.site_id FROM site_members m
+  SELECT m.application_id, m.site_id, m.figure_standing FROM site_members m
   JOIN sites s ON s.id = m.site_id
   WHERE m.retired_at IS NULL AND s.retired_at IS NULL),
 sites_with_capacity AS (
+  -- A site whose only capacity stands on a not_dc member has none of
+  -- its own (migration 034), so its tail is consequential, not a refinement.
   SELECT DISTINCT so.site_id
   FROM power_adjudication pa
   JOIN findings f ON f.id = pa.finding_id
   JOIN site_of so ON so.application_id = f.application_id
-  WHERE pa.verdict = 'site_capacity')
+  WHERE pa.verdict = 'site_capacity'
+    AND so.figure_standing <> 'not_dc_excluded')
 SELECT count(DISTINCT t.id),
        count(DISTINCT t.id) FILTER (
          WHERE so.site_id IS NOT NULL

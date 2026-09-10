@@ -244,14 +244,25 @@ SELECT s.site_key, s.classification, s.display_name,
        -- For the DESNZ consumption context: a Barbour-anchored site with
        -- no applications has no council prefixes, and a site spanning
        -- councils needs Barbour's authority to say which one it is in.
-       max(p.authority_name)                                  AS barbour_authority
+       max(p.authority_name)                                  AS barbour_authority,
+       -- Figures adjudicated as their own application's capacity on
+       -- members whose figures do not stand as the site's (migration
+       -- 034). Counted so their absence from the four columns reads as
+       -- a decision, the way n_excluded does for market context.
+       coalesce(sum(pwx.n_capacity), 0)                       AS n_not_counted
 FROM sites s
 LEFT JOIN site_members m ON m.site_id = s.id AND m.retired_at IS NULL
 LEFT JOIN applications a ON a.id = m.application_id
 LEFT JOIN latest l ON l.application_id = a.id
 LEFT JOIN app_docs ad ON ad.application_id = a.id
 LEFT JOIN app_findings af ON af.application_id = a.id
+-- A not_dc member's figures do not stand as the site's (migration 034):
+-- the join that feeds the four capacity columns takes only members
+-- whose standing counts, and the second join counts what it left out.
 LEFT JOIN app_power pw ON pw.application_id = a.id
+     AND m.figure_standing <> 'not_dc_excluded'
+LEFT JOIN app_power pwx ON pwx.application_id = a.id
+     AND m.figure_standing = 'not_dc_excluded'
 LEFT JOIN app_power_excluded px ON px.application_id = a.id
 LEFT JOIN app_eia ae ON ae.application_id = a.id
 LEFT JOIN app_provenance ap ON ap.application_id = a.id
@@ -283,7 +294,11 @@ SELECT s.site_key, a.application_ref, m.joined_via,
        a.address, a.description,
        -- Why this application is in the dataset at all. Appended rather
        -- than inserted: every consumer of this row indexes positionally.
-       array_to_string(a.discovered_via, ', ') AS discovered_via
+       array_to_string(a.discovered_via, ', ') AS discovered_via,
+       -- Whether its adjudicated figures stand as the site's (migration
+       -- 034), and why where a person or a parent decided it. Appended,
+       -- for the same reason.
+       m.figure_standing, m.standing_reason
 FROM sites s
 JOIN site_members m ON m.site_id = s.id AND m.retired_at IS NULL
 JOIN applications a ON a.id = m.application_id
@@ -405,6 +420,11 @@ SITE_HEADERS = [
     # question.
     "On-site generation plant type", "Generation figures set aside (not generation)",
     "Capacity figures attributed to site", "Power figures excluded (context)",
+    # Migration 034: a figure adjudicated as its own application's
+    # capacity on a member triage classes as not a data centre is that
+    # application's, and the four columns above do not take it. The
+    # count is here for the same reason the excluded count is.
+    "Capacity figures not counted (application not a data centre)",
     # --- environment ----------------------------------------------------
     "Facility character", "Scale band", "Scale basis",
     # From dcp/site_profile, shared with the web view so both present the
@@ -468,7 +488,27 @@ APP_HEADERS = [
     "Verdict model", "Verdict reasoning", "Signals", "Portal URL",
     "Drive folder", "Documents held", "Verified findings",
     "Environmental signals (description keywords)", "Address", "Description",
+    # Two columns the sheet already carried or now carries, named. The
+    # discovery tags were appended to APP_SQL without a header, and the
+    # row writer's tail slice then put the address under "Environmental
+    # signals" and the signals under "Address" (the 2.14 workbook, read
+    # back 2026-09-10); the writer now indexes explicitly.
+    "Discovery tags", "Figures stand as the site's",
 ]
+
+# The Applications sheet's words for site_members.figure_standing
+# (migration 034). Journalist-facing: what the value means, not what to
+# do about it.
+FIGURE_STANDING_LABEL = {
+    "counts": "yes",
+    "not_dc_excluded": ("no: triage classes this application, or the "
+                        "permission its paperwork discharges, as not a data "
+                        "centre, so its adjudicated figures are its own and "
+                        "the site's power columns do not take them"),
+    "not_dc_admitted": ("yes, by hand: triage classes it not a data centre, "
+                        "but its documents are the data centre's own "
+                        "paperwork (data/priors/not_dc_standing.yaml)"),
+}
 
 ENERGY_HEADERS = [
     "Project reference", "Project name", "Stated capacity",
@@ -729,6 +769,20 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "Megawatt figures found in this site's documents but judged to be "
      "market context (forecasts, policy targets, other schemes) — "
      "considered and set aside, not missed."),
+    ("Sites", "Capacity figures not counted (application not a data centre)",
+     "Megawatt figures adjudicated as their own application's capacity, on "
+     "applications in this site that triage classes as not a data centre — "
+     "a battery scheme or an energy centre consented in its own right, a "
+     "power station's own paperwork admitted through a family reference. "
+     "They are that application's figures and are not counted as the "
+     "site's: they appear on the Applications sheet and in the site's "
+     "findings CSV with their adjudication, and in none of the power "
+     "columns here. An application triage calls not a data centre whose "
+     "documents are the data centre's own paperwork — an outline the "
+     "data-centre applications cite as their parent, a reserved matters "
+     "on it — is admitted by hand, with the evidence, in "
+     "data/priors/not_dc_standing.yaml, and its figures count; the "
+     "Applications sheet's last column says which."),
     ("Sites", "Facility character",
      "What kind of facility the descriptions indicate (rule-based over "
      "application descriptions)."),
@@ -986,6 +1040,26 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "published output). The title often carries a promoter's capacity "
      "claim — deliberately never copied into the Power MW column: "
      "promoter names routinely overstate what documents later disclose."),
+    ("Applications", "Discovery tags",
+     "Why the application is in the dataset: the sweep, backfill, ingest "
+     "or link that found it, as recorded in discovered_via. Written to "
+     "this sheet since 2.7 under no header; named on 2026-09-10."),
+    ("Applications", "Figures stand as the site's",
+     "Whether megawatt figures adjudicated as this application's own "
+     "capacity count towards the site row it belongs to. 'yes' for every "
+     "application triage classes as data-centre related. 'no' where the "
+     "latest verdict is not a data centre, or where the application is "
+     "procedural paperwork — a conditions discharge — whose every parent "
+     "in the site is: the application is in the site because a family "
+     "reference or a project link put it there, its figures are its own "
+     "— a battery's, an energy centre's, a power station's — and the "
+     "site's power columns do not take them; the parents are named. "
+     "'yes, by hand' where triage says not a data centre but a person "
+     "has recorded, with evidence in data/priors/not_dc_standing.yaml, "
+     "that the application is the data centre's own paperwork — an "
+     "outline the data-centre applications cite as their parent, a "
+     "reserved matters on it — and that admission carries the "
+     "outline's own discharges with it."),
     ("Applications", "Verdict (latest) / confidence / model / reasoning",
      "Latest triage verdict for the application, with the model's stated "
      "reasoning. Earlier verdicts are retained in the database."),
@@ -1594,7 +1668,7 @@ def main() -> None:
          docs, findings_n, it_load_mw, total_site_mw, grid_mw, gen_mw,
          n_capacity, n_excluded, families, eia_ref, eia_doc, manual_docs,
          ptno, btitle, bstage, bvalue, bfloor, bsite, bplan, bdecision,
-         bauthority) = r
+         bauthority, n_not_counted) = r
         if lat is not None and lon is not None:
             site_coords.append((lat, lon, name or key))
         eia = " + ".join(
@@ -1733,7 +1807,7 @@ def main() -> None:
             prof.get("gen_unit_mw") if prof.get("gen_unit_mw") else "",
             prof.get("gen_plant_type") or "",
             prof.get("gen_excluded_n") or "",
-            n_capacity or "", n_excluded or "",
+            n_capacity or "", n_excluded or "", n_not_counted or "",
             scale.CHARACTERS[character].label, band_label,
             scale.BASIS_NOTE[basis],
             prof.get("generator_count") or "",
@@ -1849,6 +1923,11 @@ def main() -> None:
             pref, title, pstage, pvalue, pfloor, psite,
             str(pplan or ""), str(pdecision or ""),
         ]
+        # A pre-planning row has no members, so nothing is counted or
+        # not counted; placed by header name so the literal blanks above
+        # need not be recounted when a column is added (migration 034).
+        row.insert(SITE_HEADERS.index(
+            "Capacity figures not counted (application not a data centre)"), "")
         assert len(row) == len(SITE_HEADERS), \
             f"barbour row width {len(row)} != {len(SITE_HEADERS)}"
         ws.append(row)
@@ -1863,9 +1942,18 @@ def main() -> None:
         folder = _hyperlink(
             _drive_application_url(drive_app_urls, r[0], r[1]) or None,
             "Open Drive folder")
-        # Insert the derived signals column just before Address/Description.
-        ws.append(vals[:13] + [folder] + vals[13:-2]
-                  + ["\n".join(app_env.get(r[1], ()))] + vals[-2:])
+        # Explicit indices against APP_SQL's column order, because the
+        # previous tail slice (`vals[13:-2]` … `vals[-2:]`) was written
+        # when Description was the last column, and the discovered_via
+        # append shifted it: the 2.14 sheet had the address under
+        # "Environmental signals", the signals under "Address", and the
+        # tags under no header at all.
+        ws.append(vals[:13] + [folder]            # site key … portal URL, Drive folder
+                  + vals[13:15]                   # documents held, verified findings
+                  + ["\n".join(app_env.get(r[1], ()))]   # environmental signals
+                  + vals[15:18]                   # address, description, discovery tags
+                  + [FIGURE_STANDING_LABEL.get(vals[18], vals[18])
+                     + (f" — {vals[19]}" if vals[19] else "")])
 
     # ---- Energy projects ----------------------------------------------------
     # Ranked by distance to the nearest located data-centre site (main and

@@ -111,7 +111,11 @@ FURNITURE = 500
 COLUMNS = ["application", "document file", "where in the document",
            "signal family", "signal type", "value", "number", "unit",
            "verbatim quote", "extracted by", "whose figure is this?",
-           "quantity type", "adjudicated MW", "quantity note"]
+           "quantity type", "adjudicated MW", "quantity note",
+           # Migration 034: a figure adjudicated as its own application's
+           # is not thereby the site's; the CSV says which, and so does
+           # this. tests/test_coverage_language.py pins the two headers.
+           "counts as this site's?"]
 
 
 def cell(text: str) -> str:

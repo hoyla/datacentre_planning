@@ -105,7 +105,7 @@ def main() -> int:
         cur.execute("""
             WITH members AS (
               SELECT s.site_key, s.display_name, a.id AS application_id,
-                     a.application_ref
+                     a.application_ref, m.figure_standing
               FROM sites s
               JOIN site_members m ON m.site_id = s.id AND m.retired_at IS NULL
               JOIN applications a ON a.id = m.application_id
@@ -124,7 +124,10 @@ def main() -> int:
               FROM members mb
               JOIN findings f ON f.application_id = mb.application_id
               JOIN power_adjudication pa ON pa.finding_id = f.id
-              WHERE pa.verdict = 'site_capacity')
+              -- Migration 034: a not_dc member's capacity is not the site's,
+              -- so a site holding only that is silent, not disclosing.
+              WHERE pa.verdict = 'site_capacity'
+                AND mb.figure_standing <> 'not_dc_excluded')
             SELECT d.site_key, min(m.display_name),
                    count(*) AS held,
                    count(*) FILTER (WHERE r.document_id IS NOT NULL) AS read,
@@ -154,6 +157,7 @@ def main() -> int:
             JOIN site_members m ON m.site_id = s.id AND m.retired_at IS NULL
             JOIN findings f ON f.application_id = m.application_id
             WHERE s.retired_at IS NULL
+              AND m.figure_standing <> 'not_dc_excluded'
               AND lower(coalesce(f.value_unit,'')) IN
                   ('mw','mva','gw','kva','kw')
               AND NOT EXISTS (SELECT 1 FROM power_adjudication pa

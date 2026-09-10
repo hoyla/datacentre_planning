@@ -308,6 +308,11 @@ def load_site_floorspace(conn) -> dict[str, float]:
                  AND sm.retired_at IS NULL
             JOIN sites s ON s.id = sm.site_id AND s.retired_at IS NULL
             WHERE f.value_number IS NOT NULL
+              -- Migration 034: a not_dc member's floorspace — a B8
+              -- warehouse outline on the same land — is not the data
+              -- centre's, and would otherwise sit in the median the
+              -- estimate is made from.
+              AND sm.figure_standing <> 'not_dc_excluded'
               AND f.value_number BETWEEN 500 AND 400000
               AND lower(f.value_unit) IN ('sqm','m2','sq m','square metres',
                                           'square meters')

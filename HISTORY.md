@@ -4918,3 +4918,140 @@ same defect twice — Wakefield's `.docx` and, new tonight, a risk
 register held as an `.xls` on `Dacorum/4/00571/14/DRC`, which keeps NTT
 Hemel Hempstead 3 below read-in-full and marks its figure "may rise" on
 the page. One loader closes both.
+
+## A not_dc member's figures do not stand as the site's (2026-09-10)
+
+The Section 35 watcher ran first and found nothing new — 57 gov.uk
+hits, the same three data-centre directions, all from cache. Then the
+rule ROADMAP had carried unbuilt since the 2026-09-02 resolution of
+the `not_dc` item, and which the refused-page read had produced the
+sharpest instance of: the Eggborough gas-fired station's own 2,500 MW
+standing as a data-centre site's on-site generation.
+
+**The measurement that decided the shape.** 185 live members carried
+a latest dc_build verdict of `not_dc`; 32 of them carried 301 figures
+adjudicated `site_capacity` — correctly, for the application each
+belongs to — and every site-level rollup took the largest figure across
+every member. Split by whether the member's own documents name a data
+centre: 29 members with 216 figures do not (Eggborough 2,500; West
+Burton's battery 500; ten Selby discharges at 500 `other` on the data
+centres beside the station; MidKent 249; Highland 200; Watford Bypass
+170; the British Museum and Gardiner Haskins energy centres at 8 and
+3), and 3 members with 85 figures do — 80 of them on Kingsnorth's
+outline, the parent permission of its data-centre applications and the
+application the site is keyed on, the other five cooling figures on
+Google's Waltham Cross reserved matters and an Enfield office block.
+So a rule keyed on the verdict alone would have stripped Kingsnorth,
+and the ROADMAP's "at the figure *or* at the verdict" had to be both:
+a standing at the figure, and a hand admission for the class the
+family door exists to admit.
+
+**What was built.** `site_members.figure_standing` (migration 034):
+`counts`, `not_dc_excluded`, `not_dc_admitted`, with a
+`standing_reason`. Set at materialise by `build_clusters`, from the
+dc_build verdict alone — the universe rule admits on either rubric,
+but dc_build is the rubric that has the concept — and from
+`data/priors/not_dc_standing.yaml`, a prior on the alias file's
+contract: an entry names one application, the site it is a member of,
+a reason, the evidence, a date and who decided; an entry naming an
+application the corpus does not hold, a site it is not a member of, or
+a verdict that is not `not_dc` fails the run. Seeded with Kingsnorth's
+outline (its documents say "non-data centre, data centre" across the
+use classes and plan "for more energy intensive uses, such as data
+centres"; the three data-centre applications cite it as parent) and
+Google's reserved matters (194 findings naming a data centre), both
+entered from the record's own evidence and marked for Luke's
+confirmation. An excluded member keeps its membership and its
+documents; its figures render on its own application panel with their
+adjudication; and no site-level rollup takes them. The `preflight`
+names every member whose standing would change, the way it names a
+move, because a member whose figures stop counting changes what its
+site reports without any site, membership or claim moving.
+
+**The predicate went into every rollup, and a test holds it there.**
+Twenty-five SQL statements join `site_members` to an adjudication
+table; each now names `figure_standing` — as `<> 'not_dc_excluded'`
+where it rolls figures up to a site (the cohorts' figures and pending
+counts, the generation figure, the generator profile, the floorspace
+median, the reading input, the gate's consequential split, the
+adjudication routing, the operator-disclosure comparison, both
+exporters' site queries, the DuckDB view, the three integrity reports,
+the null-capacity sweep, the drawings pilot), and as a comment saying
+why where it deliberately reads every member (the generation
+adjudication, which types the figure itself; the subagent route's
+accounting; the quote-to-document resolver; the site page's
+every-figure table). `tests/test_figure_standing.py` parses every
+string literal in `dcp/` and `scripts/` and refuses a new one that
+joins the tables without the token — watched failing on all
+twenty-five before the predicates went in — and pins the two
+findings-based rollups by name.
+
+**Where the reader and the workbook say so.** The site page's figures
+box counts what the standing kept out — "5 further figures on 2
+applications … are adjudicated as that application's own capacity, and
+triage classes the application, or the permission its paperwork
+discharges, as not a data centre" — and the every-figure table marks
+each such row; the workbook gains "Capacity figures not counted
+(application not a data centre)" on Sites and "Figures stand as the
+site's" on Applications, each with a dictionary entry; the DuckDB's
+`site_members` carries the column and `site_overview` a
+`power_figures_not_counted`; the per-site findings CSV and the notebook
+bundle share a "counts as this site's?" column; and the reading panel
+carries the count only where it is non-zero, so no unaffected site's
+input hash moved (commit a2104e6's `empty` key moved every one).
+
+**Procedural paperwork follows its parents — found by the DuckDB
+check.** The first materialise excluded 183 members and left Eggborough
+still showing 2,500 MW in `site_overview`, because the station's second
+discharge, `Selby/ZG2023/1214/DOC`, is `procedural` and carries the
+same figure. A discharge is in the universe on the premise that its
+parent is a data centre's permission; measured, 77 `procedural` members
+have no family neighbour in their site but excluded `not_dc`
+applications, 11 of them carrying figures on 5 sites — Eggborough's
+sibling, seven more Selby discharges at 500 `other`, West Burton's
+condition, Heatherwood's, Gardiner Haskins'. So a procedural member
+whose every same-site family neighbour is excluded inherits the
+exclusion, to a fixpoint, with the parents named in its reason; an
+admitted outline carries its discharges with it, and a discharge with
+any counting neighbour, or no family edge, keeps counting. The second
+materialise took the 77.
+
+**What moved, measured against 2.14.** 260 members excluded, 2
+admitted, 1,760 counting; no site, membership or claim moved. In the
+scratch reader, 18 site pages carry the sentence over 296 figures:
+Eggborough's discharge site reads "no capacity disclosed" with 5
+figures on 2 applications not counted, West Burton the same with 32,
+the British Museum with 22 on 3, and PTNO-12784626 keeps its 96 MW IT
+load with 136 figures on 16 discharges set aside. In the workbook, six
+site rows moved on the power columns: the British Museum's 8 MW total
+site to none; Heatherwood Hospital's 3.8 and Metaswitch's 10, both
+floorspace estimates that rested on a `not_dc` member's floorspace, to
+none; Hannah Close's 0.008 (one standby figure on a `not_dc` member)
+and Gardiner Haskins' 2.1 to floorspace estimates of ≈55 and ≈65 the
+tiny figures had masked, Indicative and marked; and Skelton Grange's
+estimate from ≈130 to ≈160 as the median lost rows. The seventh moved
+row is NTT Hemel Hempstead 3, which is the 2026-09-07 partition, not
+this. Cohorts: `read_in_full_silent` 164 → 170, the other four
+unchanged, `at_least_100mw` at 45. Suites: 1,706 unit, 130
+integration, 62 browser against the scratch build, all green.
+
+**Found on the way, fixed because the writer had to change.** The
+workbook's Applications sheet had been misaligned since the discovery
+tags were appended to `APP_SQL`: the row writer's tail slice put the
+address under "Environmental signals", the signals under "Address",
+and the tags under no header — the 2.14 workbook, read back. The
+writer now indexes explicitly and the two columns are named.
+
+**Measured and not built: the key half.** Eighteen `SITE-` keys derive
+from a `not_dc` application (Rhondda's from the only application it
+has; Kingsnorth's with ten readings and two matched claims behind it).
+Re-keying renames eighteen Drive folders, orphans those readings,
+re-points three claims and one alias, and breaks the Sheet's
+annotations by key, for a key the aliases already name over. That is
+Luke's decision and is recorded in ROADMAP with the count.
+
+**Owed to the 2.15 build:** the affected sites' readings, which a bare
+`--submit` re-reads; the fallen figures `release_diff` will report;
+the Sheet's stray unnamed column after the sync; and the DuckDB, which
+was checked against the first materialise and reads the column, so the
+release build carries the second.
