@@ -1731,36 +1731,14 @@ field and is not publishable as it stands.
   GEC row carries any gas term. Where a claim about these rests on a
   coded field, name the field.
 
-- **Two external sources reach the workbook and not the reader, and
-  "Provenance" appears in neither.** Luke asked during the 2.10 release
-  whether he had missed the Published aggregates and Sources tables in
-  the reader; he had not — they are workbook-only. The workbook carries
-  an **External aggregates** sheet (62 rows) and a **Provenance** sheet
-  (20 rows), each with its dictionary entry. The reader carries a
-  subset, woven into the methodology prose rather than tabulated:
-
-  | source | in the reader |
-  |---|---|
-  | Ofgem Curate | yes — the banded queue table, linked, para 2.8 cited |
-  | NESO Call for Input | yes — linked in prose |
-  | DESNZ sub-national consumption | yes — linked, and the per-site line |
-  | UKPN Large Demand List | **no** |
-  | UKPN Data Centre Demand Profiles | **no** |
-
-  So three of five external sources reach someone reading the web page,
-  and the word "Provenance" — the sheet recording where each external
-  figure came from — appears nowhere in it. That cuts against the rule
-  the rest of the reader keeps: every number drillable to its source.
-  A reporter who works from the reader alone cannot see two of the
-  sources the release rests on, or the record of where any of them came
-  from.
-
-  Not a defect in what is shown — everything shown is cited — but an
-  asymmetry nobody chose. The fix is a section on the methodology page
-  listing all five with their locators, generated from
-  `dcp/external_aggregates.SOURCES` so it cannot drift from the
-  workbook's own sheet. Deferred past 2.10 because the artefacts were
-  built and diffed when it surfaced.
+- **Every external source now reaches the reader** (2026-09-10;
+  HISTORY, "The reader names every external source"). The methodology
+  page carries a "Sources outside the planning record" table generated
+  from `dcp/external_aggregates.SOURCES` — the table the workbook's
+  Provenance sheet is written from — so the two UK Power Networks
+  datasets and the record of where each figure came from are on the
+  page beside the three the prose already cited, and a source added
+  there appears on both surfaces. Nothing is owed here now.
 
 - **The DuckDB's claims tables carry no snapshot column.** The reader
   and the workbook link our copy of an operator's page beside the
