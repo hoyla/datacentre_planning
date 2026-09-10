@@ -5115,3 +5115,72 @@ an old key wants carrying across by hand. Recorded in ROADMAP's
 "Outstanding from the figure-standing work". Suites green after the
 change: the standing tests gained a key test and the admission test
 now expects the key to move with the admission.
+
+## An Idox documents tab says which kind of nothing it is (2026-09-10)
+
+The empty-listing item in ROADMAP, for the family that matters most:
+Idox set `no_documents_or_unparseable` whenever `len(links) == 0` —
+three indistinguishable `return []` paths, any table or none — and
+the label sat on both sides of the bug, settling 39 live applications
+as `none_published` before the 2026-08-09 tightening and looping 14
+more as `error` for ever after it, while the reader printed it
+verbatim as an application's reason for holding nothing.
+
+**The captured pages decided the design.** Every documents-tab body in
+`source_snapshots` was classified before a line was written: 1,163
+listings with documents; 237 refusals ("Permission Denied", "you do
+not have permission to view", served with 200 and the site's chrome);
+161 empty tabs, each marking itself — `<li class="nodocuments">
+Documents (0)</li>` in the application's own tab strip and a documents
+table with only its header; 48 bodies with no links and no such mark,
+which turned out to be Buckinghamshire's migrated portal answering the
+old keyVal with its search form; 5 withdrawn; and 3 Brighton bodies of
+212 bytes that are Imperva's bot-challenge script and nothing else.
+Four of them are now fixtures under `tests/fixtures/idox/`.
+
+**The rule, as ROADMAP stated it: a recognised empty on positive
+evidence only.** `idox.classify_listing` runs before the parse and
+returns one of `withdrawn`, `refused`, `tiny`, `populated`, `empty` or
+`unrecognised`; only `empty` — the tab strip's own marker, or the
+header-only table on the application's page — may settle as
+`none_published`. A refusal settles as `portal_blocked`, or as
+`login_required` when the page names a login; the bot challenge is a
+refusal with a name; a withdrawn application settles as
+`portal_blocked` with the portal's sentence as the detail. An
+unrecognised body is `unrecognised_listing`, retryable, the shape
+Agile's `UnrecognisedListing` took on 2026-09-04. The audit's refusal
+markers and byte floor moved into the adapter and the audit imports
+them, so the fetch path and the audit cannot drift on what a refusal
+looks like. `dcp.acquisition_outcome.classify_outcome` maps the new
+classes to the settled verdicts the reader already has words for, and
+`fetch_outstanding.py --only-detail` revisits the rows settled on one
+label without re-fetching every settled empty or writing over a
+hand-checked verdict's own words.
+
+**The re-fetch of the 74 applications carrying the label** (59 Idox,
+9 Ocella, 6 Arcus): 25 Idox settle as `none_published` on the marker,
+with the portal's words on the row; 32 as `login_required` — 29 of
+them Newport's, whose Idox tab has always been login-gated and whose
+documents come from the council's own document store, which held them
+(`fetch_newport_docstore.py --all-missing`, run the same afternoon:
+27 of the 29 hold documents there, 585 stored; the other two sit on
+a retired site and the store script, scoped to live sites, did not
+ask for them); two Idox as transient errors; and the Ocella and
+Arcus rows keep the conflated label as `error`, which is right until
+their adapters learn the same distinction — one family at a time, as
+the item says. Six Exeter College applications keep the old detail
+too, on a retired site outside the queue's scope. The rest of the
+queue then ran under the new classifier (77 applications, 184
+documents in): six Tower Hamlets applications withdrawn from view
+settled as `portal_blocked` with the portal's sentence, and no body
+classified as `tiny` or `unrecognised` — Wycombe's, the host behind
+the 48 search-form bodies, no longer resolves at all and sits in the
+dead-host list below.
+
+**What changed in the record and not the corpus.** Nothing new was
+found on an Idox register by this: every one of the 74 still holds
+nothing from that route. What changed is that each row now says which
+kind of nothing — a register that lists no documents, a portal that
+refuses scripted clients, a login — and the reader's clause on a site
+holding nothing counts them apart. That is the whole point of the
+item: a settled negative is a claim about a council, made in our name.

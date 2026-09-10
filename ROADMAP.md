@@ -1179,64 +1179,30 @@ both shipped since, so the old section title ("Deferred to 2.9") had
 aged into a lie. Each is scoped; what blocks each is a decision, not
 work.
 
-- **An empty document list carries two facts, and the adapters return
-  it as one — the re-fetch below cannot settle anything until they
-  don't** (measured 2026-09-04, after an external review proposed typed
-  parse outcomes). Idox, Ocella, Arcus and NI set
-  `no_documents_or_unparseable` whenever `len(links) == 0` — Idox from
-  three indistinguishable `return []` paths, any table or none — and
-  since the 2026-08-09 tightening `acquisition_outcome` refuses to
-  settle that, so it lands as `error` and is re-fetched on every sweep
-  with no exit but a hand-written row. **Live: 37 in-universe
-  applications holding no documents sit in that loop (31 Idox, 6
-  Arcus); 99 more are settled `none_published` on the same detail from
-  2026-08-08 (90 Idox, 9 Ocella), 52 of them the refusal pages below;
-  and `withdrawn_from_view` has no settled mapping either, so 7 more
-  are retried for ever for the same reason.** The label has sat on both
-  sides of the bug — it wrongly settled before the 9th and wrongly
-  refuses to settle since — and the reader prints it verbatim as an
-  application's reason for holding nothing.
-
-  **One adapter had the opposite defect, the one this project fears
-  — fixed 2026-09-04, PR #386.** Agile's `documents()` returned `[]`
-  for any 200 body that was not a JSON list, so an error object served
-  with a 200 read as `no_documents` and *settled* as `none_published`:
-  nobody looked, stored as nothing there, in the seventh costume. It
-  now raises `UnrecognisedListing`, the fetch path records it as
-  retryable, and the relist audit returns `blocked`, as its Newport
-  branch already did. **An earlier version of this bullet said NI had
-  the same hole; it does not.** NI's `or []` labels a null
-  `supportingDocuments` `no_documents_or_unparseable`, which never
-  settles, so it errs the *other* way and retries for ever. Relabelling
-  its genuinely empty list — reached only after decoding the JSON and
-  rejecting a null body — as the recognised empty it is would *create*
-  a settled path, which is why it is its own change with its own
-  evidence rather than a one-liner folded in here. aifusion and
-  salesforce already made the distinction.
-
-  The distinction is not new here. `scripts/fetch_newport_docstore.py`
-  returns `None` for a page that did not parse and `[]` for an empty
-  store, and says why in its docstring — then throws the difference away
-  one function later with `or []`. `dcp/relist_audit.py` classifies
-  `blocked` against `empty_listing` on the pages' own refusal wording
-  and a byte floor (migration 029: "the register is UNMEASURED"). Both
-  are on the audit path only. **The rule: a parser returns a recognised
-  empty on positive evidence only** — for Idox, `table#Documents`
-  present with at most a header row, or the tab strip's `Documents (0)`
-  / `nodocuments` marker, both visible in the one captured fixture —
-  never on "no links matched"; refusal wording or a body under the floor
-  is `access_refused`, mapped to a settled class (`login_required` or
-  `portal_blocked`, both of which already have reader copy — Luke's
-  call); anything else keeps the retryable label. One family at a time,
-  against captured pages of all three kinds — populated, empty, refused
-  — and the pages exist: every listing fetched is in `source_snapshots`,
-  and none is committed as a fixture yet, so capturing a Selby refusal
-  and a confirmed empty tab is the first act. Order: Agile, done; the
-  NI relabel, on its own evidence; Idox, lifting `relist_audit`'s
-  markers and floor into the fetch path and mapping
-  `withdrawn_from_view`; Ocella and Arcus after, each with its own
-  fixture pair. `tests/test_idox.py` pins the
-  conflation ("must return [] without raising") and changes with it.
+- **An empty document list carries two facts, and Idox now returns
+  them as two** (2026-09-10; HISTORY, "An Idox documents tab says which
+  kind of nothing it is"). `idox.classify_listing` runs before the
+  parse: a refusal settles as `portal_blocked`, one naming a login as
+  `login_required`, a withdrawn application as `portal_blocked` with
+  the portal's sentence, an empty tab settles as `none_published` only
+  on the portal's own marker, and a body that is none of those —
+  Buckinghamshire's search form served against an old keyVal, 48
+  captured — is `unrecognised_listing` and retries. The audit's
+  markers and floor moved into the adapter. The 74 applications settled
+  or looping on the old label were re-fetched (`fetch_outstanding.py
+  --recheck none_published --only-detail no_documents_or_unparseable`):
+  25 settle as `none_published` on the marker, 32 as
+  `login_required` (29 Newport, whose documents the council's own
+  store held — 585 across 27, fetched the same afternoon), 2 as
+  transient errors, and the 15 Ocella and Arcus rows keep the label.
+  **What remains, one family at a time as before**: Ocella (9
+  applications on the label) and Arcus (6) still return the
+  conflated label and loop as `error` until each learns the same
+  distinction against captured pages of its own three kinds; NI's
+  genuinely-empty relabel, on its own evidence, is still its own
+  change; and `tests/test_idox.py` no longer pins "must return []
+  without raising" as the parser's whole contract — the classifier's
+  five fixtures do.
 
 - **The 52 refused pages are fetched; what is left is the settled
   verdicts they were awarded under.** Every application the item began
@@ -1248,20 +1214,16 @@ work.
   inbox (all 2026-09-06; HISTORY, "An evening on the refused pages"
   and the six entries around it, with the routes in PORTAL_NOTES).
 
-  **The decision that remains is about the acquisition record, not the
-  documents.** 106 of the 128 settled verdicts carry the detail
-  `no_documents_or_unparseable` and every one was written on
-  **2026-08-08**, before the mapping was tightened on the 9th — after
-  which the same condition produced `error` instead. The population is
-  bounded and historical, not a live leak. The verdicts are settled, so
-  correcting them means writing new outcome rows over them, which is
-  why nothing has touched them: `no_documents_or_unparseable` is a
-  conflated name — the adapter sets it whenever `len(links) == 0`,
-  whether the page was a register or a refusal — and the reader prints
-  it verbatim as an application's reason for holding nothing. **The
-  typed outcome above comes first**, because re-fetching with today's
-  adapter can settle only a page that now serves documents; one that
-  still refuses lands as `error` and joins that loop.
+  **The acquisition record is corrected, 2026-09-10** (HISTORY, "An
+  Idox documents tab says which kind of nothing it is"). The 106
+  settled verdicts on `no_documents_or_unparseable` were all written
+  on 2026-08-08, before the mapping was tightened on the 9th, and the
+  conflated name sat on both sides of the bug. Every live application
+  carrying it was re-fetched under the typed classifier above and now
+  says which kind of nothing it holds; the 21 still carrying it are
+  Exeter College's six, on a retired site outside the queue, and the
+  Ocella and Arcus rows that wait on their own adapters. Nothing is
+  owed here beyond those.
 
 - **Thirteen live members whose last attempt ended in `error` while
   they hold documents — never re-queued until #403, each to be
