@@ -1280,6 +1280,14 @@ spends the afternoon again. Anything NOT on this list is new.
   station's discharge no longer names the data-centre site beside it.
   Same members, new key; the Drive folders rename at the staging build
   and the sync needs `--prune`.
+- **A consultee comment whose text is browser chrome — "Search",
+  "Accessibility statement", map labels — and no letter.** National
+  Highways' comment on `Wakefield/23/01043/FUL` (document 39292) is a
+  Word file holding one picture, and the picture is a screenshot of
+  their mapping portal. It is read by OCR (engine `docx+tesseract`,
+  2026-09-10) because a Word file with no words otherwise stays unread
+  for ever, and it yields no findings because there are none to yield.
+  Not a bad OCR pass; the document is a screenshot.
 
 - **One withheld machine reading: Mary Somerville
   (`PTNO-12843110`).** Its only planning application,

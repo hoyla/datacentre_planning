@@ -263,7 +263,8 @@ def load_cohort(conn, which: str, sample: int = 0,
                 tiers: tuple[str, ...] = (),
                 limit: int = 0,
                 unread_only: bool = False,
-                since: str | None = None) -> list[dict]:
+                since: str | None = None,
+                documents: tuple[int, ...] = ()) -> list[dict]:
     """'validation' = a small sample of documents already read by BOTH
     other models, for a three-way comparison; 'remaining' = documents
     this model has not read.
@@ -497,6 +498,14 @@ def load_cohort(conn, which: str, sample: int = 0,
             continue
         if tiers and plan.tier not in tiers:
             continue
+        # A named set of documents within the cohort: the two a new
+        # loader just made readable, the 36 live-site prose documents
+        # a primary reader has never seen. Everything else about the
+        # cohort — the plan, the tiers, the primary-read exclusion —
+        # still applies, so a document outside the cohort cannot be
+        # smuggled in by id.
+        if documents and row["document_id"] not in documents:
+            continue
         row["tier"] = plan.tier
         kept.append(row)
     # Take the cohort in slices when the whole thing is more money than
@@ -633,7 +642,8 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
               rate_out: float = 0.0, max_spend: float = 0.0,
               reasoning_effort: str | None = None,
               tiers: tuple[str, ...] = (), limit: int = 0,
-              unread_only: bool = False, since: str | None = None) -> None:
+              unread_only: bool = False, since: str | None = None,
+              documents: tuple[int, ...] = ()) -> None:
     tag = model_tag_for(model, reasoning_effort)
 
     # The validation interlock runs FIRST, before a single cache file is
@@ -647,7 +657,7 @@ def do_submit(cohort: str, model: str, max_chars: int, dry_run: bool,
     with db.connect() as conn:
         rows = load_cohort(conn, cohort, sample=sample, model_tag=tag,
                            tiers=tiers, limit=limit, unread_only=unread_only,
-                           since=since)
+                           since=since, documents=documents)
 
     # A dry run over the whole corpus does not need to build the whole
     # corpus: read a sample and scale. Exact for anything small, and for
@@ -1108,6 +1118,14 @@ def main() -> None:
                          "so repeated --limit runs walk the cohort without "
                          "overlap. Use it to check an estimate against an "
                          "actual before committing the rest.")
+    ap.add_argument("--documents", nargs="+", type=int, default=None,
+                    metavar="DOC_ID",
+                    help="Restrict the cohort to these document ids. The "
+                         "cohort's own rules still apply — a document the "
+                         "cohort would not select is not selected by id — "
+                         "so this reads a named few of what the cohort "
+                         "already contains: the two a new loader just made "
+                         "readable, say, without the rest of the cohort.")
     ap.add_argument("--tier", nargs="+", default=None,
                     choices=["A", "B", "C"], metavar="TIER",
                     help="Restrict the 'remaining' cohort to these tiers. "
@@ -1180,7 +1198,8 @@ def main() -> None:
                   max_spend=args.max_spend_usd,
                   reasoning_effort=args.reasoning_effort,
                   tiers=tuple(args.tier or ()), limit=args.limit,
-                  unread_only=args.unread_only, since=args.since)
+                  unread_only=args.unread_only, since=args.since,
+                  documents=tuple(args.documents or ()))
     elif args.collect:
         do_collect(args.batch_id)
     else:
