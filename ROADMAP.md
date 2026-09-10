@@ -67,6 +67,57 @@ detailed under "Open" in that file:
 - **Which reader re-extracts what the local model read** (Phase 3,
   below): the 2026-08-28 choice is the default position, not a decision.
 
+## Outstanding from the figure-standing work (2026-09-10)
+
+The `not_dc` figure-level rule is built in #419 (migration 034; the
+`not_dc` item in the capacity-model section has the design and the
+measurements). **2.15 is not urgent** (Luke, 2026-09-10): the Ofgem and
+NESO replies are due about now and nothing waits on a release, so
+improvements accumulate and go out together. What the work left, each
+for the person named:
+
+- **Luke: confirm the two admissions in
+  `data/priors/not_dc_standing.yaml`.** Kingsnorth's outline
+  (`Medway/MC/21/0979`) and Google's Waltham Cross reserved matters
+  (`Broxbourne/07/23/0361/RM`) were entered from the record's own
+  evidence — the 2026-09-02 resolution and the quotes in the file —
+  and not by him. An entry asserts that the application's documents
+  are the data centre's own paperwork, so its adjudicated figures stand
+  as the site's; Kingsnorth's carries the site's grid, generation and
+  total-site statements (80 figures), Google's two cooling figures. To
+  withdraw one, delete the entry and re-materialise; the site falls to
+  its next counting figure and the page says what was left out.
+- **Luke: whether a `SITE-` key may derive from a `not_dc`
+  application.** Eighteen do; the cost of re-keying — Drive renames,
+  orphaned readings, three claims, one alias, the Sheet's annotations
+  — is under the `not_dc` item. A decision, not a column.
+- **The 2.15 chain carries three things for it.** Step 4a's bare
+  `--submit` re-reads the sites whose input hash moved (at least the
+  18 pages that count excluded figures; the freshness check names the
+  full set), and until then Eggborough's page keeps a reading quoting
+  the 2,500 MW its figure box no longer counts. `release_diff` will
+  report the fallen and risen figures HISTORY lists — six workbook
+  rows — as this work, not a regression. The Sheet sync realigns the
+  Applications tab's columns by name and adds "Discovery tags" and
+  "Figures stand as the site's"; the stray unnamed column that has
+  held the discovery tags since 2.7 is not removed by the sync and
+  wants deleting by hand afterwards.
+- **Two Barbour-anchored sites now read "no capacity disclosed"** —
+  Heatherwood Hospital and Metaswitch — because the floorspace
+  estimates they carried rested on a `not_dc` member's floorspace.
+  They are two of the seven Barbour-anchored sites holding nothing but
+  `not_dc`/`procedural` applications (Phase 2, the classification
+  rules), and the standing answer there still holds: each wants
+  reading, not a rule.
+- **Eggborough's adjacency row** to `PTNO-12784626` is still owed (the
+  refused-page section); the standing removed the figure from the
+  page, not the question of what the discharge relates to.
+- Not an item, measured so nobody re-measures: the floorspace
+  estimates that surfaced at Hannah Close and Gardiner Haskins once a
+  tiny `not_dc` figure stopped masking them are the ladder's ordinary
+  rung, and all 36 sites ranking on a floorspace estimate in the
+  scratch build are `Datacentre` class.
+
 ## What the refused-page read left for a person
 
 The 2,085 documents the refused-page review put on 29 sites were
