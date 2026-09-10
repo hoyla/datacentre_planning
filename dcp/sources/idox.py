@@ -208,10 +208,10 @@ def classify_listing(html: str, base_url: str) -> tuple[str, str, list[DocumentL
       `withdrawn`    — the portal says the application is no longer
                        available for viewing (settled, by the caller).
       `refused`      — a refusal page served with 200 (settled).
-      `tiny`         — a body under the floor: nothing, not an empty
-                       register (settled as a refusal — the portal
-                       answered with no page).
-      `populated`    — a listing with documents.
+      `populated`    — a listing with documents, whatever its size.
+      `tiny`         — a linkless body under the floor: nothing, not an
+                       empty register (settled as a refusal — the
+                       portal answered with no page).
       `empty`        — a listing that offers none, on POSITIVE evidence:
                        the application's own tab strip is present and
                        marks Documents (0) with `class="nodocuments"`, or
@@ -241,13 +241,14 @@ def classify_listing(html: str, base_url: str) -> tuple[str, str, list[DocumentL
             return ("refused", f"portal served a refusal page (HTTP 200): "
                                f"{marker!r}" + (", naming a login" if login else ""),
                     [])
-    if len(html) < MIN_LISTING_BYTES:
-        return ("tiny", f"body is {len(html)} bytes and cannot be a listing "
-                        f"page (the smallest real one in the corpus is 7,192)",
-                [])
     links = parse_documents_page(html, base_url=base_url)
     if links:
         return ("populated", f"{len(links)} documents listed", links)
+    if len(html) < MIN_LISTING_BYTES:
+        return ("tiny", f"body is {len(html)} bytes with no document links "
+                        f"and cannot be an empty listing page (the smallest "
+                        f"real one in the corpus is 7,192)",
+                [])
     tree = HTMLParser(html)
     on_application = tree.css_first("#tab_summary") is not None or any(
         "activetab=documents" in (a.attributes.get("href") or "").lower()

@@ -339,7 +339,17 @@ def test_a_bot_challenge_stub_is_a_refusal_with_a_name():
 
 def test_a_body_under_the_floor_with_no_marker_is_nothing():
     kind, detail, _ = idox.classify_listing("<html></html>", base_url="https://x")
-    assert kind == "tiny" and "cannot be a listing" in detail
+    assert kind == "tiny" and "cannot be an empty listing" in detail
+
+
+def test_a_small_body_with_document_links_is_a_listing():
+    """The byte floor is for bodies with nothing in them; a short page that
+    lists documents is a listing (the zero-byte guard's fixture is one)."""
+    body = ('<html><body><table><tr><th>Description</th></tr>'
+            '<tr><td>plan</td><td><a href="/online-applications/files/A/pdf/a.pdf"'
+            ' title="View Document">view</a></td></tr></table></body></html>')
+    kind, _, links = idox.classify_listing(body, base_url="https://x")
+    assert kind == "populated" and len(links) == 1
 
 
 def test_no_links_and_no_marker_never_settles():
