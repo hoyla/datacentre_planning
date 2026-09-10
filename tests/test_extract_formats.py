@@ -179,6 +179,85 @@ def test_xlsx_reads_a_workbook_that_arrived_as_bin(tmp_path):
     assert "96 MW" in " ".join(extract.extract_xlsx(path))
 
 
+def _xls(path: Path, sheets: dict[str, list[list]]):
+    """Binary Excel 97, the one workbook format openpyxl cannot read."""
+    xlwt = pytest.importorskip("xlwt")
+    wb = xlwt.Workbook()
+    for title, rows in sheets.items():
+        ws = wb.add_sheet(title)
+        for r, row in enumerate(rows):
+            for c, v in enumerate(row):
+                ws.write(r, c, v)
+    wb.save(str(path))
+    return path
+
+
+def test_xls_gives_one_section_per_worksheet_like_xlsx(tmp_path):
+    """Three live-site documents held this format on 2026-09-10 and one of
+    them was the only document keeping a site below 'read in full'."""
+    pytest.importorskip("xlrd")
+    path = _xls(tmp_path / "register.xls",
+                {"Risks": [["Ref", "Hazard", "MW"], ["R1", "Generator fuel", 2.4]],
+                 "Notes": [["standby set 1,250 kVA"]]})
+    assert extract.sniff_format(path) == "xls"
+    assert "xls" in extract._LOADERS and "xls" not in extract.UNSUPPORTED_FORMATS
+    sheets = extract.extract_xls(path)
+    assert [s.splitlines()[0] for s in sheets] == ["[sheet: Risks]", "[sheet: Notes]"]
+    assert "R1 | Generator fuel | 2.4" in sheets[0]
+    assert "standby set 1,250 kVA" in sheets[1]
+
+
+def test_a_word_file_that_is_only_a_picture_is_read_through_ocr(tmp_path, monkeypatch):
+    """A scanned letter pasted into a blank document: the Word loader finds
+    no words, correctly, and until 2026-09-10 the document then stayed
+    uncached and unread for ever. The OCR backend is faked here — the real
+    engines are exercised by hand — so what this pins is the plumbing: the
+    pictures are read only when the body is empty, and the cache says so."""
+    docx = pytest.importorskip("docx")
+    Image = pytest.importorskip("PIL.Image")
+    picture = tmp_path / "letter.png"
+    Image.new("RGB", (40, 40), "white").save(picture)
+    doc = docx.Document()
+    doc.add_picture(str(picture))
+    path = tmp_path / "scan.docx"
+    doc.save(str(path))
+    monkeypatch.setitem(extract._OCR_BACKENDS, "tesseract",
+                        lambda img, psm="3": "18 standby generators are proposed")
+    monkeypatch.setattr(extract, "RAW_TEXT_ROOT", tmp_path / "raw_text")
+    result = extract.extract_document(
+        source="documents", application_ref="Test/1", sha="c" * 16,
+        bytes_path=path, ocr=True)
+    assert result.engine == "docx+tesseract"
+    assert result.ocr_pages == (1,)
+    assert result.pagination == "sections"
+    assert "18 standby generators are proposed" in result.pages[0]
+    assert result.pages[0].startswith("[picture: image1.png]")
+    cache = extract.cache_path_for("documents", "Test/1", "c" * 16)
+    assert json.loads(cache.read_text())["engine"] == "docx+tesseract"
+
+
+def test_a_word_file_with_text_and_a_picture_keeps_its_text(tmp_path, monkeypatch):
+    """A plan or a photograph inside a supporting statement is not read:
+    OCR of it would be noise beside the prose."""
+    docx = pytest.importorskip("docx")
+    Image = pytest.importorskip("PIL.Image")
+    picture = tmp_path / "plan.png"
+    Image.new("RGB", (40, 40), "white").save(picture)
+    doc = docx.Document()
+    doc.add_paragraph("The energy centre houses two 5 MW gas engines.")
+    doc.add_picture(str(picture))
+    path = tmp_path / "statement.docx"
+    doc.save(str(path))
+    monkeypatch.setitem(extract._OCR_BACKENDS, "tesseract",
+                        lambda img, psm="3": "NOISE FROM THE PLAN")
+    monkeypatch.setattr(extract, "RAW_TEXT_ROOT", tmp_path / "raw_text")
+    result = extract.extract_document(
+        source="documents", application_ref="Test/1", sha="d" * 16,
+        bytes_path=path, ocr=True)
+    assert result.engine == "docx" and result.ocr_pages == ()
+    assert "NOISE" not in "\n".join(result.pages)
+
+
 def test_zip_reads_the_exported_email_bundle(tmp_path):
     """Every archive sampled is an exported email: header, body, images."""
     inner = tmp_path / "inner.pdf"
