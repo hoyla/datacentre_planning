@@ -5116,6 +5116,23 @@ an old key wants carrying across by hand. Recorded in ROADMAP's
 change: the standing tests gained a key test and the admission test
 now expects the key to move with the admission.
 
+## The DuckDB links our copy of a claim's page (2026-09-10)
+
+The reader and the workbook have linked this project's held copy of an
+operator's page beside the source URL on five surfaces since
+2026-09-02, and the database export was named at the time and not
+folded in — so a reporter working from the DuckDB reached only the
+source URL, for a marketing page that can be rewritten without notice.
+`capacity_claims` now carries `our_copy_url`, resolved after the copy
+the way `snapshot_drive.copy_url` resolves it for the reader: the
+nearest held snapshot in which the claim's own quote appears, and
+nothing otherwise, because a guessed link is worse than no link.
+Claims whose locator names a register row or a filing page resolve to
+nothing by construction; the `_provenance` note says so, and says the
+source URL is what a published story cites either way. The build
+prints how many claims carry a copy: on the 2026-09-10 build, 98 of
+the 99 operator-website claims, and none of the 183 read from the
+NESO register, filed accounts or a permit.
 ## The computed figures are classified (2026-09-10)
 
 ROADMAP #248's first step, done as a script so the number can be
