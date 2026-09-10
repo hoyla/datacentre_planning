@@ -1747,13 +1747,11 @@ field and is not publishable as it stands.
   workbook's own sheet. Deferred past 2.10 because the artefacts were
   built and diffed when it surfaced.
 
-- **The DuckDB's claims tables carry no snapshot column.** The reader
-  and the workbook link our copy of an operator's page beside the
-  source URL on five surfaces, and a claim resolves to the nearest held
-  file its own verbatim quote appears in (all shipped 2026-09-01/02;
-  HISTORY). The database export was named rather than folded in at the
-  time and is still outstanding, so a reporter working from the DuckDB
-  reaches only the source URL.
+- **The DuckDB's `capacity_claims` carries `our_copy_url`** (2026-09-10;
+  HISTORY, "The DuckDB links our copy of a claim's page"), resolved as
+  the reader resolves it — the nearest held snapshot the claim's own
+  quote appears in, NULL otherwise — with its note in `_provenance`.
+  Nothing is owed here now.
 
 - **26 applications link to a register host that no longer answers,
   and they would ship in 2.10 that way** (probed 2026-08-28: every host
