@@ -5115,3 +5115,58 @@ an old key wants carrying across by hand. Recorded in ROADMAP's
 "Outstanding from the figure-standing work". Suites green after the
 change: the standing tests gained a key test and the admission test
 now expects the key to move with the admission.
+
+## The last prose gap closes, and 878 prose documents outside the sites are found unread (2026-09-10)
+
+The item ROADMAP had carried since 2026-09-03: one loader would close
+the corpus's last prose gap, two sites short of "read in full" by one
+document each. It took two loaders, and neither was the one the item
+named.
+
+**The `.docx` had a loader; the document had no words.** National
+Highways' consultee comment on `Wakefield/23/01043/FUL` sniffs as Word
+and is one: a 4 KB body with no text in it and a 720 KB picture. The
+Word loader found no words, correctly, and the dispatch — which leaves
+a loader's empty answer uncached so a transient failure is retried —
+left it uncached and unread for a month. So a Word file whose body is
+empty now has its pictures read the way a standalone scan is, with
+orientation detection, one section per picture, engine
+`docx+tesseract` and every section in `ocr_pages`; a Word file with
+text and a picture keeps its text, because a plan in a supporting
+statement is not prose. Read, the picture turned out to be a
+screenshot of National Highways' mapping portal: browser chrome and
+map labels, no letter. That is what the document is, and the quote
+gate protects everything downstream — it read to 0 findings.
+
+**The `.xls` had no loader.** The risk register on
+`Dacorum/4/00571/14/DRC` is binary Excel 97, which openpyxl cannot
+open and nothing in the venv could; `xlrd` reads it, one section per
+sheet in the same shape as `extract_xlsx`, dates converted from
+serials. Thirteen sheets, 16 findings. `xls` leaves
+`UNSUPPORTED_FORMATS`; `xlsb` and `ppt` stay. The formats test builds a
+real `.xls` through `xlwt`, now a dev dependency, and fakes the OCR
+backend for the picture case so the plumbing is pinned without a
+tesseract on the runner.
+
+**Reading them found the cohort was larger, and then that it was not.**
+`--cohort first_read --since 2026-08-08` offered 950 documents no
+primary reader had seen, which contradicted 388 of 390 sites read in
+full until split by site and tier: 4,819 of them are on live sites and
+are drawings and sampled classes the first read never sends; 36 are
+live-site prose — the two, plus the Section 106 agreements the tiering
+fix reclassified as prose on 2026-08-26 and a handful of discharge
+paperwork; and **1,226 are on applications outside every live site**
+— 184 on adjacent-power records, fetched since the queue reached that
+class on 2026-09-06, and 1,042 on `not_dc` applications in no site —
+of which 878 are prose. The 36 were read: the first-read script
+gained `--documents` to read a named few of a cohort under all the
+cohort's own rules, and 28 built (the other eight have no cache: the
+corrupt PDFs and the zero-byte file), 1,133 findings, 25 gate refusals,
+about $2, 4.8 minutes' turnaround. **Coverage is 390 of 390 live sites
+with prose read in full**, from `load_coverage_detail`. The 878 are a
+decision, in ROADMAP.
+
+The corpus extraction pass took 24 more documents with the new loaders
+and leaves 20 it cannot: four PDFs pypdf refuses, the zero-byte files,
+two `.xlsb`, a `.ppt` and five of no recognisable format — the residue
+the item already named, none of it holding a site back.
