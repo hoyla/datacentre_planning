@@ -5379,3 +5379,31 @@ What stays of each trimmed item is its ask alone: Ocella, Arcus and
 NI for the empty list; decision 6 and the Stockley wrinkle for the
 rung; the twenty uncacheable documents and three zero-byte files for
 the prose gap; Hayes for N+N.
+
+## The C and D figures go to a person's row (2026-09-10)
+
+Luke settled the second half of #248's admissibility question the same
+evening as the first: A and B become derivation records, and the 62 C
+and D figures — a scaling or a midpoint the source did not make, and a
+residue no arithmetic on the quote reaches — go to a review list for
+him to settle by hand rather than to `unclear`. The case for it was
+measured before it was put: only 19 of the 62 rows — 15 distinct
+figures, on 13 sites — are the figure a site's own box shows (the
+largest standing figure of its family, under the generation rung's
+plant-type filter, the rule the site rollups use), and most of the
+rest are small kit —
+cooling units, UPS ratings, pump motors — where the figure is right
+and the quote is mangled. `unclear` would have cleared thirteen pages
+of figures read off broken or unstated text (Fife's 850 MW from
+"BSOOMW", Northumberland's 720 MW from a per-building 72 MW, Edinburgh's
+200 MW from "Zoomw") at the price of the leads in the other 43.
+
+`scripts/computed_figures.py --review` writes the workbook beside the
+report, in the operator-pages review's shape: one row per figure with
+its class, site, application, family, value, whether it is the site's
+shown figure, the quote, our Drive copy of the document and its page,
+the reader that produced it and the finding id, then a decision column
+and a notes column left empty. The site's shown figures sort first. The
+workbook is local and regenerated from the classification on every run,
+so a decision is folded back into the record before the next run —
+the fold is the ask that stays in ROADMAP.

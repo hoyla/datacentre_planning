@@ -43,6 +43,7 @@ C 39, D 85. Re-run rather than quote.
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import itertools
 import re
@@ -172,10 +173,115 @@ def _classify_in(value_mw: float, repaired: str) -> str:
     return "D. no arithmetic on the quote reaches it"
 
 
+REVIEW_DIR = ROOT / "data" / "computed_figures_review"
+# The four families a site's figure box shows; a cooling or storage
+# rating never heads a page, so it is not "the figure a site shows".
+BOX_FAMILIES = ("it_load", "total_site", "grid_connection", "onsite_generation")
+REVIEW_HEADERS = ["class", "site_key", "site_name", "application_ref",
+                  "quantity_type", "value_mw", "value_original",
+                  "the site's shown figure?", "quote", "document (our copy)",
+                  "source url", "page", "reader", "finding_id",
+                  "decision (keep / unclear / correct to …)", "notes"]
+
+
+def write_review(computed, rows) -> Path:
+    """The C and D figures as a workbook for a person to settle by hand,
+    one row per figure, the same shape as the operator-pages review:
+    every column the decision needs beside two empty ones for the
+    decision and the reason. Luke chose this over `unclear` on
+    2026-09-10 — the reader loses little by withdrawing a mangled
+    cooling rating, but the workbook keeps the lead. Rewritten on every
+    run from the classification, so a decision column is folded back
+    into the record (a person's adjudication row) before the next run,
+    never edited here."""
+    import openpyxl
+    from openpyxl.styles import Alignment, Font
+    from openpyxl.utils import get_column_letter
+    from dcp import drive
+    picked = [c for c in computed if c[0][:1] in ("C", "D")]
+    by_fid = {r[0]: r for r in rows}
+    # The figure a site's box shows is the largest standing figure of
+    # its family, which is what the reader's rollups take.
+    with db.connect() as conn, conn.cursor() as cur:
+        # The generation rung shows standby-shaped plant only (the same
+        # filter as site_cohorts.SITE_FIGURES_SQL): plant adjudicated
+        # prime_combustion, renewable or storage, or not generation at
+        # all, never heads a page.
+        cur.execute("""
+            SELECT finding_id FROM (
+              SELECT DISTINCT ON (finding_id) finding_id, figure_basis, plant_type
+              FROM generation_adjudication
+              ORDER BY finding_id, inserted_at DESC, id DESC) g
+            WHERE coalesce(g.figure_basis, '') = 'not_generation'
+               OR coalesce(g.plant_type, '') IN ('prime_combustion', 'renewable', 'storage')""")
+        not_shown_generation = {r[0] for r in cur.fetchall()}
+        shown = {}
+        for (fid, qt, mw, *_rest) in rows:
+            if qt not in BOX_FAMILIES:
+                continue
+            if qt == "onsite_generation" and fid in not_shown_generation:
+                continue
+            key = by_fid[fid][5], qt
+            shown[key] = max(shown.get(key, 0.0), float(mw))
+        cur.execute("SELECT site_key, display_name FROM sites WHERE retired_at IS NULL")
+        names = dict(cur.fetchall())
+        doc_ids = sorted({c[7] for c in picked if c[7]})
+        cur.execute("""
+            SELECT DISTINCT ON (d.id) d.id, d.url, f.file_id
+            FROM documents d
+            LEFT JOIN document_drive_files f ON f.document_id = d.id
+            WHERE d.id = ANY(%s)
+            ORDER BY d.id, f.recorded_at DESC NULLS LAST""", (doc_ids,))
+        docs = {i: (u, fid) for i, u, fid in cur.fetchall()}
+    out_rows = []
+    for (k, key, ref, qt, mw, model, fid, doc_id, page, q) in picked:
+        vo = by_fid[fid][3]
+        unit = ""
+        url, file_id = docs.get(doc_id, (None, None))
+        out_rows.append([
+            k[:1], key, names.get(key, ""), ref, qt, mw,
+            (f"{vo:g}" if vo is not None else ""),
+            "yes" if abs(shown.get((key, qt), 0.0) - mw) < 1e-9 else "",
+            q, drive.file_url(file_id) if file_id else "", url or "", page or "",
+            model, fid, "", ""])
+    out_rows.sort(key=lambda r: (r[7] != "yes", r[0], r[1], -float(r[5])))
+    REVIEW_DIR.mkdir(parents=True, exist_ok=True)
+    with (REVIEW_DIR / "computed_figures_review.csv").open("w", newline="",
+                                                           encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(REVIEW_HEADERS)
+        w.writerows(out_rows)
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "computed_figures_review"
+    ws.append(REVIEW_HEADERS)
+    for cell in ws[1]:
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(wrap_text=True, vertical="top")
+    for r in out_rows:
+        ws.append(r)
+    widths = [6, 26, 24, 24, 16, 9, 10, 9, 60, 34, 34, 6, 18, 10, 22, 30]
+    for i, wd in enumerate(widths, 1):
+        ws.column_dimensions[get_column_letter(i)].width = wd
+    for row in ws.iter_rows(min_row=2):
+        for cell in row:
+            cell.alignment = Alignment(wrap_text=True, vertical="top")
+    ws.freeze_panes = "A2"
+    dest = REVIEW_DIR / "computed_figures_review.xlsx"
+    wb.save(dest)
+    print(f"wrote {dest}: {len(out_rows)} C and D figures for review, "
+          f"{sum(1 for r in out_rows if r[7] == 'yes')} of them the figure a site shows")
+    return dest
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--print", action="store_true", help="also print the report")
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--review", action="store_true",
+                    help="also write the C and D figures as a review workbook "
+                         "under data/computed_figures_review/ for a person to "
+                         "settle by hand (Luke, 2026-09-10)")
     args = ap.parse_args()
 
     with db.connect() as conn, conn.cursor() as cur:
@@ -222,6 +328,8 @@ def main() -> int:
     dest = args.out or (ROOT / "data" / "reports" / f"computed_figures_{stamp:%Y-%m-%d}.md")
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(report, encoding="utf-8")
+    if args.review:
+        write_review(computed, rows)
     print(f"wrote {dest}: {len(computed)} of {len(rows)} figures computed; "
           + ", ".join(f"{k[:1]} {n}" for k, n in sorted(kinds.items())))
     if args.print:

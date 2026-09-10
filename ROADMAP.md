@@ -915,17 +915,19 @@ midpoint, 11; D, nothing arithmetic on the quote reaches it, 51.
 — a derivation record beside the finding, rendered on `w-modelled`
 with the ≈ glyph. Building it is the next step of this item.
 
-**Open: what becomes of C and D** — `unclear` (a stated abstention
-beats a confident invention) or a person's row, meaning a row on the
-review workbook for someone to settle by hand against the document,
-the way Kingsnorth's export-limit figure is handled below. The
-measurement that bears on it: the 62 figures sit on 32 sites, and 15
-are the figure a site's own box shows, on 13 sites (Fife's 850 MW,
-Northumberland's 720 MW, Edinburgh's 200 MW grid connection among
-them), so `unclear` changes those thirteen pages and no others. The
-companion guard — a value that appears in no number of its quote is
-refused at adjudication write unless it carries a derivation — follows
-the derivation record.
+**Decided by Luke, 2026-09-10: C and D go to a person's row.**
+`scripts/computed_figures.py --review` writes them as
+`data/computed_figures_review/computed_figures_review.xlsx` (local, like
+the operator-pages review; 62 rows, 19 of them — 15 distinct figures on
+13 sites — the figure a site's own box shows, those first), one row per figure with the quote, our copy
+of the document, the page and two empty columns — decision and notes —
+for Luke to fill against the document. **What is owed here is the
+fold**: a decision column read back into the record as a person's
+adjudication row (`power_adjudication`, model `person`, the reason
+carried), and the workbook regenerated from the classification after
+each fold rather than edited in place. The companion guard — a value
+that appears in no number of its quote is refused at adjudication
+write unless it carries a derivation — follows the derivation record.
 
 **The target shape, once they are classified** (2026-09-04): a computed
 figure carries its derivation beside it — the source finding or evidence
