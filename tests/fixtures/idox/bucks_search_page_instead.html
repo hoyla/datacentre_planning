@@ -1,0 +1,636 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-GB" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
+<head>
+
+	<!-- #BeginEditable "doctitle" -->
+<title>Simple Search</title>
+<!-- #EndEditable -->
+    <!-- #BeginEditable "metatags" --><!-- #EndEditable -->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<!-- Customer metatags -->
+	
+	
+	<!-- Favicon link -->
+    <link rel="icon" href="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/images/buckinghamshire/favicon.svg" type="image/x-icon" />
+
+    <link rel="stylesheet" href="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/styles/screen.css" type="text/css" />
+    <link rel="stylesheet" href="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/styles/theme1.css" type="text/css"/>
+    <link rel="stylesheet" href="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/styles/print.css" type="text/css" media="print" />
+
+    <script type="text/javascript" src="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/scripts/jquery.toolbar.idox.min.js"></script>
+    <script type="text/javascript" src="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/scripts/common.js"></script>
+    <script type="text/javascript" src="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/scripts/checkbox.js"></script>
+	<!-- Customer Analytics Script -->
+	
+
+    <script type="text/javascript">
+    	$('html').addClass('js');
+    	$(document).ready(function(){
+    		$('.main#apply>span:first-child').attr('tabindex', '0')
+    	});
+    </script>
+
+    <!-- #BeginEditable "mobile" --><!-- #EndEditable -->
+    <!-- #BeginEditable "head" --><!-- #EndEditable -->
+    <!-- #BeginEditable "webapp" -->
+        <script type="text/javascript">
+            $(document).ready( function() {
+                onSearchTypeLoad();
+            });
+
+            function onSearchTypeLoad() {
+                if ($('input[name="searchType"]').val() === 'Application') {
+                    $('.row1.status').removeClass('hide');
+                 } else {
+                    $('.row1.status').addClass('hide');
+                 }
+            }
+        </script>
+    <!-- #EndEditable -->
+    <!-- #BeginEditable "recaptcha" -->
+        
+
+
+
+
+
+
+
+
+    <!-- #EndEditable -->
+
+</head>
+<body>
+
+    <a href="#pageheading" class="skip-link">Skip to main content</a>
+
+    <!-- IDOX PA START -->
+    <div id="idox">
+        <div id="pa">
+			<div id="header">
+				<div class="container">
+					<div id="logo"><a href="https://www.buckinghamshire.gov.uk/" title="Buckinghamshire Council"><img src="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/images/buckinghamshire/logo.svg" alt="Council logo" /><span class="sr-only">Buckinghamshire Council</span></a></div>
+					<div id="headertitle"><span>Public Access</span></div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div id="breadcrumbs" class="container">
+				<ol>
+				    
+				</ol>
+			</div>
+            <div class="container" role="main">
+       			<div id="toolbar" class="nojs">
+                    <ul>
+                        <li id="search" class="main"><span tabindex="0">Search&nbsp;</span><span class="caret"></span>
+   							<ul>
+								<!-- #BeginLibraryItem "/Library/searchModulesNavItems.lbi" -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            <li id="planLinks">
+                <a href="/online-applications/search.do?action=simple&amp;searchType=Application" >
+                    <span>Planning</span>
+                </a>
+                <ul>
+                    <li id="planBasicSearch">
+                        <a href="/online-applications/search.do?action=simple&amp;searchType=Application">
+                            Simple Search
+                        </a>
+                    </li>
+
+                    <li id="planAdvancedSearch">
+                        <a href="/online-applications/search.do?action=advanced&amp;searchType=Application">
+                            Advanced
+                        </a>
+                    </li>
+                    <li id="planListSearch">
+                        <a href="/online-applications/search.do?action=weeklyList&amp;searchType=Application">
+                            Weekly/Monthly Lists
+                        </a>
+                    </li>
+                    <li id="planPropertySearch">
+                        <a href="/online-applications/search.do?action=property&amp;type=custom&amp;searchType=Application">
+                            Property Search
+                        </a>
+                    </li>
+					
+                    
+                        <li id="planMapsearch">
+                            <a href="/online-applications/spatialDisplay.do?action=display&amp;searchType=Application">
+                                Map Search
+                            </a>
+                        </li>
+                    
+					
+                </ul>
+            </li>
+        
+
+        
+
+        
+            <li id="bcLinks">
+                <a href="/online-applications/search.do?action=simple&amp;searchType=BuildingControl">
+                    <span>Building Control</span>
+                </a>
+                <ul>
+                    <li id="bcBasicSearch">
+                        <a href="/online-applications/search.do?action=simple&amp;searchType=BuildingControl">
+                            Simple Search
+                        </a>
+                    </li>
+                    <li id="bcAdvancedSearch">
+                        <a href="/online-applications/search.do?action=advanced&amp;searchType=BuildingControl">
+                            Advanced
+                        </a>
+                    </li>
+                    <li id="bcListSearch">
+                        <a href="/online-applications/search.do?action=weeklyList&amp;searchType=BuildingControl">
+                            Weekly/Monthly Lists
+                        </a>
+                    </li>
+                    <li id="bcPropertySearch">
+                        <a href="/online-applications/search.do?action=property&amp;type=custom&amp;searchType=BuildingControl">
+                            Property Search
+                        </a>
+                    </li>
+
+                    
+                        <li id="bcMapsearch">
+                            <a href="/online-applications/spatialDisplay.do?action=display&amp;searchType=BuildingControl">
+                                Map Search
+                            </a>
+                        </li>
+                    
+					
+                </ul>
+            </li>
+        
+
+        
+
+        <!-- #EndLibraryItem -->
+                        	</ul>
+						</li>
+                        <!-- #BeginEditable "applicationForms" -->
+
+
+
+
+
+   
+<!-- #EndEditable -->
+                        <li id="myprofile" class="main"><span tabindex="0">My Profile&nbsp;</span><span class="caret"></span>
+                            <ul>
+                              <!-- #BeginLibraryItem "/Library/consulteeInTrayNavItem.lbi" -->
+
+
+
+
+
+
+    <!-- #EndLibraryItem -->
+                                <li><a href="https://publicaccess.buckinghamshire.gov.uk/online-applications/registered/displayUserDetails.do">Profile Details</a></li>
+                                <li><a href="https://publicaccess.buckinghamshire.gov.uk/online-applications/registered/savedSearch.do?action=display">Saved Searches</a></li>
+                                <li><a href="https://publicaccess.buckinghamshire.gov.uk/online-applications/registered/userAdmin.do?action=showNotifiedApplications">Notified Applications</a></li>
+                                <li><a href="https://publicaccess.buckinghamshire.gov.uk/online-applications/registered/trackedApplication.do?action=display">Tracked Applications</a></li>
+                                <!-- #BeginEditable "formSubmissions" -->
+
+
+
+
+
+
+
+
+<!-- #EndEditable -->
+                            </ul>
+                        </li>
+                        <li id="loginLink" class="main"><!-- #BeginEditable "loginlogout" -->
+
+
+
+
+
+
+
+
+
+
+	<a href="/online-applications/registered/userAdmin.do">Login</a>
+<!-- #EndEditable --></li>
+                        <!-- #BeginEditable "register" -->
+
+
+
+
+
+
+
+
+   
+
+
+	<li id="register">
+        <a href="/online-applications/registrationWizard.do?action=start">Register</a>
+	</li>
+
+<!-- #EndEditable -->
+                        <!-- #BeginLibraryItem "/Library/applyOnlineNavItems.lbi" -->
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+        function ApplyMenuBuilder() {
+        }
+
+        ApplyMenuBuilder.prototype.getMenuData = function (
+            planningLabel1,
+            planningUrl1,
+            planningLabel2,
+            planningUrl2,
+            planningLabel3,
+            planningUrl3,
+            buildingControlLabel1,
+            buildingControlUrl1,
+            buildingControlLabel2,
+            buildingControlUrl2,
+            buildingControlLabel3,
+            buildingControlUrl3,
+            buildingStandardsLabel1,
+            buildingStandardsUrl1,
+            buildingStandardsLabel2,
+            buildingStandardsUrl2,
+            buildingStandardsLabel3,
+            buildingStandardsUrl3,
+            licensingLabel1,
+            licensingUrl1,
+            licensingLabel2,
+            licensingUrl2,
+            licensingLabel3,
+            licensingUrl3
+        ) {
+            var modules = [];
+
+            var planning = this.getModuleJson('Planning', planningLabel1, planningUrl1, planningLabel2, planningUrl2, planningLabel3, planningUrl3);
+            var buildingControl = this.getModuleJson('Building Control', buildingControlLabel1, buildingControlUrl1, buildingControlLabel2, buildingControlUrl2, buildingControlLabel3, buildingControlUrl3);
+            var buildingStandards = this.getModuleJson('Building Standards', buildingStandardsLabel1, buildingStandardsUrl1, buildingStandardsLabel2, buildingStandardsUrl2, buildingStandardsLabel3, buildingStandardsUrl3);
+            var licensing = this.getModuleJson('Licensing', licensingLabel1, licensingUrl1, licensingLabel2, licensingUrl2, licensingLabel3, licensingUrl3);
+
+            this.pushIfNotNull(modules, planning);
+            this.pushIfNotNull(modules, buildingControl);
+            this.pushIfNotNull(modules, buildingStandards);
+            this.pushIfNotNull(modules, licensing);
+
+            var data = {};
+            data.Version = "1.0";
+            data.Default = modules;
+            return data;
+        };
+
+        ApplyMenuBuilder.prototype.getModuleJson = function (moduleName, label1, url1, label2, url2, label3, url3) {
+            var links = [];
+            this.pushIfNotNull(links, this.getLinkJson(label1, url1));
+            this.pushIfNotNull(links, this.getLinkJson(label2, url2));
+            this.pushIfNotNull(links, this.getLinkJson(label3, url3));
+
+            if (links.length === 0) {
+                return null;
+            }
+
+            var module = {};
+            module.name = moduleName;
+            module.menu = links;
+            return module;
+        };
+
+        ApplyMenuBuilder.prototype.getLinkJson = function (label, url) {
+            if (!label || label === "" || label === "null" || !url || url === "" || url === "null") {
+                return null;
+            }
+            return {"name": label, "url": url};
+        };
+
+        ApplyMenuBuilder.prototype.pushIfNotNull = function (array, item) {
+            if (item != null) {
+                array.push(item);
+            }
+        };
+
+        $(document).ready(function () {
+            var applyMenuData = new ApplyMenuBuilder().getMenuData(
+                "Planning Portal",
+                "https://www.planningportal.co.uk/",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "");
+
+            if (applyMenuData.Default.length === 0){
+                if (window.console) console.log('No data given with which to construct the Apply Online menu.')
+                hideApplyMenu();
+            }
+            loadApplyMenu('Default', applyMenuData);
+        });
+    </script>
+
+    <li id="apply" class="main">
+        <span>Apply Online&nbsp;</span>
+        <span class="caret"/>
+    </li>
+<!-- #EndLibraryItem -->
+                    </ul>
+    			</div>
+
+    			<!-- #BeginEditable "headlinenews" -->
+    
+        
+            <div class="messagebox announcement">
+                <h2><strong>We have been experiencing intermittent issues with our system.&nbsp; If you encounter an issue, please try again later. We are sorry for any inconvenience caused.</strong></h2>
+
+<p>Please see our <a href="https://www.buckinghamshire.gov.uk/planning-and-building-control/building-or-improving-your-property/view-and-comment-on-a-planning-application/" style="font-size: 13px;">View Planning Applications</a>&nbsp;webpage for important information notes on: terms and conditions, searching for applications and weekly list of applications validated, user guides, commenting on applications, viewing documents and planning history.</p>
+
+<p><strong>Our systems are being combined into a single system.</strong></p>
+
+<p>For applications submitted for the former Aylesbury Vale area before 8 August 2025, please visit our&nbsp;<a href="https://publicaccess.aylesburyvaledc.gov.uk/online-applications/">existing Aylesbury&nbsp;Vale</a>&nbsp;system.</p>
+
+<p>For applications submitted for Minerals and Waste, formerly Buckinghamshire County Council before 24 April 2026, please visit our <a href="https://publicaccess.buckscc.gov.uk/online-applications/">existing Minerals and Waste</a> system</p>
+            </div>
+        
+    
+<!-- #EndEditable -->
+
+                <div id="pageheading">
+                    <h1><strong>Planning</strong>&nbsp;&ndash;&nbsp;<!-- #BeginEditable "pageheading" -->Simple Search <!-- #EndEditable --></h1>
+                    <!-- #BeginEditable "helplink" --><!-- #EndEditable -->
+                </div>
+
+                <!-- START WAM CONTENT -->
+                <div class="content">
+                    <!-- #BeginEditable "errormsg" -->
+  
+    
+    
+
+    
+    
+
+    
+    
+<!-- #EndEditable -->
+                    <!-- #BeginEditable "pagehead" -->
+    <p>
+    
+    
+        Search for Planning Applications by keyword, application reference, postcode or by a single line of an address.
+    
+    </p>
+<!-- #EndEditable -->
+                    <!-- #BeginEditable "tabs" -->
+    
+        
+        
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+<ul class="tabs">
+
+    
+    <li>
+        <a href="/online-applications/search.do?action=simple" class="active"><span>Simple</span></a>
+        
+            
+            <ul class="subtabs">
+                
+                    <li>
+                        <a href="/online-applications/search.do?action=simple&amp;searchType=Application" class="active"><span class="sr-only">Search </span><span>Applications</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/online-applications/search.do?action=simple&amp;searchType=Enforcement" class=""><span class="sr-only">Search </span><span>Enforcements</span></a>
+                    </li>
+                
+            </ul>
+        
+    </li>
+
+    
+    <li>
+        <a href="/online-applications/search.do?action=advanced" class=""><span> Advanced</span></a>
+        
+    </li>
+
+    
+        
+        <li>
+            <a href="/online-applications/search.do?action=weeklyList" class=""><span>Weekly/Monthly Lists</span></a>
+            
+        </li>
+    
+
+    
+    <li>
+        <a href="/online-applications/search.do?action=property&amp;type=custom" class=""><span> Property</span></a>
+        
+    </li>
+
+    
+    
+        
+            <li>
+                
+                <a href="/online-applications/spatialDisplay.do?action=display&amp;searchType=Application" class=""><span>Map</span></a>
+            </li>
+        
+    
+
+</ul>
+
+<!-- #EndEditable -->
+                    <!-- #BeginEditable "tabsubnav" --><!-- #EndEditable -->
+                    <!-- #BeginEditable "pagebody" -->
+
+<div class="tabcontainer" id="simpleSearch">
+
+    <form name="searchCriteriaForm" method="post" action="/online-applications/simpleSearchResults.do?action=firstPage" id="simpleSearchForm">
+        <input type="hidden" name="_csrf" value="4802e425-7631-46d4-9d7d-5761ad3d1d3e" />
+        <input type="hidden" name="searchType" value="Application"/>
+
+        
+            
+        
+
+    <div class="row1 status">
+        <label for="searchTypeStatus">
+            Status:
+        </label>
+        <select name="searchCriteria.caseStatus" id="searchTypeStatus"><option value="">All</option>
+            <option value="Current">Current</option>
+            <option value="Decided">Decided</option></select>
+    </div>
+
+    
+    <div class="row2">
+        <label for="simpleSearchString">
+                Enter a <strong>keyword</strong>, <strong>reference number</strong>, <strong>postcode</strong> or <strong>single line of an address</strong>.
+        </label>
+    </div>
+    
+
+    <div class="row3">
+
+        
+        <span class="fieldhelp">
+            
+                <a href="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/help/fieldhelp/simpleSearchString.htm" target="_blank" rel="external" title="Help with Simple Search (opens in a new window)">
+                    <img src="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/images/help.gif" alt="Help icon" width="16" height="16" class="helpicon" />
+                </a>
+            
+            
+        </span>
+        
+        <input type="text" name="searchCriteria.simpleSearchString" maxlength="255" autocomplete="off" value="" onblur="javascript:this.value=this.value.replace(/^\s+|\s+$/g,'')" onfocus="javascript:this.value=this.value.replace(/^\s+|\s+$/g,'')" class="text" id="simpleSearchString" />
+
+        <input type="hidden" name="searchCriteria.simpleSearch" value="true" />
+        <input type="submit" value="Search" class="button primary recaptcha-submit" />
+
+    </div>
+
+    </form>
+</div>
+
+<!-- #EndEditable -->
+                    <!-- #BeginEditable "pagefoot" --><!-- #EndEditable -->
+                </div>
+                <!-- END WAM CONTENT -->
+
+                <p id="poweredBy"><a href="http://www.idoxgroup.com/" target="_blank" title="This link will open a new window"><img src="https://publicaccess.buckinghamshire.gov.uk/online-applications-skin/images/idox.gif" alt="an Idox solution" /></a></p>
+            </div>
+			<div id="footer">
+				<div class="container">
+				    <div id="links">
+						<ul>
+							<li><a href="https://publicaccess.buckinghamshire.gov.uk/online-applications/registration/terms.jsp#accessibility" rel="external" title="This link will open a new window">Accessibility statement</a></li><li><a href="https://publicaccess.buckinghamshire.gov.uk/online-applications/registration/terms.jsp#cookies" rel="external" title="This link will open a new window">Cookies</a></li><li><a href="https://www.buckinghamshire.gov.uk/your-council/contact-us/">Contact us</a></li><li><a href="https://publicaccess.buckinghamshire.gov.uk/online-applications/registration/terms.jsp#terms" rel="external" title="This link will open a new window">Terms of use</a></li>
+						</ul>
+					</div>
+					<div id="footercontent"><p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Buckinghamshire Council</p></div>
+					<div class="clear"></div>
+				</div>
+			</div>
+        </div>
+    </div>
+    <!-- IDOX PA END -->
+
+</body>
+</html>
+

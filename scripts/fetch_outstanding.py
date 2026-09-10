@@ -62,10 +62,10 @@ log = logging.getLogger("fetch_outstanding")
 # membership the queue stopped reaching it: a substation discovered today
 # got a verdict and a relationship row and was never fetched.
 OUTSTANDING_SQL = """
-SELECT a.id, a.application_ref, a.url
+SELECT a.id, a.application_ref, a.url, o.detail
 FROM applications a
 LEFT JOIN LATERAL (
-    SELECT outcome FROM acquisition_outcome ao
+    SELECT outcome, detail FROM acquisition_outcome ao
     -- Insertion order, not checked_at, matching application_acquisition.
     -- A backdated correction must not be overruled by the wrong row it
     -- was written to correct.
@@ -167,6 +167,13 @@ def main() -> int:
                         "(e.g. public.selby.gov.uk), so a register that moved can "
                         "be re-fetched on its own rather than with every settled "
                         "empty in the corpus")
+    p.add_argument("--only-detail", default=None, metavar="DETAIL",
+                   help="only applications whose latest outcome carries exactly "
+                        "this detail — with --recheck, revisits the rows settled "
+                        "on one label (the conflated "
+                        "'no_documents_or_unparseable', 2026-09-10) without "
+                        "re-fetching every settled empty, and without writing "
+                        "over a hand-checked verdict's own words")
     p.add_argument("--min-free-gb", type=float, default=15.0)
     # The adapters' default ladder (4 tries, 60s doubling) is right for a
     # single application and wrong for a sweep: a host that is simply down
@@ -197,6 +204,11 @@ def main() -> int:
     if args.host:
         rows = [r for r in rows if host_matches(r[2], args.host)]
         log.info("scoped to recorded host %s: %d applications", args.host, len(rows))
+    if args.only_detail:
+        rows = [r for r in rows if (r[3] or "") == args.only_detail]
+        log.info("scoped to latest detail %r: %d applications",
+                 args.only_detail, len(rows))
+    rows = [r[:3] for r in rows]
 
     listings = salesforce_pr.load_listings()
     plan: dict[str, list] = {}

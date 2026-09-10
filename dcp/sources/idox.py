@@ -174,6 +174,102 @@ def _documents_tab_url(application_url: str) -> str:
     return urllib.parse.urlunparse(parsed._replace(query=new_q))
 
 
+# A documents tab that is not a listing, in the portal's own words. Idox
+# serves "Permission Denied" with HTTP 200 and the site's full chrome, so
+# nothing upstream — not the status code, not the fetch — tells it from a
+# documents tab; parsed as one it yields zero links, and zero links used
+# to read as a register that holds nothing. The markers are taken from
+# bodies in `source_snapshots` (237 of them on 2026-09-10), not guessed.
+# `dcp.relist_audit` reads these same constants; they lived there first.
+REFUSAL_MARKERS = (
+    "you do not have permission to view",
+    "permission denied",
+    # Imperva/Incapsula's bot challenge: a 212-byte 200 whose only content
+    # is the challenge script. Brighton served three of them; parsed as a
+    # listing they read as an empty register, and by size alone they read
+    # as "nothing", which is true but does not say why.
+    "_incapsula_resource",
+)
+# Refusals that name a login as the way in, which is a different settled
+# class from a portal that blocks scripted clients outright.
+LOGIN_MARKERS = ("log in", "login", "sign in", "register to view")
+# Below this a body cannot be a listing page: the smallest real listing in
+# the corpus is 7,192 bytes, and a real Idox documents tab carries 8–36 KB
+# of chrome before it lists anything. Three Brighton bodies are 212 bytes.
+MIN_LISTING_BYTES = 1000
+WITHDRAWN_MARKER = "no longer available for viewing"
+
+
+def classify_listing(html: str, base_url: str) -> tuple[str, str, list[DocumentLink]]:
+    """What a documents-tab body is, and the links if it is a listing.
+
+    Returns `(kind, detail, links)` with kind one of:
+
+      `withdrawn`    — the portal says the application is no longer
+                       available for viewing (settled, by the caller).
+      `refused`      — a refusal page served with 200 (settled).
+      `tiny`         — a body under the floor: nothing, not an empty
+                       register (settled as a refusal — the portal
+                       answered with no page).
+      `populated`    — a listing with documents.
+      `empty`        — a listing that offers none, on POSITIVE evidence:
+                       the application's own tab strip is present and
+                       marks Documents (0) with `class="nodocuments"`, or
+                       the documents table is there with only its header
+                       row. This is the only kind that may settle as
+                       `none_published`.
+      `unrecognised` — no links and no positive evidence of emptiness:
+                       a search page served instead of the application
+                       (Buckinghamshire's migrated portal answered the
+                       old keyVal that way, 48 captured bodies), a page
+                       whose shape this parser does not know. Retryable,
+                       never settled.
+
+    The rule (ROADMAP, the empty-listing item): a parser returns a
+    recognised empty on positive evidence only, never on "no links
+    matched". Measured against every captured documents-tab body on
+    2026-09-10: 1,163 populated, 237 refused, 161 empty by marker, 48
+    unrecognised, 5 withdrawn, 3 tiny.
+    """
+    low = html.lower()
+    if WITHDRAWN_MARKER in low:
+        return ("withdrawn", "portal reports the application is no longer "
+                             "available for viewing", [])
+    for marker in REFUSAL_MARKERS:
+        if marker in low:
+            login = any(m in low for m in LOGIN_MARKERS)
+            return ("refused", f"portal served a refusal page (HTTP 200): "
+                               f"{marker!r}" + (", naming a login" if login else ""),
+                    [])
+    if len(html) < MIN_LISTING_BYTES:
+        return ("tiny", f"body is {len(html)} bytes and cannot be a listing "
+                        f"page (the smallest real one in the corpus is 7,192)",
+                [])
+    links = parse_documents_page(html, base_url=base_url)
+    if links:
+        return ("populated", f"{len(links)} documents listed", links)
+    tree = HTMLParser(html)
+    on_application = tree.css_first("#tab_summary") is not None or any(
+        "activetab=documents" in (a.attributes.get("href") or "").lower()
+        for a in tree.css("ul.tabs a"))
+    marked_empty = any(
+        "documents" in li.text(strip=True).lower()
+        for li in tree.css("li.nodocuments"))
+    table = tree.css_first("table")
+    header_only = (table is not None and on_application
+                   and len(table.css("tr")) <= 1
+                   and "document" in table.text(strip=True).lower())
+    if marked_empty or header_only:
+        return ("empty", "documents tab present and lists nothing"
+                         + (" (Documents (0) in the tab strip)" if marked_empty
+                            else " (header row only)"), [])
+    return ("unrecognised", "no document links and no sign of an empty "
+                            "documents tab — the body is not a listing this "
+                            "parser recognises"
+                            + ("" if on_application else
+                               "; the application's tab strip is absent"), [])
+
+
 def parse_documents_page(html: str, base_url: str) -> list[DocumentLink]:
     """Extract document links from an Idox documents-tab HTML page.
 
@@ -528,24 +624,42 @@ def fetch_documents_for_application(
         log.warning("documents page fetch failed (%s): %s", application_ref, exc)
         return summary
 
-    # Idox returns 200 with a "Planning Application details not available"
-    # body when an application has been withdrawn from public view. Flag these
-    # so the operator can act on them rather than treating them as parse misses.
-    if "no longer available for viewing" in resp.text.lower():
-        summary["error_class"] = "withdrawn_from_view"
-        log.info("withdrawn from view: %s", application_ref)
-        return summary
-
     # Snapshot the documents-tab HTML so the parse can be re-run later if our
-    # heuristics evolve.
+    # heuristics evolve — and so a refusal is evidence, not a memory.
     repo.record_snapshot(
         conn, source_id=source_id, key=docs_url, raw_bytes=resp.content,
     )
 
-    links = parse_documents_page(resp.text, base_url=docs_url)
+    # An empty document list carries two facts, and until 2026-09-10 this
+    # adapter returned it as one: `no_documents_or_unparseable` whenever
+    # `len(links) == 0`, whether the page was a register or a refusal.
+    # The label sat on both sides of the bug — it settled 39 live
+    # applications as `none_published` before 2026-08-09 and looped 14
+    # more for ever after — and the reader printed it verbatim as an
+    # application's reason for holding nothing. `classify_listing` says
+    # which fact; `dcp.acquisition_outcome` maps each to its verdict.
+    kind, detail, links = classify_listing(resp.text, base_url=docs_url)
+    summary["listing_kind"] = kind
+    summary["listing_detail"] = detail
+    if kind == "withdrawn":
+        summary["error_class"] = "withdrawn_from_view"
+        log.info("withdrawn from view: %s", application_ref)
+        return summary
+    if kind in ("refused", "tiny"):
+        summary["error_class"] = ("login_required"
+                                  if "naming a login" in detail else "access_refused")
+        log.info("%s: %s — %s", summary["error_class"], application_ref, detail)
+        return summary
+    if kind == "unrecognised":
+        # Retryable, deliberately: `errors` keeps this out of the settled
+        # arm of `classify_outcome`, as Agile's UnrecognisedListing does.
+        summary["error_class"] = "unrecognised_listing"
+        summary["errors"] += 1
+        log.warning("unrecognised listing (%s): %s", application_ref, detail)
+        return summary
     summary["links_found"] = len(links)
-    if len(links) == 0:
-        summary["error_class"] = "no_documents_or_unparseable"
+    if kind == "empty":
+        summary["error_class"] = "no_documents"
 
     # Resume support: a document URL already recorded for this application
     # with its bytes still on disk doesn't need re-downloading. Idox file
