@@ -138,3 +138,53 @@ class TestAifusionIndex:
                 return _Response("OK")
         assert aifusion.list_documents(
             _C(), api_base="https://api.example/planning", case_id="CB-1") is None
+
+
+# ---------------------------------------------------------------------------
+# Idox, 2026-09-10: the four kinds of nothing each get their own verdict
+# ---------------------------------------------------------------------------
+
+def _idox_summary(kind: str, error_class: str | None, errors: int = 0) -> dict:
+    return {"ref": "X/1", "links_found": 0, "downloaded": 0,
+            "skipped_existing": 0, "errors": errors,
+            "error_class": error_class, "listing_kind": kind,
+            "listing_detail": f"the portal's own words for {kind}"}
+
+
+def test_a_recognised_empty_idox_tab_settles_as_none_published():
+    outcome, detail = acquisition_outcome.classify_outcome(
+        _idox_summary("empty", "no_documents"))
+    assert outcome == "none_published"
+    assert "portal's own words" in detail
+
+
+def test_a_refusal_settles_as_portal_blocked_with_the_pages_words():
+    outcome, detail = acquisition_outcome.classify_outcome(
+        _idox_summary("refused", "access_refused"))
+    assert outcome == "portal_blocked" and "refused" in detail
+
+
+def test_a_refusal_naming_a_login_settles_as_login_required():
+    outcome, _ = acquisition_outcome.classify_outcome(
+        _idox_summary("refused", "login_required"))
+    assert outcome == "login_required"
+
+
+def test_withdrawn_from_view_settles_rather_than_looping():
+    outcome, detail = acquisition_outcome.classify_outcome(
+        _idox_summary("withdrawn", "withdrawn_from_view"))
+    assert outcome == "portal_blocked" and "withdrawn" in detail
+
+
+def test_an_unrecognised_idox_body_stays_retryable():
+    outcome, _ = acquisition_outcome.classify_outcome(
+        _idox_summary("unrecognised", "unrecognised_listing", errors=1))
+    assert outcome == "error"
+
+
+def test_the_conflated_label_can_no_longer_settle():
+    """`no_documents_or_unparseable` is not a verdict any adapter should
+    produce now; if one still does, it must not settle."""
+    outcome, _ = acquisition_outcome.classify_outcome(
+        _idox_summary("?", "no_documents_or_unparseable"))
+    assert outcome == "error"

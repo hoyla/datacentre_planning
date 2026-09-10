@@ -240,11 +240,11 @@ def listing_from_snapshot(conn, *, url: str, family: str) -> Listing | None:
 # not a failure miscounted, but a refusal page parsed as a fact.
 #
 # The markers are the pages' own words, taken from the bodies in
-# `source_snapshots` rather than guessed.
-REFUSAL_MARKERS = (
-    "you do not have permission to view",
-    "permission denied",
-)
+# `source_snapshots` rather than guessed. They lived here first; since
+# 2026-09-10 the fetch path applies them too, so they are the adapter's
+# and this module reads them from there — one list, or the audit and the
+# fetch drift on what a refusal looks like.
+REFUSAL_MARKERS = idox.REFUSAL_MARKERS
 
 # Below this a body cannot be a listing page. The smallest listing in the
 # corpus that offered even one document is 7,192 bytes (an Ocella
@@ -252,7 +252,7 @@ REFUSAL_MARKERS = (
 # chrome before it lists anything. Three Brighton snapshots are 212-byte
 # bodies stored with a 200 — nothing at all, which parses to zero
 # documents and reads as an empty register.
-MIN_LISTING_BYTES = 1000
+MIN_LISTING_BYTES = idox.MIN_LISTING_BYTES
 
 
 def _refusal(html: str) -> str | None:

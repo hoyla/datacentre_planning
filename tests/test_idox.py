@@ -277,3 +277,85 @@ def test_fetch_document_genuine_404_propagates(monkeypatch):
     with pytest.raises(httpx.HTTPStatusError):
         idox._fetch_document(client, pdf_url, docs_url)
     assert calls == [pdf_url, docs_url, pdf_url]
+
+
+# ---------------------------------------------------------------------------
+# What a documents tab IS, before anything is parsed out of it (2026-09-10)
+# ---------------------------------------------------------------------------
+#
+# An empty document list carried two facts and the adapter returned it as
+# one — `no_documents_or_unparseable` whenever no link was found, whether
+# the page was a register or a refusal. Four captured bodies from
+# `source_snapshots`, one of each kind the corpus holds, pin the split:
+# a listing settles as empty on positive evidence only.
+
+def _fixture(name: str) -> str:
+    return (FIXTURE_DIR / name).read_text(encoding="utf-8")
+
+
+def test_a_populated_tab_is_a_listing(halton_fixture):
+    kind, detail, links = idox.classify_listing(
+        halton_fixture, base_url="https://pa.halton.gov.uk/online-applications/x")
+    assert kind == "populated" and links and "listed" in detail
+
+
+def test_an_empty_tab_is_recognised_by_the_portals_own_marker():
+    """Watford's tab strip says `Documents (0)` with class="nodocuments"
+    and the table carries only its header: the register itself says it
+    holds nothing, which is the one shape allowed to settle."""
+    kind, detail, links = idox.classify_listing(
+        _fixture("watford_empty_tab.html"), base_url="https://pa.watford.gov.uk/x")
+    assert kind == "empty" and links == []
+    assert "Documents (0)" in detail
+
+
+def test_a_refusal_page_served_with_200_is_not_an_empty_register():
+    kind, detail, _ = idox.classify_listing(
+        _fixture("reigate_refusal.html"), base_url="https://planning.reigate-banstead.gov.uk/x")
+    assert kind == "refused"
+    assert "refusal page" in detail
+
+
+def test_a_search_page_served_instead_of_the_application_is_unrecognised():
+    """Buckinghamshire's migrated portal answered the old keyVal with its
+    search form: no links, no tab strip, nothing that says the register
+    is empty. 48 such bodies were captured, and every one of them would
+    have read as a council publishing nothing."""
+    kind, detail, _ = idox.classify_listing(
+        _fixture("bucks_search_page_instead.html"),
+        base_url="https://pa-csb.buckinghamshire.gov.uk/x")
+    assert kind == "unrecognised"
+    assert "tab strip is absent" in detail
+
+
+def test_a_bot_challenge_stub_is_a_refusal_with_a_name():
+    """Brighton's 212-byte body is Incapsula's challenge script and
+    nothing else: a bot block, not an empty register — and named as one
+    rather than merely 'too small'."""
+    kind, detail, _ = idox.classify_listing(
+        _fixture("brighton_212_bytes.html"), base_url="https://planningapps.brighton-hove.gov.uk/x")
+    assert kind == "refused" and "incapsula" in detail
+
+
+def test_a_body_under_the_floor_with_no_marker_is_nothing():
+    kind, detail, _ = idox.classify_listing("<html></html>", base_url="https://x")
+    assert kind == "tiny" and "cannot be an empty listing" in detail
+
+
+def test_a_small_body_with_document_links_is_a_listing():
+    """The byte floor is for bodies with nothing in them; a short page that
+    lists documents is a listing (the zero-byte guard's fixture is one)."""
+    body = ('<html><body><table><tr><th>Description</th></tr>'
+            '<tr><td>plan</td><td><a href="/online-applications/files/A/pdf/a.pdf"'
+            ' title="View Document">view</a></td></tr></table></body></html>')
+    kind, _, links = idox.classify_listing(body, base_url="https://x")
+    assert kind == "populated" and len(links) == 1
+
+
+def test_no_links_and_no_marker_never_settles():
+    """The rule stated: a parser returns a recognised empty on positive
+    evidence only, never on 'no links matched'."""
+    body = ("<html><body><p>No documents</p>" + "<p>site chrome</p>" * 100
+            + "</body></html>")  # over the byte floor, so size is not the reason
+    kind, _, _ = idox.classify_listing(body, base_url="https://x")
+    assert kind == "unrecognised"

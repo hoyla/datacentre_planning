@@ -89,7 +89,24 @@ def classify_outcome(summary: dict) -> tuple[str, str | None]:
     # entry in the settled population offered documents and held none,
     # 350 of them at Uskmouth Power Station alone.
     if listed == 0 and errs == 0 and error_class in (None, "no_documents"):
-        return "none_published", error_class
+        return "none_published", (summary.get("listing_detail") or error_class)
+    # The other settled negatives, each on the portal's own words rather
+    # than on an absence (since 2026-09-10; before it, a refusal page
+    # parsed to zero links and either settled as `none_published` or
+    # looped as `error`, depending on the day). `access_refused` is a
+    # refusal page or an empty body served with 200 — a portal that will
+    # not show a scripted client the register; `login_required` is the
+    # same refusal naming a login as the way in; `withdrawn_from_view` is
+    # the portal saying the application is no longer available, which is
+    # the register withholding it and settles the same way a block does.
+    # Each keeps the page's own sentence as the detail, and the snapshot
+    # behind it is the evidence. `--recheck` on the queue revisits any of
+    # them deliberately.
+    if listed == 0 and errs == 0 and error_class in ("access_refused",
+                                                     "withdrawn_from_view"):
+        return "portal_blocked", (summary.get("listing_detail") or error_class)
+    if listed == 0 and errs == 0 and error_class == "login_required":
+        return "login_required", (summary.get("listing_detail") or error_class)
     return "error", (error_class
                      or f"{errs} document failures, {listed} listed, "
                         "none retrieved")
