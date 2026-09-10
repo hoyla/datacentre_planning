@@ -1431,24 +1431,6 @@ field and is not publishable as it stands.
   gap: `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
   `Medway/MC/21/0979`, named by every staging build.
 
-- **878 prose documents outside every live site have never had a
-  primary read** (measured 2026-09-10 while reading the two above;
-  HISTORY). 1,226 documents fetched since 8 August sit on applications
-  in no live site — 184 on adjacent-power records, fetched since the
-  queue reached that class on 2026-09-06, and 1,042 on `not_dc`
-  applications in no site — and never read, because the first read's
-  cohort is not site-scoped and nothing asked; 878 of them are prose
-  (200 tier A, 678 tier B), the rest drawings and sampled classes. The
-  reader renders the adjacent-power records with their documents and
-  no findings; the 44-scheme adjacency review and the unsited-claims
-  work would both read against these. A first read is
-  `deepread_escalate_openai.py --cohort first_read --since 2026-08-08
-  --tier A B` — about 880 documents, ~1,900 requests, ~6M input
-  tokens, in the $40 class at list rates — **and whether to spend it
-  is Luke's**: the standing policy reads new content, and these are
-  new content the policy's own cohort query has been offering since
-  August.
-
 - **Two of VIRTUS's seven Slough facilities have no record at all**
   (2026-09-02). The campus is one site now — the partition was extended
   on the Iron Mountain rule the evening the facilities were located

@@ -5326,6 +5326,32 @@ and leaves 20 it cannot: four PDFs pypdf refuses, the zero-byte files,
 two `.xlsb`, a `.ppt` and five of no recognisable format — the residue
 the item already named, none of it holding a site back.
 
+## The 878 are read, and 611 more with them (2026-09-10)
+
+Luke took the decision the morning's entry left him — "feel free to
+do the ~$40 read" — and the cohort had grown by the time it ran: the
+afternoon's fetches had brought in Newport's 585 documents from the
+council's store and the queue's 184, on live sites, which the standing
+policy reads without asking. So the first-read cohort was 1,500 prose
+documents, not 878: the 878 outside every live site and 622 new on
+live ones. 754 of them had no text cache yet, extracted in three
+minutes with twelve workers before the submit (six PDFs pypdf refuses
+to open now join the uncacheable twenty). 1,480 built into 3,404
+requests; 20 could not — ten with no cache, ten with no words.
+
+One batch on `gpt-5:low`, submitted at the $85 list-rate expectation
+under a $200 ceiling and back in 45 minutes (32.5 documents a minute).
+Collected: **40,480 findings across 1,480 documents, 485 quotes (1.2%)
+failing the verbatim gate, two documents with a chunk that would not
+parse** — 869 documents outside the live sites gave 20,853 findings,
+611 on live sites 19,627. Measured at 3,537 input and 2,013 output
+tokens a request, the run cost about $42 at batch rates, which is the
+figure the morning's estimate gave for the smaller cohort. The
+first-read cohort is empty again, and the adjacent-power records and
+the excluded applications now carry findings for the 44-scheme
+adjacency review and the unsited-claims work to read against, which
+was the case for spending it.
+
 ## The roadmap is cleared again, three days after the last time (2026-09-10)
 
 ROADMAP holds what is still to do, and it was cleared of finished
