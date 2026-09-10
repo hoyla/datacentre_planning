@@ -45,6 +45,7 @@ from dcp import db, signals  # noqa: E402
 from dcp import drive as _drive  # noqa: E402
 from dcp import operator_disclosure  # noqa: E402
 from dcp import organisations  # noqa: E402
+from dcp import snapshot_drive  # noqa: E402
 from dcp import site_class  # noqa: E402
 from dcp import site_cohorts  # noqa: E402
 from dcp import site_profile  # noqa: E402
@@ -364,6 +365,31 @@ def main() -> None:
     # mapping is this project's inference, hand-checked and small, and
     # it belongs with the data rather than only inside the module that
     # renders it. published_by is untouched.
+    # Our copy of the page a claim was read from, beside the source URL.
+    # The reader and the workbook have linked it on five surfaces since
+    # 2026-09-02 and this file did not, so a reporter working from the
+    # database reached only the source URL — for a marketing page that
+    # can be rewritten without notice, which is exactly what CyrusOne
+    # LON1 did between two readings. Resolved the way the reader
+    # resolves it (`snapshot_drive.copy_url`): the nearest held snapshot
+    # in which the claim's own quote appears, and nothing otherwise —
+    # a guessed link is worse than no link. Claims whose locator names
+    # a register row or a filing page rather than a snapshot resolve to
+    # nothing by construction; the source URL beside them is the link.
+    con.execute("ALTER TABLE capacity_claims ADD COLUMN our_copy_url VARCHAR")
+    ledger = snapshot_drive.load_ledger()
+    claim_rows = con.execute(
+        "SELECT claim_id, source_locator, as_at, source_quote FROM capacity_claims"
+    ).fetchall()
+    copies = 0
+    for claim_id, locator, as_at, quote in claim_rows:
+        url = snapshot_drive.copy_url(locator, as_at, quote or "", ledger=ledger)
+        if url:
+            con.execute("UPDATE capacity_claims SET our_copy_url = ? WHERE claim_id = ?",
+                        [url, claim_id])
+            copies += 1
+    counts["capacity_claims with our_copy_url"] = copies
+
     con.execute("ALTER TABLE capacity_claims ADD COLUMN operator VARCHAR")
     con.execute("UPDATE capacity_claims SET operator = published_by")
     for legal, brand in operator_disclosure.COMPANY_TO_OPERATOR.items():
@@ -585,7 +611,15 @@ def main() -> None:
                          "whose confidence tier ('tentative' is a lead, not "
                          "an attribution) and written evidence travel with "
                          "every match. Matches with retired_at set are "
-                         "withdrawn assertions kept as history."),
+                         "withdrawn assertions kept as history. our_copy_url "
+                         "is this project's held copy of the page the claim "
+                         "was read from, on Drive, resolved to the snapshot "
+                         "the claim's own quote appears in; NULL where the "
+                         "locator names a register row or a filing page "
+                         "rather than a snapshot, or where no held snapshot "
+                         "carries the quote — the source URL beside it is "
+                         "then the only link, and a published story cites "
+                         "the source either way."),
     ])
     con.close()
     # A clean close leaves no .wal; the swap is the last act, so a

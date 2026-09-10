@@ -900,8 +900,9 @@ backing #247's facility-prior direction over any summing.
 
 ### 4. #248 — a figure we assemble is not a figure a source states
 
-**Not speculative: 234 of 9,747 site-capacity figures (2.4%) hold a
-value that appears nowhere in their own quote.** They were computed —
+**Not speculative: 250 of 10,207 site-capacity figures (2.4%) hold a
+value that appears nowhere in their own quote** (re-measured 2026-09-10;
+234 of 9,747 on 2026-08-30). They were computed —
 "Wind Generation of 3 no. 900kW turbines" → 2.7 MW; "4no 25kw split
 units and 2no 7.1Kw" → 0.1142 MW; "1 x 1.25MWe and 57 x 2.4MWe diesel
 generators" → 140.35 MW.
@@ -918,10 +919,35 @@ is "arithmetic on an area rather than anything anyone published". A
 figure multiplied out of a unit count is the same kind of thing and does
 not carry the mark.
 
-**First thing to establish:** how many of the 234 are a plain unit-count
-multiplication (defensible, needs a label) versus something looser. The
-generation cohort's existing exclusion of per-unit ratings is the
-nearest precedent for where the line sits.
+**Established, 2026-09-10** (`scripts/computed_figures.py`, which
+writes the classification to `data/reports/` and is the object to
+cite; HISTORY, "The computed figures are classified"). Over the
+10,207 site-capacity figures on live sites whose figures stand,
+**250 (2.4%) hold a value no number in their quote states** — in
+megawatts, in kilowatts or as the original value — once the quote is
+repaired for the substrate's habits (decimal commas, split digits,
+OCR'd letters in numbers), which a first pass had counted as computed
+and were not. Classed by what reaches the value:
+
+| class | figures | what it is |
+|---|---:|---|
+| A. a product of operands in the quote | 103 | a unit count times a rating, every fleet the quote names summed (51); two stated numbers multiplied (52) |
+| B. a sum of stated figures | 10 | "57 MW from Iver and 50 MW from Laleham" stored as 107 |
+| C. a scaling or a midpoint | 19 | "c. 90–100 MW" stored as 95; "9.9 MW" stored as 49.5 |
+| D. nothing arithmetic on the quote reaches it | 118 | an operand taken from the passage beyond the quote ("94 diesel backup generators" stored as 258.5); a substrate the repair could not read ("BSOOMW", "5\|0MW"); servers turned into megawatts; a count in words the fleet pattern missed |
+
+A and B are derivations a record can carry: the operands are in the
+quote and the operation is stated, which is the target shape below
+verbatim. C is an inference — a midpoint is a choice the source did
+not make — and D is a residue to read one row at a time, with the
+report listing every one of the 250 by site, application, finding and
+document. **The admissibility decision is now Luke's, on that table**:
+whether A and B become derivation records rendered on the `w-modelled`
+rung, and whether C and D go to `unclear` (a stated abstention beats a
+confident invention) or to a person's row. The companion guard the
+item names — a value that appears in no number of its quote is refused
+at adjudication write unless it carries a derivation — is the durable
+form, and it follows the decision.
 
 **The target shape, once they are classified** (2026-09-04): a computed
 figure carries its derivation beside it — the source finding or evidence
@@ -1475,53 +1501,42 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **A Word loader closes the last prose gap in the corpus**
-  (2026-09-03, found while clearing the readings backlog; figures
-  re-measured at the 2.13 release). Eleven documents had no text
-  cache and could not get one under the current extractor: four PDFs
-  pypdf refuses to open ("Invalid object in /Pages"), five whose
-  format has no loader — two `.docx` with valid zip magic, one `.xls`,
-  one `.rtf`, one `.pdf` whose bytes are not a PDF — and two of the
-  three whose fetched file is zero bytes. A twelfth joined on
-  2026-09-07: a second `.pdf` whose bytes are not a PDF, on Springfield
-  Farm, which the register itself labels corrupted and superseded — the
-  runbook's register has it, with the `not_extracted` row that keeps
-  it from deferring the site. Eleven of the twelve hold no
-  site back. **The Wakefield one is the whole remaining gap**: document
-  39292 on `Wakefield/23/01043/FUL`, a `.docx` consultee comment, is
-  the single outstanding prose document in the corpus and the only
-  reason `PTNO-12817834` is not read in full. **With it the figure goes
-  to 386 of 388**, not the 385 an earlier version of this sentence
-  claimed: 2.14 already stands at 385 of 388 (it was 357 of 360 at
-  2.13, and the refused-page read added 29 sites, all read in full), so
-  the three outstanding are Wakefield's and two Renfrewshire sites
-  holding one graphical document each. **The Renfrewshire pair can
-  never complete** — they hold no prose to read — so 386 is the ceiling
-  unless the denominator itself is wrong, which is worth one look:
-  a site with no prose has no business in a prose-coverage denominator.
-  **The `.docx` pair is the cheap half**: the sniffing
-  tests already say 255 corpus documents arrive mis-named as Word
-  files, so a loader that reads them is worth writing, and
-  `tests/test_extract_formats.py` is where its contract goes. The two
-  zero-byte files are an acquisition question — the corpus claims a
-  document it does not hold, so they want a re-fetch and, if the
-  portal still serves nothing, an `acquisition_outcome` row saying so
-  rather than a permanent silent gap. There are three, named by every
-  staging build: `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
-  `Medway/MC/21/0979`. The four corrupt PDFs are
-  probably genuinely unreadable; worth one look at whether the bytes
-  match what the portal serves before accepting that.
+- **The last prose gap closed on 2026-09-10 — 390 of 390 live sites
+  with prose are read in full** (HISTORY, "The last prose gap closes");
+  re-measure through `site_profile.load_coverage_detail` rather than
+  quoting it. What remains of the item is the residue it always named,
+  none of it holding a site back: 20 documents the corpus extraction
+  cannot cache — four PDFs pypdf refuses to open ("Invalid object in
+  /Pages"), the zero-byte files, two `.xlsb`, a `.ppt` and five of no
+  recognisable format. The four corrupt PDFs are probably genuinely
+  unreadable; worth one look at whether the bytes match what the portal
+  serves before accepting that. The zero-byte files are an acquisition
+  question — the corpus claims a document it does not hold, so they
+  want a re-fetch and, if the portal still serves nothing, an
+  `acquisition_outcome` row saying so rather than a permanent silent
+  gap; there are three, named by every staging build:
+  `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
+  `Medway/MC/21/0979`. Two Renfrewshire sites hold one graphical
+  document each and no prose, and are rightly outside the
+  denominator.
 
-  **Re-measured 2026-09-07 evening, after the Hemel ingest: 388 of 390
-  live sites with prose are read in full**, and the denominator moved
-  because the site 11 partition and the 3A ingest added records. The
-  two short are the same defect twice: Wakefield's `.docx` on
-  `PTNO-12817834`, and now a risk register held as an `.xls` on
-  `Dacorum/4/00571/14/DRC`, which keeps NTT Hemel Hempstead 3
-  (`PTNO-12063929`) below read-in-full and marks its figure "may rise"
-  in the reader. **One loader closes both**, which raises the value of
-  the cheap half of this item. Re-measure rather than quoting either
-  figure: the accessor is `site_profile.load_coverage_detail`.
+- **878 prose documents outside every live site have never had a
+  primary read** (measured 2026-09-10 while reading the two above;
+  HISTORY). 1,226 documents fetched since 8 August sit on applications
+  in no live site — 184 on adjacent-power records, fetched since the
+  queue reached that class on 2026-09-06, and 1,042 on `not_dc`
+  applications in no site — and never read, because the first read's
+  cohort is not site-scoped and nothing asked; 878 of them are prose
+  (200 tier A, 678 tier B), the rest drawings and sampled classes. The
+  reader renders the adjacent-power records with their documents and
+  no findings; the 44-scheme adjacency review and the unsited-claims
+  work would both read against these. A first read is
+  `deepread_escalate_openai.py --cohort first_read --since 2026-08-08
+  --tier A B` — about 880 documents, ~1,900 requests, ~6M input
+  tokens, in the $40 class at list rates — **and whether to spend it
+  is Luke's**: the standing policy reads new content, and these are
+  new content the policy's own cohort query has been offering since
+  August.
 
 - **Two of VIRTUS's seven Slough facilities have no record at all**
   (2026-09-02). The campus is one site now — the partition was extended
@@ -1678,44 +1693,20 @@ field and is not publishable as it stands.
   GEC row carries any gas term. Where a claim about these rests on a
   coded field, name the field.
 
-- **Two external sources reach the workbook and not the reader, and
-  "Provenance" appears in neither.** Luke asked during the 2.10 release
-  whether he had missed the Published aggregates and Sources tables in
-  the reader; he had not — they are workbook-only. The workbook carries
-  an **External aggregates** sheet (62 rows) and a **Provenance** sheet
-  (20 rows), each with its dictionary entry. The reader carries a
-  subset, woven into the methodology prose rather than tabulated:
+- **Every external source now reaches the reader** (2026-09-10;
+  HISTORY, "The reader names every external source"). The methodology
+  page carries a "Sources outside the planning record" table generated
+  from `dcp/external_aggregates.SOURCES` — the table the workbook's
+  Provenance sheet is written from — so the two UK Power Networks
+  datasets and the record of where each figure came from are on the
+  page beside the three the prose already cited, and a source added
+  there appears on both surfaces. Nothing is owed here now.
 
-  | source | in the reader |
-  |---|---|
-  | Ofgem Curate | yes — the banded queue table, linked, para 2.8 cited |
-  | NESO Call for Input | yes — linked in prose |
-  | DESNZ sub-national consumption | yes — linked, and the per-site line |
-  | UKPN Large Demand List | **no** |
-  | UKPN Data Centre Demand Profiles | **no** |
-
-  So three of five external sources reach someone reading the web page,
-  and the word "Provenance" — the sheet recording where each external
-  figure came from — appears nowhere in it. That cuts against the rule
-  the rest of the reader keeps: every number drillable to its source.
-  A reporter who works from the reader alone cannot see two of the
-  sources the release rests on, or the record of where any of them came
-  from.
-
-  Not a defect in what is shown — everything shown is cited — but an
-  asymmetry nobody chose. The fix is a section on the methodology page
-  listing all five with their locators, generated from
-  `dcp/external_aggregates.SOURCES` so it cannot drift from the
-  workbook's own sheet. Deferred past 2.10 because the artefacts were
-  built and diffed when it surfaced.
-
-- **The DuckDB's claims tables carry no snapshot column.** The reader
-  and the workbook link our copy of an operator's page beside the
-  source URL on five surfaces, and a claim resolves to the nearest held
-  file its own verbatim quote appears in (all shipped 2026-09-01/02;
-  HISTORY). The database export was named rather than folded in at the
-  time and is still outstanding, so a reporter working from the DuckDB
-  reaches only the source URL.
+- **The DuckDB's `capacity_claims` carries `our_copy_url`** (2026-09-10;
+  HISTORY, "The DuckDB links our copy of a claim's page"), resolved as
+  the reader resolves it — the nearest held snapshot the claim's own
+  quote appears in, NULL otherwise — with its note in `_provenance`.
+  Nothing is owed here now.
 
 - **26 applications link to a register host that no longer answers,
   and they would ship in 2.10 that way** (probed 2026-08-28: every host
