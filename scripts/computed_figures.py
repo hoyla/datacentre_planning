@@ -96,6 +96,7 @@ def repair(quote: str) -> str:
     t = t.replace(",", "")                                          # 2,500 -> 2500
     t = re.sub(r"(?<=\d)\s(?=\d{3}\b)", "", t)                      # 1 250 -> 1250
     t = re.sub(r"(?<=\d)\s\.\s?(?=\d)|(?<=\d)\s(?=\.\d)", ".", t)    # 3 .3 -> 3.3
+    t = re.sub(r"(?<=\d)-(?=\d\s?" + _UNIT + ")", ".", t)               # 19-9MW -> 19.9MW
     # "2 4MW" -> "24MW": a single digit, a space, then at most two more
     # digits and the unit. Not "135 150 kW", which is two figures — a
     # first draft joined those and turned 400 stated figures into
@@ -116,7 +117,23 @@ def close(a: float, b: float) -> bool:
     return abs(a - b) <= max(0.005 * abs(b), 0.0005)
 
 
-def stated(value_mw: float, value_original, repaired: str) -> bool:
+def readings(quote: str) -> list[str]:
+    """The quote as written, and as repaired. A repair only ever ADDS a
+    reading and never replaces the original: the rule that joins split
+    digits ("2 4MW" -> "24MW") also joins a label to its figure
+    ("PUMP 1 50kW" -> "150kW", "DDT E6 12MW" -> "612MW"), and on the
+    first 2026-09-10 run that alone put 64 stated figures in class D."""
+    raw = " ".join((quote or "").split())
+    return [raw, raw.replace(",", ""), repair(raw)]
+
+
+def stated(value_mw: float, value_original, texts) -> bool:
+    if isinstance(texts, str):
+        texts = [texts]
+    return any(_stated_in(value_mw, value_original, t) for t in texts)
+
+
+def _stated_in(value_mw: float, value_original, repaired: str) -> bool:
     ns = numbers(repaired)
     return any(close(n, value_mw) or close(n / 1000, value_mw)
                or close(n * 1000, value_mw)
@@ -124,7 +141,14 @@ def stated(value_mw: float, value_original, repaired: str) -> bool:
                for n in ns)
 
 
-def classify(value_mw: float, repaired: str) -> str:
+def classify(value_mw: float, texts) -> str:
+    """The best class any reading of the quote reaches (A before D)."""
+    if isinstance(texts, str):
+        texts = [texts]
+    return min(_classify_in(value_mw, t) for t in texts)
+
+
+def _classify_in(value_mw: float, repaired: str) -> str:
     fleets = sp._fleets_disclosed(repaired)
     ns = numbers(repaired)
     both = [n / 1000 for n in ns] + ns
@@ -160,10 +184,10 @@ def main() -> int:
     computed = []
     for (fid, qt, mw, vo, quote, key, ref, model, doc_id, page) in rows:
         mw = float(mw)
-        rep = repair(quote)
-        if stated(mw, vo, rep):
+        texts = readings(quote)
+        if stated(mw, vo, texts):
             continue
-        computed.append((classify(mw, rep), key, ref, qt, mw, model, fid, doc_id,
+        computed.append((classify(mw, texts), key, ref, qt, mw, model, fid, doc_id,
                          page, " ".join((quote or "").split())))
     computed.sort()
     kinds = Counter(c[0] for c in computed)
@@ -172,8 +196,8 @@ def main() -> int:
            f"{len(rows):,} site-capacity figures on live sites whose figures stand; "
            f"**{len(computed):,} ({100 * len(computed) / max(len(rows), 1):.1f}%) hold "
            f"a value no number in their quote states**, in megawatts, kilowatts or "
-           f"as the original value, after the quote is repaired for decimal commas, "
-           f"digit spacing and OCR'd digits.", "",
+           f"as the original value, read as written and as repaired for decimal "
+           f"commas, digit spacing and OCR'd digits.", "",
            f"Across {len({c[1] for c in computed})} sites; by reader: "
            + ", ".join(f"{m} {n}" for m, n in Counter(c[5] for c in computed).most_common()),
            "", "| class | figures |", "|---|---:|"]

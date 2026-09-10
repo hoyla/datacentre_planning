@@ -900,9 +900,9 @@ backing #247's facility-prior direction over any summing.
 
 ### 4. #248 — a figure we assemble is not a figure a source states
 
-**Not speculative: 250 of 10,207 site-capacity figures (2.4%) hold a
+**Not speculative: 171 of 10,207 site-capacity figures (1.7%) hold a
 value that appears nowhere in their own quote** (re-measured 2026-09-10;
-234 of 9,747 on 2026-08-30). They were computed —
+234 of 9,747 on 2026-08-30 under a cruder test). They were computed —
 "Wind Generation of 3 no. 900kW turbines" → 2.7 MW; "4no 25kw split
 units and 2no 7.1Kw" → 0.1142 MW; "1 x 1.25MWe and 57 x 2.4MWe diesel
 generators" → 140.35 MW.
@@ -919,35 +919,27 @@ is "arithmetic on an area rather than anything anyone published". A
 figure multiplied out of a unit count is the same kind of thing and does
 not carry the mark.
 
-**Established, 2026-09-10** (`scripts/computed_figures.py`, which
-writes the classification to `data/reports/` and is the object to
-cite; HISTORY, "The computed figures are classified"). Over the
-10,207 site-capacity figures on live sites whose figures stand,
-**250 (2.4%) hold a value no number in their quote states** — in
-megawatts, in kilowatts or as the original value — once the quote is
-repaired for the substrate's habits (decimal commas, split digits,
-OCR'd letters in numbers), which a first pass had counted as computed
-and were not. Classed by what reaches the value:
+**Classified 2026-09-10** by `scripts/computed_figures.py`, which
+writes the table to `data/reports/` and is the object to cite (HISTORY,
+"The computed figures are classified"): A, a product of operands in
+the quote, 102; B, a sum of stated figures, 7; C, a scaling or a
+midpoint, 11; D, nothing arithmetic on the quote reaches it, 51.
 
-| class | figures | what it is |
-|---|---:|---|
-| A. a product of operands in the quote | 103 | a unit count times a rating, every fleet the quote names summed (51); two stated numbers multiplied (52) |
-| B. a sum of stated figures | 10 | "57 MW from Iver and 50 MW from Laleham" stored as 107 |
-| C. a scaling or a midpoint | 19 | "c. 90–100 MW" stored as 95; "9.9 MW" stored as 49.5 |
-| D. nothing arithmetic on the quote reaches it | 118 | an operand taken from the passage beyond the quote ("94 diesel backup generators" stored as 258.5); a substrate the repair could not read ("BSOOMW", "5\|0MW"); servers turned into megawatts; a count in words the fleet pattern missed |
+**Decided by Luke, 2026-09-10: A and B take the target shape below**
+— a derivation record beside the finding, rendered on `w-modelled`
+with the ≈ glyph. Building it is the next step of this item.
 
-A and B are derivations a record can carry: the operands are in the
-quote and the operation is stated, which is the target shape below
-verbatim. C is an inference — a midpoint is a choice the source did
-not make — and D is a residue to read one row at a time, with the
-report listing every one of the 250 by site, application, finding and
-document. **The admissibility decision is now Luke's, on that table**:
-whether A and B become derivation records rendered on the `w-modelled`
-rung, and whether C and D go to `unclear` (a stated abstention beats a
-confident invention) or to a person's row. The companion guard the
-item names — a value that appears in no number of its quote is refused
-at adjudication write unless it carries a derivation — is the durable
-form, and it follows the decision.
+**Open: what becomes of C and D** — `unclear` (a stated abstention
+beats a confident invention) or a person's row, meaning a row on the
+review workbook for someone to settle by hand against the document,
+the way Kingsnorth's export-limit figure is handled below. The
+measurement that bears on it: the 62 figures sit on 32 sites, and 15
+are the figure a site's own box shows, on 13 sites (Fife's 850 MW,
+Northumberland's 720 MW, Edinburgh's 200 MW grid connection among
+them), so `unclear` changes those thirteen pages and no others. The
+companion guard — a value that appears in no number of its quote is
+refused at adjudication write unless it carries a derivation — follows
+the derivation record.
 
 **The target shape, once they are classified** (2026-09-04): a computed
 figure carries its derivation beside it — the source finding or evidence
