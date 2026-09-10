@@ -194,11 +194,6 @@ next one.
 
 **Accumulating now:**
 
-- **Nothing but `power-1.1` below.** The two changes that were parked
-  here went in on 2026-08-31 riding on the move to terra (HISTORY);
-  `GATE_VERSION` is `gate-2.1`. **Check the list is still empty before
-  a submit runs**, because a change landing after that has missed the
-  boat.
 - **`power-1.1`** (tier 1, ~$20–40, so it does *not* need to wait for
   the others). Committed but inert and unvalidated; the 229-figure
   ground-truth set exists to test it against the known-bad cases first.
@@ -482,15 +477,6 @@ What survives it here:
   50 MW pattern beside data-centre sites (Kingsnorth, Yorkshire Energy
   Park; the 855-finding signal under Phase 3) has a lead list nobody
   renders: those 44, by distance.
-- **The class has a Drive home since 2026-09-02** — `adjacent_power/`
-  beside `sites/`, one folder per application with an `_index.md`
-  naming the sites it stands beside. Found by the 2.11 staging build,
-  the first after the veto: 744 held documents across 28 applications
-  had nowhere to go and a `--prune` sync would have binned them, four
-  of them cited by machine readings. Since 2026-09-02 the reader's
-  "Adjacent power" box links the class's Drive folder
-  (`dcp.drive.ADJACENT_POWER_FOLDER_ID`, read back from the sync ledger)
-  and each entry its own folder once synced, beside the register link.
 - Hayes Bridge's doubled N+N 300 (the "Not in an issue" note below)
   still stands.
 
@@ -1072,18 +1058,16 @@ may add; sites with no published roster keep the one-at-a-time method.
 
 ### Not in an issue, and worth someone's time
 
-- **The N+N question is closed.** Redundancy handling is correct
-  throughout — "5 MW N+1" → 5.0, "1125 kW N+1" → 1.125. But Hayes Bridge
-  (`PTNO-12831113`) has the *same sentence* — "The campus will be served
-  by 2No (N+N) 150MW 66kV connections" — adjudicated at both 150 and
-  300 MW, and `max()` takes the wrong one. The same document set states
-  the development requires 250 MW. One site, not a pattern, but it is
-  wrong on the page.
 - **`PTNO-12831113` (Hayes) still carries the doubled 300 MW and three
-  named facilities (LON6, LON7, LON8)** — its 24 adjacent-power
-  members and the 150 MW substation figure left with the #252 chain,
-  so what remains here is the N+N adjudication above and a campus
-  worth an early slot in the facility-roster review.
+  named facilities (LON6, LON7, LON8).** One sentence — "The campus
+  will be served by 2No (N+N) 150MW 66kV connections" — is adjudicated
+  at both 150 and 300 MW and `max()` takes the wrong one, while the
+  same document set states the development requires 250 MW; one site,
+  not a pattern (redundancy handling is right everywhere else), but
+  wrong on the page. Its 24 adjacent-power members and the 150 MW
+  substation figure left with the #252 chain, so what remains here is
+  that adjudication and a campus worth an early slot in the
+  facility-roster review.
 
 ## Operator pages and typed standing — what remains
 
@@ -1095,38 +1079,11 @@ standing**: first-party operator statements may become a labelled
 ladder rung; third-party aggregates stay tier-and-count. What is
 still to do:
 
-- **A claim now says which realm it belongs to** (built 2026-09-01).
-  `component_of` on an operator claim names the claim it is part of,
-  so a facility figure inside a campus total is legible as one source
-  itemised rather than as corroboration: the sites table counts
-  top-level claims only, and the panel labels each component. The
-  ladder rung has to answer the same question — a campus total and a
-  facility figure are different rungs, not two readings of one — and
-  `capacity_claims.reconcile_components()` is the measurement to
-  design against. As measured 2026-09-01, and it now measures five
-  campuses rather than four: Saunderton 78.0 against 78.0 exact,
-  Iron Mountain 61.0 against 60.7, Kao 71.0 against 71.2, Slough
-  145.5 against 132.2, and Stockley 112.5 against 72.5 because two of
-  five facilities disclose nothing. A gap is never an error —
-  Slough's is a question for the operator, Stockley's is a
-  denominator, and Kao's and Iron Mountain's are integer campus
-  figures over decimal facilities.
-
-  *Saunderton was asserted exact here from 2026-08-31 and was not being
-  measured: its four facility claims carried no `component_of`, so the
-  benchmark campus never entered `reconcile_components()` at all. Found
-  and fixed on 2026-09-01 while building the Iron Mountain roster
-  against it. A number quoted in three prose files and computed nowhere
-  is the class this file's own rule about computed statistics exists
-  for.*
-
-- **The rung is built; decision 6 and the Stockley wrinkle are what is
-  left of it.** The design of record is
-  [docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md), decided by
-  Luke on all seven points, decisions 1 to 5 implemented on 2026-09-01
-  and the `w-operator` rendering review passed 2026-09-02 (HISTORY).
-  **Decision 6, the Pulsant class, is explicitly expected to be
-  revisited rather than settled** — the audiences those pages belong to
+- **Decision 6 and the Stockley wrinkle are what is left of the
+  operator rung** (design of record
+  [docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md); decisions 1
+  to 5 built 2026-09-01/02, HISTORY). **Decision 6, the Pulsant class,
+  is explicitly expected to be revisited rather than settled** — the audiences those pages belong to
   are counted in the design document (39 pages, 29 corporate, 10
   consultation, 5 sites holding both, five for five corporate-states
   and consultation-silent).
@@ -1205,51 +1162,16 @@ both shipped since, so the old section title ("Deferred to 2.9") had
 aged into a lie. Each is scoped; what blocks each is a decision, not
 work.
 
-- **An empty document list carries two facts, and Idox now returns
-  them as two** (2026-09-10; HISTORY, "An Idox documents tab says which
-  kind of nothing it is"). `idox.classify_listing` runs before the
-  parse: a refusal settles as `portal_blocked`, one naming a login as
-  `login_required`, a withdrawn application as `portal_blocked` with
-  the portal's sentence, an empty tab settles as `none_published` only
-  on the portal's own marker, and a body that is none of those —
-  Buckinghamshire's search form served against an old keyVal, 48
-  captured — is `unrecognised_listing` and retries. The audit's
-  markers and floor moved into the adapter. The 74 applications settled
-  or looping on the old label were re-fetched (`fetch_outstanding.py
-  --recheck none_published --only-detail no_documents_or_unparseable`):
-  25 settle as `none_published` on the marker, 32 as
-  `login_required` (29 Newport, whose documents the council's own
-  store held — 585 across 27, fetched the same afternoon), 2 as
-  transient errors, and the 15 Ocella and Arcus rows keep the label.
-  **What remains, one family at a time as before**: Ocella (9
-  applications on the label) and Arcus (6) still return the
-  conflated label and loop as `error` until each learns the same
-  distinction against captured pages of its own three kinds; NI's
-  genuinely-empty relabel, on its own evidence, is still its own
-  change; and `tests/test_idox.py` no longer pins "must return []
-  without raising" as the parser's whole contract — the classifier's
-  five fixtures do.
-
-- **The 52 refused pages are fetched; what is left is the settled
-  verdicts they were awarded under.** Every application the item began
-  with now holds documents except Exeter College's six, excluded by
-  exception — Selby's register had moved rather than closed, Exeter,
-  Derby, Doncaster and the rest served their documents from an
-  External Documents tab or a council document store, Civica and Neath
-  by their own APIs, Brighton and Bedford by hand through the manual
-  inbox (all 2026-09-06; HISTORY, "An evening on the refused pages"
-  and the six entries around it, with the routes in PORTAL_NOTES).
-
-  **The acquisition record is corrected, 2026-09-10** (HISTORY, "An
-  Idox documents tab says which kind of nothing it is"). The 106
-  settled verdicts on `no_documents_or_unparseable` were all written
-  on 2026-08-08, before the mapping was tightened on the 9th, and the
-  conflated name sat on both sides of the bug. Every live application
-  carrying it was re-fetched under the typed classifier above and now
-  says which kind of nothing it holds; the 21 still carrying it are
-  Exeter College's six, on a retired site outside the queue, and the
-  Ocella and Arcus rows that wait on their own adapters. Nothing is
-  owed here beyond those.
+- **Ocella and Arcus still return an empty document list as one
+  fact.** Idox learned the distinction on 2026-09-10 (HISTORY, "An Idox
+  documents tab says which kind of nothing it is"): a recognised empty
+  on the portal's own marker, a refusal or a login as a settled class,
+  anything else retryable. Ocella (9 applications on the label) and
+  Arcus (6) still set `no_documents_or_unparseable` whenever
+  `len(links) == 0` and loop as `error` until each learns the same
+  distinction against captured pages of its own three kinds, one family
+  at a time; NI's genuinely-empty relabel, on its own evidence, is
+  still its own change.
 
 - **Thirteen live members whose last attempt ended in `error` while
   they hold documents — never re-queued until #403, each to be
@@ -1280,7 +1202,7 @@ work.
     per-host outcome, not another `error`.
   - *Parser returned nothing on a page that had something,
     2026-08-28*: `Selby/ZG2023/1213/DOC` (4 held,
-    `no_documents_or_unparseable`) — the conflated label's item above;
+    `no_documents_or_unparseable`) — the empty-document-list item above;
     **done**: the 30-second Selby sweep fetched it first, 15 documents.
   Done when each of the thirteen carries a `fetched`, `partial` with a
   named remainder, or a settled outcome dated after this entry. The
@@ -1501,24 +1423,21 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **The last prose gap closed on 2026-09-10 — 390 of 390 live sites
-  with prose are read in full** (HISTORY, "The last prose gap closes");
-  re-measure through `site_profile.load_coverage_detail` rather than
-  quoting it. What remains of the item is the residue it always named,
-  none of it holding a site back: 20 documents the corpus extraction
-  cannot cache — four PDFs pypdf refuses to open ("Invalid object in
-  /Pages"), the zero-byte files, two `.xlsb`, a `.ppt` and five of no
+- **Twenty documents the corpus extraction cannot cache, and three
+  zero-byte files the corpus claims to hold** — the residue the
+  read-in-full item always named, none of it holding a site back (the
+  gap itself closed 2026-09-10; re-measure through
+  `site_profile.load_coverage_detail` rather than quoting it). The
+  twenty: four PDFs pypdf refuses to open ("Invalid object in /Pages"),
+  the zero-byte files, two `.xlsb`, a `.ppt` and five of no
   recognisable format. The four corrupt PDFs are probably genuinely
   unreadable; worth one look at whether the bytes match what the portal
   serves before accepting that. The zero-byte files are an acquisition
   question — the corpus claims a document it does not hold, so they
   want a re-fetch and, if the portal still serves nothing, an
   `acquisition_outcome` row saying so rather than a permanent silent
-  gap; there are three, named by every staging build:
-  `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
-  `Medway/MC/21/0979`. Two Renfrewshire sites hold one graphical
-  document each and no prose, and are rightly outside the
-  denominator.
+  gap: `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
+  `Medway/MC/21/0979`, named by every staging build.
 
 - **878 prose documents outside every live site have never had a
   primary read** (measured 2026-09-10 while reading the two above;
@@ -1692,21 +1611,6 @@ field and is not publishable as it stands.
   following §3's placing of them inside its gas rows. They do not; no
   GEC row carries any gas term. Where a claim about these rests on a
   coded field, name the field.
-
-- **Every external source now reaches the reader** (2026-09-10;
-  HISTORY, "The reader names every external source"). The methodology
-  page carries a "Sources outside the planning record" table generated
-  from `dcp/external_aggregates.SOURCES` — the table the workbook's
-  Provenance sheet is written from — so the two UK Power Networks
-  datasets and the record of where each figure came from are on the
-  page beside the three the prose already cited, and a source added
-  there appears on both surfaces. Nothing is owed here now.
-
-- **The DuckDB's `capacity_claims` carries `our_copy_url`** (2026-09-10;
-  HISTORY, "The DuckDB links our copy of a claim's page"), resolved as
-  the reader resolves it — the nearest held snapshot the claim's own
-  quote appears in, NULL otherwise — with its note in `_provenance`.
-  Nothing is owed here now.
 
 - **26 applications link to a register host that no longer answers,
   and they would ship in 2.10 that way** (probed 2026-08-28: every host
@@ -2444,17 +2348,6 @@ Deferred consciously. Return when journalism need warrants.
 
 None is abandoned; each is a known, scoped piece of work.
 
-- **The acquisition tail.** Counts superseded on 2026-08-27 — see
-  "Phase 2 — the tail of the collecting" above for what dissolved and
-  what the sweep found; the honest residue is a query on
-  `acquisition_outcome` after it completes.
-- **Scanned-page orientation detection — closed on evidence, not done.**
-  The theory was that councils scan sideways and `--psm 3` misses it. The
-  231 documents that OCR'd to nothing were the obvious test cohort, and
-  Apple Vision — which detects orientation itself — read them as blank
-  too. They are photographs and line drawings with no text in them, so
-  there is nothing for a better OCR pass to find. Reopen only with a
-  document that demonstrably has readable text nobody is reading.
 - **Coverage gaps** — Northern Ireland (whole nation, one adapter),
   pre-application/screening entries, the operator watch-list. (Section
   35 / NSIP is no longer on this list: the watcher is built and running,
