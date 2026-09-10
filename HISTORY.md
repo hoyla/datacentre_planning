@@ -5208,38 +5208,50 @@ re-run rather than copied: `scripts/computed_figures.py` reads every
 site-capacity figure on a live site whose figures stand, asks whether
 any number in its quote states the value — in megawatts, in kilowatts
 or as the original value — and classes the rest by what arithmetic on
-the quote reaches it. The quote is repaired first for the substrate's
-habits — decimal commas ("1720,71 kW"), split digits ("1 250",
-"3 .3"), OCR'd letters in numbers ("SMW", "7OMW") — because a first
-pass counted 400 of those as computed and they are stated. A second
-draft joined "135 150 kW" into one number and turned 400 stated
-figures into computed ones; the rule now joins a single split digit
-only. Measured against the corpus after both fixes: 250 of 10,207
-figures (2.4%), the same proportion as 2026-08-30's 234 of 9,747.
+the quote reaches it. The quote is read as written and as repaired
+for the substrate's habits — decimal commas ("1720,71 kW"), split
+digits ("1 250", "3 .3"), a hyphen for a decimal point ("19-9MW"),
+OCR'd letters in numbers ("SMW", "7OMW") — because a first pass
+counted 400 of those as computed and they are stated. Three drafts
+went wrong the same way before the rule was written down: one joined
+"135 150 kW" into one number; the next joined a single split digit
+only, and still turned "PUMP 1 50kW" into 150 kW and "DDT E6 12MW"
+into 612 MW, hiding 64 stated figures in the residue class. **A
+repair only ever adds a reading; it never replaces the quote as
+written.** Measured after that: 171 of 10,207 figures (1.7%), against
+2026-08-30's 234 of 9,747 under a cruder test.
 
-**The classes.** 103 are a product of operands in the quote — a unit
+**The classes.** 102 are a product of operands in the quote — a unit
 count times a rating with every fleet the quote names summed (51), or
-two stated numbers multiplied (52); 10 are a sum of stated figures; 19
-are an inference dressed as a figure — a stated figure scaled, or the
-midpoint of a range ("c. 90–100 MW" stored as 95); and 118 are a
-residue no arithmetic on the quote reaches: an operand taken from the
-passage beyond the quote ("94 diesel backup generators" stored as
-258.5), a substrate the repair could not read ("BSOOMW", "5|0MW"),
-servers turned into megawatts, a count in words the fleet pattern
-missed. The report lists all 250 by site, application, finding and
-document, under `data/reports/`.
+two stated numbers multiplied (51); 7 are a sum of stated figures; 11
+are an inference dressed as a figure — a stated figure scaled (8), or
+the midpoint of a range ("c. 90–100 MW" stored as 95; 3); and 51 are
+a residue no arithmetic on the quote reaches: an operand taken from
+the passage beyond the quote ("94 diesel backup generators" stored as
+258.5; "approximately 72 megawatt (MW) of IT capacity" per building
+stored as 720), a substrate the repair cannot read ("BSOOMW", read
+once as 800 and once as 850; "Zoomw" as 200), a figure glued to its
+label ("UPS 1-1400kW" for a 400 kW unit, Trafford's seven rows),
+servers turned into megawatts. The report lists all 171 by site,
+application, finding and document, under `data/reports/`.
 
-**What it decides, and what it leaves to Luke.** A and B are
-derivations a record can carry, the item's target shape verbatim: the
-operands are in the quote and the operation is stated. C is a choice
-the source did not make, and D is a residue to read one row at a time.
-Whether A and B become derivation records on the `w-modelled` rung,
-and whether C and D go to `unclear` or to a person's row, is the
-admissibility decision the item said the classification informs and
-does not take — recorded in ROADMAP with the table. The companion
+**What it decides, what Luke decided, and what is open.** A and B
+are derivations a record can carry, the item's target shape verbatim:
+the operands are in the quote and the operation is stated. **Luke
+settled A and B the same day: the target shape stands — a derivation
+record beside the finding, rendered on the `w-modelled` rung with the
+≈ glyph, existing rows untouched.** C is a choice the source did not
+make and D is a residue to read one row at a time; what becomes of
+them is still open, and the measurement that bears on it: the 62 C
+and D figures sit on 32 sites, and 15 of them are the figure a site's
+own box shows — 13 sites, Fife's 850 MW, Northumberland's 720 MW and
+Edinburgh's 200 MW grid connection among them, all three read off a
+broken or unstated substrate — so withdrawing them
+to `unclear` changes those thirteen pages and no others. The companion
 guard — a value that appears in no number of its quote is refused at
 adjudication write unless it carries a derivation — follows the
-decision.
+derivation record.
+
 ## The reader names every external source (2026-09-10)
 
 Luke asked during the 2.10 release whether he had missed the Published
