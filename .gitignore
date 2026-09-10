@@ -46,6 +46,13 @@ cloudrun/index.html
 cloudrun/robots.txt
 cloudrun/config.env
 
+# Completed Claude Design handoff for the Guardian Source design system's
+# table, kept locally. Its work shipped on 2026-09-02 (e7d0073): the sort
+# indicator in scripts/export_reader.py still cites this folder's
+# Table.prompt.md by path, so that citation resolves on the machine that
+# holds the bundle, not in the repository.
+design_handoff_datacentre_reader/guardian-source-design-system-sorting-tables/
+
 # ---------------------------------------------------------------------------
 # Editorial / in-flight content
 # ---------------------------------------------------------------------------
