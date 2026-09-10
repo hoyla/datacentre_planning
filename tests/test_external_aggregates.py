@@ -36,3 +36,27 @@ def test_sources_carry_full_provenance():
     for s in ea.SOURCES.values():
         assert s.url.startswith("https://")
         assert s.published and s.accessed and s.note
+
+
+# ---------------------------------------------------------------------------
+# The reader names every external source, not the three its prose cites
+# ---------------------------------------------------------------------------
+
+def test_the_reader_lists_every_external_source_with_its_locator():
+    """Until 2026-09-10 the methodology page cited three of the five
+    sources in passing and never the word Provenance; a reporter working
+    from the reader alone could not see the two UK Power Networks
+    datasets the release rests on. The table is generated from SOURCES,
+    so adding a source there puts it on the page."""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+    import export_reader
+    from dcp import external_aggregates as extagg
+    html = export_reader.external_sources_html()
+    for s in extagg.SOURCES.values():
+        assert s.title in html or export_reader.esc(s.title) in html, s.key
+        assert export_reader.esc(s.url) in html, s.key
+        assert s.accessed in html, s.key
+    assert "Provenance" in html and "External aggregates" in html
+    assert "Large Demand List" in html and "Data Centre Demand Profiles" in html
