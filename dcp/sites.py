@@ -28,6 +28,15 @@ retires sites that no longer emerge from the clustering (``retired_at``
 set, never deleted), and revives them if they re-emerge. Derived data is
 kept out of ``projects`` deliberately: that table holds Barbour records
 verbatim, and clustering is our inference (principle 3).
+
+Membership is not standing. A member the family door admitted with a
+latest dc_build verdict of ``not_dc`` stays a member, with its documents,
+and its adjudicated figures do not stand as the site's capacity
+(``site_members.figure_standing``, migration 034) unless
+``data/priors/not_dc_standing.yaml`` admits that one application with
+its evidence; ``procedural`` paperwork whose only family parents are
+excluded follows them. Every site-level capacity rollup carries the
+predicate; ``tests/test_figure_standing.py`` asserts it over the tree.
 """
 
 from __future__ import annotations
@@ -120,6 +129,140 @@ def _load_project_exclusions(data_dir: Path) -> dict[str, str]:
             raise ValueError(f"project_exclusions.yaml: duplicate entry for {ptno}")
         out[ptno] = str(e["reason"]).strip()
     return out
+
+
+FIGURE_STANDINGS = ("counts", "not_dc_excluded", "not_dc_admitted")
+
+
+def _load_not_dc_standing(data_dir: Path) -> dict[str, dict]:
+    """application_ref (upper) -> entry, from
+    `data/priors/not_dc_standing.yaml`.
+
+    An application triage calls `not_dc` whose documents a person has
+    read and found to be the data centre's own paperwork — a reserved
+    matters on a data-centre outline, or the outline itself — so its
+    adjudicated figures may stand as the site's (migration 034). Empty
+    when the file is absent. Validation — every entry must name an
+    application the corpus holds, a live member of the site it names,
+    with a `not_dc` verdict — happens in `build_clusters`, where the
+    clusters are in hand, and fails the run as the other priors do.
+    """
+    import yaml
+    path = data_dir / "priors" / "not_dc_standing.yaml"
+    if not path.exists():
+        return {}
+    payload = yaml.safe_load(path.read_text()) or {}
+    out: dict[str, dict] = {}
+    for e in payload.get("admissions") or []:
+        ref = str(e.get("application_ref") or "").strip()
+        if not ref:
+            raise ValueError("not_dc_standing.yaml: an entry has no application_ref")
+        for field in ("site_key", "reason", "evidence", "date", "decided_by"):
+            if not str(e.get(field) or "").strip():
+                raise ValueError(f"not_dc_standing.yaml: {ref} has no {field}")
+        if ref.upper() in out:
+            raise ValueError(f"not_dc_standing.yaml: duplicate entry for {ref}")
+        out[ref.upper()] = {"ref": ref, "site_key": str(e["site_key"]).strip(),
+                            "reason": str(e["reason"]).strip()}
+    return out
+
+
+def _standing_of(clusters: list[dict], admitted: dict[str, dict],
+                 fam_edges: list[tuple[int, int, str]] = ()) -> None:
+    """Set `figure_standing` and `standing_reason` on every application
+    in every cluster, and validate the admissions against the clusters.
+
+    The rule (ROADMAP, the `not_dc` item; migration 034): a member whose
+    latest dc_build verdict is `not_dc` keeps its membership and its
+    documents, and its adjudicated figures do not stand as the site's —
+    unless an entry in not_dc_standing.yaml says, with evidence, that
+    the application is the data centre's own paperwork. The verdict is
+    the dc_build one alone: the universe rule admits on either rubric,
+    but dc_build is the rubric that has the concept, and it is the one
+    `site_class` folds first. A v1 verdict never sets a standing.
+
+    **Procedural paperwork follows its parents.** A `procedural`
+    application is in the universe on the premise that its parent is a
+    data centre's permission (a conditions discharge belongs to its
+    parent's site). Where every family neighbour it has in the site is
+    an excluded `not_dc` application, that premise has failed: it is
+    the paperwork of the scheme triage said is not a data centre, and
+    its figures describe that scheme — Eggborough's second discharge
+    carried the station's 2,500 MW exactly as the first did (measured
+    2026-09-10: 77 such members, 11 carrying figures, on 5 sites). So
+    it inherits the exclusion, to a fixpoint, with the parents named in
+    its reason. An admitted parent admits its paperwork the same way;
+    a procedural with any counting neighbour, or with no family edge
+    at all, keeps counting. `unknown` is never touched — a disguise
+    suspect is what must not be dropped.
+
+    An entry that names an application the corpus does not hold, one
+    that is not a member of the site it names, or one whose verdict is
+    not `not_dc` fails the run: a key moves when a cluster's anchor
+    changes, and an admission that quietly stopped applying would put
+    the site back on its largest excluded figure with nothing to say
+    it had happened — the same contract as site_aliases.yaml.
+    """
+    seen: dict[str, tuple[str, str]] = {}
+    for c in clusters:
+        for a in c["apps"]:
+            entry = admitted.get(a["ref"].upper())
+            if a["verdict"] != "not_dc":
+                a["figure_standing"], a["standing_reason"] = "counts", None
+                if entry:
+                    raise ValueError(
+                        f"not_dc_standing.yaml admits {entry['ref']} for figures, "
+                        f"but its latest dc_build verdict is {a['verdict']!r}, not "
+                        f"not_dc; the entry asserts something the rule never "
+                        f"asks — remove it")
+            elif entry:
+                a["figure_standing"] = "not_dc_admitted"
+                a["standing_reason"] = entry["reason"]
+            else:
+                a["figure_standing"], a["standing_reason"] = "not_dc_excluded", None
+            if entry:
+                seen[a["ref"].upper()] = (c["site_key"], entry["site_key"])
+    missing = sorted(e["ref"] for k, e in admitted.items() if k not in seen)
+    if missing:
+        raise ValueError(
+            "not_dc_standing.yaml names applications that are not members "
+            "of any site: " + ", ".join(missing)
+            + " — a typo, or an application that left the universe; "
+              "repoint or remove the entry")
+    moved = sorted(f"{admitted[k]['ref']} (entry says {want}, cluster is {have})"
+                   for k, (have, want) in seen.items() if have != want)
+    if moved:
+        raise ValueError(
+            "not_dc_standing.yaml names a site its application is not a "
+            "member of: " + "; ".join(moved)
+            + " — the site key moved; repoint the entry")
+
+    # Procedural paperwork follows its parents (docstring). Family edges
+    # are undirected here — a discharge cites its parent, and the parent
+    # is a neighbour either way — and only edges inside one site count:
+    # a reference across two sites is a partition question, not standing.
+    by_id = {a["id"]: a for c in clusters for a in c["apps"]}
+    site_of = {a["id"]: c["site_key"] for c in clusters for a in c["apps"]}
+    nbrs: dict[int, set[int]] = defaultdict(set)
+    for x, y, _src in fam_edges:
+        if x in by_id and y in by_id and site_of[x] == site_of[y]:
+            nbrs[x].add(y)
+            nbrs[y].add(x)
+    changed = True
+    while changed:
+        changed = False
+        for aid, a in by_id.items():
+            if a["verdict"] != "procedural" or a["figure_standing"] != "counts":
+                continue
+            n = nbrs.get(aid)
+            if n and all(by_id[i]["figure_standing"] == "not_dc_excluded"
+                         for i in n):
+                a["figure_standing"] = "not_dc_excluded"
+                a["standing_reason"] = (
+                    "procedural paperwork of "
+                    + ", ".join(sorted(by_id[i]["ref"] for i in n))
+                    + ", which triage calls not a data centre")
+                changed = True
 
 
 def _load_site_partitions(data_dir: Path) -> tuple[dict[str, str], dict[str, str]]:
@@ -356,6 +499,12 @@ def build_clusters(conn, *, radius_km: float = 1.0,
     excluded_links = {aid for pid, aid in links if pid in excluded_ids}
     projects = [p for p in projects if p["id"] not in excluded_ids]
     links = [(pid, aid) for pid, aid in links if pid not in excluded_ids]
+
+    # The `not_dc` applications a person has admitted for figures
+    # (migration 034). Loaded here beside the other priors; validated
+    # against the clusters once they exist, at the end, because an
+    # entry has to name the site its application is a member of.
+    admitted = _load_not_dc_standing(data_dir)
 
     by_id = {a["id"]: a for a in apps}
     by_ref = {a["ref"].upper(): a for a in apps}
@@ -614,6 +763,11 @@ def build_clusters(conn, *, radius_km: float = 1.0,
                          "display_name": display, "lat": lat, "lon": lon,
                          "coord_source": src})
     clusters.sort(key=lambda c: c["site_key"])
+    # Which members' figures may stand as the site's — decided per
+    # member from the verdict, the admissions and the family edges,
+    # written to site_members by `materialise`, and read by every
+    # site-level rollup through `figure_standing <> 'not_dc_excluded'`.
+    _standing_of(clusters, admitted, fam_edges)
     return clusters
 
 
@@ -631,18 +785,24 @@ def preflight(conn, clusters: list[dict]) -> dict:
     that made it.
 
     Returns {"new": [...], "retiring": [...], "orphaned_claims": [...],
-    "leaving": [...], "moved": [...], "stale_member_rows": n}, where an
-    orphaned claim carries the site it would lose, the cluster its
-    members move to, and enough of the claim to identify it, and a moved
-    application carries the key it leaves and the key it joins.
+    "leaving": [...], "moved": [...], "standing": [...],
+    "stale_member_rows": n}, where an orphaned claim carries the site
+    it would lose, the cluster its members move to, and enough of the
+    claim to identify it; a moved application carries the key it leaves
+    and the key it joins; and a standing change carries the member, its
+    site, and the figure standing it has and would have — because a
+    member whose figures stop counting changes what its site reports
+    without any site, membership or claim moving at all.
     """
     keys = {c["site_key"] for c in clusters}
     app_to_key, proj_to_key = {}, {}
     app_refs: set[str] = set()
+    standing_of: dict[int, str] = {}
     for c in clusters:
         for a in c["apps"]:
             app_to_key[a["id"]] = c["site_key"]
             app_refs.add(a["ref"])
+            standing_of[a["id"]] = a.get("figure_standing", "counts")
         for p in c["projects"]:
             proj_to_key[p["id"]] = c["site_key"]
 
@@ -685,15 +845,26 @@ def preflight(conn, clusters: list[dict]) -> dict:
         # is visible; a member quietly dropping from a site that survives
         # is not, which is why it is listed here by name.
         cur.execute("""
-            SELECT a.id, a.application_ref, s.site_key
+            SELECT a.id, a.application_ref, s.site_key, m.figure_standing
             FROM site_members m
             JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
             JOIN applications a ON a.id = m.application_id
             WHERE m.retired_at IS NULL
             ORDER BY s.site_key, a.application_ref""")
-        live_members = cur.fetchall()
+        _rows = cur.fetchall()
+        live_members = [(aid, ref, key) for aid, ref, key, _st in _rows]
+        live_standing = {aid: st for aid, _ref, _key, st in _rows}
         leaving = [(ref, key) for _aid, ref, key in live_members
                    if ref not in app_refs]
+        # Members whose figure standing would change (migration 034):
+        # nothing above sees them — the site survives, the member stays,
+        # no claim moves — and yet the site's headline figure, its
+        # cohort memberships and its reading input all change. Listed
+        # by name, old standing to new, the way a move is.
+        standing = sorted(
+            (ref, app_to_key[aid], live_standing[aid], standing_of[aid])
+            for aid, ref, _key in live_members
+            if aid in app_to_key and live_standing[aid] != standing_of[aid])
         # Applications that are live members today and members of a
         # DIFFERENT surviving site tomorrow. Neither list above sees
         # them: the site is not retiring, the application is not
@@ -723,6 +894,7 @@ def preflight(conn, clusters: list[dict]) -> dict:
             "orphaned_claims": orphaned,
             "leaving": leaving,
             "moved": moved,
+            "standing": standing,
             "stale_member_rows": stale_member_rows}
 
 
@@ -765,13 +937,22 @@ def materialise(conn, clusters: list[dict], *, radius_km: float = 1.0) -> dict:
             cur.execute("UPDATE site_members SET retired_at=now() "
                         "WHERE site_id=%s AND retired_at IS NULL", (site_id,))
             for a in c["apps"]:
+                # The standing travels with the membership row and is
+                # rewritten on revive exactly as `joined_via` is: it is
+                # a fact about this materialise's verdicts and priors,
+                # not history, and the history is the materialise log.
                 cur.execute("""
-                    INSERT INTO site_members (site_id, application_id, joined_via)
-                    VALUES (%s,%s,%s)
+                    INSERT INTO site_members (site_id, application_id, joined_via,
+                                              figure_standing, standing_reason)
+                    VALUES (%s,%s,%s,%s,%s)
                     ON CONFLICT (site_id, application_id) WHERE application_id IS NOT NULL
                     DO UPDATE SET joined_via=EXCLUDED.joined_via,
+                                  figure_standing=EXCLUDED.figure_standing,
+                                  standing_reason=EXCLUDED.standing_reason,
                                   materialised_at=now(), retired_at=NULL""",
-                    (site_id, a["id"], a["joined_via"]))
+                    (site_id, a["id"], a["joined_via"],
+                     a.get("figure_standing", "counts"),
+                     a.get("standing_reason")))
                 summary["members"] += 1
             for p in c["projects"]:
                 cur.execute("""

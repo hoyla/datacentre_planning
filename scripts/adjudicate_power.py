@@ -676,6 +676,10 @@ JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id
 WHERE s.retired_at IS NULL
+  -- figure_standing: every member, deliberately. This adjudicates what
+  -- the figure IS — its basis and its plant — which is a fact about the
+  -- application's document, whatever the member's standing for the
+  -- site's rollup; the rollups apply the standing downstream.
   AND adj.verdict = 'site_capacity'
   AND adj.quantity_type = 'onsite_generation'
   AND adj.value_mw IS NOT NULL AND adj.value_mw > 0
@@ -957,6 +961,8 @@ def do_report() -> None:
                    max(p.value_mw) AS mw, count(*) AS n
             FROM power_adjudication p
             JOIN site_members sm ON sm.application_id = p.application_id
+                                AND sm.retired_at IS NULL
+                                AND sm.figure_standing <> 'not_dc_excluded'
             JOIN sites s ON s.id = sm.site_id
             WHERE p.verdict = 'site_capacity' AND p.value_mw IS NOT NULL
               AND s.retired_at IS NULL

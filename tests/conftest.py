@@ -117,6 +117,24 @@ def _ensure_test_database() -> None:
                 cur.execute(
                     (MIGRATIONS_DIR / "021_capacity_claims.sql").read_text())
                 conn.commit()
+            # Migration 024 — generation_adjudication, which the cohorts'
+            # site-figures query joins; without it load_inputs cannot run
+            # here (found 2026-09-10 by tests/test_figure_standing.py).
+            cur.execute("SELECT to_regclass('public.generation_adjudication')")
+            if cur.fetchone()[0] is None:
+                cur.execute(
+                    (MIGRATIONS_DIR / "024_generation_adjudication.sql").read_text())
+                conn.commit()
+            # Migration 034 — figure_standing on site_members, which every
+            # site-level capacity rollup reads (tests/test_figure_standing.py).
+            cur.execute(
+                "SELECT 1 FROM information_schema.columns "
+                "WHERE table_name = 'site_members' AND column_name = 'figure_standing'")
+            if cur.fetchone() is None:
+                cur.execute((MIGRATIONS_DIR /
+                             "034_a_not_dc_members_figures_do_not_stand_as_the_sites.sql"
+                             ).read_text())
+                conn.commit()
     finally:
         conn.close()
 

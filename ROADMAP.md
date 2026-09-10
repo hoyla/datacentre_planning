@@ -29,12 +29,13 @@ build's release diff is read against. Cloud Run serves whatever
 the script, not the merge.
 
 **Outstanding from 2.14**, each detailed in its own section below: the
-Eggborough discharge site carries the power station's own 2,500 MW as
-a site's on-site generation, which is the `not_dc` figure-level rule
-and the adjacency review in one place; Pinpoint and Giant are **755
-documents short** and silently so; step 15, telling the reporting
-team, has not been done; and the notebook bundle has not been built
-since 2.12.
+Eggborough discharge site no longer carries the power station's own
+2,500 MW as a site's on-site generation — the `not_dc` figure-level
+rule shipped on 2026-09-10 (migration 034, the `not_dc` item below)
+and the next build renders it — but the adjacency review it shares a
+place with is still open; Pinpoint and Giant are **755 documents
+short** and silently so; step 15, telling the reporting team, has not
+been done; and the notebook bundle has not been built since 2.12.
 
 **What carries forward from the site / facility / campus effort** (2.11,
 which Luke redefined on 2026-08-31 as "the effort to make sense of the
@@ -75,19 +76,21 @@ pages are read"). Two things it surfaced are still open, and one is
 the sharpest instance the corpus holds of a rule this file has been
 carrying unbuilt:
 
-- **`SITE-Selby/ZG2023/1213/DOC` carries 2,500 MW of on-site
+- **`SITE-Selby/ZG2023/1213/DOC` carried 2,500 MW of on-site
   generation that is the Eggborough gas-fired station's own.** The
   site is keyed on the station's DCO discharge, a `not_dc` application
   admitted through its `procedural` sibling, and the figure is
-  adjudicated correctly for the application it belongs to. It is the
-  **figure-level rule** (a `not_dc` member's figures standing as a
-  site's — the `not_dc` item in the capacity-model section) and the
-  **adjacency review** (the record has no `site_adjacent_power` row to
-  `PTNO-12784626`, the data centres on the same station's land) in one
-  new place. The generation adjudication types the plant, so the
-  ladder's generation rung does not rank the site on it — the figure
-  stands on the page rather than in the ranking, which is the whole
-  distinction the figure-level rule has to draw.
+  adjudicated correctly for the application it belongs to. It was the
+  sharpest instance of the **figure-level rule**, which shipped on
+  2026-09-10 (migration 034; the `not_dc` item in the capacity-model
+  section): the discharge's figures now render on its own application
+  panel and stand as no site's, and the site page says so — "no
+  capacity disclosed" with three figures on one application not
+  counted. What is still open here is the **adjacency review**: the
+  record has no `site_adjacent_power` row to `PTNO-12784626`, the data
+  centres on the same station's land, and that site's nine Selby
+  discharges (96 figures, all `other`) are excluded by the same rule
+  rather than related by a row.
 - **Redhill Data Centre is the sixth generation-understated site**
   (runbook step 5; it was five), labelled per-unit on the page.
 
@@ -254,10 +257,11 @@ What survives it here:
   the other 70 arrive through chains between `not_dc` applications.
   The comment on that code says the expansion exists to admit
   *untriaged* paperwork, not to overrule a verdict; it overrules
-  `not_dc` on every pass, and nothing downstream stops a `not_dc`
-  member's figure standing as the site's.
+  `not_dc` on every pass, and until 2026-09-10 nothing downstream
+  stopped a `not_dc` member's figure standing as the site's (migration
+  034 does — see "The figure half shipped", below).
 
-  **The pending action is a decision, Luke's**, between two shapes:
+  **The pending action was a decision, Luke's**, between two shapes:
   keep the members (a conditions discharge on an energy-centre parent
   belongs with its family) but stop a `not_dc` member's figures from
   standing as a site's capacity — which fixes the two headline figures
@@ -266,7 +270,8 @@ What survives it here:
   ejects up to 149 members, changes site keys, may drop the three
   sites entirely, and needs a dry-run materialise first so what leaves
   is seen before it goes. Hallen's was the first instance noticed
-  (2026-08-30) and left with #252's retirements.
+  (2026-08-30) and left with #252's retirements. **The first shape is
+  built** (2026-09-10, below); the veto stays `off`.
 
   **The dry run exists** (2026-09-02): `scripts/materialise_sites.py
   --dry-run --not-dc-veto family|family+project`, and the preflight now
@@ -359,10 +364,55 @@ What survives it here:
   - **The adjacency review**, below under #252, which is where the 44
     belong.
 
-  The figure-level rule — a `not_dc` member's figures do not stand as a
-  site's capacity, and a `SITE-` key is not derived from a `not_dc`
-  application — is the remaining half of the original item and is still
-  to design.
+  **The figure half shipped, 2026-09-10** (migration 034; HISTORY, "A
+  not_dc member's figures do not stand as the site's"). Every
+  membership row carries a `figure_standing`, set at materialise from
+  the latest dc_build verdict: `not_dc_excluded` keeps the member and
+  its documents and takes its adjudicated figures off every site-level
+  rollup — the sites table and its ladder, the cohorts, the workbook's
+  four capacity columns, the DuckDB view, the reading input, the
+  generator profile and the floorspace median — while they stay on the
+  application's own panel, marked, and the site page counts what it
+  left out. `data/priors/not_dc_standing.yaml` admits one application
+  at a time with its evidence (`not_dc_admitted`): Kingsnorth's outline
+  and Google's Waltham Cross reserved matters, the two the measurement
+  said to — and an admitted outline carries its own discharges with
+  it, because `procedural` paperwork follows its parents: a discharge
+  whose every family parent in the site is excluded is excluded too,
+  which is how Eggborough's second discharge, carrying the station's
+  2,500 MW exactly as the first did, left the page. Measured at the
+  materialise: 260 members excluded (183 by verdict, 77 as paperwork
+  of one), 2 admitted, no site, membership or claim moved, 18 site
+  pages carrying a not-counted count over 296 figures; Eggborough's
+  discharge site, West Burton and the British Museum's energy centre
+  fall to "no capacity disclosed", and a test over the whole tree
+  refuses any new rollup that forgets the predicate. Six workbook rows
+  moved on the power columns, listed in HISTORY. **Luke to confirm the
+  two admissions**; each carries the corpus evidence in the file.
+
+  **What the 2.15 build has to carry for it.** The readings of the
+  affected sites are stale — their input hashes moved — so step 4a's
+  bare `--submit` re-reads them before step 12, and until then
+  Eggborough's page keeps a reading that quotes the 2,500 MW its figure
+  box no longer counts; `release_diff` will report the fallen figures
+  HISTORY lists, which is this work; and the Sheet sync gains two named
+  columns on the Applications tab — "Discovery tags", which the sheet
+  has carried under no header since 2.7, and "Figures stand as the
+  site's" — beside the stray unnamed column, which wants deleting by
+  hand after the sync.
+
+  **The key half is measured and not built, and is a decision.**
+  Eighteen `SITE-` keys derive from a `not_dc` application (Rhondda's
+  from the only application it has). Re-keying them renames eighteen
+  Drive folders (a `--prune` sync each), orphans the readings keyed on
+  the old keys (Kingsnorth's ten among them; a bare `--submit` re-reads
+  them), re-points three matched claims (West Burton's one, Kingsnorth's
+  two) and one alias, and breaks the Google Sheet's annotations by
+  key — for a key the reporting team never reads as a name, since the
+  aliases name the sites. The prior could keep Kingsnorth's key, which
+  is its outline; the other seventeen would move. Not worth doing
+  until the Sheet's annotations are known to be safe or the key is
+  worth more than the churn, and either is Luke's call.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
 - **44 power schemes within 2.5 km of a live site carry `not_dc` and

@@ -80,6 +80,7 @@ WITH cons AS (
   JOIN findings f ON f.id = pa.finding_id
   JOIN site_members m ON m.application_id = f.application_id
                      AND m.retired_at IS NULL
+                     AND m.figure_standing <> 'not_dc_excluded'
   JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
   WHERE pa.verdict = 'site_capacity'
     AND pa.quantity_type IN ('it_load','total_site')
@@ -99,6 +100,8 @@ cap AS (
                      AND m.retired_at IS NULL
   JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
   WHERE pa.verdict = 'site_capacity' AND s.retired_at IS NULL
+    -- Migration 034: the site's own figures, not a not_dc member's.
+    AND m.figure_standing <> 'not_dc_excluded'
   GROUP BY 1,2)
 SELECT cap.site_key, cap.display_name, cap.it_load, cap.total_site,
        cap.grid, cap.gen, cap.storage, cap.thermal, cap.n_cons,
@@ -139,6 +142,7 @@ LEFT JOIN LATERAL (
   FROM power_adjudication pa3
   JOIN findings f3 ON f3.id = pa3.finding_id
   JOIN site_members m4 ON m4.application_id = f3.application_id AND m4.retired_at IS NULL
+                      AND m4.figure_standing <> 'not_dc_excluded'
   JOIN sites s4 ON s4.id = m4.site_id AND s4.site_key = cap.site_key
   WHERE pa3.verdict='site_capacity' AND pa3.quantity_type='onsite_generation') fleet ON true
 LEFT JOIN LATERAL (

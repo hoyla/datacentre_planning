@@ -355,6 +355,7 @@ def cohort_two_sites(conn) -> list[dict]:
                 from power_adjudication pa
                 join site_members sm on sm.application_id = pa.application_id
                                     and sm.retired_at is null
+                                    and sm.figure_standing <> 'not_dc_excluded'
                where pa.verdict = 'site_capacity' and pa.value_mw is not null
                  and pa.quantity_type in ('it_load', 'total_site',
                                           'grid_connection', 'onsite_generation')

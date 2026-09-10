@@ -226,6 +226,18 @@ Curated display names live beside the derived ones in
 alias naming a site key that is no longer live fails the build rather
 than silently ceasing to apply.
 
+**Membership is not standing.** The family door admits an application
+whatever triage said, because a reserved matters on a data-centre
+outline reads `not_dc` by construction; so every membership row also
+carries a `figure_standing` (migration 034), set at materialise from
+the latest dc_build verdict and `data/priors/not_dc_standing.yaml`. A
+`not_dc_excluded` member stays in the site with its documents, and its
+adjudicated figures stand as no site's: every site-level capacity
+rollup carries the predicate, `tests/test_figure_standing.py` asserts
+it over the tree, and the artefacts count what was left out. The prior
+admits one application at a time with its evidence, on the alias
+file's contract.
+
 ### 5. Adjudication
 
 Extraction asks what a document says; adjudication asks **whose figure
@@ -273,7 +285,7 @@ provenance discipline are what everything above still runs on.
 
 ## Schema
 
-Current schema is migrations 001–030 applied in order. The early ones in detail: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table), [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric), [004_council_aliases.sql](migrations/004_council_aliases.sql) (JSONB `councils.notes` + the `council_aliases` reorganisation map) and [005_projects.sql](migrations/005_projects.sql) (the `projects` + `project_applications` pair for commercial construction-intelligence records — see "Projects vs applications" below). Tables and their relationships:
+Current schema is migrations 001–034 applied in order. The early ones in detail: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table), [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric), [004_council_aliases.sql](migrations/004_council_aliases.sql) (JSONB `councils.notes` + the `council_aliases` reorganisation map) and [005_projects.sql](migrations/005_projects.sql) (the `projects` + `project_applications` pair for commercial construction-intelligence records — see "Projects vs applications" below). Tables and their relationships:
 
 ```
 sources        ──┐
@@ -299,7 +311,9 @@ projects         │ (source_id, external_ref) UNIQUE — commercial constructio
 project_applications │ many-to-many link to applications, match_method per link
 
 sites            │ stable site_key; retire-and-revive, never delete (006)
-site_members     │ application/project membership, joined_via, retired_at
+site_members     │ application/project membership, joined_via, retired_at;
+                 │ figure_standing — whether the member's adjudicated
+                 │ figures stand as the site's (034)
 
 power_adjudication    │ whose figure is it — per finding per model,
                       │ append-only; unit_note carries correction markers (008)

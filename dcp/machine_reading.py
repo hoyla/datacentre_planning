@@ -194,8 +194,30 @@ JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id
 WHERE s.retired_at IS NULL AND s.site_key = %s
+  -- Migration 034: the model is told the site's own figures, and a
+  -- not_dc member's are its own application's. NOT_COUNTED_SQL tells
+  -- it how many were left out, so the silence is stated.
+  AND sm.figure_standing <> 'not_dc_excluded'
   AND adj.verdict = 'site_capacity' AND adj.value_mw IS NOT NULL
 ORDER BY adj.quantity_type, adj.value_mw DESC, f.id
+"""
+
+# Figures the standing keeps out of the panel above, so the facts can say
+# so rather than present a shorter list as the whole. Counted, never
+# listed: listing them would put the excluded figures back in front of
+# the model under a heading it might not honour.
+NOT_COUNTED_SQL = """
+WITH adj AS (
+  SELECT DISTINCT ON (finding_id) finding_id, verdict, value_mw, application_id
+  FROM power_adjudication
+  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC)
+SELECT count(*), count(DISTINCT adj.application_id)
+FROM adj
+JOIN site_members sm ON sm.application_id = adj.application_id
+     AND sm.retired_at IS NULL AND sm.figure_standing = 'not_dc_excluded'
+JOIN sites s ON s.id = sm.site_id
+WHERE s.retired_at IS NULL AND s.site_key = %s
+  AND adj.verdict = 'site_capacity' AND adj.value_mw IS NOT NULL
 """
 
 CLAIMS_SQL = """
@@ -320,6 +342,8 @@ def load_site_input(conn, site_key: str, *, profile: dict,
             "application_ref": ref, "document_id": doc, "page": page,
             "quote": (quote or "").strip(), "label": label}
             for q, mw, mx, ref, doc, page, quote, label in cur.fetchall()]
+        cur.execute(NOT_COUNTED_SQL, (site_key,))
+        n_not_counted, n_not_counted_apps = cur.fetchone()
         cur.execute(CLAIMS_SQL, (site_key,))
         claims = [{
             "claim": nm, "value_mw": None if mw is None else float(mw),
@@ -362,6 +386,14 @@ def load_site_input(conn, site_key: str, *, profile: dict,
             "named_in_documents", "authority", "parties_source")},
         "cohorts": memberships,
     }
+    # Only when there is something to say. The panel is hashed, and a
+    # key present on every site would move every site's input hash and
+    # re-read the corpus (commit a2104e6's `empty` coverage key did
+    # exactly that on 2026-09-07, ~$34); a site the standing does not
+    # touch keeps the hash it had.
+    if n_not_counted:
+        panel["figures_not_counted"] = {"figures": int(n_not_counted),
+                                        "applications": int(n_not_counted_apps)}
     return SiteInput(site_key, name, panel, pages, considered,
                      len({p.document_id for p in pages}), cache)
 
@@ -534,6 +566,17 @@ def render_facts(panel: dict) -> str:
                    f"{', page ' + str(f['page']) if f['page'] else ''}"
                    f"; label {f['label']}")
         out.append(f"    quote: \"{' '.join(f['quote'].split())}\"")
+    nc = panel.get("figures_not_counted")
+    if nc:
+        _f, _a = nc["figures"], nc["applications"]
+        out.append(f"  ({_f} further figure{'s' if _f != 1 else ''} on {_a} "
+                   f"application{'s' if _a != 1 else ''} in this site "
+                   f"{'are' if _f != 1 else 'is'} adjudicated as that "
+                   f"application's own capacity, and triage classes the "
+                   f"application, or the permission its paperwork "
+                   f"discharges, as not a data centre; "
+                   f"{'they are' if _f != 1 else 'it is'} not counted as this "
+                   f"site's and not listed here.)")
     out.append("")
     out.append("Figures published outside the planning system and matched to this site:")
     if not panel["external_claims"]:
@@ -962,6 +1005,9 @@ JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
 JOIN sites s ON s.id = sm.site_id
 WHERE s.retired_at IS NULL AND adj.verdict = 'site_capacity'
+  -- figure_standing: every member, deliberately. This resolves a quote
+  -- to the document it was read from, and a quote from a not_dc
+  -- member's document is still that document's — no rollup happens here.
   AND f.document_id IS NOT NULL AND f.evidence_text IS NOT NULL
 """
 

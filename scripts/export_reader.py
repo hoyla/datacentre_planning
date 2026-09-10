@@ -135,7 +135,12 @@ FINDINGS_SQL = """
                      f.value_unit, adj.verdict, f.signal_family, f.id,
                      f.document_id, f.evidence_page, d.url AS doc_url,
                      row_number() OVER (PARTITION BY s.site_key, f.signal_family
-                       ORDER BY coalesce(adj.verdict = 'site_capacity', false) DESC,
+                       -- "Attributed to this site" means counted for it:
+                       -- a not_dc member's figures lead nothing here
+                       -- (migration 034, figure_standing).
+                       ORDER BY coalesce(adj.verdict = 'site_capacity'
+                                         AND m.figure_standing <> 'not_dc_excluded',
+                                         false) DESC,
                                 length(coalesce(f.value_text,'')) DESC,
                                 f.id) AS rf
               FROM findings f
@@ -198,6 +203,9 @@ SITE_FIGURE_SQL = """
             JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
             JOIN sites s ON s.id = m.site_id
             WHERE s.retired_at IS NULL AND pa.verdict = 'site_capacity'
+              -- The provenance of the figure that won, so it has to be
+              -- a figure that could win (migration 034).
+              AND m.figure_standing <> 'not_dc_excluded'
               AND pa.value_mw IS NOT NULL
             ORDER BY s.site_key, pa.quantity_type, pa.value_mw DESC, pa.id DESC"""
 
@@ -223,7 +231,12 @@ SITE_ALL_FIGURES_SQL = """
                      pa.value_original, pa.unit_original, pa.reasoning,
                      pa.model, f.signal_type, f.evidence_page, d.url, d.kind,
                      d.id AS document_id,
-                     a.application_ref, pa.id
+                     a.application_ref,
+                     -- figure_standing: every member, deliberately — this
+                     -- is the table of everything the adjudicator saw, and
+                     -- a figure the standing keeps off the site's rollup is
+                     -- shown here with that said (migration 034).
+                     m.figure_standing, pa.id
               FROM latest pa
               JOIN findings f ON f.id = pa.finding_id
               JOIN applications a ON a.id = pa.application_id
@@ -235,7 +248,9 @@ SITE_ALL_FIGURES_SQL = """
             SELECT * FROM (
               SELECT j.*, count(*) OVER (PARTITION BY site_key) AS cnt,
                      row_number() OVER (PARTITION BY site_key
-                       ORDER BY (verdict = 'site_capacity') DESC,
+                       ORDER BY (verdict = 'site_capacity'
+                                 AND figure_standing <> 'not_dc_excluded') DESC,
+                                (verdict = 'site_capacity') DESC,
                                 value_mw DESC NULLS LAST, id) AS rn
               FROM joined j) t
             WHERE rn <= %s ORDER BY site_key, rn"""
@@ -2944,9 +2959,31 @@ def main() -> int:
               JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
               JOIN sites s ON s.id = m.site_id
               WHERE s.retired_at IS NULL AND pa.verdict = 'site_capacity'
+                AND m.figure_standing <> 'not_dc_excluded'
                 AND pa.value_mw IS NOT NULL) t
             WHERE rn = 1""")
         power_src = {(k, q): r for k, q, r in cur.fetchall()}
+        # What the standing kept out, per site (migration 034): the count
+        # the site page states beside its figures, so a shorter list
+        # never reads as the whole. Figures and applications both, so the
+        # sentence can say "3 figures on 2 applications".
+        cur.execute("""
+            WITH latest AS (
+              SELECT DISTINCT ON (finding_id) finding_id, verdict, value_mw,
+                     application_id
+              FROM power_adjudication
+              ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC,
+                       id DESC)
+            SELECT s.site_key, count(*), count(DISTINCT pa.application_id)
+            FROM latest pa
+            JOIN site_members m ON m.application_id = pa.application_id
+                 AND m.retired_at IS NULL
+                 AND m.figure_standing = 'not_dc_excluded'
+            JOIN sites s ON s.id = m.site_id
+            WHERE s.retired_at IS NULL AND pa.verdict = 'site_capacity'
+              AND pa.value_mw IS NOT NULL
+            GROUP BY s.site_key""")
+        not_counted = {k: (int(n), int(na)) for k, n, na in cur.fetchall()}
 
         # §5's figures, with the provenance the handoff asks for.
         cur.execute(SITE_FIGURE_SQL)
@@ -2963,7 +3000,7 @@ def main() -> int:
         cur.execute(SITE_ALL_FIGURES_SQL, (ALL_FIGURES_CAP,))
         all_figs, all_figs_total = defaultdict(list), {}
         for (k, verdict, qt, v, v_orig, u_orig, reasoning, model, as_written,
-             page, url, kind, doc_id, ref, _id, cnt, _rn) in cur.fetchall():
+             page, url, kind, doc_id, ref, standing, _id, cnt, _rn) in cur.fetchall():
             all_figs_total[k] = cnt
             all_figs[k].append({
                 "verdict": verdict, "quantity": qt, "mw": v,
@@ -2971,7 +3008,7 @@ def main() -> int:
                 "model": model, "as_written": as_written, "page": page,
                 "url": url or "", "document_id": doc_id,
                 "title": mreading.document_title(url, kind) if url else "",
-                "ref": ref})
+                "ref": ref, "standing": standing})
 
         # External capacity claims: grid-register figures attached to
         # sites by hand-adjudicated inference (dcp/capacity_claims). They
@@ -3554,7 +3591,7 @@ def main() -> int:
         (key, cls, name, lat, lon, csrc, councils, n_apps, refs, verdicts,
          docs, findings_n, it, tot, grid, gen, ncap, nexc, families,
          eref, edoc, manual, ptno, btitle, bstage, bvalue, bfloor,
-         bsite, bplan, bdec, bauthority) = r
+         bsite, bplan, bdec, bauthority, _n_not_counted) = r
         prof = profiles.get(key, {})
         held, read = coverage.get(key, (docs or 0, 0))
         _cd = cov_detail.get(key, {})
@@ -4242,6 +4279,14 @@ def main() -> int:
         if _af:
             _total = all_figs_total.get(key, len(_af))
             _kept = sum(1 for r in _af if r["verdict"] == "site_capacity")
+            # A figure adjudicated as its own application's capacity on a
+            # member whose figures do not stand as the site's (migration
+            # 034) is "this application", not "this site", and the row
+            # says so — the pill alone would read as counted.
+            _NOT_COUNTED = ('<span class="q">not counted as this site’s: '
+                            'triage classes the application, or the '
+                            'permission its paperwork discharges, as not a '
+                            'data centre</span>')
             _rows = "".join(
                 # The figure as its source printed it: a 3,900 kVA
                 # switchboard is not "0 MW", and kVA is not megawatts at
@@ -4264,6 +4309,8 @@ def main() -> int:
                 + '<td><span class="adjpill {1}">{0}</span>'.format(
                     esc(VERDICT_LABEL.get(r["verdict"], (r["verdict"], "v-maybe"))[0]),
                     VERDICT_LABEL.get(r["verdict"], (r["verdict"], "v-maybe"))[1])
+                + (_NOT_COUNTED if r["verdict"] == "site_capacity"
+                   and r.get("standing") == "not_dc_excluded" else "")
                 + (f'<span class="q">{esc(trim(r["reason"], 260))}</span>'
                    if r["reason"] else "") + '</td></tr>'
                 for r in _af)
@@ -4290,6 +4337,26 @@ def main() -> int:
                    if _csv else '')
                 + ' and the <a href="#package">DuckDB file</a>.</p></details>')
 
+        # What the standing kept out of the figures above (migration
+        # 034), stated where the figures are: a figure kept off the
+        # site's line is counted where it stood, never dropped in
+        # silence \u2014 the same rule the generation line keeps.
+        _nc = not_counted.get(key)
+        _nc_html = ""
+        if _nc:
+            _ncf, _nca = _nc
+            _nc_html = (
+                f'<p class="help">{_ncf:,} further figure'
+                f'{"s" if _ncf != 1 else ""} on {_nca} application'
+                f'{"s" if _nca != 1 else ""} in this site '
+                f'{"are" if _ncf != 1 else "is"} adjudicated as that '
+                f'application\u2019s own capacity, and triage classes the '
+                f'application \u2014 or the permission its paperwork '
+                f'discharges \u2014 as not a data centre: an energy scheme, '
+                f'or an outline whose description does not name the use. '
+                f'{"They are" if _ncf != 1 else "It is"} listed in the '
+                f'table below, marked, and not counted as this '
+                f'site\u2019s.</p>')
         figures_html = (
             '<div class="box figures"><h4>Adjudicated power figures</h4>'
             '<p class="help">The figures adjudicated as describing <em>this '
@@ -4299,6 +4366,7 @@ def main() -> int:
             + ("".join(_fig_rows) if _fig_rows else
                '<p class="help">No figure in this site\u2019s documents was '
                'adjudicated as its capacity.</p>')
+            + _nc_html
             + (f'<p class="figabsent">Not stated in any document read: '
                f'{esc(", ".join(_absent))}.</p>' if _absent else '')
             + f'<dl class="kv figsum"><dt>Best available</dt><dd>'
@@ -4917,6 +4985,15 @@ def main() -> int:
     n_mappable = sum(1 for m in map_points if m["k"] == "s")
     n_no_coords = n_sites - n_mappable
 
+    def _standing_note(r):
+        # Migration 034. The two admissions are named on their rows; the
+        # excluded class is stated on the site page beside the figures,
+        # where the count is, rather than on every not_dc row here.
+        if len(r) > 18 and r[18] == "not_dc_admitted":
+            return (' <span class="q">figures stand as the site’s by hand '
+                    'adjudication (not_dc_standing.yaml)</span>')
+        return ""
+
     approws_all = []
     for r in sorted(app_rows, key=lambda x: (x[3] or "", x[1] or "")):
         portal = (f'<a href="{esc(register_url(r[12]))}" target="_blank" rel="noopener">register</a>'
@@ -4938,7 +5015,7 @@ def main() -> int:
             f"<span class='q'>{discovery(r[17])}</span></td>"
             f"<td>{esc(r[3])}</td><td>{esc(r[4]) or NOT_STATED}</td>"
             f"<td data-v='{esc(str(r[5] or ''))}'>{esc(str(r[5] or '')) or NOT_STATED}</td>"
-            f"<td>{esc(r[7]) or '<span class=\"q\">not triaged</span>'}</td>"
+            f"<td>{esc(r[7]) or '<span class=\"q\">not triaged</span>'}{_standing_note(r)}</td>"
             f"<td data-num='1' data-v='{r[13] or 0}'>{docs_cell}</td>"
             f"<td>{r[14] or 0}</td><td>{portal}</td>"
             f"<td>{esc(trim(r[16], 150))}</td></tr>")

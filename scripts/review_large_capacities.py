@@ -78,7 +78,11 @@ def main() -> int:
                    pa.value_original, pa.unit_original, pa.quantity_type,
                    pa.model, f.signal_type,
                    regexp_replace(f.evidence_text, E'\\\\s+', ' ', 'g'),
-                   a.application_ref
+                   a.application_ref,
+                   -- figure_standing: every member, deliberately — a review
+                   -- of large figures wants the ones the standing keeps off
+                   -- the site's rollup in front of a person too, labelled.
+                   m.figure_standing
             FROM power_adjudication pa
             JOIN findings f ON f.id = pa.finding_id
             JOIN applications a ON a.id = f.application_id
@@ -95,9 +99,13 @@ def main() -> int:
 
     flagged, clean = [], []
     for (key, name, aid, mw, orig, unit, qt, model, stype, quote,
-         ref) in rows:
+         ref, standing) in rows:
         reasons = []
         text = f"{quote} {stype}"
+        if standing == "not_dc_excluded":
+            reasons.append("on an application triage calls not a data centre "
+                           "— its own figure, not counted as the site's "
+                           "(figure_standing, migration 034)")
         if mw >= IMPLAUSIBLE_MW:
             reasons.append("implausible (>3 GW)")
         if ENERGY.search(text):
