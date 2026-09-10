@@ -1539,53 +1539,42 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **A Word loader closes the last prose gap in the corpus**
-  (2026-09-03, found while clearing the readings backlog; figures
-  re-measured at the 2.13 release). Eleven documents had no text
-  cache and could not get one under the current extractor: four PDFs
-  pypdf refuses to open ("Invalid object in /Pages"), five whose
-  format has no loader — two `.docx` with valid zip magic, one `.xls`,
-  one `.rtf`, one `.pdf` whose bytes are not a PDF — and two of the
-  three whose fetched file is zero bytes. A twelfth joined on
-  2026-09-07: a second `.pdf` whose bytes are not a PDF, on Springfield
-  Farm, which the register itself labels corrupted and superseded — the
-  runbook's register has it, with the `not_extracted` row that keeps
-  it from deferring the site. Eleven of the twelve hold no
-  site back. **The Wakefield one is the whole remaining gap**: document
-  39292 on `Wakefield/23/01043/FUL`, a `.docx` consultee comment, is
-  the single outstanding prose document in the corpus and the only
-  reason `PTNO-12817834` is not read in full. **With it the figure goes
-  to 386 of 388**, not the 385 an earlier version of this sentence
-  claimed: 2.14 already stands at 385 of 388 (it was 357 of 360 at
-  2.13, and the refused-page read added 29 sites, all read in full), so
-  the three outstanding are Wakefield's and two Renfrewshire sites
-  holding one graphical document each. **The Renfrewshire pair can
-  never complete** — they hold no prose to read — so 386 is the ceiling
-  unless the denominator itself is wrong, which is worth one look:
-  a site with no prose has no business in a prose-coverage denominator.
-  **The `.docx` pair is the cheap half**: the sniffing
-  tests already say 255 corpus documents arrive mis-named as Word
-  files, so a loader that reads them is worth writing, and
-  `tests/test_extract_formats.py` is where its contract goes. The two
-  zero-byte files are an acquisition question — the corpus claims a
-  document it does not hold, so they want a re-fetch and, if the
-  portal still serves nothing, an `acquisition_outcome` row saying so
-  rather than a permanent silent gap. There are three, named by every
-  staging build: `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
-  `Medway/MC/21/0979`. The four corrupt PDFs are
-  probably genuinely unreadable; worth one look at whether the bytes
-  match what the portal serves before accepting that.
+- **The last prose gap closed on 2026-09-10 — 390 of 390 live sites
+  with prose are read in full** (HISTORY, "The last prose gap closes");
+  re-measure through `site_profile.load_coverage_detail` rather than
+  quoting it. What remains of the item is the residue it always named,
+  none of it holding a site back: 20 documents the corpus extraction
+  cannot cache — four PDFs pypdf refuses to open ("Invalid object in
+  /Pages"), the zero-byte files, two `.xlsb`, a `.ppt` and five of no
+  recognisable format. The four corrupt PDFs are probably genuinely
+  unreadable; worth one look at whether the bytes match what the portal
+  serves before accepting that. The zero-byte files are an acquisition
+  question — the corpus claims a document it does not hold, so they
+  want a re-fetch and, if the portal still serves nothing, an
+  `acquisition_outcome` row saying so rather than a permanent silent
+  gap; there are three, named by every staging build:
+  `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
+  `Medway/MC/21/0979`. Two Renfrewshire sites hold one graphical
+  document each and no prose, and are rightly outside the
+  denominator.
 
-  **Re-measured 2026-09-07 evening, after the Hemel ingest: 388 of 390
-  live sites with prose are read in full**, and the denominator moved
-  because the site 11 partition and the 3A ingest added records. The
-  two short are the same defect twice: Wakefield's `.docx` on
-  `PTNO-12817834`, and now a risk register held as an `.xls` on
-  `Dacorum/4/00571/14/DRC`, which keeps NTT Hemel Hempstead 3
-  (`PTNO-12063929`) below read-in-full and marks its figure "may rise"
-  in the reader. **One loader closes both**, which raises the value of
-  the cheap half of this item. Re-measure rather than quoting either
-  figure: the accessor is `site_profile.load_coverage_detail`.
+- **878 prose documents outside every live site have never had a
+  primary read** (measured 2026-09-10 while reading the two above;
+  HISTORY). 1,226 documents fetched since 8 August sit on applications
+  in no live site — 184 on adjacent-power records, fetched since the
+  queue reached that class on 2026-09-06, and 1,042 on `not_dc`
+  applications in no site — and never read, because the first read's
+  cohort is not site-scoped and nothing asked; 878 of them are prose
+  (200 tier A, 678 tier B), the rest drawings and sampled classes. The
+  reader renders the adjacent-power records with their documents and
+  no findings; the 44-scheme adjacency review and the unsited-claims
+  work would both read against these. A first read is
+  `deepread_escalate_openai.py --cohort first_read --since 2026-08-08
+  --tier A B` — about 880 documents, ~1,900 requests, ~6M input
+  tokens, in the $40 class at list rates — **and whether to spend it
+  is Luke's**: the standing policy reads new content, and these are
+  new content the policy's own cohort query has been offering since
+  August.
 
 - **Two of VIRTUS's seven Slough facilities have no record at all**
   (2026-09-02). The campus is one site now — the partition was extended
