@@ -648,6 +648,47 @@ def trim(text, n: int) -> str:
     return t if len(t) <= n else t[: n - 1].rsplit(" ", 1)[0] + "…"
 
 
+def external_sources_html() -> str:
+    """The methodology's list of every source outside the planning record.
+
+    Five sources feed the release's external figures, and until
+    2026-09-10 three reached this page — Ofgem's Curate, NESO's call for
+    input and DESNZ's consumption series, woven into the prose — while
+    UK Power Networks' two datasets and the word "Provenance" reached
+    only the workbook's sheets (ROADMAP, "Two external sources reach the
+    workbook and not the reader"). A reporter working from the reader
+    alone could not see two of the sources the release rests on, or the
+    record of where any of them came from, which cuts against the rule
+    the rest of this page keeps: every number drillable to its source.
+
+    Generated from `dcp.external_aggregates.SOURCES`, the same table the
+    workbook's Provenance sheet is written from, so the two cannot list
+    different sources.
+    """
+    from dcp import external_aggregates as extagg
+    rows = "".join(
+        f"<tr><th scope='row'>{esc(s.title)}</th>"
+        f"<td>{esc(s.publisher)}</td><td>{esc(s.published)}</td>"
+        f"<td><a href='{esc(s.url)}' target='_blank' rel='noopener'>source</a>"
+        f"<span class='q'> · accessed {esc(s.accessed)}</span></td>"
+        f"<td class='q'>{esc(s.note)}</td></tr>"
+        for s in extagg.SOURCES.values())
+    return (
+        '<h3 class="sec">Sources outside the planning record</h3>'
+        '<p class="m">Every figure on this site that did not come from a planning '
+        'document comes from one of these, each entered once with its locator and '
+        'the date it was read. None measures the quantity a planning application '
+        'states, which is why none is joined to a site as a column: they sit beside '
+        'the data as aggregates and context (the two workbook sheets '
+        '<b>External aggregates</b> and <b>Provenance</b> carry the same table and '
+        'every figure taken from it).</p>'
+        '<div class="scroll"><table class="stats sources"><thead><tr>'
+        '<th scope="col">Source</th><th scope="col">Publisher</th>'
+        '<th scope="col">Published</th><th scope="col">Where</th>'
+        '<th scope="col">What it is, and its limits</th></tr></thead>'
+        f'<tbody>{rows}</tbody></table></div>')
+
+
 def app_anchor(key: str, ref: str) -> str:
     """A fragment id for one application's row on its site page.
 
@@ -6052,6 +6093,7 @@ def main() -> int:
  cluster, a model verdict — the inference is stored beside the original record with its
  method named. Original records are never overwritten, and re-runs add rows rather than
  replacing them.</p>
+{external_sources_html()}
 
  <h2 class="sec">Conditions of use</h2>
  <p class="m">Barbour ABI project data is licensed for this use and <b>requires attribution
