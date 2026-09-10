@@ -41,15 +41,21 @@
 # the standing example to migrate, not to copy.
 
 aliases:
-  - site_key: SITE-Bassetlaw/22/01713/FUL
+  - site_key: SITE-Bassetlaw/26/00034/FUL
     alias: West Burton Power Station
     source: |
       The site is the former West Burton power station land; the
       application's own documents and every press mention name it West
-      Burton. The derived name is the lead application's address line,
+      Burton. The derived name was the lead application's address line,
       "Land East Of Gainsborough Road Bole Nottinghamshire", which
       nobody searching for West Burton will find (ROADMAP, the
-      display-name defect, second occurrence).
+      display-name defect, second occurrence). Re-pointed 2026-09-10
+      from SITE-Bassetlaw/22/01713/FUL: that application is the battery
+      scheme, `not_dc`, and a site is no longer keyed on one (the key
+      rule of migration 034); the key is now the data-centre
+      application's, whose address line is "West Burton Power Station,
+      South Road", so the alias adds less than it did and stays for the
+      name people use.
 
   - site_key: SITE-Northumberland/13/01352/FUL
     alias: Blyth Offshore Wind Farm onshore substation
@@ -570,14 +576,17 @@ aliases:
       Amazon's existing 3A Blossom Way building because Amazon gives
       the two no common designation (Luke).
 
-  - site_key: SITE-Dacorum/20/01580/DRC
+  - site_key: SITE-Dacorum/21/04714/SCE
     alias: Amazon, 3A Blossom Way, Prologis Park Hemel Hempstead (Prologis DC5/DC6)
     source: |
-      The derived name is a condition discharge's address line, which
-      names no operator: the key is the site's first member reference
-      alphabetically, and ingesting the building's own permission chain
-      on 2026-09-07 moved it from the 2021 screening request to
-      `20/01580/DRC`. Dacorum/26/00152/FUL, submitted on
+      The derived name is the 2021 screening request's address line,
+      which names no operator. The key is the site's first member
+      whose figures stand as the site's: ingesting the building's own
+      permission chain on 2026-09-07 moved it to the condition
+      discharge `20/01580/DRC`, and the key rule of 2026-09-10
+      (migration 034) moved it back, because that discharge is
+      paperwork of the 2019 B8 consent, which triage calls `not_dc`,
+      and a site is no longer keyed on such. Dacorum/26/00152/FUL, submitted on
       behalf of Amazon Web Services, describes "the existing Data
       Centre at 3A Blossom Way", and Amazon's permit EPR/BP3546QP is
       issued at 3A Blossom Way, HP2 4ZB. Prologis markets the structure

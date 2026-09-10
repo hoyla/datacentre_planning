@@ -226,6 +226,21 @@ def test_a_not_dc_members_figure_does_not_stand_as_the_sites(db_conn, tmp_path):
 
 
 @pytest.mark.integration
+def test_a_site_is_not_keyed_on_a_not_dc_member(db_conn, tmp_path):
+    """The outline sorts first by reference and would have named the
+    site; the key skips it for the data-centre application, and an
+    admission gives it back (Kingsnorth keeps its key)."""
+    _app(db_conn, DC, verdict="new_build", assoc=OUTLINE)
+    _app(db_conn, OUTLINE, verdict="not_dc")
+    assert OUTLINE < DC, "the test needs the not_dc member to sort first"
+    clusters = sites.build_clusters(db_conn, data_dir=_priors(tmp_path, None))
+    assert [c["site_key"] for c in clusters] == [f"SITE-{DC}"]
+    data_dir = _priors(tmp_path, ENTRY.format(ref=OUTLINE, key=f"SITE-{OUTLINE}"))
+    clusters = sites.build_clusters(db_conn, data_dir=data_dir)
+    assert [c["site_key"] for c in clusters] == [f"SITE-{OUTLINE}"]
+
+
+@pytest.mark.integration
 def test_procedural_paperwork_with_a_counting_neighbour_keeps_counting(db_conn, tmp_path):
     """A discharge citing the data-centre permission as well as the
     not_dc outline is not the outline's paperwork alone; it stays."""
@@ -250,20 +265,27 @@ def test_an_admitted_not_dc_members_figure_counts_and_the_preflight_names_the_ch
     db_conn.commit()
     key = clusters[0]["site_key"]
     # Then a person admits the outline, with evidence — and the admission
-    # carries the outline's own discharge with it.
+    # carries the outline's own discharge with it, and gives the site
+    # the outline's key, which sorts first (Kingsnorth's shape).
     _app(db_conn, DISCHARGE, verdict="procedural", assoc=OUTLINE)
-    data_dir = _priors(tmp_path, ENTRY.format(ref=OUTLINE, key=key))
+    new_key = f"SITE-{OUTLINE}"
+    data_dir = _priors(tmp_path, ENTRY.format(ref=OUTLINE, key=new_key))
     clusters = sites.build_clusters(db_conn, data_dir=data_dir)
+    assert clusters[0]["site_key"] == new_key
     standing = {a["ref"]: (a["figure_standing"], a["standing_reason"])
                 for a in clusters[0]["apps"]}
     assert standing[OUTLINE][0] == "not_dc_admitted"
     assert "parent" in standing[OUTLINE][1]
     assert standing[DISCHARGE][0] == "counts"
     pre = sites.preflight(db_conn, clusters)
-    assert pre["standing"] == [(OUTLINE, key, "not_dc_excluded", "not_dc_admitted")]
+    assert pre["retiring"] == [key] and pre["new"] == [new_key]
+    # The discharge is new to the site, so it is not a *change* of
+    # standing; the outline's is.
+    assert pre["standing"] == [
+        (OUTLINE, new_key, "not_dc_excluded", "not_dc_admitted")]
     sites.materialise(db_conn, clusters)
     db_conn.commit()
-    assert site_cohorts.load_inputs(db_conn).figures[key]["it_load_mw"] == 500
+    assert site_cohorts.load_inputs(db_conn).figures[new_key]["it_load_mw"] == 500
     with db_conn.cursor() as cur:
         cur.execute("SELECT figure_standing, standing_reason FROM site_members "
                     "WHERE application_id = %s AND retired_at IS NULL", (outline,))
@@ -282,7 +304,7 @@ def test_the_prior_fails_the_run_on_a_reference_the_corpus_does_not_hold(db_conn
 
 @pytest.mark.integration
 def test_the_prior_fails_the_run_on_a_site_the_application_is_not_in(db_conn, tmp_path):
-    dc = _app(db_conn, DC, verdict="new_build", assoc=OUTLINE)
+    _app(db_conn, DC, verdict="new_build", assoc=OUTLINE)
     _app(db_conn, OUTLINE, verdict="not_dc")
     data_dir = _priors(tmp_path, ENTRY.format(ref=OUTLINE, key="SITE-Somewhere/Else"))
     with pytest.raises(ValueError, match="site key moved"):

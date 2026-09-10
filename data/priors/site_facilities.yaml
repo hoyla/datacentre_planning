@@ -633,10 +633,12 @@ sites:
           - kind: maximum IT load, operator's basis
             claim: NTT Hemel Hempstead 3
 
-  - site_key: SITE-Dacorum/20/01580/DRC
+  - site_key: SITE-Dacorum/21/04714/SCE
     note: >-
       Amazon Web Services' existing building at 3A Blossom Way,
-      Prologis Park Hemel Hempstead. Amazon publishes no facility page
+      Prologis Park Hemel Hempstead (keyed SITE-Dacorum/20/01580/DRC
+      from 2026-09-07 to 2026-09-10, when a site stopped being keyed on
+      `not_dc` paperwork). Amazon publishes no facility page
       and no figure; the only external figure is the permit's thermal
       input. Amazon's proposed Plot 3 building is its own record
       (PTNO-12700933), the two having no common designation from Amazon.

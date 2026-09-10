@@ -1274,6 +1274,12 @@ spends the afternoon again. Anything NOT on this list is new.
   estimate the standby figure of a `not_dc` member had masked. The
   Applications sheet's last column says which members count and why.
   Not a missing adjudication, and not a member that left the site.
+  **And twelve sites retired-and-new in the same diff, 88 applications
+  moving with them**: the key rule of the same day — a `SITE-` key is
+  the first member whose figures stand, so a battery scheme or a power
+  station's discharge no longer names the data-centre site beside it.
+  Same members, new key; the Drive folders rename at the staging build
+  and the sync needs `--prune`.
 
 - **One withheld machine reading: Mary Somerville
   (`PTNO-12843110`).** Its only planning application,
@@ -1378,13 +1384,6 @@ spends the afternoon again. Anything NOT on this list is new.
   ground-truth set exists to test it against the known-bad cases first.
 - **Repository visibility.** The cohorts file, the DC01 lead and the
   operator watch-list sit in a public repo.
-- **The two admissions in `data/priors/not_dc_standing.yaml`**
-  (Kingsnorth's outline, Google's Waltham Cross reserved matters) were
-  entered on 2026-09-10 from the record's own evidence and await Luke's
-  confirmation; and **whether a `SITE-` key may derive from a `not_dc`
-  application** — eighteen do — is measured in ROADMAP's `not_dc` item
-  and is a decision about Drive renames, readings and the Sheet's
-  annotations, not a column.
 
 ## Traps, each of which cost time today
 
