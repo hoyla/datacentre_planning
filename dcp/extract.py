@@ -546,6 +546,57 @@ def extract_docx(bytes_path: Path) -> list[str]:
     return paginate(blocks)
 
 
+def extract_docx_images(bytes_path: Path, *, ocr_engine: str = "tesseract") -> list[str]:
+    """OCR the pictures inside a Word file that has no text of its own.
+
+    A consultee pastes a scanned letter into a blank document and saves
+    it as `.docx`: a 4 KB body, a 700 KB picture, and a loader that
+    correctly finds no words. Left there, the document is uncached and
+    unread for ever — and it is a consultee comment, which is the class
+    where power disclosures live. National Highways' letter on
+    `Wakefield/23/01043/FUL` was the single document holding a site
+    below "read in full" for a month (2026-09-10).
+
+    One section per picture, in the package's own numbering, each read
+    with orientation detection as a standalone image is. Called only
+    when `extract_docx` returned nothing: a document with text and a
+    picture keeps its text, because a picture in a supporting statement
+    is a plan or a photograph and OCR of it is noise.
+    """
+    import io
+    import zipfile
+
+    try:
+        from PIL import Image
+    except ImportError as exc:
+        log.warning("Pillow missing; cannot OCR pictures in %s (%s)", bytes_path, exc)
+        return []
+    ocr_image = _OCR_BACKENDS[ocr_engine]
+    try:
+        with zipfile.ZipFile(bytes_path) as zf:
+            names = [n for n in zf.namelist()
+                     if n.startswith("word/media/") and not n.endswith("/")]
+            names.sort(key=lambda n: [int(t) if t.isdigit() else t
+                                      for t in re.split(r"(\d+)", n)])
+            sections: list[str] = []
+            for name in names[:MAX_IMAGE_FRAMES]:
+                try:
+                    img = Image.open(io.BytesIO(zf.read(name)))
+                    try:
+                        text = ocr_image(img.convert("RGB"), psm="1")
+                    finally:
+                        img.close()
+                except Exception as exc:
+                    log.warning("OCR failed on %s in %s: %s", name, bytes_path, exc)
+                    continue
+                if text.strip():
+                    sections.append(f"[picture: {Path(name).name}]\n{text}")
+    except Exception as exc:
+        log.warning("unreadable docx package %s: %s", bytes_path, exc)
+        return []
+    return sections
+
+
 def extract_doc(bytes_path: Path) -> list[str]:
     """Legacy Word 97-2003, via the macOS `textutil` binary.
 
@@ -606,6 +657,54 @@ def extract_xlsx(bytes_path: Path) -> list[str]:
             sheets.append("\n".join(lines))
     finally:
         wb.close()
+    return sheets
+
+
+def extract_xls(bytes_path: Path) -> list[str]:
+    """One section per worksheet of a binary Excel 97–2003 workbook.
+
+    The same shape as `extract_xlsx`, through xlrd, which is the one
+    library left that reads BIFF. Three live-site documents held this
+    format on 2026-09-10 and one of them — a risk register on
+    `Dacorum/4/00571/14/DRC` — was the single document keeping NTT Hemel
+    Hempstead 3 below "read in full". Cell values as xlrd gives them:
+    dates come back as serial numbers unless converted, so they are.
+    """
+    try:
+        import xlrd
+    except ImportError as exc:
+        log.warning("xlrd missing; cannot read %s (%s)", bytes_path, exc)
+        return []
+    try:
+        book = xlrd.open_workbook(str(bytes_path), on_demand=True)
+    except Exception as exc:
+        log.warning("xlrd failed on %s: %s", bytes_path, exc)
+        return []
+    sheets: list[str] = []
+    try:
+        for ws in book.sheets():
+            lines = [f"[sheet: {ws.name}]"]
+            for r in range(ws.nrows):
+                cells = []
+                for c in range(ws.ncols):
+                    cell = ws.cell(r, c)
+                    if cell.ctype == xlrd.XL_CELL_EMPTY:
+                        cells.append("")
+                    elif cell.ctype == xlrd.XL_CELL_DATE:
+                        try:
+                            cells.append(str(xlrd.xldate_as_datetime(
+                                cell.value, book.datemode).date()))
+                        except Exception:
+                            cells.append(str(cell.value))
+                    elif cell.ctype == xlrd.XL_CELL_NUMBER and cell.value == int(cell.value):
+                        cells.append(str(int(cell.value)))
+                    else:
+                        cells.append(str(cell.value).strip())
+                if any(cells):
+                    lines.append(" | ".join(cells).rstrip(" |"))
+            sheets.append("\n".join(lines))
+    finally:
+        book.release_resources()
     return sheets
 
 
@@ -839,6 +938,7 @@ _LOADERS = {
     "doc": (extract_doc, "sections"),
     "rtf": (extract_rtf, "sections"),
     "xlsx": (extract_xlsx, "sheets"),
+    "xls": (extract_xls, "sheets"),
     "ods": (extract_opendocument, "sections"),
     "odt": (extract_opendocument, "sections"),
     "odp": (extract_opendocument, "sections"),
@@ -852,9 +952,10 @@ _LOADERS = {
 }
 
 # Formats with no loader: recognised, but nothing can be read from them here.
-# The binary pre-2007 Excel and PowerPoint formats and the binary `.xlsb`
-# workbook, six documents corpus-wide between them.
-UNSUPPORTED_FORMATS = {"xls", "xlsb", "ppt", "unknown"}
+# The binary pre-2007 PowerPoint format and the binary `.xlsb` workbook
+# (binary Excel 97 gained a loader on 2026-09-10), a handful of documents
+# corpus-wide between them.
+UNSUPPORTED_FORMATS = {"xlsb", "ppt", "unknown"}
 
 
 def extract_document(
@@ -914,6 +1015,14 @@ def extract_document(
         loader, pagination = _LOADERS[fmt]
         pages = loader(bytes_path)
         engine = fmt
+        if fmt == "docx" and ocr and not any(p.strip() for p in pages):
+            # A Word file that is only a picture: read the picture, the
+            # way a standalone scan is read, and say so in the engine and
+            # in `ocr_pages` so the verification report can see it.
+            pages = extract_docx_images(bytes_path, ocr_engine=ocr_engine)
+            if any(p.strip() for p in pages):
+                engine = f"docx+{ocr_engine}"
+                ocr_pages = tuple(range(1, len(pages) + 1))
         if not any(p.strip() for p in pages):
             # A loader that returned nothing is far more likely to have
             # failed than to have been handed a genuinely wordless
