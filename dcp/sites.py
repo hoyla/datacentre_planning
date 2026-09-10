@@ -21,7 +21,10 @@ Identity rules (stable across re-materialisation):
 
 - A cluster containing at least one real (non-tender) Barbour project is
   keyed ``PTNO-<lowest Ptno>``.
-- Otherwise ``SITE-<alphabetically first application_ref>``.
+- Otherwise ``SITE-<alphabetically first application_ref whose figures
+  stand as the site's>`` — a ``not_dc`` member the family door admitted
+  never names the site (since 2026-09-10); a cluster with no such
+  member keys on its first application.
 
 Membership is recomputable; keys persist. A re-run updates membership,
 retires sites that no longer emerge from the clustering (``retired_at``
@@ -167,10 +170,13 @@ def _load_not_dc_standing(data_dir: Path) -> dict[str, dict]:
     return out
 
 
-def _standing_of(clusters: list[dict], admitted: dict[str, dict],
-                 fam_edges: list[tuple[int, int, str]] = ()) -> None:
+def _assign_standing(groups: list[list[dict]], admitted: dict[str, dict],
+                     fam_edges: list[tuple[int, int, str]] = ()) -> None:
     """Set `figure_standing` and `standing_reason` on every application
-    in every cluster, and validate the admissions against the clusters.
+    in every group, a group being the applications of one site-to-be.
+    Runs before the site key is derived, because the key reads it
+    (`_check_admissions` validates the admissions afterwards, once the
+    keys exist).
 
     The rule (ROADMAP, the `not_dc` item; migration 034): a member whose
     latest dc_build verdict is `not_dc` keeps its membership and its
@@ -203,9 +209,8 @@ def _standing_of(clusters: list[dict], admitted: dict[str, dict],
     the site back on its largest excluded figure with nothing to say
     it had happened — the same contract as site_aliases.yaml.
     """
-    seen: dict[str, tuple[str, str]] = {}
-    for c in clusters:
-        for a in c["apps"]:
+    for group in groups:
+        for a in group:
             entry = admitted.get(a["ref"].upper())
             if a["verdict"] != "not_dc":
                 a["figure_standing"], a["standing_reason"] = "counts", None
@@ -220,29 +225,13 @@ def _standing_of(clusters: list[dict], admitted: dict[str, dict],
                 a["standing_reason"] = entry["reason"]
             else:
                 a["figure_standing"], a["standing_reason"] = "not_dc_excluded", None
-            if entry:
-                seen[a["ref"].upper()] = (c["site_key"], entry["site_key"])
-    missing = sorted(e["ref"] for k, e in admitted.items() if k not in seen)
-    if missing:
-        raise ValueError(
-            "not_dc_standing.yaml names applications that are not members "
-            "of any site: " + ", ".join(missing)
-            + " — a typo, or an application that left the universe; "
-              "repoint or remove the entry")
-    moved = sorted(f"{admitted[k]['ref']} (entry says {want}, cluster is {have})"
-                   for k, (have, want) in seen.items() if have != want)
-    if moved:
-        raise ValueError(
-            "not_dc_standing.yaml names a site its application is not a "
-            "member of: " + "; ".join(moved)
-            + " — the site key moved; repoint the entry")
 
     # Procedural paperwork follows its parents (docstring). Family edges
     # are undirected here — a discharge cites its parent, and the parent
     # is a neighbour either way — and only edges inside one site count:
     # a reference across two sites is a partition question, not standing.
-    by_id = {a["id"]: a for c in clusters for a in c["apps"]}
-    site_of = {a["id"]: c["site_key"] for c in clusters for a in c["apps"]}
+    by_id = {a["id"]: a for group in groups for a in group}
+    site_of = {a["id"]: i for i, group in enumerate(groups) for a in group}
     nbrs: dict[int, set[int]] = defaultdict(set)
     for x, y, _src in fam_edges:
         if x in by_id and y in by_id and site_of[x] == site_of[y]:
@@ -263,6 +252,34 @@ def _standing_of(clusters: list[dict], admitted: dict[str, dict],
                     + ", ".join(sorted(by_id[i]["ref"] for i in n))
                     + ", which triage calls not a data centre")
                 changed = True
+
+
+def _check_admissions(clusters: list[dict], admitted: dict[str, dict]) -> None:
+    """Every admission names an application that is a member of the site
+    it names, or the run fails — the alias file's contract, for the
+    reason `_assign_standing`'s docstring gives. Runs once the keys
+    exist, because the key of a `SITE-` site is derived from the
+    standing the admission sets (an admitted outline keeps its key)."""
+    seen: dict[str, tuple[str, str]] = {}
+    for c in clusters:
+        for a in c["apps"]:
+            entry = admitted.get(a["ref"].upper())
+            if entry:
+                seen[a["ref"].upper()] = (c["site_key"], entry["site_key"])
+    missing = sorted(e["ref"] for k, e in admitted.items() if k not in seen)
+    if missing:
+        raise ValueError(
+            "not_dc_standing.yaml names applications that are not members "
+            "of any site: " + ", ".join(missing)
+            + " — a typo, or an application that left the universe; "
+              "repoint or remove the entry")
+    moved = sorted(f"{admitted[k]['ref']} (entry says {want}, cluster is {have})"
+                   for k, (have, want) in seen.items() if have != want)
+    if moved:
+        raise ValueError(
+            "not_dc_standing.yaml names a site its application is not a "
+            "member of: " + "; ".join(moved)
+            + " — the site key moved; repoint the entry")
 
 
 def _load_site_partitions(data_dir: Path) -> tuple[dict[str, str], dict[str, str]]:
@@ -721,6 +738,12 @@ def build_clusters(conn, *, radius_km: float = 1.0,
         q["joined_via"] = joined_via.get(("P", p["id"]), "singleton")
         raw[uf.find(("P", p["id"]))]["projects"].append(q)
 
+    # Standing first, keys second: a `SITE-` key is derived from the
+    # first application whose figures stand as the site's, so the
+    # standing has to be known before the key is (migration 034; the
+    # key rule decided by Luke, 2026-09-10).
+    _assign_standing([c["apps"] for c in raw.values()], admitted, fam_edges)
+
     clusters = []
     for c in raw.values():
         real_projects = sorted(
@@ -750,7 +773,18 @@ def build_clusters(conn, *, radius_km: float = 1.0,
                              if real_projects[0].get("coord_inferred")
                              else "barbour")
         else:
-            lead = c["apps"][0]
+            # The first application whose figures stand as the site's,
+            # in reference order — not merely the first. A key derived
+            # from a `not_dc` member named eighteen sites after the
+            # scheme triage said they were not (Eggborough's data
+            # centres after the station's discharge, West Burton's
+            # after the battery), and lent the derived name to it; an
+            # admitted outline counts and keeps its key. A site with no
+            # counting member at all — Rhondda's, one application, in
+            # the universe on its v1 verdict — keys on what it has.
+            lead = next((a for a in c["apps"]
+                         if a["figure_standing"] != "not_dc_excluded"),
+                        c["apps"][0])
             key = f"SITE-{lead['ref']}"
             display = lead["addr"] or lead["desc"] or lead["ref"]
             located_apps = [a for a in c["apps"] if a["lat"] is not None]
@@ -763,11 +797,10 @@ def build_clusters(conn, *, radius_km: float = 1.0,
                          "display_name": display, "lat": lat, "lon": lon,
                          "coord_source": src})
     clusters.sort(key=lambda c: c["site_key"])
-    # Which members' figures may stand as the site's — decided per
-    # member from the verdict, the admissions and the family edges,
-    # written to site_members by `materialise`, and read by every
-    # site-level rollup through `figure_standing <> 'not_dc_excluded'`.
-    _standing_of(clusters, admitted, fam_edges)
+    # The standing was assigned above and is written to site_members by
+    # `materialise`; with the keys now known, check every admission
+    # names the site its application is in.
+    _check_admissions(clusters, admitted)
     return clusters
 
 

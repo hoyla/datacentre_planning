@@ -66,11 +66,13 @@
 --
 -- ## What this migration does not do
 --
--- It does not change site keys. Eighteen `SITE-` keys derive from a
--- `not_dc` application (Kingsnorth's among them, with ten readings and
--- two matched claims behind it), and re-keying them renames Drive
--- folders, orphans readings and breaks the Sheet's annotations by key.
--- That is measured in ROADMAP and is a decision, not a column.
+-- It does not itself change site keys. Eighteen `SITE-` keys derived
+-- from a `not_dc` application when it was written (Kingsnorth's among
+-- them, with ten readings and two matched claims behind it); re-keying
+-- renames Drive folders, orphans readings and breaks the Sheet's
+-- annotations by key, so it was put to Luke as a decision. He took it
+-- the same day: `dcp/sites.py` now keys a `SITE-` site on its first
+-- member whose figures stand, and the tidy-up is the accepted cost.
 
 ALTER TABLE site_members
     ADD COLUMN figure_standing TEXT NOT NULL DEFAULT 'counts'

@@ -51,10 +51,10 @@ matches:
 
   - row: 752
     claim_name: West Burton Data Centre
-    site_id: 451
+    site_id: 175
     method: name_identity
     confidence: strong
-    matched_by: hand:claude-fable-5:2026-08-20; re-pointed hand:claude-fable-5:2026-08-25
+    matched_by: hand:claude-fable-5:2026-08-20; re-pointed hand:claude-fable-5:2026-08-25; re-pointed hand:claude-fable-5:2026-09-10
     evidence: >-
       Register row "West Burton Data Centre", 500 MW at West Burton
       400kV; the site holds Bassetlaw/26/00034/FUL, "West Burton Power
@@ -68,6 +68,11 @@ matches:
       match names, 0.27 km from the land east of Gainsborough Road that
       now supplies the site's display name. Same physical place, same
       evidence; only the key changed. Match 3 carries the retirement.
+      Re-pointed again 2026-09-10, from site 451 back to site 175, now
+      revived under SITE-Bassetlaw/26/00034/FUL: a site is no longer
+      keyed on a `not_dc` application (migration 034's key rule), and
+      22/01713/FUL is the battery scheme. Same members, same evidence;
+      the key is now the data-centre application this match names.
 
   - row: 723
     claim_name: Mecure Data Centre

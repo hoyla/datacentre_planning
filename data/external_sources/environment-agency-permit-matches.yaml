@@ -273,19 +273,23 @@ matches:
 # result is not the same thing as an untested one.
   # --- Hemel Hempstead, matched once site 11 was partitioned -----------
   - claim_name: Hemel Hempstead Data Centre (EPR/BP3546QP)
-    site_id: 550
+    site_id: 549
     method: operator_identity
     confidence: strong
-    matched_by: hand:claude-fable-5:2026-09-07
+    matched_by: hand:claude-fable-5:2026-09-07; re-pointed hand:claude-fable-5:2026-09-10
     evidence: >-
       The permit is held by AMAZON DATA SERVICES UK LIMITED at 3A Blossom
-      Way, HP2 4ZB (grid 508120 207510). Site 550 —
-      SITE-Dacorum/20/01580/DRC, Amazon's existing 3A Blossom Way
+      Way, HP2 4ZB (grid 508120 207510). Site 549 —
+      SITE-Dacorum/21/04714/SCE, Amazon's existing 3A Blossom Way
       building: its own record since the 2026-09-07 partition of site
-      11, re-keyed the same day when the building's own permission chain
-      was ingested (the key is the first member reference
-      alphabetically, which is now a condition discharge; the alias
-      carries the name). It holds Dacorum/26/00152/FUL at 3A Blossom Way, HP2 4ZB,
+      11, keyed that day on the 2021 screening request, re-keyed the
+      same evening onto a condition discharge when the building's own
+      permission chain was ingested (site 550), and back on 2026-09-10
+      when a site stopped being keyed on `not_dc` paperwork (migration
+      034's key rule: the 2020 discharges are paperwork of the 2019 B8
+      consent, which triage calls `not_dc`; the screening request is the
+      first member whose figures stand). Same members throughout; the
+      alias carries the name. It holds Dacorum/26/00152/FUL at 3A Blossom Way, HP2 4ZB,
       submitted on behalf of Amazon Web Services for a Learning Lab "in
       connection with the adjacent Data Centre" and describing "the
       existing Data Centre at 3A Blossom Way", and Prologis's 2021
@@ -389,9 +393,10 @@ considered:
       sites"), so it cannot describe a single site at all.
       SETTLED for Amazon's permit, 2026-09-07: site 11 was partitioned
       into four (site_partitions.yaml, the three Hemel entries), the 3A
-      Blossom Way applications now sit in SITE-Dacorum/20/01580/DRC
-      (site 550, keyed SITE-Dacorum/20/01580/DRC since the chain was
-      ingested), and the permit is matched to it above. NTT's permit stays here: it
+      Blossom Way applications now sit in SITE-Dacorum/21/04714/SCE
+      (site 549; keyed SITE-Dacorum/20/01580/DRC, site 550, from the
+      chain's ingest on 2026-09-07 until the 2026-09-10 key rule), and
+      the permit is matched to it above. NTT's permit stays here: it
       covers four sites at four postcodes (HP2 7UP, 7SU, 7DF, 7EQ), of
       which NTT's Hemel 3 record (filed under Gyron) holds one, and a
       multi-site figure

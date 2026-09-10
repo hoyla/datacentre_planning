@@ -76,32 +76,32 @@ NESO replies are due about now and nothing waits on a release, so
 improvements accumulate and go out together. What the work left, each
 for the person named:
 
-- **Luke: confirm the two admissions in
-  `data/priors/not_dc_standing.yaml`.** Kingsnorth's outline
-  (`Medway/MC/21/0979`) and Google's Waltham Cross reserved matters
-  (`Broxbourne/07/23/0361/RM`) were entered from the record's own
-  evidence — the 2026-09-02 resolution and the quotes in the file —
-  and not by him. An entry asserts that the application's documents
-  are the data centre's own paperwork, so its adjudicated figures stand
-  as the site's; Kingsnorth's carries the site's grid, generation and
-  total-site statements (80 figures), Google's two cooling figures. To
-  withdraw one, delete the entry and re-materialise; the site falls to
-  its next counting figure and the page says what was left out.
-- **Luke: whether a `SITE-` key may derive from a `not_dc`
-  application.** Eighteen do; the cost of re-keying — Drive renames,
-  orphaned readings, three claims, one alias, the Sheet's annotations
-  — is under the `not_dc` item. A decision, not a column.
-- **The 2.15 chain carries three things for it.** Step 4a's bare
-  `--submit` re-reads the sites whose input hash moved (at least the
-  18 pages that count excluded figures; the freshness check names the
-  full set), and until then Eggborough's page keeps a reading quoting
+Both decisions were taken the same day: the two admissions in
+`data/priors/not_dc_standing.yaml` are confirmed, and a `SITE-` key
+no longer derives from a `not_dc` application (HISTORY, "The key
+half, decided and built"). What that leaves is tidying, all of it at
+the 2.15 chain:
+
+- **The 2.15 chain carries the tidy-up.** Twelve sites re-keyed on
+  2026-09-10 (two onto keys they had held before) and 88 applications
+  changed key with them, so **step 9's staging build renames twelve
+  site folders and step 10's sync needs `--prune`**, or Drive keeps
+  the old names beside the new. Ten of the twelve held machine
+  readings, which are now history under the old keys; step 4a's bare
+  `--submit` reads the new keys as sites with none, and also re-reads
+  every site whose input hash moved for the standing itself (at least
+  the 18 pages that count excluded figures; the freshness check names
+  the full set) — until then Eggborough's page keeps a reading quoting
   the 2,500 MW its figure box no longer counts. `release_diff` will
-  report the fallen and risen figures HISTORY lists — six workbook
-  rows — as this work, not a regression. The Sheet sync realigns the
-  Applications tab's columns by name and adds "Discovery tags" and
-  "Figures stand as the site's"; the stray unnamed column that has
-  held the discovery tags since 2.7 is not removed by the sync and
-  wants deleting by hand afterwards.
+  report the twelve as retired-and-new and the fallen and risen
+  figures HISTORY lists — six workbook rows — as this work, not a
+  regression. The Sheet sync rewrites the twelve sites' rows under
+  their new keys, so **any annotation the team keyed on an old key
+  wants carrying across by hand**; it also realigns the Applications
+  tab's columns by name and adds "Discovery tags" and "Figures stand
+  as the site's", and the stray unnamed column that has held the
+  discovery tags since 2.7 is not removed by the sync and wants
+  deleting by hand afterwards.
 - **Two Barbour-anchored sites now read "no capacity disclosed"** —
   Heatherwood Hospital and Metaswitch — because the floorspace
   estimates they carried rested on a `not_dc` member's floorspace.
@@ -452,18 +452,14 @@ What survives it here:
   site's" — beside the stray unnamed column, which wants deleting by
   hand after the sync.
 
-  **The key half is measured and not built, and is a decision.**
-  Eighteen `SITE-` keys derive from a `not_dc` application (Rhondda's
-  from the only application it has). Re-keying them renames eighteen
-  Drive folders (a `--prune` sync each), orphans the readings keyed on
-  the old keys (Kingsnorth's ten among them; a bare `--submit` re-reads
-  them), re-points three matched claims (West Burton's one, Kingsnorth's
-  two) and one alias, and breaks the Google Sheet's annotations by
-  key — for a key the reporting team never reads as a name, since the
-  aliases name the sites. The prior could keep Kingsnorth's key, which
-  is its outline; the other seventeen would move. Not worth doing
-  until the Sheet's annotations are known to be safe or the key is
-  worth more than the churn, and either is Luke's call.
+  **The key half shipped the same day, on Luke's decision** (HISTORY,
+  "The key half, decided and built"): a `SITE-` key is the first
+  member whose figures stand, so a `not_dc` application never names a
+  site. Twelve re-keyed, not the eighteen measured — six keep their
+  key because every other member is a discharge inheriting the
+  exclusion, and Kingsnorth keeps its because its outline is admitted.
+  The tidy-up that follows is listed under "Outstanding from the
+  figure-standing work" at the top of this file.
 - Six adjacent-power records attach to no site at all: keyword-swept,
   no coordinates. Unchanged by any of this.
 - **44 power schemes within 2.5 km of a live site carry `not_dc` and

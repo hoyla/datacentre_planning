@@ -5055,3 +5055,63 @@ Luke's decision and is recorded in ROADMAP with the count.
 the Sheet's stray unnamed column after the sync; and the DuckDB, which
 was checked against the first materialise and reads the column, so the
 release build carries the second.
+
+## The key half, decided and built (2026-09-10)
+
+Luke, on the two things the figure-standing work had left him: "The two
+admissions are fine; we'll have to do the tidying up (google drive
+folders, sheet, etc) due to the non-derivation." So the prior's two
+entries stand, marked confirmed, and a `SITE-` key no longer derives
+from a `not_dc` application.
+
+**The rule.** `build_clusters` now assigns the figure standing before
+it derives keys, and keys a `SITE-` site on its first member, in
+reference order, whose figures stand as the site's: `counts` or
+`not_dc_admitted`. A cluster with no such member keys on its first
+application, as before. The derived display name follows the same
+lead, so a battery scheme's address line no longer names the
+data-centre site beside it. The admission check runs after the keys
+exist, because an admitted outline that sorts first keeps its key —
+which is why Kingsnorth stays `SITE-Medway/MC/21/0979`.
+
+**Twelve, not eighteen.** The dry run retired twelve keys and created
+ten (two revived keys their sites had held before), moving 88
+applications with them. Six of the eighteen measured that morning keep
+their key because every other member is a conditions discharge that
+inherits the exclusion, so there is nothing else to key on —
+Eggborough's discharge site, the British Museum's, Barking's,
+Hammersmith's, Leeds's, Rhondda's — and Kingsnorth keeps its by
+admission. One re-key was not in the measurement: Amazon's 3A Blossom
+Way, keyed since 2026-09-07 on `Dacorum/20/01580/DRC`, a 2020
+discharge of the 2019 B8 consent that triage calls `not_dc`, went back
+to the 2021 screening request it had been keyed on that morning. Its
+excluded members carry no figures and the site keeps its floorspace
+from the members that count, so the 2019 consent was not admitted:
+South Mimms's B8 outline is the precedent, and the S.73 that made the
+building a data centre counts on its own standing.
+
+**Re-pointed in the same sitting.** The materialise ran with
+`--allow-orphaned-claims` for the two matches the preflight named,
+then both were re-pointed by site id with the reason written on the
+match — West Burton's register row from site 451 back to 175, now
+`SITE-Bassetlaw/26/00034/FUL`; Amazon's Hemel permit from 550 to 549,
+`SITE-Dacorum/21/04714/SCE` — and `load_capacity_claims.py` re-run,
+both attached to live sites. West Burton's alias and the 3A site's
+alias and facility roster moved to the new keys with the move
+recorded; a prior on a dead key fails the build, which is how the 3A
+pair was found after the first grep for the eighteen missed a site
+that was not among them. The old match rows were retired by hand with
+the reason on the row, as the 2026-09-07 re-point's was, because a
+claim may hold one live match and the loader refuses a second until
+the first is retired. Ten of the twelve re-keyed sites held machine
+readings, now history under the old keys; the readings pass reads the
+new keys as sites with none.
+
+**What it leaves, all at the 2.15 chain:** twelve Drive folder renames
+at the staging build and a `--prune` sync; the readings; a
+`release_diff` showing twelve retired-and-new; and the Sheet, whose
+twelve rows rewrite under their new keys, so anything the team keyed on
+an old key wants carrying across by hand. Recorded in ROADMAP's
+"Outstanding from the figure-standing work". Suites green after the
+change: the standing tests gained a key test and the admission test
+now expects the key to move with the admission.

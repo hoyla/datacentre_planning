@@ -196,8 +196,9 @@ applications and Barbour projects joined by project links, family edges
 proximity within 1 km. `dcp/sites.py` builds the clusters and
 `scripts/materialise_sites.py` writes them to `sites` /
 `site_members` — stable keys (`PTNO-<lowest Ptno>`, else
-`SITE-<first ref>`), recomputable membership, retire-and-revive rather
-than delete. Two hand-adjudicated priors correct what the radius cannot
+`SITE-<first ref whose figures stand as the site's>`, so a `not_dc`
+member never names a site), recomputable membership, retire-and-revive
+rather than delete. Two hand-adjudicated priors correct what the radius cannot
 see, both failing the run on an unknown reference rather than weakening
 silently: `data/priors/site_partitions.yaml` (campus boundaries —
 partitioned nodes take no spatial edge outside their partition, while
