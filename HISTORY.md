@@ -5325,3 +5325,57 @@ The corpus extraction pass took 24 more documents with the new loaders
 and leaves 20 it cannot: four PDFs pypdf refuses, the zero-byte files,
 two `.xlsb`, a `.ppt` and five of no recognisable format — the residue
 the item already named, none of it holding a site back.
+
+## The roadmap is cleared again, three days after the last time (2026-09-10)
+
+ROADMAP holds what is still to do, and it was cleared of finished
+items on 2026-09-07 (above). By this evening it had grown twelve
+more, all of one shape: an item closes, its HISTORY entry is written,
+and a paragraph is left in ROADMAP saying so — "Nothing is owed here
+now", "built 2026-09-01", "closed on evidence" — as a pointer. Luke
+asked whether the file was current. It was not, and the drift was the
+pointer paragraph itself: a closed item leaves ROADMAP the day it
+closes, and the HISTORY entry is the pointer. This entry is the
+receipt, with the substance HISTORY did not already carry.
+
+**Already recorded in this file, and simply removed.** The Drive home
+for adjacent power (2026-09-02); `component_of` and the realm a claim
+belongs to (2026-09-01, "A claim links its own evidence"); the
+operator rung's decisions 1 to 5 (2026-09-01/02); the `power-1.1`
+preamble whose two parked changes went in with `gate-2.1`
+(2026-08-31); Idox returning an empty document list as the two facts
+it is, with the 74 re-fetched (today, above); the 52 refused pages,
+every one of which holds documents except Exeter College's six,
+excluded by exception (2026-09-06/07), and the settled verdicts they
+were awarded under, corrected today; the last prose gap, 390 of 390
+(today, above); the DuckDB's `our_copy_url` (today, above); the
+methodology page's external-sources table (today, above); the
+acquisition tail's superseded counts (2026-08-27); scanned-page
+orientation, closed on evidence ("Unreadable is not unread", above).
+
+**Substance that was only in ROADMAP, kept here.**
+
+- **The five-campus reconciliation, as measured 2026-09-01.**
+  `capacity_claims.reconcile_components()` against the operator
+  rosters: Saunderton 78.0 against 78.0 exact, Iron Mountain 61.0
+  against 60.7, Kao 71.0 against 71.2, Slough 145.5 against 132.2, and
+  Stockley 112.5 against 72.5 because two of five facilities disclose
+  nothing. A gap is never an error: Slough's is a question for the
+  operator, Stockley's is a denominator, Kao's and Iron Mountain's are
+  integer campus figures over decimal facilities. Saunderton had been
+  asserted exact from 2026-08-31 without entering the measurement at
+  all — its four facility claims carried no `component_of` — and was
+  found and fixed while the Iron Mountain roster was built against it.
+- **The N+N question.** Redundancy handling is correct throughout —
+  "5 MW N+1" is 5.0, "1125 kW N+1" is 1.125. The one wrong page is
+  Hayes Bridge, whose sentence is adjudicated at both 150 and 300 MW,
+  and that stays in ROADMAP under the Hayes item as the ask it is.
+- **Orientation detection reopens only** with a document that
+  demonstrably has readable text nobody is reading; the 231 wordless
+  documents are photographs and line drawings, read as blank by two
+  independent recognisers.
+
+What stays of each trimmed item is its ask alone: Ocella, Arcus and
+NI for the empty list; decision 6 and the Stockley wrinkle for the
+rung; the twenty uncacheable documents and three zero-byte files for
+the prose gap; Hayes for N+N.
