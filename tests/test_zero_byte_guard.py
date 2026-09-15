@@ -223,3 +223,23 @@ def test_idox_zero_byte_is_retried_on_a_later_run(db_conn, tmp_path,
         cur.execute("SELECT count(*) FROM documents WHERE application_id = %s",
                     (app_id,))
         assert cur.fetchone()[0] == 2
+
+
+@pytest.mark.integration
+def test_an_empty_document_row_is_not_held_so_a_later_pass_retries_it(db_conn):
+    """The three pre-guard empties were never retried: every adapter's
+    resume counted their rows as held. `repo.held_bytes` is the one rule
+    now, and it leaves the empty hash out (2026-09-15)."""
+    source_id = repo.ensure_source(db_conn, name="idox", kind="council")
+    app_id = repo.upsert_application(
+        db_conn, source_id=source_id,
+        app={"name": "Example/25/00002/FUL", "url": "https://pa.example.gov.uk/x?keyVal=Y"})
+    with db_conn.cursor() as cur:
+        cur.execute("""INSERT INTO documents (application_id, url, content_sha256, bytes_path)
+                       VALUES (%s, %s, %s, %s), (%s, %s, %s, %s)""",
+                    (app_id, "https://pa.example.gov.uk/files/A/real.pdf", "ab" * 32, "data/raw/x/real.pdf",
+                     app_id, "https://pa.example.gov.uk/files/B/empty.pdf", repo.EMPTY_SHA256, "data/raw/x/empty.pdf"))
+    held = repo.held_bytes(db_conn, app_id)
+    assert "https://pa.example.gov.uk/files/A/real.pdf" in held
+    assert "https://pa.example.gov.uk/files/B/empty.pdf" not in held
+    db_conn.rollback()

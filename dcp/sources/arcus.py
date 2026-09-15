@@ -315,10 +315,7 @@ def fetch_documents_for_application(
         summary["error_class"] = "no_documents"
         return summary
 
-    with conn.cursor() as cur:
-        cur.execute("SELECT url, bytes_path FROM documents WHERE application_id = %s",
-                    (application_id,))
-        prior = {u: bp for u, bp in cur.fetchall() if bp}
+    prior = repo.held_bytes(conn, application_id)
 
     app_dir = data_dir / "raw" / "documents" / _idox._sanitised_ref(application_ref)
     for link in links:
