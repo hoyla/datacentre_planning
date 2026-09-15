@@ -188,6 +188,13 @@ TABLES: dict[str, str] = {
         JOIN findings f ON f.id = pa.finding_id
         LEFT JOIN documents d ON d.id = f.document_id
         JOIN applications a ON a.id = pa.application_id""",
+    # Migration 035: why a site-capacity figure may be shown when no
+    # number in its quote states it. Join on adjudication_id.
+    "figure_derivations": """
+        SELECT fd.id, fd.adjudication_id, fd.finding_id, fd.value_mw,
+               fd.operation, fd.operands::text AS operands, fd.operands_text,
+               fd.reading, fd.derivation_version, fd.inserted_at
+        FROM figure_derivations fd""",
     "barbour_projects": """
         SELECT p.external_ref AS ptno, p.title, p.stage_summary, p.dev_type,
                p.address, p.postcode, p.latitude, p.longitude,
@@ -586,6 +593,16 @@ def main() -> None:
                          "verdict citable, and it is what latest_verdict breaks "
                          "ties on so that two exports of one database agree "
                          "about which verdict is the latest."),
+        ("figure_derivations_note", "A site-capacity figure whose value "
+         "appears in no number of its own quote carries a row here, keyed "
+         "to the power_adjudication row by adjudication_id: the operation "
+         "(fleet_sum, product, sum), the operands as the quote states them, "
+         "and operands_text for a page. The reader shows such a figure with "
+         "the \u2248 glyph. A figure with no such row and a value its quote "
+         "does not state is either stored as unclear (from 2026-09-15) or "
+         "on a person's review list; the report under data/reports/ names "
+         "them. Never treat a derived figure as a disclosure: the quote "
+         "states the components, and the total is ours."),
         ("capacity_claims_note", "External figures as their source states "
                          "them, from three sources with different standing: "
                          "NESO's Existing Agreements Register (contracted "

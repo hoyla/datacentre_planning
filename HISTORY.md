@@ -5433,3 +5433,56 @@ and a notes column left empty. The site's shown figures sort first. The
 workbook is local and regenerated from the classification on every run,
 so a decision is folded back into the record before the next run —
 the fold is the ask that stays in ROADMAP.
+
+## A computed figure carries its derivation (2026-09-15)
+
+#248's target shape, built as Luke decided it on 2026-09-10 for the A
+and B classes: a computed figure carries its derivation beside it and
+renders on the `w-modelled` rung with the ≈ glyph, distinct from a
+figure a document states. Migration 035 adds `figure_derivations`,
+keyed to the `power_adjudication` row whose value it explains — the
+operation (`fleet_sum`, `product`, `sum`), the operands as the quote
+states them, a sentence for a page ("10 × 2.9 MW = 29 MW"), which
+reading of the quote it came from, and a derivation version. Existing
+rows are untouched; the adjudication's value is still the number the
+page shows, and the derivation is why it may. `dcp/derivation.py` holds
+the rule the classifier had grown in `scripts/computed_figures.py` —
+the quote read as written and as repaired, a repair only ever adding a
+reading — and `derive()` returns the first admissible derivation any
+reading reaches. `scripts/computed_figures.py --derive` backfilled the
+109 figures adjudicated before the rule: 102 products (51 fleets
+summed, 51 two numbers multiplied) and 7 sums. The report's counts did
+not move.
+
+**Where it shows.** The reader's site figure box: a headline figure
+that is derived takes the modelled weight and the glyph, with the
+arithmetic beside the basis — six sites on the 2026-09-15 scratch
+build, "≈120 · Disclosed IT load · derived: 4 × 30 = 120 MW" the
+shape. The provenance panel under the quote says the figure is not
+stated in the quote and states the arithmetic; the figures table says
+the same on the row. The workbook gains a "Derived figures" sheet (109
+rows, one per figure, with the quote and the reading) and a Read-me
+entry; the DuckDB carries the table with a note that a derived figure
+is never a disclosure; the machine-reading facts tell the model the
+same sentence under the quote, so a reading does not call our
+arithmetic the applicant's.
+
+**The guard, in force from today.** All three adjudication scripts
+(`adjudicate_power.py`, `adjudicate_openai.py --collect`,
+`adjudicate_subagent.py --ingest`) pass every site_capacity value
+through `derivation.guard()` at write: a value some number in the full
+quote states passes untouched; a value a derivation reaches is written
+with the derivation recorded beside it; anything else is stored as
+`unclear` with the refusal in front of the model's own reasoning, so
+the abstention is visible and the sentence is kept. The full evidence
+text is fetched for the check — the batch metadata carries a
+300-character copy, and a guard on a truncated quote would refuse
+figures the page states. Each collect prints how many rows carry a
+derivation and how many were refused. The 62 C and D figures stored
+before the rule keep their verdicts until Luke's review list is folded
+back; the rule only ever touches new writes.
+
+Tests: `tests/test_derivation.py` pins the three operations, the two
+refused classes and the guard on corpus quotes; the tree test admits
+the new SQL because every rollup names the standing; the reader suites
+pass against the scratch build.

@@ -935,9 +935,13 @@ writes the table to `data/reports/` and is the object to cite (HISTORY,
 the quote, 102; B, a sum of stated figures, 7; C, a scaling or a
 midpoint, 11; D, nothing arithmetic on the quote reaches it, 51.
 
-**Decided by Luke, 2026-09-10: A and B take the target shape below**
-— a derivation record beside the finding, rendered on `w-modelled`
-with the ≈ glyph. Building it is the next step of this item.
+**A and B are built** (2026-09-15; HISTORY, "A computed figure carries
+its derivation"): migration 035's `figure_derivations` beside the
+adjudication, 109 rows backfilled, the ≈ glyph and the arithmetic on
+the reader's figure box, provenance panel and figures table, a "Derived
+figures" sheet in the workbook, the table in the DuckDB, the line in
+the machine-reading facts, and the write-time guard in all three
+adjudication scripts. Nothing of A and B is owed.
 
 **Decided by Luke, 2026-09-10: C and D go to a person's row.**
 `scripts/computed_figures.py --review` writes them as
@@ -949,19 +953,9 @@ for Luke to fill against the document. **What is owed here is the
 fold**: a decision column read back into the record as a person's
 adjudication row (`power_adjudication`, model `person`, the reason
 carried), and the workbook regenerated from the classification after
-each fold rather than edited in place. The companion guard — a value
-that appears in no number of its quote is refused at adjudication
-write unless it carries a derivation — follows the derivation record.
-
-**The target shape, once they are classified** (2026-09-04): a computed
-figure carries its derivation beside it — the source finding or evidence
-references, the operation (a unit count times a rating; a sum of stated
-components), the operands with their units, and a derivation version —
-and renders on the `w-modelled` rung with the ≈ glyph, distinct from a
-figure a document states. Existing rows stay untouched; the derivation
-is a record beside the finding, the way an adjudication is. Which
-operations are admissible is the decision the classification informs,
-not one to take before it.
+each fold rather than edited in place. The guard is in force since
+2026-09-15 for every new adjudication; the 62 C and D figures stored
+before it keep their verdicts until the fold.
 
 ### Approaches tried and rejected, so they are not re-proposed
 
