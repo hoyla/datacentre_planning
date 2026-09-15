@@ -255,6 +255,30 @@ def check_document_body(body: bytes | None, *, url: str) -> None:
         )
 
 
+EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+
+def held_bytes(conn: PgConnection, application_id: int) -> dict[str, str]:
+    """`{url: bytes_path}` for the documents an application already holds,
+    for the adapters' resume rule — a URL here is not re-downloaded.
+
+    A row whose content is the empty hash is NOT held: it is the record
+    of a portal serving nothing (the three that arrived before the
+    zero-byte guard existed, HISTORY 2.8), and counting it as held is
+    what kept those three from ever being retried — every adapter's
+    resume read the row, saw a bytes_path, and skipped the URL, so the
+    guard's "a later pass retries it" was true only for a document with
+    no row at all (found 2026-09-15). Six adapters carried the same
+    three-line rule; this is the one place it lives now.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT url, bytes_path FROM documents "
+            "WHERE application_id = %s AND content_sha256 <> %s",
+            (application_id, EMPTY_SHA256))
+        return {url: bp for url, bp in cur.fetchall() if bp}
+
+
 def zero_byte_files(root: Path) -> list[Path]:
     """Every regular file under `root` holding no bytes.
 

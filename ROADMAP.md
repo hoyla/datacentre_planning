@@ -1441,21 +1441,18 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **Twenty documents the corpus extraction cannot cache, and three
-  zero-byte files the corpus claims to hold** — the residue the
-  read-in-full item always named, none of it holding a site back (the
-  gap itself closed 2026-09-10; re-measure through
-  `site_profile.load_coverage_detail` rather than quoting it). The
-  twenty: four PDFs pypdf refuses to open ("Invalid object in /Pages"),
-  the zero-byte files, two `.xlsb`, a `.ppt` and five of no
-  recognisable format. The four corrupt PDFs are probably genuinely
-  unreadable; worth one look at whether the bytes match what the portal
-  serves before accepting that. The zero-byte files are an acquisition
-  question — the corpus claims a document it does not hold, so they
-  want a re-fetch and, if the portal still serves nothing, an
-  `acquisition_outcome` row saying so rather than a permanent silent
-  gap: `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
-  `Medway/MC/21/0979`, named by every staging build.
+- **Twelve documents the corpus extraction cannot cache**, the residue
+  the read-in-full item always named, none of it holding a site back
+  (the gap itself closed 2026-09-10; re-measure through
+  `site_profile.load_coverage_detail` rather than quoting it): two
+  `.xlsb`, a `.ppt`, five of no recognisable format, and four Central
+  Bedfordshire files that are corrupt at source — byte-identical to
+  what the council's store serves, re-fetched 2026-09-15 (the runbook's
+  expected-not-a-fault register). Reopen the four only with a reader
+  that opens them. The three zero-byte files are no longer here: their
+  applications carry `partial` rows since 2026-09-15 and the queue
+  retries the empty file on every run (HISTORY, "An empty document is
+  not held").
 
 - **Two of VIRTUS's seven Slough facilities have no record at all**
   (2026-09-02). The campus is one site now — the partition was extended

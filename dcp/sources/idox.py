@@ -668,12 +668,7 @@ def fetch_documents_for_application(
     # are immutable in practice — revised documents appear as new URLs.
     # Without this, re-walking a completed app re-downloads its whole bundle
     # just to rediscover every hash matches.
-    with conn.cursor() as cur:
-        cur.execute(
-            "SELECT url, bytes_path FROM documents WHERE application_id = %s",
-            (application_id,),
-        )
-        prior_bytes = {url: bp for url, bp in cur.fetchall() if bp}
+    prior_bytes = repo.held_bytes(conn, application_id)
 
     # A portal that 429s persistently makes each failing document cost a
     # full backoff ladder (~15 min). Three consecutive ladder-exhausted

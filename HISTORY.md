@@ -5352,6 +5352,32 @@ the excluded applications now carry findings for the 44-scheme
 adjacency review and the unsited-claims work to read against, which
 was the case for spending it.
 
+## An empty document is not held (2026-09-15)
+
+The three zero-byte files that arrived before the guard existed
+(HISTORY, 2.8: a Wakefield s106, a Warwick consultation response, a
+Medway supporting document, each served as 0 bytes with HTTP 200) had
+never been retried, and the reason was not the portals. Every adapter's
+resume rule read the `documents` row, saw a bytes_path, and skipped the
+URL as held — so the guard's promise that "a later pass retries it" was
+true only for a document with no row at all. Six adapters carried the
+same three-line rule; `repo.held_bytes` is the one place it lives now,
+and it leaves the empty hash out.
+
+Re-run through the Idox adapter the same morning, each register still
+serves its file as 0 bytes with HTTP 200, and each application now
+carries a `partial` row saying so — 20 of 21, 26 of 27, 158 of 159 —
+which the queue retries on every run at the cost of one request. The
+Medway file is not missing: the register lists the same document twice
+and the second copy (232 KB) is held. Wakefield's and Warwick's gaps
+are the councils'.
+
+The four Central Bedfordshire files the extractor refuses (three PDFs
+"Invalid object in /Pages", one .docx missing a customXML part) were
+re-fetched through the aifusion route and are byte-identical to what
+the store serves: corrupt at source, recorded in the runbook's
+expected-not-a-fault register rather than retried.
+
 ## The roadmap is cleared again, three days after the last time (2026-09-10)
 
 ROADMAP holds what is still to do, and it was cleared of finished
