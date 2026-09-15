@@ -1174,16 +1174,17 @@ both shipped since, so the old section title ("Deferred to 2.9") had
 aged into a lie. Each is scoped; what blocks each is a decision, not
 work.
 
-- **Ocella and Arcus still return an empty document list as one
-  fact.** Idox learned the distinction on 2026-09-10 (HISTORY, "An Idox
-  documents tab says which kind of nothing it is"): a recognised empty
-  on the portal's own marker, a refusal or a login as a settled class,
-  anything else retryable. Ocella (9 applications on the label) and
-  Arcus (6) still set `no_documents_or_unparseable` whenever
-  `len(links) == 0` and loop as `error` until each learns the same
-  distinction against captured pages of its own three kinds, one family
-  at a time; NI's genuinely-empty relabel, on its own evidence, is
-  still its own change.
+- **NI still returns an empty document list as one fact.** Idox,
+  Ocella and Arcus now say which kind of nothing it is (HISTORY,
+  2026-09-10 and 2026-09-15): a recognised empty on the portal's own
+  sentence, a refusal or a login as a settled class, anything else
+  retryable. NI's `or []` in `dcp/sources/ni_planning.py` still labels
+  a null `supportingDocuments` `no_documents_or_unparseable`, which
+  never settles, so it errs the safe way and retries for ever;
+  relabelling its genuinely empty list — reached only after decoding
+  the JSON and rejecting a null body — as the recognised empty it is
+  would create a settled path, and wants its own evidence (a captured
+  empty and a captured null) before it is written.
 
 - **Thirteen live members whose last attempt ended in `error` while
   they hold documents — never re-queued until #403, each to be
