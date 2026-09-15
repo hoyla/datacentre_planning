@@ -5406,6 +5406,45 @@ NI for the empty list; decision 6 and the Stockley wrinkle for the
 rung; the twenty uncacheable documents and three zero-byte files for
 the prose gap; Hayes for N+N.
 
+## Ocella and Arcus say which kind of nothing it is, and Fylde was never empty (2026-09-15)
+
+The empty-listing item's last two families in the corpus, done the way
+Idox was on 2026-09-10: a `classify_listing` before the parse, designed
+against each family's own captured pages, and the fetch path mapping
+each kind to the verdict `dcp.acquisition_outcome` already has words
+for. The refusal markers and the byte floor are imported from the Idox
+adapter so the families cannot drift on what a refusal looks like.
+
+**Ocella.** Havering's documents page says it in words — "There are no
+documents for this section" — eleven captured bodies, every one 17,624
+bytes; Hillingdon's 322 carry the same sentence beside a section that
+lists documents, so links are read first and the sentence settles only
+a page with none. The nine Havering applications that had looped as
+`error` since 2026-08-08 settled as `none_published` on the portal's
+sentence. Nothing new was found; the record now says why.
+
+**Arcus was two bugs wearing one label.** Vale of Glamorgan's Documents
+tab says "No Attachments found for this Application", and its one
+application settled the same way. Fylde did not: its five applications
+had listed documents on every fetch since 2026-08-06 and read as a
+council publishing nothing, twice over. Since 2026-08-28 the host has
+served its disclaimer interstitial in place of the application — a
+POST form at `/Disclaimer/Accept`, a third variant beside the two the
+client knew, which the client's GET to the same path did not satisfy —
+and behind it the rows carry the download URL in `data-disabled-link`
+with no href, a third register generation the parser did not read. The
+classifier names the interstitial (`disclaimer`, retryable under its
+own name, never an empty register), the client posts the form it
+finds, and the parser reads the disabled links with the document type
+from the row's own cell. Re-fetched the same morning: **five
+applications, 212 documents**, 37 to 73 each. They are new content and
+the next first read takes them.
+
+Five captured bodies are fixtures under `tests/fixtures/ocella/` and
+`tests/fixtures/arcus/`; `tests/test_ocella_listing.py` and
+`tests/test_arcus_listing.py` pin the kinds. What remains of the item
+is NI's relabel, on its own evidence.
+
 ## The C and D figures go to a person's row (2026-09-10)
 
 Luke settled the second half of #248's admissibility question the same

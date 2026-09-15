@@ -131,6 +131,43 @@ _ANCHOR_RE = re.compile(
 )
 
 
+# What a documents listing IS, before anything is parsed out of it — the
+# distinction Idox learned on 2026-09-10 (idox.classify_listing), against
+# Ocella's own captured pages. Havering's page says it in words:
+# "There are no documents for this section", eleven captured bodies, all
+# 17,624 bytes; Hillingdon's 322 carry the same sentence beside a
+# section that lists documents, so links come first. The refusal
+# markers and the floor are Idox's, imported so the families cannot
+# drift on what a refusal looks like.
+EMPTY_MARKER = "there are no documents for this section"
+
+
+def classify_listing(html: str, base_url: str) -> tuple[str, str, list[DocumentLink]]:
+    """Returns `(kind, detail, links)`; kind is one of `refused`, `tiny`,
+    `populated`, `empty` (the portal's own sentence, the only kind that
+    may settle as `none_published`) or `unrecognised` (retryable)."""
+    from dcp.sources import idox as _idox
+    low = html.lower()
+    for marker in _idox.REFUSAL_MARKERS:
+        if marker in low:
+            login = any(m in low for m in _idox.LOGIN_MARKERS)
+            return ("refused", f"portal served a refusal page (HTTP 200): "
+                               f"{marker!r}" + (", naming a login" if login else ""), [])
+    links = parse_documents_page(html, base_url=base_url)
+    if links:
+        return ("populated", f"{len(links)} documents listed", links)
+    if len(html) < _idox.MIN_LISTING_BYTES:
+        return ("tiny", f"body is {len(html)} bytes with no document links "
+                        f"and cannot be an empty listing page (the smallest "
+                        f"real one in the corpus is 7,192)", [])
+    if EMPTY_MARKER in low:
+        return ("empty", "documents page present and says there are no "
+                         "documents for this section", [])
+    return ("unrecognised", "no document links and no statement that the "
+                            "register is empty: a page whose shape this "
+                            "parser does not know", [])
+
+
 def parse_documents_page(html: str, base_url: str) -> list[DocumentLink]:
     """Extract document links from an Ocella documents-list HTML page.
 
@@ -413,10 +450,25 @@ def fetch_documents_for_application(
         conn, source_id=source_id, key=docs_url, raw_bytes=resp.content,
     )
 
-    links = parse_documents_page(resp.text, base_url=docs_url)
+    # An empty document list carries two facts (ROADMAP; HISTORY
+    # 2026-09-10 for Idox): `classify_listing` says which, and
+    # `dcp.acquisition_outcome` maps each to its verdict.
+    kind, detail, links = classify_listing(resp.text, base_url=docs_url)
+    summary["listing_kind"] = kind
+    summary["listing_detail"] = detail
+    if kind in ("refused", "tiny"):
+        summary["error_class"] = ("login_required"
+                                  if "naming a login" in detail else "access_refused")
+        log.info("%s: %s — %s", summary["error_class"], application_ref, detail)
+        return summary
+    if kind == "unrecognised":
+        summary["error_class"] = "unrecognised_listing"
+        summary["errors"] += 1
+        log.warning("unrecognised listing (%s): %s", application_ref, detail)
+        return summary
     summary["links_found"] = len(links)
-    if len(links) == 0:
-        summary["error_class"] = "no_documents_or_unparseable"
+    if kind == "empty":
+        summary["error_class"] = "no_documents"
     for link in links:
         try:
             blob = client.get(link.href)
