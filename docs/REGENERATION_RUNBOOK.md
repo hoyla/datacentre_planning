@@ -212,6 +212,18 @@ subagent route first; the batch then sees nothing to hold.
 scripts/adjudicate_openai.py --collect
 ```
 
+Since 2026-09-15 every collect (this one, the subagent's `--ingest` and
+`adjudicate_power.py`) applies the write-time rule of migration 035: a
+site_capacity value that no number in its quote states is admitted only
+with a derivation — the applicant's own unit count times a rating, or
+stated figures added — recorded beside the row in `figure_derivations`;
+otherwise the row is stored as `unclear` with the refusal in front of
+the model's reasoning. The collect prints both counts. Nothing to run
+for it; the one-off backfill of the 109 figures adjudicated before the
+rule was `scripts/computed_figures.py --derive`, which is also the
+repair if a derivation is ever found missing (append-only, a no-op when
+nothing is).
+
 Then check nothing was lost to truncation, because that has already
 happened once:
 

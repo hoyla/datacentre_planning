@@ -135,6 +135,14 @@ def _ensure_test_database() -> None:
                              "034_a_not_dc_members_figures_do_not_stand_as_the_sites.sql"
                              ).read_text())
                 conn.commit()
+            # Migration 035 — figure_derivations beside power_adjudication,
+            # which the reader's figure queries LEFT JOIN (tests/test_derivation.py).
+            cur.execute("SELECT to_regclass('public.figure_derivations')")
+            if cur.fetchone()[0] is None:
+                cur.execute((MIGRATIONS_DIR /
+                             "035_a_computed_figure_carries_its_derivation.sql"
+                             ).read_text())
+                conn.commit()
     finally:
         conn.close()
 

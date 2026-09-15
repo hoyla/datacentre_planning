@@ -45,8 +45,6 @@ from __future__ import annotations
 import argparse
 import csv
 import datetime as dt
-import itertools
-import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -59,17 +57,16 @@ from dotenv import load_dotenv  # noqa: E402
 load_dotenv(ROOT / ".env")
 
 from dcp import db  # noqa: E402
-from dcp import site_profile as sp  # noqa: E402
 
 SQL = """
 WITH latest AS (
   SELECT DISTINCT ON (finding_id) finding_id, application_id, verdict,
-         quantity_type, value_mw, value_original, unit_original, model
+         quantity_type, value_mw, value_original, unit_original, model, id
   FROM power_adjudication
   ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC)
 SELECT la.finding_id, la.quantity_type, la.value_mw, la.value_original,
        f.evidence_text, s.site_key, a.application_ref, la.model,
-       f.document_id, f.evidence_page
+       f.document_id, f.evidence_page, la.id
 FROM latest la
 JOIN findings f ON f.id = la.finding_id
 JOIN applications a ON a.id = la.application_id
@@ -82,95 +79,7 @@ WHERE la.verdict = 'site_capacity' AND la.value_mw IS NOT NULL
 ORDER BY s.site_key, la.finding_id
 """
 
-_OCR_DIGITS = str.maketrans("SOIl", "5011")
-_UNIT = r"(?:MW|kW|MVA|kVA|MWe|MWt|kWe)"
-_WORD_COUNTS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
-                "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11,
-                "twelve": 12, "sixteen": 16, "twenty": 20}
-
-
-def repair(quote: str) -> str:
-    """The quote with the substrate's habits undone, so a stated figure
-    reads as stated. Nothing here changes what the quote asserts."""
-    t = quote or ""
-    t = re.sub(r"(?<=\d),(?=\d{1,2}(?!\d))", ".", t)              # 1720,71 -> 1720.71
-    t = t.replace(",", "")                                          # 2,500 -> 2500
-    t = re.sub(r"(?<=\d)\s(?=\d{3}\b)", "", t)                      # 1 250 -> 1250
-    t = re.sub(r"(?<=\d)\s\.\s?(?=\d)|(?<=\d)\s(?=\.\d)", ".", t)    # 3 .3 -> 3.3
-    t = re.sub(r"(?<=\d)-(?=\d\s?" + _UNIT + ")", ".", t)               # 19-9MW -> 19.9MW
-    # "2 4MW" -> "24MW": a single digit, a space, then at most two more
-    # digits and the unit. Not "135 150 kW", which is two figures — a
-    # first draft joined those and turned 400 stated figures into
-    # computed ones.
-    t = re.sub(r"(?<!\d)(\d)\s(?=\d{1,2}\s?" + _UNIT + ")", r"\1", t)
-    t = re.sub(r"\b([SOIl\d]*[SOIl][SOIl\d]*)(?=\s?" + _UNIT + ")",
-               lambda m: m.group(1).translate(_OCR_DIGITS), t)      # SMW, 7OMW, ISMW
-    for word, n in _WORD_COUNTS.items():                            # eight 25kW units
-        t = re.sub(rf"\b{word}\b(?=\s+(?:x\s+|further\s+)?\d)", str(n), t, flags=re.I)
-    return t
-
-
-def numbers(text: str) -> list[float]:
-    return [float(x) for x in re.findall(r"\d+(?:\.\d+)?", text)]
-
-
-def close(a: float, b: float) -> bool:
-    return abs(a - b) <= max(0.005 * abs(b), 0.0005)
-
-
-def readings(quote: str) -> list[str]:
-    """The quote as written, and as repaired. A repair only ever ADDS a
-    reading and never replaces the original: the rule that joins split
-    digits ("2 4MW" -> "24MW") also joins a label to its figure
-    ("PUMP 1 50kW" -> "150kW", "DDT E6 12MW" -> "612MW"), and on the
-    first 2026-09-10 run that alone put 64 stated figures in class D."""
-    raw = " ".join((quote or "").split())
-    return [raw, raw.replace(",", ""), repair(raw)]
-
-
-def stated(value_mw: float, value_original, texts) -> bool:
-    if isinstance(texts, str):
-        texts = [texts]
-    return any(_stated_in(value_mw, value_original, t) for t in texts)
-
-
-def _stated_in(value_mw: float, value_original, repaired: str) -> bool:
-    ns = numbers(repaired)
-    return any(close(n, value_mw) or close(n / 1000, value_mw)
-               or close(n * 1000, value_mw)
-               or (value_original is not None and close(n, float(value_original)))
-               for n in ns)
-
-
-def classify(value_mw: float, texts) -> str:
-    """The best class any reading of the quote reaches (A before D)."""
-    if isinstance(texts, str):
-        texts = [texts]
-    return min(_classify_in(value_mw, t) for t in texts)
-
-
-def _classify_in(value_mw: float, repaired: str) -> str:
-    fleets = sp._fleets_disclosed(repaired)
-    ns = numbers(repaired)
-    both = [n / 1000 for n in ns] + ns
-    if fleets and close(sum(c * r for c, r in fleets), value_mw):
-        return "A. a unit count times a rating, every fleet in the quote summed"
-    if any(close(c * r, value_mw) for c, r in fleets):
-        return "A. a unit count times a rating, one fleet of several in the quote"
-    if any(close(a * b, value_mw) or close(a * b / 1000, value_mw)
-           for a, b in itertools.permutations(ns, 2)):
-        return "A. two stated numbers multiplied"
-    if (any(close(a + b, value_mw) for a, b in itertools.combinations(both, 2))
-            or any(close(a + b + c, value_mw)
-                   for a, b, c in itertools.combinations(both, 3))):
-        return "B. a sum of stated figures"
-    if len(ns) >= 2 and any(close((a + b) / 2, value_mw)
-                            for a, b in itertools.combinations(both, 2)):
-        return "C. the midpoint of a stated range"
-    if any(close(n * f, value_mw) for n in both
-           for f in (0.8, 0.9, 1.1, 1.25, 0.5, 2, 0.75, 5)):
-        return "C. a stated figure scaled"
-    return "D. no arithmetic on the quote reaches it"
+from dcp.derivation import DERIVATION_VERSION, classify, derive, stated  # noqa: E402
 
 
 REVIEW_DIR = ROOT / "data" / "computed_figures_review"
@@ -182,6 +91,32 @@ REVIEW_HEADERS = ["class", "site_key", "site_name", "application_ref",
                   "the site's shown figure?", "quote", "document (our copy)",
                   "source url", "page", "reader", "finding_id",
                   "decision (keep / unclear / correct to …)", "notes"]
+
+
+def write_derivations(rows) -> int:
+    """The A and B figures' derivations, recorded beside their adjudications
+    (migration 035). Idempotent: a row already carrying one under this
+    version is skipped, so the pass can run after every adjudication
+    batch — though from 2026-09-15 the adjudication scripts record the
+    derivation at write, and this is the backfill for what preceded it."""
+    from dcp import derivation
+    written = seen = 0
+    with db.connect() as conn, conn.cursor() as cur:
+        for (fid, qt, mw, vo, quote, key, ref, model, doc_id, page, adj_id) in rows:
+            mw = float(mw)
+            if stated(mw, vo, quote):
+                continue
+            d = derive(mw, quote)
+            if d is None:
+                continue
+            seen += 1
+            if derivation.record(cur, adjudication_id=adj_id, finding_id=fid,
+                                 value_mw=mw, d=d):
+                written += 1
+        conn.commit()
+    print(f"derivations: {seen} A and B figures, {written} recorded under "
+          f"{DERIVATION_VERSION} ({seen - written} already carried one)")
+    return written
 
 
 def write_review(computed, rows) -> Path:
@@ -278,6 +213,10 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--print", action="store_true", help="also print the report")
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--derive", action="store_true",
+                    help="record a derivation (migration 035) beside every "
+                         "A or B adjudication that lacks one under "
+                         f"{DERIVATION_VERSION}; append-only, a no-op on re-run")
     ap.add_argument("--review", action="store_true",
                     help="also write the C and D figures as a review workbook "
                          "under data/computed_figures_review/ for a person to "
@@ -288,12 +227,11 @@ def main() -> int:
         cur.execute(SQL)
         rows = cur.fetchall()
     computed = []
-    for (fid, qt, mw, vo, quote, key, ref, model, doc_id, page) in rows:
+    for (fid, qt, mw, vo, quote, key, ref, model, doc_id, page, adj_id) in rows:
         mw = float(mw)
-        texts = readings(quote)
-        if stated(mw, vo, texts):
+        if stated(mw, vo, quote):
             continue
-        computed.append((classify(mw, texts), key, ref, qt, mw, model, fid, doc_id,
+        computed.append((classify(mw, quote), key, ref, qt, mw, model, fid, doc_id,
                          page, " ".join((quote or "").split())))
     computed.sort()
     kinds = Counter(c[0] for c in computed)
@@ -330,6 +268,8 @@ def main() -> int:
     dest.write_text(report, encoding="utf-8")
     if args.review:
         write_review(computed, rows)
+    if args.derive:
+        write_derivations(rows)
     print(f"wrote {dest}: {len(computed)} of {len(rows)} figures computed; "
           + ", ".join(f"{k[:1]} {n}" for k, n in sorted(kinds.items())))
     if args.print:
