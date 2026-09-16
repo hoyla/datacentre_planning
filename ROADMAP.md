@@ -169,6 +169,67 @@ carrying unbuilt:
 - **Redhill Data Centre is the sixth generation-understated site**
   (runbook step 5; it was five), labelled per-unit on the page.
 
+## From the test-suite review (2026-09-16)
+
+[docs/TEST_SUITE_REVIEW_2026-09-16.md](docs/TEST_SUITE_REVIEW_2026-09-16.md)
+has the per-file verdicts. Its fix order shipped as #436–#446 the same
+day (HISTORY, "The test-suite review and its eleven fixes"). What it
+found and those did not fix, each an ask:
+
+- **The gate-and-insert loop is still four copies** (`deepread_run`,
+  `deepread_escalate`, `deepread_escalate_openai`,
+  `deepread_agent_escalate`). #440 made them write the same row and
+  #443 the same candidates, with a parity test over a fake cursor; a
+  shared helper is the end state, and the test is what makes the
+  refactor safe.
+- **CI cannot build either artefact.** #437 runs the integration tests
+  there, but `export_reader.py` and `export_handover.py` execute only
+  on a laptop. The unblocking piece is a seeded mini-corpus: enough
+  rows for a build to run and the reader tests to drive, committed as
+  a fixture. Until then a scratch build before each release is the
+  check.
+- **Two fake cursors discard the SQL** — `tests/test_machine_reading.py`
+  and `tests/test_tier_scope.py` — so `FIGURES_SQL`, `NOT_COUNTED_SQL`
+  and `CLAIMS_SQL` are never executed (#436 covered `LATEST_SQL`, #439
+  the cohort). Each wants the shape `tests/test_readings_latest.py` has.
+- **`site_class.compute_all` and `site_cohorts.compute_all` have no
+  test**: the per-rubric fold and the cohort counts the Signals card
+  prints run in no test against a database.
+- **`acquisition_outcome` stores `documents_found` and a sentence, not
+  the `downloaded`, `skipped_existing` and `errors` the verdict was
+  computed from**, so a wrong verdict cannot be audited afterwards
+  (the Ocella defect #441 fixed was unmeasurable for that reason).
+- **Source-text assertions stand in for behaviour** in about fifteen
+  files, `tests/test_coverage_language.py` from line 662 the largest;
+  `tests/test_reader_map.py` greps 700-character windows with a guard
+  at offset 637. Each wants the behavioural form where the behaviour
+  is reachable without a database.
+- **Fixtures are duplicated across files**: the docstore verdict test
+  four times, the prior-loader triad four times, the fake Drive
+  service and `_sync()` twice, `export_handover.py` executed as a
+  fresh module in three files. `conftest.py` is where they belong.
+- **Curation pins in rule tests**: `tests/test_operator_rung.py:279`
+  fails when a fourth campus is adjudicated; `tests/test_ea_permits.py`
+  pins 97 candidates and a 35/6/1 composition;
+  `tests/test_companies_house.py:32` hard-codes the over-merged sites.
+- **Weak files named by the review**, one line each: `test_smoke.py`
+  tests its own fake; `test_fetch_outstanding_timeout.py:54` has no
+  production code in it; `test_planit.py` never paginates;
+  `test_reader_sort_glyphs.py` and `test_reader_tip_301.py` assert the
+  template, and nothing in the browser suite sorts a column or opens
+  the tooltip; `test_release_diff.py` covers `check_priors` only (#446
+  added the floors over the committed page beside it).
+- **Modules with no test**, in order of consequence: `backup_db.py`'s
+  second pass and `restore_test` (#446 covered the first pass and the
+  pruning), `dcp/operator_disclosure.py`, `scripts/computed_figures.py`,
+  `scripts/load_capacity_claims.py`, `scripts/export_pinpoint_bundle.py`,
+  `dcp/signals.py` (the variant-forms rule is pinned nowhere),
+  `dcp/cli.py`, `dcp/entities.py`, `dcp/cohorts.py`,
+  `dcp/corpus_stats.py`, the adapters' fetch loops for every family
+  but Idox and Ocella, `drive_sync.Sync.folder`'s name resolution.
+- **`dcp/reader.py` and `dcp/export.py`** are the phase-1 path; the
+  honest question is whether they should still be in the tree.
+
 ## Changes waiting for a re-read they cannot justify on their own
 
 **The policy** (Luke, 2026-08-31). A full re-read has to clear one of

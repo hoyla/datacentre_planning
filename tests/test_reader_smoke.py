@@ -814,3 +814,22 @@ def test_near_a_postcode_filters_orders_and_states_what_it_cannot_place(page):
     first = page.evaluate("() => document.querySelector('#tbl-sites tr.site').dataset.key")
     original = page.evaluate("() => rows[0].dataset.key")
     assert first == original, "rows were not put back in their own order"
+
+
+def test_the_masthead_counts_are_the_rows_on_the_page(page):
+    """The only numbers on the page computed in Python rather than by
+    the page's own script: `n_sites` and `len(app_rows)` in the masthead
+    and the tab pills. `#n` is filled from the DOM, so the reconciliation
+    above it is JavaScript-internal. Nothing held the published "506
+    sites" to the 506 rows until 2026-09-16."""
+    sub = page.locator(".masthead .sub").inner_text()
+    m = re.search(r"([\d,]+) sites\s*·\s*([\d,]+) applications", sub)
+    assert m, sub
+    n_sites = int(m.group(1).replace(",", ""))
+    n_apps = int(m.group(2).replace(",", ""))
+    assert n_sites == page.evaluate(
+        "document.querySelectorAll('#tbl-sites tr.site').length")
+    assert n_apps == page.evaluate(
+        "document.querySelectorAll('#tbl-apps tbody tr').length")
+    assert page.locator("#tab-sites .pill").inner_text().replace(",", "") == str(n_sites)
+    assert page.locator("#tab-apps .pill").inner_text().replace(",", "") == str(n_apps)

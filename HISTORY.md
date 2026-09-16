@@ -5551,3 +5551,70 @@ Tests: `tests/test_derivation.py` pins the three operations, the two
 refused classes and the guard on corpus quotes; the tree test admits
 the new SQL because every rollup names the standing; the reader suites
 pass against the scratch build.
+
+## The test-suite review and its eleven fixes (2026-09-16)
+
+Luke asked for the suite to be reviewed on two questions: are the
+existing tests good, and what has none. The method was coverage
+(pytest-cov into the venv, pyproject untouched), mechanical scans, and
+four reviewers reading every test file and the code behind it, one per
+area; every claim this record repeats was re-checked in the code and,
+where the database could show it, measured. The write-up is
+[docs/TEST_SUITE_REVIEW_2026-09-16.md](docs/TEST_SUITE_REVIEW_2026-09-16.md).
+
+**The answer to the first question was yes, with patterns.** Of 111
+files, 88 sound, 20 weak, 3 problems; the best test a rule over the
+whole vocabulary and guard against their own vacuity, and marker
+discipline was clean throughout. The weaknesses recurred: five guards
+that went quietly green on absence, about forty source-text greps
+standing in for behaviour, two fake cursors that discard the SQL they
+are handed, curation pins mixed with rule pins, and fixtures copied
+across files.
+
+**The answer to the second was structural.** CI ran neither the 134
+integration tests nor either exporter; the test database was built from
+14 of 35 migrations by hand, without `findings_content_key`; the quote
+gate was written four times and tested once; no published number was
+tested end to end. And seven production defects turned up on the way,
+two of them measured: the read cohort reached 42 applications and 807
+documents only through retired membership rows, and the reader's
+source-attribution query read superseded adjudications — exposed, and
+correct on that day's page.
+
+**Eleven one-change PRs the same evening**, in the review's fix order:
+
+- #436 — the test database drops and rebuilds from every migration;
+  the content-key, readings-fold and derivation tests the old schema
+  could not hold (the derivation test had skipped on every run it ever
+  had).
+- #437 — CI starts Postgres and runs the integration tests; `corpus`
+  and `reader` markers name what no CI database can hold; an
+  unreachable database fails the job instead of skipping.
+- #438 — the Environment Agency quote test skips with a reason, the
+  conformance helper fails on a missing selector, the determinism
+  normaliser asserts its stamp matched.
+- #439 — the read cohort is live members of live sites, with the cohort
+  query run in Postgres for the first time.
+- #440 — the four findings writers write the same row (two had no
+  family columns; one no NUL strip), with a four-writer parity test.
+- #441 — every adapter counts a download only when it writes it, and
+  Ocella resumes from held documents; a failed document on a re-walk is
+  `partial`, not `fetched`.
+- #442 — `held_bytes` has one home; four docstore scripts used the
+  pre-guard query.
+- #443 — a quote verifies only on pages the model was shown, in all
+  five gates; 120 of 1,462,337 stored findings cite a page outside
+  their reading's `pages_sent`.
+- #444 — the workbook runs the reader's five liveness checks; it ran two.
+- #445 — the figure's source is read off the figure's own fold; the raw
+  query is gone.
+- #446 — floors over the committed page for `release_diff`'s regexes,
+  the masthead counts held to the rows they count, the backup's
+  first-pass verification and pruning tested; this entry; and the
+  ROADMAP section for what the review found that these did not fix.
+
+**Not done, and why.** A scratch build in CI needs a seeded
+mini-corpus, which is its own piece of work; the four gate copies want
+a shared helper, which the parity tests now make safe to write; the
+grep-shaped tests and the duplicated fixtures are refactors, not fixes.
+All in ROADMAP, "From the test-suite review".
