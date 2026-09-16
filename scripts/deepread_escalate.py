@@ -345,8 +345,9 @@ def _insert_with_model(conn, row: dict, findings: list[dict],
                 continue
             page = _dr.coerce_page(f.get("evidence_page"))
             verified_page = None
-            candidates = ([page, page - 1, page + 1]
-                          if page and 1 <= page <= len(pages) else [])
+            # Only pages the model was shown (deepread_run has the reasoning).
+            candidates = ([p for p in (page, page - 1, page + 1) if p in sent]
+                          if page else [])
             for p in candidates + [p for p in sent if p not in candidates]:
                 if 1 <= p <= len(pages) and _dr.quote_on_page(quote, pages[p - 1]):
                     verified_page = p

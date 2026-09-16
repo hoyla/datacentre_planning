@@ -80,13 +80,14 @@ class TestTheGateStillSearchesEverySentPage:
         row = {"application_ref": "T/1", "sha": "x", "document_id": 1, "application_id": 1}
         findings = [{"evidence_text": "The IT load is 12 MW.", "signal_type": "it_load",
                      "evidence_page": 3}]
-        # page 2 sits between 3's neighbours, and is NOT excluded from
-        # candidates by construction — so this documents the existing
-        # neighbour rule rather than the sent list. Assert only the JSONL
-        # carries the deduplicated sent list.
-        dr.verify_findings(row, findings, pages, sent)
-        if seen:
-            assert seen["pages_sent"] == sent
+        # Page 2 is a neighbour of the claimed page 3 and holds the quote,
+        # and it was never sent. Until 2026-09-16 the neighbour rule
+        # searched it anyway and this test asserted nothing; the gate now
+        # refuses, and the escalation carries the deduplicated sent list.
+        rows, failed = dr.verify_findings(row, findings, pages, sent)
+        assert rows == [] and failed == 1
+        assert seen["pages_sent"] == sent
+        assert 2 not in sent
 
 
 class TestEveryWriterUsesTheHelper:

@@ -1002,8 +1002,9 @@ def _insert(conn, row, findings, pages, sent, model_tag) -> tuple[int, int]:
                 continue
             page = _dr.coerce_page(f.get("evidence_page"))
             verified = None
-            cands = ([page, page - 1, page + 1]
-                     if page and 1 <= page <= len(pages) else [])
+            # Only pages the model was shown (deepread_run has the reasoning).
+            cands = ([p for p in (page, page - 1, page + 1) if p in sent]
+                     if page else [])
             for p in cands + [p for p in sent if p not in cands]:
                 if 1 <= p <= len(pages) and _dr.quote_on_page(quote, pages[p - 1]):
                     verified = p
