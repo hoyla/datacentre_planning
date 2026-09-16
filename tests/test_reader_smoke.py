@@ -42,6 +42,9 @@ import pytest
 playwright = pytest.importorskip("playwright.sync_api", reason="playwright not installed")
 
 
+# Every test here drives the built page: the reader job's, never the unit job's.
+pytestmark = pytest.mark.reader
+
 @pytest.fixture(scope="module")
 def reader_url(built_reader) -> str:
     """The session-wide build in conftest, so this suite and the
@@ -692,6 +695,7 @@ def test_every_our_copy_link_names_a_snapshot_this_repository_holds(built_reader
         f"failed rather than a corpus that genuinely cites nothing")
 
 
+@pytest.mark.corpus
 def test_every_operator_rung_cell_is_labelled_in_the_built_page(built_reader):
     """A first-party campus figure must never render as a planning one.
 
@@ -744,6 +748,7 @@ def test_every_operator_rung_cell_is_labelled_in_the_built_page(built_reader):
         f"pass the check above vacuously")
 
 
+@pytest.mark.corpus
 def test_near_a_postcode_filters_orders_and_states_what_it_cannot_place(page):
     """The control decided on 2026-09-02 at sector precision: SL1 4BG is
     the Slough Trading Estate, so a small radius keeps the estate's sites
@@ -809,3 +814,22 @@ def test_near_a_postcode_filters_orders_and_states_what_it_cannot_place(page):
     first = page.evaluate("() => document.querySelector('#tbl-sites tr.site').dataset.key")
     original = page.evaluate("() => rows[0].dataset.key")
     assert first == original, "rows were not put back in their own order"
+
+
+def test_the_masthead_counts_are_the_rows_on_the_page(page):
+    """The only numbers on the page computed in Python rather than by
+    the page's own script: `n_sites` and `len(app_rows)` in the masthead
+    and the tab pills. `#n` is filled from the DOM, so the reconciliation
+    above it is JavaScript-internal. Nothing held the published "506
+    sites" to the 506 rows until 2026-09-16."""
+    sub = page.locator(".masthead .sub").inner_text()
+    m = re.search(r"([\d,]+) sites\s*·\s*([\d,]+) applications", sub)
+    assert m, sub
+    n_sites = int(m.group(1).replace(",", ""))
+    n_apps = int(m.group(2).replace(",", ""))
+    assert n_sites == page.evaluate(
+        "document.querySelectorAll('#tbl-sites tr.site').length")
+    assert n_apps == page.evaluate(
+        "document.querySelectorAll('#tbl-apps tbody tr').length")
+    assert page.locator("#tab-sites .pill").inner_text().replace(",", "") == str(n_sites)
+    assert page.locator("#tab-apps .pill").inner_text().replace(",", "") == str(n_apps)

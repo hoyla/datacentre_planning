@@ -173,14 +173,18 @@ def passes(pages: list[str], quote: str, page: int | None,
 
     The same candidate order the runners use: the claimed page, its
     neighbours, then any other page that was sent to the model. A quote
-    is never searched in a page the model was not shown.
+    is never searched in a page the model was not shown — where `sent`
+    is known. An escalation written before pages_sent was recorded has
+    `sent` None, and for those the claimed page and its neighbours are
+    the only pages there is any reason to believe the model saw.
     """
     frags = [VF._normalise(f) for f in VF._quote_fragments(quote)]
     if not frags:
         return None
     cands: list[int] = []
-    if page and 1 <= page <= len(pages):
-        cands = [page, page - 1, page + 1]
+    if page:
+        cands = [p for p in (page, page - 1, page + 1)
+                 if sent is None or p in sent]
     for p in cands + [p for p in (sent or []) if p not in cands]:
         if 1 <= p <= len(pages) and VF.fragments_present(
                 VF._normalise(pages[p - 1] or ""), frags):

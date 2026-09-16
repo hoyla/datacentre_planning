@@ -8,6 +8,7 @@ for integration tests against a separate `dcp_test` database. Tests are marked
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -31,120 +32,67 @@ def _test_db_url() -> str:
     return parsed._replace(path=f"/{TEST_DB_NAME}").geturl()
 
 
+def _is_data_only(sql: str) -> bool:
+    """A migration that changes rows and not the schema.
+
+    Two of the thirty-five (017 and 018) demote rows and then refuse to
+    commit unless the count they expected is the count they found, which
+    on an empty database is never. They carry no CREATE, ALTER or DROP,
+    so skipping them leaves the test schema identical to production's;
+    a migration that carried schema *and* refused would leave it
+    different, which is why that case fails the session instead.
+    """
+    return not re.search(r"^\s*(CREATE|ALTER|DROP)\s", sql, re.I | re.M)
+
+
 def _ensure_test_database() -> None:
-    """Create dcp_test if missing and apply migration if schema not yet present."""
+    """Recreate dcp_test and apply every migration, in order.
+
+    Until 2026-09-16 this applied fourteen of the migrations by hand,
+    probing for one object each, so the integration tests ran on a
+    schema without `findings_content_key` (012), the readings store
+    (023), the audit stores (025-027), the Drive file table (031) and
+    the adjacency table (032) — and no test could assert the contracts
+    those hold. Now the database is dropped and rebuilt once per session
+    from `migrations/*.sql`, so the schema the tests run on is the
+    schema production has, and a migration that cannot run from scratch
+    is found here rather than at restore time.
+    """
     conn = psycopg2.connect(_admin_url())
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (TEST_DB_NAME,))
-            if not cur.fetchone():
-                cur.execute(f"CREATE DATABASE {TEST_DB_NAME}")
+            cur.execute(f"DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE)")
+            cur.execute(f"CREATE DATABASE {TEST_DB_NAME}")
     finally:
         conn.close()
 
     conn = psycopg2.connect(_test_db_url())
     try:
-        with conn.cursor() as cur:
-            # Migration 001 — initial schema
-            cur.execute("SELECT to_regclass('public.applications')")
-            if cur.fetchone()[0] is None:
-                cur.execute((MIGRATIONS_DIR / "001_initial.sql").read_text())
+        for path in sorted(MIGRATIONS_DIR.glob("*.sql")):
+            sql = path.read_text()
+            try:
+                with conn.cursor() as cur:
+                    cur.execute(sql)
                 conn.commit()
-            # Migration 002 — discovery_via column + colocated_candidates table
-            cur.execute("SELECT to_regclass('public.colocated_candidates')")
-            if cur.fetchone()[0] is None:
-                cur.execute((MIGRATIONS_DIR / "002_discovery_tracking.sql").read_text())
-                conn.commit()
-            # Migration 003 — triage columns refresh (worth_deep_read, signals, why,
-            # confidence → TEXT). Probe via information_schema since this migration
-            # adds a column rather than a new relation.
-            cur.execute(
-                "SELECT 1 FROM information_schema.columns "
-                "WHERE table_name = 'triage' AND column_name = 'worth_deep_read'"
-            )
-            if cur.fetchone() is None:
-                cur.execute((MIGRATIONS_DIR / "003_triage_columns.sql").read_text())
-                conn.commit()
-            # Migration 004 — councils.notes → JSONB + council_aliases table.
-            cur.execute("SELECT to_regclass('public.council_aliases')")
-            if cur.fetchone()[0] is None:
-                cur.execute((MIGRATIONS_DIR / "004_council_aliases.sql").read_text())
-                conn.commit()
-            # Migration 005 — projects + project_applications (Barbour ABI).
-            cur.execute("SELECT to_regclass('public.projects')")
-            if cur.fetchone()[0] is None:
-                cur.execute((MIGRATIONS_DIR / "005_projects.sql").read_text())
-                conn.commit()
-            # Migration 006 — sites + site_members.
-            cur.execute("SELECT to_regclass('public.sites')")
-            if cur.fetchone()[0] is None:
-                cur.execute((MIGRATIONS_DIR / "006_sites.sql").read_text())
-                conn.commit()
-            # Migration 008 — power_adjudication, and 009's signal_family
-            # on findings. Both are read by the reader's per-site findings
-            # query, so tests/test_export_ordering.py cannot exercise the
-            # real SQL without them. 007 comes along because it is the
-            # deep-read bookkeeping the other two are written against.
-            cur.execute("SELECT to_regclass('public.deepread_log')")
-            if cur.fetchone()[0] is None:
-                cur.execute((MIGRATIONS_DIR / "007_deepread.sql").read_text())
-                conn.commit()
-            cur.execute("SELECT to_regclass('public.power_adjudication')")
-            if cur.fetchone()[0] is None:
-                cur.execute(
-                    (MIGRATIONS_DIR / "008_power_adjudication.sql").read_text())
-                conn.commit()
-            cur.execute(
-                "SELECT 1 FROM information_schema.columns "
-                "WHERE table_name = 'findings' AND column_name = 'signal_family'"
-            )
-            if cur.fetchone() is None:
-                cur.execute(
-                    (MIGRATIONS_DIR / "009_signal_family.sql").read_text())
-                conn.commit()
-            # Migration 010 — acquisition_outcome, the per-attempt verdict
-            # the fetch queue's scope reads (2026-09-06: the queue's SQL
-            # could not be tested here without it).
-            cur.execute("SELECT to_regclass('public.acquisition_outcome')")
-            if cur.fetchone()[0] is None:
-                cur.execute(
-                    (MIGRATIONS_DIR / "010_acquisition_outcome.sql").read_text())
-                conn.commit()
-            # Migration 021 — capacity_claims + capacity_claim_matches.
-            cur.execute("SELECT to_regclass('public.capacity_claims')")
-            if cur.fetchone()[0] is None:
-                cur.execute(
-                    (MIGRATIONS_DIR / "021_capacity_claims.sql").read_text())
-                conn.commit()
-            # Migration 024 — generation_adjudication, which the cohorts'
-            # site-figures query joins; without it load_inputs cannot run
-            # here (found 2026-09-10 by tests/test_figure_standing.py).
-            cur.execute("SELECT to_regclass('public.generation_adjudication')")
-            if cur.fetchone()[0] is None:
-                cur.execute(
-                    (MIGRATIONS_DIR / "024_generation_adjudication.sql").read_text())
-                conn.commit()
-            # Migration 034 — figure_standing on site_members, which every
-            # site-level capacity rollup reads (tests/test_figure_standing.py).
-            cur.execute(
-                "SELECT 1 FROM information_schema.columns "
-                "WHERE table_name = 'site_members' AND column_name = 'figure_standing'")
-            if cur.fetchone() is None:
-                cur.execute((MIGRATIONS_DIR /
-                             "034_a_not_dc_members_figures_do_not_stand_as_the_sites.sql"
-                             ).read_text())
-                conn.commit()
-            # Migration 035 — figure_derivations beside power_adjudication,
-            # which the reader's figure queries LEFT JOIN (tests/test_derivation.py).
-            cur.execute("SELECT to_regclass('public.figure_derivations')")
-            if cur.fetchone()[0] is None:
-                cur.execute((MIGRATIONS_DIR /
-                             "035_a_computed_figure_carries_its_derivation.sql"
-                             ).read_text())
-                conn.commit()
+            except psycopg2.Error as e:
+                conn.rollback()
+                if _is_data_only(sql):
+                    continue
+                raise RuntimeError(
+                    f"{path.name} cannot be applied to an empty database: "
+                    f"{str(e).splitlines()[0]}") from e
     finally:
         conn.close()
+
+
+def _state_tables(conn) -> list[str]:
+    """Every base table except the reference data (`sources`, `councils`)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT tablename FROM pg_tables WHERE schemaname = 'public' "
+            "AND tablename NOT IN ('sources', 'councils') ORDER BY 1")
+        return [r[0] for r in cur.fetchall()]
 
 
 @pytest.fixture(scope="session")
@@ -208,10 +156,17 @@ def built_reader(tmp_path_factory) -> str:
 
 @pytest.fixture(scope="session")
 def integration_db() -> str:
-    """Ensure dcp_test exists and is migrated. Skip the test if Postgres is unreachable."""
+    """Ensure dcp_test exists and is migrated. Skip the test if Postgres is
+    unreachable — except where DCP_REQUIRE_DB is set, which CI does: there
+    a database that cannot be reached is a broken job, and a skip would
+    report the 130-odd integration tests green while running none of
+    them, the same silent pass the READER_HTML branch of `built_reader`
+    was hardened against."""
     try:
         _ensure_test_database()
     except psycopg2.OperationalError as e:
+        if os.environ.get("DCP_REQUIRE_DB"):
+            pytest.fail(f"DCP_REQUIRE_DB is set and Postgres is unreachable: {e}")
         pytest.skip(f"Postgres unavailable for integration tests: {e}")
     return _test_db_url()
 
@@ -227,15 +182,14 @@ def db_conn(integration_db: str):
     """
     conn = psycopg2.connect(integration_db)
     try:
+        tables = _state_tables(conn)
         with conn.cursor() as cur:
-            cur.execute(
-                "TRUNCATE TABLE project_applications, projects, "
-                "colocated_candidates, findings, triage, documents, "
-                "applications, source_snapshots, council_aliases, "
-                "capacity_claim_matches, capacity_claims, site_members, "
-                "power_adjudication, deepread_log, acquisition_outcome, "
-                "sites RESTART IDENTITY CASCADE"
-            )
+            # Every state table, read from the catalogue: a hand-kept
+            # list missed each table a later migration added, so a test
+            # writing to one of those started from whatever the previous
+            # test left.
+            cur.execute("TRUNCATE TABLE " + ", ".join(tables)
+                        + " RESTART IDENTITY CASCADE")
         conn.commit()
         yield conn
     finally:

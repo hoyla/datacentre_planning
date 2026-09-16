@@ -469,7 +469,22 @@ def fetch_documents_for_application(
     summary["links_found"] = len(links)
     if kind == "empty":
         summary["error_class"] = "no_documents"
+    # Resume from what is held, as every other adapter does (Idox's
+    # comment on `prior_bytes` has the reasoning). Ocella never had this,
+    # so every re-walk of a completed application re-downloaded its
+    # whole bundle — and a failure on the re-walk still counted as
+    # `fetched`, because the re-download of a held document was tallied
+    # as skipped and downloaded both (found 2026-09-16).
+    prior_bytes = repo.held_bytes(conn, application_id)
     for link in links:
+        prior_path = prior_bytes.get(link.href)
+        if prior_path:
+            p = Path(prior_path)
+            if not p.is_absolute():
+                p = data_dir.parent / p
+            if p.exists():
+                summary["skipped_existing"] += 1
+                continue
         try:
             blob = client.get(link.href)
         except Exception as exc:
@@ -493,6 +508,13 @@ def fetch_documents_for_application(
         else:
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(body)
+            # Counted here, when bytes are written, and not after the row
+            # is recorded: a document already on disk under another URL
+            # was counted as both skipped and downloaded, so `held`
+            # (their sum, dcp/acquisition_outcome.py) could exceed
+            # `links_found` and a run with a failure still read as
+            # `fetched` (found 2026-09-16).
+            summary["downloaded"] += 1
         repo.record_document(
             conn,
             application_id=application_id,
@@ -502,7 +524,6 @@ def fetch_documents_for_application(
             bytes_path=str(target.relative_to(data_dir.parent))
                 if target.is_relative_to(data_dir.parent) else str(target),
         )
-        summary["downloaded"] += 1
         conn.commit()
 
     if summary["links_found"] > 0:

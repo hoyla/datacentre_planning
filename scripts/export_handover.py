@@ -1545,6 +1545,21 @@ def main() -> None:
         _barbour_keys = {f"PTNO-{r[0]}" for r in cur.fetchall()}
         _sal.require_live(_site_aliases,
                           {r[0] for r in site_rows} | _barbour_keys)
+        # The operator pages and the facility rosters, under the same
+        # contract the reader applies (scripts/export_reader.py): a
+        # curated entry keyed to a dead site is curation silently lost,
+        # and a roster naming a snapshot nobody holds is a provenance
+        # claim with nothing behind it. The workbook renders a row per
+        # facility, and until 2026-09-16 ran neither check, so a dead
+        # key failed the reader build and passed this one.
+        from dcp import operator_pages as _opp
+        _opp.require_live(_opp.load_pages(),
+                          {r[0] for r in site_rows} | _barbour_keys)
+        from dcp import site_facilities as _sfac
+        _facilities = _sfac.load_facilities()
+        _sfac.require_live(_facilities,
+                           {r[0] for r in site_rows} | _barbour_keys)
+        _sfac.require_held_snapshots(_facilities)
         # Same contract for the campus-scope adjudications, and the same
         # value pin: a republished operator figure stops the build here
         # exactly as it does in the reader, so the two artefacts cannot

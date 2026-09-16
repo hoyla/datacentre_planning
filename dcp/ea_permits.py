@@ -909,8 +909,9 @@ def verify_ea_quotes(claims: list[FiledClaim] | None = None,
 
     Returns an empty list where the documents are not on this machine,
     because they are not in the repository. That is a skip and not a
-    pass, and callers say which: `validate_ea` reports it, and the test
-    that exercises this marks itself skipped rather than green.
+    pass: `have_permit_text` says which, and the test that exercises this
+    (tests/test_ea_permits.py) skips on it rather than reporting green
+    over nothing — which it did until 2026-09-16.
     """
     claims = claims if claims is not None else load_ea_claims()
     if not have_permit_text(text_dir):

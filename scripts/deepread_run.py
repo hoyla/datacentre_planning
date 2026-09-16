@@ -324,6 +324,14 @@ def load_cohort(conn, *, tiers: list[str] | None, ref: str | None,
         JOIN applications a  ON a.id = sm.application_id
         JOIN documents d     ON d.application_id = a.id
         WHERE s.retired_at IS NULL
+          -- The member row too, not only the site: site_members is
+          -- append-only, and a materialisation retires every member row
+          -- of a surviving site before writing the current ones, so an
+          -- application that left a site keeps a retired row there.
+          -- Without this line those rows kept their documents in the
+          -- cohort — 42 applications and 807 documents on 2026-09-16,
+          -- the one JOIN site_members in the codebase without it.
+          AND sm.retired_at IS NULL
           AND d.content_sha256 IS NOT NULL
           AND d.bytes_path IS NOT NULL
           -- Settled states only. `not_extracted` is deliberately absent:
@@ -540,9 +548,14 @@ def verify_findings(row: dict, findings: list[dict],
                 continue
             page = coerce_page(f.get("evidence_page"))
             verified_page = None
-            candidates = []
-            if page and 1 <= page <= len(pages):
-                candidates = [page, page - 1, page + 1]
+            # The claimed page and its neighbours first (models are
+            # off by one more often than wrong), then any other page
+            # sent — and only pages sent. Until 2026-09-16 the neighbours
+            # were tried whether or not the model had seen them, so a
+            # stored evidence_page could name a page never in the prompt
+            # (120 of 1,462,337 findings, measured that day).
+            candidates = ([p for p in (page, page - 1, page + 1) if p in sent]
+                          if page else [])
             for p in candidates + [p for p in sent if p not in candidates]:
                 if 1 <= p <= len(pages) and quote_on_page(quote, pages[p - 1]):
                     verified_page = p

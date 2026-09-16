@@ -87,4 +87,6 @@ target-version = "py312"
 testpaths = ["tests"]
 markers = [
     "integration: requires a running Postgres (skipped if unreachable)",
+    "corpus: builds from or reads the live corpus at DATABASE_URL, so it can only run on a machine that has one; deselected in CI",
+    "reader: drives a built reader in headless Chromium (the built_reader fixture); the reader job runs these against the committed index.html",
 ]

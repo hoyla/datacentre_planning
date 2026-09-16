@@ -2,9 +2,11 @@ name: Checks
 
 # The first automation in this repo, and deliberately one that checks
 # rather than one that publishes (ROADMAP, "CI on GitHub Actions, then a
-# publish button"). Nothing here needs Postgres, a secret or a
-# credential, which is the whole reason it can go first: it runs on every
-# push to every branch, and a fork can gain nothing by running it.
+# publish button"). Nothing here needs a secret or a credential, which is
+# the whole reason it can go first: it runs on every push to every
+# branch, and a fork can gain nothing by running it. The Postgres the
+# unit job starts is a throwaway service container with a throwaway
+# password, holding nothing but the schema the tests build.
 #
 # `permissions: contents: read` is the least privilege that still allows
 # a checkout. No job here writes anything back.
@@ -24,9 +26,32 @@ concurrency:
 
 jobs:
   unit:
-    name: Unit tests (no database)
+    name: Unit and integration tests
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    # The same major version as docker-compose.yml. The tests rebuild
+    # dcp_test from migrations/*.sql each session (tests/conftest.py), so
+    # nothing is loaded into it and nothing needs a credential beyond the
+    # throwaway below.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dcp
+          POSTGRES_PASSWORD: dcp
+          POSTGRES_DB: dcp
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dcp"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://dcp:dcp@localhost:5432/dcp
+      # An unreachable database fails the job instead of skipping the
+      # integration tests (tests/conftest.py, integration_db).
+      DCP_REQUIRE_DB: "1"
     steps:
       - uses: actions/checkout@v7
 
@@ -41,12 +66,19 @@ jobs:
 
       - run: python -m pip install -e '.[dev]'
 
-      # There is no DATABASE_URL here and none is wanted. Everything the
-      # `integration` marker covers is deselected, so a test that needs a
-      # database and is not marked will fail this job rather than quietly
-      # reaching for one — which is how three browser tests came to be
-      # selected by this command without anyone noticing.
-      - run: python -m pytest -m "not integration"
+      # Everything but the `corpus` marker: the unit tests and the 130-odd
+      # integration tests, the latter against dcp_test rebuilt from every
+      # migration, and none of the browser suites (`reader`, the job
+      # below). Until 2026-09-16 the integration tests were deselected
+      # here and ran only on a laptop with the container up, so a green
+      # job was evidence about parsers and nothing about idempotency,
+      # dedup, retirement or the queue's scope. `corpus` names the tests
+      # that build from or read the live corpus — two reader builds for
+      # the determinism test, and two browser tests that count what a
+      # scratch build renders — which no CI database can hold. `-rs`
+      # prints every skip with its reason, so a suite that went quiet
+      # would show it here.
+      - run: python -m pytest -m "not corpus and not reader" -rs
 
   reader:
     name: Reader behaviour and design
@@ -87,7 +119,7 @@ jobs:
       - name: Drive the committed reader
         env:
           READER_HTML: index.html
-        run: python -m pytest tests/test_reader_smoke.py tests/test_design_conformance.py -rs
+        run: python -m pytest -m reader -rs
 
   middleware:
     name: Edge middleware

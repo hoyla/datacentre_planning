@@ -106,6 +106,17 @@ def test_a_page_the_model_was_never_shown_is_not_searched():
     assert RG.passes(far, QUOTE, 1, [1, 2, 21]) == 21
 
 
+def test_a_neighbour_the_model_was_never_shown_is_not_searched_either():
+    """Until 2026-09-16 the neighbours of the claimed page were tried
+    whether or not they were sent, so this returned 2 on fixture
+    geometry while the docstring promised otherwise. The claim is page 3,
+    the quote is on page 2, and page 2 was not sent."""
+    assert RG.passes(PAGES, QUOTE, 3, [3, 4]) is None
+    assert RG.passes(PAGES, QUOTE, 3, [2, 3, 4]) == 2
+    # And the claimed page itself, if it was never sent.
+    assert RG.passes(PAGES, QUOTE, 2, [4]) is None
+
+
 def test_an_absent_quote_stays_absent():
     assert RG.passes(PAGES, "a capacity of 999MW is proposed", 2, [1, 2, 3, 4]) is None
 

@@ -45,6 +45,9 @@ import pytest
 playwright = pytest.importorskip("playwright.sync_api",
                                  reason="playwright not installed")
 
+# Every test here drives the built page: the reader job's, never the unit job's.
+pytestmark = pytest.mark.reader
+
 ROOT = Path(__file__).resolve().parent.parent
 HANDOFF = ROOT / "design_handoff_datacentre_reader" / "README.md"
 
@@ -84,13 +87,16 @@ def page(built_reader):
         browser.close()
 
 
-def css_of(page, selector: str, *props: str) -> dict:
-    """Computed style of the first match, or skip if the page has none.
+def css_of(page, selector: str, *props: str, required: bool = True) -> dict:
+    """Computed style of the first match.
 
-    Some panels only exist where the corpus has the data — a site with no
-    adjudicated figure has no figure row — so a missing element is a
-    reason to skip that assertion, never to fail it. A missing element
-    that should always exist is asserted separately.
+    A missing element fails, because this file exists to notice the day a
+    rule stops applying, and a renamed class is the commonest way that
+    happens — until 2026-09-16 it skipped instead, so ten of the twenty
+    tests here would have gone quietly green on a rename. The exception
+    is a panel that only exists where the corpus has the data (a site
+    with no adjudicated figure has no figure row); a caller says so with
+    `required=False`, and that assertion skips.
     """
     got = page.evaluate(
         """([sel, props]) => {
@@ -100,6 +106,9 @@ def css_of(page, selector: str, *props: str) -> dict:
              return Object.fromEntries(props.map(p => [p, g[p]]));
            }""", [selector, list(props)])
     if got is None:
+        if required:
+            pytest.fail(f"no {selector} in this build — the rule this test "
+                        f"asserts has nothing to apply to")
         pytest.skip(f"no {selector} in this build")
     return got
 
@@ -424,10 +433,10 @@ def test_sites_table_matches_section_four(page):
     assert css_of(page, ".sitecell .skey", "fontSize", "color") == {
         "fontSize": "13px", "color": SECONDARY}
 
-    mw = css_of(page, ".mw .fig", "fontSize")
+    mw = css_of(page, ".mw .fig", "fontSize", required=False)
     assert mw["fontSize"] == "21px"
 
-    bar = css_of(page, ".rbar", "height", "backgroundColor")
+    bar = css_of(page, ".rbar", "height", "backgroundColor", required=False)
     assert bar["height"] == "6px"
     assert bar["backgroundColor"] == RULE
 
