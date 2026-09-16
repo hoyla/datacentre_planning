@@ -100,12 +100,7 @@ class ArcusClient:
             follow_redirects=True)
 
         resp = self._http.client.get(url)
-        if "Disclaimer" not in resp.text or "AcceptDisclaimer" not in resp.text:
-            return
-
-        tree = HTMLParser(resp.text)
-        form = next((f for f in tree.css("form")
-                     if "AcceptDisclaimer" in (f.attributes.get("action") or "")), None)
+        form = disclaimer_form(resp.text)
         if form is None:
             return
         payload: dict[str, str] = {}
@@ -129,6 +124,61 @@ def _clean_id(value: str | None) -> str:
     return v.split(".")[0] if "." in v else v
 
 
+def disclaimer_form(html: str):
+    """The disclaimer form on an interstitial, or None. Three variants are
+    in the wild: `/Disclaimer/AcceptDisclaimer` (a POST with an ASP.NET
+    token), `/Disclaimer/Accept?returnUrl=…` as a GET, and — Fylde,
+    2026-08-28, four captured bodies — the same `/Disclaimer/Accept`
+    path as a POST form, which the older GET does not satisfy."""
+    if "Disclaimer" not in html:
+        return None
+    tree = HTMLParser(html)
+    return next((f for f in tree.css("form")
+                 if "/Disclaimer/Accept" in (f.attributes.get("action") or "")), None)
+
+
+# What an application page IS, before anything is parsed out of it — the
+# distinction Idox learned on 2026-09-10 (idox.classify_listing), against
+# Arcus's own captured pages: Vale of Glamorgan's Documents tab says "No
+# Attachments found for this Application"; Fylde has served its
+# disclaimer interstitial in place of the application since 2026-08-28,
+# a page with no application on it at all, which read as a council
+# publishing nothing. The refusal markers and the floor are Idox's.
+EMPTY_MARKER = "no attachments found for this application"
+
+
+def classify_listing(html: str, base_url: str) -> tuple[str, str, list[dict]]:
+    """Returns `(kind, detail, links)`; kind is one of `disclaimer` (the
+    interstitial, not the application — retryable once accepted),
+    `refused`, `tiny`, `populated`, `empty` (the Documents tab's own
+    sentence, the only kind that may settle as `none_published`) or
+    `unrecognised` (retryable)."""
+    from dcp.sources import idox as _idox
+    low = html.lower()
+    for marker in _idox.REFUSAL_MARKERS:
+        if marker in low:
+            login = any(m in low for m in _idox.LOGIN_MARKERS)
+            return ("refused", f"portal served a refusal page (HTTP 200): "
+                               f"{marker!r}" + (", naming a login" if login else ""), [])
+    links = parse_documents_page(html, base_url=base_url)
+    if links:
+        return ("populated", f"{len(links)} documents listed", links)
+    if disclaimer_form(html) is not None and "application number" not in low:
+        return ("disclaimer", "the portal served its disclaimer interstitial "
+                              "in place of the application", [])
+    if len(html) < _idox.MIN_LISTING_BYTES:
+        return ("tiny", f"body is {len(html)} bytes with no document links "
+                        f"and cannot be an application page", [])
+    tree = HTMLParser(html)
+    tab = tree.css_first("#Documents")
+    if tab is not None and EMPTY_MARKER in tab.text(separator=" ").lower():
+        return ("empty", "Documents tab present and says no attachments "
+                         "found for this application", [])
+    return ("unrecognised", "no document links and no statement that the "
+                            "register is empty: a page whose shape this "
+                            "parser does not know", [])
+
+
 def parse_documents_page(html: str, base_url: str) -> list[dict]:
     """Extract document links from an Arcus application page.
 
@@ -136,6 +186,8 @@ def parse_documents_page(html: str, base_url: str) -> list[dict]:
 
     - **anchor style** (West Northants, BCP, Glamorgan …): each row
       carries an `<a href="/Document/Download?module=…&fileName=…">`.
+    - **disabled-link style** (Fylde): the anchor holds the same
+      `/Document/Download` URL in `data-disabled-link` and no href.
     - **data-attribute style** (Vale of White Horse, South Oxfordshire …):
       the row holds `data-module` / `data-recordNumber` / `data-planID` /
       `data-imageID` / `data-fileName` and a JavaScript "View" button,
@@ -148,8 +200,13 @@ def parse_documents_page(html: str, base_url: str) -> list[dict]:
     out: list[dict] = []
     seen: set[str] = set()
 
+    # A third generation (Fylde, seen 2026-08-06 and unread until
+    # 2026-09-15): the row's anchor carries the download URL in
+    # `data-disabled-link`, activated by script once the row is ticked,
+    # and no href at all. Five Fylde applications listed documents on
+    # every fetch and read as a council publishing nothing.
     for a in tree.css("a"):
-        href = a.attributes.get("href") or ""
+        href = a.attributes.get("href") or a.attributes.get("data-disabled-link") or ""
         if "Document/Download" not in href:
             continue
         abs_href = urllib.parse.urljoin(base_url, href)
@@ -160,6 +217,15 @@ def parse_documents_page(html: str, base_url: str) -> list[dict]:
         filename = (qs.get("fileName") or [""])[0]
         label = a.attributes.get("aria-label") or a.text(strip=True) or ""
         kind = label.replace("Link(Download)", "").strip() or None
+        if not a.attributes.get("href"):
+            # Disabled-link style: the anchor's text is the date column;
+            # the document type is the row's third cell (after the
+            # checkbox and the date), as the table header says.
+            row = a.parent
+            while row is not None and row.tag != "tr":
+                row = row.parent
+            cells = [c.text(strip=True) for c in row.css("td")] if row is not None else []
+            kind = next((c for c in cells[2:4] if c and c != "-"), None)
         out.append({"href": abs_href, "filename": filename,
                     "kind": kind or filename or None})
 
@@ -219,16 +285,37 @@ def fetch_documents_for_application(
     repo.record_snapshot(conn, source_id=source_id, key=application_url,
                          raw_bytes=resp.content)
 
-    links = parse_documents_page(resp.text, base_url=application_url)
+    # An empty document list carries two facts (ROADMAP; HISTORY
+    # 2026-09-10 for Idox): `classify_listing` says which, and
+    # `dcp.acquisition_outcome` maps each to its verdict.
+    kind, detail, links = classify_listing(resp.text, base_url=application_url)
+    summary["listing_kind"] = kind
+    summary["listing_detail"] = detail
+    if kind == "disclaimer":
+        # The client accepted the disclaimer on first contact with the
+        # host and the host still served the interstitial: retryable,
+        # under its own name, never a register that publishes nothing.
+        summary["error_class"] = "disclaimer_gate"
+        summary["errors"] += 1
+        log.warning("disclaimer interstitial served in place of the "
+                    "application (%s)", application_ref)
+        return summary
+    if kind in ("refused", "tiny"):
+        summary["error_class"] = ("login_required"
+                                  if "naming a login" in detail else "access_refused")
+        log.info("%s: %s — %s", summary["error_class"], application_ref, detail)
+        return summary
+    if kind == "unrecognised":
+        summary["error_class"] = "unrecognised_listing"
+        summary["errors"] += 1
+        log.warning("unrecognised listing (%s): %s", application_ref, detail)
+        return summary
     summary["links_found"] = len(links)
-    if not links:
-        summary["error_class"] = "no_documents_or_unparseable"
+    if kind == "empty":
+        summary["error_class"] = "no_documents"
         return summary
 
-    with conn.cursor() as cur:
-        cur.execute("SELECT url, bytes_path FROM documents WHERE application_id = %s",
-                    (application_id,))
-        prior = {u: bp for u, bp in cur.fetchall() if bp}
+    prior = repo.held_bytes(conn, application_id)
 
     app_dir = data_dir / "raw" / "documents" / _idox._sanitised_ref(application_ref)
     for link in links:

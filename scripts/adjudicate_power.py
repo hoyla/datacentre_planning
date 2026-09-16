@@ -47,7 +47,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).parent.parent
 load_dotenv(ROOT / ".env")
 
-from dcp import db  # noqa: E402
+from dcp import db, derivation  # noqa: E402
 
 # ---------------------------------------------------------------------
 # BEFORE USING --submit: this is the Anthropic batch route, and it is
@@ -904,7 +904,7 @@ def do_collect() -> None:
         for f in app["figures"]:
             by_finding[f["finding_id"]] = f
 
-    inserted = skipped = 0
+    inserted = skipped = refused = derived = 0
     with db.connect() as conn, conn.cursor() as cur:
         for result in client.messages.batches.results(state["batch_id"]):
             if result.result.type != "succeeded":
@@ -932,6 +932,14 @@ def do_collect() -> None:
                     elif unit in APPARENT:
                         unit_note = ("apparent power (kVA/MVA); not "
                                      "converted to MW — power factor unknown")
+                # Migration 035: a value no number in the quote states is
+                # admitted as site_capacity only with a derivation, and is
+                # stored as unclear otherwise (dcp/derivation.guard).
+                verdict, reasoning, deriv = derivation.guard(
+                    a.get("verdict"), value_mw, meta["value_number"],
+                    derivation.quote_for(cur, fid), a.get("reasoning") or "")
+                if verdict == "unclear" and a.get("verdict") == "site_capacity":
+                    refused += 1
                 cur.execute("""
                     INSERT INTO power_adjudication (application_id,
                         finding_id, document_id, verdict, quantity_type,
@@ -939,18 +947,25 @@ def do_collect() -> None:
                         is_maximum, reasoning, model, prompt_version)
                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     ON CONFLICT (finding_id, model, prompt_version)
-                    DO NOTHING""",
-                    (app_id, fid, meta["document_id"], a.get("verdict"),
+                    DO NOTHING
+                    RETURNING id""",
+                    (app_id, fid, meta["document_id"], verdict,
                      a.get("quantity_type"), value_mw, meta["value_number"],
                      meta["value_unit"], unit_note, a.get("is_maximum"),
-                     (a.get("reasoning") or "")[:600], MODEL,
-                     PROMPT_VERSION))
+                     reasoning[:600], MODEL, PROMPT_VERSION))
+                _row = cur.fetchone()
+                if _row and deriv is not None:
+                    derivation.record(cur, adjudication_id=_row[0], finding_id=fid,
+                                      value_mw=value_mw, d=deriv)
+                    derived += 1
                 inserted += 1
         conn.commit()
     state["collected"] = True
     STATE_PATH.write_text(json.dumps(state, indent=1))
     print(f"inserted {inserted} adjudications"
-          + (f" ({skipped} referenced unknown finding_ids)" if skipped else ""))
+          + (f" ({skipped} referenced unknown finding_ids)" if skipped else "")
+          + f"; {derived} carry a derivation, {refused} stored as unclear because "
+            f"no number in the quote states the value and no derivation reaches it")
 
 
 def do_report() -> None:

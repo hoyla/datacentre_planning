@@ -937,9 +937,13 @@ writes the table to `data/reports/` and is the object to cite (HISTORY,
 the quote, 102; B, a sum of stated figures, 7; C, a scaling or a
 midpoint, 11; D, nothing arithmetic on the quote reaches it, 51.
 
-**Decided by Luke, 2026-09-10: A and B take the target shape below**
-— a derivation record beside the finding, rendered on `w-modelled`
-with the ≈ glyph. Building it is the next step of this item.
+**A and B are built** (2026-09-15; HISTORY, "A computed figure carries
+its derivation"): migration 035's `figure_derivations` beside the
+adjudication, 109 rows backfilled, the ≈ glyph and the arithmetic on
+the reader's figure box, provenance panel and figures table, a "Derived
+figures" sheet in the workbook, the table in the DuckDB, the line in
+the machine-reading facts, and the write-time guard in all three
+adjudication scripts. Nothing of A and B is owed.
 
 **Decided by Luke, 2026-09-10: C and D go to a person's row.**
 `scripts/computed_figures.py --review` writes them as
@@ -951,19 +955,9 @@ for Luke to fill against the document. **What is owed here is the
 fold**: a decision column read back into the record as a person's
 adjudication row (`power_adjudication`, model `person`, the reason
 carried), and the workbook regenerated from the classification after
-each fold rather than edited in place. The companion guard — a value
-that appears in no number of its quote is refused at adjudication
-write unless it carries a derivation — follows the derivation record.
-
-**The target shape, once they are classified** (2026-09-04): a computed
-figure carries its derivation beside it — the source finding or evidence
-references, the operation (a unit count times a rating; a sum of stated
-components), the operands with their units, and a derivation version —
-and renders on the `w-modelled` rung with the ≈ glyph, distinct from a
-figure a document states. Existing rows stay untouched; the derivation
-is a record beside the finding, the way an adjudication is. Which
-operations are admissible is the decision the classification informs,
-not one to take before it.
+each fold rather than edited in place. The guard is in force since
+2026-09-15 for every new adjudication; the 62 C and D figures stored
+before it keep their verdicts until the fold.
 
 ### Approaches tried and rejected, so they are not re-proposed
 
@@ -1182,16 +1176,17 @@ both shipped since, so the old section title ("Deferred to 2.9") had
 aged into a lie. Each is scoped; what blocks each is a decision, not
 work.
 
-- **Ocella and Arcus still return an empty document list as one
-  fact.** Idox learned the distinction on 2026-09-10 (HISTORY, "An Idox
-  documents tab says which kind of nothing it is"): a recognised empty
-  on the portal's own marker, a refusal or a login as a settled class,
-  anything else retryable. Ocella (9 applications on the label) and
-  Arcus (6) still set `no_documents_or_unparseable` whenever
-  `len(links) == 0` and loop as `error` until each learns the same
-  distinction against captured pages of its own three kinds, one family
-  at a time; NI's genuinely-empty relabel, on its own evidence, is
-  still its own change.
+- **NI still returns an empty document list as one fact.** Idox,
+  Ocella and Arcus now say which kind of nothing it is (HISTORY,
+  2026-09-10 and 2026-09-15): a recognised empty on the portal's own
+  sentence, a refusal or a login as a settled class, anything else
+  retryable. NI's `or []` in `dcp/sources/ni_planning.py` still labels
+  a null `supportingDocuments` `no_documents_or_unparseable`, which
+  never settles, so it errs the safe way and retries for ever;
+  relabelling its genuinely empty list — reached only after decoding
+  the JSON and rejecting a null body — as the recognised empty it is
+  would create a settled path, and wants its own evidence (a captured
+  empty and a captured null) before it is written.
 
 - **Thirteen live members whose last attempt ended in `error` while
   they hold documents — never re-queued until #403, each to be
@@ -1443,21 +1438,18 @@ field and is not publishable as it stands.
 
 ## Coverage gaps worth closing
 
-- **Twenty documents the corpus extraction cannot cache, and three
-  zero-byte files the corpus claims to hold** — the residue the
-  read-in-full item always named, none of it holding a site back (the
-  gap itself closed 2026-09-10; re-measure through
-  `site_profile.load_coverage_detail` rather than quoting it). The
-  twenty: four PDFs pypdf refuses to open ("Invalid object in /Pages"),
-  the zero-byte files, two `.xlsb`, a `.ppt` and five of no
-  recognisable format. The four corrupt PDFs are probably genuinely
-  unreadable; worth one look at whether the bytes match what the portal
-  serves before accepting that. The zero-byte files are an acquisition
-  question — the corpus claims a document it does not hold, so they
-  want a re-fetch and, if the portal still serves nothing, an
-  `acquisition_outcome` row saying so rather than a permanent silent
-  gap: `Wakefield/23/00100/S7301`, `Warwick/W/23/1025` and
-  `Medway/MC/21/0979`, named by every staging build.
+- **Twelve documents the corpus extraction cannot cache**, the residue
+  the read-in-full item always named, none of it holding a site back
+  (the gap itself closed 2026-09-10; re-measure through
+  `site_profile.load_coverage_detail` rather than quoting it): two
+  `.xlsb`, a `.ppt`, five of no recognisable format, and four Central
+  Bedfordshire files that are corrupt at source — byte-identical to
+  what the council's store serves, re-fetched 2026-09-15 (the runbook's
+  expected-not-a-fault register). Reopen the four only with a reader
+  that opens them. The three zero-byte files are no longer here: their
+  applications carry `partial` rows since 2026-09-15 and the queue
+  retries the empty file on every run (HISTORY, "An empty document is
+  not held").
 
 - **Two of VIRTUS's seven Slough facilities have no record at all**
   (2026-09-02). The campus is one site now — the partition was extended

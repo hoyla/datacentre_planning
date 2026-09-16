@@ -5352,6 +5352,32 @@ the excluded applications now carry findings for the 44-scheme
 adjacency review and the unsited-claims work to read against, which
 was the case for spending it.
 
+## An empty document is not held (2026-09-15)
+
+The three zero-byte files that arrived before the guard existed
+(HISTORY, 2.8: a Wakefield s106, a Warwick consultation response, a
+Medway supporting document, each served as 0 bytes with HTTP 200) had
+never been retried, and the reason was not the portals. Every adapter's
+resume rule read the `documents` row, saw a bytes_path, and skipped the
+URL as held — so the guard's promise that "a later pass retries it" was
+true only for a document with no row at all. Six adapters carried the
+same three-line rule; `repo.held_bytes` is the one place it lives now,
+and it leaves the empty hash out.
+
+Re-run through the Idox adapter the same morning, each register still
+serves its file as 0 bytes with HTTP 200, and each application now
+carries a `partial` row saying so — 20 of 21, 26 of 27, 158 of 159 —
+which the queue retries on every run at the cost of one request. The
+Medway file is not missing: the register lists the same document twice
+and the second copy (232 KB) is held. Wakefield's and Warwick's gaps
+are the councils'.
+
+The four Central Bedfordshire files the extractor refuses (three PDFs
+"Invalid object in /Pages", one .docx missing a customXML part) were
+re-fetched through the aifusion route and are byte-identical to what
+the store serves: corrupt at source, recorded in the runbook's
+expected-not-a-fault register rather than retried.
+
 ## The roadmap is cleared again, three days after the last time (2026-09-10)
 
 ROADMAP holds what is still to do, and it was cleared of finished
@@ -5406,6 +5432,45 @@ NI for the empty list; decision 6 and the Stockley wrinkle for the
 rung; the twenty uncacheable documents and three zero-byte files for
 the prose gap; Hayes for N+N.
 
+## Ocella and Arcus say which kind of nothing it is, and Fylde was never empty (2026-09-15)
+
+The empty-listing item's last two families in the corpus, done the way
+Idox was on 2026-09-10: a `classify_listing` before the parse, designed
+against each family's own captured pages, and the fetch path mapping
+each kind to the verdict `dcp.acquisition_outcome` already has words
+for. The refusal markers and the byte floor are imported from the Idox
+adapter so the families cannot drift on what a refusal looks like.
+
+**Ocella.** Havering's documents page says it in words — "There are no
+documents for this section" — eleven captured bodies, every one 17,624
+bytes; Hillingdon's 322 carry the same sentence beside a section that
+lists documents, so links are read first and the sentence settles only
+a page with none. The nine Havering applications that had looped as
+`error` since 2026-08-08 settled as `none_published` on the portal's
+sentence. Nothing new was found; the record now says why.
+
+**Arcus was two bugs wearing one label.** Vale of Glamorgan's Documents
+tab says "No Attachments found for this Application", and its one
+application settled the same way. Fylde did not: its five applications
+had listed documents on every fetch since 2026-08-06 and read as a
+council publishing nothing, twice over. Since 2026-08-28 the host has
+served its disclaimer interstitial in place of the application — a
+POST form at `/Disclaimer/Accept`, a third variant beside the two the
+client knew, which the client's GET to the same path did not satisfy —
+and behind it the rows carry the download URL in `data-disabled-link`
+with no href, a third register generation the parser did not read. The
+classifier names the interstitial (`disclaimer`, retryable under its
+own name, never an empty register), the client posts the form it
+finds, and the parser reads the disabled links with the document type
+from the row's own cell. Re-fetched the same morning: **five
+applications, 212 documents**, 37 to 73 each. They are new content and
+the next first read takes them.
+
+Five captured bodies are fixtures under `tests/fixtures/ocella/` and
+`tests/fixtures/arcus/`; `tests/test_ocella_listing.py` and
+`tests/test_arcus_listing.py` pin the kinds. What remains of the item
+is NI's relabel, on its own evidence.
+
 ## The C and D figures go to a person's row (2026-09-10)
 
 Luke settled the second half of #248's admissibility question the same
@@ -5434,6 +5499,58 @@ workbook is local and regenerated from the classification on every run,
 so a decision is folded back into the record before the next run —
 the fold is the ask that stays in ROADMAP.
 
+## A computed figure carries its derivation (2026-09-15)
+
+#248's target shape, built as Luke decided it on 2026-09-10 for the A
+and B classes: a computed figure carries its derivation beside it and
+renders on the `w-modelled` rung with the ≈ glyph, distinct from a
+figure a document states. Migration 035 adds `figure_derivations`,
+keyed to the `power_adjudication` row whose value it explains — the
+operation (`fleet_sum`, `product`, `sum`), the operands as the quote
+states them, a sentence for a page ("10 × 2.9 MW = 29 MW"), which
+reading of the quote it came from, and a derivation version. Existing
+rows are untouched; the adjudication's value is still the number the
+page shows, and the derivation is why it may. `dcp/derivation.py` holds
+the rule the classifier had grown in `scripts/computed_figures.py` —
+the quote read as written and as repaired, a repair only ever adding a
+reading — and `derive()` returns the first admissible derivation any
+reading reaches. `scripts/computed_figures.py --derive` backfilled the
+109 figures adjudicated before the rule: 102 products (51 fleets
+summed, 51 two numbers multiplied) and 7 sums. The report's counts did
+not move.
+
+**Where it shows.** The reader's site figure box: a headline figure
+that is derived takes the modelled weight and the glyph, with the
+arithmetic beside the basis — six sites on the 2026-09-15 scratch
+build, "≈120 · Disclosed IT load · derived: 4 × 30 = 120 MW" the
+shape. The provenance panel under the quote says the figure is not
+stated in the quote and states the arithmetic; the figures table says
+the same on the row. The workbook gains a "Derived figures" sheet (109
+rows, one per figure, with the quote and the reading) and a Read-me
+entry; the DuckDB carries the table with a note that a derived figure
+is never a disclosure; the machine-reading facts tell the model the
+same sentence under the quote, so a reading does not call our
+arithmetic the applicant's.
+
+**The guard, in force from today.** All three adjudication scripts
+(`adjudicate_power.py`, `adjudicate_openai.py --collect`,
+`adjudicate_subagent.py --ingest`) pass every site_capacity value
+through `derivation.guard()` at write: a value some number in the full
+quote states passes untouched; a value a derivation reaches is written
+with the derivation recorded beside it; anything else is stored as
+`unclear` with the refusal in front of the model's own reasoning, so
+the abstention is visible and the sentence is kept. The full evidence
+text is fetched for the check — the batch metadata carries a
+300-character copy, and a guard on a truncated quote would refuse
+figures the page states. Each collect prints how many rows carry a
+derivation and how many were refused. The 62 C and D figures stored
+before the rule keep their verdicts until Luke's review list is folded
+back; the rule only ever touches new writes.
+
+Tests: `tests/test_derivation.py` pins the three operations, the two
+refused classes and the guard on corpus quotes; the tree test admits
+the new SQL because every rollup names the standing; the reader suites
+pass against the scratch build.
 ## The regulators' refusals and the disclosure log's aggregates (2026-09-16)
 
 The two requests sent on 12 August for the project-level demand queue

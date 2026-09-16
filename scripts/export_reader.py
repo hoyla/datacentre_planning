@@ -195,11 +195,18 @@ SITE_FIGURE_SQL = """
             SELECT DISTINCT ON (s.site_key, pa.quantity_type)
                    s.site_key, pa.quantity_type, pa.value_mw, pa.model,
                    f.signal_type, f.evidence_text, f.evidence_page,
-                   d.url, d.kind, d.fetched_at, a.application_ref, d.id
+                   d.url, d.kind, d.fetched_at, a.application_ref, d.id,
+                   -- Migration 035: a value no number in the quote states
+                   -- is shown only with the arithmetic that reaches it.
+                   fd.operands_text
             FROM latest pa
             JOIN findings f ON f.id = pa.finding_id
             JOIN applications a ON a.id = pa.application_id
             LEFT JOIN documents d ON d.id = pa.document_id
+            LEFT JOIN LATERAL (
+              SELECT operands_text FROM figure_derivations x
+              WHERE x.adjudication_id = pa.id
+              ORDER BY x.inserted_at DESC, x.id DESC LIMIT 1) fd ON true
             JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
             JOIN sites s ON s.id = m.site_id
             WHERE s.retired_at IS NULL AND pa.verdict = 'site_capacity'
@@ -236,11 +243,18 @@ SITE_ALL_FIGURES_SQL = """
                      -- is the table of everything the adjudicator saw, and
                      -- a figure the standing keeps off the site's rollup is
                      -- shown here with that said (migration 034).
-                     m.figure_standing, pa.id
+                     m.figure_standing, pa.id,
+                     -- Migration 035: the arithmetic behind a value the
+                     -- quote does not state, where the row carries one.
+                     fd.operands_text AS derived
               FROM latest pa
               JOIN findings f ON f.id = pa.finding_id
               JOIN applications a ON a.id = pa.application_id
               LEFT JOIN documents d ON d.id = pa.document_id
+              LEFT JOIN LATERAL (
+                SELECT operands_text FROM figure_derivations x
+                WHERE x.adjudication_id = pa.id
+                ORDER BY x.inserted_at DESC, x.id DESC LIMIT 1) fd ON true
               JOIN site_members m ON m.application_id = a.id
                    AND m.retired_at IS NULL
               JOIN sites s ON s.id = m.site_id
@@ -3030,18 +3044,20 @@ def main() -> int:
         cur.execute(SITE_FIGURE_SQL)
         fig_prov = {}
         for (k, qt, v, model, as_written, quote_text, page, url, kind,
-             fetched, ref, doc_id) in cur.fetchall():
+             fetched, ref, doc_id, derived) in cur.fetchall():
             fig_prov[(k, qt)] = {
                 "mw": float(v), "model": model, "as_written": as_written,
                 "quote": quote_text or "", "page": page, "url": url or "",
                 "title": mreading.document_title(url, kind) if url else "",
-                "fetched": fetched, "ref": ref, "document_id": doc_id}
+                "fetched": fetched, "ref": ref, "document_id": doc_id,
+                "derived": derived or ""}
 
         # Editorial rule 4's table.
         cur.execute(SITE_ALL_FIGURES_SQL, (ALL_FIGURES_CAP,))
         all_figs, all_figs_total = defaultdict(list), {}
         for (k, verdict, qt, v, v_orig, u_orig, reasoning, model, as_written,
-             page, url, kind, doc_id, ref, standing, _id, cnt, _rn) in cur.fetchall():
+             page, url, kind, doc_id, ref, standing, _id, derived, cnt,
+             _rn) in cur.fetchall():
             all_figs_total[k] = cnt
             all_figs[k].append({
                 "verdict": verdict, "quantity": qt, "mw": v,
@@ -3049,7 +3065,7 @@ def main() -> int:
                 "model": model, "as_written": as_written, "page": page,
                 "url": url or "", "document_id": doc_id,
                 "title": mreading.document_title(url, kind) if url else "",
-                "ref": ref, "standing": standing})
+                "ref": ref, "standing": standing, "derived": derived or ""})
 
         # External capacity claims: grid-register figures attached to
         # sites by hand-adjudicated inference (dcp/capacity_claims). They
@@ -4296,7 +4312,15 @@ def main() -> int:
                           f'\u201d</p>'
                           f'<p class="figgate">Quote verified verbatim against '
                           f'the document text before storage \u00b7 '
-                          f'<a href="#methodology">how the gate works</a></p>')
+                          f'<a href="#methodology">how the gate works</a></p>'
+                          # Migration 035: the number is not in the quote;
+                          # here is how it was reached from the numbers
+                          # that are.
+                          + (f'<p class="figgate">\u2248 The figure is not '
+                             f'stated in the quote; it is our arithmetic on '
+                             f'the figures the quote states: '
+                             f'{esc(pv["derived"])}</p>'
+                             if pv.get("derived") else ""))
             _told = ('Told to <b>the planning authority</b>'
                      + (f' \u00b7 published as \u201c'
                         f'{esc(humanise(pv["as_written"], sentence=True))}\u201d' if pv else ''))
@@ -4352,6 +4376,8 @@ def main() -> int:
                     VERDICT_LABEL.get(r["verdict"], (r["verdict"], "v-maybe"))[1])
                 + (_NOT_COUNTED if r["verdict"] == "site_capacity"
                    and r.get("standing") == "not_dc_excluded" else "")
+                + (f'<span class="q">\u2248 not stated in the quote; derived: '
+                   f'{esc(r["derived"])}</span>' if r.get("derived") else "")
                 + (f'<span class="q">{esc(trim(r["reason"], 260))}</span>'
                    if r["reason"] else "") + '</td></tr>'
                 for r in _af)
@@ -4492,8 +4518,20 @@ def main() -> int:
                     "Low": "w-implied", "Indicative": "w-modelled"}.get(
                         est.confidence or "", "w-implied"))
         _mark = "≈" if est.confidence == "Indicative" else ""
+        # Migration 035 (#248, Luke 2026-09-10): a headline figure the
+        # quote does not state — our arithmetic on the applicant's own
+        # components — is the same kind of thing as the floorspace
+        # estimate, and carries the same glyph and weight, with the
+        # arithmetic stated beside the basis.
+        _derived = next((pv["derived"] for (_k, _q), pv in fig_prov.items()
+                         if _k == key and pv.get("derived") and est.value_mw
+                         and abs(pv["mw"] - float(est.value_mw)) < 0.001), "")
+        if _derived and est.basis != scale.OPERATOR_BASIS:
+            _wclass, _mark = "w-modelled", "≈"
         mw_cell = ((f"<span class='fig {_wclass}'>{_mark}{mw}</span>"
                     f"<span class='q'>{esc(est.basis)}"
+                    + (f" <span class='prov'>· derived: {esc(_derived)}</span>"
+                       if _derived else "")
                     + (" <span class='prov'>· may rise</span>" if is_prov and mw else "")
                     + "</span>") if mw
                    else f"<span class='q'>{esc(est.basis)}</span>")

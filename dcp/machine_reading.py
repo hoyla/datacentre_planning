@@ -182,13 +182,20 @@ class SiteInput:
 FIGURES_SQL = """
 WITH adj AS (
   SELECT DISTINCT ON (finding_id) finding_id, verdict, quantity_type,
-         value_mw, is_maximum, application_id, document_id
+         value_mw, is_maximum, application_id, document_id, id
   FROM power_adjudication
   ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC)
 SELECT adj.quantity_type, adj.value_mw, adj.is_maximum, a.application_ref,
-       f.document_id, f.evidence_page, f.evidence_text, f.signal_type
+       f.document_id, f.evidence_page, f.evidence_text, f.signal_type,
+       fd.operands_text
 FROM adj
 JOIN findings f ON f.id = adj.finding_id
+-- Migration 035: a value the quote does not state is told to the model
+-- with the arithmetic that reaches it, so the reading can say so.
+LEFT JOIN LATERAL (
+  SELECT operands_text FROM figure_derivations x
+  WHERE x.adjudication_id = adj.id
+  ORDER BY x.inserted_at DESC, x.id DESC LIMIT 1) fd ON true
 JOIN applications a ON a.id = adj.application_id
 JOIN site_members sm ON sm.application_id = adj.application_id
      AND sm.retired_at IS NULL
@@ -340,8 +347,9 @@ def load_site_input(conn, site_key: str, *, profile: dict,
         figures = [{
             "quantity": q, "value_mw": float(mw), "is_maximum": mx,
             "application_ref": ref, "document_id": doc, "page": page,
-            "quote": (quote or "").strip(), "label": label}
-            for q, mw, mx, ref, doc, page, quote, label in cur.fetchall()]
+            "quote": (quote or "").strip(), "label": label,
+            "derived": derived or ""}
+            for q, mw, mx, ref, doc, page, quote, label, derived in cur.fetchall()]
         cur.execute(NOT_COUNTED_SQL, (site_key,))
         n_not_counted, n_not_counted_apps = cur.fetchone()
         cur.execute(CLAIMS_SQL, (site_key,))
@@ -566,6 +574,9 @@ def render_facts(panel: dict) -> str:
                    f"{', page ' + str(f['page']) if f['page'] else ''}"
                    f"; label {f['label']}")
         out.append(f"    quote: \"{' '.join(f['quote'].split())}\"")
+        if f.get("derived"):
+            out.append(f"    (the figure is not stated in the quote; it is our "
+                       f"arithmetic on the figures the quote states: {f['derived']})")
     nc = panel.get("figures_not_counted")
     if nc:
         _f, _a = nc["figures"], nc["applications"]

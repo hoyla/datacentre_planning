@@ -568,6 +568,38 @@ def dictionary(*, water: dict) -> list[tuple[str, str, str]]:
     return filled
 
 
+DERIVED_HEADERS = ["Site key", "Application ref", "Quantity", "MW",
+                   "Derived as", "Read from", "Quote", "Page", "Reader",
+                   "Finding id"]
+
+# Every site-capacity figure whose value no number in its quote states,
+# with the arithmetic that reaches it (migration 035). Site-level here
+# means a live member of a live site; the standing is named so the
+# tree test sees it, though this sheet lists rather than rolls up —
+# a not_dc member's derived figure is still that application's.
+DERIVED_SQL = """
+WITH latest AS (
+  SELECT DISTINCT ON (finding_id) *
+  FROM power_adjudication
+  ORDER BY finding_id, (verdict = 'unclear'), inserted_at DESC, id DESC),
+fd AS (
+  SELECT DISTINCT ON (adjudication_id) *
+  FROM figure_derivations
+  ORDER BY adjudication_id, inserted_at DESC, id DESC)
+SELECT s.site_key, a.application_ref, pa.quantity_type, pa.value_mw,
+       fd.operands_text, fd.reading, f.evidence_text, f.evidence_page,
+       pa.model, pa.finding_id
+FROM fd
+JOIN latest pa ON pa.id = fd.adjudication_id
+JOIN findings f ON f.id = pa.finding_id
+JOIN applications a ON a.id = pa.application_id
+JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
+     AND m.figure_standing <> 'not_dc_excluded'
+JOIN sites s ON s.id = m.site_id AND s.retired_at IS NULL
+WHERE pa.verdict = 'site_capacity'
+ORDER BY s.site_key, a.application_ref, pa.quantity_type, pa.value_mw DESC
+"""
+
 DICTIONARY: list[tuple[str, str, str]] = [
     ("Sites", "Site key",
      "Stable identifier for the site; also the prefix of its Drive folder "
@@ -1098,6 +1130,19 @@ DICTIONARY: list[tuple[str, str, str]] = [
      "application, and this workbook includes the built estate back to "
      "2015. The workbook column is recomputed from the Sites sheet at "
      "every generation."),
+    ("Derived figures", "All columns",
+     "Site-capacity figures whose value appears in no number of their own "
+     "quote, because the extractor did the applicant's arithmetic: a unit "
+     "count times a rating, or stated figures added. 'Derived as' is the "
+     "arithmetic, with the operands as the quote states them; 'Read from' "
+     "says whether the operands were read from the quote as written or "
+     "after repairing the substrate's habits (decimal commas, split "
+     "digits, OCR'd letters). These figures render on the reader with "
+     "the \u2248 glyph, distinct from a figure a document states. A "
+     "figure whose value no arithmetic on the quote reaches is not here: "
+     "since 2026-09-15 such a figure is stored as 'unclear' at "
+     "adjudication, and the ones stored before that are on a review "
+     "list for a person."),
     ("Capacity claims", "All columns",
      "One row per claim from a named external source — currently the "
      "119 transmission demand rows of NESO's Existing Agreements "
@@ -2416,6 +2461,19 @@ def main() -> None:
     # can ask for one. Same shared rule for the adjacent class as the
     # staging build, so this sheet and the Drive tree cannot disagree
     # about what is where.
+    # ---- Derived figures (migration 035) ---------------------------------
+    ws = _sheet("Derived figures", DERIVED_HEADERS)
+    with db.connect() as conn, conn.cursor() as cur:
+        cur.execute(DERIVED_SQL)
+        derived_rows = cur.fetchall()
+    for r in derived_rows:
+        ws.append(list(r))
+    for col, w in zip("ABCDEFGHIJ", (26, 24, 18, 9, 44, 12, 60, 10, 18, 12)):
+        ws.column_dimensions[col].width = w
+    for r in ws.iter_rows(min_row=2):
+        r[4].alignment = Alignment(wrap_text=True, vertical="top")
+        r[6].alignment = Alignment(wrap_text=True, vertical="top")
+
     ws = _sheet("Excluded applications", EXCLUDED_HEADERS)
     with db.connect() as conn, conn.cursor() as cur:
         adjacent_ids = list(_adj.staged_applications(cur))

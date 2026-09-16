@@ -212,6 +212,18 @@ subagent route first; the batch then sees nothing to hold.
 scripts/adjudicate_openai.py --collect
 ```
 
+Since 2026-09-15 every collect (this one, the subagent's `--ingest` and
+`adjudicate_power.py`) applies the write-time rule of migration 035: a
+site_capacity value that no number in its quote states is admitted only
+with a derivation — the applicant's own unit count times a rating, or
+stated figures added — recorded beside the row in `figure_derivations`;
+otherwise the row is stored as `unclear` with the refusal in front of
+the model's reasoning. The collect prints both counts. Nothing to run
+for it; the one-off backfill of the 109 figures adjudicated before the
+rule was `scripts/computed_figures.py --derive`, which is also the
+repair if a derivation is ever found missing (append-only, a no-op when
+nothing is).
+
 Then check nothing was lost to truncation, because that has already
 happened once:
 
@@ -1260,6 +1272,20 @@ Each of these looks like a defect in a report, a count or the reader,
 and each has been taken apart once. The answer is here so nobody
 spends the afternoon again. Anything NOT on this list is new.
 
+- **Three applications always `partial` in the queue, one document
+  short each, and three zero-byte files under `data/raw/`**
+  (Wakefield/23/00100/S7301, Warwick/W/23/1025, Medway/MC/21/0979).
+  Their registers serve one listed file as 0 bytes with HTTP 200 —
+  re-checked 2026-09-15 — and the queue retries it on every run at the
+  cost of one request, which is the design (HISTORY, "An empty document
+  is not held"). Medway's is held under the register's second listing
+  of the same document. Not a fetch fault, not a stalled queue.
+- **Four Central Bedfordshire documents the extractor cannot open**
+  (CB/20/01048/DOC ×2, CB/23/01495/DOC, CB/25/02485/RM: three PDFs
+  "Invalid object in /Pages", one .docx missing a customXML part). They
+  are byte-identical to what the council's SharePoint store serves
+  (re-fetched 2026-09-15): corrupt at source. Reopen only with a reader
+  that opens them.
 - **A site page saying "N further figures on M applications … are
   not counted as this site's", a workbook row with a count in
   "Capacity figures not counted", `release_diff` reporting a fallen
