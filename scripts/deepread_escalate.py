@@ -41,7 +41,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).parent.parent
 load_dotenv(ROOT / ".env")
 
-from dcp import db, extract  # noqa: E402
+from dcp import db, extract, signal_families  # noqa: E402
 from dcp import deepread_select as sel  # noqa: E402
 
 # Import the local runner's prompt, chunking and verbatim gate so the two
@@ -325,6 +325,15 @@ def _no_nul(v):
     the database boundary rather than trusting any reader not to."""
     return v.replace("\x00", "") if isinstance(v, str) else v
 
+def _family_of(f: dict, label: str) -> tuple[str, str]:
+    """The controlled family for a finding, and where it came from."""
+    supplied = f.get("signal_family")
+    if supplied:
+        family = signal_families.validate_family(supplied, label)
+        return family, ("model" if family == supplied else "derived_fallback")
+    return signal_families.family_for(label), "derived"
+
+
 def _insert_with_model(conn, row: dict, findings: list[dict],
                        pages: list[str], sent: list[int]) -> tuple[int, int]:
     """verify_and_insert, but stamping the Sonnet model tag."""
@@ -351,22 +360,30 @@ def _insert_with_model(conn, row: dict, findings: list[dict],
                 continue
             num = f.get("value_number")
             num = num if isinstance(num, (int, float)) else None
+            # The family index, derived from the stored label exactly as
+            # the local runner and the OpenAI writer derive it. This path
+            # omitted the two columns from the day it was written, the
+            # defect scripts/backfill_signal_family.py exists to repair:
+            # NULL matches nothing, so no finding written here reached the
+            # two panels that select on signal_family (found 2026-09-16).
+            label = _no_nul(str(f["signal_type"])[:80])
+            family, source = _family_of(f, label)
             # Conflict-guarded against the content key (migration 012), so
             # re-collecting a batch cannot re-insert what a previous
             # collection already stored. rowcount keeps the count honest.
             cur.execute("""
                 INSERT INTO findings (application_id, document_id,
-                    signal_type, value_text, value_number, value_unit,
-                    evidence_text, evidence_page, model, prompt_version)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    signal_type, signal_family, family_source, value_text,
+                    value_number, value_unit, evidence_text, evidence_page,
+                    model, prompt_version)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (application_id, document_id, model,
                     prompt_version, signal_type, md5(value_text),
                     value_number, value_unit, md5(evidence_text),
                     evidence_page)
                 DO NOTHING""",
-                (row["application_id"], row["document_id"],
-                 _no_nul(str(f["signal_type"])[:80]),
-                 _no_nul(f.get("value_text")), num,
+                (row["application_id"], row["document_id"], label, family,
+                 source, _no_nul(f.get("value_text")), num,
                  _no_nul(f.get("value_unit")), _no_nul(quote),
                  verified_page, MODEL, PROMPT_VERSION))
             inserted += cur.rowcount

@@ -56,7 +56,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).parent.parent
 load_dotenv(ROOT / ".env")
 
-from dcp import db, extract  # noqa: E402
+from dcp import db, extract, signal_families  # noqa: E402
 from dcp import deepread_select as sel  # noqa: E402
 
 import importlib.util as _ilu  # noqa: E402
@@ -276,20 +276,32 @@ def _insert_agent(conn, row, findings, pages, sent) -> tuple[int, int]:
                 continue
             num = f.get("value_number")
             num = num if isinstance(num, (int, float)) else None
+            # NUL-stripped and family-indexed like the other three
+            # writers; this one had neither (found 2026-09-16). Postgres
+            # refuses a NUL in text, and a NULL family matches nothing.
+            label = _dr._no_nul(str(f["signal_type"])[:80])
+            supplied = f.get("signal_family")
+            if supplied:
+                family = signal_families.validate_family(supplied, label)
+                source = "model" if family == supplied else "derived_fallback"
+            else:
+                family = signal_families.family_for(label)
+                source = "derived"
             cur.execute("""
                 INSERT INTO findings (application_id, document_id,
-                    signal_type, value_text, value_number, value_unit,
-                    evidence_text, evidence_page, model, prompt_version)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    signal_type, signal_family, family_source, value_text,
+                    value_number, value_unit, evidence_text, evidence_page,
+                    model, prompt_version)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (application_id, document_id, model,
                     prompt_version, signal_type, md5(value_text),
                     value_number, value_unit, md5(evidence_text),
                     evidence_page)
                 DO NOTHING""",
-                (row["application_id"], row["document_id"],
-                 str(f["signal_type"])[:80], f.get("value_text"), num,
-                 f.get("value_unit"), quote, verified, MODEL_TAG,
-                 PROMPT_VERSION))
+                (row["application_id"], row["document_id"], label, family,
+                 source, _dr._no_nul(f.get("value_text")), num,
+                 _dr._no_nul(f.get("value_unit")), _dr._no_nul(quote),
+                 verified, MODEL_TAG, PROMPT_VERSION))
             inserted += cur.rowcount
     conn.commit()
     return inserted, failed
