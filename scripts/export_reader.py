@@ -2996,28 +2996,16 @@ def main() -> int:
             WHERE s.retired_at IS NULL
             GROUP BY s.site_key""")
         site_outcomes = dict(cur.fetchall())
-        # Which application each headline quantity came from. A site can
-        # span several buildings across several councils, and the site
-        # row takes the largest of each quantity independently — so its
-        # IT load and its total site demand may describe different
-        # buildings, and occasionally the total reads lower than the IT
-        # load. Both figures are right; naming their source dissolves the
-        # apparent contradiction and makes each one checkable.
-        cur.execute("""
-            SELECT site_key, quantity_type, application_ref FROM (
-              SELECT s.site_key, pa.quantity_type, a.application_ref,
-                     row_number() OVER (PARTITION BY s.site_key, pa.quantity_type
-                                        ORDER BY pa.value_mw DESC,
-                                                 pa.id DESC) AS rn
-              FROM power_adjudication pa
-              JOIN applications a ON a.id = pa.application_id
-              JOIN site_members m ON m.application_id = a.id AND m.retired_at IS NULL
-              JOIN sites s ON s.id = m.site_id
-              WHERE s.retired_at IS NULL AND pa.verdict = 'site_capacity'
-                AND m.figure_standing <> 'not_dc_excluded'
-                AND pa.value_mw IS NOT NULL) t
-            WHERE rn = 1""")
-        power_src = {(k, q): r for k, q, r in cur.fetchall()}
+        # Which application each headline quantity came from is read off
+        # SITE_FIGURE_SQL below, beside the figure itself. A second query
+        # used to answer it over power_adjudication raw, while the figure
+        # folded the table to each finding's latest row — so a finding
+        # re-adjudicated away from site_capacity could still name its
+        # application as the source of a figure it no longer had. On
+        # 2026-09-16 twelve sites' attributions rested on superseded rows
+        # (each, that day, identical to its successor), and six findings
+        # in the corpus had flipped verdict; one query cannot disagree
+        # with itself.
         # What the standing kept out, per site (migration 034): the count
         # the site page states beside its figures, so a shorter list
         # never reads as the whole. Figures and applications both, so the
@@ -3051,6 +3039,7 @@ def main() -> int:
                 "title": mreading.document_title(url, kind) if url else "",
                 "fetched": fetched, "ref": ref, "document_id": doc_id,
                 "derived": derived or ""}
+        power_src = {kq: p["ref"] for kq, p in fig_prov.items()}
 
         # Editorial rule 4's table.
         cur.execute(SITE_ALL_FIGURES_SQL, (ALL_FIGURES_CAP,))
