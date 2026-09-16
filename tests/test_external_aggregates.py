@@ -15,6 +15,16 @@ def test_ofgem_table_1_sums_to_its_own_totals():
     ea.check()
 
 
+def test_neso_modification_tables_sum_to_their_own_totals():
+    """Two size distributions transcribed from NESO's disclosure log; the
+    counts must reach the project count and the sizes the stated total,
+    or a typo becomes a published megawatt."""
+    for nation, projects, unit, sizes, total, months in ea.NESO_BESS_TO_DC:
+        assert sum(n for _s, n in sizes) == projects, nation
+        assert sum(sz * n for sz, n in sizes) == total, nation
+        assert unit in ("MW", "MVA") and months
+
+
 def test_every_aggregate_names_a_known_source():
     for agg in ea.AGGREGATES:
         assert agg.source_key in ea.SOURCES

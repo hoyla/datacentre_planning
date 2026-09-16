@@ -53,7 +53,7 @@ maintained — re-count before quoting.
 | The 44 `not_dc` power schemes within 2.5 km of a live site, as `adjacent_power` candidates, and the definition of "adjacent" | the `not_dc` item under #252 below | 44 schemes | 2026-09-10 | the adjacency review, and Eggborough's owed adjacency row |
 | Kingsnorth's export-limit figure: which direction the connection is | "A person's row from the export-limit rule" below | 1 figure | 2026-08-27 | the Operators tab's like-for-like |
 | Two unconfirmed operator-page identifications, and the actions still open from that sheet | `data/operator_pages_review/operator_pages_review.xlsx`; "Actions still open from the review sheet" below | 2 identifications, 5 actions | 2026-08-30 | nLighten Hoddesdon and Digital Realty LHR17 as sites; the Zenium sweep |
-| Three drafted regulator requests, to send | [docs/requests/](docs/requests/) | 3 letters | 2026-08-27 | about 28 days each from sending; the fourth (EA run hours) is drafted beside them |
+| Two internal reviews to request — NESO by 5 November, Ofgem by 10 November — and four drafted requests to send | [docs/requests/](docs/requests/) | 2 review letters, 4 requests | 2026-09-16 | from the reviews, the already-public subset of the IRN data and the no-names tables; from the requests, about 28 days each from sending |
 | UKPN's two gated datasets, behind his portal login | "UKPN's gated datasets are unpulled" below | 2 downloads | 2026-08 | the Large Demand List against our grid figures |
 | The unsited-claims decisions | [docs/PLAN_UNSITED_CLAIMS.md](docs/PLAN_UNSITED_CLAIMS.md), "Open, for Luke" | 3 decisions | 2026-09-02 | the claims file's home, and which release carries the reader section |
 | Decision 6, the Pulsant class, expected to be revisited | [docs/PLAN_OPERATOR_RUNG.md](docs/PLAN_OPERATOR_RUNG.md); "Decision 6 and the Stockley wrinkle" below | 1 decision, 39 pages | 2026-09-02 | how the keyless tier-4 estate ranks |
@@ -95,9 +95,11 @@ detailed under "Open" in that file:
 
 The `not_dc` figure-level rule is built in #419 (migration 034; the
 `not_dc` item in the capacity-model section has the design and the
-measurements). **2.15 is not urgent** (Luke, 2026-09-10): the Ofgem and
-NESO replies are due about now and nothing waits on a release, so
-improvements accumulate and go out together. What the work left, each
+measurements). **2.15 is not urgent** (Luke, 2026-09-10): nothing waits
+on a release, so improvements accumulate and go out together. The Ofgem
+and NESO replies he was waiting for arrived as refusals on 10 and 15
+September (HISTORY, "The regulators' refusals and the disclosure log's
+aggregates"). What the work left, each
 for the person named:
 
 Both decisions were taken the same day: the two admissions in
@@ -2671,16 +2673,23 @@ None is abandoned; each is a known, scoped piece of work.
     Hemel 4, which are inside neighbouring sites' radii while being
     nobody's record — a dense park breaks that heuristic, and the plan
     should say so before the loader is built.
-- **Requests outstanding, and three drafted awaiting Luke's send.**
-  NESO and Ofgem were written to on 2026-08-12 and replies are due
-  around 10 September. The three never-sent requests are now drafted in
-  [docs/requests/](docs/requests/) (2026-08-27): the CCA site-level
-  consumption FoI/EIR to the Environment Agency copied to DESNZ, the
-  NESO EIR for the project-level demand connection queue, and the DNO
-  EIR template with its fourteen-licensee address list. Each carries
-  the reg 5(6) answer to section 105 pre-emptively, and each runs ~28
-  days from sending — waiting is still the whole cost, and only the
-  sending remains.
+- **The regulators have refused; the reviews and four requests await
+  Luke's send.** NESO (FOI/26/165, 10 September) and Ofgem
+  (FOI2026/01464, 15 September) both refused the project-level demand
+  queue — NESO while confirming it holds every dataset asked for. Both
+  letters are transcribed in [docs/requests/](docs/requests/) with the
+  two internal-review drafts beside them, deadlines **5 November**
+  (NESO) and **10 November** (Ofgem) 2026; their grounds are in
+  docs/EXTERNAL_DATA_SOURCES.md §3, "Outcome". The NESO demand-queue EIR
+  was rewritten the same day to ask for what the disclosure log shows
+  NESO gives — counts, bands, months and zones, no names — rather than
+  the list it refuses; the CCA request to the Environment Agency, the
+  DNO template with its fourteen-licensee address list and the
+  run-hours EIR stand as drafted. Each answer runs ~28 days from
+  sending — waiting is still the whole cost, and only the sending
+  remains. Two promised publications to watch for: NESO's Demand IRN
+  Analysis (withheld as unfinished under 12(4)(d)) and Ofgem's autumn
+  consultation with its "Demand Capacity Register" option.
 - **UKPN's gated datasets are unpulled.** The Large Demand List and
   "Data Centres by Local Authority" sit behind Luke's portal login;
   anonymous access returns headers only, so nobody else can fetch them.

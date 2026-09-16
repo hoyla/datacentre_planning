@@ -358,3 +358,68 @@ median 3.4-year peak 40.5%; 52 of 92 active sites never exceeded 50% of
 meter capacity. Six sites show >100% utilisation (meter capacity changed
 mid-period) — per-site values are indicative. Anonymised; never mapped
 to sites.
+
+## neso_disclosure_log/ — NESO's FOI/EIR disclosure log, fetched 2026-09-16
+
+Thirteen of NESO's published responses to other people's information
+requests, every one that concerns demand connections, downloaded
+2026-09-16 from the log at
+https://www.neso.energy/corporate-information/freedom-information-and-environmental-information-regulations/disclosure-log
+(each file's own URL is `https://www.neso.energy/document/<id>/download`
+with the id in the table). Fetched because this project's own requests
+for the project-level demand queue were refused (NESO FOI/26/165,
+Ofgem FOI2026/01464 — transcribed in `docs/requests/`) and the log turned
+out to hold, in aggregate, the quantity behind Ofgem's "at least 9 GW"
+of battery-to-data-centre reclassification. Public documents,
+reproduced as downloaded; NESO redacts requesters' names itself.
+
+**The pattern across the thirteen, which decides how to ask NESO for
+anything.** Counts, megawatt bands and months are answered; a project
+name is refused every time under regulation 12(5)(e) unless already
+public; a request for a *list* is refused under 12(4)(b) as manifestly
+unreasonable, and the ICO upheld that on milestones (decision
+IC-402508-Z0G9). No demand register exists — "under consideration" as
+part of the Strategic Demand Initiative with Ofgem, DESNZ and the
+networks — and the queue datasets carry no technology classification:
+respondents to the Information Request Notice "were asked only to
+confirm whether their project was a data centre" (FOI/26/113).
+
+| Ref | Letter dated | Document id | What it holds |
+|---|---|---|---|
+| FOI/26/121 | 11 August 2026 (its header misprints July) | 385651 | **England and Wales: 21 battery agreements modified to include a data centre, 6,884 MW** (57×2, 120, 150, 200×2, 300×3, 400×8, 500×4), applications May 2024 – January 2025; 622 BESS projects in E&W; names withheld 12(5)(e); the count of rejected applications refused 12(4)(b) |
+| FOI/25/294 | 23 March 2026 | 379896 | The same question for Scotland and E&W refused 12(4)(b) (over 300 mod apps to read at 30 minutes each); FES 2025's data-centre demand range for Scotland answered |
+| FOI/25/294 internal review | 22 May and 1 June 2026 | 383291 | The reviewer upheld the exception, narrowed to Scotland and released: **8 projects, 2,000 MVA** (300×4, 250×2, 200, 100), applications December 2024 – August 2025, all contracted |
+| FOI/26/113 | 14 August 2026 | 385641 | No sector field exists; **transmission-connected demand by firm connection year, 79,289 MW** (2037: 21,951; 2033: 12,826); 17.54 GW contracted at November 2024; IRN issued 11 March 2026 |
+| FOI/25/253 | 16 February 2026 | 383886 | ≈20 GW "Transmission Connected Demand" in the reformed queue-outcome datasets; no data-centre split held |
+| FOI/25/291 | 18 March 2026 | 379891 | A dataset of transmission-connected demand sites refused 12(4)(b); the same ≈20 GW |
+| FOI/25/224 | 3 February 2026 | 378891 | The Call for Input contact list is not a list of assets; a list refused 12(4)(b) |
+| FOI/25/214 | 23 January 2026 | 378691 | Milestone counts for transmission demand refused 12(4)(b), citing ICO decision IC-402508-Z0G9 |
+| FOI/25/186 | 29 December 2025 | 375161 | New and pending demand connections by size, location and type refused 12(4)(b) |
+| FOI/25/074 | 5 August 2025 | 366321 | Demand queue at seven named West London and Buckinghamshire connection points refused 12(4)(b) |
+| FOI/24/0012 | 26 November 2024 | 348166 | "A list of demand connections" refused under FOIA section 12; the Transmission Owners suggested as holders |
+| FOI/26/032 | 28 May 2026 | 386441 | Gate 2 criteria for demand connections explained; the "Rufus data centre" project refused at project level (FOI/25/329, not held here) |
+| FOI/26/004 | 11 May 2026 | 386336 | Call for Input figures for the London RESP region not held: 56 projects linked to zone T11, coordinates known only for existing grid supply points |
+
+The figures in bold are transcribed once, with locators and quotes, in
+`dcp/external_aggregates.py`, and reach the workbook's External
+aggregates sheet and the reader's methodology from there. NESO's own
+caveat on the England and Wales table travels with them: the records
+"were created alongside the main piece of work", NESO has "not carried
+out any further quality assurance", and "it is possible that there are
+some gaps in the data".
+
+sha256 of each file as downloaded:
+
+- `FOI-24-0012_2024-11-26_demand-connections-list.pdf` 5300d5a3f5fdac63e72a14831030b60ecd6acceb20700f2d129e0a76219b2fe2
+- `FOI-25-074_2025-08-05_demand-connections-at-named-points.pdf` 362ef303ecf2a36934ef43d90c526897618fd6a3ad9b07227317c7c4fd50f508
+- `FOI-25-186_2025-12-29_demand-connections.pdf` da4029a0152b67e784c0708ac7315238f7ea04d541ce4b81ee58698101c82900
+- `FOI-25-214_2026-01-23_demand-connection-milestones.pdf` 214dd23f92df1c139f13ea4e2a5a6eaacdf4696548fe05f40b0edabaebd98e18
+- `FOI-25-224_2026-02-03_transmission-level-demand-agreements.pdf` 2f1025a345d0b3ab9d4555d6cafb2a0ebe60b85d8f78867cbdc8ad3dc219790e
+- `FOI-25-253_2026-02-16_demand-connections-data.pdf` 2b1ed6d079f181d0d4469eedf623ae1579055d23b40a54a4200e98ace0f614c5
+- `FOI-25-291_2026-03-18_transmission-connected-demand-dataset.pdf` b0d92ddbc3fd915cd2b456d6149de7a3046aba830417d7676e75a92b3651ee3f
+- `FOI-25-294-IR_2026-06-01_internal-review-scotland-modifications.pdf` faa9b10ed1927b6e435d4dbe190b527a1fc6f4635aab7a9fca8495e671bf5416
+- `FOI-25-294_2026-03-23_modification-applications-and-data-centres.pdf` 918b9102a70ab56094eeb9af6ca129f898e60a68e22b73bce662c76281c7ca03
+- `FOI-26-004_2026-05-11_cfi-summary-london-resp-region.pdf` 0468b86492ff916c898df119bd7ded2a7e6fd9de7065a2ae8e71063ce9fe4e6a
+- `FOI-26-032_2026-05-28_gate-2-criteria-for-demand-connections.pdf` eff472a5a9103ba5f2c52c515bc489eb8117b989087c7a42564837d2f28a9e1c
+- `FOI-26-113_2026-08-14_classification-of-transmission-connected-demand.pdf` a89105a817408814bbd8fd789c066fb092315a6d7257c63ab6a67de96846fbe3
+- `FOI-26-121_2026-08-11_bess-to-data-centre-modifications-england-wales.pdf` 66de3f9407c3e6b05801e2dcad9c9365914815ec834702ff9acb63c9be530405

@@ -51,8 +51,14 @@ SOURCES = {
         "Consultation on a data centre commitment fee and queue management "
         "milestones; response deadline 16 September 2026. Its evidence base "
         "(paragraphs 2.3–2.4) includes project-level data from NESO's "
-        "mandatory Information Request Notice of 13 March 2026, which is "
-        "not published."),
+        "mandatory Information Request Notice of March 2026, which is "
+        "not published. This project requested that project-level data "
+        "under the Environmental Information Regulations on 12 August "
+        "2026. NESO refused on 10 September 2026 (FOI/26/165, regulation "
+        "12(5)(e)) while confirming it holds it, and Ofgem refused on 15 "
+        "September 2026 (FOI2026/01464, regulations 12(5)(d) and "
+        "12(5)(e)). Both letters, and the internal-review requests they "
+        "invite, are in docs/requests/."),
     "neso_cfi": Source(
         "neso_cfi",
         "Demand Call for Input (CFI) — High Level Summary",
@@ -92,6 +98,25 @@ SOURCES = {
         "as a proportion of the site's meter capacity, by voltage level and "
         "data centre type. The only published measurement of what UK data "
         "centres actually draw, as opposed to what they secured."),
+    "neso_disclosure_log": Source(
+        "neso_disclosure_log",
+        "FOI/EIR disclosure log — responses on demand connections",
+        "National Energy System Operator",
+        "November 2024 – August 2026, rolling",
+        "https://www.neso.energy/corporate-information/"
+        "freedom-information-and-environmental-information-regulations/"
+        "disclosure-log",
+        "16 September 2026",
+        "NESO's published answers to other people's information requests. "
+        "The thirteen responses that concern demand connections are held "
+        "as PDFs at data/external_sources/neso_disclosure_log/ with their "
+        "sha256s. The pattern across them: aggregates (counts, megawatt "
+        "bands, months) are given, project names are refused under "
+        "regulation 12(5)(e) and lists under 12(4)(b), and no demand "
+        "register exists — one is \"under consideration\". The figures "
+        "taken from it were compiled by NESO staff for business purposes, "
+        "and NESO's own caveat travels with them: \"it is possible that "
+        "there are some gaps in the data\"."),
     "desnz_lahh": Source(
         "desnz_lahh",
         "Sub-national electricity consumption: local authority Half-Hourly "
@@ -131,6 +156,23 @@ OFGEM_QUEUE_BANDS = (
     ("500 MW and above", 500.0, None, 40, 31_408, "43.0%"),
 )
 OFGEM_QUEUE_TOTALS = (315, 72_978)  # projects, MW — the sums of Table 1
+
+
+# NESO's own count of battery-storage connection agreements modified to
+# include a data centre, contracted or granted — the only project-level
+# quantity behind Ofgem's "at least 9 GW" that any public document states.
+# Two disclosure-log responses: England and Wales (FOI/26/121, compiled by
+# NESO's Connections team in July 2026) and Scotland (FOI/25/294 internal
+# review, 1 June 2026). Scotland's sizes are in MVA, as NESO gave them.
+# (nation, projects, unit, ((size, count), ...), total, months received)
+NESO_BESS_TO_DC = (
+    ("England and Wales", 21, "MW",
+     ((57, 2), (120, 1), (150, 1), (200, 2), (300, 3), (400, 8), (500, 4)),
+     6_884, "May 2024 – January 2025"),
+    ("Scotland", 8, "MVA",
+     ((300, 4), (250, 2), (200, 1), (100, 1)),
+     2_000, "December 2024 – August 2025"),
+)
 
 
 def band_counts(values_mw) -> list[tuple[str, int]]:
@@ -272,6 +314,46 @@ AGGREGATES = (
         "68% have not yet secured one, often pending a firm connection "
         "date."),
     Aggregate(
+        "Battery-storage agreements modified to include a data centre, "
+        "England and Wales (contracted or granted)",
+        "21 projects, 6,884 MW — eight of them 400 MW and four 500 MW; "
+        "applications received May 2024 to January 2025; 622 battery "
+        "projects in England and Wales altogether",
+        "neso_disclosure_log", "FOI/26/121, dated 11 August 2026 (the "
+        "letter's own header misprints it as July), table \"FOI Response "
+        "(England and Wales)\"",
+        "We do believe this information as provided to be accurate; "
+        "however, it is possible that there are some gaps in the data."),
+    Aggregate(
+        "Battery-storage agreements modified to include a data centre, "
+        "Scotland (all contracted or granted)",
+        "8 projects, 2,000 MVA — four of 300 MVA, two of 250, one of 200, "
+        "one of 100; applications received December 2024 to August 2025",
+        "neso_disclosure_log", "FOI/25/294 internal review, 1 June 2026, "
+        "table \"FOI Response (Scotland)\"",
+        "All applications are contracted/granted"),
+    Aggregate(
+        "The two disclosures together, against Ofgem's paragraph 2.10",
+        "29 projects and about 8.9 GW (6,884 MW plus 2,000 MVA, two "
+        "units NESO does not reconcile), which corroborates Ofgem's "
+        "\"at least 9 GW\" at aggregate level; no project is named in "
+        "either letter",
+        "neso_disclosure_log", "the two tables above", ""),
+    Aggregate(
+        "Transmission-connected demand by firm connection year, August "
+        "2026",
+        "79,289 MW in total; 21,951 MW of it in 2037 and 12,826 MW in "
+        "2033; 17.54 GW had been contracted at November 2024. In "
+        "February 2026 NESO had put the same label at approximately 20 GW "
+        "from its reformed queue-outcome datasets, and gives no "
+        "reconciliation between the two",
+        "neso_disclosure_log", "FOI/26/113, 14 August 2026, table by "
+        "firm connection year; FOI/25/253, 16 February 2026",
+        "the only categorisation used within the existing delivery "
+        "pipeline (queue) and connection outcome data sets is for "
+        "'transmission connected demand', with no further categorisation "
+        "within those datasets"),
+    Aggregate(
         "Committed large demand projects in UK Power Networks' areas",
         "496 not-yet-energised import projects of 5 MVA and above "
         "(anonymised)",
@@ -303,5 +385,8 @@ def check() -> None:
     projects = sum(b[3] for b in OFGEM_QUEUE_BANDS)
     mw = sum(b[4] for b in OFGEM_QUEUE_BANDS)
     assert (projects, mw) == OFGEM_QUEUE_TOTALS, (projects, mw)
+    for nation, projects, _unit, sizes, total, _months in NESO_BESS_TO_DC:
+        assert sum(n for _s, n in sizes) == projects, nation
+        assert sum(sz * n for sz, n in sizes) == total, nation
     for agg in AGGREGATES:
         assert agg.source_key in SOURCES, agg.source_key
