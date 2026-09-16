@@ -5433,3 +5433,89 @@ and a notes column left empty. The site's shown figures sort first. The
 workbook is local and regenerated from the classification on every run,
 so a decision is folded back into the record before the next run —
 the fold is the ask that stays in ROADMAP.
+
+## The regulators' refusals and the disclosure log's aggregates (2026-09-16)
+
+The two requests sent on 12 August for the project-level demand queue
+came back refused. NESO answered first (FOI/26/165, 10 September): it
+holds the Information Request Notice data at project level, the Call
+for Input responses, the DNOs' distribution-queue data and "a list of
+projects that have had a modification application contracted/granted
+for a change from battery storage (BESS) to data centre", and withholds
+all four under regulation 12(5)(e), leaning on the CUSC, section 105 of
+the Utilities Act and a confidentiality assurance given to the IRN's
+respondents. Ofgem followed (FOI2026/01464, 15 September) with 12(5)(d)
+and 12(5)(e) over points 1–4 as a block, "not held" for the arrangement
+under which it receives the data and for its correspondence about
+publishing it, and no word on the no-names fallback the request had
+offered. Luke's reading was that the route was closed. The letters say
+something narrower: names are refused, and everything else is
+negotiable.
+
+**What the letters concede.** NESO's is the more useful of the two. It
+confirms the holdings, states that IRN respondents "were asked only to
+confirm whether their project was a data centre", that the queue
+datasets carry no other categorisation, that technology is
+self-declared at application, that a demand register is "under
+consideration", and that a "Demand Information Request Notice
+Analysis" is being finalised for publication. It also says NESO does
+"not currently publish project level information on transmission
+connected demand projects" — a statement the Existing Agreements
+register this project has used since 2026-08-20 qualifies rather than
+contradicts: 119 transmission demand projects are published there with
+name, capacity, date and connection point, each with its developer's
+consent, and the register's banner records one removed on request. For
+those fields and those projects the confidentiality NESO claims is
+already gone; for the rest it is NESO's to argue, and it holds two ICO
+decisions on neighbouring questions (IC-127537-Q8R6, IC-402508-Z0G9). Ofgem's letter says the data was obtained "by virtue of the
+provisions of the Utilities Act 2000, and Part 1 of the Electricity Act
+1989" (so a record of that exercise of power exists, and point 5 was
+held), that disclosure "would discourage applicants from providing
+information to NESO" (the IRN was compulsory, on NESO's own page), and
+that Ofgem will consult this autumn on requiring network companies to
+publish a "Demand Capacity Register".
+
+**What the disclosure log already held.** NESO publishes its answers to
+everyone's requests, and thirteen of them concern demand connections.
+Two give, in aggregate, the quantity behind Ofgem's "at least 9 GW" of
+battery-to-data-centre reclassification: FOI/26/121 (England and
+Wales, 21 projects, 6,884 MW, applications May 2024 to January 2025)
+and the FOI/25/294 internal review (Scotland, 8 projects, 2,000 MVA,
+December 2024 to August 2025) — 29 projects and about 8.9 GW, with the
+size distribution and the months. FOI/26/113 gives transmission-
+connected demand by firm connection year, 79,289 MW against 17.54 GW
+contracted in November 2024. The rest establish the pattern: a count, a
+band or a month is answered; a name is refused unless already public; a
+list is refused as manifestly unreasonable, and the ICO upheld that
+(IC-402508-Z0G9). The log's search is a Coveo widget in shadow DOM that
+a plain fetch cannot see — the URL hash runs a query in a browser, and
+the files are `/document/<id>/download`.
+
+**What was built.** The thirteen PDFs are in
+`data/external_sources/neso_disclosure_log/` with sha256s and an
+indexed README; the figures are transcribed once in
+`dcp/external_aggregates.py` — a new source, four aggregates and a
+`NESO_BESS_TO_DC` table whose counts and sizes must sum to NESO's own
+totals, tested — and reach the workbook's External aggregates sheet and
+the reader's methodology from there at the next build. The
+`ofgem_curate` source note now records that the project-level data was
+requested and refused, with both references, so the reader says so in
+its own voice. Both letters are transcribed verbatim in
+`docs/requests/` with their outcomes summarised at the top; Ofgem's
+carries the sender's name and email, replaced with the `[SENDER]`
+placeholder the drafts already use, and the PDFs stay with Luke. Beside
+them: two internal-review drafts (NESO by 5 November, Ofgem by 10
+November), and the August NESO request rewritten from a list into the
+aggregate tables the log shows NESO gives. docs/EXTERNAL_DATA_SOURCES.md
+§3 carries the outcome and a new subsection on the log; the ROADMAP's
+waiting-on-Luke row and its requests bullet now say what is actually
+outstanding.
+
+**The realistic prize, stated so it is not oversold.** NESO has never
+released a project name in this area, and its own internal reviewer
+upheld the exception while narrowing and releasing. A review is most
+likely to win the already-public subset and the no-names tables; the
+register is an ICO fight that runs into 2027. The story line the
+letters give meanwhile is a fact, not a hope: NESO holds a register of
+roughly 315 data-centre projects and a list of the ones that entered
+the queue as batteries, and declines to release either.

@@ -316,6 +316,100 @@ since it launched in 2024, with an Information Rights team, a stated
 connection data is environmental information under regulation 2(1), and
 regulation 12(2) imposes an express presumption in favour of disclosure.
 
+**Outcome, 2026-09-16: both requests were refused at project level, and
+both letters are transcribed in [docs/requests/](requests/).** The
+requests went on 12 August 2026 to NESO for the three holdings and to
+Ofgem for its own copies and analysis.
+
+- **NESO, FOI/26/165, 10 September 2026.** NESO confirms it *holds* the
+  IRN project-level data, the Call for Input responses, the DNOs'
+  distribution-queue data at project level, and "a list of projects that
+  have had a modification application contracted/granted for a change
+  from battery storage (BESS) to data centre" — and withholds all four
+  under regulation 12(5)(e), relying on the CUSC, section 105 of the
+  Utilities Act 2000 and an assurance given to IRN respondents that
+  their information "would be treated confidentially". A "Demand
+  Information Request Notice Analysis" is being finalised for
+  publication and is withheld meanwhile as unfinished (12(4)(d)). NESO
+  also states that technology is self-declared at application, that
+  IRN respondents "were asked only to confirm whether their project was
+  a data centre" (FOI/26/113), and that its queue datasets carry no
+  categorisation beyond "transmission connected demand". Two
+  corrections to this file follow from the letter: NESO says the IRN
+  was issued on **11 March 2026** (Ofgem's paragraph 2.4 says 13 March),
+  and the paragraph quoted above as 2.10 is **2.9** in the consultation
+  as published.
+- **Ofgem, FOI2026/01464, 15 September 2026.** Points 1–4 withheld under
+  12(5)(d) (confidentiality of proceedings) and 12(5)(e); points 5–6
+  "not held". No field-by-field balance and no partial disclosure; the
+  no-names fallback the request offered is not addressed. Ofgem says it
+  obtains the data "by virtue of the provisions of the Utilities Act
+  2000, and Part 1 of the Electricity Act 1989", and that it will
+  consult "this Autumn" on an option to require network companies to
+  publish a "Demand Capacity Register".
+
+The two internal-review drafts sit beside the transcriptions, with
+deadlines of 5 November (NESO) and 10 November (Ofgem). Their case rests
+on facts recorded in this file: the IRN was compulsory, so Ofgem's
+chilling-effect argument fails; the Existing Agreements register below
+already publishes name, capacity, date and connection point for the 119
+transmission-connected demand projects whose developers consented to
+inclusion, so for those fields and those projects the confidentiality
+limb of 12(5)(e) cannot be met, whatever NESO's general statement that
+it publishes no project-level demand information; and regulation 12(11)
+requires that public subset to be separated from whatever is genuinely
+confidential. The realistic prize is the already-public subset and the
+no-names tables, not the register; the ICO route after that runs into
+2027, and NESO cites two decisions in its favour on neighbouring
+questions — IC-127537-Q8R6 (connection-agreement details, 12(5)(e)) and
+IC-402508-Z0G9 (milestone data, 12(4)(b)) — so a complaint would argue
+the public-domain subset, not the register.
+
+### The disclosure log — in use since 2026-09-16
+
+NESO's [FOI/EIR disclosure log](https://www.neso.energy/corporate-information/freedom-information-and-environmental-information-regulations/disclosure-log)
+publishes its answers to everyone's requests, and thirteen of them
+concern demand connections. They are held as PDFs, with sha256s and a
+row-by-row index, in `data/external_sources/neso_disclosure_log/`
+(README there). Read together they settle how to ask NESO for anything:
+**a count, a band or a month is answered; a name is refused under
+12(5)(e) unless already public; a list is refused under 12(4)(b) as
+manifestly unreasonable**, and the ICO upheld that on milestones
+(decision IC-402508-Z0G9). The log's own search is a Coveo widget in
+shadow DOM — a plain fetch sees an empty shell; the URL hash `#q=<terms>`
+runs a search in a browser, and each result's file is
+`https://www.neso.energy/document/<id>/download`.
+
+What the log yields, transcribed with locators in
+`dcp/external_aggregates.py`:
+
+- **Battery-to-data-centre modifications, contracted or granted.**
+  England and Wales (FOI/26/121, 11 August 2026): **21 projects,
+  6,884 MW** — 57 MW × 2, 120, 150, 200 × 2, 300 × 3, 400 × 8, 500 × 4 —
+  applications received May 2024 to January 2025, out of 622 battery
+  projects in England and Wales. Scotland (FOI/25/294 internal review,
+  1 June 2026): **8 projects, 2,000 MVA** — 300 × 4, 250 × 2, 200, 100 —
+  December 2024 to August 2025. Together 29 projects and about 8.9 GW,
+  which corroborates Ofgem's "at least 9 GW" at aggregate level. NESO's
+  caveat travels with the England and Wales table: the records "were
+  created alongside the main piece of work", with no further quality
+  assurance, and "it is possible that there are some gaps in the data".
+  The internal review is also the precedent for what a review wins:
+  the reviewer upheld the burden exception for Great Britain, narrowed
+  the scope to Scotland and released the table.
+- **Transmission-connected demand by firm connection year** (FOI/26/113,
+  14 August 2026): **79,289 MW**, of which 21,951 MW in 2037 and
+  12,826 MW in 2033; 17.54 GW had been contracted at November 2024.
+  Six months earlier (FOI/25/253, February 2026) NESO put the same label
+  at approximately 20 GW from its reformed queue-outcome datasets and
+  gives no reconciliation between the two; quote each with its date and
+  do not net them.
+- **What does not exist**, in NESO's words across the thirteen: a demand
+  register ("under consideration" as part of the Strategic Demand
+  Initiative with Ofgem, DESNZ and the networks), a sector or end-use
+  classification of demand projects, and a central record of why any
+  modification application was made.
+
 ### The Existing Agreements register — in use since 2026-08-20
 
 **The exception to the heading above, and it needs stating plainly**: no
@@ -332,6 +426,17 @@ by `dcp/capacity_claims.py`. Header row 5. **119 rows carry
 `Transmission Connected Demand`** in the technology column — which the
 file spells two ways, so the comparison is case-insensitive — totalling
 49,440 MW.
+
+**Inclusion was by consent, and the register is static.** Its own
+banner says it "details all projects that applied for 'Gate 2' in the
+Connections Reform process where consent was given for inclusion in the
+EA Register", and row 3 records it was "last updated 11/6/25 following
+developer request to remove a project form the public EA list" (sic).
+NESO's FOI/25/219 says the same: absence from the register means consent
+was withheld or Gate 2 was not applied for. So the 119 rows are a floor
+on the transmission demand queue, not the queue, and a project's absence
+proves nothing. Recorded 2026-09-16, when the consent basis turned out to
+bound the "already public" argument in the internal-review drafts.
 
 **Quantity type: contracted transmission connection capacity.** A ceiling
 someone once agreed with NESO. Not IT load, not built capacity, not
@@ -1078,7 +1183,11 @@ self-auditing campus arithmetic — citable at all.
    site.
 4. **Two requests are worth more than any download:** an EIR request to
    NESO for the project-level demand connection queue, and an FoI to
-   DESNZ/EA for site-level CCA consumption.
+   DESNZ/EA for site-level CCA consumption. *The first was sent on 12
+   August 2026 and refused on 10 September (§3, "Outcome"); the internal
+   review and a rewritten aggregate request are drafted in
+   docs/requests/, and the disclosure log gave the reclassification
+   figures in aggregate meanwhile. The CCA request is still to send.*
 5. **Ask Data Center Map and Baxtel** rather than working around their
    terms. Both have journalist or research provisions.
 
