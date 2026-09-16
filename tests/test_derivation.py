@@ -80,15 +80,31 @@ def test_the_guard_leaves_other_verdicts_alone():
 
 @pytest.mark.integration
 def test_a_derivation_is_recorded_once_per_version(db_conn):
+    """Seeds its own adjudication. Until 2026-09-16 this looked for one
+    in the test database and skipped when it found none — and the
+    `db_conn` fixture truncates `power_adjudication` before every test,
+    so it skipped on every run it had ever had."""
     with db_conn.cursor() as cur:
         cur.execute("SELECT to_regclass('public.figure_derivations')")
         assert cur.fetchone()[0] is not None
-        cur.execute("SELECT id, finding_id, value_mw FROM power_adjudication "
-                    "WHERE verdict = 'site_capacity' AND value_mw IS NOT NULL LIMIT 1")
-        row = cur.fetchone()
-        if row is None:
-            pytest.skip("no adjudication in the test database")
-        adj_id, fid, mw = row
+        cur.execute("INSERT INTO sources (name, kind, base_url) VALUES ('t', 'planning_portal', 'http://t') "
+                    "ON CONFLICT (name) DO UPDATE SET base_url = EXCLUDED.base_url "
+                    "RETURNING id")
+        source_id = cur.fetchone()[0]
+        cur.execute("INSERT INTO applications (source_id, application_ref) "
+                    "VALUES (%s, 'T/1') RETURNING id", (source_id,))
+        app_id = cur.fetchone()[0]
+        cur.execute("INSERT INTO findings (application_id, signal_type, model, "
+                    "value_text, evidence_text) VALUES (%s, 'power_capacity', "
+                    "'test', '258.5 MW', 'a total of 258.5 MW') RETURNING id",
+                    (app_id,))
+        fid = cur.fetchone()[0]
+        cur.execute("INSERT INTO power_adjudication (application_id, finding_id, "
+                    "verdict, quantity_type, value_mw, reasoning, model, "
+                    "prompt_version) VALUES (%s, %s, 'site_capacity', 'total_site', "
+                    "258.5, 'seeded', 'test', 'v0') RETURNING id", (app_id, fid))
+        adj_id = cur.fetchone()[0]
+        mw = 258.5
         d = dv.Derivation("sum", [{"value": 1, "unit": "MW"}], "1 MW = 1 MW")
         assert dv.record(cur, adjudication_id=adj_id, finding_id=fid, value_mw=mw, d=d)
         assert not dv.record(cur, adjudication_id=adj_id, finding_id=fid, value_mw=mw, d=d)
