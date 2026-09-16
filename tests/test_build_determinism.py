@@ -48,6 +48,9 @@ import pytest
 
 from dcp import db
 
+# Two builds of the live corpus: nothing to build in CI's empty database.
+pytestmark = pytest.mark.corpus
+
 ROOT = Path(__file__).resolve().parent.parent
 EXPORT = ROOT / "scripts" / "export_reader.py"
 

@@ -42,6 +42,9 @@ import pytest
 playwright = pytest.importorskip("playwright.sync_api", reason="playwright not installed")
 
 
+# Every test here drives the built page: the reader job's, never the unit job's.
+pytestmark = pytest.mark.reader
+
 @pytest.fixture(scope="module")
 def reader_url(built_reader) -> str:
     """The session-wide build in conftest, so this suite and the
@@ -692,6 +695,7 @@ def test_every_our_copy_link_names_a_snapshot_this_repository_holds(built_reader
         f"failed rather than a corpus that genuinely cites nothing")
 
 
+@pytest.mark.corpus
 def test_every_operator_rung_cell_is_labelled_in_the_built_page(built_reader):
     """A first-party campus figure must never render as a planning one.
 
@@ -744,6 +748,7 @@ def test_every_operator_rung_cell_is_labelled_in_the_built_page(built_reader):
         f"pass the check above vacuously")
 
 
+@pytest.mark.corpus
 def test_near_a_postcode_filters_orders_and_states_what_it_cannot_place(page):
     """The control decided on 2026-09-02 at sector precision: SL1 4BG is
     the Slough Trading Estate, so a small radius keeps the estate's sites

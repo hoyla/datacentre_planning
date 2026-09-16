@@ -208,10 +208,17 @@ def built_reader(tmp_path_factory) -> str:
 
 @pytest.fixture(scope="session")
 def integration_db() -> str:
-    """Ensure dcp_test exists and is migrated. Skip the test if Postgres is unreachable."""
+    """Ensure dcp_test exists and is migrated. Skip the test if Postgres is
+    unreachable — except where DCP_REQUIRE_DB is set, which CI does: there
+    a database that cannot be reached is a broken job, and a skip would
+    report the 130-odd integration tests green while running none of
+    them, the same silent pass the READER_HTML branch of `built_reader`
+    was hardened against."""
     try:
         _ensure_test_database()
     except psycopg2.OperationalError as e:
+        if os.environ.get("DCP_REQUIRE_DB"):
+            pytest.fail(f"DCP_REQUIRE_DB is set and Postgres is unreachable: {e}")
         pytest.skip(f"Postgres unavailable for integration tests: {e}")
     return _test_db_url()
 
