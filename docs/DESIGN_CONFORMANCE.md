@@ -18,7 +18,10 @@ checked against a real build in a real browser. Colours, sizes, weights,
 spacing and shape from the token table and from each screen's specification are
 assertions there. Deliberately breaking three rules — a specificity regression
 on the signal card, a chip filled with the wrong colour, a drop shadow put back
-— fails three tests, one each.
+— fails three tests, one each. Since 2026-09-16 a selector the page no longer
+has fails its test as well: the helper skips only where a caller says the panel
+is data-dependent, because a renamed class had turned ten of the twenty tests
+into silent passes.
 
 That test can check what the CSS *does*. It cannot know what was decided. This
 file is the decisions.

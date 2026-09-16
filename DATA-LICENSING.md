@@ -186,8 +186,8 @@ re-used substantively in derivative research.
 
 ### Triage and finding outputs
 
-Once the deep-read stage produces `findings` (Phase 4+), those rows will
-carry the document references they were extracted from. Any external
+Every `findings` row carries the document reference and the page it was
+extracted from, behind a verbatim-quote gate. Any external
 publication that quotes a `findings` row should also cite the upstream
 planning document by its application reference.
 

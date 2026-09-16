@@ -1,5 +1,5 @@
 # Datacentre reader — Cloud Run service. A single self-contained index.html
-# served by nginx, precompressed at build time (the page runs to ~17MB raw;
+# served by nginx, precompressed at build time (the page runs to ~35MB raw;
 # gzip_static serves the .gz to every modern browser). Private service; IAP
 # gates at the Cloud Run edge (see CLOUDRUN.md) so nginx serves open inside
 # the perimeter, exactly as the tribunal Datasette and meridian portal do.

@@ -1,4 +1,4 @@
-> Filed with PR #446. The fix order at the end became eleven one-change PRs the same day, #436 to #446; what they left is in ROADMAP, "From the test-suite review".
+> Filed with PR #446. The fix order at the end became eleven one-change PRs the same day, #436 to #446; what they left is in ROADMAP, "From the test-suite review". Of the gaps in (b), items 1, 2, 3 and 7 and all seven defects closed that day; the per-file verdicts stand as written.
 
 # Test suite review, 2026-09-16
 

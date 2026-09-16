@@ -86,8 +86,7 @@ MWth on the floor.
 megawatt figure here comes from the permit PDF, so the PDFs are fetched
 into `data/raw/ea_permits/` and their text extracted beside them. Neither
 is committed — they are public documents at permanent gov.uk URLs, and
-this repository treats them the way it treats the 55,678 planning
-documents.
+this repository treats them the way it treats the planning documents.
 
 Two committed files stand in for them.
 `environment-agency-permit-claims.yaml` holds the 42 claims, each with

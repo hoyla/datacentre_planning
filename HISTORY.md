@@ -5618,3 +5618,53 @@ mini-corpus, which is its own piece of work; the four gate copies want
 a shared helper, which the parity tests now make safe to write; the
 grep-shaped tests and the duplicated fixtures are refactors, not fixes.
 All in ROADMAP, "From the test-suite review".
+
+## The documentation is brought current after the review (2026-09-16)
+
+Luke asked for the whole documentation surface to be checked against
+the day: done things in HISTORY, asks in ROADMAP, nothing else stale.
+Two readers took the two halves — every ROADMAP item against HISTORY
+and the code, and every live document against what changed — and each
+finding was re-checked before it was applied.
+
+**ROADMAP lost six closed items.** The thirteen live members in
+`error` (closed by the item's own query, which returns no rows); the 58
+Section 106 agreements (read on 2026-09-10); the zero-byte section,
+reduced to the one ask left in it — two councils to tell, since Medway's
+was the register listing one document twice; Hemel 3's `.xls` (read
+2026-09-10); UKPN's Large Demand List and demand profiles (pulled
+2026-08-12, and cited by both artefacts since 2026-09-10), leaving
+"Data Centres by Local Authority"; and the older test-surface item,
+whose surviving paragraph now sits in the section the review added.
+Numbers that had moved were re-measured and corrected in place: the
+corpus at 63,502 documents; coverage at 390 of 390; the acquisition
+tail at 189 (90 `no_adapter`, 58 `none_published`, 30 `error`, 7
+`portal_blocked`, 3 `login_required`, one never tried); the `not_dc`
+measurement of 2026-09-02 framed as the case for migration 034, with
+the 2026-09-10 standing beside it (260 excluded, 2 admitted, six sites
+keyed on an excluded member, Kingsnorth not among them); thirteen
+unresolved Companies House names; 482 of 503 sites on a planning
+application. The waiting-on-Luke table dropped the label-audit row that
+said it could go, corrected the C and D row (the write-time guard is in
+force), and gained the phase-1 modules question.
+
+**The runbook's State heading said 2.12; the base is 2.14.** Its
+coverage entry still promised a Word loader would close the last prose
+gap, which closed six days earlier without one; its §13a and notebook
+counts (533, 428, 429, 508) are now labelled with the release they were
+measured at or replaced by "the run prints its own figures"; its
+description of CI, and ARCHITECTURE's, say what runs now. ARCHITECTURE
+gained the four things the day's PRs changed and no document described:
+the quote gate's pages-sent rule, `repo.held_bytes` and the `downloaded`
+count as the outcome rule's input, the read cohort's liveness, and the
+five liveness checks both builds run; its schema list reached migration
+035; the off-tab document stores are four scripts, not one.
+`cloudrun/CLOUDRUN.md` still described EdgeOne as a deployment serving
+bytes, a year after it became a redirect; its size comments said 17 MB
+of a 35 MB page. README's counts moved from the 2.12 stamp to 2.14's,
+its "three rules" became four, and its setup loop now warns that
+migrations 017 and 018 refuse an empty database on purpose. AGENTS.md
+had restated four runbook entries and a count, against its own first
+paragraph; it routes again. `docs/PLAN_CONSUMPTION_CONTEXT.md`, the one
+plan without a status line, is marked built. `pytest-cov` joins the dev
+extra so the review's coverage figures can be reproduced.
