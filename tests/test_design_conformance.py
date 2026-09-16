@@ -45,6 +45,9 @@ import pytest
 playwright = pytest.importorskip("playwright.sync_api",
                                  reason="playwright not installed")
 
+# Every test here drives the built page: the reader job's, never the unit job's.
+pytestmark = pytest.mark.reader
+
 ROOT = Path(__file__).resolve().parent.parent
 HANDOFF = ROOT / "design_handoff_datacentre_reader" / "README.md"
 
