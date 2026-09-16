@@ -540,9 +540,14 @@ def verify_findings(row: dict, findings: list[dict],
                 continue
             page = coerce_page(f.get("evidence_page"))
             verified_page = None
-            candidates = []
-            if page and 1 <= page <= len(pages):
-                candidates = [page, page - 1, page + 1]
+            # The claimed page and its neighbours first (models are
+            # off by one more often than wrong), then any other page
+            # sent — and only pages sent. Until 2026-09-16 the neighbours
+            # were tried whether or not the model had seen them, so a
+            # stored evidence_page could name a page never in the prompt
+            # (120 of 1,462,337 findings, measured that day).
+            candidates = ([p for p in (page, page - 1, page + 1) if p in sent]
+                          if page else [])
             for p in candidates + [p for p in sent if p not in candidates]:
                 if 1 <= p <= len(pages) and quote_on_page(quote, pages[p - 1]):
                     verified_page = p
