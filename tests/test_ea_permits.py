@@ -192,10 +192,23 @@ def test_the_caveat_does_not_assume_the_fleet_equals_the_load():
 
 
 def test_every_quote_is_still_on_the_page_it_cites():
+    """Skips, and says so, where the permit text is not on this machine.
+
+    `verify_ea_quotes` returns an empty list when data/raw/ea_permits/text
+    is absent, and data/raw is not committed — so until 2026-09-16 this
+    passed green on every CI run while checking none of the 42 quotes.
+    The skip is the honest verdict; the reader job on a machine with the
+    text is where the quotes are actually verified."""
+    if not ea.have_permit_text():
+        pytest.skip("permit text is not on this machine (data/raw/ea_permits/"
+                    "text), so no quote was checked")
     assert ea.verify_ea_quotes() == []
 
 
 def test_the_batch_validates():
+    """The structural half — names, quantities, units, match evidence —
+    which needs no document. The quote half is the test above, and is
+    absent here for the same reason it skips there."""
     claims = ea.load_ea_claims()
     assert ea.validate_ea(claims, ea.load_ea_matches()) == []
 

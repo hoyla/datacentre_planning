@@ -125,6 +125,13 @@ def _build(out: Path, env: dict) -> None:
 
 
 def _normalise(text: str) -> str:
+    # The pattern has already once matched nothing (the comment above it),
+    # and a substitution that matches nothing is silent. Say so instead:
+    # a stamp this cannot find is a masthead that moved, and the next
+    # failure would otherwise be the one that straddles a minute.
+    assert _STAMP_RE.search(text), (
+        "the generation stamp pattern matched nothing in the build; the "
+        "masthead format has moved and _STAMP_RE no longer tracks it")
     return _STAMP_RE.sub("generated <stamp>", text)
 
 
