@@ -127,9 +127,11 @@ def fetch_one(conn, client: idox.IdoxClient, *, ref: str,
     with conn.cursor() as cur:
         cur.execute("SELECT id FROM applications WHERE application_ref=%s", (ref,))
         app_id = cur.fetchone()[0]
-        cur.execute("SELECT url, bytes_path FROM documents WHERE application_id=%s",
-                    (app_id,))
-        prior = {u: bp for u, bp in cur.fetchall() if bp}
+    # The one place the rule lives (repo.held_bytes): a row holding the
+    # empty hash is not held, so a pre-guard zero-byte document is retried
+    # rather than skipped forever. This script kept the older inline query
+    # until 2026-09-16.
+    prior = repo.held_bytes(conn, app_id)
     summary = {"links_found": len(docs), "downloaded": 0,
                "skipped_existing": 0, "errors": 0}
     if not docs:
