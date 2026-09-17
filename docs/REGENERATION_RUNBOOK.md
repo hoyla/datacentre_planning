@@ -12,7 +12,7 @@ those two, which were the documents it kept duplicating.)
 
 ---
 
-## State — the base is 2.12, released; figures move, so read stamps, not this file
+## State — the base is 2.14, released; figures move, so read stamps, not this file
 
 Current state lives in two places, deliberately not here: the
 [ROADMAP](../ROADMAP.md) header for the corpus counts, and
@@ -279,7 +279,8 @@ electricity; the `generation_exceeds_load` cohort refuses to compute at
 all; and the site page's generation line cannot say whether a number is
 a per-unit rating.
 
-The current pass is `gpt-5/generation-2.5`, 1,667 figures. A new prompt
+The current pass is `gpt-5/generation-2.5` — 2,705 answers over 2,582
+figures at 2.13; the run prints the current count. A new prompt
 version re-adjudicates the whole corpus by construction — no figure
 carries the new version — so bumping it is a deliberate spend, not a
 side effect of an edit.
@@ -1052,10 +1053,11 @@ roughly a tenth of the files, all of them the largest** (Luke,
 
 The default is now datacentre-classed sites only, which is what pays for
 the smaller budget, and `--max-words` is a whole-document ceiling. At
-300,000 that gives **428 sites → 584 documents, largest 299,807 words**.
+300,000 that gave, at 2.12, **428 sites → 584 documents, largest 299,807
+words**; the run prints the current figures.
 
-**Excluding the other classes is worth less than it looks.** The 84
-non-datacentre sites are 4.9% of the words: exclusion is worth about one
+**Excluding the other classes is worth less than it looks.** At 2.12 the
+84 non-datacentre sites were 4.9% of the words: exclusion is worth about one
 step of budget, 480,000 down to 300,000, and no more. It also costs the
 **48 disguise suspects**, whose class description begins "no application
 here is stated as a datacentre, and at least one could not be ruled
@@ -1064,7 +1066,7 @@ workbook and the reader; it is only the notebook that stops answering
 questions about them. `--classes all` puts them back, at a budget of
 about 450,000. Decide it per release rather than inheriting it.
 
-**584 of 600 leaves 16 documents of headroom.** The corpus only grows,
+**584 of 600 left 16 documents of headroom at 2.12.** The corpus only grows,
 so this will need re-deciding — the next lever is accepting a larger
 budget, or splitting the corpus across two notebooks.
 
@@ -1077,10 +1079,11 @@ already holds a previous release's documents must be emptied first, or
 it ends up holding two versions of every site with nothing on the page
 to say which is current.
 
-**The reader counts 533 sites and this exports 428.** Both are right:
-533 is 512 live sites plus 21 Barbour catalogue records for pre-planning
+**The reader counts more rows than this exports, and both are right.**
+The reader's rows include the Barbour catalogue records for pre-planning
 schemes, which have no planning application and so no documents to
-export; of the 512, 428 are classed as datacentres.
+export; and the export takes datacentre-classed sites only. The run
+prints both figures; do not quote a count from here.
 
 **The Pinpoint bundle takes `--already-uploaded`**, pointing at the
 manifest of what is already linked into Pinpoint. It skips those
@@ -1157,11 +1160,16 @@ The script verifies the live deployment refuses anonymous access before
 declaring success, so a failure there is the gate holding rather than
 the deploy failing.
 
-**What runs automatically, and what does not** (as of 2026-09-02).
+**What runs automatically, and what does not** (as of 2026-09-16).
 `.github/workflows/checks.yml` runs on every push to every branch: the
-no-database test suite, the two browser suites driving the committed
-`index.html`, and the middleware tests. It publishes nothing and holds
-no secret. No workflow deploys — the "publish button" (build, probe,
+unit and integration tests against a throwaway Postgres rebuilt from
+every migration (everything but the `corpus` and `reader` markers), the
+two browser suites driving the committed `index.html`, and the
+middleware tests. It publishes nothing and holds no secret. What it
+cannot do is build either artefact — `export_reader.py` and
+`export_handover.py` need the corpus — so a scratch build on this
+machine before a release is still the only execution those two get
+(ROADMAP, "From the test-suite review"). No workflow deploys — the "publish button" (build, probe,
 then wait for Luke's approval in a GitHub Environment) is designed on
 the ROADMAP under Smaller things and is not built — so the deploy is
 this step, by hand, every release. The one-time IAP wiring is
@@ -1254,8 +1262,9 @@ carried are kept as the shape of what belongs there:
   and "201 of 455 sites are not yet fully read", which counted 5,751
   drawings the deep read skips by design and the objection letters it
   samples on purpose. Both were true and both read as a job a third
-  done. Over the prose the deep read is actually for it is 36,743 of
-  36,983 (99%), and 38 sites have any prose outstanding. The split comes
+  done. Over the prose the deep read is actually for it was 36,743 of
+  36,983 (99%) with 38 sites holding prose outstanding when this was
+  written, and 390 of 390 sites read in full since 2026-09-10. The split comes
   from the methodology's own `deepread_select.classify_kind` — tier
   `skip` graphical, tier `C` sampled, A and B prose — via
   `site_profile.load_coverage_detail`, so the reader and the workbook
@@ -1370,22 +1379,21 @@ spends the afternoon again. Anything NOT on this list is new.
   verbatim quotes** — worth having if the same three documents ever
   matter to a story, and not worth a pass of its own.
 
-- **Coverage will not reach 100% of sites, and the remainder is not a
-  backlog.** Measured at the 2.13 release, 2026-09-03: **357 of 360**
-  sites with prose are read in full; re-measured 2026-09-07 after the
-  refused-pages read, which brought 29 more sites into the count:
-  **385 of 388**. The other three are the same three: two
-  Renfrewshire sites (`SITE-Renfrewshire/20/0204/PP`, `/20/0228/PP`)
-  holding a single graphical document each, so they have no prose at
-  all, and `PTNO-12817834`, whose single outstanding prose document is
-  a `.docx` — document 39292 on `Wakefield/23/01043/FUL` — that the
-  extractor has no loader for. **A Word loader would close the last
-  prose gap in the corpus.**
+- **Coverage is complete over the prose, and the remainder is not a
+  backlog.** Since 2026-09-10 (HISTORY, "The last prose gap closes"),
+  **390 of 390** live sites with prose are read in full, from
+  `site_profile.load_coverage_detail`; it was 357 of 360 at 2.13 and
+  385 of 388 at 2.14. Two Renfrewshire sites
+  (`SITE-Renfrewshire/20/0204/PP`, `/20/0228/PP`) hold a single
+  graphical document each and so have no prose to read; the last
+  outstanding prose document, the `.docx` on `Wakefield/23/01043/FUL`,
+  had a loader all along and no words — its one picture is a screenshot
+  of a mapping portal, read by OCR to 0 findings.
 
-  Separately, 12 documents have no text cache and cannot get one: four
-  PDFs pypdf refuses to open, five whose format has no loader (two
-  `.docx`, one `.xls`, one `.rtf`, one `.pdf` whose bytes are not a
-  PDF), two of the three zero-byte files below, and — since 2026-09-07
+  Separately, about twenty documents have no text cache and cannot get
+  one (the corpus extraction pass names them; the ROADMAP's "Coverage
+  gaps worth closing" carries the list): the PDFs pypdf refuses to open,
+  two `.xlsb`, a `.ppt`, five of no recognisable format, and — since 2026-09-07
   — document 67747 on `Selby/ZG2024/0549/FULM` (Springfield Farm,
   `SITE-Selby/2022/0813/SCN`), 26.8 MB of bytes that are not a PDF,
   served that way by North Yorkshire's register under a filename that
@@ -1465,8 +1473,8 @@ in the reader, and are not in the notebook.
 
 One document per datacentre-classed site: the site report as written,
 then that site's findings as a markdown table beneath it. The Drive tree keeps them
-apart, which is right for a folder and wrong for a notebook — 429 sites
-would arrive as 726 sources against a 600 limit, and a CSV uploaded as a
+apart, which is right for a folder and wrong for a notebook — at 2.12,
+429 sites would have arrived as 726 sources against a 600 limit, and a CSV uploaded as a
 source reads poorly.
 
 It reads the staging tree rather than the database on purpose, so the
@@ -1507,7 +1515,7 @@ source first.
 **Working out what is new is the hard part, and the database cannot
 tell you.** `sites.materialised_at` is rewritten for every site on
 every materialisation, so it records the last run and not creation —
-after a materialisation all 508 sites read the same date. Two workable
+after a materialisation every site reads the same date. Two workable
 routes:
 
 - read the notebook's own source list and diff against it, which is
@@ -1527,8 +1535,8 @@ Big sites are **split, never truncated**: a source is capped near
 500,000 words and one site holds 130,092 findings. Parts are budgeted by
 word count rather than row count — a row-based cap set from an estimated
 40 words per row put 49 documents over the limit, because the real
-average is ~52 and varies with quote length. 429 sites become 506
-documents. Every part repeats the site name, the key, its part number
+average is ~52 and varies with quote length. At 2.12, 429 sites became
+506 documents. Every part repeats the site name, the key, its part number
 and a line saying every row belongs to that site: one document is always
 one site, but a model retrieving a row from the middle of a
 400,000-word table has only what is on the page.

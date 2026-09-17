@@ -60,7 +60,7 @@ gcloud auth list --filter=status:ACTIVE --format='value(account)' 2>/dev/null | 
     || die "no active gcloud account — run: gcloud auth login (use your personal account)"
 
 # --- sanity: the page we are about to publish -------------------------------
-# The reader runs to ~17MB; a floor of 5MB catches a truncated or empty
+# The reader runs to ~35MB; a floor of 5MB catches a truncated or empty
 # export long before it reaches colleagues.
 [ -f "$READER" ] || die "no reader at $READER — run scripts/export_reader.py --publish index.html first"
 size=$(wc -c < "$READER" | tr -d ' ')

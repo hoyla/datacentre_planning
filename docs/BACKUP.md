@@ -2,7 +2,7 @@
 
 The document corpus is mostly re-fetchable. The database is not.
 
-454,000 findings behind a verbatim-quote gate, the power adjudications,
+about 1.5 million findings behind a verbatim-quote gate, the power adjudications,
 the append-only `source_snapshots` audit trail, the deep-read log and
 every site cluster are three months of work, and until 2026-08-10 they
 existed in exactly one place: a Docker volume on one laptop. Re-fetching
@@ -84,7 +84,7 @@ contents with `pg_restore --list`.
 That order exists because the obvious single check is wrong, and was
 wrong here first. `pg_restore --list` reads only the table of contents,
 which lives at the *start* of a custom-format dump — truncate the file
-to 40% and it still cheerfully lists all eighteen tables, because the
+to 40% and it still cheerfully lists every table, because the
 catalogue is intact and the data is gone. It is this project's own
 recurring bug wearing a backup's clothes: a listing that proves the
 listing exists. What catches truncation is gpg's integrity check, and
@@ -93,7 +93,9 @@ script did not.
 
 Tested against four cases — intact, wrong passphrase, truncated,
 single bit flipped mid-file. The last three all fail loudly and exit
-non-zero.
+non-zero, and since 2026-09-16 they are tests (`tests/test_backup_db.py`,
+which also holds `prune_local` to the newest copies); the intact case
+needs the container and stays the rehearsal's.
 
 **Verify is still the near side.** It proves the ciphertext is whole and
 the catalogue parses; it does not prove the rows are in there.

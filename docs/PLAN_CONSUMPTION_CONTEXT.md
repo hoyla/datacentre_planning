@@ -1,5 +1,10 @@
 # Build plan: per-site consumption context from DESNZ local-authority data
 
+**Status: built.** `dcp/consumption_context.py` (tested in
+`tests/test_consumption_context.py`) renders the sentence in the reader
+and the workbook, and DESNZ is `desnz_lahh` in `dcp/external_aggregates.py`.
+Kept as the design record; the do-not-relitigate section still governs.
+
 Written 2026-08-12 for the next session to execute. Luke has approved
 this shape ("lovely ideas… plan 1 now"). Everything needed is in the
 repository — no re-fetching, no browser, no registration required.

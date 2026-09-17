@@ -120,28 +120,40 @@ stays in it):
 - **Ocella** ([dcp/sources/ocella.py](dcp/sources/ocella.py)) — Hillingdon, NorthLincs and others.
 - **Agile**, **Arcus**, **aifusion**, **Salesforce** ([dcp/sources/](dcp/sources/)) — the 2026-08 portal families; Salesforce fetches against browser-harvested listings, Arcus handles both disclaimer variants.
 - **Northern Ireland** ([dcp/sources/ni_planning.py](dcp/sources/ni_planning.py)) — the whole-nation register via its own anonymous API (2026-08-27; docs/PORTAL_NOTES.md has the route map).
-- **Newport docstore** (`scripts/fetch_newport_docstore.py`) — documents held off the documents tab.
+- **Off-tab document stores** (`scripts/fetch_newport_docstore.py`, `fetch_derby_docstore.py`, `fetch_neath_docstore.py`, `fetch_civica_docstore.py`) — documents held off the documents tab; a new council on an existing store is a row in that script's `STORES`, not a script.
 - **Manual** (`scripts/ingest_manual_docs.py` + [dcp/sources/manual.py](dcp/sources/manual.py)) — for one-off portals: files dropped per application, hashed, recorded via `repo.record_document`, **preserving any adapter-recorded URL** rather than overwriting with `file://`.
 - **Browser-assisted** (`scripts/browser_receiver.py`) — a loopback sink for portals that only serve a real browser; the page POSTs each document to it. Rules and per-portal routes in [docs/PORTAL_NOTES.md](docs/PORTAL_NOTES.md).
 
 Per-application `_manifest.json` is the hand-over signal across every
 transport, and `repo.record_document` is the single gate every path
 passes through — which is where the zero-byte guard lives (an empty
-body is a failed fetch, never a document).
+body is a failed fetch, never a document). `repo.held_bytes` is the one
+query that says what an application already holds — a row with the
+empty hash is not held, so an empty file that arrived before the guard
+is retried — and every adapter and docstore script resumes from it.
+Each adapter counts a document `downloaded` only when it wrote the
+bytes and `skipped_existing` when they were already held, because those
+two counts are the whole input to the settled verdict in
+`acquisition_outcome`.
 
 #### Reading at scale — the current shape
 
 The corpus is deep-read by four model families, every finding behind
-the same **verbatim-quote gate**: an extracted quote must appear in the
-document's cached text or the finding is rejected, which makes the gate
-— not the model — the hallucination protection. Each finding records
+the same **verbatim-quote gate**: an extracted quote must appear verbatim
+on a page that was sent to the model — the claimed page and its neighbours
+first, then any other page sent, never a page the model did not see — or
+the finding is rejected, which makes the gate — not the model — the
+hallucination protection. Each finding records
 its model, and they coexist in the append-only store: GPT-5 on the
 OpenAI Batch API (52%), Claude Sonnet (25%), Qwen under MLX on the
 Studio (23%), and GPT-5.6 — luna, then terra — at under 1% between
 them. No GPT-5.6 pass over the findings corpus is planned; those rows
 came from escalations, and the deep-read `--model` has no default. The
 roster and its counts live in
-[Which model runs which task](#which-model-runs-which-task).
+[Which model runs which task](#which-model-runs-which-task). The read
+cohort is the documents of live members of live sites, minus those
+already logged under the model and prompt version; a `not_extracted`
+log row re-enters, because it is a document waiting for text.
 Standing policy (2026-08-26): **the local reader is a phase-3 second
 opinion and never the first read of anything** — the label audit
 measured it misfiling the power families at up to 68% against Sonnet's
@@ -225,7 +237,9 @@ design. Every class carries the applications that produced it.
 Curated display names live beside the derived ones in
 `data/priors/site_aliases.yaml`, read by `dcp/site_aliases.py`; an
 alias naming a site key that is no longer live fails the build rather
-than silently ceasing to apply.
+than silently ceasing to apply — and the same check runs for the
+operator pages, the facility rosters, the snapshots they cite and the
+campus-scope decisions, in the reader build and the workbook build alike.
 
 **Membership is not standing.** The family door admits an application
 whatever triage said, because a reserved matters on a data-centre
@@ -276,8 +290,10 @@ first with the register beside it, addressed by recorded file ID
 their predecessors so citations keep resolving; `scripts/release_diff.py`
 diffs each build against the last release before anything deploys. The
 published reader is served from Cloud Run behind Guardian sign-in;
-EdgeOne redirects. CI runs the no-database test suite and drives the
-committed reader on every push (`.github/workflows/checks.yml`).
+EdgeOne redirects. CI runs the unit and integration tests against a
+throwaway Postgres rebuilt from every migration, and drives the committed
+reader, on every push (`.github/workflows/checks.yml`); neither artefact
+is built there, so a scratch build before a release is still a laptop's job.
 
 The v1 editorial output — the markdown/xlsx pair, cohorts and the
 integrated viewer — is in HISTORY; its append-only store and
@@ -286,7 +302,7 @@ provenance discipline are what everything above still runs on.
 
 ## Schema
 
-Current schema is migrations 001–034 applied in order. The early ones in detail: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table), [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric), [004_council_aliases.sql](migrations/004_council_aliases.sql) (JSONB `councils.notes` + the `council_aliases` reorganisation map) and [005_projects.sql](migrations/005_projects.sql) (the `projects` + `project_applications` pair for commercial construction-intelligence records — see "Projects vs applications" below). Tables and their relationships:
+Current schema is migrations 001–035 applied in order. The early ones in detail: [002_discovery_tracking.sql](migrations/002_discovery_tracking.sql) (the `discovered_via` array and the `colocated_candidates` table), [003_triage_columns.sql](migrations/003_triage_columns.sql) (Stage-1 rubric refresh — added `worth_deep_read`, `signals[]`, `why`; converted `confidence` from REAL to TEXT to match the categorical rubric), [004_council_aliases.sql](migrations/004_council_aliases.sql) (JSONB `councils.notes` + the `council_aliases` reorganisation map) and [005_projects.sql](migrations/005_projects.sql) (the `projects` + `project_applications` pair for commercial construction-intelligence records — see "Projects vs applications" below). Tables and their relationships:
 
 ```
 sources        ──┐
@@ -318,6 +334,8 @@ site_members     │ application/project membership, joined_via, retired_at;
 
 power_adjudication    │ whose figure is it — per finding per model,
                       │ append-only; unit_note carries correction markers (008)
+figure_derivations    │ the arithmetic behind a computed figure, per
+                      │ adjudication and derivation version (035)
 finding_label_audit   │ misfiled-family verdicts; demotes at render (025)
 site_machine_readings │ per-site readings behind their own quote gate,
                       │ keyed on input hash (§7b–e)

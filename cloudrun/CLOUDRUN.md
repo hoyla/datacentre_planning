@@ -4,8 +4,8 @@ Serving the reader from Google Cloud Run
 An **authenticated** copy of the published reader (`index.html`), hosted on
 Cloud Run behind Google Identity-Aware Proxy so any `@guardian.co.uk` account
 signs in with their normal Google login — no shared password to distribute.
-This replaces password administration, not the EdgeOne deployment itself:
-EdgeOne keeps building from git until it is retired as a separate decision.
+This replaced password administration. Since 2026-08-29 EdgeOne serves
+nothing and only redirects here (`middleware.js`).
 
 The pattern — and every gotcha below — is inherited from the two deployments
 that proved it on the same personal GCP account with Guardian users:
@@ -145,7 +145,7 @@ Redeploying content — the routine
 ---------------------------------
 
 **Nothing deploys automatically.** There is no GitHub Action here: pushing
-to main updates only the EdgeOne deployment (which builds from git). The
+to main updates only the EdgeOne redirect, which serves no page. The
 Cloud Run copy changes exactly when you run the script below, and serves
 whatever `index.html` sits at the root of the checkout you run it from —
 committed or not.
@@ -165,8 +165,8 @@ scripts/export_reader.py --publish index.html
 
 # 2. Release process as usual — the release PR carrying index.html to main.
 
-# 3. From main, after the release PR merges (so EdgeOne and Cloud Run serve
-#    identical bytes):
+# 3. From main, after the release PR merges (so the deployed page is the
+#    released one):
 ./cloudrun/deploy.sh
 ```
 

@@ -71,6 +71,9 @@ dev = [
     # Chromium. After `pip install -e '.[dev]'`, fetch the browser once
     # with `playwright install chromium`; the test skips without it.
     "playwright>=1.60",
+    # The coverage figures in docs/TEST_SUITE_REVIEW_2026-09-16.md were
+    # measured with it; `pytest --cov=dcp --cov=scripts` reproduces them.
+    "pytest-cov>=7.0",
 ]
 
 [project.scripts]

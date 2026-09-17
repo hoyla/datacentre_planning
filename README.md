@@ -6,20 +6,22 @@ the planning system records but does not collect: how much power these
 sites will draw, what generation they propose on site, how they will be
 cooled, and who is behind them.
 
-**What it holds :** at the 2.12 boundary (2026-09-02), 500 sites plus
-7 known only at pre-planning stage, 1,999 in-scope planning
-applications and 60,156 documents from council registers — every
-document whose application is in a live site is staged for Drive
-(57,559 at 2.12), and step 9 of the runbook prints what is not and why
-— plus a layer of nationally significant energy projects for adjacency
-(197 at the 2.9 boundary; it moves as the Section 35 watcher runs). 
-_Last updated 2 September 2026_
+**What it holds :** at the 2.14 boundary (2026-09-07), 499 sites plus
+7 known only at pre-planning stage, 1,993 in-scope planning
+applications and 62,241 documents from council registers — every
+document whose application is in a live site is staged for Drive, and
+step 9 of the runbook prints what is not and why — plus a layer of
+nationally significant energy projects for adjacency (197 at the 2.9
+boundary; it moves as the Section 35 watcher runs). The corpus has
+moved since the stamp; ROADMAP's opening paragraph carries the latest
+measurement.
+_Last updated 16 September 2026_
 
 The output is a handover package, not a live service: a reader, a
 workbook, a queryable database, and the source documents themselves.
 
 - [AGENTS.md](AGENTS.md) — what to read before working on a given part of
-  this, and the three rules that stop the same mistakes recurring. Routing
+  this, and the four rules that stop the same mistakes recurring. Routing
   only; it restates nothing. Start there if you are picking work up.
 - [ROADMAP.md](ROADMAP.md) — what is still to do.
 - [HISTORY.md](HISTORY.md) — what has been built and decided, including
@@ -44,7 +46,8 @@ workbook, a queryable database, and the source documents themselves.
   one's MW actually is, and why none of them can be merged into a column
   here. Read before proposing a triangulation source.
 - [docs/SCALE_RANKING_RESEARCH.md](docs/SCALE_RANKING_RESEARCH.md) —
-  how to rank the 304 sites with no power figure well enough to choose
+  how to rank the sites with no power figure (304 at that document's
+  2026-08-22 boundary) well enough to choose
   fifty for manual corroboration, and a survey of sources not yet
   tried, each marked checked or unverified. Candidates for the
   EXTERNAL_DATA_SOURCES process, not conclusions.
@@ -132,12 +135,27 @@ cp .env.example .env
 
 docker compose up -d postgres
 for m in migrations/*.sql; do psql "$DATABASE_URL" -f "$m"; done
+# 017 and 018 are data-only and refuse on an empty database by design;
+# two loud exceptions on a fresh install are expected (tests/conftest.py)
 
 git config core.hooksPath .githooks   # push safety, see below
-pytest                                 # full suite
 pytest -m "not integration"            # no Postgres required
+pytest -m "not corpus and not reader"  # what CI's unit job runs: unit + integration tests
+READER_HTML=index.html pytest -m reader  # the browser suites over the committed page, as CI's reader job
+pytest                                 # everything, including the live-corpus builds
 node --test tests/middleware.test.mjs  # the EdgeOne redirect
 ```
+
+Three markers, declared in `pyproject.toml`. `integration` needs Postgres:
+`tests/conftest.py` drops and rebuilds `dcp_test` from every migration once
+per session, so those tests run on production's schema and seed their own
+rows. `corpus` builds from or reads the live corpus (the determinism test's
+two builds, and the browser tests that count a scratch build's output),
+which no CI database holds. `reader` drives a built page in headless
+Chromium. CI (`.github/workflows/checks.yml`) starts a throwaway Postgres
+for the first, deselects the second, and runs the third against the
+committed `index.html`, where the two `corpus`-marked browser tests skip
+their build-dependent half; neither exporter is built in CI.
 
 `.githooks/pre-push` refuses a push to a branch whose pull request has
 merged, or is ready for review, printing the recovery. Draft PRs and
